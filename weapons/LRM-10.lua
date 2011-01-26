@@ -1,0 +1,39 @@
+weaponDef = {
+	name                    = "LRM-10",
+	weaponType              = "MissileLauncher",
+	renderType				= 1,
+	explosionGenerator    	= "custom:HE_MEDIUM",
+--	cegTag					= "BazookaTrail",
+	smokeTrail				= true,
+	smokeDelay				= "0.05",
+	soundHit              	= [[GEN_Explode2]],
+	soundStart            	= [[SRM_Fire]],
+--	soundTrigger			= 0,
+	burnblow				= false, 	--Bullets explode at range limit.
+	collideFriendly			= true,
+	noSelfDamage            = true,
+	turret                  = true,
+	range                   = 2100,
+	accuracy                = 1000,
+	wobble					= 1300,
+	guidance				= true,
+	selfprop				= true,
+	ballistic				= false,
+	trajectoryHeight		= 1,
+	tracks					= true,
+	turnRate				= 3500,
+	weaponTimer				= 20,
+	flightTime				= 10,
+	areaOfEffect            = 20,
+	startVelocity			= 500,
+	weaponVelocity          = 700,
+	reloadtime              = 10,
+	burst					= 10,
+	burstrate				= 0.1,
+	model					= "Missile.s3o",
+	damage = {
+		default = 100,--10 DPS
+	},
+}
+
+return lowerkeys({ LRM10 = weaponDef })

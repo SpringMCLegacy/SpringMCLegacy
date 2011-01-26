@@ -1,0 +1,211 @@
+-- Test Tank Script
+
+--defines
+local body, turret, barrel, launcher, mg, lamsturret, lams = piece ("body", "turret", "barrel", "launcher", "mg", "lamsturret", "lams")
+local trackr, trackl = piece ("trackr", "trackl")
+local flare, mgflare1, mgflare2, lamsflare = piece ("flare", "mgflare1", "mgflare2", "lamsflare")
+local smokePieces = {body, turret}
+local LaunchPoints = {}
+local numLaunchPoints = 10
+	for i = 1, numLaunchPoints do
+		LaunchPoints[i] = piece ("launchpoint"..i)
+	end
+local wheels = {}
+local numWheels = 14
+	for i = 1, numWheels do
+		wheels[i] = piece ("wheel"..i)
+	end
+local rad = math.rad
+local currLaunchPoint = 1
+
+-- constants
+local SIG_AIM1 = 2
+local SIG_AIM2 = 4
+local SIG_AIM3 = 8
+local SIG_AIM4 = 16
+local SIG_AIM5 = 32
+
+local RESTORE_DELAY = Spring.UnitScript.GetLongestReloadTime(unitID) * 2
+
+-- includes
+include "smokeunit.lua"
+
+--SFX defines
+SMALL_MUZZLEFLASH = SFX.CEG+0
+MG_MUZZLEFLASH = SFX.CEG+1
+
+function script.Create()
+	StartThread(SmokeUnit())
+end
+
+local function SpinWheels(moving)
+	if moving then
+		for i = 1, numWheels do
+			Spin(wheels[i], x_axis, rad(200), rad(100))
+		end
+	else
+		for i = 1, numWheels do
+			StopSpin(wheels[i], x_axis, rad(100))
+		end
+	end	
+end
+
+function script.StartMoving()
+	SpinWheels(true)
+end
+
+function script.StopMoving()
+	SpinWheels(false)
+end
+
+local function RestoreAfterDelay(unitID)
+	Sleep(RESTORE_DELAY)
+	Turn(turret, y_axis, 0, math.rad(50))
+	Turn(barrel, x_axis, 0, math.rad(100))
+	Turn(launcher, x_axis, 0, math.rad(100))
+	Turn(mg, x_axis, 0, math.rad(100))
+	Turn(lamsturret, y_axis, 0, math.rad(100))
+	Turn(lams, x_axis, 0, math.rad(100))
+end
+
+function script.AimWeapon1(heading, pitch)
+	Signal(SIG_AIM1)
+	SetSignalMask(SIG_AIM1)
+	Turn(turret, y_axis, heading, rad(75))
+	Turn(barrel, x_axis, -pitch, rad(200))
+	WaitForTurn(turret, y_axis)
+	StartThread(RestoreAfterDelay)
+	return true
+end
+
+function script.FireWeapon1()
+end
+
+function script.Shot1()
+end
+
+function script.AimFromWeapon1() 
+	return turret 
+end
+
+function script.QueryWeapon1() 
+	return flare
+end
+	
+function script.AimWeapon2(heading, pitch)
+	Signal(SIG_AIM2)
+	SetSignalMask(SIG_AIM2)
+	Turn(turret, y_axis, heading, rad(25))
+	Turn(launcher, x_axis, -pitch, rad(50))
+	WaitForTurn(turret, y_axis)
+	StartThread(RestoreAfterDelay)
+	return true
+end
+
+function script.FireWeapon2()
+end
+
+function script.Shot2()
+	EmitSfx(LaunchPoints[currLaunchPoint], SMALL_MUZZLEFLASH)
+	currLaunchPoint = currLaunchPoint + 1
+	if currLaunchPoint > numLaunchPoints then 
+		currLaunchPoint = 1
+	end
+end
+
+function script.AimFromWeapon2() 
+	return turret 
+end
+
+function script.QueryWeapon2() 
+	return LaunchPoints[currLaunchPoint]
+end
+
+function script.AimWeapon3(heading, pitch)
+	Signal(SIG_AIM3)
+	SetSignalMask(SIG_AIM3)
+	Turn(turret, y_axis, heading, rad(75))
+	Turn(mg, x_axis, -pitch, rad(200))
+	WaitForTurn(turret, y_axis)
+	StartThread(RestoreAfterDelay)
+	return true
+end
+
+function script.FireWeapon3()
+end
+
+function script.Shot3()
+	EmitSfx(mgflare1, MG_MUZZLEFLASH)
+end
+
+function script.AimFromWeapon3() 
+	return turret 
+end
+
+function script.QueryWeapon3() 
+	return mgflare1
+end
+
+function script.AimWeapon4(heading, pitch)
+	Signal(SIG_AIM4)
+	SetSignalMask(SIG_AIM4)
+	Turn(turret, y_axis, heading, rad(75))
+	Turn(mg, x_axis, -pitch, rad(200))
+	WaitForTurn(turret, y_axis)
+	StartThread(RestoreAfterDelay)
+	return true
+end
+
+function script.FireWeapon4()
+end
+
+function script.Shot4()
+	EmitSfx(mgflare2, MG_MUZZLEFLASH)
+end
+
+function script.AimFromWeapon4() 
+	return turret 
+end
+
+function script.QueryWeapon4() 
+	return mgflare2
+end
+
+function script.AimWeapon5(heading, pitch)
+	Signal(SIG_AIM5)
+	SetSignalMask(SIG_AIM5)
+	Turn(lamsturret, y_axis, heading, rad(75))
+	Turn(lams, x_axis, -pitch, rad(200))
+	WaitForTurn(turret, y_axis)
+	StartThread(RestoreAfterDelay)
+	return true
+end
+
+function script.FireWeapon5()
+end
+
+function script.Shot5()
+	EmitSfx(lamsflare, MG_MUZZLEFLASH)
+end
+
+function script.AimFromWeapon5() 
+	return lamsturret 
+end
+
+function script.QueryWeapon5() 
+	return lamsflare
+end
+
+function script.Killed(recentDamage, maxHealth)
+	--local severity = recentDamage / maxHealth * 100
+	--if severity <= 25 then
+	--	Explode(body, math.bit_or({SFX.BITMAPONLY, SFX.BITMAP1}))
+	--	return 1
+	--elseif severity <= 50 then
+	--	Explode(body, math.bit_or({SFX.FALL, SFX.BITMAP1}))
+	--	return 2
+	--else
+	--	Explode(body, math.bit_or({SFX.FALL, SFX.SMOKE, SFX.FIRE, SFX.EXPLODE_ON_HIT, SFX.BITMAP1}))
+	--	return 3
+	--end
+end
