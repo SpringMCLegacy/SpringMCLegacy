@@ -28,10 +28,10 @@ local IS_Scorpion = {
 		--Makes unit use weapon from /weapons folder
 		weapons 		= {	
 			[1] = {
-				name	= "AC2",
+				name	= "LightGauss",
 			},
 			[2] = {
-				name	= "AC2",
+				name	= "MG",
 				weaponslaveto2 = 1,
 			},
 			[3] = {

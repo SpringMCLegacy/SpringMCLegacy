@@ -1,9 +1,9 @@
 -- Test Tank Script
 
 --defines
-local body, turret, mantlet, barrel1, barrel2 = piece ("body", "turret", "mantlet", "barrel1", "barrel2")
+local body, turret, mantlet, barrel = piece ("body", "turret", "mantlet", "barrel")
 local trackr, trackl = piece ("trackr", "trackl")
-local flare1, flare2, coaxflare = piece ("flare1", "flare2", "coaxflare")
+local flare, coaxflare1, coaxflare2 = piece ("flare", "coaxflare1", "coaxflare2")
 local smokePieces = {body, turret}
 local wheels = {}
 local numWheels = 12
@@ -65,10 +65,10 @@ function script.AimWeapon1(heading, pitch)
 end
 
 function script.FireWeapon1()
-	EmitSfx(flare1, SMALL_MUZZLEFLASH)
-	Move(barrel1, z_axis, -3, 100)
-	WaitForMove(barrel1, z_axis)
-	Move(barrel1, z_axis, 0, 10)
+	EmitSfx(flare, SMALL_MUZZLEFLASH)
+	Move(barrel, z_axis, -3, 100)
+	WaitForMove(barrel, z_axis)
+	Move(barrel, z_axis, 0, 10)
 end
 
 function script.AimFromWeapon1() 
@@ -76,7 +76,7 @@ function script.AimFromWeapon1()
 end
 
 function script.QueryWeapon1() 
-	return flare1
+	return flare
 end
 	
 	function script.AimWeapon2(heading, pitch)
@@ -90,10 +90,10 @@ end
 end
 
 function script.FireWeapon2()
-	EmitSfx(flare2, SMALL_MUZZLEFLASH)
-	Move(barrel2, z_axis, -3, 100)
-	WaitForMove(barrel2, z_axis)
-	Move(barrel2, z_axis, 0, 10)
+end
+
+function script.Shot2()
+	EmitSfx(coaxflare1, MG_MUZZLEFLASH)
 end
 
 function script.AimFromWeapon2() 
@@ -101,7 +101,7 @@ function script.AimFromWeapon2()
 end
 
 function script.QueryWeapon2() 
-	return flare2
+	return coaxflare1
 end
 
 function script.AimWeapon3(heading, pitch)
@@ -118,7 +118,7 @@ function script.FireWeapon3()
 end
 
 function script.Shot3()
-	EmitSfx(coaxflare, MG_MUZZLEFLASH)
+	EmitSfx(coaxflare2, MG_MUZZLEFLASH)
 end
 
 function script.AimFromWeapon3() 
@@ -126,7 +126,7 @@ function script.AimFromWeapon3()
 end
 
 function script.QueryWeapon3() 
-	return coaxflare
+	return coaxflare2
 end
 function script.Killed(recentDamage, maxHealth)
 	--local severity = recentDamage / maxHealth * 100
