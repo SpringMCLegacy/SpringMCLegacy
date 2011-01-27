@@ -2,21 +2,19 @@
 -- useful global stuff
 local ud = UnitDefs[Spring.GetUnitDefID(unitID)] -- unitID is available automatically to all LUS
 local weapons = ud.weapons
---defines
-local body, turret, launcher = piece ("body", "turret", "launcher")
-local floatr, floatl = piece ("floatr", "floatl")
+--piece defines
+local body, turret, barrel = piece ("body", "turret", "barrel")
+local trackr, trackl = piece ("trackr", "trackl")
+local flare = piece ("flare")
 local smokePieces = {body, turret}
-local wakepoint1 = piece ("wakepoint1")
 
--- superfluous for this unit but you may have units which are mixed! 
--- Note you could also just loop through the weapons looking for the right tags...
-local missileWeaponIDs = {1, 2} 
+local missileWeaponIDs = {[2] = true, [3] = true}
  
 local launchPoints = {}
 local numPoints = {}
 local currPoints = {}
  
-for _, weaponID in pairs(missileWeaponIDs) do
+for weaponID in pairs(missileWeaponIDs) do
         launchPoints[weaponID] = {}
         currPoints[weaponID] = 1
         numPoints[weaponID] = WeaponDefs[weapons[weaponID].weaponDef].salvoSize
@@ -25,10 +23,17 @@ for _, weaponID in pairs(missileWeaponIDs) do
         end
 end
 
+local wheels = {}
+local numWheels = 22
+	for i = 1, numWheels do
+		wheels[i] = piece ("wheel"..i)
+	end
 local rad = math.rad
+local currLaunchPoint = 1
 
 -- constants
 local SIG_AIM = 2
+
 local RESTORE_DELAY = Spring.UnitScript.GetLongestReloadTime(unitID) * 2
 
 -- includes
@@ -36,55 +41,64 @@ include "smokeunit.lua"
 
 --SFX defines
 SMALL_MUZZLEFLASH = SFX.CEG+0
-
-local function Hover()
-	while true do
-		EmitSfx(wakepoint1, SFX.WAKE) -- Well this doesn't fucking work, why not?!
-		Sleep(100)
---		Move(body, y_axis, 10, 5)
---		WaitForMove(body, y_axis)
---		Move(body, y_axis, 0, 5)
---		WaitForMove(body, y_axis)
-	end
-end
+MG_MUZZLEFLASH = SFX.CEG+1
 
 function script.Create()
-	StartThread(Hover())
 	StartThread(SmokeUnit())
 end
 
+local function SpinWheels(moving)
+	if moving then
+		for i = 1, numWheels do
+			Spin(wheels[i], x_axis, rad(200), rad(100))
+		end
+	else
+		for i = 1, numWheels do
+			StopSpin(wheels[i], x_axis, rad(100))
+		end
+	end	
+end
+
 function script.StartMoving()
+	SpinWheels(true)
 end
 
 function script.StopMoving()
+	SpinWheels(false)
 end
 
 local function RestoreAfterDelay(unitID)
 	Sleep(RESTORE_DELAY)
 	Turn(turret, y_axis, 0, math.rad(50))
-	Turn(launcher, x_axis, 0, math.rad(100))
+	Turn(barrel, x_axis, 0, math.rad(100))
 end
 
-function script.AimWeapon(weaponID,heading, pitch)
-        Signal(SIG_AIM ^ weaponID) -- this is 2 'to the power of' weapon ID, so 2, 4, 8 etc
-        SetSignalMask(SIG_AIM ^ weaponID)
-        -- may be a bad idea for all weapons to turn the same turret, but we shall see
-	Turn(turret, y_axis, heading, rad(100))
-	Turn(launcher, x_axis, -pitch, rad(200))
+function script.AimWeapon(weaponID, heading, pitch)
+	Signal(SIG_AIM ^ weaponID) -- 2 'to the power of' weapon ID
+    SetSignalMask(SIG_AIM ^ weaponID)
+		if weaponID == 1 then
+			Turn(barrel, x_axis, -pitch, rad(200))
+		end
+	Turn(turret, y_axis, heading, rad(75))
 	WaitForTurn(turret, y_axis)
 	StartThread(RestoreAfterDelay)
 	return true
 end
 
 function script.FireWeapon(weaponID)
+		if weaponID == 1 then
+			EmitSfx(flare, MG_MUZZLEFLASH)
+		end
 end
 
 function script.Shot(weaponID)
-        EmitSfx(launchPoints[weaponID][currPoints[weaponID]], SMALL_MUZZLEFLASH)
+	if missileWeaponIDs[weaponID] then
+		EmitSfx(launchPoints[weaponID][currPoints[weaponID]], SMALL_MUZZLEFLASH)
         currPoints[weaponID] = currPoints[weaponID] + 1
         if currPoints[weaponID] > numPoints[weaponID] then 
                 currPoints[weaponID] = 1
         end
+	end		
 end
 
 function script.AimFromWeapon(weaponID) 
@@ -92,9 +106,15 @@ function script.AimFromWeapon(weaponID)
 end
 
 function script.QueryWeapon(weaponID) 
-        return launchPoints[weaponID][currPoints[weaponID]]
+	if missileWeaponIDs[weaponID] then
+		return launchPoints[weaponID][currPoints[weaponID]]
+	else
+		if weaponID == 1 then
+			return flare
+		end
+	end
 end
-	
+
 function script.Killed(recentDamage, maxHealth)
 	--local severity = recentDamage / maxHealth * 100
 	--if severity <= 25 then
