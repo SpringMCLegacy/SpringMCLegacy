@@ -36,17 +36,18 @@ include "smokeunit.lua"
 --SFX defines
 SMALL_MUZZLEFLASH = SFX.CEG+0
 
---local function Hover()
---	while true do
+local function Hover()
+	while true do
+--		EmitSfx(body, SFX.WAKE1) -- Well this doesn't fucking work, why not?!
 --		Move(body, y_axis, 10, 5)
 --		WaitForMove(body, y_axis)
 --		Move(body, y_axis, 0, 5)
 --		WaitForMove(body, y_axis)
---	end
---end
+	end
+end
 
 function script.Create()
---	StartThread(Hover())
+	StartThread(Hover())
 	StartThread(SmokeUnit())
 end
 
