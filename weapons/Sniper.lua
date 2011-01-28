@@ -1,5 +1,5 @@
 weaponDef = {
-	name                    = "Sniper",
+	name                    = "Sniper Artillery Cannon",
 	weaponType              = "Cannon",
 	explosionGenerator    	= "custom:HE_XLARGE",
 	soundHit             	= [[GEN_Explode5]],

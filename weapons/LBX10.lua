@@ -1,5 +1,5 @@
 weaponDef = {
-	name                    = "LBX-10",
+	name                    = "LBX/10 AutoCannon",
 	weaponType              = "Cannon",
 	explosionGenerator    	= "custom:HE_MEDIUM",
 	soundHit              	= [[GEN_Explode1]],
@@ -9,7 +9,7 @@ weaponDef = {
 	noSelfDamage            = true,
 	turret                  = true,
 	ballistic				= 1,
-	range                   = 1500,
+	range                   = 1800,
 	accuracy                = 250,
 	areaOfEffect            = 1,
 	weaponVelocity          = 1500,

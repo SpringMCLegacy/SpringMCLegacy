@@ -1,5 +1,5 @@
 weaponDef = {
-	name                    = "LPL",
+	name                    = "Large Pulse Laser",
 	weaponType              = "BeamLaser",
 	beamLaser				= true,
 	beamLaser				= 1,
@@ -14,7 +14,7 @@ weaponDef = {
 	collideFriendly			= true,
 	noSelfDamage            = true,
 	turret                  = true,
-	range                   = 1000,
+	range                   = 900,
 	accuracy                = 250,
 	tollerance				= 100,
 	areaOfEffect            = 10,
