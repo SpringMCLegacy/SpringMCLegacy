@@ -1,34 +1,35 @@
 weaponDef = {
-	name                    = "Gauss Rifle",
+	name                    = "PPC",
 	weaponType              = "Cannon",
 	explosionGenerator    	= "custom:AP_MEDIUM",
-	cegTag					= "RailTrail",
+--	cegTag					= "RailTrail",
 	soundHit              	= [[GEN_Explode1]],
-	soundStart            	= [[Gauss_Fire]],
+	soundStart            	= [[PPC_Fire]],
 	burnblow				= false, 	--Bullets explode at range limit.
 	collideFriendly			= true,
 	noSelfDamage            = true,
 	turret                  = true,
-	ballistic				= 1,
+--	ballistic				= 1,
+	lineOfSight				= 1,
 	range                   = 2200,
-	accuracy                = 100,
-	areaOfEffect            = 5,
-	weaponVelocity          = 2500,
-	reloadtime              = 3,
+	accuracy                = 200,
+	areaOfEffect            = 10,
+	weaponVelocity          = 2000,
+	reloadtime              = 2.5,
 	renderType				= 1,
-	size					= 2,
+	size					= 3,
 	sizeDecay				= 0,
-	separation				= 2, 		--Distance between each plasma particle.
-	stages					= 250, 		--Number of particles used in one plasma shot.
+	separation				= 1.5, 		--Distance between each plasma particle.
+	stages					= 100, 		--Number of particles used in one plasma shot.
 --	AlphaDecay				= 0.05, 		--How much a plasma particle is more transparent than the previous particle. 
-	rgbcolor				= "0.75 0.75 1.0",
+	rgbcolor				= "1.0 0.5 0.85",
 	intensity				= 0.5,
 	damage = {
-		default = 450, --150 DPS
+		default = 250, --100 DPS
 	},
 	
 	
 	
 }
 
-return lowerkeys({ Gauss = weaponDef })
+return lowerkeys({ PPC = weaponDef })
