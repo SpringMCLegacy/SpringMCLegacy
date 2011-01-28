@@ -1,24 +1,24 @@
-local CL_Ares = {
-	name              	= "Ares",
-	description         = "Medium Tank",
-	objectName        	= "CL_Ares.s3o",
-	script				= "CL_Ares.lua",
+local IS_Schrek = {
+	name              	= "Schrek",
+	description         = "Fire Support Tank",
+	objectName        	= "IS_Schrek.s3o",
+	script				= "IS_Schrek.lua",
 	category 			= "tank ground",
 	sightDistance       = 1000,
-	maxDamage           = 4500,
-	mass                = 4000,
+	maxDamage           = 7000,
+	mass                = 4500,
 	footprintX			= 2,
 	footprintZ 			= 2,
 	collisionVolumeType = "box",
-	collisionVolumeScales = "27 25 32",
-	collisionVolumeOffsets = "0 0 0",
+	collisionVolumeScales = "27 20 46",
+	collisionVolumeOffsets = "0 -1 0",
 	collisionVolumeTest = 1,
 	buildCostEnergy     = 0,
 	buildCostMetal      = 0,
 	buildTime           = 0,
 	canMove				= true,
 		movementClass   = "TANK",
-		maxVelocity		= 4.3, --86kph/10/2
+		maxVelocity		= 2.7, --54kph/10/2
 		maxReverseVelocity= 1.6,
 		acceleration    = 0.8,
 		brakeRate       = 0.1,
@@ -28,20 +28,19 @@ local CL_Ares = {
 		--Makes unit use weapon from /weapons folder
 		weapons 		= {	
 			[1] = {
-				name	= "CERLBL",
+				name	= "PPC",
 			},
 			[2] = {
-				name	= "ATM9",
+				name	= "PPC",
 			},
 			[3] = {
-				name	= "ATM9",
+				name	= "PPC",
 			},
 		},
 	--Gets CEG effects from /gamedata/explosions folder
 	sfxtypes = {
 		explosiongenerators = {
-		"custom:SMALL_MUZZLEFLASH",
-		"custom:MG_MUZZLEFLASH",
+		"custom:MEDIUM_MUZZLEFLASH",
 		},
 	},
 	customparams = {
@@ -49,4 +48,4 @@ local CL_Ares = {
     },
 }
 
-return lowerkeys({ ["CL_Ares"] = CL_Ares })
+return lowerkeys({ ["IS_Schrek"] = IS_Schrek })
