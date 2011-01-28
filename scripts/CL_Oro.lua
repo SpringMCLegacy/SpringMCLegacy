@@ -1,9 +1,9 @@
 -- Test Tank Script
 
 --defines
-local body, turret, mantlet, barrel, coaxlaser = piece ("body", "turret", "mantlet", "barrel", "coaxlaser")
+local body, turret, mantlet, barrel = piece ("body", "turret", "mantlet", "barrel")
 local trackr, trackl = piece ("trackr", "trackl")
-local flare1, flare2, coaxflare = piece ("flare1", "flare2", "coaxflare")
+local flare1, flare2= piece ("flare1", "flare2")
 local smokePieces = {body, turret}
 local wheels = {}
 local numWheels = 12
@@ -16,7 +16,6 @@ local currLaunchPoint = 1
 -- constants
 local SIG_AIM1 = 2
 local SIG_AIM2 = 4
-local SIG_AIM3 = 8
 
 local RESTORE_DELAY = Spring.UnitScript.GetLongestReloadTime(unitID) * 2
 
@@ -55,7 +54,6 @@ local function RestoreAfterDelay(unitID)
 	Sleep(RESTORE_DELAY)
 	Turn(turret, y_axis, 0, math.rad(50))
 	Turn(mantlet, x_axis, 0, math.rad(100))
-	Turn(coaxlaser, x_axis, 0, math.rad(100))
 end
 
 function script.AimWeapon1(heading, pitch)
@@ -109,31 +107,6 @@ end
 
 function script.QueryWeapon2() 
 	return flare2
-end
-
-function script.AimWeapon3(heading, pitch)
-	Signal(SIG_AIM3)
-	SetSignalMask(SIG_AIM3)
-	Turn(turret, y_axis, heading, rad(85))
-	Turn(coaxlaser, x_axis, -pitch, rad(200))
-	WaitForTurn(turret, y_axis)
-	StartThread(RestoreAfterDelay)
-	return true
-end
-
-function script.FireWeapon3()
-	EmitSfx(coaxflare, MG_MUZZLEFLASH)
-end
-
-function script.Shot3()
-end
-
-function script.AimFromWeapon3() 
-	return turret 
-end
-
-function script.QueryWeapon3() 
-	return coaxflare
 end
 
 function script.Killed(recentDamage, maxHealth)

@@ -1,12 +1,12 @@
 local CL_Oro = {
 	name              	= "Oro",
-	description         = "Combat Tank",
+	description         = "Heavy Combat Tank",
 	objectName        	= "CL_Oro.s3o",
 	script				= "CL_Oro.lua",
 	category 			= "tank ground",
 	sightDistance       = 1000,
-	maxDamage           = 10000,--5500
-	mass                = 6000,
+	maxDamage           = 11000,--5500
+	mass                = 6500,
 	footprintX			= 2,
 	footprintZ 			= 2,
 	collisionVolumeType = "box",
@@ -19,7 +19,7 @@ local CL_Oro = {
 	canMove				= true,
 		movementClass   = "TANK",
 		maxVelocity		= 3.2, --64kph/10/2
-		maxReverseVelocity= 1.6,
+		maxReverseVelocity= 1.5,
 		acceleration    = 0.8,
 		brakeRate       = 0.1,
 		turnRate 		= 400,
@@ -28,13 +28,10 @@ local CL_Oro = {
 		--Makes unit use weapon from /weapons folder
 		weapons 		= {	
 			[1] = {
-				name	= "LBX20",
+				name	= "HAG30",
 			},
 			[2] = {
-				name	= "LPL",
-			},
-			[3] = {
-				name	= "CERMBL",
+				name	= "CLPL",
 			},
 		},
 	--Gets CEG effects from /gamedata/explosions folder
