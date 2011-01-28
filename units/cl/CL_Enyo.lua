@@ -1,46 +1,47 @@
-local IS_Schrek = {
-	name              	= "Schrek",
-	description         = "Fire Support Tank",
-	objectName        	= "IS_Schrek.s3o",
-	script				= "IS_Schrek.lua",
+local CL_Enyo = {
+	name              	= "Enyo",
+	description         = "Medium Assault Tank",
+	objectName        	= "CL_Enyo.s3o",
+	script				= "CL_Enyo.lua",
 	category 			= "tank ground",
 	sightDistance       = 1000,
 	maxDamage           = 7000,
-	mass                = 8000,
+	mass                = 5500,
 	footprintX			= 2,
 	footprintZ 			= 2,
 	collisionVolumeType = "box",
-	collisionVolumeScales = "27 20 46",
-	collisionVolumeOffsets = "0 -1 0",
+	collisionVolumeScales = "27 25 35",
+	collisionVolumeOffsets = "0 1 0",
 	collisionVolumeTest = 1,
 	buildCostEnergy     = 0,
 	buildCostMetal      = 0,
 	buildTime           = 0,
 	canMove				= true,
 		movementClass   = "TANK",
-		maxVelocity		= 2.7, --54kph/10/2
+		maxVelocity		= 4.8, --97kph/10/2
 		maxReverseVelocity= 1.6,
-		acceleration    = 0.6,
+		acceleration    = 0.9,
 		brakeRate       = 0.1,
-		turnRate 		= 300,
+		turnRate 		= 500,
 	
 	canAttack 			= true,
 		--Makes unit use weapon from /weapons folder
 		weapons 		= {	
 			[1] = {
-				name	= "PPC",
+				name	= "LPL",
 			},
 			[2] = {
-				name	= "PPC",
+				name	= "SRM6",
 			},
 			[3] = {
-				name	= "PPC",
+				name	= "SRM6",
 			},
 		},
 	--Gets CEG effects from /gamedata/explosions folder
 	sfxtypes = {
 		explosiongenerators = {
-		"custom:MEDIUM_MUZZLEFLASH",
+		"custom:SMALL_MUZZLEFLASH",
+		"custom:MG_MUZZLEFLASH",
 		},
 	},
 	customparams = {
@@ -48,4 +49,4 @@ local IS_Schrek = {
     },
 }
 
-return lowerkeys({ ["IS_Schrek"] = IS_Schrek })
+return lowerkeys({ ["CL_Enyo"] = CL_Enyo })
