@@ -1,5 +1,5 @@
 weaponDef = {
-	name                    = "PPC",
+	name                    = "Particle Projector Cannon",
 	weaponType              = "Cannon",
 	explosionGenerator    	= "custom:AP_MEDIUM",
 --	cegTag					= "RailTrail",

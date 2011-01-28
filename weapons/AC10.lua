@@ -1,5 +1,5 @@
 weaponDef = {
-	name                    = "AC/10",
+	name                    = "AutoCannon/10",
 	weaponType              = "Cannon",
 	explosionGenerator    	= "custom:HE_MEDIUM",
 	soundHit              	= [[GEN_Explode3]],
