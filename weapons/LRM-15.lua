@@ -29,7 +29,7 @@ weaponDef = {
 	startVelocity			= 500,
 	weaponVelocity          = 700,
 	reloadtime              = 10,
-	burst					= 10,
+	burst					= 15,
 	burstrate				= 0.1,
 	model					= "Missile.s3o",
 	damage = {
@@ -37,4 +37,4 @@ weaponDef = {
 	},
 }
 
-return lowerkeys({ LRM10 = weaponDef })
+return lowerkeys({ LRM15 = weaponDef })
