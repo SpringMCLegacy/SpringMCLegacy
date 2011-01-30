@@ -5,6 +5,7 @@ local CL_Enyo = {
 	script				= "CL_Enyo.lua",
 	category 			= "tank ground",
 	sightDistance       = 1000,
+	radarDistance      	= 1500,
 	maxDamage           = 7000,
 	mass                = 5500,
 	footprintX			= 2,
@@ -46,6 +47,7 @@ local CL_Enyo = {
 	},
 	customparams = {
 		hasturnbutton	= "1",
+		helptext		= "Armament: 1 x Large Pulse Laser, 2 x SRM-6 - Armor: 7 tons",
     },
 }
 

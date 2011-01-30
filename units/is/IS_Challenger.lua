@@ -5,6 +5,7 @@ local IS_Challenger = {
 	script				= "IS_Challenger.lua",
 	category 			= "tank ground",
 	sightDistance       = 1000,
+	radarDistance      	= 1500,
 	maxDamage           = 14000,
 	mass                = 9000,
 	footprintX			= 3,
@@ -60,6 +61,7 @@ local IS_Challenger = {
 	},
 	customparams = {
 		hasturnbutton	= "1",
+		helptext		= "Armament: 1 x Gauss Rifle, 1 x LBX/10, 1 x LRM-10, 2 x Medium Pulse Laser - Armor: 14 tons",
 	},
 }
 

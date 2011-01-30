@@ -21,14 +21,14 @@ weaponDef = {
 	ballistic				= false,
 	trajectoryHeight		= 1,
 	tracks					= true,
-	turnRate				= 1000,
+	turnRate				= 500,
 	weaponTimer				= 50,
 	flightTime				= 50,
 	areaOfEffect            = 175,
-	startVelocity			= 350,
+	startVelocity			= 500,
 	weaponVelocity          = 500,
 	reloadtime              = 20,
-	model					= "Missile.s3o",
+	model					= "LargeMissile.s3o",
 	damage = {
 		default = 4000,--200 DPS
 	},

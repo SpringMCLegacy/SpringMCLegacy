@@ -5,6 +5,7 @@ local CL_Huit = {
 	script				= "CL_Huit.lua",
 	category 			= "tank ground",
 	sightDistance       = 1000,
+	radarDistance      	= 2000,
 	maxDamage           = 5500,
 	mass                = 8500,
 	footprintX			= 2,
@@ -49,6 +50,7 @@ local CL_Huit = {
 	},
 	customparams = {
 		hasturnbutton	= "1",
+		helptext		= "Armament: 2 x Arrow IV Artillery Missle, 2 x Medium Pulse Laser - Armor: 5.5 tons",
     },
 }
 

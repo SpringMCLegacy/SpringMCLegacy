@@ -4,7 +4,10 @@ local CL_Hephaestus = {
 	objectName        	= "CL_Hephaestus.s3o",
 	script				= "CL_Hephaestus.lua",
 	category 			= "tank ground hovercraft",
+	stealth				= 1,
 	sightDistance       = 1000,
+	radarDistance      	= 2000,
+--	radarDistanceJam    = 0,
 	maxDamage           = 5000,
 	mass                = 3000,
 	footprintX			= 2,
@@ -44,6 +47,7 @@ local CL_Hephaestus = {
 	},
 	customparams = {
 		hasturnbutton	= "1",
+		helptext		= "Armament: 2 x Medium Pulse Laser - Armor: 5 tons",
     },
 }
 

@@ -5,6 +5,7 @@ local IS_Demolisher = {
 	script				= "IS_Demolisher.lua",
 	category 			= "tank ground",
 	sightDistance       = 1000,
+	radarDistance      	= 1500,
 	maxDamage           = 13000,
 	mass                = 8000,
 	footprintX			= 3,
@@ -43,6 +44,7 @@ local IS_Demolisher = {
 	},
 	customparams = {
 		hasturnbutton	= "1",
+		helptext		= "Armament: 2 x AC/20 - Armor: 13 tons",
     },
 }
 

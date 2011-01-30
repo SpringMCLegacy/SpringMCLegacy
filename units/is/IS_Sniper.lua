@@ -5,6 +5,7 @@ local IS_Sniper = {
 	script				= "IS_Sniper.lua",
 	category 			= "tank ground",
 	sightDistance       = 1000,
+	radarDistance      	= 2000,
 	maxDamage           = 4000,
 	mass                = 8000,
 	footprintX			= 3,
@@ -48,6 +49,7 @@ local IS_Sniper = {
 	},
 	customparams = {
 		hasturnbutton	= "1",
+		helptext		= "Armament: 1 x Sniper Artillery Gun, 2 x ER Small Beam Laser - Armor: 7 tons",
     },
 }
 

@@ -5,6 +5,7 @@ local IS_Goblin = {
 	script				= "IS_Goblin.lua",
 	category 			= "tank ground",
 	sightDistance       = 1000,
+	radarDistance      	= 1500,
 	maxDamage           = 8000,
 	mass                = 4500,
 	footprintX			= 2,
@@ -31,7 +32,7 @@ local IS_Goblin = {
 				name	= "LPL",
 			},
 			[2] = {
-				name	= "MRM10",
+				name	= "SRM6",
 			},
 			[3] = {
 				name	= "MG",
@@ -52,6 +53,7 @@ local IS_Goblin = {
 	},
 	customparams = {
 		hasturnbutton	= "1",
+		helptext		= "Armament: 1 x Large Pulse Laser, 1 x SRM-6, 2 x Machinegun, Laser Anti-Missile System - Armor: 8 tons",
     },
 }
 

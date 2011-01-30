@@ -5,6 +5,7 @@ local IS_Harasser = {
 	script				= "IS_Harasser.lua",
 	category 			= "tank ground hovercraft",
 	sightDistance       = 1000,
+	radarDistance      	= 1500,
 	maxDamage           = 1500,
 	mass                = 2500,
 	footprintX			= 2,
@@ -44,6 +45,7 @@ local IS_Harasser = {
 	},
 	customparams = {
 		hasturnbutton	= "1",
+		helptext		= "Armament: 2 x SRM-6 - Armor: 1.5 tons",
     },
 }
 

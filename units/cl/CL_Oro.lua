@@ -5,6 +5,7 @@ local CL_Oro = {
 	script				= "CL_Oro.lua",
 	category 			= "tank ground",
 	sightDistance       = 1000,
+	radarDistance      	= 1500,
 	maxDamage           = 11000,--5500
 	mass                = 6500,
 	footprintX			= 2,
@@ -43,6 +44,7 @@ local CL_Oro = {
 	},
 	customparams = {
 		hasturnbutton	= "1",
+		helptext		= "Armament: 1 x Hyper Assault Gauss 30, 1 x Large Pulse Laser - Armor: 11 tons",
     },
 }
 
