@@ -1,7 +1,7 @@
 weaponDef = {
 	name                    = "LBX/20 AutoCannon",
 	weaponType              = "Cannon",
-	explosionGenerator    	= "custom:HE_MEDIUM",
+	explosionGenerator    	= "custom:Bullet",
 	soundHit              	= [[GEN_Explode1]],
 	soundStart            	= [[Gauss_Fire]],
 	burnblow				= false, 	--Bullets explode at range limit.
