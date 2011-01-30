@@ -5,6 +5,7 @@ local IS_Schrek = {
 	script				= "IS_Schrek.lua",
 	category 			= "tank ground",
 	sightDistance       = 1000,
+	radarDistance      	= 1500,
 	maxDamage           = 7000,
 	mass                = 8000,
 	footprintX			= 2,
@@ -45,6 +46,7 @@ local IS_Schrek = {
 	},
 	customparams = {
 		hasturnbutton	= "1",
+		helptext		= "Armament: 3 x Particle Projector Cannon - Armor: 7 tons",
     },
 }
 

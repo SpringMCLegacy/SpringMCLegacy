@@ -5,6 +5,7 @@ local IS_Scorpion = {
 	script				= "IS_Scorpion.lua",
 	category 			= "tank ground",
 	sightDistance       = 1000,
+	radarDistance      	= 1500,
 	maxDamage           = 2000,
 	mass                = 2500,
 	footprintX			= 2,
@@ -50,6 +51,7 @@ local IS_Scorpion = {
 	},
     customparams = {
 		hasturnbutton	= "1",
+		helptext		= "Armament: 1 x Light Gauss Rifle, 2 x Machinegun - Armor: 2 tons",
     },
 }
 

@@ -81,20 +81,29 @@ end
 function script.AimWeapon(weaponID, heading, pitch)
 	Signal(SIG_AIM ^ weaponID) -- 2 'to the power of' weapon ID
     SetSignalMask(SIG_AIM ^ weaponID)
-		if weaponID == 1 then
+		if missileWeaponIDs[weaponID] then
+			Turn(launchPoints[weaponID][i], x_axis, -pitch, rad(200))
+		elseif weaponID == 1 then
 			Turn(mantlet, x_axis, -pitch, rad(100))
+			Turn(turret, y_axis, heading, rad(50))
+			WaitForTurn(turret, y_axis)
 		elseif weaponID == 2 then
 			Turn(barrel2, x_axis, -pitch, rad(100))
+			Turn(turret, y_axis, heading, rad(50))
+			WaitForTurn(turret, y_axis)
 		elseif weaponID == 3 then
 			Turn(hullbarrel, y_axis, heading, rad(50))
 			Turn(hullbarrel, x_axis, -pitch, rad(100))
+			WaitForTurn(hullbarrel, y_axis)
 		elseif weaponID == 7 then
 			Turn(mg, x_axis, -pitch, rad(200))
+			Turn(turret, y_axis, heading, rad(50))
+			WaitForTurn(turret, y_axis)
 		elseif weaponID == 8 then
 			Turn(mg, x_axis, -pitch, rad(200))
+			Turn(turret, y_axis, heading, rad(50))
+			WaitForTurn(turret, y_axis)
 		end
-	Turn(turret, y_axis, heading, rad(50))
-	WaitForTurn(turret, y_axis)
 	StartThread(RestoreAfterDelay)
 	return true
 end

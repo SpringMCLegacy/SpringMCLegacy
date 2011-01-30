@@ -5,6 +5,7 @@ local CL_Ares = {
 	script				= "CL_Ares.lua",
 	category 			= "tank ground",
 	sightDistance       = 1000,
+	radarDistance      	= 1500,
 	maxDamage           = 4500,
 	mass                = 4000,
 	footprintX			= 2,
@@ -46,6 +47,7 @@ local CL_Ares = {
 	},
 	customparams = {
 		hasturnbutton	= "1",
+		helptext		= "Armament: 1 x ER Large Beam Laser, 2 x ATM-9 - Armor: 4.5 tons",
     },
 }
 

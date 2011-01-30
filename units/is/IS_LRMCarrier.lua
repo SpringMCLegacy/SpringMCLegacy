@@ -5,6 +5,7 @@ local IS_LRMCarrier = {
 	script				= "IS_LRMCarrier.lua",
 	category 			= "tank ground",
 	sightDistance       = 1000,
+	radarDistance      	= 2000,
 	maxDamage           = 2000,
 	mass                = 6000,
 	footprintX			= 2,
@@ -43,6 +44,7 @@ local IS_LRMCarrier = {
 	},
 	customparams = {
 		hasturnbutton	= "1",
+		helptext		= "Armament: 2 x LRM-20 - Armor: 2 tons",
     },
 }
 

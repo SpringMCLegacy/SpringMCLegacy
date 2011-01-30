@@ -4,8 +4,10 @@ local CL_Mars = {
 	objectName        	= "CL_Mars.s3o",
 	script				= "CL_Mars.lua",
 	category 			= "tank ground",
+	stealth				= 1,
 	sightDistance       = 1000,
-	maxDamage           = 15000,--11500
+	radarDistance      	= 1500,
+	maxDamage           = 12000,--11500
 	mass                = 10000,
 	footprintX			= 3,
 	footprintZ 			= 3,
@@ -70,6 +72,7 @@ local CL_Mars = {
 	},
 	customparams = {
 		hasturnbutton	= "1",
+		helptext		= "Armament: 1 x Gauss Rifle, 1 x ER Large Beam Laser, 1 x LBX/10, 3 x LRM-15 - Armor: 15 tons",
     },
 }
 
