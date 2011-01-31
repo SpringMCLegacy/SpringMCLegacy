@@ -6,6 +6,7 @@ local IS_Challenger = {
 	category 			= "tank ground",
 	sightDistance       = 1000,
 	radarDistance      	= 1500,
+		activateWhenBuilt   = true,
 	maxDamage           = 14000,
 	mass                = 9000,
 	footprintX			= 3,

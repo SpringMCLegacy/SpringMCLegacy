@@ -6,6 +6,7 @@ local CL_Ares = {
 	category 			= "tank ground",
 	sightDistance       = 1000,
 	radarDistance      	= 1500,
+		activateWhenBuilt   = true,
 	maxDamage           = 4500,
 	mass                = 4000,
 	footprintX			= 2,

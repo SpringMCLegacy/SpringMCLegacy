@@ -7,6 +7,7 @@ local CL_Mars = {
 	stealth				= 1,
 	sightDistance       = 1000,
 	radarDistance      	= 1500,
+		activateWhenBuilt   = true,
 	maxDamage           = 12000,--11500
 	mass                = 10000,
 	footprintX			= 3,

@@ -6,6 +6,7 @@ local IS_Demolisher = {
 	category 			= "tank ground",
 	sightDistance       = 1000,
 	radarDistance      	= 1500,
+		activateWhenBuilt   = true,
 	maxDamage           = 13000,
 	mass                = 8000,
 	footprintX			= 3,

@@ -6,6 +6,7 @@ local IS_Scorpion = {
 	category 			= "tank ground",
 	sightDistance       = 1000,
 	radarDistance      	= 1500,
+		activateWhenBuilt   = true,
 	maxDamage           = 2000,
 	mass                = 2500,
 	footprintX			= 2,

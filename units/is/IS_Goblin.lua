@@ -6,6 +6,7 @@ local IS_Goblin = {
 	category 			= "tank ground",
 	sightDistance       = 1000,
 	radarDistance      	= 1500,
+		activateWhenBuilt   = true,
 	maxDamage           = 8000,
 	mass                = 4500,
 	footprintX			= 2,
