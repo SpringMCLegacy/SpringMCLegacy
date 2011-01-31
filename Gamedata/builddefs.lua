@@ -10,15 +10,15 @@ buildoptions =
         -- Clan Units --
         --------------------
 
-  CL_Factory = 
+  cl_factory = 
   {
-    "CL_Hephaestus",
-	"CL_Ares",
-	"CL_Enyo",
-	"CL_Oro",
-	"CL_Morrigu",
-	"CL_Mars",
-	"CL_Huit",
+    "cl_hephaestus",
+	"cl_ares",
+	"cl_enyo",
+	"cl_oro",
+	"cl_morrigu",
+	"cl_mars",
+	"cl_huit",
   },
 }
 
