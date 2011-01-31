@@ -6,6 +6,7 @@ local IS_Harasser = {
 	category 			= "tank ground hovercraft",
 	sightDistance       = 1000,
 	radarDistance      	= 1500,
+		activateWhenBuilt   = true,
 	maxDamage           = 1500,
 	mass                = 2500,
 	footprintX			= 2,

@@ -6,6 +6,7 @@ local IS_LRMCarrier = {
 	category 			= "tank ground",
 	sightDistance       = 1000,
 	radarDistance      	= 2000,
+		activateWhenBuilt   = true,
 	maxDamage           = 2000,
 	mass                = 6000,
 	footprintX			= 2,

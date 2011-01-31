@@ -6,6 +6,7 @@ local CL_Huit = {
 	category 			= "tank ground",
 	sightDistance       = 1000,
 	radarDistance      	= 2000,
+		activateWhenBuilt   = true,
 	maxDamage           = 5500,
 	mass                = 8500,
 	footprintX			= 2,
