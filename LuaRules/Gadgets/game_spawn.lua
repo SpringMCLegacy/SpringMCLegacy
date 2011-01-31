@@ -1,0 +1,1 @@
+return include("luagadgets/gadgets/game_spawn.lua")
