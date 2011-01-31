@@ -2,6 +2,8 @@
 -- useful global stuff
 local ud = UnitDefs[Spring.GetUnitDefID(unitID)] -- unitID is available automatically to all LUS
 local weapons = ud.weapons
+local deg, rad = math.deg, math.rad
+
 --piece defines
 local body, turret, barrel = piece ("body", "turret", "barrel")
 local trackr, trackl = piece ("trackr", "trackl")
@@ -14,6 +16,15 @@ local launchPoints = {}
 local numPoints = {}
 local currPoints = {}
  
+--Turning/Movement Locals
+local TURRET_SPEED = rad(75)
+local ELEVATION_SPEED = rad(100)
+local ELEVATION_SPEED_FAST = rad(200)
+local CANNON_RECOIL_DISTANCE = -5
+local CANNON_RECOIL_SPEED = 100
+local WHEEL_SPEED = rad(100)
+local WHEEL_ACCELERATION = rad(200)
+
 for weaponID in pairs(missileWeaponIDs) do
         launchPoints[weaponID] = {}
         currPoints[weaponID] = 1
@@ -50,11 +61,11 @@ end
 local function SpinWheels(moving)
 	if moving then
 		for i = 1, numWheels do
-			Spin(wheels[i], x_axis, rad(200), rad(100))
+			Spin(wheels[i], x_axis, WHEEL_ACCELERATION, WHEEL_SPEED)
 		end
 	else
 		for i = 1, numWheels do
-			StopSpin(wheels[i], x_axis, rad(100))
+			StopSpin(wheels[i], x_axis, WHEEL_SPEED)
 		end
 	end	
 end
@@ -69,17 +80,17 @@ end
 
 local function RestoreAfterDelay(unitID)
 	Sleep(RESTORE_DELAY)
-	Turn(turret, y_axis, 0, math.rad(50))
-	Turn(barrel, x_axis, 0, math.rad(100))
+	Turn(turret, y_axis, 0, TURRET_SPEED)
+	Turn(barrel, x_axis, 0, ELEVATION_SPEED
 end
 
 function script.AimWeapon(weaponID, heading, pitch)
 	Signal(SIG_AIM ^ weaponID) -- 2 'to the power of' weapon ID
     SetSignalMask(SIG_AIM ^ weaponID)
 		if weaponID == 1 then
-			Turn(barrel, x_axis, -pitch, rad(200))
+			Turn(barrel, x_axis, -pitch, ELEVATION_SPEED)
 		end
-	Turn(turret, y_axis, heading, rad(75))
+	Turn(turret, y_axis, heading, TURRET_SPEED)
 	WaitForTurn(turret, y_axis)
 	StartThread(RestoreAfterDelay)
 	return true

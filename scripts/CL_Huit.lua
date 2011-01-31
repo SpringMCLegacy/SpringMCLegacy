@@ -1,5 +1,5 @@
 -- Test Tank Script
-
+local deg, rad = math.deg, math.rad
 --defines
 local body, turret, launcher1, launcher2, lasers = piece ("body", "turret", "launcher1", "launcher2", "lasers")
 local trackr, trackl = piece ("trackr", "trackl")
@@ -10,7 +10,15 @@ local numWheels = 10
 	for i = 1, numWheels do
 		wheels[i] = piece ("wheel"..i)
 	end
-local rad = math.rad
+
+--Turning/Movement Locals
+local TURRET_SPEED = rad(50)
+local ELEVATION_SPEED = rad(75)
+local ELEVATION_SPEED_FAST = rad(150)
+local CANNON_RECOIL_DISTANCE = -5
+local CANNON_RECOIL_SPEED = 100
+local WHEEL_SPEED = rad(50)
+local WHEEL_ACCELERATION = rad(100)
 
 -- constants
 local SIG_AIM1 = 2
@@ -34,11 +42,11 @@ end
 local function SpinWheels(moving)
 	if moving then
 		for i = 1, numWheels do
-			Spin(wheels[i], x_axis, rad(200), rad(100))
+			Spin(wheels[i], x_axis, WHEEL_ACCELERATION, WHEEL_SPEED)
 		end
 	else
 		for i = 1, numWheels do
-			StopSpin(wheels[i], x_axis, rad(100))
+			StopSpin(wheels[i], x_axis, WHEEL_SPEED)
 		end
 	end	
 end
@@ -53,17 +61,17 @@ end
 
 local function RestoreAfterDelay(unitID)
 	Sleep(RESTORE_DELAY)
-	Turn(turret, y_axis, 0, math.rad(50))
-	Turn(launcher1, x_axis, 0, math.rad(100))
-	Turn(launcher2, x_axis, 0, math.rad(100))
-	Turn(lasers, x_axis, 0, math.rad(100))
+	Turn(turret, y_axis, 0, TURRET_SPEED)
+	Turn(launcher1, x_axis, 0, ELEVATION_SPEED)
+	Turn(launcher2, x_axis, 0, ELEVATION_SPEED)
+	Turn(lasers, x_axis, 0, ELEVATION_SPEED_FAST)
 end
 
 function script.AimWeapon1(heading, pitch)
 	Signal(SIG_AIM1)
 	SetSignalMask(SIG_AIM1)
-	Turn(turret, y_axis, heading, rad(50))
-	Turn(launcher1, x_axis, -pitch, rad(75))
+	Turn(turret, y_axis, heading, TURRET_SPEED)
+	Turn(launcher1, x_axis, -pitch, ELEVATION_SPEED)
 	WaitForTurn(turret, y_axis)
 	StartThread(RestoreAfterDelay)
 	return true
@@ -87,8 +95,8 @@ end
 function script.AimWeapon2(heading, pitch)
 	Signal(SIG_AIM2)
 	SetSignalMask(SIG_AIM2)
-	Turn(turret, y_axis, heading, rad(50))
-	Turn(launcher2, x_axis, -pitch, rad(75))
+	Turn(turret, y_axis, heading, TURRET_SPEED)
+	Turn(launcher2, x_axis, -pitch, ELEVATION_SPEED)
 	WaitForTurn(turret, y_axis)
 	StartThread(RestoreAfterDelay)
 	return true
@@ -112,8 +120,8 @@ end
 function script.AimWeapon3(heading, pitch)
 	Signal(SIG_AIM3)
 	SetSignalMask(SIG_AIM3)
-	Turn(turret, y_axis, heading, rad(50))
-	Turn(lasers, x_axis, -pitch, rad(200))
+	Turn(turret, y_axis, heading, TURRET_SPEED)
+	Turn(lasers, x_axis, -pitch, ELEVATION_SPEED_FAST)
 	WaitForTurn(turret, y_axis)
 	StartThread(RestoreAfterDelay)
 	return true
@@ -137,8 +145,8 @@ end
 function script.AimWeapon4(heading, pitch)
 	Signal(SIG_AIM3)
 	SetSignalMask(SIG_AIM3)
-	Turn(turret, y_axis, heading, rad(50))
-	Turn(lasers, x_axis, -pitch, rad(200))
+	Turn(turret, y_axis, heading, TURRET_SPEED)
+	Turn(lasers, x_axis, -pitch, ELEVATION_SPEED_FAST)
 	WaitForTurn(turret, y_axis)
 	StartThread(RestoreAfterDelay)
 	return true

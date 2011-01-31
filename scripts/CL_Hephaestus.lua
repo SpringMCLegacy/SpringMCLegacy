@@ -1,11 +1,20 @@
 -- Test Tank Script
-
+local deg, rad = math.deg, math.rad
 --defines
 local body, turret, guns = piece ("body", "turret", "guns")
 local floatr, floatl = piece ("floatr", "floatl")
 local flare1, flare2 = piece ("flare1", "flare2")
 local smokePieces = {body, turret}
-local rad = math.rad
+
+--Turning/Movement Locals
+local TURRET_SPEED = rad(75)
+local ELEVATION_SPEED = rad(200)
+local ELEVATION_SPEED_FAST = rad(200)
+local CANNON_RECOIL_DISTANCE = -5
+local CANNON_RECOIL_SPEED = 100
+local WHEEL_SPEED = rad(100)
+local WHEEL_ACCELERATION = rad(200)
+
 -- constants
 local SIG_AIM1 = 2
 local SIG_AIM2 = 4
@@ -29,15 +38,15 @@ end
 
 local function RestoreAfterDelay(unitID)
 	Sleep(RESTORE_DELAY)
-	Turn(turret, y_axis, 0, math.rad(50))
-	Turn(guns, x_axis, 0, math.rad(100))
+	Turn(turret, y_axis, 0, TURRET_SPEED)
+	Turn(guns, x_axis, 0, ELEVATION_SPEED)
 end
 
 function script.AimWeapon1(heading, pitch)
 	Signal(SIG_AIM1)
 	SetSignalMask(SIG_AIM1)
-	Turn(turret, y_axis, heading, rad(75))
-	Turn(guns, x_axis, -pitch, rad(200))
+	Turn(turret, y_axis, heading, TURRET_SPEED)
+	Turn(guns, x_axis, -pitch, ELEVATION_SPEED)
 	WaitForTurn(turret, y_axis)
 	StartThread(RestoreAfterDelay)
 	return true
@@ -58,8 +67,8 @@ end
 	function script.AimWeapon2(heading, pitch)
 	Signal(SIG_AIM2)
 	SetSignalMask(SIG_AIM2)
-	Turn(turret, y_axis, heading, rad(75))
-	Turn(guns, x_axis, -pitch, rad(200))
+	Turn(turret, y_axis, heading, TURRET_SPEED)
+	Turn(guns, x_axis, -pitch, ELEVATION_SPEED)
 	WaitForTurn(turret, y_axis)
 	StartThread(RestoreAfterDelay)
 	return true
