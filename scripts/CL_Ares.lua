@@ -81,7 +81,7 @@ end
 local function RestoreAfterDelay(unitID)
 	Sleep(RESTORE_DELAY)
 	Turn(turret, y_axis, 0, TURRET_SPEED)
-	Turn(barrel, x_axis, 0, ELEVATION_SPEED
+	Turn(barrel, x_axis, 0, ELEVATION_SPEED)
 end
 
 function script.AimWeapon(weaponID, heading, pitch)
