@@ -48,7 +48,7 @@ local IS_Schrek = {
 	--Gets CEG effects from /gamedata/explosions folder
 	sfxtypes = {
 		explosiongenerators = {
-		"custom:MEDIUM_MUZZLEFLASH",
+		"custom:PPC_MUZZLEFLASH",
 		},
 	},
 	customparams = {

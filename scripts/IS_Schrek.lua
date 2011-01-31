@@ -21,7 +21,7 @@ local RESTORE_DELAY = Spring.UnitScript.GetLongestReloadTime(unitID) * 2
 include "smokeunit.lua"
 
 --SFX defines
-MEDIUM_MUZZLEFLASH = SFX.CEG+0
+PPC_MUZZLEFLASH = SFX.CEG+0
 
 function script.Create()
 	StartThread(SmokeUnit())
@@ -64,7 +64,7 @@ function script.AimWeapon1(heading, pitch)
 end
 
 function script.FireWeapon1()
-	EmitSfx(flare1, MEDIUM_MUZZLEFLASH)
+	EmitSfx(flare1, PPC_MUZZLEFLASH)
 	Move(barrel1, z_axis, -5, 100)
 	WaitForMove(barrel1, z_axis)
 	Move(barrel1, z_axis, 0, 10)
@@ -89,7 +89,7 @@ end
 end
 
 function script.FireWeapon2()
-	EmitSfx(flare2, MEDIUM_MUZZLEFLASH)
+	EmitSfx(flare2, PPC_MUZZLEFLASH)
 	Move(barrel2, z_axis, -5, 100)
 	WaitForMove(barrel2, z_axis)
 	Move(barrel2, z_axis, 0, 10)
@@ -117,7 +117,7 @@ function script.AimWeapon3(heading, pitch)
 end
 
 function script.FireWeapon3()
-	EmitSfx(flare3, MEDIUM_MUZZLEFLASH)
+	EmitSfx(flare3, PPC_MUZZLEFLASH)
 	Move(barrel3, z_axis, -5, 100)
 	WaitForMove(barrel3, z_axis)
 	Move(barrel3, z_axis, 0, 10)
