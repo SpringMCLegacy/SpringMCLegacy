@@ -2,6 +2,8 @@
 -- useful global stuff
 local ud = UnitDefs[Spring.GetUnitDefID(unitID)] -- unitID is available automatically to all LUS
 local weapons = ud.weapons
+local deg, rad = math.deg, math.rad
+
 --piece defines
 local pelvis, torso, launcher1, launcher2, barrel = piece ("pelvis", "torso", "launcher1", "launcher2", "barrel")
 local lupperleg, llowerleg, rupperleg, rlowerleg, rfronttoes, rbacktoes, lfronttoes, lbacktoes = piece ("lupperleg", "llowerleg", "rupperleg", "rlowerleg", "rfronttoes", "rbacktoes", "lfronttoes", "lbacktoes")
@@ -14,6 +16,10 @@ local launchPoints = {}
 local numPoints = {}
 local currPoints = {}
  
+--Turning/Movement Locals
+local TORSO_SPEED = rad(200)
+local ELEVATION_SPEED = rad(200)
+
 for weaponID in pairs(missileWeaponIDs) do
         launchPoints[weaponID] = {}
         currPoints[weaponID] = 1
@@ -22,8 +28,6 @@ for weaponID in pairs(missileWeaponIDs) do
                 launchPoints[weaponID][i] = piece("launchpoint_" .. weaponID .. "_" .. i)
         end
 end
-
-local rad = math.rad
 local currLaunchPoint = 1
 
 -- constants
@@ -52,23 +56,23 @@ end
 
 local function RestoreAfterDelay(unitID)
 	Sleep(RESTORE_DELAY)
-	Turn(torso, y_axis, 0, math.rad(75))
-	Turn(barrel, x_axis, 0, math.rad(100))
-	Turn(launcher1, x_axis, 0, math.rad(100))
-	Turn(launcher2, x_axis, 0, math.rad(100))
+	Turn(torso, y_axis, 0, TORSO_SPEED)
+	Turn(barrel, x_axis, 0, ELEVATION_SPEED)
+	Turn(launcher1, x_axis, 0, ELEVATION_SPEED)
+	Turn(launcher2, x_axis, 0, ELEVATION_SPEED)
 end
 
 function script.AimWeapon(weaponID, heading, pitch)
 	Signal(SIG_AIM ^ weaponID) -- 2 'to the power of' weapon ID
     SetSignalMask(SIG_AIM ^ weaponID)
 		if weaponID == 1 then
-			Turn(barrel, x_axis, -pitch, rad(200))
+			Turn(barrel, x_axis, -pitch, ELEVATION_SPEED)
 		--elseif weaponID == 2 then
 		--	Turn(launcher1, x_axis, -pitch, rad(150))
 		--elseif weaponID == 3 then
 		--	Turn(launcher2, x_axis, -pitch, rad(150))
 		end
-	Turn(torso, y_axis, heading, rad(100))
+	Turn(torso, y_axis, heading, TORSO_SPEED)
 	WaitForTurn(torso, y_axis)
 	StartThread(RestoreAfterDelay)
 	return true

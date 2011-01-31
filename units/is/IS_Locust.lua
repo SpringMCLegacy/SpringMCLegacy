@@ -13,7 +13,7 @@ local IS_Locust = {
 	footprintZ 			= 2,
 	collisionVolumeType = "box",
 	collisionVolumeScales = "15 35 15",
-	collisionVolumeOffsets = "0 2 0",
+	collisionVolumeOffsets = "0 0 0",
 	collisionVolumeTest = 1,
 --	leaveTracks			= 1,
 --	trackOffset			= 10,--no idea what this does
@@ -38,19 +38,19 @@ local IS_Locust = {
 			[1] = {
 				name	= "MBL",
 				mainDir = "0 0 1",
-				maxAngleDif = 90,
+				maxAngleDif = 270,
 			},
 			[2] = {
 				name	= "SRM6",
 				--weaponSlaveTo2 = 1,
 				mainDir = "0 0 1",
-				maxAngleDif = 90,
+				maxAngleDif = 270,
 			},
 			[3] = {
 				name	= "SRM6",
 				--weaponSlaveTo3 = 1,
 				mainDir = "0 0 1",
-				maxAngleDif = 90,
+				maxAngleDif = 270,
 			},
 		},
 		

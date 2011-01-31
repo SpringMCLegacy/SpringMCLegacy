@@ -2,11 +2,21 @@
 -- useful global stuff
 local ud = UnitDefs[Spring.GetUnitDefID(unitID)] -- unitID is available automatically to all LUS
 local weapons = ud.weapons
+local deg, rad = math.deg, math.rad
 --piece defines
 local body, turret, mantlet, barrel1, barrel2, hullbarrel, mg = piece ("body", "turret", "mantlet", "barrel1", "barrel2", "hullbarrel", "mg")
 local trackr, trackl = piece ("trackr", "trackl")
 local flare1, flare2, hullflare, mgflare1, mgflare2 = piece ("flare1", "flare2", "hullflare", "mgflare1", "mgflare2")
 local smokePieces = {body, turret}
+
+--Turning/Movement Locals
+local TURRET_SPEED = rad(50)
+local ELEVATION_SPEED = rad(100)
+local ELEVATION_SPEED_FAST = rad(150)
+local CANNON_RECOIL_DISTANCE = -5
+local CANNON_RECOIL_SPEED = 100
+local WHEEL_SPEED = rad(50)
+local WHEEL_ACCELERATION = rad(100)
 
 local missileWeaponIDs = {[4] = true, [5] = true, [6] = true}
  
@@ -28,7 +38,7 @@ local numWheels = 16
 	for i = 1, numWheels do
 		wheels[i] = piece ("wheel"..i)
 	end
-local rad = math.rad
+
 local currLaunchPoint = 1
 
 -- constants
@@ -51,11 +61,11 @@ end
 local function SpinWheels(moving)
 	if moving then
 		for i = 1, numWheels do
-			Spin(wheels[i], x_axis, rad(200), rad(100))
+			Spin(wheels[i], x_axis, WHEEL_ACCELERATION, WHEEL_SPEED)
 		end
 	else
 		for i = 1, numWheels do
-			StopSpin(wheels[i], x_axis, rad(100))
+			StopSpin(wheels[i], x_axis, WHEEL_SPEED)
 		end
 	end	
 end
@@ -70,12 +80,12 @@ end
 
 local function RestoreAfterDelay(unitID)
 	Sleep(RESTORE_DELAY)
-	Turn(turret, y_axis, 0, math.rad(50))
-	Turn(mantlet, x_axis, 0, math.rad(100))
-	Turn(hullbarrel, y_axis, 0, math.rad(50))
-	Turn(hullbarrel, x_axis, 0, math.rad(100))
-	Turn(barrel2, x_axis, 0, math.rad(100))
-	Turn(mg, x_axis, 0, math.rad(200))
+	Turn(turret, y_axis, 0, TURRET_SPEED)
+	Turn(mantlet, x_axis, 0, ELEVATION_SPEED)
+	Turn(hullbarrel, y_axis, 0, TURRET_SPEED)
+	Turn(hullbarrel, x_axis, 0, ELEVATION_SPEED)
+	Turn(barrel2, x_axis, 0, ELEVATION_SPEED)
+	Turn(mg, x_axis, 0, ELEVATION_SPEED_FAST)
 end
 
 function script.AimWeapon(weaponID, heading, pitch)
@@ -84,24 +94,24 @@ function script.AimWeapon(weaponID, heading, pitch)
 		--if missileWeaponIDs[weaponID] then
 		--	Turn(launchPoints[weaponID][i], x_axis, -pitch, rad(200))
 		if weaponID == 1 then
-			Turn(mantlet, x_axis, -pitch, rad(100))
-			Turn(turret, y_axis, heading, rad(50))
+			Turn(mantlet, x_axis, -pitch, ELEVATION_SPEED)
+			Turn(turret, y_axis, heading, TURRET_SPEED)
 			WaitForTurn(turret, y_axis)
 		elseif weaponID == 2 then
-			Turn(barrel2, x_axis, -pitch, rad(100))
-			Turn(turret, y_axis, heading, rad(50))
+			Turn(barrel2, x_axis, -pitch, ELEVATION_SPEED)
+			Turn(turret, y_axis, heading, TURRET_SPEED)
 			WaitForTurn(turret, y_axis)
 		elseif weaponID == 3 then
-			Turn(hullbarrel, y_axis, heading, rad(50))
-			Turn(hullbarrel, x_axis, -pitch, rad(100))
+			Turn(hullbarrel, y_axis, heading, ELEVATION_SPEED)
+			Turn(hullbarrel, x_axis, -pitch, TURRET_SPEED)
 			WaitForTurn(hullbarrel, y_axis)
 		elseif weaponID == 7 then
-			Turn(mg, x_axis, -pitch, rad(200))
-			Turn(turret, y_axis, heading, rad(50))
+			Turn(mg, x_axis, -pitch, ELEVATION_SPEED_FAST)
+			Turn(turret, y_axis, heading, TURRET_SPEED)
 			WaitForTurn(turret, y_axis)
 		elseif weaponID == 8 then
-			Turn(mg, x_axis, -pitch, rad(200))
-			Turn(turret, y_axis, heading, rad(50))
+			Turn(mg, x_axis, -pitch, ELEVATION_SPEED_FAST)
+			Turn(turret, y_axis, heading, TURRET_SPEED)
 			WaitForTurn(turret, y_axis)
 		end
 	StartThread(RestoreAfterDelay)
@@ -111,10 +121,16 @@ end
 function script.FireWeapon(weaponID)
 		if weaponID == 1 then
 			EmitSfx(flare1, LARGE_MUZZLEFLASH)
+			Move(barrel1, z_axis, CANNON_RECOIL_DISTANCE, CANNON_RECOIL_SPEED)
+			WaitForMove(barrel1, z_axis)
+			Move(barrel1, z_axis, 0, 10)
 		elseif weaponID == 2 then
 			EmitSfx(flare2, MG_MUZZLEFLASH)
 		elseif weaponID == 3 then
 			EmitSfx(hullflare, MEDIUM_MUZZLEFLASH)
+			Move(hullbarrel, z_axis, CANNON_RECOIL_DISTANCE, CANNON_RECOIL_SPEED)
+			WaitForMove(hullbarrel, z_axis)
+			Move(barrel1, z_axis, 0, 10)
 		elseif weaponID == 7 then
 			EmitSfx(mgflare1, MG_MUZZLEFLASH)
 			Sleep(100)
