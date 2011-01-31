@@ -16,7 +16,7 @@
   }
   energyStorage=0.01;
   metalMake=100;
-  metalStorage=5000;
+  metalStorage=50000;
   //explodeAs=;
   footprintX=1;
   footprintZ=1;

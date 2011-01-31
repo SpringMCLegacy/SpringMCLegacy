@@ -15,7 +15,7 @@
     supplyRange=0;
   }
   energyStorage=0.01;
-  metalStorage=5000;
+  metalStorage=50000;
   metalMake=100;
   //explodeAs=;
   footprintX=1;
