@@ -20,6 +20,18 @@ buildoptions =
 	"cl_mars",
 	"cl_huit",
   },
+  is_factory = 
+  {
+    "is_harasser",
+	"is_scorpion",
+	"is_goblin",
+	"is_demolisher",
+	"is_challenger",
+	"is_schrek",
+	"is_lrmcarrier",
+	"is_sniper",
+	"is_locust",
+  },
 }
 
 return buildoptions

@@ -2,6 +2,7 @@
 -- useful global stuff
 local ud = UnitDefs[Spring.GetUnitDefID(unitID)] -- unitID is available automatically to all LUS
 local weapons = ud.weapons
+local deg, rad = math.deg, math.rad
 --piece defines
 local body, turret, barrel = piece ("body", "turret", "barrel")
 local trackr, trackl = piece ("trackr", "trackl")
@@ -37,7 +38,6 @@ local numWheels = 18
 	for i = 1, numWheels do
 		wheels[i] = piece ("wheel"..i)
 	end
-local rad = math.rad
 local currLaunchPoint = 1
 
 -- constants

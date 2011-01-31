@@ -1,11 +1,11 @@
 local sidedata = {
 	{
 	name = "IS",
-	startUnit = "IS_Dropship",
+	startUnit = "IS_Factory",
 	},
 	{
 	name = "CL",
-	startUnit = "CL_Dropship",
+	startUnit = "CL_Factory",
 	},
 }
 return sidedata

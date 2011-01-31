@@ -1,5 +1,5 @@
 [unitinfo] {
-  unitname=CL_Factory;
+  unitname=IS_Factory;
   name=LOLFactory;
   buildCostEnergy=0;
   buildCostMetal=0;
@@ -15,8 +15,8 @@
     supplyRange=0;
   }
   energyStorage=0.01;
-  metalMake=100;
   metalStorage=5000;
+  metalMake=100;
   //explodeAs=;
   footprintX=1;
   footprintZ=1;
