@@ -7,7 +7,7 @@ local iconTypes = {
 	factory = {
 		bitmap		=	"icons/factory.tga",
 		size			=	2.75,
-		distance	=	0.01,
+		distance	=	5.0,
 	},
 }
 
