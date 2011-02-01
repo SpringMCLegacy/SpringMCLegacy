@@ -18,14 +18,14 @@
   metalMake=100;
   metalStorage=50000;
   //explodeAs=;
-  footprintX=1;
-  footprintZ=1;
+  footprintX=20;
+  footprintZ=20;
   iconType=factory;
   idleAutoHeal=3;
-  maxDamage=20000;
+  maxDamage=50000;
   maxSlope=10;
   maxWaterDepth=0;
-  objectName=dummyfactory.s3o;
+  objectName=Dropship.s3o;
   //selfDestructAs=;
   [sfxtypes] {
   }
