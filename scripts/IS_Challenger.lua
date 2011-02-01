@@ -6,7 +6,6 @@ local weapons = ud.weapons
 local body, turret, barrel1, barrel2, laser1, laser2, lamsturret, lams = piece ("body", "turret", "barrel1", "barrel2", "laser1", "laser2", "lamsturret", "lams")
 local trackr, trackl = piece ("trackr", "trackl")
 local flare1, flare2, laserflare1, laserflare2, lamsflare1, lamsflare2 = piece ("flare1", "flare2", "laserflare1", "laserflare2", "lamsflare1", "lamsflare2")
-local smokePieces = {body, turret}
 
 local missileWeaponIDs = {[3] = true} 
  
@@ -45,7 +44,7 @@ MEDIUM_MUZZLEFLASH = SFX.CEG+1
 MG_MUZZLEFLASH = SFX.CEG+2
 
 function script.Create()
-	StartThread(SmokeUnit())
+	StartThread(SmokeUnit, {body, turret})
 end
 
 local function SpinWheels(moving)

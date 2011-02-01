@@ -5,7 +5,6 @@ local weapons = ud.weapons
 --defines
 local body, turret, launcher = piece ("body", "turret", "launcher")
 local floatr, floatl = piece ("floatr", "floatl")
-local smokePieces = {body, turret}
 local wakepoint1 = piece ("wakepoint1")
 
 -- superfluous for this unit but you may have units which are mixed! 
@@ -50,7 +49,7 @@ end
 
 function script.Create()
 	StartThread(Hover())
-	StartThread(SmokeUnit())
+	StartThread(SmokeUnit, {body, turret})
 end
 
 function script.StartMoving()

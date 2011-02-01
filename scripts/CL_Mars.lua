@@ -7,7 +7,6 @@ local deg, rad = math.deg, math.rad
 local body, turret, mantlet, barrel1, barrel2, hullbarrel, mg = piece ("body", "turret", "mantlet", "barrel1", "barrel2", "hullbarrel", "mg")
 local trackr, trackl = piece ("trackr", "trackl")
 local flare1, flare2, hullflare, mgflare1, mgflare2 = piece ("flare1", "flare2", "hullflare", "mgflare1", "mgflare2")
-local smokePieces = {body, turret}
 
 --Turning/Movement Locals
 local TURRET_SPEED = rad(50)
@@ -55,7 +54,7 @@ MEDIUM_MUZZLEFLASH = SFX.CEG+1
 MG_MUZZLEFLASH = SFX.CEG+2
 
 function script.Create()
-	StartThread(SmokeUnit())
+	StartThread(SmokeUnit, {body, turret})
 end
 
 local function SpinWheels(moving)

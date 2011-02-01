@@ -4,7 +4,6 @@
 local body, mantlet, barrel, laserturret, lasermantlet, lasers = piece ("body", "mantlet", "barrel", "laserturret", "lasermantlet", "lasers")
 local trackr, trackl = piece ("trackr", "trackl")
 local flare, laserflare1, laserflare2 = piece ("flare", "laserflare1", "laserflare2")
-local smokePieces = {body}
 local wheels = {}
 local numWheels = 8
 	for i = 1, numWheels do
@@ -25,7 +24,7 @@ include "smokeunit.lua"
 XXLARGE_MUZZLEFLASH = SFX.CEG+0
 
 function script.Create()
-	StartThread(SmokeUnit())
+	StartThread(SmokeUnit, {body})
 end
 
 local function SpinWheels(moving)
