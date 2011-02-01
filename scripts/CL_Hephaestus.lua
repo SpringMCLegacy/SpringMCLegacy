@@ -4,7 +4,6 @@ local deg, rad = math.deg, math.rad
 local body, turret, guns = piece ("body", "turret", "guns")
 local floatr, floatl = piece ("floatr", "floatl")
 local flare1, flare2 = piece ("flare1", "flare2")
-local smokePieces = {body, turret}
 
 --Turning/Movement Locals
 local TURRET_SPEED = rad(75)
@@ -27,7 +26,7 @@ include "smokeunit.lua"
 MG_MUZZLEFLASH = SFX.CEG+0
 
 function script.Create()
-	StartThread(SmokeUnit())
+	StartThread(SmokeUnit, {body, turret})
 end
 
 function script.StartMoving()

@@ -4,7 +4,6 @@
 local body, turret, mantlet, barrel = piece ("body", "turret", "mantlet", "barrel")
 local trackr, trackl = piece ("trackr", "trackl")
 local flare, coaxflare1, coaxflare2 = piece ("flare", "coaxflare1", "coaxflare2")
-local smokePieces = {body, turret}
 local wheels = {}
 local numWheels = 12
 	for i = 1, 12 do
@@ -25,7 +24,7 @@ SMALL_MUZZLEFLASH = SFX.CEG+0
 MG_MUZZLEFLASH = SFX.CEG+1
 
 function script.Create()
-	StartThread(SmokeUnit())
+	StartThread(SmokeUnit, {body, turret})
 end
 
 local function SpinWheels(moving)

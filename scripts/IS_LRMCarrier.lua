@@ -5,7 +5,6 @@ local weapons = ud.weapons
 --piece defines
 local body, turret, launcher = piece ("body", "turret", "launcher")
 local trackr, trackl = piece ("trackr", "trackl")
-local smokePieces = {body, turret}
  
 -- superfluous for this unit but you may have units which are mixed! 
 -- Note you could also just loop through the weapons looking for the right tags...
@@ -37,13 +36,13 @@ local SIG_AIM = 2
 local RESTORE_DELAY = Spring.UnitScript.GetLongestReloadTime(unitID) * 2
  
 -- includes
---include "smokeunit.lua"
+include "smokeunit.lua"
  
 --SFX defines
 MEDIUM_MUZZLEFLASH = SFX.CEG+0
  
 function script.Create()
---        StartThread(SmokeUnit())
+	StartThread(SmokeUnit, {body, turret})
 end
  
 local function SpinWheels(moving)

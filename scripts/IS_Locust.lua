@@ -8,7 +8,6 @@ local deg, rad = math.deg, math.rad
 local pelvis, torso, launcher1, launcher2, barrel = piece ("pelvis", "torso", "launcher1", "launcher2", "barrel")
 local lupperleg, llowerleg, rupperleg, rlowerleg, rfronttoes, rbacktoes, lfronttoes, lbacktoes = piece ("lupperleg", "llowerleg", "rupperleg", "rlowerleg", "rfronttoes", "rbacktoes", "lfronttoes", "lbacktoes")
 local flare = piece ("flare")
-local smokePieces = {body, turret}
 
 local missileWeaponIDs = {[2] = true, [3] = true}
  
@@ -43,7 +42,7 @@ SMALL_MUZZLEFLASH = SFX.CEG+0
 MG_MUZZLEFLASH = SFX.CEG+1
 
 function script.Create()
-	StartThread(SmokeUnit())
+	StartThread(SmokeUnit, {body, turret})
 end
 
 local function MotionControl(moving)
