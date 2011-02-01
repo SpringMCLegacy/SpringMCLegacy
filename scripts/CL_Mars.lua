@@ -129,7 +129,7 @@ function script.FireWeapon(weaponID)
 			EmitSfx(hullflare, MEDIUM_MUZZLEFLASH)
 			Move(hullbarrel, z_axis, CANNON_RECOIL_DISTANCE, CANNON_RECOIL_SPEED)
 			WaitForMove(hullbarrel, z_axis)
-			Move(barrel1, z_axis, 0, 10)
+			Move(hullbarrel, z_axis, 0, 10)
 		elseif weaponID == 7 then
 			EmitSfx(mgflare1, MG_MUZZLEFLASH)
 			Sleep(100)
