@@ -32,14 +32,14 @@ local IS_Locust = {
 		maxReverseVelocity= 3.0,
 		acceleration    = 2.0,
 		brakeRate       = 0.1,
-		turnRate 		= 500,
+		turnRate 		= 1000,
 		smoothAnim		= 1,
 	
 	canAttack 			= true,
 		--Makes unit use weapon from /weapons folder
 		weapons 		= {	
 			[1] = {
-				name	= "MPL",
+				name	= "MBL",
 				mainDir = "0 0 1",
 				maxAngleDif = 270,
 			},
