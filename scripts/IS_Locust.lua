@@ -42,7 +42,7 @@ SMALL_MUZZLEFLASH = SFX.CEG+0
 MG_MUZZLEFLASH = SFX.CEG+1
 
 function script.Create()
-	StartThread(SmokeUnit, {body, turret})
+	StartThread(SmokeUnit, {pelvis, torso}) -- maybe add some more pieces here?
 end
 
 local function MotionControl(moving)
