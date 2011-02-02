@@ -16,19 +16,32 @@ if (gadgetHandler:IsSyncedCode()) then
 -- Localisations
 
 -- Synced Read
+local AreTeamsAllied 		= Spring.AreTeamsAllied
 local GetTeamResources		= Spring.GetTeamResources
 local GetUnitCmdDescs 		= Spring.GetUnitCmdDescs
 local GetUnitTeam 			= Spring.GetUnitTeam
 -- Synced Ctrl
+local AddTeamResource 		= Spring.AddTeamResource
 local EditUnitCmdDesc		= Spring.EditUnitCmdDesc
 local FindUnitCmdDesc		= Spring.FindUnitCmdDesc
 
 -- Unsynced Ctrl
 
 -- Constants
+local DAMAGE_REWARD_MULT = 1
+local KILL_REWARD_MULT = 0.5
 
 -- Variables
+local modOptions = Spring.GetModOptions()
 local dropShips = {}
+
+function gadget:UnitDamaged(unitID, unitDefID, unitTeam, damage, paralyzer, weaponID, attackerID, attackerDefID, attackerTeam)
+	if modOptions and modOptions.income == "damage" then
+		if not AreTeamsAllied(unitTeam, attackerTeam) then
+			AddTeamResource(attackerTeam, "metal", damage * DAMAGE_REWARD_MULT)
+		end
+	end
+end
 
 function gadget:UnitCreated(unitID, unitDefID, teamID)
 	local ud = UnitDefs[unitDefID]
@@ -37,8 +50,13 @@ function gadget:UnitCreated(unitID, unitDefID, teamID)
 	end
 end
 
-function gadget:UnitDestroyed(unitID, unitDefID, teamID)
+function gadget:UnitDestroyed(unitID, unitDefID, unitTeam, attackerID, attackerDefID, attackerTeam)
 	dropShips[unitID] = nil
+	if modOptions and modOptions.income == "damage" then
+		if attackerID and not AreTeamsAllied(unitTeam, attackerTeam) then
+			AddTeamResource(attackerTeam, "metal", UnitDefs[unitDefID].metalCost * KILL_REWARD_MULT)
+		end
+	end
 end
 
 function gadget:GameFrame(n)
