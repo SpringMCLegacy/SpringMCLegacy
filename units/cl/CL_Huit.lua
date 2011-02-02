@@ -7,6 +7,7 @@ local CL_Huit = {
 	sightDistance       = 1000,
 	radarDistance      	= 2000,
 		activateWhenBuilt   = true,
+		onoffable           = true,
 	maxDamage           = 5500,
 	mass                = 8500,
 	footprintX			= 2,

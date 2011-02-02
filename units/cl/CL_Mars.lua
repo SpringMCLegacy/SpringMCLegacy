@@ -8,6 +8,7 @@ local CL_Mars = {
 	sightDistance       = 1000,
 	radarDistance      	= 1500,
 		activateWhenBuilt   = true,
+		onoffable           = true,
 	maxDamage           = 12000,--11500
 	mass                = 10000,
 	footprintX			= 3,

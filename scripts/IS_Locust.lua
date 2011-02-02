@@ -1,4 +1,4 @@
--- Test Tank Script
+-- Test Mech Script
 -- useful global stuff
 local ud = UnitDefs[Spring.GetUnitDefID(unitID)] -- unitID is available automatically to all LUS
 local weapons = ud.weapons
@@ -18,6 +18,7 @@ local currPoints = {}
 --Turning/Movement Locals
 local TORSO_SPEED = rad(200)
 local ELEVATION_SPEED = rad(200)
+local LEG_SPEED = rad(1000)
 
 for weaponID in pairs(missileWeaponIDs) do
         launchPoints[weaponID] = {}
@@ -31,7 +32,7 @@ local currLaunchPoint = 1
 
 -- constants
 local SIG_AIM = 2
-
+local walking = false
 local RESTORE_DELAY = Spring.UnitScript.GetLongestReloadTime(unitID) * 2
 
 -- includes
@@ -41,32 +42,216 @@ include "smokeunit.lua"
 SMALL_MUZZLEFLASH = SFX.CEG+0
 MG_MUZZLEFLASH = SFX.CEG+1
 
-function script.Create()
-	StartThread(SmokeUnit, {pelvis, torso}) -- maybe add some more pieces here?
+local function MotionControl()
+	while true do
+		if walking then
+			--Spring.Echo("Step ONE")
+			--Left Leg--
+			Turn(lupperleg, x_axis, rad(25), LEG_SPEED)
+			Turn(llowerleg, x_axis, rad(25), LEG_SPEED)
+			Turn(lbacktoes, x_axis, rad(-60), LEG_SPEED)
+			Turn(lfronttoes, x_axis, rad(-15), LEG_SPEED)
+			--Right Leg--
+			Turn(rupperleg, x_axis, rad(-25), LEG_SPEED)
+			Turn(rlowerleg, x_axis, rad(15), LEG_SPEED)
+			Turn(rbacktoes, x_axis, rad(-30), LEG_SPEED)
+			Turn(rfronttoes, x_axis, rad(45), LEG_SPEED)
+			--Wait For Turns...--
+			WaitForTurn(lupperleg, x_axis)
+			WaitForTurn(llowerleg, x_axis)
+			WaitForTurn(lbacktoes, x_axis)
+			WaitForTurn(lfronttoes, x_axis)
+			WaitForTurn(rupperleg, x_axis)
+			WaitForTurn(rlowerleg, x_axis)
+			WaitForTurn(rbacktoes, x_axis)
+			WaitForTurn(rfronttoes, x_axis)
+			Sleep(10)
+			--Spring.Echo("Step TWO")
+			--Left Leg--
+			Turn(lupperleg, x_axis, rad(25), LEG_SPEED)
+			Turn(llowerleg, x_axis, rad(45), LEG_SPEED)
+			Turn(lbacktoes, x_axis, rad(-75), LEG_SPEED)
+			Turn(lfronttoes, x_axis, rad(-60), LEG_SPEED)
+			--Right Leg--
+			Turn(rupperleg, x_axis, rad(-45), LEG_SPEED)
+			Turn(rlowerleg, x_axis, rad(0), LEG_SPEED)
+			Turn(rbacktoes, x_axis, rad(-30), LEG_SPEED)
+			Turn(rfronttoes, x_axis, rad(40), LEG_SPEED)
+			--Wait For Turns...--
+			WaitForTurn(lupperleg, x_axis)
+			WaitForTurn(llowerleg, x_axis)
+			WaitForTurn(lbacktoes, x_axis)
+			WaitForTurn(lfronttoes, x_axis)
+			WaitForTurn(rupperleg, x_axis)
+			WaitForTurn(rlowerleg, x_axis)
+			WaitForTurn(rbacktoes, x_axis)
+			WaitForTurn(rfronttoes, x_axis)
+			Sleep(10)
+			--Spring.Echo("Step THREE")
+			--Left Leg--
+			Turn(lupperleg, x_axis, rad(60), LEG_SPEED)
+			Turn(llowerleg, x_axis, rad(15), LEG_SPEED)
+			Turn(lbacktoes, x_axis, rad(-45), LEG_SPEED)
+			Turn(lfronttoes, x_axis, rad(0), LEG_SPEED)
+			--Right Leg--
+			Turn(rupperleg, x_axis, rad(-30), LEG_SPEED)
+			Turn(rlowerleg, x_axis, rad(15), LEG_SPEED)
+			Turn(rbacktoes, x_axis, rad(10), LEG_SPEED)
+			Turn(rfronttoes, x_axis, rad(15), LEG_SPEED)
+			--Wait For Turns...--
+			WaitForTurn(lupperleg, x_axis)
+			WaitForTurn(llowerleg, x_axis)
+			WaitForTurn(lbacktoes, x_axis)
+			WaitForTurn(lfronttoes, x_axis)
+			WaitForTurn(rupperleg, x_axis)
+			WaitForTurn(rlowerleg, x_axis)
+			WaitForTurn(rbacktoes, x_axis)
+			WaitForTurn(rfronttoes, x_axis)
+			Sleep(10)
+			--Spring.Echo("Step FOUR")
+			--Left Leg--
+			Turn(lupperleg, x_axis, rad(-10), LEG_SPEED)
+			Turn(llowerleg, x_axis, rad(-15), LEG_SPEED)
+			Turn(lbacktoes, x_axis, rad(-45), LEG_SPEED)
+			Turn(lfronttoes, x_axis, rad(30), LEG_SPEED)
+			--Right Leg--
+			Turn(rupperleg, x_axis, rad(0), LEG_SPEED)
+			Turn(rlowerleg, x_axis, rad(5), LEG_SPEED)
+			Turn(rbacktoes, x_axis, rad(0), LEG_SPEED)
+			Turn(rfronttoes, x_axis, rad(0), LEG_SPEED)
+			--Wait For Turns...--
+			WaitForTurn(lupperleg, x_axis)
+			WaitForTurn(llowerleg, x_axis)
+			WaitForTurn(lbacktoes, x_axis)
+			WaitForTurn(lfronttoes, x_axis)
+			WaitForTurn(rupperleg, x_axis)
+			WaitForTurn(rlowerleg, x_axis)
+			WaitForTurn(rbacktoes, x_axis)
+			WaitForTurn(rfronttoes, x_axis)
+			Sleep(10)
+			--Spring.Echo("Step FIVE")
+			--Left Leg--
+			Turn(lupperleg, x_axis, rad(-25), LEG_SPEED)
+			Turn(llowerleg, x_axis, rad(-15), LEG_SPEED)
+			Turn(lbacktoes, x_axis, rad(-30), LEG_SPEED)
+			Turn(lfronttoes, x_axis, rad(45), LEG_SPEED)
+			--Right Leg--
+			Turn(rupperleg, x_axis, rad(25), LEG_SPEED)
+			Turn(rlowerleg, x_axis, rad(25), LEG_SPEED)
+			Turn(rbacktoes, x_axis, rad(-60), LEG_SPEED)
+			Turn(rfronttoes, x_axis, rad(-45), LEG_SPEED)
+			--Wait For Turns...--
+			WaitForTurn(lupperleg, x_axis)
+			WaitForTurn(llowerleg, x_axis)
+			WaitForTurn(lbacktoes, x_axis)
+			WaitForTurn(lfronttoes, x_axis)
+			WaitForTurn(rupperleg, x_axis)
+			WaitForTurn(rlowerleg, x_axis)
+			WaitForTurn(rbacktoes, x_axis)
+			WaitForTurn(rfronttoes, x_axis)
+			Sleep(10)
+			--Spring.Echo("Step SIX")
+			--Left Leg--
+			Turn(lupperleg, x_axis, rad(-45), LEG_SPEED)
+			Turn(llowerleg, x_axis, rad(0), LEG_SPEED)
+			Turn(lbacktoes, x_axis, rad(-30), LEG_SPEED)
+			Turn(lfronttoes, x_axis, rad(60), LEG_SPEED)
+			--Right Leg--
+			Turn(rupperleg, x_axis, rad(25), LEG_SPEED)
+			Turn(rlowerleg, x_axis, rad(45), LEG_SPEED)
+			Turn(rbacktoes, x_axis, rad(-75), LEG_SPEED)
+			Turn(rfronttoes, x_axis, rad(-60), LEG_SPEED)
+			--Wait For Turns...--
+			WaitForTurn(lupperleg, x_axis)
+			WaitForTurn(llowerleg, x_axis)
+			WaitForTurn(lbacktoes, x_axis)
+			WaitForTurn(lfronttoes, x_axis)
+			WaitForTurn(rupperleg, x_axis)
+			WaitForTurn(rlowerleg, x_axis)
+			WaitForTurn(rbacktoes, x_axis)
+			WaitForTurn(rfronttoes, x_axis)
+			Sleep(10)
+			--Spring.Echo("Step SEVEN")
+			--Left Leg--
+			Turn(lupperleg, x_axis, rad(-30), LEG_SPEED)
+			Turn(llowerleg, x_axis, rad(15), LEG_SPEED)
+			Turn(lbacktoes, x_axis, rad(10), LEG_SPEED)
+			Turn(lfronttoes, x_axis, rad(15), LEG_SPEED)
+			--Right Leg--
+			Turn(rupperleg, x_axis, rad(45), LEG_SPEED)
+			Turn(rlowerleg, x_axis, rad(15), LEG_SPEED)
+			Turn(rbacktoes, x_axis, rad(-45), LEG_SPEED)
+			Turn(rfronttoes, x_axis, rad(0), LEG_SPEED)
+			--Wait For Turns...--
+			WaitForTurn(lupperleg, x_axis)
+			WaitForTurn(llowerleg, x_axis)
+			WaitForTurn(lbacktoes, x_axis)
+			WaitForTurn(lfronttoes, x_axis)
+			WaitForTurn(rupperleg, x_axis)
+			WaitForTurn(rlowerleg, x_axis)
+			WaitForTurn(rbacktoes, x_axis)
+			WaitForTurn(rfronttoes, x_axis)
+			Sleep(10)
+			--Spring.Echo("Step EIGHT")
+			--Left Leg--
+			Turn(lupperleg, x_axis, rad(0), LEG_SPEED)
+			Turn(llowerleg, x_axis, rad(5), LEG_SPEED)
+			Turn(lbacktoes, x_axis, rad(0), LEG_SPEED)
+			Turn(lfronttoes, x_axis, rad(0), LEG_SPEED)
+			--Right Leg--
+			Turn(rupperleg, x_axis, rad(-10), LEG_SPEED)
+			Turn(rlowerleg, x_axis, rad(-15), LEG_SPEED)
+			Turn(rbacktoes, x_axis, rad(-45), LEG_SPEED)
+			Turn(rfronttoes, x_axis, rad(30), LEG_SPEED)
+			--Wait For Turns...--
+			WaitForTurn(lupperleg, x_axis)
+			WaitForTurn(llowerleg, x_axis)
+			WaitForTurn(lbacktoes, x_axis)
+			WaitForTurn(lfronttoes, x_axis)
+			WaitForTurn(rupperleg, x_axis)
+			WaitForTurn(rlowerleg, x_axis)
+			WaitForTurn(rbacktoes, x_axis)
+			WaitForTurn(rfronttoes, x_axis)
+			Sleep(10)
+		else
+			Turn(lupperleg, x_axis, rad(0), LEG_SPEED)
+			Turn(llowerleg, x_axis, rad(0), LEG_SPEED)
+			Turn(lfronttoes, x_axis, rad(0), LEG_SPEED)
+			Turn(lbacktoes, x_axis, rad(0), LEG_SPEED)
+			Turn(rupperleg, x_axis, rad(0), LEG_SPEED)
+			Turn(rlowerleg, x_axis, rad(0), LEG_SPEED)
+			Turn(rfronttoes, x_axis, rad(0), LEG_SPEED)
+			Turn(rbacktoes, x_axis, rad(0),LEG_SPEED)
+			Sleep(100)
+		end
+	end
 end
 
-local function MotionControl(moving)
-	if moving then
-		Turn(lupperleg, x_axis, -5, rad(200))
-		Turn(llowerleg, x_axis, 0, rad(200))
-		Turn(lfronttoes, x_axis, 0, rad(200))
-		Turn(lbacktoes, x_axis, 0, rad(200))
-		Turn(rupperleg, x_axis, 5, rad(200))
-		Turn(rlowerleg, x_axis, 0, rad(200))
-		Turn(rfronttoes, x_axis, 0, rad(200))
-		Turn(rbacktoes, x_axis, 0, rad(200))
-	--else
-		--(lupperleg, x_axis, 0, rad(200))
-		--(rupperleg, x_axis, 0, rad(200))
-	end	
+
+--local function StopWalk()
+--	Turn(lupperleg, x_axis, 0, rad(200))
+--	Turn(rupperleg, x_axis, 0, rad(200))
+--end
+
+function script.Create()
+	StartThread(SmokeUnit, {body, turret})
+	StartThread(MotionControl)
 end
 
 function script.StartMoving()
-	MotionControl(true)
+	walking = true
 end
 
 function script.StopMoving()
-	MotionControl(false)
+	walking = false
+end
+
+function script.Activate()
+	Spring.SetUnitStealth(unitID, false)
+end
+
+function script.Deactivate()
+	Spring.SetUnitStealth(unitID, true)
 end
 
 local function RestoreAfterDelay(unitID)

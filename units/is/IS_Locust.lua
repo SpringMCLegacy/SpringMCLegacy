@@ -7,6 +7,7 @@ local IS_Locust = {
 	sightDistance       = 1000,
 	radarDistance      	= 1500,
 		activateWhenBuilt   = true,
+		onoffable           = true,
 	maxDamage           = 3000,
 	mass                = 2000,
 	footprintX			= 2,
@@ -30,14 +31,15 @@ local IS_Locust = {
 		maxVelocity		= 6.5, --130kph/10/2
 		maxReverseVelocity= 3.0,
 		acceleration    = 2.0,
-		brakeRate       = 0.5,
+		brakeRate       = 0.1,
 		turnRate 		= 500,
+		smoothAnim		= 1,
 	
 	canAttack 			= true,
 		--Makes unit use weapon from /weapons folder
 		weapons 		= {	
 			[1] = {
-				name	= "MBL",
+				name	= "MPL",
 				mainDir = "0 0 1",
 				maxAngleDif = 270,
 			},

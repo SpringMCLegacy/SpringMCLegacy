@@ -7,6 +7,7 @@ local CL_Ares = {
 	sightDistance       = 1000,
 	radarDistance      	= 1500,
 		activateWhenBuilt   = true,
+		onoffable           = true,
 	maxDamage           = 4500,
 	mass                = 4000,
 	footprintX			= 2,

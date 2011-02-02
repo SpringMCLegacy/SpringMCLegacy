@@ -7,6 +7,7 @@ local IS_Goblin = {
 	sightDistance       = 1000,
 	radarDistance      	= 1500,
 		activateWhenBuilt   = true,
+		onoffable           = true,
 	maxDamage           = 6000,
 	mass                = 4500,
 	footprintX			= 2,

@@ -7,6 +7,7 @@ local CL_Enyo = {
 	sightDistance       = 1000,
 	radarDistance      	= 1500,
 		activateWhenBuilt   = true,
+		onoffable           = true,
 	maxDamage           = 7000,
 	mass                = 5500,
 	footprintX			= 2,

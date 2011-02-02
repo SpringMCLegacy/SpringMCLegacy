@@ -7,6 +7,7 @@ local CL_Oro = {
 	sightDistance       = 1000,
 	radarDistance      	= 1500,
 		activateWhenBuilt   = true,
+		onoffable           = true,
 	maxDamage           = 11000,--5500
 	mass                = 6500,
 	footprintX			= 3,
