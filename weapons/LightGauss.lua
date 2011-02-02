@@ -14,7 +14,7 @@ weaponDef = {
 	accuracy                = 100,
 	areaOfEffect            = 3,
 	weaponVelocity          = 2700,
-	reloadtime              = 2,
+	reloadtime              = 4,
 	renderType				= 1,
 	size					= 1.5,
 	sizeDecay				= 0,
@@ -24,7 +24,7 @@ weaponDef = {
 	rgbcolor				= "0.75 0.75 1.0",
 	intensity				= 0.5,
 	damage = {
-		default = 160, --80 DPS
+		default = 320, --80 DPS
 	},
 	
 	
