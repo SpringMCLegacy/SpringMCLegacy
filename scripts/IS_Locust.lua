@@ -47,17 +47,17 @@ end
 
 local function MotionControl(moving)
 	if moving then
-		Turn(lupperleg, x_axis, -35, rad(200))
+		Turn(lupperleg, x_axis, -5, rad(200))
 		Turn(llowerleg, x_axis, 0, rad(200))
 		Turn(lfronttoes, x_axis, 0, rad(200))
 		Turn(lbacktoes, x_axis, 0, rad(200))
-		Turn(rupperleg, x_axis, 35, rad(200))
+		Turn(rupperleg, x_axis, 5, rad(200))
 		Turn(rlowerleg, x_axis, 0, rad(200))
 		Turn(rfronttoes, x_axis, 0, rad(200))
 		Turn(rbacktoes, x_axis, 0, rad(200))
-	else
-		--Turn(lupperleg, x_axis, 0, rad(200))
-		--Turn(rupperleg, x_axis, 0, rad(200))
+	--else
+		--(lupperleg, x_axis, 0, rad(200))
+		--(rupperleg, x_axis, 0, rad(200))
 	end	
 end
 

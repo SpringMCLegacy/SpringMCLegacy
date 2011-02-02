@@ -24,6 +24,7 @@ local IS_Locust = {
 	buildCostEnergy     = 0,
 	buildCostMetal      = 2000,
 	buildTime           = 0,
+	upright				= true,
 	canMove				= true,
 		movementClass   = "TANK",
 		maxVelocity		= 6.5, --130kph/10/2
@@ -41,13 +42,13 @@ local IS_Locust = {
 				maxAngleDif = 270,
 			},
 			[2] = {
-				name	= "SRM6",
+				name	= "SRM3",
 				--weaponSlaveTo2 = 1,
 				mainDir = "0 0 1",
 				maxAngleDif = 270,
 			},
 			[3] = {
-				name	= "SRM6",
+				name	= "SRM3",
 				--weaponSlaveTo3 = 1,
 				mainDir = "0 0 1",
 				maxAngleDif = 270,
