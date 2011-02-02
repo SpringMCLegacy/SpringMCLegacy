@@ -7,6 +7,7 @@ local IS_LRMCarrier = {
 	sightDistance       = 1000,
 	radarDistance      	= 2000,
 		activateWhenBuilt   = true,
+		onoffable           = true,
 	maxDamage           = 2000,
 	mass                = 6000,
 	footprintX			= 2,

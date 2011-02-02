@@ -7,6 +7,7 @@ local IS_Harasser = {
 	sightDistance       = 1000,
 	radarDistance      	= 1500,
 		activateWhenBuilt   = true,
+		onoffable           = true,
 	maxDamage           = 1500,
 	mass                = 2500,
 	footprintX			= 2,

@@ -77,6 +77,14 @@ function script.StopMoving()
 	SpinWheels(false)
 end
 
+function script.Activate()
+	Spring.SetUnitStealth(unitID, false)
+end
+
+function script.Deactivate()
+	Spring.SetUnitStealth(unitID, true)
+end
+
 local function RestoreAfterDelay(unitID)
 	Sleep(RESTORE_DELAY)
 	Turn(turret, y_axis, 0, TURRET_SPEED)

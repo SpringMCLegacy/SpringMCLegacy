@@ -8,6 +8,7 @@ local CL_Hephaestus = {
 	sightDistance       = 1000,
 	radarDistance      	= 2000,
 		activateWhenBuilt   = true,
+		onoffable           = true,
 --	radarDistanceJam    = 0,
 	maxDamage           = 5000,
 	mass                = 3000,

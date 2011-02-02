@@ -7,6 +7,7 @@ local IS_Schrek = {
 	sightDistance       = 1000,
 	radarDistance      	= 1500,
 		activateWhenBuilt   = true,
+		onoffable           = true,
 	maxDamage           = 7000,
 	mass                = 8000,
 	footprintX			= 3,

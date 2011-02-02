@@ -49,6 +49,14 @@ function script.StopMoving()
 	Signal(SIG_MOVE)
 end
 
+function script.Activate()
+	Spring.SetUnitStealth(unitID, false)
+end
+
+function script.Deactivate()
+	Spring.SetUnitStealth(unitID, true)
+end
+
 local function RestoreAfterDelay(unitID)
 	Sleep(RESTORE_DELAY)
 	Turn(laserturret, y_axis, 0, math.rad(50))

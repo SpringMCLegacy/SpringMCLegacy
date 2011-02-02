@@ -7,6 +7,7 @@ local IS_Scorpion = {
 	sightDistance       = 1000,
 	radarDistance      	= 1500,
 		activateWhenBuilt   = true,
+		onoffable           = true,
 	maxDamage           = 2000,
 	mass                = 2500,
 	footprintX			= 2,

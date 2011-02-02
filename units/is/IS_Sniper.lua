@@ -7,6 +7,7 @@ local IS_Sniper = {
 	sightDistance       = 1000,
 	radarDistance      	= 2000,
 		activateWhenBuilt   = true,
+		onoffable           = true,
 	maxDamage           = 4000,
 	mass                = 8000,
 	footprintX			= 2,
