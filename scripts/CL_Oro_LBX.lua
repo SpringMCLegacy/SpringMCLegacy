@@ -1,9 +1,9 @@
 -- Test Tank Script
 
 --defines
-local body, turret, mantlet, barrel = piece ("body", "turret", "mantlet", "barrel", "coaxlaser")
+local body, turret, mantlet, barrel, coaxlaser = piece ("body", "turret", "mantlet", "barrel", "coaxlaser")
 local trackr, trackl = piece ("trackr", "trackl")
-local flare1, flare2= piece ("flare1", "flare2", "coaxflare")
+local flare1, flare2, coaxflare = piece ("flare1", "flare2", "coaxflare")
 local wheels = {}
 local numWheels = 12
 	for i = 1, numWheels do
@@ -62,6 +62,7 @@ local function RestoreAfterDelay(unitID)
 	Sleep(RESTORE_DELAY)
 	Turn(turret, y_axis, 0, math.rad(50))
 	Turn(mantlet, x_axis, 0, math.rad(100))
+	Turn(coaxlaser, x_axis, 0, math.rad(100))
 end
 
 function script.AimWeapon1(heading, pitch)
@@ -139,7 +140,7 @@ function script.AimFromWeapon3()
 end
 
 function script.QueryWeapon3() 
-	return coaxlaserflare
+	return coaxflare
 end
 
 function script.Killed(recentDamage, maxHealth)
