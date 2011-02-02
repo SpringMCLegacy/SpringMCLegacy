@@ -1,66 +1,59 @@
-local IS_Scorpion = {
-	name              	= "Scorpion",
-	description         = "Light Tank",
-	objectName        	= "IS_Scorpion.s3o",
-	script				= "IS_Scorpion.lua",
+local CL_Oro_HAG = {
+	name              	= "Oro (HAG/30)",
+	description         = "Heavy Combat Tank",
+	objectName        	= "CL_Oro_HAG.s3o",
+	script				= "CL_Oro_HAG.lua",
 	category 			= "tank ground",
 	sightDistance       = 1000,
 	radarDistance      	= 1500,
 		activateWhenBuilt   = true,
 		onoffable           = true,
-	maxDamage           = 2000,
-	mass                = 2500,
-	footprintX			= 2,
-	footprintZ 			= 2,
+	maxDamage           = 11000,--5500
+	mass                = 6500,
+	footprintX			= 3,
+	footprintZ 			= 3,
 	collisionVolumeType = "box",
-	collisionVolumeScales = "20 12 30",
-	collisionVolumeOffsets = "0 2 0",
+	collisionVolumeScales = "30 20 48",
+	collisionVolumeOffsets = "0 3 0",
+	collisionVolumeTest = 1,
 	leaveTracks			= 1,
 	trackOffset			= 10,--no idea what this does
-	trackStrength		= 2.5,--how visible the tracks are
+	trackStrength		= 6.5,--how visible the tracks are
 	trackStretch		= 1,-- how much the tracks stretch, the higher the number the more "compact" they become
 	trackType			= "Thick",--graphics file to use for the track decal, from \bitmaps\tracks\ folder
-	trackWidth			= 20,--width to render the decal
-	collisionVolumeTest = 1,
+	trackWidth			= 24,--width to render the decal
 	buildCostEnergy     = 0,
-	buildCostMetal      = 650,
+	buildCostMetal      = 4000,
 	buildTime           = 0,
 	canMove				= true,
 		movementClass   = "TANK",
 		maxVelocity		= 3.2, --64kph/10/2
-		maxReverseVelocity= 1.6,
-		acceleration    = 1.0,
+		maxReverseVelocity= 1.5,
+		acceleration    = 0.8,
 		brakeRate       = 0.1,
-		turnRate 		= 500,
+		turnRate 		= 400,
 	
 	canAttack 			= true,
 		--Makes unit use weapon from /weapons folder
 		weapons 		= {	
 			[1] = {
-				name	= "LightGauss",
+				name	= "HAG30",
 			},
 			[2] = {
-				name	= "MG",
-				weaponslaveto2 = 1,
-			},
-			[3] = {
-				name	= "MG",
-				weaponslaveto3 = 1,
+				name	= "CLPL",
 			},
 		},
-		
 	--Gets CEG effects from /gamedata/explosions folder
-
 	sfxtypes = {
 		explosiongenerators = {
-		"custom:SMALL_MUZZLEFLASH",
+		"custom:LARGE_MUZZLEFLASH",
 		"custom:MG_MUZZLEFLASH",
 		},
 	},
-    customparams = {
+	customparams = {
 		hasturnbutton	= "1",
-		helptext		= "Armament: 1 x Light Gauss Rifle, 2 x Machinegun - Armor: 2 tons",
+		helptext		= "Armament: 1 x Hyper Assault Gauss 30, 1 x Large Pulse Laser - Armor: 11 tons",
     },
 }
 
-return lowerkeys({ ["IS_Scorpion"] = IS_Scorpion })
+return lowerkeys({ ["CL_Oro_HAG"] = CL_Oro_HAG })
