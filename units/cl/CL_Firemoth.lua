@@ -1,14 +1,14 @@
-local IS_Locust = {
-	name              	= "Locust",
+local CL_Firemoth = {
+	name              	= "Fire Moth/Dasher",
 	description         = "Light Scout Mech",
-	objectName        	= "IS_Locust.s3o",
-	script				= "IS_Locust.lua",
+	objectName        	= "CL_Firemoth.s3o",
+	script				= "CL_Firemoth.lua",
 	category 			= "mech ground",
 	sightDistance       = 1000,
 	radarDistance      	= 1500,
 		activateWhenBuilt   = true,
 		onoffable           = true,
-	maxDamage           = 3000,
+	maxDamage           = 2000,
 	mass                = 2000,
 	footprintX			= 2,
 	footprintZ 			= 2,
@@ -28,7 +28,7 @@ local IS_Locust = {
 	upright				= true,
 	canMove				= true,
 		movementClass   = "TANK",
-		maxVelocity		= 6.5, --130kph/10/2
+		maxVelocity		= 8.1, --162kph/10/2
 		maxReverseVelocity= 3.0,
 		acceleration    = 2.0,
 		brakeRate       = 0.1,
@@ -39,21 +39,27 @@ local IS_Locust = {
 		--Makes unit use weapon from /weapons folder
 		weapons 		= {	
 			[1] = {
-				name	= "MBL",
-				mainDir = "0 0 1",
-				maxAngleDif = 270,
+				name	= "CERMBL",
+				--mainDir = "0 0 1",
+				--maxAngleDif = 270,
 			},
 			[2] = {
-				name	= "SRM3",
+				name	= "CERMBL",
 				--weaponSlaveTo2 = 1,
-				mainDir = "0 0 1",
-				maxAngleDif = 270,
+				--mainDir = "0 0 1",
+				--maxAngleDif = 270,
 			},
 			[3] = {
-				name	= "SRM3",
+				name	= "SRM4",
 				--weaponSlaveTo3 = 1,
-				mainDir = "0 0 1",
-				maxAngleDif = 270,
+				--mainDir = "0 0 1",
+				--maxAngleDif = 270,
+			},
+			[4] = {
+				name	= "SRM6",
+				--weaponSlaveTo3 = 1,
+				--mainDir = "0 0 1",
+				--maxAngleDif = 270,
 			},
 		},
 		
@@ -67,8 +73,8 @@ local IS_Locust = {
 	},
     customparams = {
 		hasturnbutton	= "1",
-		helptext		= "Armament: 1 x Medium Beam Laser, 2 x SRM-3 - Armor: 3 tons",
+		helptext		= "Armament: 2 x ER Medium Beam Laser, 1 x SRM-4, 1 x SRM-6 - Armor: 2 tons",
     },
 }
 
-return lowerkeys({ ["IS_Locust"] = IS_Locust })
+return lowerkeys({ ["CL_Firemoth"] = CL_Firemoth })
