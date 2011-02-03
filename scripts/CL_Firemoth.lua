@@ -8,7 +8,7 @@ local deg, rad = math.deg, math.rad
 local pelvis, torso = piece ("pelvis", "torso")
 local lupperarm, llowerarm, rupperarm, rlowerarm = piece ("lupperarm", "llowerarm", "rupperarm", "rlowerarm")
 local lupperleg, llowerleg, rupperleg, rlowerleg, rtoe, ltoe = piece ("lupperleg", "llowerleg", "rupperleg", "rlowerleg", "rtoe", "ltoe")
-local flare1, flare2 = piece ("flare1, flare2")
+local flare1, flare2 = piece ("flare1", "flare2")
 
 local missileWeaponIDs = {[3] = true, [4] = true}
  
