@@ -234,7 +234,7 @@ end
 --end
 
 function script.Create()
-	StartThread(SmokeUnit, {body, torso})
+	StartThread(SmokeUnit, {pelvis, torso})
 	StartThread(MotionControl)
 end
 

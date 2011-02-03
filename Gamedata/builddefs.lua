@@ -20,6 +20,7 @@ buildoptions =
 	"cl_morrigu",
 	"cl_mars",
 	"cl_huit",
+	"cl_firemoth",
   },
   is_factory = 
   {
@@ -33,6 +34,7 @@ buildoptions =
 	"is_lrmcarrier",
 	"is_sniper",
 	"is_locust",
+	"is_chimera",
   },
 }
 

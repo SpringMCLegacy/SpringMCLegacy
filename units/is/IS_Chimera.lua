@@ -28,11 +28,11 @@ local IS_Chimera = {
 	upright				= true,
 	canMove				= true,
 		movementClass   = "TANK",
-		maxVelocity		= 6.5, --130kph/10/2
+		maxVelocity		= 4.85, --97kph/10/2
 		maxReverseVelocity= 3.0,
-		acceleration    = 2.0,
+		acceleration    = 1.5,
 		brakeRate       = 0.1,
-		turnRate 		= 1000,
+		turnRate 		= 800,
 		smoothAnim		= 1,
 	
 	canAttack 			= true,

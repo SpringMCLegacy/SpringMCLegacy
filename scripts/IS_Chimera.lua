@@ -19,7 +19,7 @@ local currPoints = {}
 --Turning/Movement Locals
 local TORSO_SPEED = rad(200)
 local ELEVATION_SPEED = rad(200)
-local LEG_SPEED = rad(1000)
+local LEG_SPEED = rad(750)
 
 for weaponID in pairs(missileWeaponIDs) do
         launchPoints[weaponID] = {}
@@ -235,7 +235,7 @@ end
 --end
 
 function script.Create()
-	StartThread(SmokeUnit, {body, torso})
+	StartThread(SmokeUnit, {pelvis, torso})
 	StartThread(MotionControl)
 end
 
