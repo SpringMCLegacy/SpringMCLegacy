@@ -1,8 +1,8 @@
-local CL_Factory = {
+local IS_Factory = {
 	name              	= "Dropship",
 	description         = "Unit Aquisition Facility",
 	objectName        	= "Dropship.s3o",
-	script				= "CL_Factory.cob",
+	script				= "IS_Factory.cob",
 	category 			= "dropship structure",
 	sightDistance       = 1500,
 	radarDistance      	= 3000,
@@ -50,4 +50,4 @@ local CL_Factory = {
     },
 }
 
-return lowerkeys({ ["CL_Factory"] = CL_Factory })
+return lowerkeys({ ["IS_Factory"] = IS_Factory })
