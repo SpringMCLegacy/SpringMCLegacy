@@ -13,7 +13,7 @@ weaponDef = {
 	accuracy                = 100,
 	areaOfEffect            = 1,
 	weaponVelocity          = 1200,
-	reloadtime              = 1.0,
+	reloadtime              = 0.8,
 	burst					= 6,
 	burstrate				= 0.08,
 	sprayAngle 				= 100,
@@ -24,7 +24,7 @@ weaponDef = {
 	rgbcolor				= "1 0.8 0",
 	intensity				= 0.5,
 	damage = {
-		default = 4,--30 DPS more or less
+		default = 1.28,--10 DPS more or less
 	},
 	
 	
