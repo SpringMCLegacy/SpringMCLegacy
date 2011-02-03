@@ -37,13 +37,13 @@ local CL_Enyo = {
 		--Makes unit use weapon from /weapons folder
 		weapons 		= {	
 			[1] = {
-				name	= "LPL",
+				name	= "CLPL",
 			},
 			[2] = {
-				name	= "SRM6",
+				name	= "SSRM6",
 			},
 			[3] = {
-				name	= "SRM6",
+				name	= "SSRM6",
 			},
 		},
 	--Gets CEG effects from /gamedata/explosions folder
@@ -55,7 +55,7 @@ local CL_Enyo = {
 	},
 	customparams = {
 		hasturnbutton	= "1",
-		helptext		= "Armament: 1 x Large Pulse Laser, 2 x SRM-6 - Armor: 7 tons",
+		helptext		= "Armament: 1 x Large Pulse Laser, 2 x SSRM-6 - Armor: 7 tons",
     },
 }
 
