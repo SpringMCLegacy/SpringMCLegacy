@@ -1,19 +1,19 @@
-local CL_Stormcrow = {
-	name              	= "Stormcrow (Ryoken)",
-	description         = "Medium Combat Mech",
-	objectName        	= "CL_Stormcrow.s3o",
-	script				= "CL_Stormcrow.lua",
+local CL_Timberwolf = {
+	name              	= "Timber Wolf (Mad Cat)",
+	description         = "Assault Mech",
+	objectName        	= "CL_Timberwolf.s3o",
+	script				= "CL_Timberwolf.lua",
 	category 			= "mech ground",
 	sightDistance       = 1000,
 	radarDistance      	= 1500,
 		activateWhenBuilt   = true,
 		onoffable           = true,
-	maxDamage           = 8000,
-	mass                = 5500,
-	footprintX			= 2,
-	footprintZ 			= 2,
+	maxDamage           = 12000,
+	mass                = 7500,
+	footprintX			= 3,
+	footprintZ 			= 3,
 	collisionVolumeType = "box",
-	collisionVolumeScales = "30 50 25",
+	collisionVolumeScales = "40 50 40",
 	collisionVolumeOffsets = "0 0 0",
 	collisionVolumeTest = 1,
 --	leaveTracks			= 1,
@@ -23,23 +23,23 @@ local CL_Stormcrow = {
 --	trackType			= "Thick",--graphics file to use for the track decal, from \bitmaps\tracks\ folder
 --	trackWidth			= 20,--width to render the decal
 	buildCostEnergy     = 0,
-	buildCostMetal      = 6500,
+	buildCostMetal      = 11000,
 	buildTime           = 0,
 	upright				= true,
 	canMove				= true,
-		movementClass   = "SMALLMECH",
-		maxVelocity		= 4.85, --97kph/10/2
-		maxReverseVelocity= 3.0,
-		acceleration    = 1.5,
-		brakeRate       = 0.1,
-		turnRate 		= 800,
+		movementClass   = "LARGEMECH",
+		maxVelocity		= 4.3, --86kph/10/2
+		maxReverseVelocity= 1.10,
+		acceleration    = 1,
+		brakeRate       = 0.2,
+		turnRate 		= 700,
 		smoothAnim		= 1,
 	
 	canAttack 			= true,
 		--Makes unit use weapon from /weapons folder
 		weapons 		= {	
 			[1] = {
-				name	= "CLPL",
+				name	= "CERLBL",
 				mainDir = "0 0 1",
 				maxAngleDif = 270,
 			},
@@ -50,26 +50,47 @@ local CL_Stormcrow = {
 				maxAngleDif = 270,
 			},
 			[3] = {
-				name	= "CLPL",
-				--weaponSlaveTo2 = 1,
+				name	= "CERLBL",
 				mainDir = "0 0 1",
 				maxAngleDif = 270,
 			},
 			[4] = {
 				name	= "CERMBL",
-				--weaponSlaveTo4 = 1,
+				--weaponSlaveTo2 = 1,
 				mainDir = "0 0 1",
 				maxAngleDif = 270,
 			},
 			[5] = {
-				name	= "CERMBL",
-				--weaponSlaveTo4 = 1,
+				name	= "UAC5",
+				--weaponSlaveTo2 = 1,
 				mainDir = "0 0 1",
 				maxAngleDif = 270,
 			},
 			[6] = {
-				name	= "LRM20",
-				--weaponSlaveTo4 = 1,
+				name	= "UAC5",
+				mainDir = "0 0 1",
+				maxAngleDif = 270,
+			},
+			[7] = {
+				name	= "CSPL",
+				--weaponSlaveTo2 = 1,
+				mainDir = "0 0 1",
+				maxAngleDif = 270,
+			},
+			[8] = {
+				name	= "CSPL",
+				mainDir = "0 0 1",
+				maxAngleDif = 270,
+			},
+			[9] = {
+				name	= "ATM9",
+				--weaponSlaveTo2 = 1,
+				mainDir = "0 0 1",
+				maxAngleDif = 270,
+			},
+			[10] = {
+				name	= "ATM9",
+				--weaponSlaveTo2 = 1,
 				mainDir = "0 0 1",
 				maxAngleDif = 270,
 			},
@@ -80,13 +101,14 @@ local CL_Stormcrow = {
 	sfxtypes = {
 		explosiongenerators = {
 		"custom:MEDIUM_MUZZLEFLASH",
+		"custom:SMALL_MUZZLEFLASH",
 		"custom:MG_MUZZLEFLASH",
 		},
 	},
     customparams = {
 		hasturnbutton	= "1",
-		helptext		= "Armament: 2 x Large Pulse Laser, 3 x ER Medium Beam Laser, 1 x LRM-20 - Armor: 7 tons",
+		helptext		= "Armament: 2 x ER Large Beam Laser, 2 x ER Medium Beam Laser, 2 x UAC/5, 2 x Small Pulse Laser, 2 x ATM-9 - Armor: 19 tons",
     },
 }
 
-return lowerkeys({ ["CL_Stormcrow"] = CL_Stormcrow })
+return lowerkeys({ ["CL_Timberwolf"] = CL_Timberwolf })

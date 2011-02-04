@@ -1,19 +1,19 @@
-local CL_Stormcrow = {
-	name              	= "Stormcrow (Ryoken)",
-	description         = "Medium Combat Mech",
-	objectName        	= "CL_Stormcrow.s3o",
-	script				= "CL_Stormcrow.lua",
+local IS_Owens = {
+	name              	= "Owens",
+	description         = "Light Support Mech",
+	objectName        	= "IS_Owens.s3o",
+	script				= "IS_Owens.lua",
 	category 			= "mech ground",
 	sightDistance       = 1000,
 	radarDistance      	= 1500,
 		activateWhenBuilt   = true,
 		onoffable           = true,
-	maxDamage           = 8000,
-	mass                = 5500,
+	maxDamage           = 7000,
+	mass                = 3500,
 	footprintX			= 2,
 	footprintZ 			= 2,
 	collisionVolumeType = "box",
-	collisionVolumeScales = "30 50 25",
+	collisionVolumeScales = "30 35 15",
 	collisionVolumeOffsets = "0 0 0",
 	collisionVolumeTest = 1,
 --	leaveTracks			= 1,
@@ -23,53 +23,47 @@ local CL_Stormcrow = {
 --	trackType			= "Thick",--graphics file to use for the track decal, from \bitmaps\tracks\ folder
 --	trackWidth			= 20,--width to render the decal
 	buildCostEnergy     = 0,
-	buildCostMetal      = 6500,
+	buildCostMetal      = 2000,
 	buildTime           = 0,
 	upright				= true,
 	canMove				= true,
 		movementClass   = "SMALLMECH",
-		maxVelocity		= 4.85, --97kph/10/2
-		maxReverseVelocity= 3.0,
-		acceleration    = 1.5,
+		maxVelocity		= 5.0, --100kph/10/2
+		maxReverseVelocity= 2.5,
+		acceleration    = 1.75,
 		brakeRate       = 0.1,
-		turnRate 		= 800,
+		turnRate 		= 900,
 		smoothAnim		= 1,
 	
 	canAttack 			= true,
 		--Makes unit use weapon from /weapons folder
 		weapons 		= {	
 			[1] = {
-				name	= "CLPL",
+				name	= "ArtemisLRM5",
 				mainDir = "0 0 1",
 				maxAngleDif = 270,
 			},
 			[2] = {
-				name	= "CERMBL",
+				name	= "ArtemisLRM5",
 				--weaponSlaveTo2 = 1,
 				mainDir = "0 0 1",
 				maxAngleDif = 270,
 			},
 			[3] = {
-				name	= "CLPL",
-				--weaponSlaveTo2 = 1,
+				name	= "MBL",
+				--weaponSlaveTo3 = 1,
 				mainDir = "0 0 1",
 				maxAngleDif = 270,
 			},
 			[4] = {
-				name	= "CERMBL",
-				--weaponSlaveTo4 = 1,
+				name	= "SBL",
+				--weaponSlaveTo3 = 1,
 				mainDir = "0 0 1",
 				maxAngleDif = 270,
 			},
 			[5] = {
-				name	= "CERMBL",
-				--weaponSlaveTo4 = 1,
-				mainDir = "0 0 1",
-				maxAngleDif = 270,
-			},
-			[6] = {
-				name	= "LRM20",
-				--weaponSlaveTo4 = 1,
+				name	= "SBL",
+				--weaponSlaveTo3 = 1,
 				mainDir = "0 0 1",
 				maxAngleDif = 270,
 			},
@@ -79,14 +73,14 @@ local CL_Stormcrow = {
 
 	sfxtypes = {
 		explosiongenerators = {
-		"custom:MEDIUM_MUZZLEFLASH",
+		"custom:SMALL_MUZZLEFLASH",
 		"custom:MG_MUZZLEFLASH",
 		},
 	},
     customparams = {
 		hasturnbutton	= "1",
-		helptext		= "Armament: 2 x Large Pulse Laser, 3 x ER Medium Beam Laser, 1 x LRM-20 - Armor: 7 tons",
+		helptext		= "Armament: 1 x Medium Beam Laser, 2 x Small Beam Laser, 2 x Artemis-enhanced LRM-5 - Armor: 7 tons",
     },
 }
 
-return lowerkeys({ ["CL_Stormcrow"] = CL_Stormcrow })
+return lowerkeys({ ["IS_Owens"] = IS_Owens })

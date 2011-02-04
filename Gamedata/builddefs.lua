@@ -21,7 +21,12 @@ buildoptions =
 	"cl_mars",
 	"cl_huit",
 	"cl_firemoth",
+	"cl_kitfox",
 	"cl_stormcrow",
+	"cl_timberwolf",
+	"cl_maddog",
+	"cl_direwolf",
+	"cl_warhawk",
   },
   is_factory = 
   {
@@ -36,6 +41,8 @@ buildoptions =
 	"is_sniper",
 	"is_locust",
 	"is_chimera",
+	"is_owens",
+	"is_atlas",
   },
 }
 
