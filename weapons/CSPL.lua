@@ -1,5 +1,5 @@
 weaponDef = {
-	name                    = "Medium Pulse Laser",
+	name                    = "Clan Small Pulse Laser",
 	weaponType              = "BeamLaser",
 	beamLaser				= true,
 	beamLaser				= 1,
@@ -9,34 +9,34 @@ weaponDef = {
 	lineOfSight				= true,
 	explosionGenerator    	= "custom:AP_SMALL",
 	soundHit              	= [[GEN_Pulse_Explode1]],
-	soundStart           	= [[MPL_Fire]],
+	soundStart           	= [[SPL_Fire]],
 	burnblow				= true, 	--Bullets explode at range limit.
 	collideFriendly			= true,
 	noSelfDamage            = true,
 	turret                  = true,
 	range                   = 600,
-	accuracy                = 250,
+	accuracy                = 200,
 	tollerance				= 100,
 	areaOfEffect            = 5,
 	weaponVelocity          = 2000,
 	weaponTimer				= 0.8,
-	reloadtime              = 0.6,
-	size 					= 0.1,
-	laserFlareSize			= 0.1,
-	thickness				= 1,
-	coreThickness			= 0.1,
+	reloadtime              = 0.33,
+	size 					= 0.075,
+	laserFlareSize			= 0.075,
+	thickness				= 0.75,
+	coreThickness			= 0.075,
 	beamDecay          		= 1,
 	beamTime           		= 0.01,
 	beamTTL           		= 1,
 	minIntensity			= 1,
-	rgbcolor				= "1.0 0.6 0.1",
-	intensity				= 0.6,
+	rgbcolor				= "0.3 1.0 0.3",
+	intensity				= 0.5,
 	damage = {
-		default = 36, --60 DPS
+		default = 9, --30 DPS
 	},
 	
 	
 	
 }
 
-return lowerkeys({ MPL = weaponDef })
+return lowerkeys({ CSPL = weaponDef })

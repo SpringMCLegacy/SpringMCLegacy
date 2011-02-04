@@ -1,5 +1,5 @@
 weaponDef = {
-	name                    = "Particle Projector Cannon",
+	name                    = "Clan Extended Range Particle Projector Cannon",
 	weaponType              = "Cannon",
 	explosionGenerator    	= "custom:AP_MEDIUM",
 --	cegTag					= "RailTrail",
@@ -11,11 +11,11 @@ weaponDef = {
 	turret                  = true,
 --	ballistic				= 1,
 	lineOfSight				= 1,
-	range                   = 1800,
+	range                   = 2300,
 	accuracy                = 200,
 	areaOfEffect            = 10,
 	weaponVelocity          = 2000,
-	reloadtime              = 5,
+	reloadtime              = 7.5,
 	renderType				= 1,
 	size					= 3,
 	sizeDecay				= 0,
@@ -25,11 +25,11 @@ weaponDef = {
 	rgbcolor				= "0.5 0.5 1.0",
 	intensity				= 0.5,
 	damage = {
-		default = 500, --100 DPS
+		default = 1125, --150 DPS
 	},
 	
 	
 	
 }
 
-return lowerkeys({ PPC = weaponDef })
+return lowerkeys({ CERPPC = weaponDef })

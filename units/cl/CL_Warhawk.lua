@@ -1,19 +1,19 @@
-local CL_Stormcrow = {
-	name              	= "Stormcrow (Ryoken)",
-	description         = "Medium Combat Mech",
-	objectName        	= "CL_Stormcrow.s3o",
-	script				= "CL_Stormcrow.lua",
+local CL_Warhawk = {
+	name              	= "War Hawk (Masakari)",
+	description         = "Assault Mech",
+	objectName        	= "CL_Warhawk.s3o",
+	script				= "CL_Warhawk.lua",
 	category 			= "mech ground",
 	sightDistance       = 1000,
 	radarDistance      	= 1500,
 		activateWhenBuilt   = true,
 		onoffable           = true,
-	maxDamage           = 8000,
-	mass                = 5500,
-	footprintX			= 2,
-	footprintZ 			= 2,
+	maxDamage           = 13500,
+	mass                = 8500,
+	footprintX			= 3,
+	footprintZ 			= 3,
 	collisionVolumeType = "box",
-	collisionVolumeScales = "30 50 25",
+	collisionVolumeScales = "40 50 40",
 	collisionVolumeOffsets = "0 0 0",
 	collisionVolumeTest = 1,
 --	leaveTracks			= 1,
@@ -23,53 +23,46 @@ local CL_Stormcrow = {
 --	trackType			= "Thick",--graphics file to use for the track decal, from \bitmaps\tracks\ folder
 --	trackWidth			= 20,--width to render the decal
 	buildCostEnergy     = 0,
-	buildCostMetal      = 6500,
+	buildCostMetal      = 15000,
 	buildTime           = 0,
 	upright				= true,
 	canMove				= true,
-		movementClass   = "SMALLMECH",
-		maxVelocity		= 4.85, --97kph/10/2
-		maxReverseVelocity= 3.0,
-		acceleration    = 1.5,
-		brakeRate       = 0.1,
-		turnRate 		= 800,
+		movementClass   = "LARGEMECH",
+		maxVelocity		= 3.2, --64kph/10/2
+		maxReverseVelocity= 0.95,
+		acceleration    = 1.0,
+		brakeRate       = 0.15,
+		turnRate 		= 700,
 		smoothAnim		= 1,
 	
 	canAttack 			= true,
 		--Makes unit use weapon from /weapons folder
 		weapons 		= {	
 			[1] = {
-				name	= "CLPL",
+				name	= "CERPPC",
 				mainDir = "0 0 1",
 				maxAngleDif = 270,
 			},
 			[2] = {
-				name	= "CERMBL",
+				name	= "CERPPC",
 				--weaponSlaveTo2 = 1,
 				mainDir = "0 0 1",
 				maxAngleDif = 270,
 			},
 			[3] = {
-				name	= "CLPL",
-				--weaponSlaveTo2 = 1,
+				name	= "CERPPC",
 				mainDir = "0 0 1",
 				maxAngleDif = 270,
 			},
 			[4] = {
-				name	= "CERMBL",
-				--weaponSlaveTo4 = 1,
+				name	= "CERPPC",
+				--weaponSlaveTo2 = 1,
 				mainDir = "0 0 1",
 				maxAngleDif = 270,
 			},
 			[5] = {
-				name	= "CERMBL",
-				--weaponSlaveTo4 = 1,
-				mainDir = "0 0 1",
-				maxAngleDif = 270,
-			},
-			[6] = {
-				name	= "LRM20",
-				--weaponSlaveTo4 = 1,
+				name	= "LRM10",
+				--weaponSlaveTo2 = 1,
 				mainDir = "0 0 1",
 				maxAngleDif = 270,
 			},
@@ -85,8 +78,8 @@ local CL_Stormcrow = {
 	},
     customparams = {
 		hasturnbutton	= "1",
-		helptext		= "Armament: 2 x Large Pulse Laser, 3 x ER Medium Beam Laser, 1 x LRM-20 - Armor: 7 tons",
+		helptext		= "Armament: 4 x ER Particle Cannon, 1 x LRM-10 - Armor: 19 tons",
     },
 }
 
-return lowerkeys({ ["CL_Stormcrow"] = CL_Stormcrow })
+return lowerkeys({ ["CL_Warhawk"] = CL_Warhawk })
