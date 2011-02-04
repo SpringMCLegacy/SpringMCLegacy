@@ -28,8 +28,8 @@ local FindUnitCmdDesc		= Spring.FindUnitCmdDesc
 -- Unsynced Ctrl
 
 -- Constants
-local DAMAGE_REWARD_MULT = 1
-local KILL_REWARD_MULT = 0.5
+local DAMAGE_REWARD_MULT = 0.1
+local KILL_REWARD_MULT = 2
 
 -- Variables
 local modOptions = Spring.GetModOptions()
