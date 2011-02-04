@@ -21,6 +21,7 @@ buildoptions =
 	"cl_mars",
 	"cl_huit",
 	"cl_firemoth",
+	"cl_stormcrow",
   },
   is_factory = 
   {
