@@ -1,10 +1,10 @@
 local sidedata = {
 	{
-	name = "IS",
+	name = "Inner Sphere",
 	startUnit = "IS_Factory",
 	},
 	{
-	name = "CL",
+	name = "Clan Wolf",
 	startUnit = "CL_Factory",
 	},
 }
