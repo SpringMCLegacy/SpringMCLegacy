@@ -31,6 +31,7 @@ weaponDef = {
 	model					= "LargeMissile.s3o",
 	damage = {
 		default = 4000,--200 DPS
+		dropships = 1,--haha fuck you flozi
 	},
 }
 
