@@ -50,19 +50,19 @@ local IS_Owens = {
 				maxAngleDif = 270,
 			},
 			[3] = {
-				name	= "MBL",
+				name	= "NARC",
 				--weaponSlaveTo3 = 1,
 				mainDir = "0 0 1",
 				maxAngleDif = 270,
 			},
 			[4] = {
-				name	= "SBL",
+				name	= "MPL",
 				--weaponSlaveTo3 = 1,
 				mainDir = "0 0 1",
 				maxAngleDif = 270,
 			},
 			[5] = {
-				name	= "SBL",
+				name	= "MPL",
 				--weaponSlaveTo3 = 1,
 				mainDir = "0 0 1",
 				maxAngleDif = 270,
@@ -73,13 +73,14 @@ local IS_Owens = {
 
 	sfxtypes = {
 		explosiongenerators = {
+		"custom:MEDIUM_MUZZLEFLASH",
 		"custom:SMALL_MUZZLEFLASH",
 		"custom:MG_MUZZLEFLASH",
 		},
 	},
     customparams = {
 		hasturnbutton	= "1",
-		helptext		= "Armament: 1 x Medium Beam Laser, 2 x Small Beam Laser, 2 x Artemis-enhanced LRM-5 - Armor: 7 tons",
+		helptext		= "Armament: 1 x NARC Launcher, 2 x Small Beam Laser, 2 x Artemis-enhanced LRM-5 - Armor: 7 tons",
     },
 }
 

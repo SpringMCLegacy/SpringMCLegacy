@@ -3,7 +3,7 @@ local deg, rad = math.deg, math.rad
 --defines
 local body, turret, guns = piece ("body", "turret", "guns")
 local floatr, floatl = piece ("floatr", "floatl")
-local flare1, flare2 = piece ("flare1", "flare2")
+local flare1, flare2, flare3 = piece ("flare1", "flare2", "flare3")
 
 --Turning/Movement Locals
 local TURRET_SPEED = rad(75)
@@ -23,7 +23,8 @@ local RESTORE_DELAY = Spring.UnitScript.GetLongestReloadTime(unitID) * 2
 include "smokeunit.lua"
 
 --SFX defines
-MG_MUZZLEFLASH = SFX.CEG+0
+SMALL_MUZZLEFLASH = SFX.CEG+0
+MG_MUZZLEFLASH = SFX.CEG+1
 
 function script.Create()
 	StartThread(SmokeUnit, {body, turret})
@@ -83,6 +84,27 @@ end
 
 function script.QueryWeapon2() 
 	return flare2
+end
+
+function script.AimWeapon3(heading, pitch)
+	Signal(SIG_AIM1)
+	SetSignalMask(SIG_AIM1)
+	Turn(turret, y_axis, heading, TURRET_SPEED)
+	WaitForTurn(turret, y_axis)
+	StartThread(RestoreAfterDelay)
+	return true
+end
+
+function script.FireWeapon3()
+	EmitSfx(flare3, SMALL_MUZZLEFLASH)
+end
+
+function script.AimFromWeapon3() 
+	return turret 
+end
+
+function script.QueryWeapon3() 
+	return flare3
 end
 
 function script.Killed(recentDamage, maxHealth)

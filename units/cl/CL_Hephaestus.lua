@@ -39,11 +39,15 @@ local CL_Hephaestus = {
 			[2] = {
 				name	= "MPL",
 			},
+			[3] = {
+				name	= "NARC",
+			},
 		},
 		
 	--Gets CEG effects from /gamedata/explosions folder
 	sfxtypes = {
 		explosiongenerators = {
+		"custom:SMALL_MUZZLEFLASH",
 		"custom:MG_MUZZLEFLASH",
 		},
 	},
