@@ -69,6 +69,7 @@ local IS_Chimera = {
 		explosiongenerators = {
 		"custom:MEDIUM_MUZZLEFLASH",
 		"custom:MG_MUZZLEFLASH",
+		"custom:RocketTrail",
 		},
 	},
     customparams = {

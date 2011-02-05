@@ -236,7 +236,7 @@ local function Jump(unitID, goal, cmdTag)
 	if cob then
 		spCallCOBScript( unitID, "BeginJump", 0)
       else
-	    --Spring.UnitScript.CallAsUnit(unitID,env.beginJump)
+	    Spring.UnitScript.CallAsUnit(unitID,env.beginJump)
 	  end
 	if rotateMidAir then
 	  mcSetRotation(unitID, 0, (startHeading - 2^15)/rotUnit, 0) -- keep current heading
@@ -261,7 +261,7 @@ local function Jump(unitID, goal, cmdTag)
 	  if cob then
 		spCallCOBScript( unitID, "BeginJump", 0)
       else
-		--Spring.UnitScript.CallAsUnit(unitID,env.beginJump)
+		Spring.UnitScript.CallAsUnit(unitID,env.beginJump)
 	  end
 
 	  if rotateMidAir then
