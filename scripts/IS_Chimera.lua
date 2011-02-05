@@ -9,6 +9,7 @@ local pelvis, torso = piece ("pelvis", "torso")
 local rupperarm, rlowerarm, lupperarm, llowerarm = piece ("rupperarm", "rlowerarm", "lupperarm", "llowerarm")
 local lupperleg, llowerleg, rupperleg, rlowerleg, rfronttoe, rbacktoe, lfronttoe, lbacktoe = piece ("lupperleg", "llowerleg", "rupperleg", "rlowerleg", "rfronttoe", "rbacktoe", "lfronttoe", "lbacktoe")
 local flare1, flare2, flare3 = piece ("flare1", "flare2", "flare3")
+local jet1, jet2, jet3, jet4 = piece ("jet1", "jet2", "jet3", "jet4")
 
 local missileWeaponIDs = {[4] = true}
  
@@ -42,6 +43,7 @@ include "smokeunit.lua"
 --SFX defines
 MEDIUM_MUZZLEFLASH = SFX.CEG+0
 MG_MUZZLEFLASH = SFX.CEG+1
+RocketTrail = SFX.CEG+2
 
 local function MotionControl()
 	while true do
@@ -249,6 +251,14 @@ end
 
 function script.Activate()
 	Spring.SetUnitStealth(unitID, false)
+end
+
+function beginJump()
+	Spring.Echo(" Cocksucking motherfucker!")
+	EmitSfx(jet1, RocketTrail)
+	EmitSfx(jet2, RocketTrail)
+	EmitSfx(jet3, RocketTrail)
+	EmitSfx(jet4, RocketTrail)
 end
 
 function script.Deactivate()

@@ -26,7 +26,7 @@ local name
   
 jumpCategory = { 
 	baseclass = {
-		range = 400, height = 200, speed = 6,  reload = 10,  aaShootMe = false, delay = 0, cobscript = true,rotateMidAir = true},	
+		range = 600, height = 200, speed = 6,  reload = 10,  aaShootMe = false, delay = 0, cobscript = true,rotateMidAir = true},	
 	-- category containining only optional tags for testing error code only.
 	-- iammissingstuff ={
 	-- 	reload	= 10, aaShootMe	= false, },	
@@ -35,7 +35,7 @@ jumpCategory = {
 jumpClassGroups = {
 
 	baseclass = { 
-	"cl_timberwolf",
+	"is_chimera",
 	--[["corpyro",
 	"corfast",
 	"corsktl",
@@ -64,7 +64,7 @@ jumpClassGroups = {
 --		reload
 ------------------------------------------------------------------------------------------------------------------------------------------------	
 overCategory = {
-	cl_timberwolf = { cobscript = false}
+	is_chimera = { cobscript = false}
  --[[noruas = {
     reload = 0,  },
 	
