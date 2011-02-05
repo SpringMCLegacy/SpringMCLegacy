@@ -1,19 +1,19 @@
-local CL_Direwolf = {
-	name              	= "Dire Wolf (Daishi)",
-	description         = "Assault Mech",
-	objectName        	= "CL_Direwolf.s3o",
-	script				= "CL_Direwolf.lua",
+local IS_Mauler = {
+	name              	= "Mauler",
+	description         = "Assault Support Mech",
+	objectName        	= "IS_Mauler.s3o",
+	script				= "IS_Mauler.lua",
 	category 			= "mech ground",
 	sightDistance       = 1000,
 	radarDistance      	= 1500,
 		activateWhenBuilt   = true,
 		onoffable           = true,
-	maxDamage           = 19000,
-	mass                = 10000,
+	maxDamage           = 11000,
+	mass                = 9000,
 	footprintX			= 3,
 	footprintZ 			= 3,
 	collisionVolumeType = "box",
-	collisionVolumeScales = "40 50 40",
+	collisionVolumeScales = "40 60 40",
 	collisionVolumeOffsets = "0 0 0",
 	collisionVolumeTest = 1,
 --	leaveTracks			= 1,
@@ -23,7 +23,7 @@ local CL_Direwolf = {
 --	trackType			= "Thick",--graphics file to use for the track decal, from \bitmaps\tracks\ folder
 --	trackWidth			= 20,--width to render the decal
 	buildCostEnergy     = 0,
-	buildCostMetal      = 16000,
+	buildCostMetal      = 14000,
 	buildTime           = 0,
 	upright				= true,
 	canMove				= true,
@@ -39,64 +39,46 @@ local CL_Direwolf = {
 		--Makes unit use weapon from /weapons folder
 		weapons 		= {	
 			[1] = {
-				name	= "CERLBL",
+				name	= "LBL",
 				mainDir = "0 0 1",
 				maxAngleDif = 270,
 			},
 			[2] = {
-				name	= "CERLBL",
+				name	= "LBL",
 				--weaponSlaveTo2 = 1,
 				mainDir = "0 0 1",
 				maxAngleDif = 270,
 			},
 			[3] = {
-				name	= "CMPL",
+				name	= "LRM15",
 				mainDir = "0 0 1",
 				maxAngleDif = 270,
 			},
 			[4] = {
-				name	= "CMPL",
+				name	= "LRM15",
 				--weaponSlaveTo2 = 1,
 				mainDir = "0 0 1",
 				maxAngleDif = 270,
 			},
 			[5] = {
-				name	= "UAC5",
+				name	= "AC2",
 				--weaponSlaveTo2 = 1,
 				mainDir = "0 0 1",
 				maxAngleDif = 270,
 			},
 			[6] = {
-				name	= "CERLBL",
+				name	= "AC2",
 				mainDir = "0 0 1",
 				maxAngleDif = 270,
 			},
 			[7] = {
-				name	= "CERLBL",
+				name	= "AC2",
 				--weaponSlaveTo2 = 1,
 				mainDir = "0 0 1",
 				maxAngleDif = 270,
 			},
 			[8] = {
-				name	= "CMPL",
-				mainDir = "0 0 1",
-				maxAngleDif = 270,
-			},
-			[9] = {
-				name	= "CMPL",
-				--weaponSlaveTo2 = 1,
-				mainDir = "0 0 1",
-				maxAngleDif = 270,
-			},
-			[10] = {
-				name	= "UAC5",
-				--weaponSlaveTo2 = 1,
-				mainDir = "0 0 1",
-				maxAngleDif = 270,
-			},
-			[11] = {
-				name	= "LRM10",
-				--weaponSlaveTo4 = 1,
+				name	= "AC2",
 				mainDir = "0 0 1",
 				maxAngleDif = 270,
 			},
@@ -107,13 +89,14 @@ local CL_Direwolf = {
 	sfxtypes = {
 		explosiongenerators = {
 		"custom:MEDIUM_MUZZLEFLASH",
+		"custom:XSMALL_MUZZLEFLASH",
 		"custom:MG_MUZZLEFLASH",
 		},
 	},
     customparams = {
 		hasturnbutton	= "1",
-		helptext		= "Armament: 4 x ER Large Beam Laser, 4 x ER Medium Pulse Laser, 2 x UAC/5, 1 x ATM-9 - Armor: 19 tons",
+		helptext		= "Armament: 2 x Large Beam Laser, 4 x AC/2, 2 x LRM-15 - Armor: 11 tons",
     },
 }
 
-return lowerkeys({ ["CL_Direwolf"] = CL_Direwolf })
+return lowerkeys({ ["IS_Mauler"] = IS_Mauler })
