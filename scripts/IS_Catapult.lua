@@ -9,6 +9,7 @@ local pelvis, torso = piece ("pelvis", "torso")
 local rupperarm, lupperarm = piece ("rupperarm", "lupperarm")
 local lupperleg, llowerleg, rupperleg, rlowerleg, rfronttoes, rbacktoe, lfronttoes, lbacktoe = piece ("lupperleg", "llowerleg", "rupperleg", "rlowerleg", "rfronttoes", "rbacktoe", "lfronttoes", "lbacktoe")
 local flare1, flare2, flare3, flare4 = piece ("flare1", "flare2", "flare3", "flare4")
+local jet1, jet2, jet3, jet4 = piece ("jet1", "jet2", "jet3", "jet4")
 
 local missileWeaponIDs = {[1] = true, [2] = true}
  
@@ -34,6 +35,7 @@ local currLaunchPoint = 1
 -- constants
 local SIG_AIM = 2
 local walking = false
+local isJumping = false
 local RESTORE_DELAY = Spring.UnitScript.GetLongestReloadTime(unitID) * 2
 
 -- includes
@@ -229,15 +231,24 @@ local function MotionControl()
 	end
 end
 
-
---local function StopWalk()
---	Turn(lupperleg, x_axis, 0, rad(200))
---	Turn(rupperleg, x_axis, 0, rad(200))
---end
+function JumpControl()
+	while true do
+		if isJumping then
+			EmitSfx(jet1, RocketTrail)
+			EmitSfx(jet2, RocketTrail)
+			EmitSfx(jet3, RocketTrail)
+			EmitSfx(jet4, RocketTrail)
+			Sleep(50)
+		else
+			Sleep(100)
+		end
+	end
+end
 
 function script.Create()
 	StartThread(SmokeUnit, {pelvis, torso})
 	StartThread(MotionControl)
+	StartThread(JumpControl)
 end
 
 function script.StartMoving()
@@ -249,10 +260,11 @@ function script.StopMoving()
 end
 
 function beginJump()
-	--[[EmitSfx(jet1, RocketTrail)
-	EmitSfx(jet2, RocketTrail)
-	EmitSfx(jet3, RocketTrail)
-	EmitSfx(jet4, RocketTrail)]]--
+	isJumping = true
+end
+
+function endJump()
+	isJumping = false
 end
 
 function script.Activate()

@@ -35,6 +35,7 @@ local currLaunchPoint = 1
 -- constants
 local SIG_AIM = 2
 local walking = false
+local isJumping = false
 local RESTORE_DELAY = Spring.UnitScript.GetLongestReloadTime(unitID) * 2
 
 -- includes
@@ -230,15 +231,24 @@ local function MotionControl()
 	end
 end
 
-
---local function StopWalk()
---	Turn(lupperleg, x_axis, 0, rad(200))
---	Turn(rupperleg, x_axis, 0, rad(200))
---end
+function JumpControl()
+	while true do
+		if isJumping then
+			EmitSfx(jet1, RocketTrail)
+			EmitSfx(jet2, RocketTrail)
+			EmitSfx(jet3, RocketTrail)
+			EmitSfx(jet4, RocketTrail)
+			Sleep(50)
+		else
+			Sleep(100)
+		end
+	end
+end
 
 function script.Create()
 	StartThread(SmokeUnit, {pelvis, torso})
 	StartThread(MotionControl)
+	StartThread(JumpControl)
 end
 
 function script.StartMoving()
@@ -254,10 +264,11 @@ function script.Activate()
 end
 
 function beginJump()
-	EmitSfx(jet1, RocketTrail)
-	EmitSfx(jet2, RocketTrail)
-	EmitSfx(jet3, RocketTrail)
-	EmitSfx(jet4, RocketTrail)
+	isJumping = true
+end
+
+function endJump()
+	isJumping = false
 end
 
 function script.Deactivate()
