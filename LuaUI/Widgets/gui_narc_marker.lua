@@ -124,7 +124,7 @@ local function CountDown(frame, height)
 end
  
 function widget:DrawWorldPreUnit()
-  glLineWidth(6.0)
+  glLineWidth(4.0)
   glDepthTest(false)--true)
   glPolygonOffset(-50, -2)
  
