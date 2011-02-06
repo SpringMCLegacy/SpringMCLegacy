@@ -48,6 +48,9 @@ local CL_Factory = {
 		supplyradius	= "0",
 		helptext		= "A Dropship",
     },
+	sounds = {
+    underattack        = "Dropship_Alarm",
+	},
 }
 
 return lowerkeys({ ["CL_Factory"] = CL_Factory })
