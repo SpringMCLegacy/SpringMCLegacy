@@ -23,6 +23,7 @@ local IS_Factory = {
 	idleAutoHeal		= 0,
 	maxSlope			= 50,
 	builder				= true,
+	moveState			= 0,
 		showNanoFrame		= 0,
 		showNanoSpray		= 0,
 		workerTime			= 1,
