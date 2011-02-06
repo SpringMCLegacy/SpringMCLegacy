@@ -310,7 +310,7 @@ local function Jump(unitID, goal, cmdTag)
     if cob then
 	  spCallCOBScript( unitID, "EndJump", 0)
 	else
-	   --Spring.UnitScript.CallAsUnit(unitID,env.endJump)
+	   Spring.UnitScript.CallAsUnit(unitID,env.endJump)
 	end
     lastJump[unitID] = spGetGameSeconds()
     jumping[unitID] = false
