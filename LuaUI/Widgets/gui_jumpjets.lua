@@ -10,7 +10,7 @@
 
 function widget:GetInfo()
   return {
-    name      = "Jumjet GUI",
+    name      = "Jumpjet GUI",
     desc      = "Draws jump arc.",
     author    = "quantum",
     date      = "May 30, 2008",
