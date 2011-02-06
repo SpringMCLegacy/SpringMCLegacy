@@ -169,7 +169,6 @@ local function ReloadQueue(unitID, queue, cmdTag)
 end
 
 local function Jump(unitID, goal, cmdTag)
-	Spring.Echo("Jumping ", unitID)
   goal[2]             = spGetGroundHeight(goal[1],goal[3])
   local start         = {spGetUnitBasePosition(unitID)}
 

@@ -254,7 +254,6 @@ function script.Activate()
 end
 
 function beginJump()
-	Spring.Echo(" Cocksucking motherfucker!")
 	EmitSfx(jet1, RocketTrail)
 	EmitSfx(jet2, RocketTrail)
 	EmitSfx(jet3, RocketTrail)
