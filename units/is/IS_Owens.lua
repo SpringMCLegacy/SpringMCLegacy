@@ -4,8 +4,8 @@ local IS_Owens = {
 	objectName        	= "IS_Owens.s3o",
 	script				= "IS_Owens.lua",
 	category 			= "mech ground",
-	sightDistance       = 1000,
-	radarDistance      	= 1500,
+	sightDistance       = 1500,
+	radarDistance      	= 2000,
 		activateWhenBuilt   = true,
 		onoffable           = true,
 	maxDamage           = 7000,
@@ -80,7 +80,7 @@ local IS_Owens = {
 	},
     customparams = {
 		hasturnbutton	= "1",
-		helptext		= "Armament: 1 x NARC Launcher, 2 x Small Beam Laser, 2 x Artemis-enhanced LRM-5 - Armor: 7 tons",
+		helptext		= "Armament: 2 x Artemis-enhanced LRM-5, 2 x Small Beam Laser, 1 x NARC Launcher - Armor: 7 tons",
     },
 }
 
