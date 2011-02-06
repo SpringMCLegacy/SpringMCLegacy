@@ -35,7 +35,8 @@ local outRadarUnits = {}
 local narcUnits = {}
 
 local function NARC(unitID, allyTeam)
-	narcUnits[unitID] = true
+	local narcFrame = GetGameFrame() + NARC_DURATION
+	narcUnits[unitID] = narcFrame
 	SetUnitLosState(unitID, allyTeam, {los=true, prevLos=true, radar=true, contRadar=true} ) 
 	SetUnitLosMask(unitID, allyTeam, {los=true, prevLos=false, radar=false, contRadar=false} )	
 	-- Set rules param here so that widgets know the unit is NARCed, value points to the frame NARC runs out
@@ -43,10 +44,12 @@ local function NARC(unitID, allyTeam)
 end
 
 local function DeNARC(unitID, allyTeam)
-	narcUnits[unitID] = nil
-	SetUnitLosMask(unitID, allyTeam, {los=false, prevLos=false, radar=false, contRadar=false} )
-	-- unset rules param
-	SetUnitRulesParam(unitID, "NARC", -1, {inlos = true})
+	if narcUnits[unitID] <= GetGameFrame() + 1 then
+		narcUnits[unitID] = nil
+		SetUnitLosMask(unitID, allyTeam, {los=false, prevLos=false, radar=false, contRadar=false} )
+		-- unset rules param
+		SetUnitRulesParam(unitID, "NARC", -1, {inlos = true})
+	end
 end
 
 function gadget:UnitEnteredRadar(unitID, unitTeam, allyTeam, unitDefID)
