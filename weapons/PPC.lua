@@ -27,9 +27,9 @@ weaponDef = {
 	damage = {
 		default = 500, --100 DPS
 	},
-	
-	
-	
+	customparams = {
+		heatgenerated		= "50",--10/sec
+    },
 }
 
 return lowerkeys({ PPC = weaponDef })

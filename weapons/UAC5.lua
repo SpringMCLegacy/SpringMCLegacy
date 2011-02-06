@@ -25,9 +25,9 @@ weaponDef = {
 	damage = {
 		default = 25, --75 DPS, 25% increased Rate Of Fire
 	},
-	
-	
-	
+	customparams = {
+		heatgenerated		= "0.56",--1.5/sec
+    },
 }
 
 return lowerkeys({ UAC5 = weaponDef })

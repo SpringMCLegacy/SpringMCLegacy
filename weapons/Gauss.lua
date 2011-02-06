@@ -26,9 +26,9 @@ weaponDef = {
 	damage = {
 		default = 900, --150 DPS
 	},
-	
-	
-	
+	customparams = {
+		heatgenerated		= "6",--1/s
+    },
 }
 
 return lowerkeys({ Gauss = weaponDef })
