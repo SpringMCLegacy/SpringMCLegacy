@@ -1,19 +1,19 @@
-local CL_Maddog = {
-	name              	= "Mad Dog (Vulture)",
+local IS_Catapult = {
+	name              	= "Catapult",
 	description         = "Heavy Support Mech",
-	objectName        	= "CL_Maddog.s3o",
-	script				= "CL_Maddog.lua",
+	objectName        	= "IS_Catapult.s3o",
+	script				= "IS_Catapult.lua",
 	category 			= "mech ground",
-	sightDistance       = 1500,
-	radarDistance      	= 2000,
+	sightDistance       = 1000,
+	radarDistance      	= 1500,
 		activateWhenBuilt   = true,
 		onoffable           = true,
-	maxDamage           = 8500,
-	mass                = 6000,
+	maxDamage           = 10000,
+	mass                = 6500,
 	footprintX			= 3,
 	footprintZ 			= 3,
 	collisionVolumeType = "box",
-	collisionVolumeScales = "40 50 40",
+	collisionVolumeScales = "45 50 40",
 	collisionVolumeOffsets = "0 0 0",
 	collisionVolumeTest = 1,
 --	leaveTracks			= 1,
@@ -28,11 +28,11 @@ local CL_Maddog = {
 	upright				= true,
 	canMove				= true,
 		movementClass   = "LARGEMECH",
-		maxVelocity		= 4.3, --86kph/10/2
-		maxReverseVelocity= 1.10,
+		maxVelocity		= 3.25, --65kph/10/2
+		maxReverseVelocity= 1.0,
 		acceleration    = 1,
 		brakeRate       = 0.2,
-		turnRate 		= 700,
+		turnRate 		= 650,
 		smoothAnim		= 1,
 	
 	canAttack 			= true,
@@ -50,23 +50,23 @@ local CL_Maddog = {
 				maxAngleDif = 270,
 			},
 			[3] = {
-				name	= "CLPL",
+				name	= "MPL",
 				mainDir = "0 0 1",
 				maxAngleDif = 270,
 			},
 			[4] = {
-				name	= "CMPL",
+				name	= "MPL",
 				--weaponSlaveTo2 = 1,
 				mainDir = "0 0 1",
 				maxAngleDif = 270,
 			},
 			[5] = {
-				name	= "CLPL",
+				name	= "MPL",
 				mainDir = "0 0 1",
 				maxAngleDif = 270,
 			},
 			[6] = {
-				name	= "CMPL",
+				name	= "MPL",
 				--weaponSlaveTo2 = 1,
 				mainDir = "0 0 1",
 				maxAngleDif = 270,
@@ -79,6 +79,7 @@ local CL_Maddog = {
 		explosiongenerators = {
 		"custom:MEDIUM_MUZZLEFLASH",
 		"custom:MG_MUZZLEFLASH",
+		"custom:RocketTrail",
 		},
 	},
     customparams = {
@@ -87,4 +88,4 @@ local CL_Maddog = {
     },
 }
 
-return lowerkeys({ ["CL_Maddog"] = CL_Maddog })
+return lowerkeys({ ["IS_Catapult"] = IS_Catapult })

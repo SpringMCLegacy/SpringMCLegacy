@@ -6,7 +6,7 @@ local deg, rad = math.deg, math.rad
 
 --piece defines
 local pelvis, torso = piece ("pelvis", "torso")
-local rupperarm, rlowerarm, lupperarm, llowerarm = piece ("rupperarm", "rlowerarm", "lupperarm", "llowerarm")
+local rupperarm, lupperarm = piece ("rupperarm", "lupperarm")
 local lupperleg, llowerleg, rupperleg, rlowerleg, rfronttoes, rbacktoe, lfronttoes, lbacktoe = piece ("lupperleg", "llowerleg", "rupperleg", "rlowerleg", "rfronttoes", "rbacktoe", "lfronttoes", "lbacktoe")
 local flare1, flare2, flare3, flare4 = piece ("flare1", "flare2", "flare3", "flare4")
 
@@ -42,6 +42,7 @@ include "smokeunit.lua"
 --SFX defines
 MEDIUM_MUZZLEFLASH = SFX.CEG+0
 MG_MUZZLEFLASH = SFX.CEG+1
+RocketTrail = SFX.CEG+2
 
 local function MotionControl()
 	while true do
@@ -247,6 +248,13 @@ function script.StopMoving()
 	walking = false
 end
 
+function beginJump()
+	--[[EmitSfx(jet1, RocketTrail)
+	EmitSfx(jet2, RocketTrail)
+	EmitSfx(jet3, RocketTrail)
+	EmitSfx(jet4, RocketTrail)]]--
+end
+
 function script.Activate()
 	Spring.SetUnitStealth(unitID, false)
 end
@@ -258,19 +266,16 @@ end
 local function RestoreAfterDelay(unitID)
 	Sleep(RESTORE_DELAY)
 	Turn(torso, y_axis, 0, TORSO_SPEED)
-	Turn(llowerarm, x_axis, 0, ELEVATION_SPEED)
-	Turn(rlowerarm, x_axis, 0, ELEVATION_SPEED)
+	Turn(lupperarm, x_axis, 0, ELEVATION_SPEED)
+	Turn(rupperarm, x_axis, 0, ELEVATION_SPEED)
 end
 
 function script.AimWeapon(weaponID, heading, pitch)
 	Signal(SIG_AIM ^ weaponID) -- 2 'to the power of' weapon ID
     SetSignalMask(SIG_AIM ^ weaponID)
-		if weaponID == 1 then
-			Turn(llowerarm, x_axis, -pitch, ELEVATION_SPEED)
-		elseif weaponID == 3 then
-			Turn(rlowerarm, x_axis, -pitch, ELEVATION_SPEED)
-		end
 	Turn(torso, y_axis, heading, TORSO_SPEED)
+	Turn(lupperarm, x_axis, -pitch, ELEVATION_SPEED)
+	Turn(rupperarm, x_axis, -pitch, ELEVATION_SPEED)
 	WaitForTurn(torso, y_axis)
 	StartThread(RestoreAfterDelay)
 	return true
