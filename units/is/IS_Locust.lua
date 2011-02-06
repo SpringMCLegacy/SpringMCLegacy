@@ -44,13 +44,13 @@ local IS_Locust = {
 				maxAngleDif = 270,
 			},
 			[2] = {
-				name	= "SRM3",
+				name	= "SRM4",
 				--weaponSlaveTo2 = 1,
 				mainDir = "0 0 1",
 				maxAngleDif = 270,
 			},
 			[3] = {
-				name	= "SRM3",
+				name	= "SRM4",
 				--weaponSlaveTo3 = 1,
 				mainDir = "0 0 1",
 				maxAngleDif = 270,
@@ -67,7 +67,7 @@ local IS_Locust = {
 	},
     customparams = {
 		hasturnbutton	= "1",
-		helptext		= "Armament: 1 x Medium Beam Laser, 2 x SRM-3 - Armor: 3 tons",
+		helptext		= "Armament: 1 x Medium Beam Laser, 2 x SRM-4 - Armor: 3 tons",
     },
 }
 
