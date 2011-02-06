@@ -26,9 +26,9 @@ weaponDef = {
 	damage = {
 		default = 320, --80 DPS
 	},
-	
-	
-	
+	customparams = {
+		heatgenerated		= "4",--1/sec
+    },
 }
 
 return lowerkeys({ LightGauss = weaponDef })

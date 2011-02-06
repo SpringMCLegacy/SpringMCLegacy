@@ -34,7 +34,9 @@ weaponDef = {
 	damage = {
 		default = 75, --100 DPS
 	},
-	
+	customparams = {
+		heatgenerated		= "7.5",--10/s
+    },
 	
 	
 }

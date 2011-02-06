@@ -29,6 +29,9 @@ weaponDef = {
 	damage = {
 		default = 50, --300 DPS
 	},
+	customparams = {
+		heatgenerated		= "30",--6/sec
+    },
 }
 
 return lowerkeys({ HAG30 = weaponDef })

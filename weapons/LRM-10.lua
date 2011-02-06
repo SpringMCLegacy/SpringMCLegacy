@@ -35,6 +35,9 @@ weaponDef = {
 	damage = {
 		default = 100,--10 DPS
 	},
+	customparams = {
+		heatgenerated		= "40",--4/sec
+    },
 }
 
 return lowerkeys({ LRM10 = weaponDef })

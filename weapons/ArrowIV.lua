@@ -33,6 +33,9 @@ weaponDef = {
 		default = 4000,--200 DPS
 		dropships = 1,--haha fuck you flozi
 	},
+	customparams = {
+		heatgenerated		= "200",--10/sec
+    },
 }
 
 return lowerkeys({ ArrowIV = weaponDef })
