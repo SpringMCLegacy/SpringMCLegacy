@@ -59,37 +59,14 @@ local GetUnitRulesParam    = Spring.GetUnitRulesParam
 local trackSlope  = true
  
 local circleLines  = 0
-local circlePolys  = 0
 local circleDivs  = 32
 local circleOffset  = 0
  
-local diamondLines  = 0
-local diamondPolys  = 0
- 
-local squareLines  = 0
-local squarePolys  = 0
-local squareOffset  = 0
  
 local startTimer  = spGetTimer()
  
 local realRadii    = {}
-local teamColors  = {}
---------------------------------------------------------------------------------
---------------------------------------------------------------------------------
- 
-local function SetupCommandColors(state)
-  local alpha = state and 1 or 0
-  local f = io.open('cmdcolors.tmp', 'w+')
-  if (f) then
-    f:write('unitBox  0 1 0 ' .. alpha)
-    f:close()
-    spSendCommands({'cmdcolors cmdcolors.tmp'})
-  end
-  os.remove('cmdcolors.tmp')
-end
- 
---------------------------------------------------------------------------------
---------------------------------------------------------------------------------
+
  
 function widget:Initialize()
   circleLines = glCreateList(function()
@@ -101,65 +78,11 @@ function widget:Initialize()
       end
     end)
   end)
- 
-  circlePolys = glCreateList(function()
-    glBeginEnd(GL_TRIANGLE_FAN, function()
-    local radstep = (2.0 * math.pi) / circleDivs
-      for i = 1, circleDivs do
-        local a = (i * radstep)
-        glVertex(math.sin(a), circleOffset, math.cos(a))
-      end
-    end)
-  end)
-  
-  diamondLines = glCreateList(function()
-    glBeginEnd(GL_LINE_LOOP, function()
-      local radstep = (2.0 * math.pi) / 4
-      for i = 1, 4 do
-        local a = (i * radstep)
-        glVertex(math.sin(a), 0, math.cos(a))
-      end
-    end)
-  end)
-  
-  diamondPolys = glCreateList(function()
-    glBeginEnd(GL_TRIANGLE_FAN, function()
-    local radstep = (2.0 * math.pi) / 4
-      for i = 1, 4 do
-        local a = (i * radstep)
-        glVertex(math.sin(a), 0, math.cos(a))
-      end
-    end)
-  end)
-  
-  squareLines = glCreateList(function()
-    glBeginEnd(GL_LINE_LOOP, function()
-      glVertex(-1,0,-1)
-      glVertex(-1,0,1)
-      glVertex(1,0,1)
-      glVertex(1,0,-1)
-    end)
-  end)
- 
-  squarePolys = glCreateList(function()
-    glBeginEnd(GL.POLYGON,function()
-      glVertex(-1,0,-1)
-      glVertex(-1,0,1)
-      glVertex(1,0,1)
-      glVertex(1,0,-1)
-    end)
-  end)
- 
-SetupCommandColors(false)
 end
  
  
 function widget:Shutdown()
   glDeleteList(circleLines)
-  glDeleteList(circlePolys)
-  glDeleteList(squareLines)
-  glDeleteList(squarePolys)
-  SetupCommandColors(true)
 end
  
 --------------------------------------------------------------------------------
@@ -187,36 +110,11 @@ end
 --------------------------------------------------------------------------------
 --------------------------------------------------------------------------------
  
-local teamColors = {}
- 
- 
-local function GetTeamColorSet(teamID)
-  local colors = teamColors[teamID]
-  if (colors) then
-    return colors
-  end
-  local r,g,b = spGetTeamColor(teamID)
-  
-  colors = {
-    { r, g, b, 0.1},
-    { r, g, b, 0.2 },
-    { r, g, b, 0.7 },
-    { r, g, b, 0.02},
-  }
-  teamColors[teamID] = colors
-  return colors
-end
- 
- 
---------------------------------------------------------------------------------
---------------------------------------------------------------------------------
- 
 function widget:DrawWorldPreUnit()
-  glLineWidth(3.0)
-  glDepthTest(true)
+  glLineWidth(6.0)
+  glDepthTest(false)--true)
   glPolygonOffset(-50, -2)
  
-  local lastColorSet = nil
   for _,unitID in ipairs(spGetAllUnits()) do
     if (spIsUnitVisible(unitID)) then
                 -- check if it's NARCed
@@ -227,7 +125,8 @@ function widget:DrawWorldPreUnit()
                                 local udid = spGetUnitDefID(unitID)
                                 local radius = GetUnitDefRealRadius(udid)
                                 if (radius) then
-                                        local colorSet  = GetTeamColorSet(teamID)
+										local diffTime = spDiffTimers(spGetTimer(), startTimer)
+										local alpha = 1.8 * math.abs(0.5 - (diffTime * 3.0 % 1.0))
                                         local x, y, z = spGetUnitBasePosition(unitID)
                                         local gx, gy, gz = spGetGroundNormal(x, z)
                                         local degrot = math.acos(gy) * 180 / math.pi
@@ -236,11 +135,11 @@ function widget:DrawWorldPreUnit()
                                         if (Spring.GetUnitBuildFacing(unitID) or 0)%2==1 then
                                                 xs,zs=zs,xs
                                         end
-                                        -- use the diamond shape for now, to see it easily on top the team platters
-                                        glColor(colorSet[1])
-                                        glDrawListAtUnit(unitID, diamondPolys, false, radius, 1.0, radius, degrot, gz, 0, -gx)
-                                        glColor(colorSet[2])
-                                        glDrawListAtUnit(unitID, diamondLines, false, radius, 1.0, radius, degrot, gz, 0, -gx)
+										-- draw concentric yellow blinky circles
+										glColor(1, 1, 0, alpha)
+										glDrawListAtUnit(unitID, circleLines, false, radius, 1.0, radius, degrot, gz, 0, -gx)
+										glDrawListAtUnit(unitID, circleLines, false, radius * 1.5, 1.0, radius * 1.5, degrot, gz, 0, -gx)
+										glDrawListAtUnit(unitID, circleLines, false, radius * 2.5, 1.0, radius * 2.5, degrot, gz, 0, -gx)
                                 end
                         end
                 end
@@ -248,56 +147,6 @@ function widget:DrawWorldPreUnit()
   end
  
   glPolygonOffset(false)
- 
-  --
-  -- Blink the selected units
-  --
- 
   glDepthTest(false)
- 
-  local diffTime = spDiffTimers(spGetTimer(), startTimer)
-  local alpha = 1.8 * math.abs(0.5 - (diffTime * 3.0 % 1.0))
-  glColor(1, 1, 1, alpha)
- 
-  for _,unitID in ipairs(spGetSelectedUnits()) do
-    local udid        = spGetUnitDefID(unitID)
-    local radius    = GetUnitDefRealRadius(udid)
-    local teamID    = spGetUnitTeam(unitID)
-    local colorSet  = GetTeamColorSet(teamID)
-    if (radius) then
-      local xs,zs = 4*UnitDefs[udid].xsize or 4, 4*UnitDefs[udid].zsize or 4
-      if (Spring.GetUnitBuildFacing(unitID) or 0)%2==1 then
-        xs,zs=zs,xs
-      end
-      if (UnitDefs[udid].speed <10) then
-        glColor(colorSet[1])
-        glDrawListAtUnit(unitID, squarePolys,false,xs,1,zs)
-        glColor(colorSet[2])
-        glDrawListAtUnit(unitID, squareLines,false,xs,1,zs)
-      elseif (trackSlope and (not UnitDefs[udid].canFly)) then
-        local x, y, z = spGetUnitBasePosition(unitID)
-        local gx, gy, gz = spGetGroundNormal(x, z)
-        local degrot = math.acos(gy) * 180 / math.pi
-        
-        if (UnitDefs[udid].builder == true) then
-          glColor(colorSet[2])
-          glDrawListAtUnit(unitID, diamondPolys, false, radius, 1.0, radius, degrot, gz, 0, -gx)
-          glColor(colorSet[3])
-          glDrawListAtUnit(unitID, diamondLines, false, radius, 1.0, radius, degrot, gz, 0, -gx)
-        else
-          glColor(colorSet[2])
-          glDrawListAtUnit(unitID, circlePolys, false, radius, 1.0, radius)
-          glColor(colorSet[3])
-          glDrawListAtUnit(unitID, circleLines, false, radius, 1.0, radius, degrot, gz, 0, -gx)
-        end
-      else
-        glColor(colorSet[2])
-        glDrawListAtUnit(unitID, circlePolys, false, radius, 1.0, radius)
-        glColor(colorSet[3])
-        glDrawListAtUnit(unitID, circleLines, false, radius, 1.0, radius)
-      end
-    end
-  end
- 
   glLineWidth(1.0)
 end
