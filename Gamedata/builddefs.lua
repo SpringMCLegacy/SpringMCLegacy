@@ -42,6 +42,7 @@ buildoptions =
 	"is_locust",
 	"is_owens",
 	"is_chimera",
+	"is_bushwacker",
 	"is_catapult",
 	"is_mauler",
 	"is_atlas",
