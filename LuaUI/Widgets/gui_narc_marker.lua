@@ -28,33 +28,38 @@ end
  
 -- Automatically generated local definitions
  
-local GL_LINE_LOOP        = GL.LINE_LOOP
-local GL_TRIANGLE_FAN      = GL.TRIANGLE_FAN
-local glBeginEnd        = gl.BeginEnd
-local glColor          = gl.Color
-local glCreateList        = gl.CreateList
-local glDeleteList        = gl.DeleteList
-local glDepthTest        = gl.DepthTest
-local glDrawListAtUnit      = gl.DrawListAtUnit
-local glLineWidth        = gl.LineWidth
-local glPolygonOffset      = gl.PolygonOffset
-local glVertex          = gl.Vertex
-local spDiffTimers        = Spring.DiffTimers
-local spGetAllUnits        = Spring.GetAllUnits
-local spGetGroundNormal      = Spring.GetGroundNormal
-local spGetSelectedUnits    = Spring.GetSelectedUnits
-local spGetTeamColor      = Spring.GetTeamColor
-local spGetTimer        = Spring.GetTimer
-local spGetUnitBasePosition    = Spring.GetUnitBasePosition
-local spGetUnitDefDimensions  = Spring.GetUnitDefDimensions
-local spGetUnitDefID      = Spring.GetUnitDefID
-local spGetUnitRadius      = Spring.GetUnitRadius
-local spGetUnitTeam        = Spring.GetUnitTeam
-local spGetUnitViewPosition    = Spring.GetUnitViewPosition
-local spIsUnitSelected      = Spring.IsUnitSelected
-local spIsUnitVisible      = Spring.IsUnitVisible
-local spSendCommands      = Spring.SendCommands
-local GetUnitRulesParam    = Spring.GetUnitRulesParam
+local GL_LINE_LOOP				= GL.LINE_LOOP
+local GL_TRIANGLE_FAN			= GL.TRIANGLE_FAN
+local glBeginEnd				= gl.BeginEnd
+local glBillboard				= gl.Billboard
+local glColor					= gl.Color
+local glCreateList				= gl.CreateList
+local glDeleteList				= gl.DeleteList
+local glDepthTest				= gl.DepthTest
+local glDrawFuncAtUnit			= gl.DrawFuncAtUnit
+local glDrawListAtUnit			= gl.DrawListAtUnit
+local glLineWidth				= gl.LineWidth
+local glPolygonOffset			= gl.PolygonOffset
+local glPopMatrix				= gl.PopMatrix
+local glPushMatrix				= gl.PushMatrix
+local glText					= gl.Text
+local glVertex					= gl.Vertex
+local spDiffTimers				= Spring.DiffTimers
+local spGetAllUnits				= Spring.GetAllUnits
+local spGetGroundNormal			= Spring.GetGroundNormal
+local spGetSelectedUnits		= Spring.GetSelectedUnits
+local spGetTimer				= Spring.GetTimer
+local spGetUnitBasePosition		= Spring.GetUnitBasePosition
+local spGetUnitDefDimensions	= Spring.GetUnitDefDimensions
+local spGetUnitDefID			= Spring.GetUnitDefID
+local spGetUnitHeight			= Spring.GetUnitHeight
+local spGetUnitRadius			= Spring.GetUnitRadius
+local spGetUnitTeam				= Spring.GetUnitTeam
+local spGetUnitViewPosition		= Spring.GetUnitViewPosition
+local spIsUnitSelected			= Spring.IsUnitSelected
+local spIsUnitVisible			= Spring.IsUnitVisible
+local spSendCommands			= Spring.SendCommands
+local GetUnitRulesParam			= Spring.GetUnitRulesParam
  
 local trackSlope  = true
  
@@ -66,7 +71,7 @@ local circleOffset  = 0
 local startTimer  = spGetTimer()
  
 local realRadii    = {}
-
+local heights = {}
  
 function widget:Initialize()
   circleLines = glCreateList(function()
@@ -110,6 +115,14 @@ end
 --------------------------------------------------------------------------------
 --------------------------------------------------------------------------------
  
+local function CountDown(frame, height)
+	local timeLeft = string.format('%.1f', (frame - Spring.GetGameFrame()) / 32.0)
+	glPushMatrix()
+	glBillboard()
+	glText("NARC: " .. timeLeft, 0, height + 10, 20, "c")
+	glPopMatrix()
+end
+ 
 function widget:DrawWorldPreUnit()
   glLineWidth(6.0)
   glDepthTest(false)--true)
@@ -124,6 +137,11 @@ function widget:DrawWorldPreUnit()
                         if (teamID and teamID ~= Spring.GetGaiaTeamID()) then
                                 local udid = spGetUnitDefID(unitID)
                                 local radius = GetUnitDefRealRadius(udid)
+								local height = heights[udid]
+								if not height then
+									height = spGetUnitHeight(unitID)
+									heights[udid] = height
+								end
                                 if (radius) then
 										local diffTime = spDiffTimers(spGetTimer(), startTimer)
 										local alpha = 1.8 * math.abs(0.5 - (diffTime * 3.0 % 1.0))
@@ -136,6 +154,8 @@ function widget:DrawWorldPreUnit()
                                                 xs,zs=zs,xs
                                         end
 										-- draw concentric yellow blinky circles
+										glColor(1, 1, 0, 1)
+										glDrawFuncAtUnit(unitID, true, CountDown, NARCFrame, height) -- should really cache heights
 										glColor(1, 1, 0, alpha)
 										glDrawListAtUnit(unitID, circleLines, false, radius, 1.0, radius, degrot, gz, 0, -gx)
 										glDrawListAtUnit(unitID, circleLines, false, radius * 1.5, 1.0, radius * 1.5, degrot, gz, 0, -gx)
