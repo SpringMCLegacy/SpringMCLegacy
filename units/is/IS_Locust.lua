@@ -44,14 +44,26 @@ local IS_Locust = {
 				maxAngleDif = 270,
 			},
 			[2] = {
-				name	= "SRM4",
+				name	= "MPL",
 				--weaponSlaveTo2 = 1,
 				mainDir = "0 0 1",
 				maxAngleDif = 270,
 			},
 			[3] = {
-				name	= "SRM4",
+				name	= "SPL",
 				--weaponSlaveTo3 = 1,
+				mainDir = "0 0 1",
+				maxAngleDif = 270,
+			},
+			[4] = {
+				name	= "MPL",
+				--weaponSlaveTo4 = 1,
+				mainDir = "0 0 1",
+				maxAngleDif = 270,
+			},
+			[5] = {
+				name	= "SPL",
+				--weaponSlaveTo5 = 1,
 				mainDir = "0 0 1",
 				maxAngleDif = 270,
 			},
@@ -61,13 +73,12 @@ local IS_Locust = {
 
 	sfxtypes = {
 		explosiongenerators = {
-		"custom:SMALL_MUZZLEFLASH",
 		"custom:MG_MUZZLEFLASH",
 		},
 	},
     customparams = {
 		hasturnbutton	= "1",
-		helptext		= "Armament: 1 x Medium Beam Laser, 2 x SRM-4 - Armor: 3 tons",
+		helptext		= "Armament: 1 x Medium Beam Laser, 2 x Medium Pulse Laser, 2 x Small Pulse Laser - Armor: 3 tons",
     },
 }
 

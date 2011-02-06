@@ -5,30 +5,15 @@ local weapons = ud.weapons
 local deg, rad = math.deg, math.rad
 
 --piece defines
-local pelvis, torso, launcher1, launcher2, barrel = piece ("pelvis", "torso", "launcher1", "launcher2", "barrel")
+local pelvis, torso, barrel = piece ("pelvis", "torso", "barrel")
+local lupperarm, llowerarm, rupperarm, rlowerarm = piece ("lupperarm", "llowerarm", "rupperarm", "rlowerarm")
 local lupperleg, llowerleg, rupperleg, rlowerleg, rfronttoes, rbacktoes, lfronttoes, lbacktoes = piece ("lupperleg", "llowerleg", "rupperleg", "rlowerleg", "rfronttoes", "rbacktoes", "lfronttoes", "lbacktoes")
-local flare = piece ("flare")
-
-local missileWeaponIDs = {[2] = true, [3] = true}
- 
-local launchPoints = {}
-local numPoints = {}
-local currPoints = {}
+local flare1, flare2, flare3, flare4, flare5 = piece ("flare1", "flare2", "flare3", "flare4", "flare5")
  
 --Turning/Movement Locals
 local TORSO_SPEED = rad(200)
 local ELEVATION_SPEED = rad(200)
 local LEG_SPEED = rad(1000)
-
-for weaponID in pairs(missileWeaponIDs) do
-        launchPoints[weaponID] = {}
-        currPoints[weaponID] = 1
-        numPoints[weaponID] = WeaponDefs[weapons[weaponID].weaponDef].salvoSize
-        for i = 1, numPoints[weaponID] do
-                launchPoints[weaponID][i] = piece("launchpoint_" .. weaponID .. "_" .. i)
-        end
-end
-local currLaunchPoint = 1
 
 -- constants
 local SIG_AIM = 2
@@ -39,8 +24,7 @@ local RESTORE_DELAY = Spring.UnitScript.GetLongestReloadTime(unitID) * 2
 include "smokeunit.lua"
 
 --SFX defines
-SMALL_MUZZLEFLASH = SFX.CEG+0
-MG_MUZZLEFLASH = SFX.CEG+1
+MG_MUZZLEFLASH = SFX.CEG+0
 
 local function MotionControl()
 	while true do
@@ -258,8 +242,8 @@ local function RestoreAfterDelay(unitID)
 	Sleep(RESTORE_DELAY)
 	Turn(torso, y_axis, 0, TORSO_SPEED)
 	Turn(barrel, x_axis, 0, ELEVATION_SPEED)
-	Turn(launcher1, x_axis, 0, ELEVATION_SPEED)
-	Turn(launcher2, x_axis, 0, ELEVATION_SPEED)
+	Turn(llowerarm, x_axis, 0, ELEVATION_SPEED)
+	Turn(rlowerarm, x_axis, 0, ELEVATION_SPEED)
 end
 
 function script.AimWeapon(weaponID, heading, pitch)
@@ -267,10 +251,10 @@ function script.AimWeapon(weaponID, heading, pitch)
     SetSignalMask(SIG_AIM ^ weaponID)
 		if weaponID == 1 then
 			Turn(barrel, x_axis, -pitch, ELEVATION_SPEED)
-		--elseif weaponID == 2 then
-		--	Turn(launcher1, x_axis, -pitch, rad(150))
-		--elseif weaponID == 3 then
-		--	Turn(launcher2, x_axis, -pitch, rad(150))
+		elseif weaponID == 2 then
+			Turn(llowerarm, x_axis, -pitch, rad(150))
+		elseif weaponID == 4 then
+			Turn(rlowerarm, x_axis, -pitch, rad(150))
 		end
 	Turn(torso, y_axis, heading, TORSO_SPEED)
 	WaitForTurn(torso, y_axis)
@@ -280,18 +264,19 @@ end
 
 function script.FireWeapon(weaponID)
 		if weaponID == 1 then
-			EmitSfx(flare, MG_MUZZLEFLASH)
+			EmitSfx(flare1, MG_MUZZLEFLASH)
+		elseif weaponID == 2 then
+			EmitSfx(flare2, MG_MUZZLEFLASH)
+		elseif weaponID == 3 then
+			EmitSfx(flare3, MG_MUZZLEFLASH)
+		elseif weaponID == 4 then
+			EmitSfx(flare4, MG_MUZZLEFLASH)
+		elseif weaponID == 5 then
+			EmitSfx(flare5, MG_MUZZLEFLASH)
 		end
 end
 
 function script.Shot(weaponID)
-	if missileWeaponIDs[weaponID] then
-		EmitSfx(launchPoints[weaponID][currPoints[weaponID]], SMALL_MUZZLEFLASH)
-        currPoints[weaponID] = currPoints[weaponID] + 1
-        if currPoints[weaponID] > numPoints[weaponID] then 
-                currPoints[weaponID] = 1
-        end
-	end		
 end
 
 function script.AimFromWeapon(weaponID) 
@@ -299,12 +284,16 @@ function script.AimFromWeapon(weaponID)
 end
 
 function script.QueryWeapon(weaponID) 
-	if missileWeaponIDs[weaponID] then
-		return launchPoints[weaponID][currPoints[weaponID]]
-	else
-		if weaponID == 1 then
-			return flare
-		end
+	if weaponID == 1 then
+		return flare1
+	elseif weaponID == 2 then
+		return flare2
+	elseif weaponID == 3 then
+		return flare3
+	elseif weaponID == 4 then
+		return flare4
+	elseif weaponID == 5 then
+		return flare5
 	end
 end
 
