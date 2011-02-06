@@ -6,7 +6,7 @@ local CL_Hephaestus = {
 	category 			= "tank ground hovercraft",
 	stealth				= 1,
 	sightDistance       = 1000,
-	radarDistance      	= 2000,
+	radarDistance      	= 1500,
 		activateWhenBuilt   = true,
 		onoffable           = true,
 --	radarDistanceJam    = 0,
@@ -53,7 +53,7 @@ local CL_Hephaestus = {
 	},
 	customparams = {
 		hasturnbutton	= "1",
-		helptext		= "Armament: 2 x Medium Pulse Laser - Armor: 5 tons",
+		helptext		= "Armament: 2 x Medium Pulse Laser, 1 x NARC Launcher - Armor: 5 tons",
     },
 }
 
