@@ -55,13 +55,13 @@ local IS_Atlas = {
 				maxAngleDif = 270,
 			},
 			[4] = {
-				name	= "MBL",
+				name	= "MPL",
 				--weaponSlaveTo2 = 1,
 				mainDir = "0 0 1",
 				maxAngleDif = 270,
 			},
 			[5] = {
-				name	= "MBL",
+				name	= "MPL",
 				--weaponSlaveTo2 = 1,
 				mainDir = "0 0 1",
 				maxAngleDif = 270,
