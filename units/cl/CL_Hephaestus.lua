@@ -19,7 +19,7 @@ local CL_Hephaestus = {
 	collisionVolumeOffsets = "0 3 0",
 	collisionVolumeTest = 1,
 	buildCostEnergy     = 0,
-	buildCostMetal      = 500,
+	buildCostMetal      = 650,
 	buildTime           = 0,
 	canMove				= true,
 	canHover			= true,
@@ -34,10 +34,10 @@ local CL_Hephaestus = {
 		--Makes unit use weapon from /weapons folder
 		weapons 		= {	
 			[1] = {
-				name	= "MPL",
+				name	= "CMPL",
 			},
 			[2] = {
-				name	= "MPL",
+				name	= "CMPL",
 			},
 			[3] = {
 				name	= "NARC",

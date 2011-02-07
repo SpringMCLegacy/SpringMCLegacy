@@ -8,7 +8,7 @@ local IS_Mauler = {
 	radarDistance      	= 1500,
 		activateWhenBuilt   = true,
 		onoffable           = true,
-	maxDamage           = 11000,
+	maxDamage           = 14000,
 	mass                = 9000,
 	footprintX			= 3,
 	footprintZ 			= 3,
@@ -39,12 +39,12 @@ local IS_Mauler = {
 		--Makes unit use weapon from /weapons folder
 		weapons 		= {	
 			[1] = {
-				name	= "LBL",
+				name	= "Gauss",
 				mainDir = "0 0 1",
 				maxAngleDif = 270,
 			},
 			[2] = {
-				name	= "LBL",
+				name	= "Gauss",
 				--weaponSlaveTo2 = 1,
 				mainDir = "0 0 1",
 				maxAngleDif = 270,
