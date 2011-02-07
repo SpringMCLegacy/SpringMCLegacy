@@ -40,6 +40,7 @@ buildoptions =
 	"is_lrmcarrier",
 	"is_sniper",
 	"is_locust",
+	"is_osiris",
 	"is_owens",
 	"is_chimera",
 	"is_bushwacker",
