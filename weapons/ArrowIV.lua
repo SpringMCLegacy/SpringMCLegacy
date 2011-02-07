@@ -27,10 +27,10 @@ weaponDef = {
 	areaOfEffect            = 175,
 	startVelocity			= 500,
 	weaponVelocity          = 500,
-	reloadtime              = 20,
+	reloadtime              = 15,
 	model					= "LargeMissile.s3o",
 	damage = {
-		default = 4000,--200 DPS
+		default = 3000,--200 DPS
 		dropships = 1,--haha fuck you flozi
 	},
 	customparams = {
