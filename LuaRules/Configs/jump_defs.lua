@@ -37,6 +37,7 @@ jumpClassGroups = {
 	baseclass = { 
 	"is_chimera",
 	"is_catapult",
+	"is_osiris",
 	--[["corpyro",
 	"corfast",
 	"corsktl",
@@ -67,6 +68,7 @@ jumpClassGroups = {
 overCategory = {
 	is_chimera = { cobscript = false},
 	is_catapult = { cobscript = false},
+	is_osiris = { cobscript = false},
  --[[noruas = {
     reload = 0,  },
 	
