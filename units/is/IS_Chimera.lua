@@ -39,7 +39,7 @@ local IS_Chimera = {
 		--Makes unit use weapon from /weapons folder
 		weapons 		= {	
 			[1] = {
-				name	= "PPC",
+				name	= "LPL",
 				mainDir = "0 0 1",
 				maxAngleDif = 270,
 			},
