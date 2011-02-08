@@ -1,6 +1,6 @@
 local IS_Osiris = {
 	name              	= "Osiris",
-	description         = "Light Combat Mech",
+	description         = "Light Skirmish Mech",
 	objectName        	= "IS_Osiris.s3o",
 	script				= "IS_Osiris.lua",
 	category 			= "mech ground",

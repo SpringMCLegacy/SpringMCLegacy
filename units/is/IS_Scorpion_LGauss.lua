@@ -1,6 +1,6 @@
 local IS_Scorpion_LGauss = {
 	name              	= "Scorpion (Light Gauss)",
-	description         = "Light Tank",
+	description         = "Light Sniper Tank",
 	objectName        	= "IS_Scorpion_LGauss.s3o",
 	script				= "IS_Scorpion_LGauss.lua",
 	category 			= "tank ground",

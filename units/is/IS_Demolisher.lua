@@ -1,6 +1,6 @@
 local IS_Demolisher = {
 	name              	= "Demolisher",
-	description         = "Heavy Assault Tank",
+	description         = "Heavy Brawler Tank",
 	objectName        	= "IS_Demolisher.s3o",
 	script				= "IS_Demolisher.lua",
 	category 			= "tank ground",

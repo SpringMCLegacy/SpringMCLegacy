@@ -1,6 +1,6 @@
 local IS_Atlas = {
 	name              	= "Atlas",
-	description         = "Assault Mech",
+	description         = "Assault-class Brawler Mech",
 	objectName        	= "IS_Atlas.s3o",
 	script				= "IS_Atlas.lua",
 	category 			= "mech ground",

@@ -1,6 +1,6 @@
 local CL_Stormcrow = {
 	name              	= "Stormcrow (Ryoken)",
-	description         = "Medium Combat Mech",
+	description         = "Medium Brawler Mech",
 	objectName        	= "CL_Stormcrow.s3o",
 	script				= "CL_Stormcrow.lua",
 	category 			= "mech ground",

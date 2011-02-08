@@ -1,6 +1,6 @@
 local CL_Oro_LBX = {
 	name              	= "Oro (LBX/20)",
-	description         = "Heavy Combat Tank",
+	description         = "Medium Brawler Tank",
 	objectName        	= "CL_Oro_LBX.s3o",
 	script				= "CL_Oro_LBX.lua",
 	category 			= "tank ground",

@@ -1,6 +1,6 @@
 local CL_Ares = {
 	name              	= "Ares",
-	description         = "Medium Tank",
+	description         = "Medium Sniper Tank",
 	objectName        	= "CL_Ares.s3o",
 	script				= "CL_Ares.lua",
 	category 			= "tank ground",

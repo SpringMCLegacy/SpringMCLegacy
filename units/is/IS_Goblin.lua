@@ -1,6 +1,6 @@
 local IS_Goblin = {
 	name              	= "Goblin",
-	description         = "Medium Tank",
+	description         = "Medium Brawler Tank",
 	objectName        	= "IS_Goblin.s3o",
 	script				= "IS_Goblin.lua",
 	category 			= "tank ground",

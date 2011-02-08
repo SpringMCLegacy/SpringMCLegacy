@@ -1,6 +1,6 @@
 local IS_Harasser = {
 	name              	= "Harraser",
-	description         = "Scout Hovercraft",
+	description         = "Light Skirmish Hovercraft",
 	objectName        	= "IS_Harasser.s3o",
 	script				= "IS_Harasser.lua",
 	category 			= "tank ground hovercraft",

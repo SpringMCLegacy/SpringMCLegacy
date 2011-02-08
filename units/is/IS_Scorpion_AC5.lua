@@ -1,6 +1,6 @@
 local IS_Scorpion_AC5 = {
 	name              	= "Scorpion (AC/5)",
-	description         = "Light Tank",
+	description         = "Light Strike Tank",
 	objectName        	= "IS_Scorpion_AC5.s3o",
 	script				= "IS_Scorpion_AC5.lua",
 	category 			= "tank ground",

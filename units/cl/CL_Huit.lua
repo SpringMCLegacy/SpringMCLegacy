@@ -1,6 +1,6 @@
 local CL_Huit = {
 	name              	= "Huitzilopochtli",
-	description         = "Artillery Vehicle",
+	description         = "Heavy Artillery Support Vehicle",
 	objectName        	= "CL_Huit.s3o",
 	script				= "CL_Huit.lua",
 	category 			= "tank ground",

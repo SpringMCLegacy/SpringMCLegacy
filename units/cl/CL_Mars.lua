@@ -1,6 +1,6 @@
 local CL_Mars = {
 	name              	= "Mars",
-	description         = "Heavy Assault/Support Tank",
+	description         = "Heavy Strike Tank",
 	objectName        	= "CL_Mars.s3o",
 	script				= "CL_Mars.lua",
 	category 			= "tank ground",

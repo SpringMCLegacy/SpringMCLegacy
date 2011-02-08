@@ -1,6 +1,6 @@
 local IS_LRMCarrier = {
 	name              	= "LRM Carrier",
-	description         = "Support Vehicle",
+	description         = "Missile Support Vehicle",
 	objectName        	= "IS_LRMCarrier.s3o",
 	script				= "IS_LRMCarrier.lua",
 	category 			= "tank ground",
