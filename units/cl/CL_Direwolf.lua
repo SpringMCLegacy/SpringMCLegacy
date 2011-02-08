@@ -1,6 +1,6 @@
 local CL_Direwolf = {
 	name              	= "Dire Wolf (Daishi)",
-	description         = "Assault Mech",
+	description         = "Assault-class Strike Mech",
 	objectName        	= "CL_Direwolf.s3o",
 	script				= "CL_Direwolf.lua",
 	category 			= "mech ground",

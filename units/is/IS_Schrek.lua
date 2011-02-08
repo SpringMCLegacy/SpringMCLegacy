@@ -1,6 +1,6 @@
 local IS_Schrek = {
 	name              	= "Schrek",
-	description         = "Fire Support Tank",
+	description         = "Medium Sniper Tank",
 	objectName        	= "IS_Schrek.s3o",
 	script				= "IS_Schrek.lua",
 	category 			= "tank ground",

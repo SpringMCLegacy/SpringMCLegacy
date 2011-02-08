@@ -1,6 +1,6 @@
 local IS_Owens = {
 	name              	= "Owens",
-	description         = "Light Support Mech",
+	description         = "Light Missile Support Mech",
 	objectName        	= "IS_Owens.s3o",
 	script				= "IS_Owens.lua",
 	category 			= "mech ground",

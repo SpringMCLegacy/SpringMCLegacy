@@ -1,6 +1,6 @@
 local CL_Maddog = {
 	name              	= "Mad Dog (Vulture)",
-	description         = "Heavy Support Mech",
+	description         = "Heavy Missile Support Mech",
 	objectName        	= "CL_Maddog.s3o",
 	script				= "CL_Maddog.lua",
 	category 			= "mech ground",

@@ -1,6 +1,6 @@
 local IS_Chimera = {
 	name              	= "Chimera",
-	description         = "Medium Combat Mech",
+	description         = "Medium Skirmish Mech",
 	objectName        	= "IS_Chimera.s3o",
 	script				= "IS_Chimera.lua",
 	category 			= "mech ground",

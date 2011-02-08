@@ -1,6 +1,6 @@
 local IS_Bushwacker = {
 	name              	= "Bushwacker",
-	description         = "Medium Combat Mech",
+	description         = "Medium Strike Mech",
 	objectName        	= "IS_Bushwacker.s3o",
 	script				= "IS_Bushwacker.lua",
 	category 			= "mech ground",

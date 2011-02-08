@@ -1,6 +1,6 @@
 local CL_Warhawk = {
 	name              	= "War Hawk (Masakari)",
-	description         = "Assault Mech",
+	description         = "Assault-class Sniper Mech",
 	objectName        	= "CL_Warhawk.s3o",
 	script				= "CL_Warhawk.lua",
 	category 			= "mech ground",

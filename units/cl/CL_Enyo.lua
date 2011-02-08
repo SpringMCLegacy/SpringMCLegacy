@@ -1,6 +1,6 @@
 local CL_Enyo = {
 	name              	= "Enyo",
-	description         = "Medium Assault Tank",
+	description         = "Medium Strike Tank",
 	objectName        	= "CL_Enyo.s3o",
 	script				= "CL_Enyo.lua",
 	category 			= "tank ground",

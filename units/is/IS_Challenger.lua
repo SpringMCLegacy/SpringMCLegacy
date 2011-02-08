@@ -1,6 +1,6 @@
 local IS_Challenger = {
 	name              	= "Challenger",
-	description         = "Heavy Combat Tank",
+	description         = "Heavy Strike Tank",
 	objectName        	= "IS_Challenger.s3o",
 	script				= "IS_Challenger.lua",
 	category 			= "tank ground",

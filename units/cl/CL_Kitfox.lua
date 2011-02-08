@@ -1,6 +1,6 @@
 local CL_Kitfox = {
 	name              	= "Kit Fox (Uller)",
-	description         = "Light Scout Mech",
+	description         = "Light Skirmish Mech",
 	objectName        	= "CL_Kitfox.s3o",
 	script				= "CL_Kitfox.lua",
 	category 			= "mech ground",

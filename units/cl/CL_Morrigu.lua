@@ -1,6 +1,6 @@
 local CL_Morrigu = {
 	name              	= "Morrigu",
-	description         = "Heavy Support Tank",
+	description         = "Heavy Sniper Tank",
 	objectName        	= "CL_Morrigu.s3o",
 	script				= "CL_Morrigu.lua",
 	category 			= "tank ground",

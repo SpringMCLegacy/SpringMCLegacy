@@ -1,6 +1,6 @@
 local IS_Catapult = {
 	name              	= "Catapult",
-	description         = "Heavy Support Mech",
+	description         = "Heavy Missile Support Mech",
 	objectName        	= "IS_Catapult.s3o",
 	script				= "IS_Catapult.lua",
 	category 			= "mech ground",

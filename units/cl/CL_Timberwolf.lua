@@ -1,6 +1,6 @@
 local CL_Timberwolf = {
 	name              	= "Timber Wolf (Mad Cat)",
-	description         = "Assault Mech",
+	description         = "Heavy Strike Mech",
 	objectName        	= "CL_Timberwolf.s3o",
 	script				= "CL_Timberwolf.lua",
 	category 			= "mech ground",

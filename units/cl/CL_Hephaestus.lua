@@ -1,6 +1,6 @@
 local CL_Hephaestus = {
 	name              	= "Hephaestus",
-	description         = "Scout Hovercraft",
+	description         = "Light Scout Hovercraft",
 	objectName        	= "CL_Hephaestus.s3o",
 	script				= "CL_Hephaestus.lua",
 	category 			= "tank ground hovercraft",
