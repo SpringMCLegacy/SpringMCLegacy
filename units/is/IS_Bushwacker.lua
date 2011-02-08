@@ -1,6 +1,6 @@
 local IS_Bushwacker = {
 	name              	= "Bushwacker",
-	description         = "Medium Strike Mech",
+	description         = "Medium Brawler Mech",
 	objectName        	= "IS_Bushwacker.s3o",
 	script				= "IS_Bushwacker.lua",
 	category 			= "mech ground",
@@ -8,7 +8,7 @@ local IS_Bushwacker = {
 	radarDistance      	= 1500,
 		activateWhenBuilt   = true,
 		onoffable           = true,
-	maxDamage           = 9000,
+	maxDamage           = 10000,
 	mass                = 5500,
 	footprintX			= 2,
 	footprintZ 			= 2,
@@ -23,23 +23,23 @@ local IS_Bushwacker = {
 --	trackType			= "Thick",--graphics file to use for the track decal, from \bitmaps\tracks\ folder
 --	trackWidth			= 20,--width to render the decal
 	buildCostEnergy     = 0,
-	buildCostMetal      = 6000,
+	buildCostMetal      = 7000,
 	buildTime           = 0,
 	upright				= true,
 	canMove				= true,
 		movementClass   = "SMALLMECH",
-		maxVelocity		= 4.3, --86kph/10/2
-		maxReverseVelocity= 2.5,
-		acceleration    = 1.2,
+		maxVelocity		= 3.25, --64kph/10/2
+		maxReverseVelocity= 1.9,
+		acceleration    = 1.0,
 		brakeRate       = 0.1,
-		turnRate 		= 750,
+		turnRate 		= 700,
 		smoothAnim		= 1,
 	
 	canAttack 			= true,
 		--Makes unit use weapon from /weapons folder
 		weapons 		= {	
 			[1] = {
-				name	= "AC10",
+				name	= "AC20",
 				mainDir = "0 0 1",
 				maxAngleDif = 270,
 			},
@@ -50,19 +50,19 @@ local IS_Bushwacker = {
 				maxAngleDif = 270,
 			},
 			[3] = {
-				name	= "MG",
+				name	= "SPL",
 				--weaponSlaveTo2 = 1,
 				mainDir = "0 0 1",
 				maxAngleDif = 270,
 			},
 			[4] = {
-				name	= "MG",
+				name	= "SPL",
 				--weaponSlaveTo4 = 1,
 				mainDir = "0 0 1",
 				maxAngleDif = 270,
 			},
 			[5] = {
-				name	= "LRM10",
+				name	= "MRM10",
 				--weaponSlaveTo4 = 1,
 				mainDir = "0 0 1",
 				maxAngleDif = 270,
@@ -86,7 +86,7 @@ local IS_Bushwacker = {
 	},
     customparams = {
 		hasturnbutton	= "1",
-		helptext		= "Armament: 1 x AC/10, 1 x ER Large Beam Laser, 2 x MG, 1 x SRM-6, 1 x LRM-10 - Armor: 7 tons",
+		helptext		= "Armament: 1 x LBX/20, 1 x ER Large Beam Laser, 2 x Small Pulse Laser, 1 x SRM-6, 1 x MRM-10 - Armor: 7 tons",
     },
 }
 
