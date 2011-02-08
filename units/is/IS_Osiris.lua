@@ -39,12 +39,12 @@ local IS_Osiris = {
 		--Makes unit use weapon from /weapons folder
 		weapons 		= {	
 			[1] = {
-				name	= "MPL",
+				name	= "ERSBL",
 				mainDir = "0 0 1",
 				maxAngleDif = 270,
 			},
 			[2] = {
-				name	= "MPL",
+				name	= "ERSBL",
 				--weaponSlaveTo2 = 1,
 				mainDir = "0 0 1",
 				maxAngleDif = 270,
@@ -92,7 +92,7 @@ local IS_Osiris = {
 	},
     customparams = {
 		hasturnbutton	= "1",
-		helptext		= "Armament: 5 x Medium Pulse Laser, 1 x MG, 1 x SRM-6 - Armor: 4 tons",
+		helptext		= "Armament: 3 x Medium Pulse Laser, 2 x ER Small Beam Laser, 1 x MG, 1 x SRM-6 - Armor: 4 tons",
     },
 }
 

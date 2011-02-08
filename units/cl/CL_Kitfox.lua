@@ -44,7 +44,7 @@ local CL_Kitfox = {
 				--maxAngleDif = 270,
 			},
 			[2] = {
-				name	= "AC5",
+				name	= "AC10",
 				--weaponSlaveTo2 = 1,
 				--mainDir = "0 0 1",
 				--maxAngleDif = 270,
