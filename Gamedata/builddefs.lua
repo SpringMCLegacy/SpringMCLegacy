@@ -13,9 +13,9 @@ buildoptions =
   cl_factory = 
   {
     "cl_hephaestus",
-	"cl_ares",
 	"cl_enyo",
 	"cl_oro_lbx",
+	"cl_ares",
 	"cl_oro_hag",
 	"cl_morrigu",
 	"cl_mars",
@@ -31,12 +31,12 @@ buildoptions =
   is_factory = 
   {
     "is_harasser",
-	"is_scorpion_ac5",
-	"is_scorpion_lgauss",
+	--"is_scorpion_ac5",
+	--"is_scorpion_lgauss",
 	"is_goblin",
+	"is_schrek",
 	"is_demolisher",
 	"is_challenger",
-	"is_schrek",
 	"is_lrmcarrier",
 	"is_sniper",
 	"is_locust",
