@@ -16,7 +16,7 @@ buildoptions =
 	"cl_enyo",
 	"cl_oro_lbx",
 	"cl_ares",
-	"cl_oro_hag",
+	--"cl_oro_hag",
 	"cl_morrigu",
 	"cl_mars",
 	"cl_huit",
