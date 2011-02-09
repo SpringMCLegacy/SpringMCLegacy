@@ -6,30 +6,14 @@ local deg, rad = math.deg, math.rad
 
 --piece defines
 local pelvis, torso = piece ("pelvis", "torso")
-local rupperarm, rlowerarm, lupperarm, llowerarm = piece ("rupperarm", "rlowerarm", "lupperarm", "llowerarm")
-local lupperleg, llowerleg, rupperleg, rlowerleg, rfronttoes, rbacktoe, lfronttoes, lbacktoe = piece ("lupperleg", "llowerleg", "rupperleg", "rlowerleg", "rfronttoes", "rbacktoe", "lfronttoes", "lbacktoe")
-local flare1, flare2, flare3, flare4, flare5 = piece ("flare1", "flare2", "flare3", "flare4", "flare5")
-
-local missileWeaponIDs = {[1] = true}
- 
-local launchPoints = {}
-local numPoints = {}
-local currPoints = {}
+local lupperarm, llowerarm, rupperarm, rlowerarm = piece ("lupperarm", "llowerarm", "rupperarm", "rlowerarm")
+local lupperleg, llowerleg, rupperleg, rlowerleg, rfronttoe, rbacktoe, lfronttoe, lbacktoe = piece ("lupperleg", "llowerleg", "rupperleg", "rlowerleg", "rfronttoe", "rbacktoe", "lfronttoe", "lbacktoe")
+local flare1, flare2, flare3, flare4, flare5, flare6, flare7, flare8 = piece ("flare1", "flare2", "flare3", "flare4", "flare5", "flare6", "flare7", "flare8")
  
 --Turning/Movement Locals
-local TORSO_SPEED = rad(150)
+local TORSO_SPEED = rad(200)
 local ELEVATION_SPEED = rad(200)
-local LEG_SPEED = rad(750)
-
-for weaponID in pairs(missileWeaponIDs) do
-        launchPoints[weaponID] = {}
-        currPoints[weaponID] = 1
-        numPoints[weaponID] = WeaponDefs[weapons[weaponID].weaponDef].salvoSize
-        for i = 1, numPoints[weaponID] do
-                launchPoints[weaponID][i] = piece("launchpoint_" .. weaponID .. "_" .. i)
-        end
-end
-local currLaunchPoint = 1
+local LEG_SPEED = rad(800)
 
 -- constants
 local SIG_AIM = 2
@@ -40,8 +24,7 @@ local RESTORE_DELAY = Spring.UnitScript.GetLongestReloadTime(unitID) * 2
 include "smokeunit.lua"
 
 --SFX defines
-MEDIUM_MUZZLEFLASH = SFX.CEG+0
-MG_MUZZLEFLASH = SFX.CEG+1
+MG_MUZZLEFLASH = SFX.CEG+0
 
 local function MotionControl()
 	while true do
@@ -51,177 +34,177 @@ local function MotionControl()
 			Turn(lupperleg, x_axis, rad(25), LEG_SPEED)
 			Turn(llowerleg, x_axis, rad(25), LEG_SPEED)
 			Turn(lbacktoe, x_axis, rad(-60), LEG_SPEED)
-			Turn(lfronttoes, x_axis, rad(-15), LEG_SPEED)
+			Turn(lfronttoe, x_axis, rad(-15), LEG_SPEED)
 			--Right Leg--
 			Turn(rupperleg, x_axis, rad(-25), LEG_SPEED)
 			Turn(rlowerleg, x_axis, rad(15), LEG_SPEED)
 			Turn(rbacktoe, x_axis, rad(-30), LEG_SPEED)
-			Turn(rfronttoes, x_axis, rad(45), LEG_SPEED)
+			Turn(rfronttoe, x_axis, rad(45), LEG_SPEED)
 			--Wait For Turns...--
 			WaitForTurn(lupperleg, x_axis)
 			WaitForTurn(llowerleg, x_axis)
 			WaitForTurn(lbacktoe, x_axis)
-			WaitForTurn(lfronttoes, x_axis)
+			WaitForTurn(lfronttoe, x_axis)
 			WaitForTurn(rupperleg, x_axis)
 			WaitForTurn(rlowerleg, x_axis)
 			WaitForTurn(rbacktoe, x_axis)
-			WaitForTurn(rfronttoes, x_axis)
+			WaitForTurn(rfronttoe, x_axis)
 			Sleep(10)
 			--Spring.Echo("Step TWO")
 			--Left Leg--
 			Turn(lupperleg, x_axis, rad(25), LEG_SPEED)
 			Turn(llowerleg, x_axis, rad(45), LEG_SPEED)
 			Turn(lbacktoe, x_axis, rad(-75), LEG_SPEED)
-			Turn(lfronttoes, x_axis, rad(-60), LEG_SPEED)
+			Turn(lfronttoe, x_axis, rad(-60), LEG_SPEED)
 			--Right Leg--
 			Turn(rupperleg, x_axis, rad(-45), LEG_SPEED)
 			Turn(rlowerleg, x_axis, rad(0), LEG_SPEED)
 			Turn(rbacktoe, x_axis, rad(-30), LEG_SPEED)
-			Turn(rfronttoes, x_axis, rad(40), LEG_SPEED)
+			Turn(rfronttoe, x_axis, rad(40), LEG_SPEED)
 			--Wait For Turns...--
 			WaitForTurn(lupperleg, x_axis)
 			WaitForTurn(llowerleg, x_axis)
 			WaitForTurn(lbacktoe, x_axis)
-			WaitForTurn(lfronttoes, x_axis)
+			WaitForTurn(lfronttoe, x_axis)
 			WaitForTurn(rupperleg, x_axis)
 			WaitForTurn(rlowerleg, x_axis)
 			WaitForTurn(rbacktoe, x_axis)
-			WaitForTurn(rfronttoes, x_axis)
+			WaitForTurn(rfronttoe, x_axis)
 			Sleep(10)
 			--Spring.Echo("Step THREE")
 			--Left Leg--
 			Turn(lupperleg, x_axis, rad(60), LEG_SPEED)
 			Turn(llowerleg, x_axis, rad(15), LEG_SPEED)
 			Turn(lbacktoe, x_axis, rad(-45), LEG_SPEED)
-			Turn(lfronttoes, x_axis, rad(0), LEG_SPEED)
+			Turn(lfronttoe, x_axis, rad(0), LEG_SPEED)
 			--Right Leg--
 			Turn(rupperleg, x_axis, rad(-30), LEG_SPEED)
 			Turn(rlowerleg, x_axis, rad(15), LEG_SPEED)
 			Turn(rbacktoe, x_axis, rad(10), LEG_SPEED)
-			Turn(rfronttoes, x_axis, rad(15), LEG_SPEED)
+			Turn(rfronttoe, x_axis, rad(15), LEG_SPEED)
 			--Wait For Turns...--
 			WaitForTurn(lupperleg, x_axis)
 			WaitForTurn(llowerleg, x_axis)
 			WaitForTurn(lbacktoe, x_axis)
-			WaitForTurn(lfronttoes, x_axis)
+			WaitForTurn(lfronttoe, x_axis)
 			WaitForTurn(rupperleg, x_axis)
 			WaitForTurn(rlowerleg, x_axis)
 			WaitForTurn(rbacktoe, x_axis)
-			WaitForTurn(rfronttoes, x_axis)
+			WaitForTurn(rfronttoe, x_axis)
 			Sleep(10)
 			--Spring.Echo("Step FOUR")
 			--Left Leg--
 			Turn(lupperleg, x_axis, rad(-10), LEG_SPEED)
 			Turn(llowerleg, x_axis, rad(-15), LEG_SPEED)
 			Turn(lbacktoe, x_axis, rad(-45), LEG_SPEED)
-			Turn(lfronttoes, x_axis, rad(30), LEG_SPEED)
+			Turn(lfronttoe, x_axis, rad(30), LEG_SPEED)
 			--Right Leg--
 			Turn(rupperleg, x_axis, rad(0), LEG_SPEED)
 			Turn(rlowerleg, x_axis, rad(5), LEG_SPEED)
 			Turn(rbacktoe, x_axis, rad(0), LEG_SPEED)
-			Turn(rfronttoes, x_axis, rad(0), LEG_SPEED)
+			Turn(rfronttoe, x_axis, rad(0), LEG_SPEED)
 			--Wait For Turns...--
 			WaitForTurn(lupperleg, x_axis)
 			WaitForTurn(llowerleg, x_axis)
 			WaitForTurn(lbacktoe, x_axis)
-			WaitForTurn(lfronttoes, x_axis)
+			WaitForTurn(lfronttoe, x_axis)
 			WaitForTurn(rupperleg, x_axis)
 			WaitForTurn(rlowerleg, x_axis)
 			WaitForTurn(rbacktoe, x_axis)
-			WaitForTurn(rfronttoes, x_axis)
+			WaitForTurn(rfronttoe, x_axis)
 			Sleep(10)
 			--Spring.Echo("Step FIVE")
 			--Left Leg--
 			Turn(lupperleg, x_axis, rad(-25), LEG_SPEED)
 			Turn(llowerleg, x_axis, rad(-15), LEG_SPEED)
 			Turn(lbacktoe, x_axis, rad(-30), LEG_SPEED)
-			Turn(lfronttoes, x_axis, rad(45), LEG_SPEED)
+			Turn(lfronttoe, x_axis, rad(45), LEG_SPEED)
 			--Right Leg--
 			Turn(rupperleg, x_axis, rad(25), LEG_SPEED)
 			Turn(rlowerleg, x_axis, rad(25), LEG_SPEED)
 			Turn(rbacktoe, x_axis, rad(-60), LEG_SPEED)
-			Turn(rfronttoes, x_axis, rad(-45), LEG_SPEED)
+			Turn(rfronttoe, x_axis, rad(-45), LEG_SPEED)
 			--Wait For Turns...--
 			WaitForTurn(lupperleg, x_axis)
 			WaitForTurn(llowerleg, x_axis)
 			WaitForTurn(lbacktoe, x_axis)
-			WaitForTurn(lfronttoes, x_axis)
+			WaitForTurn(lfronttoe, x_axis)
 			WaitForTurn(rupperleg, x_axis)
 			WaitForTurn(rlowerleg, x_axis)
 			WaitForTurn(rbacktoe, x_axis)
-			WaitForTurn(rfronttoes, x_axis)
+			WaitForTurn(rfronttoe, x_axis)
 			Sleep(10)
 			--Spring.Echo("Step SIX")
 			--Left Leg--
 			Turn(lupperleg, x_axis, rad(-45), LEG_SPEED)
 			Turn(llowerleg, x_axis, rad(0), LEG_SPEED)
 			Turn(lbacktoe, x_axis, rad(-30), LEG_SPEED)
-			Turn(lfronttoes, x_axis, rad(60), LEG_SPEED)
+			Turn(lfronttoe, x_axis, rad(60), LEG_SPEED)
 			--Right Leg--
 			Turn(rupperleg, x_axis, rad(25), LEG_SPEED)
 			Turn(rlowerleg, x_axis, rad(45), LEG_SPEED)
 			Turn(rbacktoe, x_axis, rad(-75), LEG_SPEED)
-			Turn(rfronttoes, x_axis, rad(-60), LEG_SPEED)
+			Turn(rfronttoe, x_axis, rad(-60), LEG_SPEED)
 			--Wait For Turns...--
 			WaitForTurn(lupperleg, x_axis)
 			WaitForTurn(llowerleg, x_axis)
 			WaitForTurn(lbacktoe, x_axis)
-			WaitForTurn(lfronttoes, x_axis)
+			WaitForTurn(lfronttoe, x_axis)
 			WaitForTurn(rupperleg, x_axis)
 			WaitForTurn(rlowerleg, x_axis)
 			WaitForTurn(rbacktoe, x_axis)
-			WaitForTurn(rfronttoes, x_axis)
+			WaitForTurn(rfronttoe, x_axis)
 			Sleep(10)
 			--Spring.Echo("Step SEVEN")
 			--Left Leg--
 			Turn(lupperleg, x_axis, rad(-30), LEG_SPEED)
 			Turn(llowerleg, x_axis, rad(15), LEG_SPEED)
 			Turn(lbacktoe, x_axis, rad(10), LEG_SPEED)
-			Turn(lfronttoes, x_axis, rad(15), LEG_SPEED)
+			Turn(lfronttoe, x_axis, rad(15), LEG_SPEED)
 			--Right Leg--
 			Turn(rupperleg, x_axis, rad(45), LEG_SPEED)
 			Turn(rlowerleg, x_axis, rad(15), LEG_SPEED)
 			Turn(rbacktoe, x_axis, rad(-45), LEG_SPEED)
-			Turn(rfronttoes, x_axis, rad(0), LEG_SPEED)
+			Turn(rfronttoe, x_axis, rad(0), LEG_SPEED)
 			--Wait For Turns...--
 			WaitForTurn(lupperleg, x_axis)
 			WaitForTurn(llowerleg, x_axis)
 			WaitForTurn(lbacktoe, x_axis)
-			WaitForTurn(lfronttoes, x_axis)
+			WaitForTurn(lfronttoe, x_axis)
 			WaitForTurn(rupperleg, x_axis)
 			WaitForTurn(rlowerleg, x_axis)
 			WaitForTurn(rbacktoe, x_axis)
-			WaitForTurn(rfronttoes, x_axis)
+			WaitForTurn(rfronttoe, x_axis)
 			Sleep(10)
 			--Spring.Echo("Step EIGHT")
 			--Left Leg--
 			Turn(lupperleg, x_axis, rad(0), LEG_SPEED)
 			Turn(llowerleg, x_axis, rad(5), LEG_SPEED)
 			Turn(lbacktoe, x_axis, rad(0), LEG_SPEED)
-			Turn(lfronttoes, x_axis, rad(0), LEG_SPEED)
+			Turn(lfronttoe, x_axis, rad(0), LEG_SPEED)
 			--Right Leg--
 			Turn(rupperleg, x_axis, rad(-10), LEG_SPEED)
 			Turn(rlowerleg, x_axis, rad(-15), LEG_SPEED)
 			Turn(rbacktoe, x_axis, rad(-45), LEG_SPEED)
-			Turn(rfronttoes, x_axis, rad(30), LEG_SPEED)
+			Turn(rfronttoe, x_axis, rad(30), LEG_SPEED)
 			--Wait For Turns...--
 			WaitForTurn(lupperleg, x_axis)
 			WaitForTurn(llowerleg, x_axis)
 			WaitForTurn(lbacktoe, x_axis)
-			WaitForTurn(lfronttoes, x_axis)
+			WaitForTurn(lfronttoe, x_axis)
 			WaitForTurn(rupperleg, x_axis)
 			WaitForTurn(rlowerleg, x_axis)
 			WaitForTurn(rbacktoe, x_axis)
-			WaitForTurn(rfronttoes, x_axis)
+			WaitForTurn(rfronttoe, x_axis)
 			Sleep(10)
 		else
 			Turn(lupperleg, x_axis, rad(0), LEG_SPEED)
 			Turn(llowerleg, x_axis, rad(0), LEG_SPEED)
-			Turn(lfronttoes, x_axis, rad(0), LEG_SPEED)
+			Turn(lfronttoe, x_axis, rad(0), LEG_SPEED)
 			Turn(lbacktoe, x_axis, rad(0), LEG_SPEED)
 			Turn(rupperleg, x_axis, rad(0), LEG_SPEED)
 			Turn(rlowerleg, x_axis, rad(0), LEG_SPEED)
-			Turn(rfronttoes, x_axis, rad(0), LEG_SPEED)
+			Turn(rfronttoe, x_axis, rad(0), LEG_SPEED)
 			Turn(rbacktoe, x_axis, rad(0),LEG_SPEED)
 			Sleep(100)
 		end
@@ -265,18 +248,10 @@ end
 function script.AimWeapon(weaponID, heading, pitch)
 	Signal(SIG_AIM ^ weaponID) -- 2 'to the power of' weapon ID
     SetSignalMask(SIG_AIM ^ weaponID)
-		if weaponID == 2 then
-			Turn(llowerarm, x_axis, -pitch, ELEVATION_SPEED)
-		elseif weaponID == 3 then
-			Turn(llowerarm, x_axis, -pitch, ELEVATION_SPEED)
-		elseif weaponID == 4 then
-			Turn(rlowerarm, x_axis, -pitch, ELEVATION_SPEED)
+		if weaponID == 1 then
+			Turn(llowerarm, x_axis, -pitch, rad(150))
 		elseif weaponID == 5 then
-			Turn(rlowerarm, x_axis, -pitch, ELEVATION_SPEED)
-		--elseif weaponID == 2 then
-		--	Turn(launcher1, x_axis, -pitch, rad(150))
-		--elseif weaponID == 3 then
-		--	Turn(launcher2, x_axis, -pitch, rad(150))
+			Turn(rlowerarm, x_axis, -pitch, rad(150))
 		end
 	Turn(torso, y_axis, heading, TORSO_SPEED)
 	WaitForTurn(torso, y_axis)
@@ -285,27 +260,26 @@ function script.AimWeapon(weaponID, heading, pitch)
 end
 
 function script.FireWeapon(weaponID)
-		if weaponID == 2 then
+		if weaponID == 1 then
 			EmitSfx(flare1, MG_MUZZLEFLASH)
-		elseif weaponID == 3 then
+		elseif weaponID == 2 then
 			EmitSfx(flare2, MG_MUZZLEFLASH)
-		elseif weaponID == 4 then
+		elseif weaponID == 3 then
 			EmitSfx(flare3, MG_MUZZLEFLASH)
-		elseif weaponID == 5 then
+		elseif weaponID == 4 then
 			EmitSfx(flare4, MG_MUZZLEFLASH)
-		elseif weaponID == 6 then
+		elseif weaponID == 5 then
 			EmitSfx(flare5, MG_MUZZLEFLASH)
+		elseif weaponID == 6 then
+			EmitSfx(flare6, MG_MUZZLEFLASH)
+		elseif weaponID == 7 then
+			EmitSfx(flare7, MG_MUZZLEFLASH)
+		elseif weaponID == 8 then
+			EmitSfx(flare8, MG_MUZZLEFLASH)
 		end
 end
 
 function script.Shot(weaponID)
-	if missileWeaponIDs[weaponID] then
-		EmitSfx(launchPoints[weaponID][currPoints[weaponID]], MEDIUM_MUZZLEFLASH)
-        currPoints[weaponID] = currPoints[weaponID] + 1
-        if currPoints[weaponID] > numPoints[weaponID] then 
-                currPoints[weaponID] = 1
-        end
-	end		
 end
 
 function script.AimFromWeapon(weaponID) 
@@ -313,20 +287,22 @@ function script.AimFromWeapon(weaponID)
 end
 
 function script.QueryWeapon(weaponID) 
-	if missileWeaponIDs[weaponID] then
-		return launchPoints[weaponID][currPoints[weaponID]]
-	else
-		if weaponID == 2 then
-			return flare1
-		elseif weaponID == 3 then
-			return flare2
-		elseif weaponID == 4 then
-			return flare3
-		elseif weaponID == 5 then
-			return flare4
-		elseif weaponID == 6 then
-			return flare5
-		end
+	if weaponID == 1 then
+		return flare1
+	elseif weaponID == 2 then
+		return flare2
+	elseif weaponID == 3 then
+		return flare3
+	elseif weaponID == 4 then
+		return flare4
+	elseif weaponID == 5 then
+		return flare5
+	elseif weaponID == 6 then
+		return flare6
+	elseif weaponID == 7 then
+		return flare7
+	elseif weaponID == 8 then
+		return flare8
 	end
 end
 
