@@ -24,6 +24,7 @@
 --              },
 --              weapons = {
 --                      reloadtime = 0.5,       --reloadtime multiplier
+--						accuracy = 2,			--accuracy multiplier
 --                      range = 2,              --Range multiplier. This also increases the projectile speed so lasers don't fade out.
 --                                              --Missiles and artillery may have problems with excessive range increases
 --                      mask = {"infantry","droid"},
@@ -42,6 +43,13 @@ local auras = {
 						rate = 0.1,     --heals the unit by maxHP * rate per second. The per second is non-negotiable
 						mask = {"all"},
 				},
+--				weapons = {
+--						reloadtime = 0.5,       --reloadtime multiplier
+--						accuracy = 0.01,			--accuracy multiplier
+--						range = 0,              --Range multiplier. This also increases the projectile speed so lasers don't fade out.
+--                                             --Missiles and artillery may have problems with excessive range increases
+--						mask = {"all"},
+--             },
         },
 		is_factory = {
                 range = 300,

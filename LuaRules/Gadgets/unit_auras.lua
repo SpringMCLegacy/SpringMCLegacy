@@ -101,9 +101,10 @@ function gadget:GameFrame(n)
  
                                         elseif(key == "weapons") then
                                                 for weaponNum,orig in pairs(value) do
-                                                        SetUnitWeaponState(uid, weaponNum - 1, {reloadtime = orig.reload, range = orig.range, projectileSpeed = orig.speed})
+                                                        SetUnitWeaponState(uid, weaponNum - 1, {reloadtime = orig.reload, accuracy = orig.accuracy, range = orig.range, projectileSpeed = orig.speed})
                                                         SetUnitRulesParam(uid, "aurarange", 0)
                                                         SetUnitRulesParam(uid, "aurareloadtime", 0)
+                                                        SetUnitRulesParam(uid, "auraaccuracy", 0)
                                                 end
                                         end
                                 end
@@ -185,21 +186,25 @@ function gadget:GameFrame(n)
  
                                                         --boost weapon stats
                                                         local weapons = ad.weapons
-                                                        if(defs.weapons and (defs.weapons.reloadtime or defs.weapons.range) and weapons and InCategory(defs.weapons.mask, categories)) then
+                                                        if(defs.weapons and (defs.weapons.reloadtime or defs.weapons.range or defs.weapons.accuracy) and weapons and InCategory(defs.weapons.mask, categories)) then
                                                                 hasBeenAffected = true
                                                                 affectedUnits[affectedid].weapons = {}
                                                                 for i=1,#weapons do
                                                                         local wdat = WeaponDefs[weapons[i].weaponDef]
+                                                                        defs.weapons.accuracy = defs.weapons.accuracy or 1
                                                                         defs.weapons.range = defs.weapons.range or 1
                                                                         defs.weapons.reloadtime = defs.weapons.reloadtime or 1
-                                                                        affectedUnits[affectedid].weapons[i] = {reload = wdat.reload, range = wdat.range, speed = wdat.projectilespeed}
+																		Spring.Echo("accuracy: " .. wdat.accuracy .. " mult: " .. defs.weapons.accuracy)
+                                                                        affectedUnits[affectedid].weapons[i] = {reload = wdat.reload, accuracy = wdat.accuracy, range = wdat.range, speed = wdat.projectilespeed}
                                                                         SetUnitWeaponState(affectedid, i - 1, {
                                                                                 reloadTime = wdat.reload * defs.weapons.reloadtime,
                                                                                 range = wdat.range * defs.weapons.range,
+                                                                                accuracy = wdat.accuracy * defs.weapons.accuracy,
                                                                                 projectileSpeed = wdat.projectilespeed * defs.weapons.range,    --prevent laser falloff
                                                                         })
                                                                         if(wdat.range) then SetUnitRulesParam(affectedid, "aurarange", defs.weapons.range) end
                                                                         if(wdat.reloadtime) then SetUnitRulesParam(affectedid, "aurareload", defs.weapons.reloadtime) end
+                                                                        if(wdat.accuracy) then SetUnitRulesParam(affectedid, "auraaccuracy", defs.weapons.accuracy) end
                                                                 end
                                                         end
  
