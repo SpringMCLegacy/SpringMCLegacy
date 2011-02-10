@@ -1,6 +1,7 @@
 weaponDef = {
 	name                    = "Artemis IV Fire Control System-enhanced Long Range Missile 5",
 	weaponType              = "MissileLauncher",
+	Targetable				= true,
 	renderType				= 1,
 	explosionGenerator    	= "custom:HE_MEDIUM",
 --	cegTag					= "RocketTrail",
