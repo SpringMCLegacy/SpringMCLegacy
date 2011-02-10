@@ -24,6 +24,7 @@ local GetUnitTeam 			= Spring.GetUnitTeam
 local AddTeamResource 		= Spring.AddTeamResource
 local EditUnitCmdDesc		= Spring.EditUnitCmdDesc
 local FindUnitCmdDesc		= Spring.FindUnitCmdDesc
+local SetUnitResourcing		= Spring.SetUnitResourcing
 
 -- Unsynced Ctrl
 
@@ -36,7 +37,7 @@ local modOptions = Spring.GetModOptions()
 local dropShips = {}
 
 function gadget:UnitDamaged(unitID, unitDefID, unitTeam, damage, paralyzer, weaponID, attackerID, attackerDefID, attackerTeam)
-	if modOptions and modOptions.income == "damage" then
+	if modOptions and modOptions.income ~= "none" then
 		if attackerID and not AreTeamsAllied(unitTeam, attackerTeam) then
 			AddTeamResource(attackerTeam, "metal", damage * DAMAGE_REWARD_MULT)
 		end
@@ -47,12 +48,15 @@ function gadget:UnitCreated(unitID, unitDefID, teamID)
 	local ud = UnitDefs[unitDefID]
 	if ud.builder then -- warning, assumes no other builders or factories!
 		dropShips[unitID] = true
+		if modOptions and modOptions.income == "none" then
+			SetUnitResourcing(unitID, "umm", 0)
+		end
 	end
 end
 
 function gadget:UnitDestroyed(unitID, unitDefID, unitTeam, attackerID, attackerDefID, attackerTeam)
 	dropShips[unitID] = nil
-	if modOptions and modOptions.income == "damage" then
+	if modOptions and modOptions.income ~= "none" then
 		if attackerID and not AreTeamsAllied(unitTeam, attackerTeam) then
 			AddTeamResource(attackerTeam, "metal", UnitDefs[unitDefID].metalCost * KILL_REWARD_MULT)
 		end
