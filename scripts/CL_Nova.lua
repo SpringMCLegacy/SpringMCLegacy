@@ -249,9 +249,9 @@ function script.AimWeapon(weaponID, heading, pitch)
 	Signal(SIG_AIM ^ weaponID) -- 2 'to the power of' weapon ID
     SetSignalMask(SIG_AIM ^ weaponID)
 		if weaponID == 1 then
-			Turn(llowerarm, x_axis, -pitch, rad(150))
+			Turn(llowerarm, x_axis, -pitch, ELEVATION_SPEED)
 		elseif weaponID == 5 then
-			Turn(rlowerarm, x_axis, -pitch, rad(150))
+			Turn(rlowerarm, x_axis, -pitch, ELEVATION_SPEED)
 		end
 	Turn(torso, y_axis, heading, TORSO_SPEED)
 	WaitForTurn(torso, y_axis)
