@@ -1,6 +1,6 @@
 local CL_Nova = {
 	name              	= "Nova",
-	description         = "Medium Skirmish Mech",
+	description         = "Medium Strike Mech",
 	objectName        	= "CL_Nova.s3o",
 	script				= "CL_Nova.lua",
 	category 			= "mech ground",
