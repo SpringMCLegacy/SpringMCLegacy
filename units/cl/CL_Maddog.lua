@@ -29,7 +29,7 @@ local CL_Maddog = {
 	canMove				= true,
 		movementClass   = "LARGEMECH",
 		maxVelocity		= 2.86, --86kph/30
-		maxReverseVelocity= 1.10,
+		maxReverseVelocity= 1.09
 		acceleration    = 1,
 		brakeRate       = 0.2,
 		turnRate 		= 700,
@@ -40,36 +40,33 @@ local CL_Maddog = {
 		weapons 		= {	
 			[1] = {
 				name	= "ArtemisLRM20",
-				--weaponSlaveTo2 = 1,
+				weaponSlaveTo = 1,
 				mainDir = "0 0 1",
-				maxAngleDif = 270,
 			},
 			[2] = {
 				name	= "ArtemisLRM20",
+				weaponSlaveTo = 1,
 				mainDir = "0 0 1",
-				maxAngleDif = 270,
 			},
 			[3] = {
 				name	= "CLPL",
+				weaponSlaveTo = 1,
 				mainDir = "0 0 1",
-				maxAngleDif = 270,
 			},
 			[4] = {
 				name	= "CMPL",
-				--weaponSlaveTo2 = 1,
+				weaponSlaveTo = 1,
 				mainDir = "0 0 1",
-				maxAngleDif = 270,
 			},
 			[5] = {
 				name	= "CLPL",
+				weaponSlaveTo = 1,
 				mainDir = "0 0 1",
-				maxAngleDif = 270,
 			},
 			[6] = {
 				name	= "CMPL",
-				--weaponSlaveTo2 = 1,
+				weaponSlaveTo = 1,
 				mainDir = "0 0 1",
-				maxAngleDif = 270,
 			},
 		},
 		
