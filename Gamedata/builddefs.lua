@@ -22,6 +22,7 @@ buildoptions =
 	--"cl_huit",
 	"cl_firemoth",
 	"cl_kitfox",
+	"cl_cougar",
 	"cl_mistlynx",
 	"cl_nova",
 	"cl_stormcrow",
