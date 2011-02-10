@@ -18,27 +18,17 @@ local beacon = {
 	buildCostEnergy     = 0,
 	buildCostMetal      = 0,
 	buildTime           = 0,
-	canMove				= true,
-	maxVelocity			= 0,
+	canMove				= false,
 	energyStorage		= 0.01,
 	metalMake			= 100,
 	metalStorage		= 0,
 	idleAutoHeal		= 0,
 	maxSlope			= 50,
-	builder				= false,
-		moveState			= 0,
-		showNanoFrame		= 0,
-		showNanoSpray		= 0,
-		workerTime			= 1,
-		canBeAssisted	= false,
-	TEDClass			= METAL,
 	
 	sfxtypes = {
 	},
 	
 	customparams = {
-		ammosupplier	= "0",
-		supplyradius	= "0",
 		helptext		= "A Beacon indicating a strategically important location.",
     },
 	
