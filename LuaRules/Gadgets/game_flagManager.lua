@@ -1,9 +1,9 @@
 function gadget:GetInfo()
 	return {
-		name      = "Flag Manager",
+		name      = "Beacon Manager",
 		desc      = "Populates maps with flags and handles control",
 		author    = "FLOZi",
-		date      = "31st July 2008",
+		date      = "Adopted from S44 flagManager 10/02/2011",
 		license   = "GNU GPL v2",
 		layer     = 1,
 		enabled   = true  --  loaded by default?
@@ -47,7 +47,7 @@ local DEF_MULT = 0.25 --multiplies against the FBI defined DefRate
 
 -- variables
 
-local flagTypes = {"flag"}
+local flagTypes = {"beacon"}
 local flags = {} -- flags[flagType][index] == flagUnitID
 local numFlags = {} -- numFlags[flagType] == numberOfFlagsOfType
 local flagTypeData = {} -- flagTypeData[flagType] = {radius = radius, etc}
@@ -117,7 +117,7 @@ function gadget:GamePreload()
 		local flagSpots, buoySpots = VFS.Include(PROFILE_PATH)
 		if flagSpots and #flagSpots > 0 then 
 			Spring.Echo("Map Beacon Profile found. Loading Beacon positions...", #flagSpots)
-			flagTypeSpots["flag"] = flagSpots 
+			flagTypeSpots[flagTypes[1]] = flagSpots 
 		end
 		--[[if buoySpots and #buoySpots > 0 then 
 			Spring.Echo("Map Buoy Profile found. Loading Buoy positions...")
@@ -228,7 +228,7 @@ function gadget:UnitCreated(unitID, unitDefID, unitTeam, builderID)
 		local cp = ud.customParams
 		local flagCapRate = 1 --cp.flagcaprate
 		local flagDefendRate = cp.flagdefendrate or flagCapRate
-		local flagCapType = ud.customParams.flagcaptype or "flag"
+		local flagCapType = ud.customParams.flagcaptype or flagTypes[1]
 		if flagCapRate then
 			flagTypeCappers[flagCapType][unitID] = (CAP_MULT * flagCapRate)
 			flagTypeDefenders[flagCapType][unitID] = (DEF_MULT * flagCapRate)
@@ -242,7 +242,7 @@ function gadget:UnitDestroyed(unitID, unitDefID, unitTeam, attackerID, attackerD
 	if ud.speed > 0 then
 		local cp = ud.customParams
 		local flagCapRate = 1 -- cp.flagcaprate
-		local flagCapType = ud.customParams.flagcaptype or "flag"
+		local flagCapType = ud.customParams.flagcaptype or flagTypes[1]
 		if flagCapRate then
 			flagTypeCappers[flagCapType][unitID] = nil
 			flagTypeDefenders[flagCapType][unitID] = nil
