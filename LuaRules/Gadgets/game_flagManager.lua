@@ -42,8 +42,8 @@ local GAIA_TEAM_ID = Spring.GetGaiaTeamID()
 local PROFILE_PATH = "maps/flagConfig/" .. Game.mapName .. "_profile.lua"
 local DEBUG	= false -- enable to print out flag locations in profile format
 
-local CAP_MULT = 0.25 --multiplies against the FBI defined CapRate
-local DEF_MULT = 0.25 --multiplies against the FBI defined DefRate
+local CAP_MULT = 1 --multiplies against the FBI defined CapRate
+local DEF_MULT = 1 --multiplies against the FBI defined DefRate
 
 -- variables
 

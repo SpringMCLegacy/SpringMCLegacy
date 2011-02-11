@@ -59,7 +59,7 @@ local IS_Chimera = {
 				WeaponSlaveTo = 1,
 			},
 			[4] = {
-				name	= "MRM10",
+				name	= "MRM20",
 				mainDir = "0 0 1",
 				maxAngleDif = 270,
 				OnlyTargetCategory = "notbeacon",
