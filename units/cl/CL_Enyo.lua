@@ -3,7 +3,7 @@ local CL_Enyo = {
 	description         = "Medium Strike Tank",
 	objectName        	= "CL_Enyo.s3o",
 	script				= "CL_Enyo.lua",
-	category 			= "tank ground",
+	category 			= "tank ground notbeacon",
 	sightDistance       = 1000,
 	radarDistance      	= 1500,
 		activateWhenBuilt   = true,
@@ -38,12 +38,17 @@ local CL_Enyo = {
 		weapons 		= {	
 			[1] = {
 				name	= "CLPL",
+				OnlyTargetCategory = "notbeacon",
 			},
 			[2] = {
 				name	= "SSRM6",
+				OnlyTargetCategory = "notbeacon",
+				WeaponSlaveTo = 1,
 			},
 			[3] = {
 				name	= "SSRM6",
+				OnlyTargetCategory = "notbeacon",
+				WeaponSlaveTo = 1,
 			},
 		},
 	--Gets CEG effects from /gamedata/explosions folder

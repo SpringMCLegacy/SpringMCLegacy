@@ -3,7 +3,7 @@ local CL_Morrigu = {
 	description         = "Heavy Sniper Tank",
 	objectName        	= "CL_Morrigu.s3o",
 	script				= "CL_Morrigu.lua",
-	category 			= "tank ground",
+	category 			= "tank ground notbeacon",
 	sightDistance       = 1000,
 	radarDistance      	= 1500,
 		activateWhenBuilt   = true,
@@ -38,15 +38,22 @@ local CL_Morrigu = {
 		weapons 		= {	
 			[1] = {
 				name	= "CERLBL",
+				OnlyTargetCategory = "notbeacon",
 			},
 			[2] = {
 				name	= "CERLBL",
+				OnlyTargetCategory = "notbeacon",
+				WeaponSlaveTo = 1,
 			},
 			[3] = {
 				name	= "LRM15",
+				OnlyTargetCategory = "notbeacon",
+				WeaponSlaveTo = 1,
 			},
 			[4] = {
 				name	= "LRM15",
+				OnlyTargetCategory = "notbeacon",
+				WeaponSlaveTo = 1,
 			},
 		},
 	--Gets CEG effects from /gamedata/explosions folder

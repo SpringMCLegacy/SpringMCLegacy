@@ -46,24 +46,24 @@ local IS_Chimera = {
 			},
 			[2] = {
 				name	= "CMPL",
-				--weaponSlaveTo2 = 1,
 				mainDir = "0 0 1",
 				maxAngleDif = 270,
 				OnlyTargetCategory = "notbeacon",
+				WeaponSlaveTo = 1,
 			},
 			[3] = {
 				name	= "CMPL",
-				--weaponSlaveTo2 = 1,
 				mainDir = "0 0 1",
 				maxAngleDif = 270,
 				OnlyTargetCategory = "notbeacon",
+				WeaponSlaveTo = 1,
 			},
 			[4] = {
 				name	= "MRM10",
-				--weaponSlaveTo4 = 1,
 				mainDir = "0 0 1",
 				maxAngleDif = 270,
 				OnlyTargetCategory = "notbeacon",
+				WeaponSlaveTo = 1,
 			},
 		},
 		

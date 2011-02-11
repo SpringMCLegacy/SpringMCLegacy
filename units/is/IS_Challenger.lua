@@ -3,7 +3,7 @@ local IS_Challenger = {
 	description         = "Heavy Strike Tank",
 	objectName        	= "IS_Challenger.s3o",
 	script				= "IS_Challenger.lua",
-	category 			= "tank ground",
+	category 			= "tank ground notbeacon",
 	sightDistance       = 1000,
 	radarDistance      	= 1500,
 		activateWhenBuilt   = true,
@@ -38,22 +38,27 @@ local IS_Challenger = {
 		weapons 		= {	
 			[1] = {
 				name	= "Gauss",
+				OnlyTargetCategory = "notbeacon",
 			},
 			[2] = {
 				name	= "LBX10",
-				weaponslaveto2 = 1,
+				OnlyTargetCategory = "notbeacon",
+				WeaponSlaveTo = 1,
 			},
 			[3] = {
 				name	= "LRM10",
-				weaponslaveto3 = 1,
+				OnlyTargetCategory = "notbeacon",
+				WeaponSlaveTo = 1,
 			},
 			[4] = {
 				name	= "MPL",
-				weaponslaveto4 = 1,
+				OnlyTargetCategory = "notbeacon",
+				WeaponSlaveTo = 1,
 			},
 			[5] = {
 				name	= "MPL",
-				weaponslaveto5 = 1,
+				OnlyTargetCategory = "notbeacon",
+				WeaponSlaveTo = 1,
 			},
 			--[6] = {
 			--	name	= "LAMS",

@@ -32,6 +32,7 @@ weaponDef = {
 	damage = {
 		default = 3000,--200 DPS
 		dropships = 1,--haha fuck you flozi
+		beacons = 0,
 	},
 	customparams = {
 		heatgenerated		= "200",--10/sec

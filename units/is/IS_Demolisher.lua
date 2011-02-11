@@ -3,7 +3,7 @@ local IS_Demolisher = {
 	description         = "Heavy Brawler Tank",
 	objectName        	= "IS_Demolisher.s3o",
 	script				= "IS_Demolisher.lua",
-	category 			= "tank ground",
+	category 			= "tank ground notbeacon",
 	sightDistance       = 1000,
 	radarDistance      	= 1500,
 		activateWhenBuilt   = true,
@@ -38,10 +38,12 @@ local IS_Demolisher = {
 		weapons 		= {	
 			[1] = {
 				name	= "AC20",
+				OnlyTargetCategory = "notbeacon",
 			},
 			[2] = {
 				name	= "AC20",
-				weaponslaveto2 = 1,
+				OnlyTargetCategory = "notbeacon",
+				WeaponSlaveTo = 1,
 			},
 		},
 	--Gets CEG effects from /gamedata/explosions folder

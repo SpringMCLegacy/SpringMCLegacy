@@ -3,7 +3,7 @@ local IS_Schrek = {
 	description         = "Medium Sniper Tank",
 	objectName        	= "IS_Schrek.s3o",
 	script				= "IS_Schrek.lua",
-	category 			= "tank ground",
+	category 			= "tank ground notbeacon",
 	sightDistance       = 1000,
 	radarDistance      	= 1500,
 		activateWhenBuilt   = true,
@@ -38,12 +38,17 @@ local IS_Schrek = {
 		weapons 		= {	
 			[1] = {
 				name	= "PPC",
+				OnlyTargetCategory = "notbeacon",
 			},
 			[2] = {
 				name	= "PPC",
+				OnlyTargetCategory = "notbeacon",
+				WeaponSlaveTo = 1,
 			},
 			[3] = {
 				name	= "PPC",
+				OnlyTargetCategory = "notbeacon",
+				WeaponSlaveTo = 1,
 			},
 		},
 	--Gets CEG effects from /gamedata/explosions folder

@@ -33,6 +33,7 @@ weaponDef = {
 	model					= "Missile.s3o",
 	damage = {
 		default = 200,--20 DPS
+		beacons = 0,
 	},
 	customparams = {
 		heatgenerated		= "30",--3/sec

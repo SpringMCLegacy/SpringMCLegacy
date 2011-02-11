@@ -3,6 +3,9 @@ local armorDefs = {
 		"CL_Factory",
 		"IS_Factory",	
    },
+   beacons = {
+		"beacon",
+   },
 }
 -- convert to named maps  (trepan is a noob)
 for categoryName, categoryTable in pairs(armorDefs) do

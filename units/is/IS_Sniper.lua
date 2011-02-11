@@ -3,7 +3,7 @@ local IS_Sniper = {
 	description         = "Mobile Artillery",
 	objectName        	= "IS_Sniper.s3o",
 	script				= "IS_Sniper.lua",
-	category 			= "tank ground",
+	category 			= "tank ground notbeacon",
 	sightDistance       = 1000,
 	radarDistance      	= 2000,
 		activateWhenBuilt   = true,
@@ -40,13 +40,16 @@ local IS_Sniper = {
 				name	= "Sniper",
 				mainDir = "0 0 1",
 				maxAngleDif = 15,
+				OnlyTargetCategory = "notbeacon",
 			},
 			[2] = {
 				name	= "ERSBL",
+				OnlyTargetCategory = "notbeacon",
 			},
 			[3] = {
 				name	= "ERSBL",
-				weaponslaveto3 = 2,
+				weaponslaveto = 2,
+				OnlyTargetCategory = "notbeacon",
 			},
 		},
 	--Gets CEG effects from /gamedata/explosions folder

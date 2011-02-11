@@ -3,7 +3,7 @@ local IS_LRMCarrier = {
 	description         = "Missile Support Vehicle",
 	objectName        	= "IS_LRMCarrier.s3o",
 	script				= "IS_LRMCarrier.lua",
-	category 			= "tank ground",
+	category 			= "tank ground notbeacon",
 	sightDistance       = 1000,
 	radarDistance      	= 2000,
 		activateWhenBuilt   = true,
@@ -38,9 +38,12 @@ local IS_LRMCarrier = {
 		weapons 		= {	
 			[1] = {
 				name	= "LRM20",
+				OnlyTargetCategory = "notbeacon",
 			},
 			[2] = {
 				name	= "LRM20",
+				WeaponSlaveTo = 1,
+				OnlyTargetCategory = "notbeacon",
 			},
 		},
 	--Gets CEG effects from /gamedata/explosions folder

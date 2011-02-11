@@ -3,7 +3,7 @@ local CL_Hephaestus = {
 	description         = "Light Scout Hovercraft",
 	objectName        	= "CL_Hephaestus.s3o",
 	script				= "CL_Hephaestus.lua",
-	category 			= "tank ground hovercraft",
+	category 			= "tank ground hovercraft notbeacon",
 	stealth				= 1,
 	sightDistance       = 1000,
 	radarDistance      	= 1500,
@@ -35,12 +35,17 @@ local CL_Hephaestus = {
 		weapons 		= {	
 			[1] = {
 				name	= "CMPL",
+				OnlyTargetCategory = "notbeacon",
 			},
 			[2] = {
 				name	= "CMPL",
+				OnlyTargetCategory = "notbeacon",
+				WeaponSlaveTo = 1,
 			},
 			[3] = {
 				name	= "NARC",
+				OnlyTargetCategory = "notbeacon",
+				WeaponSlaveTo = 1,
 			},
 		},
 		

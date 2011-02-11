@@ -3,7 +3,7 @@ local IS_Scorpion_AC5 = {
 	description         = "Light Strike Tank",
 	objectName        	= "IS_Scorpion_AC5.s3o",
 	script				= "IS_Scorpion_AC5.lua",
-	category 			= "tank ground",
+	category 			= "tank ground notbeacon",
 	sightDistance       = 1000,
 	radarDistance      	= 1500,
 		activateWhenBuilt   = true,
@@ -38,14 +38,17 @@ local IS_Scorpion_AC5 = {
 		weapons 		= {	
 			[1] = {
 				name	= "AC5",
+				OnlyTargetCategory = "notbeacon",
 			},
 			[2] = {
 				name	= "MG",
-				weaponslaveto2 = 1,
+				OnlyTargetCategory = "notbeacon",
+				WeaponSlaveTo = 1,
 			},
 			[3] = {
 				name	= "MG",
-				weaponslaveto3 = 1,
+				OnlyTargetCategory = "notbeacon",
+				WeaponSlaveTo = 1,
 			},
 		},
 		
