@@ -40,7 +40,6 @@ local IS_Catapult = {
 		weapons 		= {	
 			[1] = {
 				name	= "ArtemisLRM20",
-				--weaponSlaveTo2 = 1,
 				mainDir = "0 0 1",
 				maxAngleDif = 270,
 				OnlyTargetCategory = "notbeacon",
@@ -56,26 +55,28 @@ local IS_Catapult = {
 				mainDir = "0 0 1",
 				maxAngleDif = 270,
 				OnlyTargetCategory = "notbeacon",
+				WeaponSlaveTo = 1,
 			},
 			[4] = {
 				name	= "MPL",
-				--weaponSlaveTo2 = 1,
 				mainDir = "0 0 1",
 				maxAngleDif = 270,
 				OnlyTargetCategory = "notbeacon",
+				WeaponSlaveTo = 1,
 			},
 			[5] = {
 				name	= "MPL",
 				mainDir = "0 0 1",
 				maxAngleDif = 270,
 				OnlyTargetCategory = "notbeacon",
+				WeaponSlaveTo = 1,
 			},
 			[6] = {
 				name	= "MPL",
-				--weaponSlaveTo2 = 1,
 				mainDir = "0 0 1",
 				maxAngleDif = 270,
 				OnlyTargetCategory = "notbeacon",
+				WeaponSlaveTo = 1,
 			},
 		},
 		

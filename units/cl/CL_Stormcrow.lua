@@ -40,7 +40,6 @@ local CL_Stormcrow = {
 		weapons 		= {	
 			[1] = {
 				name	= "ArtemisLRM20",
-				--weaponSlaveTo4 = 1,
 				mainDir = "0 0 1",
 				maxAngleDif = 270,
 				OnlyTargetCategory = "notbeacon",
@@ -50,34 +49,35 @@ local CL_Stormcrow = {
 				mainDir = "0 0 1",
 				maxAngleDif = 270,
 				OnlyTargetCategory = "notbeacon",
+				WeaponSlaveTo = 1,
 			},
 			[3] = {
 				name	= "CERMBL",
-				--weaponSlaveTo2 = 1,
 				mainDir = "0 0 1",
 				maxAngleDif = 270,
 				OnlyTargetCategory = "notbeacon",
+				WeaponSlaveTo = 1,
 			},
 			[4] = {
 				name	= "CERLBL",
-				--weaponSlaveTo2 = 1,
 				mainDir = "0 0 1",
 				maxAngleDif = 270,
 				OnlyTargetCategory = "notbeacon",
+				WeaponSlaveTo = 1,
 			},
 			[5] = {
 				name	= "CERMBL",
-				--weaponSlaveTo4 = 1,
 				mainDir = "0 0 1",
 				maxAngleDif = 270,
 				OnlyTargetCategory = "notbeacon",
+				WeaponSlaveTo = 1,
 			},
 			[6] = {
 				name	= "CERMBL",
-				--weaponSlaveTo4 = 1,
 				mainDir = "0 0 1",
 				maxAngleDif = 270,
 				OnlyTargetCategory = "notbeacon",
+				WeaponSlaveTo = 1,
 			},
 		},
 		

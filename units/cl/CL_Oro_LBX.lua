@@ -3,7 +3,7 @@ local CL_Oro_LBX = {
 	description         = "Medium Brawler Tank",
 	objectName        	= "CL_Oro_LBX.s3o",
 	script				= "CL_Oro_LBX.lua",
-	category 			= "tank ground",
+	category 			= "tank ground notbeacon",
 	sightDistance       = 1000,
 	radarDistance      	= 1500,
 		activateWhenBuilt   = true,
@@ -38,12 +38,17 @@ local CL_Oro_LBX = {
 		weapons 		= {	
 			[1] = {
 				name	= "LBX20",
+				OnlyTargetCategory = "notbeacon",
 			},
 			[2] = {
 				name	= "CLPL",
+				OnlyTargetCategory = "notbeacon",
+				WeaponSlaveTo = 1,
 			},
 			[3] = {
 				name	= "CERMBL",
+				OnlyTargetCategory = "notbeacon",
+				WeaponSlaveTo = 1,
 			},
 		},
 	--Gets CEG effects from /gamedata/explosions folder

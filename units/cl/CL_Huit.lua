@@ -3,7 +3,7 @@ local CL_Huit = {
 	description         = "Heavy Artillery Support Vehicle",
 	objectName        	= "CL_Huit.s3o",
 	script				= "CL_Huit.lua",
-	category 			= "tank ground",
+	category 			= "tank ground notbeacon",
 	sightDistance       = 1000,
 	radarDistance      	= 2000,
 		activateWhenBuilt   = true,
@@ -38,15 +38,22 @@ local CL_Huit = {
 		weapons 		= {	
 			[1] = {
 				name	= "ArrowIV",
+				OnlyTargetCategory = "notbeacon",
 			},
 			[2] = {
 				name	= "ArrowIV",
+				OnlyTargetCategory = "notbeacon",
+				WeaponSlaveTo = 1,
 			},
 			[3] = {
 				name	= "CMPL",
+				OnlyTargetCategory = "notbeacon",
+				WeaponSlaveTo = 1,
 			},
 			[3] = {
 				name	= "CMPL",
+				OnlyTargetCategory = "notbeacon",
+				WeaponSlaveTo = 1,
 			},
 		},
 	--Gets CEG effects from /gamedata/explosions folder

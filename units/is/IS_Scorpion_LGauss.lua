@@ -3,7 +3,7 @@ local IS_Scorpion_LGauss = {
 	description         = "Light Sniper Tank",
 	objectName        	= "IS_Scorpion_LGauss.s3o",
 	script				= "IS_Scorpion_LGauss.lua",
-	category 			= "tank ground",
+	category 			= "tank ground notbeacon",
 	sightDistance       = 1000,
 	radarDistance      	= 1500,
 		activateWhenBuilt   = true,
@@ -38,14 +38,19 @@ local IS_Scorpion_LGauss = {
 		weapons 		= {	
 			[1] = {
 				name	= "LightGauss",
+				OnlyTargetCategory = "notbeacon",
 			},
 			[2] = {
 				name	= "MG",
 				weaponslaveto2 = 1,
+				OnlyTargetCategory = "notbeacon",
+				WeaponSlaveTo = 1,
 			},
 			[3] = {
 				name	= "MG",
 				weaponslaveto3 = 1,
+				OnlyTargetCategory = "notbeacon",
+				WeaponSlaveTo = 1,
 			},
 		},
 		

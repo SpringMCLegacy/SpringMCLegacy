@@ -3,7 +3,7 @@ local CL_Ares = {
 	description         = "Medium Sniper Tank",
 	objectName        	= "CL_Ares.s3o",
 	script				= "CL_Ares.lua",
-	category 			= "tank ground",
+	category 			= "tank ground notbeacon",
 	sightDistance       = 1000,
 	radarDistance      	= 1500,
 		activateWhenBuilt   = true,
@@ -38,12 +38,17 @@ local CL_Ares = {
 		weapons 		= {	
 			[1] = {
 				name	= "CERLBL",
+				OnlyTargetCategory = "notbeacon",
 			},
 			[2] = {
 				name	= "ATM9",
+				OnlyTargetCategory = "notbeacon",
+				WeaponSlaveTo = 1,
 			},
 			[3] = {
 				name	= "ATM9",
+				OnlyTargetCategory = "notbeacon",
+				WeaponSlaveTo = 1,
 			},
 		},
 	--Gets CEG effects from /gamedata/explosions folder

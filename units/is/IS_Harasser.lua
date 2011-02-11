@@ -3,7 +3,7 @@ local IS_Harasser = {
 	description         = "Light Skirmish Hovercraft",
 	objectName        	= "IS_Harasser.s3o",
 	script				= "IS_Harasser.lua",
-	category 			= "tank ground hovercraft",
+	category 			= "tank ground hovercraft notbeacon",
 	sightDistance       = 1000,
 	radarDistance      	= 1500,
 		activateWhenBuilt   = true,
@@ -33,9 +33,12 @@ local IS_Harasser = {
 		weapons 		= {	
 			[1] = {
 				name	= "SRM6",
+				OnlyTargetCategory = "notbeacon",
 			},
 			[2] = {
 				name	= "SRM6",
+				OnlyTargetCategory = "notbeacon",
+				WeaponSlaveTo = 1,
 			},
 		},
 		

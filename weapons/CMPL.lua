@@ -33,6 +33,7 @@ weaponDef = {
 	intensity				= 0.6,
 	damage = {
 		default = 42, --70 DPS
+		beacons = 0,
 	},
 	customparams = {
 		heatgenerated		= "2.4",--4/sec

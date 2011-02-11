@@ -3,7 +3,7 @@ local CL_Mars = {
 	description         = "Heavy Strike Tank",
 	objectName        	= "CL_Mars.s3o",
 	script				= "CL_Mars.lua",
-	category 			= "tank ground",
+	category 			= "tank ground notbeacon",
 	stealth				= 1,
 	sightDistance       = 1000,
 	radarDistance      	= 1500,
@@ -39,29 +39,38 @@ local CL_Mars = {
 		weapons 		= {	
 			[1] = {
 				name	= "Gauss",
+				OnlyTargetCategory = "notbeacon",
 			},
 			[2] = {
 				name	= "CERLBL",
+				OnlyTargetCategory = "notbeacon",
+				WeaponSlaveTo = 1,
 			},
 			[3] = {
 				name	= "LBX10",
 				mainDir = "0 0 1",
 				maxAngleDif = 35,
+				OnlyTargetCategory = "notbeacon",
 			},
 			[4] = {
 				name	= "LRM15",
 				mainDir = "0 0 1",
 				maxAngleDif = 180,
+				OnlyTargetCategory = "notbeacon",
 			},
 			[5] = {
 				name	= "LRM15",
 				mainDir = "0 0 1",
 				maxAngleDif = 180,
+				OnlyTargetCategory = "notbeacon",
+				WeaponSlaveTo = 4,
 			},
 			[6] = {
 				name	= "LRM15",
 				mainDir = "0 0 1",
 				maxAngleDif = 180,
+				OnlyTargetCategory = "notbeacon",
+				WeaponSlaveTo = 4,
 			},
 			[7] = {
 				name	= "MG",

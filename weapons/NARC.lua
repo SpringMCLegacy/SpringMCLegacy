@@ -2,6 +2,7 @@ weaponDef = {
 	name                    = "NARC Missile",
 	weaponType              = "MissileLauncher",
 	renderType				= 1,
+	commandFire				= true,
 	explosionGenerator    	= "custom:AP_SMALL",
 --	cegTag					= "BazookaTrail",
 	smokeTrail				= true,
@@ -28,6 +29,7 @@ weaponDef = {
 	model					= "Missile.s3o",
 	damage = {
 		default 			= 0,--NONE!
+		beacons = 0,
 	},
 	customparams = {
 		narc				= "1",

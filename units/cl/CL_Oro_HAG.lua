@@ -3,7 +3,7 @@ local CL_Oro_HAG = {
 	description         = "Heavy Strike Tank",
 	objectName        	= "CL_Oro_HAG.s3o",
 	script				= "CL_Oro_HAG.lua",
-	category 			= "tank ground",
+	category 			= "tank ground notbeacon",
 	sightDistance       = 1000,
 	radarDistance      	= 1500,
 		activateWhenBuilt   = true,
@@ -38,9 +38,12 @@ local CL_Oro_HAG = {
 		weapons 		= {	
 			[1] = {
 				name	= "HAG30",
+				OnlyTargetCategory = "notbeacon",
 			},
 			[2] = {
 				name	= "CLPL",
+				OnlyTargetCategory = "notbeacon",
+				WeaponSlaveTo = 1,
 			},
 		},
 	--Gets CEG effects from /gamedata/explosions folder
