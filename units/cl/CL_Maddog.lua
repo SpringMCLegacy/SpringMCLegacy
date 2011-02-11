@@ -3,7 +3,7 @@ local CL_Maddog = {
 	description         = "Heavy Missile Support Mech",
 	objectName        	= "CL_Maddog.s3o",
 	script				= "CL_Maddog.lua",
-	category 			= "mech ground",
+	category 			= "mech ground notbeacon",
 	sightDistance       = 1500,
 	radarDistance      	= 2000,
 		activateWhenBuilt   = true,
@@ -41,32 +41,32 @@ local CL_Maddog = {
 			[1] = {
 				name	= "ArtemisLRM20",
 				weaponSlaveTo = 1,
-				mainDir = "0 0 1",
+				OnlyTargetCategory = "notbeacon",
 			},
 			[2] = {
 				name	= "ArtemisLRM20",
 				weaponSlaveTo = 1,
-				mainDir = "0 0 1",
+				OnlyTargetCategory = "notbeacon",
 			},
 			[3] = {
 				name	= "CLPL",
 				weaponSlaveTo = 1,
-				mainDir = "0 0 1",
+				OnlyTargetCategory = "notbeacon",
 			},
 			[4] = {
 				name	= "CMPL",
 				weaponSlaveTo = 1,
-				mainDir = "0 0 1",
+				OnlyTargetCategory = "notbeacon",
 			},
 			[5] = {
 				name	= "CLPL",
 				weaponSlaveTo = 1,
-				mainDir = "0 0 1",
+				OnlyTargetCategory = "notbeacon",
 			},
 			[6] = {
 				name	= "CMPL",
 				weaponSlaveTo = 1,
-				mainDir = "0 0 1",
+				OnlyTargetCategory = "notbeacon",
 			},
 		},
 		
