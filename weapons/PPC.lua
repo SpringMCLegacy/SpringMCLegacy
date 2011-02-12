@@ -13,6 +13,7 @@ weaponDef = {
 	lineOfSight				= 1,
 	range                   = 1800,
 	accuracy                = 100,
+	movingAccuracy			= 500,
 	areaOfEffect            = 10,
 	weaponVelocity          = 2000,
 	reloadtime              = 5,
