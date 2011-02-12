@@ -24,6 +24,7 @@ buildoptions =
 	"cl_kitfox",
 	"cl_cougar",
 	"cl_mistlynx",
+	"cl_iceferret",
 	"cl_nova",
 	"cl_stormcrow",
 	"cl_timberwolf",
