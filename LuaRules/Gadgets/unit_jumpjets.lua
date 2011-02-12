@@ -355,6 +355,7 @@ end
 
 function gadget:Initialize()
   Spring.SetCustomCommandDrawData(CMD_JUMP, "Attack", {0, 1, 0, 1})
+  Spring.SendCommands({"bind j jump"})
   gadgetHandler:RegisterCMDID(CMD_JUMP)
   for _, unitID in pairs(Spring.GetAllUnits()) do
     gadget:UnitCreated(unitID, Spring.GetUnitDefID(unitID))
