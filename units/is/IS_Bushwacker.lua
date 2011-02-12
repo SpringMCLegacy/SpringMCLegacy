@@ -1,6 +1,6 @@
 local IS_Bushwacker = {
 	name              	= "Bushwacker",
-	description         = "Medium Brawler Mech",
+	description         = "Medium Strike Mech",
 	objectName        	= "IS_Bushwacker.s3o",
 	script				= "IS_Bushwacker.lua",
 	category 			= "mech ground notbeacon",
@@ -8,7 +8,7 @@ local IS_Bushwacker = {
 	radarDistance      	= 1500,
 		activateWhenBuilt   = true,
 		onoffable           = true,
-	maxDamage           = 10000,
+	maxDamage           = 9000,
 	mass                = 5500,
 	footprintX			= 2,
 	footprintZ 			= 2,
@@ -23,13 +23,13 @@ local IS_Bushwacker = {
 --	trackType			= "Thick",--graphics file to use for the track decal, from \bitmaps\tracks\ folder
 --	trackWidth			= 20,--width to render the decal
 	buildCostEnergy     = 0,
-	buildCostMetal      = 7000,
+	buildCostMetal      = 4750,
 	buildTime           = 0,
 	upright				= true,
 	canMove				= true,
 		movementClass   = "SMALLMECH",
-		maxVelocity		= 2.16, --65kph/30
-		maxReverseVelocity= 1.08,
+		maxVelocity		= 2.86, --86kph/30
+		maxReverseVelocity= 1.43,
 		acceleration    = 1.0,
 		brakeRate       = 0.1,
 		turnRate 		= 700,
@@ -39,7 +39,7 @@ local IS_Bushwacker = {
 		--Makes unit use weapon from /weapons folder
 		weapons 		= {	
 			[1] = {
-				name	= "AC20",
+				name	= "AC10",
 				mainDir = "0 0 1",
 				maxAngleDif = 270,
 				OnlyTargetCategory = "notbeacon",
@@ -52,28 +52,28 @@ local IS_Bushwacker = {
 				WeaponSlaveTo = 1,
 			},
 			[3] = {
-				name	= "SPL",
+				name	= "ERMBL",
 				mainDir = "0 0 1",
 				maxAngleDif = 270,
 				OnlyTargetCategory = "notbeacon",
 				WeaponSlaveTo = 1,
 			},
 			[4] = {
-				name	= "SPL",
+				name	= "ERMBL",
 				mainDir = "0 0 1",
 				maxAngleDif = 270,
 				OnlyTargetCategory = "notbeacon",
 				WeaponSlaveTo = 1,
 			},
 			[5] = {
-				name	= "MRM20",
+				name	= "LRM15",
 				mainDir = "0 0 1",
 				maxAngleDif = 270,
 				OnlyTargetCategory = "notbeacon",
 				WeaponSlaveTo = 1,
 			},
 			[6] = {
-				name	= "SRM6",
+				name	= "MRM10",
 				mainDir = "0 0 1",
 				maxAngleDif = 270,
 				OnlyTargetCategory = "notbeacon",
@@ -92,7 +92,7 @@ local IS_Bushwacker = {
 	},
     customparams = {
 		hasturnbutton	= "1",
-		helptext		= "Armament: 1 x LBX/20, 1 x ER Large Beam Laser, 2 x Small Pulse Laser, 1 x SRM-6, 1 x MRM-10 - Armor: 7 tons",
+		helptext		= "Armament: 1 x AC/10, 1 x ER Large Beam Laser, 2 x ER Medium Beam Laser, 1 x MRM-10, 1 x LRM-10 - Armor: 9 tons",
     },
 }
 
