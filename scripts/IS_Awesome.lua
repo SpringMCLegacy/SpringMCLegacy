@@ -5,31 +5,15 @@ local weapons = ud.weapons
 local deg, rad = math.deg, math.rad
 
 --piece defines
-local pelvis, torso, llauncher, rlauncher = piece ("pelvis", "torso", "llauncher", "rlauncher")
+local pelvis, torso = piece ("pelvis", "torso")
 local rupperarm, rlowerarm, lupperarm, llowerarm = piece ("rupperarm", "rlowerarm", "lupperarm", "llowerarm")
 local lupperleg, llowerleg, rupperleg, rlowerleg, rfoot, lfoot = piece ("lupperleg", "llowerleg", "rupperleg", "rlowerleg", "rfoot", "lfoot")
-local flare1, flare2, flare3, flare4, flare5, flare6, flare7, flare8 = piece ("flare1", "flare2", "flare3", "flare4", "flare5", "flare6", "flare7", "flare8")
-
-local missileWeaponIDs = {[9] = true, [10] = true, }
- 
-local launchPoints = {}
-local numPoints = {}
-local currPoints = {}
+local flare1, flare2, flare3, flare4, flare5 = piece ("flare1", "flare2", "flare3", "flare4", "flare5")
  
 --Turning/Movement Locals
 local TORSO_SPEED = rad(100)
 local ELEVATION_SPEED = rad(150)
 local LEG_SPEED = rad(350)
-
-for weaponID in pairs(missileWeaponIDs) do
-        launchPoints[weaponID] = {}
-        currPoints[weaponID] = 1
-        numPoints[weaponID] = WeaponDefs[weapons[weaponID].weaponDef].salvoSize
-        for i = 1, numPoints[weaponID] do
-                launchPoints[weaponID][i] = piece("launchpoint_" .. weaponID .. "_" .. i)
-        end
-end
-local currLaunchPoint = 1
 
 -- constants
 local SIG_AIM = 2
@@ -41,8 +25,7 @@ include "smokeunit.lua"
 
 --SFX defines
 PPC_MUZZLEFLASH = SFX.CEG+0
-MEDIUM_MUZZLEFLASH = SFX.CEG+1
-MG_MUZZLEFLASH = SFX.CEG+2
+MG_MUZZLEFLASH = SFX.CEG+1
 
 local function MotionControl()
 	while true do
@@ -195,12 +178,6 @@ local function MotionControl()
 	end
 end
 
-
---local function StopWalk()
---	Turn(lupperleg, x_axis, 0, rad(200))
---	Turn(rupperleg, x_axis, 0, rad(200))
---end
-
 function script.Create()
 	StartThread(SmokeUnit, {pelvis, torso})
 	StartThread(MotionControl)
@@ -227,8 +204,6 @@ local function RestoreAfterDelay(unitID)
 	Turn(torso, y_axis, 0, TORSO_SPEED)
 	Turn(llowerarm, x_axis, 0, ELEVATION_SPEED)
 	Turn(rlowerarm, x_axis, 0, ELEVATION_SPEED)
-	Turn(llauncher, x_axis, 0, ELEVATION_SPEED)
-	Turn(rlauncher, x_axis, 0, ELEVATION_SPEED)
 end
 
 function script.AimWeapon(weaponID, heading, pitch)
@@ -238,10 +213,6 @@ function script.AimWeapon(weaponID, heading, pitch)
 			Turn(llowerarm, x_axis, -pitch, ELEVATION_SPEED)
 		elseif weaponID == 2 then
 			Turn(rlowerarm, x_axis, -pitch, ELEVATION_SPEED)
-		elseif weaponID == 9 then
-			Turn(llauncher, x_axis, -pitch, ELEVATION_SPEED)
-		elseif weaponID == 10 then
-			Turn(rlauncher, x_axis, -pitch, ELEVATION_SPEED)
 		end
 	Turn(torso, y_axis, heading, TORSO_SPEED)
 	WaitForTurn(torso, y_axis)
@@ -255,28 +226,11 @@ function script.FireWeapon(weaponID)
 		elseif weaponID == 2 then
 			EmitSfx(flare2, PPC_MUZZLEFLASH)
 		elseif weaponID == 3 then
-			EmitSfx(flare3, MG_MUZZLEFLASH)
+			EmitSfx(flare3, PPC_MUZZLEFLASH)
 		elseif weaponID == 4 then
-			EmitSfx(flare4, MG_MUZZLEFLASH)
+			EmitSfx(flare4, PPC_MUZZLEFLASH)
 		elseif weaponID == 5 then
 			EmitSfx(flare5, MG_MUZZLEFLASH)
-		elseif weaponID == 6 then
-		EmitSfx(flare6, MG_MUZZLEFLASH)
-			elseif weaponID == 7 then
-		EmitSfx(flare7, MG_MUZZLEFLASH)
-		elseif weaponID == 8 then
-			EmitSfx(flare8, MG_MUZZLEFLASH)
-		end
-end
-
-function script.Shot(weaponID)
-	if missileWeaponIDs[weaponID] then
-		EmitSfx(launchPoints[weaponID][currPoints[weaponID]], MEDIUM_MUZZLEFLASH)
-        currPoints[weaponID] = currPoints[weaponID] + 1
-        if currPoints[weaponID] > numPoints[weaponID] then 
-                currPoints[weaponID] = 1
-        end
-	end		
 end
 
 function script.AimFromWeapon(weaponID) 
@@ -284,10 +238,7 @@ function script.AimFromWeapon(weaponID)
 end
 
 function script.QueryWeapon(weaponID) 
-	if missileWeaponIDs[weaponID] then
-		return launchPoints[weaponID][currPoints[weaponID]]
-	else
-		if weaponID == 1 then
+	if weaponID == 1 then
 			return flare1
 		elseif weaponID == 2 then
 			return flare2
@@ -297,12 +248,6 @@ function script.QueryWeapon(weaponID)
 			return flare4
 		elseif weaponID == 5 then
 			return flare5
-		elseif weaponID == 6 then
-			return flare6
-		elseif weaponID == 7 then
-			return flare7
-		elseif weaponID == 8 then
-			return flare8
 		end
 	end
 end
