@@ -1,7 +1,7 @@
 local modinfo = {
-		name					= "Mechwarrior: War Robots",
+		name					=	"MW:S",
 		shortName				= "MWS",
-		game					= "Mechwarrior: War Robots",
+		game					= "MW:S",
 		shortGame				= "MWS",
 		mutator					= "Official",
 		description				=	"War is hell.",
