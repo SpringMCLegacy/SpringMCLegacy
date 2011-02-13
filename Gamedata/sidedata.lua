@@ -4,7 +4,7 @@ local sidedata = {
 	startUnit = "IS_Factory",
 	},
 	{
-	name = "Clan Wolf",
+	name = "Clans",
 	startUnit = "CL_Factory",
 	},
 }

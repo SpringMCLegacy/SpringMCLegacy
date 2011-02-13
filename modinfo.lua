@@ -1,5 +1,5 @@
 local modinfo = {
-		name					=	"MW:S",
+		name					= "Mechwarrior: War Robots",
 		shortName				= "MWS",
 		game					= "MW:S",
 		shortGame				= "MWS",
