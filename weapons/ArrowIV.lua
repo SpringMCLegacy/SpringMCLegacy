@@ -29,6 +29,7 @@ weaponDef = {
 	weaponVelocity          = 500,
 	reloadtime              = 15,
 	model					= "LargeMissile.s3o",
+	interceptedByShieldType	= 1,
 	damage = {
 		default = 3000,--200 DPS
 		dropships = 1,--haha fuck you flozi
