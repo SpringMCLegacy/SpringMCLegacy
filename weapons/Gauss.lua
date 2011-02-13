@@ -12,6 +12,7 @@ weaponDef = {
 	ballistic				= 1,
 	range                   = 2200,
 	accuracy                = 10,
+	targetMoveError			= 0.01,
 	areaOfEffect            = 5,
 	weaponVelocity          = 2500,
 	reloadtime              = 6,

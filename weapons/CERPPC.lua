@@ -14,6 +14,7 @@ weaponDef = {
 	range                   = 2100,
 	accuracy                = 100,
 	movingAccuracy			= 500,
+	targetMoveError			= 0.05,
 	areaOfEffect            = 10,
 	weaponVelocity          = 2000,
 	reloadtime              = 7.5,

@@ -32,6 +32,7 @@ weaponDef = {
 	burst					= 20,
 	burstrate				= 0.1,
 	model					= "Missile.s3o",
+	interceptedByShieldType	= 1,
 	damage = {
 		default = 100,--10 DPS
 		beacons = 0,

@@ -56,9 +56,9 @@ local IS_Goblin = {
 				OnlyTargetCategory = "notbeacon",
 				WeaponSlaveTo = 1,
 			},
-			--[5] = {
-			--	name	= "LAMS",
-			--},
+			[5] = {
+				name	= "AMS",
+			},
 		},
 	--Gets CEG effects from /gamedata/explosions folder
 	sfxtypes = {

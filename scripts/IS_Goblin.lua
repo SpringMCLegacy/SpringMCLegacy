@@ -156,6 +156,8 @@ function script.QueryWeapon(weaponID)
 			return mgflare1
 		elseif weaponID == 4 then
 			return mgflare2
+		elseif weaponID == 5 then
+			return lamsflare
 		end
 	end
 end
