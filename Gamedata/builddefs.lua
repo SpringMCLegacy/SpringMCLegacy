@@ -46,6 +46,7 @@ buildoptions =
 	"is_locust",
 	"is_osiris",
 	"is_owens",
+	"is_raven",
 	"is_chimera",
 	"is_bushwacker",
 	"is_warhammer",
