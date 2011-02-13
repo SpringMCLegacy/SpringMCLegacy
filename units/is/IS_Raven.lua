@@ -1,19 +1,21 @@
-local IS_Owens = {
-	name              	= "Owens",
-	description         = "Light Missile Support Mech",
-	objectName        	= "IS_Owens.s3o",
-	script				= "IS_Owens.lua",
+local IS_Raven = {
+	name              	= "Raven",
+	description         = "Light ECM Scout Mech",
+	objectName        	= "IS_Raven.s3o",
+	script				= "IS_Raven.lua",
 	category 			= "mech ground notbeacon",
 	sightDistance       = 1500,
 	radarDistance      	= 2000,
+		stealth 		= 1,
 		activateWhenBuilt   = true,
 		onoffable           = true,
-	maxDamage           = 4000,
+		radarDistanceJam    = 100,
+	maxDamage           = 4500,
 	mass                = 3500,
 	footprintX			= 2,
 	footprintZ 			= 2,
 	collisionVolumeType = "box",
-	collisionVolumeScales = "30 35 15",
+	collisionVolumeScales = "15 35 15",
 	collisionVolumeOffsets = "0 0 0",
 	collisionVolumeTest = 1,
 --	leaveTracks			= 1,
@@ -23,50 +25,43 @@ local IS_Owens = {
 --	trackType			= "Thick",--graphics file to use for the track decal, from \bitmaps\tracks\ folder
 --	trackWidth			= 20,--width to render the decal
 	buildCostEnergy     = 0,
-	buildCostMetal      = 3750,
+	buildCostMetal      = 1500,
 	buildTime           = 0,
 	upright				= true,
 	canMove				= true,
 		movementClass   = "SMALLMECH",
 		maxVelocity		= 3.23, --97kph/30
 		maxReverseVelocity= 1.61,
-		acceleration    = 1.75,
+		acceleration    = 2.0,
 		brakeRate       = 0.1,
-		turnRate 		= 900,
+		turnRate 		= 1000,
 		smoothAnim		= 1,
 	
 	canAttack 			= true,
 		--Makes unit use weapon from /weapons folder
 		weapons 		= {	
 			[1] = {
-				name	= "ArtemisLRM5",
+				name	= "MPL",
 				mainDir = "0 0 1",
 				maxAngleDif = 270,
 				OnlyTargetCategory = "notbeacon",
 			},
 			[2] = {
-				name	= "ArtemisLRM5",
+				name	= "MPL",
 				mainDir = "0 0 1",
 				maxAngleDif = 270,
 				OnlyTargetCategory = "notbeacon",
 				WeaponSlaveTo = 1,
 			},
 			[3] = {
-				name	= "ERSBL",
+				name	= "NARC",
 				mainDir = "0 0 1",
 				maxAngleDif = 270,
 				OnlyTargetCategory = "notbeacon",
 				WeaponSlaveTo = 1,
 			},
 			[4] = {
-				name	= "MPL",
-				mainDir = "0 0 1",
-				maxAngleDif = 270,
-				OnlyTargetCategory = "notbeacon",
-				WeaponSlaveTo = 1,
-			},
-			[5] = {
-				name	= "MPL",
+				name	= "SRM6",
 				mainDir = "0 0 1",
 				maxAngleDif = 270,
 				OnlyTargetCategory = "notbeacon",
@@ -78,15 +73,14 @@ local IS_Owens = {
 
 	sfxtypes = {
 		explosiongenerators = {
-		"custom:MEDIUM_MUZZLEFLASH",
 		"custom:SMALL_MUZZLEFLASH",
 		"custom:MG_MUZZLEFLASH",
 		},
 	},
     customparams = {
 		hasturnbutton	= "1",
-		helptext		= "Armament: 2 x Artemis-enhanced LRM-5, 2 x Small Beam Laser, 1 x NARC Launcher - Armor: 7 tons",
+		helptext		= "Armament: 3 x Medium Pulse Laser, 1 x SRM-6, 1 x NARC Launcher - Armor: 3 tons",
     },
 }
 
-return lowerkeys({ ["IS_Owens"] = IS_Owens })
+return lowerkeys({ ["IS_Raven"] = IS_Raven })
