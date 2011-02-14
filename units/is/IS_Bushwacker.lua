@@ -66,7 +66,7 @@ local IS_Bushwacker = {
 				WeaponSlaveTo = 1,
 			},
 			[5] = {
-				name	= "LRM10",
+				name	= "LRM5",
 				mainDir = "0 0 1",
 				maxAngleDif = 270,
 				OnlyTargetCategory = "notbeacon",
