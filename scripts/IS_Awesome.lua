@@ -231,6 +231,7 @@ function script.FireWeapon(weaponID)
 			EmitSfx(flare4, PPC_MUZZLEFLASH)
 		elseif weaponID == 5 then
 			EmitSfx(flare5, MG_MUZZLEFLASH)
+		end
 end
 
 function script.AimFromWeapon(weaponID) 
@@ -250,7 +251,6 @@ function script.QueryWeapon(weaponID)
 			return flare5
 		end
 	end
-end
 
 function script.Killed(recentDamage, maxHealth)
 	--local severity = recentDamage / maxHealth * 100
