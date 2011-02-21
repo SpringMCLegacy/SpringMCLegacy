@@ -28,7 +28,7 @@ local IS_Dropship = {
 		showNanoSpray		= 0,
 		workerTime			= 1,
 		canBeAssisted	= false,
-		yardmap			= "ooccccccccccccccccoo ooccccccccccccccccoo cccccccccccccccccccc  cccccccccccccccccccc  cccccccccccccccccccc  cccccccccccccccccccc  cccccccccccccccccccc  cccccccccccccccccccc  cccccccccccccccccccc  cccccccccccccccccccc  cccccccccccccccccccc  cccccccccccccccccccc  cccccccccccccccccccc  cccccccccccccccccccc  cccccccccccccccccccc  cccccccccccccccccccc  ooccccccccccccccccoo  ooccccccccccccccccoo",
+		yardmap			= "yyyyyyyyyyyyyyyyyyyy yyyyyyyyyyyyyyyyyyyy yyyyyyyyyyyyyyyyyyyy yyyoccccccccccccoyyy yyyccccccccccccccyyy yyccccccccccccccccyy yyccccccccccccccccyy yyccccccccccccccccyy yyccccccccccccccccyy yyccccccccccccccccyy yyccccccccccccccccyy yyccccccccccccccccyy yyccccccccccccccccyy yyycccccccccccccccyy yyyoccccccccccccoyyy yyyyyyyyyyyyyyyyyyyy yyyyyyyyyyyyyyyyyyyy yyyyyyyyyyyyyyyyyyyy",
 	TEDClass			= PLANT,
 	canAttack 			= true,
 		--Makes unit use weapon from /weapons folder

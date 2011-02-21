@@ -10,7 +10,7 @@ buildoptions =
         -- Clan Units --
         --------------------
 
-  cl_factory = 
+  cl_dropship = 
   {
     --"cl_hephaestus",
 	--"cl_enyo",
@@ -32,7 +32,7 @@ buildoptions =
 	"cl_warhawk",
 	"cl_direwolf",
   },
-  is_factory = 
+  is_dropship = 
   {
     --"is_harasser",
 	--"is_scorpion_ac5",

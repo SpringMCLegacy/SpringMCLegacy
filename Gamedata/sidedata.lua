@@ -1,11 +1,11 @@
 local sidedata = {
 	{
 	name = "Inner Sphere",
-	startUnit = "IS_Factory",
+	startUnit = "IS_Dropship",
 	},
 	{
 	name = "Clans",
-	startUnit = "CL_Factory",
+	startUnit = "CL_Dropship",
 	},
 }
 return sidedata

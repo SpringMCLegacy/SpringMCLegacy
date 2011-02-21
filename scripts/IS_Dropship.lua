@@ -98,9 +98,26 @@ function script.Create()
 end
 
 function script.Activate()
+	SetUnitValue(COB.YARD_OPEN, 1)
+	SetUnitValue(COB.INBUILDSTANCE, 1)
+	SetUnitValue(COB.BUGGER_OFF, 1)
+	--StartThread(build_animation)
+	return 1
 end
 
 function script.Deactivate()
+	SetUnitValue(COB.YARD_OPEN, 0)
+	SetUnitValue(COB.INBUILDSTANCE, 0)
+	SetUnitValue(COB.BUGGER_OFF, 0)
+	return 0
+end
+
+function QueryBuildInfo() 
+	return pad
+end
+
+function QueryNanopiece() 
+	return beam 
 end
 
 local function RestoreAfterDelay(unitID)
@@ -265,21 +282,21 @@ end
 
 function script.FireWeapon(weaponID)
 		if weaponID == 1 then
-			EmitSfx(turret1_flare1, MG_MUZZLEFLASH)
+			EmitSfx(turret1_flare1, MEDIUM_MUZZLEFLASH)
 		elseif weaponID == 2 then
-			EmitSfx(turret1_flare2, MG_MUZZLEFLASH)
+			EmitSfx(turret1_flare2, MEDIUM_MUZZLEFLASH)
 		elseif weaponID == 3 then
-			EmitSfx(turret2_flare1, MG_MUZZLEFLASH)
+			EmitSfx(turret2_flare1, MEDIUM_MUZZLEFLASH)
 		elseif weaponID == 4 then
-			EmitSfx(turret2_flare2, MG_MUZZLEFLASH)
+			EmitSfx(turret2_flare2, MEDIUM_MUZZLEFLASH)
 		elseif weaponID == 5 then
-			EmitSfx(turret3_flare1, MG_MUZZLEFLASH)
+			EmitSfx(turret3_flare1, MEDIUM_MUZZLEFLASH)
 		elseif weaponID == 6 then
-			EmitSfx(turret3_flare2, MG_MUZZLEFLASH)
+			EmitSfx(turret3_flare2, MEDIUM_MUZZLEFLASH)
 		elseif weaponID == 7 then
-			EmitSfx(turret4_flare1, MG_MUZZLEFLASH)
+			EmitSfx(turret4_flare1, MEDIUM_MUZZLEFLASH)
 		elseif weaponID == 8 then
-			EmitSfx(turret4_flare2, MG_MUZZLEFLASH)
+			EmitSfx(turret4_flare2, MEDIUM_MUZZLEFLASH)
 		elseif weaponID == 9 then
 			EmitSfx(ppc1_flare, PPC_MUZZLEFLASH)
 		elseif weaponID == 10 then

@@ -36,7 +36,7 @@
  
  
 local auras = {
-        cl_factory = {
+        cl_dropship = {
                 range = 300,
                 transport = false,
                 heal = {
@@ -51,7 +51,7 @@ local auras = {
 --						mask = {"all"},
 --             },
         },
-		is_factory = {
+		is_dropship = {
                 range = 300,
                 transport = false,
                 heal = {
