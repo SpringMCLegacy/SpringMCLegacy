@@ -23,7 +23,7 @@ local CL_Kitfox = {
 --	trackType			= "Thick",--graphics file to use for the track decal, from \bitmaps\tracks\ folder
 --	trackWidth			= 20,--width to render the decal
 	buildCostEnergy     = 0,
-	buildCostMetal      = 2000,
+	buildCostMetal      = 2250,
 	buildTime           = 0,
 	upright				= true,
 	canMove				= true,
@@ -46,7 +46,7 @@ local CL_Kitfox = {
 				WeaponSlaveTo = 1,
 			},
 			[2] = {
-				name	= "AC10",
+				name	= "AC5",
 				--mainDir = "0 0 1",
 				--maxAngleDif = 270,
 				OnlyTargetCategory = "notbeacon",
