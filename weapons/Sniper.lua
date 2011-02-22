@@ -25,8 +25,12 @@ weaponDef = {
 	intensity				= 0.5,
 	damage = {
 		default = 7500, --375 DPS (should be 250, but seemed weak)
-		dropships = 0,--haha fuck you flozi
 		beacons = 0,
+		light = 7500,
+		medium = 6375,
+		heavy = 5250,
+		assault = 3750,
+		vehicle = 11250,
 	},
 	customparams = {
 		heatgenerated		= "200",--10/sec
