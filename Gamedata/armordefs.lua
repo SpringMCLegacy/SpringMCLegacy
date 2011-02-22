@@ -15,6 +15,7 @@ local armorDefs = {
 		"CL_Kitfox",
 		"CL_MistLynx",
 		"CL_Cougar",
+		"IS_Wolfhound",
 	},
 	medium = {
 		"IS_Chimera",

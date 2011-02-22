@@ -45,6 +45,7 @@ buildoptions =
 	--"is_sniper",
 	"is_locust",
 	"is_osiris",
+	"is_wolfhound",
 	"is_owens",
 	"is_raven",
 	"is_chimera",

@@ -1,19 +1,19 @@
-local CL_Kitfox = {
-	name              	= "Kit Fox (Uller)",
+local IS_Wolfhound = {
+	name              	= "Wolfhound",
 	description         = "Light Strike Mech",
-	objectName        	= "CL_Kitfox.s3o",
-	script				= "CL_Kitfox.lua",
+	objectName        	= "IS_Wolfhound.s3o",
+	script				= "IS_Wolfhound.lua",
 	category 			= "mech ground notbeacon",
-	sightDistance       = 1000,
-	radarDistance      	= 1500,
+	sightDistance       = 1500,
+	radarDistance      	= 2000,
 		activateWhenBuilt   = true,
 		onoffable           = true,
-	maxDamage           = 4000,
-	mass                = 3000,
+	maxDamage           = 7000,
+	mass                = 3500,
 	footprintX			= 2,
 	footprintZ 			= 2,
 	collisionVolumeType = "box",
-	collisionVolumeScales = "15 35 15",
+	collisionVolumeScales = "35 50 20",
 	collisionVolumeOffsets = "0 0 0",
 	collisionVolumeTest = 1,
 --	leaveTracks			= 1,
@@ -23,46 +23,52 @@ local CL_Kitfox = {
 --	trackType			= "Thick",--graphics file to use for the track decal, from \bitmaps\tracks\ folder
 --	trackWidth			= 20,--width to render the decal
 	buildCostEnergy     = 0,
-	buildCostMetal      = 2250,
+	buildCostMetal      = 3500,
 	buildTime           = 0,
 	upright				= true,
 	canMove				= true,
 		movementClass   = "SMALLMECH",
 		maxVelocity		= 4.85, --97kph/30
 		maxReverseVelocity= 2.43,
-		acceleration    = 1.8,
+		acceleration    = 1.75,
 		brakeRate       = 0.1,
-		turnRate 		= 950,
+		turnRate 		= 900,
 		smoothAnim		= 1,
 	
 	canAttack 			= true,
 		--Makes unit use weapon from /weapons folder
 		weapons 		= {	
 			[1] = {
-				name	= "CERLBL",
-				--mainDir = "0 0 1",
-				--maxAngleDif = 270,
+				name	= "LBL",
+				mainDir = "0 0 1",
+				maxAngleDif = 270,
 				OnlyTargetCategory = "notbeacon",
-				WeaponSlaveTo = 1,
 			},
 			[2] = {
-				name	= "AC5",
-				--mainDir = "0 0 1",
-				--maxAngleDif = 270,
+				name	= "ERMBL",
+				mainDir = "0 0 1",
+				maxAngleDif = 270,
 				OnlyTargetCategory = "notbeacon",
 				WeaponSlaveTo = 1,
 			},
 			[3] = {
-				name	= "CSPL",
-				--mainDir = "0 0 1",
-				--maxAngleDif = 270,
+				name	= "ERMBL",
+				mainDir = "0 0 1",
+				maxAngleDif = 270,
 				OnlyTargetCategory = "notbeacon",
 				WeaponSlaveTo = 1,
 			},
 			[4] = {
-				name	= "SSRM4",
-				--mainDir = "0 0 1",
-				--maxAngleDif = 270,
+				name	= "ERMBL",
+				mainDir = "0 0 1",
+				maxAngleDif = 270,
+				OnlyTargetCategory = "notbeacon",
+				WeaponSlaveTo = 1,
+			},
+			[5] = {
+				name	= "ERMBL",
+				mainDir = "0 0 1",
+				maxAngleDif = 270,
 				OnlyTargetCategory = "notbeacon",
 				WeaponSlaveTo = 1,
 			},
@@ -72,14 +78,13 @@ local CL_Kitfox = {
 
 	sfxtypes = {
 		explosiongenerators = {
-		"custom:SMALL_MUZZLEFLASH",
 		"custom:MG_MUZZLEFLASH",
 		},
 	},
     customparams = {
 		hasturnbutton	= "1",
-		helptext		= "Armament: 1 x ER Large Beam Laser, 1 x AC/5, 1 x Small Pulse Laser, 1 x SSRM-4 - Armor: 4 tons",
+		helptext		= "Armament: 1 x Large Beam Laser, 4 x ER Medium Beam Laser - Armor: 7 tons",
     },
 }
 
-return lowerkeys({ ["CL_Kitfox"] = CL_Kitfox })
+return lowerkeys({ ["IS_Wolfhound"] = IS_Wolfhound })
