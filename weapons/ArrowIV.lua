@@ -32,8 +32,12 @@ weaponDef = {
 	interceptedByShieldType	= 1,
 	damage = {
 		default = 3000,--200 DPS
-		dropships = 1,--haha fuck you flozi
 		beacons = 0,
+		light = 3000,
+		medium = 2550,
+		heavy = 2100,
+		assault = 1500,
+		vehicle = 4500,
 	},
 	customparams = {
 		heatgenerated		= "200",--10/sec

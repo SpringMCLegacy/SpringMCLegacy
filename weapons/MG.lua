@@ -26,6 +26,7 @@ weaponDef = {
 	damage = {
 		default = 1.28,--10 DPS more or less
 		beacons = 0,
+		vehicle = 3,
 	},
 	
 	

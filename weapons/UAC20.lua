@@ -23,8 +23,13 @@ weaponDef = {
 	rgbcolor				= "1 0.8 0",
 	intensity				= 0.2,
 	damage = {
-		default = 500, --200 DPS
+		default = 500, --250 DPS, 25% increased Rate of Fire
 		beacons = 0,
+		light = 500,
+		medium = 425,
+		heavy = 350,
+		assault = 250,
+		vehicle = 750,
 	},
 	customparams = {
 		heatgenerated		= "17.5",--10.5/sec
