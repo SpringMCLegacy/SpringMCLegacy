@@ -9,6 +9,7 @@ local pelvis, torso = piece ("pelvis", "torso")
 local lupperarm, llowerarm, rupperarm, rlowerarm = piece ("lupperarm", "llowerarm", "rupperarm", "rlowerarm")
 local lupperleg, llowerleg, rupperleg, rlowerleg, rfronttoe, rbacktoe, lfronttoe, lbacktoe = piece ("lupperleg", "llowerleg", "rupperleg", "rlowerleg", "rfronttoe", "rbacktoe", "lfronttoe", "lbacktoe")
 local flare1, flare2, flare3, flare4, flare5, flare6, flare7, flare8 = piece ("flare1", "flare2", "flare3", "flare4", "flare5", "flare6", "flare7", "flare8")
+local jet1, jet2, jet3, jet4 = piece ("jet1", "jet2", "jet3", "jet4")
  
 --Turning/Movement Locals
 local TORSO_SPEED = rad(200)
@@ -18,6 +19,7 @@ local LEG_SPEED = rad(800)
 -- constants
 local SIG_AIM = 2
 local walking = false
+local isJumping = false
 local RESTORE_DELAY = Spring.UnitScript.GetLongestReloadTime(unitID) * 2
 
 -- includes
@@ -25,6 +27,7 @@ include "smokeunit.lua"
 
 --SFX defines
 MG_MUZZLEFLASH = SFX.CEG+0
+RocketTrail = SFX.CEG+1
 
 local function MotionControl()
 	while true do
@@ -211,15 +214,24 @@ local function MotionControl()
 	end
 end
 
-
---local function StopWalk()
---	Turn(lupperleg, x_axis, 0, rad(200))
---	Turn(rupperleg, x_axis, 0, rad(200))
---end
+function JumpControl()
+	while true do
+		if isJumping then
+			EmitSfx(jet1, RocketTrail)
+			EmitSfx(jet2, RocketTrail)
+			EmitSfx(jet3, RocketTrail)
+			EmitSfx(jet4, RocketTrail)
+			Sleep(50)
+		else
+			Sleep(100)
+		end
+	end
+end
 
 function script.Create()
 	StartThread(SmokeUnit, {pelvis, torso})
 	StartThread(MotionControl)
+	StartThread(JumpControl)
 end
 
 function script.StartMoving()
@@ -228,6 +240,14 @@ end
 
 function script.StopMoving()
 	walking = false
+end
+
+function beginJump()
+	isJumping = true
+end
+
+function endJump()
+	isJumping = false
 end
 
 function script.Activate()
