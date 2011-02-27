@@ -39,6 +39,7 @@ jumpClassGroups = {
 	"is_catapult",
 	"is_osiris",
 	"cl_mistlynx",
+	"cl_nova",
 	--[["corpyro",
 	"corfast",
 	"corsktl",
@@ -71,6 +72,7 @@ overCategory = {
 	is_catapult = { cobscript = false},
 	is_osiris = { cobscript = false},
 	cl_mistlynx = { cobscript = false},
+	cl_nova = { cobscript = false},
  --[[noruas = {
     reload = 0,  },
 	
