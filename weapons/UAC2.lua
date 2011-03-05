@@ -1,21 +1,21 @@
 weaponDef = {
-	name                    = "Ultra AutoCannon/5",
+	name                    = "Ultra AutoCannon/2",
 	weaponType              = "Cannon",
-	explosionGenerator    	= "custom:HE_SMALL",
-	soundHit              	= [[GEN_Explode2]],
-	soundStart            	= [[AC5_Fire]],
+	explosionGenerator    	= "custom:HE_XSMALL",
+	soundHit              	= [[GEN_Explode1]],
+	soundStart            	= [[AC2_Fire]],
 	burnblow				= false, 	--Bullets explode at range limit.
 	collideFriendly			= true,
 	noSelfDamage            = true,
 	turret                  = true,
 	ballistic				= 1,
-	range                   = 2000,
-	accuracy                = 50,
-	areaOfEffect            = 10,
+	range                   = 2400,
+	accuracy                = 25,
+	areaOfEffect            = 5,
 	weaponVelocity          = 2000,
-	reloadtime              = 0.5,
+	reloadtime              = 0.1,
 	renderType				= 1,
-	size					= 1,
+	size					= 0.75,
 	sizeDecay				= 0,
 	separation				= 2, 		--Distance between each plasma particle.
 	stages					= 40, 		--Number of particles used in one plasma shot.
@@ -23,17 +23,17 @@ weaponDef = {
 	rgbcolor				= "1 0.8 0",
 	intensity				= 0.1,
 	damage = {
-		default = 25, --100 DPS, 2xRoF
+		default = 4, --40 DPS, 2 x ROF
 		beacons = 0,
-		light = 25,
-		medium = 21.25,
-		heavy = 17.5,
-		assault = 12.5,
-		vehicle = 37.5,
+		light = 4,
+		medium = 3.4,
+		heavy = 2.8,
+		assault = 2,
+		vehicle = 6,
 	},
 	customparams = {
-		heatgenerated		= "0.56",--1.5/sec
+		heatgenerated		= "0.1",--0.5/s
     },
 }
 
-return lowerkeys({ UAC5 = weaponDef })
+return lowerkeys({ UAC2 = weaponDef })
