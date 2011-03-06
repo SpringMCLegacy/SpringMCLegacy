@@ -31,6 +31,7 @@ weaponDef = {
 	},
 	customparams = {
 		heatgenerated		= "6",--3/s
+		cegflare			= "FLAME_MUZZLEFLASH",
     },
 }
 

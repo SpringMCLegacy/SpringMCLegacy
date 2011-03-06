@@ -1,5 +1,5 @@
 weaponDef = {
-	name                    = "Extended Range Particle Projector Cannon",
+	name                    = "Clan Extended Range Particle Projector Cannon",
 	weaponType              = "Cannon",
 	explosionGenerator    	= "custom:AP_MEDIUM",
 --	cegTag					= "RailTrail",
@@ -27,16 +27,13 @@ weaponDef = {
 	rgbcolor				= "0.5 0.5 1.0",
 	intensity				= 0.5,
 	damage = {
-		default = 500, --100 DPS
+		default = 750, --150 DPS
 		beacons = 0,
-		light = 500,
-		medium = 425,
-		heavy = 350,
-		assault = 250,
 		vehicle = 750,
 	},
 	customparams = {
 		heatgenerated		= "50",--10/sec
+		cegflare			= "PPC_MUZZLEFLASH",
     },
 }
 

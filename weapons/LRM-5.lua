@@ -43,7 +43,8 @@ weaponDef = {
 		vehicle = 150,
 	},
 	customparams = {
-		heatgenerated		= "40",--4/sec
+		heatgenerated		= "20",--2/sec for entire salvo
+		cegflare			= "LRM_MUZZLEFLASH",
     },
 }
 

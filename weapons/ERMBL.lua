@@ -41,7 +41,8 @@ weaponDef = {
 		vehicle = 225,
 	},
 	customparams = {
-		heatgenerated		= "9",--3/sec
+		heatgenerated		= "15",--5/sec
+		cegflare			= "MBL_MUZZLEFLASH",
     },
 }
 
