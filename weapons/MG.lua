@@ -28,7 +28,10 @@ weaponDef = {
 		beacons = 0,
 		vehicle = 3,
 	},
-	
+	customparams = {
+		--heatgenerated		= "0",--0/s
+		cegflare			= "MG_MUZZLEFLASH",
+    },
 	
 	
 }

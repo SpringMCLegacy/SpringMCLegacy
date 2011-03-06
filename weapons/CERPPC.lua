@@ -11,13 +11,13 @@ weaponDef = {
 	turret                  = true,
 --	ballistic				= 1,
 	lineOfSight				= 1,
-	range                   = 2100,
+	range                   = 2300,
 	accuracy                = 100,
-	movingAccuracy			= 500,
 	targetMoveError			= 0.05,
+	movingAccuracy			= 500,
 	areaOfEffect            = 10,
 	weaponVelocity          = 2000,
-	reloadtime              = 7.5,
+	reloadtime              = 5,
 	renderType				= 1,
 	size					= 3,
 	sizeDecay				= 0,
@@ -27,19 +27,14 @@ weaponDef = {
 	rgbcolor				= "0.5 0.5 1.0",
 	intensity				= 0.5,
 	damage = {
-		default = 1125, --150 DPS
+		default = 750, --150 DPS
 		beacons = 0,
-		light = 1125,
-		medium = 956.25,
-		heavy = 787.5,
-		assault = 562.5,
-		vehicle = 1687.5,
+		vehicle = 750,
 	},
 	customparams = {
-		heatgenerated		= "112.5",--15/sec
+		heatgenerated		= "75",--15/sec
+		cegflare			= "PPC_MUZZLEFLASH",
     },
-	
-	
 }
 
 return lowerkeys({ CERPPC = weaponDef })
