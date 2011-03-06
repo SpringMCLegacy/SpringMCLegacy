@@ -1,0 +1,43 @@
+weaponDef = {
+	name                    = "Extended Range Particle Projector Cannon",
+	weaponType              = "Cannon",
+	explosionGenerator    	= "custom:AP_MEDIUM",
+--	cegTag					= "RailTrail",
+	soundHit              	= [[PPC_Hit]],
+	soundStart            	= [[PPC_Fire]],
+	burnblow				= false, 	--Bullets explode at range limit.
+	collideFriendly			= true,
+	noSelfDamage            = true,
+	turret                  = true,
+--	ballistic				= 1,
+	lineOfSight				= 1,
+	range                   = 2300,
+	accuracy                = 100,
+	targetMoveError			= 0.05,
+	movingAccuracy			= 500,
+	areaOfEffect            = 10,
+	weaponVelocity          = 2000,
+	reloadtime              = 5,
+	renderType				= 1,
+	size					= 3,
+	sizeDecay				= 0,
+	separation				= 1.5, 		--Distance between each plasma particle.
+	stages					= 100, 		--Number of particles used in one plasma shot.
+--	AlphaDecay				= 0.05, 		--How much a plasma particle is more transparent than the previous particle. 
+	rgbcolor				= "0.5 0.5 1.0",
+	intensity				= 0.5,
+	damage = {
+		default = 500, --100 DPS
+		beacons = 0,
+		light = 500,
+		medium = 425,
+		heavy = 350,
+		assault = 250,
+		vehicle = 750,
+	},
+	customparams = {
+		heatgenerated		= "50",--10/sec
+    },
+}
+
+return lowerkeys({ ERPPC = weaponDef })

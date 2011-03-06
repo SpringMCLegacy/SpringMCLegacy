@@ -4,11 +4,11 @@ local CL_Maddog = {
 	objectName        	= "CL_Maddog.s3o",
 	script				= "CL_Maddog.lua",
 	category 			= "mech ground notbeacon",
-	sightDistance       = 1500,
-	radarDistance      	= 2000,
+	sightDistance       = 1000,
+	radarDistance      	= 1500,
 		activateWhenBuilt   = true,
 		onoffable           = true,
-	maxDamage           = 8500,
+	maxDamage           = 16300,
 	mass                = 6000,
 	footprintX			= 3,
 	footprintZ 			= 3,
@@ -23,7 +23,7 @@ local CL_Maddog = {
 --	trackType			= "Thick",--graphics file to use for the track decal, from \bitmaps\tracks\ folder
 --	trackWidth			= 20,--width to render the decal
 	buildCostEnergy     = 0,
-	buildCostMetal      = 9000,
+	buildCostMetal      = 23700,
 	buildTime           = 0,
 	upright				= true,
 	canMove				= true,
@@ -80,7 +80,7 @@ local CL_Maddog = {
 	},
     customparams = {
 		hasturnbutton	= "1",
-		helptext		= "Armament: 2 x Artemis-enhanced LRM-20, 2 x Large Pulse Laser, 2 x Medium Pulse Laser - Armor: 8.5 tons",
+		helptext		= "Armament: 2 x LRM-20, 2 x Large Pulse Laser, 2 x Medium Pulse Laser - Armor: 8.5 tons Ferro-Fibrous",
     },
 }
 

@@ -8,7 +8,7 @@ local IS_Catapult = {
 	radarDistance      	= 1500,
 		activateWhenBuilt   = true,
 		onoffable           = true,
-	maxDamage           = 10000,
+	maxDamage           = 20200,
 	mass                = 6500,
 	footprintX			= 3,
 	footprintZ 			= 3,
@@ -23,7 +23,7 @@ local IS_Catapult = {
 --	trackType			= "Thick",--graphics file to use for the track decal, from \bitmaps\tracks\ folder
 --	trackWidth			= 20,--width to render the decal
 	buildCostEnergy     = 0,
-	buildCostMetal      = 9000,
+	buildCostMetal      = 27200,
 	buildTime           = 0,
 	upright				= true,
 	canMove				= true,
@@ -51,28 +51,28 @@ local IS_Catapult = {
 				OnlyTargetCategory = "notbeacon",
 			},
 			[3] = {
-				name	= "MPL",
+				name	= "ERMBL",
 				mainDir = "0 0 1",
 				maxAngleDif = 270,
 				OnlyTargetCategory = "notbeacon",
 				WeaponSlaveTo = 1,
 			},
 			[4] = {
-				name	= "MPL",
+				name	= "ERMBL",
 				mainDir = "0 0 1",
 				maxAngleDif = 270,
 				OnlyTargetCategory = "notbeacon",
 				WeaponSlaveTo = 1,
 			},
 			[5] = {
-				name	= "MPL",
+				name	= "ERMBL",
 				mainDir = "0 0 1",
 				maxAngleDif = 270,
 				OnlyTargetCategory = "notbeacon",
 				WeaponSlaveTo = 1,
 			},
 			[6] = {
-				name	= "MPL",
+				name	= "ERMBL",
 				mainDir = "0 0 1",
 				maxAngleDif = 270,
 				OnlyTargetCategory = "notbeacon",
@@ -91,7 +91,7 @@ local IS_Catapult = {
 	},
     customparams = {
 		hasturnbutton	= "1",
-		helptext		= "Armament: 2 x Artemis-enhanced LRM-20, 2 x Large Pulse Laser, 2 x Medium Pulse Laser - Armor: 8.5 tons",
+		helptext		= "Armament: 2 x Artemis-enhanced LRM-20, 4 x ER Medium Beam Laser - Armor: 13 tons Standard",
     },
 }
 

@@ -8,7 +8,7 @@ local IS_Osiris = {
 	radarDistance      	= 1500,
 		activateWhenBuilt   = true,
 		onoffable           = true,
-	maxDamage           = 4000,
+	maxDamage           = 6800,
 	mass                = 3000,
 	footprintX			= 2,
 	footprintZ 			= 2,
@@ -23,7 +23,7 @@ local IS_Osiris = {
 --	trackType			= "Thick",--graphics file to use for the track decal, from \bitmaps\tracks\ folder
 --	trackWidth			= 20,--width to render the decal
 	buildCostEnergy     = 0,
-	buildCostMetal      = 2000,
+	buildCostMetal      = 10800,
 	buildTime           = 0,
 	upright				= true,
 	canMove				= true,
@@ -39,13 +39,13 @@ local IS_Osiris = {
 		--Makes unit use weapon from /weapons folder
 		weapons 		= {	
 			[1] = {
-				name	= "ERSBL",
+				name	= "MPL",
 				mainDir = "0 0 1",
 				maxAngleDif = 270,
 				OnlyTargetCategory = "notbeacon",
 			},
 			[2] = {
-				name	= "ERSBL",
+				name	= "MPL",
 				mainDir = "0 0 1",
 				maxAngleDif = 270,
 				OnlyTargetCategory = "notbeacon",
@@ -59,27 +59,6 @@ local IS_Osiris = {
 				WeaponSlaveTo = 1,
 			},
 			[4] = {
-				name	= "MPL",
-				mainDir = "0 0 1",
-				maxAngleDif = 270,
-				OnlyTargetCategory = "notbeacon",
-				WeaponSlaveTo = 1,
-			},
-			[5] = {
-				name	= "MPL",
-				mainDir = "0 0 1",
-				maxAngleDif = 270,
-				OnlyTargetCategory = "notbeacon",
-				WeaponSlaveTo = 1,
-			},
-			[6] = {
-				name	= "MG",
-				mainDir = "0 0 1",
-				maxAngleDif = 270,
-				OnlyTargetCategory = "notbeacon",
-				WeaponSlaveTo = 1,
-			},
-			[7] = {
 				name	= "SRM6",
 				mainDir = "0 0 1",
 				maxAngleDif = 270,
@@ -99,7 +78,7 @@ local IS_Osiris = {
 	},
     customparams = {
 		hasturnbutton	= "1",
-		helptext		= "Armament: 3 x Medium Pulse Laser, 2 x ER Small Beam Laser, 1 x MG, 1 x SRM-6 - Armor: 4 tons",
+		helptext		= "Armament: 3 x Medium Pulse Laser, 1 x SRM-6 - Armor: 4.5 tons Standard",
     },
 }
 

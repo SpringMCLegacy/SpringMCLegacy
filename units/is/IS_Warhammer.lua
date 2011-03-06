@@ -8,7 +8,7 @@ local IS_Warhammer = {
 	radarDistance      	= 1500,
 		activateWhenBuilt   = true,
 		onoffable           = true,
-	maxDamage           = 10000,
+	maxDamage           = 16000,
 	mass                = 7000,
 	footprintX			= 3,
 	footprintZ 			= 3,
@@ -23,7 +23,7 @@ local IS_Warhammer = {
 --	trackType			= "Thick",--graphics file to use for the track decal, from \bitmaps\tracks\ folder
 --	trackWidth			= 20,--width to render the decal
 	buildCostEnergy     = 0,
-	buildCostMetal      = 8500,
+	buildCostMetal      = 21400,
 	buildTime           = 0,
 	upright				= true,
 	canMove				= true,
@@ -39,13 +39,13 @@ local IS_Warhammer = {
 		--Makes unit use weapon from /weapons folder
 		weapons 		= {	
 			[1] = {
-				name	= "PPC",
+				name	= "ERPPC",
 				mainDir = "0 0 1",
 				maxAngleDif = 270,
 				OnlyTargetCategory = "notbeacon",
 			},
 			[2] = {
-				name	= "PPC",
+				name	= "ERPPC",
 				mainDir = "0 0 1",
 				maxAngleDif = 270,
 				OnlyTargetCategory = "notbeacon",
@@ -120,7 +120,7 @@ local IS_Warhammer = {
 	},
     customparams = {
 		hasturnbutton	= "1",
-		helptext		= "Armament: 2 x PPC, 4 x ER Medium Beam Laser, 2 x Small Pulse Laser, 2 x LRM-5 - Armor: 10 tons",
+		helptext		= "Armament: 2 x ER PPC, 4 x ER Medium Beam Laser, 2 x Small Pulse Laser, 2 x LRM-5 - Armor: 10 tons Standard",
     },
 }
 

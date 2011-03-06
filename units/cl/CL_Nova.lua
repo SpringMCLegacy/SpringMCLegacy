@@ -1,5 +1,5 @@
 local CL_Nova = {
-	name              	= "Nova",
+	name              	= "Nova (Black Hawk)",
 	description         = "Medium Strike Mech",
 	objectName        	= "CL_Nova.s3o",
 	script				= "CL_Nova.lua",
@@ -8,7 +8,7 @@ local CL_Nova = {
 	radarDistance      	= 1500,
 		activateWhenBuilt   = true,
 		onoffable           = true,
-	maxDamage           = 10000,
+	maxDamage           = 16000,
 	mass                = 5000,
 	footprintX			= 2,
 	footprintZ 			= 2,
@@ -23,7 +23,7 @@ local CL_Nova = {
 --	trackType			= "Thick",--graphics file to use for the track decal, from \bitmaps\tracks\ folder
 --	trackWidth			= 20,--width to render the decal
 	buildCostEnergy     = 0,
-	buildCostMetal      = 5000,
+	buildCostMetal      = 24400,
 	buildTime           = 0,
 	upright				= true,
 	canMove				= true,
@@ -92,6 +92,34 @@ local CL_Nova = {
 				OnlyTargetCategory = "notbeacon",
 				WeaponSlaveTo = 1,
 			},
+			[9] = {
+				name	= "CERMBL",
+				mainDir = "0 0 1",
+				maxAngleDif = 270,
+				OnlyTargetCategory = "notbeacon",
+				WeaponSlaveTo = 1,
+			},
+			[10] = {
+				name	= "CERMBL",
+				mainDir = "0 0 1",
+				maxAngleDif = 270,
+				OnlyTargetCategory = "notbeacon",
+				WeaponSlaveTo = 1,
+			},
+			[11] = {
+				name	= "CERMBL",
+				mainDir = "0 0 1",
+				maxAngleDif = 270,
+				OnlyTargetCategory = "notbeacon",
+				WeaponSlaveTo = 1,
+			},
+			[12] = {
+				name	= "CERMBL",
+				mainDir = "0 0 1",
+				maxAngleDif = 270,
+				OnlyTargetCategory = "notbeacon",
+				WeaponSlaveTo = 1,
+			},
 		},
 		
 	--Gets CEG effects from /gamedata/explosions folder
@@ -104,7 +132,7 @@ local CL_Nova = {
 	},
     customparams = {
 		hasturnbutton	= "1",
-		helptext		= "Armament: 8 x ER Medium Beam Laser - Armor: 10 tons",
+		helptext		= "Armament: 12 x ER Medium Beam Laser - Armor: 10 tons",
     },
 }
 

@@ -8,7 +8,7 @@ local IS_Bushwacker = {
 	radarDistance      	= 1500,
 		activateWhenBuilt   = true,
 		onoffable           = true,
-	maxDamage           = 9000,
+	maxDamage           = 16100,
 	mass                = 5500,
 	footprintX			= 2,
 	footprintZ 			= 2,
@@ -23,7 +23,7 @@ local IS_Bushwacker = {
 --	trackType			= "Thick",--graphics file to use for the track decal, from \bitmaps\tracks\ folder
 --	trackWidth			= 20,--width to render the decal
 	buildCostEnergy     = 0,
-	buildCostMetal      = 4750,
+	buildCostMetal      = 20100,
 	buildTime           = 0,
 	upright				= true,
 	canMove				= true,
@@ -52,28 +52,28 @@ local IS_Bushwacker = {
 				WeaponSlaveTo = 1,
 			},
 			[3] = {
-				name	= "ERMBL",
+				name	= "ERSBL",
 				mainDir = "0 0 1",
 				maxAngleDif = 270,
 				OnlyTargetCategory = "notbeacon",
 				WeaponSlaveTo = 1,
 			},
 			[4] = {
-				name	= "ERMBL",
+				name	= "ERSBL",
 				mainDir = "0 0 1",
 				maxAngleDif = 270,
 				OnlyTargetCategory = "notbeacon",
 				WeaponSlaveTo = 1,
 			},
 			[5] = {
-				name	= "LRM5",
+				name	= "MRM10",
 				mainDir = "0 0 1",
 				maxAngleDif = 270,
 				OnlyTargetCategory = "notbeacon",
 				WeaponSlaveTo = 1,
 			},
 			[6] = {
-				name	= "MRM10",
+				name	= "LRM5",
 				mainDir = "0 0 1",
 				maxAngleDif = 270,
 				OnlyTargetCategory = "notbeacon",
@@ -92,7 +92,7 @@ local IS_Bushwacker = {
 	},
     customparams = {
 		hasturnbutton	= "1",
-		helptext		= "Armament: 1 x AC/10, 1 x ER Large Beam Laser, 2 x ER Medium Beam Laser, 1 x MRM-10, 1 x LRM-10 - Armor: 9 tons",
+		helptext		= "Armament: 1 x AC/10, 1 x ER Large Beam Laser, 2 x ER Small Beam Laser, 1 x MRM-10, 1 x LRM-5 - Armor: 9 tons Standard",
     },
 }
 

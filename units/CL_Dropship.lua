@@ -7,7 +7,7 @@ local CL_Dropship = {
 	sightDistance       = 1000,
 	radarDistance      	= 1500,
 		activateWhenBuilt   = true,
-	maxDamage           = 50000,
+	maxDamage           = 100000,
 	mass                = 36000,
 	footprintX			= 20,
 	footprintZ 			= 20,
@@ -18,7 +18,7 @@ local CL_Dropship = {
 	canMove				= true,
 	maxVelocity			= 0,
 	energyStorage		= 0.01,
-	metalMake			= 100,
+	metalMake			= 500,
 	metalStorage		= 50000,
 	idleAutoHeal		= 0,
 	maxSlope			= 50,
@@ -200,6 +200,9 @@ local CL_Dropship = {
 				mainDir = "-1 1 1",
 				maxAngleDif = 180,
 				OnlyTargetCategory = "notbeacon",
+			},
+			[29] = {
+				name	= "AMS_Dropship",
 			},
 		},
 	--Gets CEG effects from /gamedata/explosions folder

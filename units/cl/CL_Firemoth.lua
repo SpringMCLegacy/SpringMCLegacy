@@ -8,7 +8,7 @@ local CL_Firemoth = {
 	radarDistance      	= 1500,
 		activateWhenBuilt   = true,
 		onoffable           = true,
-	maxDamage           = 2000,
+	maxDamage           = 3800,
 	mass                = 2000,
 	footprintX			= 2,
 	footprintZ 			= 2,
@@ -23,7 +23,7 @@ local CL_Firemoth = {
 --	trackType			= "Thick",--graphics file to use for the track decal, from \bitmaps\tracks\ folder
 --	trackWidth			= 20,--width to render the decal
 	buildCostEnergy     = 0,
-	buildCostMetal      = 2000,
+	buildCostMetal      = 7200,
 	buildTime           = 0,
 	upright				= true,
 	canMove				= true,
@@ -39,13 +39,13 @@ local CL_Firemoth = {
 		--Makes unit use weapon from /weapons folder
 		weapons 		= {	
 			[1] = {
-				name	= "CMPL",
+				name	= "CERMBL",
 				--mainDir = "0 0 1",
 				--maxAngleDif = 270,
 				OnlyTargetCategory = "notbeacon",
 			},
 			[2] = {
-				name	= "CMPL",
+				name	= "CERMBL",
 				--mainDir = "0 0 1",
 				--maxAngleDif = 270,
 				OnlyTargetCategory = "notbeacon",
@@ -77,7 +77,7 @@ local CL_Firemoth = {
 	},
     customparams = {
 		hasturnbutton	= "1",
-		helptext		= "Armament: 2 x ER Medium Beam Laser, 1 x SRM-4, 1 x SRM-6 - Armor: 2 tons",
+		helptext		= "Armament: 2 x ER Medium Beam Laser, 1 x SRM-4, 1 x SRM-6 - Armor: 2 tons Ferro-Fibrous",
     },
 }
 

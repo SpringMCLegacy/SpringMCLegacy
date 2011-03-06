@@ -8,7 +8,7 @@ local IS_Wolfhound = {
 	radarDistance      	= 2000,
 		activateWhenBuilt   = true,
 		onoffable           = true,
-	maxDamage           = 7000,
+	maxDamage           = 11900,
 	mass                = 3500,
 	footprintX			= 2,
 	footprintZ 			= 2,
@@ -23,7 +23,7 @@ local IS_Wolfhound = {
 --	trackType			= "Thick",--graphics file to use for the track decal, from \bitmaps\tracks\ folder
 --	trackWidth			= 20,--width to render the decal
 	buildCostEnergy     = 0,
-	buildCostMetal      = 3500,
+	buildCostMetal      = 14800,
 	buildTime           = 0,
 	upright				= true,
 	canMove				= true,
@@ -83,7 +83,7 @@ local IS_Wolfhound = {
 	},
     customparams = {
 		hasturnbutton	= "1",
-		helptext		= "Armament: 1 x Large Beam Laser, 4 x ER Medium Beam Laser - Armor: 7 tons",
+		helptext		= "Armament: 1 x Large Beam Laser, 4 x ER Medium Beam Laser - Armor: 7.5 tons Standard",
     },
 }
 
