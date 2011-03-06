@@ -249,6 +249,10 @@ function script.QueryWeapon(weaponID)
 			return flare4
 		elseif weaponID == 5 then
 			return flare5
+		elseif weaponID == 6 then
+			return pelvis
+		elseif weaponID == 7 then
+			return pelvis
 		end
 	end
 

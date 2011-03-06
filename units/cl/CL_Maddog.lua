@@ -68,6 +68,9 @@ local CL_Maddog = {
 				weaponSlaveTo = 1,
 				OnlyTargetCategory = "notbeacon",
 			},
+			[7] = {
+				name	= "AMS",
+			},
 		},
 		
 	--Gets CEG effects from /gamedata/explosions folder

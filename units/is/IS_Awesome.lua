@@ -25,7 +25,7 @@ local IS_Awesome = {
 --	trackType			= "Thick",--graphics file to use for the track decal, from \bitmaps\tracks\ folder
 --	trackWidth			= 20,--width to render the decal
 	buildCostEnergy     = 0,
-	buildCostMetal      = 30300,
+	buildCostMetal      = 35160,
 	buildTime           = 0,
 	upright				= true,
 	canMove				= true,
@@ -73,6 +73,12 @@ local IS_Awesome = {
 				maxAngleDif = 270,
 				OnlyTargetCategory = "notbeacon",
 				WeaponSlaveTo = 1,
+			},
+			[6] = {
+				name	= "AMS",
+			},
+			[7] = {
+				name	= "AMS",
 			},
 		},
 		
