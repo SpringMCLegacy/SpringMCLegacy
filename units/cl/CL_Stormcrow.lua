@@ -8,7 +8,7 @@ local CL_Stormcrow = {
 	radarDistance      	= 1500,
 		activateWhenBuilt   = true,
 		onoffable           = true,
-	maxDamage           = 8000,
+	maxDamage           = 18200,
 	mass                = 5500,
 	footprintX			= 2,
 	footprintZ 			= 2,
@@ -23,7 +23,7 @@ local CL_Stormcrow = {
 --	trackType			= "Thick",--graphics file to use for the track decal, from \bitmaps\tracks\ folder
 --	trackWidth			= 20,--width to render the decal
 	buildCostEnergy     = 0,
-	buildCostMetal      = 6000,
+	buildCostMetal      = 24200,
 	buildTime           = 0,
 	upright				= true,
 	canMove				= true,
@@ -45,35 +45,35 @@ local CL_Stormcrow = {
 				OnlyTargetCategory = "notbeacon",
 			},
 			[2] = {
-				name	= "CERLBL",
+				name	= "CMPL",
 				mainDir = "0 0 1",
 				maxAngleDif = 270,
 				OnlyTargetCategory = "notbeacon",
 				WeaponSlaveTo = 1,
 			},
 			[3] = {
-				name	= "CERMBL",
+				name	= "CMPL",
 				mainDir = "0 0 1",
 				maxAngleDif = 270,
 				OnlyTargetCategory = "notbeacon",
 				WeaponSlaveTo = 1,
 			},
 			[4] = {
-				name	= "CERLBL",
+				name	= "CMPL",
 				mainDir = "0 0 1",
 				maxAngleDif = 270,
 				OnlyTargetCategory = "notbeacon",
 				WeaponSlaveTo = 1,
 			},
 			[5] = {
-				name	= "CERMBL",
+				name	= "CMPL",
 				mainDir = "0 0 1",
 				maxAngleDif = 270,
 				OnlyTargetCategory = "notbeacon",
 				WeaponSlaveTo = 1,
 			},
 			[6] = {
-				name	= "CERMBL",
+				name	= "SSRM6",
 				mainDir = "0 0 1",
 				maxAngleDif = 270,
 				OnlyTargetCategory = "notbeacon",
@@ -91,7 +91,7 @@ local CL_Stormcrow = {
 	},
     customparams = {
 		hasturnbutton	= "1",
-		helptext		= "Armament: 1 x Enhanced Range LRM-20, 2 x Large Pulse Laser, 3 x ER Medium Beam Laser - Armor: 7 tons",
+		helptext		= "Armament: 1 x LRM-20, 4 x Medium Pulse Laser, 1 x SSRM-6 - Armor: 9.5 tons",
     },
 }
 

@@ -8,7 +8,7 @@ local CL_Mistlynx = {
 	radarDistance      	= 2000,
 		activateWhenBuilt   = true,
 		onoffable           = true,
-	maxDamage           = 2000,
+	maxDamage           = 6700,
 	mass                = 2000,
 	footprintX			= 2,
 	footprintZ 			= 2,
@@ -23,7 +23,7 @@ local CL_Mistlynx = {
 --	trackType			= "Thick",--graphics file to use for the track decal, from \bitmaps\tracks\ folder
 --	trackWidth			= 20,--width to render the decal
 	buildCostEnergy     = 0,
-	buildCostMetal      = 4000,
+	buildCostMetal      = 12100,
 	buildTime           = 0,
 	upright				= true,
 	canMove				= true,
@@ -89,7 +89,7 @@ local CL_Mistlynx = {
 	},
     customparams = {
 		hasturnbutton	= "1",
-		helptext		= "Armament: 2 x ER Medium Beam Laser, 1 x SRM-4, 1 x SRM-6 - Armor: 2 tons",
+		helptext		= "Armament: 1 x LRM-10, 1 x SSRM-4, 2 x MG - Armor: 3.5 tons Ferro-Fibrous",
     },
 }
 

@@ -8,7 +8,7 @@ local IS_Locust = {
 	radarDistance      	= 1500,
 		activateWhenBuilt   = true,
 		onoffable           = true,
-	maxDamage           = 3000,
+	maxDamage           = 6900,
 	mass                = 2000,
 	footprintX			= 2,
 	footprintZ 			= 2,
@@ -23,7 +23,7 @@ local IS_Locust = {
 --	trackType			= "Thick",--graphics file to use for the track decal, from \bitmaps\tracks\ folder
 --	trackWidth			= 20,--width to render the decal
 	buildCostEnergy     = 0,
-	buildCostMetal      = 1500,
+	buildCostMetal      = 9200,
 	buildTime           = 0,
 	upright				= true,
 	canMove				= true,
@@ -83,7 +83,7 @@ local IS_Locust = {
 	},
     customparams = {
 		hasturnbutton	= "1",
-		helptext		= "Armament: 1 x Medium Beam Laser, 2 x Medium Pulse Laser, 2 x Small Pulse Laser - Armor: 3 tons",
+		helptext		= "Armament: 1 x Medium Beam Laser, 2 x Medium Pulse Laser, 2 x Small Pulse Laser - Armor: 4 tons",
     },
 }
 

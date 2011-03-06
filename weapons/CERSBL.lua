@@ -37,12 +37,12 @@ weaponDef = {
 		light = 125,
 		medium = 106.25,
 		heavy = 87.5,
-		assault = 37.5,
-		vehicle = 112.5,
+		assault = 62.5,
+		vehicle = 187.5,
 	},
 	customparams = {
 		heatgenerated		= "5",--2/sec
     },
 }
 
-return lowerkeys({ ERSBL = weaponDef })
+return lowerkeys({ CERSBL = weaponDef })

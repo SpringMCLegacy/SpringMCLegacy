@@ -8,9 +8,9 @@ local deg, rad = math.deg, math.rad
 local pelvis, torso = piece ("pelvis", "torso")
 local rupperarm, rlowerarm, lupperarm, llowerarm = piece ("rupperarm", "rlowerarm", "lupperarm", "llowerarm")
 local lupperleg, llowerleg, rupperleg, rlowerleg, rfronttoes, rbacktoe, lfronttoes, lbacktoe = piece ("lupperleg", "llowerleg", "rupperleg", "rlowerleg", "rfronttoes", "rbacktoe", "lfronttoes", "lbacktoe")
-local flare1, flare2, flare3, flare4, flare5 = piece ("flare1", "flare2", "flare3", "flare4", "flare5")
+local flare1, flare2, flare3, flare4 = piece ("flare1", "flare2", "flare3", "flare4")
 
-local missileWeaponIDs = {[1] = true}
+local missileWeaponIDs = {[1] = true, [6] = true}
  
 local launchPoints = {}
 local numPoints = {}
@@ -273,10 +273,6 @@ function script.AimWeapon(weaponID, heading, pitch)
 			Turn(rlowerarm, x_axis, -pitch, ELEVATION_SPEED)
 		elseif weaponID == 5 then
 			Turn(rlowerarm, x_axis, -pitch, ELEVATION_SPEED)
-		--elseif weaponID == 2 then
-		--	Turn(launcher1, x_axis, -pitch, rad(150))
-		--elseif weaponID == 3 then
-		--	Turn(launcher2, x_axis, -pitch, rad(150))
 		end
 	Turn(torso, y_axis, heading, TORSO_SPEED)
 	WaitForTurn(torso, y_axis)
@@ -293,8 +289,6 @@ function script.FireWeapon(weaponID)
 			EmitSfx(flare3, MG_MUZZLEFLASH)
 		elseif weaponID == 5 then
 			EmitSfx(flare4, MG_MUZZLEFLASH)
-		elseif weaponID == 6 then
-			EmitSfx(flare5, MG_MUZZLEFLASH)
 		end
 end
 
@@ -324,8 +318,6 @@ function script.QueryWeapon(weaponID)
 			return flare3
 		elseif weaponID == 5 then
 			return flare4
-		elseif weaponID == 6 then
-			return flare5
 		end
 	end
 end

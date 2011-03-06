@@ -34,6 +34,8 @@ local launcher4_joint, launcher4 = piece ("launcher4_joint", "launcher4")
 local laser1, laser2, laser3, laser4, laser5, laser6, laser7, laser8 = piece ("laser1", "laser2", "laser3", "laser4", "laser5", "laser6", "laser7", "laser8")
 --LBLs
 local laser9, laser10, laser11, laser12 = piece ("laser9", "laser10", "laser11", "laser12")
+--Anti-Missile System
+local ams = piece ("ams")
 
 local missileWeaponIDs = {[13] = true, [14] = true, [15] = true, [16] = true}
  
@@ -398,6 +400,8 @@ function script.QueryWeapon(weaponID)
 			return laser11
 		elseif weaponID == 28 then
 			return laser12
+		elseif weaponID == 29 then
+			return ams
 		end
 	end
 end

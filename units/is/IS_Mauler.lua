@@ -8,7 +8,7 @@ local IS_Mauler = {
 	radarDistance      	= 1500,
 		activateWhenBuilt   = true,
 		onoffable           = true,
-	maxDamage           = 11500,
+	maxDamage           = 20600,
 	mass                = 9000,
 	footprintX			= 3,
 	footprintZ 			= 3,
@@ -23,7 +23,7 @@ local IS_Mauler = {
 --	trackType			= "Thick",--graphics file to use for the track decal, from \bitmaps\tracks\ folder
 --	trackWidth			= 20,--width to render the decal
 	buildCostEnergy     = 0,
-	buildCostMetal      = 10000,
+	buildCostMetal      = 26200,
 	buildTime           = 0,
 	upright				= true,
 	canMove				= true,
@@ -39,13 +39,13 @@ local IS_Mauler = {
 		--Makes unit use weapon from /weapons folder
 		weapons 		= {	
 			[1] = {
-				name	= "Gauss",
+				name	= "LBL",
 				mainDir = "0 0 1",
 				maxAngleDif = 270,
 				OnlyTargetCategory = "notbeacon",
 			},
 			[2] = {
-				name	= "Gauss",
+				name	= "LBL",
 				mainDir = "0 0 1",
 				maxAngleDif = 270,
 				OnlyTargetCategory = "notbeacon",
@@ -106,7 +106,7 @@ local IS_Mauler = {
 	},
     customparams = {
 		hasturnbutton	= "1",
-		helptext		= "Armament: 2 x Large Beam Laser, 4 x AC/2, 2 x LRM-15 - Armor: 11 tons",
+		helptext		= "Armament: 2 x Large Beam Laser, 4 x Autocannon/2, 2 x LRM-15 - Armor: 11.5 tons Standard",
     },
 }
 

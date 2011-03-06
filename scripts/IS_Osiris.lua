@@ -8,11 +8,11 @@ local deg, rad = math.deg, math.rad
 local pelvis, torso = piece ("pelvis", "torso")
 local lupperarm, rupperarm = piece ("lupperarm", "rupperarm")
 local lupperleg, llowerleg, rupperleg, rlowerleg, rfronttoes, rbacktoes, lfronttoes, lbacktoes = piece ("lupperleg", "llowerleg", "rupperleg", "rlowerleg", "rfronttoes", "rbacktoes", "lfronttoes", "lbacktoes")
-local flare1, flare2, flare3, flare4, flare5, flare6 = piece ("flare1", "flare2", "flare3", "flare4", "flare5", "flare6")
-local barrel1, barrel2, barrel3 = piece ("barrel1", "barrel2", "barrel3")
+local flare1, flare2, flare3 = piece ("flare1", "flare2", "flare3")
+local barrel1 = piece ("barrel1")
 local jet1, jet2, jet3 = piece ("jet1", "jet2", "jet3")
  
-local missileWeaponIDs = {[7] = true}
+local missileWeaponIDs = {[4] = true}
  
 local launchPoints = {}
 local numPoints = {}
@@ -278,8 +278,6 @@ local function RestoreAfterDelay(unitID)
 	Sleep(RESTORE_DELAY)
 	Turn(torso, y_axis, 0, TORSO_SPEED)
 	Turn(barrel1, x_axis, 0, ELEVATION_SPEED)
-	Turn(barrel2, x_axis, 0, ELEVATION_SPEED)
-	Turn(barrel3, x_axis, 0, ELEVATION_SPEED)
 	Turn(lupperarm, x_axis, 0, ELEVATION_SPEED)
 	Turn(rupperarm, x_axis, 0, ELEVATION_SPEED)
 end
@@ -290,11 +288,9 @@ function script.AimWeapon(weaponID, heading, pitch)
 		if weaponID == 1 then
 			Turn(barrel1, x_axis, -pitch, ELEVATION_SPEED)
 		elseif weaponID == 2 then
-			Turn(barrel2, x_axis, -pitch, ELEVATION_SPEED)
-		elseif weaponID == 3 then
-			Turn(barrel3, x_axis, -pitch, ELEVATION_SPEED)
-		elseif weaponID == 4 then
 			Turn(rupperarm, x_axis, -pitch, ELEVATION_SPEED)
+		elseif weaponID == 4 then
+			Turn(lupperarm, x_axis, -pitch, ELEVATION_SPEED)
 		end
 	Turn(torso, y_axis, heading, TORSO_SPEED)
 	WaitForTurn(torso, y_axis)
@@ -309,22 +305,6 @@ function script.FireWeapon(weaponID)
 			EmitSfx(flare2, MG_MUZZLEFLASH)
 		elseif weaponID == 3 then
 			EmitSfx(flare3, MG_MUZZLEFLASH)
-		elseif weaponID == 4 then
-			EmitSfx(flare4, MG_MUZZLEFLASH)
-		elseif weaponID == 5 then
-			EmitSfx(flare5, MG_MUZZLEFLASH)
-		elseif weaponID == 6 then
-			EmitSfx(flare6, MG_MUZZLEFLASH)
-			Sleep(100)
-			EmitSfx(flare6, MG_MUZZLEFLASH)
-			Sleep(100)
-			EmitSfx(flare6, MG_MUZZLEFLASH)
-			Sleep(100)
-			EmitSfx(flare6, MG_MUZZLEFLASH)
-			Sleep(100)
-			EmitSfx(flare6, MG_MUZZLEFLASH)
-			Sleep(100)
-			EmitSfx(flare6, MG_MUZZLEFLASH)
 		end
 end
 
@@ -352,12 +332,6 @@ function script.QueryWeapon(weaponID)
 			return flare2
 		elseif weaponID == 3 then
 			return flare3
-		elseif weaponID == 4 then
-			return flare4
-		elseif weaponID == 5 then
-			return flare5
-		elseif weaponID == 6 then
-			return flare6
 		end
 	end
 end

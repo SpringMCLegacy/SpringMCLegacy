@@ -8,7 +8,7 @@ local CL_Kitfox = {
 	radarDistance      	= 1500,
 		activateWhenBuilt   = true,
 		onoffable           = true,
-	maxDamage           = 4000,
+	maxDamage           = 7600,
 	mass                = 3000,
 	footprintX			= 2,
 	footprintZ 			= 2,
@@ -23,7 +23,7 @@ local CL_Kitfox = {
 --	trackType			= "Thick",--graphics file to use for the track decal, from \bitmaps\tracks\ folder
 --	trackWidth			= 20,--width to render the decal
 	buildCostEnergy     = 0,
-	buildCostMetal      = 2250,
+	buildCostMetal      = 11100,
 	buildTime           = 0,
 	upright				= true,
 	canMove				= true,
@@ -46,7 +46,7 @@ local CL_Kitfox = {
 				WeaponSlaveTo = 1,
 			},
 			[2] = {
-				name	= "AC5",
+				name	= "UAC5",
 				--mainDir = "0 0 1",
 				--maxAngleDif = 270,
 				OnlyTargetCategory = "notbeacon",
@@ -60,7 +60,7 @@ local CL_Kitfox = {
 				WeaponSlaveTo = 1,
 			},
 			[4] = {
-				name	= "SSRM4",
+				name	= "SRM6",
 				--mainDir = "0 0 1",
 				--maxAngleDif = 270,
 				OnlyTargetCategory = "notbeacon",
@@ -78,7 +78,7 @@ local CL_Kitfox = {
 	},
     customparams = {
 		hasturnbutton	= "1",
-		helptext		= "Armament: 1 x ER Large Beam Laser, 1 x AC/5, 1 x Small Pulse Laser, 1 x SSRM-4 - Armor: 4 tons",
+		helptext		= "Armament: 1 x ER Large Beam Laser, 1 x UAC/5, 1 x Small Pulse Laser, 1 x SRM-6 - Armor: 4 tons Ferro-Fibrous",
     },
 }
 

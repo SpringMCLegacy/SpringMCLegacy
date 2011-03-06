@@ -8,7 +8,7 @@ local CL_Direwolf = {
 	radarDistance      	= 1500,
 		activateWhenBuilt   = true,
 		onoffable           = true,
-	maxDamage           = 19000,
+	maxDamage           = 30400,
 	mass                = 10000,
 	footprintX			= 3,
 	footprintZ 			= 3,
@@ -23,7 +23,7 @@ local CL_Direwolf = {
 --	trackType			= "Thick",--graphics file to use for the track decal, from \bitmaps\tracks\ folder
 --	trackWidth			= 20,--width to render the decal
 	buildCostEnergy     = 0,
-	buildCostMetal      = 14000,
+	buildCostMetal      = 40550,
 	buildTime           = 0,
 	upright				= true,
 	canMove				= true,
@@ -53,13 +53,13 @@ local CL_Direwolf = {
 				WeaponSlaveTo = 1,
 			},
 			[3] = {
-				name	= "CMPL",
+				name	= "CERMBL",
 				mainDir = "0 0 1",
 				maxAngleDif = 270,
 				OnlyTargetCategory = "notbeacon",
 			},
 			[4] = {
-				name	= "CMPL",
+				name	= "CERMBL",
 				mainDir = "0 0 1",
 				maxAngleDif = 270,
 				OnlyTargetCategory = "notbeacon",
@@ -87,14 +87,14 @@ local CL_Direwolf = {
 				WeaponSlaveTo = 1,
 			},
 			[8] = {
-				name	= "CMPL",
+				name	= "CERMBL",
 				mainDir = "0 0 1",
 				maxAngleDif = 270,
 				OnlyTargetCategory = "notbeacon",
 				WeaponSlaveTo = 1,
 			},
 			[9] = {
-				name	= "CMPL",
+				name	= "CERMBL",
 				mainDir = "0 0 1",
 				maxAngleDif = 270,
 				OnlyTargetCategory = "notbeacon",
@@ -126,7 +126,7 @@ local CL_Direwolf = {
 	},
     customparams = {
 		hasturnbutton	= "1",
-		helptext		= "Armament: 4 x ER Large Beam Laser, 4 x ER Medium Pulse Laser, 2 x UAC/5, 1 x ATM-9 - Armor: 19 tons",
+		helptext		= "Armament: 4 x ER Large Beam Laser, 4 x ER Medium Beam Laser, 2 x UAC/5, 1 x ATM-9 - Armor: 19 tons",
     },
 }
 

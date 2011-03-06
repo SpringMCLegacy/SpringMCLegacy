@@ -8,7 +8,7 @@ local CL_Warhawk = {
 	radarDistance      	= 2000,
 		activateWhenBuilt   = true,
 		onoffable           = true,
-	maxDamage           = 13500,
+	maxDamage           = 25900,
 	mass                = 8500,
 	footprintX			= 3,
 	footprintZ 			= 3,
@@ -23,7 +23,7 @@ local CL_Warhawk = {
 --	trackType			= "Thick",--graphics file to use for the track decal, from \bitmaps\tracks\ folder
 --	trackWidth			= 20,--width to render the decal
 	buildCostEnergy     = 0,
-	buildCostMetal      = 13000,
+	buildCostMetal      = 33250,
 	buildTime           = 0,
 	upright				= true,
 	canMove				= true,
@@ -67,7 +67,7 @@ local CL_Warhawk = {
 				WeaponSlaveTo = 1,
 			},
 			[5] = {
-				name	= "LRM10",
+				name	= "ATM9",
 				mainDir = "0 0 1",
 				maxAngleDif = 270,
 				OnlyTargetCategory = "notbeacon",
@@ -85,7 +85,7 @@ local CL_Warhawk = {
 	},
     customparams = {
 		hasturnbutton	= "1",
-		helptext		= "Armament: 4 x ER Particle Cannon, 1 x LRM-10 - Armor: 19 tons",
+		helptext		= "Armament: 4 x ER Particle Cannon, 1 x ATM-9 - Armor: 13.5 tons Ferro-Fibrous",
     },
 }
 

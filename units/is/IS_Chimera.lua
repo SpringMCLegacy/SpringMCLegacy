@@ -8,7 +8,7 @@ local IS_Chimera = {
 	radarDistance      	= 1500,
 		activateWhenBuilt   = true,
 		onoffable           = true,
-	maxDamage           = 7000,
+	maxDamage           = 11200,
 	mass                = 4000,
 	footprintX			= 2,
 	footprintZ 			= 2,
@@ -23,7 +23,7 @@ local IS_Chimera = {
 --	trackType			= "Thick",--graphics file to use for the track decal, from \bitmaps\tracks\ folder
 --	trackWidth			= 20,--width to render the decal
 	buildCostEnergy     = 0,
-	buildCostMetal      = 3500,
+	buildCostMetal      = 15500,
 	buildTime           = 0,
 	upright				= true,
 	canMove				= true,
@@ -45,14 +45,14 @@ local IS_Chimera = {
 				OnlyTargetCategory = "notbeacon",
 			},
 			[2] = {
-				name	= "CMPL",
+				name	= "MPL",
 				mainDir = "0 0 1",
 				maxAngleDif = 270,
 				OnlyTargetCategory = "notbeacon",
 				WeaponSlaveTo = 1,
 			},
 			[3] = {
-				name	= "CMPL",
+				name	= "MPL",
 				mainDir = "0 0 1",
 				maxAngleDif = 270,
 				OnlyTargetCategory = "notbeacon",
@@ -78,7 +78,7 @@ local IS_Chimera = {
 	},
     customparams = {
 		hasturnbutton	= "1",
-		helptext		= "Armament: 1 x Large Pulse Laser, 2 x ER Medium Pulse Laser, 1 x MRM-10 - Armor: 7 tons",
+		helptext		= "Armament: 1 x Large Pulse Laser, 2 x Medium Pulse Laser, 1 x MRM-20 - Armor: 7 tons",
     },
 }
 

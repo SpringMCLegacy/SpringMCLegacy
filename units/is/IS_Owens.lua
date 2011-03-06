@@ -8,7 +8,7 @@ local IS_Owens = {
 	radarDistance      	= 2000,
 		activateWhenBuilt   = true,
 		onoffable           = true,
-	maxDamage           = 4000,
+	maxDamage           = 11200,
 	mass                = 3500,
 	footprintX			= 2,
 	footprintZ 			= 2,
@@ -23,13 +23,13 @@ local IS_Owens = {
 --	trackType			= "Thick",--graphics file to use for the track decal, from \bitmaps\tracks\ folder
 --	trackWidth			= 20,--width to render the decal
 	buildCostEnergy     = 0,
-	buildCostMetal      = 3750,
+	buildCostMetal      = 14800,
 	buildTime           = 0,
 	upright				= true,
 	canMove				= true,
 		movementClass   = "SMALLMECH",
-		maxVelocity		= 4.85, --97kph/30
-		maxReverseVelocity= 2.43,
+		maxVelocity		= 6.5, --130kph/30
+		maxReverseVelocity= 3.25,
 		acceleration    = 1.75,
 		brakeRate       = 0.1,
 		turnRate 		= 900,
@@ -52,21 +52,21 @@ local IS_Owens = {
 				WeaponSlaveTo = 1,
 			},
 			[3] = {
-				name	= "ERSBL",
+				name	= "MBL",
 				mainDir = "0 0 1",
 				maxAngleDif = 270,
 				OnlyTargetCategory = "notbeacon",
 				WeaponSlaveTo = 1,
 			},
 			[4] = {
-				name	= "MPL",
+				name	= "ERSBL",
 				mainDir = "0 0 1",
 				maxAngleDif = 270,
 				OnlyTargetCategory = "notbeacon",
 				WeaponSlaveTo = 1,
 			},
 			[5] = {
-				name	= "MPL",
+				name	= "ERSBL",
 				mainDir = "0 0 1",
 				maxAngleDif = 270,
 				OnlyTargetCategory = "notbeacon",
@@ -85,7 +85,7 @@ local IS_Owens = {
 	},
     customparams = {
 		hasturnbutton	= "1",
-		helptext		= "Armament: 2 x Artemis-enhanced LRM-5, 2 x Small Beam Laser, 1 x NARC Launcher - Armor: 7 tons",
+		helptext		= "Armament: 2 x Artemis-enhanced LRM-5, 2 x ER Small Beam Laser, 1 x Medium Beam Laser - Armor: 7 tons",
     },
 }
 

@@ -9,6 +9,7 @@ local pelvis, torso = piece ("pelvis", "torso")
 local lupperarm, llowerarm, rupperarm, rlowerarm = piece ("lupperarm", "llowerarm", "rupperarm", "rlowerarm")
 local lupperleg, llowerleg, rupperleg, rlowerleg, rfronttoe, rbacktoe, lfronttoe, lbacktoe = piece ("lupperleg", "llowerleg", "rupperleg", "rlowerleg", "rfronttoe", "rbacktoe", "lfronttoe", "lbacktoe")
 local flare1, flare2, flare3, flare4, flare5, flare6, flare7, flare8 = piece ("flare1", "flare2", "flare3", "flare4", "flare5", "flare6", "flare7", "flare8")
+local flare9, flare10, flare11, flare12 = piece ("flare9", "flare10", "flare11", "flare12")
 local jet1, jet2, jet3, jet4 = piece ("jet1", "jet2", "jet3", "jet4")
  
 --Turning/Movement Locals
@@ -296,6 +297,14 @@ function script.FireWeapon(weaponID)
 			EmitSfx(flare7, MG_MUZZLEFLASH)
 		elseif weaponID == 8 then
 			EmitSfx(flare8, MG_MUZZLEFLASH)
+		elseif weaponID == 9 then
+			EmitSfx(flare9, MG_MUZZLEFLASH)
+		elseif weaponID == 10 then
+			EmitSfx(flare10, MG_MUZZLEFLASH)
+		elseif weaponID == 11 then
+			EmitSfx(flare11, MG_MUZZLEFLASH)
+		elseif weaponID == 12 then
+			EmitSfx(flare12, MG_MUZZLEFLASH)
 		end
 end
 
@@ -323,6 +332,14 @@ function script.QueryWeapon(weaponID)
 		return flare7
 	elseif weaponID == 8 then
 		return flare8
+	elseif weaponID == 9 then
+		return flare9
+	elseif weaponID == 10 then
+		return flare10
+	elseif weaponID == 11 then
+		return flare11
+	elseif weaponID == 12 then
+		return flare12
 	end
 end
 

@@ -1,14 +1,14 @@
 weaponDef = {
-	name                    = "Anti-Missile System (AMS)",
+	name                    = "Dropship Anti-Missile System (AMS)",
 	isShield				= true,
 	shieldInterceptType		= 1,
 	exteriorShield			= true,
 	shieldEnergyUse			= 0,
-	shieldPower				= 500,
-	shieldPowerRegen		= 250,
+	shieldPower				= 1500,
+	shieldPowerRegen		= 750,
 	shieldPowerRegenEnergy	= 0,
-	shieldRadius			= 250,
-	shieldStartingPower		= 500,
+	shieldRadius			= 500,
+	shieldStartingPower		= 1500,
 	smartShield				= true,
 	visibleShield			= false,
 		shieldAlpha				= 1.0,
@@ -20,4 +20,4 @@ weaponDef = {
 
 }
 
-return lowerkeys({ AMS = weaponDef })
+return lowerkeys({ AMS_Dropship = weaponDef })

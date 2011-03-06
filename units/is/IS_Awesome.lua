@@ -9,8 +9,8 @@ local IS_Awesome = {
 		stealth				= 1,
 		activateWhenBuilt   = true,
 		onoffable           = true,
-		radarDistanceJam    = 100,
-	maxDamage           = 14000,
+		radarDistanceJam    = 500,
+	maxDamage           = 24700,
 	mass                = 8500,
 	footprintX			= 3,
 	footprintZ 			= 3,
@@ -25,7 +25,7 @@ local IS_Awesome = {
 --	trackType			= "Thick",--graphics file to use for the track decal, from \bitmaps\tracks\ folder
 --	trackWidth			= 20,--width to render the decal
 	buildCostEnergy     = 0,
-	buildCostMetal      = 10500,
+	buildCostMetal      = 30300,
 	buildTime           = 0,
 	upright				= true,
 	canMove				= true,
@@ -86,7 +86,7 @@ local IS_Awesome = {
 	},
     customparams = {
 		hasturnbutton	= "1",
-		helptext		= "Armament: 4 x PPC, 1 x Medium Pulse Laser - Armor: 11 tons",
+		helptext		= "Armament: 4 x PPC, 1 x Medium Pulse Laser - Armor: 15.5 tons Standard",
     },
 }
 

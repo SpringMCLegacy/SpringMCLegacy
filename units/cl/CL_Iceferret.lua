@@ -8,7 +8,7 @@ local CL_Iceferret = {
 	radarDistance      	= 2000,
 		activateWhenBuilt   = true,
 		onoffable           = true,
-	maxDamage           = 7500,
+	maxDamage           = 11400,
 	mass                = 4500,
 	footprintX			= 2,
 	footprintZ 			= 2,
@@ -23,7 +23,7 @@ local CL_Iceferret = {
 --	trackType			= "Thick",--graphics file to use for the track decal, from \bitmaps\tracks\ folder
 --	trackWidth			= 20,--width to render the decal
 	buildCostEnergy     = 0,
-	buildCostMetal      = 3750,
+	buildCostMetal      = 15400,
 	buildTime           = 0,
 	upright				= true,
 	canMove				= true,
@@ -65,7 +65,7 @@ local CL_Iceferret = {
 				WeaponSlaveTo = 1,
 			},
 			[5] = {
-				name	= "SSRM6",
+				name	= "SRM6",
 				mainDir = "0 0 1",
 				maxAngleDif = 270,
 				OnlyTargetCategory = "notbeacon",
@@ -83,7 +83,7 @@ local CL_Iceferret = {
 	},
     customparams = {
 		hasturnbutton	= "1",
-		helptext		= "Armament: 4 x Medium Pulse Laser, 1 x SSRM-6 - Armor: 7.5 tons",
+		helptext		= "Armament: 4 x Medium Pulse Laser, 1 x SRM-6 - Armor: 7.5 tons Ferro-Fibrous",
     },
 }
 

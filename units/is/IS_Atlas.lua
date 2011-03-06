@@ -8,7 +8,7 @@ local IS_Atlas = {
 	radarDistance      	= 1500,
 		activateWhenBuilt   = true,
 		onoffable           = true,
-	maxDamage           = 19000,
+	maxDamage           = 30400,
 	mass                = 10000,
 	footprintX			= 3,
 	footprintZ 			= 3,
@@ -23,12 +23,12 @@ local IS_Atlas = {
 --	trackType			= "Thick",--graphics file to use for the track decal, from \bitmaps\tracks\ folder
 --	trackWidth			= 20,--width to render the decal
 	buildCostEnergy     = 0,
-	buildCostMetal      = 11000,
+	buildCostMetal      = 38600,
 	buildTime           = 0,
 	upright				= true,
 	canMove				= true,
 		movementClass   = "LARGEMECH",
-		maxVelocity		= 3.25, --65kph/3
+		maxVelocity		= 2.7, --54kph/30
 		maxReverseVelocity= 1.63,
 		acceleration    = .80,
 		brakeRate       = 0.1,
@@ -39,7 +39,7 @@ local IS_Atlas = {
 		--Makes unit use weapon from /weapons folder
 		weapons 		= {	
 			[1] = {
-				name	= "UAC20",
+				name	= "AC20",
 				mainDir = "0 0 1",
 				maxAngleDif = 270,
 				OnlyTargetCategory = "notbeacon",
@@ -106,7 +106,7 @@ local IS_Atlas = {
 	},
     customparams = {
 		hasturnbutton	= "1",
-		helptext		= "Armament: 1 x AC/20, 2 x Large Pulse Laser, 2 x Medium Beam Laser, 2 x MRM-10, 1 x SSRM-6 - Armor: 19 tons",
+		helptext		= "Armament: 1 x AC/20, 2 x Large Pulse Laser, 2 x Medium Beam Laser, 2 x MRM-10, 1 x SSRM-6 - Armor: 19 tons Standard",
     },
 }
 

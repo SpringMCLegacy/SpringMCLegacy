@@ -10,7 +10,7 @@ local IS_Raven = {
 		activateWhenBuilt   = true,
 		onoffable           = true,
 		radarDistanceJam    = 100,
-	maxDamage           = 4500,
+	maxDamage           = 8000,
 	mass                = 3500,
 	footprintX			= 2,
 	footprintZ 			= 2,
@@ -25,7 +25,7 @@ local IS_Raven = {
 --	trackType			= "Thick",--graphics file to use for the track decal, from \bitmaps\tracks\ folder
 --	trackWidth			= 20,--width to render the decal
 	buildCostEnergy     = 0,
-	buildCostMetal      = 3000,
+	buildCostMetal      = 13200,
 	buildTime           = 0,
 	upright				= true,
 	canMove				= true,
@@ -41,13 +41,13 @@ local IS_Raven = {
 		--Makes unit use weapon from /weapons folder
 		weapons 		= {	
 			[1] = {
-				name	= "MPL",
+				name	= "MBL",
 				mainDir = "0 0 1",
 				maxAngleDif = 270,
 				OnlyTargetCategory = "notbeacon",
 			},
 			[2] = {
-				name	= "MPL",
+				name	= "MBL",
 				mainDir = "0 0 1",
 				maxAngleDif = 270,
 				OnlyTargetCategory = "notbeacon",
@@ -79,7 +79,7 @@ local IS_Raven = {
 	},
     customparams = {
 		hasturnbutton	= "1",
-		helptext		= "Armament: 3 x Medium Pulse Laser, 1 x SRM-6, 1 x NARC Launcher - Armor: 3 tons",
+		helptext		= "Armament: 3 x Medium Pulse Laser, 1 x SRM-6, 1 x NARC Launcher - Armor: 4.5 tons Standard",
     },
 }
 

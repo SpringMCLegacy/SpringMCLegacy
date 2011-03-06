@@ -8,7 +8,7 @@ local CL_Timberwolf = {
 	radarDistance      	= 1500,
 		activateWhenBuilt   = true,
 		onoffable           = true,
-	maxDamage           = 12000,
+	maxDamage           = 23000,
 	mass                = 7500,
 	footprintX			= 3,
 	footprintZ 			= 3,
@@ -24,7 +24,7 @@ local CL_Timberwolf = {
 --	trackType			= "Thick",--graphics file to use for the track decal, from \bitmaps\tracks\ folder
 --	trackWidth			= 20,--width to render the decal
 	buildCostEnergy     = 0,
-	buildCostMetal      = 10000,
+	buildCostMetal      = 31000,
 	buildTime           = 0,
 	upright				= true,
 	canMove				= true,
@@ -68,14 +68,14 @@ local CL_Timberwolf = {
 				WeaponSlaveTo = 1,
 			},
 			[5] = {
-				name	= "UAC5",
+				name	= "MG",
 				mainDir = "0 0 1",
 				maxAngleDif = 270,
 				OnlyTargetCategory = "notbeacon",
 				WeaponSlaveTo = 1,
 			},
 			[6] = {
-				name	= "UAC5",
+				name	= "MG",
 				mainDir = "0 0 1",
 				maxAngleDif = 270,
 				OnlyTargetCategory = "notbeacon",
@@ -96,14 +96,14 @@ local CL_Timberwolf = {
 				WeaponSlaveTo = 1,
 			},
 			[9] = {
-				name	= "ATM9",
+				name	= "ATM12",
 				mainDir = "0 0 1",
 				maxAngleDif = 270,
 				OnlyTargetCategory = "notbeacon",
 				WeaponSlaveTo = 1,
 			},
 			[10] = {
-				name	= "ATM9",
+				name	= "ATM12",
 				mainDir = "0 0 1",
 				maxAngleDif = 270,
 				OnlyTargetCategory = "notbeacon",
@@ -122,7 +122,7 @@ local CL_Timberwolf = {
 	},
     customparams = {
 		hasturnbutton	= "1",
-		helptext		= "Armament: 2 x ER Large Beam Laser, 2 x ER Medium Beam Laser, 2 x UAC/5, 2 x Small Pulse Laser, 2 x ATM-9 - Armor: 19 tons",
+		helptext		= "Armament: 2 x ER Large Beam Laser, 2 x ER Medium Beam Laser, 2 x Small Pulse Laser, 2 x MG, 2 x ATM-12 - Armor: 12 tons Ferro-Fibrous",
     },
 }
 
