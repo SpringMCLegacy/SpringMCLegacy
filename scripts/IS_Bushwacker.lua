@@ -268,6 +268,8 @@ function script.AimWeapon(weaponID, heading, pitch)
     SetSignalMask(SIG_AIM ^ weaponID)
 		if weaponID == 1 then
 			Turn(rlowerarm, x_axis, -pitch, ELEVATION_SPEED)
+		elseif weaponID == 6 then
+			Turn(llowerarm, x_axis, -pitch, ELEVATION_SPEED)
 		end
 	Turn(torso, y_axis, heading, TORSO_SPEED)
 	WaitForTurn(torso, y_axis)
@@ -316,6 +318,8 @@ function script.QueryWeapon(weaponID)
 			return flare3
 		elseif weaponID == 4 then
 			return flare4
+		elseif weaponID == 7 then
+			return pelvis
 		end
 	end
 end

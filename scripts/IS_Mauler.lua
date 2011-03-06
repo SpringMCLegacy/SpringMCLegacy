@@ -267,20 +267,14 @@ function script.FireWeapon(weaponID)
 			WaitForMove(barrel1, z_axis)
 			Move(barrel1, z_axis, 0, 50)
 		elseif weaponID == 6 then
-			EmitSfx(acflare2, XSMALL_MUZZLEFLASH)
-			Move(barrel2, z_axis, -1, 200)
-			WaitForMove(barrel2, z_axis)
-			Move(barrel2, z_axis, 0, 50)
+			EmitSfx(acflare2, MG_MUZZLEFLASH)
 		elseif weaponID == 7 then
 			EmitSfx(acflare3, XSMALL_MUZZLEFLASH)
 			Move(barrel3, z_axis, -1, 200)
 			WaitForMove(barrel3, z_axis)
 			Move(barrel3, z_axis, 0, 50)
 		elseif weaponID == 8 then
-			EmitSfx(acflare4, XSMALL_MUZZLEFLASH)
-			Move(barrel4, z_axis, -1, 200)
-			WaitForMove(barrel4, z_axis)
-			Move(barrel4, z_axis, 0, 50)
+			EmitSfx(acflare4, MG_MUZZLEFLASH)
 		end
 end
 

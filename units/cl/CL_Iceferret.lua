@@ -71,6 +71,9 @@ local CL_Iceferret = {
 				OnlyTargetCategory = "notbeacon",
 				WeaponSlaveTo = 1,
 			},
+			[6] = {
+				name	= "AMS",
+			},
 		},
 		
 	--Gets CEG effects from /gamedata/explosions folder

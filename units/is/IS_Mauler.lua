@@ -23,7 +23,7 @@ local IS_Mauler = {
 --	trackType			= "Thick",--graphics file to use for the track decal, from \bitmaps\tracks\ folder
 --	trackWidth			= 20,--width to render the decal
 	buildCostEnergy     = 0,
-	buildCostMetal      = 26200,
+	buildCostMetal      = 28200,
 	buildTime           = 0,
 	upright				= true,
 	canMove				= true,
@@ -66,28 +66,28 @@ local IS_Mauler = {
 				WeaponSlaveTo = 1,
 			},
 			[5] = {
-				name	= "AC2",
+				name	= "RAC2",
 				mainDir = "0 0 1",
 				maxAngleDif = 270,
 				OnlyTargetCategory = "notbeacon",
 				WeaponSlaveTo = 1,
 			},
 			[6] = {
-				name	= "AC2",
+				name	= "ERMBL",
 				mainDir = "0 0 1",
 				maxAngleDif = 270,
 				OnlyTargetCategory = "notbeacon",
 				WeaponSlaveTo = 1,
 			},
 			[7] = {
-				name	= "AC2",
+				name	= "RAC2",
 				mainDir = "0 0 1",
 				maxAngleDif = 270,
 				OnlyTargetCategory = "notbeacon",
 				WeaponSlaveTo = 1,
 			},
 			[8] = {
-				name	= "AC2",
+				name	= "ERMBL",
 				mainDir = "0 0 1",
 				maxAngleDif = 270,
 				OnlyTargetCategory = "notbeacon",
@@ -106,7 +106,7 @@ local IS_Mauler = {
 	},
     customparams = {
 		hasturnbutton	= "1",
-		helptext		= "Armament: 2 x Large Beam Laser, 4 x Autocannon/2, 2 x LRM-15 - Armor: 11.5 tons Standard",
+		helptext		= "Armament: 2 x Large Beam Laser, 2 x ER Medium Beam Laser 2 x Autocannon/2, 2 x LRM-15 - Armor: 11.5 tons Standard",
     },
 }
 

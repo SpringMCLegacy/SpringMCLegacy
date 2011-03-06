@@ -79,6 +79,9 @@ local IS_Bushwacker = {
 				OnlyTargetCategory = "notbeacon",
 				WeaponSlaveTo = 1,
 			},
+			[7] = {
+				name	= "AMS",
+			},
 		},
 		
 	--Gets CEG effects from /gamedata/explosions folder
