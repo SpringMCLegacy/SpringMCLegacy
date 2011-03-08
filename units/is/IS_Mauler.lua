@@ -99,9 +99,9 @@ local IS_Mauler = {
 
 	sfxtypes = {
 		explosiongenerators = {
-		"custom:MEDIUM_MUZZLEFLASH",
-		"custom:XSMALL_MUZZLEFLASH",
-		"custom:MG_MUZZLEFLASH",
+		"custom:MISSILE_MUZZLEFLASH",
+		"custom:AC2_MUZZLEFLASH",
+		"custom:LASER_MUZZLEFLASH",
 		},
 	},
     customparams = {

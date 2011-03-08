@@ -49,7 +49,7 @@ local IS_Demolisher = {
 	--Gets CEG effects from /gamedata/explosions folder
 	sfxtypes = {
 		explosiongenerators = {
-		"custom:LARGE_MUZZLEFLASH",
+		"custom:AC20_MUZZLEFLASH",
 		},
 	},
 	customparams = {

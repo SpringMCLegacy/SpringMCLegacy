@@ -58,7 +58,7 @@ local IS_Scorpion_LGauss = {
 
 	sfxtypes = {
 		explosiongenerators = {
-		"custom:SMALL_MUZZLEFLASH",
+		"custom:GAUSS_MUZZLEFLASH",
 		"custom:MG_MUZZLEFLASH",
 		},
 	},

@@ -78,7 +78,7 @@ local IS_Wolfhound = {
 
 	sfxtypes = {
 		explosiongenerators = {
-		"custom:MG_MUZZLEFLASH",
+		"custom:LASER_MUZZLEFLASH",
 		},
 	},
     customparams = {

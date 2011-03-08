@@ -1,0 +1,35 @@
+[LASER_MUZZLEFLASH] //thanks to quantum, he rocks! Please credit him if you use this effect.
+
+{
+   [BitmapMuzzleFlame]
+   {
+	class = CBitmapMuzzleFlame;
+      
+	[properties]
+      	{
+         	dir = dir;
+         	colorMap=1 1 1 0.01	1 1 1 0.01	1 1 1 0.01; 
+          	size=2.25;
+          	length=3;
+          	sizeGrowth=1;
+          	ttl=3;
+          	frontOffset=0.1;
+          	sideTexture=plasma2;
+          	frontTexture=flowerflash;
+      	}
+   water=1;
+   air=1;
+   underwater=1;
+   ground=1;
+   count=1;
+   	[GROUNDFLASH]
+	{
+		flashsize=10;
+		flashalpha=0.9;
+		circlegrowth=0;
+		circlealpha=1;
+		ttl=3;
+		color=1,0.7,0;
+	}
+    }
+}

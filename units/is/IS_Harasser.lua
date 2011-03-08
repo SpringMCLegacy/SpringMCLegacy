@@ -45,7 +45,7 @@ local IS_Harasser = {
 	--Gets CEG effects from /gamedata/explosions folder
 	sfxtypes = {
 		explosiongenerators = {
-		"custom:SMALL_MUZZLEFLASH",
+		"custom:MISSILE_MUZZLEFLASH",
 		},
 	},
 	customparams = {

@@ -99,9 +99,9 @@ local IS_Atlas = {
 
 	sfxtypes = {
 		explosiongenerators = {
-		"custom:LARGE_MUZZLEFLASH",
-		"custom:MEDIUM_MUZZLEFLASH",
-		"custom:MG_MUZZLEFLASH",
+		"custom:AC20_MUZZLEFLASH",
+		"custom:MISSILE_MUZZLEFLASH",
+		"custom:LASER_MUZZLEFLASH",
 		},
 	},
     customparams = {

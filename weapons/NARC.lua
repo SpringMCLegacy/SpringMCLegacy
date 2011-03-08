@@ -33,7 +33,7 @@ weaponDef = {
 	},
 	customparams = {
 		narc				= "1",
-		cegflare			= "NARC_MUZZLEFLASH",
+		cegflare			= "MISSILE_MUZZLEFLASH",
     },
 }
 

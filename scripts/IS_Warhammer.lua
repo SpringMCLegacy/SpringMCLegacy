@@ -41,8 +41,8 @@ include "smokeunit.lua"
 
 --SFX defines
 PPC_MUZZLEFLASH = SFX.CEG+0
-MEDIUM_MUZZLEFLASH = SFX.CEG+1
-MG_MUZZLEFLASH = SFX.CEG+2
+MISSILE_MUZZLEFLASH = SFX.CEG+1
+LASER_MUZZLEFLASH = SFX.CEG+2
 
 local function MotionControl()
 	while true do
@@ -255,23 +255,23 @@ function script.FireWeapon(weaponID)
 		elseif weaponID == 2 then
 			EmitSfx(flare2, PPC_MUZZLEFLASH)
 		elseif weaponID == 3 then
-			EmitSfx(flare3, MG_MUZZLEFLASH)
+			EmitSfx(flare3, LASER_MUZZLEFLASH)
 		elseif weaponID == 4 then
-			EmitSfx(flare4, MG_MUZZLEFLASH)
+			EmitSfx(flare4, LASER_MUZZLEFLASH)
 		elseif weaponID == 5 then
-			EmitSfx(flare5, MG_MUZZLEFLASH)
+			EmitSfx(flare5, LASER_MUZZLEFLASH)
 		elseif weaponID == 6 then
-		EmitSfx(flare6, MG_MUZZLEFLASH)
+		EmitSfx(flare6, LASER_MUZZLEFLASH)
 			elseif weaponID == 7 then
-		EmitSfx(flare7, MG_MUZZLEFLASH)
+		EmitSfx(flare7, LASER_MUZZLEFLASH)
 		elseif weaponID == 8 then
-			EmitSfx(flare8, MG_MUZZLEFLASH)
+			EmitSfx(flare8, LASER_MUZZLEFLASH)
 		end
 end
 
 function script.Shot(weaponID)
 	if missileWeaponIDs[weaponID] then
-		EmitSfx(launchPoints[weaponID][currPoints[weaponID]], MEDIUM_MUZZLEFLASH)
+		EmitSfx(launchPoints[weaponID][currPoints[weaponID]], MISSILE_MUZZLEFLASH)
         currPoints[weaponID] = currPoints[weaponID] + 1
         if currPoints[weaponID] > numPoints[weaponID] then 
                 currPoints[weaponID] = 1

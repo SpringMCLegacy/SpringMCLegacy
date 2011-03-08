@@ -71,9 +71,9 @@ local IS_Osiris = {
 
 	sfxtypes = {
 		explosiongenerators = {
-		"custom:SMALL_MUZZLEFLASH",
-		"custom:MG_MUZZLEFLASH",
-		"custom:RocketTrail",
+		"custom:MISSILE_MUZZLEFLASH",
+		"custom:LASER_MUZZLEFLASH",
+		"custom:JumpJetTrail",
 		},
 	},
     customparams = {

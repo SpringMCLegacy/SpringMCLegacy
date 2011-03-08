@@ -67,9 +67,10 @@ local IS_Challenger = {
 	--Gets CEG effects from /gamedata/explosions folder
 	sfxtypes = {
 		explosiongenerators = {
-		"custom:SMALL_MUZZLEFLASH",
-		"custom:MEDIUM_MUZZLEFLASH",
-		"custom:MG_MUZZLEFLASH",
+		"custom:GAUSS_MUZZLEFLASH",
+		"custom:AC10_MUZZLEFLASH",
+		"custom:MISSILE_MUZZLEFLASH",
+		"custom:LASER_MUZZLEFLASH",
 		},
 	},
 	customparams = {
