@@ -87,7 +87,7 @@ local IS_Awesome = {
 	sfxtypes = {
 		explosiongenerators = {
 		"custom:PPC_MUZZLEFLASH",
-		"custom:MG_MUZZLEFLASH",
+		"custom:LASER_MUZZLEFLASH",
 		},
 	},
     customparams = {

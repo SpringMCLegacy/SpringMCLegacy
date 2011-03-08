@@ -55,7 +55,7 @@ local IS_Sniper = {
 	--Gets CEG effects from /gamedata/explosions folder
 	sfxtypes = {
 		explosiongenerators = {
-		"custom:XXLARGE_MUZZLEFLASH",
+		"custom:ARTILLERY_MUZZLEFLASH",
 		},
 	},
 	customparams = {

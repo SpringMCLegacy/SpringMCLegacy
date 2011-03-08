@@ -56,7 +56,7 @@ local IS_Scorpion_AC5 = {
 
 	sfxtypes = {
 		explosiongenerators = {
-		"custom:SMALL_MUZZLEFLASH",
+		"custom:AC5_MUZZLEFLASH",
 		"custom:MG_MUZZLEFLASH",
 		},
 	},

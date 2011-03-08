@@ -66,9 +66,9 @@ local RESTORE_DELAY = Spring.UnitScript.GetLongestReloadTime(unitID) * 2
 include "smokeunit.lua"
 
 --SFX defines
-MEDIUM_MUZZLEFLASH = SFX.CEG+0
+MISSILE_MUZZLEFLASH = SFX.CEG+0
 PPC_MUZZLEFLASH = SFX.CEG+1
-MG_MUZZLEFLASH = SFX.CEG+2
+LASER_MUZZLEFLASH = SFX.CEG+2
 
 function script.Create()
 	StartThread(SmokeUnit, {hull})
@@ -284,21 +284,21 @@ end
 
 function script.FireWeapon(weaponID)
 		if weaponID == 1 then
-			EmitSfx(turret1_flare1, MEDIUM_MUZZLEFLASH)
+			EmitSfx(turret1_flare1, MISSILE_MUZZLEFLASH)
 		elseif weaponID == 2 then
-			EmitSfx(turret1_flare2, MEDIUM_MUZZLEFLASH)
+			EmitSfx(turret1_flare2, MISSILE_MUZZLEFLASH)
 		elseif weaponID == 3 then
-			EmitSfx(turret2_flare1, MEDIUM_MUZZLEFLASH)
+			EmitSfx(turret2_flare1, MISSILE_MUZZLEFLASH)
 		elseif weaponID == 4 then
-			EmitSfx(turret2_flare2, MEDIUM_MUZZLEFLASH)
+			EmitSfx(turret2_flare2, MISSILE_MUZZLEFLASH)
 		elseif weaponID == 5 then
-			EmitSfx(turret3_flare1, MEDIUM_MUZZLEFLASH)
+			EmitSfx(turret3_flare1, MISSILE_MUZZLEFLASH)
 		elseif weaponID == 6 then
-			EmitSfx(turret3_flare2, MEDIUM_MUZZLEFLASH)
+			EmitSfx(turret3_flare2, MISSILE_MUZZLEFLASH)
 		elseif weaponID == 7 then
-			EmitSfx(turret4_flare1, MEDIUM_MUZZLEFLASH)
+			EmitSfx(turret4_flare1, MISSILE_MUZZLEFLASH)
 		elseif weaponID == 8 then
-			EmitSfx(turret4_flare2, MEDIUM_MUZZLEFLASH)
+			EmitSfx(turret4_flare2, MISSILE_MUZZLEFLASH)
 		elseif weaponID == 9 then
 			EmitSfx(ppc1_flare, PPC_MUZZLEFLASH)
 		elseif weaponID == 10 then
@@ -308,35 +308,35 @@ function script.FireWeapon(weaponID)
 		elseif weaponID == 12 then
 			EmitSfx(ppc4_flare, PPC_MUZZLEFLASH)
 		elseif weaponID == 17 then
-			EmitSfx(laser1, MG_MUZZLEFLASH)
+			EmitSfx(laser1, LASER_MUZZLEFLASH)
 		elseif weaponID == 18 then
-			EmitSfx(laser2, MG_MUZZLEFLASH)
+			EmitSfx(laser2, LASER_MUZZLEFLASH)
 		elseif weaponID == 19 then
-			EmitSfx(laser3, MG_MUZZLEFLASH)
+			EmitSfx(laser3, LASER_MUZZLEFLASH)
 		elseif weaponID == 20 then
-			EmitSfx(laser4, MG_MUZZLEFLASH)
+			EmitSfx(laser4, LASER_MUZZLEFLASH)
 		elseif weaponID == 21 then
-			EmitSfx(laser5, MG_MUZZLEFLASH)
+			EmitSfx(laser5, LASER_MUZZLEFLASH)
 		elseif weaponID == 22 then
-			EmitSfx(laser6, MG_MUZZLEFLASH)
+			EmitSfx(laser6, LASER_MUZZLEFLASH)
 		elseif weaponID == 23 then
-			EmitSfx(laser7, MG_MUZZLEFLASH)
+			EmitSfx(laser7, LASER_MUZZLEFLASH)
 		elseif weaponID == 24 then
-			EmitSfx(laser8, MG_MUZZLEFLASH)
+			EmitSfx(laser8, LASER_MUZZLEFLASH)
 		elseif weaponID == 25 then
-			EmitSfx(laser9, MG_MUZZLEFLASH)
+			EmitSfx(laser9, LASER_MUZZLEFLASH)
 		elseif weaponID == 26 then
-			EmitSfx(laser10, MG_MUZZLEFLASH)
+			EmitSfx(laser10, LASER_MUZZLEFLASH)
 		elseif weaponID == 27 then
-			EmitSfx(laser11, MG_MUZZLEFLASH)
+			EmitSfx(laser11, LASER_MUZZLEFLASH)
 		elseif weaponID == 28 then
-			EmitSfx(laser12, MG_MUZZLEFLASH)
+			EmitSfx(laser12, LASER_MUZZLEFLASH)
 		end
 end
 
 function script.Shot(weaponID)
 	if missileWeaponIDs[weaponID] then
-		EmitSfx(launchPoints[weaponID][currPoints[weaponID]], MEDIUM_MUZZLEFLASH)
+		EmitSfx(launchPoints[weaponID][currPoints[weaponID]], MISSILE_MUZZLEFLASH)
         currPoints[weaponID] = currPoints[weaponID] + 1
         if currPoints[weaponID] > numPoints[weaponID] then 
                 currPoints[weaponID] = 1

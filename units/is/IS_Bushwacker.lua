@@ -88,9 +88,9 @@ local IS_Bushwacker = {
 
 	sfxtypes = {
 		explosiongenerators = {
-		"custom:MEDIUM_MUZZLEFLASH",
-		"custom:SMALL_MUZZLEFLASH",
-		"custom:MG_MUZZLEFLASH",
+		"custom:AC10_MUZZLEFLASH",
+		"custom:MISSILE_MUZZLEFLASH",
+		"custom:LASER_MUZZLEFLASH",
 		},
 	},
     customparams = {

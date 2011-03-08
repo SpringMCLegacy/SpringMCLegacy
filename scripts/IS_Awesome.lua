@@ -25,7 +25,7 @@ include "smokeunit.lua"
 
 --SFX defines
 PPC_MUZZLEFLASH = SFX.CEG+0
-MG_MUZZLEFLASH = SFX.CEG+1
+LASER_MUZZLEFLASH = SFX.CEG+1
 
 local function MotionControl()
 	while true do
@@ -230,7 +230,7 @@ function script.FireWeapon(weaponID)
 		elseif weaponID == 4 then
 			EmitSfx(flare4, PPC_MUZZLEFLASH)
 		elseif weaponID == 5 then
-			EmitSfx(flare5, MG_MUZZLEFLASH)
+			EmitSfx(flare5, LASER_MUZZLEFLASH)
 		end
 end
 

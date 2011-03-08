@@ -208,9 +208,9 @@ local CL_Dropship = {
 	--Gets CEG effects from /gamedata/explosions folder
 	sfxtypes = {
 		explosiongenerators = {
-		"custom:MEDIUM_MUZZLEFLASH",
+		"custom:MISSILE_MUZZLEFLASH",
 		"custom:PPC_MUZZLEFLASH",
-		"custom:MG_MUZZLEFLASH",
+		"custom:LASER_MUZZLEFLASH",
 		},
 	},
 	customparams = {

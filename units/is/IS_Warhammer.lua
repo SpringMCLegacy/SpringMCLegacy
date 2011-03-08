@@ -114,8 +114,8 @@ local IS_Warhammer = {
 	sfxtypes = {
 		explosiongenerators = {
 		"custom:PPC_MUZZLEFLASH",
-		"custom:MEDIUM_MUZZLEFLASH",
-		"custom:MG_MUZZLEFLASH",
+		"custom:MISSILE_MUZZLEFLASH",
+		"custom:LASER_MUZZLEFLASH",
 		},
 	},
     customparams = {

@@ -39,9 +39,10 @@ local RESTORE_DELAY = Spring.UnitScript.GetLongestReloadTime(unitID) * 2
 include "smokeunit.lua"
 
 --SFX defines
-SMALL_MUZZLEFLASH = SFX.CEG+0
-MEDIUM_MUZZLEFLASH = SFX.CEG+1
-MG_MUZZLEFLASH = SFX.CEG+2
+GAUSS_MUZZLEFLASH = SFX.CEG+0
+AC10_MUZZLEFLASH = SFX.CEG+1
+MISSILE_MUZZLEFLASH = SFX.CEG+2
+LASER_MUZZLEFLASH = SFX.CEG+3
 
 function script.Create()
 	StartThread(SmokeUnit, {body, turret})
@@ -106,24 +107,25 @@ end
 
 function script.FireWeapon(weaponID)
 		if weaponID == 1 then
+				EmitSfx(flare1, GAUSS_MUZZLEFLASH)
 				Move(barrel1, z_axis, -5, 100)
 				WaitForMove(barrel1, z_axis)
 				Move(barrel1, z_axis, 0, 10)
 		elseif weaponID == 2 then
-				EmitSfx(flare2, MEDIUM_MUZZLEFLASH)
+				EmitSfx(flare2, AC10_MUZZLEFLASH)
 				Move(barrel2, z_axis, -5, 100)
 				WaitForMove(barrel2, z_axis)
 				Move(barrel2, z_axis, 0, 10)
 		elseif weaponID == 4 then
-				EmitSfx(laserflare1, MG_MUZZLEFLASH)
+				EmitSfx(laserflare1, LASER_MUZZLEFLASH)
 		elseif weaponID == 5 then
-				EmitSfx(laserflare2, MG_MUZZLEFLASH)
+				EmitSfx(laserflare2, LASER_MUZZLEFLASH)
 		end
 end
 
 function script.Shot(weaponID)
 	if missileWeaponIDs[weaponID] then
-		EmitSfx(launchPoints[weaponID][currPoints[weaponID]], SMALL_MUZZLEFLASH)
+		EmitSfx(launchPoints[weaponID][currPoints[weaponID]], MISSILE_MUZZLEFLASH)
         currPoints[weaponID] = currPoints[weaponID] + 1
         if currPoints[weaponID] > numPoints[weaponID] then 
                 currPoints[weaponID] = 1

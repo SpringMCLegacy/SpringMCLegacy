@@ -1,7 +1,7 @@
 weaponDef = {
 	name                    = "Particle Projector Cannon",
 	weaponType              = "Cannon",
-	explosionGenerator    	= "custom:AP_MEDIUM",
+	explosionGenerator    	= "custom:PPC",
 --	cegTag					= "RailTrail",
 	soundHit              	= [[PPC_Hit]],
 	soundStart            	= [[PPC_Fire]],

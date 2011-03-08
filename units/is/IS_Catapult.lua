@@ -84,9 +84,9 @@ local IS_Catapult = {
 
 	sfxtypes = {
 		explosiongenerators = {
-		"custom:MEDIUM_MUZZLEFLASH",
-		"custom:MG_MUZZLEFLASH",
-		"custom:RocketTrail",
+		"custom:MISSILE_MUZZLEFLASH",
+		"custom:LASER_MUZZLEFLASH",
+		"custom:JumpJetTrail",
 		},
 	},
     customparams = {

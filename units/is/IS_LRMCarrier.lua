@@ -49,8 +49,7 @@ local IS_LRMCarrier = {
 	--Gets CEG effects from /gamedata/explosions folder
 	sfxtypes = {
 		explosiongenerators = {
-		"custom:SMALL_MUZZLEFLASH",
-		"custom:MG_MUZZLEFLASH",
+		"custom:MISSILE_MUZZLEFLASH",
 		},
 	},
 	customparams = {

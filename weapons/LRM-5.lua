@@ -44,7 +44,7 @@ weaponDef = {
 	},
 	customparams = {
 		heatgenerated		= "20",--2/sec for entire salvo
-		cegflare			= "LRM_MUZZLEFLASH",
+		cegflare			= "MISSILE_MUZZLEFLASH",
     },
 }
 
