@@ -113,13 +113,13 @@ local CL_Timberwolf = {
 		
 	--Gets CEG effects from /gamedata/explosions folder
 
-	sfxtypes = {
+	--[[sfxtypes = {
 		explosiongenerators = {
 		"custom:MISSILE_MUZZLEFLASH",
 		"custom:LASER_MUZZLEFLASH",
 		"custom:MG_MUZZLEFLASH",
 		},
-	},
+	},]]
     customparams = {
 		hasturnbutton	= "1",
 		helptext		= "Armament: 2 x ER Large Beam Laser, 2 x ER Medium Beam Laser, 2 x Small Pulse Laser, 2 x MG, 2 x ATM-12 - Armor: 12 tons Ferro-Fibrous",
