@@ -68,7 +68,7 @@ local CL_Mistlynx = {
 				OnlyTargetCategory = "notbeacon",
 				WeaponSlaveTo = 1,
 			},
-			[4] = {
+			[5] = {
 				name	= "MG",
 				--weaponSlaveTo3 = 1,
 				--mainDir = "0 0 1",
@@ -82,9 +82,9 @@ local CL_Mistlynx = {
 
 	sfxtypes = {
 		explosiongenerators = {
-		"custom:SMALL_MUZZLEFLASH",
+		"custom:MISSILE_MUZZLEFLASH",
 		"custom:MG_MUZZLEFLASH",
-		"custom:RocketTrail",
+		"custom:JumpJetTrail",
 		},
 	},
     customparams = {

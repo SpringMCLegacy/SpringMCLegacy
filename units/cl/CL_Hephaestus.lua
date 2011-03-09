@@ -34,11 +34,11 @@ local CL_Hephaestus = {
 		--Makes unit use weapon from /weapons folder
 		weapons 		= {	
 			[1] = {
-				name	= "CMPL",
+				name	= "CERMBL",
 				OnlyTargetCategory = "notbeacon",
 			},
 			[2] = {
-				name	= "CMPL",
+				name	= "CERMBL",
 				OnlyTargetCategory = "notbeacon",
 				WeaponSlaveTo = 1,
 			},
@@ -52,8 +52,8 @@ local CL_Hephaestus = {
 	--Gets CEG effects from /gamedata/explosions folder
 	sfxtypes = {
 		explosiongenerators = {
-		"custom:SMALL_MUZZLEFLASH",
-		"custom:MG_MUZZLEFLASH",
+		"custom:MISSILE_MUZZLEFLASH",
+		"custom:LASER_MUZZLEFLASH",
 		},
 	},
 	customparams = {

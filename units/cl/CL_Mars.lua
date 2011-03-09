@@ -74,16 +74,22 @@ local CL_Mars = {
 			},
 			[7] = {
 				name	= "MG",
+				OnlyTargetCategory = "notbeacon",
+				WeaponSlaveTo = 1,
 			},
 			[8] = {
 				name	= "MG",
+				OnlyTargetCategory = "notbeacon",
+				WeaponSlaveTo = 1,
 			},
 		},
 	--Gets CEG effects from /gamedata/explosions folder
 	sfxtypes = {
 		explosiongenerators = {
-		"custom:LARGE_MUZZLEFLASH",
-		"custom:MEDIUM_MUZZLEFLASH",
+		"custom:GAUSS_MUZZLEFLASH",
+		"custom:MISSILE_MUZZLEFLASH",
+		"custom:AC10_MUZZLEFLASH",
+		"custom:LASER_MUZZLEFLASH",
 		"custom:MG_MUZZLEFLASH",
 		},
 	},
