@@ -49,8 +49,8 @@ local CL_Oro_HAG = {
 	--Gets CEG effects from /gamedata/explosions folder
 	sfxtypes = {
 		explosiongenerators = {
-		"custom:LARGE_MUZZLEFLASH",
-		"custom:MG_MUZZLEFLASH",
+		"custom:GAUSS_MUZZLEFLASH",
+		"custom:LASER_MUZZLEFLASH",
 		},
 	},
 	customparams = {

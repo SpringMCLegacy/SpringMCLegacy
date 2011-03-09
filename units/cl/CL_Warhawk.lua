@@ -79,8 +79,8 @@ local CL_Warhawk = {
 
 	sfxtypes = {
 		explosiongenerators = {
-		"custom:MEDIUM_MUZZLEFLASH",
-		"custom:MG_MUZZLEFLASH",
+		"custom:MISSILE_MUZZLEFLASH",
+		"custom:PPC_MUZZLEFLASH",
 		},
 	},
     customparams = {

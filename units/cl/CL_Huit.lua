@@ -59,8 +59,8 @@ local CL_Huit = {
 	--Gets CEG effects from /gamedata/explosions folder
 	sfxtypes = {
 		explosiongenerators = {
-		"custom:LARGE_MUZZLEFLASH",
-		"custom:MG_MUZZLEFLASH",
+		"custom:ARROW_MUZZLEFLASH",
+		"custom:LASER_MUZZLEFLASH",
 		},
 	},
 	customparams = {

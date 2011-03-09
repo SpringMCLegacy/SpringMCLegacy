@@ -27,8 +27,8 @@ local RESTORE_DELAY = Spring.UnitScript.GetLongestReloadTime(unitID) * 2
 include "smokeunit.lua"
 
 --SFX defines
-MG_MUZZLEFLASH = SFX.CEG+0
-RocketTrail = SFX.CEG+1
+LASER_MUZZLEFLASH = SFX.CEG+0
+JumpJetTrail = SFX.CEG+1
 
 local function MotionControl()
 	while true do
@@ -218,10 +218,10 @@ end
 function JumpControl()
 	while true do
 		if isJumping then
-			EmitSfx(jet1, RocketTrail)
-			EmitSfx(jet2, RocketTrail)
-			EmitSfx(jet3, RocketTrail)
-			EmitSfx(jet4, RocketTrail)
+			EmitSfx(jet1, JumpJetTrail)
+			EmitSfx(jet2, JumpJetTrail)
+			EmitSfx(jet3, JumpJetTrail)
+			EmitSfx(jet4, JumpJetTrail)
 			Sleep(50)
 		else
 			Sleep(100)
@@ -282,29 +282,29 @@ end
 
 function script.FireWeapon(weaponID)
 		if weaponID == 1 then
-			EmitSfx(flare1, MG_MUZZLEFLASH)
+			EmitSfx(flare1, LASER_MUZZLEFLASH)
 		elseif weaponID == 2 then
-			EmitSfx(flare2, MG_MUZZLEFLASH)
+			EmitSfx(flare2, LASER_MUZZLEFLASH)
 		elseif weaponID == 3 then
-			EmitSfx(flare3, MG_MUZZLEFLASH)
+			EmitSfx(flare3, LASER_MUZZLEFLASH)
 		elseif weaponID == 4 then
-			EmitSfx(flare4, MG_MUZZLEFLASH)
+			EmitSfx(flare4, LASER_MUZZLEFLASH)
 		elseif weaponID == 5 then
-			EmitSfx(flare5, MG_MUZZLEFLASH)
+			EmitSfx(flare5, LASER_MUZZLEFLASH)
 		elseif weaponID == 6 then
-			EmitSfx(flare6, MG_MUZZLEFLASH)
+			EmitSfx(flare6, LASER_MUZZLEFLASH)
 		elseif weaponID == 7 then
-			EmitSfx(flare7, MG_MUZZLEFLASH)
+			EmitSfx(flare7, LASER_MUZZLEFLASH)
 		elseif weaponID == 8 then
-			EmitSfx(flare8, MG_MUZZLEFLASH)
+			EmitSfx(flare8, LASER_MUZZLEFLASH)
 		elseif weaponID == 9 then
-			EmitSfx(flare9, MG_MUZZLEFLASH)
+			EmitSfx(flare9, LASER_MUZZLEFLASH)
 		elseif weaponID == 10 then
-			EmitSfx(flare10, MG_MUZZLEFLASH)
+			EmitSfx(flare10, LASER_MUZZLEFLASH)
 		elseif weaponID == 11 then
-			EmitSfx(flare11, MG_MUZZLEFLASH)
+			EmitSfx(flare11, LASER_MUZZLEFLASH)
 		elseif weaponID == 12 then
-			EmitSfx(flare12, MG_MUZZLEFLASH)
+			EmitSfx(flare12, LASER_MUZZLEFLASH)
 		end
 end
 

@@ -115,8 +115,8 @@ local CL_Timberwolf = {
 
 	sfxtypes = {
 		explosiongenerators = {
-		"custom:MEDIUM_MUZZLEFLASH",
-		"custom:SMALL_MUZZLEFLASH",
+		"custom:MISSILE_MUZZLEFLASH",
+		"custom:LASER_MUZZLEFLASH",
 		"custom:MG_MUZZLEFLASH",
 		},
 	},

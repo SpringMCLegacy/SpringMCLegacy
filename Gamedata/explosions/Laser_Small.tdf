@@ -3,7 +3,7 @@
 	[smoke] {
 		class=CSimpleParticleSystem;
 		[properties]{
-			sizeGrowth=1 r1;
+			sizeGrowth=0.5 r0.5;
 			sizeMod=0.5;
 			pos=0, 0, 0;
 			emitVector=0, 1, 0;
@@ -14,8 +14,8 @@
 			particleLife=12;
 			particleLifeSpread=4;
 			numParticles=8;
-			particleSpeed=1;
-			particleSpeedSpread=0.5;
+			particleSpeed=0.5;
+			particleSpeedSpread=0.25;
 			particleSize=1;
 			particleSizeSpread=0;
 			emitRot=0;
@@ -32,8 +32,8 @@
 	[pikes] {
 		class=CExploSpikeProjectile;
 		[properties] {
-			dir= -1 r2, -1 r2, -1 r2;
-			width=2;
+			dir= -0.5 r1, -0.5 r1, -0.5 r1;
+			width=1;
 			length=1;
 			lengthGrowth=1;
 			alpha=1;
@@ -70,7 +70,7 @@
 	}
 	
 	[groundflash] {
-		flashsize=16;
+		flashsize=8;
 		flashalpha=1;
 		circlegrowth=10;
 		circlealpha=0;
@@ -80,6 +80,7 @@
 }
 
 [Laser_Small_Hit] {
+	
 	[sparks] {
 		class=CSimpleParticleSystem;
 		[properties]
@@ -94,7 +95,7 @@
 			airdrag=0.95;
 			particleLife=32;
 			particleLifeSpread=0;
-			numParticles=16;
+			numParticles=8;
 			particleSpeed=0.5;
 			particleSpeedSpread=2;
 			particleSize=0.5;
@@ -110,14 +111,14 @@
 	}
 }
 
-[Laser_Small_Miss] {
+[Laser_XSmall_Miss] {
 	[ground]{
 		class = CBitmapMuzzleFlame;  
 		[properties]{
 			dir = -0.1 r0.2, 1, -0.1 r0.2;
 			colorMap=0.5 0.4 0.3 1  0.05 0.04 0.03 0.1;
-			size=2 r1;
-			length=8 r4;
+			size=1 r0.5;
+			length=4 r8;
 			sizeGrowth=1;
 			ttl=12;
 			frontOffset=0;
@@ -133,8 +134,8 @@
 		[properties]{
 			dir = -0.1 r0.2, 1, -0.1 r0.2;
 			colorMap=0.45 0.45 0.5 0.5  0.045 0.045 0.05 0.05; 
-			size=2 r1;
-			length=8 r4;
+			size=1 r0.5;
+			length=4 r8;
 			sizeGrowth=1;
 			ttl=12;
 			frontOffset=0;

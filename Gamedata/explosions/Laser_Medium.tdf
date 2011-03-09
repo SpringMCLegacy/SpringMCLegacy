@@ -3,7 +3,7 @@
 	[smoke] {
 		class=CSimpleParticleSystem;
 		[properties]{
-			sizeGrowth=2 r2;
+			sizeGrowth=1 r1;
 			sizeMod=0.5;
 			pos=0, 0, 0;
 			emitVector=0, 1, 0;
@@ -13,9 +13,9 @@
 			airdrag=0.75;
 			particleLife=12;
 			particleLifeSpread=4;
-			numParticles=8;
-			particleSpeed=2;
-			particleSpeedSpread=1;
+			numParticles=5;
+			particleSpeed=1;
+			particleSpeedSpread=0.5;
 			particleSize=1;
 			particleSizeSpread=0;
 			emitRot=0;
@@ -32,8 +32,8 @@
 	[pikes] {
 		class=CExploSpikeProjectile;
 		[properties] {
-			dir= -2 r4, -2 r4, -2 r4;
-			width=4;
+			dir= -1 r2, -1 r2, -1 r2;
+			width=2;
 			length=1;
 			lengthGrowth=1;
 			alpha=1;
@@ -70,7 +70,7 @@
 	}
 	
 	[groundflash] {
-		flashsize=32;
+		flashsize=10;
 		flashalpha=1;
 		circlegrowth=10;
 		circlealpha=0;
@@ -80,7 +80,6 @@
 }
 
 [Laser_Medium_Hit] {
-	
 	[sparks] {
 		class=CSimpleParticleSystem;
 		[properties]
@@ -93,13 +92,13 @@
 			colorMap=1 0.75 0.5 0.01   1 0.75 0.5 0.01   0 0 0 0;
 			Texture=plasma;
 			airdrag=0.95;
-			particleLife=32;
+			particleLife=26;
 			particleLifeSpread=0;
-			numParticles=32;
+			numParticles=10;
 			particleSpeed=0.5;
 			particleSpeedSpread=2;
-			particleSize=0.5;
-			particleSizeSpread=1;
+			particleSize=0.2;
+			particleSizeSpread=0.75;
 			emitRot=0;
 			emitRotSpread=90;
 			directional=1;
@@ -117,8 +116,8 @@
 		[properties]{
 			dir = -0.1 r0.2, 1, -0.1 r0.2;
 			colorMap=0.5 0.4 0.3 1  0.05 0.04 0.03 0.1;
-			size=4 r2;
-			length=16 r8;
+			size=2 r1;
+			length=8 r4;
 			sizeGrowth=1;
 			ttl=12;
 			frontOffset=0;
@@ -126,7 +125,7 @@
 			frontTexture=splashbase;
 		}
 		ground=1;
-		count=4;
+		count=3;
 	}
 	
 	[water]{
@@ -134,8 +133,8 @@
 		[properties]{
 			dir = -0.1 r0.2, 1, -0.1 r0.2;
 			colorMap=0.45 0.45 0.5 0.5  0.045 0.045 0.05 0.05; 
-			size=4 r2;
-			length=16 r8;
+			size=2 r1;
+			length=8 r4;
 			sizeGrowth=1;
 			ttl=12;
 			frontOffset=0;
@@ -143,6 +142,6 @@
 			frontTexture=splashbase;
 		}
 		water=1;
-		count=4;
+		count=3;
 	}
 }

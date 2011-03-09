@@ -54,8 +54,8 @@ local CL_Enyo = {
 	--Gets CEG effects from /gamedata/explosions folder
 	sfxtypes = {
 		explosiongenerators = {
-		"custom:SMALL_MUZZLEFLASH",
-		"custom:MG_MUZZLEFLASH",
+		"custom:MISSILE",
+		"custom:LASER_MUZZLEFLASH",
 		},
 	},
 	customparams = {

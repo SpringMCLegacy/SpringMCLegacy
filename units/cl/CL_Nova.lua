@@ -126,8 +126,8 @@ local CL_Nova = {
 
 	sfxtypes = {
 		explosiongenerators = {
-		"custom:MG_MUZZLEFLASH",
-		"custom:RocketTrail",
+		"custom:LASER_MUZZLEFLASH",
+		"custom:JumpJetTrail",
 		},
 	},
     customparams = {

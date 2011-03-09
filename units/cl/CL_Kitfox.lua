@@ -72,8 +72,9 @@ local CL_Kitfox = {
 
 	sfxtypes = {
 		explosiongenerators = {
-		"custom:SMALL_MUZZLEFLASH",
-		"custom:MG_MUZZLEFLASH",
+		"custom:MISSILE_MUZZLEFLASH",
+		"custom:AC5_MUZZLEFLASH",
+		"custom:LASER_MUZZLEFLASH",
 		},
 	},
     customparams = {
