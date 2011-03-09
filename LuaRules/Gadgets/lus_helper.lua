@@ -14,7 +14,7 @@ if (gadgetHandler:IsSyncedCode()) then
 --SYNCED
 
 -- Localisations
-
+GG.lusHelper = {}
 -- Synced Read
 local GetUnitPieceMap		= Spring.GetUnitPieceMap
 -- Synced Ctrl
@@ -33,20 +33,25 @@ function gadget:GamePreload()
 	-- Parse UnitDef Data
 	for unitDefID, unitDef in pairs(UnitDefs) do
 		local info = {}
+		local missileWeaponIDs = {}
+		local burstLengths = {}
 		
 		local weapons = unitDef.weapons
 		-- Parse UnitDef Weapon Data
 		for i = 1, #weapons do
-			local missileWeaponIDs = {}
 			local weaponInfo = weapons[i]
 			--for tag, value in pairs(weaponInfo) do
 				--Spring.Echo(tag, value)
 			--end
 			local weaponDef = WeaponDefs[weaponInfo.weaponDef]
+			burstLengths[i] = weaponDef.salvoSize
 			if weaponDef.type == "MissileLauncher" then
-				missileWeaponIDs[i] = weaponDef.salvoSize -- 2 birds 1 stone
+				missileWeaponIDs[i] = true
 			end
 		end
+		info.missileWeaponIDs = missileWeaponIDs
+		info.burstLengths = burstLengths
+		GG.lusHelper[unitDefID] = info
 	end
 	
 end

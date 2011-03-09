@@ -1,25 +1,27 @@
 -- Test Mech Script
 -- useful global stuff
-ud = UnitDefs[Spring.GetUnitDefID(unitID)] -- unitID is available automatically to all LUS
-weapons = ud.weapons
+unitDefID = Spring.GetUnitDefID(unitID)
+unitDef = UnitDefs[unitDefID]
+weapons = unitDef.weapons
+info = GG.lusHelper[unitDefID]
 -- the following have to be non-local for the walkscript include to find them
 rad = math.rad
 walking = false
 
 -- includes
 include "smokeunit.lua"
-include ("walks/" .. ud.name .. "_walk.lua")
+include ("walks/" .. unitDef.name .. "_walk.lua")
 
 --piece defines
 local pelvis, torso = piece ("pelvis", "torso")
 local rupperarm, rlowerarm, lupperarm, llowerarm = piece ("rupperarm", "rlowerarm", "lupperarm", "llowerarm")
 
--- TODO: Generalise from weapon defs
-local missileWeaponIDs = {[9] = true, [10] = true}
- 
+-- Info from lusHelper gadget
+local missileWeaponIDs = info.missileWeaponIDs
+local burstLengths = info.burstLengths
+
 local flares = {}
 local launchPoints = {}
-local burstLength = {}
 local currPoints = {}
 local currLaunchPoint = 1
  
@@ -29,11 +31,10 @@ local TORSO_SPEED = rad(125)
 local ELEVATION_SPEED = rad(165)
 
 for weaponID = 1, #weapons do
-	burstLength[weaponID] = WeaponDefs[weapons[weaponID].weaponDef].salvoSize
 	if missileWeaponIDs[weaponID] then
 		launchPoints[weaponID] = {}
 		currPoints[weaponID] = 1
-		for i = 1, burstLength[weaponID] do
+		for i = 1, burstLengths[weaponID] do
 			launchPoints[weaponID][i] = piece("launchpoint_" .. weaponID .. "_" .. i)
 		end	
 	else
@@ -92,7 +93,7 @@ function script.AimWeapon(weaponID, heading, pitch)
 end
 
 function script.FireWeapon(weaponID)
-	if burstLength[weaponID] == 1 then
+	if burstLengths[weaponID] == 1 then
 		EmitSfx(flares[weaponID], SFX.CEG + weaponID - 1)
 	end
 end
@@ -101,10 +102,10 @@ function script.Shot(weaponID)
 	if missileWeaponIDs[weaponID] then
 		EmitSfx(launchPoints[weaponID][currPoints[weaponID]], SFX.CEG + weaponID - 1)
         currPoints[weaponID] = currPoints[weaponID] + 1
-        if currPoints[weaponID] > burstLength[weaponID] then 
+        if currPoints[weaponID] > burstLengths[weaponID] then 
 			currPoints[weaponID] = 1
         end
-	elseif burstLength[weaponID] > 1 then
+	elseif burstLengths[weaponID] > 1 then
 		EmitSfx(flares[weaponID], SFX.CEG + weaponID - 1)
 	end
 end
