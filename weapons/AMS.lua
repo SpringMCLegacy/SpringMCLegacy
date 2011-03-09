@@ -1,7 +1,7 @@
 weaponDef = {
 	name                    = "Anti-Missile System (AMS)",
 	isShield				= true,
-	shieldInterceptType		= 1,
+	shieldInterceptType		= 32,
 	exteriorShield			= true,
 	shieldEnergyUse			= 0,
 	shieldPower				= 500,
