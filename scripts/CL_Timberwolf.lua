@@ -19,6 +19,7 @@ local rupperarm, rlowerarm, lupperarm, llowerarm = piece ("rupperarm", "rlowerar
 -- Info from lusHelper gadget
 local missileWeaponIDs = info.missileWeaponIDs
 local burstLengths = info.burstLengths
+local firingHeats = info.firingHeats
 
 local flares = {}
 local launchPoints = {}

@@ -35,6 +35,7 @@ function gadget:GamePreload()
 		local info = {}
 		local missileWeaponIDs = {}
 		local burstLengths = {}
+		local firingHeats = {}
 		
 		local weapons = unitDef.weapons
 		-- Parse UnitDef Weapon Data
@@ -45,12 +46,14 @@ function gadget:GamePreload()
 			--end
 			local weaponDef = WeaponDefs[weaponInfo.weaponDef]
 			burstLengths[i] = weaponDef.salvoSize
+			firingHeats[i] = weaponDef.customParams.heatgenerated or 0
 			if weaponDef.type == "MissileLauncher" then
 				missileWeaponIDs[i] = true
 			end
 		end
 		info.missileWeaponIDs = missileWeaponIDs
 		info.burstLengths = burstLengths
+		info.firingHeats = firingHeats
 		GG.lusHelper[unitDefID] = info
 	end
 	
