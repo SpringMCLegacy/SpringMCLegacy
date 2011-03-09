@@ -33,12 +33,12 @@ function gadget:GamePreload()
 	-- Parse UnitDef Data
 	for unitDefID, unitDef in pairs(UnitDefs) do
 		local info = {}
+		local weapons = unitDef.weapons
+		
+		-- Parse UnitDef Weapon Data
 		local missileWeaponIDs = {}
 		local burstLengths = {}
 		local firingHeats = {}
-		
-		local weapons = unitDef.weapons
-		-- Parse UnitDef Weapon Data
 		for i = 1, #weapons do
 			local weaponInfo = weapons[i]
 			--for tag, value in pairs(weaponInfo) do
@@ -51,6 +51,11 @@ function gadget:GamePreload()
 				missileWeaponIDs[i] = true
 			end
 		end
+		-- UnitDef Level Info
+		info.heatLimit = unitDef.customParams.heatlimit or 1000
+		info.coolRate = info.heatLimit / 10 -- or a constant rate of 10?
+		info.numWeapons = #weapons
+		-- WeaponDef Level Info
 		info.missileWeaponIDs = missileWeaponIDs
 		info.burstLengths = burstLengths
 		info.firingHeats = firingHeats
