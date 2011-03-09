@@ -2,7 +2,6 @@
 -- useful global stuff
 unitDefID = Spring.GetUnitDefID(unitID)
 unitDef = UnitDefs[unitDefID]
-weapons = unitDef.weapons
 info = GG.lusHelper[unitDefID]
 -- the following have to be non-local for the walkscript include to find them
 rad = math.rad
@@ -17,6 +16,8 @@ local pelvis, torso = piece ("pelvis", "torso")
 local rupperarm, rlowerarm, lupperarm, llowerarm = piece ("rupperarm", "rlowerarm", "lupperarm", "llowerarm")
 
 -- Info from lusHelper gadget
+local heatLimit = info.heatLimit
+local coolRate = info.coolRate
 local missileWeaponIDs = info.missileWeaponIDs
 local burstLengths = info.burstLengths
 local firingHeats = info.firingHeats
@@ -24,14 +25,17 @@ local firingHeats = info.firingHeats
 local flares = {}
 local launchPoints = {}
 local currPoints = {}
+
 local currLaunchPoint = 1
+local currHeatLevel = 0
  
 --Turning/Movement Locals
 -- TODO: Generalise from unitdef customParams
 local TORSO_SPEED = rad(125)
 local ELEVATION_SPEED = rad(165)
+local RESTORE_DELAY = Spring.UnitScript.GetLongestReloadTime(unitID) * 2
 
-for weaponID = 1, #weapons do
+for weaponID = 1, info.numWeapons do
 	if missileWeaponIDs[weaponID] then
 		launchPoints[weaponID] = {}
 		currPoints[weaponID] = 1
@@ -43,9 +47,6 @@ for weaponID = 1, #weapons do
 	end
 end
 
--- constants
-
-local RESTORE_DELAY = Spring.UnitScript.GetLongestReloadTime(unitID) * 2
 
 function script.Create()
 	StartThread(SmokeUnit, {pelvis, torso})
@@ -97,6 +98,7 @@ function script.FireWeapon(weaponID)
 	if burstLengths[weaponID] == 1 then
 		EmitSfx(flares[weaponID], SFX.CEG + weaponID - 1)
 	end
+	currHeatLevel = currHeatLevel + firingHeats[weaponID]
 end
 
 function script.Shot(weaponID)
