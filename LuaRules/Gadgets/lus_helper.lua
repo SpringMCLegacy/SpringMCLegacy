@@ -52,7 +52,7 @@ function gadget:GamePreload()
 			end
 		end
 		-- UnitDef Level Info
-		info.heatLimit = unitDef.customParams.heatlimit or 1000
+		info.heatLimit = (unitDef.customParams.heatlimit or 50) * 10
 		info.coolRate = info.heatLimit / 10 -- or a constant rate of 10?
 		info.numWeapons = #weapons
 		-- WeaponDef Level Info

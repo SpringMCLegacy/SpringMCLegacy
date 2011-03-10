@@ -47,10 +47,28 @@ for weaponID = 1, info.numWeapons do
 	end
 end
 
+local function RestoreAfterDelay(unitID)
+	Sleep(RESTORE_DELAY)
+	Turn(torso, y_axis, 0, TORSO_SPEED)
+	
+	-- TODO: Generalise
+	Turn(llowerarm, x_axis, 0, ELEVATION_SPEED)
+	Turn(rlowerarm, x_axis, 0, ELEVATION_SPEED)
+end
+
+local function CoolOff()
+	while true do
+		currHeatLevel = currHeatLevel - coolRate
+		if currHeatLevel < 0 then currHeatLevel = 0 end
+		Spring.Echo(currHeatLevel)
+		Sleep(1000) -- cools once per second
+	end
+end
 
 function script.Create()
 	StartThread(SmokeUnit, {pelvis, torso})
 	StartThread(MotionControl)
+	StartThread(CoolOff)
 end
 
 function script.StartMoving()
@@ -67,15 +85,6 @@ end
 
 function script.Deactivate()
 	Spring.SetUnitStealth(unitID, true)
-end
-
-local function RestoreAfterDelay(unitID)
-	Sleep(RESTORE_DELAY)
-	Turn(torso, y_axis, 0, TORSO_SPEED)
-	
-	-- TODO: Generalise
-	Turn(llowerarm, x_axis, 0, ELEVATION_SPEED)
-	Turn(rlowerarm, x_axis, 0, ELEVATION_SPEED)
 end
 
 function script.AimWeapon(weaponID, heading, pitch)
