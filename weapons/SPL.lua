@@ -42,7 +42,7 @@ weaponDef = {
 	},
 	customparams = {
 		heatgenerated		= "0.66",--2/sec
-		cegflare			= "SPL_MUZZLEFLASH",
+		cegflare			= "LASER_MUZZLEFLASH",
     },
 }
 

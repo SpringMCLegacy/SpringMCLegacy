@@ -1,7 +1,7 @@
 weaponDef = {
 	name                    = "Machinegun",
 	weaponType              = "Cannon",
-	explosionGenerator    	= "custom:Bullet",
+	explosionGenerator    	= "custom:MG_Hit",
 	soundHit              	= [[MG_Hit]],
 	soundStart            	= [[MG_Fire]],
 	soundTrigger			= 1,

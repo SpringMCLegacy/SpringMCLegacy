@@ -84,6 +84,7 @@ local CL_Maddog = {
     customparams = {
 		hasturnbutton	= "1",
 		helptext		= "Armament: 2 x LRM-20, 2 x Large Pulse Laser, 2 x Medium Pulse Laser - Armor: 8.5 tons Ferro-Fibrous",
+		heatlimit		= "24",
     },
 }
 

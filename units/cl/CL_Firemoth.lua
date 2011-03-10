@@ -78,6 +78,7 @@ local CL_Firemoth = {
     customparams = {
 		hasturnbutton	= "1",
 		helptext		= "Armament: 2 x ER Medium Beam Laser, 1 x SRM-4, 1 x SRM-6 - Armor: 2 tons Ferro-Fibrous",
+		heatlimit		= "20",
     },
 }
 

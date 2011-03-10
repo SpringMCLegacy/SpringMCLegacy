@@ -8,7 +8,7 @@ local IS_Warhammer = {
 	radarDistance      	= 1500,
 		activateWhenBuilt   = true,
 		onoffable           = true,
-	maxDamage           = 16000,
+	maxDamage           = 21600,
 	mass                = 7000,
 	footprintX			= 3,
 	footprintZ 			= 3,
@@ -23,7 +23,7 @@ local IS_Warhammer = {
 --	trackType			= "Thick",--graphics file to use for the track decal, from \bitmaps\tracks\ folder
 --	trackWidth			= 20,--width to render the decal
 	buildCostEnergy     = 0,
-	buildCostMetal      = 21400,
+	buildCostMetal      = 27000,
 	buildTime           = 0,
 	upright				= true,
 	canMove				= true,
@@ -121,6 +121,7 @@ local IS_Warhammer = {
     customparams = {
 		hasturnbutton	= "1",
 		helptext		= "Armament: 2 x ER PPC, 4 x ER Medium Beam Laser, 2 x Small Pulse Laser, 2 x LRM-5 - Armor: 10 tons Standard",
+		heatlimit		= "30",
     },
 }
 

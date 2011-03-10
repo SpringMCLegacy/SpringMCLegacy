@@ -84,6 +84,7 @@ local IS_Locust = {
     customparams = {
 		hasturnbutton	= "1",
 		helptext		= "Armament: 1 x Medium Beam Laser, 2 x Medium Pulse Laser, 2 x Small Pulse Laser - Armor: 4 tons",
+		heatlimit		= "20",
     },
 }
 
