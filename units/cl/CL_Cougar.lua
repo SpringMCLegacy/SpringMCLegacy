@@ -80,6 +80,7 @@ local CL_Cougar = {
 		hasturnbutton	= "1",
 		helptext		= "Armament: 2 x Large Pulse Laser, 2 x SSRM-4 - Armor: 5.5 tons",
 		heatlimit		= "20",
+		torsoturnspeed	= "180",
     },
 }
 

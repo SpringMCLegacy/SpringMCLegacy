@@ -87,6 +87,7 @@ local CL_Warhawk = {
 		hasturnbutton	= "1",
 		helptext		= "Armament: 4 x ER Particle Cannon, 1 x ATM-9 - Armor: 13.5 tons Ferro-Fibrous",
 		heatlimit		= "40",
+		torsoturnspeed	= "100",
     },
 }
 

@@ -92,6 +92,8 @@ local IS_Catapult = {
     customparams = {
 		hasturnbutton	= "1",
 		helptext		= "Armament: 2 x Artemis-enhanced LRM-20, 4 x ER Medium Beam Laser - Armor: 13 tons Standard",
+		heatlimit		= "20",
+		torsoturnspeed	= "125",
     },
 }
 

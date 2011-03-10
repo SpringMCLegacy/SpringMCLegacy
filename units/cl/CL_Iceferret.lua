@@ -88,6 +88,7 @@ local CL_Iceferret = {
 		hasturnbutton	= "1",
 		helptext		= "Armament: 4 x Medium Pulse Laser, 1 x SRM-6 - Armor: 7.5 tons Ferro-Fibrous",
 		heatlimit		= "24",
+		torsoturnspeed	= "190",
     },
 }
 

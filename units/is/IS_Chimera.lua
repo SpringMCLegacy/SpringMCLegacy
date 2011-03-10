@@ -80,6 +80,7 @@ local IS_Chimera = {
 		hasturnbutton	= "1",
 		helptext		= "Armament: 1 x Large Pulse Laser, 2 x Medium Pulse Laser, 1 x MRM-20 - Armor: 7 tons",
 		heatlimit		= "20",
+		torsoturnspeed	= "170",
     },
 }
 

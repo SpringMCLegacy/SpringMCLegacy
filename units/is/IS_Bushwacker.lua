@@ -97,6 +97,7 @@ local IS_Bushwacker = {
 		hasturnbutton	= "1",
 		helptext		= "Armament: 1 x AC/10, 1 x ER Large Beam Laser, 2 x ER Small Beam Laser, 1 x MRM-10, 1 x LRM-5 - Armor: 9 tons Standard",
 		heatlimit		= "22",
+		torsoturnspeed	= "160",
     },
 }
 

@@ -128,6 +128,8 @@ local CL_Direwolf = {
     customparams = {
 		hasturnbutton	= "1",
 		helptext		= "Armament: 4 x ER Large Beam Laser, 4 x ER Medium Beam Laser, 2 x UAC/5, 1 x ATM-9 - Armor: 19 tons",
+		heatlimit		= "44",
+		torsoturnspeed	= "100",
     },
 }
 
