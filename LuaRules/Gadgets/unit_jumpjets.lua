@@ -9,7 +9,7 @@ function gadget:GetInfo()
     author    = "quantum",
     date      = "May 14, 2008",
     license   = "GNU GPL, v2 or later",
-    layer     = 0,
+    layer     = -2, --load before lusHelper
     enabled   = true  --  loaded by default?
   }
 end
@@ -97,7 +97,7 @@ local jumpDefs = {}
 for name, data in pairs(jumpDefNames) do
   jumpDefs[UnitDefNames[name].id] = data
 end
-
+GG.jumpDefs = jumpDefs
 
 local jumpCmdDesc = {
   id      = CMD_JUMP,

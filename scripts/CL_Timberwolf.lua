@@ -6,14 +6,11 @@ info = GG.lusHelper[unitDefID]
 -- the following have to be non-local for the walkscript include to find them
 rad = math.rad
 walking = false
+jumping = false
 
 -- includes
 include "smokeunit.lua"
 include ("walks/" .. unitDef.name .. "_walk.lua")
-
---piece defines
-local pelvis, torso = piece ("pelvis", "torso")
-local rupperarm, rlowerarm, lupperarm, llowerarm = piece ("rupperarm", "rlowerarm", "lupperarm", "llowerarm")
 
 -- Info from lusHelper gadget
 local heatLimit = info.heatLimit
@@ -21,20 +18,35 @@ local coolRate = info.coolRate
 local missileWeaponIDs = info.missileWeaponIDs
 local burstLengths = info.burstLengths
 local firingHeats = info.firingHeats
+local hasArms = info.arms
+
+--Turning/Movement Locals
+local TORSO_SPEED = info.torsoTurnSpeed
+local ELEVATION_SPEED = info.elevationSpeed
+local RESTORE_DELAY = Spring.UnitScript.GetLongestReloadTime(unitID) * 2
+
+local currLaunchPoint = 1
+local currHeatLevel = 0
+
+--piece defines
+local pelvis, torso = piece ("pelvis", "torso")
+
+local rlowerarm, llowerarm
+if hasArms then
+	rlowerarm = piece("rlowerarm")
+	llowerarm = piece("llowerarm")
+end
+
+local jets = {}
+if info.jumpjets then
+	for i = 1, 4 do
+		jets[i] = piece("jet" .. i)
+	end
+end
 
 local flares = {}
 local launchPoints = {}
 local currPoints = {}
-
-local currLaunchPoint = 1
-local currHeatLevel = 0
- 
---Turning/Movement Locals
--- TODO: Generalise from unitdef customParams
-local TORSO_SPEED = rad(125)
-local ELEVATION_SPEED = rad(165)
-local RESTORE_DELAY = Spring.UnitScript.GetLongestReloadTime(unitID) * 2
-
 for weaponID = 1, info.numWeapons do
 	if missileWeaponIDs[weaponID] then
 		launchPoints[weaponID] = {}
@@ -51,18 +63,38 @@ local function RestoreAfterDelay(unitID)
 	Sleep(RESTORE_DELAY)
 	Turn(torso, y_axis, 0, TORSO_SPEED)
 	
-	-- TODO: Generalise
-	Turn(llowerarm, x_axis, 0, ELEVATION_SPEED)
-	Turn(rlowerarm, x_axis, 0, ELEVATION_SPEED)
+	if hasArms then
+		Turn(llowerarm, x_axis, 0, ELEVATION_SPEED)
+		Turn(rlowerarm, x_axis, 0, ELEVATION_SPEED)
+	end
 end
 
 local function CoolOff()
 	while true do
 		currHeatLevel = currHeatLevel - coolRate
 		if currHeatLevel < 0 then currHeatLevel = 0 end
-		Spring.Echo(currHeatLevel)
+		--Spring.Echo(currHeatLevel)
 		Sleep(1000) -- cools once per second
 	end
+end
+
+function JumpFX()
+	while jumping do
+		local jumpJetTrail = SFX.CEG + info.numWeapons
+		for i = 1, #jets do
+			EmitSfx(jets[i], jumpJetTrail)
+		end
+		Sleep(50)
+	end
+end
+
+function beginJump()
+	jumping = true
+	StartThread(JumpFX)
+end
+
+function endJump()
+	jumping = false
 end
 
 function script.Create()
@@ -90,11 +122,13 @@ end
 function script.AimWeapon(weaponID, heading, pitch)
 	Signal(2 ^ weaponID) -- 2 'to the power of' weapon ID
 	SetSignalMask(2 ^ weaponID)
-	-- TODO: Generalise
-	if weaponID == 1 then
-		Turn(llowerarm, x_axis, -pitch, ELEVATION_SPEED)
-	elseif weaponID == 6 then
-		Turn(rlowerarm, x_axis, -pitch, ELEVATION_SPEED)
+
+	if hasArms then
+		if weaponID == 1 then
+			Turn(llowerarm, x_axis, -pitch, ELEVATION_SPEED)
+		elseif weaponID == 2 then
+			Turn(rlowerarm, x_axis, -pitch, ELEVATION_SPEED)
+		end
 	end
 
 	Turn(torso, y_axis, heading, TORSO_SPEED)
