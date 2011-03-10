@@ -111,7 +111,7 @@
 	}
 }
 
-[Laser_XSmall_Miss] {
+[Laser_Small_Miss] {
 	[ground]{
 		class = CBitmapMuzzleFlame;  
 		[properties]{

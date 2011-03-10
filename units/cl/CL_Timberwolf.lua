@@ -123,6 +123,7 @@ local CL_Timberwolf = {
     customparams = {
 		hasturnbutton	= "1",
 		helptext		= "Armament: 2 x ER Large Beam Laser, 2 x ER Medium Beam Laser, 2 x Small Pulse Laser, 2 x MG, 2 x ATM-12 - Armor: 12 tons Ferro-Fibrous",
+		heatlimit		= "34",
     },
 }
 

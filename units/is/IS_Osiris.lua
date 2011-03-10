@@ -79,6 +79,7 @@ local IS_Osiris = {
     customparams = {
 		hasturnbutton	= "1",
 		helptext		= "Armament: 3 x Medium Pulse Laser, 1 x SRM-6 - Armor: 4.5 tons Standard",
+		heatlimit		= "20",
     },
 }
 

@@ -90,6 +90,7 @@ local CL_Mistlynx = {
     customparams = {
 		hasturnbutton	= "1",
 		helptext		= "Armament: 1 x LRM-10, 1 x SSRM-4, 2 x MG - Armor: 3.5 tons Ferro-Fibrous",
+		heatlimit		= "20",
     },
 }
 

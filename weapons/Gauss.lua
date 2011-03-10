@@ -1,7 +1,7 @@
 weaponDef = {
 	name                    = "Gauss Rifle",
 	weaponType              = "Cannon",
-	explosionGenerator    	= "custom:AP_MEDIUM",
+	explosionGenerator    	= "custom:HE_SMALL",
 	cegTag					= "RailTrail",
 	soundHit              	= [[GEN_Explode1]],
 	soundStart            	= [[Gauss_Fire]],

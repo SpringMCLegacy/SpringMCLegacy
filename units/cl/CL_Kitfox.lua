@@ -80,6 +80,7 @@ local CL_Kitfox = {
     customparams = {
 		hasturnbutton	= "1",
 		helptext		= "Armament: 1 x ER Large Beam Laser, 1 x UAC/5, 1 x Small Pulse Laser, 1 x SRM-6 - Armor: 4 tons Ferro-Fibrous",
+		heatlimit		= "20",
     },
 }
 

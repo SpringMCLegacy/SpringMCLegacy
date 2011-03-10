@@ -93,6 +93,7 @@ local IS_Awesome = {
     customparams = {
 		hasturnbutton	= "1",
 		helptext		= "Armament: 4 x PPC, 1 x Medium Pulse Laser - Armor: 15.5 tons Standard",
+		heatlimit		= "38",
     },
 }
 
