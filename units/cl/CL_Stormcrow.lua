@@ -93,6 +93,7 @@ local CL_Stormcrow = {
 		hasturnbutton	= "1",
 		helptext		= "Armament: 1 x LRM-20, 4 x Medium Pulse Laser, 1 x SSRM-6 - Armor: 9.5 tons",
 		heatlimit		= "20",
+		torsoturnspeed	= "160",
     },
 }
 

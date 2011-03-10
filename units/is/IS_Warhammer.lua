@@ -122,6 +122,7 @@ local IS_Warhammer = {
 		hasturnbutton	= "1",
 		helptext		= "Armament: 2 x ER PPC, 4 x ER Medium Beam Laser, 2 x Small Pulse Laser, 2 x LRM-5 - Armor: 10 tons Standard",
 		heatlimit		= "30",
+		torsoturnspeed	= "120",
     },
 }
 

@@ -84,6 +84,8 @@ local IS_Wolfhound = {
     customparams = {
 		hasturnbutton	= "1",
 		helptext		= "Armament: 1 x Large Beam Laser, 4 x ER Medium Beam Laser - Armor: 7.5 tons Standard",
+		heatlimit		= "15",
+		torsoturnspeed	= "180",
     },
 }
 

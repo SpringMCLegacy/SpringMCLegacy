@@ -81,6 +81,7 @@ local IS_Raven = {
 		hasturnbutton	= "1",
 		helptext		= "Armament: 3 x Medium Pulse Laser, 1 x SRM-6, 1 x NARC Launcher - Armor: 4.5 tons Standard",
 		heatlimit		= "11",
+		torsoturnspeed	= "180",
     },
 }
 
