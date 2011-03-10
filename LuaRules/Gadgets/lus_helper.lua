@@ -25,8 +25,12 @@ local GetUnitPieceMap		= Spring.GetUnitPieceMap
 -- Variables
 
 function gadget:UnitCreated(unitID, unitDefID, teamID, builderID)
-	-- Parse Model Data
-	local pieceMap = GetUnitPieceMap(unitID)
+	local info = GG.lusHelper[unitDefID]
+	if not info.arms then
+		-- Parse Model Data
+		local pieceMap = GetUnitPieceMap(unitID)
+		info.arms = pieceMap["rlowerarm"] ~= nil
+	end
 end
 
 function gadget:GamePreload()
@@ -51,10 +55,13 @@ function gadget:GamePreload()
 				missileWeaponIDs[i] = true
 			end
 		end
+		info.jumpjets = GG.jumpDefs[unitDefID] ~= nil
 		-- UnitDef Level Info
 		info.heatLimit = (unitDef.customParams.heatlimit or 50) * 10
 		info.coolRate = info.heatLimit / 10 -- or a constant rate of 10?
 		info.numWeapons = #weapons
+		info.torsoTurnSpeed = math.rad(tonumber(unitDef.customParams.torsoturnspeed) or 125)
+		info.elevationSpeed = math.rad(tonumber(unitDef.customParams.torsoturnspeed) or math.deg(info.torsoTurnSpeed))
 		-- WeaponDef Level Info
 		info.missileWeaponIDs = missileWeaponIDs
 		info.burstLengths = burstLengths
