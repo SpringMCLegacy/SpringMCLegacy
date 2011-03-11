@@ -53,34 +53,34 @@ local CL_Direwolf = {
 				WeaponSlaveTo = 1,
 			},
 			[3] = {
-				name	= "CERMBL",
+				name	= "CERLBL",
 				mainDir = "0 0 1",
 				maxAngleDif = 270,
 				OnlyTargetCategory = "notbeacon",
 			},
 			[4] = {
-				name	= "CERMBL",
+				name	= "CERLBL",
 				mainDir = "0 0 1",
 				maxAngleDif = 270,
 				OnlyTargetCategory = "notbeacon",
 				WeaponSlaveTo = 1,
 			},
 			[5] = {
-				name	= "UAC5",
+				name	= "CERMBL",
 				mainDir = "0 0 1",
 				maxAngleDif = 270,
 				OnlyTargetCategory = "notbeacon",
 				WeaponSlaveTo = 1,
 			},
 			[6] = {
-				name	= "CERLBL",
+				name	= "CERMBL",
 				mainDir = "0 0 1",
 				maxAngleDif = 270,
 				OnlyTargetCategory = "notbeacon",
 				WeaponSlaveTo = 1,
 			},
 			[7] = {
-				name	= "CERLBL",
+				name	= "CERMBL",
 				mainDir = "0 0 1",
 				maxAngleDif = 270,
 				OnlyTargetCategory = "notbeacon",
@@ -94,7 +94,7 @@ local CL_Direwolf = {
 				WeaponSlaveTo = 1,
 			},
 			[9] = {
-				name	= "CERMBL",
+				name	= "UAC5",
 				mainDir = "0 0 1",
 				maxAngleDif = 270,
 				OnlyTargetCategory = "notbeacon",
@@ -118,13 +118,13 @@ local CL_Direwolf = {
 		
 	--Gets CEG effects from /gamedata/explosions folder
 
-	sfxtypes = {
+	--[[sfxtypes = {
 		explosiongenerators = {
 		"custom:MISSILE_MUZZLEFLASH",
 		"custom:AC5_MUZZLEFLASH",
 		"custom:LASER_MUZZLEFLASH",
 		},
-	},
+	},]]
     customparams = {
 		hasturnbutton	= "1",
 		helptext		= "Armament: 4 x ER Large Beam Laser, 4 x ER Medium Beam Laser, 2 x UAC/5, 1 x ATM-9 - Armor: 19 tons",
