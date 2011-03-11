@@ -2,7 +2,7 @@ local CL_Nova = {
 	name              	= "Nova (Black Hawk)",
 	description         = "Medium Strike Mech",
 	objectName        	= "CL_Nova.s3o",
-	script				= "CL_Nova.lua",
+	script				= "Mech.lua",
 	category 			= "mech ground notbeacon",
 	sightDistance       = 1000,
 	radarDistance      	= 1500,
@@ -124,12 +124,12 @@ local CL_Nova = {
 		
 	--Gets CEG effects from /gamedata/explosions folder
 
-	sfxtypes = {
+	--[[sfxtypes = {
 		explosiongenerators = {
 		"custom:LASER_MUZZLEFLASH",
 		"custom:JumpJetTrail",
 		},
-	},
+	},]]
     customparams = {
 		hasturnbutton	= "1",
 		helptext		= "Armament: 12 x ER Medium Beam Laser - Armor: 10 tons",
