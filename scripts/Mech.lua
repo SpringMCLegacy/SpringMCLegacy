@@ -81,7 +81,7 @@ end
 
 function JumpFX()
 	while jumping do
-		local jumpJetTrail = SFX.CEG + info.numWeapons
+		local jumpJetTrail = SFX.CEG
 		for i = 1, #jets do
 			EmitSfx(jets[i], jumpJetTrail)
 		end
@@ -141,7 +141,7 @@ end
 
 function script.FireWeapon(weaponID)
 	if burstLengths[weaponID] == 1 then
-		EmitSfx(flares[weaponID], SFX.CEG + weaponID - 1)
+		EmitSfx(flares[weaponID], SFX.CEG + weaponID)
 	end
 	currHeatLevel = currHeatLevel + firingHeats[weaponID]
 	if currHeatLevel > heatLimit then 
@@ -151,13 +151,13 @@ end
 
 function script.Shot(weaponID)
 	if missileWeaponIDs[weaponID] then
-		EmitSfx(launchPoints[weaponID][currPoints[weaponID]], SFX.CEG + weaponID - 1)
+		EmitSfx(launchPoints[weaponID][currPoints[weaponID]], SFX.CEG + weaponID)
         currPoints[weaponID] = currPoints[weaponID] + 1
         if currPoints[weaponID] > burstLengths[weaponID] then 
 			currPoints[weaponID] = 1
         end
 	elseif burstLengths[weaponID] > 1 then
-		EmitSfx(flares[weaponID], SFX.CEG + weaponID - 1)
+		EmitSfx(flares[weaponID], SFX.CEG + weaponID)
 	end
 end
 

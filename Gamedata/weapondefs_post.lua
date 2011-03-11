@@ -25,6 +25,7 @@ for unitName, ud in pairs(UnitDefs) do
 	if weapons then
 		if not ud.sfxtypes then
 			ud.sfxtypes = { explosiongenerators = {} }
+			table.insert(ud.sfxtypes.explosiongenerators, "custom:JumpJetTrail")
 		end
 		for weaponID = 1, #weapons do
 			local cegFlare = cegCache[string.lower(weapons[weaponID].name)]
@@ -35,7 +36,6 @@ for unitName, ud in pairs(UnitDefs) do
 				--end
 			end
 		end
-		table.insert(ud.sfxtypes.explosiongenerators, "custom:JumpJetTrail")
 		Spring.Echo("UNIT: " .. unitName)
 		for _, i in pairs(ud.sfxtypes.explosiongenerators) do
 			Spring.Echo(i)
