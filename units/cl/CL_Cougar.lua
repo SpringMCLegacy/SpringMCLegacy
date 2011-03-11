@@ -2,7 +2,7 @@ local CL_Cougar = {
 	name              	= "Cougar",
 	description         = "Light Brawler Mech",
 	objectName        	= "CL_Cougar.s3o",
-	script				= "CL_Cougar.lua",
+	script				= "Mech.lua",
 	category 			= "mech ground notbeacon",
 	sightDistance       = 1000,
 	radarDistance      	= 1500,
@@ -70,12 +70,12 @@ local CL_Cougar = {
 		
 	--Gets CEG effects from /gamedata/explosions folder
 
-	sfxtypes = {
+	--[[sfxtypes = {
 		explosiongenerators = {
 		"custom:MISSILE_MUZZLEFLASH",
 		"custom:LASER_MUZZLEFLASH",
 		},
-	},
+	},]]
     customparams = {
 		hasturnbutton	= "1",
 		helptext		= "Armament: 2 x Large Pulse Laser, 2 x SSRM-4 - Armor: 5.5 tons",
