@@ -54,6 +54,9 @@ function gadget:GamePreload()
 			if weaponDef.type == "MissileLauncher" then
 				missileWeaponIDs[i] = true
 			end
+			if weaponDef.isShield then
+				info.amsID = i
+			end
 		end
 		info.jumpjets = GG.jumpDefs[unitDefID] ~= nil
 		-- UnitDef Level Info

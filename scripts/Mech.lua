@@ -19,6 +19,7 @@ local missileWeaponIDs = info.missileWeaponIDs
 local burstLengths = info.burstLengths
 local firingHeats = info.firingHeats
 local hasArms = info.arms
+local amsID = info.amsID
 
 --Turning/Movement Locals
 local TORSO_SPEED = info.torsoTurnSpeed
@@ -167,6 +168,8 @@ end
 function script.QueryWeapon(weaponID) 
 	if missileWeaponIDs[weaponID] then
 		return launchPoints[weaponID][currPoints[weaponID]]
+	elseif weaponID == amsID then
+		return torso
 	else
 		return flares[weaponID]
 	end
