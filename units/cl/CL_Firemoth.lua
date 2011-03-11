@@ -2,7 +2,7 @@ local CL_Firemoth = {
 	name              	= "Fire Moth (Dasher)",
 	description         = "Light Skirmish Mech",
 	objectName        	= "CL_Firemoth.s3o",
-	script				= "CL_Firemoth.lua",
+	script				= "Mech.lua",
 	category 			= "mech ground notbeacon",
 	sightDistance       = 1000,
 	radarDistance      	= 1500,
@@ -69,17 +69,18 @@ local CL_Firemoth = {
 		
 	--Gets CEG effects from /gamedata/explosions folder
 
-	sfxtypes = {
+	--[[sfxtypes = {
 		explosiongenerators = {
 		"custom:MISSILE_MUZZLEFLASH",
 		"custom:LASER_MUZZLEFLASH",
 		},
-	},
+	},]]
     customparams = {
 		hasturnbutton	= "1",
 		helptext		= "Armament: 2 x ER Medium Beam Laser, 1 x SRM-4, 1 x SRM-6 - Armor: 2 tons Ferro-Fibrous",
 		heatlimit		= "20",
 		torsoturnspeed	= "200",
+		rightarmid 		= "4",
     },
 }
 
