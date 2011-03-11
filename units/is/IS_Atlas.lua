@@ -2,7 +2,7 @@ local IS_Atlas = {
 	name              	= "Atlas",
 	description         = "Assault-class Brawler Mech",
 	objectName        	= "IS_Atlas.s3o",
-	script				= "IS_Atlas.lua",
+	script				= "Mech.lua",
 	category 			= "mech ground notbeacon",
 	sightDistance       = 1000,
 	radarDistance      	= 1500,
@@ -39,7 +39,7 @@ local IS_Atlas = {
 		--Makes unit use weapon from /weapons folder
 		weapons 		= {	
 			[1] = {
-				name	= "AC20",
+				name	= "LPL",
 				mainDir = "0 0 1",
 				maxAngleDif = 270,
 				OnlyTargetCategory = "notbeacon",
@@ -52,7 +52,7 @@ local IS_Atlas = {
 				WeaponSlaveTo = 1,
 			},
 			[3] = {
-				name	= "LPL",
+				name	= "AC20",
 				mainDir = "0 0 1",
 				maxAngleDif = 270,
 				OnlyTargetCategory = "notbeacon",
@@ -97,13 +97,13 @@ local IS_Atlas = {
 		
 	--Gets CEG effects from /gamedata/explosions folder
 
-	sfxtypes = {
+	--[[sfxtypes = {
 		explosiongenerators = {
 		"custom:AC20_MUZZLEFLASH",
 		"custom:MISSILE_MUZZLEFLASH",
 		"custom:LASER_MUZZLEFLASH",
 		},
-	},
+	},]]
     customparams = {
 		hasturnbutton	= "1",
 		helptext		= "Armament: 1 x AC/20, 2 x Large Pulse Laser, 2 x Medium Beam Laser, 2 x MRM-10, 1 x SSRM-6 - Armor: 19 tons Standard",

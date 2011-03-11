@@ -2,7 +2,7 @@ local IS_Awesome = {
 	name              	= "Awesome",
 	description         = "Assault-class Strike Mech",
 	objectName        	= "IS_Awesome.s3o",
-	script				= "IS_Awesome.lua",
+	script				= "Mech.lua",
 	category 			= "mech ground notbeacon",
 	sightDistance       = 1000,
 	radarDistance      	= 1500,
@@ -77,22 +77,19 @@ local IS_Awesome = {
 			[6] = {
 				name	= "AMS",
 			},
-			[7] = {
-				name	= "AMS",
-			},
 		},
 		
 	--Gets CEG effects from /gamedata/explosions folder
 
-	sfxtypes = {
+	--[[sfxtypes = {
 		explosiongenerators = {
 		"custom:PPC_MUZZLEFLASH",
 		"custom:LASER_MUZZLEFLASH",
 		},
-	},
+	},]]
     customparams = {
 		hasturnbutton	= "1",
-		helptext		= "Armament: 4 x PPC, 1 x Medium Pulse Laser - Armor: 15.5 tons Standard",
+		helptext		= "Armament: 4 x PPC, 1 x Medium Pulse Laser, Anti-Missile System - Armor: 15.5 tons Standard",
 		heatlimit		= "38",
 		torsoturnspeed	= "100",
     },

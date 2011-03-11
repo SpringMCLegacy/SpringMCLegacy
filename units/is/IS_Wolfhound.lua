@@ -2,7 +2,7 @@ local IS_Wolfhound = {
 	name              	= "Wolfhound",
 	description         = "Light Strike Mech",
 	objectName        	= "IS_Wolfhound.s3o",
-	script				= "IS_Wolfhound.lua",
+	script				= "Mech.lua",
 	category 			= "mech ground notbeacon",
 	sightDistance       = 1500,
 	radarDistance      	= 2000,
@@ -39,34 +39,34 @@ local IS_Wolfhound = {
 		--Makes unit use weapon from /weapons folder
 		weapons 		= {	
 			[1] = {
-				name	= "LBL",
+				name	= "MBL",
 				mainDir = "0 0 1",
 				maxAngleDif = 270,
 				OnlyTargetCategory = "notbeacon",
 			},
 			[2] = {
-				name	= "ERMBL",
+				name	= "LBL",
 				mainDir = "0 0 1",
 				maxAngleDif = 270,
 				OnlyTargetCategory = "notbeacon",
 				WeaponSlaveTo = 1,
 			},
 			[3] = {
-				name	= "ERMBL",
+				name	= "MBL",
 				mainDir = "0 0 1",
 				maxAngleDif = 270,
 				OnlyTargetCategory = "notbeacon",
 				WeaponSlaveTo = 1,
 			},
 			[4] = {
-				name	= "ERMBL",
+				name	= "MBL",
 				mainDir = "0 0 1",
 				maxAngleDif = 270,
 				OnlyTargetCategory = "notbeacon",
 				WeaponSlaveTo = 1,
 			},
 			[5] = {
-				name	= "ERMBL",
+				name	= "MBL",
 				mainDir = "0 0 1",
 				maxAngleDif = 270,
 				OnlyTargetCategory = "notbeacon",
@@ -76,11 +76,11 @@ local IS_Wolfhound = {
 		
 	--Gets CEG effects from /gamedata/explosions folder
 
-	sfxtypes = {
+	--[[sfxtypes = {
 		explosiongenerators = {
 		"custom:LASER_MUZZLEFLASH",
 		},
-	},
+	},]]
     customparams = {
 		hasturnbutton	= "1",
 		helptext		= "Armament: 1 x Large Beam Laser, 4 x ER Medium Beam Laser - Armor: 7.5 tons Standard",

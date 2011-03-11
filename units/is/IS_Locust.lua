@@ -2,7 +2,7 @@ local IS_Locust = {
 	name              	= "Locust",
 	description         = "Light Scout Mech",
 	objectName        	= "IS_Locust.s3o",
-	script				= "IS_Locust.lua",
+	script				= "Mech.lua",
 	category 			= "mech ground notbeacon",
 	sightDistance       = 1000,
 	radarDistance      	= 1500,
@@ -39,7 +39,7 @@ local IS_Locust = {
 		--Makes unit use weapon from /weapons folder
 		weapons 		= {	
 			[1] = {
-				name	= "MBL",
+				name	= "MPL",
 				mainDir = "0 0 1",
 				maxAngleDif = 270,
 				OnlyTargetCategory = "notbeacon",
@@ -59,14 +59,14 @@ local IS_Locust = {
 				WeaponSlaveTo = 1,
 			},
 			[4] = {
-				name	= "MPL",
+				name	= "SPL",
 				mainDir = "0 0 1",
 				maxAngleDif = 270,
 				OnlyTargetCategory = "notbeacon",
 				WeaponSlaveTo = 1,
 			},
 			[5] = {
-				name	= "SPL",
+				name	= "MBL",
 				mainDir = "0 0 1",
 				maxAngleDif = 270,
 				OnlyTargetCategory = "notbeacon",
@@ -76,11 +76,11 @@ local IS_Locust = {
 		
 	--Gets CEG effects from /gamedata/explosions folder
 
-	sfxtypes = {
+	--[[sfxtypes = {
 		explosiongenerators = {
 		"custom:LASER_MUZZLEFLASH",
 		},
-	},
+	},]]
     customparams = {
 		hasturnbutton	= "1",
 		helptext		= "Armament: 1 x Medium Beam Laser, 2 x Medium Pulse Laser, 2 x Small Pulse Laser - Armor: 4 tons",
