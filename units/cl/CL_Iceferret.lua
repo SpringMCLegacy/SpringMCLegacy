@@ -2,7 +2,7 @@ local CL_Iceferret = {
 	name              	= "Ice Ferret (Fenris)",
 	description         = "Medium Strike Mech",
 	objectName        	= "CL_Iceferret.s3o",
-	script				= "CL_Iceferret.lua",
+	script				= "Mech.lua",
 	category 			= "mech ground notbeacon",
 	sightDistance       = 1500,
 	radarDistance      	= 2000,
@@ -78,12 +78,12 @@ local CL_Iceferret = {
 		
 	--Gets CEG effects from /gamedata/explosions folder
 
-	sfxtypes = {
+	--[[sfxtypes = {
 		explosiongenerators = {
 		"custom:MISSILE_MUZZLEFLASH",
 		"custom:LASER_MUZZLEFLASH",
 		},
-	},
+	},]]
     customparams = {
 		hasturnbutton	= "1",
 		helptext		= "Armament: 4 x Medium Pulse Laser, 1 x SRM-6 - Armor: 7.5 tons Ferro-Fibrous",
