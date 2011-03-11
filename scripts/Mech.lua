@@ -143,6 +143,9 @@ function script.FireWeapon(weaponID)
 		EmitSfx(flares[weaponID], SFX.CEG + weaponID - 1)
 	end
 	currHeatLevel = currHeatLevel + firingHeats[weaponID]
+	if currHeatLevel > heatLimit then 
+		Spring.Echo("Mech " .. unitID .. ": damn brah its gettin hot in hurr")
+	end
 end
 
 function script.Shot(weaponID)
