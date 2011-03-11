@@ -2,7 +2,7 @@ local IS_Bushwacker = {
 	name              	= "Bushwacker",
 	description         = "Medium Strike Mech",
 	objectName        	= "IS_Bushwacker.s3o",
-	script				= "IS_Bushwacker.lua",
+	script				= "Mech.lua",
 	category 			= "mech ground notbeacon",
 	sightDistance       = 1000,
 	radarDistance      	= 1500,
@@ -86,18 +86,19 @@ local IS_Bushwacker = {
 		
 	--Gets CEG effects from /gamedata/explosions folder
 
-	sfxtypes = {
+	--[[sfxtypes = {
 		explosiongenerators = {
 		"custom:AC10_MUZZLEFLASH",
 		"custom:MISSILE_MUZZLEFLASH",
 		"custom:LASER_MUZZLEFLASH",
 		},
-	},
+	},]]
     customparams = {
 		hasturnbutton	= "1",
 		helptext		= "Armament: 1 x AC/10, 1 x ER Large Beam Laser, 2 x ER Small Beam Laser, 1 x MRM-10, 1 x LRM-5 - Armor: 9 tons Standard",
 		heatlimit		= "22",
 		torsoturnspeed	= "160",
+		rightarmid 		= "6",
     },
 }
 
