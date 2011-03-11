@@ -65,6 +65,8 @@ function gadget:GamePreload()
 		info.numWeapons = #weapons
 		info.torsoTurnSpeed = math.rad(tonumber(unitDef.customParams.torsoturnspeed) or 125)
 		info.elevationSpeed = math.rad(tonumber(unitDef.customParams.torsoturnspeed) or math.deg(info.torsoTurnSpeed))
+		info.leftArmID = tonumber(unitDef.customParams.leftarmid) or 1
+		info.rightArmID = tonumber(unitDef.customParams.rightarmid) or 2
 		-- WeaponDef Level Info
 		info.missileWeaponIDs = missileWeaponIDs
 		info.burstLengths = burstLengths
