@@ -2,7 +2,7 @@ local CL_Kitfox = {
 	name              	= "Kit Fox (Uller)",
 	description         = "Light Strike Mech",
 	objectName        	= "CL_Kitfox.s3o",
-	script				= "CL_Kitfox.lua",
+	script				= "Mech.lua",
 	category 			= "mech ground notbeacon",
 	sightDistance       = 1000,
 	radarDistance      	= 1500,
@@ -60,7 +60,7 @@ local CL_Kitfox = {
 				WeaponSlaveTo = 1,
 			},
 			[4] = {
-				name	= "SRM6",
+				name	= "ATM6",
 				--mainDir = "0 0 1",
 				--maxAngleDif = 270,
 				OnlyTargetCategory = "notbeacon",
@@ -70,13 +70,13 @@ local CL_Kitfox = {
 		
 	--Gets CEG effects from /gamedata/explosions folder
 
-	sfxtypes = {
+	--[[sfxtypes = {
 		explosiongenerators = {
 		"custom:MISSILE_MUZZLEFLASH",
 		"custom:AC5_MUZZLEFLASH",
 		"custom:LASER_MUZZLEFLASH",
 		},
-	},
+	},]]
     customparams = {
 		hasturnbutton	= "1",
 		helptext		= "Armament: 1 x ER Large Beam Laser, 1 x UAC/5, 1 x Small Pulse Laser, 1 x SRM-6 - Armor: 4 tons Ferro-Fibrous",

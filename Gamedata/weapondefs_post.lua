@@ -36,10 +36,10 @@ for unitName, ud in pairs(UnitDefs) do
 			end
 		end
 		table.insert(ud.sfxtypes.explosiongenerators, "custom:JumpJetTrail")
-		--[[Spring.Echo("UNIT: " .. unitName)
+		Spring.Echo("UNIT: " .. unitName)
 		for _, i in pairs(ud.sfxtypes.explosiongenerators) do
 			Spring.Echo(i)
 		end
-		Spring.Echo("~~~~~~") --]]
+		Spring.Echo("~~~~~~")
 	end
 end
