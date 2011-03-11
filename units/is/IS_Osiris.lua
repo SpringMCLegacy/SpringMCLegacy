@@ -2,7 +2,7 @@ local IS_Osiris = {
 	name              	= "Osiris",
 	description         = "Light Skirmish Mech",
 	objectName        	= "IS_Osiris.s3o",
-	script				= "IS_Osiris.lua",
+	script				= "Mech.lua",
 	category 			= "mech ground notbeacon",
 	sightDistance       = 1000,
 	radarDistance      	= 1500,
@@ -69,18 +69,19 @@ local IS_Osiris = {
 		
 	--Gets CEG effects from /gamedata/explosions folder
 
-	sfxtypes = {
+	--[[sfxtypes = {
 		explosiongenerators = {
 		"custom:MISSILE_MUZZLEFLASH",
 		"custom:LASER_MUZZLEFLASH",
 		"custom:JumpJetTrail",
 		},
-	},
+	},]]
     customparams = {
 		hasturnbutton	= "1",
 		helptext		= "Armament: 3 x Medium Pulse Laser, 1 x SRM-6 - Armor: 4.5 tons Standard",
 		heatlimit		= "20",
 		torsoturnspeed	= "190",
+		rightarmid 		= "4",
     },
 }
 

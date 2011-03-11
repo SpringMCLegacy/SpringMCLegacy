@@ -2,7 +2,7 @@ local IS_Raven = {
 	name              	= "Raven",
 	description         = "Light ECM Scout Mech",
 	objectName        	= "IS_Raven.s3o",
-	script				= "IS_Raven.lua",
+	script				= "Mech.lua",
 	category 			= "mech ground notbeacon",
 	sightDistance       = 1500,
 	radarDistance      	= 2000,
@@ -71,17 +71,18 @@ local IS_Raven = {
 		
 	--Gets CEG effects from /gamedata/explosions folder
 
-	sfxtypes = {
+	--[[sfxtypes = {
 		explosiongenerators = {
 		"custom:MISSILE_MUZZLEFLASH",
 		"custom:LASER_MUZZLEFLASH",
 		},
-	},
+	},]]
     customparams = {
 		hasturnbutton	= "1",
 		helptext		= "Armament: 3 x Medium Pulse Laser, 1 x SRM-6, 1 x NARC Launcher - Armor: 4.5 tons Standard",
 		heatlimit		= "11",
 		torsoturnspeed	= "180",
+		rightarmid 		= "4",
     },
 }
 
