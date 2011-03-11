@@ -19,6 +19,8 @@ local missileWeaponIDs = info.missileWeaponIDs
 local burstLengths = info.burstLengths
 local firingHeats = info.firingHeats
 local hasArms = info.arms
+local leftArmID = info.leftArmID
+local rightArmID = info.rightArmID
 local amsID = info.amsID
 
 --Turning/Movement Locals
@@ -126,9 +128,9 @@ function script.AimWeapon(weaponID, heading, pitch)
 
 	if hasArms then
 		 -- NB: Currently assumes first two weapons aim the arms
-		if weaponID == 1 then
+		if weaponID == leftArmID then
 			Turn(llowerarm, x_axis, -pitch, ELEVATION_SPEED)
-		elseif weaponID == 2 then
+		elseif weaponID == rightArmID then
 			Turn(rlowerarm, x_axis, -pitch, ELEVATION_SPEED)
 		end
 	end
