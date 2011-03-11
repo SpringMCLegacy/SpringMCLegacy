@@ -3,7 +3,7 @@
 local lupperleg, llowerleg, rupperleg, rlowerleg, rfronttoe, rbacktoe, lfronttoe, lbacktoe = piece ("lupperleg", "llowerleg", "rupperleg", "rlowerleg", "rfronttoe", "rbacktoe", "lfronttoe", "lbacktoe")
 
 --Turning/Movement Locals
-local LEG_SPEED = rad(700)
+local LEG_SPEED = rad(750)
 
 -- Walk script
 function MotionControl()

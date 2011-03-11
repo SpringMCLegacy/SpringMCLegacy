@@ -2,7 +2,7 @@ local IS_Chimera = {
 	name              	= "Chimera",
 	description         = "Medium Skirmish Mech",
 	objectName        	= "IS_Chimera.s3o",
-	script				= "IS_Chimera.lua",
+	script				= "Mech.lua",
 	category 			= "mech ground notbeacon",
 	sightDistance       = 1000,
 	radarDistance      	= 1500,
@@ -39,13 +39,13 @@ local IS_Chimera = {
 		--Makes unit use weapon from /weapons folder
 		weapons 		= {	
 			[1] = {
-				name	= "LPL",
+				name	= "MPL",
 				mainDir = "0 0 1",
 				maxAngleDif = 270,
 				OnlyTargetCategory = "notbeacon",
 			},
 			[2] = {
-				name	= "MPL",
+				name	= "LPL",
 				mainDir = "0 0 1",
 				maxAngleDif = 270,
 				OnlyTargetCategory = "notbeacon",
@@ -69,13 +69,13 @@ local IS_Chimera = {
 		
 	--Gets CEG effects from /gamedata/explosions folder
 
-	sfxtypes = {
+	--[[sfxtypes = {
 		explosiongenerators = {
 		"custom:MISSILE_MUZZLEFLASH",
 		"custom:LASER_MUZZLEFLASH",
 		"custom:JumpJetTrail",
 		},
-	},
+	},]]
     customparams = {
 		hasturnbutton	= "1",
 		helptext		= "Armament: 1 x Large Pulse Laser, 2 x Medium Pulse Laser, 1 x MRM-20 - Armor: 7 tons",

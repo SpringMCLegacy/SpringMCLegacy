@@ -2,7 +2,7 @@ local CL_Warhawk = {
 	name              	= "War Hawk (Masakari)",
 	description         = "Assault-class Sniper Mech",
 	objectName        	= "CL_Warhawk.s3o",
-	script				= "CL_Warhawk.lua",
+	script				= "Mech.lua",
 	category 			= "mech ground notbeacon",
 	sightDistance       = 1500,
 	radarDistance      	= 2000,
@@ -77,12 +77,12 @@ local CL_Warhawk = {
 		
 	--Gets CEG effects from /gamedata/explosions folder
 
-	sfxtypes = {
+	--[[sfxtypes = {
 		explosiongenerators = {
 		"custom:MISSILE_MUZZLEFLASH",
 		"custom:PPC_MUZZLEFLASH",
 		},
-	},
+	},]]
     customparams = {
 		hasturnbutton	= "1",
 		helptext		= "Armament: 4 x ER Particle Cannon, 1 x ATM-9 - Armor: 13.5 tons Ferro-Fibrous",
