@@ -51,7 +51,7 @@ function gadget:GamePreload()
 			local weaponDef = WeaponDefs[weaponInfo.weaponDef]
 			burstLengths[i] = weaponDef.salvoSize
 			firingHeats[i] = weaponDef.customParams.heatgenerated or 0
-			if weaponDef.type == "MissileLauncher" then
+			if weaponDef.type == "MissileLauncher" and burstLengths[i] > 1 then
 				missileWeaponIDs[i] = true
 			end
 			if weaponDef.isShield then
