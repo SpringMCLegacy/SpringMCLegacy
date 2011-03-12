@@ -2,7 +2,7 @@ local IS_Mauler = {
 	name              	= "Mauler",
 	description         = "Assault-class Sniper Mech",
 	objectName        	= "IS_Mauler.s3o",
-	script				= "IS_Mauler.lua",
+	script				= "Mech.lua",
 	category 			= "mech ground notbeacon",
 	sightDistance       = 1000,
 	radarDistance      	= 1500,
@@ -39,55 +39,55 @@ local IS_Mauler = {
 		--Makes unit use weapon from /weapons folder
 		weapons 		= {	
 			[1] = {
-				name	= "LBL",
+				name	= "ERLBL",
 				mainDir = "0 0 1",
 				maxAngleDif = 270,
 				OnlyTargetCategory = "notbeacon",
 			},
 			[2] = {
-				name	= "LBL",
+				name	= "ERLBL",
 				mainDir = "0 0 1",
 				maxAngleDif = 270,
 				OnlyTargetCategory = "notbeacon",
 				WeaponSlaveTo = 1,
 			},
 			[3] = {
-				name	= "LRM15",
+				name	= "UAC2",
 				mainDir = "0 0 1",
 				maxAngleDif = 270,
 				OnlyTargetCategory = "notbeacon",
 				WeaponSlaveTo = 1,
 			},
 			[4] = {
-				name	= "LRM15",
+				name	= "UAC5",
 				mainDir = "0 0 1",
 				maxAngleDif = 270,
 				OnlyTargetCategory = "notbeacon",
 				WeaponSlaveTo = 1,
 			},
 			[5] = {
-				name	= "RAC2",
+				name	= "UAC2",
 				mainDir = "0 0 1",
 				maxAngleDif = 270,
 				OnlyTargetCategory = "notbeacon",
 				WeaponSlaveTo = 1,
 			},
 			[6] = {
-				name	= "ERMBL",
+				name	= "UAC5",
 				mainDir = "0 0 1",
 				maxAngleDif = 270,
 				OnlyTargetCategory = "notbeacon",
 				WeaponSlaveTo = 1,
 			},
 			[7] = {
-				name	= "RAC2",
+				name	= "LRM15",
 				mainDir = "0 0 1",
 				maxAngleDif = 270,
 				OnlyTargetCategory = "notbeacon",
 				WeaponSlaveTo = 1,
 			},
 			[8] = {
-				name	= "ERMBL",
+				name	= "LRM15",
 				mainDir = "0 0 1",
 				maxAngleDif = 270,
 				OnlyTargetCategory = "notbeacon",
@@ -97,16 +97,16 @@ local IS_Mauler = {
 		
 	--Gets CEG effects from /gamedata/explosions folder
 
-	sfxtypes = {
+	--[[sfxtypes = {
 		explosiongenerators = {
 		"custom:MISSILE_MUZZLEFLASH",
 		"custom:AC2_MUZZLEFLASH",
 		"custom:LASER_MUZZLEFLASH",
 		},
-	},
+	},]]
     customparams = {
 		hasturnbutton	= "1",
-		helptext		= "Armament: 2 x Large Beam Laser, 2 x ER Medium Beam Laser 2 x Autocannon/2, 2 x LRM-15 - Armor: 11.5 tons Standard",
+		helptext		= "Armament: 2 x Large Beam Laser, 2 x Autocannon/5, 2 x Autocannon/2, 2 x LRM-15 - Armor: 11.5 tons Standard",
 		heatlimit		= "22",
 		torsoturnspeed	= "120",
     },
