@@ -39,13 +39,13 @@ local IS_Warhammer = {
 		--Makes unit use weapon from /weapons folder
 		weapons 		= {	
 			[1] = {
-				name	= "ERPPC",
+				name	= "PPC",
 				mainDir = "0 0 1",
 				maxAngleDif = 270,
 				OnlyTargetCategory = "notbeacon",
 			},
 			[2] = {
-				name	= "ERPPC",
+				name	= "PPC",
 				mainDir = "0 0 1",
 				maxAngleDif = 270,
 				OnlyTargetCategory = "notbeacon",
@@ -94,14 +94,7 @@ local IS_Warhammer = {
 				WeaponSlaveTo = 1,
 			},
 			[9] = {
-				name	= "LRM5",
-				mainDir = "0 0 1",
-				maxAngleDif = 270,
-				OnlyTargetCategory = "notbeacon",
-				WeaponSlaveTo = 1,
-			},
-			[10] = {
-				name	= "LRM5",
+				name	= "LRM10",
 				mainDir = "0 0 1",
 				maxAngleDif = 270,
 				OnlyTargetCategory = "notbeacon",
