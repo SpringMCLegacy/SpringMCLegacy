@@ -3,6 +3,7 @@ local CL_Cougar = {
 	description         = "Light Brawler Mech",
 	objectName        	= "CL_Cougar.s3o",
 	script				= "Mech.lua",
+	corpse				= "CL_Cougar_X",
 	category 			= "mech ground notbeacon",
 	sightDistance       = 1000,
 	radarDistance      	= 1500,
@@ -83,5 +84,4 @@ local CL_Cougar = {
 		torsoturnspeed	= "180",
     },
 }
-
 return lowerkeys({ ["CL_Cougar"] = CL_Cougar })
