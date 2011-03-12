@@ -3,6 +3,7 @@ local CL_Warhawk = {
 	description         = "Assault-class Sniper Mech",
 	objectName        	= "CL_Warhawk.s3o",
 	script				= "Mech.lua",
+	corpse				= "CL_Warhawk_X",
 	category 			= "mech ground notbeacon",
 	sightDistance       = 1500,
 	radarDistance      	= 2000,

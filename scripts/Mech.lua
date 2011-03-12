@@ -197,4 +197,5 @@ function script.Killed(recentDamage, maxHealth)
 	--	Explode(body, math.bit_or({SFX.FALL, SFX.SMOKE, SFX.FIRE, SFX.EXPLODE_ON_HIT, SFX.BITMAP1}))
 	--	return 3
 	--end
+	return 1
 end

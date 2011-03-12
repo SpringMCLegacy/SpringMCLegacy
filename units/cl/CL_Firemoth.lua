@@ -3,6 +3,7 @@ local CL_Firemoth = {
 	description         = "Light Skirmish Mech",
 	objectName        	= "CL_Firemoth.s3o",
 	script				= "Mech.lua",
+	corpse				= "CL_Firemoth_X",
 	category 			= "mech ground notbeacon",
 	sightDistance       = 1000,
 	radarDistance      	= 1500,

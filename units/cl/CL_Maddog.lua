@@ -3,6 +3,7 @@ local CL_Maddog = {
 	description         = "Heavy Missile Support Mech",
 	objectName        	= "CL_Maddog.s3o",
 	script				= "CL_Maddog.lua",
+	corpse				= "CL_Maddog_X",
 	category 			= "mech ground notbeacon",
 	sightDistance       = 1000,
 	radarDistance      	= 1500,

@@ -3,6 +3,7 @@ local CL_Kitfox = {
 	description         = "Light Strike Mech",
 	objectName        	= "CL_Kitfox.s3o",
 	script				= "Mech.lua",
+	corpse				= "CL_Kitfox_X",
 	category 			= "mech ground notbeacon",
 	sightDistance       = 1000,
 	radarDistance      	= 1500,

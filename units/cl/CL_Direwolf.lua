@@ -3,6 +3,7 @@ local CL_Direwolf = {
 	description         = "Assault-class Strike Mech",
 	objectName        	= "CL_Direwolf.s3o",
 	script				= "Mech.lua",
+	corpse				= "CL_Direwolf_X",
 	category 			= "mech ground notbeacon",
 	sightDistance       = 1000,
 	radarDistance      	= 1500,
