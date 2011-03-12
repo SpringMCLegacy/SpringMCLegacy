@@ -56,9 +56,11 @@ for weaponID = 1, info.numWeapons do
 		currPoints[weaponID] = 1
 		for i = 1, burstLengths[weaponID] do
 			launchPoints[weaponID][i] = piece("launchpoint_" .. weaponID .. "_" .. i)
+			--Hide(launchPoints[weaponID][i])
 		end	
 	elseif weaponID ~= amsID then
 		flares[weaponID] = piece ("flare" .. weaponID) -- NB: Currently relies on missiles being the final weapons!
+		--Hide(flares[weaponID])
 	end
 end
 
@@ -123,17 +125,24 @@ function script.Deactivate()
 end
 
 function script.AimWeapon(weaponID, heading, pitch)
+	--if weaponID == amsID then return true end
+	
 	Signal(2 ^ weaponID) -- 2 'to the power of' weapon ID
 	SetSignalMask(2 ^ weaponID)
 
-	if hasArms then
+	if hasArms and (weaponID == leftArmID or weaponID == rightArmID) then
 		 -- NB: Currently assumes first two weapons aim the arms
 		if weaponID == leftArmID then
 			Turn(llowerarm, x_axis, -pitch, ELEVATION_SPEED)
 		elseif weaponID == rightArmID then
 			Turn(rlowerarm, x_axis, -pitch, ELEVATION_SPEED)
 		end
+	elseif missileWeaponIDs[weaponID] then
+		Turn(launchPoints[weaponID][currPoints[weaponID]], x_axis, -pitch, ELEVATION_SPEED)
+	else
+		Turn(flares[weaponID], x_axis, -pitch, ELEVATION_SPEED)
 	end
+	
 
 	Turn(torso, y_axis, heading, TORSO_SPEED)
 	WaitForTurn(torso, y_axis)
