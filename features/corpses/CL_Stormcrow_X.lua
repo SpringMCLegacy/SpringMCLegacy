@@ -1,5 +1,5 @@
 local featureDefs = {
-  CL_Cougar_X = {
+  CL_Stormcrow_X = {
     blocking           = true,
     category           = "corpses",
     damage             = 5400,
@@ -10,7 +10,7 @@ local featureDefs = {
     height             = "20",
     hitdensity         = "50",
     metal              = 2000,
-    object             = "CL_Cougar_X.s3o",
+    object             = "CL_Stormcrow_X.s3o",
     reclaimable        = true,
     world              = "All Worlds",
   },

@@ -3,6 +3,7 @@ local CL_Mistlynx = {
 	description         = "Light Missile Support Mech",
 	objectName        	= "CL_Mistlynx.s3o",
 	script				= "CL_Mistlynx.lua",
+	corpse				= "CL_Mistlynx_X",
 	category 			= "mech ground notbeacon",
 	sightDistance       = 1500,
 	radarDistance      	= 2000,

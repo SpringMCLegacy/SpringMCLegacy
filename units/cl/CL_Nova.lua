@@ -3,6 +3,7 @@ local CL_Nova = {
 	description         = "Medium Strike Mech",
 	objectName        	= "CL_Nova.s3o",
 	script				= "Mech.lua",
+	corpse				= "CL_Nova_X",
 	category 			= "mech ground notbeacon",
 	sightDistance       = 1000,
 	radarDistance      	= 1500,

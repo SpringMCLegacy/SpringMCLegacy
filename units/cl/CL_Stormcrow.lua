@@ -3,6 +3,7 @@ local CL_Stormcrow = {
 	description         = "Medium Brawler Mech",
 	objectName        	= "CL_Stormcrow.s3o",
 	script				= "CL_Stormcrow.lua",
+	corpse				= "CL_Stormcrow_X",
 	category 			= "mech ground notbeacon",
 	sightDistance       = 1000,
 	radarDistance      	= 1500,

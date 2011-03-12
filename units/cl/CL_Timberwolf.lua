@@ -3,6 +3,7 @@ local CL_Timberwolf = {
 	description         = "Heavy Strike Mech",
 	objectName        	= "CL_Timberwolf.s3o",
 	script				= "Mech.lua",
+	corpse				= "CL_Timberwolf_X",
 	category 			= "mech ground notbeacon",
 	sightDistance       = 1000,
 	radarDistance      	= 1500,
