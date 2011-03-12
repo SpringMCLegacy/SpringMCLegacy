@@ -125,20 +125,19 @@ function script.Deactivate()
 end
 
 function script.AimWeapon(weaponID, heading, pitch)
-	--if weaponID == amsID then return true end
-	
 	Signal(2 ^ weaponID) -- 2 'to the power of' weapon ID
 	SetSignalMask(2 ^ weaponID)
 
 	if hasArms and (weaponID == leftArmID or weaponID == rightArmID) then
-		 -- NB: Currently assumes first two weapons aim the arms
 		if weaponID == leftArmID then
 			Turn(llowerarm, x_axis, -pitch, ELEVATION_SPEED)
 		elseif weaponID == rightArmID then
 			Turn(rlowerarm, x_axis, -pitch, ELEVATION_SPEED)
 		end
 	elseif missileWeaponIDs[weaponID] then
-		Turn(launchPoints[weaponID][currPoints[weaponID]], x_axis, -pitch, ELEVATION_SPEED)
+		for i = 1, burstLengths[weaponID] do
+			Turn(launchPoints[weaponID][i], x_axis, -pitch, ELEVATION_SPEED)
+		end
 	else
 		Turn(flares[weaponID], x_axis, -pitch, ELEVATION_SPEED)
 	end
