@@ -55,12 +55,12 @@ local CL_Maddog = {
 				OnlyTargetCategory = "notbeacon",
 			},
 			[4] = {
-				name	= "CMPL",
+				name	= "CLPL",
 				weaponSlaveTo = 1,
 				OnlyTargetCategory = "notbeacon",
 			},
 			[5] = {
-				name	= "CLPL",
+				name	= "CMPL",
 				weaponSlaveTo = 1,
 				OnlyTargetCategory = "notbeacon",
 			},
@@ -87,6 +87,8 @@ local CL_Maddog = {
 		helptext		= "Armament: 2 x LRM-20, 2 x Large Pulse Laser, 2 x Medium Pulse Laser - Armor: 8.5 tons Ferro-Fibrous",
 		heatlimit		= "24",
 		torsoturnspeed	= "135",
+		leftarmid		= "3",
+		rightarmid 		= "4",
     },
 }
 

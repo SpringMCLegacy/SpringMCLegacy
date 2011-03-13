@@ -1,8 +1,8 @@
 local CL_Stormcrow = {
 	name              	= "Stormcrow (Ryoken)",
-	description         = "Medium Brawler Mech",
+	description         = "Medium Missile Support Mech",
 	objectName        	= "CL_Stormcrow.s3o",
-	script				= "CL_Stormcrow.lua",
+	script				= "Mech.lua",
 	corpse				= "CL_Stormcrow_X",
 	category 			= "mech ground notbeacon",
 	sightDistance       = 1000,
@@ -84,17 +84,19 @@ local CL_Stormcrow = {
 		
 	--Gets CEG effects from /gamedata/explosions folder
 
-	sfxtypes = {
+	--[[sfxtypes = {
 		explosiongenerators = {
 		"custom:MISSILE_MUZZLEFLASH",
 		"custom:LASER_MUZZLEFLASH",
 		},
-	},
+	},]]
     customparams = {
 		hasturnbutton	= "1",
 		helptext		= "Armament: 1 x LRM-20, 4 x Medium Pulse Laser, 1 x SSRM-6 - Armor: 9.5 tons",
 		heatlimit		= "20",
 		torsoturnspeed	= "160",
+		leftarmid		= "2",
+		rightarmid 		= "3",
     },
 }
 
