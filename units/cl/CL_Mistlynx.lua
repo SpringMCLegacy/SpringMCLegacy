@@ -2,7 +2,7 @@ local CL_Mistlynx = {
 	name              	= "Mist Lynx (Koshi)",
 	description         = "Light Missile Support Mech",
 	objectName        	= "CL_Mistlynx.s3o",
-	script				= "CL_Mistlynx.lua",
+	script				= "Mech.lua",
 	corpse				= "CL_Mistlynx_X",
 	category 			= "mech ground notbeacon",
 	sightDistance       = 1500,
@@ -46,15 +46,15 @@ local CL_Mistlynx = {
 				OnlyTargetCategory = "notbeacon",
 			},
 			[2] = {
-				name	= "SSRM4",
-				--weaponSlaveTo2 = 1,
+				name	= "NARC",
+				--weaponSlaveTo3 = 1,
 				--mainDir = "0 0 1",
 				--maxAngleDif = 270,
 				OnlyTargetCategory = "notbeacon",
 				WeaponSlaveTo = 1,
 			},
 			[3] = {
-				name	= "NARC",
+				name	= "MG",
 				--weaponSlaveTo3 = 1,
 				--mainDir = "0 0 1",
 				--maxAngleDif = 270,
@@ -70,8 +70,8 @@ local CL_Mistlynx = {
 				WeaponSlaveTo = 1,
 			},
 			[5] = {
-				name	= "MG",
-				--weaponSlaveTo3 = 1,
+				name	= "SSRM4",
+				--weaponSlaveTo2 = 1,
 				--mainDir = "0 0 1",
 				--maxAngleDif = 270,
 				OnlyTargetCategory = "notbeacon",
@@ -81,13 +81,13 @@ local CL_Mistlynx = {
 		
 	--Gets CEG effects from /gamedata/explosions folder
 
-	sfxtypes = {
+	--[[sfxtypes = {
 		explosiongenerators = {
 		"custom:MISSILE_MUZZLEFLASH",
 		"custom:MG_MUZZLEFLASH",
 		"custom:JumpJetTrail",
 		},
-	},
+	},]]
     customparams = {
 		hasturnbutton	= "1",
 		helptext		= "Armament: 1 x LRM-10, 1 x SSRM-4, 2 x MG - Armor: 3.5 tons Ferro-Fibrous",

@@ -2,7 +2,7 @@ local IS_Catapult = {
 	name              	= "Catapult",
 	description         = "Heavy Missile Support Mech",
 	objectName        	= "IS_Catapult.s3o",
-	script				= "IS_Catapult.lua",
+	script				= "Mech.lua",
 	category 			= "mech ground notbeacon",
 	sightDistance       = 1000,
 	radarDistance      	= 1500,
@@ -82,13 +82,13 @@ local IS_Catapult = {
 		
 	--Gets CEG effects from /gamedata/explosions folder
 
-	sfxtypes = {
+	--[[sfxtypes = {
 		explosiongenerators = {
 		"custom:MISSILE_MUZZLEFLASH",
 		"custom:LASER_MUZZLEFLASH",
 		"custom:JumpJetTrail",
 		},
-	},
+	},]]
     customparams = {
 		hasturnbutton	= "1",
 		helptext		= "Armament: 2 x Artemis-enhanced LRM-20, 4 x ER Medium Beam Laser - Armor: 13 tons Standard",
