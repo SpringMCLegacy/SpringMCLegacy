@@ -8,6 +8,9 @@ rad = math.rad
 walking = false
 jumping = false
 
+-- localised API functions
+local SetUnitRulesParam = Spring.SetUnitRulesParam
+
 -- includes
 include "smokeunit.lua"
 include ("walks/" .. unitDef.name .. "_walk.lua")
@@ -81,7 +84,7 @@ local function CoolOff()
 	while true do
 		currHeatLevel = currHeatLevel - coolRate
 		if currHeatLevel < 0 then currHeatLevel = 0 end
-		--Spring.Echo(currHeatLevel)
+		SetUnitRulesParam(unitID, "heat", currHeatLevel)
 		Sleep(1000) -- cools once per second
 	end
 end
@@ -156,13 +159,12 @@ function script.AimWeapon(weaponID, heading, pitch)
 end
 
 function script.FireWeapon(weaponID)
-	--[[if burstLengths[weaponID] == 1 then
-		EmitSfx(flares[weaponID], SFX.CEG + weaponID)
-	end]]
 	currHeatLevel = currHeatLevel + firingHeats[weaponID]
 	if currHeatLevel > heatLimit then 
 		Spring.Echo("Mech " .. unitID .. ": damn brah its gettin hot in hurr")
+		-- apply fire rate reduction etc here
 	end
+	SetUnitRulesParam(unitID, "heat", currHeatLevel)
 end
 
 function script.Shot(weaponID)
@@ -172,7 +174,7 @@ function script.Shot(weaponID)
         if currPoints[weaponID] > burstLengths[weaponID] then 
 			currPoints[weaponID] = 1
         end
-	else--if burstLengths[weaponID] > 1 then
+	else
 		EmitSfx(flares[weaponID], SFX.CEG + weaponID)
 	end
 end
