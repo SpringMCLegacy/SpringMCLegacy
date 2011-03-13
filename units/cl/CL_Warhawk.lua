@@ -68,7 +68,7 @@ local CL_Warhawk = {
 				WeaponSlaveTo = 1,
 			},
 			[5] = {
-				name	= "ATM9",
+				name	= "ATM6",
 				mainDir = "0 0 1",
 				maxAngleDif = 270,
 				OnlyTargetCategory = "notbeacon",

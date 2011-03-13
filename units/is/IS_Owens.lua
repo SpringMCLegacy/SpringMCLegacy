@@ -2,7 +2,7 @@ local IS_Owens = {
 	name              	= "Owens",
 	description         = "Light Missile Support Mech",
 	objectName        	= "IS_Owens.s3o",
-	script				= "IS_Owens.lua",
+	script				= "Mech.lua",
 	category 			= "mech ground notbeacon",
 	sightDistance       = 1500,
 	radarDistance      	= 2000,
@@ -76,12 +76,12 @@ local IS_Owens = {
 		
 	--Gets CEG effects from /gamedata/explosions folder
 
-	sfxtypes = {
+	--[[sfxtypes = {
 		explosiongenerators = {
 		"custom:MISSILE_MUZZLEFLASH",
 		"custom:LASER_MUZZLEFLASH",
 		},
-	},
+	},]]
     customparams = {
 		hasturnbutton	= "1",
 		helptext		= "Armament: 2 x Artemis-enhanced LRM-5, 2 x ER Small Beam Laser, 1 x Medium Beam Laser - Armor: 7 tons",
