@@ -4,6 +4,7 @@ local CL_Kitfox = {
 	objectName        	= "CL_Kitfox.s3o",
 	script				= "Mech.lua",
 	corpse				= "CL_Kitfox_X",
+	explodeAs          	= "mechexplode",
 	category 			= "mech ground notbeacon",
 	sightDistance       = 1000,
 	radarDistance      	= 1500,

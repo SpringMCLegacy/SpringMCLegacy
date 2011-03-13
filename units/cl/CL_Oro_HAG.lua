@@ -3,6 +3,7 @@ local CL_Oro_HAG = {
 	description         = "Heavy Strike Tank",
 	objectName        	= "CL_Oro_HAG.s3o",
 	script				= "CL_Oro_HAG.lua",
+	explodeAs          	= "mechexplode",
 	category 			= "tank ground notbeacon",
 	sightDistance       = 1000,
 	radarDistance      	= 1500,

@@ -3,6 +3,7 @@ local CL_Mars = {
 	description         = "Heavy Strike Tank",
 	objectName        	= "CL_Mars.s3o",
 	script				= "CL_Mars.lua",
+	explodeAs          	= "mechexplode",
 	category 			= "tank ground notbeacon",
 	stealth				= 1,
 	sightDistance       = 1000,

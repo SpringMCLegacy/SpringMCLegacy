@@ -4,6 +4,7 @@ local CL_Mistlynx = {
 	objectName        	= "CL_Mistlynx.s3o",
 	script				= "Mech.lua",
 	corpse				= "CL_Mistlynx_X",
+	explodeAs          	= "mechexplode",
 	category 			= "mech ground notbeacon",
 	sightDistance       = 1500,
 	radarDistance      	= 2000,

@@ -3,6 +3,7 @@ local IS_Harasser = {
 	description         = "Light Skirmish Hovercraft",
 	objectName        	= "IS_Harasser.s3o",
 	script				= "IS_Harasser.lua",
+	explodeAs          	= "mechexplode",
 	category 			= "tank ground hovercraft notbeacon",
 	sightDistance       = 1000,
 	radarDistance      	= 1500,

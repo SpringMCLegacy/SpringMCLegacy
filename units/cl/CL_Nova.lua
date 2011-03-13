@@ -4,6 +4,7 @@ local CL_Nova = {
 	objectName        	= "CL_Nova.s3o",
 	script				= "Mech.lua",
 	corpse				= "CL_Nova_X",
+	explodeAs          	= "mechexplode",
 	category 			= "mech ground notbeacon",
 	sightDistance       = 1000,
 	radarDistance      	= 1500,

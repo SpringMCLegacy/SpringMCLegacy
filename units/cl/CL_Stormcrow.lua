@@ -4,6 +4,7 @@ local CL_Stormcrow = {
 	objectName        	= "CL_Stormcrow.s3o",
 	script				= "Mech.lua",
 	corpse				= "CL_Stormcrow_X",
+	explodeAs          	= "mechexplode",
 	category 			= "mech ground notbeacon",
 	sightDistance       = 1000,
 	radarDistance      	= 1500,

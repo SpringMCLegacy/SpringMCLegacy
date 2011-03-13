@@ -3,6 +3,7 @@ local CL_Morrigu = {
 	description         = "Heavy Sniper Tank",
 	objectName        	= "CL_Morrigu.s3o",
 	script				= "CL_Morrigu.lua",
+	explodeAs          	= "mechexplode",
 	category 			= "tank ground notbeacon",
 	sightDistance       = 1000,
 	radarDistance      	= 1500,

@@ -4,6 +4,7 @@ local CL_Iceferret = {
 	objectName        	= "CL_Iceferret.s3o",
 	script				= "Mech.lua",
 	corpse				= "CL_Iceferret_X",
+	explodeAs          	= "mechexplode",
 	category 			= "mech ground notbeacon",
 	sightDistance       = 1500,
 	radarDistance      	= 2000,
