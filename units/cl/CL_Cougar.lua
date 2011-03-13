@@ -4,6 +4,7 @@ local CL_Cougar = {
 	objectName        	= "CL_Cougar.s3o",
 	script				= "Mech.lua",
 	corpse				= "CL_Cougar_X",
+	explodeAs          	= "mechexplode",
 	category 			= "mech ground notbeacon",
 	sightDistance       = 1000,
 	radarDistance      	= 1500,

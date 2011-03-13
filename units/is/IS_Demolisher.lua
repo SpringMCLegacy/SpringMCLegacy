@@ -3,6 +3,7 @@ local IS_Demolisher = {
 	description         = "Heavy Brawler Tank",
 	objectName        	= "IS_Demolisher.s3o",
 	script				= "IS_Demolisher.lua",
+	explodeAs          	= "mechexplode",
 	category 			= "tank ground notbeacon",
 	sightDistance       = 1000,
 	radarDistance      	= 1500,

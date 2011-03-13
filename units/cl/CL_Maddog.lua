@@ -4,6 +4,7 @@ local CL_Maddog = {
 	objectName        	= "CL_Maddog.s3o",
 	script				= "Mech.lua",
 	corpse				= "CL_Maddog_X",
+	explodeAs          	= "mechexplode",
 	category 			= "mech ground notbeacon",
 	sightDistance       = 1000,
 	radarDistance      	= 1500,

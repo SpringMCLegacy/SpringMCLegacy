@@ -3,6 +3,7 @@ local IS_Goblin = {
 	description         = "Medium Brawler Tank",
 	objectName        	= "IS_Goblin.s3o",
 	script				= "IS_Goblin.lua",
+	explodeAs          	= "mechexplode",
 	category 			= "tank ground notbeacon",
 	sightDistance       = 1000,
 	radarDistance      	= 1500,

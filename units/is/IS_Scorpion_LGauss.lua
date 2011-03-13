@@ -3,6 +3,7 @@ local IS_Scorpion_LGauss = {
 	description         = "Light Sniper Tank",
 	objectName        	= "IS_Scorpion_LGauss.s3o",
 	script				= "IS_Scorpion_LGauss.lua",
+	explodeAs          	= "mechexplode",
 	category 			= "tank ground notbeacon",
 	sightDistance       = 1000,
 	radarDistance      	= 1500,

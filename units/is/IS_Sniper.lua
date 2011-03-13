@@ -3,6 +3,7 @@ local IS_Sniper = {
 	description         = "Mobile Artillery",
 	objectName        	= "IS_Sniper.s3o",
 	script				= "IS_Sniper.lua",
+	explodeAs          	= "mechexplode",
 	category 			= "tank ground notbeacon",
 	sightDistance       = 1000,
 	radarDistance      	= 2000,

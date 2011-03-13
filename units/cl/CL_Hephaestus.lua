@@ -3,6 +3,7 @@ local CL_Hephaestus = {
 	description         = "Light Scout Hovercraft",
 	objectName        	= "CL_Hephaestus.s3o",
 	script				= "CL_Hephaestus.lua",
+	explodeAs          	= "mechexplode",
 	category 			= "tank ground hovercraft notbeacon",
 	stealth				= 1,
 	sightDistance       = 1000,

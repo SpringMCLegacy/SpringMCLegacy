@@ -4,6 +4,7 @@ local CL_Warhawk = {
 	objectName        	= "CL_Warhawk.s3o",
 	script				= "Mech.lua",
 	corpse				= "CL_Warhawk_X",
+	explodeAs          	= "mechexplode",
 	category 			= "mech ground notbeacon",
 	sightDistance       = 1500,
 	radarDistance      	= 2000,

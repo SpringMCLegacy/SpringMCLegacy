@@ -3,6 +3,7 @@ local IS_LRMCarrier = {
 	description         = "Missile Support Vehicle",
 	objectName        	= "IS_LRMCarrier.s3o",
 	script				= "IS_LRMCarrier.lua",
+	explodeAs          	= "mechexplode",
 	category 			= "tank ground notbeacon",
 	sightDistance       = 1000,
 	radarDistance      	= 2000,
