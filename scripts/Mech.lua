@@ -16,6 +16,7 @@ include ("walks/" .. unitDef.name .. "_walk.lua")
 local heatLimit = info.heatLimit
 local coolRate = info.coolRate
 local missileWeaponIDs = info.missileWeaponIDs
+local launcherIDs = info.launcherIDs
 local burstLengths = info.burstLengths
 local firingHeats = info.firingHeats
 local hasArms = info.arms
@@ -48,19 +49,21 @@ if info.jumpjets then
 end
 
 local flares = {}
+local launchers = {}
 local launchPoints = {}
 local currPoints = {}
 for weaponID = 1, info.numWeapons do
 	if missileWeaponIDs[weaponID] then
+		if launcherIDs[weaponID] then
+			launchers[weaponID] = piece("launcher_" .. weaponID)
+		end
 		launchPoints[weaponID] = {}
 		currPoints[weaponID] = 1
 		for i = 1, burstLengths[weaponID] do
 			launchPoints[weaponID][i] = piece("launchpoint_" .. weaponID .. "_" .. i)
-			--Hide(launchPoints[weaponID][i])
 		end	
 	elseif weaponID ~= amsID then
-		flares[weaponID] = piece ("flare" .. weaponID) -- NB: Currently relies on missiles being the final weapons!
-		--Hide(flares[weaponID])
+		flares[weaponID] = piece ("flare_" .. weaponID)
 	end
 end
 
@@ -135,13 +138,16 @@ function script.AimWeapon(weaponID, heading, pitch)
 			Turn(rlowerarm, x_axis, -pitch, ELEVATION_SPEED)
 		end
 	elseif missileWeaponIDs[weaponID] then
-		for i = 1, burstLengths[weaponID] do
-			Turn(launchPoints[weaponID][i], x_axis, -pitch, ELEVATION_SPEED)
+		if launchers[weaponID] then
+			Turn(launchers[weaponID], x_axis, -pitch, ELEVATION_SPEED)
+		else
+			for i = 1, burstLengths[weaponID] do
+				Turn(launchPoints[weaponID][i], x_axis, -pitch, ELEVATION_SPEED)
+			end
 		end
 	else
 		Turn(flares[weaponID], x_axis, -pitch, ELEVATION_SPEED)
 	end
-	
 
 	Turn(torso, y_axis, heading, TORSO_SPEED)
 	WaitForTurn(torso, y_axis)
