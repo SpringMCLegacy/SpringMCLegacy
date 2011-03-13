@@ -16,6 +16,7 @@ if (gadgetHandler:IsSyncedCode()) then
 -- Localisations
 GG.lusHelper = {}
 -- Synced Read
+local GetUnitPieceInfo 		= Spring.GetUnitPieceInfo
 local GetUnitPieceMap		= Spring.GetUnitPieceMap
 -- Synced Ctrl
 
@@ -30,6 +31,14 @@ function gadget:UnitCreated(unitID, unitDefID, teamID, builderID)
 		-- Parse Model Data
 		local pieceMap = GetUnitPieceMap(unitID)
 		info.arms = pieceMap["rlowerarm"] ~= nil
+		local launcherIDs = {}
+		for pieceName, pieceNum in pairs(pieceMap) do
+			if pieceName:find("launcher_") and #pieceName <= 10 then -- better to use a regex here really
+				local weaponNum = tonumber(pieceName:sub(10, -1))
+				launcherIDs[weaponNum] = true
+			end
+		end
+		info.launcherIDs = launcherIDs
 	end
 end
 
