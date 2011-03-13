@@ -136,6 +136,7 @@ local CL_Nova = {
 		helptext		= "Armament: 12 x ER Medium Beam Laser - Armor: 10 tons",
 		heatlimit		= "36",
 		torsoturnspeed	= "150",
+		canjump			= "1",
     },
 }
 

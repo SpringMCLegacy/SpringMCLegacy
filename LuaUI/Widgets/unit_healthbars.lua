@@ -138,7 +138,7 @@ local barColors = {
   build   = { 0.75,0.75,0.75,barAlpha },
   stock   = { 0.50,0.50,0.50,barAlpha },
   reload  = { 0.00,0.60,0.60,barAlpha },
-  jump    = { 0.00,0.60,0.60,barAlpha },
+  jump    = { 0.60,0.60,0.40,barAlpha },
   sheath  = { 0.00,0.20,1.00,barAlpha },
   fuel    = { 0.70,0.30,0.00,barAlpha },
   slow    = { 0.50,0.10,0.70,barAlpha },
@@ -582,20 +582,20 @@ do
 
     --// BARS //-----------------------------------------------------------------------------
       --// Shield
-      if (ci.maxShield>0) then
+      --[[if (ci.maxShield>0) then
         local shieldOn,shieldPower = GetUnitShieldState(unitID)
         if (shieldOn)and(build==1)and(shieldPower<ci.maxShield) then
           shieldPower = shieldPower / ci.maxShield
           AddBar("shield",shieldPower,"shield",(fullText and floor(shieldPower*100)..'%') or '')
         end
-      end
+      end]]
 
       --// HEALTH
       if (health) and ((drawFullHealthBars)or(hp<1)) and ((build==1)or(build-hp>=0.01)) then
         hp100 = hp*100; hp100 = hp100 - hp100%1; --//same as floor(hp*100), but 10% faster
         if (hp100<0) then hp100=0 elseif (hp100>100) then hp100=100 end
         if (drawFullHealthBars)or(hp100<100) then
-          AddBar("health",hp,nil,(fullText and hp100..'%') or '',bfcolormap[hp100])
+          AddBar("Damage",hp,nil,(fullText and hp100..'%') or '',bfcolormap[hp100])
         end
       end
 
@@ -650,7 +650,7 @@ do
       end
 
       --// RELOAD
-      if (ci.reloadTime>=minReloadTime) then
+      --[[if (ci.reloadTime>=minReloadTime) then
         _,reloaded,reloadFrame = GetUnitWeaponState(unitID,ci.primaryWeapon)
         if (reloaded==false) then
 		  local reloadTime = Spring.GetUnitWeaponState(unitID, ci.primaryWeapon , 'reloadTime')
@@ -658,7 +658,7 @@ do
           reload = 1 - ((reloadFrame-gameFrame)/30) / ci.reloadTime;
           AddBar("reload",reload,"reload",(fullText and floor(reload*100)..'%') or '')
         end
-      end
+      end]]
 
 	  --// SHEATH
 	  local sheathState = GetUnitRulesParam(unitID,"sheathState")
@@ -680,10 +680,10 @@ do
 	  
       --// JUMPJET
       if (drawJumpJet)and(ci.canJump) then
-        local jumpReload = GetUnitRulesParam(unitID,"jumpReload")
-        if (jumpReload and (jumpReload>0) and (jumpReload<1)) then
-          AddBar("jump",jumpReload,"jump",(fullText and floor(jumpReload*100)..'%') or '')
-        end
+        local jumpReload = GetUnitRulesParam(unitID,"jumpReload") or 1
+        --if jumpReload then
+          AddBar("Jump Jets",jumpReload,"jump",'')
+        --end
       end
 
     if (barsN>0)or(numStockpiled) then

@@ -93,6 +93,7 @@ local CL_Mistlynx = {
 		helptext		= "Armament: 1 x LRM-10, 1 x SSRM-4, 2 x MG - Armor: 3.5 tons Ferro-Fibrous",
 		heatlimit		= "20",
 		torsoturnspeed	= "200",
+		canjump			= "1",
     },
 }
 

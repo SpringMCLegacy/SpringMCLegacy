@@ -82,6 +82,7 @@ local IS_Osiris = {
 		heatlimit		= "20",
 		torsoturnspeed	= "190",
 		rightarmid 		= "4",
+		canjump			= "1",
     },
 }
 
