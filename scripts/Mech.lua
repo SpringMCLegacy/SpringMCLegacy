@@ -156,9 +156,9 @@ function script.AimWeapon(weaponID, heading, pitch)
 end
 
 function script.FireWeapon(weaponID)
-	if burstLengths[weaponID] == 1 then
+	--[[if burstLengths[weaponID] == 1 then
 		EmitSfx(flares[weaponID], SFX.CEG + weaponID)
-	end
+	end]]
 	currHeatLevel = currHeatLevel + firingHeats[weaponID]
 	if currHeatLevel > heatLimit then 
 		Spring.Echo("Mech " .. unitID .. ": damn brah its gettin hot in hurr")
@@ -172,7 +172,7 @@ function script.Shot(weaponID)
         if currPoints[weaponID] > burstLengths[weaponID] then 
 			currPoints[weaponID] = 1
         end
-	elseif burstLengths[weaponID] > 1 then
+	else--if burstLengths[weaponID] > 1 then
 		EmitSfx(flares[weaponID], SFX.CEG + weaponID)
 	end
 end
