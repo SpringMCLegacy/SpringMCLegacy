@@ -94,6 +94,7 @@ local IS_Catapult = {
 		helptext		= "Armament: 2 x Artemis-enhanced LRM-20, 4 x ER Medium Beam Laser - Armor: 13 tons Standard",
 		heatlimit		= "20",
 		torsoturnspeed	= "125",
+		canjump			= "1",
     },
 }
 
