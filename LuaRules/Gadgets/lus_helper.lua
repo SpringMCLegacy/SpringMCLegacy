@@ -32,13 +32,19 @@ function gadget:UnitCreated(unitID, unitDefID, teamID, builderID)
 		local pieceMap = GetUnitPieceMap(unitID)
 		info.arms = pieceMap["rlowerarm"] ~= nil
 		local launcherIDs = {}
+		local numWheels = 0
 		for pieceName, pieceNum in pairs(pieceMap) do
+			-- Find launcher pieces
 			if pieceName:find("launcher_") and #pieceName <= 10 then -- better to use a regex here really
 				local weaponNum = tonumber(pieceName:sub(10, -1))
 				launcherIDs[weaponNum] = true
+			-- Find the number of wheels
+			elseif pieceName:find("wheel") then
+				numWheels = numWheels + 1
 			end
 		end
 		info.launcherIDs = launcherIDs
+		info.numWheels = numWheels
 	end
 end
 
