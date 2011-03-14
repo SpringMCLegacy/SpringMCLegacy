@@ -76,7 +76,7 @@ function gadget:GamePreload()
 		info.jumpjets = GG.jumpDefs[unitDefID] ~= nil
 		-- UnitDef Level Info
 		info.heatLimit = (unitDef.customParams.heatlimit or 50) * 10
-		info.coolRate = info.heatLimit / 10 -- or a constant rate of 10?
+		info.coolRate = info.heatLimit / 100 -- or a constant rate of 10?
 		info.numWeapons = #weapons
 		info.torsoTurnSpeed = math.rad(tonumber(unitDef.customParams.torsoturnspeed) or 125)
 		info.elevationSpeed = math.rad(tonumber(unitDef.customParams.torsoturnspeed) or math.deg(info.torsoTurnSpeed))
