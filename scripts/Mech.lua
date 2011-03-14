@@ -34,6 +34,7 @@ local RESTORE_DELAY = Spring.UnitScript.GetLongestReloadTime(unitID) * 2
 
 local currLaunchPoint = 1
 local currHeatLevel = 0
+local jumpHeat = 50
 
 --piece defines
 local pelvis, torso = piece ("pelvis", "torso")
@@ -101,6 +102,7 @@ end
 
 function beginJump()
 	jumping = true
+	currHeatLevel = currHeatLevel + jumpHeat
 	StartThread(JumpFX)
 end
 

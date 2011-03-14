@@ -109,7 +109,7 @@ local IS_Mauler = {
     customparams = {
 		hasturnbutton	= "1",
 		helptext		= "Armament: 2 x Large Beam Laser, 2 x Autocannon/5, 2 x Autocannon/2, 2 x LRM-15 - Armor: 11.5 tons Standard",
-		heatlimit		= "22",
+		heatlimit		= "36",
 		torsoturnspeed	= "120",
     },
 }
