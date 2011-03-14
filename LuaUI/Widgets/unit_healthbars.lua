@@ -550,6 +550,7 @@ do
         canStockpile  = ud.canStockpile,
         reloadTime    = ud.reloadTime,
         primaryWeapon = ud.primaryWeapon-1,
+		heatLimit     = (tonumber(ud.customParams.heatlimit) or 0) * 10,
       }
     end
     ci = customInfo[unitDefID]
@@ -596,6 +597,18 @@ do
         if (hp100<0) then hp100=0 elseif (hp100>100) then hp100=100 end
         if (drawFullHealthBars)or(hp100<100) then
           AddBar("Damage",hp,nil,(fullText and hp100..'%') or '',bfcolormap[hp100])
+        end
+      end
+	  
+	  --// HEAT
+	  local heat = GetUnitRulesParam(unitID,"heat")
+      if (heat or ci.heatLimit > 0) then
+        --hp100 = hp*100; hp100 = hp100 - hp100%1; --//same as floor(hp*100), but 10% faster
+		local heat100 = heat / ci.heatLimit * 100
+		heat100 = heat100 - heat100%1
+        if (heat100<0) then heat100=0 elseif (heat100>100) then heat100=100 end
+        if (drawFullHealthBars)or(heat100>0) then
+          AddBar("Heat",heat100/100,nil,'',bfcolormap[100 - heat100])
         end
       end
 
