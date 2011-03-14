@@ -602,7 +602,7 @@ do
 	  
 	  --// HEAT
 	  local heat = GetUnitRulesParam(unitID,"heat")
-      if (heat or ci.heatLimit > 0) then
+      if (heat) then
         --hp100 = hp*100; hp100 = hp100 - hp100%1; --//same as floor(hp*100), but 10% faster
 		local heat100 = heat / ci.heatLimit * 100
 		heat100 = heat100 - heat100%1
