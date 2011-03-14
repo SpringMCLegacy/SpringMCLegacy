@@ -89,7 +89,7 @@ local IS_Atlas = {
 				WeaponSlaveTo = 1,
 			},
 			[8] = {
-				name	= "SSRM6",
+				name	= "SRM6",
 				mainDir = "0 0 1",
 				maxAngleDif = 270,
 				OnlyTargetCategory = "notbeacon",
@@ -109,7 +109,7 @@ local IS_Atlas = {
     customparams = {
 		hasturnbutton	= "1",
 		helptext		= "Armament: 1 x AC/20, 2 x Large Pulse Laser, 2 x Medium Beam Laser, 2 x MRM-10, 1 x SSRM-6 - Armor: 19 tons Standard",
-		heatlimit		= "20",
+		heatlimit		= "30",
 		torsoturnspeed	= "100",
     },
 }
