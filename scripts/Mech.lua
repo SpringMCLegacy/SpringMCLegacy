@@ -92,9 +92,14 @@ local function CoolOff()
 		if currHeatLevel < 0 then 
 			currHeatLevel = 0 
 		end
-		if currHeatLevel > heatDangerLimit and currHeatLevel < heatLimit then 
-			SlowFire = true
-		elseif currHeatLevel < heatDangerLimit or currHeatLevel > heatLimit then 
+		if currHeatLevel > heatDangerLimit then 
+			if StopFire == false then
+				SlowFire = true
+			elseif StopFire == true then
+				Slowfire = false
+			end
+		end
+		if currHeatLevel < heatDangerLimit or currHeatLevel > heatLimit then 
 			SlowFire = false 
 		end
 		if currHeatLevel > heatLimit then 
@@ -184,7 +189,7 @@ function script.FireWeapon(weaponID)
 		Spring.Echo("Mech " .. unitID .. ": Heat normal.")
 	end
 	if SlowFire then
-		Spring.Echo("Mech " .. unitID .. ": Heat rising.")
+		Spring.Echo("Mech " .. unitID .. ": Heat elevated.")
 	end
 	if StopFire then 
 		Spring.Echo("Mech " .. unitID .. ": Heat critical.")
