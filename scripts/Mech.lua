@@ -10,6 +10,7 @@ jumping = false
 
 -- localised API functions
 local SetUnitRulesParam = Spring.SetUnitRulesParam
+local SetUnitWeaponState = Spring.SetUnitWeaponState
 
 -- includes
 include "smokeunit.lua"
@@ -35,6 +36,10 @@ local RESTORE_DELAY = Spring.UnitScript.GetLongestReloadTime(unitID) * 2
 local currLaunchPoint = 1
 local currHeatLevel = 0
 local jumpHeat = 50
+local heatDangerLimit = heatLimit * 0.5
+local SlowDownRate = 2
+local SlowFire = false
+local StopFire = false
 
 --piece defines
 local pelvis, torso = piece ("pelvis", "torso")
@@ -84,7 +89,20 @@ end
 local function CoolOff()
 	while true do
 		currHeatLevel = currHeatLevel - coolRate
-		if currHeatLevel < 0 then currHeatLevel = 0 end
+		if currHeatLevel < 0 then 
+			currHeatLevel = 0 
+		end
+		if currHeatLevel > heatDangerLimit and currHeatLevel < heatLimit then 
+			SlowFire = true
+		elseif currHeatLevel < heatDangerLimit or currHeatLevel > heatLimit then 
+			SlowFire = false 
+		end
+		if currHeatLevel > heatLimit then 
+			StopFire = true 
+		end
+		if StopFire and currHeatLevel < heatDangerLimit then 
+			StopFire = false 
+		end
 		SetUnitRulesParam(unitID, "heat", currHeatLevel)
 		Sleep(1000) -- cools once per second
 	end
@@ -162,9 +180,14 @@ end
 
 function script.FireWeapon(weaponID)
 	currHeatLevel = currHeatLevel + firingHeats[weaponID]
-	if currHeatLevel > heatLimit then 
-		Spring.Echo("Mech " .. unitID .. ": damn brah its gettin hot in hurr")
-		-- apply fire rate reduction etc here
+	if SlowFire == false and StopFire == false then
+		Spring.Echo("Mech " .. unitID .. ": Heat normal.")
+	end
+	if SlowFire then
+		Spring.Echo("Mech " .. unitID .. ": Heat rising.")
+	end
+	if StopFire then 
+		Spring.Echo("Mech " .. unitID .. ": Heat critical.")
 	end
 	SetUnitRulesParam(unitID, "heat", currHeatLevel)
 end
