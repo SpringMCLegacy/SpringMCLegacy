@@ -36,10 +36,10 @@ local RESTORE_DELAY = Spring.UnitScript.GetLongestReloadTime(unitID) * 2
 local currLaunchPoint = 1
 local currHeatLevel = 0
 local jumpHeat = 50
-local heatDangerLimit = heatLimit * 0.5
+local heatElevatedLimit = heatLimit * 0.5
 local SlowDownRate = 2
-local SlowFire = false
-local StopFire = false
+local HeatElevated = false
+local HeatCritical = false
 
 --piece defines
 local pelvis, torso = piece ("pelvis", "torso")
@@ -92,21 +92,21 @@ local function CoolOff()
 		if currHeatLevel < 0 then 
 			currHeatLevel = 0 
 		end
-		if currHeatLevel > heatDangerLimit then 
-			if StopFire == false then
-				SlowFire = true
-			elseif StopFire == true then
-				Slowfire = false
+		if currHeatLevel > heatElevatedLimit then 
+			if HeatCritical == false then
+				HeatElevated = true
+			elseif HeatCritical == true then
+				HeatElevated = false
 			end
 		end
-		if currHeatLevel < heatDangerLimit or currHeatLevel > heatLimit then 
-			SlowFire = false 
+		if currHeatLevel < heatElevatedLimit or currHeatLevel > heatLimit then 
+			HeatElevated = false 
 		end
 		if currHeatLevel > heatLimit then 
-			StopFire = true 
+			HeatCritical = true 
 		end
-		if StopFire and currHeatLevel < heatDangerLimit then 
-			StopFire = false 
+		if HeatCritical and currHeatLevel < heatElevatedLimit then 
+			HeatCritical = false 
 		end
 		SetUnitRulesParam(unitID, "heat", currHeatLevel)
 		Sleep(1000) -- cools once per second
@@ -185,14 +185,14 @@ end
 
 function script.FireWeapon(weaponID)
 	currHeatLevel = currHeatLevel + firingHeats[weaponID]
-	if SlowFire == false and StopFire == false then
-		Spring.Echo("Mech " .. unitID .. ": Heat normal.")
+	if HeatElevated == false and HeatCritical == false then
+		Spring.Echo("Mech " .. unitID .. ": Heat normal, all weapons free.")
 	end
-	if SlowFire then
-		Spring.Echo("Mech " .. unitID .. ": Heat elevated.")
+	if HeatElevated then
+		Spring.Echo("Mech " .. unitID .. ": Heat elevated, compensating.")
 	end
-	if StopFire then 
-		Spring.Echo("Mech " .. unitID .. ": Heat critical.")
+	if HeatCritical then 
+		Spring.Echo("Mech " .. unitID .. ": Heat critical, weapons systems offline.")
 	end
 	SetUnitRulesParam(unitID, "heat", currHeatLevel)
 end
