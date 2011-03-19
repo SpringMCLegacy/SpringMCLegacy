@@ -1,6 +1,6 @@
 local featureDefs = {
   IS_Owens_X = {
-    blocking           = true,
+    blocking           = false,
     category           = "corpses",
     damage             = 5400,
     description        = "Wreckage",
