@@ -141,6 +141,10 @@ local function CoolOff()
 end
 
 function script.HitByWeapon(x, z, weaponID)
+	local wd = WeaponDefs[weaponID]
+	local heatDamage = wd.customParams.heatdamage or 0
+	Spring.Echo(wd.customParams.heatdamage)
+	currHeatLevel = currHeatLevel + heatDamage
 	--for weaponID, value in heatDamages do 
 	--	Spring.Echo("weapon "..weaponID..": "..value)
 	--end
