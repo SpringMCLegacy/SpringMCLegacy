@@ -1,6 +1,6 @@
 local featureDefs = {
   CL_Warhawk_X = {
-    blocking           = true,
+    blocking           = false,
     category           = "corpses",
     damage             = 5400,
     description        = "Wreckage",
