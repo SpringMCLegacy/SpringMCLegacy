@@ -21,6 +21,7 @@ local coolRate = info.coolRate * 2
 local missileWeaponIDs = info.missileWeaponIDs
 local launcherIDs = info.launcherIDs
 local burstLengths = info.burstLengths
+local heatDamages = info.heatDamages
 local firingHeats = info.firingHeats
 local hasArms = info.arms
 local leftArmID = info.leftArmID
@@ -106,7 +107,7 @@ local function CoolOff()
 				for weaponID = 0, numWeapons - 1 do
 					SetUnitWeaponState(unitID, weaponID, {reloadTime = 99999, reloadFrame = 99999})
 				end
-				Spring.Echo("Mech " .. unitID .. ": Heat critical, weapons systems offline")
+				--Spring.Echo("Mech " .. unitID .. ": Heat critical, weapons systems offline")
 			end
 		elseif currHeatLevel > heatElevatedLimit then
 			if heatCritical and not heatElevated then
@@ -121,7 +122,7 @@ local function CoolOff()
 					local oldReloadFrame = GetUnitWeaponState(unitID, weaponID, "reloadFrame")
 					SetUnitWeaponState(unitID, weaponID, {reloadTime = reload, reloadFrame = oldReloadFrame + reload * 30})
 				end
-				Spring.Echo("Mech " .. unitID .. ": Heat elevated, compensating firerate.")
+				--Spring.Echo("Mech " .. unitID .. ": Heat elevated, compensating firerate.")
 			end
 		else
 			if heatCritical or heatElevated then
@@ -129,7 +130,7 @@ local function CoolOff()
 				for weaponID = 0, numWeapons - 1 do
 					SetUnitWeaponState(unitID, weaponID, {reloadTime = reloadTimes[weaponID + 1], reloadFrame = 0})
 				end
-				Spring.Echo("Mech " .. unitID .. ": Heat normal, all weapons free.")
+				--Spring.Echo("Mech " .. unitID .. ": Heat normal, all weapons free.")
 			end
 			heatCritical = false
 			heatElevated = false
@@ -137,6 +138,15 @@ local function CoolOff()
 		SetUnitRulesParam(unitID, "heat", currHeatLevel)
 		Sleep(1000) -- cools once per second
 	end
+end
+
+function script.HitByWeapon(x, z, weaponID)
+	--for weaponID, value in heatDamages do 
+	--	Spring.Echo("weapon "..weaponID..": "..value)
+	--end
+	--Spring.Echo(info.heatDamages[weaponID])
+	--currHeatLevel = currHeatLevel + heatDamages[weaponID]
+	--SetUnitRulesParam(unitID, "heat", currHeatLevel)
 end
 
 function JumpFX()
