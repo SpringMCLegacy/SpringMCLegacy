@@ -10,7 +10,6 @@ jumping = false
 
 -- localised API functions
 local SetUnitRulesParam = Spring.SetUnitRulesParam
-local SetUnitWeaponState = Spring.SetUnitWeaponState
 
 -- includes
 include "smokeunit.lua"
@@ -18,7 +17,7 @@ include ("walks/" .. unitDef.name .. "_walk.lua")
 
 -- Info from lusHelper gadget
 local heatLimit = info.heatLimit
-local coolRate = info.coolRate
+local coolRate = info.coolRate * 2
 local missileWeaponIDs = info.missileWeaponIDs
 local launcherIDs = info.launcherIDs
 local burstLengths = info.burstLengths
@@ -36,10 +35,7 @@ local RESTORE_DELAY = Spring.UnitScript.GetLongestReloadTime(unitID) * 2
 local currLaunchPoint = 1
 local currHeatLevel = 0
 local jumpHeat = 50
-local heatElevatedLimit = heatLimit * 0.5
 local SlowDownRate = 2
-local HeatElevated = false
-local HeatCritical = false
 
 --piece defines
 local pelvis, torso = piece ("pelvis", "torso")
@@ -87,26 +83,56 @@ local function RestoreAfterDelay(unitID)
 end
 
 local function CoolOff()
+	-- localised API functions
+	local GetUnitWeaponState = Spring.GetUnitWeaponState
+	local SetUnitWeaponState = Spring.SetUnitWeaponState
+	-- lusHelper info
+	local reloadTimes = info.reloadTimes
+	local numWeapons = info.numWeapons
+	-- variables
+	local heatElevatedLimit = 0.5 * heatLimit
+	local heatElevated = false
+	local heatCritical = false
 	while true do
 		currHeatLevel = currHeatLevel - coolRate
 		if currHeatLevel < 0 then 
 			currHeatLevel = 0 
 		end
-		if currHeatLevel > heatElevatedLimit then 
-			if HeatCritical == false then
-				HeatElevated = true
-			elseif HeatCritical == true then
-				HeatElevated = false
-			end
-		end
-		if currHeatLevel < heatElevatedLimit or currHeatLevel > heatLimit then 
-			HeatElevated = false 
-		end
 		if currHeatLevel > heatLimit then 
-			HeatCritical = true 
-		end
-		if HeatCritical and currHeatLevel < heatElevatedLimit then 
-			HeatCritical = false 
+			if not heatCritical then
+				heatElevated = false
+				heatCritical = true
+				-- halt weapon fire here
+				for weaponID = 0, numWeapons - 1 do
+					SetUnitWeaponState(unitID, weaponID, {reloadTime = 99999, reloadFrame = 99999})
+				end
+				Spring.Echo("Mech " .. unitID .. ": Heat critical, weapons systems offline")
+			end
+		elseif currHeatLevel > heatElevatedLimit then
+			if heatCritical and not heatElevated then
+				heatCritical = false
+				heatElevated = true
+				Spring.Echo("Mech " .. unitID .. ": Heat reduced to elevated")
+			elseif not heatElevated then
+				heatElevated = true
+				-- reduce weapon rate here
+				for weaponID = 0, numWeapons - 1 do
+					local reload = reloadTimes[weaponID + 1] * 2
+					local oldReloadFrame = GetUnitWeaponState(unitID, weaponID, "reloadFrame")
+					SetUnitWeaponState(unitID, weaponID, {reloadTime = reload, reloadFrame = oldReloadFrame + reload * 30})
+				end
+				Spring.Echo("Mech " .. unitID .. ": Heat elevated, compensating firerate.")
+			end
+		else
+			if heatCritical or heatElevated then
+				-- reset weapon rate here
+				for weaponID = 0, numWeapons - 1 do
+					SetUnitWeaponState(unitID, weaponID, {reloadTime = reloadTimes[weaponID + 1], reloadFrame = 0})
+				end
+				Spring.Echo("Mech " .. unitID .. ": Heat normal, all weapons free.")
+			end
+			heatCritical = false
+			heatElevated = false
 		end
 		SetUnitRulesParam(unitID, "heat", currHeatLevel)
 		Sleep(1000) -- cools once per second
@@ -185,15 +211,6 @@ end
 
 function script.FireWeapon(weaponID)
 	currHeatLevel = currHeatLevel + firingHeats[weaponID]
-	if HeatElevated == false and HeatCritical == false then
-		Spring.Echo("Mech " .. unitID .. ": Heat normal, all weapons free.")
-	end
-	if HeatElevated then
-		Spring.Echo("Mech " .. unitID .. ": Heat elevated, compensating.")
-	end
-	if HeatCritical then 
-		Spring.Echo("Mech " .. unitID .. ": Heat critical, weapons systems offline.")
-	end
 	SetUnitRulesParam(unitID, "heat", currHeatLevel)
 end
 

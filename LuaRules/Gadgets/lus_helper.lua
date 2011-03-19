@@ -58,12 +58,14 @@ function gadget:GamePreload()
 		local missileWeaponIDs = {}
 		local burstLengths = {}
 		local firingHeats = {}
+		local reloadTimes = {}
 		for i = 1, #weapons do
 			local weaponInfo = weapons[i]
 			--for tag, value in pairs(weaponInfo) do
 				--Spring.Echo(tag, value)
 			--end
 			local weaponDef = WeaponDefs[weaponInfo.weaponDef]
+			reloadTimes[i] = weaponDef.reload
 			burstLengths[i] = weaponDef.salvoSize
 			firingHeats[i] = weaponDef.customParams.heatgenerated or 0
 			if weaponDef.type == "MissileLauncher" and burstLengths[i] > 1 then
@@ -84,6 +86,7 @@ function gadget:GamePreload()
 		info.rightArmID = tonumber(unitDef.customParams.rightarmid) or 2
 		-- WeaponDef Level Info
 		info.missileWeaponIDs = missileWeaponIDs
+		info.reloadTimes = reloadTimes
 		info.burstLengths = burstLengths
 		info.firingHeats = firingHeats
 		GG.lusHelper[unitDefID] = info
