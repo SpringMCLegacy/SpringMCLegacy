@@ -26,14 +26,14 @@ weaponDef = {
 	areaOfEffect            = 20,
 	startVelocity			= 700,
 	weaponVelocity          = 900,
-	reloadtime              = 10,
+	reloadtime              = 7.5,
 	burst					= 6,
 	burstrate				= 0.1,
 	sprayAngle 				= 100,
 	model					= "Missile.s3o",
 	interceptedByShieldType	= 32,
 	damage = {
-		default = 200,--20 DPS
+		default = 150,--20 DPS
 		beacons = 0,
 		light = 200,
 		medium = 170,
@@ -42,7 +42,7 @@ weaponDef = {
 		vehicle = 300,
 	},
 	customparams = {
-		heatgenerated		= "40",--4/sec
+		heatgenerated		= "30",--4/sec
 		cegflare			= "MISSILE_MUZZLEFLASH",
     },
 }
