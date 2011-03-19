@@ -27,6 +27,7 @@ buildoptions =
 	"cl_iceferret",
 	"cl_nova",
 	"cl_stormcrow",
+	"cl_summoner",
 	"cl_timberwolf",
 	"cl_maddog",
 	"cl_warhawk",
