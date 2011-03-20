@@ -582,14 +582,14 @@ do
     end
 
     --// BARS //-----------------------------------------------------------------------------
-      --// Shield
-      if (ci.maxShield>0) then
+      --// Shield -- commented out
+      --[[if (ci.maxShield>0) then
         local shieldOn,shieldPower = GetUnitShieldState(unitID)
         if (shieldOn)and(build==1)and(shieldPower<ci.maxShield) then
           shieldPower = shieldPower / ci.maxShield
           AddBar("shield",shieldPower,"shield",(fullText and floor(shieldPower*100)..'%') or '')
         end
-      end
+      end]]
 
       --// HEALTH
       if (health) and ((drawFullHealthBars)or(hp<1)) and ((build==1)or(build-hp>=0.01)) then
