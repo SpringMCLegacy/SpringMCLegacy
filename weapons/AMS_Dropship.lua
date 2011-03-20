@@ -1,8 +1,9 @@
 weaponDef = {
 	name                    = "Dropship Anti-Missile System (AMS)",
+	weaponType				= "Shield",
 	isShield				= true,
 	shieldInterceptType		= 32,
-	exteriorShield			= true,
+	exteriorShield			= false,
 	shieldEnergyUse			= 0,
 	shieldPower				= 1500,
 	shieldPowerRegen		= 750,
