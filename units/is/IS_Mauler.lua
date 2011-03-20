@@ -41,13 +41,13 @@ local IS_Mauler = {
 		--Makes unit use weapon from /weapons folder
 		weapons 		= {	
 			[1] = {
-				name	= "ERLBL",
+				name	= "LBL",
 				mainDir = "0 0 1",
 				maxAngleDif = 270,
 				OnlyTargetCategory = "notbeacon",
 			},
 			[2] = {
-				name	= "ERLBL",
+				name	= "LBL",
 				mainDir = "0 0 1",
 				maxAngleDif = 270,
 				OnlyTargetCategory = "notbeacon",
@@ -61,7 +61,7 @@ local IS_Mauler = {
 				WeaponSlaveTo = 1,
 			},
 			[4] = {
-				name	= "UAC5",
+				name	= "UAC2",
 				mainDir = "0 0 1",
 				maxAngleDif = 270,
 				OnlyTargetCategory = "notbeacon",
@@ -75,7 +75,7 @@ local IS_Mauler = {
 				WeaponSlaveTo = 1,
 			},
 			[6] = {
-				name	= "UAC5",
+				name	= "UAC2",
 				mainDir = "0 0 1",
 				maxAngleDif = 270,
 				OnlyTargetCategory = "notbeacon",
