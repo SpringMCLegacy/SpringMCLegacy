@@ -18,6 +18,7 @@ include ("walks/" .. unitDef.name .. "_walk.lua")
 -- Info from lusHelper gadget
 local heatLimit = info.heatLimit
 local coolRate = info.coolRate * 3
+local inWater = false
 local missileWeaponIDs = info.missileWeaponIDs
 local launcherIDs = info.launcherIDs
 local burstLengths = info.burstLengths
@@ -84,17 +85,26 @@ local function RestoreAfterDelay(unitID)
 end
 
 local function CoolOff()
+	local max = math.max
 	-- localised API functions
 	local GetGameFrame = Spring.GetGameFrame
+	local GetGroundHeight = Spring.GetGroundHeight
+	local GetUnitBasePosition = Spring.GetUnitBasePosition
 	local SetUnitWeaponState = Spring.SetUnitWeaponState
 	-- lusHelper info
 	local reloadTimes = info.reloadTimes
 	local numWeapons = info.numWeapons
+	local baseCoolRate = info.coolRate
 	-- variables	
 	local heatElevatedLimit = 0.5 * heatLimit
 	local heatElevated = false
 	local heatCritical = false
 	while true do
+		if inWater then
+			local x, _, z = GetUnitBasePosition(unitID)
+			local depth = max(3, GetGroundHeight(x, z) / -3)
+			coolRate = baseCoolRate * depth
+		end
 		currHeatLevel = currHeatLevel - coolRate
 		if currHeatLevel < 0 then 
 			currHeatLevel = 0 
@@ -141,11 +151,10 @@ local function CoolOff()
 end
 
 function script.setSFXoccupy(terrainType)
-	if terrainType == 2 then -- deep water
-		coolRate = info.coolRate * 10
-	elseif terrainType == 1 then -- shallow water
-		coolRate = info.coolRate * 4
+	if terrainType == 2 or terrainType == 1 then -- water
+		inWater = true
 	else
+		inWater = false
 		coolRate = info.coolRate * 3
 	end
 end
