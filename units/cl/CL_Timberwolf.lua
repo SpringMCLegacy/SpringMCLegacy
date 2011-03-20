@@ -98,14 +98,14 @@ local CL_Timberwolf = {
 				WeaponSlaveTo = 1,
 			},
 			[9] = {
-				name	= "ATM12",
+				name	= "ATM9",
 				mainDir = "0 0 1",
 				maxAngleDif = 270,
 				OnlyTargetCategory = "notbeacon",
 				WeaponSlaveTo = 1,
 			},
 			[10] = {
-				name	= "ATM12",
+				name	= "ATM9",
 				mainDir = "0 0 1",
 				maxAngleDif = 270,
 				OnlyTargetCategory = "notbeacon",
