@@ -85,12 +85,12 @@ end
 
 local function CoolOff()
 	-- localised API functions
-	local GetUnitWeaponState = Spring.GetUnitWeaponState
+	local GetGameFrame = Spring.GetGameFrame
 	local SetUnitWeaponState = Spring.SetUnitWeaponState
 	-- lusHelper info
 	local reloadTimes = info.reloadTimes
 	local numWeapons = info.numWeapons
-	-- variables
+	-- variables	
 	local heatElevatedLimit = 0.5 * heatLimit
 	local heatElevated = false
 	local heatCritical = false
@@ -100,37 +100,37 @@ local function CoolOff()
 			currHeatLevel = 0 
 		end
 		if currHeatLevel > heatLimit then 
-			if not heatCritical then
+			if not heatCritical then -- either elevated->critical or normal->critical
 				heatElevated = false
 				heatCritical = true
 				-- halt weapon fire here
 				for weaponID = 0, numWeapons - 1 do
 					SetUnitWeaponState(unitID, weaponID, {reloadTime = 99999, reloadFrame = 99999})
 				end
-				--Spring.Echo("Mech " .. unitID .. ": Heat critical, weapons systems offline")
 			end
 		elseif currHeatLevel > heatElevatedLimit then
-			if heatCritical and not heatElevated then
-				heatCritical = false
+			if heatCritical and not heatElevated then -- critical -> elevated
 				heatElevated = true
-				--Spring.Echo("Mech " .. unitID .. ": Heat reduced to elevated")
-			elseif not heatElevated then
+			elseif not heatElevated then -- normal -> elevated
 				heatElevated = true
 				-- reduce weapon rate here
 				for weaponID = 0, numWeapons - 1 do
 					local reload = reloadTimes[weaponID + 1] * 2
-					local oldReloadFrame = GetUnitWeaponState(unitID, weaponID, "reloadFrame")
-					SetUnitWeaponState(unitID, weaponID, {reloadTime = reload, reloadFrame = oldReloadFrame + reload * 30})
+					SetUnitWeaponState(unitID, weaponID, {reloadTime = reload})
 				end
-				--Spring.Echo("Mech " .. unitID .. ": Heat elevated, compensating firerate.")
 			end
 		else
-			if heatCritical or heatElevated then
+			if heatCritical then -- critical->elevated->normal
+				-- reset weapon rate here
+				for weaponID = 0, numWeapons - 1 do
+					local currFrame = GetGameFrame()
+					SetUnitWeaponState(unitID, weaponID, {reloadTime = reloadTimes[weaponID + 1], reloadFrame = currFrame + reloadTimes[weaponID + 1] * 30})
+				end
+			elseif heatElevated then -- elevated->normal
 				-- reset weapon rate here
 				for weaponID = 0, numWeapons - 1 do
 					SetUnitWeaponState(unitID, weaponID, {reloadTime = reloadTimes[weaponID + 1]})
 				end
-				--Spring.Echo("Mech " .. unitID .. ": Heat normal, all weapons free.")
 			end
 			heatCritical = false
 			heatElevated = false
