@@ -17,7 +17,7 @@ include ("walks/" .. unitDef.name .. "_walk.lua")
 
 -- Info from lusHelper gadget
 local heatLimit = info.heatLimit
-local coolRate = info.coolRate * 2
+local coolRate = info.coolRate * 3
 local missileWeaponIDs = info.missileWeaponIDs
 local launcherIDs = info.launcherIDs
 local burstLengths = info.burstLengths
@@ -35,7 +35,7 @@ local RESTORE_DELAY = Spring.UnitScript.GetLongestReloadTime(unitID) * 2
 
 local currLaunchPoint = 1
 local currHeatLevel = 0
-local jumpHeat = 50
+local jumpHeat = 40
 local SlowDownRate = 2
 
 --piece defines
@@ -113,7 +113,7 @@ local function CoolOff()
 			if heatCritical and not heatElevated then
 				heatCritical = false
 				heatElevated = true
-				Spring.Echo("Mech " .. unitID .. ": Heat reduced to elevated")
+				--Spring.Echo("Mech " .. unitID .. ": Heat reduced to elevated")
 			elseif not heatElevated then
 				heatElevated = true
 				-- reduce weapon rate here
@@ -143,9 +143,9 @@ end
 function script.HitByWeapon(x, z, weaponID)
 	local wd = WeaponDefs[weaponID]
 	local heatDamage = wd.customParams.heatdamage or 0
-	Spring.Echo(wd.customParams.heatdamage)
+	--Spring.Echo(wd.customParams.heatdamage)
 	currHeatLevel = currHeatLevel + heatDamage
-	SetUnitRulesParam(unitID, "heat", currHeatLevel)
+	--SetUnitRulesParam(unitID, "heat", currHeatLevel)
 end
 
 function JumpFX()
