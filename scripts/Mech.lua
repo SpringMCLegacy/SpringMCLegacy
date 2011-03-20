@@ -140,6 +140,16 @@ local function CoolOff()
 	end
 end
 
+function script.setSFXoccupy(terrainType)
+	if terrainType == 2 then -- deep water
+		coolRate = info.coolRate * 10
+	elseif terrainType == 1 then -- shallow water
+		coolRate = info.coolRate * 4
+	else
+		coolRate = info.coolRate * 3
+	end
+end
+
 function script.HitByWeapon(x, z, weaponID)
 	local wd = WeaponDefs[weaponID]
 	local heatDamage = wd.customParams.heatdamage or 0
