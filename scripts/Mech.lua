@@ -128,7 +128,7 @@ local function CoolOff()
 			if heatCritical or heatElevated then
 				-- reset weapon rate here
 				for weaponID = 0, numWeapons - 1 do
-					SetUnitWeaponState(unitID, weaponID, {reloadTime = reloadTimes[weaponID + 1], reloadFrame = 0})
+					SetUnitWeaponState(unitID, weaponID, {reloadTime = reloadTimes[weaponID + 1]})
 				end
 				--Spring.Echo("Mech " .. unitID .. ": Heat normal, all weapons free.")
 			end
@@ -145,7 +145,7 @@ function script.HitByWeapon(x, z, weaponID)
 	local heatDamage = wd.customParams.heatdamage or 0
 	--Spring.Echo(wd.customParams.heatdamage)
 	currHeatLevel = currHeatLevel + heatDamage
-	--SetUnitRulesParam(unitID, "heat", currHeatLevel)
+	SetUnitRulesParam(unitID, "heat", currHeatLevel)
 end
 
 function JumpFX()
