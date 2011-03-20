@@ -99,6 +99,7 @@ function PlaceFlag(spot, flagType)
 	end
 	
 	local newFlag = CreateUnit(flagType, spot.x, 0, spot.z, 0, GAIA_TEAM_ID)
+	Spring.Echo("flagID: " .. newFlag)
 	numFlags[flagType] = numFlags[flagType] + 1
 	flags[flagType][numFlags[flagType]] = newFlag
 	flagCapStatuses[newFlag] = {}
