@@ -25,6 +25,7 @@ local AddTeamResource 		= Spring.AddTeamResource
 local EditUnitCmdDesc		= Spring.EditUnitCmdDesc
 local FindUnitCmdDesc		= Spring.FindUnitCmdDesc
 local SetUnitResourcing		= Spring.SetUnitResourcing
+local UseTeamResource 		= Spring.UseTeamResource
 
 -- Unsynced Ctrl
 
@@ -61,6 +62,15 @@ function gadget:UnitDestroyed(unitID, unitDefID, unitTeam, attackerID, attackerD
 			AddTeamResource(attackerTeam, "metal", UnitDefs[unitDefID].metalCost * KILL_REWARD_MULT)
 		end
 	end
+	-- reimburse 'weight'
+	AddTeamResource(unitTeam, "energy", UnitDefs[unitDefID].energyCost)
+end
+
+function gadget:UnitGiven(unitID, unitDefID, unitTeam, oldTeam)
+	-- reimburse 'weight'
+	local weight = UnitDefs[unitDefID].energyCost
+	AddTeamResource(oldTeam, "energy", weight)
+	UseTeamResource(unitTeam, "energy", weight)
 end
 
 function gadget:GameFrame(n)
