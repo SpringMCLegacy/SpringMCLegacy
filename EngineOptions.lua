@@ -36,35 +36,35 @@ local options =
   
   {
     key    = "StartMetal",
-    name   = "Starting Command",
-    desc   = "Sets the starting Command Point level for all players (key = 'StartMetal')",
+    name   = "Starting C-Bills",
+    desc   = "Sets the amount of C-Bills players start with at the beginning of the game.",
     type   = "number",
     section= "StartingResources",
     def    = 10000,
     min    = 0,
-    max    = 50000,
+    max    = 100000,
     step   = 10,  -- quantization is aligned to the def value
                     -- (step <= 0) means that there is no quantization
   },
-  --[[{
+  {
     key    = "StartEnergy",
-    name   = "Starting Logistics",
-    desc   = "Sets the starting Logistics level for all players",
+    name   = "Maximum Tonnage",
+    desc   = "Sets how many units, by tonnage, players can use during the game.",
     type   = "number",
     section= "StartingResources",
     def    = 500,
-    min    = 0,
-    max    = 50000,
+    min    = 100,
+    max    = 1000,
     step   = 10,  -- quantization is aligned to the def value
                     -- (step <= 0) means that there is no quantization
-  },]]--
+  },
   
   {
     key    = "MaxUnits",
     name   = "Max units",
     desc   = "Determines the ceiling of how many units and buildings a player is allowed  to own at the same time (key = 'MaxUnits')",
     type   = "number",
-    def    = 30,
+    def    = 20,
     min    = 1,
     max    = 100,
     step   = 1,  -- quantization is aligned to the def value
