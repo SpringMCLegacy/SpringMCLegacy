@@ -108,8 +108,8 @@ local IS_Atlas = {
 	},]]
     customparams = {
 		hasturnbutton	= "1",
-		helptext		= "Armament: 1 x AC/20, 2 x Large Pulse Laser, 2 x Medium Beam Laser, 2 x MRM-10, 1 x SSRM-6 - Armor: 19 tons Standard",
-		heatlimit		= "30",
+		helptext		= "Armament: 1 x AC/20, 2 x Large Pulse Laser, 2 x Medium Beam Laser, 2 x MRM-10, 1 x SRM-6 - Armor: 19 tons Standard",
+		heatlimit		= "32",
 		torsoturnspeed	= "100",
     },
 }
