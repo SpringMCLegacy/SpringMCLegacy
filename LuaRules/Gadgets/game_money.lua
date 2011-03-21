@@ -78,12 +78,14 @@ function gadget:GameFrame(n)
 		for unitID in pairs(dropShips) do
 			local teamID = GetUnitTeam(unitID)
 			local money = GetTeamResources(teamID, "metal")
+			local weightLeft = GetTeamResources(teamID, "energy")
 			local cmdDescs = GetUnitCmdDescs(unitID)
 			for cmdDescID = 1, #cmdDescs do
 				local buildDefID = cmdDescs[cmdDescID].id
 				if buildDefID < 0 then -- a build order
 					local buildCost = UnitDefs[-buildDefID].metalCost
-					if buildCost > money then
+					local weight = UnitDefs[-buildDefID].energyCost
+					if buildCost > money or weight > weightLeft then
 						EditUnitCmdDesc(unitID, cmdDescID, {disabled = true})
 					else
 						EditUnitCmdDesc(unitID, cmdDescID, {disabled = false})
