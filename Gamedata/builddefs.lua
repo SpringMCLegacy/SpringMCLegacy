@@ -29,6 +29,7 @@ buildoptions =
 	"cl_stormcrow",
 	"cl_summoner",
 	"cl_timberwolf",
+	"cl_hellbringer",
 	"cl_maddog",
 	"cl_warhawk",
 	"cl_direwolf",
