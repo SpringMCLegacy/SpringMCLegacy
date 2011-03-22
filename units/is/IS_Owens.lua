@@ -87,7 +87,7 @@ local IS_Owens = {
     customparams = {
 		hasturnbutton	= "1",
 		helptext		= "Armament: 2 x Artemis-enhanced LRM-5, 2 x ER Small Beam Laser, 1 x Medium Beam Laser - Armor: 7 tons",
-		heatlimit 		= "10",
+		heatlimit 		= "16",
 		torsoturnspeed	= "185",
     },
 }
