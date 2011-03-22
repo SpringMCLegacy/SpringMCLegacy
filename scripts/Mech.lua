@@ -17,7 +17,7 @@ include ("walks/" .. unitDef.name .. "_walk.lua")
 
 -- Info from lusHelper gadget
 local heatLimit = info.heatLimit
-local coolRate = info.coolRate * 3
+local coolRate = info.coolRate * 4
 local inWater = false
 local missileWeaponIDs = info.missileWeaponIDs
 local launcherIDs = info.launcherIDs
