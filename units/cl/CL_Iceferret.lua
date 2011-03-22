@@ -1,6 +1,6 @@
 local CL_Iceferret = {
 	name              	= "Ice Ferret (Fenris)",
-	description         = "Medium Strike Mech",
+	description         = "Medium Brawler Mech",
 	objectName        	= "CL_Iceferret.s3o",
 	script				= "Mech.lua",
 	corpse				= "CL_Iceferret_X",
