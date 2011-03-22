@@ -25,7 +25,7 @@ local IS_Chimera = {
 --	trackType			= "Thick",--graphics file to use for the track decal, from \bitmaps\tracks\ folder
 --	trackWidth			= 20,--width to render the decal
 	buildCostEnergy     = 40,
-	buildCostMetal      = 15950,
+	buildCostMetal      = 17270,
 	buildTime           = 0,
 	upright				= true,
 	canMove				= true,
@@ -61,7 +61,14 @@ local IS_Chimera = {
 				WeaponSlaveTo = 1,
 			},
 			[4] = {
-				name	= "MRM20",
+				name	= "SRM6",
+				mainDir = "0 0 1",
+				maxAngleDif = 270,
+				OnlyTargetCategory = "notbeacon",
+				WeaponSlaveTo = 1,
+			},
+			[5] = {
+				name	= "SRM6",
 				mainDir = "0 0 1",
 				maxAngleDif = 270,
 				OnlyTargetCategory = "notbeacon",
@@ -80,7 +87,7 @@ local IS_Chimera = {
 	},]]
     customparams = {
 		hasturnbutton	= "1",
-		helptext		= "Armament: 1 x Large Pulse Laser, 2 x Medium Pulse Laser, 1 x MRM-20 - Armor: 7 tons",
+		helptext		= "Armament: 1 x Large Pulse Laser, 2 x Medium Pulse Laser, 2 x SRM-6 - Armor: 7 tons",
 		heatlimit		= "20",
 		torsoturnspeed	= "170",
 		canjump			= "1",
