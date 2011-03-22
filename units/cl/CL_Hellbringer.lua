@@ -87,7 +87,7 @@ local CL_Hellbringer = {
 	},]]
     customparams = {
 		hasturnbutton	= "1",
-		helptext		= "Armament: 2 x ER PPC, 3 x ER Medium Beam Laser, 2 x Machinegun, 1 x LRM-10 - Armor: 8 tons Ferro-Fibrous",
+		helptext		= "Armament: 1 x Gauss Rifle, 1 x UAC/10, 1 x ER Small Beam Laser, 1 x LRM-10 - Armor: 8 tons Ferro-Fibrous",
 		heatlimit		= "26",
 		torsoturnspeed	= "130",
     },
