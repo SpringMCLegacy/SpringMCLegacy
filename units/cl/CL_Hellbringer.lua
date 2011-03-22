@@ -28,7 +28,7 @@ local CL_Hellbringer = {
 --	trackType			= "Thick",--graphics file to use for the track decal, from \bitmaps\tracks\ folder
 --	trackWidth			= 20,--width to render the decal
 	buildCostEnergy     = 65,
-	buildCostMetal      = 25545,
+	buildCostMetal      = 23140,
 	buildTime           = 0,
 	upright				= true,
 	canMove				= true,
@@ -44,13 +44,13 @@ local CL_Hellbringer = {
 		--Makes unit use weapon from /weapons folder
 		weapons 		= {	
 			[1] = {
-				name	= "CERPPC",
+				name	= "Gauss",
 				mainDir = "0 0 1",
 				maxAngleDif = 270,
 				OnlyTargetCategory = "notbeacon",
 			},
 			[2] = {
-				name	= "CERPPC",
+				name	= "UAC10",
 				--weaponSlaveTo2 = 1,
 				mainDir = "0 0 1",
 				maxAngleDif = 270,
@@ -58,41 +58,13 @@ local CL_Hellbringer = {
 				WeaponSlaveTo = 1,
 			},
 			[3] = {
-				name	= "CERMBL",
+				name	= "CERSBL",
 				mainDir = "0 0 1",
 				maxAngleDif = 270,
 				OnlyTargetCategory = "notbeacon",
 				WeaponSlaveTo = 1,
 			},
 			[4] = {
-				name	= "CERMBL",
-				mainDir = "0 0 1",
-				maxAngleDif = 270,
-				OnlyTargetCategory = "notbeacon",
-				WeaponSlaveTo = 1,
-			},
-			[5] = {
-				name	= "CERMBL",
-				mainDir = "0 0 1",
-				maxAngleDif = 270,
-				OnlyTargetCategory = "notbeacon",
-				WeaponSlaveTo = 1,
-			},
-			[6] = {
-				name	= "MG",
-				mainDir = "0 0 1",
-				maxAngleDif = 270,
-				OnlyTargetCategory = "notbeacon",
-				WeaponSlaveTo = 1,
-			},
-			[7] = {
-				name	= "MG",
-				mainDir = "0 0 1",
-				maxAngleDif = 270,
-				OnlyTargetCategory = "notbeacon",
-				WeaponSlaveTo = 1,
-			},
-			[8] = {
 				name	= "LRM10",
 				mainDir = "0 0 1",
 				maxAngleDif = 270,
