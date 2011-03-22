@@ -68,28 +68,28 @@ local IS_Warhammer = {
 				WeaponSlaveTo = 1,
 			},
 			[5] = {
-				name	= "MBL",
+				name	= "ERSBL",
 				mainDir = "0 0 1",
 				maxAngleDif = 270,
 				OnlyTargetCategory = "notbeacon",
 				WeaponSlaveTo = 1,
 			},
 			[6] = {
-				name	= "MBL",
+				name	= "ERSBL",
 				mainDir = "0 0 1",
 				maxAngleDif = 270,
 				OnlyTargetCategory = "notbeacon",
 				WeaponSlaveTo = 1,
 			},
 			[7] = {
-				name	= "SPL",
+				name	= "MG",
 				mainDir = "0 0 1",
 				maxAngleDif = 270,
 				OnlyTargetCategory = "notbeacon",
 				WeaponSlaveTo = 1,
 			},
 			[8] = {
-				name	= "SPL",
+				name	= "MG",
 				mainDir = "0 0 1",
 				maxAngleDif = 270,
 				OnlyTargetCategory = "notbeacon",
@@ -115,7 +115,7 @@ local IS_Warhammer = {
 	},]]
     customparams = {
 		hasturnbutton	= "1",
-		helptext		= "Armament: 2 x ER PPC, 4 x ER Medium Beam Laser, 2 x Small Pulse Laser, 2 x LRM-5 - Armor: 10 tons Standard",
+		helptext		= "Armament: 2 x PPC, 2 x Medium Beam Laser, 2 x Small Beam Laser, 2 x MG, 1 x LRM-10 - Armor: 10 tons Standard",
 		heatlimit		= "30",
 		torsoturnspeed	= "120",
     },

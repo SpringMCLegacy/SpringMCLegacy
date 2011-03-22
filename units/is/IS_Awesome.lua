@@ -43,7 +43,7 @@ local IS_Awesome = {
 		--Makes unit use weapon from /weapons folder
 		weapons 		= {	
 			[1] = {
-				name	= "PPC",
+				name	= "LBL",
 				mainDir = "0 0 1",
 				maxAngleDif = 270,
 				OnlyTargetCategory = "notbeacon",
@@ -91,7 +91,7 @@ local IS_Awesome = {
 	},]]
     customparams = {
 		hasturnbutton	= "1",
-		helptext		= "Armament: 4 x PPC, 1 x Medium Pulse Laser, Anti-Missile System - Armor: 15.5 tons Standard",
+		helptext		= "Armament: 1 x Large Beam Laser, 3 x PPC, 1 x Medium Pulse Laser, Anti-Missile System - Armor: 15.5 tons Standard",
 		heatlimit		= "38",
 		torsoturnspeed	= "100",
     },

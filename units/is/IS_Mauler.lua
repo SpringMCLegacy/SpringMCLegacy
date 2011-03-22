@@ -54,7 +54,7 @@ local IS_Mauler = {
 				WeaponSlaveTo = 1,
 			},
 			[3] = {
-				name	= "UAC2",
+				name	= "UAC5",
 				mainDir = "0 0 1",
 				maxAngleDif = 270,
 				OnlyTargetCategory = "notbeacon",
@@ -68,7 +68,7 @@ local IS_Mauler = {
 				WeaponSlaveTo = 1,
 			},
 			[5] = {
-				name	= "UAC2",
+				name	= "UAC5",
 				mainDir = "0 0 1",
 				maxAngleDif = 270,
 				OnlyTargetCategory = "notbeacon",
@@ -82,14 +82,14 @@ local IS_Mauler = {
 				WeaponSlaveTo = 1,
 			},
 			[7] = {
-				name	= "LRM15",
+				name	= "LRM10",
 				mainDir = "0 0 1",
 				maxAngleDif = 270,
 				OnlyTargetCategory = "notbeacon",
 				WeaponSlaveTo = 1,
 			},
 			[8] = {
-				name	= "LRM15",
+				name	= "LRM10",
 				mainDir = "0 0 1",
 				maxAngleDif = 270,
 				OnlyTargetCategory = "notbeacon",
