@@ -21,6 +21,7 @@ local armorDefs = {
 		"CL_Iceferret",
 		"CL_Nova",
 		"CL_Stormcrow",
+		"IS_Orion",
 		"IS_Warhammer",
 		"IS_Catapult",
 		"CL_Summoner",
