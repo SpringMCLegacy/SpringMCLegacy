@@ -102,7 +102,7 @@ local function CoolOff()
 	while true do
 		if inWater then
 			local x, _, z = GetUnitBasePosition(unitID)
-			local depth = max(3, GetGroundHeight(x, z) / -3)
+			local depth = max(4, GetGroundHeight(x, z) / -3)
 			coolRate = baseCoolRate * depth
 		end
 		currHeatLevel = currHeatLevel - coolRate
