@@ -155,7 +155,7 @@ function script.setSFXoccupy(terrainType)
 		inWater = true
 	else
 		inWater = false
-		coolRate = info.coolRate * 3
+		coolRate = info.coolRate * 4
 	end
 end
 
