@@ -52,6 +52,7 @@ buildoptions =
 	"is_raven",
 	"is_chimera",
 	"is_bushwacker",
+	"is_orion",
 	"is_warhammer",
 	"is_catapult",
 	"is_awesome",
