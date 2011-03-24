@@ -1,5 +1,5 @@
 weaponDef = {
-	name                    = "Extended Range Small Beam Laser",
+	name                    = "Small Beam Laser",
 	weaponType              = "BeamLaser",
 	beamLaser				= true,
 	beamLaser				= 1,
@@ -14,7 +14,7 @@ weaponDef = {
 	collideFriendly			= true,
 	noSelfDamage            = true,
 	turret                  = true,
-	range                   = 500,
+	range                   = 300,
 	accuracy                = 10,
 	tollerance				= 100,
 	areaOfEffect            = 5,
@@ -41,9 +41,9 @@ weaponDef = {
 		vehicle = 112.5,
 	},
 	customparams = {
-		heatgenerated		= "5",--2/sec
+		heatgenerated		= "2.5",--1/sec
 		cegflare			= "LASER_MUZZLEFLASH",
     },
 }
 
-return lowerkeys({ ERSBL = weaponDef })
+return lowerkeys({ SBL = weaponDef })
