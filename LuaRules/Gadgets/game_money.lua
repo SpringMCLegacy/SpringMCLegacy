@@ -38,7 +38,7 @@ local modOptions = Spring.GetModOptions()
 local dropShips = {}
 
 function gadget:UnitDamaged(unitID, unitDefID, unitTeam, damage, paralyzer, weaponID, attackerID, attackerDefID, attackerTeam)
-	if modOptions and modOptions.income ~= "none" then
+	if modOptions and (modOptions.income ~= "none" and modOptions.income ~= "dropship") then
 		if attackerID and not AreTeamsAllied(unitTeam, attackerTeam) then
 			AddTeamResource(attackerTeam, "metal", damage * DAMAGE_REWARD_MULT)
 		end
@@ -57,7 +57,7 @@ end
 
 function gadget:UnitDestroyed(unitID, unitDefID, unitTeam, attackerID, attackerDefID, attackerTeam)
 	dropShips[unitID] = nil
-	if modOptions and modOptions.income ~= "none" then
+	if modOptions and (modOptions.income ~= "none" and modOptions.income ~= "dropship") then
 		if attackerID and not AreTeamsAllied(unitTeam, attackerTeam) then
 			AddTeamResource(attackerTeam, "metal", UnitDefs[unitDefID].metalCost * KILL_REWARD_MULT)
 		end
@@ -86,7 +86,7 @@ function gadget:GameFrame(n)
 					local buildCost = UnitDefs[-buildDefID].metalCost
 					local weight = UnitDefs[-buildDefID].energyCost
 					if buildCost > money or weight > weightLeft then
-						EditUnitCmdDesc(unitID, cmdDescID, {disabled = true})
+						EditUnitCmdDesc(unitID, cmdDescID, {disabled = true, name = "test", onlyTexture = false})
 					else
 						EditUnitCmdDesc(unitID, cmdDescID, {disabled = false})
 					end

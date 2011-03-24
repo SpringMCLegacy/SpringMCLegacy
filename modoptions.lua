@@ -25,8 +25,8 @@ local options = {
 
   {
 	key    = '2gamemode',
-	name   = 'Income Settings',
-	desc   = 'Sets options regarding Income modes',
+	name   = 'Gameplay Settings',
+	desc   = 'Sets options regarding income and winning conditions',
 	type   = 'section',
   },
 	
@@ -41,13 +41,13 @@ local options = {
       items = {
          {
 		 key = "default",
-		 name = "Dropship & Beacon & Damage Income",
-		 desc = "Income from your dropship, damaging enemy units and capturing beacons",
-		 },
-         {
-		 key = "damageonly",
-		 name = "Dropship & Damage Income Only",
+		 name = "Dropship & Damage Income",
 		 desc = "Income from your dropship and from damaging and killing enemy units" ,
+		 },
+		 {
+		 key = "dropship",
+		 name = "Dropship Income",
+		 desc = "Income only from your dropship",
 		 },
          {
 		 key = "none",
@@ -56,6 +56,18 @@ local options = {
 		 },
       },
    },
+   
+	{
+		key = "start_tickets",
+		name = "Tickets",
+		desc = "Ticket Controls",
+		type   = "number",
+		def    = 100,
+		min    = 100,
+		max    = 50000,
+		section= '2gamemode',
+		step   = 10,
+	},
  
 --------------------------------------------------------------------------------
 --------------------------------------------------------------------------------

@@ -20,6 +20,7 @@ local GetGroundHeight			= Spring.GetGroundHeight
 local GetGroundInfo				= Spring.GetGroundInfo
 local GetUnitsInCylinder		= Spring.GetUnitsInCylinder
 local GetUnitTeam				= Spring.GetUnitTeam
+local GetTeamInfo 				= Spring.GetTeamInfo
 local GetTeamRulesParam			= Spring.GetTeamRulesParam
 local GetTeamUnitDefCount 		= Spring.GetTeamUnitDefCount
 
@@ -39,6 +40,7 @@ local TransferUnit				= Spring.TransferUnit
 
 -- constants
 local GAIA_TEAM_ID = Spring.GetGaiaTeamID()
+local GAIA_ALLY_ID = select(6, GetTeamInfo(GAIA_TEAM_ID))
 local PROFILE_PATH = "maps/flagConfig/" .. Game.mapName .. "_profile.lua"
 local DEBUG	= false -- enable to print out flag locations in profile format
 
@@ -81,10 +83,44 @@ if (Spring.GetModOptions) then
 end
 local metalMake = tonumber(modOptions.map_command_per_player) or -1
 
+-- BEACON TICKET DECLARATIONS
+local START_TICKETS = tonumber(modOptions.start_tickets) or 100
+local TICKET_LOSS_PER_BEACON = 1
+local beaconsPerAllyTeam = {}
+local tickets = {}
+local bleedTimes = {}
+local allyTeams = Spring.GetAllyTeamList()
+for i = 1, #allyTeams do
+	local allyTeam = allyTeams[i]
+	if allyTeam == GAIA_ALLY_ID then allyTeams[i] = nil; break end
+	tickets[allyTeam] = START_TICKETS
+	bleedTimes[allyTeam] = 0
+	beaconsPerAllyTeam[allyTeam] = 0
+end
+
 if (gadgetHandler:IsSyncedCode()) then
 -- SYNCED
 
 local DelayCall = GG.Delay.DelayCall
+
+function UpdateBeacons(teamID, num)
+	local allyTeam = select(6, GetTeamInfo(teamID))
+	beaconsPerAllyTeam[allyTeam] = beaconsPerAllyTeam[allyTeam] + num
+end
+
+function DecrementTickets(allyTeam)
+	tickets[allyTeam] = tickets[allyTeam] - 1
+	if tickets[allyTeam] == 0 then
+		local teams = Spring.GetTeamList(allyTeam)
+		for i = 1, #teams do
+			local teamID = teams[i]
+			local teamUnits = Spring.GetTeamUnits(teamID)
+			for i = 1, #teamUnits do
+				TransferUnit(teamUnits[i], GAIA_TEAM_ID, false)
+			end
+		end
+	end
+end
 
 -- this function is used to add any additional flagType specific behaviour
 function FlagSpecialBehaviour(flagType, flagID, flagTeamID, teamID)
@@ -99,7 +135,6 @@ function PlaceFlag(spot, flagType)
 	end
 	
 	local newFlag = CreateUnit(flagType, spot.x, 0, spot.z, 0, GAIA_TEAM_ID)
-	Spring.Echo("flagID: " .. newFlag)
 	numFlags[flagType] = numFlags[flagType] + 1
 	flags[flagType][numFlags[flagType]] = newFlag
 	flagCapStatuses[newFlag] = {}
@@ -117,7 +152,7 @@ function gadget:GamePreload()
 	if VFS.FileExists(PROFILE_PATH) then
 		local flagSpots, buoySpots = VFS.Include(PROFILE_PATH)
 		if flagSpots and #flagSpots > 0 then 
-			Spring.Echo("Map Beacon Profile found. Loading Beacon positions...", #flagSpots)
+			Spring.Echo("Map Beacon Profile found. Loading Beacon positions..." .. (#flagSpots or 0))
 			flagTypeSpots[flagTypes[1]] = flagSpots 
 		end
 		--[[if buoySpots and #buoySpots > 0 then 
@@ -141,6 +176,7 @@ end
 
 
 function gadget:GameFrame(n)
+	local maxBeacon = 0
 	-- FLAG CONTROL
 	if n % 30 == 5 then -- every second with a 5 frame offset
 		for _, flagType in pairs(flagTypes) do
@@ -197,11 +233,13 @@ function gadget:GameFrame(n)
 								-- Neutral flag being capped
 								Spring.SendMessageToTeam(teamID, flagData.tooltip .. " Captured!")
 								TransferUnit(flagID, teamID, false)
+								UpdateBeacons(teamID, 1)
 								SetTeamRulesParam(teamID, flagType .. "s", (GetTeamRulesParam(teamID, flagType .. "s") or 0) + 1, {public = true})
 							else
 								-- Team flag being neutralised
 								Spring.SendMessageToTeam(teamID, flagData.tooltip .. " Neutralised!")
 								TransferUnit(flagID, GAIA_TEAM_ID, false)
+								UpdateBeacons(flagTeamID, -1)
 								SetTeamRulesParam(teamID, flagType .. "s", (GetTeamRulesParam(teamID, flagType .. "s") or 0) - 1, {public = true})
 							end
 							-- Perform any flagType specific behaviours
@@ -219,6 +257,25 @@ function gadget:GameFrame(n)
 					end
 				end
 			end
+		end
+		-- manage tickets
+
+		
+		for allyTeam, numBeacon in pairs(beaconsPerAllyTeam) do
+			maxBeacon = math.max(numBeacon, maxBeacon)
+		end
+		for allyTeam, numBeacon in pairs(beaconsPerAllyTeam) do
+			if numBeacon < maxBeacon then
+				bleedTimes[allyTeam] = numFlags["beacon"] / (maxBeacon - numBeacon)
+			else
+				bleedTimes[allyTeam] = 0
+			end
+		end
+	end
+	for allyTeam, i in pairs(bleedTimes) do
+		if i > 0 and n % (30 * i) == 0 then
+			DecrementTickets(allyTeam)
+			Spring.Echo("AllyTeam " .. allyTeam .. ": " .. tickets[allyTeam])
 		end
 	end
 end
