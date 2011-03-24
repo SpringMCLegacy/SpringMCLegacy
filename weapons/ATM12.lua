@@ -38,7 +38,7 @@ weaponDef = {
 		light = 200,
 		medium = 170,
 		heavy = 140,
-		assault = 120
+		assault = 120,
 		vehicle = 300,
 	},
 	customparams = {
