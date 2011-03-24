@@ -24,8 +24,8 @@ local IS_Hollander = {
 --	trackStretch		= 1,-- how much the tracks stretch, the higher the number the more "compact" they become
 --	trackType			= "Thick",--graphics file to use for the track decal, from \bitmaps\tracks\ folder
 --	trackWidth			= 20,--width to render the decal
-	buildCostEnergy     = 35,
-	buildCostMetal      = 14800,
+	buildCostEnergy     = 45,
+	buildCostMetal      = 14900,
 	buildTime           = 0,
 	upright				= true,
 	canMove				= true,
@@ -47,20 +47,20 @@ local IS_Hollander = {
 				OnlyTargetCategory = "notbeacon",
 			},
 			[2] = {
-				name	= "SBL",
+				name	= "Flamer",
 				mainDir = "0 0 1",
 				maxAngleDif = 270,
 				OnlyTargetCategory = "notbeacon",
 				WeaponSlaveTo = 1,
 			},
 			[3] = {
-				name	= "SBL",
+				name	= "Flamer",
 				mainDir = "0 0 1",
 				maxAngleDif = 270,
 				OnlyTargetCategory = "notbeacon",
 				WeaponSlaveTo = 1,
 			},
-			[4] = {
+			--[[[4] = {
 				name	= "Flamer",
 				mainDir = "0 0 1",
 				maxAngleDif = 270,
@@ -73,7 +73,7 @@ local IS_Hollander = {
 				maxAngleDif = 270,
 				OnlyTargetCategory = "notbeacon",
 				WeaponSlaveTo = 1,
-			},
+			},]]
 		},
     customparams = {
 		hasturnbutton	= "1",
