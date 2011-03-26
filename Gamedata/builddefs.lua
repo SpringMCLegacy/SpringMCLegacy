@@ -57,7 +57,6 @@ buildoptions =
 	"is_warhammer",
 	"is_catapult",
 	"is_awesome",
-	"is_mauler",
 	"is_devastator",
 	"is_atlas",
   },
