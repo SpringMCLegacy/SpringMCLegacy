@@ -109,8 +109,9 @@ function UpdateBeacons(teamID, num)
 end
 
 function DecrementTickets(allyTeam)
-	tickets[allyTeam] = tickets[allyTeam] - 1
-	if tickets[allyTeam] == 0 then
+	if tickets[allyTeam] > 0 then
+		tickets[allyTeam] = tickets[allyTeam] - 1
+	elseif tickets[allyTeam] == 0 then
 		local teams = Spring.GetTeamList(allyTeam)
 		for i = 1, #teams do
 			local teamID = teams[i]
