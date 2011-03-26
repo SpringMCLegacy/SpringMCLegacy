@@ -62,7 +62,7 @@ local CL_Kitfox = {
 				WeaponSlaveTo = 1,
 			},
 			[4] = {
-				name	= "ATM6",
+				name	= "SRM4",
 				--mainDir = "0 0 1",
 				--maxAngleDif = 270,
 				OnlyTargetCategory = "notbeacon",
