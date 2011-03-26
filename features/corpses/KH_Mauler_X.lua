@@ -1,5 +1,5 @@
 local featureDefs = {
-  IS_Mauler_X = {
+  KH_Mauler_X = {
     blocking           = false,
     category           = "corpses",
     damage             = 5400,
@@ -10,7 +10,7 @@ local featureDefs = {
     height             = "30",
     hitdensity         = "50",
     metal              = 2000,
-    object             = "IS_Mauler_X.s3o",
+    object             = "KH_Mauler_X.s3o",
     reclaimable        = true,
     world              = "All Worlds",
   },
