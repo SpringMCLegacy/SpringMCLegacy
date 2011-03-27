@@ -2,6 +2,7 @@ local IS_Bushwacker = {
 	name              	= "Bushwacker",
 	description         = "Medium Strike Mech",
 	objectName        	= "IS_Bushwacker.s3o",
+	iconType			= "mediummech",
 	script				= "Mech.lua",
 	corpse				= "IS_Bushwacker_X",
 	explodeAs          	= "mechexplode",

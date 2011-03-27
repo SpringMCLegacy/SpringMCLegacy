@@ -2,6 +2,7 @@ local IS_Atlas = {
 	name              	= "Atlas",
 	description         = "Assault-class Brawler Mech",
 	objectName        	= "IS_Atlas.s3o",
+	iconType			= "assaultmech",
 	script				= "Mech.lua",
 	corpse				= "IS_Atlas_X",
 	explodeAs          	= "mechexplode",

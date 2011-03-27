@@ -2,6 +2,7 @@ local IS_Hollander = {
 	name              	= "Hollander II",
 	description         = "Medium Sniper Mech",
 	objectName        	= "IS_Hollander.s3o",
+	iconType			= "mediummech",
 	script				= "Mech.lua",
 	corpse				= "IS_Hollander_X",
 	explodeAs          	= "mechexplode",

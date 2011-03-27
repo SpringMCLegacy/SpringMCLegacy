@@ -2,6 +2,7 @@ local IS_Locust = {
 	name              	= "Locust",
 	description         = "Light Scout Mech",
 	objectName        	= "IS_Locust.s3o",
+	iconType			= "lightmech",
 	script				= "Mech.lua",
 	corpse				= "IS_Locust_X",
 	explodeAs          	= "mechexplode",

@@ -2,6 +2,7 @@ local IS_Raven = {
 	name              	= "Raven",
 	description         = "Light ECM Scout Mech",
 	objectName        	= "IS_Raven.s3o",
+	iconType			= "lightmech",
 	script				= "Mech.lua",
 	corpse				= "IS_Raven_X",
 	explodeAs          	= "mechexplode",

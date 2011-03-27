@@ -2,6 +2,7 @@ local CL_Mistlynx = {
 	name              	= "Mist Lynx (Koshi)",
 	description         = "Light Missile Support Mech",
 	objectName        	= "CL_Mistlynx.s3o",
+	iconType			= "lightmech",
 	script				= "Mech.lua",
 	corpse				= "CL_Mistlynx_X",
 	explodeAs          	= "mechexplode",

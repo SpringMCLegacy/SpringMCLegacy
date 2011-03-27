@@ -2,6 +2,7 @@ local IS_Awesome = {
 	name              	= "Awesome",
 	description         = "Assault-class Strike Mech",
 	objectName        	= "IS_Awesome.s3o",
+	iconType			= "assaultmech",
 	script				= "Mech.lua",
 	corpse				= "IS_Awesome_X",
 	explodeAs          	= "mechexplode",

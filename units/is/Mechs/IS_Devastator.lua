@@ -2,6 +2,7 @@ local IS_Devastator = {
 	name              	= "Devastator",
 	description         = "Assault-class Brawler Mech",
 	objectName        	= "IS_Devastator.s3o",
+	iconType			= "assaultmech",
 	script				= "Mech.lua",
 	corpse				= "IS_Devastator_X",
 	explodeAs          	= "mechexplode",

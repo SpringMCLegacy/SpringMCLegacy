@@ -2,6 +2,7 @@ local CL_Summoner = {
 	name              	= "Summoner (Thor)",
 	description         = "Heavy Brawler Mech",
 	objectName        	= "CL_Summoner.s3o",
+	iconType			= "heavymech",
 	script				= "Mech.lua",
 	corpse				= "CL_Summoner_X",
 	explodeAs          	= "mechexplode",

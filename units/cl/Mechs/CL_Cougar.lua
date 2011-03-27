@@ -2,6 +2,7 @@ local CL_Cougar = {
 	name              	= "Cougar",
 	description         = "Light Brawler Mech",
 	objectName        	= "CL_Cougar.s3o",
+	iconType			= "lightmech",
 	script				= "Mech.lua",
 	corpse				= "CL_Cougar_X",
 	explodeAs          	= "mechexplode",
