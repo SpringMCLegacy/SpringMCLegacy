@@ -2,6 +2,7 @@ local IS_Osiris = {
 	name              	= "Osiris",
 	description         = "Light Skirmish Mech",
 	objectName        	= "IS_Osiris.s3o",
+	iconType			= "lightmech",
 	script				= "Mech.lua",
 	corpse				= "IS_Osiris_X",
 	explodeAs          	= "mechexplode",

@@ -2,6 +2,7 @@ local CL_Warhawk = {
 	name              	= "War Hawk (Masakari)",
 	description         = "Assault-class Sniper Mech",
 	objectName        	= "CL_Warhawk.s3o",
+	iconType			= "assaultmech",
 	script				= "Mech.lua",
 	corpse				= "CL_Warhawk_X",
 	explodeAs          	= "mechexplode",

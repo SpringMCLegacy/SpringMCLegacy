@@ -2,6 +2,7 @@ local CL_Iceferret = {
 	name              	= "Ice Ferret (Fenris)",
 	description         = "Medium Brawler Mech",
 	objectName        	= "CL_Iceferret.s3o",
+	iconType			= "mediummech",
 	script				= "Mech.lua",
 	corpse				= "CL_Iceferret_X",
 	explodeAs          	= "mechexplode",

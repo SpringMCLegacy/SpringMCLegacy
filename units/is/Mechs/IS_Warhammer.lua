@@ -2,6 +2,7 @@ local IS_Warhammer = {
 	name              	= "Warhammer",
 	description         = "Heavy Strike Mech",
 	objectName        	= "IS_Warhammer.s3o",
+	iconType			= "heavymech",
 	script				= "Mech.lua",
 	corpse				= "IS_Warhammer_X",
 	explodeAs          	= "mechexplode",

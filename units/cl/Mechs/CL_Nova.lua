@@ -2,6 +2,7 @@ local CL_Nova = {
 	name              	= "Nova (Black Hawk)",
 	description         = "Medium Strike Mech",
 	objectName        	= "CL_Nova.s3o",
+	iconType			= "mediummech",
 	script				= "Mech.lua",
 	corpse				= "CL_Nova_X",
 	explodeAs          	= "mechexplode",

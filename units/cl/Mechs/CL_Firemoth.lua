@@ -2,6 +2,7 @@ local CL_Firemoth = {
 	name              	= "Fire Moth (Dasher)",
 	description         = "Light Skirmish Mech",
 	objectName        	= "CL_Firemoth.s3o",
+	iconType			= "lightmech",
 	script				= "Mech.lua",
 	corpse				= "CL_Firemoth_X",
 	explodeAs          	= "mechexplode",

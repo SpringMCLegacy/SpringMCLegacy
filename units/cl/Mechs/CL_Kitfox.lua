@@ -2,6 +2,7 @@ local CL_Kitfox = {
 	name              	= "Kit Fox (Uller)",
 	description         = "Light Strike Mech",
 	objectName        	= "CL_Kitfox.s3o",
+	iconType			= "lightmech",
 	script				= "Mech.lua",
 	corpse				= "CL_Kitfox_X",
 	explodeAs          	= "mechexplode",

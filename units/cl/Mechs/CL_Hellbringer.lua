@@ -2,6 +2,7 @@ local CL_Hellbringer = {
 	name              	= "Hellbringer (Loki)",
 	description         = "Heavy Sniper Mech",
 	objectName        	= "CL_Hellbringer.s3o",
+	iconType			= "heavymech",
 	script				= "Mech.lua",
 	corpse				= "CL_Hellbringer_X",
 	explodeAs          	= "mechexplode",

@@ -2,6 +2,7 @@ local beacon = {
 	name              	= "Beacon",
 	description         = "Strategic Marker",
 	objectName        	= "beacon.s3o",
+	iconType			= "beacon",
 	script				= "beacon.lua",
 	category 			= "beacon",
 	sightDistance       = 0,

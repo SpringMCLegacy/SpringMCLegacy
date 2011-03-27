@@ -2,6 +2,7 @@ local CL_Timberwolf = {
 	name              	= "Timber Wolf (Mad Cat)",
 	description         = "Heavy Strike Mech",
 	objectName        	= "CL_Timberwolf.s3o",
+	iconType			= "heavymech",
 	script				= "Mech.lua",
 	corpse				= "CL_Timberwolf_X",
 	explodeAs          	= "mechexplode",

@@ -2,6 +2,7 @@ local IS_Catapult = {
 	name              	= "Catapult",
 	description         = "Heavy Missile Support Mech",
 	objectName        	= "IS_Catapult.s3o",
+	iconType			= "heavymech",
 	script				= "Mech.lua",
 	corpse				= "IS_Catapult_X",
 	explodeAs          	= "mechexplode",

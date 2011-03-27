@@ -2,6 +2,7 @@ local IS_Dropship = {
 	name              	= "Dropship",
 	description         = "Unit Aquisition Facility",
 	objectName        	= "Dropship_2.s3o",
+	iconType			= "dropship",
 	script				= "Dropship.lua",
 	category 			= "dropship structure notbeacon",
 	sightDistance       = 1000,

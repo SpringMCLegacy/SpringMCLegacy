@@ -2,6 +2,7 @@ local IS_Orion = {
 	name              	= "Orion",
 	description         = "Heavy Strike Mech",
 	objectName        	= "IS_Orion.s3o",
+	iconType			= "heavymech",
 	script				= "Mech.lua",
 	corpse				= "IS_Orion_X",
 	explodeAs          	= "mechexplode",

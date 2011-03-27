@@ -2,6 +2,7 @@ local CL_Maddog = {
 	name              	= "Mad Dog (Vulture)",
 	description         = "Heavy Missile Support Mech",
 	objectName        	= "CL_Maddog.s3o",
+	iconType			= "heavymech",
 	script				= "Mech.lua",
 	corpse				= "CL_Maddog_X",
 	explodeAs          	= "mechexplode",

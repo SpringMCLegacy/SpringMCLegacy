@@ -2,6 +2,7 @@ local IS_Chimera = {
 	name              	= "Chimera",
 	description         = "Medium Skirmish Mech",
 	objectName        	= "IS_Chimera.s3o",
+	iconType			= "mediummech",
 	script				= "Mech.lua",
 	corpse				= "IS_Chimera_X",
 	explodeAs          	= "mechexplode",

@@ -2,6 +2,7 @@ local IS_Wolfhound = {
 	name              	= "Wolfhound",
 	description         = "Light Strike Mech",
 	objectName        	= "IS_Wolfhound.s3o",
+	iconType			= "lightmech",
 	script				= "Mech.lua",
 	corpse				= "IS_Wolfhound_X",
 	explodeAs          	= "mechexplode",
