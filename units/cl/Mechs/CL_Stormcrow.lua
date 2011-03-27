@@ -76,25 +76,24 @@ local CL_Stormcrow = {
 				WeaponSlaveTo = 1,
 			},
 			[6] = {
-				name	= "SSRM6",
+				name	= "SRM4",
+				mainDir = "0 0 1",
+				maxAngleDif = 270,
+				OnlyTargetCategory = "notbeacon",
+				WeaponSlaveTo = 1,
+			},
+			[7] = {
+				name	= "SRM4",
 				mainDir = "0 0 1",
 				maxAngleDif = 270,
 				OnlyTargetCategory = "notbeacon",
 				WeaponSlaveTo = 1,
 			},
 		},
-		
-	--Gets CEG effects from /gamedata/explosions folder
 
-	--[[sfxtypes = {
-		explosiongenerators = {
-		"custom:MISSILE_MUZZLEFLASH",
-		"custom:LASER_MUZZLEFLASH",
-		},
-	},]]
     customparams = {
 		hasturnbutton	= "1",
-		helptext		= "Armament: 1 x LRM-20, 4 x Medium Pulse Laser, 1 x SSRM-6 - Armor: 9.5 tons",
+		helptext		= "Armament: 1 x LRM-20, 4 x Medium Pulse Laser, 2 x SRM-4 - Armor: 9.5 tons",
 		heatlimit		= "20",
 		torsoturnspeed	= "160",
 		leftarmid		= "2",
