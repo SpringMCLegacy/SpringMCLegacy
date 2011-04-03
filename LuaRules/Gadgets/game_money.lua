@@ -37,6 +37,18 @@ local KILL_REWARD_MULT = 0.1
 local modOptions = Spring.GetModOptions()
 local dropShips = {}
 
+function gadget:AllowUnitCreation(unitDefID, builderID, teamID, x, y, z)
+	ud = UnitDefs[unitDefID]
+	local money = GetTeamResources(teamID, "metal")
+	local weightLeft = GetTeamResources(teamID, "energy")
+	local buildCost = ud.metalCost
+	local weight = ud.energyCost
+	if buildCost > money or weight > weightLeft then
+		return false
+	end
+	return true
+end
+
 function gadget:UnitDamaged(unitID, unitDefID, unitTeam, damage, paralyzer, weaponID, attackerID, attackerDefID, attackerTeam)
 	if modOptions and (modOptions.income ~= "none" and modOptions.income ~= "dropship") then
 		if attackerID and not AreTeamsAllied(unitTeam, attackerTeam) then
@@ -45,7 +57,7 @@ function gadget:UnitDamaged(unitID, unitDefID, unitTeam, damage, paralyzer, weap
 	end
 end
 
-function gadget:UnitCreated(unitID, unitDefID, teamID)
+function gadget:UnitCreated(unitID, unitDefID, teamID, builderID)
 	local ud = UnitDefs[unitDefID]
 	if ud.builder then -- warning, assumes no other builders or factories!
 		dropShips[unitID] = true
