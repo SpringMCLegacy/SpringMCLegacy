@@ -192,7 +192,6 @@ function script.Create()
 	StartThread(SmokeUnit, {pelvis, torso})
 	StartThread(MotionControl)
 	StartThread(CoolOff)
-	Sleep(unitDef.buildTime * 1000)
 end
 
 function script.StartMoving()
