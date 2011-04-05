@@ -3,9 +3,10 @@
 local ud = UnitDefs[Spring.GetUnitDefID(unitID)] -- unitID is available automatically to all LUS
 local weapons = ud.weapons
 local deg, rad = math.deg, math.rad
+local currUnitDefID = nil
 
 --piece defines
-local hull, pad, beam = piece ("hull", "pad", "beam")
+local hull, link, pad, beam = piece ("hull", "link", "pad", "beam")
 --Weapon 1 and 2, dual lasers
 local turret1_joint, turret1, turret1_flare1, turret1_flare2 = piece ("turret1_joint", "turret1", "turret1_flare1", "turret1_flare2")
 --Weapon 3 and 4, dual lasers
@@ -70,7 +71,13 @@ MEDIUM_MUZZLEFLASH = SFX.CEG+0
 PPC_MUZZLEFLASH = SFX.CEG+1
 MG_MUZZLEFLASH = SFX.CEG+2
 
+function GetUnitDef(unitDefID)
+	currUnitDefID = unitDefID
+end
+
 function script.Create()
+	Turn(link, x_axis, rad(20), 7)
+	
 	StartThread(SmokeUnit, {hull})
 	--Turning offset turrets to their positions
 	Turn(turret1, y_axis, 0, TURRET_SPEED_FAST)
@@ -99,6 +106,20 @@ function script.Create()
 	Turn(laser12, y_axis, rad(45), TURRET_SPEED_FAST)
 end
 
+function script.StartBuilding()
+	local buildTime = UnitDefs[currUnitDefID].buildTime
+	local moveSpeed = 206 / buildTime * 16 / 30
+	Move(link, z_axis, 52, moveSpeed)
+	WaitForMove(link, z_axis)
+	Move(pad, z_axis, 154, moveSpeed)
+	WaitForMove(pad, z_axis)
+end
+
+function script.StopBuilding()
+	Move(link, z_axis, 0, 50000000)
+	Move(pad, z_axis, 0, 50000000)
+end
+
 function script.Activate()
 	SetUnitValue(COB.YARD_OPEN, 1)
 	SetUnitValue(COB.INBUILDSTANCE, 1)
@@ -114,11 +135,11 @@ function script.Deactivate()
 	return 0
 end
 
-function QueryBuildInfo() 
+function script.QueryBuildInfo() 
 	return pad
 end
 
-function QueryNanopiece() 
+function script.QueryNanopiece() 
 	return beam 
 end
 

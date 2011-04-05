@@ -188,9 +188,11 @@ function endJump()
 end
 
 function script.Create()
+	walking = true
 	StartThread(SmokeUnit, {pelvis, torso})
 	StartThread(MotionControl)
 	StartThread(CoolOff)
+	Sleep(unitDef.buildTime * 1000)
 end
 
 function script.StartMoving()
@@ -198,6 +200,9 @@ function script.StartMoving()
 end
 
 function script.StopMoving()
+	-- if we are walking down the ramp during construction, ignore calls to StopMoving
+	-- there's probably a more efficient way to do this
+	if select(5, Spring.GetUnitHealth(unitID)) ~= 1 then return end
 	walking = false
 end
 
