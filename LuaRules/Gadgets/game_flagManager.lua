@@ -29,6 +29,7 @@ local CallCOBScript				= Spring.CallCOBScript
 local CreateUnit				= Spring.CreateUnit
 local DestroyFeature			= Spring.DestroyFeature
 local GiveOrderToUnit			= Spring.GiveOrderToUnit
+local SetGameRulesParam 		= Spring.SetGameRulesParam
 local SetTeamRulesParam			= Spring.SetTeamRulesParam
 local SetUnitAlwaysVisible		= Spring.SetUnitAlwaysVisible
 local SetUnitMetalExtraction	= Spring.SetUnitMetalExtraction
@@ -111,7 +112,8 @@ end
 function DecrementTickets(allyTeam)
 	if tickets[allyTeam] > 0 then
 		tickets[allyTeam] = tickets[allyTeam] - 1
-		Spring.Echo("AllyTeam " .. allyTeam .. ": " .. tickets[allyTeam])
+		--Spring.Echo("AllyTeam " .. allyTeam .. ": " .. tickets[allyTeam])
+		SetGameRulesParam("tickets" .. allyTeam, tickets[allyTeam], {public = true})
 	elseif tickets[allyTeam] == 0 then
 		local teams = Spring.GetTeamList(allyTeam)
 		for i = 1, #teams do
