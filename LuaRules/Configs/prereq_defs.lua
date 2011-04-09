@@ -27,6 +27,6 @@ local result = {
   cl_morrigu = {"cl_dropship"},
   cl_mars = {"cl_dropship"},
   cl_huit = {"cl_dropship"},
-  }
+}
 
-return outpost_vehicledepot
+return result
