@@ -38,7 +38,7 @@ colors.yellow = "\255\255\255\001"
 colors.green = "\255\001\255\001"
 colors.white = "\255\255\255\255"
 colors.black = "\255\001\001\001"
-colors.grey = "\255\128\128\128"
+colors.grey = "\255\160\160\160"
 
 local btFont
 local text = "C-Bills: " .. colors.grey .. 0 .. colors.white .. "\t\tTonnage: " .. colors.yellow .. 0 .. colors.white .. " / " .. colors.yellow .. 0 .. colors.white .. "\t\tTime: 0:00:00"
