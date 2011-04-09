@@ -64,7 +64,7 @@ local function SetBuildoptionDisabled(unitDefID, teamID, disable)
     local unitID = teamUnits[i]
     local cmdDescID = FindUnitCmdDesc(unitID, -unitDefID)
     if cmdDescID then
-      EditUnitCmdDesc(unitID, cmdDescID, {disabled = disable})
+      EditUnitCmdDesc(unitID, cmdDescID, {disabled = disable, hidden = disable})
     end
   end
 end
