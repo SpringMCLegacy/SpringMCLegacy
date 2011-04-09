@@ -11,7 +11,7 @@ buildoptions =
         --------------------
 
   cl_dropship = 
-  {
+	{
     --"cl_hephaestus",
 	--"cl_enyo",
 	--"cl_oro_lbx",
@@ -59,6 +59,26 @@ buildoptions =
 	"is_awesome",
 	"is_devastator",
 	"is_atlas",
+  },
+  outpost_vehicledepot = 
+  {
+	"is_harasser",
+	"is_scorpion_ac5",
+	"is_scorpion_lgauss",
+	"is_goblin",
+	"is_schrek",
+	"is_demolisher",
+	"is_challenger",
+	"is_lrmcarrier",
+	"is_sniper",
+	"cl_hephaestus",
+	"cl_enyo",
+	"cl_oro_lbx",
+	"cl_ares",
+	"cl_oro_hag",
+	"cl_morrigu",
+	"cl_mars",
+	"cl_huit",
   },
 }
 

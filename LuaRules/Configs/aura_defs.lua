@@ -55,7 +55,16 @@ local auras = {
                 range = 300,
                 transport = false,
                 heal = {
-						rate = 0.1,     --heals the unit by maxHP * rate per second. The per second is non-negotiable
+						rate = 0.1,     --heals the unit by maxHP * rate per second. The per second is non-negotiable.
+						mask = {"all"},
+				},
+        },
+		outpost_c3center = {
+                range = 600,
+                transport = false,
+                weapons = {
+						range = 1.25,     --Range multiplier. This also increases the projectile speed so lasers don't fade out.
+						accuracy = 1.25,  --Accuracy multiplier.
 						mask = {"all"},
 				},
         },
