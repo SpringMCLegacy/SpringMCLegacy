@@ -30,7 +30,7 @@ for i = 1, #allyTeams do
 	local allyTeam = allyTeams[i]
 	if allyTeam == GAIA_ALLY_ID then allyTeams[i] = nil; break end
 end
-local xMax, yMax = Spring.GetScreenGeometry()
+local xMax, yMax = Spring.GetViewGeometry()
 
 local colors = {}
 colors.red = "\255\255\001\001"
@@ -66,6 +66,7 @@ function widget:GameFrame(n)
 	if n % 32 == 0 then
 		local cBills = floor(GetTeamResources(MY_TEAM_ID, "metal"))
 		local tonnage, maxTonnage = GetTeamResources(MY_TEAM_ID, "energy")
+		maxTonnage = floor(maxTonnage)
 		tonnage = floor(maxTonnage - tonnage)
 		text = "C-Bills: " .. colors.grey .. cBills .. colors.white .. "\t\tTonnage: " .. colors.yellow .. tonnage .. colors.white .. " / " .. colors.yellow .. maxTonnage .. gameTime
 		text2 = "Tickets\n"
