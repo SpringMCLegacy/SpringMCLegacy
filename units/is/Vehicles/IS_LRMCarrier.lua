@@ -9,7 +9,7 @@ local IS_LRMCarrier = {
 	radarDistance      	= 1500,
 		activateWhenBuilt   = true,
 		onoffable           = true,
-	maxDamage           = 1000,
+	maxDamage           = 8000,
 	mass                = 6000,
 	footprintX			= 2,
 	footprintZ 			= 2,
@@ -47,15 +47,11 @@ local IS_LRMCarrier = {
 				OnlyTargetCategory = "notbeacon",
 			},
 		},
-	--Gets CEG effects from /gamedata/explosions folder
-	sfxtypes = {
-		explosiongenerators = {
-		"custom:MISSILE_MUZZLEFLASH",
-		},
-	},
 	customparams = {
 		hasturnbutton	= "1",
 		helptext		= "Armament: 2 x LRM-20 - Armor: 2 tons",
+		heatlimit		= "26",
+		unittype		= "vehicle",
     },
 }
 

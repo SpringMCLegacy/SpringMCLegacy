@@ -70,21 +70,12 @@ local CL_Kitfox = {
 				WeaponSlaveTo = 1,
 			},
 		},
-		
-	--Gets CEG effects from /gamedata/explosions folder
-
-	--[[sfxtypes = {
-		explosiongenerators = {
-		"custom:MISSILE_MUZZLEFLASH",
-		"custom:AC5_MUZZLEFLASH",
-		"custom:LASER_MUZZLEFLASH",
-		},
-	},]]
     customparams = {
 		hasturnbutton	= "1",
 		helptext		= "Armament: 1 x ER Large Beam Laser, 1 x UAC/5, 1 x Small Pulse Laser, 1 x SRM-6 - Armor: 4 tons Ferro-Fibrous",
 		heatlimit		= "20",
 		torsoturnspeed	= "180",
+		unittype		= "mech",
     },
 }
 

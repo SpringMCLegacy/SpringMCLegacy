@@ -95,6 +95,7 @@ local IS_Awesome = {
 		helptext		= "Armament: 1 x Large Beam Laser, 3 x PPC, 1 x Medium Pulse Laser, Anti-Missile System - Armor: 15.5 tons Standard",
 		heatlimit		= "38",
 		torsoturnspeed	= "100",
+		unittype		= "mech",
     },
 }
 

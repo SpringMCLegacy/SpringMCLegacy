@@ -9,7 +9,7 @@ local CL_Oro_HAG = {
 	radarDistance      	= 1500,
 		activateWhenBuilt   = true,
 		onoffable           = true,
-	maxDamage           = 5500,--5500
+	maxDamage           = 19700,
 	mass                = 6500,
 	footprintX			= 3,
 	footprintZ 			= 3,
@@ -47,16 +47,11 @@ local CL_Oro_HAG = {
 				WeaponSlaveTo = 1,
 			},
 		},
-	--Gets CEG effects from /gamedata/explosions folder
-	sfxtypes = {
-		explosiongenerators = {
-		"custom:GAUSS_MUZZLEFLASH",
-		"custom:LASER_MUZZLEFLASH",
-		},
-	},
 	customparams = {
 		hasturnbutton	= "1",
 		helptext		= "Armament: 1 x Hyper Assault Gauss 30, 1 x Large Pulse Laser - Armor: 11 tons",
+		heatlimit		= "20",
+		unittype		= "vehicle",
     },
 }
 

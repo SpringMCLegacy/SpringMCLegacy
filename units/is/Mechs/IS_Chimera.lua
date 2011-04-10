@@ -92,6 +92,7 @@ local IS_Chimera = {
 		heatlimit		= "20",
 		torsoturnspeed	= "170",
 		canjump			= "1",
+		unittype		= "mech",
     },
 }
 

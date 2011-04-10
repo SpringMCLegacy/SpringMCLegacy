@@ -71,19 +71,12 @@ local CL_Cougar = {
 			},
 		},
 		
-	--Gets CEG effects from /gamedata/explosions folder
-
-	--[[sfxtypes = {
-		explosiongenerators = {
-		"custom:MISSILE_MUZZLEFLASH",
-		"custom:LASER_MUZZLEFLASH",
-		},
-	},]]
     customparams = {
 		hasturnbutton	= "1",
 		helptext		= "Armament: 2 x Large Pulse Laser, 2 x SSRM-4 - Armor: 5.5 tons",
 		heatlimit		= "20",
 		torsoturnspeed	= "180",
+		unittype		= "mech",
     },
 }
 return lowerkeys({ ["CL_Cougar"] = CL_Cougar })

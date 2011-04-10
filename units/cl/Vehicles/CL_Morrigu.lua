@@ -7,9 +7,11 @@ local CL_Morrigu = {
 	category 			= "tank ground notbeacon",
 	sightDistance       = 800,
 	radarDistance      	= 1500,
+		stealth				= 1,
 		activateWhenBuilt   = true,
 		onoffable           = true,
-	maxDamage           = 6500,
+		radarDistanceJam    = 500,
+	maxDamage           = 23200,
 	mass                = 8000,
 	footprintX			= 3,
 	footprintZ 			= 3,
@@ -57,16 +59,11 @@ local CL_Morrigu = {
 				WeaponSlaveTo = 1,
 			},
 		},
-	--Gets CEG effects from /gamedata/explosions folder
-	sfxtypes = {
-		explosiongenerators = {
-		"custom:MISSILE_MUZZLEFLASH",
-		"custom:LASER_MUZZLEFLASH",
-		},
-	},
 	customparams = {
 		hasturnbutton	= "1",
 		helptext		= "Armament: 2 x ER Large Beam Laser, 2 x LRM-15 - Armor: 13 tons",
+		heatlimit		= "26",
+		unittype		= "vehicle",
     },
 }
 

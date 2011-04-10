@@ -86,6 +86,7 @@ local IS_Osiris = {
 		torsoturnspeed	= "190",
 		rightarmid 		= "4",
 		canjump			= "1",
+		unittype		= "mech",
     },
 }
 

@@ -9,7 +9,7 @@ local CL_Ares = {
 	radarDistance      	= 1500,
 		activateWhenBuilt   = true,
 		onoffable           = true,
-	maxDamage           = 2250,
+	maxDamage           = 8000,
 	mass                = 4000,
 	footprintX			= 2,
 	footprintZ 			= 2,
@@ -52,16 +52,11 @@ local CL_Ares = {
 				WeaponSlaveTo = 1,
 			},
 		},
-	--Gets CEG effects from /gamedata/explosions folder
-	sfxtypes = {
-		explosiongenerators = {
-		"custom:MISSILE_MUZZLEFLASH",
-		"custom:LASER_MUZZLEFLASH",
-		},
-	},
 	customparams = {
 		hasturnbutton	= "1",
 		helptext		= "Armament: 1 x ER Large Beam Laser, 2 x ATM-9 - Armor: 4.5 tons",
+		heatlimit		= "26",
+		unittype		= "vehicle",
     },
 }
 

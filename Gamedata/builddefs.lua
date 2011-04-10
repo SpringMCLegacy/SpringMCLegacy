@@ -64,7 +64,7 @@ buildoptions =
   {
 	"is_harasser",
 	"is_scorpion_ac5",
-	"is_scorpion_lgauss",
+	--"is_scorpion_lgauss",
 	"is_goblin",
 	"is_schrek",
 	"is_demolisher",

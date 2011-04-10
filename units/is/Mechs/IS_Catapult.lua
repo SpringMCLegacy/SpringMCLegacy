@@ -98,6 +98,7 @@ local IS_Catapult = {
 		heatlimit		= "24",
 		torsoturnspeed	= "125",
 		canjump			= "1",
+		unittype		= "mech",
     },
 }
 

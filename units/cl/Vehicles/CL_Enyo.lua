@@ -9,7 +9,7 @@ local CL_Enyo = {
 	radarDistance      	= 1500,
 		activateWhenBuilt   = true,
 		onoffable           = true,
-	maxDamage           = 4500,
+	maxDamage           = 13400,
 	mass                = 5500,
 	footprintX			= 2,
 	footprintZ 			= 2,
@@ -52,16 +52,11 @@ local CL_Enyo = {
 				WeaponSlaveTo = 1,
 			},
 		},
-	--Gets CEG effects from /gamedata/explosions folder
-	sfxtypes = {
-		explosiongenerators = {
-		"custom:MISSILE_MUZZLEFLASH",
-		"custom:LASER_MUZZLEFLASH",
-		},
-	},
 	customparams = {
 		hasturnbutton	= "1",
 		helptext		= "Armament: 1 x Large Pulse Laser, 2 x SSRM-6 - Armor: 7 tons",
+		heatlimit		= "28",
+		unittype		= "vehicle",
     },
 }
 

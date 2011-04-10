@@ -72,21 +72,13 @@ local CL_Summoner = {
 			},
 		},
 		
-	--Gets CEG effects from /gamedata/explosions folder
-
-	--[[sfxtypes = {
-		explosiongenerators = {
-		"custom:MISSILE_MUZZLEFLASH",
-		"custom:LASER_MUZZLEFLASH",
-		"custom:MG_MUZZLEFLASH",
-		},
-	},]]
     customparams = {
 		hasturnbutton	= "1",
 		helptext		= "Armament: 1 x UAC/20, 1 x Large Pulse Laser, 1 x Small Pulse Laser, 1 x SRM-6 - Armor: 9.5 tons Ferro-Fibrous",
 		heatlimit		= "28",
 		torsoturnspeed	= "130",
 		canjump			= "1",
+		unittype		= "mech",
     },
 }
 

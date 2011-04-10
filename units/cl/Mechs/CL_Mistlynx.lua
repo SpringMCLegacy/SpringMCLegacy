@@ -80,22 +80,14 @@ local CL_Mistlynx = {
 				WeaponSlaveTo = 1,
 			},
 		},
-		
-	--Gets CEG effects from /gamedata/explosions folder
 
-	--[[sfxtypes = {
-		explosiongenerators = {
-		"custom:MISSILE_MUZZLEFLASH",
-		"custom:MG_MUZZLEFLASH",
-		"custom:JumpJetTrail",
-		},
-	},]]
     customparams = {
 		hasturnbutton	= "1",
 		helptext		= "Armament: 1 x LRM-10, 1 x SSRM-4, 2 x MG - Armor: 3.5 tons Ferro-Fibrous",
 		heatlimit		= "20",
 		torsoturnspeed	= "200",
 		canjump			= "1",
+		unittype		= "mech",
     },
 }
 

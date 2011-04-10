@@ -89,6 +89,7 @@ local IS_Wolfhound = {
 		helptext		= "Armament: 1 x Large Beam Laser, 4 x ER Medium Beam Laser - Armor: 7.5 tons Standard",
 		heatlimit		= "22",
 		torsoturnspeed	= "180",
+		unittype		= "mech",
     },
 }
 

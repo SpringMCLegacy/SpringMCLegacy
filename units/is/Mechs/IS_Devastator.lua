@@ -97,6 +97,7 @@ local IS_Devastator = {
 		helptext		= "Armament: 2 x Gauss Rifle, 2 x PPC, 3 x Medium Beam Laser - Armor: 19 tons Standard",
 		heatlimit		= "34",
 		torsoturnspeed	= "100",
+		unittype		= "mech",
     },
 }
 

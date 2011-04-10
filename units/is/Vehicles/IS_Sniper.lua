@@ -9,7 +9,7 @@ local IS_Sniper = {
 	radarDistance      	= 1500,
 		activateWhenBuilt   = true,
 		onoffable           = true,
-	maxDamage           = 2000,
+	maxDamage           = 6400,
 	mass                = 8000,
 	footprintX			= 2,
 	footprintZ 			= 2,
@@ -53,15 +53,11 @@ local IS_Sniper = {
 				OnlyTargetCategory = "notbeacon",
 			},
 		},
-	--Gets CEG effects from /gamedata/explosions folder
-	sfxtypes = {
-		explosiongenerators = {
-		"custom:ARTILLERY_MUZZLEFLASH",
-		},
-	},
 	customparams = {
 		hasturnbutton	= "1",
 		helptext		= "Armament: 1 x Sniper Artillery Gun, 2 x ER Small Beam Laser - Armor: 7 tons",
+		heatlimit		= "15",
+		unittype		= "vehicle",
     },
 }
 

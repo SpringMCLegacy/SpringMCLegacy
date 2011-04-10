@@ -83,6 +83,7 @@ local IS_Hollander = {
 		torsoturnspeed	= "180",
 		leftarmid 		= "2",
 		rightarmid 		= "3",
+		unittype		= "mech",
     },
 }
 

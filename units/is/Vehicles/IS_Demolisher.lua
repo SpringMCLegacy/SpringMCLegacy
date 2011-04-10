@@ -9,7 +9,7 @@ local IS_Demolisher = {
 	radarDistance      	= 1500,
 		activateWhenBuilt   = true,
 		onoffable           = true,
-	maxDamage           = 7000,
+	maxDamage           = 22400,
 	mass                = 8000,
 	footprintX			= 3,
 	footprintZ 			= 3,
@@ -48,14 +48,11 @@ local IS_Demolisher = {
 			},
 		},
 	--Gets CEG effects from /gamedata/explosions folder
-	sfxtypes = {
-		explosiongenerators = {
-		"custom:AC20_MUZZLEFLASH",
-		},
-	},
 	customparams = {
 		hasturnbutton	= "1",
 		helptext		= "Armament: 2 x AC/20 - Armor: 13 tons",
+		heatlimit		= "10",
+		unittype		= "vehicle",
     },
 }
 

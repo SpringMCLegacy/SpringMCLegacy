@@ -102,6 +102,7 @@ local IS_Bushwacker = {
 		heatlimit		= "22",
 		torsoturnspeed	= "160",
 		rightarmid 		= "6",
+		unittype		= "mech",
     },
 }
 

@@ -8,9 +8,11 @@ local CL_Mars = {
 	stealth				= 1,
 	sightDistance       = 800,
 	radarDistance      	= 1500,
+		stealth				= 1,
 		activateWhenBuilt   = true,
 		onoffable           = true,
-	maxDamage           = 5750,--11500
+		radarDistanceJam    = 500,
+	maxDamage           = 26800,
 	mass                = 10000,
 	footprintX			= 3,
 	footprintZ 			= 3,
@@ -84,19 +86,11 @@ local CL_Mars = {
 				WeaponSlaveTo = 1,
 			},
 		},
-	--Gets CEG effects from /gamedata/explosions folder
-	sfxtypes = {
-		explosiongenerators = {
-		"custom:GAUSS_MUZZLEFLASH",
-		"custom:MISSILE_MUZZLEFLASH",
-		"custom:AC10_MUZZLEFLASH",
-		"custom:LASER_MUZZLEFLASH",
-		"custom:MG_MUZZLEFLASH",
-		},
-	},
 	customparams = {
 		hasturnbutton	= "1",
 		helptext		= "Armament: 1 x Gauss Rifle, 1 x ER Large Beam Laser, 1 x LBX/10, 3 x LRM-15 - Armor: 15 tons",
+		heatlimit		= "36",
+		unittype		= "vehicle",
     },
 }
 

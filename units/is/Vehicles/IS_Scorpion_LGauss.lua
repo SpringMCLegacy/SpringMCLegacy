@@ -9,7 +9,7 @@ local IS_Scorpion_LGauss = {
 	radarDistance      	= 1500,
 		activateWhenBuilt   = true,
 		onoffable           = true,
-	maxDamage           = 1000,
+	maxDamage           = 3200,
 	mass                = 2500,
 	footprintX			= 2,
 	footprintZ 			= 2,
@@ -55,17 +55,11 @@ local IS_Scorpion_LGauss = {
 			},
 		},
 		
-	--Gets CEG effects from /gamedata/explosions folder
-
-	sfxtypes = {
-		explosiongenerators = {
-		"custom:GAUSS_MUZZLEFLASH",
-		"custom:MG_MUZZLEFLASH",
-		},
-	},
     customparams = {
 		hasturnbutton	= "1",
 		helptext		= "Armament: 1 x Light Gauss Rifle, 2 x Machinegun - Armor: 2 tons",
+		heatlimit		= "10",
+		unittype		= "vehicle",
     },
 }
 

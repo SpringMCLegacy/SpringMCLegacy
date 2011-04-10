@@ -9,7 +9,7 @@ local IS_Scorpion_AC5 = {
 	radarDistance      	= 1500,
 		activateWhenBuilt   = true,
 		onoffable           = true,
-	maxDamage           = 1000,
+	maxDamage           = 3200,
 	mass                = 2500,
 	footprintX			= 2,
 	footprintZ 			= 2,
@@ -28,7 +28,7 @@ local IS_Scorpion_AC5 = {
 	buildTime           = 0,
 	canMove				= true,
 		movementClass   = "TANK",
-		maxVelocity		= 2.16, --65kph/30
+		maxVelocity		= 2.16, --65kph/20
 		maxReverseVelocity= 1.6,
 		acceleration    = 1.0,
 		brakeRate       = 0.1,
@@ -53,17 +53,11 @@ local IS_Scorpion_AC5 = {
 			},
 		},
 		
-	--Gets CEG effects from /gamedata/explosions folder
-
-	sfxtypes = {
-		explosiongenerators = {
-		"custom:AC5_MUZZLEFLASH",
-		"custom:MG_MUZZLEFLASH",
-		},
-	},
     customparams = {
 		hasturnbutton	= "1",
 		helptext		= "Armament: 1 x Autocannon/5, 2 x Machinegun - Armor: 2 tons",
+		heatlimit		= "10",
+		unittype		= "vehicle",
     },
 }
 
