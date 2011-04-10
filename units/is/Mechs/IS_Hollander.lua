@@ -42,7 +42,7 @@ local IS_Hollander = {
 		--Makes unit use weapon from /weapons folder
 		weapons 		= {	
 			[1] = {
-				name	= "HeavyGauss",
+				name	= "Gauss",
 				mainDir = "0 0 1",
 				maxAngleDif = 270,
 				OnlyTargetCategory = "notbeacon",
@@ -61,20 +61,20 @@ local IS_Hollander = {
 				OnlyTargetCategory = "notbeacon",
 				WeaponSlaveTo = 1,
 			},
-			--[[[4] = {
-				name	= "Flamer",
+			[4] = {
+				name	= "SPL",
 				mainDir = "0 0 1",
 				maxAngleDif = 270,
 				OnlyTargetCategory = "notbeacon",
 				WeaponSlaveTo = 1,
 			},
 			[5] = {
-				name	= "Flamer",
+				name	= "SPL",
 				mainDir = "0 0 1",
 				maxAngleDif = 270,
 				OnlyTargetCategory = "notbeacon",
 				WeaponSlaveTo = 1,
-			},]]
+			},
 		},
     customparams = {
 		hasturnbutton	= "1",
