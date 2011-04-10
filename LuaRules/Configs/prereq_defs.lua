@@ -18,6 +18,7 @@ local result = {
   is_demolisher = {"is_dropship"},
   is_challenger = {"is_dropship"},
   is_lrmcarrier = {"is_dropship"},
+  is_sniper = {"is_dropship"},
   
   cl_hephaestus = {"cl_dropship"},
   cl_enyo = {"cl_dropship"},

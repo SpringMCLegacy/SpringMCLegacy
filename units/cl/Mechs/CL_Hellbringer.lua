@@ -76,21 +76,12 @@ local CL_Hellbringer = {
 				name	= "AMS",
 			},
 		},
-		
-	--Gets CEG effects from /gamedata/explosions folder
-
-	--[[sfxtypes = {
-		explosiongenerators = {
-		"custom:MISSILE_MUZZLEFLASH",
-		"custom:LASER_MUZZLEFLASH",
-		"custom:MG_MUZZLEFLASH",
-		},
-	},]]
     customparams = {
 		hasturnbutton	= "1",
 		helptext		= "Armament: 1 x Gauss Rifle, 1 x UAC/10, 1 x ER Small Beam Laser, 1 x LRM-10 - Armor: 8 tons Ferro-Fibrous",
 		heatlimit		= "26",
 		torsoturnspeed	= "130",
+		unittype		= "mech",
     },
 }
 

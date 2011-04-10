@@ -119,6 +119,7 @@ local IS_Warhammer = {
 		helptext		= "Armament: 2 x PPC, 2 x Medium Beam Laser, 2 x Small Beam Laser, 2 x MG, 1 x LRM-10 - Armor: 10 tons Standard",
 		heatlimit		= "34",
 		torsoturnspeed	= "120",
+		unittype		= "mech",
     },
 }
 

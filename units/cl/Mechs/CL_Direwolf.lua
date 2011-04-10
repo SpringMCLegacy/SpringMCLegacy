@@ -118,21 +118,13 @@ local CL_Direwolf = {
 				WeaponSlaveTo = 1,
 			},
 		},
-		
-	--Gets CEG effects from /gamedata/explosions folder
 
-	--[[sfxtypes = {
-		explosiongenerators = {
-		"custom:MISSILE_MUZZLEFLASH",
-		"custom:AC5_MUZZLEFLASH",
-		"custom:LASER_MUZZLEFLASH",
-		},
-	},]]
     customparams = {
 		hasturnbutton	= "1",
 		helptext		= "Armament: 4 x ER Large Beam Laser, 4 x ER Medium Beam Laser, 2 x UAC/5, 1 x ATM-9 - Armor: 19 tons",
 		heatlimit		= "44",
 		torsoturnspeed	= "100",
+		unittype		= "mech",
     },
 }
 

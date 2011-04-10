@@ -91,6 +91,7 @@ local IS_Orion = {
 		helptext		= "Armament: 1 x AC/20, 1 x Large Pulse Laser, 1 x Medium Pulse Laser, 2 x SRM-6 - Armor: 12.5 tons Standard",
 		heatlimit		= "29",
 		torsoturnspeed	= "120",
+		unittype		= "mech",
     },
 }
 

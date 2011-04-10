@@ -86,6 +86,7 @@ local IS_Raven = {
 		heatlimit		= "11",
 		torsoturnspeed	= "180",
 		rightarmid 		= "4",
+		unittype		= "mech",
     },
 }
 

@@ -9,7 +9,7 @@ local IS_Goblin = {
 	radarDistance      	= 1500,
 		activateWhenBuilt   = true,
 		onoffable           = true,
-	maxDamage           = 3000,
+	maxDamage           = 9600,
 	mass                = 4500,
 	footprintX			= 2,
 	footprintZ 			= 2,
@@ -61,17 +61,11 @@ local IS_Goblin = {
 				name	= "AMS",
 			},
 		},
-	--Gets CEG effects from /gamedata/explosions folder
-	sfxtypes = {
-		explosiongenerators = {
-		"custom:MISSILE_MUZZLEFLASH",
-		"custom:LASER_MUZZLEFLASH",
-		"custom:MG_MUZZLEFLASH",
-		},
-	},
 	customparams = {
 		hasturnbutton	= "1",
 		helptext		= "Armament: 1 x Large Pulse Laser, 1 x SRM-6, 2 x Machinegun, Laser Anti-Missile System - Armor: 8 tons",
+		heatlimit		= "20",
+		unittype		= "vehicle",
     },
 }
 

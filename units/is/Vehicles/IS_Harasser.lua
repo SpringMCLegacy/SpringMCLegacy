@@ -9,7 +9,7 @@ local IS_Harasser = {
 	radarDistance      	= 1500,
 		activateWhenBuilt   = true,
 		onoffable           = true,
-	maxDamage           = 750,
+	maxDamage           = 2400,
 	mass                = 2500,
 	footprintX			= 2,
 	footprintZ 			= 2,
@@ -42,16 +42,11 @@ local IS_Harasser = {
 				WeaponSlaveTo = 1,
 			},
 		},
-		
-	--Gets CEG effects from /gamedata/explosions folder
-	sfxtypes = {
-		explosiongenerators = {
-		"custom:MISSILE_MUZZLEFLASH",
-		},
-	},
 	customparams = {
 		hasturnbutton	= "1",
 		helptext		= "Armament: 2 x SRM-6 - Armor: 1.5 tons",
+		heatlimit		= "10",
+		unittype		= "vehicle",
     },
 }
 

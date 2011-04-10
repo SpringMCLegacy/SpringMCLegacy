@@ -7,9 +7,11 @@ local CL_Huit = {
 	category 			= "tank ground notbeacon",
 	sightDistance       = 800,
 	radarDistance      	= 1500,
+		stealth				= 1,
 		activateWhenBuilt   = true,
 		onoffable           = true,
-	maxDamage           = 2750,
+		radarDistanceJam    = 500,
+	maxDamage           = 9800,
 	mass                = 8500,
 	footprintX			= 2,
 	footprintZ 			= 2,
@@ -57,16 +59,11 @@ local CL_Huit = {
 				WeaponSlaveTo = 1,
 			},
 		},
-	--Gets CEG effects from /gamedata/explosions folder
-	sfxtypes = {
-		explosiongenerators = {
-		"custom:ARROW_MUZZLEFLASH",
-		"custom:LASER_MUZZLEFLASH",
-		},
-	},
 	customparams = {
 		hasturnbutton	= "1",
 		helptext		= "Armament: 2 x Arrow IV Artillery Missle, 2 x Medium Pulse Laser - Armor: 5.5 tons",
+		heatlimit		= "20",
+		unittype		= "vehicle",
     },
 }
 

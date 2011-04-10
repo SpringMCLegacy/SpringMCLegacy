@@ -9,7 +9,7 @@ local CL_Oro_LBX = {
 	radarDistance      	= 1500,
 		activateWhenBuilt   = true,
 		onoffable           = true,
-	maxDamage           = 2750,--5500
+	maxDamage           = 9800,
 	mass                = 6500,
 	footprintX			= 3,
 	footprintZ 			= 3,
@@ -52,16 +52,11 @@ local CL_Oro_LBX = {
 				WeaponSlaveTo = 1,
 			},
 		},
-	--Gets CEG effects from /gamedata/explosions folder
-	sfxtypes = {
-		explosiongenerators = {
-		"custom:AC20_MUZZLEFLASH",
-		"custom:LASER_MUZZLEFLASH",
-		},
-	},
 	customparams = {
 		hasturnbutton	= "1",
 		helptext		= "Armament: 1 x LBX Autocannon/20, 1 x Large Pulse Laser, 1 x ER Medium Beam Laser - Armor: 11 tons",
+		heatlimit		= "15",
+		unittype		= "vehicle",
     },
 }
 

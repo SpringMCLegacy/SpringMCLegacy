@@ -9,7 +9,7 @@ local IS_Challenger = {
 	radarDistance      	= 1500,
 		activateWhenBuilt   = true,
 		onoffable           = true,
-	maxDamage           = 7000,
+	maxDamage           = 22400,
 	mass                = 9000,
 	footprintX			= 3,
 	footprintZ 			= 3,
@@ -61,22 +61,16 @@ local IS_Challenger = {
 				OnlyTargetCategory = "notbeacon",
 				WeaponSlaveTo = 1,
 			},
-			--[6] = {
-			--	name	= "LAMS",
-			--},
+			[6] = {
+				name	= "AMS",
+			},
 		},
 	--Gets CEG effects from /gamedata/explosions folder
-	sfxtypes = {
-		explosiongenerators = {
-		"custom:GAUSS_MUZZLEFLASH",
-		"custom:AC10_MUZZLEFLASH",
-		"custom:MISSILE_MUZZLEFLASH",
-		"custom:LASER_MUZZLEFLASH",
-		},
-	},
 	customparams = {
 		hasturnbutton	= "1",
 		helptext		= "Armament: 1 x Gauss Rifle, 1 x LBX/10, 1 x LRM-10, 2 x Medium Pulse Laser - Armor: 14 tons",
+		heatlimit		= "20",
+		unittype		= "vehicle",
 	},
 }
 

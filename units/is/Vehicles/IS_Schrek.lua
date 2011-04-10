@@ -9,7 +9,7 @@ local IS_Schrek = {
 	radarDistance      	= 1500,
 		activateWhenBuilt   = true,
 		onoffable           = true,
-	maxDamage           = 3500,
+	maxDamage           = 11200,
 	mass                = 8000,
 	footprintX			= 3,
 	footprintZ 			= 3,
@@ -52,15 +52,11 @@ local IS_Schrek = {
 				WeaponSlaveTo = 1,
 			},
 		},
-	--Gets CEG effects from /gamedata/explosions folder
-	sfxtypes = {
-		explosiongenerators = {
-		"custom:PPC_MUZZLEFLASH",
-		},
-	},
 	customparams = {
 		hasturnbutton	= "1",
 		helptext		= "Armament: 3 x Particle Projector Cannon - Armor: 7 tons",
+		heatlimit		= "30",
+		unittype		= "vehicle",
     },
 }
 

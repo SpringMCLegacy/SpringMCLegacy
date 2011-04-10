@@ -6,12 +6,13 @@ local CL_Hephaestus = {
 	explodeAs          	= "mechexplode",
 	category 			= "tank ground hovercraft notbeacon",
 	stealth				= 1,
-	sightDistance       = 800,
-	radarDistance      	= 1500,
+	sightDistance       = 1200,
+	radarDistance      	= 2000,
+		stealth				= 1,
 		activateWhenBuilt   = true,
 		onoffable           = true,
---	radarDistanceJam    = 0,
-	maxDamage           = 1250,
+		radarDistanceJam    = 500,
+	maxDamage           = 8900,
 	mass                = 3000,
 	footprintX			= 2,
 	footprintZ 			= 2,
@@ -49,17 +50,11 @@ local CL_Hephaestus = {
 				WeaponSlaveTo = 1,
 			},
 		},
-		
-	--Gets CEG effects from /gamedata/explosions folder
-	sfxtypes = {
-		explosiongenerators = {
-		"custom:MISSILE_MUZZLEFLASH",
-		"custom:LASER_MUZZLEFLASH",
-		},
-	},
 	customparams = {
 		hasturnbutton	= "1",
 		helptext		= "Armament: 2 x Medium Pulse Laser, 1 x NARC Launcher - Armor: 5 tons",
+		heatlimit		= "20",
+		unittype		= "vehicle",
     },
 }
 

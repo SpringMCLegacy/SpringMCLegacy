@@ -75,15 +75,6 @@ local CL_Maddog = {
 				name	= "AMS",
 			},
 		},
-		
-	--Gets CEG effects from /gamedata/explosions folder
-
-	--[[sfxtypes = {
-		explosiongenerators = {
-		"custom:MISSILE_MUZZLEFLASH",
-		"custom:LASER_MUZZLEFLASH",
-		},
-	},]]
     customparams = {
 		hasturnbutton	= "1",
 		helptext		= "Armament: 2 x LRM-20, 2 x Large Pulse Laser, 2 x Medium Pulse Laser - Armor: 8.5 tons Ferro-Fibrous",
@@ -91,6 +82,7 @@ local CL_Maddog = {
 		torsoturnspeed	= "135",
 		leftarmid		= "3",
 		rightarmid 		= "4",
+		unittype		= "mech",
     },
 }
 

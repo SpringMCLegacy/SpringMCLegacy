@@ -98,6 +98,7 @@ local CL_Stormcrow = {
 		torsoturnspeed	= "160",
 		leftarmid		= "2",
 		rightarmid 		= "3",
+		unittype		= "mech",
     },
 }
 

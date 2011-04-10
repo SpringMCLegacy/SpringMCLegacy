@@ -78,20 +78,12 @@ local CL_Iceferret = {
 				name	= "AMS",
 			},
 		},
-		
-	--Gets CEG effects from /gamedata/explosions folder
-
-	--[[sfxtypes = {
-		explosiongenerators = {
-		"custom:MISSILE_MUZZLEFLASH",
-		"custom:LASER_MUZZLEFLASH",
-		},
-	},]]
     customparams = {
 		hasturnbutton	= "1",
 		helptext		= "Armament: 4 x Medium Pulse Laser, 1 x SRM-6 - Armor: 7.5 tons Ferro-Fibrous",
 		heatlimit		= "24",
 		torsoturnspeed	= "190",
+		unittype		= "mech",
     },
 }
 
