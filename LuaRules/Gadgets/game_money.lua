@@ -101,10 +101,12 @@ function gadget:GameFrame(n)
 				if buildDefID < 0 then -- a build order
 					local buildCost = UnitDefs[-buildDefID].metalCost
 					local weight = UnitDefs[-buildDefID].energyCost
-					if buildCost > money or weight > weightLeft then
-						EditUnitCmdDesc(unitID, cmdDescID, {disabled = true, name = "test", onlyTexture = false})
+					if buildCost > money then
+						EditUnitCmdDesc(unitID, cmdDescID, {disabled = true, params = {"C"}})
+					elseif weight > weightLeft then
+						EditUnitCmdDesc(unitID, cmdDescID, {disabled = true, params = {"T"}})
 					else
-						EditUnitCmdDesc(unitID, cmdDescID, {disabled = false})
+						EditUnitCmdDesc(unitID, cmdDescID, {disabled = false, params = {}})
 					end
 				end
 			end
