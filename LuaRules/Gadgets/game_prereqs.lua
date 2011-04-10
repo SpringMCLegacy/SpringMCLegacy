@@ -64,7 +64,7 @@ local function SetBuildoptionDisabled(unitDefID, teamID, disable)
     local unitID = teamUnits[i]
     local cmdDescID = FindUnitCmdDesc(unitID, -unitDefID)
     if cmdDescID then
-      EditUnitCmdDesc(unitID, cmdDescID, {disabled = disable, hidden = disable})
+      EditUnitCmdDesc(unitID, cmdDescID, {hidden = disable})
     end
   end
 end
@@ -111,7 +111,7 @@ end
 function gadget:UnitCreated(unitID, unitDefID, unitTeam)
   --enable/disable for the constructor
 	local ud = UnitDefs[unitDefID]
-	if ud.buildDistance and ud.speed > 0 then
+	if ud.builder then
 		--Spring.Echo("Builder! ", unitTeam)
 		for buildDefID, buildability in pairs(buildables) do
 			--Spring.Echo(unitTeam, " : ", (buildability[unitTeam] or "nil"))
@@ -119,10 +119,10 @@ function gadget:UnitCreated(unitID, unitDefID, unitTeam)
 			if cmdDescID then
 				if not buildability[unitTeam] then
 					--Spring.Echo("Disabling unit!")
-					EditUnitCmdDesc(unitID, cmdDescID, {disabled = true})
+					EditUnitCmdDesc(unitID, cmdDescID, {hidden = true})
 				else
 					--Spring.Echo("Enabling unit!")
-					EditUnitCmdDesc(unitID, cmdDescID, {disabled = false})
+					EditUnitCmdDesc(unitID, cmdDescID, {hidden = false})
 				end
 			end
 		end
