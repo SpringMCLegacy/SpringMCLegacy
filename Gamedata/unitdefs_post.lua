@@ -13,4 +13,5 @@ for name, ud in pairs(UnitDefs) do
 			ud.buildtime = RAMP_DISTANCE / speed
 		end
 	end
+	ud.maxvelocity = ud.maxvelocity * (modOptions.speed or 1)
 end

@@ -65,8 +65,18 @@ local options = {
 		def    = 100,
 		min    = 100,
 		max    = 50000,
-		section= '2gamemode',
+		section = '2gamemode',
 		step   = 10,
+	},
+	{
+		key = "speed",
+		name = "Test Speed Multipliers",
+		desc = "Developer tool",
+		type = "number",
+		def = 1,
+		min = 0.1,
+		max = 100,
+		section = "2gamemode",
 	},
  
 --------------------------------------------------------------------------------
