@@ -27,23 +27,35 @@ local GetUnitPieceMap		= Spring.GetUnitPieceMap
 
 function gadget:UnitCreated(unitID, unitDefID, teamID, builderID)
 	local info = GG.lusHelper[unitDefID]
-	if not info.arms then
+	if not info.arms then --and not UnitDefs[unitDefID].name:find("dropship") then
 		-- Parse Model Data
 		local pieceMap = GetUnitPieceMap(unitID)
 		info.arms = pieceMap["rlowerarm"] ~= nil
 		local launcherIDs = {}
+		local mantletIDs = {}
+		local barrelIDs = {}
 		local numWheels = 0
 		for pieceName, pieceNum in pairs(pieceMap) do
 			-- Find launcher pieces
 			if pieceName:find("launcher_") and #pieceName <= 10 then -- better to use a regex here really
 				local weaponNum = tonumber(pieceName:sub(10, -1))
 				launcherIDs[weaponNum] = true
+			-- Find mantlet pieces
+			elseif pieceName:find("mantlet_") then
+				local weaponNum = tonumber(pieceName:sub(9, -1))
+				mantletIDs[weaponNum] = true
+			-- Find barrel pieces
+			elseif pieceName:find("barrel_") then
+				local weaponNum = tonumber(pieceName:sub(8, -1))
+				barrelIDs[weaponNum] = true
 			-- Find the number of wheels
 			elseif pieceName:find("wheel") then
 				numWheels = numWheels + 1
 			end
 		end
 		info.launcherIDs = launcherIDs
+		info.mantletIDs = mantletIDs
+		info.barrelIDs = barrelIDs
 		info.numWheels = numWheels
 	end
 end
@@ -52,6 +64,7 @@ function gadget:GamePreload()
 	-- Parse UnitDef Data
 	for unitDefID, unitDef in pairs(UnitDefs) do
 		local info = {}
+		local cp = unitDef.customParams
 		local weapons = unitDef.weapons
 		
 		-- Parse UnitDef Weapon Data
@@ -76,15 +89,21 @@ function gadget:GamePreload()
 				info.amsID = i
 			end
 		end
-		info.jumpjets = GG.jumpDefs[unitDefID] ~= nil
 		-- UnitDef Level Info
-		info.heatLimit = (unitDef.customParams.heatlimit or 50) * 10
+		-- Mechs
+		info.jumpjets = GG.jumpDefs[unitDefID] ~= nil
+		info.torsoTurnSpeed = math.rad(tonumber(cp.torsoturnspeed) or 125)
+		info.leftArmID = tonumber(cp.leftarmid) or 1
+		info.rightArmID = tonumber(cp.rightarmid) or 2
+		-- Vehicles
+		info.turretTurnSpeed = math.rad(tonumber(cp.turretturnspeed) or 75)
+		info.wheelSpeed = math.rad(tonumber(cp.wheelspeed) or 200)
+		-- General
+		info.heatLimit = (cp.heatlimit or 50) * 10
 		info.coolRate = info.heatLimit / 50 -- or a constant rate of 10?
 		info.numWeapons = #weapons
-		info.torsoTurnSpeed = math.rad(tonumber(unitDef.customParams.torsoturnspeed) or 125)
-		info.elevationSpeed = math.rad(tonumber(unitDef.customParams.torsoturnspeed) or math.deg(info.torsoTurnSpeed))
-		info.leftArmID = tonumber(unitDef.customParams.leftarmid) or 1
-		info.rightArmID = tonumber(unitDef.customParams.rightarmid) or 2
+		info.elevationSpeed = math.rad(tonumber(cp.elevationspeed) or math.deg(info.torsoTurnSpeed))
+		
 		-- WeaponDef Level Info
 		info.missileWeaponIDs = missileWeaponIDs
 		info.reloadTimes = reloadTimes
