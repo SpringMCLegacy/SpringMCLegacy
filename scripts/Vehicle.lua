@@ -200,8 +200,9 @@ end
 function script.AimWeapon(weaponID, heading, pitch)
 	Signal(2 ^ weaponID) -- 2 'to the power of' weapon ID
 	SetSignalMask(2 ^ weaponID)
-	if turrets[weaponID] then -- use a weapon-specific turret if it exists
-		Turn(turrets[weaponID], y_axis, heading, TURRET_SPEED)
+	-- use a weapon-specific turret if it exists
+	if weaponID > 1 and turrets[2] then -- this is really a hack
+		Turn(turrets[2], y_axis, heading, TURRET_2_SPEED)
 	else -- otherwise use main
 		Turn(turret, y_axis, heading, TURRET_SPEED)
 	end
