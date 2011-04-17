@@ -32,6 +32,7 @@ function gadget:UnitCreated(unitID, unitDefID, teamID, builderID)
 		local pieceMap = GetUnitPieceMap(unitID)
 		info.arms = pieceMap["rlowerarm"] ~= nil
 		local launcherIDs = {}
+		local turretIDs = {}
 		local mantletIDs = {}
 		local barrelIDs = {}
 		local numWheels = 0
@@ -48,12 +49,17 @@ function gadget:UnitCreated(unitID, unitDefID, teamID, builderID)
 			elseif pieceName:find("barrel_") then
 				local weaponNum = tonumber(pieceName:sub(8, -1))
 				barrelIDs[weaponNum] = true
+			-- Find additional turrets
+			elseif pieceName:find("turret_") then
+				local weaponNum = tonumber(pieceName:sub(8, -1))
+				turretIDs[weaponNum] = true
 			-- Find the number of wheels
 			elseif pieceName:find("wheel") then
 				numWheels = numWheels + 1
 			end
 		end
 		info.launcherIDs = launcherIDs
+		info.turretIDs = turretIDs
 		info.mantletIDs = mantletIDs
 		info.barrelIDs = barrelIDs
 		info.numWheels = numWheels
@@ -82,7 +88,7 @@ function gadget:GamePreload()
 			reloadTimes[i] = weaponDef.reload
 			burstLengths[i] = weaponDef.salvoSize
 			firingHeats[i] = weaponDef.customParams.heatgenerated or 0
-			if weaponDef.type == "MissileLauncher" and burstLengths[i] > 1 then
+			if weaponDef.type == "MissileLauncher" and weaponDef.name ~= "narc" then --burstLengths[i] > 1 then
 				missileWeaponIDs[i] = true
 			end
 			if weaponDef.isShield then
@@ -96,7 +102,9 @@ function gadget:GamePreload()
 		info.leftArmID = tonumber(cp.leftarmid) or 1
 		info.rightArmID = tonumber(cp.rightarmid) or 2
 		-- Vehicles
+		info.hover = unitDef.canHover
 		info.turretTurnSpeed = math.rad(tonumber(cp.turretturnspeed) or 75)
+		info.turret2TurnSpeed = math.rad(tonumber(cp.turret2turnspeed) or 75)
 		info.wheelSpeed = math.rad(tonumber(cp.wheelspeed) or 200)
 		-- General
 		info.heatLimit = (cp.heatlimit or 50) * 10

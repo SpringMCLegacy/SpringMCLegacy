@@ -13,7 +13,6 @@ local SetUnitRulesParam = Spring.SetUnitRulesParam
 
 -- includes
 include "smokeunit.lua"
---include ("walks/" .. unitDef.name .. "_walk.lua")
 
 -- Info from lusHelper gadget
 local heatLimit = info.heatLimit
@@ -24,45 +23,35 @@ local launcherIDs = info.launcherIDs
 local burstLengths = info.burstLengths
 local heatDamages = info.heatDamages
 local firingHeats = info.firingHeats
---[[local hasArms = info.arms
-local leftArmID = info.leftArmID
-local rightArmID = info.rightArmID]]
 local amsID = info.amsID
+local hover = info.hover
 
 --Turning/Movement Locals
 local TURRET_SPEED = info.turretTurnSpeed
+local TURRET_2_SPEED = info.turret2TurnSpeed
 local ELEVATION_SPEED = info.elevationSpeed
 local WHEEL_SPEED = info.wheelSpeed
 local RESTORE_DELAY = Spring.UnitScript.GetLongestReloadTime(unitID) * 2
 
 local currLaunchPoint = 1
 local currHeatLevel = 0
---local jumpHeat = 40
---local SlowDownRate = 2
 
 --piece defines
 local body, turret = piece ("body", "turret")
-local trackr, trackl = piece ("trackr", "trackl")
 
 local wheels = {}
-for i = 1, info.numWheels do
-	wheels[i] = piece ("wheel"..i)
-end
-
---[[local rlowerarm, llowerarm
-if hasArms then
-	rlowerarm = piece("rlowerarm")
-	llowerarm = piece("llowerarm")
-end
-
-local jets = {}
-if info.jumpjets then
-	for i = 1, 4 do
-		jets[i] = piece("jet" .. i)
+local trackr, trackl, wakepoint
+if hover then
+	wakepoint = piece ("wakepoint")
+else
+	trackr, trackl = piece ("trackr", "trackl")
+	for i = 1, info.numWheels do
+		wheels[i] = piece ("wheel"..i)
 	end
-end]]
+end
 
 local flares = {}
+local turrets = {}
 local mantlets = {}
 local barrels = {}
 local launchers = {}
@@ -81,6 +70,9 @@ for weaponID = 1, info.numWeapons do
 	elseif weaponID ~= amsID then
 		flares[weaponID] = piece ("flare_" .. weaponID)
 	end
+	if info.turretIDs[weaponID] then
+		turrets[weaponID] = piece("turret_" .. weaponID)
+	end
 	if info.mantletIDs[weaponID] then
 		mantlets[weaponID] = piece("mantlet_" .. weaponID)
 	end
@@ -95,10 +87,6 @@ local function RestoreAfterDelay(unitID)
 	for i = 1, #mantlets do
 		Turn(mantlets[i], x_axis, 0, ELEVATION_SPEED)
 	end
-	--[[if hasArms then
-		Turn(llowerarm, x_axis, 0, ELEVATION_SPEED)
-		Turn(rlowerarm, x_axis, 0, ELEVATION_SPEED)
-	end]]
 end
 
 local function CoolOff()
@@ -184,45 +172,18 @@ function script.HitByWeapon(x, z, weaponID)
 	SetUnitRulesParam(unitID, "heat", currHeatLevel)
 end
 
---[[function JumpFX()
-	while jumping do
-		local jumpJetTrail = SFX.CEG
-		for i = 1, #jets do
-			EmitSfx(jets[i], jumpJetTrail)
-		end
-		Sleep(50)
-	end
-end
-
-function beginJump()
-	jumping = true
-	currHeatLevel = currHeatLevel + jumpHeat
-	StartThread(JumpFX)
-end
-
-function endJump()
-	jumping = false
-end]]
-
 function script.Create()
-	--walking = true
 	StartThread(SmokeUnit, {pelvis, torso})
-	--StartThread(MotionControl)
 	StartThread(CoolOff)
 end
 
 function script.StartMoving()
-	--walking = true
 	for i = 1, #wheels do
 		Spin(wheels[i], x_axis, WHEEL_SPEED, WHEEL_SPEED/2)
 	end
 end
 
 function script.StopMoving()
-	-- if we are walking down the ramp during construction, ignore calls to StopMoving
-	-- there's probably a more efficient way to do this
-	--[[if select(5, Spring.GetUnitHealth(unitID)) ~= 1 then return end
-	walking = false]]
 	for i = 1, #wheels do
 		StopSpin(wheels[i], x_axis, WHEEL_SPEED/2)
 	end
@@ -239,15 +200,13 @@ end
 function script.AimWeapon(weaponID, heading, pitch)
 	Signal(2 ^ weaponID) -- 2 'to the power of' weapon ID
 	SetSignalMask(2 ^ weaponID)
+	if turrets[weaponID] then -- use a weapon-specific turret if it exists
+		Turn(turrets[weaponID], y_axis, heading, TURRET_SPEED)
+	else -- otherwise use main
+		Turn(turret, y_axis, heading, TURRET_SPEED)
+	end
 	if mantlets[weaponID] then
 		Turn(mantlets[weaponID], x_axis, -pitch, TURRET_SPEED)
-	--end
-	--[[if hasArms and (weaponID == leftArmID or weaponID == rightArmID) then
-		if weaponID == leftArmID then
-			Turn(llowerarm, x_axis, -pitch, ELEVATION_SPEED)
-		elseif weaponID == rightArmID then
-			Turn(rlowerarm, x_axis, -pitch, ELEVATION_SPEED)
-		end]]
 	elseif missileWeaponIDs[weaponID] then
 		if launchers[weaponID] then
 			Turn(launchers[weaponID], x_axis, -pitch, ELEVATION_SPEED)
@@ -259,9 +218,14 @@ function script.AimWeapon(weaponID, heading, pitch)
 	else
 		Turn(flares[weaponID], x_axis, -pitch, ELEVATION_SPEED)
 	end
-
-	Turn(turret, y_axis, heading, TURRET_SPEED)
-	WaitForTurn(turret, y_axis)
+	if turrets[weaponID] then
+		WaitForTurn(turrets[weaponID], y_axis)
+	else
+		WaitForTurn(turret, y_axis)
+	end
+	if mantlets[weaponID] then
+		WaitForTurn(mantlets[weaponID], x_axis)
+	end
 	StartThread(RestoreAfterDelay)
 	return true
 end
