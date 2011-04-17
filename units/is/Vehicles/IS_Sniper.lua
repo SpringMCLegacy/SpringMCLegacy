@@ -7,8 +7,8 @@ local IS_Sniper = {
 	category 			= "tank ground notbeacon",
 	sightDistance       = 800,
 	radarDistance      	= 1500,
-		activateWhenBuilt   = true,
-		onoffable           = true,
+	activateWhenBuilt   = true,
+	onoffable           = true,
 	maxDamage           = 6400,
 	mass                = 8000,
 	footprintX			= 2,
@@ -27,12 +27,12 @@ local IS_Sniper = {
 	buildCostMetal      = 5000,
 	buildTime           = 0,
 	canMove				= true,
-		movementClass   = "TANK",
-		maxVelocity		= 1.8, --54kph/30
-		maxReverseVelocity= 1.3,
-		acceleration    = 0.6,
-		brakeRate       = 0.1,
-		turnRate 		= 300,
+	movementClass   = "TANK",
+	maxVelocity		= 1.8, --54kph/30
+	maxReverseVelocity= 1.3,
+	acceleration    = 0.6,
+	brakeRate       = 0.1,
+	turnRate 		= 300,
 	
 	canAttack 			= true,
 		--Makes unit use weapon from /weapons folder
@@ -58,6 +58,9 @@ local IS_Sniper = {
 		helptext		= "Armament: 1 x Sniper Artillery Gun, 2 x ER Small Beam Laser - Armor: 7 tons",
 		heatlimit		= "15",
 		unittype		= "vehicle",
+		turretturnspeed = "50",
+		turret2turnspeed = "200",
+		elevationspeed = "50",
     },
 }
 
