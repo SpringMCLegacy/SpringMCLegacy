@@ -14,4 +14,5 @@ for name, ud in pairs(UnitDefs) do
 		end
 	end
 	ud.maxvelocity = (ud.maxvelocity or 0) * (modOptions.speed or 1)
+	ud.maxreversevelocity = (ud.maxreversevelocity or 0) * (modOptions.speed or 1)
 end
