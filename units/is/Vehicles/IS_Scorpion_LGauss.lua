@@ -60,6 +60,10 @@ local IS_Scorpion_LGauss = {
 		helptext		= "Armament: 1 x Light Gauss Rifle, 2 x Machinegun - Armor: 2 tons",
 		heatlimit		= "10",
 		unittype		= "vehicle",
+		turretturnspeed = "75",
+		elevationspeed  = "200",
+		barrelrecoildist = "{[1] = 3}",
+		wheelspeed      = "200",
     },
 }
 

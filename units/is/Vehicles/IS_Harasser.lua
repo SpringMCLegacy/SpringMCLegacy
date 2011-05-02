@@ -47,6 +47,8 @@ local IS_Harasser = {
 		helptext		= "Armament: 2 x SRM-6 - Armor: 1.5 tons",
 		heatlimit		= "10",
 		unittype		= "vehicle",
+		turretturnspeed = "100",
+		elevationspeed  = "200",
     },
 }
 
