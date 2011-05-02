@@ -52,6 +52,10 @@ local CL_Oro_HAG = {
 		helptext		= "Armament: 1 x Hyper Assault Gauss 30, 1 x Large Pulse Laser - Armor: 11 tons",
 		heatlimit		= "20",
 		unittype		= "vehicle",
+		turretturnspeed = "85",
+		elevationspeed  = "200",
+		wheelspeed      = "200",
+		barrelrecoildist = "{[1] = 5}",
     },
 }
 

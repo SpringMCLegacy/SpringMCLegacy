@@ -91,6 +91,12 @@ local CL_Mars = {
 		helptext		= "Armament: 1 x Gauss Rifle, 1 x ER Large Beam Laser, 1 x LBX/10, 3 x LRM-15 - Armor: 15 tons",
 		heatlimit		= "36",
 		unittype		= "vehicle",
+		wheelspeed      = "50",
+		turretturnspeed = "50",
+		elevationspeed  = "100",
+		barrelrecoildist = "{[1] = 5, [3] = 5}",
+		barrelrecoilspeed = "100",
+		turrets = "{[3] = 3}",
     },
 }
 

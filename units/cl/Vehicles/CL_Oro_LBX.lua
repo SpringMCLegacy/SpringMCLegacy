@@ -57,6 +57,10 @@ local CL_Oro_LBX = {
 		helptext		= "Armament: 1 x LBX Autocannon/20, 1 x Large Pulse Laser, 1 x ER Medium Beam Laser - Armor: 11 tons",
 		heatlimit		= "15",
 		unittype		= "vehicle",
+		turretturnspeed = "85",
+		elevationspeed  = "200",
+		wheelspeed      = "200",
+		barrelrecoildist = "{[1] = 5}",
     },
 }
 

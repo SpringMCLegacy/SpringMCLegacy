@@ -57,6 +57,8 @@ local CL_Enyo = {
 		helptext		= "Armament: 1 x Large Pulse Laser, 2 x SSRM-6 - Armor: 7 tons",
 		heatlimit		= "28",
 		unittype		= "vehicle",
+		turretturnspeed = "100",
+		elevationspeed  = "150",
     },
 }
 

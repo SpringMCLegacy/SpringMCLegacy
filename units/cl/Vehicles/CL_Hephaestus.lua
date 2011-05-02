@@ -55,6 +55,8 @@ local CL_Hephaestus = {
 		helptext		= "Armament: 2 x Medium Pulse Laser, 1 x NARC Launcher - Armor: 5 tons",
 		heatlimit		= "20",
 		unittype		= "vehicle",
+		turretturnspeed = "75",
+		elevationspeed  = "200",
     },
 }
 

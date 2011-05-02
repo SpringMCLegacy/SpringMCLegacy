@@ -25,6 +25,10 @@ local GetUnitPieceMap		= Spring.GetUnitPieceMap
 
 -- Variables
 
+local function StringToTable(input)
+	return loadstring("return " .. (input or "{}"))()
+end
+
 function gadget:UnitCreated(unitID, unitDefID, teamID, builderID)
 	local info = GG.lusHelper[unitDefID]
 	if not info.arms then --and not UnitDefs[unitDefID].name:find("dropship") then
@@ -50,9 +54,9 @@ function gadget:UnitCreated(unitID, unitDefID, teamID, builderID)
 				local weaponNum = tonumber(pieceName:sub(8, -1))
 				barrelIDs[weaponNum] = true
 			-- Find additional turrets
-			elseif pieceName:find("turret_") then
+			--[[elseif pieceName:find("turret_") then
 				local weaponNum = tonumber(pieceName:sub(8, -1))
-				turretIDs[weaponNum] = true
+				turretIDs[weaponNum] = true]]
 			-- Find the number of wheels
 			elseif pieceName:find("wheel") then
 				numWheels = numWheels + 1
@@ -98,14 +102,18 @@ function gadget:GamePreload()
 		-- UnitDef Level Info
 		-- Mechs
 		info.jumpjets = GG.jumpDefs[unitDefID] ~= nil
-		info.torsoTurnSpeed = math.rad(tonumber(cp.torsoturnspeed) or 125)
+		info.torsoTurnSpeed = math.rad(tonumber(cp.torsoturnspeed) or 100)
 		info.leftArmID = tonumber(cp.leftarmid) or 1
 		info.rightArmID = tonumber(cp.rightarmid) or 2
 		-- Vehicles
 		info.hover = unitDef.canHover
+		info.turrets = StringToTable(cp.turrets)
 		info.turretTurnSpeed = math.rad(tonumber(cp.turretturnspeed) or 75)
 		info.turret2TurnSpeed = math.rad(tonumber(cp.turret2turnspeed) or 75)
-		info.wheelSpeed = math.rad(tonumber(cp.wheelspeed) or 200)
+		info.barrelRecoilSpeed = (tonumber(cp.barrelrecoilspeed) or 100)
+		info.barrelRecoilDist = StringToTable(cp.barrelrecoildist)
+		info.wheelSpeed = math.rad(tonumber(cp.wheelspeed) or 100)
+		info.wheelAccel = math.rad(tonumber(cp.wheelaccel) or info.wheelSpeed * 2)
 		-- General
 		info.heatLimit = (cp.heatlimit or 50) * 10
 		info.coolRate = info.heatLimit / 50 -- or a constant rate of 10?
