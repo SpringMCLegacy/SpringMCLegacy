@@ -64,6 +64,9 @@ local CL_Morrigu = {
 		helptext		= "Armament: 2 x ER Large Beam Laser, 2 x LRM-15 - Armor: 13 tons",
 		heatlimit		= "26",
 		unittype		= "vehicle",
+		turretturnspeed = "50",
+		elevationspeed = "100",
+		wheelspeed = "200",
     },
 }
 

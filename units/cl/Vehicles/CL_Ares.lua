@@ -57,6 +57,8 @@ local CL_Ares = {
 		helptext		= "Armament: 1 x ER Large Beam Laser, 2 x ATM-9 - Armor: 4.5 tons",
 		heatlimit		= "26",
 		unittype		= "vehicle",
+		turretturnspeed = "75",
+		elevationspeed  = "100",
     },
 }
 

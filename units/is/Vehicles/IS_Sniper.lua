@@ -61,6 +61,7 @@ local IS_Sniper = {
 		turretturnspeed = "50",
 		turret2turnspeed = "200",
 		elevationspeed = "50",
+		turrets = "{[2] = 2, [3] = 2}",
     },
 }
 

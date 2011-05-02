@@ -53,7 +53,7 @@ local CL_Huit = {
 				OnlyTargetCategory = "notbeacon",
 				WeaponSlaveTo = 1,
 			},
-			[3] = {
+			[4] = {
 				name	= "CMPL",
 				OnlyTargetCategory = "notbeacon",
 				WeaponSlaveTo = 1,
@@ -64,6 +64,8 @@ local CL_Huit = {
 		helptext		= "Armament: 2 x Arrow IV Artillery Missle, 2 x Medium Pulse Laser - Armor: 5.5 tons",
 		heatlimit		= "20",
 		unittype		= "vehicle",
+		turretturnspeed = "50",
+		elevationspeed  = "75",
     },
 }
 

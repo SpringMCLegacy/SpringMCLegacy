@@ -20,6 +20,7 @@ local coolRate = info.coolRate * 4
 local inWater = false
 local missileWeaponIDs = info.missileWeaponIDs
 local launcherIDs = info.launcherIDs
+local barrelRecoils = info.barrelRecoilDist
 local burstLengths = info.burstLengths
 local heatDamages = info.heatDamages
 local firingHeats = info.firingHeats
@@ -30,7 +31,9 @@ local hover = info.hover
 local TURRET_SPEED = info.turretTurnSpeed
 local TURRET_2_SPEED = info.turret2TurnSpeed
 local ELEVATION_SPEED = info.elevationSpeed
+local BARREL_SPEED = info.barrelRecoilSpeed
 local WHEEL_SPEED = info.wheelSpeed
+local WHEEL_ACCEL = info.wheelAccel
 local RESTORE_DELAY = Spring.UnitScript.GetLongestReloadTime(unitID) * 2
 
 local currLaunchPoint = 1
@@ -51,7 +54,7 @@ else
 end
 
 local flares = {}
-local turrets = {}
+local turrets = info.turrets
 local mantlets = {}
 local barrels = {}
 local launchers = {}
@@ -70,9 +73,9 @@ for weaponID = 1, info.numWeapons do
 	elseif weaponID ~= amsID then
 		flares[weaponID] = piece ("flare_" .. weaponID)
 	end
-	if info.turretIDs[weaponID] then
+	--[[if info.turretIDs[weaponID] then
 		turrets[weaponID] = piece("turret_" .. weaponID)
-	end
+	end]]
 	if info.mantletIDs[weaponID] then
 		mantlets[weaponID] = piece("mantlet_" .. weaponID)
 	end
@@ -84,8 +87,11 @@ end
 local function RestoreAfterDelay(unitID)
 	Sleep(RESTORE_DELAY)
 	Turn(turret, y_axis, 0, TURRET_SPEED)
-	for i = 1, #mantlets do
-		Turn(mantlets[i], x_axis, 0, ELEVATION_SPEED)
+	for id in pairs(mantlets) do
+		Turn(mantlets[id], x_axis, 0, ELEVATION_SPEED)
+	end
+	for id in pairs(launchers) do
+		Turn(launchers[id], x_axis, 0, ELEVATION_SPEED)
 	end
 end
 
@@ -179,13 +185,13 @@ end
 
 function script.StartMoving()
 	for i = 1, #wheels do
-		Spin(wheels[i], x_axis, WHEEL_SPEED, WHEEL_SPEED/2)
+		Spin(wheels[i], x_axis, WHEEL_SPEED, WHEEL_ACCEL)
 	end
 end
 
 function script.StopMoving()
 	for i = 1, #wheels do
-		StopSpin(wheels[i], x_axis, WHEEL_SPEED/2)
+		StopSpin(wheels[i], x_axis, WHEEL_ACCEL)
 	end
 end
 
@@ -201,8 +207,8 @@ function script.AimWeapon(weaponID, heading, pitch)
 	Signal(2 ^ weaponID) -- 2 'to the power of' weapon ID
 	SetSignalMask(2 ^ weaponID)
 	-- use a weapon-specific turret if it exists
-	if weaponID > 1 and turrets[2] then -- this is really a hack
-		Turn(turrets[2], y_axis, heading, TURRET_2_SPEED)
+	if turrets[weaponID] then
+		Turn(turrets[weaponID], y_axis, heading, TURRET_2_SPEED)
 	else -- otherwise use main
 		Turn(turret, y_axis, heading, TURRET_SPEED)
 	end
@@ -222,7 +228,7 @@ function script.AimWeapon(weaponID, heading, pitch)
 	if turrets[weaponID] then
 		WaitForTurn(turrets[weaponID], y_axis)
 	else
-		WaitForTurn(turret, y_axis)
+		WaitForTurn(turret, y_axis) -- CL_Mars shouldn't really wait here for missiles
 	end
 	if mantlets[weaponID] then
 		WaitForTurn(mantlets[weaponID], x_axis)
@@ -234,8 +240,8 @@ end
 function script.FireWeapon(weaponID)
 	currHeatLevel = currHeatLevel + firingHeats[weaponID]
 	SetUnitRulesParam(unitID, "heat", currHeatLevel)
-	if barrels[weaponID] then
-		Move(barrels[weaponID], z_axis, -3, 100)
+	if barrels[weaponID] and barrelRecoils[weaponID] then
+		Move(barrels[weaponID], z_axis, -barrelRecoils[weaponID], BARREL_SPEED)
 		WaitForMove(barrels[weaponID], z_axis)
 		Move(barrels[weaponID], z_axis, 0, 10)
 	end
