@@ -52,6 +52,9 @@ local IS_LRMCarrier = {
 		helptext		= "Armament: 2 x LRM-20 - Armor: 2 tons",
 		heatlimit		= "26",
 		unittype		= "vehicle",
+		turretturnspeed = "25",
+		elevationspeed  = "50",
+		wheelspeed      = "200",
     },
 }
 

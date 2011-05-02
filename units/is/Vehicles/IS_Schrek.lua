@@ -57,6 +57,10 @@ local IS_Schrek = {
 		helptext		= "Armament: 3 x Particle Projector Cannon - Armor: 7 tons",
 		heatlimit		= "30",
 		unittype		= "vehicle",
+		turretturnspeed = "40",
+		elevationspeed  = "100",
+		barrelrecoildist = "{[1] = 5, [2] = 5, [3] = 5}",
+		wheelspeed      = "200",
     },
 }
 

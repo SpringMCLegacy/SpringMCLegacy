@@ -53,6 +53,10 @@ local IS_Demolisher = {
 		helptext		= "Armament: 2 x AC/20 - Armor: 13 tons",
 		heatlimit		= "10",
 		unittype		= "vehicle",
+		turretturnspeed = "75",
+		elevationspeed  = "200",
+		wheelspeed      = "200",
+		barrelrecoildist = "{[1] = 5, [2] = 5}",
     },
 }
 

@@ -71,6 +71,10 @@ local IS_Challenger = {
 		helptext		= "Armament: 1 x Gauss Rifle, 1 x LBX/10, 1 x LRM-10, 2 x Medium Pulse Laser - Armor: 14 tons",
 		heatlimit		= "20",
 		unittype		= "vehicle",
+		turretturnspeed = "75",
+		elevationspeed  = "200",
+		wheelspeed      = "200",
+		barrelrecoildist = "{[1] = 5, [2] = 5}",
 	},
 }
 

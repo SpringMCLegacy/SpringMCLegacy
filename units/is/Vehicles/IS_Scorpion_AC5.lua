@@ -58,6 +58,10 @@ local IS_Scorpion_AC5 = {
 		helptext		= "Armament: 1 x Autocannon/5, 2 x Machinegun - Armor: 2 tons",
 		heatlimit		= "10",
 		unittype		= "vehicle",
+		turretturnspeed = "75",
+		elevationspeed  = "200",
+		barrelrecoildist = "{[1] = 3}",
+		wheelspeed      = "200",
     },
 }
 

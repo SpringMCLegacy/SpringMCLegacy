@@ -66,6 +66,9 @@ local IS_Goblin = {
 		helptext		= "Armament: 1 x Large Pulse Laser, 1 x SRM-6, 2 x Machinegun, Laser Anti-Missile System - Armor: 8 tons",
 		heatlimit		= "20",
 		unittype		= "vehicle",
+		turrettunspeed  = "75",
+		elevationspeed  = "200",
+		wheelspeed      = "200",
     },
 }
 
