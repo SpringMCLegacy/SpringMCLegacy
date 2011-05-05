@@ -3,6 +3,7 @@ local IS_Schrek = {
 	description         = "Medium Sniper Tank",
 	objectName        	= "IS_Schrek.s3o",
 	script				= "Vehicle.lua",
+	corpse				= "IS_Schrek_X",
 	explodeAs          	= "mechexplode",
 	category 			= "tank ground notbeacon",
 	sightDistance       = 800,

@@ -63,10 +63,11 @@ buildoptions =
   outpost_vehicledepot = 
   {
 	"is_harasser",
-	"is_scorpion_ac5",
+	--"is_scorpion_ac5",
 	--"is_scorpion_lgauss",
 	"is_goblin",
 	"is_schrek",
+	"is_partisan",
 	"is_demolisher",
 	"is_challenger",
 	"is_lrmcarrier",
@@ -75,7 +76,7 @@ buildoptions =
 	"cl_enyo",
 	"cl_oro_lbx",
 	"cl_ares",
-	"cl_oro_hag",
+	--"cl_oro_hag",
 	"cl_morrigu",
 	"cl_mars",
 	"cl_huit",

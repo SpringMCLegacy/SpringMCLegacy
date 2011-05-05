@@ -3,6 +3,7 @@ local CL_Enyo = {
 	description         = "Medium Strike Tank",
 	objectName        	= "CL_Enyo.s3o",
 	script				= "Vehicle.lua",
+	corpse				= "CL_Enyo_X",
 	explodeAs          	= "mechexplode",
 	category 			= "tank ground notbeacon",
 	sightDistance       = 800,
