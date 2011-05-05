@@ -3,6 +3,7 @@ local IS_Challenger = {
 	description         = "Heavy Strike Tank",
 	objectName        	= "IS_Challenger.s3o",
 	script				= "Vehicle.lua",
+	corpse				= "IS_Challenger_X",
 	explodeAs          	= "mechexplode",
 	category 			= "tank ground notbeacon",
 	sightDistance       = 800,

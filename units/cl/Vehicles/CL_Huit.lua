@@ -3,6 +3,7 @@ local CL_Huit = {
 	description         = "Heavy Artillery Support Vehicle",
 	objectName        	= "CL_Huit.s3o",
 	script				= "Vehicle.lua",
+	corpse				= "CL_Huit_X",
 	explodeAs          	= "mechexplode",
 	category 			= "tank ground notbeacon",
 	sightDistance       = 800,

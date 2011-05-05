@@ -3,6 +3,7 @@ local CL_Oro_LBX = {
 	description         = "Medium Brawler Tank",
 	objectName        	= "CL_Oro_LBX.s3o",
 	script				= "Vehicle.lua",
+	corpse				= "CL_Oro_LBX_X",
 	explodeAs          	= "mechexplode",
 	category 			= "tank ground notbeacon",
 	sightDistance       = 800,

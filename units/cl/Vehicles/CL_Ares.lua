@@ -3,6 +3,7 @@ local CL_Ares = {
 	description         = "Medium Sniper Tank",
 	objectName        	= "CL_Ares.s3o",
 	script				= "Vehicle.lua",
+	corpse				= "CL_Ares_X",
 	explodeAs          	= "mechexplode",
 	category 			= "tank ground notbeacon",
 	sightDistance       = 800,
