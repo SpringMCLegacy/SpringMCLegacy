@@ -179,7 +179,7 @@ function script.HitByWeapon(x, z, weaponID)
 end
 
 function script.Create()
-	StartThread(SmokeUnit, {pelvis, torso})
+	StartThread(SmokeUnit, {body, turret})
 	StartThread(CoolOff)
 end
 

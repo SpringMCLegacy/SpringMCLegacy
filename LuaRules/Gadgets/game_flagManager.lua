@@ -50,7 +50,7 @@ local DEF_MULT = 1 --multiplies against the FBI defined DefRate
 
 -- variables
 
-local flagTypes = {"beacon"}
+local flagTypes = {"beacon", "outpost_vehicledepot"}
 local flags = {} -- flags[flagType][index] == flagUnitID
 local numFlags = {} -- numFlags[flagType] == numberOfFlagsOfType
 local flagTypeData = {} -- flagTypeData[flagType] = {radius = radius, etc}
@@ -144,25 +144,35 @@ function PlaceFlag(spot, flagType)
 	flagCapStatuses[newFlag] = {}
 	
 	SetUnitNeutral(newFlag, true)
-	SetUnitNoSelect(newFlag, true)
+	if flagType == "beacon" then -- ugly
+		SetUnitNoSelect(newFlag, true)
+	end
 	SetUnitAlwaysVisible(newFlag, true)
 end
 
 
 function gadget:GamePreload()
-	if modOptions and (modOptions.income == "damageonly" or modOptions.income == "none") then gadgetHandler:RemoveGadget() end
 	if DEBUG then Spring.Echo(PROFILE_PATH) end
 	-- CHECK FOR PROFILES
 	if VFS.FileExists(PROFILE_PATH) then
-		local flagSpots, buoySpots = VFS.Include(PROFILE_PATH)
+		local flagSpots, outpostSpots = VFS.Include(PROFILE_PATH)
 		if flagSpots and #flagSpots > 0 then 
 			Spring.Echo("Map Beacon Profile found. Loading Beacon positions..." .. (#flagSpots or 0))
-			flagTypeSpots[flagTypes[1]] = flagSpots 
+			flagTypeSpots["beacon"] = flagSpots 
 		end
-		--[[if buoySpots and #buoySpots > 0 then 
-			Spring.Echo("Map Buoy Profile found. Loading Buoy positions...")
-			flagTypeSpots["buoy"] = buoySpots 
-		end]]
+		if outpostSpots and #outpostSpots > 0 then 
+			Spring.Echo("Map Outposts Profile found. Loading Outpost positions..." .. (#outpostSpots or 0))
+			--flagTypeSpots["buoy"] = buoySpots 
+			for i = 1, #outpostSpots do
+				local spot = outpostSpots[i]
+				if type(spot.types) == "table" then
+					Spring.Echo("PENIS")
+					local outpostType = spot.types[math.random(1, #spot.types)] 
+					spot.types = nil
+					flagTypeSpots[outpostType][#flagTypeSpots[outpostType] + 1] = spot
+				end
+			end
+		end
 	end
 end
 
@@ -289,8 +299,9 @@ function gadget:UnitCreated(unitID, unitDefID, unitTeam, builderID)
 		local cp = ud.customParams
 		local flagCapRate = 1 --cp.flagcaprate
 		local flagDefendRate = cp.flagdefendrate or flagCapRate
-		local flagCapType = ud.customParams.flagcaptype or flagTypes[1]
-		if flagCapRate then
+		--local flagCapType = ud.customParams.flagcaptype or flagTypes[1]
+		for _, flagCapType in pairs(flagTypes) do
+		--if flagCapRate then
 			flagTypeCappers[flagCapType][unitID] = (CAP_MULT * flagCapRate)
 			flagTypeDefenders[flagCapType][unitID] = (DEF_MULT * flagCapRate)
 		end
