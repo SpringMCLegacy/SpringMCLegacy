@@ -3,6 +3,7 @@ local Outpost_C3Center = {
 	description         = "Relays targeting and sensor data",
 	objectName        	= "Outpost_C3Center.s3o",
 	script				= "Outpost_C3Center.lua",
+	iconType			= "beacon",
 	category 			= "structure beacon",
 	sightDistance       = 1200,
 	radarDistance      	= 2000,

@@ -7,6 +7,7 @@ local CL_Maddog = {
 	corpse				= "CL_Maddog_X",
 	explodeAs          	= "mechexplode",
 	category 			= "mech ground notbeacon",
+	noChaseCategory		= "beacon air",
 	sightDistance       = 800,
 	radarDistance      	= 1500,
 		activateWhenBuilt   = true,

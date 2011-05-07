@@ -5,6 +5,7 @@ local CL_Oro_HAG = {
 	script				= "Vehicle.lua",
 	explodeAs          	= "mechexplode",
 	category 			= "tank ground notbeacon",
+	noChaseCategory		= "beacon",
 	sightDistance       = 800,
 	radarDistance      	= 1500,
 		activateWhenBuilt   = true,

@@ -6,6 +6,7 @@ local IS_Demolisher = {
 	corpse				= "IS_Demolisher_X",
 	explodeAs          	= "mechexplode",
 	category 			= "tank ground notbeacon",
+	noChaseCategory		= "beacon air",
 	sightDistance       = 800,
 	radarDistance      	= 1500,
 		activateWhenBuilt   = true,

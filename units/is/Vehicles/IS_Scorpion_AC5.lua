@@ -5,6 +5,7 @@ local IS_Scorpion_AC5 = {
 	script				= "Vehicle.lua",
 	explodeAs          	= "mechexplode",
 	category 			= "tank ground notbeacon",
+	noChaseCategory		= "beacon air",
 	sightDistance       = 800,
 	radarDistance      	= 1500,
 		activateWhenBuilt   = true,

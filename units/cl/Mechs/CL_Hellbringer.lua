@@ -7,6 +7,7 @@ local CL_Hellbringer = {
 	corpse				= "CL_Hellbringer_X",
 	explodeAs          	= "mechexplode",
 	category 			= "mech ground notbeacon",
+	noChaseCategory		= "beacon air",
 	sightDistance       = 1200,
 	radarDistance      	= 2000,
 		stealth				= 1,

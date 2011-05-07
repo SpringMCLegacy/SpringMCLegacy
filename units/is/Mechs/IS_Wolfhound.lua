@@ -7,6 +7,7 @@ local IS_Wolfhound = {
 	corpse				= "IS_Wolfhound_X",
 	explodeAs          	= "mechexplode",
 	category 			= "mech ground notbeacon",
+	noChaseCategory		= "beacon air",
 	sightDistance       = 1200,
 	radarDistance      	= 2000,
 		activateWhenBuilt   = true,

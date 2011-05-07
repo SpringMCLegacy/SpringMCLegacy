@@ -3,6 +3,7 @@ local Outpost_Garrison = {
 	description         = "Armed Defensive Garrison",
 	objectName        	= "Outpost_ListeningPost.s3o",
 	script				= "Outpost_Garrison.lua",
+	iconType			= "beacon",
 	category 			= "structure beacon",
 	sightDistance       = 1200,
 	radarDistance      	= 2000,

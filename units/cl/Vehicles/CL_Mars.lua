@@ -6,6 +6,7 @@ local CL_Mars = {
 	corpse				= "CL_Mars_X",
 	explodeAs          	= "mechexplode",
 	category 			= "tank ground notbeacon",
+	noChaseCategory		= "beacon air",
 	stealth				= 1,
 	sightDistance       = 800,
 	radarDistance      	= 1500,

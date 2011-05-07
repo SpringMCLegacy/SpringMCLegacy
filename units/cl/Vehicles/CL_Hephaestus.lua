@@ -6,6 +6,7 @@ local CL_Hephaestus = {
 	corpse				= "CL_Hephaestus_X",
 	explodeAs          	= "mechexplode",
 	category 			= "tank ground hovercraft notbeacon",
+	noChaseCategory		= "beacon air",
 	stealth				= 1,
 	sightDistance       = 1200,
 	radarDistance      	= 2000,
