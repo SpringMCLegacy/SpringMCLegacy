@@ -50,7 +50,7 @@ local DEF_MULT = 1 --multiplies against the FBI defined DefRate
 
 -- variables
 
-local flagTypes = {"beacon", "outpost_vehicledepot"}
+local flagTypes = {"beacon", "outpost_c3center", "outpost_garrison", "outpost_listeningpost", "outpost_vehicledepot"}
 local flags = {} -- flags[flagType][index] == flagUnitID
 local numFlags = {} -- numFlags[flagType] == numberOfFlagsOfType
 local flagTypeData = {} -- flagTypeData[flagType] = {radius = radius, etc}
