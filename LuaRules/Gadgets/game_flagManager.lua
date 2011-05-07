@@ -166,7 +166,9 @@ function gadget:GamePreload()
 			for i = 1, #outpostSpots do
 				local spot = outpostSpots[i]
 				if type(spot.types) == "table" then
-					local outpostType = spot.types[math.random(1, #spot.types)] 
+					local number = math.random(1, #spot.types)
+					Spring.Echo(#spot.types, number)
+					local outpostType = spot.types[number] 
 					spot.types = nil
 					flagTypeSpots[outpostType][#flagTypeSpots[outpostType] + 1] = spot
 				end
