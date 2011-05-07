@@ -64,7 +64,7 @@ local auras = {
                 transport = false,
                 weapons = {
 						range = 1.25,     --Range multiplier. This also increases the projectile speed so lasers don't fade out.
-						accuracy = 1.25,  --Accuracy multiplier.
+						accuracy = 2,  --Accuracy multiplier.
 						mask = {"all"},
 				},
         },
