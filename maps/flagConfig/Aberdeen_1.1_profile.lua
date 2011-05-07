@@ -21,4 +21,14 @@ local resources = {
 	},
 }
 
-return resources
+local outposts = {
+	{
+		x = 3200,
+		z = 165,
+		types = {
+			"outpost_vehicledepot",
+		},
+	},
+}
+
+return resources, outposts
