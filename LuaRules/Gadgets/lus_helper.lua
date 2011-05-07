@@ -53,10 +53,6 @@ function gadget:UnitCreated(unitID, unitDefID, teamID, builderID)
 			elseif pieceName:find("barrel_") then
 				local weaponNum = tonumber(pieceName:sub(8, -1))
 				barrelIDs[weaponNum] = true
-			-- Find additional turrets
-			--[[elseif pieceName:find("turret_") then
-				local weaponNum = tonumber(pieceName:sub(8, -1))
-				turretIDs[weaponNum] = true]]
 			-- Find the number of wheels
 			elseif pieceName:find("wheel") then
 				numWheels = numWheels + 1
@@ -85,9 +81,6 @@ function gadget:GamePreload()
 		local reloadTimes = {}
 		for i = 1, #weapons do
 			local weaponInfo = weapons[i]
-			--for tag, value in pairs(weaponInfo) do
-				--Spring.Echo(tag, value)
-			--end
 			local weaponDef = WeaponDefs[weaponInfo.weaponDef]
 			reloadTimes[i] = weaponDef.reload
 			burstLengths[i] = weaponDef.salvoSize
