@@ -1,7 +1,7 @@
 function widget:GetInfo()
   return {
-    name      = "1944 Flag Ranges",
-    desc      = "Shows a flag's capping radius and team colour",
+    name      = "BT:L - Beacon Ranges",
+    desc      = "Shows a beacons's capping radius and team colour",
     author    = "CarRepairer and Evil4Zerggin",
     date      = "28 August 2009",
     license   = "GNU GPL v2",
@@ -42,7 +42,7 @@ local FLAG_CAP_THRESHOLD  = 10 -- number of capping points needed for a flag to 
 
 local maxAlpha = 0.5
 local innerSize = 0.875
-local circleDivs = 64
+local circleDivs = 6--4
 local circleInc = 2 * PI / circleDivs
 
 -- variables
