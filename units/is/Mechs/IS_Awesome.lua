@@ -7,6 +7,7 @@ local IS_Awesome = {
 	corpse				= "IS_Awesome_X",
 	explodeAs          	= "mechexplode",
 	category 			= "mech ground notbeacon",
+	noChaseCategory		= "beacon air",
 	sightDistance       = 800,
 	radarDistance      	= 1500,
 		stealth				= 1,

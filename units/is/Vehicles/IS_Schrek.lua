@@ -6,6 +6,7 @@ local IS_Schrek = {
 	corpse				= "IS_Schrek_X",
 	explodeAs          	= "mechexplode",
 	category 			= "tank ground notbeacon",
+	noChaseCategory		= "beacon air",
 	sightDistance       = 800,
 	radarDistance      	= 1500,
 		activateWhenBuilt   = true,

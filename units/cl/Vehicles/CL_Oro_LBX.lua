@@ -6,6 +6,7 @@ local CL_Oro_LBX = {
 	corpse				= "CL_Oro_LBX_X",
 	explodeAs          	= "mechexplode",
 	category 			= "tank ground notbeacon",
+	noChaseCategory		= "beacon",
 	sightDistance       = 800,
 	radarDistance      	= 1500,
 		activateWhenBuilt   = true,

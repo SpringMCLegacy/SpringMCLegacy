@@ -3,6 +3,7 @@ local Outpost_ListeningPost = {
 	description         = "Automated Observation Post",
 	objectName        	= "Outpost_ListeningPost.s3o",
 	script				= "Outpost_ListeningPost.lua",
+	iconType			= "beacon",
 	category 			= "structure beacon",
 	sightDistance       = 1200,
 	radarDistance      	= 2000,

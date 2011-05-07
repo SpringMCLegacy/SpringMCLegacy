@@ -7,6 +7,7 @@ local CL_Timberwolf = {
 	corpse				= "CL_Timberwolf_X",
 	explodeAs          	= "mechexplode",
 	category 			= "mech ground notbeacon",
+	noChaseCategory		= "beacon",
 	sightDistance       = 800,
 	radarDistance      	= 1500,
 		activateWhenBuilt   = true,

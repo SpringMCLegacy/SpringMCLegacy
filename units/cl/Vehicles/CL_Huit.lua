@@ -6,6 +6,7 @@ local CL_Huit = {
 	corpse				= "CL_Huit_X",
 	explodeAs          	= "mechexplode",
 	category 			= "tank ground notbeacon",
+	noChaseCategory		= "beacon air",
 	sightDistance       = 800,
 	radarDistance      	= 1500,
 		stealth				= 1,
