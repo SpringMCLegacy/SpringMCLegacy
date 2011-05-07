@@ -42,7 +42,7 @@ local IS_Atlas = {
 		--Makes unit use weapon from /weapons folder
 		weapons 		= {	
 			[1] = {
-				name	= "LPL",
+				name	= "UAC20",
 				mainDir = "0 0 1",
 				maxAngleDif = 270,
 				OnlyTargetCategory = "notbeacon",
@@ -55,7 +55,7 @@ local IS_Atlas = {
 				WeaponSlaveTo = 1,
 			},
 			[3] = {
-				name	= "AC20",
+				name	= "LPL",
 				mainDir = "0 0 1",
 				maxAngleDif = 270,
 				OnlyTargetCategory = "notbeacon",
@@ -109,9 +109,11 @@ local IS_Atlas = {
 	},]]
     customparams = {
 		hasturnbutton	= "1",
-		helptext		= "Armament: 1 x AC/20, 2 x Large Pulse Laser, 2 x Medium Beam Laser, 2 x MRM-10, 1 x SRM-6 - Armor: 19 tons Standard",
+		helptext		= "Armament: 1 x Ultra AC/20, 2 x Large Pulse Laser, 2 x Medium Beam Laser, 2 x MRM-10, 1 x SRM-6 - Armor: 19 tons Standard",
 		heatlimit		= "32",
 		torsoturnspeed	= "100",
+		leftarmid		= "2",
+		rightarmid 		= "3",
 		unittype		= "mech",
     },
 }
