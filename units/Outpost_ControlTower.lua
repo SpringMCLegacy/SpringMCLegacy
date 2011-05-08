@@ -1,19 +1,19 @@
-local Outpost_C3Center = {
-	name              	= "C3 Command Center",
-	description         = "Relays targeting and sensor data",
-	objectName        	= "Outpost_C3Center.s3o",
-	script				= "Outpost_C3Center.lua",
+local Outpost_ControlTower = {
+	name              	= "Aero Control Tower",
+	description         = "Allows control for Aerospace assets",
+	objectName        	= "Outpost_ControlTower.s3o",
+	script				= "Outpost_ControlTower.lua",
 	iconType			= "beacon",
 	category 			= "structure beacon",
 	sightDistance       = 1200,
 	radarDistance      	= 2000,
 		activateWhenBuilt   = true,
-	maxDamage           = 22000,
+	maxDamage           = 36000,
 	mass                = 5000,
-	footprintX			= 7,
-	footprintZ 			= 7,
+	footprintX			= 6,
+	footprintZ 			= 6,
 	collisionVolumeType = "box",
-	collisionVolumeScales = "75 75 75",
+	collisionVolumeScales = "75 300 75",
 	collisionVolumeOffsets = "0 0 0",
 	collisionVolumeTest = 1,
 	buildCostEnergy     = 0,
@@ -36,4 +36,4 @@ local Outpost_C3Center = {
 	--},
 }
 
-return lowerkeys({ ["Outpost_C3Center"] = Outpost_C3Center })
+return lowerkeys({ ["Outpost_ControlTower"] = Outpost_ControlTower })
