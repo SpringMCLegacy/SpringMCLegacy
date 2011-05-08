@@ -19,8 +19,7 @@ local result = {
   is_challenger = {"is_dropship"},
   is_lrmcarrier = {"is_dropship"},
   is_sniper = {"is_dropship"},
-  
-  is_hawkmoth = {"outpost_controltower", "is_dropship"},
+  is_hawkmoth = {"outpost_controltower"},
   
   cl_hephaestus = {"cl_dropship"},
   cl_enyo = {"cl_dropship"},
@@ -30,8 +29,7 @@ local result = {
   cl_morrigu = {"cl_dropship"},
   cl_mars = {"cl_dropship"},
   cl_huit = {"cl_dropship"},
-  
-  cl_donar = {"outpost_controltower", "cl_dropship"},
+  cl_donar = {"outpost_controltower"},
 }
 
 return result
