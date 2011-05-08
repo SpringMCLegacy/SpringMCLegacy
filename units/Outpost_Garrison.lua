@@ -29,7 +29,7 @@ local Outpost_Garrison = {
 	customparams = {
 		ammosupplier	= "0",
 		supplyradius	= "0",
-		helptext		= "An auto-spawning observation outpost.",
+		helptext		= "Fortified Garrison with defensive weapon emplacements.",
     },
 	--sounds = {
     --underattack        = "Dropship_Alarm",

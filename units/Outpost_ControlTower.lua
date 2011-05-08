@@ -1,6 +1,6 @@
 local Outpost_ControlTower = {
 	name              	= "Aero Control Tower",
-	description         = "Allows control for Aerospace assets",
+	description         = "Allows control of Aerospace assets",
 	objectName        	= "Outpost_ControlTower.s3o",
 	script				= "Outpost_ControlTower.lua",
 	iconType			= "beacon",
@@ -27,9 +27,8 @@ local Outpost_ControlTower = {
 	TEDClass			= "FORT",
 		--Makes unit use weapon from /weapons folder
 	customparams = {
-		ammosupplier	= "0",
-		supplyradius	= "0",
-		helptext		= "Boosts accuracy and range of nearby units.",
+		dontcount		= 1,
+		helptext		= "Allows control of Aerospace assets",
     },
 	--sounds = {
     --underattack        = "Dropship_Alarm",
