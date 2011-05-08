@@ -35,9 +35,8 @@ local Outpost_VehicleDepot = {
 	TEDClass			= PLANT,
 	
 	customparams = {
-		ammosupplier	= "0",
-		supplyradius	= "0",
-		helptext		= "A Vehicle Depot",
+		dontcount		= 1,
+		helptext		= "A Vehicle Depot that can build ground vehicles.",
     },
 	sounds = {
     underattack        = "Dropship_Alarm",

@@ -27,9 +27,8 @@ local Outpost_ListeningPost = {
 	TEDClass			= "FORT",
 		--Makes unit use weapon from /weapons folder
 	customparams = {
-		ammosupplier	= "0",
-		supplyradius	= "0",
-		helptext		= "An auto-spawning observation outpost.",
+		dontcount		= 1,
+		helptext		= "An observation outpost equipped with advanced sensors.",
     },
 	--sounds = {
     --underattack        = "Dropship_Alarm",

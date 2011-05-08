@@ -27,8 +27,7 @@ local Outpost_C3Center = {
 	TEDClass			= "FORT",
 		--Makes unit use weapon from /weapons folder
 	customparams = {
-		ammosupplier	= "0",
-		supplyradius	= "0",
+		dontcount		= 1,
 		helptext		= "Boosts accuracy and range of nearby units.",
     },
 	--sounds = {
