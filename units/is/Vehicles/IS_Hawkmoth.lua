@@ -11,8 +11,8 @@ local IS_Hawkmoth = {
 	radarDistance      	= 2000,
 		activateWhenBuilt   = true,
 		onoffable           = true,
-	maxDamage           = 2600,
-	mass                = 4000,
+	maxDamage           = 3500,
+	mass                = 2000,
 	footprintX			= 2,
 	footprintZ 			= 2,
 	collisionVolumeType = "box",
@@ -41,20 +41,20 @@ local IS_Hawkmoth = {
 		--Makes unit use weapon from /weapons folder
 		weapons 		= {	
 			[1] = {
-				name	= "LightGauss",
+				name	= "Gauss",
 				OnlyTargetCategory = "notbeacon",
 				mainDir = "0 0 1",
 				maxAngleDif = 180,
 			},
 			[2] = {
-				name	= "ArtemisLRM5",
+				name	= "LRM5",
 				OnlyTargetCategory = "notbeacon",
 				WeaponSlaveTo = 1,
 				mainDir = "0 0 1",
 				maxAngleDif = 90,
 			},
 			[3] = {
-				name	= "ArtemisLRM5",
+				name	= "LRM5",
 				OnlyTargetCategory = "notbeacon",
 				WeaponSlaveTo = 1,
 				mainDir = "0 0 1",
@@ -63,7 +63,7 @@ local IS_Hawkmoth = {
 		},
 	customparams = {
 		hasturnbutton	= "1",
-		helptext		= "Armament: 1 x Light Gauss Rifle, 2 x Artemis IV-enhanced LRM-5 - Armor: 1.5 tons",
+		helptext		= "Armament: 1 x Light Gauss Rifle, 2 x Artemis IV-enhanced LRM-5 - Armor: 2 tons",
 		heatlimit		= "15",
 		unittype		= "vehicle",
     },

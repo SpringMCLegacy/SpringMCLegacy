@@ -35,11 +35,11 @@ weaponDef = {
 	damage = {
 		default = 100,--10 DPS
 		beacons = 0,
-		light = 50,
-		medium = 42.5,
-		heavy = 35,
-		assault = 25,
-		vehicle = 75,
+		light = 100,
+		medium = 90,--90%
+		heavy = 80, --80%
+		assault = 70, --70%
+		vehicle = 150, --150%
 	},
 	customparams = {
 		heatgenerated		= "40",--4/sec

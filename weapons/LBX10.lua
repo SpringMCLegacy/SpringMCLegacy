@@ -31,9 +31,9 @@ weaponDef = {
 		default = 15, --100 DPS
 		beacons = 0,
 		light = 15,
-		medium = 12.75,
-		heavy = 10.5,
-		assault = 7.5,
+		medium = 13.5,
+		heavy = 12,
+		assault = 10.5,
 		vehicle = 22.5,
 	},
 	customparams = {
