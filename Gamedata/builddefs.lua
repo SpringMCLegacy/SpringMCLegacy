@@ -34,6 +34,7 @@ buildoptions =
 	"cl_maddog",
 	"cl_warhawk",
 	"cl_direwolf",
+	"cl_donar",
   },
   is_dropship = 
   {
@@ -60,6 +61,7 @@ buildoptions =
 	"is_awesome",
 	"is_devastator",
 	"is_atlas",
+	"is_hawkmoth",
   },
   outpost_vehicledepot = 
   {
