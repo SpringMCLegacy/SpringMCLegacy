@@ -15,7 +15,7 @@ local outposts = {
 	{
 		x = 5156,
 		z = 2053,
-		types = {"outpost_vehicledepot", "outpost_c3center", "outpost_garrison"},
+		types = {"outpost_listeningpost", "outpost_garrison"},
 	},
 		{
 		x = 5096,
@@ -25,12 +25,12 @@ local outposts = {
 	{
 		x = 2368,
 		z = 899,
-		types = {"outpost_listeningpost", "outpost_garrison"},
+		types = {"outpost_vehicledepot", "outpost_c3center", "outpost_garrison", "outpost_controltower"},
 	},
 	{
 		x = 7873,
 		z = 899,
-		types = {"outpost_listeningpost", "outpost_garrison"},
+		types = {"outpost_vehicledepot", "outpost_c3center", "outpost_garrison", "outpost_controltower"},
 	},
 }
 
