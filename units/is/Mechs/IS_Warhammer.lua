@@ -84,14 +84,14 @@ local IS_Warhammer = {
 				WeaponSlaveTo = 1,
 			},
 			[7] = {
-				name	= "MG",
+				name	= "Flamer",
 				mainDir = "0 0 1",
 				maxAngleDif = 270,
 				OnlyTargetCategory = "notbeacon",
 				WeaponSlaveTo = 1,
 			},
 			[8] = {
-				name	= "MG",
+				name	= "Flamer",
 				mainDir = "0 0 1",
 				maxAngleDif = 270,
 				OnlyTargetCategory = "notbeacon",

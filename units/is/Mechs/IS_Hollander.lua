@@ -49,14 +49,14 @@ local IS_Hollander = {
 				OnlyTargetCategory = "notbeacon",
 			},
 			[2] = {
-				name	= "Flamer",
+				name	= "SBL",
 				mainDir = "0 0 1",
 				maxAngleDif = 270,
 				OnlyTargetCategory = "notbeacon",
 				WeaponSlaveTo = 1,
 			},
 			[3] = {
-				name	= "Flamer",
+				name	= "SBL",
 				mainDir = "0 0 1",
 				maxAngleDif = 270,
 				OnlyTargetCategory = "notbeacon",
