@@ -28,7 +28,7 @@ local outposts = {
 		types = {"outpost_vehicledepot", "outpost_garrison", "outpost_controltower"},
 	},
 	{
-		x = 7400,
+		x = 8200,
 		z = 1200,
 		types = {"outpost_vehicledepot", "outpost_garrison", "outpost_controltower"},
 	},
