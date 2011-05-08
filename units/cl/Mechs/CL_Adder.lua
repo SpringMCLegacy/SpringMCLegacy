@@ -44,22 +44,22 @@ local CL_Adder = {
 		weapons 		= {	
 			[1] = {
 				name	= "CERPPC",
-				--mainDir = "0 0 1",
-				--maxAngleDif = 270,
+				mainDir = "0 0 1",
+				maxAngleDif = 270,
 				OnlyTargetCategory = "notbeacon",
 				WeaponSlaveTo = 1,
 			},
 			[2] = {
 				name	= "CERPPC",
-				--mainDir = "0 0 1",
-				--maxAngleDif = 270,
+				mainDir = "0 0 1",
+				maxAngleDif = 270,
 				OnlyTargetCategory = "notbeacon",
 				WeaponSlaveTo = 1,
 			},
 			[3] = {
 				name	= "Flamer",
-				--mainDir = "0 0 1",
-				--maxAngleDif = 270,
+				mainDir = "0 0 1",
+				maxAngleDif = 270,
 				OnlyTargetCategory = "notbeacon",
 				WeaponSlaveTo = 1,
 			},
