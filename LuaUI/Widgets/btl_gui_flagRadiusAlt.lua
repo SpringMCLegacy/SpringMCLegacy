@@ -42,6 +42,7 @@ local FLAG_DEF_ID = {
 	UnitDefNames["outpost_c3center"].id, 
 	UnitDefNames["outpost_garrison"].id, 
 	UnitDefNames["outpost_listeningpost"].id, 
+	UnitDefNames["outpost_controltower"].id, 
 }
 
 local FLAG_RADIUS          = 230 -- current flagkiller weapon radius, we may want to open this up to modoptions
