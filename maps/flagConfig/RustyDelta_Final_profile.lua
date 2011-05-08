@@ -23,13 +23,13 @@ local outposts = {
 		types = {"beacon", "outpost_listeningpost", "outpost_garrison"},
 	},
 	{
-		x = 2368,
-		z = 899,
+		x = 2000,
+		z = 1200,
 		types = {"outpost_vehicledepot", "outpost_garrison", "outpost_controltower"},
 	},
 	{
-		x = 7873,
-		z = 899,
+		x = 7400,
+		z = 1200,
 		types = {"outpost_vehicledepot", "outpost_garrison", "outpost_controltower"},
 	},
 }
