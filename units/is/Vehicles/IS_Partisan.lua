@@ -40,21 +40,21 @@ local IS_Partisan = {
 		--Makes unit use weapon from /weapons folder
 		weapons 		= {	
 			[1] = {
-				name	= "AC5",
+				name	= "AC5_AA",
 				OnlyTargetCategory = "notbeacon",
 			},
 			[2] = {
-				name	= "AC5",
+				name	= "AC5_AA",
 				OnlyTargetCategory = "notbeacon",
 				WeaponSlaveTo = 1,
 			},
 			[3] = {
-				name	= "AC5",
+				name	= "AC5_AA",
 				OnlyTargetCategory = "notbeacon",
 				WeaponSlaveTo = 1,
 			},
 			[4] = {
-				name	= "AC5",
+				name	= "AC5_AA",
 				OnlyTargetCategory = "notbeacon",
 				WeaponSlaveTo = 1,
 			},

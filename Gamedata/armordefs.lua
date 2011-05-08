@@ -14,18 +14,24 @@ local armorDefs = {
 	light = {
 		"IS_Locust",
 		"IS_Osiris",
+		"IS_Wolfhound",
 		"IS_Owens",
 		"IS_Raven",
+		"IS_Hollander",
 		"CL_Firemoth",
 		"CL_Kitfox",
 		"CL_MistLynx",
 		"CL_Cougar",
-		"IS_Wolfhound",
+		"CL_Adder",
+	},
+	medium = {
 		"IS_Chimera",
 		"IS_Bushwacker",
 		"CL_Iceferret",
 		"CL_Nova",
 		"CL_Stormcrow",
+	},
+	heavy = {
 		"IS_Orion",
 		"IS_Warhammer",
 		"IS_Catapult",
@@ -33,32 +39,15 @@ local armorDefs = {
 		"CL_Timberwolf",
 		"CL_Hellbringer",
 		"CL_Maddog",
-		"IS_Mauler",
+	},
+	assault = {
 		"IS_Awesome",
 		"IS_Atlas",
+		"IS_Devastator",
 		"CL_Warhawk",
 		"CL_Direwolf",
+		"KH_Mauler",
 	},
-	--medium = {
-	--	"IS_Chimera",
-	--	"IS_Bushwacker",
-	--	"CL_Iceferret",
-	--	"CL_Nova",
-	--	"CL_Stormcrow",
-	--},
-	--heavy = {
-	--	"IS_Warhammer",
-	--	"IS_Catapult",
-	--	"CL_Timberwolf",
-	--	"CL_Maddog",
-	--},
-	--assault = {
-	--	"IS_Mauler",
-	--	"IS_Awesome",
-	--	"IS_Atlas",
-	--	"CL_Warhawk",
-	--	"CL_Direwolf",
-	--},
     vehicle = {
 		"IS_Harasser",
 		"IS_Scorpion_ac5",
@@ -69,6 +58,7 @@ local armorDefs = {
 		"IS_Challenger",
 		"IS_LRMCarrier",
 		"IS_Sniper",
+		"IS_Partisan",
 		"CL_Hephaestus",
 		"CL_Enyo",
 		"CL_Oro_lbx",
@@ -78,12 +68,13 @@ local armorDefs = {
 		"CL_Mars",
 		"CL_Huit",
 	},
-	--aerospace = {
-	--	"",
-	--},
-	--vtol = {
-	--	"",
-	--},
+	--[[aerospace = {
+		"",
+	},--]]
+	vtol = {
+		"IS_Hawkmoth",
+		"CL_Donar",
+	},
 }
 -- convert to named maps  (trepan is a noob)
 for categoryName, categoryTable in pairs(armorDefs) do
