@@ -45,7 +45,7 @@ local IS_Devastator = {
 			[1] = {
 				name	= "Gauss",
 				mainDir = "0 0 1",
-				maxAngleDif = 270,
+				maxAngleDif = 200,
 				OnlyTargetCategory = "notbeacon",
 			},
 			[2] = {
