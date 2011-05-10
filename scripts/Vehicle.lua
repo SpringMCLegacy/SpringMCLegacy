@@ -16,14 +16,14 @@ include "smokeunit.lua"
 
 -- Info from lusHelper gadget
 local heatLimit = info.heatLimit
-local coolRate = info.coolRate * 4
+local coolRate = info.coolRate * 2
 local inWater = false
 local missileWeaponIDs = info.missileWeaponIDs
 local launcherIDs = info.launcherIDs
 local barrelRecoils = info.barrelRecoilDist
 local burstLengths = info.burstLengths
 local heatDamages = info.heatDamages
-local firingHeats = info.firingHeats
+local firingHeats = info.firingHeats * 0.5
 local amsID = info.amsID
 local hover = info.hover
 local vtol = info.vtol
