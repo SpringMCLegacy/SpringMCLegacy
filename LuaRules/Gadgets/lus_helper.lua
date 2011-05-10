@@ -84,7 +84,7 @@ function gadget:GamePreload()
 			local weaponDef = WeaponDefs[weaponInfo.weaponDef]
 			reloadTimes[i] = weaponDef.reload
 			burstLengths[i] = weaponDef.salvoSize
-			firingHeats[i] = weaponDef.customParams.heatgenerated or 0
+			firingHeats[i] = (weaponDef.customParams.heatgenerated or 0) * 0.5
 			if weaponDef.type == "MissileLauncher" and weaponDef.name ~= "narc" then --burstLengths[i] > 1 then
 				missileWeaponIDs[i] = true
 			end
