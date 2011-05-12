@@ -41,14 +41,7 @@ jumpClassGroups = {
 	"cl_mistlynx",
 	"cl_nova",
 	"cl_summoner",
-	--[["corpyro",
-	"corfast",
-	"corsktl",
-	"core_slicer",
-	"corcan",
-	"chicken_leaper",
-	"corsumo",]]
-	-- "pizzathehut",--bad unit left for testing purposes
+	"cl_shadowcat",
 	},
 
 	-- iammissingstuff = {--bad category

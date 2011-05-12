@@ -30,6 +30,7 @@ local armorDefs = {
 		"CL_Iceferret",
 		"CL_Nova",
 		"CL_Stormcrow",
+		"CL_Shadowcat",
 	},
 	heavy = {
 		"IS_Orion",
