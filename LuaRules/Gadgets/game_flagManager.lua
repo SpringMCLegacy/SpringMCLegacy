@@ -75,7 +75,7 @@ for _, flagType in pairs(flagTypes) do
 	flagTypeDefenders[flagType] = {}
 end
 
-
+local flagTurrets = {}
 local flagCapStatuses = {} -- table of flag's capping statuses
 local teams	= Spring.GetTeamList()
 
@@ -127,8 +127,47 @@ function DecrementTickets(allyTeam)
 	end
 end
 
+function Facing(x, z)
+	local heading = Spring.GetHeadingFromVector(x, z)
+	return ((heading + 8192) / 16384) % 4
+end
+
 -- this function is used to add any additional flagType specific behaviour
-function FlagSpecialBehaviour(flagType, flagID, flagTeamID, teamID)
+function FlagSpecialBehaviour(action, flagType, flagID, flagTeamID, teamID)
+	if action == "placed" then
+		if flagType == "outpost_garrison" then
+			flagTurrets[flagID] = {}
+			local x, y, z = Spring.GetUnitPosition(flagID)
+			local turrList = {"mblturret", "lrmturret", "mblturret", "ac20turret"}
+			local placementRadius = 100
+			local angle = 0
+			for i = 1, #turrList do
+				local dx = placementRadius * math.sin(angle)
+				local dz = placementRadius * math.cos(angle)
+				local turretID = CreateUnit(turrList[i], x + dx, y, z + dz, Facing(dx, dz), GAIA_TEAM_ID)
+				flagTurrets[flagID][#flagTurrets[flagID] + 1] = turretID
+				SetUnitAlwaysVisible(turretID, true)
+				SetUnitNeutral(turretID, true)
+				angle = angle + (2 * math.pi / #turrList)
+			end
+		end
+	elseif action == "capped" then
+		if flagType == "outpost_garrison" then
+			if flagTeamID == GAIA_TEAM_ID then -- neutral flag is capped
+				for i = 1, #flagTurrets[flagID] do
+					local turretID = flagTurrets[flagID][i]
+					SetUnitNeutral(turretID, false)
+					TransferUnit(turretID, teamID, false)
+				end
+			else
+				for i = 1, #flagTurrets[flagID] do -- flag neutralised
+					local turretID = flagTurrets[flagID][i]
+					SetUnitNeutral(turretID, true)
+					TransferUnit(turretID, teamID, false)
+				end
+			end
+		end
+	end
 end
 
 function PlaceFlag(spot, flagType)
@@ -155,6 +194,7 @@ function PlaceFlag(spot, flagType)
 	for i = 1, #features do
 		DestroyFeature(features[i])
 	end
+	FlagSpecialBehaviour("placed", flagType, newFlag)
 end
 
 
@@ -268,7 +308,7 @@ function gadget:GameFrame(n)
 								SetTeamRulesParam(teamID, flagType .. "s", (GetTeamRulesParam(teamID, flagType .. "s") or 0) - 1, {public = true})
 							end
 							-- Perform any flagType specific behaviours
-							--FlagSpecialBehaviour(flagType, flagID, flagTeamID, teamID)
+							FlagSpecialBehaviour("capped", flagType, flagID, flagTeamID, teamID)
 							-- Turn flag back on
 							GiveOrderToUnit(flagID, CMD.ONOFF, {1}, {})
 							-- Flag has changed team, reset capping statuses
