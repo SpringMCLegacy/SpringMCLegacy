@@ -16,6 +16,7 @@ local floor						= math.floor
 local AreTeamsAllied			= Spring.AreTeamsAllied
 local GetFeatureDefID			= Spring.GetFeatureDefID
 local GetFeaturePosition		= Spring.GetFeaturePosition
+local GetFeaturesInRectangle	= Spring.GetFeaturesInRectangle
 local GetGroundHeight			= Spring.GetGroundHeight
 local GetGroundInfo				= Spring.GetGroundInfo
 local GetUnitsInCylinder		= Spring.GetUnitsInCylinder
@@ -148,6 +149,12 @@ function PlaceFlag(spot, flagType)
 		SetUnitNoSelect(newFlag, true)
 	end
 	SetUnitAlwaysVisible(newFlag, true)
+	
+	local squareSize = 100
+	local features = GetFeaturesInRectangle(spot.x - squareSize, spot.z - squareSize, spot.x + squareSize, spot.z + squareSize)
+	for i = 1, #features do
+		DestroyFeature(features[i])
+	end
 end
 
 
@@ -170,7 +177,7 @@ function gadget:GamePreload()
 						math.random(math.random(100))
 					end]]
 					local number = math.random(spot.x * spot.z) % #spot.types + 1
-					Spring.Echo(#spot.types, number)
+					--Spring.Echo(#spot.types, number)
 					local outpostType = spot.types[number] 
 					spot.types = nil
 					flagTypeSpots[outpostType][#flagTypeSpots[outpostType] + 1] = spot
