@@ -68,6 +68,7 @@ overCategory = {
 	cl_mistlynx = { cobscript = false},
 	cl_nova = { cobscript = false},
 	cl_summoner = { cobscript = false},
+	cl_shadowcat = { cobscript = false},
  --[[noruas = {
     reload = 0,  },
 	
