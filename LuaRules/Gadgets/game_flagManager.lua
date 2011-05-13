@@ -142,7 +142,7 @@ end
 
 local function SpawnTurret(x, y, z, facing, flagID, unitDefID, teamID)
 	if not teamID then teamID = GetUnitTeam(flagID) end
-	local turretID = CreateUnit(unitDefID, x, y, z, HeadingToFacing(heading), teamID)
+	local turretID = CreateUnit(unitDefID, x, y, z, facing, teamID)
 	flagTurrets[flagID][turretID] = true
 	turretFlags[turretID] = flagID
 	SetUnitAlwaysVisible(turretID, true)
@@ -173,20 +173,14 @@ function FlagSpecialBehaviour(action, flagType, flagID, flagTeamID, teamID)
 		end
 	elseif action == "capped" then
 		if flagType == "outpost_garrison" then
-			if flagTeamID == GAIA_TEAM_ID then -- neutral flag is capped
-				for turretID in flagTurrets[flagID] do
-					TransferUnit(turretID, teamID, false)
-					SetUnitNeutral(turretID, false)
-					local env = Spring.UnitScript.GetScriptEnv(turretID)
-					Spring.UnitScript.CallAsUnit(turretID, env.TeamChange, teamID)
-				end
-			else -- flag neutralised
-				for turretID in flagTurrets[flagID] do
-					TransferUnit(turretID, GAIA_TEAM_ID, false)
-					SetUnitNeutral(turretID, true)
-					local env = Spring.UnitScript.GetScriptEnv(turretID)
-					Spring.UnitScript.CallAsUnit(turretID, env.TeamChange, GAIA_TEAM_ID)
-				end
+			if flagTeamID ~= GAIA_TEAM_ID then -- flag is neutralised
+				teamID = GAIA_TEAM_ID
+			end
+			for turretID in pairs(flagTurrets[flagID]) do
+				TransferUnit(turretID, teamID, false)
+				SetUnitNeutral(turretID, teamID == GAIA_TEAM_ID)
+				local env = Spring.UnitScript.GetScriptEnv(turretID)
+				Spring.UnitScript.CallAsUnit(turretID, env.TeamChange, teamID)
 			end
 		end
 	end
