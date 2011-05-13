@@ -19,6 +19,8 @@ local GetFeaturePosition		= Spring.GetFeaturePosition
 local GetFeaturesInRectangle	= Spring.GetFeaturesInRectangle
 local GetGroundHeight			= Spring.GetGroundHeight
 local GetGroundInfo				= Spring.GetGroundInfo
+local GetUnitHeading			= Spring.GetUnitHeading
+local GetUnitPosition			= Spring.GetUnitPosition
 local GetUnitsInCylinder		= Spring.GetUnitsInCylinder
 local GetUnitTeam				= Spring.GetUnitTeam
 local GetTeamInfo 				= Spring.GetTeamInfo
@@ -76,6 +78,7 @@ for _, flagType in pairs(flagTypes) do
 end
 
 local flagTurrets = {}
+local turretFlags = {}
 local flagCapStatuses = {} -- table of flag's capping statuses
 local teams	= Spring.GetTeamList()
 
@@ -127,9 +130,13 @@ function DecrementTickets(allyTeam)
 	end
 end
 
+function HeadingToFacing(heading)
+	return ((heading + 8192) / 16384) % 4
+end
+
 function Facing(x, z)
 	local heading = Spring.GetHeadingFromVector(x, z)
-	return ((heading + 8192) / 16384) % 4
+	return HeadingToFacing(heading)
 end
 
 -- this function is used to add any additional flagType specific behaviour
@@ -144,28 +151,21 @@ function FlagSpecialBehaviour(action, flagType, flagID, flagTeamID, teamID)
 			for i = 1, #turrList do
 				local dx = placementRadius * math.sin(angle)
 				local dz = placementRadius * math.cos(angle)
-				local turretID = CreateUnit(turrList[i], x + dx, y, z + dz, Facing(dx, dz), GAIA_TEAM_ID)
-				flagTurrets[flagID][#flagTurrets[flagID] + 1] = turretID
-				SetUnitAlwaysVisible(turretID, true)
-				SetUnitNeutral(turretID, true)
-				local env = Spring.UnitScript.GetScriptEnv(turretID)
-				Spring.UnitScript.CallAsUnit(turretID, env.TeamChange, GAIA_TEAM_ID)
+				local turretID = SpawnTurret(x + dx, y, z + dz, Facing(dx, dz), flagID, turrList[i], teamID)
 				angle = angle + (2 * math.pi / #turrList)
 			end
 		end
 	elseif action == "capped" then
 		if flagType == "outpost_garrison" then
 			if flagTeamID == GAIA_TEAM_ID then -- neutral flag is capped
-				for i = 1, #flagTurrets[flagID] do
-					local turretID = flagTurrets[flagID][i]
+				for turretID in flagTurrets[flagID] do
 					TransferUnit(turretID, teamID, false)
 					SetUnitNeutral(turretID, false)
 					local env = Spring.UnitScript.GetScriptEnv(turretID)
 					Spring.UnitScript.CallAsUnit(turretID, env.TeamChange, teamID)
 				end
-			else
-				for i = 1, #flagTurrets[flagID] do -- flag neutralised
-					local turretID = flagTurrets[flagID][i]
+			else -- flag neutralised
+				for turretID in flagTurrets[flagID] do
 					TransferUnit(turretID, GAIA_TEAM_ID, false)
 					SetUnitNeutral(turretID, true)
 					local env = Spring.UnitScript.GetScriptEnv(turretID)
@@ -175,6 +175,22 @@ function FlagSpecialBehaviour(action, flagType, flagID, flagTeamID, teamID)
 		end
 	end
 end
+
+
+local function SpawnTurret(x, y, z, facing, flagID, unitDefID, teamID)
+	if not teamID then teamID = GetUnitTeam(flagID) end
+	local turretID = CreateUnit(unitDefID, x, y, z, HeadingToFacing(heading), teamID)
+	flagTurrets[flagID][turretID] = true
+	turretFlags[turretID] = flagID
+	SetUnitAlwaysVisible(turretID, true)
+	if teamID == GAIA_TEAM_ID then
+		SetUnitNeutral(turretID, true)
+		local env = Spring.UnitScript.GetScriptEnv(turretID)
+		Spring.UnitScript.CallAsUnit(turretID, env.TeamChange, GAIA_TEAM_ID)
+	end
+	return turretID
+end
+
 
 function PlaceFlag(spot, flagType)
 	if DEBUG then
@@ -360,7 +376,7 @@ function gadget:UnitCreated(unitID, unitDefID, unitTeam, builderID)
 		for _, flagCapType in pairs(flagTypes) do
 		--if flagCapRate then
 			flagTypeCappers[flagCapType][unitID] = (CAP_MULT * flagCapRate)
-			flagTypeDefenders[flagCapType][unitID] = (DEF_MULT * flagCapRate)
+			flagTypeDefenders[flagCapType][unitID] = (DEF_MULT * flagDefendRate)
 		end
 	end
 end
@@ -376,6 +392,14 @@ function gadget:UnitDestroyed(unitID, unitDefID, unitTeam, attackerID, attackerD
 			flagTypeCappers[flagCapType][unitID] = nil
 			flagTypeDefenders[flagCapType][unitID] = nil
 		end
+	end
+	local flagID = turretFlags[unitID]
+	if flagID then
+		local x, y, z = GetUnitPosition(unitID)
+		local turretRespawnDelay = 120 * 30
+		DelayCall(SpawnTurret, {x, y, z, HeadingToFacing(GetUnitHeading(unitID)), flagID, unitDefID}, turretRespawnDelay)
+		turretFlags[unitID] = nil
+		flagTurrets[flagID][unitID] = nil
 	end
 end
 

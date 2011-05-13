@@ -6,6 +6,7 @@ info = GG.lusHelper[unitDefID]
 
 -- localised API functions
 local SetUnitRulesParam = Spring.SetUnitRulesParam
+local GetUnitHealth = Spring.GetUnitHealth
 
 -- includes
 include "smokeunit.lua"
@@ -23,7 +24,7 @@ local BARREL_SPEED = info.barrelRecoilSpeed
 local RESTORE_DELAY = Spring.UnitScript.GetLongestReloadTime(unitID) * 2
 
 local currLaunchPoint = 1
-local noFiring = true
+local noFiring = false
 local GAIA_TEAM_ID = Spring.GetGaiaTeamID()
 
 --piece defines
@@ -73,11 +74,6 @@ function TeamChange(teamID)
 	else
 		noFiring = false
 	end
-end
-
-function script.HitByWeapon(x, z, weaponID)
-	local wd = WeaponDefs[weaponID]
-	-- handle non-death here
 end
 
 function script.Create()
