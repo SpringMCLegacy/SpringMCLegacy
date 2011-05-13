@@ -35,6 +35,7 @@ local LRMTurret = {
 	customparams = {
 		ammosupplier	= "0",
 		supplyradius	= "0",
+		flagdefendrate	= "100",
 		helptext		= "An auto-spawning defensive turret for Garrisons.",
     },
 	sounds = {
