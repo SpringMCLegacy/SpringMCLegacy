@@ -36,6 +36,7 @@ local AC20Turret = {
 		ammosupplier	= "0",
 		supplyradius	= "0",
 		helptext		= "An auto-spawning defensive turret for Garrisons.",
+		barrelrecoildist = "{[1] = 5}",
     },
 	sounds = {
     underattack        = "Dropship_Alarm",

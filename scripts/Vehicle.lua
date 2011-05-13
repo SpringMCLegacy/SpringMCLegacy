@@ -3,10 +3,6 @@
 unitDefID = Spring.GetUnitDefID(unitID)
 unitDef = UnitDefs[unitDefID]
 info = GG.lusHelper[unitDefID]
--- the following have to be non-local for the walkscript include to find them
-rad = math.rad
-walking = false
-jumping = false
 
 -- localised API functions
 local SetUnitRulesParam = Spring.SetUnitRulesParam
