@@ -139,7 +139,7 @@ function FlagSpecialBehaviour(action, flagType, flagID, flagTeamID, teamID)
 			flagTurrets[flagID] = {}
 			local x, y, z = Spring.GetUnitPosition(flagID)
 			local turrList = {"mblturret", "lrmturret", "mblturret", "ac20turret"}
-			local placementRadius = 100
+			local placementRadius = 180
 			local angle = 0
 			for i = 1, #turrList do
 				local dx = placementRadius * math.sin(angle)
@@ -148,6 +148,8 @@ function FlagSpecialBehaviour(action, flagType, flagID, flagTeamID, teamID)
 				flagTurrets[flagID][#flagTurrets[flagID] + 1] = turretID
 				SetUnitAlwaysVisible(turretID, true)
 				SetUnitNeutral(turretID, true)
+				local env = Spring.UnitScript.GetScriptEnv(turretID)
+				Spring.UnitScript.CallAsUnit(turretID, env.TeamChange, GAIA_TEAM_ID)
 				angle = angle + (2 * math.pi / #turrList)
 			end
 		end
@@ -156,14 +158,18 @@ function FlagSpecialBehaviour(action, flagType, flagID, flagTeamID, teamID)
 			if flagTeamID == GAIA_TEAM_ID then -- neutral flag is capped
 				for i = 1, #flagTurrets[flagID] do
 					local turretID = flagTurrets[flagID][i]
-					SetUnitNeutral(turretID, false)
 					TransferUnit(turretID, teamID, false)
+					SetUnitNeutral(turretID, false)
+					local env = Spring.UnitScript.GetScriptEnv(turretID)
+					Spring.UnitScript.CallAsUnit(turretID, env.TeamChange, teamID)
 				end
 			else
 				for i = 1, #flagTurrets[flagID] do -- flag neutralised
 					local turretID = flagTurrets[flagID][i]
+					TransferUnit(turretID, GAIA_TEAM_ID, false)
 					SetUnitNeutral(turretID, true)
-					TransferUnit(turretID, teamID, false)
+					local env = Spring.UnitScript.GetScriptEnv(turretID)
+					Spring.UnitScript.CallAsUnit(turretID, env.TeamChange, GAIA_TEAM_ID)
 				end
 			end
 		end
