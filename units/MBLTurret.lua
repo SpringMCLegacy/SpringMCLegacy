@@ -38,6 +38,7 @@ local MBLTurret = {
 		},
 	customparams = {
 		ammosupplier	= "0",
+		flagdefendrate	= "100",
 		supplyradius	= "0",
 		helptext		= "An auto-spawning defensive turret for Garrisons.",
     },
