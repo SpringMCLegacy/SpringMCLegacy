@@ -139,6 +139,22 @@ function Facing(x, z)
 	return HeadingToFacing(heading)
 end
 
+
+local function SpawnTurret(x, y, z, facing, flagID, unitDefID, teamID)
+	if not teamID then teamID = GetUnitTeam(flagID) end
+	local turretID = CreateUnit(unitDefID, x, y, z, HeadingToFacing(heading), teamID)
+	flagTurrets[flagID][turretID] = true
+	turretFlags[turretID] = flagID
+	SetUnitAlwaysVisible(turretID, true)
+	if teamID == GAIA_TEAM_ID then
+		SetUnitNeutral(turretID, true)
+		local env = Spring.UnitScript.GetScriptEnv(turretID)
+		Spring.UnitScript.CallAsUnit(turretID, env.TeamChange, GAIA_TEAM_ID)
+	end
+	return turretID
+end
+
+
 -- this function is used to add any additional flagType specific behaviour
 function FlagSpecialBehaviour(action, flagType, flagID, flagTeamID, teamID)
 	if action == "placed" then
@@ -174,21 +190,6 @@ function FlagSpecialBehaviour(action, flagType, flagID, flagTeamID, teamID)
 			end
 		end
 	end
-end
-
-
-local function SpawnTurret(x, y, z, facing, flagID, unitDefID, teamID)
-	if not teamID then teamID = GetUnitTeam(flagID) end
-	local turretID = CreateUnit(unitDefID, x, y, z, HeadingToFacing(heading), teamID)
-	flagTurrets[flagID][turretID] = true
-	turretFlags[turretID] = flagID
-	SetUnitAlwaysVisible(turretID, true)
-	if teamID == GAIA_TEAM_ID then
-		SetUnitNeutral(turretID, true)
-		local env = Spring.UnitScript.GetScriptEnv(turretID)
-		Spring.UnitScript.CallAsUnit(turretID, env.TeamChange, GAIA_TEAM_ID)
-	end
-	return turretID
 end
 
 
