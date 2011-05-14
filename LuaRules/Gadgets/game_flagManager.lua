@@ -380,7 +380,7 @@ end
 
 function gadget:UnitDestroyed(unitID, unitDefID, unitTeam, attackerID, attackerDefID, attackerTeam)
 	local ud = UnitDefs[unitDefID]
-	if ud.speed > 0 then
+	if ud.speed > 0 and not ud.canFly then
 		local cp = ud.customParams
 		local flagCapRate = 1 -- cp.flagcaprate
 		local flagCapType = ud.customParams.flagcaptype or flagTypes[1]
