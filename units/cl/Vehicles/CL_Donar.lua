@@ -64,6 +64,8 @@ local CL_Donar = {
 	customparams = {
 		hasturnbutton	= "1",
 		helptext		= "Armament: 1 x Large Pulse Laser, 2 x ATM-6 - Armor: 3 tons",
+		flagcaprate		= "0",
+		flagdefendrate	= "0",
 		heatlimit		= "24",
 		unittype		= "vehicle",
     },
