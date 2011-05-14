@@ -1,13 +1,13 @@
 local MBLTurret = {
 	name              	= "Defense Turret",
-	description         = "Dual Medium Lasers",
+	description         = "Dual Large Pulse Lasers",
 	objectName        	= "MBLTurret.s3o",
 	script				= "Turret.lua",
 	category 			= "structure notbeacon",
 	sightDistance       = 800,
 	radarDistance      	= 1500,
 		activateWhenBuilt   = true,
-	maxDamage           = 22000,
+	maxDamage           = 12000,
 	mass                = 5000,
 	footprintX			= 3,
 	footprintZ 			= 3,
@@ -28,11 +28,11 @@ local MBLTurret = {
 		--Makes unit use weapon from /weapons folder
 		weapons 		= {	
 			[1] = {
-				name	= "ERMBL",
+				name	= "LPL",
 				OnlyTargetCategory = "notbeacon",
 			},
 			[2] = {
-				name	= "ERMBL",
+				name	= "LPL",
 				OnlyTargetCategory = "notbeacon",
 			},
 		},

@@ -1,7 +1,7 @@
 local Outpost_Garrison = {
 	name              	= "Garrison",
 	description         = "Armed Defensive Garrison",
-	objectName        	= "Outpost_ListeningPost.s3o",
+	objectName        	= "Outpost_Garrison.s3o",
 	script				= "Outpost_Garrison.lua",
 	iconType			= "beacon",
 	category 			= "structure beacon",
