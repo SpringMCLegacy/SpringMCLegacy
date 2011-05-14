@@ -47,14 +47,14 @@ local CL_Donar = {
 				maxAngleDif = 90,
 			},
 			[2] = {
-				name	= "SRM4",
+				name	= "SSRM4",
 				OnlyTargetCategory = "notbeacon",
 				WeaponSlaveTo = 1,
 				mainDir = "0 0 1",
 				maxAngleDif = 90,
 			},
 			[3] = {
-				name	= "SRM4",
+				name	= "SSRM4",
 				OnlyTargetCategory = "notbeacon",
 				WeaponSlaveTo = 1,
 				mainDir = "0 0 1",
