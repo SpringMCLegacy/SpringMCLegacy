@@ -1,7 +1,7 @@
 local iconTypes = {
 	default = {
-		bitmap		=	"icons/alert.tga",
-		size			=	2,
+		bitmap		=	"icons/blank.png",
+		size			=	0,
 		distance	=	5000,
 	},
 	dropship = {
