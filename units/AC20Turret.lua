@@ -1,13 +1,13 @@
 local AC20Turret = {
 	name              	= "Defense Turret",
-	description         = "Autocannon/20",
+	description         = "Ultra Autocannon/20",
 	objectName        	= "AC20Turret.s3o",
 	script				= "Turret.lua",
 	category 			= "structure notbeacon",
 	sightDistance       = 800,
 	radarDistance      	= 1200,
 		activateWhenBuilt   = true,
-	maxDamage           = 22000,
+	maxDamage           = 12000,
 	mass                = 5000,
 	footprintX			= 3,
 	footprintZ 			= 3,
@@ -28,7 +28,7 @@ local AC20Turret = {
 		--Makes unit use weapon from /weapons folder
 		weapons 		= {	
 			[1] = {
-				name	= "AC20",
+				name	= "UAC20",
 				OnlyTargetCategory = "notbeacon",
 			},
 		},
