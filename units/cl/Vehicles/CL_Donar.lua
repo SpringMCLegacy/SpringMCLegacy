@@ -41,20 +41,20 @@ local CL_Donar = {
 		--Makes unit use weapon from /weapons folder
 		weapons 		= {	
 			[1] = {
-				name	= "CLPL",
+				name	= "CMPL",
 				OnlyTargetCategory = "notbeacon",
 				mainDir = "0 0 1",
 				maxAngleDif = 90,
 			},
 			[2] = {
-				name	= "LRM5",
+				name	= "SRM4",
 				OnlyTargetCategory = "notbeacon",
 				WeaponSlaveTo = 1,
 				mainDir = "0 0 1",
 				maxAngleDif = 90,
 			},
 			[3] = {
-				name	= "LRM5",
+				name	= "SRM4",
 				OnlyTargetCategory = "notbeacon",
 				WeaponSlaveTo = 1,
 				mainDir = "0 0 1",
