@@ -64,6 +64,8 @@ local IS_Hawkmoth = {
 	customparams = {
 		hasturnbutton	= "1",
 		helptext		= "Armament: 1 x Light Gauss Rifle, 2 x Artemis IV-enhanced LRM-5 - Armor: 2 tons",
+		flagcaprate		= "0",
+		flagdefendrate	= "0",
 		heatlimit		= "15",
 		unittype		= "vehicle",
     },
