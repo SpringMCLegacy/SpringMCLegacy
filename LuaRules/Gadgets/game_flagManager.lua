@@ -286,7 +286,7 @@ function gadget:GameFrame(n)
 					for i = 1, #unitsAtFlag do
 						local unitID = unitsAtFlag[i]
 						local unitTeamID = GetUnitTeam(unitID)
-						if defenders[unitID] and AreTeamsAllied(unitTeamID, flagTeamID) then
+						if defenders[unitID] and AreTeamsAllied(unitTeamID, flagTeamID) and flagTeamID ~= GAIA_TEAM_ID then
 							--Spring.Echo("Defender at flag " .. flagID .. " Value is: " .. defenders[unitID])
 							defendTotal = defendTotal + defenders[unitID]
 						end
@@ -363,9 +363,10 @@ end
 
 function gadget:UnitCreated(unitID, unitDefID, unitTeam, builderID)
 	local ud = UnitDefs[unitDefID]
-	if ud.speed > 0 then
+	--if ud.speed > 0 then
 		local cp = ud.customParams
-		local flagCapRate = 1 --cp.flagcaprate
+		local flagCapRate = 0 --= 1 --cp.flagcaprate
+		if ud.speed > 0 then flagCapRate = 1 end
 		local flagDefendRate = cp.flagdefendrate or flagCapRate
 		--local flagCapType = ud.customParams.flagcaptype or flagTypes[1]
 		for _, flagCapType in pairs(flagTypes) do
@@ -373,7 +374,7 @@ function gadget:UnitCreated(unitID, unitDefID, unitTeam, builderID)
 			flagTypeCappers[flagCapType][unitID] = (CAP_MULT * flagCapRate)
 			flagTypeDefenders[flagCapType][unitID] = (DEF_MULT * flagDefendRate)
 		end
-	end
+	--end
 end
 
 
