@@ -22,7 +22,7 @@ local Outpost_Garrison = {
 	canMove				= false,
 	maxVelocity			= 0,
 	idleAutoHeal		= 0,
-	maxSlope			= 50,
+	maxSlope			= 100,
 	builder				= false,
 	TEDClass			= "FORT",
 		--Makes unit use weapon from /weapons folder
