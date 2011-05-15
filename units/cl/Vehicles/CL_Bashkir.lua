@@ -3,7 +3,6 @@ local CL_Bashkir = {
 	description         = "Light Interceptor ASF",
 	objectName        	= "CL_Bashkir.s3o",
 	script				= "Vehicle.lua",
-	corpse				= "CL_Bashkir_X",
 	explodeAs          	= "mechexplode",
 	category 			= "air notbeacon",
 	noChaseCategory		= "beacon",
