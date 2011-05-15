@@ -174,10 +174,12 @@ end
 
 function script.HitByWeapon(x, z, weaponID)
 	local wd = WeaponDefs[weaponID]
-	local heatDamage = wd.customParams.heatdamage or 0
-	--Spring.Echo(wd.customParams.heatdamage)
-	currHeatLevel = currHeatLevel + heatDamage
-	SetUnitRulesParam(unitID, "heat", currHeatLevel)
+	if wd then
+		local heatDamage = wd.customParams.heatdamage or 0
+		--Spring.Echo(wd.customParams.heatdamage)
+		currHeatLevel = currHeatLevel + heatDamage
+		SetUnitRulesParam(unitID, "heat", currHeatLevel)
+	end
 end
 
 function script.Create()
