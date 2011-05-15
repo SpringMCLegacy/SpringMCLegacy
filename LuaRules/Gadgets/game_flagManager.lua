@@ -56,6 +56,7 @@ local DEF_MULT = 1 --multiplies against the FBI defined DefRate
 local flagTypes = {"beacon", "outpost_c3center", "outpost_garrison", "outpost_listeningpost", "outpost_vehicledepot", "outpost_controltower"}
 local flags = {} -- flags[flagType][index] == flagUnitID
 local numFlags = {} -- numFlags[flagType] == numberOfFlagsOfType
+local totalFlags = 0
 local flagTypeData = {} -- flagTypeData[flagType] = {radius = radius, etc}
 local flagTypeSpots = {} -- flagTypeSpots[flagType][metalSpotCount] == {x = x_coord, z = z_coord}
 local flagTypeCappers = {} -- cappers[flagType][unitID] = true
@@ -198,6 +199,7 @@ function PlaceFlag(spot, flagType)
 	
 	local newFlag = CreateUnit(flagType, spot.x, 0, spot.z, 0, GAIA_TEAM_ID)
 	numFlags[flagType] = numFlags[flagType] + 1
+	totalFlags = totalFlags + 1
 	flags[flagType][numFlags[flagType]] = newFlag
 	flagCapStatuses[newFlag] = {}
 	
@@ -349,7 +351,7 @@ function gadget:GameFrame(n)
 		end
 		for allyTeam, numBeacon in pairs(beaconsPerAllyTeam) do
 			if numBeacon < maxBeacon then
-				bleedTimes[allyTeam] = numFlags["beacon"] / (maxBeacon - numBeacon)
+				bleedTimes[allyTeam] = totalFlags / (maxBeacon - numBeacon)
 			else
 				bleedTimes[allyTeam] = 0
 			end
