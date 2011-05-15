@@ -115,6 +115,13 @@ function gadget:GameFrame(n)
 			end
 		end
 	end
+	
+	if n % 1800 == 0 then
+		for dropship in pairs(dropships) do
+			local cbills = Spring.GetUnitResources(dropship)
+			Spring.SetUnitResourcing(dropship, "umm", cbills + 100)
+		end
+	end
 end
 
 else
