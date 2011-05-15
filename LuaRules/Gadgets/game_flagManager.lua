@@ -367,7 +367,7 @@ function gadget:UnitCreated(unitID, unitDefID, unitTeam, builderID)
 	--if ud.speed > 0 then
 		local cp = ud.customParams
 		local flagCapRate = 0 --= 1 --cp.flagcaprate
-		if ud.speed > 0 then flagCapRate = 1 end
+		if ud.speed > 0 and not ud.canFly then flagCapRate = 1 end
 		local flagDefendRate = cp.flagdefendrate or flagCapRate
 		--local flagCapType = ud.customParams.flagcaptype or flagTypes[1]
 		for _, flagCapType in pairs(flagTypes) do
@@ -382,10 +382,7 @@ end
 function gadget:UnitDestroyed(unitID, unitDefID, unitTeam, attackerID, attackerDefID, attackerTeam)
 	local ud = UnitDefs[unitDefID]
 	if ud.speed > 0 and not ud.canFly then
-		local cp = ud.customParams
-		local flagCapRate = 1 -- cp.flagcaprate
-		local flagCapType = ud.customParams.flagcaptype or flagTypes[1]
-		if flagCapRate then
+		for _, flagCapType in pairs(flagTypes) do
 			flagTypeCappers[flagCapType][unitID] = nil
 			flagTypeDefenders[flagCapType][unitID] = nil
 		end
@@ -397,6 +394,9 @@ function gadget:UnitDestroyed(unitID, unitDefID, unitTeam, attackerID, attackerD
 		DelayCall(SpawnTurret, {x, y, z, HeadingToFacing(GetUnitHeading(unitID)), flagID, unitDefID}, turretRespawnDelay)
 		turretFlags[unitID] = nil
 		flagTurrets[flagID][unitID] = nil
+		for _, flagCapType in pairs(flagTypes) do
+			flagTypeDefenders[flagCapType][unitID] = nil
+		end
 	end
 end
 
