@@ -36,12 +36,12 @@ local iconTypes = {
 	},
 	vehicle = {
 		bitmap		=	"icons/vehicle.png",
-		size			=	5,
-		distance	=	1.1,
+		size			=	3,
+		distance	=	1.0,
 	},
 	aero = {
 		bitmap		=	"icons/aero.png",
-		size			=	4.5,
+		size			=	3,
 		distance	=	1.0,
 	},
 	
