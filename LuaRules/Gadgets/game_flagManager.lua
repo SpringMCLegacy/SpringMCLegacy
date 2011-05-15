@@ -211,7 +211,7 @@ function PlaceFlag(spot, flagType)
 	for i = 1, #features do
 		DestroyFeature(features[i])
 	end
-	FlagSpecialBehaviour("placed", flagType, newFlag)
+	FlagSpecialBehaviour("placed", flagType, newFlag, GAIA_TEAM_ID, GAIA_TEAM_ID)
 end
 
 
