@@ -2,6 +2,7 @@ local CL_Huit = {
 	name              	= "Huitzilopochtli",
 	description         = "Heavy Artillery Support Vehicle",
 	objectName        	= "CL_Huit.s3o",
+	iconType			= "vehicle",
 	script				= "Vehicle.lua",
 	corpse				= "CL_Huit_X",
 	explodeAs          	= "mechexplode",

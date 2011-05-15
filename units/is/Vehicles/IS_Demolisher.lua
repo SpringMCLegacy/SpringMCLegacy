@@ -2,6 +2,7 @@ local IS_Demolisher = {
 	name              	= "Demolisher",
 	description         = "Heavy Brawler Tank",
 	objectName        	= "IS_Demolisher.s3o",
+	iconType			= "vehicle",
 	script				= "Vehicle.lua",
 	corpse				= "IS_Demolisher_X",
 	explodeAs          	= "mechexplode",

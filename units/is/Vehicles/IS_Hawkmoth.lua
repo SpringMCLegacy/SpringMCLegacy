@@ -2,6 +2,7 @@ local IS_Hawkmoth = {
 	name              	= "Hawk Moth",
 	description         = "Light Attack VTOL",
 	objectName        	= "IS_Hawkmoth.s3o",
+	iconType			= "aero",
 	script				= "Vehicle.lua",
 	corpse				= "IS_Hawkmoth_X",
 	explodeAs          	= "mechexplode",

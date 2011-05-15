@@ -2,6 +2,7 @@ local IS_Sparrowhawk = {
 	name              	= "Sparrowhawk",
 	description         = "Light Interceptor ASF",
 	objectName        	= "IS_Sparrowhawk.s3o",
+	iconType			= "aero",
 	script				= "Vehicle.lua",
 	explodeAs          	= "mechexplode",
 	category 			= "air notbeacon",

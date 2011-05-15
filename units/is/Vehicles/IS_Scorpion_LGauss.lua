@@ -2,6 +2,7 @@ local IS_Scorpion_LGauss = {
 	name              	= "Scorpion (Light Gauss)",
 	description         = "Light Sniper Tank",
 	objectName        	= "IS_Scorpion_LGauss.s3o",
+	iconType			= "vehicle",
 	script				= "Vehicle.lua",
 	explodeAs          	= "mechexplode",
 	category 			= "tank ground notbeacon",

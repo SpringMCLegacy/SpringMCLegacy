@@ -2,6 +2,7 @@ local CL_Oro_LBX = {
 	name              	= "Oro (LBX/20)",
 	description         = "Medium Brawler Tank",
 	objectName        	= "CL_Oro_LBX.s3o",
+	iconType			= "vehicle",
 	script				= "Vehicle.lua",
 	corpse				= "CL_Oro_LBX_X",
 	explodeAs          	= "mechexplode",

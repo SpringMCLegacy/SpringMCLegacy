@@ -2,6 +2,7 @@ local CL_Hephaestus = {
 	name              	= "Hephaestus",
 	description         = "Light Scout Hovercraft",
 	objectName        	= "CL_Hephaestus.s3o",
+	iconType			= "vehicle",
 	script				= "Vehicle.lua",
 	corpse				= "CL_Hephaestus_X",
 	explodeAs          	= "mechexplode",

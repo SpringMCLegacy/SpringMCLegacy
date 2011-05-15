@@ -1,6 +1,7 @@
 local IS_Sniper = {
 	name              	= "Sniper",
 	description         = "Mobile Artillery",
+	iconType			= "vehicle",
 	objectName        	= "IS_Sniper.s3o",
 	script				= "Vehicle.lua",
 	corpse				= "IS_Sniper_X",

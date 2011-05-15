@@ -2,6 +2,7 @@ local CL_Oro_HAG = {
 	name              	= "Oro (HAG/30)",
 	description         = "Heavy Strike Tank",
 	objectName        	= "CL_Oro_HAG.s3o",
+	iconType			= "vehicle",
 	script				= "Vehicle.lua",
 	explodeAs          	= "mechexplode",
 	category 			= "tank ground notbeacon",

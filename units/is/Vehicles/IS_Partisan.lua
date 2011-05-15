@@ -2,6 +2,7 @@ local IS_Partisan = {
 	name              	= "Partisan",
 	description         = "Heavy Anti-Aircraft Tank",
 	objectName        	= "IS_Partisan.s3o",
+	iconType			= "vehicle",
 	script				= "Vehicle.lua",
 	corpse				= "IS_Partisan_X",
 	explodeAs          	= "mechexplode",

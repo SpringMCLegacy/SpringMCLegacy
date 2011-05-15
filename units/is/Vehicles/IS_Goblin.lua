@@ -2,6 +2,7 @@ local IS_Goblin = {
 	name              	= "Goblin",
 	description         = "Medium Brawler Tank",
 	objectName        	= "IS_Goblin.s3o",
+	iconType			= "vehicle",
 	script				= "Vehicle.lua",
 	corpse				= "IS_Goblin_X",
 	explodeAs          	= "mechexplode",

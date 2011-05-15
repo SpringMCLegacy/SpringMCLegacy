@@ -34,7 +34,16 @@ local iconTypes = {
 		size			=	5.5,
 		distance	=	1.3,
 	},
-	
+	vehicle = {
+		bitmap		=	"icons/vehicle.png",
+		size			=	5,
+		distance	=	1.1,
+	},
+	aero = {
+		bitmap		=	"icons/aero.png",
+		size			=	4.5,
+		distance	=	1.0,
+	},
 	
 }
 

@@ -2,6 +2,7 @@ local IS_LRMCarrier = {
 	name              	= "LRM Carrier",
 	description         = "Missile Support Vehicle",
 	objectName        	= "IS_LRMCarrier.s3o",
+	iconType			= "vehicle",
 	script				= "Vehicle.lua",
 	corpse				= "IS_LRMCarrier_X",
 	explodeAs          	= "mechexplode",

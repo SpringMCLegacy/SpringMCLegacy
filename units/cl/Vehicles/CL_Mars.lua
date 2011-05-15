@@ -2,6 +2,7 @@ local CL_Mars = {
 	name              	= "Mars",
 	description         = "Heavy Strike Tank",
 	objectName        	= "CL_Mars.s3o",
+	iconType			= "vehicle",
 	script				= "Vehicle.lua",
 	corpse				= "CL_Mars_X",
 	explodeAs          	= "mechexplode",

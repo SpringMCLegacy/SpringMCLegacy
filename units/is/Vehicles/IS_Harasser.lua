@@ -2,6 +2,7 @@ local IS_Harasser = {
 	name              	= "Harraser",
 	description         = "Light Skirmish Hovercraft",
 	objectName        	= "IS_Harasser.s3o",
+	iconType			= "vehicle",
 	script				= "Vehicle.lua",
 	corpse				= "IS_Harasser_X",
 	explodeAs          	= "mechexplode",

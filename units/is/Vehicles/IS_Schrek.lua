@@ -2,6 +2,7 @@ local IS_Schrek = {
 	name              	= "Schrek",
 	description         = "Medium Sniper Tank",
 	objectName        	= "IS_Schrek.s3o",
+	iconType			= "vehicle",
 	script				= "Vehicle.lua",
 	corpse				= "IS_Schrek_X",
 	explodeAs          	= "mechexplode",
