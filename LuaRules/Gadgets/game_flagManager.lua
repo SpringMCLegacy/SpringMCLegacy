@@ -142,9 +142,8 @@ end
 
 local function SpawnTurret(x, y, z, facing, flagID, unitDefID, teamID)
 	if not teamID then teamID = GetUnitTeam(flagID) end
-	Spring.Echo(unitDefID, x, y, z, facing, teamID)
+	
 	local turretID = CreateUnit(unitDefID, x, y, z, 0, teamID)
-	Spring.Echo(flagID, turretID)
 	flagTurrets[flagID][turretID] = true
 	turretFlags[turretID] = flagID
 	SetUnitAlwaysVisible(turretID, true)

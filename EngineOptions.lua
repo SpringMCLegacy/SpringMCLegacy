@@ -59,17 +59,17 @@ local options =
                     -- (step <= 0) means that there is no quantization
   },
   
-  {
+  --[[{
     key    = "MaxUnits",
     name   = "Max units",
     desc   = "Determines the ceiling of how many units and buildings a player is allowed  to own at the same time (key = 'MaxUnits')",
     type   = "number",
-    def    = 20,
+    def    = 100,
     min    = 1,
     max    = 100,
     step   = 1,  -- quantization is aligned to the def value
                     -- (step <= 0) means that there is no quantization
-  },
+  },--]]
   
   {
     key    = "GhostedBuildings",
