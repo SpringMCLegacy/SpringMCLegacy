@@ -46,8 +46,8 @@ if hover then
 	wakepoint = piece ("wakepoint")
 elseif vtol then
 	blades1 = piece ("blades1")
---elseif aero then
---	exhaust1, exhaust2 = piece ("exhaust1", "exhaust2")
+elseif aero then
+	--what?!?!
 else
 	trackr, trackl = piece ("trackr", "trackl")
 	for i = 1, info.numWheels do
