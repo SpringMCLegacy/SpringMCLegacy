@@ -34,6 +34,7 @@ local DAMAGE_REWARD_MULT = 0.1
 local KILL_REWARD_MULT = 0.1
 
 -- Variables
+local incomeIncrease = 100
 local modOptions = Spring.GetModOptions()
 local dropShips = {}
 
@@ -118,7 +119,8 @@ function gadget:GameFrame(n)
 	
 	if n > 0 and n % 1800 == 0 then
 		for dropship in pairs(dropShips) do
-			Spring.SetUnitResourcing(dropship, "umm", 100)
+			Spring.SetUnitResourcing(dropship, "umm", incomeIncrease)
+			incomeIncrease = incomeIncrease + 100
 		end
 	end
 end
