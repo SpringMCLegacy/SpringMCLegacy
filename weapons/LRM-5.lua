@@ -41,6 +41,7 @@ weaponDef = {
 		heavy = 120, --80%
 		assault = 105, --70%
 		vehicle = 225, --150%
+		vtol = 225, --150%
 	},
 	customparams = {
 		heatgenerated		= "30",--2/sec for entire salvo

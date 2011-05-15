@@ -39,6 +39,7 @@ weaponDef = {
 		heavy = 54, --80%
 		assault = 47.25, --70%
 		vehicle = 101.25,
+		vtol = 101.25, --150%
 	},
 	customparams = {
 		heatgenerated		= "7.5",--10/sec
