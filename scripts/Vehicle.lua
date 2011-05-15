@@ -23,6 +23,7 @@ local firingHeats = info.firingHeats
 local amsID = info.amsID
 local hover = info.hover
 local vtol = info.vtol
+local aero = info.aero
 
 --Turning/Movement Locals
 local TURRET_SPEED = info.turretTurnSpeed
@@ -40,11 +41,13 @@ local currHeatLevel = 0
 local body, turret = piece ("body", "turret")
 
 local wheels = {}
-local trackr, trackl, wakepoint, blades1
+local trackr, trackl, wakepoint, blades1, exhaust1, exhaust2
 if hover then
 	wakepoint = piece ("wakepoint")
 elseif vtol then
 	blades1 = piece ("blades1")
+elseif aero then
+	exhaust1, exhaust2 = piece ("exhaust1", "exhaust2")
 else
 	trackr, trackl = piece ("trackr", "trackl")
 	for i = 1, info.numWheels do
