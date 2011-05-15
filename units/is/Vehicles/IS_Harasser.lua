@@ -25,9 +25,9 @@ local IS_Harasser = {
 	canMove				= true,
 	canHover			= true,
 		movementClass   = "HOVER",
-		maxVelocity		= 5.4, --162kph/30
-		maxReverseVelocity= 4.05,
-		acceleration    = 1.0,
+		maxVelocity		= 8.1, --162kph/30
+		maxReverseVelocity= 4.0,
+		acceleration    = 2.0,
 		brakeRate       = 0.1,
 		turnRate 		= 500,
 	

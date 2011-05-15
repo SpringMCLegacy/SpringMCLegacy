@@ -28,9 +28,9 @@ local CL_Hephaestus = {
 	canMove				= true,
 	canHover			= true,
 		movementClass   = "HOVER",
-		maxVelocity		= 4.3, --130kph/30
-		maxReverseVelocity= 4.05,
-		acceleration    = .85,
+		maxVelocity		= 6.5, --130kph/30
+		maxReverseVelocity= 3.25,
+		acceleration    = 1.8,
 		brakeRate       = 0.1,
 		turnRate 		= 450,
 	
