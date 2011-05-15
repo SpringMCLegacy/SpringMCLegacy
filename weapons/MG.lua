@@ -27,6 +27,7 @@ weaponDef = {
 		default = 1.28,--10 DPS more or less
 		beacons = 0,
 		vehicle = 3,
+		vtol = 3, --150%
 	},
 	customparams = {
 		--heatgenerated		= "0",--0/s
