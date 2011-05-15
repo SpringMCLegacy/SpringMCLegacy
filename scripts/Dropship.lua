@@ -6,7 +6,7 @@ local deg, rad = math.deg, math.rad
 local currUnitDefID = nil
 
 --piece defines
-local hull, link, pad, beam = piece ("hull", "link", "pad", "beam")
+local hull, link, pad, beam, main_door = piece ("hull", "link", "pad", "beam", "main_door")
 --Weapon 1 and 2, dual lasers
 local turret1_joint, turret1, turret1_flare1, turret1_flare2 = piece ("turret1_joint", "turret1", "turret1_flare1", "turret1_flare2")
 --Weapon 3 and 4, dual lasers
@@ -48,6 +48,7 @@ local currPoints = {}
 local TURRET_SPEED = rad(100)
 local ELEVATION_SPEED = rad(200)
 local TURRET_SPEED_FAST = rad(500)
+local DOOR_SPEED = rad(20)
 
 for weaponID in pairs(missileWeaponIDs) do
         launchPoints[weaponID] = {}
@@ -120,18 +121,26 @@ function script.StopBuilding()
 	Move(pad, z_axis, 0, 50000000)
 end
 
+function Doors(open)
+	if open == 1 then 
+		Turn(main_door, x_axis, rad(90), DOOR_SPEED)
+		WaitForTurn(main_door, x_axis)
+	else
+		Turn(main_door, x_axis, rad(0), DOOR_SPEED)
+		WaitForTurn(main_door, x_axis)
+	end
+	SetUnitValue(COB.YARD_OPEN, open)
+	SetUnitValue(COB.INBUILDSTANCE, open)
+	SetUnitValue(COB.BUGGER_OFF, open)
+end
+
 function script.Activate()
-	SetUnitValue(COB.YARD_OPEN, 1)
-	SetUnitValue(COB.INBUILDSTANCE, 1)
-	SetUnitValue(COB.BUGGER_OFF, 1)
-	--StartThread(build_animation)
+	StartThread(Doors, 1)
 	return 1
 end
 
 function script.Deactivate()
-	SetUnitValue(COB.YARD_OPEN, 0)
-	SetUnitValue(COB.INBUILDSTANCE, 0)
-	SetUnitValue(COB.BUGGER_OFF, 0)
+	StartThread(Doors, 0)
 	return 0
 end
 
