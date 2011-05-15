@@ -2,6 +2,7 @@ local CL_Morrigu = {
 	name              	= "Morrigu",
 	description         = "Heavy Sniper Tank",
 	objectName        	= "CL_Morrigu.s3o",
+	iconType			= "vehicle",
 	script				= "Vehicle.lua",
 	corpse				= "CL_Morrigu_X",
 	explodeAs          	= "mechexplode",

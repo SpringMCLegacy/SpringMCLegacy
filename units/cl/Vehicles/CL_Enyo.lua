@@ -2,6 +2,7 @@ local CL_Enyo = {
 	name              	= "Enyo",
 	description         = "Medium Strike Tank",
 	objectName        	= "CL_Enyo.s3o",
+	iconType			= "vehicle",
 	script				= "Vehicle.lua",
 	corpse				= "CL_Enyo_X",
 	explodeAs          	= "mechexplode",

@@ -2,6 +2,7 @@ local CL_Ares = {
 	name              	= "Ares",
 	description         = "Medium Sniper Tank",
 	objectName        	= "CL_Ares.s3o",
+	iconType			= "vehicle",
 	script				= "Vehicle.lua",
 	corpse				= "CL_Ares_X",
 	explodeAs          	= "mechexplode",

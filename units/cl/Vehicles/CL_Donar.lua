@@ -2,6 +2,7 @@ local CL_Donar = {
 	name              	= "Donar",
 	description         = "Attack VTOL",
 	objectName        	= "CL_Donar.s3o",
+	iconType			= "aero",
 	script				= "Vehicle.lua",
 	corpse				= "CL_Donar_X",
 	explodeAs          	= "mechexplode",
