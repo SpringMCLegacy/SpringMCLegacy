@@ -75,6 +75,8 @@ local armorDefs = {
 	vtol = {
 		"IS_Hawkmoth",
 		"CL_Donar",
+		"IS_Sparrowhawk",
+		"CL_Bashkir",
 	},
 }
 -- convert to named maps  (trepan is a noob)

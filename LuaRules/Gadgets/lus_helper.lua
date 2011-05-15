@@ -101,6 +101,7 @@ function gadget:GamePreload()
 		-- Vehicles
 		info.hover = unitDef.canHover
 		info.vtol = unitDef.hoverAttack
+		info.aero = unitDef.myGravity
 		info.turrets = StringToTable(cp.turrets)
 		info.turretTurnSpeed = math.rad(tonumber(cp.turretturnspeed) or 75)
 		info.turret2TurnSpeed = math.rad(tonumber(cp.turret2turnspeed) or 75)
