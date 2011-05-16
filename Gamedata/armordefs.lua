@@ -27,6 +27,7 @@ local armorDefs = {
 	medium = {
 		"IS_Chimera",
 		"IS_Bushwacker",
+		"IS_Dervish",
 		"CL_Iceferret",
 		"CL_Nova",
 		"CL_Stormcrow",
