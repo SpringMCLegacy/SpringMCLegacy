@@ -57,6 +57,7 @@ buildoptions =
 	"is_chimera",
 	"is_bushwacker",
 	"is_hollander",
+	"is_dervish",
 	"is_orion",
 	"is_warhammer",
 	"is_catapult",
