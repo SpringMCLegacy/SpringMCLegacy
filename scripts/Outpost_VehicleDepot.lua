@@ -27,25 +27,28 @@ function Doors(open)
 			Move(doors[i], x_axis, position, DOOR_SPEED)
 			WaitForMove(doors[i], x_axis)
 		end
+		-- open yard after doors are done
+		SetUnitValue(COB.YARD_OPEN, open)
+		SetUnitValue(COB.INBUILDSTANCE, open)
+		SetUnitValue(COB.BUGGER_OFF, open)
 	else
+		-- close yard before closing doors
+		SetUnitValue(COB.YARD_OPEN, open)
+		SetUnitValue(COB.INBUILDSTANCE, open)
+		SetUnitValue(COB.BUGGER_OFF, open)
 		for i = 1, #doors do
 			Move(doors[i], x_axis, position, DOOR_SPEED)
 			WaitForMove(doors[i], x_axis)
 		end
 	end
-	SetUnitValue(COB.YARD_OPEN, open)
-	SetUnitValue(COB.INBUILDSTANCE, open)
-	SetUnitValue(COB.BUGGER_OFF, open)
 end
 
 function script.Activate()
 	StartThread(Doors, 1)
-	return 1
 end
 
 function script.Deactivate()
 	StartThread(Doors, 0)
-	return 0
 end
 
 function script.QueryBuildInfo() 
