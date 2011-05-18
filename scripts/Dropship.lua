@@ -122,26 +122,32 @@ function script.StopBuilding()
 end
 
 function Doors(open)
+	Signal(1)
+	SetSignalMask(1)
 	if open == 1 then 
 		Turn(main_door, x_axis, rad(90), DOOR_SPEED)
 		WaitForTurn(main_door, x_axis)
+		-- open yard after doors are done
+		SetUnitValue(COB.YARD_OPEN, open)
+		SetUnitValue(COB.INBUILDSTANCE, open)
+		SetUnitValue(COB.BUGGER_OFF, open)
 	else
+		-- close yard before closing doors
+		SetUnitValue(COB.YARD_OPEN, open)
+		SetUnitValue(COB.INBUILDSTANCE, open)
+		SetUnitValue(COB.BUGGER_OFF, open)
 		Turn(main_door, x_axis, rad(0), DOOR_SPEED)
 		WaitForTurn(main_door, x_axis)
 	end
-	SetUnitValue(COB.YARD_OPEN, open)
-	SetUnitValue(COB.INBUILDSTANCE, open)
-	SetUnitValue(COB.BUGGER_OFF, open)
 end
 
 function script.Activate()
+	if not currUnitDefID then return end
 	StartThread(Doors, 1)
-	return 1
 end
 
 function script.Deactivate()
 	StartThread(Doors, 0)
-	return 0
 end
 
 function script.QueryBuildInfo() 
