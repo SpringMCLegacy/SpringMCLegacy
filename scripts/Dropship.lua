@@ -3,10 +3,10 @@
 local ud = UnitDefs[Spring.GetUnitDefID(unitID)] -- unitID is available automatically to all LUS
 local weapons = ud.weapons
 local deg, rad = math.deg, math.rad
-local currUnitDefID = nil
+local currUnitDef
 
 --piece defines
-local hull, link, pad, beam, main_door = piece ("hull", "link", "pad", "beam", "main_door")
+local hull, link, pad, beam, main_door, hanger_door, vtol_pad = piece ("hull", "link", "pad", "beam", "main_door", "hanger_door", "vtol_pad")
 --Weapon 1 and 2, dual lasers
 local turret1_joint, turret1, turret1_flare1, turret1_flare2 = piece ("turret1_joint", "turret1", "turret1_flare1", "turret1_flare2")
 --Weapon 3 and 4, dual lasers
@@ -73,11 +73,12 @@ PPC_MUZZLEFLASH = SFX.CEG+1
 MG_MUZZLEFLASH = SFX.CEG+2
 
 function GetUnitDef(unitDefID)
-	currUnitDefID = unitDefID
+	currUnitDef = UnitDefs[unitDefID]
 end
 
 function script.Create()
 	Turn(link, x_axis, rad(20), 7)
+	Turn(hanger_door, y_axis, rad(90), DOOR_SPEED)
 	
 	StartThread(SmokeUnit, {hull})
 	--Turning offset turrets to their positions
@@ -108,17 +109,25 @@ function script.Create()
 end
 
 function script.StartBuilding()
-	local buildTime = UnitDefs[currUnitDefID].buildTime
-	local moveSpeed = 206 / buildTime * 16 / 30
-	Move(link, z_axis, 52, moveSpeed)
-	WaitForMove(link, z_axis)
-	Move(pad, z_axis, 154, moveSpeed)
-	WaitForMove(pad, z_axis)
+	local buildTime = currUnitDef.buildTime * 30 / 16
+	
+	if currUnitDef.canFly then
+		local moveSpeed = 256 / buildTime
+		Move(vtol_pad, z_axis, -256, moveSpeed)
+		WaitForMove(vtol_pad, z_axis)
+	else
+		local moveSpeed = 206 / buildTime
+		Move(link, z_axis, 52, moveSpeed)
+		WaitForMove(link, z_axis)
+		Move(pad, z_axis, 154, moveSpeed)
+		WaitForMove(pad, z_axis)
+	end
 end
 
 function script.StopBuilding()
 	Move(link, z_axis, 0, 50000000)
 	Move(pad, z_axis, 0, 50000000)
+	Move(vtol_pad, z_axis, 0, 50000000)
 end
 
 function Doors(open)
@@ -142,7 +151,7 @@ function Doors(open)
 end
 
 function script.Activate()
-	if not currUnitDefID then return end
+	if not currUnitDef then return end
 	StartThread(Doors, 1)
 end
 
@@ -151,6 +160,9 @@ function script.Deactivate()
 end
 
 function script.QueryBuildInfo() 
+	if currUnitDef.canFly then
+		return vtol_pad
+	end
 	return pad
 end
 
