@@ -70,6 +70,17 @@ function gadget:UnitCreated(unitID, unitDefID, teamID, builderID)
 			SetUnitResourcing(unitID, "umm", 0)
 		end
 	end
+	----------------------------------
+	-- this doesn't really belong here
+	if ud.canFly then
+		Spring.GiveOrderToUnit(unitID, CMD.IDLEMODE, {0}, {})
+		local toRemove = {CMD.IDLEMODE, CMD.AUTOREPAIRLEVEL}
+		for _, cmdID in pairs(toRemove) do
+			local cmdDescID = Spring.FindUnitCmdDesc(unitID, cmdID)
+			Spring.RemoveUnitCmdDesc(unitID, cmdDescID)
+		end
+	end
+	----------------------------------
 end
 
 function gadget:UnitDestroyed(unitID, unitDefID, unitTeam, attackerID, attackerDefID, attackerTeam)
