@@ -71,9 +71,9 @@ local spGetUnitDefID       = Spring.GetUnitDefID
 local spGetUnitTeam        = Spring.GetUnitTeam
 local spDestroyUnit        = Spring.DestroyUnit
 local spCreateUnit         = Spring.CreateUnit
+local spSetUnitLeaveTracks = Spring.SetUnitLeaveTracks
 
 local mcSetRotationVelocity = MoveCtrl.SetRotationVelocity
-local mcSetLeaveTracks      = MoveCtrl.SetLeaveTracks
 local mcSetPosition         = MoveCtrl.SetPosition
 local mcSetRotation         = MoveCtrl.SetRotation
 local mcDisable             = MoveCtrl.Disable
@@ -225,7 +225,7 @@ local function Jump(unitID, goal, cmdTag)
   jumping[unitID] = true
 
   mcEnable(unitID)
-  mcSetLeaveTracks(unitID, false)
+  spSetUnitLeaveTracks(unitID, false)
 
   if not cob then
     env = Spring.UnitScript.GetScriptEnv(unitID)
