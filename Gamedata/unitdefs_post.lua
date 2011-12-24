@@ -3,7 +3,7 @@ if (Spring.GetModOptions) then
   modOptions = Spring.GetModOptions()
 end
 
-local RAMP_DISTANCE = 206
+local RAMP_DISTANCE = 156 -- 206
 
 for name, ud in pairs(UnitDefs) do
 	ud.shownanoframe = false

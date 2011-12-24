@@ -109,17 +109,17 @@ function script.Create()
 end
 
 function script.StartBuilding()
-	local buildTime = currUnitDef.buildTime * 30 / 16
+	local buildTime = currUnitDef.buildTime
 	
 	if currUnitDef.canFly then
 		local moveSpeed = 256 / buildTime
 		Move(vtol_pad, z_axis, -256, moveSpeed)
 		WaitForMove(vtol_pad, z_axis)
 	else
-		local moveSpeed = 206 / buildTime
+		local moveSpeed = 156 / buildTime -- 206
 		Move(link, z_axis, 52, moveSpeed)
 		WaitForMove(link, z_axis)
-		Move(pad, z_axis, 154, moveSpeed)
+		Move(pad, z_axis, 108, moveSpeed) -- 154
 		WaitForMove(pad, z_axis)
 	end
 end
