@@ -4,6 +4,7 @@ local ud = UnitDefs[Spring.GetUnitDefID(unitID)] -- unitID is available automati
 local weapons = ud.weapons
 local deg, rad = math.deg, math.rad
 local currUnitDef
+local BUILD_FACING = Spring.GetUnitBuildFacing(unitID)
 
 --piece defines
 local hull, link, pad, beam, main_door, hanger_door, vtol_pad = piece ("hull", "link", "pad", "beam", "main_door", "hanger_door", "vtol_pad")
@@ -110,11 +111,19 @@ end
 
 function script.StartBuilding()
 	local buildTime = currUnitDef.buildTime
-	
+
 	if currUnitDef.canFly then
 		local moveSpeed = 256 / buildTime
-		Move(vtol_pad, z_axis, -256, moveSpeed)
+		Move(vtol_pad, z_axis, 256, moveSpeed)
 		WaitForMove(vtol_pad, z_axis)
+		
+		local velocity = {}
+		velocity[0] = {moveSpeed / 30, 0, 0}
+		velocity[1] = {0, 0, -moveSpeed / 30}
+		velocity[2] = {-moveSpeed / 30, 0, 0}
+		velocity[3] = {0, 0, moveSpeed / 30}
+	
+		Spring.SetUnitVelocity(Spring.GetUnitIsBuilding(unitID), unpack(velocity[BUILD_FACING]))
 	else
 		local moveSpeed = 156 / buildTime -- 206
 		Move(link, z_axis, 52, moveSpeed)
