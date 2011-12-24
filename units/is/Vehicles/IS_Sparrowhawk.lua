@@ -28,6 +28,7 @@ local IS_Sparrowhawk = {
 		steeringMode	= "1",
 		defaultmissiontype  = "VTOL_standby",
 		maneuverLeashLength = "2000",
+		factoryHeadingTakeoff = false,
 	canMove				= true,
 		movementClass   = "AERO",
 		maxVelocity		= 18.6, --280kph/15

@@ -31,7 +31,9 @@ local GetTeamUnitDefCount 		= Spring.GetTeamUnitDefCount
 local CallCOBScript				= Spring.CallCOBScript
 local CreateUnit				= Spring.CreateUnit
 local DestroyFeature			= Spring.DestroyFeature
+local GameOver					= Spring.GameOver
 local GiveOrderToUnit			= Spring.GiveOrderToUnit
+local KillTeam					= Spring.KillTeam
 local SetGameRulesParam 		= Spring.SetGameRulesParam
 local SetTeamRulesParam			= Spring.SetTeamRulesParam
 local SetUnitAlwaysVisible		= Spring.SetUnitAlwaysVisible
@@ -95,6 +97,8 @@ local TICKET_LOSS_PER_BEACON = 1
 local beaconsPerAllyTeam = {}
 local tickets = {}
 local bleedTimes = {}
+local allyTeamAlive = {}
+local deadAllyTeams = 0
 local allyTeams = Spring.GetAllyTeamList()
 for i = 1, #allyTeams do
 	local allyTeam = allyTeams[i]
@@ -102,6 +106,7 @@ for i = 1, #allyTeams do
 	tickets[allyTeam] = START_TICKETS
 	bleedTimes[allyTeam] = 0
 	beaconsPerAllyTeam[allyTeam] = 0
+	allyTeamAlive[allyTeam] = true
 end
 
 if (gadgetHandler:IsSyncedCode()) then
@@ -126,6 +131,14 @@ function DecrementTickets(allyTeam)
 			local teamUnits = Spring.GetTeamUnits(teamID)
 			for i = 1, #teamUnits do
 				TransferUnit(teamUnits[i], GAIA_TEAM_ID, false)
+			end
+			KillTeam(teamID)
+		end
+		allyTeamAlive[allyTeam] = false
+		deadAllyTeams = deadAllyTeams + 1
+		if deadAllyTeams == (#allyTeams - 1) then
+			for team, alive in pairs(allyTeamAlive) do
+				if alive then GameOver({team}) break end
 			end
 		end
 	end

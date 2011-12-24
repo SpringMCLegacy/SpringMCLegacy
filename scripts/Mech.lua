@@ -22,7 +22,6 @@ local inWater = false
 local missileWeaponIDs = info.missileWeaponIDs
 local launcherIDs = info.launcherIDs
 local burstLengths = info.burstLengths
-local heatDamages = info.heatDamages
 local firingHeats = info.firingHeats
 local hasArms = info.arms
 local leftArmID = info.leftArmID

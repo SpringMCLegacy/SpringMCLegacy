@@ -31,7 +31,7 @@ end
 
 function gadget:UnitCreated(unitID, unitDefID, teamID, builderID)
 	local info = GG.lusHelper[unitDefID]
-	if not info.arms then --and not UnitDefs[unitDefID].name:find("dropship") then
+	if info.arms == nil then --and not UnitDefs[unitDefID].name:find("dropship") then
 		-- Parse Model Data
 		local pieceMap = GetUnitPieceMap(unitID)
 		info.arms = pieceMap["rlowerarm"] ~= nil
@@ -76,7 +76,6 @@ function gadget:GamePreload()
 		-- Parse UnitDef Weapon Data
 		local missileWeaponIDs = {}
 		local burstLengths = {}
-		local heatDamages = {}
 		local firingHeats = {}		
 		local reloadTimes = {}
 		for i = 1, #weapons do
