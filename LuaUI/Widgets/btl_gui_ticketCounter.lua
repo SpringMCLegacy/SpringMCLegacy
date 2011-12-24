@@ -46,11 +46,6 @@ local text2 = ""
 local gameTime = ""
 
 function widget:Initialize()
-	if Game.modShortName ~= "MWS" then
-		widgetHandler:RemoveWidget()
-		return
-	end
-  
 	Spring.SendCommands("resbar 0", "clock 0")
 	btFont = gl.LoadFont("LuaUI/Fonts/bt_oldstyle.ttf", 16, 2, 30)
 end
