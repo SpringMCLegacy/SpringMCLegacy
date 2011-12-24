@@ -1,4 +1,5 @@
 local IS_Hawkmoth = {
+	collide = false,
 	name              	= "Hawk Moth",
 	description         = "Light Attack VTOL",
 	objectName        	= "IS_Hawkmoth.s3o",
@@ -30,6 +31,7 @@ local IS_Hawkmoth = {
 		steeringMode	= "1",
 		defaultmissiontype  = "VTOL_standby",
 		maneuverLeashLength = "2000",
+		factoryHeadingTakeoff = false, 
 	canMove				= true,
 		movementClass   = "VTOL",
 		maxVelocity		= 8.1, --86kph/30

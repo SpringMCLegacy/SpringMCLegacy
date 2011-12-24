@@ -18,7 +18,6 @@ local missileWeaponIDs = info.missileWeaponIDs
 local launcherIDs = info.launcherIDs
 local barrelRecoils = info.barrelRecoilDist
 local burstLengths = info.burstLengths
-local heatDamages = info.heatDamages
 local firingHeats = info.firingHeats
 local amsID = info.amsID
 local hover = info.hover
@@ -41,11 +40,11 @@ local currHeatLevel = 0
 local body, turret = piece ("body", "turret")
 
 local wheels = {}
-local trackr, trackl, wakepoint, blades1
+local trackr, trackl, wakepoint, rotor
 if hover then
 	wakepoint = piece ("wakepoint")
 elseif vtol then
-	blades1 = piece ("blades1")
+	rotor = piece ("rotor")
 elseif aero then
 	--what?!?!
 else
@@ -185,6 +184,9 @@ end
 function script.Create()
 	StartThread(SmokeUnit, {body, turret})
 	StartThread(CoolOff)
+	if rotor then
+		Spin(rotor, y_axis, 20 * WHEEL_SPEED, WHEEL_ACCEL)
+	end
 end
 
 function script.StartMoving()
