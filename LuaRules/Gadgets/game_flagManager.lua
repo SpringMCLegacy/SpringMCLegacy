@@ -257,6 +257,10 @@ function gadget:GamePreload()
 				end
 			end
 		end
+	else
+		for i=1,20 do
+			Spring.Echo("NO MAP PROFILE FOUND FOR " .. Game.mapName)
+		end
 	end
 end
 
