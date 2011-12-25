@@ -203,14 +203,15 @@ end
 
 
 function PlaceFlag(spot, flagType)
-	if DEBUG then
+	if true then
 		Spring.Echo("{")
 		Spring.Echo("	x = " .. spot.x .. ",")
 		Spring.Echo("	z = " .. spot.z .. ",")
 		Spring.Echo("},")
 	end
 	
-	local newFlag = CreateUnit(flagType, spot.x, 0, spot.z, 0, GAIA_TEAM_ID)
+	local newFlag = CreateUnit(flagType, spot.x, Spring.GetGroundHeight(spot.x, spot.z), spot.z, 0, GAIA_TEAM_ID)
+	Spring.Echo("newflag?", newFlag)
 	numFlags[flagType] = numFlags[flagType] + 1
 	totalFlags = totalFlags + 1
 	flags[flagType][numFlags[flagType]] = newFlag
@@ -268,7 +269,7 @@ end
 function gadget:GameStart()
 	-- FLAG PLACEMENT
 	for _, flagType in pairs(flagTypes) do
-		if DEBUG then Spring.Echo("-- flagType is " .. flagType) end
+		if true then Spring.Echo("-- flagType is " .. flagType) end
 		for i = 1, #flagTypeSpots[flagType] do
 			PlaceFlag(flagTypeSpots[flagType][i], flagType)
 		end
