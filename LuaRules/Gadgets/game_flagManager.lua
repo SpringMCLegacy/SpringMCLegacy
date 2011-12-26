@@ -102,11 +102,14 @@ local deadAllyTeams = 0
 local allyTeams = Spring.GetAllyTeamList()
 for i = 1, #allyTeams do
 	local allyTeam = allyTeams[i]
-	if allyTeam == GAIA_ALLY_ID then allyTeams[i] = nil; break end
-	tickets[allyTeam] = START_TICKETS
-	bleedTimes[allyTeam] = 0
-	beaconsPerAllyTeam[allyTeam] = 0
-	allyTeamAlive[allyTeam] = true
+	if allyTeam == GAIA_ALLY_ID then 
+		allyTeams[i] = nil
+	else
+		tickets[allyTeam] = START_TICKETS
+		bleedTimes[allyTeam] = 0
+		beaconsPerAllyTeam[allyTeam] = 0
+		allyTeamAlive[allyTeam] = true
+	end
 end
 
 if (gadgetHandler:IsSyncedCode()) then
@@ -125,20 +128,22 @@ function DecrementTickets(allyTeam)
 		--Spring.Echo("AllyTeam " .. allyTeam .. ": " .. tickets[allyTeam])
 		SetGameRulesParam("tickets" .. allyTeam, tickets[allyTeam], {public = true})
 	elseif tickets[allyTeam] == 0 then
-		local teams = Spring.GetTeamList(allyTeam)
-		for i = 1, #teams do
-			local teamID = teams[i]
-			local teamUnits = Spring.GetTeamUnits(teamID)
-			for i = 1, #teamUnits do
-				TransferUnit(teamUnits[i], GAIA_TEAM_ID, false)
+		if allyTeamAlive[allyTeam] then
+			local teams = Spring.GetTeamList(allyTeam)
+			for i = 1, #teams do
+				local teamID = teams[i]
+				local teamUnits = Spring.GetTeamUnits(teamID)
+				for i = 1, #teamUnits do
+					TransferUnit(teamUnits[i], GAIA_TEAM_ID, false)
+				end
+				KillTeam(teamID)
 			end
-			KillTeam(teamID)
-		end
-		allyTeamAlive[allyTeam] = false
-		deadAllyTeams = deadAllyTeams + 1
-		if deadAllyTeams == (#allyTeams - 1) then
-			for team, alive in pairs(allyTeamAlive) do
-				if alive then GameOver({team}) break end
+			allyTeamAlive[allyTeam] = false
+			deadAllyTeams = deadAllyTeams + 1
+			if deadAllyTeams == (#allyTeams - 1) then
+				for team, alive in pairs(allyTeamAlive) do
+					if alive then GameOver({team}) break end
+				end
 			end
 		end
 	end
