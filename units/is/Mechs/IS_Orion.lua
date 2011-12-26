@@ -1,6 +1,6 @@
 local IS_Orion = {
 	name              	= "Orion",
-	description         = "Heavy Strike Mech",
+	description         = "Heavy Brawler Mech",
 	objectName        	= "IS_Orion.s3o",
 	iconType			= "heavymech",
 	script				= "Mech.lua",
