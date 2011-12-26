@@ -29,13 +29,6 @@ weaponDef = {
 	--DynDamageRange			= 1200,--Weapon will decrease in damage up to this range
 	damage = {
 		default = 3000,--250 DPS
-		beacons = 0,
-		light = 3000,
-		medium = 2700, --90%
-		heavy = 2400, --80%
-		assault = 2100, --70%
-		vehicle = 4500, --150%
-		vtol = 4500, --150%
 	},
 	customparams = {
 		heatgenerated		= "24",--1/s

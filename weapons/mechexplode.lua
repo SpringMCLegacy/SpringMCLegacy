@@ -12,7 +12,6 @@ weaponDef = {
 	craterMult				= 0,
 	damage = {
 		default = 1000,
-		beacons = 0,
 	},
 }
 

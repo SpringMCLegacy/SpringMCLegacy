@@ -29,7 +29,6 @@ weaponDef = {
 	model					= "Missile.s3o",
 	damage = {
 		default 			= 0,--NONE!
-		beacons = 0,
 	},
 	customparams = {
 		narc				= "1",
