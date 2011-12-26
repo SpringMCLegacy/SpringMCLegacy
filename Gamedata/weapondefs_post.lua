@@ -11,11 +11,30 @@ local UnitDefs = DEFS.unitDefs
 
 local cegCache = {}
 
+local damageMults = {
+	beacons		= 0,
+	light		= 1,   -- 100% default
+	medium		= 0.9, --90% default
+	heavy		= 0.8, --80% default
+	assault		= 0.7, --70% default
+	vehicle		= 1.5, --150% default
+	vtol		= 1.5, --150%
+}
+
 for weapName, wd in pairs(WeaponDefs) do 
 	local cp = wd.customparams
 	if cp then
 		if cp.cegflare then
 			cegCache[weapName] = cp.cegflare
+		end
+	end
+	
+	-- Apply damage multipliers
+	local damage = wd.damage or {}
+	local default = damage.default or 0
+	for unitType, multiplier in pairs(damageMults) do
+		if not damage[unitType] then -- don't override weaponDefs
+			damage[unitType] = default * damageMults[unitType]
 		end
 	end
 end

@@ -25,12 +25,6 @@ weaponDef = {
 	intensity				= 0.1,
 	damage = {
 		default = 25, --50 DPS
-		beacons = 0,
-		light = 25,
-		medium = 22.5, --90% of default
-		heavy = 20, --80% of default
-		assault = 17.5, --70% of default
-		vehicle = 37.5, --150% of default
 		vtol	= 50, --200% of default
 	},
 	customparams = {
