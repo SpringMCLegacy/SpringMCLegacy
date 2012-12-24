@@ -37,6 +37,10 @@ for weapName, wd in pairs(WeaponDefs) do
 			damage[unitType] = default * damageMults[unitType]
 		end
 	end
+	Spring.Echo(wd.weapontype)
+	if wd.weapontype == "MissileLauncher" or wd.weapontype == "StarburstLauncher" then
+		wd.targetable = 1
+	end
 end
 
 for unitName, ud in pairs(UnitDefs) do

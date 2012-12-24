@@ -1,22 +1,38 @@
 weaponDef = {
 	name                    = "Anti-Missile System (AMS)",
-	weaponType				= "Shield",
-	isShield				= true,
-	shieldInterceptType		= 32,
-	exteriorShield			= false,
-	shieldEnergyUse			= 0,
-	shieldPower				= 500,
-	shieldPowerRegen		= 100,
-	shieldPowerRegenEnergy	= 0,
-	shieldRadius			= 200,
-	shieldStartingPower		= 500,
-	smartShield				= true,
-	visibleShield			= false,
-	--	shieldAlpha				= 1.0,
-	--	shieldGoodColor			= "0.0 1.0 0.0",
-	--	shieldBadColor			= "1.0 0.0 0.0",
+		
+	weaponType              = "Cannon",
+	explosionGenerator    	= "custom:MG_Hit",
+	soundHit              	= [[MG_Hit]],
+	soundStart            	= [[MG_Fire]],
+	soundTrigger			= 1,
+	burnblow				= false, 	--Bullets explode at range limit.
+	collideFriendly			= false,
+	noSelfDamage            = true,
+	turret                  = true,
+	range                   = 5000,
+	--accuracy                = 100,
+	areaOfEffect            = 100,
+	weaponVelocity          = 2400,
+	reloadtime              = 0.1,
+	burst					= 10,
+	burstrate				= 0.01,
+	--sprayAngle 				= 100,
+	size					= 0.5,
+	separation				= 1, 		--Distance between each plasma particle.
+	stages					= 10, 		--Number of particles used in one plasma shot.
+	AlphaDecay				= 0.05, 		--How much a plasma particle is more transparent than the previous particle. 
+	rgbcolor				= "1 0.8 0",
+	intensity				= 0.9,
+	
+	collisionsize = 5,
+	interceptor = 1,
+	coverage = 2500,
+	interceptsolo = false,
+	proximitypriority = 2000,
+	predictboost = 50000,
 	damage = {
-		default = 10,--1 DPS
+		default = 1000,--1 DPS
 	},
 }
 

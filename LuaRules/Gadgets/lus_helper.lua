@@ -87,7 +87,7 @@ function gadget:GamePreload()
 			if weaponDef.type == "MissileLauncher" and weaponDef.name ~= "narc" then --burstLengths[i] > 1 then
 				missileWeaponIDs[i] = true
 			end
-			if weaponDef.isShield then
+			if weaponDef.interceptor == 1 then
 				info.amsID = i
 			end
 		end
@@ -109,7 +109,7 @@ function gadget:GamePreload()
 		info.wheelSpeed = math.rad(tonumber(cp.wheelspeed) or 100)
 		info.wheelAccel = math.rad(tonumber(cp.wheelaccel) or info.wheelSpeed * 2)
 		-- General
-		info.heatLimit = (cp.heatlimit or 50) * 10
+		info.heatLimit = (tonumber(cp.heatlimit) or 50) * 10
 		info.coolRate = info.heatLimit / 50 -- or a constant rate of 10?
 		info.numWeapons = #weapons
 		info.elevationSpeed = math.rad(tonumber(cp.elevationspeed) or math.deg(info.torsoTurnSpeed))
