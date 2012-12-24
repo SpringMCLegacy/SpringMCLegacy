@@ -69,7 +69,7 @@ for weaponID = 1, info.numWeapons do
 			launchPoints[weaponID][i] = piece("launchpoint_" .. weaponID .. "_" .. i)
 		end	
 	elseif weaponID ~= amsID then
-		flares[weaponID] = piece ("flare_" .. weaponID)
+		flares[weaponID] = piece("flare_" .. weaponID)
 	end
 end
 
@@ -230,6 +230,8 @@ function script.AimWeapon(weaponID, heading, pitch)
 				Turn(launchPoints[weaponID][i], x_axis, -pitch, ELEVATION_SPEED)
 			end
 		end
+	elseif weaponID == amsID then
+		return true
 	else
 		Turn(flares[weaponID], x_axis, -pitch, ELEVATION_SPEED)
 	end
@@ -252,6 +254,8 @@ function script.Shot(weaponID)
         if currPoints[weaponID] > burstLengths[weaponID] then 
 			currPoints[weaponID] = 1
         end
+	elseif weaponID == amsID then
+		return
 	else
 		EmitSfx(flares[weaponID], SFX.CEG + weaponID)
 	end
