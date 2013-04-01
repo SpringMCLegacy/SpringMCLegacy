@@ -43,27 +43,27 @@ local IS_Locust = {
 		--Makes unit use weapon from /weapons folder
 		weapons 		= {	
 			[1] = {
-				name	= "MPL",
+				name	= "SBL",
 				mainDir = "0 0 1",
 				maxAngleDif = 180,
 				OnlyTargetCategory = "notbeacon",
 			},
 			[2] = {
-				name	= "MPL",
+				name	= "SBL",
 				mainDir = "0 0 1",
 				maxAngleDif = 180,
 				OnlyTargetCategory = "notbeacon",
 				WeaponSlaveTo = 1,
 			},
 			[3] = {
-				name	= "SPL",
+				name	= "SBL",
 				mainDir = "0 0 1",
 				maxAngleDif = 180,
 				OnlyTargetCategory = "notbeacon",
 				WeaponSlaveTo = 1,
 			},
 			[4] = {
-				name	= "SPL",
+				name	= "SBL",
 				mainDir = "0 0 1",
 				maxAngleDif = 180,
 				OnlyTargetCategory = "notbeacon",

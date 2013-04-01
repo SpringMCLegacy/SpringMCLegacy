@@ -15,7 +15,7 @@ weaponDef = {
 	areaOfEffect            = 100,
 	weaponVelocity          = 2400,
 	reloadtime              = 0.1,
-	burst					= 10,
+	burst					= 5,
 	burstrate				= 0.01,
 	--sprayAngle 				= 100,
 	size					= 0.5,
@@ -27,12 +27,12 @@ weaponDef = {
 	
 	collisionsize = 5,
 	interceptor = 1,
-	coverage = 2500,
+	coverage = 1000,
 	interceptsolo = false,
 	proximitypriority = 2000,
 	predictboost = 50000,
 	damage = {
-		default = 1000,--1 DPS
+		default = 1,--1 DPS
 	},
 }
 

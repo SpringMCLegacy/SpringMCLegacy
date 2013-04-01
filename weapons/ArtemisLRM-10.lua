@@ -1,26 +1,27 @@
 weaponDef = {
-	name                    = "Advanced Tactical Missile 12",
+	name                    = "Artemis IV Fire Control System-enhanced Long Range Missile 10",
 	weaponType              = "MissileLauncher",
 	renderType				= 1,
 	explosionGenerator    	= "custom:HE_MEDIUM",
---	cegTag					= "BazookaTrail",
+--	cegTag					= "RocketTrail",
 	smokeTrail				= true,
 	smokeDelay				= "0.05",
-	soundHit              	= [[GEN_Explode3]],
-	soundStart            	= [[ATM_Fire]],
+	soundHit              	= [[GEN_Explode2]],
+	soundStart            	= [[LRM_Fire]],
 --	soundTrigger			= 0,
-	burnblow				= true, 	--Bullets explode at range limit.
+	burnblow				= false, 	--Bullets explode at range limit.
 	collideFriendly			= true,
 	noSelfDamage            = true,
 	turret                  = true,
 	range                   = 2600,
 	accuracy                = 50,
 	sprayangle				= 50,
-	wobble					= 1000,
+	wobble					= 1750,
 	dance 					= 100,
 	guidance				= true,
 	selfprop				= true,
 	ballistic				= false,
+	trajectoryHeight		= 1,
 	tracks					= true,
 	turnRate				= 1000,
 	flightTime				= 10,
@@ -28,18 +29,18 @@ weaponDef = {
 	areaOfEffect            = 20,
 	startVelocity			= 1000,
 	weaponVelocity          = 1000,
-	reloadtime              = 10,
-	burst					= 12,
+	reloadtime              = 15,
+	burst					= 10,
 	burstrate				= 0.1,
 	model					= "Missile.s3o",
 	interceptedByShieldType	= 32,
 	damage = {
-		default = 200,--15 DPS
+		default = 150,--10 DPS
 	},
 	customparams = {
-		heatgenerated		= "80", --6/sec
+		heatgenerated		= "60", --6/sec
 		cegflare			= "MISSILE_MUZZLEFLASH",
     },
 }
 
-return lowerkeys({ ATM12 = weaponDef })
+return lowerkeys({ ArtemisLRM10 = weaponDef })
