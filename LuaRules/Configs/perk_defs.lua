@@ -5,17 +5,15 @@ return {
 			action = 'perkheatsinks',
 			name = 'Extra\nHeatsinks',
 			disabled = true,
-			tooltip = '+5% Heat Capacity',
+			tooltip = '+50% Heat Capacity',
 			texture = 'unitpics/is_atlas.png',	
 		},
 		valid = function (unitDefID) return true end,
 		applyPerk = function (unitID) 
 			Spring.Echo("Extra Heatsinks selected") 
 			env = Spring.UnitScript.GetScriptEnv(unitID)
-			--Spring.Echo(env.heatLimit)
-			env.heatLimit = 1000
+			env.heatLimit = env.heatLimit * 1.5
 			Spring.SetUnitRulesParam(unitID, "heatLimit", env.heatLimit)
-			--Spring.Echo(Spring.GetUnitRulesParam(unitID, "heatLimit"))
 		end,
 	},
 	jumpjets = {
@@ -24,7 +22,7 @@ return {
 			action = 'perkjumpjet',
 			name = 'Enhanced\nJumpjets',
 			disabled = true,
-			tooltip = '+5% Jump Range',
+			tooltip = '+50% Jump Range',
 			texture = 'unitpics/is_osiris.png',	
 		},
 		valid = function (unitDefID)
@@ -32,8 +30,10 @@ return {
 		end,
 		applyPerk = function (unitID) 
 			Spring.Echo("Enhanced Jumpjets selected") 
-			Spring.SetUnitRulesParam(unitID, "jumpRange", 1000)
-			Spring.SetUnitRulesParam(unitID, "jumpSpeed", 100)
+			local currRange = Spring.GetUnitRulesParam(unitID, "jumpRange")
+			local currSpeed = Spring.GetUnitRulesParam(unitID, "jumpSpeed")
+			Spring.SetUnitRulesParam(unitID, "jumpRange", currRange * 1.5)
+			Spring.SetUnitRulesParam(unitID, "jumpSpeed", currSpeed * 1.5)
 		end,
 	},
 }
