@@ -175,7 +175,7 @@ local function Jump(unitID, goal, cmdTag)
   local fakeUnitID
   local unitDefID     = spGetUnitDefID(unitID)
   local jumpDef       = jumpDefs[unitDefID]
-  local speed         = jumpDef.speed
+  local speed         = Spring.GetUnitRulesParam(unitID, "jumpSpeed") or jumpDef.speed
   local delay    	  = jumpDef.delay
   local height        = jumpDef.height
   local reloadTime    = (jumpDef.reload or 0)*30

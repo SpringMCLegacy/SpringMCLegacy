@@ -62,15 +62,17 @@ function gadget:AllowCommand(unitID, unitDefID, teamID, cmdID, cmdParams, cmdOpt
 	local ud = UnitDefs[unitDefID]
 	local cp = ud.customParams
 	if perkDef then
-		if cp and cp.unittype == "mech" then
+		-- check that this unit can receive this perk (can be issued the order due to multiple units selected)
+		if cp and cp.unittype == "mech" and perkDef.valid(unitDefID) then
 			perkDef.applyPerk(unitID)
-			EditUnitCmdDesc(unitID, FindUnitCmdDesc(unitID, cmdID), {name = perkDef.cmdDesc.name .."\n(Trained)"})
+			EditUnitCmdDesc(unitID, FindUnitCmdDesc(unitID, cmdID), {name = perkDef.cmdDesc.name .."\n(Trained)", disabled = true})
 			currentPerks[unitID][perkDef.name] = true
 			-- disable perks here
 			for perkCmdID, perkDef in pairs(perkDefs) do
-				EditUnitCmdDesc(unitID, FindUnitCmdDesc(unitID, perkCmdID), {disabled = true})
+				if not currentPerks[unitID][perkDef.name] then
+					EditUnitCmdDesc(unitID, FindUnitCmdDesc(unitID, perkCmdID), {disabled = true})
+				end
 			end
-			return true
 		else 
 			return false
 		end
@@ -89,6 +91,8 @@ function gadget:UnitCreated(unitID, unitDefID, teamID, builderID)
 			-- Don't add perks that can't be used on this mech
 			if perkDef.valid(unitDefID) then
 				InsertUnitCmdDesc(unitID, perkCmdDesc)
+			else
+				currentPerks[unitID][perkDef.name] = true -- hack
 			end
 		end
 	end
