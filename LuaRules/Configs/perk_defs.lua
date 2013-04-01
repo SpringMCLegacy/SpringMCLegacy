@@ -3,7 +3,7 @@ return {
 		cmdDesc = {
 			id = 3000,
 			action = 'perkheatsinks',
-			name = 'Extra Heatsinks',
+			name = 'Extra\nHeatsinks',
 			disabled = true,
 			tooltip = '+5% Heat Capacity',
 			texture = 'unitpics/is_atlas.png',	
@@ -22,15 +22,17 @@ return {
 		cmdDesc = {
 			id = 3001,
 			action = 'perkjumpjet',
-			name = 'Enhanced Jumpjets',
+			name = 'Enhanced\nJumpjets',
 			disabled = true,
 			tooltip = '+5% Jump Range',
 			texture = 'unitpics/is_osiris.png',	
 		},
-		valid = function (unitDefID) return true end,
+		valid = function (unitDefID)
+			return (UnitDefs[unitDefID].customParams.canjump or false) 
+		end,
 		applyPerk = function (unitID) 
 			Spring.Echo("Enhanced Jumpjets selected") 
-			Spring.SetUnitRulesParam(unitID, "jumpRange", 1000000)
+			Spring.SetUnitRulesParam(unitID, "jumpRange", 1000)
 		end,
 	},
 }

@@ -206,7 +206,7 @@ local function  DrawMouseArc(unitID, shift, groundPos)
     return
   end
   local queue = spGetCommandQueue(unitID)
-  local range = jumpDefs[unitDefID].range
+  local range = Spring.GetUnitRulesParam(unitID, "jumpRange") or jumpDefs[unitDefID].range
   if (not queue or #queue == 0 or not shift) then
     local unitPos = {spGetUnitPosition(unitID)}
     local dist = GetDist2(unitPos, groundPos)
