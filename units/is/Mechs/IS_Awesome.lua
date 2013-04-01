@@ -72,7 +72,7 @@ local IS_Awesome = {
 				WeaponSlaveTo = 1,
 			},
 			[5] = {
-				name	= "MPL",
+				name	= "SBL",
 				mainDir = "0 0 1",
 				maxAngleDif = 200,
 				OnlyTargetCategory = "notbeacon",

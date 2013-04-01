@@ -43,13 +43,13 @@ local IS_Catapult = {
 		--Makes unit use weapon from /weapons folder
 		weapons 		= {	
 			[1] = {
-				name	= "ArtemisLRM20",
+				name	= "ArtemisLRM15",
 				mainDir = "0 0 1",
 				maxAngleDif = 270,
 				OnlyTargetCategory = "notbeacon",
 			},
 			[2] = {
-				name	= "ArtemisLRM20",
+				name	= "ArtemisLRM15",
 				mainDir = "0 0 1",
 				maxAngleDif = 270,
 				OnlyTargetCategory = "notbeacon",
