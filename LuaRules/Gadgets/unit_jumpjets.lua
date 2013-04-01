@@ -414,7 +414,7 @@ function gadget:CommandFallback(unitID, unitDefID, teamID,    -- keeps getting
   local x, y, z = spGetUnitBasePosition(unitID)
   local distSqr = GetDist2Sqr({x, y, z}, cmdParams)
   local jumpDef = jumpDefs[unitDefID]
-  local range   = jumpDef.range
+  local range   = Spring.GetUnitRulesParam(unitID, "jumpRange") or jumpDef.range
   local reload  = jumpDef.reload or 0
   local t       = spGetGameSeconds()
 
