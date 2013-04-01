@@ -602,9 +602,10 @@ do
 	  
 	  --// HEAT
 	  local heat = GetUnitRulesParam(unitID,"heat")
+	  local heatLimit = GetUnitRulesParam(unitID,"heatLimit") or ci.heatLimit
       if (heat) then
         --hp100 = hp*100; hp100 = hp100 - hp100%1; --//same as floor(hp*100), but 10% faster
-		local heat100 = heat / ci.heatLimit * 100
+		local heat100 = heat / heatLimit * 100
 		heat100 = heat100 - heat100%1
         if (heat100<0) then heat100=0 elseif (heat100>100) then heat100=100 end
         if (drawFullHealthBars)or(heat100>0) then
