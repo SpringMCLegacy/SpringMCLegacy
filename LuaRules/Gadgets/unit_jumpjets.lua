@@ -371,6 +371,8 @@ function gadget:UnitCreated(unitID, unitDefID, unitTeam)
   lastJump[unitID] = t
   spInsertUnitCmdDesc(unitID, jumpCmdDesc)
   spSetUnitRulesParam(unitID,"jumpReload",1)
+  spSetUnitRulesParam(unitID,"jumpSpeed", jumpDefs[unitDefID].speed)
+  spSetUnitRulesParam(unitID,"jumpRange", jumpDefs[unitDefID].range)
 end
 
 
