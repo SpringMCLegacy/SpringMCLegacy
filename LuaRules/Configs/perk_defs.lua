@@ -33,6 +33,7 @@ return {
 		applyPerk = function (unitID) 
 			Spring.Echo("Enhanced Jumpjets selected") 
 			Spring.SetUnitRulesParam(unitID, "jumpRange", 1000)
+			Spring.SetUnitRulesParam(unitID, "jumpSpeed", 100)
 		end,
 	},
 }
