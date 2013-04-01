@@ -64,6 +64,7 @@ function gadget:AllowCommand(unitID, unitDefID, teamID, cmdID, cmdParams, cmdOpt
 	if perkDef then
 		if cp and cp.unittype == "mech" then
 			perkDef.applyPerk(unitID)
+			EditUnitCmdDesc(unitID, FindUnitCmdDesc(unitID, cmdID), {name = perkDef.cmdDesc.name .."\n(Trained)"})
 			currentPerks[unitID][perkDef.name] = true
 			-- disable perks here
 			for perkCmdID, perkDef in pairs(perkDefs) do
