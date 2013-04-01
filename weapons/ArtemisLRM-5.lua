@@ -1,7 +1,6 @@
 weaponDef = {
 	name                    = "Artemis IV Fire Control System-enhanced Long Range Missile 5",
 	weaponType              = "MissileLauncher",
-	Targetable				= true,
 	renderType				= 1,
 	explosionGenerator    	= "custom:HE_MEDIUM",
 --	cegTag					= "RocketTrail",
@@ -15,20 +14,21 @@ weaponDef = {
 	noSelfDamage            = true,
 	turret                  = true,
 	range                   = 2600,
-	accuracy                = 1000,
-	wobble					= 1300,
-	dance 					= 50,
+	accuracy                = 50,
+	sprayangle				= 50,
+	wobble					= 1750,
+	dance 					= 100,
 	guidance				= true,
 	selfprop				= true,
 	ballistic				= false,
 	trajectoryHeight		= 1,
 	tracks					= true,
-	turnRate				= 3500,
+	turnRate				= 1000,
 	flightTime				= 10,
 	weaponTimer				= 20,
 	areaOfEffect            = 20,
-	startVelocity			= 500,
-	weaponVelocity          = 700,
+	startVelocity			= 1000,
+	weaponVelocity          = 1000,
 	reloadtime              = 15,
 	burst					= 5,
 	burstrate				= 0.1,
@@ -38,7 +38,7 @@ weaponDef = {
 		default = 150,--10 DPS
 	},
 	customparams = {
-		heatgenerated		= "30",--2/sec
+		heatgenerated		= "30", --6/sec
 		cegflare			= "MISSILE_MUZZLEFLASH",
     },
 }
