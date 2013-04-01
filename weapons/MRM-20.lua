@@ -15,14 +15,9 @@ weaponDef = {
 	turret                  = true,
 	range                   = 1500,
 	accuracy                = 1000,
-	wobble					= 1300,
-	dance					= 100,
-	guidance				= true,
-	selfprop				= true,
+	sprayAngle				= 500,
 	ballistic				= true,
 	trajectoryHeight		= 0.1,
-	tracks					= false,
-	turnRate				= 5000,
 	weaponTimer				= 5,
 	areaOfEffect            = 20,
 	startVelocity			= 750,
@@ -36,7 +31,7 @@ weaponDef = {
 		default = 100,--10 DPS
 	},
 	customparams = {
-		heatgenerated		= "60",--6/sec
+		heatgenerated		= "60",--4/sec
 		cegflare			= "MISSILE_MUZZLEFLASH",
     },
 }
