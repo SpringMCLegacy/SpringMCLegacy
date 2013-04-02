@@ -47,7 +47,7 @@ local IS_Demolisher = {
 			[2] = {
 				name	= "AC20",
 				OnlyTargetCategory = "notbeacon",
-				WeaponSlaveTo = 1,
+				SlaveTo = 1,
 			},
 		},
 	--Gets CEG effects from /gamedata/explosions folder

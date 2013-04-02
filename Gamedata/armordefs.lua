@@ -12,46 +12,49 @@ local armorDefs = {
 		"outpost_controltower",
 	},
 	light = {
-		"IS_Locust",
+		--[["IS_Locust",
 		"IS_Osiris",
 		"IS_Wolfhound",
 		"IS_Owens",
 		"IS_Raven",
 		"IS_Hollander",
+		"IS_Hollander_BZK-G1",
 		"CL_Firemoth",
 		"CL_Kitfox",
 		"CL_MistLynx",
 		"CL_Cougar",
-		"CL_Adder",
+		"CL_Adder",--]]
 	},
 	medium = {
-		"IS_Chimera",
+		--[["IS_Chimera",
 		"IS_Bushwacker",
 		"IS_Dervish",
 		"CL_Iceferret",
 		"CL_Nova",
 		"CL_Stormcrow",
-		"CL_Shadowcat",
+		"CL_Shadowcat",--]]
 	},
 	heavy = {
-		"IS_Orion",
+		--[["IS_Orion",
 		"IS_Warhammer",
 		"IS_Catapult",
 		"CL_Summoner",
 		"CL_Timberwolf",
 		"CL_Hellbringer",
-		"CL_Maddog",
+		"CL_Maddog",--]]
 	},
 	assault = {
-		"IS_Awesome",
-		"IS_Atlas",
+		--[["IS_Awesome_AWS8Q",
+		"IS_Awesome_AWS9M",
+		"IS_Atlas_AS7D",
+		"IS_Atlas_AS7K",
 		"IS_Devastator",
 		"CL_Warhawk",
 		"CL_Direwolf",
-		"KH_Mauler",
+		"KH_Mauler",--]]
 	},
     vehicle = {
-		"IS_Harasser",
+		--[["IS_Harasser",
 		"IS_Scorpion_ac5",
 		"IS_Scorpion_lgauss",
 		"IS_Goblin",
@@ -68,16 +71,16 @@ local armorDefs = {
 		"CL_Oro_hag",
 		"CL_Morrigu",
 		"CL_Mars",
-		"CL_Huit",
+		"CL_Huit",--]]
 	},
 	--[[aerospace = {
 		"",
 	},--]]
 	vtol = {
-		"IS_Hawkmoth",
+		--[["IS_Hawkmoth",
 		"CL_Donar",
 		"IS_Sparrowhawk",
-		"CL_Bashkir",
+		"CL_Bashkir",--]]
 	},
 }
 -- convert to named maps  (trepan is a noob)

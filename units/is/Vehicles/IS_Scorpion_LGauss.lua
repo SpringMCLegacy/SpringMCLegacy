@@ -45,15 +45,15 @@ local IS_Scorpion_LGauss = {
 			},
 			[2] = {
 				name	= "MG",
-				weaponslaveto2 = 1,
+				SlaveTo2 = 1,
 				OnlyTargetCategory = "notbeacon",
-				WeaponSlaveTo = 1,
+				SlaveTo = 1,
 			},
 			[3] = {
 				name	= "MG",
-				weaponslaveto3 = 1,
+				SlaveTo3 = 1,
 				OnlyTargetCategory = "notbeacon",
-				WeaponSlaveTo = 1,
+				SlaveTo = 1,
 			},
 		},
 		

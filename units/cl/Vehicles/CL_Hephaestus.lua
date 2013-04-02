@@ -45,12 +45,12 @@ local CL_Hephaestus = {
 			[2] = {
 				name	= "CERMBL",
 				OnlyTargetCategory = "notbeacon",
-				WeaponSlaveTo = 1,
+				SlaveTo = 1,
 			},
 			[3] = {
 				name	= "NARC",
 				OnlyTargetCategory = "notbeacon",
-				WeaponSlaveTo = 1,
+				SlaveTo = 1,
 			},
 		},
 	customparams = {

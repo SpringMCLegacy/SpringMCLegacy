@@ -47,17 +47,17 @@ local IS_Partisan = {
 			[2] = {
 				name	= "AC5_AA",
 				OnlyTargetCategory = "notbeacon",
-				WeaponSlaveTo = 1,
+				SlaveTo = 1,
 			},
 			[3] = {
 				name	= "AC5_AA",
 				OnlyTargetCategory = "notbeacon",
-				WeaponSlaveTo = 1,
+				SlaveTo = 1,
 			},
 			[4] = {
 				name	= "AC5_AA",
 				OnlyTargetCategory = "notbeacon",
-				WeaponSlaveTo = 1,
+				SlaveTo = 1,
 			},
 		},
 	--Gets CEG effects from /gamedata/explosions folder

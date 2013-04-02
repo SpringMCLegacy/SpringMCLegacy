@@ -55,13 +55,14 @@ local CL_Shadowcat = {
 				mainDir = "0 0 1",
 				maxAngleDif = 200,
 				OnlyTargetCategory = "notbeacon",
+				SlaveTo = 1,
 			},
 			[3] = {
 				name	= "CERMBL",
 				mainDir = "0 0 1",
 				maxAngleDif = 200,
 				OnlyTargetCategory = "notbeacon",
-				WeaponSlaveTo = 1,
+				SlaveTo = 1,
 			},
 		},
 

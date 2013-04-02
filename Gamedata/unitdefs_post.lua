@@ -48,6 +48,8 @@ for name, ud in pairs(UnitDefs) do
 	end
 	-- no OTA nanoframes please
 	ud.shownanoframe = false
+	ud.category = (ud.category or "") .. " all"
+	ud.nochasecategory = (ud.nochasecategory or "") .. " all"
 	-- set buildtimes based on walking speed, so units roll off the ramp at their correct speed
 	local speed = (ud.maxvelocity or 0) * 30
 	if speed > 0 then
@@ -59,5 +61,7 @@ for name, ud in pairs(UnitDefs) do
 	end
 	-- set velocity by modoption
 	ud.maxvelocity = (ud.maxvelocity or 0) * (modOptions.speed or 1)
-	ud.maxreversevelocity = (ud.maxreversevelocity or 0) * (modOptions.speed or 1)
+	ud.maxreversevelocity = ud.maxvelocity / 1.5
+	ud.acceleration = ud.maxvelocity / 4
+	ud.brakerate = ud.maxvelocity / 25
 end

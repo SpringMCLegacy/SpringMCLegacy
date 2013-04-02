@@ -1,10 +1,10 @@
-local IS_Atlas = {
-	name              	= "Atlas",
-	description         = "Assault-class Brawler Mech",
-	objectName        	= "IS_Atlas.s3o",
-	iconType			= "assaultmech",
+local IS_Catapult_CPLTC1 = {
+	name              	= "Catapult CPLT-C1",
+	description         = "Heavy Missile Support Mech",
+	objectName        	= "IS_Catapult_CPLTC1.s3o",
+	iconType			= "heavymech",
 	script				= "Mech.lua",
-	corpse				= "IS_Atlas_X",
+	corpse				= "IS_Catapult_X",
 	explodeAs          	= "mechexplode",
 	category 			= "mech ground notbeacon",
 	noChaseCategory		= "beacon air",
@@ -12,12 +12,12 @@ local IS_Atlas = {
 	radarDistance      	= 1500,
 		activateWhenBuilt   = true,
 		onoffable           = true,
-	maxDamage           = 30400,
-	mass                = 10000,
+	maxDamage           = 16000,
+	mass                = 6500,
 	footprintX			= 3,
 	footprintZ 			= 3,
 	collisionVolumeType = "box",
-	collisionVolumeScales = "40 60 40",
+	collisionVolumeScales = "45 50 40",
 	collisionVolumeOffsets = "0 0 0",
 	collisionVolumeTest = 1,
 --	leaveTracks			= 1,
@@ -26,76 +26,58 @@ local IS_Atlas = {
 --	trackStretch		= 1,-- how much the tracks stretch, the higher the number the more "compact" they become
 --	trackType			= "Thick",--graphics file to use for the track decal, from \bitmaps\tracks\ folder
 --	trackWidth			= 20,--width to render the decal
-	buildCostEnergy     = 100, -- in tons
-	buildCostMetal      = 38600,
+	buildCostEnergy     = 65,
+	buildCostMetal      = 28820,
 	buildTime           = 0,
 	upright				= true,
 	canMove				= true,
 		movementClass   = "LARGEMECH",
-		maxVelocity		= 2.7, --54kph/30
-		maxReverseVelocity= 1.63,
-		acceleration    = .80,
-		brakeRate       = 0.1,
-		turnRate 		= 600,
+		maxVelocity		= 3, --60kph/20
+		turnRate 		= 650,
 		smoothAnim		= 1,
 	
 	canAttack 			= true,
 		--Makes unit use weapon from /weapons folder
 		weapons 		= {	
 			[1] = {
-				name	= "AC20",
+				name	= "ArtemisLRM15",
 				mainDir = "0 0 1",
 				maxAngleDif = 270,
 				OnlyTargetCategory = "notbeacon",
 			},
 			[2] = {
-				name	= "MBL",
+				name	= "ArtemisLRM15",
 				mainDir = "0 0 1",
-				maxAngleDif = 240,
+				maxAngleDif = 270,
 				OnlyTargetCategory = "notbeacon",
-				WeaponSlaveTo = 1,
 			},
 			[3] = {
 				name	= "MBL",
 				mainDir = "0 0 1",
-				maxAngleDif = 240,
+				maxAngleDif = 270,
 				OnlyTargetCategory = "notbeacon",
-				WeaponSlaveTo = 1,
+				SlaveTo = 1,
 			},
 			[4] = {
 				name	= "MBL",
 				mainDir = "0 0 1",
 				maxAngleDif = 270,
 				OnlyTargetCategory = "notbeacon",
-				WeaponSlaveTo = 1,
+				SlaveTo = 1,
 			},
 			[5] = {
 				name	= "MBL",
 				mainDir = "0 0 1",
-				maxAngleDif = 240,
+				maxAngleDif = 270,
 				OnlyTargetCategory = "notbeacon",
-				WeaponSlaveTo = 1,
+				SlaveTo = 1,
 			},
 			[6] = {
-				name	= "LRM10",
+				name	= "MBL",
 				mainDir = "0 0 1",
-				maxAngleDif = 240,
+				maxAngleDif = 270,
 				OnlyTargetCategory = "notbeacon",
-				WeaponSlaveTo = 1,
-			},
-			[7] = {
-				name	= "LRM10",
-				mainDir = "0 0 1",
-				maxAngleDif = 240,
-				OnlyTargetCategory = "notbeacon",
-				WeaponSlaveTo = 1,
-			},
-			[8] = {
-				name	= "SRM6",
-				mainDir = "0 0 1",
-				maxAngleDif = 240,
-				OnlyTargetCategory = "notbeacon",
-				WeaponSlaveTo = 1,
+				SlaveTo = 1,
 			},
 		},
 		
@@ -103,20 +85,19 @@ local IS_Atlas = {
 
 	--[[sfxtypes = {
 		explosiongenerators = {
-		"custom:AC20_MUZZLEFLASH",
 		"custom:MISSILE_MUZZLEFLASH",
 		"custom:LASER_MUZZLEFLASH",
+		"custom:JumpJetTrail",
 		},
 	},]]
     customparams = {
 		hasturnbutton	= "1",
-		helptext		= "Armament: 1 x Ultra AC/20, 2 x Large Pulse Laser, 2 x Medium Beam Laser, 2 x MRM-10, 1 x SRM-6 - Armor: 19 tons Standard",
-		heatlimit		= "32",
-		torsoturnspeed	= "100",
-		leftarmid		= "2",
-		rightarmid 		= "3",
+		helptext		= "Armament: 2 x Artemis-guided LRM-15, 4 x Medium Beam Laser - Armor: 10 tons Standard",
+		heatlimit		= "15",
+		torsoturnspeed	= "125",
+		canjump			= "1",
 		unittype		= "mech",
     },
 }
 
-return lowerkeys({ ["IS_Atlas"] = IS_Atlas })
+return lowerkeys({ ["IS_Catapult_CPLTC1"] = IS_Catapult_CPLTC1 })
