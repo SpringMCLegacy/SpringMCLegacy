@@ -73,6 +73,9 @@ local spDestroyUnit        = Spring.DestroyUnit
 local spCreateUnit         = Spring.CreateUnit
 local spSetUnitLeaveTracks = Spring.SetUnitLeaveTracks
 
+-- added for BTL
+local spGetUnitRulesParam  = Spring.GetUnitRulesParam
+
 local mcSetRotationVelocity = MoveCtrl.SetRotationVelocity
 local mcSetPosition         = MoveCtrl.SetPosition
 local mcSetRotation         = MoveCtrl.SetRotation
@@ -178,7 +181,7 @@ local function Jump(unitID, goal, cmdTag)
   local speed         = Spring.GetUnitRulesParam(unitID, "jumpSpeed") or jumpDef.speed
   local delay    	  = jumpDef.delay
   local height        = jumpDef.height
-  local reloadTime    = (jumpDef.reload or 0)*30
+  local reloadTime    = (Spring.GetUnitRulesParam(unitID, "jumpReload") or (jumpDef.reload or 0))*30
   local teamID        = spGetUnitTeam(unitID)
   
   local rotateMidAir  = jumpDef.rotateMidAir
@@ -248,7 +251,7 @@ local function Jump(unitID, goal, cmdTag)
 		--Spring.UnitScript.CallAsUnit(unitID,env.preJump,turn,lineDist)
 	  end
   end
-  spSetUnitRulesParam(unitID,"jumpReload",0)
+  spSetUnitRulesParam(unitID,"jumpReloadBar",0)
 
   local function JumpLoop()
   
@@ -323,7 +326,7 @@ local function Jump(unitID, goal, cmdTag)
 	
     local reloadTimeInv = 1/reloadTime
     for i=1, reloadTime do
-      spSetUnitRulesParam(unitID,"jumpReload",i*reloadTimeInv)
+      spSetUnitRulesParam(unitID,"jumpReloadBar",i*reloadTimeInv)
       Sleep()
     end
   end
@@ -370,7 +373,8 @@ function gadget:UnitCreated(unitID, unitDefID, unitTeam)
   local t = spGetGameSeconds()
   lastJump[unitID] = t
   spInsertUnitCmdDesc(unitID, jumpCmdDesc)
-  spSetUnitRulesParam(unitID,"jumpReload",1)
+  spSetUnitRulesParam(unitID,"jumpReloadBar",1)
+  spSetUnitRulesParam(unitID,"jumpReload", jumpDefs[unitDefID].reload)
   spSetUnitRulesParam(unitID,"jumpSpeed", jumpDefs[unitDefID].speed)
   spSetUnitRulesParam(unitID,"jumpRange", jumpDefs[unitDefID].range)
 end
@@ -416,8 +420,8 @@ function gadget:CommandFallback(unitID, unitDefID, teamID,    -- keeps getting
   local x, y, z = spGetUnitBasePosition(unitID)
   local distSqr = GetDist2Sqr({x, y, z}, cmdParams)
   local jumpDef = jumpDefs[unitDefID]
-  local range   = Spring.GetUnitRulesParam(unitID, "jumpRange") or jumpDef.range
-  local reload  = jumpDef.reload or 0
+  local range   = spGetUnitRulesParam(unitID, "jumpRange") or jumpDef.range
+  local reload  = spGetUnitRulesParam(unitID, "jumpReload") or jumpDef.reload or 0
   local t       = spGetGameSeconds()
 
   if (distSqr < (range*range)) then
