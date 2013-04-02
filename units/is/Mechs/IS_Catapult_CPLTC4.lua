@@ -1,7 +1,7 @@
-local IS_Catapult = {
-	name              	= "Catapult",
+local IS_Catapult_CPLTC4 = {
+	name              	= "Catapult CPLT-C4",
 	description         = "Heavy Missile Support Mech",
-	objectName        	= "IS_Catapult.s3o",
+	objectName        	= "IS_Catapult_CPLTC4.s3o",
 	iconType			= "heavymech",
 	script				= "Mech.lua",
 	corpse				= "IS_Catapult_X",
@@ -12,7 +12,7 @@ local IS_Catapult = {
 	radarDistance      	= 1500,
 		activateWhenBuilt   = true,
 		onoffable           = true,
-	maxDamage           = 20200,
+	maxDamage           = 16000,
 	mass                = 6500,
 	footprintX			= 3,
 	footprintZ 			= 3,
@@ -32,10 +32,7 @@ local IS_Catapult = {
 	upright				= true,
 	canMove				= true,
 		movementClass   = "LARGEMECH",
-		maxVelocity		= 3.25, --65kph/3
-		maxReverseVelocity= 1.63,
-		acceleration    = 1,
-		brakeRate       = 0.2,
+		maxVelocity		= 3, --60kph/20
 		turnRate 		= 650,
 		smoothAnim		= 1,
 	
@@ -43,13 +40,13 @@ local IS_Catapult = {
 		--Makes unit use weapon from /weapons folder
 		weapons 		= {	
 			[1] = {
-				name	= "ArtemisLRM15",
+				name	= "ArtemisLRM20",
 				mainDir = "0 0 1",
 				maxAngleDif = 270,
 				OnlyTargetCategory = "notbeacon",
 			},
 			[2] = {
-				name	= "ArtemisLRM15",
+				name	= "ArtemisLRM20",
 				mainDir = "0 0 1",
 				maxAngleDif = 270,
 				OnlyTargetCategory = "notbeacon",
@@ -59,28 +56,14 @@ local IS_Catapult = {
 				mainDir = "0 0 1",
 				maxAngleDif = 270,
 				OnlyTargetCategory = "notbeacon",
-				WeaponSlaveTo = 1,
+				SlaveTo = 1,
 			},
 			[4] = {
 				name	= "MBL",
 				mainDir = "0 0 1",
 				maxAngleDif = 270,
 				OnlyTargetCategory = "notbeacon",
-				WeaponSlaveTo = 1,
-			},
-			[5] = {
-				name	= "MBL",
-				mainDir = "0 0 1",
-				maxAngleDif = 270,
-				OnlyTargetCategory = "notbeacon",
-				WeaponSlaveTo = 1,
-			},
-			[6] = {
-				name	= "MBL",
-				mainDir = "0 0 1",
-				maxAngleDif = 270,
-				OnlyTargetCategory = "notbeacon",
-				WeaponSlaveTo = 1,
+				SlaveTo = 1,
 			},
 		},
 		
@@ -95,12 +78,12 @@ local IS_Catapult = {
 	},]]
     customparams = {
 		hasturnbutton	= "1",
-		helptext		= "Armament: 2 x Artemis-enhanced LRM-20, 4 x ER Medium Beam Laser - Armor: 13 tons Standard",
-		heatlimit		= "24",
+		helptext		= "Armament: 2 x Artemis-guided LRM-20, 2 x Medium Beam Laser - Armor: 10 tons Standard",
+		heatlimit		= "20",
 		torsoturnspeed	= "125",
 		canjump			= "1",
 		unittype		= "mech",
     },
 }
 
-return lowerkeys({ ["IS_Catapult"] = IS_Catapult })
+return lowerkeys({ ["IS_Catapult_CPLTC4"] = IS_Catapult_CPLTC4 })

@@ -46,7 +46,7 @@ local CL_Oro_HAG = {
 			[2] = {
 				name	= "CLPL",
 				OnlyTargetCategory = "notbeacon",
-				WeaponSlaveTo = 1,
+				SlaveTo = 1,
 			},
 		},
 	customparams = {

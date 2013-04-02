@@ -52,14 +52,14 @@ local IS_Hawkmoth = {
 			[2] = {
 				name	= "LRM5",
 				OnlyTargetCategory = "notbeacon",
-				WeaponSlaveTo = 1,
+				SlaveTo = 1,
 				mainDir = "0 0 1",
 				maxAngleDif = 90,
 			},
 			[3] = {
 				name	= "LRM5",
 				OnlyTargetCategory = "notbeacon",
-				WeaponSlaveTo = 1,
+				SlaveTo = 1,
 				mainDir = "0 0 1",
 				maxAngleDif = 90,
 			},

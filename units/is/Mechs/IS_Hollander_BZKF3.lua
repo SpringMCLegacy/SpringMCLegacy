@@ -1,10 +1,10 @@
-local IS_Dervish = {
-	name              	= "Dervish",
-	description         = "Medium Missile Support Mech",
-	objectName        	= "IS_Dervish.s3o",
+local IS_Hollander_BZKF3 = {
+	name              	= "Hollander BZK-F3",
+	description         = "Gauss Sniper Light Mech",
+	objectName        	= "IS_Hollander.s3o",
 	iconType			= "mediummech",
 	script				= "Mech.lua",
-	corpse				= "IS_Dervish_X",
+	corpse				= "IS_Hollander_X",
 	explodeAs          	= "mechexplode",
 	category 			= "mech ground notbeacon",
 	noChaseCategory		= "beacon air",
@@ -12,12 +12,12 @@ local IS_Dervish = {
 	radarDistance      	= 1500,
 		activateWhenBuilt   = true,
 		onoffable           = true,
-	maxDamage           = 16100,
-	mass                = 5500,
+	maxDamage           = 10700,
+	mass                = 4500,
 	footprintX			= 2,
 	footprintZ 			= 2,
 	collisionVolumeType = "box",
-	collisionVolumeScales = "25 50 25",
+	collisionVolumeScales = "35 50 20",
 	collisionVolumeOffsets = "0 0 0",
 	collisionVolumeTest = 1,
 --	leaveTracks			= 1,
@@ -26,74 +26,63 @@ local IS_Dervish = {
 --	trackStretch		= 1,-- how much the tracks stretch, the higher the number the more "compact" they become
 --	trackType			= "Thick",--graphics file to use for the track decal, from \bitmaps\tracks\ folder
 --	trackWidth			= 20,--width to render the decal
-	buildCostEnergy     = 55,
-	buildCostMetal      = 21100,
+	buildCostEnergy     = 45,
+	buildCostMetal      = 14900,
 	buildTime           = 0,
 	upright				= true,
 	canMove				= true,
 		movementClass   = "SMALLMECH",
-		maxVelocity		= 4.3, --86kph/30
-		maxReverseVelocity= 2.15,
-		acceleration    = 1.0,
-		brakeRate       = 0.1,
-		turnRate 		= 700,
+		maxVelocity		= 4, --80kph/20
+		turnRate 		= 900,
 		smoothAnim		= 1,
 	
 	canAttack 			= true,
 		--Makes unit use weapon from /weapons folder
 		weapons 		= {	
 			[1] = {
-				name	= "ArtemisLRM15",
+				name	= "LBX10",
 				mainDir = "0 0 1",
 				maxAngleDif = 270,
 				OnlyTargetCategory = "notbeacon",
 			},
 			[2] = {
-				name	= "ArtemisLRM15",
-				mainDir = "0 0 1",
-				maxAngleDif = 220,
+				name	= "MBL",
+				--mainDir = "0 0 1",
+				--maxAngleDif = 270,
 				OnlyTargetCategory = "notbeacon",
-				WeaponSlaveTo = 1,
+				SlaveTo = 1,
 			},
 			[3] = {
 				name	= "MBL",
-				mainDir = "0 0 1",
-				maxAngleDif = 220,
+				--mainDir = "0 0 1",
+				--maxAngleDif = 270,
 				OnlyTargetCategory = "notbeacon",
-				WeaponSlaveTo = 1,
+				SlaveTo = 1,
 			},
-			[4] = {
-				name	= "MBL",
-				mainDir = "0 0 1",
-				maxAngleDif = 220,
-				OnlyTargetCategory = "notbeacon",
-				WeaponSlaveTo = 1,
-			},
-			[5] = {
-				name	= "MBL",
-				mainDir = "0 0 1",
-				maxAngleDif = 220,
-				OnlyTargetCategory = "notbeacon",
-				WeaponSlaveTo = 1,
-			},
-			[6] = {
-				name	= "MBL",
-				mainDir = "0 0 1",
-				maxAngleDif = 220,
-				OnlyTargetCategory = "notbeacon",
-				WeaponSlaveTo = 1,
-			},
+--			[4] = {
+--				name	= "SPL",
+--				--mainDir = "0 0 1",
+--				--maxAngleDif = 270,
+--				OnlyTargetCategory = "notbeacon",
+--				SlaveTo = 1,
+--			},
+--			[5] = {
+--				name	= "SPL",
+--				--mainDir = "0 0 1",
+--				--maxAngleDif = 270,
+--				OnlyTargetCategory = "notbeacon",
+--				SlaveTo = 1,
+--			},
 		},
-		
     customparams = {
 		hasturnbutton	= "1",
-		helptext		= "Armament: 2 x ER LRM-15, 4 x Medium Beam Laser - Armor: 10 tons Standard",
-		heatlimit		= "22",
-		torsoturnspeed	= "160",
-		leftarmid		= "3",
-		rightarmid 		= "5",
+		helptext		= "Armament: 1 x Gauss Rifle: 4 tons Ferro-Fibrous",
+		heatlimit		= "10",
+		torsoturnspeed	= "140",
+		leftarmid 		= "2",
+		rightarmid 		= "3",
 		unittype		= "mech",
     },
 }
 
-return lowerkeys({ ["IS_Dervish"] = IS_Dervish })
+return lowerkeys({ ["IS_Hollander_BZKF3"] = IS_Hollander_BZKF3 })

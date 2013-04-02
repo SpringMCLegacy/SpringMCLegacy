@@ -44,32 +44,32 @@ local CL_Maddog = {
 		weapons 		= {	
 			[1] = {
 				name	= "ArtemisLRM20",
-				weaponSlaveTo = 1,
+				SlaveTo = 1,
 				OnlyTargetCategory = "notbeacon",
 			},
 			[2] = {
 				name	= "ArtemisLRM20",
-				weaponSlaveTo = 1,
+				SlaveTo = 1,
 				OnlyTargetCategory = "notbeacon",
 			},
 			[3] = {
 				name	= "CLPL",
-				weaponSlaveTo = 1,
+				SlaveTo = 1,
 				OnlyTargetCategory = "notbeacon",
 			},
 			[4] = {
 				name	= "CLPL",
-				weaponSlaveTo = 1,
+				SlaveTo = 1,
 				OnlyTargetCategory = "notbeacon",
 			},
 			[5] = {
 				name	= "CMPL",
-				weaponSlaveTo = 1,
+				SlaveTo = 1,
 				OnlyTargetCategory = "notbeacon",
 			},
 			[6] = {
 				name	= "CMPL",
-				weaponSlaveTo = 1,
+				SlaveTo = 1,
 				OnlyTargetCategory = "notbeacon",
 			},
 			[7] = {

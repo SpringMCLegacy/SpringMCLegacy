@@ -46,22 +46,22 @@ local IS_Challenger = {
 			[2] = {
 				name	= "LBX10",
 				OnlyTargetCategory = "notbeacon",
-				WeaponSlaveTo = 1,
+				SlaveTo = 1,
 			},
 			[3] = {
 				name	= "LRM10",
 				OnlyTargetCategory = "notbeacon",
-				WeaponSlaveTo = 1,
+				SlaveTo = 1,
 			},
 			[4] = {
 				name	= "MPL",
 				OnlyTargetCategory = "notbeacon",
-				WeaponSlaveTo = 1,
+				SlaveTo = 1,
 			},
 			[5] = {
 				name	= "MPL",
 				OnlyTargetCategory = "notbeacon",
-				WeaponSlaveTo = 1,
+				SlaveTo = 1,
 			},
 			[6] = {
 				name	= "AMS",

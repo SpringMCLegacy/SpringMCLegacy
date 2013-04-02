@@ -46,12 +46,12 @@ local IS_Scorpion_AC5 = {
 			[2] = {
 				name	= "MG",
 				OnlyTargetCategory = "notbeacon",
-				WeaponSlaveTo = 1,
+				SlaveTo = 1,
 			},
 			[3] = {
 				name	= "MG",
 				OnlyTargetCategory = "notbeacon",
-				WeaponSlaveTo = 1,
+				SlaveTo = 1,
 			},
 		},
 		

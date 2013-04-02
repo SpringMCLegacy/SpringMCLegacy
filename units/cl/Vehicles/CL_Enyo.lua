@@ -47,12 +47,12 @@ local CL_Enyo = {
 			[2] = {
 				name	= "SSRM6",
 				OnlyTargetCategory = "notbeacon",
-				WeaponSlaveTo = 1,
+				SlaveTo = 1,
 			},
 			[3] = {
 				name	= "SSRM6",
 				OnlyTargetCategory = "notbeacon",
-				WeaponSlaveTo = 1,
+				SlaveTo = 1,
 			},
 		},
 	customparams = {

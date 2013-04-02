@@ -52,7 +52,7 @@ local IS_Sniper = {
 			},
 			[3] = {
 				name	= "ERSBL",
-				weaponslaveto = 2,
+				SlaveTo = 2,
 				OnlyTargetCategory = "notbeacon",
 			},
 		},

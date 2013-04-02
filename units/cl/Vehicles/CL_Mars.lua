@@ -50,7 +50,7 @@ local CL_Mars = {
 			[2] = {
 				name	= "CERLBL",
 				OnlyTargetCategory = "notbeacon",
-				WeaponSlaveTo = 1,
+				SlaveTo = 1,
 			},
 			[3] = {
 				name	= "LBX10",
@@ -69,24 +69,24 @@ local CL_Mars = {
 				mainDir = "0 0 1",
 				maxAngleDif = 180,
 				OnlyTargetCategory = "notbeacon",
-				WeaponSlaveTo = 4,
+				SlaveTo = 4,
 			},
 			[6] = {
 				name	= "LRM15",
 				mainDir = "0 0 1",
 				maxAngleDif = 180,
 				OnlyTargetCategory = "notbeacon",
-				WeaponSlaveTo = 4,
+				SlaveTo = 4,
 			},
 			[7] = {
 				name	= "MG",
 				OnlyTargetCategory = "notbeacon",
-				WeaponSlaveTo = 1,
+				SlaveTo = 1,
 			},
 			[8] = {
 				name	= "MG",
 				OnlyTargetCategory = "notbeacon",
-				WeaponSlaveTo = 1,
+				SlaveTo = 1,
 			},
 		},
 	customparams = {

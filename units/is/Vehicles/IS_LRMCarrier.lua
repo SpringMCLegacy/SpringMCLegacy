@@ -46,7 +46,7 @@ local IS_LRMCarrier = {
 			},
 			[2] = {
 				name	= "LRM20",
-				WeaponSlaveTo = 1,
+				SlaveTo = 1,
 				OnlyTargetCategory = "notbeacon",
 			},
 		},

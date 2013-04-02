@@ -42,7 +42,7 @@ local IS_Harasser = {
 			[2] = {
 				name	= "SRM6",
 				OnlyTargetCategory = "notbeacon",
-				WeaponSlaveTo = 1,
+				SlaveTo = 1,
 			},
 		},
 	customparams = {
