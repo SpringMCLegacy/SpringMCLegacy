@@ -87,6 +87,9 @@ local IS_Atlas_AS7K = {
 				OnlyTargetCategory = "notbeacon",
 				SlaveTo = 1,
 			},
+			[5] = {
+				name	= "AMS",
+			},
 		},
 		
 	--Gets CEG effects from /gamedata/explosions folder
@@ -100,7 +103,7 @@ local IS_Atlas_AS7K = {
 	},]]
     customparams = {
 		hasturnbutton	= "1",
-		helptext		= "Armament: 1 x Gauss, 2 x Large Beam Laser, 2 x Medium Pulse Laser, 2 x LRM-10 - Armor: 19 tons Standard",
+		helptext		= "Armament: 1 x Gauss, 2 x Large Beam Laser, 2 x Medium Pulse Laser, 2 x LRM-10, AMS - Armor: 19 tons Standard",
 		heatlimit		= "20",
 		torsoturnspeed	= "100",
 		leftarmid		= "2",

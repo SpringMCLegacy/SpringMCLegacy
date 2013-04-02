@@ -1,7 +1,7 @@
 local IS_Hollander_BZKG1 = {
 	name              	= "Hollander BZK-G1",
-	description         = "Medium-range Brawler Light Mech",
-	objectName        	= "IS_Hollander.s3o",
+	description         = "Light Brawler",
+	objectName        	= "IS_Hollander_BZKG1.s3o",
 	iconType			= "mediummech",
 	script				= "Mech.lua",
 	corpse				= "IS_Hollander_X",
@@ -40,15 +40,43 @@ local IS_Hollander_BZKG1 = {
 		--Makes unit use weapon from /weapons folder
 		weapons 		= {	
 			[1] = {
-				name	= "Gauss",
+				name	= "LBX10",
 				mainDir = "0 0 1",
 				maxAngleDif = 270,
 				OnlyTargetCategory = "notbeacon",
 			},
+			[2] = {
+				name	= "MBL",
+				--mainDir = "0 0 1",
+				--maxAngleDif = 270,
+				OnlyTargetCategory = "notbeacon",
+				SlaveTo = 1,
+			},
+			[3] = {
+				name	= "MBL",
+				--mainDir = "0 0 1",
+				--maxAngleDif = 270,
+				OnlyTargetCategory = "notbeacon",
+				SlaveTo = 1,
+			},
+--			[4] = {
+--				name	= "SPL",
+--				--mainDir = "0 0 1",
+--				--maxAngleDif = 270,
+--				OnlyTargetCategory = "notbeacon",
+--				SlaveTo = 1,
+--			},
+--			[5] = {
+--				name	= "SPL",
+--				--mainDir = "0 0 1",
+--				--maxAngleDif = 270,
+--				OnlyTargetCategory = "notbeacon",
+--				SlaveTo = 1,
+--			},
 		},
     customparams = {
 		hasturnbutton	= "1",
-		helptext		= "Armament: 1 x LBX-10, 2 x Medium Beam Laser: 6 tons Ferro-Fibrous",
+		helptext		= "Armament: 1 x LBX-10, 2 x Medium Laser - Armor: 6 tons Ferro-Fibrous",
 		heatlimit		= "10",
 		torsoturnspeed	= "140",
 		leftarmid 		= "2",

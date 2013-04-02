@@ -1,10 +1,10 @@
-local IS_Awesome_AWS8Q = {
-	name              	= "Awesome AWS-8Q",
-	description         = "Assault-class Strike Mech",
-	objectName        	= "IS_Awesome_AWS8Q.s3o",
-	iconType			= "assaultmech",
+local IS_Osiris_OSR4D = {
+	name              	= "Osiris OSR-4D",
+	description         = "Light Skirmish Mech",
+	objectName        	= "IS_Osiris_OSR4D.s3o",
+	iconType			= "lightmech",
 	script				= "Mech.lua",
-	corpse				= "IS_Awesome_X",
+	corpse				= "IS_Osiris_X",
 	explodeAs          	= "mechexplode",
 	category 			= "mech ground notbeacon",
 	noChaseCategory		= "beacon air",
@@ -12,12 +12,12 @@ local IS_Awesome_AWS8Q = {
 	radarDistance      	= 1500,
 		activateWhenBuilt   = true,
 		onoffable           = true,
-	maxDamage           = 24000,
-	mass                = 8500,
-	footprintX			= 3,
-	footprintZ 			= 3,
+	maxDamage           = 9300,
+	mass                = 3000,
+	footprintX			= 2,
+	footprintZ 			= 2,
 	collisionVolumeType = "box",
-	collisionVolumeScales = "40 60 40",
+	collisionVolumeScales = "15 35 15",
 	collisionVolumeOffsets = "0 0 0",
 	collisionVolumeTest = 1,
 --	leaveTracks			= 1,
@@ -26,43 +26,57 @@ local IS_Awesome_AWS8Q = {
 --	trackStretch		= 1,-- how much the tracks stretch, the higher the number the more "compact" they become
 --	trackType			= "Thick",--graphics file to use for the track decal, from \bitmaps\tracks\ folder
 --	trackWidth			= 20,--width to render the decal
-	buildCostEnergy     = 85,
-	buildCostMetal      = 35160,
+	buildCostEnergy     = 30,
+	buildCostMetal      = 10780,
 	buildTime           = 0,
 	upright				= true,
 	canMove				= true,
-		movementClass   = "LARGEMECH",
-		maxVelocity		= 2.5, --50kph/20
-		turnRate 		= 600,
+		movementClass   = "SMALLMECH",
+		maxVelocity		= 6, --120kph/20
+		turnRate 		= 1000,
 		smoothAnim		= 1,
 	
 	canAttack 			= true,
 		--Makes unit use weapon from /weapons folder
 		weapons 		= {	
 			[1] = {
-				name	= "PPC",
-				mainDir = "0 0 1",
-				maxAngleDif = 200,
+				name	= "MPL",
+				--mainDir = "0 0 1",
+				--maxAngleDif = 270,
 				OnlyTargetCategory = "notbeacon",
 			},
 			[2] = {
-				name	= "PPC",
-				mainDir = "0 0 1",
-				maxAngleDif = 200,
+				name	= "ERMBL",
+				--mainDir = "0 0 1",
+				--maxAngleDif = 270,
 				OnlyTargetCategory = "notbeacon",
 				SlaveTo = 1,
 			},
 			[3] = {
-				name	= "PPC",
-				mainDir = "0 0 1",
-				maxAngleDif = 200,
+				name	= "ERMBL",
+				--mainDir = "0 0 1",
+				--maxAngleDif = 270,
 				OnlyTargetCategory = "notbeacon",
 				SlaveTo = 1,
 			},
 			[4] = {
-				name	= "SBL",
-				mainDir = "0 0 1",
-				maxAngleDif = 200,
+				name	= "ERMBL",
+				--mainDir = "0 0 1",
+				--maxAngleDif = 270,
+				OnlyTargetCategory = "notbeacon",
+				SlaveTo = 1,
+			},
+			[5] = {
+				name	= "ERMBL",
+				--mainDir = "0 0 1",
+				--maxAngleDif = 270,
+				OnlyTargetCategory = "notbeacon",
+				SlaveTo = 1,
+			},
+			[6] = {
+				name	= "ERMBL",
+				--mainDir = "0 0 1",
+				--maxAngleDif = 270,
 				OnlyTargetCategory = "notbeacon",
 				SlaveTo = 1,
 			},
@@ -72,17 +86,20 @@ local IS_Awesome_AWS8Q = {
 
 	--[[sfxtypes = {
 		explosiongenerators = {
-		"custom:PPC_MUZZLEFLASH",
+		"custom:MISSILE_MUZZLEFLASH",
 		"custom:LASER_MUZZLEFLASH",
+		"custom:JumpJetTrail",
 		},
 	},]]
     customparams = {
 		hasturnbutton	= "1",
-		helptext		= "Armament: 3 x PPC, 1 x SBL - Armor: 15.5 tons Standard",
-		heatlimit		= "28",
-		torsoturnspeed	= "100",
+		helptext		= "Armament: 5 x Medium Beam Laser, 1 x Medium Pulse Laser - Armor: 5.5 tons Ferro-Fibrous",
+		heatlimit		= "20",
+		torsoturnspeed	= "190",
+		rightarmid 		= "2",
+		canjump			= "1",
 		unittype		= "mech",
     },
 }
 
-return lowerkeys({ ["IS_Awesome_AWS8Q"] = IS_Awesome_AWS8Q })
+return lowerkeys({ ["IS_Osiris_OSR4D"] = IS_Osiris_OSR4D })
