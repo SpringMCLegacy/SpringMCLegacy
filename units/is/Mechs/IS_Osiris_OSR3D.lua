@@ -1,7 +1,7 @@
-local IS_Osiris = {
-	name              	= "Osiris",
+local IS_Osiris_OSR3D = {
+	name              	= "Osiris OSR-3D",
 	description         = "Light Skirmish Mech",
-	objectName        	= "IS_Osiris.s3o",
+	objectName        	= "IS_Osiris_OSR3D.s3o",
 	iconType			= "lightmech",
 	script				= "Mech.lua",
 	corpse				= "IS_Osiris_X",
@@ -12,7 +12,7 @@ local IS_Osiris = {
 	radarDistance      	= 1500,
 		activateWhenBuilt   = true,
 		onoffable           = true,
-	maxDamage           = 6800,
+	maxDamage           = 8000,
 	mass                = 3000,
 	footprintX			= 2,
 	footprintZ 			= 2,
@@ -32,10 +32,7 @@ local IS_Osiris = {
 	upright				= true,
 	canMove				= true,
 		movementClass   = "SMALLMECH",
-		maxVelocity		= 6.5, --130kph/30
-		maxReverseVelocity= 3.25,
-		acceleration    = 2.0,
-		brakeRate       = 0.1,
+		maxVelocity		= 6, --120kph/20
 		turnRate 		= 1000,
 		smoothAnim		= 1,
 	
@@ -43,26 +40,47 @@ local IS_Osiris = {
 		--Makes unit use weapon from /weapons folder
 		weapons 		= {	
 			[1] = {
-				name	= "MPL",
+				name	= "ERMBL",
 				--mainDir = "0 0 1",
 				--maxAngleDif = 270,
 				OnlyTargetCategory = "notbeacon",
 			},
 			[2] = {
-				name	= "MPL",
+				name	= "ERMBL",
 				--mainDir = "0 0 1",
 				--maxAngleDif = 270,
 				OnlyTargetCategory = "notbeacon",
 				SlaveTo = 1,
 			},
 			[3] = {
-				name	= "MPL",
+				name	= "ERMBL",
 				--mainDir = "0 0 1",
 				--maxAngleDif = 270,
 				OnlyTargetCategory = "notbeacon",
 				SlaveTo = 1,
 			},
 			[4] = {
+				name	= "ERMBL",
+				--mainDir = "0 0 1",
+				--maxAngleDif = 270,
+				OnlyTargetCategory = "notbeacon",
+				SlaveTo = 1,
+			},
+			[5] = {
+				name	= "ERMBL",
+				--mainDir = "0 0 1",
+				--maxAngleDif = 270,
+				OnlyTargetCategory = "notbeacon",
+				SlaveTo = 1,
+			},
+			[6] = {
+				name	= "MG",
+				--mainDir = "0 0 1",
+				--maxAngleDif = 270,
+				OnlyTargetCategory = "notbeacon",
+				SlaveTo = 1,
+			},
+			[7] = {
 				name	= "SRM6",
 				--mainDir = "0 0 1",
 				--maxAngleDif = 270,
@@ -82,13 +100,13 @@ local IS_Osiris = {
 	},]]
     customparams = {
 		hasturnbutton	= "1",
-		helptext		= "Armament: 3 x Medium Pulse Laser, 1 x SRM-6 - Armor: 4.5 tons Standard",
+		helptext		= "Armament: 5 x Medium Beam Laser, 1 x Machinegun, 1 x SRM-6 - Armor: 4.5 tons Ferro-Fibrous",
 		heatlimit		= "20",
 		torsoturnspeed	= "190",
-		rightarmid 		= "4",
+		rightarmid 		= "1",
 		canjump			= "1",
 		unittype		= "mech",
     },
 }
 
-return lowerkeys({ ["IS_Osiris"] = IS_Osiris })
+return lowerkeys({ ["IS_Osiris_OSR3D"] = IS_Osiris_OSR3D })
