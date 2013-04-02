@@ -26,7 +26,7 @@ local name
   
 jumpCategory = { 
 	baseclass = {
-		range = 600, height = 200, speed = 6,  reload = 10,  aaShootMe = false, delay = 0, cobscript = true, rotateMidAir = true},	
+		range = 600, height = 200, speed = 6,  reload = 10,  aaShootMe = false, delay = 0, cobscript = false,rotateMidAir = true},	
 	-- category containining only optional tags for testing error code only.
 	-- iammissingstuff ={
 	-- 	reload	= 10, aaShootMe	= false, },	
@@ -63,7 +63,7 @@ jumpClassGroups = {
 --		speed
 --		reload
 ------------------------------------------------------------------------------------------------------------------------------------------------	
-overCategory = {
+--[[overCategory = {
 	is_chimera = { cobscript = false},
 	is_catapult = { cobscript = false},
 	is_osiris = { cobscript = false},
@@ -86,8 +86,8 @@ overCategory = {
  corsumo = {
     delay = 30, height = 100, range = 300, reload = 13, cobscript = false, rotateMidAir = false},
 	-- corpyro = {
-		-- range = 400, height = 200, speed = 6,  reload = 10, },	]]
-}
+		-- range = 400, height = 200, speed = 6,  reload = 10, },
+}--]]
 ------------------------------------------------------------------------------------------------------------------------------------------------
 -- this is just an error checking block, not our configuration area
 -- I know n^2, bite me... see error checking comment
@@ -124,10 +124,10 @@ for groupId,groupcluster in pairs(jumpClassGroups) do
 					IsBadDef = true			
 				end
 				
-				if ( not jumpCategory[groupId].cobscript ) then
+				--[[if ( not jumpCategory[groupId].cobscript ) then
 					Spring.Echo("   Jump Jet Defs error: (Unit: " .. name .. " missing required parameter cobscript)")	
 					IsBadDef = true			
-				end
+				end]]
 				
 				if ( not jumpCategory[groupId].rotateMidAir ) then
 					Spring.Echo("   Jump Jet Defs error: (Unit: " .. name .. " missing required parameter rotateMidAir)")	
@@ -178,9 +178,9 @@ for uName,uOvers in pairs(overCategory) do
 				Spring.Echo("   Jump Jet Defs warning: ( " .. uName .. " has unneeded warning override )")
 			end
 			
-			if ( uOvers.cobscript == jumpers[uName].cobscript) then
+			--[[if ( uOvers.cobscript == jumpers[uName].cobscript) then
 				Spring.Echo("   Jump Jet Defs warning: ( " .. uName .. " has unneeded warning override )")
-			end
+			end]]
 			
 			if ( uOvers.rotateMidAir == jumpers[uName].rotateMidAir) then
 				Spring.Echo("   Jump Jet Defs warning: ( " .. uName .. " has unneeded warning override )")
