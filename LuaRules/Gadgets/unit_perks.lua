@@ -64,9 +64,9 @@ end
 
 function gadget:AllowCommand(unitID, unitDefID, teamID, cmdID, cmdParams, cmdOptions)
 	local perkDef = perkDefs[cmdID]
-	local ud = UnitDefs[unitDefID]
-	local cp = ud.customParams
 	if perkDef then
+		local ud = UnitDefs[unitDefID]
+		local cp = ud.customParams
 		-- check that this unit can receive this perk (can be issued the order due to multiple units selected)
 		if cp and cp.unittype == "mech" and perkDef.valid(unitDefID) then
 			perkDef.applyPerk(unitID)
@@ -104,7 +104,8 @@ function gadget:UnitCreated(unitID, unitDefID, teamID, builderID)
 			if perkDef.valid(unitDefID) then
 				InsertUnitCmdDesc(unitID, perkCmdDesc)
 			else
-				currentPerks[unitID][perkDef.name] = true -- hack
+				-- treat invalid perks as though they were already trained
+				currentPerks[unitID][perkDef.name] = true
 			end
 		end
 	end
