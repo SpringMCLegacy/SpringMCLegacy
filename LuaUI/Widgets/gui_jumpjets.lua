@@ -141,7 +141,7 @@ local function DrawArc(unitID, start, finish, color, jumpFrame, range)
     local lineDist   = GetDist3(start, finish)
     local flightDist = GetDist2(start, vertex) + GetDist3(vertex, finish)
     
-    local speed      = jumpDefs[unitDefID].speed * lineDist/flightDist
+    local speed      = Spring.GetUnitRulesParam(unitID, "jumpSpeed") * lineDist/flightDist
     step             = speed/lineDist
     
     local frame      = spGetGameFrame()
