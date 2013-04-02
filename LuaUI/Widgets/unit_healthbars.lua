@@ -545,7 +545,7 @@ do
     if (not customInfo[unitDefID]) then
       customInfo[unitDefID] = {
         height        = ud.height+14,
-        canJump       = (ud.customParams.canjump=="1")or(GetUnitRulesParam(unitID,"jumpReload")),
+        canJump       = (ud.customParams.canjump=="1")or(GetUnitRulesParam(unitID,"jumpReloadBar")),
         maxShield     = ud.shieldPower,
         canStockpile  = ud.canStockpile,
         reloadTime    = ud.reloadTime,
@@ -694,7 +694,7 @@ do
 	  
       --// JUMPJET
       if (drawJumpJet)and(ci.canJump) then
-        local jumpReload = GetUnitRulesParam(unitID,"jumpReload")
+        local jumpReload = GetUnitRulesParam(unitID,"jumpReloadBar")
         if jumpReload then
           AddBar("Jump Jets",jumpReload,"jump",'')
         end
