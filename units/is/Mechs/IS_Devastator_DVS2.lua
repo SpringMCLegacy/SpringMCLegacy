@@ -1,7 +1,7 @@
-local IS_Devastator = {
+local IS_Devastator_DVS2 = {
 	name              	= "Devastator",
 	description         = "Assault-class Brawler Mech",
-	objectName        	= "IS_Devastator.s3o",
+	objectName        	= "IS_Devastator_DVS2.s3o",
 	iconType			= "assaultmech",
 	script				= "Mech.lua",
 	corpse				= "IS_Devastator_X",
@@ -32,10 +32,7 @@ local IS_Devastator = {
 	upright				= true,
 	canMove				= true,
 		movementClass   = "LARGEMECH",
-		maxVelocity		= 2.7, --54kph/30
-		maxReverseVelocity= 1.63,
-		acceleration    = .80,
-		brakeRate       = 0.1,
+		maxVelocity		= 2.5, --50kph/20
 		turnRate 		= 600,
 		smoothAnim		= 1,
 	
@@ -90,16 +87,23 @@ local IS_Devastator = {
 				OnlyTargetCategory = "notbeacon",
 				SlaveTo = 1,
 			},
+			[8] = {
+				name	= "MBL",
+				mainDir = "0 0 1",
+				maxAngleDif = 200,
+				OnlyTargetCategory = "notbeacon",
+				SlaveTo = 1,
+			},
 		},
 		
 	--Gets CEG effects from /gamedata/explosions folder
     customparams = {
 		hasturnbutton	= "1",
-		helptext		= "Armament: 2 x Gauss Rifle, 2 x PPC, 3 x Medium Beam Laser - Armor: 19 tons Standard",
-		heatlimit		= "34",
+		helptext		= "Armament: 2 x Gauss Rifle, 2 x PPC, 4 x Medium Beam Laser - Armor: 18.5 tons Standard",
+		heatlimit		= "28",
 		torsoturnspeed	= "100",
 		unittype		= "mech",
     },
 }
 
-return lowerkeys({ ["IS_Devastator"] = IS_Devastator })
+return lowerkeys({ ["IS_Devastator_DVS2"] = IS_Devastator_DVS2 })
