@@ -2,10 +2,11 @@
 local GetCmdID = GG.CustomCommands.GetCmdID
 
 -- Common valid() functions here:
-local function allMechs(unitDefID) return true end
-local function hasJumpjets(unitDefID) return (UnitDefs[unitDefID].customParams.canjump or false) end
+local function allMechs(unitDefID) Spring.Echo("valid: allMechs") return true end
+local function hasJumpjets(unitDefID) Spring.Echo("valid: hasJumpjets") return (UnitDefs[unitDefID].customParams.canjump or false) end
 
 local function hasWeaponName(unitDefID, weapName)
+	Spring.Echo("valid: hasWeaponName")
 	local weapons = UnitDefs[unitDefID].weapons
 	for weapNum, weapTable in pairs(weapons) do 
 		if weapTable["weaponDef"] == WeaponDefNames[weapName:lower()].id then return true end
