@@ -44,7 +44,6 @@ local CL_Maddog = {
 		weapons 		= {	
 			[1] = {
 				name	= "ArtemisLRM20",
-				SlaveTo = 1,
 				OnlyTargetCategory = "notbeacon",
 			},
 			[2] = {

@@ -33,6 +33,7 @@ weaponDef = {
 		heatgenerated		= "75",--10/sec
 		cegflare			= "PPC_MUZZLEFLASH",
 		heatdamage			= "10",
+		weaponclass			= "energy",
     },
 }
 

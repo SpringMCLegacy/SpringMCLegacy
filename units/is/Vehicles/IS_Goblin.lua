@@ -43,7 +43,6 @@ local IS_Goblin = {
 			[1] = {
 				name	= "LPL",
 				OnlyTargetCategory = "notbeacon",
-				SlaveTo = 1,
 			},
 			[2] = {
 				name	= "SRM6",
