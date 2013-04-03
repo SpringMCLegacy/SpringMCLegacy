@@ -1,5 +1,5 @@
-local IS_Wolfhound = {
-	name              	= "Wolfhound",
+local IS_Wolfhound_WLF3S = {
+	name              	= "Wolfhound WLF-3S",
 	description         = "Light Strike Mech",
 	objectName        	= "IS_Wolfhound.s3o",
 	iconType			= "lightmech",
@@ -32,10 +32,7 @@ local IS_Wolfhound = {
 	upright				= true,
 	canMove				= true,
 		movementClass   = "SMALLMECH",
-		maxVelocity		= 4.85, --97kph/30
-		maxReverseVelocity= 2.43,
-		acceleration    = 1.75,
-		brakeRate       = 0.1,
+		maxVelocity		= 4.5, --90kph/20
 		turnRate 		= 900,
 		smoothAnim		= 1,
 	
@@ -43,34 +40,34 @@ local IS_Wolfhound = {
 		--Makes unit use weapon from /weapons folder
 		weapons 		= {	
 			[1] = {
-				name	= "MBL",
+				name	= "ERMBL",
 				mainDir = "0 0 1",
 				maxAngleDif = 270,
 				OnlyTargetCategory = "notbeacon",
 			},
 			[2] = {
-				name	= "ERLBL",
+				name	= "ERPPC",
 				mainDir = "0 0 1",
 				maxAngleDif = 270,
 				OnlyTargetCategory = "notbeacon",
 				SlaveTo = 1,
 			},
 			[3] = {
-				name	= "MBL",
+				name	= "ERSBL",
 				mainDir = "0 0 1",
 				maxAngleDif = 270,
 				OnlyTargetCategory = "notbeacon",
 				SlaveTo = 1,
 			},
 			[4] = {
-				name	= "MBL",
+				name	= "ERMBL",
 				mainDir = "0 0 1",
 				maxAngleDif = 270,
 				OnlyTargetCategory = "notbeacon",
 				SlaveTo = 1,
 			},
 			[5] = {
-				name	= "MBL",
+				name	= "ERMBL",
 				mainDir = "0 0 1",
 				maxAngleDif = 270,
 				OnlyTargetCategory = "notbeacon",
@@ -87,11 +84,11 @@ local IS_Wolfhound = {
 	},]]
     customparams = {
 		hasturnbutton	= "1",
-		helptext		= "Armament: 1 x Large Beam Laser, 4 x ER Medium Beam Laser - Armor: 7.5 tons Standard",
-		heatlimit		= "22",
+		helptext		= "Armament: 1 x ER PPC, 3 x ER Medium Beam Laser, 1 x ER Small Beam Laser - Armor: 7.5 tons Standard",
+		heatlimit		= "24",
 		torsoturnspeed	= "180",
 		unittype		= "mech",
     },
 }
 
-return lowerkeys({ ["IS_Wolfhound"] = IS_Wolfhound })
+return lowerkeys({ ["IS_Wolfhound_WLF3S"] = IS_Wolfhound_WLF3S })

@@ -32,7 +32,7 @@ local IS_Chimera_CMA1S = {
 	upright				= true,
 	canMove				= true,
 		movementClass   = "SMALLMECH",
-		maxVelocity		= 4.85, --97kph/30
+		maxVelocity		= 4.5, --90kph/20
 		turnRate 		= 800,
 		smoothAnim		= 1,
 	
