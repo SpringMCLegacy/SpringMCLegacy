@@ -32,6 +32,7 @@ local MINIMUM_XP_INCREASE_TO_CHECK = 0.01
 local PERK_XP_COST = 0.2
 -- Variables
 local perkDefs = {} -- perkCmdID = PerkDef table
+local validPerks = {} -- unitDefID = {perkCmdID = true, etc}
 local currentPerks = {} -- currentPerks = {unitID = {perk1 = true, perk2 = true}}
 
 local perkInclude = VFS.Include("LuaRules/Configs/perk_defs.lua")
@@ -98,10 +99,17 @@ function gadget:UnitCreated(unitID, unitDefID, teamID, builderID)
 	if cp and cp.unittype == "mech" then
 		-- Only give perks to mech pilots
 		currentPerks[unitID] = {}
+		if not validPerks[unitDefID] then validPerks[unitDefID] = {} end
 		for perkCmdID, perkDef in pairs(perkDefs) do -- using pairs here means perks aren't in order, use Find?
 			local perkCmdDesc = perkDef.cmdDesc
-			-- Don't add perks that can't be used on this mech
-			if perkDef.valid(unitDefID) then
+			-- first check valid cache
+			local isValid = validPerks[unitDefID][perkCmdID]
+			if isValid == nil then -- first time this kind of unit is produced (hence specific nil check)... 
+				-- ...check if the perk is valid and cache the result
+				isValid = perkDef.valid(unitDefID)
+				validPerks[unitDefID][perkCmdID] = isValid
+			end
+			if isValid then -- Only add perks valid for this mech
 				InsertUnitCmdDesc(unitID, perkCmdDesc)
 			else
 				-- treat invalid perks as though they were already trained
