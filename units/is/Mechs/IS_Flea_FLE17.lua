@@ -1,16 +1,18 @@
-local IS_Locust = {
-	name              	= "Locust",
+local IS_Flea_FLE17 = {
+	name              	= "Flea FLE-17",
 	description         = "Light Scout Mech",
-	objectName        	= "IS_Locust.s3o",
+	objectName        	= "IS_Flea_FLE17.s3o",
 	iconType			= "lightmech",
 	script				= "Mech.lua",
-	corpse				= "IS_Locust_X",
+	corpse				= "IS_Flea_X",
 	explodeAs          	= "mechexplode",
 	category 			= "mech ground notbeacon",
 	noChaseCategory		= "beacon air",
+	sightDistance       = 800,
+	radarDistance      	= 1500,
 		activateWhenBuilt   = true,
 		onoffable           = true,
-	maxDamage           = 5300,
+	maxDamage           = 4800,
 	mass                = 2000,
 	footprintX			= 2,
 	footprintZ 			= 2,
@@ -37,13 +39,13 @@ local IS_Locust = {
 		--Makes unit use weapon from /weapons folder
 		weapons 		= {	
 			[1] = {
-				name	= "SBL",
+				name	= "MPL",
 				mainDir = "0 0 1",
 				maxAngleDif = 180,
 				OnlyTargetCategory = "notbeacon",
 			},
 			[2] = {
-				name	= "SBL",
+				name	= "MPL",
 				mainDir = "0 0 1",
 				maxAngleDif = 180,
 				OnlyTargetCategory = "notbeacon",
@@ -64,7 +66,7 @@ local IS_Locust = {
 				SlaveTo = 1,
 			},
 			[5] = {
-				name	= "MBL",
+				name	= "Flamer",
 				mainDir = "0 0 1",
 				maxAngleDif = 180,
 				OnlyTargetCategory = "notbeacon",
@@ -81,11 +83,11 @@ local IS_Locust = {
 	},]]
     customparams = {
 		hasturnbutton	= "1",
-		helptext		= "Armament: 1 x Medium Beam Laser, 2 x Medium Pulse Laser, 2 x Small Pulse Laser - Armor: 4 tons",
+		helptext		= "Armament: 2 x Medium Pulse Laser, 2 x Small Beam Laser, 1 x Flamer - Armor: 3 tons Standard",
 		heatlimit		= "10",
 		torsoturnspeed	= "195",
 		unittype		= "mech",
     },
 }
 
-return lowerkeys({ ["IS_Locust"] = IS_Locust })
+return lowerkeys({ ["IS_Flea_FLE17"] = IS_Flea_FLE17 })
