@@ -8,8 +8,6 @@ local IS_Wolfhound_WLF3S = {
 	explodeAs          	= "mechexplode",
 	category 			= "mech ground notbeacon",
 	noChaseCategory		= "beacon air",
-	sightDistance       = 1200,
-	radarDistance      	= 2000,
 		activateWhenBuilt   = true,
 		onoffable           = true,
 	maxDamage           = 11900,
@@ -33,7 +31,6 @@ local IS_Wolfhound_WLF3S = {
 	canMove				= true,
 		movementClass   = "SMALLMECH",
 		maxVelocity		= 4.5, --90kph/20
-		turnRate 		= 900,
 		smoothAnim		= 1,
 	
 	canAttack 			= true,

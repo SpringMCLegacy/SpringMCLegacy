@@ -8,8 +8,6 @@ local IS_Osiris_OSR4D = {
 	explodeAs          	= "mechexplode",
 	category 			= "mech ground notbeacon",
 	noChaseCategory		= "beacon air",
-	sightDistance       = 800,
-	radarDistance      	= 1500,
 		activateWhenBuilt   = true,
 		onoffable           = true,
 	maxDamage           = 9800,
@@ -33,7 +31,6 @@ local IS_Osiris_OSR4D = {
 	canMove				= true,
 		movementClass   = "SMALLMECH",
 		maxVelocity		= 6, --120kph/20
-		turnRate 		= 1000,
 		smoothAnim		= 1,
 	
 	canAttack 			= true,

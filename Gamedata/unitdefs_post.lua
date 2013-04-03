@@ -59,9 +59,19 @@ for name, ud in pairs(UnitDefs) do
 			ud.buildtime = HANGAR_DISTANCE / (speed * 0.5)
 		end
 	end
-	-- set velocity by modoption
+	-- set maxvelocity by modoption
 	ud.maxvelocity = (ud.maxvelocity or 0) * (modOptions.speed or 1)
+	-- calculate reverse, acceleration, brake and turning speed based on maxvelocity
 	ud.maxreversevelocity = ud.maxvelocity / 1.5
 	ud.acceleration = ud.maxvelocity / 4
 	ud.brakerate = ud.maxvelocity / 25
+	ud.turnrate = ud.maxvelocity * 200
+	-- set sightrange/radardistance based on hasbap customparam
+	if ud.customparams.hasbap == "true" then
+		ud.sightrange = 2000
+		ud.radardistance = 4000
+	else
+		ud.sightrange = 1000
+		ud.radardistance = 2000
+	end
 end

@@ -8,8 +8,6 @@ local IS_Atlas_AS7K = {
 	explodeAs          	= "mechexplode",
 	category 			= "mech ground notbeacon",
 	noChaseCategory		= "beacon air",
-	sightDistance       = 800,
-	radarDistance      	= 1500,
 		activateWhenBuilt   = true,
 		onoffable           = true,
 	maxDamage           = 30400,
@@ -33,7 +31,6 @@ local IS_Atlas_AS7K = {
 	canMove				= true,
 		movementClass   = "LARGEMECH",
 		maxVelocity		= 2.5, --50kph/20
-		turnRate 		= 600,
 		smoothAnim		= 1,
 	
 	canAttack 			= true,

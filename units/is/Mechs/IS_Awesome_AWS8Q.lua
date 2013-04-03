@@ -8,8 +8,6 @@ local IS_Awesome_AWS8Q = {
 	explodeAs          	= "mechexplode",
 	category 			= "mech ground notbeacon",
 	noChaseCategory		= "beacon air",
-	sightDistance       = 800,
-	radarDistance      	= 1500,
 		activateWhenBuilt   = true,
 		onoffable           = true,
 	maxDamage           = 24000,
@@ -33,7 +31,6 @@ local IS_Awesome_AWS8Q = {
 	canMove				= true,
 		movementClass   = "LARGEMECH",
 		maxVelocity		= 2.5, --50kph/20
-		turnRate 		= 600,
 		smoothAnim		= 1,
 	
 	canAttack 			= true,
