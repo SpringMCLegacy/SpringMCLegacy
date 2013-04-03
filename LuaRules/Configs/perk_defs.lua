@@ -5,6 +5,14 @@ local GetCmdID = GG.CustomCommands.GetCmdID
 local function allMechs(unitDefID) return true end
 local function hasJumpjets(unitDefID) return (UnitDefs[unitDefID].customParams.canjump or false) end
 
+local function hasWeaponName(unitDefID, weapName)
+	local weapons = UnitDefs[unitDefID].weapons
+	for weapNum, weapTable in pairs(weapons) do 
+		if weapTable["weaponDef"] == WeaponDefNames[weapName:lower()].id then return true end
+	end
+	return false
+end
+
 return {
 	heatcapacity = {
 		cmdDesc = {
@@ -84,6 +92,21 @@ return {
 			local currLos = Spring.GetUnitSensorRadius(unitID, "los")
 			Spring.SetUnitSensorRadius(unitID, "radar", currRadar * 1.5)
 			Spring.SetUnitSensorRadius(unitID, "los", currLos * 1.5)
+		end,
+	},
+	narcduration = {
+		cmdDesc = {
+			id = GetCmdID('PERK_NARC_DURATION'),
+			action = 'perknarkduration',
+			name = '  NARC:\n  Duration  ',
+			tooltip = '+50% NARC duration',
+			texture = 'unitpics/is_raven.png',	
+		},
+		valid = function (unitDefID) return hasWeaponName(unitDefID, "NARC") end,
+		applyPerk = function (unitID) 
+			--Spring.Echo("Sensor range selected") 
+			local currDuration = Spring.GetUnitRulesParam(unitID, "NARC_DURATION") or Spring.GetGameRulesParam("NARC_DURATION")
+			Spring.SetUnitRulesParam(unitID, "NARC_DURATION", currDuration * 1.5)
 		end,
 	},
 }
