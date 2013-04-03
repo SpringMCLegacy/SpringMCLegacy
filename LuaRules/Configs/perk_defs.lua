@@ -69,4 +69,21 @@ return {
 			Spring.SetUnitRulesParam(unitID, "jumpReload", currReload * 0.5)
 		end,
 	},
+	sensorrange = {
+		cmdDesc = {
+			id = GetCmdID('PERK_SENSORS_RANGE'),
+			action = 'perksensorsrange',
+			name = '  Sensors:\n  Range     ',
+			tooltip = '+50% Radar and LOS range',
+			texture = 'unitpics/is_owens.png',	
+		},
+		valid = allMechs,
+		applyPerk = function (unitID) 
+			--Spring.Echo("Sensor range selected") 
+			local currRadar = Spring.GetUnitSensorRadius(unitID, "radar")
+			local currLos = Spring.GetUnitSensorRadius(unitID, "los")
+			Spring.SetUnitSensorRadius(unitID, "radar", currRadar * 1.5)
+			Spring.SetUnitSensorRadius(unitID, "los", currLos * 1.5)
+		end,
+	},
 }
