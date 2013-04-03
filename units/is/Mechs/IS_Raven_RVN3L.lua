@@ -10,7 +10,6 @@ local IS_Raven_RVN3L = {
 	noChaseCategory		= "beacon air",
 		activateWhenBuilt   = true,
 		onoffable           = true,
-		radarDistanceJam    = 500,
 	maxDamage           = 8000,
 	mass                = 3500,
 	footprintX			= 2,
