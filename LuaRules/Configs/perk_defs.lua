@@ -1,3 +1,6 @@
+-- Use the automatic CMD ID generator
+local GetCmdID = GG.CustomCommands.GetCmdID
+
 -- Common valid() functions here:
 local function allMechs(unitDefID) return true end
 local function hasJumpjets(unitDefID) return (UnitDefs[unitDefID].customParams.canjump or false) end
@@ -5,7 +8,7 @@ local function hasJumpjets(unitDefID) return (UnitDefs[unitDefID].customParams.c
 return {
 	heatcapacity = {
 		cmdDesc = {
-			id = 1000,
+			id = GetCmdID('PERK_HEAT_CAPACITY'),
 			action = 'perkheatcapacity',
 			name = '  Heat:\n  Capacity  ',
 			tooltip = '+50% Heat capacity',
@@ -21,7 +24,7 @@ return {
 	},
 	heatdissapate = {
 		cmdDesc = {
-			id = 1001,
+			id = GetCmdID('PERK_HEAT_DISSIPATE'),
 			action = 'perkheatsdissipate',
 			name = '  Heat:\n  Dissipate ',
 			tooltip = '+50% Heat disiapation rate',
@@ -36,7 +39,7 @@ return {
 	},
 	jumpjetrange = {
 		cmdDesc = {
-			id = 1002,
+			id = GetCmdID('PERK_JUMP_RANGE'),
 			action = 'perkjumpjetrange',
 			name = '  Jump:\n  Range     ',
 			tooltip = '+50% Jump range & speed',
@@ -53,7 +56,7 @@ return {
 	},
 	jumpjetreload = {
 		cmdDesc = {
-			id = 1003,
+			id = GetCmdID('PERK_JUMP_RELOAD'),
 			action = 'perkjumpjetreload',
 			name = '  Jump:\n  Reload    ',
 			tooltip = '-50% Jump reload time',

@@ -16,13 +16,13 @@ local SetUnitCOBValue = Spring.SetUnitCOBValue
 local GetUnitCOBValue = Spring.GetUnitCOBValue
 local GetUnitPosition = Spring.GetUnitPosition
 -- Constants
-local CMD_TURN = 35521 -- this should be changed, we really need some centralised 'commands.h.lua' file with our used command ids
+local CMD_TURN = GG.CustomCommands.GetCmdID("CMD_TURN")
 local COB_ANGULAR = 182
 
 local turnCmdDesc = {
 	id = CMD_TURN,
 	type = CMDTYPE.ICON_MAP,
-	name = "Turn",
+	name = "   Turn    ",
 	action = "turn",
 	tooltip = "Turn to face a given point",
 	cursor = "Patrol",
@@ -71,10 +71,6 @@ function gadget:GameFrame(n)
 	end
 end
 
-function gadget:Initialize()
-	gadgetHandler:RegisterCMDID(CMD_TURN)
-end
-
 function gadget:UnitCreated(unitID, unitDefID, unitTeam, builderID)
 	local ud = UnitDefs[unitDefID]
 	if ud.customParams.hasturnbutton then
@@ -114,6 +110,7 @@ else
 -- UNSYNCED
 function gadget:Initialize()
 	Spring.SetCustomCommandDrawData(CMD_TURN, "Patrol", {0,1,0,.8})
+	Spring.SendCommands({"bind t turn"})
 end
 
 end
