@@ -16,8 +16,11 @@ include "smokeunit.lua"
 include ("walks/" .. unitDef.name .. "_walk.lua")
 
 -- Info from lusHelper gadget
-heatLimit = info.heatLimit -- non-local so perks can change it (flagrant lack of encapsulation!)
-local coolRate = info.coolRate * 2
+-- non-local so perks can change them (flagrant lack of encapsulation!)
+heatLimit = info.heatLimit 
+baseCoolRate = info.coolRate * 2
+
+local coolRate = baseCoolRate
 local inWater = false
 local missileWeaponIDs = info.missileWeaponIDs
 local launcherIDs = info.launcherIDs
@@ -93,12 +96,12 @@ local function CoolOff()
 	-- lusHelper info
 	local reloadTimes = info.reloadTimes
 	local numWeapons = info.numWeapons
-	local baseCoolRate = info.coolRate
 	-- variables	
 	local heatElevated = false
 	local heatCritical = false
 	while true do
 		local heatElevatedLimit = 0.5 * heatLimit
+		coolRate = baseCoolRate -- reset coolRate in case of perk
 		if inWater then
 			local x, _, z = GetUnitBasePosition(unitID)
 			local depth = max(4, GetGroundHeight(x, z) / -3)
@@ -154,7 +157,7 @@ function script.setSFXoccupy(terrainType)
 		inWater = true
 	else
 		inWater = false
-		coolRate = info.coolRate * 2
+		coolRate = baseCoolRate
 	end
 end
 
