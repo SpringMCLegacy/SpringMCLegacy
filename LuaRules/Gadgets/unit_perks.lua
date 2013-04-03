@@ -99,17 +99,17 @@ function gadget:UnitCreated(unitID, unitDefID, teamID, builderID)
 	if cp and cp.unittype == "mech" then
 		-- Only give perks to mech pilots
 		currentPerks[unitID] = {}
-		if not validPerks[unitDefID] then validPerks[unitDefID] = {} end
+		local firstTime = not validPerks[unitDefID]
+		if firstTime then 
+			validPerks[unitDefID] = {} 
+		end
 		for perkCmdID, perkDef in pairs(perkDefs) do -- using pairs here means perks aren't in order, use Find?
 			local perkCmdDesc = perkDef.cmdDesc
-			-- first check valid cache
-			local isValid = validPerks[unitDefID][perkCmdID]
-			if isValid == nil then -- first time this kind of unit is produced (hence specific nil check)... 
+			if firstTime then -- first time this kind of unit is produced... 
 				-- ...check if the perk is valid and cache the result
-				isValid = perkDef.valid(unitDefID)
-				validPerks[unitDefID][perkCmdID] = isValid
+				validPerks[unitDefID][perkCmdID] = perkDef.valid(unitDefID)
 			end
-			if isValid then -- Only add perks valid for this mech
+			if validPerks[unitDefID][perkCmdID] then -- Only add perks valid for this mech
 				InsertUnitCmdDesc(unitID, perkCmdDesc)
 			else
 				-- treat invalid perks as though they were already trained
