@@ -2,16 +2,35 @@
 local GetCmdID = GG.CustomCommands.GetCmdID
 
 -- Common valid() functions here:
-local function allMechs(unitDefID) Spring.Echo("valid: allMechs") return true end
-local function hasJumpjets(unitDefID) Spring.Echo("valid: hasJumpjets") return (UnitDefs[unitDefID].customParams.canjump or false) end
+local function allMechs(unitDefID) return true end
+local function hasJumpjets(unitDefID) return (UnitDefs[unitDefID].customParams.canjump or false) end
 
 local function hasWeaponName(unitDefID, weapName)
-	Spring.Echo("valid: hasWeaponName")
 	local weapons = UnitDefs[unitDefID].weapons
 	for weapNum, weapTable in pairs(weapons) do 
 		if weapTable["weaponDef"] == WeaponDefNames[weapName:lower()].id then return true end
 	end
 	return false
+end
+
+local function hasWeaponClass(unitDefID, className) -- projectile, energy, missile
+	local weapons = UnitDefs[unitDefID].weapons
+	for weapNum, weapTable in pairs(weapons) do 
+		if WeaponDefs[weapTable["weaponDef"]].customParams["weaponclass"] == className then return true end
+	end
+	return false
+end	
+
+-- Common apply() functions
+local function setWeaponClassAttribute(unitID, className, attrib, multiplier)
+	local weapons = UnitDefs[Spring.GetUnitDefID(unitID)].weapons
+	for weapNum, weapTable in pairs(weapons) do
+		if WeaponDefs[weapTable["weaponDef"]].customParams["weaponclass"] == className then
+			local currAttrib = Spring.GetUnitWeaponState(unitID, weapNum - 1, attrib)
+			Spring.Echo("Current " .. attrib .. ": ", currAttrib, weapNum, WeaponDefs[weapTable["weaponDef"]].name)
+			Spring.SetUnitWeaponState(unitID, weapNum - 1, attrib, currAttrib * multiplier)
+		end
+	end
 end
 
 return {
@@ -110,6 +129,48 @@ return {
 			--Spring.Echo("Sensor range selected") 
 			local currDuration = Spring.GetUnitRulesParam(unitID, "NARC_DURATION") or Spring.GetGameRulesParam("NARC_DURATION")
 			Spring.SetUnitRulesParam(unitID, "NARC_DURATION", currDuration * 1.5)
+		end,
+	},
+	missilerange = {
+		cmdDesc = {
+			id = GetCmdID('PERK_MISSILE_RANGE'),
+			action = 'perkmissilerange',
+			name = '  Missiles:\n  Range     ',
+			tooltip = '+50% Missile Range',
+			texture = 'unitpics/is_catapult.png',	
+		},
+		valid = function (unitDefID) return hasWeaponClass(unitDefID, "missile") end,
+		applyPerk = function (unitID) 
+			--Spring.Echo("Missile range selected") 
+			setWeaponClassAttribute(unitID, "missile", "range", 1.5)
+		end,
+	},
+	energyrange = {
+		cmdDesc = {
+			id = GetCmdID('PERK_ENERGY_RANGE'),
+			action = 'perkenergyrange',
+			name = '  Energy:\n  Range     ',
+			tooltip = '+50% Energy Weapon Range',
+			texture = 'unitpics/cl_nova.png',	
+		},
+		valid = function (unitDefID) return hasWeaponClass(unitDefID, "energy") end,
+		applyPerk = function (unitID) 
+			--Spring.Echo("Energy range selected") 
+			setWeaponClassAttribute(unitID, "energy", "range", 1.5)
+		end,
+	},
+	projectilerange = {
+		cmdDesc = {
+			id = GetCmdID('PERK_PROJECTILE_RANGE'),
+			action = 'perkprojectilerange',
+			name = '  Projectile:\n  Range     ',
+			tooltip = '+50% Projectile Weapon Range',
+			texture = 'unitpics/is_hollander.png',	
+		},
+		valid = function (unitDefID) return hasWeaponClass(unitDefID, "projectile") end,
+		applyPerk = function (unitID) 
+			--Spring.Echo("Energy range selected") 
+			setWeaponClassAttribute(unitID, "projectile", "range", 1.5)
 		end,
 	},
 }
