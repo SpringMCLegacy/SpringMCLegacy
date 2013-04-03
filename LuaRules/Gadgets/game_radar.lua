@@ -19,6 +19,7 @@ local SetUnitRulesParam	= Spring.SetUnitRulesParam
 -- Synced Read
 local GetGameFrame 		= Spring.GetGameFrame
 local GetTeamInfo		= Spring.GetTeamInfo
+local GetUnitRulesParam	= Spring.GetUnitRulesParam
 -- Synced Ctrl
 local SetUnitLosMask 	= Spring.SetUnitLosMask
 local SetUnitLosState 	= Spring.SetUnitLosState
@@ -27,6 +28,7 @@ local SetUnitLosState 	= Spring.SetUnitLosState
 -- Constants
 local NARC_ID = WeaponDefNames["narc"].id
 local NARC_DURATION = 32 * 60 -- 30 seconds
+Spring.SetGameRulesParam("NARC_DURATION", NARC_DURATION)
 
 -- Variables
 local modOptions = Spring.GetModOptions()
@@ -44,13 +46,13 @@ end
 
 local narcUnits = {}
 
-local function NARC(unitID, allyTeam)
-	local narcFrame = GetGameFrame() + NARC_DURATION
+local function NARC(unitID, allyTeam, duration)
+	local narcFrame = GetGameFrame() + duration
 	narcUnits[unitID] = narcFrame
 	SetUnitLosState(unitID, allyTeam, {los=true, prevLos=true, radar=true, contRadar=true} ) 
 	SetUnitLosMask(unitID, allyTeam, {los=true, prevLos=false, radar=false, contRadar=false} )	
 	-- Set rules param here so that widgets know the unit is NARCed, value points to the frame NARC runs out
-	SetUnitRulesParam(unitID, "NARC", GetGameFrame() + NARC_DURATION, {inlos = true})
+	SetUnitRulesParam(unitID, "NARC", narcFrame, {inlos = true})
 end
 
 local function DeNARC(unitID, allyTeam)
@@ -74,13 +76,14 @@ function gadget:UnitLeftRadar(unitID, unitTeam, allyTeam, unitDefID)
 	inRadarUnits[allyTeam][unitID] = nil
 end
 
-function gadget:UnitPreDamaged(unitID, unitDefID, unitTeam, damage, paralyzer, weaponID, attackerID, attackerDefID, attackerTeam)
+function gadget:UnitPreDamaged(unitID, unitDefID, unitTeam, damage, paralyzer, weaponID, projectileID, attackerID, attackerDefID, attackerTeam)
 	-- ignore non-NARC weapons
 	if weaponID ~= NARC_ID or not attackerID then return damage end
 	local allyTeam = select(6, GetTeamInfo(attackerTeam))
 	-- do the NARC, delay the deNARC
-	NARC(unitID, allyTeam)
-	DelayCall(DeNARC, {unitID, allyTeam}, NARC_DURATION)
+	local duration = GetUnitRulesParam(attackerID, "NARC_DURATION") or NARC_DURATION
+	NARC(unitID, allyTeam, duration)
+	DelayCall(DeNARC, {unitID, allyTeam}, duration)
 	-- NARC does 0 damage
 	return 0
 end

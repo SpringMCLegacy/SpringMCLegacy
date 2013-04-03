@@ -5,7 +5,7 @@ function gadget:GetInfo()
 		author = "FLOZi (C. Lawrence)",
 		date = "31/03/2013",
 		license = "GNU GPL v2",
-		layer = 1,
+		layer = 2, -- run after game_radar
 		enabled = true
 	}
 end
@@ -98,7 +98,7 @@ function gadget:UnitCreated(unitID, unitDefID, teamID, builderID)
 	if cp and cp.unittype == "mech" then
 		-- Only give perks to mech pilots
 		currentPerks[unitID] = {}
-		for perkCmdID, perkDef in pairs(perkDefs) do
+		for perkCmdID, perkDef in pairs(perkDefs) do -- using pairs here means perks aren't in order, use Find?
 			local perkCmdDesc = perkDef.cmdDesc
 			-- Don't add perks that can't be used on this mech
 			if perkDef.valid(unitDefID) then
