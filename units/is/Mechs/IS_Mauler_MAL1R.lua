@@ -1,9 +1,9 @@
 local IS_Mauler_MAL1R = {
 	name              	= "Mauler MAL-1R",
-	description         = "Assault-class Sniper Mech",
+	description         = "Assault-class Striker/Support Mech",
 	objectName        	= "IS_Mauler_MAL1R.s3o",
 	script				= "Mech.lua",
-	corpse				= "KH_Mauler_X",
+	corpse				= "IS_Mauler_X",
 	explodeAs          	= "mechexplode",
 	category 			= "mech ground notbeacon",
 		activateWhenBuilt   = true,
