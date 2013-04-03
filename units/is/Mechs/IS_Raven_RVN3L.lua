@@ -1,7 +1,7 @@
 local IS_Raven_RVN3L = {
 	name              	= "Raven RVN-3L",
 	description         = "Light ECM Scout Mech",
-	objectName        	= "IS_Raven.s3o",
+	objectName        	= "IS_Raven_RVN3L.s3o",
 	iconType			= "lightmech",
 	script				= "Mech.lua",
 	corpse				= "IS_Raven_X",
