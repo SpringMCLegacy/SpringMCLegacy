@@ -8,8 +8,6 @@ local IS_Hollander_BZKF3 = {
 	explodeAs          	= "mechexplode",
 	category 			= "mech ground notbeacon",
 	noChaseCategory		= "beacon air",
-	sightDistance       = 800,
-	radarDistance      	= 1500,
 		activateWhenBuilt   = true,
 		onoffable           = true,
 	maxDamage           = 7100,
@@ -33,7 +31,6 @@ local IS_Hollander_BZKF3 = {
 	canMove				= true,
 		movementClass   = "SMALLMECH",
 		maxVelocity		= 4, --80kph/20
-		turnRate 		= 900,
 		smoothAnim		= 1,
 	
 	canAttack 			= true,

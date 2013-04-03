@@ -8,8 +8,6 @@ local IS_Catapult_CPLTC4 = {
 	explodeAs          	= "mechexplode",
 	category 			= "mech ground notbeacon",
 	noChaseCategory		= "beacon air",
-	sightDistance       = 800,
-	radarDistance      	= 1500,
 		activateWhenBuilt   = true,
 		onoffable           = true,
 	maxDamage           = 16000,
@@ -33,7 +31,6 @@ local IS_Catapult_CPLTC4 = {
 	canMove				= true,
 		movementClass   = "LARGEMECH",
 		maxVelocity		= 3, --60kph/20
-		turnRate 		= 650,
 		smoothAnim		= 1,
 	
 	canAttack 			= true,

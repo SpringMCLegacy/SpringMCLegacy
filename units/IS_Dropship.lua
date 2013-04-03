@@ -5,8 +5,6 @@ local IS_Dropship = {
 	iconType			= "dropship",
 	script				= "Dropship.lua",
 	category 			= "dropship structure notbeacon",
-	sightDistance       = 1000,
-	radarDistance      	= 1500,
 		activateWhenBuilt   = true,
 	maxDamage           = 180000,
 	mass                = 36000,
@@ -218,6 +216,7 @@ local IS_Dropship = {
 		ammosupplier	= "0",
 		supplyradius	= "0",
 		helptext		= "A Dropship",
+		hasbap			= true,
     },
 	sounds = {
     underattack        = "Dropship_Alarm",

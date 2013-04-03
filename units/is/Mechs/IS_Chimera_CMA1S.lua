@@ -8,8 +8,6 @@ local IS_Chimera_CMA1S = {
 	explodeAs          	= "mechexplode",
 	category 			= "mech ground notbeacon",
 	noChaseCategory		= "beacon air",
-	sightDistance       = 800,
-	radarDistance      	= 1500,
 		activateWhenBuilt   = true,
 		onoffable           = true,
 	maxDamage           = 11200,
@@ -33,7 +31,6 @@ local IS_Chimera_CMA1S = {
 	canMove				= true,
 		movementClass   = "SMALLMECH",
 		maxVelocity		= 4.5, --90kph/20
-		turnRate 		= 800,
 		smoothAnim		= 1,
 	
 	canAttack 			= true,

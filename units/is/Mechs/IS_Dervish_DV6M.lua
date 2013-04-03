@@ -8,8 +8,6 @@ local IS_Dervish_DV6M = {
 	explodeAs          	= "mechexplode",
 	category 			= "mech ground notbeacon",
 	noChaseCategory		= "beacon air",
-	sightDistance       = 800,
-	radarDistance      	= 1500,
 		activateWhenBuilt   = true,
 		onoffable           = true,
 	maxDamage           = 12000,
@@ -33,7 +31,6 @@ local IS_Dervish_DV6M = {
 	canMove				= true,
 		movementClass   = "SMALLMECH",
 		maxVelocity		= 4, --80kph/20
-		turnRate 		= 700,
 		smoothAnim		= 1,
 	
 	canAttack 			= true,

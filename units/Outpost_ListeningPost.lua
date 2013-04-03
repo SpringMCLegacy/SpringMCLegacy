@@ -5,8 +5,6 @@ local Outpost_ListeningPost = {
 	script				= "Outpost_ListeningPost.lua",
 	iconType			= "beacon",
 	category 			= "structure beacon",
-	sightDistance       = 1200,
-	radarDistance      	= 2000,
 		activateWhenBuilt   = true,
 	maxDamage           = 22000,
 	mass                = 5000,
@@ -29,6 +27,7 @@ local Outpost_ListeningPost = {
 	customparams = {
 		dontcount		= 1,
 		helptext		= "An observation outpost equipped with advanced sensors.",
+		hasbap			= true,
     },
 	--sounds = {
     --underattack        = "Dropship_Alarm",
