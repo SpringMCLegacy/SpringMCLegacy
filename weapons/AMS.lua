@@ -3,7 +3,7 @@ weaponDef = {
 		
 	weaponType              = "Cannon",
 	explosionGenerator    	= "custom:MG_Hit",
-	soundHit              	= [[MG_Hit]],
+--	soundHit              	= [[MG_Hit]],
 	soundStart            	= [[MG_Fire]],
 	soundTrigger			= 1,
 	burnblow				= false, 	--Bullets explode at range limit.
