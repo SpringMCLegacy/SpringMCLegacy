@@ -90,8 +90,10 @@ return {
 			--Spring.Echo("Sensor range selected") 
 			local currRadar = Spring.GetUnitSensorRadius(unitID, "radar")
 			local currLos = Spring.GetUnitSensorRadius(unitID, "los")
+			local currAirLos = Spring.GetUnitSensorRadius(unitID, "airlos")
 			Spring.SetUnitSensorRadius(unitID, "radar", currRadar * 1.5)
 			Spring.SetUnitSensorRadius(unitID, "los", currLos * 1.5)
+			Spring.SetUnitSensorRadius(unitID, "airlos", currAirLos * 1.5)
 		end,
 	},
 	narcduration = {
