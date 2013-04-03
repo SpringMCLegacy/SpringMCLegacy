@@ -70,7 +70,7 @@ function gadget:AllowCommand(unitID, unitDefID, teamID, cmdID, cmdParams, cmdOpt
 		-- check that this unit can receive this perk (can be issued the order due to multiple units selected)
 		if cp and cp.unittype == "mech" and perkDef.valid(unitDefID) then
 			perkDef.applyPerk(unitID)
-			EditUnitCmdDesc(unitID, FindUnitCmdDesc(unitID, cmdID), {name = perkDef.cmdDesc.name .."\n(Trained)", disabled = true})
+			EditUnitCmdDesc(unitID, FindUnitCmdDesc(unitID, cmdID), {name = perkDef.cmdDesc.name .."\n  (Trained)", disabled = true})
 			currentPerks[unitID][perkDef.name] = true
 			-- deduct xp 'cost' of perk
 			local currExp = GetUnitExperience(unitID)
