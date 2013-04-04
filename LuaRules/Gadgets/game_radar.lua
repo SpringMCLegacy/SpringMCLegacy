@@ -19,6 +19,7 @@ local SetUnitRulesParam	= Spring.SetUnitRulesParam
 -- Synced Read
 local GetGameFrame 		= Spring.GetGameFrame
 local GetTeamInfo		= Spring.GetTeamInfo
+local GetUnitLosState	= Spring.GetUnitLosState
 local GetUnitRulesParam	= Spring.GetUnitRulesParam
 -- Synced Ctrl
 local SetUnitLosMask 	= Spring.SetUnitLosMask
@@ -58,9 +59,11 @@ end
 local function DeNARC(unitID, allyTeam)
 	if narcUnits[unitID] <= GetGameFrame() + 1 then
 		narcUnits[unitID] = nil
-		SetUnitLosMask(unitID, allyTeam, {los=false, prevLos=false, radar=false, contRadar=false} )
 		-- unset rules param
 		SetUnitRulesParam(unitID, "NARC", -1, {inlos = true})
+		local radarState = GetUnitLosState(unitID, allyTeam).radar
+		SetUnitLosState(unitID, allyTeam, {los = radarState})
+		SetUnitLosMask(unitID, allyTeam, {los=radarState, prevLos=radarState, radar=false, contRadar=false} )
 	end
 end
 
@@ -71,7 +74,7 @@ function gadget:UnitEnteredRadar(unitID, unitTeam, allyTeam, unitDefID)
 end
 
 function gadget:UnitLeftRadar(unitID, unitTeam, allyTeam, unitDefID)
-	--Spring.Echo(UnitDefs[unitDefID].name .. " left radar" .. allyTeam)
+	--Spring.Echo(UnitDefs[unitDefID].name .. " left radar " .. allyTeam)
 	outRadarUnits[allyTeam][unitID] = true
 	inRadarUnits[allyTeam][unitID] = nil
 end
