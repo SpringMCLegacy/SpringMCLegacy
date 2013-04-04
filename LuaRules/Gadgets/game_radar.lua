@@ -19,6 +19,7 @@ local SetUnitRulesParam	= Spring.SetUnitRulesParam
 -- Synced Read
 local GetGameFrame 		= Spring.GetGameFrame
 local GetTeamInfo		= Spring.GetTeamInfo
+local GetUnitIsDead 	= Spring.GetUnitIsDead
 local GetUnitLosState	= Spring.GetUnitLosState
 local GetUnitRulesParam	= Spring.GetUnitRulesParam
 -- Synced Ctrl
@@ -57,7 +58,7 @@ local function NARC(unitID, allyTeam, duration)
 end
 
 local function DeNARC(unitID, allyTeam)
-	if narcUnits[unitID] <= GetGameFrame() + 1 then
+	if not GetUnitIsDead(unitID) and narcUnits[unitID] <= GetGameFrame() + 1 then
 		narcUnits[unitID] = nil
 		-- unset rules param
 		SetUnitRulesParam(unitID, "NARC", -1, {inlos = true})
@@ -89,6 +90,14 @@ function gadget:UnitPreDamaged(unitID, unitDefID, unitTeam, damage, paralyzer, w
 	DelayCall(DeNARC, {unitID, allyTeam}, duration)
 	-- NARC does 0 damage
 	return 0
+end
+
+function gadget:UnitDestroyed(unitID, unitDefID, teamID)
+	for i = 1, numAllyTeams do
+		local allyTeam = allyTeams[i]
+		inRadarUnits[allyTeam][unitID] = nil
+		outRadarUnits[allyTeam][unitID] = nil
+	end
 end
 
 function gadget:GameFrame(n)
