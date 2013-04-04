@@ -58,7 +58,7 @@ local function NARC(unitID, allyTeam, duration)
 end
 
 local function DeNARC(unitID, allyTeam)
-	if not GetUnitIsDead(unitID) and narcUnits[unitID] <= GetGameFrame() + 1 then
+	if not GetUnitIsDead(unitID) and narcUnits[unitID] and narcUnits[unitID] <= GetGameFrame() + 1 then
 		narcUnits[unitID] = nil
 		-- unset rules param
 		SetUnitRulesParam(unitID, "NARC", -1, {inlos = true})
@@ -98,6 +98,7 @@ function gadget:UnitDestroyed(unitID, unitDefID, teamID)
 		inRadarUnits[allyTeam][unitID] = nil
 		outRadarUnits[allyTeam][unitID] = nil
 	end
+	narcUnits[unitID] = nil
 end
 
 function gadget:GameFrame(n)
