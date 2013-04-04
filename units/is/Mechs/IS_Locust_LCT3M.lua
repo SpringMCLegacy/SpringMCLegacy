@@ -1,7 +1,7 @@
-local IS_Locust = {
-	name              	= "Locust",
+local IS_Locust_LCT3M = {
+	name              	= "Locust LCT-3M",
 	description         = "Light Scout Mech",
-	objectName        	= "IS_Locust.s3o",
+	objectName        	= "IS_Locust_LCT3M.s3o",
 	iconType			= "lightmech",
 	script				= "Mech.lua",
 	corpse				= "IS_Locust_X",
@@ -37,7 +37,7 @@ local IS_Locust = {
 		--Makes unit use weapon from /weapons folder
 		weapons 		= {	
 			[1] = {
-				name	= "SBL",
+				name	= "MBL",
 				mainDir = "0 0 1",
 				maxAngleDif = 180,
 				OnlyTargetCategory = "notbeacon",
@@ -64,11 +64,14 @@ local IS_Locust = {
 				SlaveTo = 1,
 			},
 			[5] = {
-				name	= "MBL",
+				name	= "SBL",
 				mainDir = "0 0 1",
 				maxAngleDif = 180,
 				OnlyTargetCategory = "notbeacon",
 				SlaveTo = 1,
+			},
+			[6] = {
+				name	= "AMS",
 			},
 		},
 		
@@ -81,11 +84,11 @@ local IS_Locust = {
 	},]]
     customparams = {
 		hasturnbutton	= "1",
-		helptext		= "Armament: 1 x Medium Beam Laser, 2 x Medium Pulse Laser, 2 x Small Pulse Laser - Armor: 4 tons",
+		helptext		= "Armament: 1 x Medium Beam Laser, 4 x Small Beam Laser - Armor: 3 tons",
 		heatlimit		= "10",
 		torsoturnspeed	= "195",
 		unittype		= "mech",
     },
 }
 
-return lowerkeys({ ["IS_Locust"] = IS_Locust })
+return lowerkeys({ ["IS_Locust_LCT3M"] = IS_Locust_LCT3M })
