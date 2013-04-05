@@ -6,7 +6,13 @@ function serializeTable(val, name, skipnewlines, depth)
 
     local tmp = string.rep(" ", depth)
 
-    if name then tmp = tmp .. "[" .. name .. "] = " end
+    if name then 
+		if tonumber(name) then -- wrap number indices
+			tmp = tmp .. "[" .. name .. "] = " 
+		else
+			tmp = tmp .. name .. " = " 
+		end
+	end
 
     if type(val) == "table" then
         tmp = tmp .. "{" .. (not skipnewlines and "\n" or "")
@@ -25,7 +31,6 @@ function serializeTable(val, name, skipnewlines, depth)
     else
         tmp = tmp .. "\"[inserializeable datatype:" .. type(val) .. "]\""
     end
-
     return tmp
 end
 
