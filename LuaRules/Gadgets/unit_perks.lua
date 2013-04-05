@@ -29,7 +29,7 @@ local SetUnitExperience		= Spring.SetUnitExperience
 
 -- Constants
 local MINIMUM_XP_INCREASE_TO_CHECK = 0.01
-local PERK_XP_COST = 0.2
+local PERK_XP_COST = 0.5
 -- Variables
 local perkDefs = {} -- perkCmdID = PerkDef table
 local validPerks = {} -- unitDefID = {perkCmdID = true, etc}
@@ -45,14 +45,14 @@ function gadget:Initialize()
 	Spring.SetExperienceGrade(MINIMUM_XP_INCREASE_TO_CHECK)
 end
 	
-function gadget:UnitExperience(unitID, unitDefID, teamID, gainedExp, totalExp)
-	--Spring.Echo("Unit " .. unitID .. " (" .. UnitDefs[unitDefID].name .. ") gained exp: " .. gainedExp)
+function gadget:UnitExperience(unitID, unitDefID, teamID, newExp, oldExp)
+	--Spring.Echo("Unit " .. unitID .. " (" .. UnitDefs[unitDefID].name .. ")", newExp, oldExp, newExp - oldExp, oldExp - newExp)
 	-- enable perks here
 	local ud = UnitDefs[unitDefID]
 	local cp = ud.customParams
 	if cp and cp.unittype == "mech" then
-		if totalExp > PERK_XP_COST then
-			Spring.Echo("Unit " .. unitID .. " (" .. UnitDefs[unitDefID].name .. ") ready to perk up! " .."(Exp: " .. totalExp ..")")
+		if newExp > PERK_XP_COST then
+			--Spring.Echo("Unit " .. unitID .. " (" .. UnitDefs[unitDefID].name .. ") ready to perk up! " .."(Exp: " .. newExp ..")")
 			for perkCmdID, perkDef in pairs(perkDefs) do
 				--Spring.Echo(perkCmdDesc.name, FindUnitCmdDesc(unitID, perkCmdDesc.id))
 				if not currentPerks[unitID][perkDef.name] then
