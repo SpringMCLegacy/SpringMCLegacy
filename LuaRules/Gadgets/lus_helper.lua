@@ -78,12 +78,14 @@ function gadget:GamePreload()
 		local burstLengths = {}
 		local firingHeats = {}		
 		local reloadTimes = {}
+		local ammoTypes = {}
 		for i = 1, #weapons do
 			local weaponInfo = weapons[i]
 			local weaponDef = WeaponDefs[weaponInfo.weaponDef]
 			reloadTimes[i] = weaponDef.reload
 			burstLengths[i] = weaponDef.salvoSize
 			firingHeats[i] = (weaponDef.customParams.heatgenerated or 0) * 0.5
+			ammoTypes[i] = weaponDef.customParams.ammotype -- intentionally nil otherwise
 			if weaponDef.type == "MissileLauncher" and weaponDef.name ~= "narc" then --burstLengths[i] > 1 then
 				missileWeaponIDs[i] = true
 			end
@@ -91,6 +93,13 @@ function gadget:GamePreload()
 				info.amsID = i
 			end
 		end
+		-- WeaponDef Level Info
+		info.missileWeaponIDs = missileWeaponIDs
+		info.reloadTimes = reloadTimes
+		info.burstLengths = burstLengths
+		info.firingHeats = firingHeats
+		info.ammoTypes = ammoTypes
+		
 		-- UnitDef Level Info
 		-- Mechs
 		info.jumpjets = GG.jumpDefs[unitDefID] ~= nil
@@ -113,12 +122,9 @@ function gadget:GamePreload()
 		info.coolRate = info.heatLimit / 50 -- or a constant rate of 10?
 		info.numWeapons = #weapons
 		info.elevationSpeed = math.rad(tonumber(cp.elevationspeed) or math.deg(info.torsoTurnSpeed))
+		info.maxAmmo = StringToTable(cp.maxammo)
 		
-		-- WeaponDef Level Info
-		info.missileWeaponIDs = missileWeaponIDs
-		info.reloadTimes = reloadTimes
-		info.burstLengths = burstLengths
-		info.firingHeats = firingHeats
+		-- And finally, stick it in GG for the script to access
 		GG.lusHelper[unitDefID] = info
 	end
 	

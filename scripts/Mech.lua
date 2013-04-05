@@ -26,6 +26,10 @@ local missileWeaponIDs = info.missileWeaponIDs
 local launcherIDs = info.launcherIDs
 local burstLengths = info.burstLengths
 local firingHeats = info.firingHeats
+local ammoTypes = info.ammoTypes
+local maxAmmo = info.maxAmmo
+local currAmmo = {} -- copy maxAmmo table into currAmmo
+for k,v in pairs(maxAmmo) do currAmmo[k] = v end
 local hasArms = info.arms
 local leftArmID = info.leftArmID
 local rightArmID = info.rightArmID
@@ -242,6 +246,10 @@ function script.AimWeapon(weaponID, heading, pitch)
 	Turn(torso, y_axis, heading, TORSO_SPEED)
 	WaitForTurn(torso, y_axis)
 	StartThread(RestoreAfterDelay)
+	local ammoType = ammoTypes[weaponID]
+	if ammoType and currAmmo[ammoType] < burstLengths[weaponID] then
+		return false
+	end
 	return true
 end
 
@@ -251,6 +259,11 @@ function script.FireWeapon(weaponID)
 end
 
 function script.Shot(weaponID)
+	local ammoType = ammoTypes[weaponID]
+	if ammoType then
+		currAmmo[ammoType] = currAmmo[ammoType] - 1
+		Spring.Echo("Unit " .. unitID .. " (" .. unitDef.name .. ") weapon " .. weaponID .. " now has ammo " .. currAmmo[ammoType] .. " (" .. ammoType .. ")")
+	end
 	if missileWeaponIDs[weaponID] then
 		EmitSfx(launchPoints[weaponID][currPoints[weaponID]], SFX.CEG + weaponID)
         currPoints[weaponID] = currPoints[weaponID] + 1
