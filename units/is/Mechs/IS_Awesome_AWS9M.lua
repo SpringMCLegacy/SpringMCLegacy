@@ -93,6 +93,7 @@ local IS_Awesome_AWS9M = {
 		heatlimit		= "38",
 		torsoturnspeed	= "100",
 		unittype		= "mech",
+		maxammo 		= {srm = 120},
     },
 }
 

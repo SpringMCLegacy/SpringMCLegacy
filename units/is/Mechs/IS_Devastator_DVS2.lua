@@ -100,6 +100,7 @@ local IS_Devastator_DVS2 = {
 		heatlimit		= "28",
 		torsoturnspeed	= "100",
 		unittype		= "mech",
+		maxammo 		= {gauss = 60},
     },
 }
 

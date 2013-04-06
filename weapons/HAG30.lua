@@ -1,5 +1,5 @@
 weaponDef = {
-	name                    = "LBX/20 AutoCannon",
+	name                    = "Hyper-Assault Gauss 30",
 	weaponType              = "Cannon",
 	explosionGenerator    	= "custom:MG_Hit",
 	soundHit              	= [[GEN_Explode1]],
@@ -14,10 +14,8 @@ weaponDef = {
 	areaOfEffect            = 1,
 	weaponVelocity          = 2500,
 	reloadtime              = 5,
-	burst					= 2,
-	burstrate				= 0.00001,
 	sprayAngle				= 100,
-	projectiles				= 15,
+	projectiles				= 30,
 	renderType				= 1,
 	size					= 0.5,
 	sizeDecay				= 0,
@@ -33,6 +31,7 @@ weaponDef = {
 		heatgenerated		= "30",--6/sec
 		cegflare			= "GAUSS_MUZZLEFLASH",
 		weaponclass			= "projectile",
+		ammotype			= "gauss",
     },
 }
 

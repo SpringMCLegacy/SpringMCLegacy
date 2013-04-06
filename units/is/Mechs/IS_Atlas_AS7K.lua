@@ -106,6 +106,7 @@ local IS_Atlas_AS7K = {
 		leftarmid		= "2",
 		rightarmid 		= "3",
 		unittype		= "mech",
+		maxammo 		= {lrm = 360, gauss = 20},
     },
 }
 

@@ -51,6 +51,8 @@ local IS_Hollander_BZKF3 = {
 		leftarmid 		= "2",
 		rightarmid 		= "3",
 		unittype		= "mech",
+		maxammo 		= {gauss = 20},
+		
     },
 }
 

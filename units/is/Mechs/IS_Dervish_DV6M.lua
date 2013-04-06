@@ -87,6 +87,7 @@ local IS_Dervish_DV6M = {
 		leftarmid		= "4",
 		rightarmid 		= "3",
 		unittype		= "mech",
+		maxammo 		= {lrm = 360, srm = 240},
     },
 }
 

@@ -88,6 +88,7 @@ local IS_Chimera_CMA1S = {
 		torsoturnspeed	= "170",
 		canjump			= "1",
 		unittype		= "mech",
+		maxammo 		= {mrm = 400},
     },
 }
 

@@ -81,6 +81,7 @@ local IS_Raven_RVN3L = {
 		rightarmid 		= "4",
 		unittype		= "mech",
 		hasbap			= true,
+		maxammo 		= {narc = 20, srm = 120},
     },
 }
 

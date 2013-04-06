@@ -84,6 +84,7 @@ local IS_Bushwacker_BSWS2 = {
 		torsoturnspeed	= "160",
 		rightarmid 		= "6",
 		unittype		= "mech",
+		maxammo 		= {srm = 120, ac10 = 40},
     },
 }
 

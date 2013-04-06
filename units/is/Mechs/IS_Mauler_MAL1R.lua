@@ -105,6 +105,7 @@ local IS_Mauler_MAL1R = {
 		helptext		= "Armament: 2 x ER Large Beam Laser, 4 x AC/2, 2 x LRM-15 - Armor: 11.5 tons Standard",
 		heatlimit		= "22",
 		torsoturnspeed	= "120",
+		maxammo 		= {lrm = 720, ac2 = 300},
     },
 }
 

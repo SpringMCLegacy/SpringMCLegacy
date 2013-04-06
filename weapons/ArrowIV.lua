@@ -37,6 +37,7 @@ weaponDef = {
 		heatgenerated		= "200",--10/sec
 		cegflare			= "ARROW_MUZZLEFLASH",
 		weaponclass			= "missile",
+		ammotype			= "arrow",
     },
 }
 

@@ -49,14 +49,14 @@ local IS_Catapult_CPLTC4 = {
 				OnlyTargetCategory = "notbeacon",
 			},
 			[3] = {
-				name	= "MBL",
+				name	= "ERSBL",
 				mainDir = "0 0 1",
 				maxAngleDif = 270,
 				OnlyTargetCategory = "notbeacon",
 				SlaveTo = 1,
 			},
 			[4] = {
-				name	= "MBL",
+				name	= "ERSBL",
 				mainDir = "0 0 1",
 				maxAngleDif = 270,
 				OnlyTargetCategory = "notbeacon",
@@ -80,6 +80,7 @@ local IS_Catapult_CPLTC4 = {
 		torsoturnspeed	= "125",
 		canjump			= "1",
 		unittype		= "mech",
+		maxammo 		= {lrm = 720},
     },
 }
 
