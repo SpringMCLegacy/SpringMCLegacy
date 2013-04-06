@@ -29,6 +29,7 @@ weaponDef = {
 		heatgenerated		= "0.5",--1/sec
 		cegflare			= "AC5_MUZZLEFLASH",
 		weaponclass			= "projectile",
+		ammotype			= "ac5",
     },	
 }
 

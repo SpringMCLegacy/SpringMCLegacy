@@ -103,6 +103,7 @@ local IS_Osiris_OSR3D = {
 		rightarmid 		= "1",
 		canjump			= "1",
 		unittype		= "mech",
+		maxammo 		= {srm = 120},
     },
 }
 

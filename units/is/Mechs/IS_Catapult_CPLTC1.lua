@@ -94,7 +94,7 @@ local IS_Catapult_CPLTC1 = {
 		torsoturnspeed	= "125",
 		canjump			= "1",
 		unittype		= "mech",
-		maxammo 		= {lrm = 100},
+		maxammo 		= {lrm = 360},
 
     },
 }

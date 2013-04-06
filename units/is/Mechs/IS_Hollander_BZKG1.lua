@@ -79,6 +79,7 @@ local IS_Hollander_BZKG1 = {
 		leftarmid 		= "2",
 		rightarmid 		= "3",
 		unittype		= "mech",
+		maxammo 		= {ac10 = 30},
     },
 }
 

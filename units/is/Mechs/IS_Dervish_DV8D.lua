@@ -87,6 +87,7 @@ local IS_Dervish_DV8D = {
 		leftarmid		= "5",
 		rightarmid 		= "3",
 		unittype		= "mech",
+		maxammo 		= {lrm = 720},
     },
 }
 

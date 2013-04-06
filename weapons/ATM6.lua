@@ -40,6 +40,7 @@ weaponDef = {
 		heatgenerated		= "40", --6/sec
 		cegflare			= "MISSILE_MUZZLEFLASH",
 		weaponclass			= "missile",
+		ammotype			= "atm",
     },
 }
 

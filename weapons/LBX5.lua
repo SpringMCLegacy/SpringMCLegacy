@@ -4,7 +4,6 @@ weaponDef = {
 	explosionGenerator    	= "custom:MG_Hit",
 --	soundHit              	= [[GEN_Explode1]],
 	soundStart            	= [[LBX5_Fire]],
-	soundTrigger			= 1,
 	burnblow				= false, 	--Bullets explode at range limit.
 	collideFriendly			= true,
 	noSelfDamage            = true,
@@ -14,11 +13,9 @@ weaponDef = {
 	accuracy                = 100,
 	areaOfEffect            = 1,
 	weaponVelocity          = 2500,
-	reloadtime              = 1,
-	burst					= 5,
-	burstrate				= 0.00001,
+	reloadtime              = 0.5,
 	sprayAngle				= 200,
-	projectiles				= 2,--increased from 1
+	projectiles				= 8,
 	renderType				= 1,
 	size					= 0.5,
 	sizeDecay				= 0,
@@ -34,6 +31,7 @@ weaponDef = {
 		heatgenerated		= "1",--1/sec
 		cegflare			= "AC5_MUZZLEFLASH",
 		weaponclass			= "projectile",
+		ammotype			= "ac5",
     },
 }
 

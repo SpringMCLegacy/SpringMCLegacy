@@ -31,6 +31,7 @@ weaponDef = {
 		heatgenerated		= "6",--1/s
 		cegflare			= "GAUSS_MUZZLEFLASH",
 		weaponclass			= "projectile",
+		ammotype			= "gauss",
     },
 }
 
