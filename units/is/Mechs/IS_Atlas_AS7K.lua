@@ -1,7 +1,7 @@
 local IS_Atlas_AS7K = {
-	name              	= "Atlas",
-	description         = "AS7-K",
-	objectName        	= "IS_Atlas.s3o",
+	name              	= "Atlas AS7-K",
+	description         = "Fire Support Assault Mech",
+	objectName        	= "IS_Atlas_AS7K.s3o",
 	iconType			= "assaultmech",
 	script				= "Mech.lua",
 	corpse				= "IS_Atlas_X",
@@ -84,7 +84,7 @@ local IS_Atlas_AS7K = {
 				OnlyTargetCategory = "notbeacon",
 				SlaveTo = 1,
 			},
-			[5] = {
+			[8] = {
 				name	= "AMS",
 			},
 		},
