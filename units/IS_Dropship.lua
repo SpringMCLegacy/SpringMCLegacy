@@ -27,8 +27,26 @@ local IS_Dropship = {
 		showNanoSpray		= 0,
 		workerTime			= 1,
 		canBeAssisted	= false,
-		yardmap			= "yyyyyyyyyyyyyyyyyyyy yyyyyyyyyyyyyyyyyyyy yyyyyyyyyyyyyyyyyyyy yyyyyyyyyyyyyyyyyyyy yyyyoyyyyyyyyyyoyyyy yyyyyyyyyyyyyyyyyyyy yyyyyyyyyyyyyyyyyyyy yyyyyyyyyyyyyyyyyyyy yyyyyyyyyyyyyyyyyyyy yyyyyyyyyyyyyyyyyyyy yyyyyyyyyyyyyyyyyyyy yyyyyyyyyyyyyyyyyyyy yyyyyyyyyyyyyyyyyyyy yyyyyyyyyyyyyyyyyyyy yyyyyyyyyyyyyyyyyyyy yyyyoyyyyyyyyyyoyyyy yyyyyyyyyyyyyyyyyyyy yyyyyyyyyyyyyyyyyyyy yyyyyyyyyyyyyyyyyyyy yyyyyyyyyyyyyyyyyyyy",
-	TEDClass			= PLANT,
+		yardmap			= [[yyyyyyyyyyyyyyyyyyyy
+		                    yyyyyyyyyyyyyyyyyyyy 
+							yyyyyyyyyyyyyyyyyyyy 
+							yyyyyyyyyyyyyyyyyyyy 
+							yyyyoyyyyyyyyyyoyyyy 
+							yyyyyyyyyyyyyyyyyyyy 
+							yyyyyyyyyyyyyyyyyyyy 
+							yyyyyyyyyyyyyyyyyyyy 
+							yyyyyyyyyyyyyyyyyyyy 
+							yyyyyyyyyyyyyyyyyyyy 
+							yyyyyyyyyyyyyyyyyyyy 
+							yyyyyyyyyyyyyyyyyyyy 
+							yyyyyyyyyyyyyyyyyyyy 
+							yyyyyyyyyyyyyyyyyyyy 
+							yyyyyyyyyyyyyyyyyyyy 
+							yyyyoyyyyyyyyyyoyyyy 
+							yyyyyyyyyyyyyyyyyyyy 
+							yyyyyyyyyyyyyyyyyyyy 
+							yyyyyyyyyyyyyyyyyyyy 
+							yyyyyyyyyyyyyyyyyyyy]],
 	canAttack 			= true,
 		--Makes unit use weapon from /weapons folder
 		weapons 		= {	
@@ -214,7 +232,7 @@ local IS_Dropship = {
 	},
 	customparams = {
 		ammosupplier	= "0",
-		supplyradius	= "0",
+		supplyradius	= "500",
 		helptext		= "A Dropship",
 		hasbap			= true,
     },

@@ -90,6 +90,16 @@ local function RestoreAfterDelay(unitID)
 	end
 end
 
+-- non-local function called by gadgets/game_ammo.lua
+function Resupply(ammoType, amount) 
+	local newAmmoLevel = currAmmo[ammoType] + amount
+	if newAmmoLevel <= maxAmmo[ammoType] then
+		currAmmo[ammoType] = newAmmoLevel
+		return true -- Ammo was taken
+	end
+	return false -- Ammo was not needed
+end
+
 local function CoolOff()
 	local max = math.max
 	-- localised API functions
