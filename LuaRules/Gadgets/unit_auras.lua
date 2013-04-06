@@ -263,6 +263,8 @@ function gadget:DrawWorldPreUnit()
                         glDepthTest(true)
                         glColor(0,0.6,0,1)
                         glDrawGroundCircle(x,y,z,auras[udid].range,24)
+						glColor(1,1,0)
+						glDrawGroundCircle(x,y,z,tonumber(UnitDefs[udid].customParams.supplyradius),24)
                         glDepthTest(false)
                         glColor(1,1,1,1)
                 end
