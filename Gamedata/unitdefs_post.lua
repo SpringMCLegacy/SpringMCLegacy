@@ -42,6 +42,11 @@ end
 local RAMP_DISTANCE = 156 -- 206
 local HANGAR_DISTANCE = 256
 
+local IS_DROPSHIP_UD
+local IS_DROPSHIP_BUILDOPTIONS = {}
+local CL_DROPSHIP_UD
+local CL_DROPSHIP_BUILDOPTIONS = {}
+
 for name, ud in pairs(UnitDefs) do
 	-- convert all customparams subtables back into strings for Spring
 	if ud.customparams then
@@ -83,4 +88,16 @@ for name, ud in pairs(UnitDefs) do
 		ud.radardistance = 2000
 		ud.airsightdistance = 1400
 	end
+	-- Automatically build dropship buildmenus
+	if ud.customparams.unittype == "mech" then
+		if name:sub(1, 2) == "is" then
+			table.insert(IS_DROPSHIP_BUILDOPTIONS, name)
+		elseif name:sub(1, 2) == "cl" then
+			table.insert(CL_DROPSHIP_BUILDOPTIONS, name)
+		end
+	end
+	if name == "is_dropship" then IS_DROPSHIP_UD = ud end
+	if name == "cl_dropship" then CL_DROPSHIP_UD = ud end
 end
+IS_DROPSHIP_UD["buildoptions"] = IS_DROPSHIP_BUILDOPTIONS
+CL_DROPSHIP_UD["buildoptions"] = CL_DROPSHIP_BUILDOPTIONS
