@@ -94,14 +94,14 @@ local function RestoreAfterDelay(unitID)
 end
 
 -- non-local function called by gadgets/game_ammo.lua
-function Resupply(ammoType, amount) 
+function ChangeAmmo(ammoType, amount) 
 	local newAmmoLevel = currAmmo[ammoType] + amount
 	if newAmmoLevel <= maxAmmo[ammoType] then
 		currAmmo[ammoType] = newAmmoLevel
 		SetUnitRulesParam(unitID, "ammo_" .. ammoType, newAmmoLevel)
-		return true -- Ammo was taken
+		return true -- Ammo was changed
 	end
-	return false -- Ammo was not needed
+	return false -- Ammo was not changed
 end
 
 local function CoolOff()
@@ -270,15 +270,13 @@ end
 function script.FireWeapon(weaponID)
 	currHeatLevel = currHeatLevel + firingHeats[weaponID]
 	SetUnitRulesParam(unitID, "heat", currHeatLevel)
+	local ammoType = ammoTypes[weaponID]
+	if ammoType then
+		ChangeAmmo(ammoType, -burstLengths[weaponID])
+	end
 end
 
 function script.Shot(weaponID)
-	local ammoType = ammoTypes[weaponID]
-	if ammoType then
-		currAmmo[ammoType] = currAmmo[ammoType] - 1
-		--Spring.Echo("Unit " .. unitID .. " (" .. unitDef.name .. ") weapon " .. weaponID .. " now has ammo " .. currAmmo[ammoType] .. " (" .. ammoType .. ")")
-		SetUnitRulesParam(unitID, "ammo_" .. ammoType, currAmmo[ammoType])
-	end
 	if missileWeaponIDs[weaponID] then
 		EmitSfx(launchPoints[weaponID][currPoints[weaponID]], SFX.CEG + weaponID)
         currPoints[weaponID] = currPoints[weaponID] + 1
