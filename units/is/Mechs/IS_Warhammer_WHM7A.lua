@@ -1,7 +1,7 @@
 local IS_Warhammer_WHM7A = {
 	name              	= "Warhammer WHM-7A",
 	description         = "Heavy Strike Mech",
-	objectName        	= "IS_Warhammer_WHM6R.s3o",
+	objectName        	= "IS_Warhammer_WHM7A.s3o",
 	iconType			= "heavymech",
 	script				= "Mech.lua",
 	corpse				= "IS_Warhammer_X",
@@ -64,28 +64,28 @@ local IS_Warhammer_WHM7A = {
 				SlaveTo = 1,
 			},
 			[5] = {
-				name	= "SPL",
+				name	= "ERMBL",
 				mainDir = "0 0 1",
 				maxAngleDif = 220,
 				OnlyTargetCategory = "notbeacon",
 				SlaveTo = 1,
 			},
 			[6] = {
-				name	= "SPL",
+				name	= "ERMBL",
 				mainDir = "0 0 1",
 				maxAngleDif = 220,
 				OnlyTargetCategory = "notbeacon",
 				SlaveTo = 1,
 			},
 			[7] = {
-				name	= "ERMBL",
+				name	= "SPL",
 				mainDir = "0 0 1",
 				maxAngleDif = 220,
 				OnlyTargetCategory = "notbeacon",
 				SlaveTo = 1,
 			},
 			[8] = {
-				name	= "ERMBL",
+				name	= "SPL",
 				mainDir = "0 0 1",
 				maxAngleDif = 220,
 				OnlyTargetCategory = "notbeacon",
@@ -111,7 +111,7 @@ local IS_Warhammer_WHM7A = {
 	},]]
     customparams = {
 		hasturnbutton	= "1",
-		helptext		= "Armament: 2 x ER PPC, 4 x ER Medium Beam Laser, 2 x Small Beam Laser, 1 x SRM-6 - Armor: 10 tons Standard",
+		helptext		= "Armament: 2 x ER PPC, 4 x ER Medium Beam Laser, 2 x Small Pulse Laser, 1 x SRM-6 - Armor: 10 tons Standard",
 		heatlimit		= "32",
 		torsoturnspeed	= "120",
 		unittype		= "mech",
