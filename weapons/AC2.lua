@@ -23,7 +23,7 @@ weaponDef = {
 	rgbcolor				= "1 0.8 0",
 	intensity				= 0.1,
 	damage = {
-		default = 4, --20 DPS
+		default = 8, --40 DPS
 	},
 	customparams = {
 		heatgenerated		= "0.1",--0.5/s

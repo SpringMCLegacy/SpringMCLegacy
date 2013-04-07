@@ -37,13 +37,13 @@ local IS_Chimera_CMA1S = {
 		--Makes unit use weapon from /weapons folder
 		weapons 		= {	
 			[1] = {
-				name	= "MBL",
+				name	= "ERLBL",
 				mainDir = "0 0 1",
 				maxAngleDif = 270,
 				OnlyTargetCategory = "notbeacon",
 			},
 			[2] = {
-				name	= "ERLBL",
+				name	= "ERMBL",
 				mainDir = "0 0 1",
 				maxAngleDif = 270,
 				OnlyTargetCategory = "notbeacon",
@@ -57,14 +57,7 @@ local IS_Chimera_CMA1S = {
 				SlaveTo = 1,
 			},
 			[4] = {
-				name	= "MRM10",
-				mainDir = "0 0 1",
-				maxAngleDif = 270,
-				OnlyTargetCategory = "notbeacon",
-				SlaveTo = 1,
-			},
-			[5] = {
-				name	= "MRM10",
+				name	= "MRM20",
 				mainDir = "0 0 1",
 				maxAngleDif = 270,
 				OnlyTargetCategory = "notbeacon",
