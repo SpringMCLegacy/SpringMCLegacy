@@ -111,7 +111,7 @@ local IS_Warhammer_WHM6R = {
 	},]]
     customparams = {
 		hasturnbutton	= "1",
-		helptext		= "Armament: 2 x PPC, 2 x Medium Beam Laser, 2 x Small Beam Laser, 2 x MG, 1 x SRM-6 - Armor: 10 tons Standard",
+		helptext		= "Armament: 2 x PPC, 2 x Medium Beam Laser, 2 x Small Beam Laser, 2 x Machinegun, 1 x SRM-6 - Armor: 10 tons Standard",
 		heatlimit		= "18",
 		torsoturnspeed	= "120",
 		unittype		= "mech",
