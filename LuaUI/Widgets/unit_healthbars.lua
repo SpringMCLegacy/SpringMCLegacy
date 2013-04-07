@@ -35,7 +35,7 @@ local featureBarAlpha  = 0.6
 
 local drawBarTitles = true
 local drawBarPercentages = true 
-local titlesAlpha   = 0.3*barAlpha
+local titlesAlpha   = 1.0*barAlpha
 
 local drawFullHealthBars = false
 
@@ -138,8 +138,8 @@ local barColors = {
   build   = { 0.75,0.75,0.75,barAlpha },
   stock   = { 0.50,0.50,0.50,barAlpha },
   reload  = { 0.00,0.60,0.60,barAlpha },
-  jump    = { 0.60,0.60,0.40,barAlpha },
-  sheath  = { 0.00,0.20,1.00,barAlpha },
+  ammo    = { 0.60,0.60,0.40,barAlpha },
+  jump    = { 0.00,0.70,0.84,barAlpha },
   fuel    = { 0.70,0.30,0.00,barAlpha },
   slow    = { 0.50,0.10,0.70,barAlpha },
   goo     = { 0.50,0.50,0.50,barAlpha },
@@ -540,6 +540,7 @@ do
 
   local customInfo = {}
   local ci
+  local ammoTypes = {"AC2", "AC5", "AC10", "AC20", "LRM", "SRM", "MRM", "ATM", "Gauss", "NARC", "Arrow"}
 
   function DrawUnitInfos(unitID,unitDefID, ud)
     if (not customInfo[unitDefID]) then
@@ -612,7 +613,26 @@ do
           AddBar("Heat",heat100/100,nil,'',bfcolormap[100 - heat100])
         end
       end
-
+	  
+	  --// JUMPJET
+      if (drawJumpJet)and(ci.canJump) then
+        local jumpReload = GetUnitRulesParam(unitID,"jumpReloadBar")
+        if jumpReload then
+          AddBar("Jump Jets",jumpReload,"jump",'')
+        end
+      end
+	  
+	  --// AMMO
+	  for i = 1, #ammoTypes do
+	    local ammoType = ammoTypes[i]
+		local ammoTypeLower = ammoType:lower()
+	    local ammo = GetUnitRulesParam(unitID,"ammo_" .. ammoTypeLower)
+	    local ammoLimit = GetUnitRulesParam(unitID,"ammo_" .. ammoTypeLower .. "_limit")
+	    if ammo and ammo < ammoLimit then
+		  AddBar(ammoType, ammo/ammoLimit, "ammo", "")
+	    end
+	  end
+--[[
       --// BUILD
       if (build<1) then
         AddBar("building",build,"build",(fullText and floor(build*100)..'%') or '')
@@ -692,21 +712,15 @@ do
         AddBar("goo",gooState,"goo",(fullText and floor(gooState*100)..'%') or '')
       end
 	  
-      --// JUMPJET
-      if (drawJumpJet)and(ci.canJump) then
-        local jumpReload = GetUnitRulesParam(unitID,"jumpReloadBar")
-        if jumpReload then
-          AddBar("Jump Jets",jumpReload,"jump",'')
-        end
-      end
 
+--]]
     if (barsN>0)or(numStockpiled) then
       glPushMatrix()
       glTranslate(ux, uy+ci.height, uz )
       glBillboard()
 
       --// STOCKPILE ICON
-      if (numStockpiled) then
+      --[[if (numStockpiled) then
         if (barShader) then
           glMyText(1)
           DrawStockpile(numStockpiled,numStockpileQued)
@@ -714,7 +728,7 @@ do
         else
           DrawStockpile(numStockpiled,numStockpileQued)
         end
-      end
+      end]]
 
       --// DRAW BARS
       DrawBars(fullText)
