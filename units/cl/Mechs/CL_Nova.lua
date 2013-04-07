@@ -114,7 +114,7 @@ local CL_Nova = {
 			[11] = {
 				name	= "CERMBL",
 				mainDir = "0 0 1",
-				maxAngleDif = 270,
+				maxAngleDif = 200,
 				OnlyTargetCategory = "notbeacon",
 				SlaveTo = 1,
 			},
