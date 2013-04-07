@@ -54,10 +54,10 @@ function gadget:GameFrame(n)
 					local info = GG.lusHelper[unitDefID]
 					local ammoTypes = info.ammoTypes
 					local env = Spring.UnitScript.GetScriptEnv(unitID)
-					if env.Resupply then -- N.B. currently this runs for all mechs regardless of whether they have any ammo using weapons...
+					if env.ChangeAmmo then -- N.B. currently this runs for all mechs regardless of whether they have any ammo using weapons...
 						for weaponNum, ammoType in pairs(ammoTypes) do --... but this loop will finish immediatly in that case
 							local amount = info.burstLengths[weaponNum]
-							local supplied = env.Resupply(ammoType, amount)
+							local supplied = env.ChangeAmmo(ammoType, amount)
 							--if supplied then Spring.Echo("Deduct " .. amount .. " " .. ammoType) end
 						end
 					end
