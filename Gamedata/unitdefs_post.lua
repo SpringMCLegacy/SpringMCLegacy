@@ -73,12 +73,14 @@ for name, ud in pairs(UnitDefs) do
 	ud.turnrate = ud.maxvelocity * 200
 	-- set sightrange/radardistance based on hasbap customparam
 	if ud.customparams.hasbap == "true" then
-		ud.sightdistance = 2000
-		ud.radardistance = 4000
-		ud.airsightdistance = 3000
+		ud.seismicdistance = 4000
+		ud.sightdistance = 1500
+		ud.radardistance = 3000
+		ud.airsightdistance = 2000
 	else
+		ud.seismicdistance = 0
 		ud.sightdistance = 1000
 		ud.radardistance = 2000
-		ud.airsightdistance = 1500
+		ud.airsightdistance = 1400
 	end
 end
