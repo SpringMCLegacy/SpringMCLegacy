@@ -13,7 +13,7 @@ weaponDef = {
 	accuracy                = 250,
 	areaOfEffect            = 1,
 	weaponVelocity          = 2500,
-	reloadtime              = 2.5,
+	reloadtime              = 5,
 	sprayAngle				= 400,
 	projectiles				= 20,
 	renderType				= 1,
@@ -25,7 +25,7 @@ weaponDef = {
 	rgbcolor				= "1 0.8 0",
 	intensity				= 0.5,
 	damage = {
-		default = 75, --600 DPS
+		default = 150, --600 DPS
 	},
 	customparams = {
 		heatgenerated		= "30",--6/sec
