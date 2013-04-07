@@ -58,7 +58,7 @@ function gadget:GameFrame(n)
 						for weaponNum, ammoType in pairs(ammoTypes) do --... but this loop will finish immediatly in that case
 							local amount = info.burstLengths[weaponNum]
 							local supplied = env.Resupply(ammoType, amount)
-							if supplied then Spring.Echo("Deduct " .. amount .. " " .. ammoType) end
+							--if supplied then Spring.Echo("Deduct " .. amount .. " " .. ammoType) end
 						end
 					end
 				end

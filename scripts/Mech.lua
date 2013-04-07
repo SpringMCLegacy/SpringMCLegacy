@@ -29,7 +29,10 @@ local firingHeats = info.firingHeats
 local ammoTypes = info.ammoTypes
 local maxAmmo = info.maxAmmo
 local currAmmo = {} -- copy maxAmmo table into currAmmo
-for k,v in pairs(maxAmmo) do currAmmo[k] = v end
+for k,v in pairs(maxAmmo) do 
+	currAmmo[k] = v 
+	SetUnitRulesParam(unitID, "ammo_" .. k .. "_limit", v)
+end
 local hasArms = info.arms
 local leftArmID = info.leftArmID
 local rightArmID = info.rightArmID
@@ -95,6 +98,7 @@ function Resupply(ammoType, amount)
 	local newAmmoLevel = currAmmo[ammoType] + amount
 	if newAmmoLevel <= maxAmmo[ammoType] then
 		currAmmo[ammoType] = newAmmoLevel
+		SetUnitRulesParam(unitID, "ammo_" .. ammoType, newAmmoLevel)
 		return true -- Ammo was taken
 	end
 	return false -- Ammo was not needed
@@ -272,7 +276,8 @@ function script.Shot(weaponID)
 	local ammoType = ammoTypes[weaponID]
 	if ammoType then
 		currAmmo[ammoType] = currAmmo[ammoType] - 1
-		Spring.Echo("Unit " .. unitID .. " (" .. unitDef.name .. ") weapon " .. weaponID .. " now has ammo " .. currAmmo[ammoType] .. " (" .. ammoType .. ")")
+		--Spring.Echo("Unit " .. unitID .. " (" .. unitDef.name .. ") weapon " .. weaponID .. " now has ammo " .. currAmmo[ammoType] .. " (" .. ammoType .. ")")
+		SetUnitRulesParam(unitID, "ammo_" .. ammoType, currAmmo[ammoType])
 	end
 	if missileWeaponIDs[weaponID] then
 		EmitSfx(launchPoints[weaponID][currPoints[weaponID]], SFX.CEG + weaponID)
