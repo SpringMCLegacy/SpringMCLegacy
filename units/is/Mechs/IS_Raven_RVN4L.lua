@@ -80,7 +80,7 @@ local IS_Raven_RVN4L = {
 		torsoturnspeed	= "180",
 		rightarmid 		= "4",
 		unittype		= "mech",
-		hasbap			= true,
+		hasbap			= "true",
 		maxammo 		= {narc = 20, srm = 120},
     },
 }

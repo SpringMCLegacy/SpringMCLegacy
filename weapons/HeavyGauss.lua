@@ -28,7 +28,7 @@ weaponDef = {
 	--DynDamageMin			= 1200,--100 DPS 
 	--DynDamageRange			= 1200,--Weapon will decrease in damage up to this range
 	damage = {
-		default = 3000,--250 DPS
+		default = 4500,--375 DPS
 	},
 	customparams = {
 		heatgenerated		= "24",--1/s
