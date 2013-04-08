@@ -64,6 +64,7 @@ local IS_Scorpion_AC5 = {
 		elevationspeed  = "200",
 		barrelrecoildist = "{[1] = 3}",
 		wheelspeed      = "200",
+		maxammo 		= {ac5 = 80},
     },
 }
 

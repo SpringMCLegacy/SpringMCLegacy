@@ -66,6 +66,7 @@ local IS_Sniper = {
 		elevationspeed = "50",
 		turrets = "{[2] = 2, [3] = 2}",
 		barrelrecoildist = "{[1] = 4}",
+		maxammo 		= {sniper = 10},
     },
 }
 

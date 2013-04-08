@@ -58,6 +58,7 @@ local IS_LRMCarrier = {
 		turretturnspeed = "25",
 		elevationspeed  = "50",
 		wheelspeed      = "200",
+		maxammo 		= {lrm = 720},
     },
 }
 

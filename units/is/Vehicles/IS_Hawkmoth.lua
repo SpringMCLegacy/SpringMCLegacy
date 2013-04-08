@@ -49,28 +49,15 @@ local IS_Hawkmoth = {
 				mainDir = "0 0 1",
 				maxAngleDif = 180,
 			},
-			[2] = {
-				name	= "LRM5",
-				OnlyTargetCategory = "notbeacon",
-				SlaveTo = 1,
-				mainDir = "0 0 1",
-				maxAngleDif = 90,
-			},
-			[3] = {
-				name	= "LRM5",
-				OnlyTargetCategory = "notbeacon",
-				SlaveTo = 1,
-				mainDir = "0 0 1",
-				maxAngleDif = 90,
-			},
 		},
 	customparams = {
 		hasturnbutton	= "1",
-		helptext		= "Armament: 1 x Light Gauss Rifle, 2 x Artemis IV-enhanced LRM-5 - Armor: 2 tons",
+		helptext		= "Armament: 1 x Light Gauss Rifle - Armor: 2 tons",
 		flagcaprate		= "0",
 		flagdefendrate	= "0",
 		heatlimit		= "15",
 		unittype		= "vehicle",
+		maxammo 		= {gauss = 30},
     },
 }
 

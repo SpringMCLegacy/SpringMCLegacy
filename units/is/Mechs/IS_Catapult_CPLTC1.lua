@@ -37,13 +37,13 @@ local IS_Catapult_CPLTC1 = {
 		--Makes unit use weapon from /weapons folder
 		weapons 		= {	
 			[1] = {
-				name	= "ArtemisLRM15",
+				name	= "LRM15",
 				mainDir = "0 0 1",
 				maxAngleDif = 270,
 				OnlyTargetCategory = "notbeacon",
 			},
 			[2] = {
-				name	= "ArtemisLRM15",
+				name	= "LRM15",
 				mainDir = "0 0 1",
 				maxAngleDif = 270,
 				OnlyTargetCategory = "notbeacon",
@@ -89,7 +89,7 @@ local IS_Catapult_CPLTC1 = {
 	},]]
     customparams = {
 		hasturnbutton	= "1",
-		helptext		= "Armament: 2 x Artemis-guided LRM-15, 4 x Medium Beam Laser - Armor: 10 tons Standard",
+		helptext		= "Armament: 2 x LRM-15, 4 x Medium Beam Laser - Armor: 10 tons Standard",
 		heatlimit		= "15",
 		torsoturnspeed	= "125",
 		canjump			= "1",

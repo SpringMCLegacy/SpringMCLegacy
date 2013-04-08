@@ -37,13 +37,13 @@ local IS_Dervish_DV6M = {
 		--Makes unit use weapon from /weapons folder
 		weapons 		= {	
 			[1] = {
-				name	= "ArtemisLRM10",
+				name	= "LRM10",
 				mainDir = "0 0 1",
 				maxAngleDif = 270,
 				OnlyTargetCategory = "notbeacon",
 			},
 			[2] = {
-				name	= "ArtemisLRM10",
+				name	= "LRM10",
 				mainDir = "0 0 1",
 				maxAngleDif = 220,
 				OnlyTargetCategory = "notbeacon",
@@ -81,7 +81,7 @@ local IS_Dervish_DV6M = {
 		
     customparams = {
 		hasturnbutton	= "1",
-		helptext		= "Armament: 2 x ER LRM-10, 2 x Medium Laser, 2 x SRM-2 - Armor: 7.5 tons Standard",
+		helptext		= "Armament: 2 x LRM-10, 2 x Medium Laser, 2 x SRM-2 - Armor: 7.5 tons Standard",
 		heatlimit		= "10",
 		torsoturnspeed	= "160",
 		leftarmid		= "4",

@@ -69,6 +69,7 @@ local IS_Partisan = {
 		turretturnspeed = "120",
 		elevationspeed  = "300",
 		wheelspeed      = "200",
+		maxammo 		= {ac5 = 200},
 	},
 }
 
