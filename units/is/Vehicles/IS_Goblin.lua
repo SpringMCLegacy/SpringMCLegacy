@@ -71,6 +71,7 @@ local IS_Goblin = {
 		turrettunspeed  = "75",
 		elevationspeed  = "200",
 		wheelspeed      = "200",
+		maxammo 		= {srm = 120},
     },
 }
 

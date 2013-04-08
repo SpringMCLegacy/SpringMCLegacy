@@ -3,6 +3,7 @@ weaponDef = {
 	weaponType              = "MissileLauncher",
 	renderType				= 1,
 	commandFire				= true,
+	canAttackGround			= false,
 	explosionGenerator    	= "custom:HE_XSMALL",
 --	cegTag					= "BazookaTrail",
 	smokeTrail				= true,

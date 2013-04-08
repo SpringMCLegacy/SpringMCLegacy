@@ -37,13 +37,13 @@ local IS_Dervish_DV8D = {
 		--Makes unit use weapon from /weapons folder
 		weapons 		= {	
 			[1] = {
-				name	= "ArtemisLRM15",
+				name	= "LRM15",
 				mainDir = "0 0 1",
 				maxAngleDif = 270,
 				OnlyTargetCategory = "notbeacon",
 			},
 			[2] = {
-				name	= "ArtemisLRM15",
+				name	= "LRM15",
 				mainDir = "0 0 1",
 				maxAngleDif = 220,
 				OnlyTargetCategory = "notbeacon",
@@ -81,7 +81,7 @@ local IS_Dervish_DV8D = {
 		
     customparams = {
 		hasturnbutton	= "1",
-		helptext		= "Armament: 2 x ER LRM-15, 4 x ER Medium Laser,  - Armor: 10.5 tons Standard",
+		helptext		= "Armament: 2 x LRM-15, 4 x ER Medium Laser,  - Armor: 10.5 tons Standard",
 		heatlimit		= "20",
 		torsoturnspeed	= "160",
 		leftarmid		= "5",

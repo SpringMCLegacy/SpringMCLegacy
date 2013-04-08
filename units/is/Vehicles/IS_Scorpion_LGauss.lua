@@ -66,6 +66,7 @@ local IS_Scorpion_LGauss = {
 		elevationspeed  = "200",
 		barrelrecoildist = "{[1] = 3}",
 		wheelspeed      = "200",
+		maxammo 		= {gauss = 30},
     },
 }
 

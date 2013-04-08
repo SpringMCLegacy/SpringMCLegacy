@@ -52,6 +52,7 @@ local IS_Harasser = {
 		unittype		= "vehicle",
 		turretturnspeed = "100",
 		elevationspeed  = "200",
+		maxammo 		= {srm = 120},
     },
 }
 

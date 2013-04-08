@@ -77,6 +77,7 @@ local IS_Challenger = {
 		elevationspeed  = "200",
 		wheelspeed      = "200",
 		barrelrecoildist = "{[1] = 5, [2] = 5}",
+		maxammo 		= {lrm = 180, ac10 = 30, gauss = 30},
 	},
 }
 

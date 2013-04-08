@@ -13,9 +13,9 @@ weaponDef = {
 	collideFriendly			= true,
 	noSelfDamage            = true,
 	turret                  = true,
-	range                   = 2100,
-	accuracy                = 1000,
-	sprayangle				= 1000,
+	range                   = 2600,
+	accuracy                = 50,
+	sprayangle				= 50,
 	wobble					= 1750,
 	dance 					= 100,
 	guidance				= true,
@@ -38,10 +38,11 @@ weaponDef = {
 		default = 150,--10 DPS
 	},
 	customparams = {
-		heatgenerated		= "75", --5/sec
+		heatgenerated		= "75", --6/sec
 		cegflare			= "MISSILE_MUZZLEFLASH",
 		weaponclass			= "missile",
 		ammotype			= "lrm",
+
     },
 }
 
