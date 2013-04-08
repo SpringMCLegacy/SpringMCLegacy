@@ -30,6 +30,7 @@ weaponDef = {
 		cegflare			= "AC5_MUZZLEFLASH",
 		weaponclass			= "projectile",
 		ammotype			= "ac5",
+		spinspeed			= "360",
     },	
 }
 
