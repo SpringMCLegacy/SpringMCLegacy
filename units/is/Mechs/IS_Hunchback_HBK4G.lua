@@ -1,6 +1,6 @@
 local IS_Hunchback_HBK4G = {
 	name              	= "Hunchback HBK-4G",
-	description         = "Medium Brawler Mech",
+	description         = "Medium-class Close Range Brawler",
 	objectName        	= "IS_Hunchback_HBK4G.s3o",
 	iconType			= "mediummech",
 	script				= "Mech.lua",

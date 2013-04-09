@@ -1,6 +1,6 @@
 local IS_Warhammer_WHM6R = {
 	name              	= "Warhammer WHM-6R",
-	description         = "Heavy Strike Mech",
+	description         = "Heavy-class Mid Range Fire Support",
 	objectName        	= "IS_Warhammer_WHM6R.s3o",
 	iconType			= "heavymech",
 	script				= "Mech.lua",

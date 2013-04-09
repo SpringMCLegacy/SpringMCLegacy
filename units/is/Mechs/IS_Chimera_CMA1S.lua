@@ -1,6 +1,6 @@
 local IS_Chimera_CMA1S = {
 	name              	= "Chimera CMA-1S",
-	description         = "Medium Skirmish Mech",
+	description         = "Medium-class Mid Range Skirmisher",
 	objectName        	= "IS_Chimera_CMA1S.s3o",
 	iconType			= "mediummech",
 	script				= "Mech.lua",

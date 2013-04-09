@@ -1,6 +1,6 @@
 local IS_Bushwacker_BSWX1 = {
 	name              	= "Bushwacker BSW-X1",
-	description         = "Medium Strike Mech",
+	description         = "Medium-class Mid Range Fire Support",
 	objectName        	= "IS_Bushwacker_BSWX1.s3o",
 	iconType			= "mediummech",
 	script				= "Mech.lua",

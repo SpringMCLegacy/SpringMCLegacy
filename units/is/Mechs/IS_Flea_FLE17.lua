@@ -1,6 +1,6 @@
 local IS_Flea_FLE17 = {
 	name              	= "Flea FLE-17",
-	description         = "Light Scout Mech",
+	description         = "Light-class Close Range Harasser",
 	objectName        	= "IS_Flea_FLE17.s3o",
 	iconType			= "lightmech",
 	script				= "Mech.lua",

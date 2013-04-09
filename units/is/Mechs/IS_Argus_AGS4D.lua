@@ -1,6 +1,6 @@
 local IS_Argus_AGS4D = {
 	name              	= "Argus AGS-4D",
-	description         = "Heavy Skirmisher Mech",
+	description         = "Heavy-class Mid Range Skirmisher",
 	objectName        	= "IS_Argus_AGS4D.s3o",
 	iconType			= "heavymech",
 	script				= "Mech.lua",

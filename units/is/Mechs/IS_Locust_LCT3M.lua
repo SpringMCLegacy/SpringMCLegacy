@@ -1,6 +1,6 @@
 local IS_Locust_LCT3M = {
 	name              	= "Locust LCT-3M",
-	description         = "Light Scout Mech",
+	description         = "Light-class Close Range Scout",
 	objectName        	= "IS_Locust_LCT3M.s3o",
 	iconType			= "lightmech",
 	script				= "Mech.lua",

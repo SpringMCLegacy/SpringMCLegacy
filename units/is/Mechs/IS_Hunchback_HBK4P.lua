@@ -1,6 +1,6 @@
 local IS_Hunchback_HBK4P = {
 	name              	= "Hunchback HBK-4P",
-	description         = "Medium Strike Mech",
+	description         = "Medium-class Mid Range Fire Support",
 	objectName        	= "IS_Hunchback_HBK4P.s3o",
 	iconType			= "mediummech",
 	script				= "Mech.lua",

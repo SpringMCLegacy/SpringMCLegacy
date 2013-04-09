@@ -1,6 +1,6 @@
 local IS_Mauler_MAL3R = {
 	name              	= "Mauler MAL-3R",
-	description         = "Assault-class Brawler Mech",
+	description         = "Assault-class Close Range Brawler",
 	objectName        	= "IS_Mauler_MAL3R.s3o",
 	script				= "Mech.lua",
 	corpse				= "IS_Mauler_X",
