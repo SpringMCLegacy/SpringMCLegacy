@@ -10,6 +10,7 @@ local IS_Raven_RVN4L = {
 	noChaseCategory		= "beacon air",
 		activateWhenBuilt   = true,
 		onoffable           = true,
+		radardistanceJam	= 500,
 	maxDamage           = 9600,
 	mass                = 3500,
 	footprintX			= 2,
@@ -81,6 +82,7 @@ local IS_Raven_RVN4L = {
 		rightarmid 		= "4",
 		unittype		= "mech",
 		hasbap			= "true",
+		hasecm			= "true",
 		maxammo 		= {narc = 20, srm = 120},
     },
 }

@@ -77,17 +77,21 @@ for name, ud in pairs(UnitDefs) do
 	ud.brakerate = ud.maxvelocity / 25
 	ud.turnrate = ud.maxvelocity * 200
 	-- set sightrange/radardistance based on hasbap customparam
-	if ud.customparams.hasbap == "true" then
-		ud.seismicdistance = 4000
+	if ud.customparams.hasbap == "true" or ud.customparams.hasecm == "true" then
+		ud.seismicdistance = 3000
 		ud.sightdistance = 1500
 		ud.radardistance = 3000
-		ud.airsightdistance = 2000
+		ud.airsightdistance = 3000
+		ud.siesmicsignature = 100
 	else
 		ud.seismicdistance = 0
 		ud.sightdistance = 1000
 		ud.radardistance = 2000
-		ud.airsightdistance = 1400
+		ud.airsightdistance = 2000
+		ud.siesmicsignature = 0
 	end
+	
+	
 	-- Automatically build dropship buildmenus
 	if ud.customparams.unittype == "mech" then
 		if name:sub(1, 2) == "is" then
