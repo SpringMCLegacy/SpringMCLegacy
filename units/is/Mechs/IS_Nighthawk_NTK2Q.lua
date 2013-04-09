@@ -1,6 +1,6 @@
 local IS_Nighthawk_NTK2Q = {
 	name              	= "Night Hawk NTK-2Q",
-	description         = "Light Line Mech",
+	description         = "Light-class Mid Range Fire Support",
 	objectName        	= "IS_Nighthawk_NTK2Q.s3o",
 	iconType			= "lightmech",
 	script				= "Mech.lua",

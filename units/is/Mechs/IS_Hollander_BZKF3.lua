@@ -1,6 +1,6 @@
 local IS_Hollander_BZKF3 = {
 	name              	= "Hollander BZK-F3",
-	description         = "Light Gauss Sniper",
+	description         = "Light-class Long Range Fire Support/Sniper",
 	objectName        	= "IS_Hollander_BZKF3.s3o",
 	iconType			= "mediummech",
 	script				= "Mech.lua",

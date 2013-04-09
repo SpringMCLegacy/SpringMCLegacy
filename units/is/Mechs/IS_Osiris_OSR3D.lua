@@ -1,6 +1,6 @@
 local IS_Osiris_OSR3D = {
 	name              	= "Osiris OSR-3D",
-	description         = "Light Skirmish Mech",
+	description         = "Light-class Close Range Skirmisher",
 	objectName        	= "IS_Osiris_OSR3D.s3o",
 	iconType			= "lightmech",
 	script				= "Mech.lua",

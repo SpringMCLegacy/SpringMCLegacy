@@ -1,6 +1,6 @@
 local IS_Hollander_BZKG1 = {
 	name              	= "Hollander BZK-G1",
-	description         = "Light Brawler",
+	description         = "Light-class Close Range Brawler",
 	objectName        	= "IS_Hollander_BZKG1.s3o",
 	iconType			= "mediummech",
 	script				= "Mech.lua",

@@ -1,6 +1,6 @@
 local IS_Devastator_DVS2 = {
 	name              	= "Devastator",
-	description         = "Assault-class Brawler Mech",
+	description         = "Assault-class Long Range Fire Support/Sniper",
 	objectName        	= "IS_Devastator_DVS2.s3o",
 	iconType			= "assaultmech",
 	script				= "Mech.lua",

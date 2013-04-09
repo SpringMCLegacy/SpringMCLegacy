@@ -1,6 +1,6 @@
 local IS_Atlas_AS7K = {
 	name              	= "Atlas AS7-K",
-	description         = "Fire Support Assault Mech",
+	description         = "Assault-class Long Range Fire Support",
 	objectName        	= "IS_Atlas_AS7K.s3o",
 	iconType			= "assaultmech",
 	script				= "Mech.lua",

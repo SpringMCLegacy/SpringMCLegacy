@@ -1,6 +1,6 @@
 local IS_Talon_TLN5W = {
 	name              	= "Talon TLN-5W",
-	description         = "Light Sniper Mech",
+	description         = "Light-class Long Range Fire Support/Sniper",
 	objectName        	= "IS_Talon_TLN5W.s3o",
 	iconType			= "lightmech",
 	script				= "Mech.lua",

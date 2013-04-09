@@ -1,6 +1,6 @@
 local IS_Dervish_DV6M = {
 	name              	= "Dervish DV-6M",
-	description         = "Medium Missile Support Mech",
+	description         = "Medium-class Missile Support",
 	objectName        	= "IS_Dervish_DV6M.s3o",
 	iconType			= "mediummech",
 	script				= "Mech.lua",

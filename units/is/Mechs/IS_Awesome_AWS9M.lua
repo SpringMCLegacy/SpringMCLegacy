@@ -1,6 +1,6 @@
 local IS_Awesome_AWS9M = {
 	name              	= "Awesome AWS-9M",
-	description         = "Assault-class Strike Mech",
+	description         = "Assault-class Long Range Fire Support/Sniper",
 	objectName        	= "IS_Awesome_AWS9M.s3o",
 	iconType			= "assaultmech",
 	script				= "Mech.lua",

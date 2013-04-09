@@ -1,6 +1,6 @@
 local IS_Catapult_CPLTC1 = {
 	name              	= "Catapult CPLT-C1",
-	description         = "Heavy Missile Support Mech",
+	description         = "Heavy-class Long Range Missile Support",
 	objectName        	= "IS_Catapult_CPLTC1.s3o",
 	iconType			= "heavymech",
 	script				= "Mech.lua",
