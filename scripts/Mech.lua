@@ -27,6 +27,7 @@ local launcherIDs = info.launcherIDs
 local burstLengths = info.burstLengths
 local firingHeats = info.firingHeats
 local ammoTypes = info.ammoTypes
+local spinSpeeds = info.spinSpeeds
 local maxAmmo = info.maxAmmo
 local currAmmo = {} -- copy maxAmmo table into currAmmo
 for k,v in pairs(maxAmmo) do 
@@ -53,8 +54,8 @@ local pelvis, torso = piece ("pelvis", "torso")
 
 local rlowerarm, llowerarm
 if hasArms then
-	rlowerarm = piece("rlowerarm")
-	llowerarm = piece("llowerarm")
+	rlowerarm = piece("rupperarm")
+	llowerarm = piece("lupperarm")
 end
 
 local jets = {}
@@ -68,6 +69,8 @@ local flares = {}
 local launchers = {}
 local launchPoints = {}
 local currPoints = {}
+local spinPieces = {}
+local spinPiecesState = {}
 for weaponID = 1, info.numWeapons do
 	if missileWeaponIDs[weaponID] then
 		if launcherIDs[weaponID] then
@@ -80,6 +83,10 @@ for weaponID = 1, info.numWeapons do
 		end	
 	elseif weaponID ~= amsID then
 		flares[weaponID] = piece("flare_" .. weaponID)
+		if spinSpeeds[weaponID] then
+			spinPieces[weaponID] = piece("barrels_" .. weaponID)
+			spinPiecesState[weaponID] = false
+		end
 	end
 end
 
@@ -102,6 +109,18 @@ function ChangeAmmo(ammoType, amount)
 		return true -- Ammo was changed
 	end
 	return false -- Ammo was not changed
+end
+
+local function SpinBarrels(weaponID, start)
+	Signal(spinSpeeds)
+	SetSignalMask(spinSpeeds)
+	if start  then
+		Spin(spinPieces[weaponID], z_axis, spinSpeeds[weaponID], spinSpeeds[weaponID] / 5)
+	else
+		Sleep(2000)
+		StopSpin(spinPieces[weaponID], z_axis, spinSpeeds[weaponID]/10)
+	end
+	spinPiecesState[weaponID] = start -- must come after the Sleep
 end
 
 local function CoolOff()
@@ -262,9 +281,16 @@ function script.AimWeapon(weaponID, heading, pitch)
 	StartThread(RestoreAfterDelay)
 	local ammoType = ammoTypes[weaponID]
 	if ammoType and currAmmo[ammoType] < burstLengths[weaponID] then
+		if spinSpeeds[weaponID] then
+			StartThread(SpinBarrels, weaponID, false)
+		end
 		return false
+	else
+		if spinSpeeds[weaponID] and not spinPiecesState[weaponID] then
+			StartThread(SpinBarrels, weaponID, true)
+		end
+		return true
 	end
-	return true
 end
 
 function script.FireWeapon(weaponID)
@@ -287,6 +313,12 @@ function script.Shot(weaponID)
 		return
 	else
 		EmitSfx(flares[weaponID], SFX.CEG + weaponID)
+	end
+end
+
+function script.EndBurst(weaponID)
+	if spinSpeeds[weaponID] then
+		StartThread(SpinBarrels, weaponID, false)
 	end
 end
 

@@ -34,7 +34,7 @@ function gadget:UnitCreated(unitID, unitDefID, teamID, builderID)
 	if info.arms == nil then --and not UnitDefs[unitDefID].name:find("dropship") then
 		-- Parse Model Data
 		local pieceMap = GetUnitPieceMap(unitID)
-		info.arms = pieceMap["rlowerarm"] ~= nil
+		info.arms = pieceMap["rupperarm"] ~= nil
 		local launcherIDs = {}
 		local turretIDs = {}
 		local mantletIDs = {}
@@ -79,6 +79,7 @@ function gadget:GamePreload()
 		local firingHeats = {}		
 		local reloadTimes = {}
 		local ammoTypes = {}
+		local spinSpeeds = {}
 		for i = 1, #weapons do
 			local weaponInfo = weapons[i]
 			local weaponDef = WeaponDefs[weaponInfo.weaponDef]
@@ -86,6 +87,7 @@ function gadget:GamePreload()
 			burstLengths[i] = weaponDef.salvoSize
 			firingHeats[i] = (weaponDef.customParams.heatgenerated or 0) * 0.5
 			ammoTypes[i] = weaponDef.customParams.ammotype -- intentionally nil otherwise
+			spinSpeeds[i] = weaponDef.customParams.spinspeed and math.rad(weaponDef.customParams.spinspeed)
 			if weaponDef.type == "MissileLauncher" and weaponDef.name ~= "narc" then --burstLengths[i] > 1 then
 				missileWeaponIDs[i] = true
 			end
@@ -99,6 +101,7 @@ function gadget:GamePreload()
 		info.burstLengths = burstLengths
 		info.firingHeats = firingHeats
 		info.ammoTypes = ammoTypes
+		info.spinSpeeds = spinSpeeds
 		
 		-- UnitDef Level Info
 		-- Mechs

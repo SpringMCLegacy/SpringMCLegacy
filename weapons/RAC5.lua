@@ -30,10 +30,10 @@ weaponDef = {
 	},
 	customparams = {
 		heatgenerated		= "4",--1/sec
-		cegflare			= "AC5_MUZZLEFLASH",
+		cegflare			= "MISSILE_MUZZLEFLASH",--"AC5_MUZZLEFLASH",
 		weaponclass			= "projectile",
 		ammotype			= "ac5",
-		spinspeed			= "360",
+		spinspeed			= "600",
     },	
 }
 
