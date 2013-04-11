@@ -296,10 +296,12 @@ function script.AimWeapon(weaponID, heading, pitch)
 end
 
 function script.BlockShot(weaponID, targetID, userTarget)
+	Spring.Echo("BLOCKSHOT")
 	local minRange = minRanges[weaponID]
 	if minRange then
+		Spring.Echo("BLOCKSHOT: MINRANGE")
 		local distance = GetUnitSeparation(unitID, targetID, true)
-		if distance < minRange then return true end
+		if distance < minRange then Spring.Echo("BLOCKSHOT: DIST < MINRANGE")return true end
 	end
 	return false
 end
