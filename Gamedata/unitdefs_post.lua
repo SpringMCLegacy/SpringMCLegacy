@@ -82,13 +82,13 @@ for name, ud in pairs(UnitDefs) do
 		ud.sightdistance = 1500
 		ud.radardistance = 3000
 		ud.airsightdistance = 3000
-		ud.siesmicsignature = 100
+		ud.seismicsignature = 100
 	else
 		ud.seismicdistance = 0
 		ud.sightdistance = 1000
 		ud.radardistance = 2000
 		ud.airsightdistance = 2000
-		ud.siesmicsignature = 0
+		ud.seismicsignature = 0
 	end
 	
 	
