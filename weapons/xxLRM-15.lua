@@ -1,5 +1,5 @@
 weaponDef = {
-	name                    = "eXperimental Long Range Missile 15 - Improved Guidance",
+	name                    = "eXperimental Long Range Missile 15 - Guidance Failure",
 	weaponType              = "MissileLauncher",
 	renderType				= 1,
 	explosionGenerator    	= "custom:HE_MEDIUM",
@@ -14,8 +14,8 @@ weaponDef = {
 	noSelfDamage            = true,
 	turret                  = true,
 	range                   = 3000,
-	accuracy                = 50,
-	sprayangle				= 50,
+	accuracy                = 5000,
+	sprayangle				= 8000,
 	wobble					= 2000,
 	dance 					= 100,
 	guidance				= true,
@@ -28,7 +28,7 @@ weaponDef = {
 	weaponTimer				= 20,
 	areaOfEffect            = 20,
 	startVelocity			= 1000,
-	weaponVelocity          = 1000,
+	weaponVelocity          = 750,
 	reloadtime              = 15,
 	burst					= 15,
 	burstrate				= 0.1,
@@ -46,4 +46,4 @@ weaponDef = {
     },
 }
 
-return lowerkeys({ xLRM15 = weaponDef })
+return lowerkeys({ xxLRM15 = weaponDef })

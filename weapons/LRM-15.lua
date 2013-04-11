@@ -14,8 +14,8 @@ weaponDef = {
 	noSelfDamage            = true,
 	turret                  = true,
 	range                   = 3000,
-	accuracy                = 50,
-	sprayangle				= 50,
+	accuracy                = 2000,
+	sprayangle				= 5000,
 	wobble					= 2000,
 	dance 					= 100,
 	guidance				= true,
@@ -28,7 +28,7 @@ weaponDef = {
 	weaponTimer				= 20,
 	areaOfEffect            = 20,
 	startVelocity			= 1000,
-	weaponVelocity          = 1000,
+	weaponVelocity          = 800,
 	reloadtime              = 15,
 	burst					= 15,
 	burstrate				= 0.1,
@@ -42,7 +42,7 @@ weaponDef = {
 		cegflare			= "MISSILE_MUZZLEFLASH",
 		weaponclass			= "missile",
 		ammotype			= "lrm",
-		minrange			= "300",
+		minrange			= "500",
     },
 }
 
