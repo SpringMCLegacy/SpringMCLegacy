@@ -38,21 +38,21 @@ local IS_Nighthawk_NTK2Q = {
 		weapons 		= {	
 			[1] = {
 				name	= "ERLBL",
-				mainDir = "0 0 1",
-				maxAngleDif = 220,
+				--mainDir = "0 0 1",
+				--maxAngleDif = 220,
 				OnlyTargetCategory = "notbeacon",
 			},
 			[2] = {
 				name	= "LBL",
-				mainDir = "0 0 1",
-				maxAngleDif = 220,
+				--mainDir = "0 0 1",
+				--maxAngleDif = 220,
 				OnlyTargetCategory = "notbeacon",
 				SlaveTo = 1,
 			},
 			[3] = {
 				name	= "MPL",
-				mainDir = "0 0 1",
-				maxAngleDif = 220,
+				--mainDir = "0 0 1",
+				--maxAngleDif = 220,
 				OnlyTargetCategory = "notbeacon",
 				SlaveTo = 1,
 			},

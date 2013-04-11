@@ -38,8 +38,8 @@ local IS_Hollander_BZKF3 = {
 		weapons 		= {	
 			[1] = {
 				name	= "Gauss",
-				mainDir = "0 0 1",
-				maxAngleDif = 270,
+				--mainDir = "0 0 1",
+				--maxAngleDif = 270,
 				OnlyTargetCategory = "notbeacon",
 			},
 		},

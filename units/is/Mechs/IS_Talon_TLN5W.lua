@@ -38,21 +38,21 @@ local IS_Talon_TLN5W = {
 		weapons 		= {	
 			[1] = {
 				name	= "ERPPC",
-				mainDir = "0 0 1",
-				maxAngleDif = 220,
+				--mainDir = "0 0 1",
+				--maxAngleDif = 220,
 				OnlyTargetCategory = "notbeacon",
 			},
 			[2] = {
 				name	= "MBL",
-				mainDir = "0 0 1",
-				maxAngleDif = 220,
+				--mainDir = "0 0 1",
+				--maxAngleDif = 220,
 				OnlyTargetCategory = "notbeacon",
 				SlaveTo = 1,
 			},
 			[3] = {
 				name	= "MBL",
-				mainDir = "0 0 1",
-				maxAngleDif = 220,
+				--mainDir = "0 0 1",
+				--maxAngleDif = 220,
 				OnlyTargetCategory = "notbeacon",
 				SlaveTo = 1,
 			},
