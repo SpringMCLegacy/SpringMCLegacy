@@ -38,8 +38,8 @@ local IS_Hollander_BZKG1 = {
 		weapons 		= {	
 			[1] = {
 				name	= "LBX10",
-				mainDir = "0 0 1",
-				maxAngleDif = 270,
+				--mainDir = "0 0 1",
+				--maxAngleDif = 270,
 				OnlyTargetCategory = "notbeacon",
 			},
 			[2] = {
