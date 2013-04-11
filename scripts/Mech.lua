@@ -298,8 +298,12 @@ end
 function script.BlockShot(weaponID, targetID, userTarget)
 	local minRange = minRanges[weaponID]
 	if minRange then
-		local distance = GetUnitSeparation(unitID, targetID, true)
-		if distance < minRange then return true end
+		if not userTarget then
+			local distance = GetUnitSeparation(unitID, targetID, true)
+			if distance < minRange then return true end
+		else
+			return true
+		end
 	end
 	return false
 end
