@@ -10,6 +10,7 @@ jumping = false
 
 -- localised API functions
 local SetUnitRulesParam = Spring.SetUnitRulesParam
+local GetUnitSeparation = Spring.GetUnitSeparation
 
 -- includes
 include "smokeunit.lua"
@@ -19,14 +20,15 @@ include ("walks/" .. unitDef.name .. "_walk.lua")
 -- non-local so perks can change them (flagrant lack of encapsulation!)
 heatLimit = info.heatLimit 
 baseCoolRate = info.coolRate * 2
-
 local coolRate = baseCoolRate
 local inWater = false
+
 local missileWeaponIDs = info.missileWeaponIDs
 local launcherIDs = info.launcherIDs
 local burstLengths = info.burstLengths
 local firingHeats = info.firingHeats
 local ammoTypes = info.ammoTypes
+local minRanges = info.minRanges
 local spinSpeeds = info.spinSpeeds
 local maxAmmo = info.maxAmmo
 local currAmmo = {} -- copy maxAmmo table into currAmmo
@@ -291,6 +293,15 @@ function script.AimWeapon(weaponID, heading, pitch)
 		end
 		return true
 	end
+end
+
+function script.BlockShot(weaponID, targetID, userTarget)
+	local minRange = minRanges[weaponID]
+	if minRange then
+		local distance = GetUnitSeparation(unitID, targetID, true)
+		if distance < minRange then return true end
+	end
+	return false
 end
 
 function script.FireWeapon(weaponID)

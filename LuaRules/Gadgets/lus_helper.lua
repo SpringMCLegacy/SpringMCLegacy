@@ -79,6 +79,7 @@ function gadget:GamePreload()
 		local firingHeats = {}		
 		local reloadTimes = {}
 		local ammoTypes = {}
+		local minRanges = {}
 		local spinSpeeds = {}
 		for i = 1, #weapons do
 			local weaponInfo = weapons[i]
@@ -87,6 +88,7 @@ function gadget:GamePreload()
 			burstLengths[i] = weaponDef.salvoSize
 			firingHeats[i] = (weaponDef.customParams.heatgenerated or 0) * 0.5
 			ammoTypes[i] = weaponDef.customParams.ammotype -- intentionally nil otherwise
+			minRanges[i] = tonumber(weaponDef.customParams.minrange) -- intentionally nil otherwise
 			spinSpeeds[i] = weaponDef.customParams.spinspeed and math.rad(weaponDef.customParams.spinspeed)
 			if weaponDef.type == "MissileLauncher" and weaponDef.name ~= "narc" then --burstLengths[i] > 1 then
 				missileWeaponIDs[i] = true
@@ -101,6 +103,7 @@ function gadget:GamePreload()
 		info.burstLengths = burstLengths
 		info.firingHeats = firingHeats
 		info.ammoTypes = ammoTypes
+		info.minRanges = minRanges
 		info.spinSpeeds = spinSpeeds
 		
 		-- UnitDef Level Info
