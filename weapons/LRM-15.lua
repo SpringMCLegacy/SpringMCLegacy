@@ -12,6 +12,7 @@ weaponDef = {
 	burnblow				= false, 	--Bullets explode at range limit.
 	collideFriendly			= true,
 	noSelfDamage            = true,
+	canAttackGround			= false,
 	turret                  = true,
 	range                   = 3000,
 	accuracy                = 2000,
