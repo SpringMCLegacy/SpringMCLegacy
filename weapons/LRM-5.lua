@@ -42,6 +42,7 @@ weaponDef = {
 		cegflare			= "MISSILE_MUZZLEFLASH",
 		weaponclass			= "missile",
 		ammotype			= "lrm",
+		minrange			= "300",
     },
 }
 
