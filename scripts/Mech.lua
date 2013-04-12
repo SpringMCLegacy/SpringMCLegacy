@@ -301,9 +301,9 @@ function script.BlockShot(weaponID, targetID, userTarget)
 	local minRange = minRanges[weaponID]
 	if minRange then
 		local distance
-		if not userTarget then
+		if targetID then
 			distance = GetUnitSeparation(unitID, targetID, true)
-		else
+		elseif userTarget then
 			local cmd = GetUnitCommands(unitID, 1)[1]
 			if cmd.id == CMD.ATTACK then
 				local tx,ty,tz = unpack(cmd.params)
