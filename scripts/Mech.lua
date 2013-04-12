@@ -11,6 +11,8 @@ jumping = false
 -- localised API functions
 local SetUnitRulesParam = Spring.SetUnitRulesParam
 local GetUnitSeparation = Spring.GetUnitSeparation
+local GetUnitCommands   = Spring.GetUnitCommands
+local GetUnitDistanceToPoint = GG.GetUnitDistanceToPoint
 
 -- includes
 include "smokeunit.lua"
@@ -298,12 +300,17 @@ end
 function script.BlockShot(weaponID, targetID, userTarget)
 	local minRange = minRanges[weaponID]
 	if minRange then
+		local distance
 		if not userTarget then
-			local distance = GetUnitSeparation(unitID, targetID, true)
-			if distance < minRange then return true end
+			distance = GetUnitSeparation(unitID, targetID, true)
 		else
-			return true
+			local cmd = GetUnitCommands(unitID, 1)[1]
+			if cmd.id == CMD.ATTACK then
+				local tx,ty,tz = unpack(cmd.params)
+				distance = GetUnitDistanceToPoint(unitID, tx, ty, tz, false)
+			end
 		end
+		if distance < minRange then return true end
 	end
 	return false
 end

@@ -18,6 +18,7 @@ GG.lusHelper = {}
 -- Synced Read
 local GetUnitPieceInfo 		= Spring.GetUnitPieceInfo
 local GetUnitPieceMap		= Spring.GetUnitPieceMap
+local GetUnitPosition		= Spring.GetUnitPosition
 -- Synced Ctrl
 
 -- Unsynced Ctrl
@@ -25,9 +26,19 @@ local GetUnitPieceMap		= Spring.GetUnitPieceMap
 
 -- Variables
 
+-- Useful functions for GG
+local function GetUnitDistanceToPoint(unitID, tx, ty, tz, bool3D)
+	local x,y,z = GetUnitPosition(unitID)
+	local dy = (bool3D and ty and (ty - y)^2) or 0
+	local distanceSquared = (tx - x)^2 + (tz - z)^2 + dy
+	return math.sqrt(distanceSquared)
+end
+GG.GetUnitDistanceToPoint = GetUnitDistanceToPoint
+
 local function StringToTable(input)
 	return loadstring("return " .. (input or "{}"))()
 end
+GG.StringToTable = StringToTable
 
 function gadget:UnitCreated(unitID, unitDefID, teamID, builderID)
 	local info = GG.lusHelper[unitDefID]
