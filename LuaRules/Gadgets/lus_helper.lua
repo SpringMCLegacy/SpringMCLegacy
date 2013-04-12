@@ -15,6 +15,7 @@ if (gadgetHandler:IsSyncedCode()) then
 
 -- Localisations
 GG.lusHelper = {}
+sqrt = math.sqrt
 -- Synced Read
 local GetUnitPieceInfo 		= Spring.GetUnitPieceInfo
 local GetUnitPieceMap		= Spring.GetUnitPieceMap
@@ -31,7 +32,7 @@ local function GetUnitDistanceToPoint(unitID, tx, ty, tz, bool3D)
 	local x,y,z = GetUnitPosition(unitID)
 	local dy = (bool3D and ty and (ty - y)^2) or 0
 	local distanceSquared = (tx - x)^2 + (tz - z)^2 + dy
-	return math.sqrt(distanceSquared)
+	return sqrt(distanceSquared)
 end
 GG.GetUnitDistanceToPoint = GetUnitDistanceToPoint
 
