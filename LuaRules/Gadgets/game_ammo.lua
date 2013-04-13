@@ -44,7 +44,7 @@ end
 
 
 function gadget:GameFrame(n)
-	if n % 32 == 0 then -- every 32 frames (once a second)
+	if n % 30 == 0 then -- every 30 frames (once a second)
 		for supplierID, supplyInfo in pairs(ammoSuppliers) do
 			local x, _, z = GetUnitPosition(supplierID)
 			local nearbyUnits = GetUnitsInCylinder(x, z, supplyInfo.range, supplyInfo.team)

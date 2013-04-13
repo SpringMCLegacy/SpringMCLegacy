@@ -22,6 +22,7 @@ local GetTeamInfo		= Spring.GetTeamInfo
 local GetUnitIsDead 	= Spring.GetUnitIsDead
 local GetUnitLosState	= Spring.GetUnitLosState
 local GetUnitRulesParam	= Spring.GetUnitRulesParam
+local GetUnitSeparation	= Spring.GetUnitSeparation
 -- Synced Ctrl
 local SetUnitLosMask 	= Spring.SetUnitLosMask
 local SetUnitLosState 	= Spring.SetUnitLosState
@@ -36,6 +37,7 @@ Spring.SetGameRulesParam("NARC_DURATION", NARC_DURATION)
 local modOptions = Spring.GetModOptions()
 local inRadarUnits = {}
 local outRadarUnits = {}
+local allyJammers = {}
 
 local allyTeams = Spring.GetAllyTeamList()
 local numAllyTeams = #allyTeams
@@ -44,9 +46,17 @@ for i = 1, numAllyTeams do
 	local allyTeam = allyTeams[i]
 	inRadarUnits[allyTeam] = {}
 	outRadarUnits[allyTeam] = {}
+	allyJammers[allyTeam] = {}
 end
 
 local narcUnits = {}
+
+local function GetUnitUnderJammmer(unitID, allyTeam)
+	for jammerID, radius in pairs(allyJammers[allyTeam]) do
+		if GetUnitSeparation(unitID, jammerID) < radius return true end
+	end
+	return false
+end
 
 local function NARC(unitID, allyTeam, duration)
 	local narcFrame = GetGameFrame() + duration
@@ -83,6 +93,7 @@ end
 function gadget:UnitPreDamaged(unitID, unitDefID, unitTeam, damage, paralyzer, weaponID, projectileID, attackerID, attackerDefID, attackerTeam)
 	-- ignore non-NARC weapons
 	if weaponID ~= NARC_ID or not attackerID then return damage end
+	if GetUnitUnderJammer(unitID, select(6, GetTeamInfo(unitTeam)) then return 0 end
 	local allyTeam = select(6, GetTeamInfo(attackerTeam))
 	-- do the NARC, delay the deNARC
 	local duration = GetUnitRulesParam(attackerID, "NARC_DURATION") or NARC_DURATION
@@ -92,11 +103,21 @@ function gadget:UnitPreDamaged(unitID, unitDefID, unitTeam, damage, paralyzer, w
 	return 0
 end
 
+function gadget:UnitCreated(unitID, unitDefID, teamID)
+	local ud = UnitDefs[unitDefID]
+	local jamRadius = ud.jammerRadius
+	if jamRadius then
+		local allyTeam = select(6, GetTeamInfo(teamID))
+		allyJammers[allyTeam][unitID] = jamRadius
+	end
+end
+
 function gadget:UnitDestroyed(unitID, unitDefID, teamID)
 	for i = 1, numAllyTeams do
 		local allyTeam = allyTeams[i]
 		inRadarUnits[allyTeam][unitID] = nil
 		outRadarUnits[allyTeam][unitID] = nil
+		allyJammers[allyTeam][unitID] = nil
 	end
 	narcUnits[unitID] = nil
 end
