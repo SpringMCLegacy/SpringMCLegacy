@@ -51,7 +51,8 @@ end
 
 local narcUnits = {}
 
-local function GetUnitUnderJammmer(unitID, allyTeam)
+local function GetUnitUnderJammmer(unitID, teamID)
+	local allyTeam = select(6, GetTeamInfo(teamID))
 	for jammerID, radius in pairs(allyJammers[allyTeam]) do
 		if GetUnitSeparation(unitID, jammerID) < radius then return true end
 	end
@@ -93,7 +94,7 @@ end
 function gadget:UnitPreDamaged(unitID, unitDefID, unitTeam, damage, paralyzer, weaponID, projectileID, attackerID, attackerDefID, attackerTeam)
 	-- ignore non-NARC weapons
 	if weaponID ~= NARC_ID or not attackerID then return damage end
-	if GetUnitUnderJammer(unitID, select(6, GetTeamInfo(unitTeam)) then return 0 end
+	if GetUnitUnderJammer(unitID, unitTeam) then return 0 end
 	local allyTeam = select(6, GetTeamInfo(attackerTeam))
 	-- do the NARC, delay the deNARC
 	local duration = GetUnitRulesParam(attackerID, "NARC_DURATION") or NARC_DURATION
