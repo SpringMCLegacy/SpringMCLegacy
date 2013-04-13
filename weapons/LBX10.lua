@@ -9,7 +9,7 @@ weaponDef = {
 	noSelfDamage            = true,
 	turret                  = true,
 	ballistic				= 1,
-	range                   = 1100,
+	range                   = 1500,
 	accuracy                = 250,
 	areaOfEffect            = 1,
 	weaponVelocity          = 2500,
@@ -24,6 +24,8 @@ weaponDef = {
 --	AlphaDecay				= 0.05, 		--How much a plasma particle is more transparent than the previous particle. 
 	rgbcolor				= "1 0.8 0",
 	intensity				= 0.5,
+	dynDamageExp			= 1.0,
+	dynDamageMin			= 45,
 	damage = {
 		default = 90, --300 DPS
 	},
