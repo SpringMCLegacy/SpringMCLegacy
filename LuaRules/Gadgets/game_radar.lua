@@ -53,7 +53,7 @@ local narcUnits = {}
 
 local function GetUnitUnderJammmer(unitID, allyTeam)
 	for jammerID, radius in pairs(allyJammers[allyTeam]) do
-		if GetUnitSeparation(unitID, jammerID) < radius return true end
+		if GetUnitSeparation(unitID, jammerID) < radius then return true end
 	end
 	return false
 end
