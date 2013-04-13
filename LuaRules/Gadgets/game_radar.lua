@@ -51,7 +51,7 @@ end
 
 local narcUnits = {}
 
-local function GetUnitUnderJammmer(unitID, teamID)
+local function GetUnitUnderJammer(unitID, teamID)
 	local allyTeam = select(6, GetTeamInfo(teamID))
 	for jammerID, radius in pairs(allyJammers[allyTeam]) do
 		if GetUnitSeparation(unitID, jammerID) < radius then return true end
