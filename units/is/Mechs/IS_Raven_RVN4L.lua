@@ -38,7 +38,7 @@ local IS_Raven_RVN4L = {
 		--Makes unit use weapon from /weapons folder
 		weapons 		= {	
 			[1] = {
-				name	= "ERMBL",
+				name	= "NARC",
 				--mainDir = "0 0 1",
 				--maxAngleDif = 270,
 				OnlyTargetCategory = "notbeacon",
@@ -51,7 +51,7 @@ local IS_Raven_RVN4L = {
 				SlaveTo = 1,
 			},
 			[3] = {
-				name	= "NARC",
+				name	= "ERMBL",
 				--mainDir = "0 0 1",
 				--maxAngleDif = 270,
 				OnlyTargetCategory = "notbeacon",
@@ -59,6 +59,13 @@ local IS_Raven_RVN4L = {
 			},
 			[4] = {
 				name	= "SRM6",
+				--mainDir = "0 0 1",
+				--maxAngleDif = 270,
+				OnlyTargetCategory = "notbeacon",
+				SlaveTo = 1,
+			},
+			[5] = {
+				name	= "TAG",
 				--mainDir = "0 0 1",
 				--maxAngleDif = 270,
 				OnlyTargetCategory = "notbeacon",
@@ -76,7 +83,7 @@ local IS_Raven_RVN4L = {
 	},]]
     customparams = {
 		hasturnbutton	= "1",
-		helptext		= "Armament: 2 x ER Medium Beam Laser, 1 x SRM-6, 1 x NARC Launcher - Armor: 4.5 tons Ferro-Fibrous",
+		helptext		= "Armament: 2 x ER Medium Beam Laser, 1 x SRM-6, 1 x NARC Launcher, 1 x TAG Laser - Armor: 6 tons Standard",
 		heatlimit		= "11",
 		torsoturnspeed	= "180",
 		rightarmid 		= "4",

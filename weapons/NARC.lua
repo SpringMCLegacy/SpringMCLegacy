@@ -15,6 +15,7 @@ weaponDef = {
 	collideFriendly			= true,
 	noSelfDamage            = true,
 	turret                  = true,
+	canAttackGround			= false,
 	range                   = 1800,
 	accuracy                = 10,
 	guidance				= true,
