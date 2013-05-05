@@ -23,6 +23,7 @@ local GetUnitIsDead 	= Spring.GetUnitIsDead
 local GetUnitLosState	= Spring.GetUnitLosState
 local GetUnitRulesParam	= Spring.GetUnitRulesParam
 local GetUnitSeparation	= Spring.GetUnitSeparation
+local GetUnitTeam		= Spring.GetUnitTeam
 -- Synced Ctrl
 local SetUnitLosMask 	= Spring.SetUnitLosMask
 local SetUnitLosState 	= Spring.SetUnitLosState
@@ -54,7 +55,7 @@ local narcUnits = {}
 local function GetUnitUnderJammer(unitID, teamID)
 	local allyTeam = select(6, GetTeamInfo(teamID))
 	for jammerID, radius in pairs(allyJammers[allyTeam]) do
-		if GetUnitSeparation(unitID, jammerID) < radius then return true end
+		if GetUnitSeparation(unitID, jammerID) < radius then return true, allyTeam end
 	end
 	return false
 end
@@ -138,6 +139,11 @@ function gadget:GameFrame(n)
 				SetUnitLosMask(unitID, allyTeam, {los=false, prevLos=false, radar=false, contRadar=false} )
 				outRadarUnits[allyTeam][unitID] = nil
 			end
+		end
+		for unitID in pairs(narcUnits) do
+			local teamID = GetUnitTeam(unitID)
+			local underJammer, allyTeam = GetUnitUnderJammer(unitID, teamID)
+			if underJammer then DeNARC(unitID, allyTeam) end
 		end
 	end
 end
