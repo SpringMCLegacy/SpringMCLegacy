@@ -55,22 +55,22 @@ local narcUnits = {}
 local function GetUnitUnderJammer(unitID, teamID)
 	local allyTeam = select(6, GetTeamInfo(teamID))
 	for jammerID, radius in pairs(allyJammers[allyTeam]) do
-		if GetUnitSeparation(unitID, jammerID) < radius then return true, allyTeam end
+		if GetUnitSeparation(unitID, jammerID) < radius then return true end
 	end
 	return false
 end
 
 local function NARC(unitID, allyTeam, duration)
 	local narcFrame = GetGameFrame() + duration
-	narcUnits[unitID] = narcFrame
+	narcUnits[unitID] = {frame = narcFrame, allyTeam = allyTeam}
 	SetUnitLosState(unitID, allyTeam, {los=true, prevLos=true, radar=true, contRadar=true} ) 
 	SetUnitLosMask(unitID, allyTeam, {los=true, prevLos=false, radar=false, contRadar=false} )	
 	-- Set rules param here so that widgets know the unit is NARCed, value points to the frame NARC runs out
 	SetUnitRulesParam(unitID, "NARC", narcFrame, {inlos = true})
 end
 
-local function DeNARC(unitID, allyTeam)
-	if not GetUnitIsDead(unitID) and narcUnits[unitID] and narcUnits[unitID] <= GetGameFrame() + 1 then
+local function DeNARC(unitID, allyTeam, force)
+	if not GetUnitIsDead(unitID) and narcUnits[unitID] and (narcUnits[unitID].frame <= GetGameFrame() + 1 or force) then
 		narcUnits[unitID] = nil
 		-- unset rules param
 		SetUnitRulesParam(unitID, "NARC", -1, {inlos = true})
@@ -140,10 +140,9 @@ function gadget:GameFrame(n)
 				outRadarUnits[allyTeam][unitID] = nil
 			end
 		end
-		for unitID in pairs(narcUnits) do
+		for unitID, data in pairs(narcUnits) do
 			local teamID = GetUnitTeam(unitID)
-			local underJammer, allyTeam = GetUnitUnderJammer(unitID, teamID)
-			if underJammer then DeNARC(unitID, allyTeam) end
+			if GetUnitUnderJammer(unitID, teamID) then DeNARC(unitID, data.allyTeam, true) end
 		end
 	end
 end
