@@ -284,7 +284,7 @@ function script.AimWeapon(weaponID, heading, pitch)
 	WaitForTurn(torso, y_axis)
 	StartThread(RestoreAfterDelay)
 	local ammoType = ammoTypes[weaponID]
-	if ammoType and currAmmo[ammoType] < burstLengths[weaponID] then
+	if ammoType and (currAmmo[ammoType] or 0) < (burstLengths[weaponID] or 0) then
 		if spinSpeeds[weaponID] then
 			StartThread(SpinBarrels, weaponID, false)
 		end
