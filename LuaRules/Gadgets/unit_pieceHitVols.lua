@@ -10,7 +10,6 @@ function gadget:GetInfo()
 	}
 end
 
-local cache = {}
 local accept = {pelvis = true, torso = true, rlowerarm = true, llowerarm = true, lupperleg = true, llowerleg = true, rupperleg = true, rlowerleg = true}
 
 if gadgetHandler:IsSyncedCode() then
@@ -19,14 +18,19 @@ if gadgetHandler:IsSyncedCode() then
 function gadget:UnitCreated(unitID, unitDefID, teamID, builderID)
 	local ud = UnitDefs[unitDefID]
 	local cp = ud.customParams
-	if not cache[unitDefID] and not ud.name:find("factory") then
-		cache[unitDefID] = true
+	if not ud.name:find("dropship") then
 		local pieces = Spring.GetUnitPieceList(unitID)
 		for i, pieceName in pairs(pieces) do
 			--Spring.Echo(i, pieceName)
 			if not accept[pieceName] and i ~= "n" then
 				--Spring.Echo("piece " .. i .. " called " .. pieceName .. " to be disabled")
-				Spring.SetUnitPieceCollisionVolumeData(unitID, i - 1, true,true, false,false, 0,0,0, 0,0,0, -1, 0)
+				Spring.SetUnitPieceCollisionVolumeData(unitID, i - 1, false, 0,0,0, 0,0,0, -1, 0)
+			elseif pieceName == "torso" then
+				local scaleX, scaleY, scaleZ, offsetX, offsetY, offsetZ, volumeType, testType, primaryAxis = Spring.GetUnitPieceCollisionVolumeData (unitID, i-1 )
+				Spring.SetUnitPieceCollisionVolumeData(unitID, i - 1, true, 0.5*scaleX,0.5*scaleY,0.5*scaleZ, offsetX,offsetY,offsetZ, volumeType, primaryAxis)
+			else
+				local scaleX, scaleY, scaleZ, offsetX, offsetY, offsetZ, volumeType, testType, primaryAxis = Spring.GetUnitPieceCollisionVolumeData (unitID, i-1 )
+				Spring.SetUnitPieceCollisionVolumeData(unitID, i - 1, true, 1.5*scaleX,1.5*scaleY,1.5*scaleZ, offsetX,offsetY,offsetZ, volumeType, primaryAxis)
 			end
 		end
 	end
