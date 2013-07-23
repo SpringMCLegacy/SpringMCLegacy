@@ -65,6 +65,7 @@ for name, ud in pairs(UnitDefs) do
 	if speed > 0 then
 		if ud.customparams.unittype == "mech" then
 			ud.buildtime = RAMP_DISTANCE / speed
+			ud.usepiececollisionvolumes = true
 		elseif ud.canfly then
 			ud.buildtime = HANGAR_DISTANCE / (speed * 0.5)
 		end

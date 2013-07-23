@@ -15,6 +15,16 @@ local accept = {pelvis = true, torso = true, rlowerarm = true, llowerarm = true,
 if gadgetHandler:IsSyncedCode() then
 --	SYNCED
 
+-- localisations
+--SyncedRead
+local GetPieceColVol = Spring.GetUnitPieceCollisionVolumeData
+--SyncedCtrl
+local SetPieceColVol = Spring.SetUnitPieceCollisionVolumeData
+
+-- Constants
+local TORSO_SCALE = 0.5
+local LIMB_SCALE = 1.5
+
 function gadget:UnitCreated(unitID, unitDefID, teamID, builderID)
 	local ud = UnitDefs[unitDefID]
 	local cp = ud.customParams
@@ -24,13 +34,14 @@ function gadget:UnitCreated(unitID, unitDefID, teamID, builderID)
 			--Spring.Echo(i, pieceName)
 			if not accept[pieceName] and i ~= "n" then
 				--Spring.Echo("piece " .. i .. " called " .. pieceName .. " to be disabled")
-				Spring.SetUnitPieceCollisionVolumeData(unitID, i - 1, false, 0,0,0, 0,0,0, -1, 0)
-			elseif pieceName == "torso" then
-				local scaleX, scaleY, scaleZ, offsetX, offsetY, offsetZ, volumeType, testType, primaryAxis = Spring.GetUnitPieceCollisionVolumeData (unitID, i-1 )
-				Spring.SetUnitPieceCollisionVolumeData(unitID, i - 1, true, 0.5*scaleX,0.5*scaleY,0.5*scaleZ, offsetX,offsetY,offsetZ, volumeType, primaryAxis)
-			else
-				local scaleX, scaleY, scaleZ, offsetX, offsetY, offsetZ, volumeType, testType, primaryAxis = Spring.GetUnitPieceCollisionVolumeData (unitID, i-1 )
-				Spring.SetUnitPieceCollisionVolumeData(unitID, i - 1, true, 1.5*scaleX,1.5*scaleY,1.5*scaleZ, offsetX,offsetY,offsetZ, volumeType, primaryAxis)
+				SetPieceColVol (unitID, i - 1, false, 0,0,0, 0,0,0, -1, 0)
+			else 
+				local scaleX, scaleY, scaleZ, offsetX, offsetY, offsetZ, volumeType, _, primaryAxis = GetPieceColVol (unitID, i-1)
+				local scaleMult = LIMB_SCALE
+				if pieceName == "torso" then scaleMult = TORSO_SCALE end
+				SetPieceColVol(unitID, i - 1, true, 
+								scaleMult*scaleX, scaleMult*scaleY, scaleMult*scaleZ, 
+								offsetX, offsetY, offsetZ, volumeType, primaryAxis)
 			end
 		end
 	end
