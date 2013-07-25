@@ -38,7 +38,7 @@ function gadget:UnitCreated(unitID, unitDefID, teamID, builderID)
 			else 
 				local scaleX, scaleY, scaleZ, offsetX, offsetY, offsetZ, volumeType, _, primaryAxis = GetPieceColVol (unitID, i-1)
 				local scaleMult = LIMB_SCALE
-				if pieceName == "torso" then scaleMult = TORSO_SCALE end
+				if pieceName == "torso" or pieceName == "pelvis" then scaleMult = TORSO_SCALE end
 				SetPieceColVol(unitID, i - 1, true, 
 								scaleMult*scaleX, scaleMult*scaleY, scaleMult*scaleZ, 
 								offsetX, offsetY, offsetZ, volumeType, primaryAxis)

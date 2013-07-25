@@ -24,7 +24,6 @@ local GetUnitPosition		= Spring.GetUnitPosition
 
 -- Unsynced Ctrl
 -- Constants
-
 -- Variables
 
 -- Useful functions for GG
@@ -124,6 +123,12 @@ function gadget:GamePreload()
 		info.torsoTurnSpeed = math.rad(tonumber(cp.torsoturnspeed) or 100)
 		info.leftArmID = tonumber(cp.leftarmid) or 1
 		info.rightArmID = tonumber(cp.rightarmid) or 2
+		-- Limb HPs
+		info.limbHPs = {}
+		info.limbHPs["left_leg"] = unitDef.health * 0.1
+		info.limbHPs["right_leg"] = unitDef.health * 0.1
+		info.limbHPs["left_arm"] = unitDef.health * 0.15
+		info.limbHPs["right_arm"] = unitDef.health * 0.15
 		-- Vehicles
 		info.hover = unitDef.canHover
 		info.vtol = unitDef.hoverAttack
@@ -141,7 +146,6 @@ function gadget:GamePreload()
 		info.numWeapons = #weapons
 		info.elevationSpeed = math.rad(tonumber(cp.elevationspeed) or math.deg(info.torsoTurnSpeed))
 		info.maxAmmo = StringToTable(cp.maxammo)
-		
 		-- And finally, stick it in GG for the script to access
 		GG.lusHelper[unitDefID] = info
 	end
