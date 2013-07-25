@@ -211,7 +211,7 @@ function hideLimbPieces(limb)
 	if limb == "left_arm" then
 		Hide(piece("llowerarm"))
 		Hide(lupperarm)
-	elseif limb == "rightt_arm" then
+	elseif limb == "right_arm" then
 		Hide(piece("rlowerarm"))
 		Hide(rupperarm)	
 	end
