@@ -12,6 +12,7 @@ jumping = false
 local SetUnitRulesParam = Spring.SetUnitRulesParam
 local GetUnitSeparation = Spring.GetUnitSeparation
 local GetUnitCommands   = Spring.GetUnitCommands
+local GetUnitLastAttackedPiece = Spring.GetUnitLastAttackedPiece
 local GetUnitDistanceToPoint = GG.GetUnitDistanceToPoint
 
 -- includes
@@ -42,6 +43,10 @@ local hasArms = info.arms
 local leftArmID = info.leftArmID
 local rightArmID = info.rightArmID
 local amsID = info.amsID
+local limbHPs = {}
+for k,v in pairs(info.limbHPs) do -- copy table from defaults
+	limbHPs[k] = v
+end
 
 --Turning/Movement Locals
 local TORSO_SPEED = info.torsoTurnSpeed
@@ -56,10 +61,10 @@ local SlowDownRate = 2
 --piece defines
 local pelvis, torso = piece ("pelvis", "torso")
 
-local rlowerarm, llowerarm
+local rupperarm, lupperarm
 if hasArms then
-	rlowerarm = piece("rupperarm")
-	llowerarm = piece("lupperarm")
+	rupperarm = piece("rupperarm")
+	lupperarm = piece("lupperarm")
 end
 
 local jets = {}
@@ -99,8 +104,8 @@ local function RestoreAfterDelay(unitID)
 	Turn(torso, y_axis, 0, TORSO_SPEED)
 	
 	if hasArms then
-		Turn(llowerarm, x_axis, 0, ELEVATION_SPEED)
-		Turn(rlowerarm, x_axis, 0, ELEVATION_SPEED)
+		Turn(lupperarm, x_axis, 0, ELEVATION_SPEED)
+		Turn(rupperarm, x_axis, 0, ELEVATION_SPEED)
 	end
 end
 
@@ -202,12 +207,52 @@ function script.setSFXoccupy(terrainType)
 	end
 end
 
-function script.HitByWeapon(x, z, weaponID)
+function hideLimbPieces(limb)
+	if limb == "left_arm" then
+		Hide(piece("llowerarm"))
+		Hide(lupperarm)
+	elseif limb == "rightt_arm" then
+		Hide(piece("rlowerarm"))
+		Hide(rupperarm)	
+	end
+end
+
+function limbHPControl(limb, damage)
+	local currHP = limbHPs[limb]
+	if currHP > 0 then
+		local newHP = limbHPs[limb] - damage
+		Spring.Echo(unitDef.name, limb, newHP)
+		if newHP < 0 then 
+			hideLimbPieces(limb)
+			newHP = 0
+		end
+		limbHPs[limb] = newHP
+	end
+end
+
+function script.HitByWeapon(x, z, weaponID, damage)
 	local wd = WeaponDefs[weaponID]
 	local heatDamage = wd.customParams.heatdamage or 0
 	--Spring.Echo(wd.customParams.heatdamage)
 	currHeatLevel = currHeatLevel + heatDamage
 	SetUnitRulesParam(unitID, "heat", currHeatLevel)
+	local hitPiece = GetUnitLastAttackedPiece(unitID) or ""
+	if hitPiece == "torso" or hitPiece == "pelvis" then 
+		return damage
+	elseif hitPiece == "lupperleg" or hitPiece == "llowerleg" then
+		--deduct Left Leg HP
+		limbHPControl("left_leg", damage)
+	elseif hitPiece == "rupperleg" or hitPiece == "rlowerleg" then
+		--deduct Right Leg HP
+		limbHPControl("right_leg", damage)
+	elseif hitPiece == "lupperarm" or hitPiece == "llowerarm" then
+		--deduct Left Arm HP
+		limbHPControl("left_arm", damage)
+	elseif hitPiece == "rupperarm" or hitPiece == "rlowerarm" then
+		--deduct Right Arm HP
+		limbHPControl("right_arm", damage)
+	end
+	return 0
 end
 
 function JumpFX()
@@ -262,9 +307,9 @@ function script.AimWeapon(weaponID, heading, pitch)
 
 	if hasArms and (weaponID == leftArmID or weaponID == rightArmID) then
 		if weaponID == leftArmID then
-			Turn(llowerarm, x_axis, -pitch, ELEVATION_SPEED)
+			Turn(lupperarm, x_axis, -pitch, ELEVATION_SPEED)
 		elseif weaponID == rightArmID then
-			Turn(rlowerarm, x_axis, -pitch, ELEVATION_SPEED)
+			Turn(rupperarm, x_axis, -pitch, ELEVATION_SPEED)
 		end
 	elseif missileWeaponIDs[weaponID] then
 		if launchers[weaponID] then
