@@ -104,6 +104,7 @@ local IS_Mauler_MAL1R = {
 		hasturnbutton	= "1",
 		helptext		= "Armament: 2 x ER Large Beam Laser, 4 x AC/2, 2 x LRM-15 - Armor: 11.5 tons Ferro-Fibrous",
 		heatlimit		= "22",
+		unittype		= "mech",
 		torsoturnspeed	= "120",
 		maxammo 		= {lrm = 720, ac2 = 300},
     },
