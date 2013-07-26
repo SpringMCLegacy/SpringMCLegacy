@@ -27,7 +27,6 @@ local CL_Hephaestus = {
 	buildCostMetal      = 9270,
 	buildTime           = 0,
 	canMove				= true,
---	canHover			= true,
 		movementClass   = "HOVER",
 		maxVelocity		= 6.5, --130kph/30
 		maxReverseVelocity= 3.25,
