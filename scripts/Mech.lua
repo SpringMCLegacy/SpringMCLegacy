@@ -301,6 +301,29 @@ function script.Deactivate()
 	Spring.SetUnitStealth(unitID, true)
 end
 
+local function WeaponCanFire(weaponID)
+	if weaponID == amsID then
+		return true
+	end
+	if weaponID == leftArmID and limbHPs["left_arm"] <= 0 then
+		return false
+	elseif weaponID == rightArmID and limbHPs["right_arm"] <= 0 then
+		return false
+	end
+	local ammoType = ammoTypes[weaponID]
+	if ammoType and (currAmmo[ammoType] or 0) < (burstLengths[weaponID] or 0) then
+		if spinSpeeds[weaponID] then
+			StartThread(SpinBarrels, weaponID, false)
+		end
+		return false
+	else
+		if spinSpeeds[weaponID] and not spinPiecesState[weaponID] then
+			StartThread(SpinBarrels, weaponID, true)
+		end
+		return true
+	end
+end
+
 function script.AimWeapon(weaponID, heading, pitch)
 	Signal(2 ^ weaponID) -- 2 'to the power of' weapon ID
 	SetSignalMask(2 ^ weaponID)
@@ -319,8 +342,6 @@ function script.AimWeapon(weaponID, heading, pitch)
 				Turn(launchPoints[weaponID][i], x_axis, -pitch, ELEVATION_SPEED)
 			end
 		end
-	elseif weaponID == amsID then
-		return true
 	else
 		Turn(flares[weaponID], x_axis, -pitch, ELEVATION_SPEED)
 	end
@@ -328,18 +349,7 @@ function script.AimWeapon(weaponID, heading, pitch)
 	Turn(torso, y_axis, heading, TORSO_SPEED)
 	WaitForTurn(torso, y_axis)
 	StartThread(RestoreAfterDelay)
-	local ammoType = ammoTypes[weaponID]
-	if ammoType and (currAmmo[ammoType] or 0) < (burstLengths[weaponID] or 0) then
-		if spinSpeeds[weaponID] then
-			StartThread(SpinBarrels, weaponID, false)
-		end
-		return false
-	else
-		if spinSpeeds[weaponID] and not spinPiecesState[weaponID] then
-			StartThread(SpinBarrels, weaponID, true)
-		end
-		return true
-	end
+	return WeaponCanFire(weaponID)
 end
 
 function script.BlockShot(weaponID, targetID, userTarget)
