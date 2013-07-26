@@ -7,7 +7,7 @@ local IS_Partisan = {
 	corpse				= "IS_Partisan_X",
 	explodeAs          	= "mechexplode",
 	category 			= "tank ground notbeacon",
-	noChaseCategory		= "beacon",
+	noChaseCategory		= "beacon ground",
 	sightDistance       = 800,
 	radarDistance      	= 1500,
 		activateWhenBuilt   = true,
@@ -43,20 +43,24 @@ local IS_Partisan = {
 			[1] = {
 				name	= "AC5_AA",
 				OnlyTargetCategory = "notbeacon",
+				badTargetCategory = "ground",
 			},
 			[2] = {
 				name	= "AC5_AA",
 				OnlyTargetCategory = "notbeacon",
+				badTargetCategory = "ground",
 				SlaveTo = 1,
 			},
 			[3] = {
 				name	= "AC5_AA",
 				OnlyTargetCategory = "notbeacon",
+				badTargetCategory = "ground",
 				SlaveTo = 1,
 			},
 			[4] = {
 				name	= "AC5_AA",
 				OnlyTargetCategory = "notbeacon",
+				badTargetCategory = "ground",
 				SlaveTo = 1,
 			},
 		},
