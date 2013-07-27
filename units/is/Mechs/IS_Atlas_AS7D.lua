@@ -107,8 +107,6 @@ local IS_Atlas_AS7D = {
 		helptext		= "Armament: 1 x AC/20, 4 x Medium Beam Laser, 2 x LRM-10, 1 x SRM-6 - Armor: 19 tons Standard",
 		heatlimit		= "20",
 		torsoturnspeed	= "100",
-		leftarmid		= "2",
-		rightarmid 		= "3",
 		unittype		= "mech",
 		maxammo 		= {lrm = 360, srm = 120, ac20 = 15},
     },

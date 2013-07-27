@@ -103,8 +103,6 @@ local IS_Atlas_AS7K = {
 		helptext		= "Armament: 1 x Gauss, 2 x Large Beam Laser, 2 x Medium Pulse Laser, 2 x LRM-10, AMS - Armor: 19 tons Standard",
 		heatlimit		= "20",
 		torsoturnspeed	= "100",
-		leftarmid		= "2",
-		rightarmid 		= "3",
 		unittype		= "mech",
 		maxammo 		= {lrm = 360, gauss = 20},
     },

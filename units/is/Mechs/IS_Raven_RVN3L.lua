@@ -86,7 +86,6 @@ local IS_Raven_RVN3L = {
 		helptext		= "Armament: 2 x Medium Beam Laser, 1 x SRM-6, 1 x NARC Launcher, 1 x TAG Laser - Armor: 4.5 tons Ferro-Fibrous",
 		heatlimit		= "11",
 		torsoturnspeed	= "180",
-		rightarmid 		= "4",
 		unittype		= "mech",
 		hasbap			= "true",
 		hasecm			= "true",

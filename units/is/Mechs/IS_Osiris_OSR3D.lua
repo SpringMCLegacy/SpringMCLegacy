@@ -100,7 +100,6 @@ local IS_Osiris_OSR3D = {
 		helptext		= "Armament: 5 x Medium Beam Laser, 1 x Machinegun, 1 x SRM-6 - Armor: 4.5 tons Ferro-Fibrous",
 		heatlimit		= "20",
 		torsoturnspeed	= "190",
-		rightarmid 		= "1",
 		canjump			= "1",
 		unittype		= "mech",
 		maxammo 		= {srm = 120},

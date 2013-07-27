@@ -84,8 +84,6 @@ local IS_Dervish_DV8D = {
 		helptext		= "Armament: 2 x LRM-15, 4 x ER Medium Laser,  - Armor: 10.5 tons Standard",
 		heatlimit		= "20",
 		torsoturnspeed	= "160",
-		leftarmid		= "5",
-		rightarmid 		= "3",
 		unittype		= "mech",
 		maxammo 		= {lrm = 720},
     },

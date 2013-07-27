@@ -80,8 +80,6 @@ local CL_Maddog = {
 		helptext		= "Armament: 2 x LRM-20, 2 x Large Pulse Laser, 2 x Medium Pulse Laser - Armor: 8.5 tons Ferro-Fibrous",
 		heatlimit		= "24",
 		torsoturnspeed	= "135",
-		leftarmid		= "3",
-		rightarmid 		= "4",
 		unittype		= "mech",
     },
 }
