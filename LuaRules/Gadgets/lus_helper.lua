@@ -105,6 +105,8 @@ function gadget:UnitCreated(unitID, unitDefID, teamID, builderID)
 
 		info.rightArmMasterID = GetArmMasterWeapon(rightArmIDs)
 		info.leftArmMasterID = GetArmMasterWeapon(leftArmIDs)
+		info.rightArmIDs = rightArmIDs
+		info.leftArmIDs = leftArmIDs
 		--Spring.Echo("Right: ", info.rightArmMasterID, "Left:", info.leftArmMasterID)
 		
 		info.launcherIDs = launcherIDs
