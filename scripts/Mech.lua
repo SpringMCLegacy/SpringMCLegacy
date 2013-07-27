@@ -41,6 +41,8 @@ for k,v in pairs(maxAmmo) do
 	SetUnitRulesParam(unitID, "ammo_" .. k .. "_limit", v)
 end
 local hasArms = info.arms
+local leftArmIDs = info.leftArmIDs
+local rightArmIDs = info.rightArmIDs
 local leftArmMasterID = info.leftArmMasterID
 local rightArmMasterID = info.rightArmMasterID
 local amsID = info.amsID
@@ -214,10 +216,12 @@ end
 
 function hideLimbPieces(limb)
 	if limb == "left_arm" then
-		Hide(piece("llowerarm"))
+		local llowerarm = piece("llowerarm") or nil
+		if llowerarm then Hide(llowerarm) end
 		Hide(lupperarm)
 	elseif limb == "right_arm" then
-		Hide(piece("rlowerarm"))
+		local rlowerarm = piece("rlowerarm")
+		if rlowerarm then Hide(rlowerarm) end
 		Hide(rupperarm)	
 	end
 end
@@ -310,9 +314,9 @@ local function WeaponCanFire(weaponID)
 	if weaponID == amsID then
 		return true
 	end
-	if weaponID == leftArmMasterID and limbHPs["left_arm"] <= 0 then
+	if leftArmIDs[weaponID] and limbHPs["left_arm"] <= 0 then
 		return false
-	elseif weaponID == rightArmMasterID and limbHPs["right_arm"] <= 0 then
+	elseif rightArmIDs[weaponID] and limbHPs["right_arm"] <= 0 then
 		return false
 	end
 	local ammoType = ammoTypes[weaponID]
