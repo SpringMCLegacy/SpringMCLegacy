@@ -28,6 +28,7 @@ local inWater = false
 
 local missileWeaponIDs = info.missileWeaponIDs
 local launcherIDs = info.launcherIDs
+local barrelRecoils = info.barrelRecoilDist
 local burstLengths = info.burstLengths
 local firingHeats = info.firingHeats
 local ammoTypes = info.ammoTypes
@@ -40,8 +41,8 @@ for k,v in pairs(maxAmmo) do
 	SetUnitRulesParam(unitID, "ammo_" .. k .. "_limit", v)
 end
 local hasArms = info.arms
-local leftArmID = info.leftArmID
-local rightArmID = info.rightArmID
+local leftArmMasterID = info.leftArmMasterID
+local rightArmMasterID = info.rightArmMasterID
 local amsID = info.amsID
 local limbHPs = {}
 for k,v in pairs(info.limbHPs) do -- copy table from defaults
@@ -51,6 +52,7 @@ end
 --Turning/Movement Locals
 local TORSO_SPEED = info.torsoTurnSpeed
 local ELEVATION_SPEED = info.elevationSpeed
+local BARREL_SPEED = info.barrelRecoilSpeed
 local RESTORE_DELAY = Spring.UnitScript.GetLongestReloadTime(unitID) * 2
 
 local currLaunchPoint = 1
@@ -75,6 +77,7 @@ if info.jumpjets then
 end
 
 local flares = {}
+local barrels = {}
 local launchers = {}
 local launchPoints = {}
 local currPoints = {}
@@ -95,6 +98,8 @@ for weaponID = 1, info.numWeapons do
 		if spinSpeeds[weaponID] then
 			spinPieces[weaponID] = piece("barrels_" .. weaponID)
 			spinPiecesState[weaponID] = false
+		elseif info.barrelIDs[weaponID] then
+			barrels[weaponID] = piece("barrel_" .. weaponID)
 		end
 	end
 end
@@ -305,9 +310,9 @@ local function WeaponCanFire(weaponID)
 	if weaponID == amsID then
 		return true
 	end
-	if weaponID == leftArmID and limbHPs["left_arm"] <= 0 then
+	if weaponID == leftArmMasterID and limbHPs["left_arm"] <= 0 then
 		return false
-	elseif weaponID == rightArmID and limbHPs["right_arm"] <= 0 then
+	elseif weaponID == rightArmMasterID and limbHPs["right_arm"] <= 0 then
 		return false
 	end
 	local ammoType = ammoTypes[weaponID]
@@ -328,10 +333,10 @@ function script.AimWeapon(weaponID, heading, pitch)
 	Signal(2 ^ weaponID) -- 2 'to the power of' weapon ID
 	SetSignalMask(2 ^ weaponID)
 
-	if hasArms and (weaponID == leftArmID or weaponID == rightArmID) then
-		if weaponID == leftArmID then
+	if hasArms and (weaponID == leftArmMasterID or weaponID == rightArmMasterID) then
+		if weaponID == leftArmMasterID then
 			Turn(lupperarm, x_axis, -pitch, ELEVATION_SPEED)
-		elseif weaponID == rightArmID then
+		elseif weaponID == rightArmMasterID then
 			Turn(rupperarm, x_axis, -pitch, ELEVATION_SPEED)
 		end
 	elseif missileWeaponIDs[weaponID] then
@@ -373,6 +378,11 @@ end
 function script.FireWeapon(weaponID)
 	currHeatLevel = currHeatLevel + firingHeats[weaponID]
 	SetUnitRulesParam(unitID, "heat", currHeatLevel)
+	if barrels[weaponID] and barrelRecoils[weaponID] then
+		Move(barrels[weaponID], z_axis, -barrelRecoils[weaponID], BARREL_SPEED)
+		WaitForMove(barrels[weaponID], z_axis)
+		Move(barrels[weaponID], z_axis, 0, 10)
+	end
 	local ammoType = ammoTypes[weaponID]
 	if ammoType then
 		ChangeAmmo(ammoType, -burstLengths[weaponID])

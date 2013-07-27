@@ -40,35 +40,73 @@ local function StringToTable(input)
 end
 GG.StringToTable = StringToTable
 
+local function IsParentAnArm(parent, side)
+	if side == "left" then
+		if (parent == "lupperarm" or parent == "llowerarm") then
+			return true
+		end
+	elseif side == "right" then
+		if (parent == "rupperarm" or parent == "rlowerarm") then
+			return true
+		end
+	end
+	return nil
+end
+local function GetArmMasterWeapon(input)
+	local lowestID = 32
+	for weaponID, _ in pairs(input) do
+		if weaponID < lowestID then lowestID = weaponID end
+	end
+	return lowestID
+end
+
 function gadget:UnitCreated(unitID, unitDefID, teamID, builderID)
 	local info = GG.lusHelper[unitDefID]
 	if info.arms == nil then --and not UnitDefs[unitDefID].name:find("dropship") then
 		-- Parse Model Data
 		local pieceMap = GetUnitPieceMap(unitID)
 		info.arms = pieceMap["rupperarm"] ~= nil
+		local leftArmIDs = {}
+		local rightArmIDs = {}
+		
 		local launcherIDs = {}
 		local turretIDs = {}
 		local mantletIDs = {}
 		local barrelIDs = {}
 		local numWheels = 0
 		for pieceName, pieceNum in pairs(pieceMap) do
+			local parent = GetUnitPieceInfo(unitID, pieceNum)["parent"]
+			local weapNumPos = pieceName:find("_") or 0
+			local weaponNum = tonumber(pieceName:sub(weapNumPos+1,weapNumPos+1))
 			-- Find launcher pieces
-			if pieceName:find("launcher_") and #pieceName <= 10 then -- better to use a regex here really
-				local weaponNum = tonumber(pieceName:sub(10, -1))
+			if pieceName:find("launcher_") then
 				launcherIDs[weaponNum] = true
 			-- Find mantlet pieces
 			elseif pieceName:find("mantlet_") then
-				local weaponNum = tonumber(pieceName:sub(9, -1))
 				mantletIDs[weaponNum] = true
 			-- Find barrel pieces
 			elseif pieceName:find("barrel_") then
-				local weaponNum = tonumber(pieceName:sub(8, -1))
 				barrelIDs[weaponNum] = true
+				leftArmIDs[weaponNum] = leftArmIDs[weaponNum] or IsParentAnArm(parent, "left")
+				rightArmIDs[weaponNum] = rightArmIDs[weaponNum] or IsParentAnArm(parent, "right")
 			-- Find the number of wheels
 			elseif pieceName:find("wheel") then
 				numWheels = numWheels + 1
+			-- assign flare weaponIDs to left or right arms
+			elseif pieceName:find("flare_") then
+				leftArmIDs[weaponNum] = leftArmIDs[weaponNum] or IsParentAnArm(parent, "left")
+				rightArmIDs[weaponNum] = rightArmIDs[weaponNum] or IsParentAnArm(parent, "right")
+			-- assign launchpoint weaponIDs to left or right arms
+			elseif pieceName:find("launchpoint_") then
+				leftArmIDs[weaponNum] = leftArmIDs[weaponNum] or IsParentAnArm(parent, "left")
+				rightArmIDs[weaponNum] = rightArmIDs[weaponNum] or IsParentAnArm(parent, "right")
 			end
 		end
+
+		info.rightArmMasterID = GetArmMasterWeapon(rightArmIDs)
+		info.leftArmMasterID = GetArmMasterWeapon(leftArmIDs)
+		--Spring.Echo("Right: ", info.rightArmMasterID, "Left:", info.leftArmMasterID)
+		
 		info.launcherIDs = launcherIDs
 		info.turretIDs = turretIDs
 		info.mantletIDs = mantletIDs
@@ -121,8 +159,6 @@ function gadget:GamePreload()
 		-- Mechs
 		info.jumpjets = GG.jumpDefs[unitDefID] ~= nil
 		info.torsoTurnSpeed = math.rad(tonumber(cp.torsoturnspeed) or 100)
-		info.leftArmID = tonumber(cp.leftarmid) or 1
-		info.rightArmID = tonumber(cp.rightarmid) or 2
 		-- Limb HPs
 		info.limbHPs = {}
 		info.limbHPs["left_leg"] = unitDef.health * 0.1
