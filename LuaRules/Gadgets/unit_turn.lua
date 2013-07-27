@@ -35,8 +35,6 @@ if (gadgetHandler:IsSyncedCode()) then
 -- SYNCED
 
 local function StartTurn(unitID, unitDefID, tx, tz)
-	env = Spring.UnitScript.GetScriptEnv(unitID)
-	Spring.UnitScript.CallAsUnit(unitID,env.StartTurn)
 	local ud = UnitDefs[unitDefID]
 	local turnRate = ud.turnRate
 	local ux, _, uz = GetUnitPosition(unitID)
@@ -54,6 +52,8 @@ local function StartTurn(unitID, unitDefID, tx, tz)
 		numFrames = -numFrames
 		turnRate = - turnRate
 	end
+	env = Spring.UnitScript.GetScriptEnv(unitID)
+	Spring.UnitScript.CallAsUnit(unitID, env.StartTurn, turnRate < 0) -- clockwise from +ve y
 	local turnTable = {}
 	turnTable["turnRate"] = turnRate
 	turnTable["numFrames"] = numFrames

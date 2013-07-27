@@ -301,8 +301,9 @@ function StopJump()
 	jumping = false
 end
 
-function StartTurn()
-	Spring.Echo("I'm turnin' yo!")
+function StartTurn(clockwise)
+	local direction = (clockwise and "clockwise") or "anti-clockwise"
+	Spring.Echo("I'm turnin' " .. direction .. " yo!")
 end
 
 function StopTurn()
