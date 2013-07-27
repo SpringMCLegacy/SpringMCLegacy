@@ -57,7 +57,7 @@ for unitName, ud in pairs(UnitDefs) do
 					--end
 				end
 			end
-			table.insert(ud.sfxtypes.explosiongenerators, "custom:ROACHPLOSION")
+			table.insert(ud.sfxtypes.explosiongenerators, "custom:HE_Large")
 			--[[Spring.Echo("UNIT: " .. unitName)
 			for _, i in pairs(ud.sfxtypes.explosiongenerators) do
 				Spring.Echo(i)
