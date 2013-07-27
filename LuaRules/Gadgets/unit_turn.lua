@@ -35,6 +35,8 @@ if (gadgetHandler:IsSyncedCode()) then
 -- SYNCED
 
 local function StartTurn(unitID, unitDefID, tx, tz)
+	env = Spring.UnitScript.GetScriptEnv(unitID)
+	Spring.UnitScript.CallAsUnit(unitID,env.StartTurn)
 	local ud = UnitDefs[unitDefID]
 	local turnRate = ud.turnRate
 	local ux, _, uz = GetUnitPosition(unitID)
@@ -59,6 +61,12 @@ local function StartTurn(unitID, unitDefID, tx, tz)
 	turning[unitID] = turnTable
 end
 
+local function StopTurn(unitID)
+	turning[unitID] = nil
+	env = Spring.UnitScript.GetScriptEnv(unitID)
+	Spring.UnitScript.CallAsUnit(unitID,env.StopTurn)
+end
+
 function gadget:GameFrame(n)
 	for unitID, turnTable in pairs(turning) do
 		if turnTable.numFrames > 0 then
@@ -80,10 +88,12 @@ end
 
 function gadget:AllowCommand(unitID, unitDefID, teamID, cmdID, cmdParams, cmdOptions)
 	local ud = UnitDefs[unitDefID]
-	if cmdID == CMD_TURN and not ud.customParams.hasturnbutton then
-		return false
+	if cmdID == CMD_TURN then
+		return ud.customParams.hasturnbutton
 	end
-	turning[unitID] = nil -- Abort turn if another command issued directly (not queued)
+	if cmdID ~= CMD.SET_WANTED_MAX_SPEED and turning[unitID] then
+		StopTurn(unitID) -- Abort turn if another command issued directly (not queued)
+	end
 	return true
 end
 
@@ -98,7 +108,7 @@ function gadget:CommandFallback(unitID, unitDefID, unitTeam, cmdID, cmdParams, c
 			if turning[unitID].numFrames > 0 then
 				return true, false -- still turning
 			else
-				turning[unitID] = nil
+				StopTurn(unitID)
 				return true, true -- turn finished
 			end
 		end

@@ -236,9 +236,9 @@ local function Jump(unitID, goal, cmdTag)
   
   if (delay == 0) then
 	if cob then
-		spCallCOBScript( unitID, "BeginJump", 0)
+		spCallCOBScript( unitID, "StartJump", 0)
       else
-	    Spring.UnitScript.CallAsUnit(unitID,env.beginJump)
+	    Spring.UnitScript.CallAsUnit(unitID,env.StartJump)
 	  end
 	if rotateMidAir then
 	  mcSetRotation(unitID, 0, (startHeading - 2^15)/rotUnit, 0) -- keep current heading
@@ -261,9 +261,9 @@ local function Jump(unitID, goal, cmdTag)
 	  end
 	  
 	  if cob then
-		spCallCOBScript( unitID, "BeginJump", 0)
+		spCallCOBScript( unitID, "StartJump", 0)
       else
-		Spring.UnitScript.CallAsUnit(unitID,env.beginJump)
+		Spring.UnitScript.CallAsUnit(unitID,env.StartJump)
 	  end
 
 	  if rotateMidAir then
@@ -311,9 +311,9 @@ local function Jump(unitID, goal, cmdTag)
 
     if (fakeUnitID) then spDestroyUnit(fakeUnitID, false, true) end
     if cob then
-	  spCallCOBScript( unitID, "EndJump", 0)
+	  spCallCOBScript( unitID, "StopJump", 0)
 	else
-	   Spring.UnitScript.CallAsUnit(unitID,env.endJump)
+	   Spring.UnitScript.CallAsUnit(unitID,env.StopJump)
 	end
     lastJump[unitID] = spGetGameSeconds()
     jumping[unitID] = false

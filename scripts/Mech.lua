@@ -291,14 +291,22 @@ function JumpFX()
 	end
 end
 
-function beginJump()
+function StartJump()
 	jumping = true
 	currHeatLevel = currHeatLevel + jumpHeat
 	StartThread(JumpFX)
 end
 
-function endJump()
+function StopJump()
 	jumping = false
+end
+
+function StartTurn()
+	Spring.Echo("I'm turnin' yo!")
+end
+
+function StopTurn()
+	Spring.Echo("I'm finished turnin' bro!")
 end
 
 function script.Create()

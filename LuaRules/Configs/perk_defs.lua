@@ -40,7 +40,7 @@ return {
 			action = 'perkheatcapacity',
 			name = '  Heat:\n  Capacity  ',
 			tooltip = '+50% Heat capacity',
-			texture = 'unitpics/is_atlas.png',	
+			--texture = 'unitpics/is_atlas.png',	
 		},
 		valid = allMechs,
 		applyPerk = function (unitID) 
@@ -56,7 +56,7 @@ return {
 			action = 'perkheatsdissipate',
 			name = '  Heat:\n  Dissipate ',
 			tooltip = '+50% Heat disiapation rate',
-			texture = 'unitpics/is_atlas.png',	
+			--texture = 'unitpics/is_atlas.png',	
 		},
 		valid = allMechs,
 		applyPerk = function (unitID) 
@@ -71,7 +71,7 @@ return {
 			action = 'perkjumpjetrange',
 			name = '  Jump:\n  Range     ',
 			tooltip = '+50% Jump range & speed',
-			texture = 'unitpics/is_osiris.png',	
+			--texture = 'unitpics/is_osiris.png',	
 		},
 		valid = hasJumpjets,
 		applyPerk = function (unitID) 
@@ -88,7 +88,7 @@ return {
 			action = 'perkjumpjetreload',
 			name = '  Jump:\n  Reload    ',
 			tooltip = '-50% Jump reload time',
-			texture = 'unitpics/is_osiris.png',	
+			--texture = 'unitpics/is_osiris.png',	
 		},
 		valid = hasJumpjets,
 		applyPerk = function (unitID) 
@@ -103,7 +103,7 @@ return {
 			action = 'perksensorsrange',
 			name = '  Sensors:\n  Range     ',
 			tooltip = '+50% Radar and LOS range',
-			texture = 'unitpics/is_owens.png',	
+			--texture = 'unitpics/is_owens.png',	
 		},
 		valid = allMechs,
 		applyPerk = function (unitID) 
@@ -122,7 +122,7 @@ return {
 			action = 'perknarkduration',
 			name = '  NARC:\n  Duration  ',
 			tooltip = '+50% NARC duration',
-			texture = 'unitpics/is_raven.png',	
+			--texture = 'unitpics/is_raven.png',	
 		},
 		valid = function (unitDefID) return hasWeaponName(unitDefID, "NARC") end,
 		applyPerk = function (unitID) 
@@ -137,7 +137,7 @@ return {
 			action = 'perkmissilerange',
 			name = '  Missiles:\n  Range     ',
 			tooltip = '+50% Missile Range',
-			texture = 'unitpics/is_catapult.png',	
+			--texture = 'unitpics/is_catapult.png',	
 		},
 		valid = function (unitDefID) return hasWeaponClass(unitDefID, "missile") end,
 		applyPerk = function (unitID) 
@@ -151,7 +151,7 @@ return {
 			action = 'perkenergyrange',
 			name = '  Energy:\n  Range     ',
 			tooltip = '+50% Energy Weapon Range',
-			texture = 'unitpics/cl_nova.png',	
+			--texture = 'unitpics/cl_nova.png',	
 		},
 		valid = function (unitDefID) return hasWeaponClass(unitDefID, "energy") end,
 		applyPerk = function (unitID) 
@@ -165,7 +165,7 @@ return {
 			action = 'perkprojectilerange',
 			name = '  Projectile:\n  Range     ',
 			tooltip = '+50% Projectile Weapon Range',
-			texture = 'unitpics/is_hollander.png',	
+			--texture = 'unitpics/is_hollander.png',	
 		},
 		valid = function (unitDefID) return hasWeaponClass(unitDefID, "projectile") end,
 		applyPerk = function (unitID) 
