@@ -10,7 +10,7 @@ function gadget:GetInfo()
 	}
 end
 
-local accept = {pelvis = true, torso = true, rlowerarm = true, llowerarm = true, lupperleg = true, llowerleg = true, rupperleg = true, rlowerleg = true}
+local accept = {pelvis = true, torso = true, rupperarm = true, rlowerarm = true, lupperarm = true, llowerarm = true, lupperleg = true, llowerleg = true, rupperleg = true, rlowerleg = true}
 
 if gadgetHandler:IsSyncedCode() then
 --	SYNCED
