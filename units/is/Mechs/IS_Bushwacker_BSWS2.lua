@@ -85,6 +85,7 @@ local IS_Bushwacker_BSWS2 = {
 		rightarmid 		= "6",
 		unittype		= "mech",
 		maxammo 		= {srm = 120, ac10 = 40},
+		barrelrecoildist = {[1] = 5},
     },
 }
 
