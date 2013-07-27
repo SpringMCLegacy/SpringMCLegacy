@@ -221,9 +221,9 @@ function SmokeLimb(limb, piece)
 		local health = limbHPs[limb]/maxHealth
 		--Spring.Echo("WHOOP", limb, health)
 		if (health <= 66) then -- only smoke if less then 2/3rd limb maxhealth left
-			EmitSfx(piece, SFX.BLACK_SMOKE)
+			EmitSfx(piece, SFX.WHITE_SMOKE)
 		end
-		Sleep(20*health + 200)
+		Sleep(20*health + 150)
 	end
 end
 
@@ -232,12 +232,14 @@ function hideLimbPieces(limb)
 		local llowerarm = piece("llowerarm") or nil
 		if llowerarm then Hide(llowerarm) end
 		Hide(lupperarm)
-		EmitSfx(lupperarm, SFX.CEG + #(unitDef.weapons) + 1)
+		EmitSfx(lupperarm, SFX.CEG + info.numWeapons + 1)
+		Explode(lupperarm, SFX.FIRE + SFX.SMOKE)
 	elseif limb == "right_arm" then
 		local rlowerarm = piece("rlowerarm")
 		if rlowerarm then Hide(rlowerarm) end
 		Hide(rupperarm)	
-		EmitSfx(rupperarm, SFX.CEG + #(unitDef.weapons) + 1)
+		EmitSfx(rupperarm, SFX.CEG + info.numWeapons + 1)
+		Explode(rupperarm, SFX.FIRE + SFX.SMOKE)
 	end
 end
 
@@ -245,7 +247,7 @@ function limbHPControl(limb, damage)
 	local currHP = limbHPs[limb]
 	if currHP > 0 then
 		local newHP = limbHPs[limb] - damage
-		Spring.Echo(unitDef.name, limb, newHP)
+		--Spring.Echo(unitDef.name, limb, newHP)
 		if newHP < 0 then 
 			hideLimbPieces(limb)
 			newHP = 0
