@@ -84,8 +84,6 @@ local IS_Dervish_DV6M = {
 		helptext		= "Armament: 2 x LRM-10, 2 x Medium Laser, 2 x SRM-2 - Armor: 7.5 tons Standard",
 		heatlimit		= "10",
 		torsoturnspeed	= "160",
-		leftarmid		= "4",
-		rightarmid 		= "3",
 		unittype		= "mech",
 		maxammo 		= {lrm = 360, srm = 240},
     },

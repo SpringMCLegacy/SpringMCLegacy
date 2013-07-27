@@ -48,8 +48,6 @@ local IS_Hollander_BZKF3 = {
 		helptext		= "Armament: 1 x Gauss Rifle - Armor: 4 tons Ferro-Fibrous",
 		heatlimit		= "10",
 		torsoturnspeed	= "140",
-		leftarmid 		= "2",
-		rightarmid 		= "3",
 		unittype		= "mech",
 		maxammo 		= {gauss = 20},
 		

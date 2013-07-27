@@ -70,8 +70,6 @@ local IS_Hunchback_HBK4G = {
 		helptext		= "Armament: 1 x AC/20, 2 x Medium Beam Laser, 1 x Small Beam Laser - Armor: 10 tons Standard",
 		heatlimit		= "13",
 		torsoturnspeed	= "160",
-		leftarmid		= "3",
-		rightarmid 		= "2",
 		unittype		= "mech",
 		maxammo 		= {ac20 = 16},
     },

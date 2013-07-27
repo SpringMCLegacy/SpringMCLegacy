@@ -58,7 +58,6 @@ local CL_Firemoth_A = {
 		helptext		= "Armament: 1 x SRM-4, 1 x TAG Laser - Armor: 2 tons Ferro-Fibrous",
 		heatlimit		= "20",
 		torsoturnspeed	= "200",
-		rightarmid 		= "1",
 		unittype		= "mech",
 		maxammo 		= {srm = 120},
     },

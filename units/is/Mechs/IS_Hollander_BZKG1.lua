@@ -76,8 +76,6 @@ local IS_Hollander_BZKG1 = {
 		helptext		= "Armament: 1 x LBX-10, 2 x Medium Laser - Armor: 6 tons Ferro-Fibrous",
 		heatlimit		= "10",
 		torsoturnspeed	= "140",
-		leftarmid 		= "2",
-		rightarmid 		= "3",
 		unittype		= "mech",
 		maxammo 		= {ac10 = 30},
     },

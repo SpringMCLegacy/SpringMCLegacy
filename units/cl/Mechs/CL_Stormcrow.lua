@@ -97,8 +97,6 @@ local CL_Stormcrow = {
 		helptext		= "Armament: 1 x LRM-20, 4 x Medium Pulse Laser, 2 x SRM-4 - Armor: 9.5 tons",
 		heatlimit		= "20",
 		torsoturnspeed	= "160",
-		leftarmid		= "2",
-		rightarmid 		= "3",
 		unittype		= "mech",
     },
 }

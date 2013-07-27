@@ -93,7 +93,6 @@ local IS_Osiris_OSR4D = {
 		helptext		= "Armament: 5 x Medium Beam Laser, 1 x Medium Pulse Laser - Armor: 5.5 tons Ferro-Fibrous",
 		heatlimit		= "20",
 		torsoturnspeed	= "190",
-		rightarmid 		= "2",
 		canjump			= "1",
 		unittype		= "mech",
     },

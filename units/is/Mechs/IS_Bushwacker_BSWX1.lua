@@ -93,7 +93,6 @@ local IS_Bushwacker_BSWX1 = {
 		helptext		= "Armament: 1 x AC/10, 1 x Large Beam Laser, 2 x Machinegun, 2 x LRM-5 - Armor: 9 tons Ferro-Fibrous",
 		heatlimit		= "22",
 		torsoturnspeed	= "160",
-		rightarmid 		= "6",
 		unittype		= "mech",
 		maxammo 		= {lrm = 180, ac10 = 20},
     },
