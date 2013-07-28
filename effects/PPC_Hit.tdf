@@ -15,7 +15,7 @@
       		size = 10.5;
       		sizeGrowth = 5;
 
-			numParticles		= 5;
+			//numParticles		= 5;
          	pos = r-2 r2, 5, r-2 r2;
          	speed=0, 1 0, 0;
       		}
@@ -90,7 +90,7 @@
 		emitRot		= 45;
 		emitRotSpread	= 32;
 
-		size = 5;
+		//size = 5;
 		sizeGrowth	= 0.75;
 		sizeMod		= 0.75;
 
