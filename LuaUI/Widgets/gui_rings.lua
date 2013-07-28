@@ -23,10 +23,17 @@ local GetUnitDefID			= Spring.GetUnitDefID
 local GetActiveCommand		= Spring.GetActiveCommand
 local GetSelectedUnits		= Spring.GetSelectedUnits
 
+local AttackRed = {1.0, 0.2, 0.2, 0.7}
+
+function widget:Initialize()
+	btFont = gl.LoadFont("LuaUI/Fonts/bt_oldstyle.ttf", 24, 2, 30)
+	btFont:SetTextColor(AttackRed)
+end
+
 function widget:DrawWorldPreUnit()
 	if select(4, GetActiveCommand()) == "Attack" then
 		glDepthTest(true)
-		glColor(1.0,0,0,1)
+		glColor(AttackRed)
 		for _,unitID in ipairs(GetSelectedUnits()) do
 			local unitDef = UnitDefs[GetUnitDefID(unitID)]
 			local weapons = unitDef.weapons
@@ -44,8 +51,8 @@ function widget:DrawWorldPreUnit()
 				glDrawGroundCircle(x,y,z, radius,24)
 				gl.DrawFuncAtUnit(unitID, false, function()
 					gl.Translate(0, 40, radius - 40)
-					gl.Billboard()
-					gl.Text("Min Range: " .. weapName, 0, 0, 24, "c")
+					gl.Billboard()	
+					btFont:Print("Min Range: " .. weapName, 0, 0, 24, "c")
 				end)
 			end
 		end
