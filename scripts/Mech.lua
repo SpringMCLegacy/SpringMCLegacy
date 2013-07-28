@@ -281,20 +281,23 @@ function script.HitByWeapon(x, z, weaponID, damage)
 	return 0
 end
 
-function JumpFX()
-	while jumping do
-		local jumpJetTrail = SFX.CEG
-		for i = 1, #jets do
-			EmitSfx(jets[i], jumpJetTrail)
-		end
-		Sleep(50)
-	end
+function PreJump(delay, turn, lineDist)
+	Spring.Echo("In " .. delay .. " frames I will jump " .. lineDist .. " elmos on a heading of " .. turn)
 end
 
 function StartJump()
 	jumping = true
 	currHeatLevel = currHeatLevel + jumpHeat
-	StartThread(JumpFX)
+end
+
+function Jumping()
+	for i = 1, #jets do -- emit JumpJetTrail
+		EmitSfx(jets[i], SFX.CEG)
+	end
+end
+
+function HalfJump()
+	Spring.Echo("Woah! It's high up here!")
 end
 
 function StopJump()

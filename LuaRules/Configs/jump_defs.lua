@@ -26,7 +26,7 @@ local name
   
 jumpCategory = { 
 	baseclass = {
-		range = 600, height = 200, speed = 6,  reload = 10,  aaShootMe = false, delay = 0, cobscript = false,rotateMidAir = true},	
+		range = 600, height = 200, speed = 6,  reload = 10,  aaShootMe = false, delay = 60, cobscript = false,rotateMidAir = true},	
 	-- category containining only optional tags for testing error code only.
 	-- iammissingstuff ={
 	-- 	reload	= 10, aaShootMe	= false, },	
