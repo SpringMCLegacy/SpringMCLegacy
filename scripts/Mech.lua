@@ -215,13 +215,12 @@ function script.setSFXoccupy(terrainType)
 end
 
 function SmokeLimb(limb, piece)
-	--Spring.Echo("BANANA", 0.66 * 0.1 * unitDef.health)
 	local maxHealth = info.limbHPs[limb] / 100
 	while true do
 		local health = limbHPs[limb]/maxHealth
-		--Spring.Echo("WHOOP", limb, health)
 		if (health <= 66) then -- only smoke if less then 2/3rd limb maxhealth left
-			EmitSfx(piece, SFX.WHITE_SMOKE)
+			EmitSfx(piece, SFX.CEG + info.numWeapons + 2)
+			EmitSfx(piece, SFX.CEG + info.numWeapons + 3)
 		end
 		Sleep(20*health + 150)
 	end
@@ -318,15 +317,17 @@ function script.Create()
 	--StartThread(SmokeUnit, {pelvis, torso})
 	StartThread(SmokeLimb, "left_arm", lupperarm)
 	StartThread(SmokeLimb, "right_arm", rupperarm)
-	StartThread(MotionControl)
 	StartThread(CoolOff)
+	StartThread(MotionControl)
 end
 
 function script.StartMoving()
+	Spring.Echo("START MOVING")
 	walking = true
 end
 
 function script.StopMoving()
+	Spring.Echo("STOP MOVING")
 	-- if we are walking down the ramp during construction, ignore calls to StopMoving
 	-- there's probably a more efficient way to do this 
 	-- Not sure if this is still required!
