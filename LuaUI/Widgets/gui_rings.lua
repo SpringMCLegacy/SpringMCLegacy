@@ -29,7 +29,13 @@ local AttackRed = {1.0, 0.2, 0.2, 0.7}
 local minRanges = {} -- minRange[unitDefID] = {weapName = range, ...}
 
 function widget:Initialize()
-	-- cache ranges
+	-- Change default command menu font
+	local currentFont = Spring.GetConfigString("FontFile")
+	local currentFontSmall = Spring.GetConfigString("SmallFontFile")
+	Spring.SendCommands("font Handel Gothic.ttf")
+	Spring.SetConfigString("FontFile", currentFont)
+	Spring.SetConfigString("SmallFontFile", currentFontSmall)
+	-- Cache ranges
 	for unitDefID, unitDef in pairs(UnitDefs) do
 		local weapons = unitDef.weapons
 		for i = 1, #weapons do 
@@ -59,10 +65,12 @@ function widget:DrawWorldPreUnit()
 			if rangesToDraw then
 				local x, y, z = GetUnitPosition(unitID)
 				for weapName, radius in pairs(rangesToDraw) do
+					gl.PushMatrix()
 					glDrawGroundCircle(x,y,z, radius,24)
 					glTranslate(x, y + 40, z + radius - 40)
 					glBillboard()
 					btFont:Print("Min Range: " .. weapName, 0, 0, 24, "c")
+					gl.PopMatrix()
 				end
 			end
 		end
