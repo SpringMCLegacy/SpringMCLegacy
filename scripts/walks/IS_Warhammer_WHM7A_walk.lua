@@ -1,6 +1,7 @@
 --piece defines
 -- NB. local here means main script can't read them, may want to change that for e.g. Killed (or put Killed in here for per-unit death anims! But then other pieces need to be none-local)
 local pelvis, lupperleg, llowerleg, rupperleg, rlowerleg, rfoot, lfoot = piece ("pelvis", "lupperleg", "llowerleg", "rupperleg", "rlowerleg", "rfoot", "lfoot")
+local torso, rupperarm, lupperarm = piece ("torso", "rupperarm", "lupperarm")
 
 --Turning/Movement Locals
 local LEG_SPEED = rad(400)
@@ -103,6 +104,10 @@ function MotionControl()
 			WaitForTurn(rfoot, x_axis)
 			--Sleep(10)
 			--Spring.Echo("Step THREE")
+			--Arms & Torso--
+			Move(torso, y_axis, -1, LEG_SPEED * 4)
+			Move(rupperarm, y_axis, -2, LEG_SPEED * 4)
+			Move(lupperarm, y_axis, -2, LEG_SPEED * 4)
 			--Pelvis--
 			Turn(pelvis, z_axis, rad(-2), LEG_SPEED / 4)
 			--Left Leg--
@@ -122,6 +127,10 @@ function MotionControl()
 			WaitForTurn(rfoot, x_axis)
 			--Sleep(10)
 			--Spring.Echo("Step 3.5")
+			--Arms & Torso--
+			Move(torso, y_axis, 0, LEG_SPEED)
+			Move(rupperarm, y_axis, 0, LEG_SPEED)
+			Move(lupperarm, y_axis, 0, LEG_SPEED)
 			--Pelvis--
 			Turn(pelvis, z_axis, rad(-2), LEG_SPEED / 4)
 			--Left Leg--
@@ -217,6 +226,10 @@ function MotionControl()
 			WaitForTurn(rfoot, x_axis)
 			--Sleep(10)
 			--Spring.Echo("Step SIX")
+			--Arms & Torso--
+			Move(torso, y_axis, -1, LEG_SPEED * 4)
+			Move(rupperarm, y_axis, -2, LEG_SPEED * 4)
+			Move(lupperarm, y_axis, -2, LEG_SPEED * 4)
 			--Pelvis--
 			Turn(pelvis, z_axis, rad(2), LEG_SPEED / 4)
 			--Left Leg--
@@ -236,6 +249,10 @@ function MotionControl()
 			WaitForTurn(rfoot, x_axis)
 			--Sleep(10)
 			--Spring.Echo("Step 6.5")
+			--Arms & Torso--
+			Move(torso, y_axis, 0, LEG_SPEED)
+			Move(rupperarm, y_axis, 0, LEG_SPEED)
+			Move(lupperarm, y_axis, 0, LEG_SPEED)
 			--Pelvis--
 			Turn(pelvis, z_axis, rad(2), LEG_SPEED / 4)
 			--Left Leg--
@@ -274,6 +291,9 @@ function MotionControl()
 			WaitForTurn(rfoot, x_axis)
 			--Sleep(10)
 		else
+			Move(torso, y_axis, 0, LEG_SPEED)
+			Move(rupperarm, y_axis, 0, LEG_SPEED)
+			Move(lupperarm, y_axis, 0, LEG_SPEED)
 			Turn(lupperleg, x_axis, rad(0), LEG_SPEED)
 			Turn(llowerleg, x_axis, rad(0), LEG_SPEED)
 			Turn(lfoot, x_axis, rad(0), LEG_SPEED)
