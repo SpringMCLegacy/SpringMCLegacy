@@ -1,6 +1,6 @@
 function widget:GetInfo()
   return {
-    name      = "BTL - Minimum Ranges",
+    name      = "BT:L - Minimum Ranges",
     desc      = "Draws minimum range rings",
     author    = "FLOZi (C. Lawrence)",
     date      = "28/07/2013",
@@ -13,9 +13,10 @@ end
 -- localisations
 
 -- OGL
-local glDrawGroundCircle 	= gl.DrawGroundCircle
-local glDepthTest 			= gl.DepthTest
+local glBillboard	 		= gl.Billboard
 local glColor 				= gl.Color
+local glDrawGroundCircle 	= gl.DrawGroundCircle
+local glTranslate			= gl.Translate
 -- SyncedRead
 local GetUnitPosition 		= Spring.GetUnitPosition
 local GetUnitDefID			= Spring.GetUnitDefID
@@ -25,7 +26,24 @@ local GetSelectedUnits		= Spring.GetSelectedUnits
 
 local AttackRed = {1.0, 0.2, 0.2, 0.7}
 
+local minRanges = {} -- minRange[unitDefID] = {weapName = range, ...}
+
 function widget:Initialize()
+	-- cache ranges
+	for unitDefID, unitDef in pairs(UnitDefs) do
+		local weapons = unitDef.weapons
+		for i = 1, #weapons do 
+			local weaponDef = WeaponDefs[weapons[i].weaponDef]
+			local minRange = tonumber(weaponDef.customParams.minrange) or nil
+			if minRange then
+				if not minRanges[unitDefID] then
+					minRanges[unitDefID] = {}
+				end
+				minRanges[unitDefID][weaponDef.name] = minRange
+			end
+		end
+	end
+	-- Setup fonts for drawing
 	btFont = gl.LoadFont("LuaUI/Fonts/bt_oldstyle.ttf", 24, 2, 30)
 	btFont:SetTextColor(AttackRed)
 	--btFont:SetAutoOutlineColor(false)
@@ -36,23 +54,16 @@ function widget:DrawWorldPreUnit()
 	if select(4, GetActiveCommand()) == "Attack" then
 		glColor(AttackRed)
 		for _,unitID in ipairs(GetSelectedUnits()) do
-			local unitDef = UnitDefs[GetUnitDefID(unitID)]
-			local weapons = unitDef.weapons
-			local minRanges = {}
-			for i = 1, #weapons do
-				local weaponInfo = weapons[i]
-				local weaponDef = WeaponDefs[weaponInfo.weaponDef]
-				local minRange = tonumber(weaponDef.customParams.minrange) or nil
-				if minRange then
-					minRanges[weaponDef.name] = minRange
+			local unitDefID = GetUnitDefID(unitID)
+			local rangesToDraw = minRanges[unitDefID]
+			if rangesToDraw then
+				local x, y, z = GetUnitPosition(unitID)
+				for weapName, radius in pairs(rangesToDraw) do
+					glDrawGroundCircle(x,y,z, radius,24)
+					glTranslate(x, y + 40, z + radius - 40)
+					glBillboard()
+					btFont:Print("Min Range: " .. weapName, 0, 0, 24, "c")
 				end
-			end
-			local x, y, z = GetUnitPosition(unitID)
-			for weapName, radius in pairs(minRanges) do
-				glDrawGroundCircle(x,y,z, radius,24)
-				gl.Translate(x, y + 40, z + radius - 40)
-				gl.Billboard()
-				btFont:Print("Min Range: " .. weapName, 0, 0, 24, "c")
 			end
 		end
 		glColor(1,1,1,1)
