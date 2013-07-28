@@ -28,11 +28,12 @@ local AttackRed = {1.0, 0.2, 0.2, 0.7}
 function widget:Initialize()
 	btFont = gl.LoadFont("LuaUI/Fonts/bt_oldstyle.ttf", 24, 2, 30)
 	btFont:SetTextColor(AttackRed)
+	--btFont:SetAutoOutlineColor(false)
+	--btFont:SetOutlineColor(0,1,0)
 end
 
 function widget:DrawWorldPreUnit()
 	if select(4, GetActiveCommand()) == "Attack" then
-		glDepthTest(true)
 		glColor(AttackRed)
 		for _,unitID in ipairs(GetSelectedUnits()) do
 			local unitDef = UnitDefs[GetUnitDefID(unitID)]
@@ -49,14 +50,11 @@ function widget:DrawWorldPreUnit()
 			local x, y, z = GetUnitPosition(unitID)
 			for weapName, radius in pairs(minRanges) do
 				glDrawGroundCircle(x,y,z, radius,24)
-				gl.DrawFuncAtUnit(unitID, false, function()
-					gl.Translate(0, 40, radius - 40)
-					gl.Billboard()	
-					btFont:Print("Min Range: " .. weapName, 0, 0, 24, "c")
-				end)
+				gl.Translate(x, y + 40, z + radius - 40)
+				gl.Billboard()
+				btFont:Print("Min Range: " .. weapName, 0, 0, 24, "c")
 			end
 		end
-		glDepthTest(false)
 		glColor(1,1,1,1)
 	end
 end
