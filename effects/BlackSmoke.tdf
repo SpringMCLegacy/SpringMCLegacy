@@ -1,29 +1,30 @@
 [BlackSmoke] {
-	[smoke] {
+	[blacksmoke] {
 		class=CSimpleParticleSystem;
 		[properties]{
-			sizeGrowth=4 r4;
-			sizeMod=0.5;
+			sizeGrowth=0.5;
+			sizeMod=1;
 			pos=0, 0, 0;
 			emitVector=0, 1, 0;
-			gravity=0, 0, 0;
-			colorMap=0.1 0.1 0.1 1  0 0 0 0;
+			gravity=0, 1, 0;
+			colorMap=0.1 0.1 0.1 0.9  0 0 0 0;
 			Texture=smokesmall;
-			airdrag=0.75;
-			particleLife=24;
-			particleLifeSpread=8;
-			numParticles=8;
+			airdrag=0.5;
+			particleLife=30;
+			particleLifeSpread=5;
+			numParticles=1;
 			particleSpeed=3;
 			particleSpeedSpread=1;
 			particleSize=3;
-			particleSizeSpread=1;
-			emitRot=0;
-			emitRotSpread=90;
-			directional=0;
+			particleSizeSpread=2;
+			emitRot=25;
+			emitRotSpread=5;
+			directional=1;
 			alwaysVisible=0;
 		}
+		air=1;
 		water=1;
 		ground=1;
-		count=1;
+		count=2;
 	}
 }
