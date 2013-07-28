@@ -248,7 +248,7 @@ local function Jump(unitID, goal, cmdTag)
 	if cob then
 		spCallCOBScript( unitID, "PreJump", 0)
       else
-		--Spring.UnitScript.CallAsUnit(unitID,env.preJump,turn,lineDist)
+		Spring.UnitScript.CallAsUnit(unitID,env.PreJump,delay,turn,lineDist)
 	  end
   end
   spSetUnitRulesParam(unitID,"jumpReloadBar",0)
@@ -294,7 +294,7 @@ local function Jump(unitID, goal, cmdTag)
 	  if cob then
 		spCallCOBScript(unitID, "Jumping", 1, i * 100)
 	  else
-		--Spring.UnitScript.CallAsUnit(unitID,env.jumping)
+		Spring.UnitScript.CallAsUnit(unitID,env.Jumping)
 	  end
 	  
 	  if (fakeUnitID) then mcSetPosition(fakeUnitID, x, y, z) end
@@ -302,7 +302,7 @@ local function Jump(unitID, goal, cmdTag)
 		  if cob then
 			spCallCOBScript( unitID, "HalfJump", 0)
 		  else
-		   -- Spring.UnitScript.CallAsUnit(unitID,env.halfJump)
+		    Spring.UnitScript.CallAsUnit(unitID,env.HalfJump)
 		  end
         halfJump = true
       end
