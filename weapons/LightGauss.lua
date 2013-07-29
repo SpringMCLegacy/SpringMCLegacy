@@ -1,7 +1,7 @@
 weaponDef = {
 	name                    = "Light Gauss Rifle",
 	weaponType              = "Cannon",
-	explosionGenerator    	= "custom:HE_XSMALL",
+	explosionGenerator    	= "custom:LightGauss_Hit",
 	cegTag					= "RailTrail",
 	soundHit              	= [[GEN_Explode1]],
 	soundStart            	= [[LightGauss_Fire]],
