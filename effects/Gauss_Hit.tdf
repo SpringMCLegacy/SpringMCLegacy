@@ -1,0 +1,572 @@
+[Gauss_Hit] {
+	usedefaultexplosions=0;
+	
+	[debris] {
+    class=CSimpleParticleSystem;
+    [properties]{
+      sizeGrowth=0;
+      sizeMod=1;
+      pos=0, 0, 0;
+      emitVector=0, 1, 0;
+      gravity=0, -0.3, 0;
+      colorMap=0 0 0 1  0 0 0 1;
+      Texture=debris2;
+      airdrag=0.95;
+      particleLife=48;
+      particleLifeSpread=16;
+      numParticles=24;
+      particleSpeed=3;
+      particleSpeedSpread=3;
+      particleSize=1;
+      particleSizeSpread=8;
+      emitRot=0;
+      emitRotSpread=90;
+      directional=1;
+      alwaysVisible=0;
+    }
+    unit=1;
+    ground=1;
+    count=1;
+  }
+  
+  [sparks] {
+    class=CSimpleParticleSystem;
+    [properties]
+    {
+      sizeGrowth=0;
+      sizeMod=1.0;
+      pos=0, 1, 0;
+      emitVector=0, 1, 0;
+      gravity=0, -0.3, 0;
+      colorMap=1 0.75 0.5 0.01   1 0.75 0.5 0.01   0 0 0 0;
+      Texture=plasma;
+      airdrag=0.8;
+      particleLife=48;
+      particleLifeSpread=16;
+      numParticles=8;
+      particleSpeed=6;
+      particleSpeedSpread=18;
+      particleSize=1;
+      particleSizeSpread=2;
+      emitRot=0;
+      emitRotSpread=90;
+      directional=1;
+    }
+    unit=1;
+    ground=1;
+    count=1;
+  }
+  
+  [sphere] {
+    class=CSpherePartSpawner;
+    [properties] {
+      expansionSpeed=4;
+      ttl=12;
+      alpha=0.05;
+      color=1,1,1;
+    }
+    air=1;
+    water=1;
+    ground=1;
+    count=1;
+  }
+  
+  [pikes] {
+    class=CExploSpikeProjectile;
+    [properties] {
+      dir= -4 r8, -4 r8, -4 r8;
+      width=8;
+      length=1;
+      lengthGrowth=1;
+      alpha=1;
+      alphadecay=0.08;
+      color=1,0.75,0.5;
+      alwaysVisible=1;
+    }
+    air=1;
+    water=1;
+    ground=1;
+    count=8; 
+  }
+	
+	[dust]{
+		class = CBitmapMuzzleFlame;  
+		[properties]{
+			dir = -0.1 r0.2, 1, -0.1 r0.2;
+			colorMap=0.5 0.4 0.3 1  0.05 0.04 0.03 0.1;
+			size=8 r6;
+			length=18 r8;
+			sizeGrowth=2;
+			ttl=12;
+			frontOffset=0;
+			sideTexture=splashside;
+			frontTexture=splashbase;
+		}
+		ground=1;
+		count=8;
+	}
+	
+	[water]{
+		class = CBitmapMuzzleFlame;  
+		[properties]{
+			dir = -0.1 r0.2, 1, -0.1 r0.2;
+			colorMap=0.45 0.45 0.5 0.5  0.045 0.045 0.05 0.05; 
+			size=8 r6;
+			length=18 r8;
+			sizeGrowth=2;
+			ttl=12;
+			frontOffset=0;
+			sideTexture=splashside;
+			frontTexture=splashbase;
+		}
+		water=1;
+		count=4;
+	}
+	
+	[groundflash] {
+		flashsize=8;
+		flashalpha=1;
+		circlegrowth=10;
+		circlealpha=0;
+		ttl=8;
+		color=1,0.75,0.5;
+	}
+	
+	[ricochet_chunk] {
+    class=CSimpleParticleSystem;
+    [properties]
+    {
+      sizeGrowth=0;
+      sizeMod=1.0;
+      pos=0, 1, 0;
+      emitVector=dir;
+      gravity=0, -0.3, 0;
+      colorMap=1 1 1 0.01   1 1 1 0.01   0 0 0 0;
+      Texture=plasma;
+      airdrag=1;
+      particleLife=48;
+      particleLifeSpread=16;
+      numParticles=1;
+      particleSpeed=10;
+      particleSpeedSpread=20;
+      particleSize=10;
+      particleSizeSpread=2;
+      emitRot=0;
+      emitRotSpread=0;
+      directional=1;
+    }
+    unit=1;
+    ground=1;
+    count=1;
+  }
+  
+  [ricochet_bits] {
+    class=CSimpleParticleSystem;
+    [properties]
+    {
+      sizeGrowth=0;
+      sizeMod=1.0;
+      pos=0, 1, 0;
+      emitVector=dir;
+      gravity=0, -0.3, 0;
+      colorMap=1 0.75 0.5 0.01   1 0.75 0.5 0.01   0 0 0 0;
+      Texture=plasma;
+      airdrag=1;
+      particleLife=36;
+      particleLifeSpread=12;
+      numParticles=6;
+      particleSpeed=6;
+      particleSpeedSpread=18;
+      particleSize=2;
+      particleSizeSpread=3;
+      emitRot=0;
+      emitRotSpread=25;
+      directional=1;
+    }
+    unit=1;
+    ground=1;
+    count=1;
+  }
+}
+
+[LightGauss_Hit] {
+	usedefaultexplosions=0;
+	
+	[debris] {
+    class=CSimpleParticleSystem;
+    [properties]{
+      sizeGrowth=0;
+      sizeMod=1;
+      pos=0, 0, 0;
+      emitVector=0, 1, 0;
+      gravity=0, -0.3, 0;
+      colorMap=0 0 0 1  0 0 0 1;
+      Texture=debris2;
+      airdrag=0.95;
+      particleLife=36;
+      particleLifeSpread=16;
+      numParticles=18;
+      particleSpeed=3;
+      particleSpeedSpread=3;
+      particleSize=0.8;
+      particleSizeSpread=6;
+      emitRot=0;
+      emitRotSpread=90;
+      directional=1;
+      alwaysVisible=0;
+    }
+    unit=1;
+    ground=1;
+    count=1;
+  }
+  
+  [sparks] {
+    class=CSimpleParticleSystem;
+    [properties]
+    {
+      sizeGrowth=0;
+      sizeMod=1.0;
+      pos=0, 1, 0;
+      emitVector=0, 1, 0;
+      gravity=0, -0.3, 0;
+      colorMap=1 0.75 0.5 0.01   1 0.75 0.5 0.01   0 0 0 0;
+      Texture=plasma;
+      airdrag=0.8;
+      particleLife=48;
+      particleLifeSpread=16;
+      numParticles=6;
+      particleSpeed=5;
+      particleSpeedSpread=14;
+      particleSize=1;
+      particleSizeSpread=2;
+      emitRot=0;
+      emitRotSpread=90;
+      directional=1;
+    }
+    unit=1;
+    ground=1;
+    count=1;
+  }
+  
+  [sphere] {
+    class=CSpherePartSpawner;
+    [properties] {
+      expansionSpeed=4;
+      ttl=12;
+      alpha=0.05;
+      color=1,1,1;
+    }
+    air=1;
+    water=1;
+    ground=1;
+    count=1;
+  }
+  
+  [pikes] {
+    class=CExploSpikeProjectile;
+    [properties] {
+      dir= -4 r8, -4 r8, -4 r8;
+      width=8;
+      length=1;
+      lengthGrowth=1;
+      alpha=1;
+      alphadecay=0.08;
+      color=1,0.75,0.5;
+      alwaysVisible=1;
+    }
+    air=1;
+    water=1;
+    ground=1;
+    count=8; 
+  }
+	
+	[dust]{
+		class = CBitmapMuzzleFlame;  
+		[properties]{
+			dir = -0.1 r0.2, 1, -0.1 r0.2;
+			colorMap=0.5 0.4 0.3 1  0.05 0.04 0.03 0.1;
+			size=6 r5;
+			length=14 r6;
+			sizeGrowth=2;
+			ttl=12;
+			frontOffset=0;
+			sideTexture=splashside;
+			frontTexture=splashbase;
+		}
+		ground=1;
+		count=8;
+	}
+	
+	[water]{
+		class = CBitmapMuzzleFlame;  
+		[properties]{
+			dir = -0.1 r0.2, 1, -0.1 r0.2;
+			colorMap=0.45 0.45 0.5 0.5  0.045 0.045 0.05 0.05; 
+			size=6 r5;
+			length=14 r6;
+			sizeGrowth=2;
+			ttl=12;
+			frontOffset=0;
+			sideTexture=splashside;
+			frontTexture=splashbase;
+		}
+		water=1;
+		count=4;
+	}
+	
+	[groundflash] {
+		flashsize=6;
+		flashalpha=1;
+		circlegrowth=10;
+		circlealpha=0;
+		ttl=8;
+		color=1,0.75,0.5;
+	}
+	
+	[ricochet_chunk] {
+    class=CSimpleParticleSystem;
+    [properties]
+    {
+      sizeGrowth=0;
+      sizeMod=1.0;
+      pos=0, 1, 0;
+      emitVector=dir;
+      gravity=0, -0.3, 0;
+      colorMap=1 1 1 0.01   1 1 1 0.01   0 0 0 0;
+      Texture=plasma;
+      airdrag=1;
+      particleLife=48;
+      particleLifeSpread=16;
+      numParticles=1;
+      particleSpeed=10;
+      particleSpeedSpread=20;
+      particleSize=8;
+      particleSizeSpread=2;
+      emitRot=0;
+      emitRotSpread=0;
+      directional=1;
+    }
+    unit=1;
+    ground=1;
+    count=1;
+  }
+  
+  [ricochet_bits] {
+    class=CSimpleParticleSystem;
+    [properties]
+    {
+      sizeGrowth=0;
+      sizeMod=1.0;
+      pos=0, 1, 0;
+      emitVector=dir;
+      gravity=0, -0.3, 0;
+      colorMap=1 0.75 0.5 0.01   1 0.75 0.5 0.01   0 0 0 0;
+      Texture=plasma;
+      airdrag=1;
+      particleLife=36;
+      particleLifeSpread=12;
+      numParticles=5;
+      particleSpeed=6;
+      particleSpeedSpread=18;
+      particleSize=1;
+      particleSizeSpread=3;
+      emitRot=0;
+      emitRotSpread=25;
+      directional=1;
+    }
+    unit=1;
+    ground=1;
+    count=1;
+  }
+}
+
+[HeavyGauss_Hit] {
+	usedefaultexplosions=0;
+	
+	[debris] {
+    class=CSimpleParticleSystem;
+    [properties]{
+      sizeGrowth=0;
+      sizeMod=1;
+      pos=0, 0, 0;
+      emitVector=0, 1, 0;
+      gravity=0, -0.3, 0;
+      colorMap=0 0 0 1  0 0 0 1;
+      Texture=debris2;
+      airdrag=0.95;
+      particleLife=48;
+      particleLifeSpread=16;
+      numParticles=32;
+      particleSpeed=3;
+      particleSpeedSpread=3;
+      particleSize=1;
+      particleSizeSpread=8;
+      emitRot=0;
+      emitRotSpread=90;
+      directional=1;
+      alwaysVisible=0;
+    }
+    unit=1;
+    ground=1;
+    count=1;
+  }
+  
+  [sparks] {
+    class=CSimpleParticleSystem;
+    [properties]
+    {
+      sizeGrowth=0;
+      sizeMod=1.0;
+      pos=0, 1, 0;
+      emitVector=0, 1, 0;
+      gravity=0, -0.3, 0;
+      colorMap=1 0.75 0.5 0.01   1 0.75 0.5 0.01   0 0 0 0;
+      Texture=plasma;
+      airdrag=0.8;
+      particleLife=48;
+      particleLifeSpread=16;
+      numParticles=12;
+      particleSpeed=6;
+      particleSpeedSpread=18;
+      particleSize=1;
+      particleSizeSpread=3;
+      emitRot=0;
+      emitRotSpread=90;
+      directional=1;
+    }
+    unit=1;
+    ground=1;
+    count=1;
+  }
+  
+  [sphere] {
+    class=CSpherePartSpawner;
+    [properties] {
+      expansionSpeed=4;
+      ttl=12;
+      alpha=0.05;
+      color=1,1,1;
+    }
+    air=1;
+    water=1;
+    ground=1;
+    count=1;
+  }
+  
+  [pikes] {
+    class=CExploSpikeProjectile;
+    [properties] {
+      dir= -4 r8, -4 r8, -4 r8;
+      width=8;
+      length=1;
+      lengthGrowth=1;
+      alpha=1;
+      alphadecay=0.08;
+      color=1,0.75,0.5;
+      alwaysVisible=1;
+    }
+    air=1;
+    water=1;
+    ground=1;
+    count=8; 
+  }
+	
+	[dust]{
+		class = CBitmapMuzzleFlame;  
+		[properties]{
+			dir = -0.1 r0.2, 1, -0.1 r0.2;
+			colorMap=0.5 0.4 0.3 1  0.05 0.04 0.03 0.1;
+			size=10 r8;
+			length=24 r10;
+			sizeGrowth=2;
+			ttl=12;
+			frontOffset=0;
+			sideTexture=splashside;
+			frontTexture=splashbase;
+		}
+		ground=1;
+		count=8;
+	}
+	
+	[water]{
+		class = CBitmapMuzzleFlame;  
+		[properties]{
+			dir = -0.1 r0.2, 1, -0.1 r0.2;
+			colorMap=0.45 0.45 0.5 0.5  0.045 0.045 0.05 0.05; 
+			size=10 r8;
+			length=24 r10;
+			sizeGrowth=2;
+			ttl=12;
+			frontOffset=0;
+			sideTexture=splashside;
+			frontTexture=splashbase;
+		}
+		water=1;
+		count=4;
+	}
+	
+	[groundflash] {
+		flashsize=10;
+		flashalpha=1;
+		circlegrowth=10;
+		circlealpha=0;
+		ttl=8;
+		color=1,0.75,0.5;
+	}
+	
+	[ricochet_chunk] {
+    class=CSimpleParticleSystem;
+    [properties]
+    {
+      sizeGrowth=0;
+      sizeMod=1.0;
+      pos=0, 1, 0;
+      emitVector=dir;
+      gravity=0, -0.3, 0;
+      colorMap=1 1 1 0.01   1 1 1 0.01   0 0 0 0;
+      Texture=plasma;
+      airdrag=1;
+      particleLife=48;
+      particleLifeSpread=16;
+      numParticles=1;
+      particleSpeed=10;
+      particleSpeedSpread=20;
+      particleSize=16;
+      particleSizeSpread=4;
+      emitRot=0;
+      emitRotSpread=0;
+      directional=1;
+    }
+    unit=1;
+    ground=1;
+    count=1;
+  }
+  
+  [ricochet_bits] {
+    class=CSimpleParticleSystem;
+    [properties]
+    {
+      sizeGrowth=0;
+      sizeMod=1.0;
+      pos=0, 1, 0;
+      emitVector=dir;
+      gravity=0, -0.3, 0;
+      colorMap=1 0.75 0.5 0.01   1 0.75 0.5 0.01   0 0 0 0;
+      Texture=plasma;
+      airdrag=1;
+      particleLife=36;
+      particleLifeSpread=12;
+      numParticles=10;
+      particleSpeed=6;
+      particleSpeedSpread=18;
+      particleSize=2;
+      particleSizeSpread=3;
+      emitRot=0;
+      emitRotSpread=25;
+      directional=1;
+    }
+    unit=1;
+    ground=1;
+    count=1;
+  }
+}
