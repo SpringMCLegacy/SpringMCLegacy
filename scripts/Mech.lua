@@ -169,7 +169,7 @@ local function CoolOff()
 				heatElevated = false
 				heatCritical = true
 				-- halt weapon fire here
-				for weaponID = 0, numWeapons - 1 do
+				for weaponID = 1, numWeapons do
 					SetUnitWeaponState(unitID, weaponID, {reloadTime = 99999, reloadFrame = 99999})
 				end
 			end
@@ -179,22 +179,22 @@ local function CoolOff()
 			elseif not heatElevated then -- normal -> elevated
 				heatElevated = true
 				-- reduce weapon rate here
-				for weaponID = 0, numWeapons - 1 do
-					local reload = reloadTimes[weaponID + 1] * 2
+				for weaponID = 1, numWeapons do
+					local reload = reloadTimes[weaponID] * 2
 					SetUnitWeaponState(unitID, weaponID, {reloadTime = reload})
 				end
 			end
 		else
 			if heatCritical then -- critical->elevated->normal
 				-- reset weapon rate here
-				for weaponID = 0, numWeapons - 1 do
+				for weaponID = 1, numWeapons do
 					local currFrame = GetGameFrame()
-					SetUnitWeaponState(unitID, weaponID, {reloadTime = reloadTimes[weaponID + 1], reloadFrame = currFrame + reloadTimes[weaponID + 1] * 30})
+					SetUnitWeaponState(unitID, weaponID, {reloadTime = reloadTimes[weaponID], reloadFrame = currFrame + reloadTimes[weaponID] * 30})
 				end
 			elseif heatElevated then -- elevated->normal
 				-- reset weapon rate here
-				for weaponID = 0, numWeapons - 1 do
-					SetUnitWeaponState(unitID, weaponID, {reloadTime = reloadTimes[weaponID + 1]})
+				for weaponID = 1, numWeapons do
+					SetUnitWeaponState(unitID, weaponID, {reloadTime = reloadTimes[weaponID]})
 				end
 			end
 			heatCritical = false
