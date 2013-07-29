@@ -94,7 +94,7 @@
 		particleLife=20;
 		numParticles=2; 
 		particleSpeed=5; 
-		particleSize=2;
+		particleSize=1;
 		
 		
 		emitVector=dir; 
@@ -129,7 +129,7 @@
 		particleLife=20;
 		numParticles=4; 
 		particleSpeed=6; 
-		particleSize=5;
+		particleSize=3;
 		
 		
 		emitVector=dir;
