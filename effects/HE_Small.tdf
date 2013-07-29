@@ -1,5 +1,35 @@
 [HE_Small] {
 	usedefaultexplosions=0;
+	
+	[fire] {
+    class=CSimpleParticleSystem;
+    [properties]{
+      sizeGrowth=2 r2;
+      sizeMod=0.5;
+      pos=0, 0, 0;
+      emitVector=0, 1, 0;
+      gravity=0, 0, 0;
+      colorMap=1 1 1 0.25  0.025 0.025 0.025 0.25  0 0 0 0;
+      Texture=fireball;
+      airdrag=0.75;
+      particleLife=32;
+      particleLifeSpread=4;
+      numParticles=18;
+      particleSpeed=1;
+      particleSpeedSpread=2;
+      particleSize=0.1;
+      particleSizeSpread=0;
+      emitRot=0;
+      emitRotSpread=90;
+      directional=0;
+      alwaysVisible=0;
+    }
+    air=1;
+    water=1;
+    ground=1;
+    count=1;
+  }
+	
 	[smoke] {
 		class=CSimpleParticleSystem;
 		[properties]{

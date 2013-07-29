@@ -3,7 +3,7 @@
 	[smoke] {
 		class=CSimpleParticleSystem;
 		[properties]{
-			sizeGrowth=1 r1;
+			sizeGrowth=1.2 r1.2;
 			sizeMod=0.5;
 			pos=0, 0, 0;
 			emitVector=0, 1, 0;
@@ -14,8 +14,8 @@
 			particleLife=12;
 			particleLifeSpread=4;
 			numParticles=8;
-			particleSpeed=1;
-			particleSpeedSpread=0.5;
+			particleSpeed=1.25;
+			particleSpeedSpread=0.75;
 			particleSize=1;
 			particleSizeSpread=0;
 			emitRot=0;
@@ -70,7 +70,7 @@
 	}
 	
 	[groundflash] {
-		flashsize=16;
+		flashsize=10;
 		flashalpha=1;
 		circlegrowth=10;
 		circlealpha=0;
@@ -111,37 +111,30 @@
 }
 
 [Laser_Large_Miss] {
-	[ground]{
-		class = CBitmapMuzzleFlame;  
+	[steam] {
+		class=CSimpleParticleSystem;
 		[properties]{
-			dir = -0.1 r0.2, 1, -0.1 r0.2;
-			colorMap=0.5 0.4 0.3 1  0.05 0.04 0.03 0.1;
-			size=2 r1;
-			length=8 r4;
-			sizeGrowth=1;
-			ttl=12;
-			frontOffset=0;
-			sideTexture=splashside;
-			frontTexture=splashbase;
-		}
-		ground=1;
-		count=4;
-	}
-	
-	[water]{
-		class = CBitmapMuzzleFlame;  
-		[properties]{
-			dir = -0.1 r0.2, 1, -0.1 r0.2;
-			colorMap=0.45 0.45 0.5 0.5  0.045 0.045 0.05 0.05; 
-			size=2 r1;
-			length=8 r4;
-			sizeGrowth=1;
-			ttl=12;
-			frontOffset=0;
-			sideTexture=splashside;
-			frontTexture=splashbase;
+			sizeGrowth=1 r1;
+			sizeMod=0.5;
+			pos=0, 0, 0;
+			emitVector=0, 1, 0;
+			gravity=0, 0, 0;
+			colorMap=0.8 0.8 0.8 1  0.8 0.8 0.8 0;
+			Texture=smokesmall;
+			airdrag=0.75;
+			particleLife=12;
+			particleLifeSpread=4;
+			numParticles=8;
+			particleSpeed=1;
+			particleSpeedSpread=0.5;
+			particleSize=1;
+			particleSizeSpread=0;
+			emitRot=0;
+			emitRotSpread=90;
+			directional=0;
+			alwaysVisible=0;
 		}
 		water=1;
-		count=4;
+		count=1;
 	}
 }
