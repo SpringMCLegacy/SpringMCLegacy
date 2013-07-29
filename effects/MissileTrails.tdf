@@ -1,0 +1,396 @@
+[ArrowIVTrail]
+{
+   [flame]
+	{
+		class=CSimpleParticleSystem;
+		[properties]
+		{
+		sizeGrowth=0.50;
+		sizeMod=1.0;
+		pos=0, 1, 0; 
+		gravity=0, 0, 0;
+		
+		Texture=smokesmall;
+		airdrag=0.87;
+		colorMap=1.0 0.6 0.6 0.01    0.8 0.7 0.7 0.05    0.7 0.7 0.7 1.0    0.6 0.6 0.6 1.0    0.6 0.6 0.6 1.0;
+
+		particleLifeSpread=0; 
+		particleSpeedSpread=5;  
+		particleSizeSpread=1;   
+		
+		particleLife=20;
+		numParticles=2; 
+		particleSpeed=0; 
+		particleSize=6;
+		
+		
+		emitVector=0, 0, -1; 
+		emitRot=5;
+		emitRotSpread=0; 
+		directional=0; 
+		}
+	air=1;
+	water=1;
+	ground=1;
+	count=1;
+	}
+   
+	[exhaust]
+	{
+		class=CSimpleParticleSystem;
+		[properties]
+		{
+		sizeGrowth=0.50;
+		sizeMod=1.0;
+		pos=0, 1, 0; 
+		gravity=0, 0, 0;
+		
+		Texture=smokesmall;
+		airdrag=0.87;
+		colorMap=0.5 0.5 0.5 0.01    0.5 0.5 0.5 0.05    0.5 0.5 0.5 1.0    0.5 0.5 0.5 1.0    0.5 0.5 0.5 1.0;
+
+		particleLifeSpread=15; 
+		particleSpeedSpread=2;  
+		particleSizeSpread=1;   
+		
+		particleLife=20;
+		numParticles=4; 
+		particleSpeed=2; 
+		particleSize=20;
+		
+		
+		emitVector=0, 0, -1;
+		emitRot=45;
+		emitRotSpread=5; 
+		directional=0; 
+		}
+	air=1;
+	water=1;
+	ground=1;
+	count=1;
+	}
+}
+
+[MRMTrail]
+{
+   [flame]
+	{
+		class=CSimpleParticleSystem;
+		[properties]
+		{
+		sizeGrowth=0.50;
+		sizeMod=1.0;
+		pos=0, 1, 0; 
+		gravity=0, 0, 0;
+		
+		Texture=smokesmall;
+		airdrag=0.87;
+		colorMap=1.0 0.6 0.6 0.01    0.8 0.7 0.7 0.05    0.7 0.7 0.7 1.0    0.6 0.6 0.6 1.0    0.6 0.6 0.6 1.0;
+
+		particleLifeSpread=0; 
+		particleSpeedSpread=5;  
+		particleSizeSpread=1;   
+		
+		particleLife=20;
+		numParticles=2; 
+		particleSpeed=5; 
+		particleSize=2;
+		
+		
+		emitVector=dir; 
+		emitRot=180;
+		emitRotSpread=0; 
+		directional=1; 
+		}
+	air=1;
+	water=1;
+	ground=1;
+	count=1;
+	}
+   
+	[exhaus1]
+	{
+		class=CSimpleParticleSystem;
+		[properties]
+		{
+		sizeGrowth=0.50;
+		sizeMod=1.0;
+		pos=0, 1, 0; 
+		gravity=0, 0, 0;
+		
+		Texture=smokesmall;
+		airdrag=0.87;
+		colorMap=0.5 0.5 0.5 0.01    0.5 0.5 0.5 0.05    0.5 0.5 0.5 1.0    0.5 0.5 0.5 1.0    0.5 0.5 0.5 1.0;
+
+		particleLifeSpread=15; 
+		particleSpeedSpread=6;  
+		particleSizeSpread=1;   
+		
+		particleLife=20;
+		numParticles=4; 
+		particleSpeed=6; 
+		particleSize=5;
+		
+		
+		emitVector=dir;
+		emitRot=180;
+		emitRotSpread=2; 
+		directional=1; 
+		}
+	air=1;
+	water=1;
+	ground=1;
+	count=1;
+	}
+	
+	[exhaust2]
+	{
+		class=CSimpleParticleSystem;
+		[properties]
+		{
+		sizeGrowth=0.50;
+		sizeMod=1.0;
+		pos=0, 1, 0; 
+		gravity=0, 0, 0;
+		
+		Texture=smokesmall;
+		airdrag=0;
+		colorMap=0.4 0.4 0.4 0.01    0.4 0.4 0.4 0.05    0.4 0.4 0.4 1.0    0.4 0.4 0.4 1.0    0.4 0.4 0.4 1.0;
+
+		particleLifeSpread=15; 
+		particleSpeedSpread=5;  
+		particleSizeSpread=1;   
+		
+		particleLife=10;
+		numParticles=4; 
+		particleSpeed=10; 
+		particleSize=3;
+		
+		
+		emitVector=dir;
+		emitRot=180;
+		emitRotSpread=2; 
+		directional=1; 
+		}
+	air=1;
+	water=1;
+	ground=1;
+	count=1;
+	}
+}
+
+[LRMTrail]
+{
+   [flame]
+	{
+		class=CSimpleParticleSystem;
+		[properties]
+		{
+		sizeGrowth=0.50;
+		sizeMod=1.0;
+		pos=0, 1, 0; 
+		gravity=0, 0, 0;
+		
+		Texture=smokesmall;
+		airdrag=0.87;
+		colorMap=1.0 0.6 0.6 0.01    0.8 0.7 0.7 0.05    0.7 0.7 0.7 1.0    0.6 0.6 0.6 1.0    0.6 0.6 0.6 1.0;
+
+		particleLifeSpread=0; 
+		particleSpeedSpread=5;  
+		particleSizeSpread=1;   
+		
+		particleLife=20;
+		numParticles=2; 
+		particleSpeed=10; 
+		particleSize=2;
+		
+		
+		emitVector=dir; 
+		emitRot=180;
+		emitRotSpread=0; 
+		directional=1; 
+		}
+	air=1;
+	water=1;
+	ground=1;
+	count=1;
+	}
+   
+	[exhaust1]
+	{
+		class=CSimpleParticleSystem;
+		[properties]
+		{
+		sizeGrowth=0.50;
+		sizeMod=1.0;
+		pos=0, 1, 0; 
+		gravity=0, 0, 0;
+		
+		Texture=smokesmall;
+		airdrag=0.87;
+		colorMap=0.5 0.5 0.5 0.01    0.5 0.5 0.5 0.05    0.5 0.5 0.5 1.0    0.5 0.5 0.5 1.0    0.5 0.5 0.5 1.0;
+
+		particleLifeSpread=15; 
+		particleSpeedSpread=5;  
+		particleSizeSpread=1;   
+		
+		particleLife=20;
+		numParticles=4; 
+		particleSpeed=10; 
+		particleSize=5;
+		
+		
+		emitVector=dir;
+		emitRot=180;
+		emitRotSpread=2; 
+		directional=1; 
+		}
+	air=1;
+	water=1;
+	ground=1;
+	count=1;
+	}
+	
+	[exhaust2]
+	{
+		class=CSimpleParticleSystem;
+		[properties]
+		{
+		sizeGrowth=0.50;
+		sizeMod=1.0;
+		pos=0, 1, 0; 
+		gravity=0, 0, 0;
+		
+		Texture=smokesmall;
+		airdrag=0;
+		colorMap=0.4 0.4 0.4 0.01    0.4 0.4 0.4 0.05    0.4 0.4 0.4 1.0    0.4 0.4 0.4 1.0    0.4 0.4 0.4 1.0;
+
+		particleLifeSpread=15; 
+		particleSpeedSpread=5;  
+		particleSizeSpread=1;   
+		
+		particleLife=10;
+		numParticles=4; 
+		particleSpeed=10; 
+		particleSize=3;
+		
+		
+		emitVector=dir;
+		emitRot=180;
+		emitRotSpread=2; 
+		directional=1; 
+		}
+	air=1;
+	water=1;
+	ground=1;
+	count=1;
+	}
+}
+
+[SRMTrail]
+{
+   [flame]
+	{
+		class=CSimpleParticleSystem;
+		[properties]
+		{
+		sizeGrowth=0.50;
+		sizeMod=1.0;
+		pos=0, 1, 0; 
+		gravity=0, 0, 0;
+		
+		Texture=smokesmall;
+		airdrag=0.6;
+		colorMap=1.0 0.8 0.6 0.01    0.9 0.8 0.7 0.05    0.8 0.8 0.7 1.0    0.7 0.6 0.6 1.0    0.6 0.6 0.6 1.0;
+
+		particleLifeSpread=0; 
+		particleSpeedSpread=5;  
+		particleSizeSpread=1;   
+		
+		particleLife=5;
+		numParticles=2; 
+		particleSpeed=20; 
+		particleSize=2;
+		
+		
+		emitVector=dir; 
+		emitRot=180;
+		emitRotSpread=0; 
+		directional=1; 
+		}
+	air=1;
+	water=1;
+	ground=1;
+	count=1;
+	}
+   
+	[exhaust1]
+	{
+		class=CSimpleParticleSystem;
+		[properties]
+		{
+		sizeGrowth=0.50;
+		sizeMod=1.0;
+		pos=0, 1, 0; 
+		gravity=0, 0, 0;
+		
+		Texture=smokesmall;
+		airdrag=0.65;
+		colorMap=0.3 0.3 0.3 0.01    0.3 0.3 0.3 0.05    0.3 0.3 0.3 1.0    0.4 0.4 0.4 1.0    0.4 0.4 0.4 1.0;
+
+		particleLifeSpread=15; 
+		particleSpeedSpread=5;  
+		particleSizeSpread=1;   
+		
+		particleLife=10;
+		numParticles=4; 
+		particleSpeed=20; 
+		particleSize=3;
+		
+		
+		emitVector=dir;
+		emitRot=180;
+		emitRotSpread=2; 
+		directional=1; 
+		}
+	air=1;
+	water=1;
+	ground=1;
+	count=1;
+	}
+	
+	[exhaust2]
+	{
+		class=CSimpleParticleSystem;
+		[properties]
+		{
+		sizeGrowth=0.50;
+		sizeMod=1.0;
+		pos=0, 1, 0; 
+		gravity=0, 0, 0;
+		
+		Texture=smokesmall;
+		airdrag=0;
+		colorMap=0.3 0.3 0.3 0.01    0.3 0.3 0.3 0.05    0.3 0.3 0.3 1.0    0.4 0.4 0.4 1.0    0.4 0.4 0.4 1.0;
+
+		particleLifeSpread=15; 
+		particleSpeedSpread=5;  
+		particleSizeSpread=1;   
+		
+		particleLife=10;
+		numParticles=4; 
+		particleSpeed=10; 
+		particleSize=3;
+		
+		
+		emitVector=dir;
+		emitRot=180;
+		emitRotSpread=2; 
+		directional=1; 
+		}
+	air=1;
+	water=1;
+	ground=1;
+	count=1;
+	}
+}
