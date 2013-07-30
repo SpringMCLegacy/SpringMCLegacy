@@ -387,6 +387,10 @@ end
 
 function gadget:AllowCommand(unitID, unitDefID, teamID,
                              cmdID, cmdParams, cmdOptions)
+  -- don't allow jumping if at/above critical heat
+  if (cmdID == CMD_JUMP and (spGetUnitRulesParam(unitID, "heat") >= (spGetUnitRulesParam(unitID, "heatLimit") or GG.lusHelper[unitDefID].heatLimit))) then
+    return false
+  end
   if (cmdID == CMD_JUMP and
       spTestBuildOrder(
           unitDefID, cmdParams[1], cmdParams[2], cmdParams[3], 1) == 0) then
