@@ -6,7 +6,7 @@
 		class=CSimpleParticleSystem;
 		[properties]
 		{
-		sizeGrowth=0.50;
+		sizeGrowth=0.75;
 		sizeMod=1.0;
 		pos=0, 1, 0; 
 		gravity=0, 0, 0;
@@ -22,7 +22,7 @@
 		particleLife=5;
 		numParticles=2; 
 		particleSpeed=0; 
-		particleSize=6;
+		particleSize=4;
 		
 		
 		emitVector=0, 0, -1; 
@@ -48,13 +48,13 @@
 		
 		Texture=smokesmall;
 		airdrag=0.87;
-		colorMap=1 1 1 1    0.8 0.8 0.6 1    0.7 0.7 0.5 1;
+		colorMap=0.8 0.8 0.6 0.01    0.7 0.7 0.6 0.5    0.6 0.6 0.6 1.0    0.6 0.6 0.6 0.1    0.5 0.5 0.5 0.001;
 
 		particleLifeSpread=15; 
 		particleSpeedSpread=2;  
 		particleSizeSpread=1;   
 		
-		particleLife=20;
+		particleLife=40;
 		numParticles=4; 
 		particleSpeed=2; 
 		particleSize=20;
@@ -79,12 +79,12 @@
 		class=CSimpleParticleSystem;
 		[properties]
 		{
-		sizeGrowth=0.25;
+		sizeGrowth=0.5;
 		sizeMod=1.0;
 		pos=0, 1, 0; 
 		gravity=0, 0, 0;
 		
-		Texture=smokesmall;
+		Texture=GenericSmokeCloud;
 		airdrag=0.87;
 		colorMap=0.8 0.7 0.6 0.01    0.6 0.6 0.6 0.05    0.5 0.5 0.5 1.0    0.4 0.4 0.4 1.0    0.4 0.4 0.4 1.0;
 
@@ -94,8 +94,8 @@
 		
 		particleLife=10;
 		numParticles=10; 
-		particleSpeed=0; 
-		particleSize=2;
+		particleSpeed=-8 i4; 
+		particleSize=1;
 		
 		
 		emitVector=dir; 
@@ -117,21 +117,21 @@
 		class=CSimpleParticleSystem;
 		[properties]
 		{
-		sizeGrowth=0.25;
+		sizeGrowth=0.75;
 		sizeMod=1.0;
 		pos=0, 1, 0; 
 		gravity=0, 0, 0;
 		
-		Texture=smokesmall;
+		Texture=GenericSmokeCloud;
 		airdrag=0.8;
-		colorMap=0.8 0.8 0.6 0.01    0.5 0.5 0.5 0.05    0.45 0.45 0.45 1.0    0.45 0.45 0.45 1.0    0.4 0.4 0.4 1.0;
+		colorMap=0.8 0.8 0.6 0.01    0.5 0.5 0.5 0.5    0.45 0.45 0.45 1.0    0.45 0.45 0.45 1.0    0.4 0.4 0.4 1.0;
 		particleLifeSpread=5; 
 		particleSpeedSpread=15;  
 		particleSizeSpread=2;   
 		particleLife=10;
-		numParticles=15; 
-		particleSpeed=0; 
-		particleSize=4;
+		numParticles=14; 
+		particleSpeed=-8 i4; 
+		particleSize=1;
 		emitVector=dir; 
 		emitRot=180;
 		emitRotSpread=0; 
@@ -151,14 +151,14 @@
 		class=CSimpleParticleSystem;
 		[properties]
 		{
-		sizeGrowth=0.4;
+		sizeGrowth=1;
 		sizeMod=1.0;
 		pos=0, 1, 0; 
 		gravity=0, 0, 0;
 		
 		Texture=smokesmall;
 		airdrag=0.87;
-		colorMap=0.7 0.7 0.6 0.01    0.6 0.6 0.6 0.05    0.5 0.5 0.5 1.0    0.4 0.4 0.4 1.0    0.4 0.4 0.4 1.0;
+		colorMap=1.0 0.7 0.6 0.01    0.7 0.55 0.55 0.7    0.4 0.4 0.4 1.0    0.3 0.3 0.3 1.0    0.2 0.2 0.2 1.0;
 
 		particleLifeSpread=5; 
 		particleSpeedSpread=10;  
@@ -166,8 +166,8 @@
 		
 		particleLife=5;
 		numParticles=10; 
-		particleSpeed=0; 
-		particleSize=2;
+		particleSpeed=-8 i4; 
+		particleSize=1;
 		
 		
 		emitVector=dir; 
