@@ -18,7 +18,7 @@ local GetUnitPosition = Spring.GetUnitPosition
 -- Constants
 local CMD_TURN = GG.CustomCommands.GetCmdID("CMD_TURN")
 local COB_ANGULAR = 182
-
+local MINIMUM_TURN = 5 * COB_ANGULAR
 local turnCmdDesc = {
 	id = CMD_TURN,
 	type = CMDTYPE.ICON_MAP,
@@ -28,8 +28,6 @@ local turnCmdDesc = {
 	cursor = "Patrol",
 }
 
--- Constants
-local MINIMUM_TURN = 500
 -- Variables
 local turning = {} -- structure: turning = {unitID={turnRate=number COB units to rotate per frame, numFrames=number of frames left to rotate in, currHeading= current heading}}
 
@@ -38,8 +36,6 @@ if (gadgetHandler:IsSyncedCode()) then
 
 local function StartTurn(unitID, unitDefID, tx, tz)
 	local ud = UnitDefs[unitDefID]
-	if not ud.customParams.hasturnbutton then return false end -- unit has no turn button
-	
 	local turnRate = ud.turnRate
 	local ux, _, uz = GetUnitPosition(unitID)
 	local dx, dz = tx - ux, tz - uz
@@ -103,9 +99,7 @@ end
 function gadget:AllowCommand(unitID, unitDefID, teamID, cmdID, cmdParams, cmdOptions)
 	local ud = UnitDefs[unitDefID]
 	if cmdID == CMD_TURN then
-		local tx, _, tz = cmdParams[1], cmdParams[2], cmdParams[3]
-		local canTurn = StartTurn(unitID, unitDefID, tx, tz)
-		return canTurn
+		return ud.customParams.hasturnbutton
 	end
 	if cmdID ~= CMD.SET_WANTED_MAX_SPEED and turning[unitID] then
 		StopTurn(unitID) -- Abort turn if another command issued directly (not queued)
@@ -117,7 +111,9 @@ function gadget:CommandFallback(unitID, unitDefID, unitTeam, cmdID, cmdParams, c
 	local ud = UnitDefs[unitDefID]
 	if cmdID == CMD_TURN then
 		if turning[unitID] == nil then
-			return true, true -- start turn and continue
+			local tx, _, tz = cmdParams[1], cmdParams[2], cmdParams[3]
+			local canTurn = StartTurn(unitID, unitDefID, tx, tz)
+			return canTurn, false -- start turn and continue
 		else
 			if turning[unitID].numFrames and turning[unitID].numFrames > 0 then
 				return true, false -- still turning
@@ -132,8 +128,9 @@ end
 
 else
 -- UNSYNCED
+
 function gadget:Initialize()
-	Spring.SetCustomCommandDrawData(CMD_TURN, "Patrol", {0,1,0,.8})
+	Spring.SetCustomCommandDrawData(SYNCED.CustomCommandIDs["CMD_TURN"], "Patrol", {0,1,0,.8})
 	Spring.SendCommands({"bind t turn"})
 end
 
