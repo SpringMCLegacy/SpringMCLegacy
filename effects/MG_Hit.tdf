@@ -10,6 +10,24 @@
 		nounit=1;
 		count=1;
 	}
+	
+	[pikes] {
+    class=CExploSpikeProjectile;
+    [properties] {
+      dir= -4 r8, -4 r8, -4 r8;
+      width=0.5;
+      length=0.5;
+      lengthGrowth=0.2;
+      alpha=1;
+      alphadecay=0.25;
+      color=1,0.75,0.5;
+      alwaysVisible=1;
+    }
+    air=1;
+    water=0;
+    ground=1;
+    count=2; 
+  }
 }
 
 [MG_Miss] {
@@ -18,8 +36,8 @@
 		[properties]{
 			dir = -0.1 r0.2, 1, -0.1 r0.2;
 			colorMap=0.5 0.4 0.3 1  0.05 0.04 0.03 0.1;
-			size=1 r0.5;
-			length=4 r8;
+			size=2 r0.5;
+			length=6 r8;
 			sizeGrowth=1;
 			ttl=12;
 			frontOffset=0;
@@ -35,8 +53,8 @@
 		[properties]{
 			dir = -0.1 r0.2, 1, -0.1 r0.2;
 			colorMap=0.45 0.45 0.5 0.5  0.045 0.045 0.05 0.05; 
-			size=1 r0.5;
-			length=4 r8;
+			size=2 r0.5;
+			length=6 r8;
 			sizeGrowth=1;
 			ttl=12;
 			frontOffset=0;

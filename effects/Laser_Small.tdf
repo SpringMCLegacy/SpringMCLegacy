@@ -70,12 +70,12 @@
 	}
 	
 	[groundflash] {
-		flashsize=4;
-		flashalpha=1;
+		flashsize=2;
+		flashalpha=0.75;
 		circlegrowth=10;
 		circlealpha=0;
-		ttl=8;
-		color=1,0.75,0.5;
+		ttl=24;
+		color=1,0.65,0.5;
 	}
 }
 
