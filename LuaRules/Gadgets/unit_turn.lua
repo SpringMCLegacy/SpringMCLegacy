@@ -53,7 +53,9 @@ local function StartTurn(unitID, unitDefID, tx, tz)
 		turnRate = - turnRate
 	end
 	env = Spring.UnitScript.GetScriptEnv(unitID)
-	Spring.UnitScript.CallAsUnit(unitID, env.StartTurn, turnRate < 0) -- clockwise from +ve y
+	if env and env.StartTurn then
+		Spring.UnitScript.CallAsUnit(unitID, env.StartTurn, turnRate < 0) -- clockwise from +ve y
+	end
 	local turnTable = {}
 	turnTable["turnRate"] = turnRate
 	turnTable["numFrames"] = numFrames
@@ -64,7 +66,9 @@ end
 local function StopTurn(unitID)
 	turning[unitID] = nil
 	env = Spring.UnitScript.GetScriptEnv(unitID)
-	Spring.UnitScript.CallAsUnit(unitID,env.StopTurn)
+	if env and env.StopTurn then
+		Spring.UnitScript.CallAsUnit(unitID,env.StopTurn)
+	end
 end
 
 function gadget:GameFrame(n)
