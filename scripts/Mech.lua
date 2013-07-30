@@ -5,8 +5,9 @@ unitDef = UnitDefs[unitDefID]
 info = GG.lusHelper[unitDefID]
 -- the following have to be non-local for the walkscript include to find them
 rad = math.rad
-walking = false
+walking = {}
 jumping = false
+turning = {}
 
 -- localised API functions
 local SetUnitRulesParam = Spring.SetUnitRulesParam
@@ -304,26 +305,33 @@ function StopJump()
 end
 
 function StartTurn(clockwise)
+	Signal(walking)
 	local direction = (clockwise and "clockwise") or "anti-clockwise"
 	Spring.Echo("I'm turnin' " .. direction .. " yo!")
+	--turning = {}
+	StartThread(anim_Turn, turning)
 end
 
 function StopTurn()
 	Spring.Echo("I'm finished turnin' bro!")
+	Signal(turning)
+	StartThread(anim_Reset)
 end
 
 function script.Create()
-	walking = true
+	--walking = true
 	--StartThread(SmokeUnit, {pelvis, torso})
 	StartThread(SmokeLimb, "left_arm", lupperarm)
 	StartThread(SmokeLimb, "right_arm", rupperarm)
 	StartThread(CoolOff)
-	StartThread(MotionControl)
+	--StartThread(MotionControl)
 end
 
 function script.StartMoving()
 	Spring.Echo("START MOVING")
-	walking = true
+	Signal(turning)
+	--walking = {}
+	StartThread(anim_Walk, walking)
 end
 
 function script.StopMoving()
@@ -332,7 +340,8 @@ function script.StopMoving()
 	-- there's probably a more efficient way to do this 
 	-- Not sure if this is still required!
 	if select(5, Spring.GetUnitHealth(unitID)) ~= 1 then return end
-	walking = false
+	Signal(walking)
+	StartThread(anim_Reset)
 end
 
 function script.Activate()

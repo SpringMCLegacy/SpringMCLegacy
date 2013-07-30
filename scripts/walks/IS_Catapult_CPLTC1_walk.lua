@@ -155,10 +155,12 @@ WaitForTurn(lfronttoes, x_axis)
 
 --Turn script
 
-function anim_Turn
+function anim_Turn(signal)
+		Spring.Echo("TURN ANIM START", Spring.GetGameFrame())
+		SetSignalMask(signal)
 	while true do
 		--Left Leg Up...
-		Turn(lupperleg, x_axis, rad(20), LEG_SPEED)
+		Turn(lupperleg, x_axis, rad(40), LEG_SPEED)
 		Turn(llowerleg, x_axis, rad(-25), LEG_SPEED)
 		Turn(lbacktoe, x_axis, rad(-15), LEG_SPEED)
 		Turn(lfronttoes, x_axis, rad(15), LEG_SPEED)
@@ -178,7 +180,7 @@ function anim_Turn
 		WaitForTurn(lbacktoe, x_axis)
 		WaitForTurn(lfronttoes, x_axis)
 		--Right Leg Up...
-		Turn(rupperleg, x_axis, rad(20), LEG_SPEED)
+		Turn(rupperleg, x_axis, rad(40), LEG_SPEED)
 		Turn(rlowerleg, x_axis, rad(-25), LEG_SPEED)
 		Turn(rbacktoe, x_axis, rad(-15), LEG_SPEED)
 		Turn(rfronttoes, x_axis, rad(15), FLEG_SPEED)
@@ -197,7 +199,7 @@ function anim_Turn
 		WaitForTurn(rlowerleg, x_axis)
 		WaitForTurn(rbacktoe, x_axis)
 		WaitForTurn(rfronttoes, x_axis)
-	else
+	--[[else
 		Turn(lupperleg, x_axis, rad(0), LEG_SPEED)
 		Turn(llowerleg, x_axis, rad(0), LEG_SPEED)
 		Turn(lfronttoes, x_axis, rad(0), LEG_SPEED)
@@ -206,11 +208,12 @@ function anim_Turn
 		Turn(rlowerleg, x_axis, rad(0), LEG_SPEED)
 		Turn(rfronttoes, x_axis, rad(0), LEG_SPEED)
 		Turn(rbacktoe, x_axis, rad(0),LEG_SPEED)
-		Sleep(100)
+		Sleep(100)]]
 	end
+			Spring.Echo("TURN ANIM STOP", Spring.GetGameFrame())
 end
 		
-function anim_PreJump
+function anim_PreJump()
 	while true do
 		--Crouch...
 		Turn(rupperleg, x_axis, rad(30), LEG_SPEED)
@@ -229,7 +232,7 @@ function anim_PreJump
 	end
 end
 
-function anim_Jump
+function anim_Jump()
 	while true do
 		--Jump!
 		Turn(rupperleg, x_axis, rad(5), LEG_SPEED * 4)
@@ -254,7 +257,7 @@ function anim_Jump
 	end
 end
 
-function anim_JumpInProgress
+function anim_JumpInProgress()
 	while true do
 		--Brace for impact...
 		Turn(rupperleg, x_axis, rad(-15), LEG_SPEED / 4)
@@ -281,7 +284,7 @@ function anim_JumpInProgress
 	end
 end
 
-function anim_Land
+function anim_Land()
 	while true do
 		--Touchdown!
 		Turn(rupperleg, x_axis, rad(20), LEG_SPEED * 4)
@@ -331,9 +334,9 @@ function anim_Land
 end
 
 -- Walk script
-function MotionControl()
-	while true do
-		if walking then
+function anim_Walk(signal)
+	SetSignalMask(signal)
+	while walking do
 			--Spring.Echo("START")
 			Turn(pelvis, z_axis, rad(5), LEG_SPEED / 10)
 			--Left Leg--
@@ -686,19 +689,20 @@ function MotionControl()
 			WaitForTurn(rbacktoe, x_axis)
 			WaitForTurn(rfronttoes, x_axis)
 			--Sleep(10)
-		else
-			Turn(pelvis, z_axis, rad(0), LEG_SPEED)
-			Turn(lupperleg, x_axis, rad(0), LEG_SPEED)
-			Turn(llowerleg, x_axis, rad(0), LEG_SPEED)
-			Turn(lfoot, x_axis, rad(0), LEG_SPEED)
-			Turn(lfronttoes, x_axis, rad(0), LEG_SPEED)
-			Turn(lbacktoe, x_axis, rad(0), LEG_SPEED)
-			Turn(rupperleg, x_axis, rad(0), LEG_SPEED)
-			Turn(rlowerleg, x_axis, rad(0), LEG_SPEED)
-			Turn(rfoot, x_axis, rad(0), LEG_SPEED)
-			Turn(rfronttoes, x_axis, rad(0), LEG_SPEED)
-			Turn(rbacktoe, x_axis, rad(0),LEG_SPEED)
-			Sleep(100)
-		end
 	end
+end
+
+function anim_Reset()
+	Turn(pelvis, z_axis, rad(0), LEG_SPEED)
+	Turn(lupperleg, x_axis, rad(0), LEG_SPEED)
+	Turn(llowerleg, x_axis, rad(0), LEG_SPEED)
+	Turn(lfoot, x_axis, rad(0), LEG_SPEED)
+	Turn(lfronttoes, x_axis, rad(0), LEG_SPEED)
+	Turn(lbacktoe, x_axis, rad(0), LEG_SPEED)
+	Turn(rupperleg, x_axis, rad(0), LEG_SPEED)
+	Turn(rlowerleg, x_axis, rad(0), LEG_SPEED)
+	Turn(rfoot, x_axis, rad(0), LEG_SPEED)
+	Turn(rfronttoes, x_axis, rad(0), LEG_SPEED)
+	Turn(rbacktoe, x_axis, rad(0),LEG_SPEED)
+	Sleep(100)
 end
