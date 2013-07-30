@@ -1,56 +1,19 @@
 [GAUSS_MUZZLEFLASH]
 {
-   [BitmapMuzzleFlame]
-   {
-	class=CBitmapMuzzleFlame;
-      
-	[properties]
-      	{
-         	dir=dir;
-         	colorMap=1 1 1 0.01	1 1 1 0.01	1 1 1 0.01; 
-          	size=0.26;
-          	length=0.5;
-          	sizeGrowth=70;
-          	ttl=5;
-          	frontOffset=0.3;
-          	sideTexture=plasma2;
-          	frontTexture=plasma0029;
-			alwaysvisible=0;
-      	}
-   water=1;
-   air=1;
-   underwater=1;
-   ground=1;
-   count=1;
-   }
-   [muzzlesmoke]
+   usedefaultexplosions=0;
+	[sphere] 
 	{
-		class=CSimpleParticleSystem;
-		[properties]
+		class=CSpherePartSpawner;
+		[properties] 
 		{
-			sizeGrowth=0;
-			sizeMod=1.0;
-			pos=0, 0, 0;
-			emitVector=dir;
-			gravity=0, 0, 0;
-			colorMap=0 0 0 0.01  0.5 0.5 0.5 0.5     0 0 0 0.01;
-			Texture=smokesmall;
-			airdrag=0.8;
-			particleLife=20;
-			particleLifeSpread=0;
-			numParticles=1;
-			particleSpeed=10 i-1;
-			particleSpeedSpread=1;
-			particleSize=7 i-0.4;
-			particleSizeSpread=1;
-			emitRot=0;
-			emitRotSpread=10;
-			directional=0;
-			alwaysvisible=0;
+			expansionSpeed=3;
+			ttl=12;
+			alpha=0.125;
+			color=1,1,1;
 		}
 		air=1;
 		water=1;
 		ground=1;
-		count=10;
+		count=1;
 	}
 }
