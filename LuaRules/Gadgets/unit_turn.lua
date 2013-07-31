@@ -12,6 +12,8 @@ end
 
 -- SyncedCtrl
 local SetUnitCOBValue = Spring.SetUnitCOBValue
+local SetUnitMoveGoal = Spring.SetUnitMoveGoal
+local SetUnitVelocity = Spring.SetUnitVelocity
 -- SyncedRead
 local GetUnitCOBValue = Spring.GetUnitCOBValue
 local GetUnitPosition = Spring.GetUnitPosition
@@ -37,14 +39,17 @@ if (gadgetHandler:IsSyncedCode()) then
 local function StartTurn(unitID, unitDefID, tx, tz)
 	local ud = UnitDefs[unitDefID]
 	local turnRate = ud.turnRate
-	local ux, _, uz = GetUnitPosition(unitID)
+	local ux, uy, uz = GetUnitPosition(unitID)
 	local dx, dz = tx - ux, tz - uz
 
 	local newHeading = math.deg(math.atan2(dx, dz)) * COB_ANGULAR	
 	local currHeading = GetUnitCOBValue(unitID, COB.HEADING)
 	local deltaHeading = newHeading - currHeading
-	Spring.Echo(math.abs(deltaHeading))
 	if math.abs(deltaHeading) < MINIMUM_TURN then return false end -- turn command was too small
+	
+	-- Make sure we stop first and know we don't want to travel anywhere else
+	SetUnitMoveGoal(unitID, ux, uy, uz)
+	SetUnitVelocity(unitID, 0,0,0)
 	
 	--  find the direction for shortest turn
 	if deltaHeading > (180 * COB_ANGULAR) then deltaHeading = deltaHeading - (360 * COB_ANGULAR) end
@@ -68,10 +73,12 @@ local function StartTurn(unitID, unitDefID, tx, tz)
 end
 
 local function StopTurn(unitID)
-	turning[unitID] = {} -- not nil here or gets started again by CommandFallback
-	env = Spring.UnitScript.GetScriptEnv(unitID)
-	if env and env.StopTurn then
-		Spring.UnitScript.CallAsUnit(unitID,env.StopTurn)
+	if turning[unitID].numFrames then -- only attempt to stop if we are actually turning
+		turning[unitID] = {} -- not nil here or gets started again by CommandFallback
+		env = Spring.UnitScript.GetScriptEnv(unitID)
+		if env and env.StopTurn then
+			Spring.UnitScript.CallAsUnit(unitID,env.StopTurn)
+		end
 	end
 end
 
@@ -98,11 +105,12 @@ end
 
 function gadget:AllowCommand(unitID, unitDefID, teamID, cmdID, cmdParams, cmdOptions)
 	local ud = UnitDefs[unitDefID]
-	if cmdID == CMD_TURN then
+	if cmdID ~= CMD.SET_WANTED_MAX_SPEED and turning[unitID] and turning[unitID].numFrames then
+		if not cmdOptions["shift"] then
+			StopTurn(unitID) -- Abort turn if another command issued directly (not queued)
+		end
+	elseif cmdID == CMD_TURN then
 		return ud.customParams.hasturnbutton
-	end
-	if cmdID ~= CMD.SET_WANTED_MAX_SPEED and turning[unitID] then
-		StopTurn(unitID) -- Abort turn if another command issued directly (not queued)
 	end
 	return true
 end

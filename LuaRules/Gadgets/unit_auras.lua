@@ -41,7 +41,7 @@ function gadget:Initialize()
         end
  
         -- Loops through the units, calling g:UnitFinished() on each of them
-        for _,uid in ipairs(GetAllUnits()) do
+        for _,unitID in ipairs(GetAllUnits()) do
                 local teamID = GetUnitTeam(unitID)
                 local unitDefID = GetUnitDefID(unitID)
                 gadget:UnitFinished(unitID, unitDefID, teamID)
