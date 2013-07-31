@@ -4,50 +4,9 @@ local pelvis, torso, lupperleg, llowerleg, rupperleg, rlowerleg, rfronttoes, rba
 
 --Turning/Movement Locals
 local LEG_SPEED = rad(300)
+local LEG_TURN_SPEED = rad (200)
 
 --[[
---TURNING SCRIPT--
---Left Leg Up...
-Turn(lupperleg, x_axis, rad(20), LEG_SPEED)
-Turn(llowerleg, x_axis, rad(-25), LEG_SPEED)
-Turn(lbacktoe, x_axis, rad(-15), LEG_SPEED)
-Turn(lfronttoes, x_axis, rad(15), LEG_SPEED)
---Wait for turns...
-WaitForTurn(lupperleg, x_axis)
-WaitForTurn(llowerleg, x_axis)
-WaitForTurn(lbacktoe, x_axis)
-WaitForTurn(lfronttoes, x_axis)
---Left Leg Down...
-Turn(lupperleg, x_axis, rad(0), LEG_SPEED)
-Turn(llowerleg, x_axis, rad(0), LEG_SPEED)
-Turn(lbacktoe, x_axis, rad(0), LEG_SPEED)
-Turn(lfronttoes, x_axis, rad(0), LEG_SPEED)
---Wait for turns...
-WaitForTurn(lupperleg, x_axis)
-WaitForTurn(llowerleg, x_axis)
-WaitForTurn(lbacktoe, x_axis)
-WaitForTurn(lfronttoes, x_axis)
---Right Leg Up...
-Turn(rupperleg, x_axis, rad(20), LEG_SPEED)
-Turn(rlowerleg, x_axis, rad(-25), LEG_SPEED)
-Turn(rbacktoe, x_axis, rad(-15), LEG_SPEED)
-Turn(rfronttoes, x_axis, rad(15), FLEG_SPEED)
---Wait for turns...
-WaitForTurn(rupperleg, x_axis)
-WaitForTurn(rlowerleg, x_axis)
-WaitForTurn(rbacktoe, x_axis)
-WaitForTurn(rfronttoes, x_axis)
---Right Leg Down...
-Turn(rupperleg, x_axis, rad(0), LEG_SPEED)
-Turn(rlowerleg, x_axis, rad(0), LEG_SPEED)
-Turn(rbacktoe, x_axis, rad(0), LEG_SPEED)
-Turn(rfronttoes, x_axis, rad(0), FLEG_SPEED)
---Wait for turns
-WaitForTurn(rupperleg, x_axis)
-WaitForTurn(rlowerleg, x_axis)
-WaitForTurn(rbacktoe, x_axis)
-WaitForTurn(rfronttoes, x_axis)
-
 --JUMPING SCRIPT--
 --Crouch...
 Turn(rupperleg, x_axis, rad(30), LEG_SPEED)
@@ -159,41 +118,49 @@ function anim_Turn(signal)
 	SetSignalMask(signal)
 	while true do
 		--Left Leg Up...
-		Turn(lupperleg, x_axis, rad(40), LEG_SPEED)
-		Turn(llowerleg, x_axis, rad(-25), LEG_SPEED)
-		Turn(lbacktoe, x_axis, rad(-15), LEG_SPEED)
-		Turn(lfronttoes, x_axis, rad(15), LEG_SPEED)
+		Turn(pelvis, z_axis, rad(-5), LEG_TURN_SPEED)
+		Turn(lupperleg, x_axis, rad(30), LEG_TURN_SPEED)
+		Turn(llowerleg, x_axis, rad(-40), LEG_TURN_SPEED)
+		Turn(lbacktoe, x_axis, rad(-15), LEG_TURN_SPEED)
+		Turn(lfronttoes, x_axis, rad(15), LEG_TURN_SPEED)
 		--Wait for turns...
+		WaitForTurn(pelvis, z_axis)
 		WaitForTurn(lupperleg, x_axis)
 		WaitForTurn(llowerleg, x_axis)
 		WaitForTurn(lbacktoe, x_axis)
 		WaitForTurn(lfronttoes, x_axis)
 		--Left Leg Down...
-		Turn(lupperleg, x_axis, rad(0), LEG_SPEED)
-		Turn(llowerleg, x_axis, rad(0), LEG_SPEED)
-		Turn(lbacktoe, x_axis, rad(0), LEG_SPEED)
-		Turn(lfronttoes, x_axis, rad(0), LEG_SPEED)
+		Turn(pelvis, z_axis, rad(0), LEG_TURN_SPEED)
+		Turn(lupperleg, x_axis, rad(0), LEG_TURN_SPEED)
+		Turn(llowerleg, x_axis, rad(0), LEG_TURN_SPEED)
+		Turn(lbacktoe, x_axis, rad(0), LEG_TURN_SPEED)
+		Turn(lfronttoes, x_axis, rad(0), LEG_TURN_SPEED)
 		--Wait for turns...
+		WaitForTurn(pelvis, z_axis)
 		WaitForTurn(lupperleg, x_axis)
 		WaitForTurn(llowerleg, x_axis)
 		WaitForTurn(lbacktoe, x_axis)
 		WaitForTurn(lfronttoes, x_axis)
 		--Right Leg Up...
-		Turn(rupperleg, x_axis, rad(40), LEG_SPEED)
-		Turn(rlowerleg, x_axis, rad(-25), LEG_SPEED)
-		Turn(rbacktoe, x_axis, rad(-15), LEG_SPEED)
-		Turn(rfronttoes, x_axis, rad(15), FLEG_SPEED)
+		Turn(pelvis, z_axis, rad(5), LEG_TURN_SPEED)
+		Turn(rupperleg, x_axis, rad(30), LEG_TURN_SPEED)
+		Turn(rlowerleg, x_axis, rad(-40), LEG_TURN_SPEED)
+		Turn(rbacktoe, x_axis, rad(-15), LEG_TURN_SPEED)
+		Turn(rfronttoes, x_axis, rad(15), LEG_TURN_SPEED)
 		--Wait for turns...
+		WaitForTurn(pelvis, z_axis)
 		WaitForTurn(rupperleg, x_axis)
 		WaitForTurn(rlowerleg, x_axis)
 		WaitForTurn(rbacktoe, x_axis)
 		WaitForTurn(rfronttoes, x_axis)
 		--Right Leg Down...
-		Turn(rupperleg, x_axis, rad(0), LEG_SPEED)
-		Turn(rlowerleg, x_axis, rad(0), LEG_SPEED)
-		Turn(rbacktoe, x_axis, rad(0), LEG_SPEED)
-		Turn(rfronttoes, x_axis, rad(0), FLEG_SPEED)
+		Turn(pelvis, z_axis, rad(0), LEG_TURN_SPEED)
+		Turn(rupperleg, x_axis, rad(0), LEG_TURN_SPEED)
+		Turn(rlowerleg, x_axis, rad(0), LEG_TURN_SPEED)
+		Turn(rbacktoe, x_axis, rad(0), LEG_TURN_SPEED)
+		Turn(rfronttoes, x_axis, rad(0), LEG_TURN_SPEED)
 		--Wait for turns
+		WaitForTurn(pelvis, z_axis)
 		WaitForTurn(rupperleg, x_axis)
 		WaitForTurn(rlowerleg, x_axis)
 		WaitForTurn(rbacktoe, x_axis)

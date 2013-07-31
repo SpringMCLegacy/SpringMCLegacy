@@ -1,52 +1,13 @@
 --piece defines
 -- NB. local here means main script can't read them, may want to change that for e.g. Killed (or put Killed in here for per-unit death anims! But then other pieces need to be none-local)
 local pelvis, torso, lupperleg, llowerleg, rupperleg, rlowerleg, rfronttoe, rbacktoe, rlefttoe, rrighttoe, lfronttoe, lbacktoe , llefttoe, lrighttoe, lfoot, rfoot = piece ("pelvis", "torso", "lupperleg", "llowerleg", "rupperleg", "rlowerleg", "rfronttoe", "rbacktoe", "rlefttoe", "rrighttoe", "lfronttoe", "lbacktoe", "llefttoe", "lrighttoe", "lfoot", "rfoot")
+local lupperarm = piece ("lupperarm")
 
 --Turning/Movement Locals
 local LEG_SPEED = rad(400)
+local LEG_TURN_SPEED = rad (250)
 
 --[[
---TURNING SCRIPT--
---Left Leg Up...
-Turn(lupperleg, x_axis, rad(20), LEG_SPEED)
-Turn(llowerleg, x_axis, rad(-25), LEG_SPEED)
-Turn(lbacktoe, x_axis, rad(-15), LEG_SPEED)
-Turn(lfronttoe, x_axis, rad(15), LEG_SPEED)
---Wait for turns...
-WaitForTurn(lupperleg, x_axis)
-WaitForTurn(llowerleg, x_axis)
-WaitForTurn(lbacktoe, x_axis)
-WaitForTurn(lfronttoe, x_axis)
---Left Leg Down...
-Turn(lupperleg, x_axis, rad(0), LEG_SPEED)
-Turn(llowerleg, x_axis, rad(0), LEG_SPEED)
-Turn(lbacktoe, x_axis, rad(0), LEG_SPEED)
-Turn(lfronttoe, x_axis, rad(0), LEG_SPEED)
---Wait for turns...
-WaitForTurn(lupperleg, x_axis)
-WaitForTurn(llowerleg, x_axis)
-WaitForTurn(lbacktoe, x_axis)
-WaitForTurn(lfronttoe, x_axis)
---Right Leg Up...
-Turn(rupperleg, x_axis, rad(20), LEG_SPEED)
-Turn(rlowerleg, x_axis, rad(-25), LEG_SPEED)
-Turn(rbacktoe, x_axis, rad(-15), LEG_SPEED)
-Turn(rfronttoe, x_axis, rad(15), FLEG_SPEED)
---Wait for turns...
-WaitForTurn(rupperleg, x_axis)
-WaitForTurn(rlowerleg, x_axis)
-WaitForTurn(rbacktoe, x_axis)
-WaitForTurn(rfronttoe, x_axis)
---Right Leg Down...
-Turn(rupperleg, x_axis, rad(0), LEG_SPEED)
-Turn(rlowerleg, x_axis, rad(0), LEG_SPEED)
-Turn(rbacktoe, x_axis, rad(0), LEG_SPEED)
-Turn(rfronttoe, x_axis, rad(0), FLEG_SPEED)
---Wait for turns
-WaitForTurn(rupperleg, x_axis)
-WaitForTurn(rlowerleg, x_axis)
-WaitForTurn(rbacktoe, x_axis)
-WaitForTurn(rfronttoe, x_axis)
 
 --JUMPING SCRIPT--
 --Crouch...
@@ -153,12 +114,81 @@ WaitForTurn(lbacktoe, x_axis)
 WaitForTurn(lfronttoe, x_axis)
 ]]
 
+function anim_Turn(signal)
+	SetSignalMask(signal)
+	while true do
+		--Left Leg Up...
+		Turn(pelvis, z_axis, rad(-5), LEG_TURN_SPEED)
+		Turn(lupperleg, x_axis, rad(20), LEG_TURN_SPEED)
+		Turn(llowerleg, x_axis, rad(-25), LEG_TURN_SPEED)
+		Turn(lbacktoe, x_axis, rad(-15), LEG_TURN_SPEED)
+		Turn(lfronttoe, x_axis, rad(15), LEG_TURN_SPEED)
+		Turn(lrighttoe, z_axis, rad(15), LEG_TURN_SPEED)
+		Turn(llefttoe, z_axis, rad(-15), LEG_TURN_SPEED)
+		--Wait for turns...
+		WaitForTurn(pelvis, z_axis)
+		WaitForTurn(lupperleg, x_axis)
+		WaitForTurn(llowerleg, x_axis)
+		WaitForTurn(lbacktoe, x_axis)
+		WaitForTurn(lfronttoe, x_axis)
+		WaitForTurn(lrighttoe, z_axis)
+		WaitForTurn(llefttoe, z_axis)
+		--Left Leg Down...
+		Turn(pelvis, z_axis, rad(0), LEG_TURN_SPEED)
+		Turn(lupperleg, x_axis, rad(0), LEG_TURN_SPEED)
+		Turn(llowerleg, x_axis, rad(0), LEG_TURN_SPEED)
+		Turn(lbacktoe, x_axis, rad(0), LEG_TURN_SPEED)
+		Turn(lfronttoe, x_axis, rad(0), LEG_TURN_SPEED)
+		Turn(lrighttoe, z_axis, rad(0), LEG_TURN_SPEED)
+		Turn(llefttoe, z_axis, rad(0), LEG_TURN_SPEED)
+		--Wait for turns...
+		WaitForTurn(pelvis, z_axis)
+		WaitForTurn(lupperleg, x_axis)
+		WaitForTurn(llowerleg, x_axis)
+		WaitForTurn(lbacktoe, x_axis)
+		WaitForTurn(lfronttoe, x_axis)
+		WaitForTurn(lrighttoe, z_axis)
+		WaitForTurn(llefttoe, z_axis)
+		--Right Leg Up...
+		Turn(pelvis, z_axis, rad(5), LEG_TURN_SPEED)
+		Turn(rupperleg, x_axis, rad(20), LEG_TURN_SPEED)
+		Turn(rlowerleg, x_axis, rad(-25), LEG_TURN_SPEED)
+		Turn(rbacktoe, x_axis, rad(-15), LEG_TURN_SPEED)
+		Turn(rfronttoe, x_axis, rad(15), LEG_TURN_SPEED)
+		Turn(rrighttoe, z_axis, rad(15), LEG_TURN_SPEED)
+		Turn(rlefttoe, z_axis, rad(-15), LEG_TURN_SPEED)
+		--Wait for turns...
+		WaitForTurn(pelvis, z_axis)
+		WaitForTurn(rupperleg, x_axis)
+		WaitForTurn(rlowerleg, x_axis)
+		WaitForTurn(rbacktoe, x_axis)
+		WaitForTurn(rfronttoe, x_axis)
+		WaitForTurn(rrighttoe, z_axis)
+		WaitForTurn(rlefttoe, z_axis)
+		--Right Leg Down...
+		Turn(pelvis, z_axis, rad(0), LEG_TURN_SPEED)
+		Turn(rupperleg, x_axis, rad(0), LEG_TURN_SPEED)
+		Turn(rlowerleg, x_axis, rad(0), LEG_TURN_SPEED)
+		Turn(rbacktoe, x_axis, rad(0), LEG_TURN_SPEED)
+		Turn(rfronttoe, x_axis, rad(0), LEG_TURN_SPEED)
+		Turn(rrighttoe, z_axis, rad(0), LEG_TURN_SPEED)
+		Turn(rlefttoe, z_axis, rad(0), LEG_TURN_SPEED)
+		--Wait for turns
+		WaitForTurn(pelvis, z_axis)
+		WaitForTurn(rupperleg, x_axis)
+		WaitForTurn(rlowerleg, x_axis)
+		WaitForTurn(rbacktoe, x_axis)
+		WaitForTurn(rfronttoe, x_axis)
+		WaitForTurn(rrighttoe, z_axis)
+		WaitForTurn(rlefttoe, z_axis)
+	end
+end
 
 -- Walk script
-function MotionControl()
+function anim_Walk(signal)
+	SetSignalMask(signal)
 	while true do
-		if walking then
-			--Spring.Echo("START")
+			--[[--Spring.Echo("START")
 			Turn(pelvis, z_axis, rad(5), LEG_SPEED / 10)
 			--Left Leg--
 			Turn(lupperleg, x_axis, rad(0), LEG_SPEED)
@@ -186,7 +216,7 @@ function MotionControl()
 			WaitForTurn(rlowerleg, x_axis)
 			WaitForTurn(rfoot, x_axis)
 			WaitForTurn(rbacktoe, x_axis)
-			WaitForTurn(rfronttoe, x_axis)
+			WaitForTurn(rfronttoe, x_axis)]]
 			--Sleep(10)
 			
 			--Spring.Echo("Step .5")
@@ -288,6 +318,8 @@ function MotionControl()
 			--Spring.Echo("Step 2")
 			--Torso--
 			Turn(pelvis, z_axis, rad(-5), LEG_SPEED / 10)
+			Move(torso, y_axis, -1, LEG_SPEED * 4)
+			Move(lupperarm, y_axis, -2, LEG_SPEED * 4)
 			--Left Leg--
 			Turn(lupperleg, x_axis, rad(40), LEG_SPEED)
 			Turn(llowerleg, x_axis, rad(10), LEG_SPEED)
@@ -320,6 +352,8 @@ function MotionControl()
 			--Spring.Echo("Step 2.5")
 			--Torso--
 			Turn(pelvis, z_axis, rad(-5), LEG_SPEED / 10)
+			Move(torso, y_axis, 0, LEG_SPEED)
+			Move(lupperarm, y_axis, 0, LEG_SPEED)
 			--Left Leg--
 			Turn(lupperleg, x_axis, rad(45), LEG_SPEED)
 			Turn(llowerleg, x_axis, rad(-10), LEG_SPEED)
@@ -410,6 +444,9 @@ function MotionControl()
 			--Sleep(10)
 			
 			--Spring.Echo("Step 4")
+			--Torso--
+			Move(torso, y_axis, -1, LEG_SPEED * 4)
+			Move(lupperarm, y_axis, -2, LEG_SPEED * 4)
 			--Left Leg--
 			Turn(lupperleg, x_axis, rad(10), LEG_SPEED)
 			Turn(llowerleg, x_axis, rad(-20), LEG_SPEED)
@@ -440,6 +477,9 @@ function MotionControl()
 			--Sleep(10)
 			
 			--Spring.Echo("Step 4.5")
+			--Torso--
+			Move(torso, y_axis, 0, LEG_SPEED)
+			Move(lupperarm, y_axis, 0, LEG_SPEED)
 			--Left Leg--
 			Turn(lupperleg, x_axis, rad(-10), LEG_SPEED)
 			Turn(llowerleg, x_axis, rad(-10), LEG_SPEED)
@@ -562,8 +602,13 @@ function MotionControl()
 			WaitForTurn(rbacktoe, x_axis)
 			WaitForTurn(rfronttoe, x_axis)
 			--Sleep(10)
-		else
+	end
+end
+
+function anim_Reset()
 			Turn(pelvis, z_axis, rad(0), LEG_SPEED)
+			Move(torso, y_axis, 0, LEG_SPEED)
+			Move(lupperarm, y_axis, 0, LEG_SPEED)
 			Turn(lupperleg, x_axis, rad(0), LEG_SPEED)
 			Turn(llowerleg, x_axis, rad(0), LEG_SPEED)
 			Turn(lfoot, x_axis, rad(0), LEG_SPEED)
@@ -579,6 +624,4 @@ function MotionControl()
 			Turn(rlefttoe, z_axis, rad(0), LEG_SPEED)
 			Turn(rrighttoe, z_axis, rad(0), LEG_SPEED)
 			Sleep(100)
-		end
-	end
 end
