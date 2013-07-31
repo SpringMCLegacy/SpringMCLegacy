@@ -54,7 +54,9 @@ local DOOR_SPEED = rad(20)
 for weaponID in pairs(missileWeaponIDs) do
         launchPoints[weaponID] = {}
         currPoints[weaponID] = 1
-        numPoints[weaponID] = WeaponDefs[weapons[weaponID].weaponDef].salvoSize
+		local weaponDefID = weapons[weaponID].weaponDef
+		local weaponDef = WeaponDefs[weaponDefID]
+        numPoints[weaponID] = weaponDef.salvoSize
         for i = 1, numPoints[weaponID] do
                 launchPoints[weaponID][i] = piece("launchpoint_" .. weaponID .. "_" .. i)
         end

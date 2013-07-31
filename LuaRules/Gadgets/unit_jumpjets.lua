@@ -252,7 +252,7 @@ local function Jump(unitID, goal, cmdTag)
 	  end
   end
   spSetUnitRulesParam(unitID,"jumpReloadBar",0)
-
+---------------------------------------------------------------
   local function JumpLoop()
   
     if delay > 0 then
@@ -330,6 +330,7 @@ local function Jump(unitID, goal, cmdTag)
       Sleep()
     end
   end
+---------------------------------------------------------------
   
   StartScript(JumpLoop)
   return true
