@@ -27,6 +27,7 @@ local GetUnitPosition		= Spring.GetUnitPosition
 -- Variables
 
 -- Useful functions for GG
+
 local function GetUnitDistanceToPoint(unitID, tx, ty, tz, bool3D)
 	local x,y,z = GetUnitPosition(unitID)
 	local dy = (bool3D and ty and (ty - y)^2) or 0
@@ -62,6 +63,7 @@ end
 
 function gadget:UnitCreated(unitID, unitDefID, teamID, builderID)
 	local info = GG.lusHelper[unitDefID]
+	info.builderID = builderID
 	if info.arms == nil then --and not UnitDefs[unitDefID].name:find("dropship") then
 		-- Parse Model Data
 		local pieceMap = GetUnitPieceMap(unitID)

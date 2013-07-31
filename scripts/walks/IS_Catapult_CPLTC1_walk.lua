@@ -114,8 +114,9 @@ WaitForTurn(lfronttoes, x_axis)
 
 --Turn script
 
-function anim_Turn(signal)
-	SetSignalMask(signal)
+function anim_Turn()
+	Signal(SIG_ANIMATE)
+	SetSignalMask(SIG_ANIMATE)
 	while true do
 		--Left Leg Up...
 		Turn(pelvis, z_axis, rad(-5), LEG_TURN_SPEED)
@@ -289,8 +290,9 @@ function anim_Land()
 end
 
 -- Walk script
-function anim_Walk(signal)
-	SetSignalMask(signal)
+function anim_Walk()
+	Signal(SIG_ANIMATE)
+	SetSignalMask(SIG_ANIMATE)
 	while true do
 		--Spring.Echo("START")
 		Turn(pelvis, z_axis, rad(5), LEG_SPEED / 10)
@@ -648,6 +650,7 @@ function anim_Walk(signal)
 end
 
 function anim_Reset()
+	Signal(SIG_ANIMATE)
 	Turn(pelvis, z_axis, rad(0), LEG_SPEED)
 	Turn(lupperleg, x_axis, rad(0), LEG_SPEED)
 	Turn(llowerleg, x_axis, rad(0), LEG_SPEED)

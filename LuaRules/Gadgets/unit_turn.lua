@@ -63,8 +63,8 @@ local function StartTurn(unitID, unitDefID, tx, tz)
 	end
 	env = Spring.UnitScript.GetScriptEnv(unitID)
 	if env and env.StartTurn then
-		-- SetUnitVelocity above calls StartMoving in LUS after 1 frame, so call turn anim after 2 (FU, Spring)
-		DelayCall(Spring.UnitScript.CallAsUnit,{unitID, env.StartTurn, turnRate < 0}, 2) -- clockwise from +ve y
+		-- SetUnitVelocity above calls StartMoving in LUS after 1 frame, StopMoving after 2, so call turn anim after 3 (FU, Spring)
+		DelayCall(Spring.UnitScript.CallAsUnit,{unitID, env.StartTurn, turnRate < 0}, 3) -- clockwise from +ve y
 	end
 	local turnTable = {}
 	turnTable["turnRate"] = turnRate

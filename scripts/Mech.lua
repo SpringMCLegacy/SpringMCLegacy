@@ -5,9 +5,9 @@ unitDef = UnitDefs[unitDefID]
 info = GG.lusHelper[unitDefID]
 -- the following have to be non-local for the walkscript include to find them
 rad = math.rad
-walking = {}
+
+SIG_ANIMATE = {}
 jumping = false
-turning = {}
 
 -- localised API functions
 local SetUnitRulesParam = Spring.SetUnitRulesParam
@@ -305,42 +305,36 @@ function StopJump()
 end
 
 function StartTurn(clockwise)
-	Signal(walking)
 	local direction = (clockwise and "clockwise") or "anti-clockwise"
-	Spring.Echo("I'm turnin' " .. direction .. " yo!")
-	--turning = {}
-	StartThread(anim_Turn, turning)
+	Spring.Echo("I'm turnin' " .. direction .. " yo!", Spring.GetGameFrame())
+	--Signal(walking)
+	StartThread(anim_Turn)
 end
 
 function StopTurn()
-	Spring.Echo("I'm finished turnin' bro!")
-	Signal(turning)
+	Spring.Echo("I'm finished turnin' bro!", Spring.GetGameFrame())
+	--Signal(SIG_ANIMATE)
 	StartThread(anim_Reset)
 end
 
 function script.Create()
-	--walking = true
+	if info.builderID then script.StartMoving() end -- walk down ramp
 	--StartThread(SmokeUnit, {pelvis, torso})
 	StartThread(SmokeLimb, "left_arm", lupperarm)
 	StartThread(SmokeLimb, "right_arm", rupperarm)
 	StartThread(CoolOff)
-	--StartThread(MotionControl)
 end
 
 function script.StartMoving()
-	Spring.Echo("START MOVING")
-	Signal(turning)
-	--walking = {}
-	StartThread(anim_Walk, walking)
+	Spring.Echo("START MOVING", Spring.GetGameFrame())
+	--Signal(turning)
+	--Signal(walking)
+	StartThread(anim_Walk)
 end
 
 function script.StopMoving()
-	Spring.Echo("STOP MOVING")
-	-- if we are walking down the ramp during construction, ignore calls to StopMoving
-	-- there's probably a more efficient way to do this 
-	-- Not sure if this is still required!
-	if select(5, Spring.GetUnitHealth(unitID)) ~= 1 then return end
-	Signal(walking)
+	Spring.Echo("STOP MOVING", Spring.GetGameFrame())
+	--Signal(SIG_ANIMATE)
 	StartThread(anim_Reset)
 end
 
