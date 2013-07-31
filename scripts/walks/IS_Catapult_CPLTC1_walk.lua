@@ -114,7 +114,7 @@ WaitForTurn(lfronttoes, x_axis)
 
 --Turn script
 
-function anim_Turn()
+function anim_Turn(clockwise)
 	Signal(SIG_ANIMATE)
 	SetSignalMask(SIG_ANIMATE)
 	while true do

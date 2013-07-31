@@ -307,13 +307,22 @@ end
 function StartTurn(clockwise)
 	local direction = (clockwise and "clockwise") or "anti-clockwise"
 	Spring.Echo("I'm turnin' " .. direction .. " yo!", Spring.GetGameFrame())
-	--Signal(walking)
-	StartThread(anim_Turn)
+	StartThread(anim_Turn, clockwise)
 end
 
 function StopTurn()
 	Spring.Echo("I'm finished turnin' bro!", Spring.GetGameFrame())
-	--Signal(SIG_ANIMATE)
+	StartThread(anim_Reset)
+end
+
+function script.StartMoving(reversing)
+	Spring.Echo("Reversing?", reversing)
+	Spring.Echo("START MOVING", Spring.GetGameFrame())
+	StartThread(anim_Walk)
+end
+
+function script.StopMoving()
+	Spring.Echo("STOP MOVING", Spring.GetGameFrame())
 	StartThread(anim_Reset)
 end
 
@@ -323,19 +332,6 @@ function script.Create()
 	StartThread(SmokeLimb, "left_arm", lupperarm)
 	StartThread(SmokeLimb, "right_arm", rupperarm)
 	StartThread(CoolOff)
-end
-
-function script.StartMoving()
-	Spring.Echo("START MOVING", Spring.GetGameFrame())
-	--Signal(turning)
-	--Signal(walking)
-	StartThread(anim_Walk)
-end
-
-function script.StopMoving()
-	Spring.Echo("STOP MOVING", Spring.GetGameFrame())
-	--Signal(SIG_ANIMATE)
-	StartThread(anim_Reset)
 end
 
 function script.Activate()
