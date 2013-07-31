@@ -283,14 +283,16 @@ end
 
 function PreJump(delay, turn, lineDist)
 	Spring.Echo("In " .. delay .. " frames I will jump " .. lineDist .. " elmos on a heading of " .. turn)
+	StartThread(anim_PreJump)
 end
 
 function StartJump()
 	jumping = true
 	currHeatLevel = currHeatLevel + jumpHeat
+	StartThread(anim_StartJump)
 end
 
-function Jumping()
+function Jumping()-- Gets called throughout by gadget
 	for i = 1, #jets do -- emit JumpJetTrail
 		EmitSfx(jets[i], SFX.CEG)
 	end
@@ -298,10 +300,12 @@ end
 
 function HalfJump()
 	Spring.Echo("Woah! It's high up here!")
+	StartThread(anim_HalfJump)
 end
 
 function StopJump()
 	jumping = false
+	StartThread(anim_StopJump)
 end
 
 function StartTurn(clockwise)

@@ -42,13 +42,34 @@ colors.grey = "\255\160\160\160"
 
 local btFont
 local text = "C-Bills: " .. colors.grey .. 0 .. colors.white .. "\t\tTonnage: " .. colors.yellow .. 0 .. colors.white .. " / " .. colors.yellow .. 0 .. colors.white .. "\t\tTime: 0:00:00"
-local text2 = ""
+local text2
 local gameTime = ""
+local fps = colors.yellow .. "fps: " ..Spring.GetFPS()
+
+local function Text2()
+	text2 = "Tickets\n"
+	for i = 1, #allyTeams do
+		local allyTeam = allyTeams[i]
+		local tickets = GetGameRulesParam("tickets" .. allyTeam) or START_TICKETS
+		if tickets > START_TICKETS * 0.75 then
+			tickets = colors.green .. tickets
+		elseif tickets > START_TICKETS * 0.25 then
+			tickets = colors.yellow .. tickets
+		elseif tickets == 0 then
+			tickets = colors.black .. tickets
+		else
+			tickets = colors.red .. tickets
+		end
+		text2 = text2 .. colors.white .. "\nTeam " .. allyTeam .. ": " .. tickets
+	end
+end
 
 function widget:Initialize()
-	Spring.SendCommands("resbar 0", "clock 0")
+	Spring.SendCommands("resbar 0", "clock 0", "fps 0")
 	btFont = gl.LoadFont("LuaUI/Fonts/bt_oldstyle.ttf", 16, 2, 30)
+	Text2()
 end
+
 
 function widget:GameFrame(n)
 	if n % 30 == 0 then
@@ -57,6 +78,7 @@ function widget:GameFrame(n)
 		local minutes = format("%02d",  floor(gameSecs / 60))
 		local seconds = format("%02d", gameSecs % 60)
 		gameTime = colors.white .. "\t\tTime: " .. hours .. ":" .. minutes .. ":" .. seconds
+		fps = colors.yellow .. "fps: " ..Spring.GetFPS()
 	end
 	if n % 32 == 0 then
 		local cBills = floor(GetTeamResources(MY_TEAM_ID, "metal"))
@@ -64,27 +86,14 @@ function widget:GameFrame(n)
 		maxTonnage = floor(maxTonnage)
 		tonnage = floor(maxTonnage - tonnage)
 		text = "C-Bills: " .. colors.grey .. cBills .. colors.white .. "\t\tTonnage: " .. colors.yellow .. tonnage .. colors.white .. " / " .. colors.yellow .. maxTonnage .. gameTime
-		text2 = "Tickets\n"
-		for i = 1, #allyTeams do
-			local allyTeam = allyTeams[i]
-			local tickets = GetGameRulesParam("tickets" .. allyTeam) or START_TICKETS
-			if tickets > START_TICKETS * 0.75 then
-				tickets = colors.green .. tickets
-			elseif tickets > START_TICKETS * 0.25 then
-				tickets = colors.yellow .. tickets
-			elseif tickets == 0 then
-				tickets = colors.black .. tickets
-			else
-				tickets = colors.red .. tickets
-			end
-			text2 = text2 .. colors.white .. "\nTeam " .. allyTeam .. ": " .. tickets
-		end
+		Text2()
 	end
 end
 
 function widget:DrawScreen()
 	btFont:Begin()
 		btFont:Print(text, xMax/2, yMax - 32, 16, "cod")
-		btFont:Print(text2, xMax - 90, yMax - 32, 16, "cod")
+		btFont:Print(text2, xMax - 148, yMax - 32, 16, "od")
+		btFont:Print(fps, xMax - 148, yMax - 72 - (16 * #allyTeams), 12, "od")
 	btFont:End()
 end
