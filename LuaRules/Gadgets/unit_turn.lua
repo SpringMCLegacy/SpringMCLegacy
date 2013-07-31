@@ -35,6 +35,7 @@ local turning = {} -- structure: turning = {unitID={turnRate=number COB units to
 
 if (gadgetHandler:IsSyncedCode()) then
 -- SYNCED
+local DelayCall = GG.Delay.DelayCall
 
 local function StartTurn(unitID, unitDefID, tx, tz)
 	local ud = UnitDefs[unitDefID]
@@ -62,7 +63,8 @@ local function StartTurn(unitID, unitDefID, tx, tz)
 	end
 	env = Spring.UnitScript.GetScriptEnv(unitID)
 	if env and env.StartTurn then
-		Spring.UnitScript.CallAsUnit(unitID, env.StartTurn, turnRate < 0) -- clockwise from +ve y
+		-- SetUnitVelocity above calls StartMoving in LUS after 1 frame, so call turn anim after 2 (FU, Spring)
+		DelayCall(Spring.UnitScript.CallAsUnit,{unitID, env.StartTurn, turnRate < 0}, 2) -- clockwise from +ve y
 	end
 	local turnTable = {}
 	turnTable["turnRate"] = turnRate
