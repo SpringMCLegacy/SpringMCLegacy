@@ -1,17 +1,19 @@
 --piece defines
 -- NB. local here means main script can't read them, may want to change that for e.g. Killed (or put Killed in here for per-unit death anims! But then other pieces need to be none-local)
-local pelvis, lupperleg, llowerleg, rupperleg, rlowerleg, rfoot, lfoot = piece ("pelvis", "lupperleg", "llowerleg", "rupperleg", "rlowerleg", "rfoot", "lfoot")
-local torso, rupperarm, lupperarm = piece ("torso", "rupperarm", "lupperarm")
+local pelvis, torso, lupperleg, llowerleg, rupperleg, rlowerleg, lfoot, rfoot = piece ("pelvis", "torso", "lupperleg", "llowerleg", "rupperleg", "rlowerleg", "lfoot", "rfoot")
+local rupperarm, lupperarm = piece ("rupperarm", "lupperarm")
 
 --Turning/Movement Locals
 local LEG_SPEED = rad(350)
-local LEG_TURN_SPEED =rad(300)
+local LEG_TURN_SPEED = rad (300)
 
-function anim_Turn(signal)
-	SetSignalMask(signal)
+function anim_Turn(clockwise)
+	Signal(SIG_ANIMATE)
+	SetSignalMask(SIG_ANIMATE)
 	while true do
+--		Spring.Echo("anim_Turn")
 		--Left Leg Up...
-		Turn(pelvis, z_axis, rad(5), LEG_TURN_SPEED / 2)
+		Turn(pelvis, z_axis, rad(-5), LEG_TURN_SPEED / 2)
 		Turn(lupperleg, x_axis, rad(-40), LEG_TURN_SPEED / 1.5)
 		Turn(llowerleg, x_axis, rad(60), LEG_TURN_SPEED)
 		--Wait for turns...
@@ -27,7 +29,7 @@ function anim_Turn(signal)
 		WaitForTurn(lupperleg, x_axis)
 		WaitForTurn(llowerleg, x_axis)
 		--Right Leg Up...
-		Turn(pelvis, z_axis, rad(-5), LEG_TURN_SPEED / 2)
+		Turn(pelvis, z_axis, rad(5), LEG_TURN_SPEED / 2)
 		Turn(rupperleg, x_axis, rad(-40), LEG_TURN_SPEED / 1.5)
 		Turn(rlowerleg, x_axis, rad(60), LEG_TURN_SPEED)
 		--Wait for turns...
@@ -46,9 +48,11 @@ function anim_Turn(signal)
 end
 
 -- Walk script
-function anim_Walk(signal)
-	SetSignalMask(signal)
+function anim_Walk()
+	Signal(SIG_ANIMATE)
+	SetSignalMask(SIG_ANIMATE)
 	while true do
+--		Spring.Echo("anim_Walk")
 		--Spring.Echo("Step 0.5")
 		--Pelvis--
 		Turn(pelvis, z_axis, rad(2), LEG_SPEED)
@@ -333,15 +337,16 @@ function anim_Walk(signal)
 end
 
 function anim_Reset()
+	Signal(SIG_ANIMATE)
+--	Spring.Echo("anim_Reset")
 	Turn(pelvis, z_axis, rad(0), LEG_SPEED)
-	Move(torso, z_axis, 0, LEG_SPEED)
-	Move(rupperarm, y_axis, 0, LEG_SPEED)
-	Move(lupperarm, y_axis, 0, LEG_SPEED)
 	Turn(lupperleg, x_axis, rad(0), LEG_SPEED)
 	Turn(llowerleg, x_axis, rad(0), LEG_SPEED)
 	Turn(lfoot, x_axis, rad(0), LEG_SPEED)
 	Turn(rupperleg, x_axis, rad(0), LEG_SPEED)
 	Turn(rlowerleg, x_axis, rad(0), LEG_SPEED)
 	Turn(rfoot, x_axis, rad(0), LEG_SPEED)
-	Sleep(10)
+	Move(lupperarm, y_axis, 0, LEG_SPEED)
+	Move(rupperarm, y_axis, 0, LEG_SPEED)
+	Sleep(100)
 end

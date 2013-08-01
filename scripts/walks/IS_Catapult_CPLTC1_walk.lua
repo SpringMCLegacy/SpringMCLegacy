@@ -118,7 +118,7 @@ function anim_Turn(clockwise)
 	Signal(SIG_ANIMATE)
 	SetSignalMask(SIG_ANIMATE)
 	while true do
-		Spring.Echo("anim_Turn")
+--		Spring.Echo("anim_Turn")
 		--Left Leg Up...
 		Turn(pelvis, z_axis, rad(-5), LEG_TURN_SPEED)
 		Turn(lupperleg, x_axis, rad(30), LEG_TURN_SPEED)
@@ -173,9 +173,8 @@ end
 function anim_PreJump()
 	Signal(SIG_ANIMATE)
 	SetSignalMask(SIG_ANIMATE)
-	Spring.Echo("anim_PreJump")
+--	Spring.Echo("anim_PreJump")
 	anim_Reset()
-	--while true do
 		--Crouch...
 		Turn(rupperleg, x_axis, rad(30), LEG_SPEED)
 		Turn(rlowerleg, x_axis, rad(-30), LEG_SPEED)
@@ -190,15 +189,13 @@ function anim_PreJump()
 		WaitForTurn(rlowerleg, x_axis)
 		WaitForTurn(lupperleg, x_axis)
 		WaitForTurn(llowerleg, x_axis)
-	--end
-	Spring.Echo("anim_PreJump Completed")
+--	Spring.Echo("anim_PreJump Completed")
 end
 
 function anim_StartJump()
 	Signal(SIG_ANIMATE)
 	SetSignalMask(SIG_ANIMATE)
-	Spring.Echo("anim_StartJump")
-	--while true do
+--	Spring.Echo("anim_StartJump")
 		--Jump!
 		Turn(rupperleg, x_axis, rad(5), LEG_SPEED * 4)
 		Turn(rlowerleg, x_axis, rad(20), LEG_SPEED * 4)
@@ -219,15 +216,13 @@ function anim_StartJump()
 		WaitForTurn(llowerleg, x_axis)
 		WaitForTurn(lbacktoe, x_axis)
 		WaitForTurn(lfronttoes, x_axis)
-	--end
-	Spring.Echo("anim_StartJump Completed")
+--	Spring.Echo("anim_StartJump Completed")
 end
 
 function anim_HalfJump()
 	Signal(SIG_ANIMATE)
 	SetSignalMask(SIG_ANIMATE)
-	Spring.Echo("anim_HalfJump")
-	--while true do
+--	Spring.Echo("anim_HalfJump")
 		--Brace for impact...
 		Turn(rupperleg, x_axis, rad(-30), LEG_SPEED / 4)
 		Turn(rlowerleg, x_axis, rad(20), LEG_SPEED / 4)
@@ -250,15 +245,13 @@ function anim_HalfJump()
 		WaitForTurn(llowerleg, x_axis)
 		WaitForTurn(lbacktoe, x_axis)
 		WaitForTurn(lfronttoes, x_axis)
-	--end
-	Spring.Echo("anim_HalfJump Completed")
+--	Spring.Echo("anim_HalfJump Completed")
 end
 
 function anim_StopJump()
 	Signal(SIG_ANIMATE)
 	SetSignalMask(SIG_ANIMATE)
-	Spring.Echo("anim_StopJump")
-	--while true do
+--	Spring.Echo("anim_StopJump")
 		--Touchdown!
 		Turn(rupperleg, x_axis, rad(20), LEG_SPEED * 4)
 		Turn(rlowerleg, x_axis, rad(-25), LEG_SPEED * 4)
@@ -277,8 +270,7 @@ function anim_StopJump()
 		Move(pelvis, y_axis, 0, LEG_SPEED * 8)
 		Move(pelvis, z_axis, 0, LEG_SPEED * 8)
 		anim_Reset()
-		Spring.Echo("anim_StopJump Completed")
-	--end
+--		Spring.Echo("anim_StopJump Completed")
 end
 
 -- Walk script
@@ -286,7 +278,7 @@ function anim_Walk()
 	Signal(SIG_ANIMATE)
 	SetSignalMask(SIG_ANIMATE)
 	while true do
-		Spring.Echo("anim_Walk")
+--		Spring.Echo("anim_Walk")
 		--Spring.Echo("START")
 		Turn(pelvis, z_axis, rad(5), LEG_SPEED / 10)
 		--Left Leg--
@@ -644,7 +636,7 @@ end
 
 function anim_Reset()
 	Signal(SIG_ANIMATE)
-	Spring.Echo("anim_Reset")
+--	Spring.Echo("anim_Reset")
 	Turn(pelvis, z_axis, rad(0), LEG_SPEED)
 	Turn(lupperleg, x_axis, rad(0), LEG_SPEED)
 	Turn(llowerleg, x_axis, rad(0), LEG_SPEED)
