@@ -427,11 +427,13 @@ function gadget:CommandFallback(unitID, unitDefID, teamID,    -- keeps getting
   local jumpDef = jumpDefs[unitDefID]
   local range   = spGetUnitRulesParam(unitID, "jumpRange") or jumpDef.range
   local reload  = spGetUnitRulesParam(unitID, "jumpReload") or jumpDef.reload or 0
+  local barFull = spGetUnitRulesParam(unitID, "jumpReloadBar") == 1
   local t       = spGetGameSeconds()
 
   if (distSqr < (range*range)) then
     local cmdTag = spGetCommandQueue(unitID,1)[1].tag
-    if ((t - lastJump[unitID]) >= reload) then
+	 -- reload perk can change reload before bar is full so check both
+    if ((t - lastJump[unitID]) >= reload) and barFull then
       local coords = table.concat(cmdParams)
       if (not jumps[coords]) then
         if (not Jump(unitID, cmdParams, cmdTag)) then
