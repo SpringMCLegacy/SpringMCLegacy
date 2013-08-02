@@ -15,6 +15,7 @@ local GetUnitSeparation = Spring.GetUnitSeparation
 local GetUnitCommands   = Spring.GetUnitCommands
 local GetUnitLastAttackedPiece = Spring.GetUnitLastAttackedPiece
 local GetUnitDistanceToPoint = GG.GetUnitDistanceToPoint
+local GetUnitUnderJammer = GG.GetUnitUnderJammer
 
 -- includes
 include "smokeunit.lua"
@@ -28,6 +29,7 @@ local coolRate = baseCoolRate
 local inWater = false
 
 local missileWeaponIDs = info.missileWeaponIDs
+local jammableIDs = info.jammableIDs
 local launcherIDs = info.launcherIDs
 local barrelRecoils = info.barrelRecoilDist
 local burstLengths = info.burstLengths
@@ -282,7 +284,6 @@ function script.HitByWeapon(x, z, weaponID, damage)
 end
 
 function PreJump(delay, turn, lineDist)
-	Spring.Echo("In " .. delay .. " frames I will jump " .. lineDist .. " elmos on a heading of " .. turn)
 	StartThread(anim_PreJump)
 end
 
@@ -299,7 +300,6 @@ function Jumping()-- Gets called throughout by gadget
 end
 
 function HalfJump()
-	Spring.Echo("Woah! It's high up here!")
 	StartThread(anim_HalfJump)
 end
 
@@ -309,24 +309,19 @@ function StopJump()
 end
 
 function StartTurn(clockwise)
-	local direction = (clockwise and "clockwise") or "anti-clockwise"
-	Spring.Echo("I'm turnin' " .. direction .. " yo!", Spring.GetGameFrame())
 	StartThread(anim_Turn, clockwise)
 end
 
 function StopTurn()
-	Spring.Echo("I'm finished turnin' bro!", Spring.GetGameFrame())
 	StartThread(anim_Reset)
 end
 
 function script.StartMoving(reversing)
 	Spring.Echo("Reversing?", reversing)
-	Spring.Echo("START MOVING", Spring.GetGameFrame())
 	StartThread(anim_Walk)
 end
 
 function script.StopMoving()
-	Spring.Echo("STOP MOVING", Spring.GetGameFrame())
 	StartThread(anim_Reset)
 end
 
@@ -398,6 +393,14 @@ function script.AimWeapon(weaponID, heading, pitch)
 end
 
 function script.BlockShot(weaponID, targetID, userTarget)
+	local jammable = jammableIDs[weaponID]
+	if jammable then
+		local jammed = GetUnitUnderJammer(targetID)
+		if jammed then
+			Spring.Echo("Can't fire weapon " .. weaponID .. " as target is jammed")
+			return true 
+		end
+	end
 	local minRange = minRanges[weaponID]
 	if minRange then
 		local distance

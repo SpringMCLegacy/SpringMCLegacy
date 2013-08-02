@@ -39,6 +39,11 @@ for weapName, wd in pairs(WeaponDefs) do
 	end
 	if wd.weapontype == "MissileLauncher" or wd.weapontype == "StarburstLauncher" then
 		wd.targetable = 1
+		local jammable = cp.jammable
+		if jammable == nil then -- nil check required due to bools
+			wd.customparams.jammable = true
+			Spring.Echo(weapName .. " is a jammable missile")
+		end
 	end
 end
 

@@ -53,12 +53,14 @@ end
 local narcUnits = {}
 
 local function GetUnitUnderJammer(unitID, teamID)
+	if not teamID then teamID = GetUnitTeam(unitID) end
 	local allyTeam = select(6, GetTeamInfo(teamID))
 	for jammerID, radius in pairs(allyJammers[allyTeam]) do
 		if GetUnitSeparation(unitID, jammerID) < radius then return true end
 	end
 	return false
 end
+GG.GetUnitUnderJammer = GetUnitUnderJammer
 
 local function NARC(unitID, allyTeam, duration)
 	local narcFrame = GetGameFrame() + duration
