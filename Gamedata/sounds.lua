@@ -81,7 +81,7 @@ local Sounds = {
 			gainmod = 0.35,
 			pitchmod = 0.1,
 			priority = -0.1,
-			maxdist = 1000,
+			maxdist = 5000,
 		}
 	},
 }
