@@ -267,6 +267,7 @@ function anim_StopJump()
 		Turn(lfronttoes, x_axis, rad(0), LEG_SPEED * 4)
 		Move(pelvis, y_axis, -7.6, LEG_SPEED * 18)
 		Move(pelvis, z_axis, -4.3, LEG_SPEED * 18)
+		PlaySound("stomp", 25)
 		Sleep (100)
 		--Recover
 		Move(pelvis, y_axis, 0, LEG_SPEED * 8)
