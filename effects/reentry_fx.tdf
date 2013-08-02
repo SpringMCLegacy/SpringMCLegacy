@@ -93,9 +93,9 @@
 		[properties]{
 			dir = -0.1 r0.2, 1, -0.1 r0.2;
 			colorMap=0.5 0.4 0.3 1  0.05 0.04 0.03 0.1;
-			size=6 r6;
-			length=12 r8;
-			sizeGrowth=1;
+			size=12 r2;
+			length=18 r2;
+			sizeGrowth=1.2;
 			ttl=12;
 			frontOffset=0;
 			sideTexture=splashside;
@@ -110,9 +110,9 @@
 		[properties]{
 			dir = -0.1 r0.2, 1, -0.1 r0.2;
 			colorMap=0.45 0.45 0.5 0.5  0.045 0.045 0.05 0.05; 
-			size=6 r6;
-			length=12 r8;
-			sizeGrowth=1;
+			size=12 r2;
+			length=18 r2;
+			sizeGrowth=1.2;
 			ttl=12;
 			frontOffset=0;
 			sideTexture=splashside;
