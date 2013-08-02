@@ -395,10 +395,12 @@ end
 function script.BlockShot(weaponID, targetID, userTarget)
 	local jammable = jammableIDs[weaponID]
 	if jammable then
-		local jammed = GetUnitUnderJammer(targetID)
-		if jammed then
-			Spring.Echo("Can't fire weapon " .. weaponID .. " as target is jammed")
-			return true 
+		if targetID then
+			local jammed = GetUnitUnderJammer(targetID)
+			if jammed then
+				Spring.Echo("Can't fire weapon " .. weaponID .. " as target is jammed")
+				return true 
+			end
 		end
 	end
 	local minRange = minRanges[weaponID]

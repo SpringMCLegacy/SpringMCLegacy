@@ -42,7 +42,7 @@ for weapName, wd in pairs(WeaponDefs) do
 		local jammable = cp.jammable
 		if jammable == nil then -- nil check required due to bools
 			wd.customparams.jammable = true
-			Spring.Echo(weapName .. " is a jammable missile")
+			--Spring.Echo(weapName .. " is a jammable missile")
 		end
 	end
 end
