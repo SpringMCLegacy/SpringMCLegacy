@@ -19,14 +19,11 @@ local resources = {
 		z = 2600,
 		feature = nil
 	},
-}
-
-local outposts = {
 	{
 		x = 3050,
 		z = 3150,
-		types = {"outpost_listeningpost", "outpost_vehicledepot", "outpost_c3center", "outpost_garrison"},
+		feature = nil
 	},
 }
 
-return resources, outposts
+return resources
