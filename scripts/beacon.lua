@@ -2,6 +2,7 @@
 local base = piece ("base")
 local dirt = piece ("dirt")
 local rocket = piece("rocket")
+local blink = piece("blink")
 
 local flaps = {}
 for i = 1, 4 do
@@ -25,6 +26,10 @@ function fx()
 		EmitSfx(rocket, SFX.BLACK_SMOKE)
 		Sleep(20 * t)
 		t = t + 5
+	end
+	while stage == 0 do
+		Sleep(1000)
+		EmitSfx(blink, SFX.CEG + 2)
 	end
 end
 
@@ -60,6 +65,8 @@ function script.Create()
 	Sleep(500)
 	Move(antenna3, y_axis, 12, 48)
 	WaitForMove(antenna3, y_axis)
+	stage = 0
+	StartThread(fx) -- restart for blink
 end
 
 function script.Killed(recentDamage, maxHealth)

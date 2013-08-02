@@ -71,5 +71,6 @@ for unitName, ud in pairs(UnitDefs) do
 		ud.sfxtypes = { explosiongenerators = {} }
 		table.insert(ud.sfxtypes.explosiongenerators, "custom:reentry_fx")
 		table.insert(ud.sfxtypes.explosiongenerators, "custom:ROACHPLOSION")
+		table.insert(ud.sfxtypes.explosiongenerators, "custom:beacon")
 	end
 end
