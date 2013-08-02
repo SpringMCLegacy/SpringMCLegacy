@@ -170,7 +170,7 @@ function gadget:GamePreload()
 		info.limbHPs["left_arm"] = unitDef.health * 0.15
 		info.limbHPs["right_arm"] = unitDef.health * 0.15
 		-- Vehicles
-		info.hover = unitDef.canHover
+		--info.hover = unitDef.canHover
 		info.vtol = unitDef.hoverAttack
 		info.aero = unitDef.myGravity
 		info.turrets = StringToTable(cp.turrets)

@@ -26,8 +26,9 @@ local beacon = {
 	idleAutoHeal		= 0,
 	maxSlope			= 50,
 	
-	sfxtypes = {
-	},
+	--[[sfxtypes = {
+		explosiongenerators = {"custom:reentry_fx", "custom:JumpJetTrail"},
+	},]]
 	
 	customparams = {
 		dontcount		= 1,

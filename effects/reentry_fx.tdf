@@ -1,0 +1,96 @@
+[reentry_fx] {
+	[trail] {
+		class=CSimpleParticleSystem;
+		[properties] {
+			sizeGrowth=4;
+			sizeMod=1.0;
+			pos=-7 r14, 0, -7 r14;
+			emitVector=dir;
+			gravity=0, 0, 0;
+			colorMap=1 0.8 0.25 0.1	0.9 0.55 0 1	0.9 0.55 0 1	0.2 0.2 0.2 1	0.2 0.2 0.2 1	0.2 0.2 0.2 1	0.2 0.2 0.2 1	0 0 0 0;
+			Texture=GenericSmokeCloud;
+			airdrag=0.6;
+			particleLife=16;
+			particleLifeSpread=3;
+			numParticles=1;
+			particleSpeed=-8 i4;
+			particleSpeedSpread=2;
+			particleSize=20 i-4;
+			particleSizeSpread=3;
+			emitRot=r5;
+			emitRotSpread=3;
+			directional=0;
+			useAirLos=0;
+			alwaysVisible=0;
+		}
+		air=1;
+		water=1;
+		ground=1;
+		count=2;
+	}
+}
+
+[impact_dust] {
+	[impact_dust] {
+		class=CSimpleParticleSystem;
+		[properties] {
+			sizeGrowth=0.2;
+			sizeMod=1.0;
+			pos = 0 r15, 1, 0 r15;
+			emitVector=0, 1, 0;
+			gravity= 0, 0, 0;
+			colorMap=0.5 0.4 0.3 0.5	0 0 0 0.0;
+			Texture=dirt;
+			airdrag=0.5;
+			particleLife=90;
+			particleLifeSpread=8;
+			numParticles=5;
+			particleSpeed=0.2;
+			particleSpeedSpread=1;
+			particleSize=30;
+			particleSizeSpread=20;
+			emitRot=90;
+			emitRotSpread=0;
+			directional=0;
+			useAirLos=0;
+			alwaysVisible=0;
+		}
+		water=1;
+		air=1;
+		ground=1;
+		count=1;
+	}
+}
+
+
+[impact_dust_med] {
+	[impact_dust_med] {
+		class=CSimpleParticleSystem;
+		[properties] {
+			sizeGrowth=0.2;
+			sizeMod=1.0;
+			pos = 0 r15, 1, 0 r15;
+			emitVector=0, 1, 0;
+			gravity= 0, 0, 0;
+			colorMap=0.5 0.4 0.3 0.5	0 0 0 0.0;
+			Texture=dirt;
+			airdrag=0.5;
+			particleLife=90;
+			particleLifeSpread=30;
+			numParticles=3;
+			particleSpeed=0.2;
+			particleSpeedSpread=1;
+			particleSize=70;
+			particleSizeSpread=50;
+			emitRot=90;
+			emitRotSpread=0;
+			directional=0;
+			useAirLos=0;
+			alwaysVisible=0;
+		}
+		water=1;
+		air=1;
+		ground=1;
+		count=2;
+	}
+}
