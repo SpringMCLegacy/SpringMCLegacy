@@ -70,7 +70,6 @@ for unitName, ud in pairs(UnitDefs) do
 	if unitName == "beacon" then
 		ud.sfxtypes = { explosiongenerators = {} }
 		table.insert(ud.sfxtypes.explosiongenerators, "custom:reentry_fx")
-		table.insert(ud.sfxtypes.explosiongenerators, "custom:impact_dust")
-		table.insert(ud.sfxtypes.explosiongenerators, "custom:impact_dust_med")
+		table.insert(ud.sfxtypes.explosiongenerators, "custom:ROACHPLOSION")
 	end
 end
