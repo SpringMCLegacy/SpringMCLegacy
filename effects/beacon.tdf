@@ -7,7 +7,7 @@
 			pos=0, 0, 0;
 			emitVector=dir;
 			gravity=0, 0, 0;
-			colorMap=1.0 1.0 0.8 1.0    0.0 0.3 1.0 1.0    0 0 0 0.01;
+			colorMap=1.0 0.7 0.7 1.0    1.0 0.7 0.7 1.0    0 0 0 0.01;
 			Texture=CircularThingy;//MegaFlare;
 			airdrag=1;
 			particleLife=5;
@@ -15,17 +15,34 @@
 			numParticles=1;
 			particleSpeed=0.001;
 			particleSpeedSpread=0;
-			particleSize=1.5;
-			particleSizeSpread=0.5;
+			particleSize=2.5;
+			particleSizeSpread=1.0;
 			emitRot=0;
 			emitRotSpread=0.001;
 			directional=0;
 			useAirLos=0;
-			alwaysVisible=0;
+			alwaysVisible=1;
 		}
 		air=1;
 		water=1;
 		ground=1;
 		count=1;
 	}  
+	[pikes] {
+    class=CExploSpikeProjectile;
+    [properties] {
+      dir= -4 r8, -4 r8, -4 r8;
+      width=1.0;
+      length=2.5;
+      lengthGrowth=0.6;
+      alpha=1;
+      alphadecay=0.25;
+      color=1,0.2,0.2;
+      alwaysVisible=1;
+    }
+    air=1;
+    water=0;
+    ground=1;
+    count=2; 
+  }
 }
