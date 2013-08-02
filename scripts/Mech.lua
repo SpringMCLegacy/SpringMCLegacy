@@ -14,9 +14,12 @@ local SetUnitRulesParam = Spring.SetUnitRulesParam
 local GetUnitSeparation = Spring.GetUnitSeparation
 local GetUnitCommands   = Spring.GetUnitCommands
 local GetUnitLastAttackedPiece = Spring.GetUnitLastAttackedPiece
+-- localised GG functions
 local GetUnitDistanceToPoint = GG.GetUnitDistanceToPoint
 local GetUnitUnderJammer = GG.GetUnitUnderJammer
-
+function PlaySound(sound, volume, channel)
+	GG.PlaySoundAtUnit(unitID, sound, volume, channel)
+end
 -- includes
 include "smokeunit.lua"
 include ("walks/" .. unitDef.name .. "_walk.lua")

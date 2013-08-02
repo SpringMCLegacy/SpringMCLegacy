@@ -21,12 +21,20 @@ local GetUnitPieceInfo 		= Spring.GetUnitPieceInfo
 local GetUnitPieceMap		= Spring.GetUnitPieceMap
 local GetUnitPosition		= Spring.GetUnitPosition
 -- Synced Ctrl
-
+local PlaySoundFile			= Spring.PlaySoundFile
 -- Unsynced Ctrl
 -- Constants
 -- Variables
 
 -- Useful functions for GG
+
+local function PlaySoundAtUnit(unitID, sound, volume, channel)
+	local x,y,z = GetUnitPosition(unitID)
+	volume = volume or 5
+	channel = channel or "sfx"
+	PlaySoundFile(sound, volume, x, y, z, channel)
+ end
+ GG.PlaySoundAtUnit = PlaySoundAtUnit
 
 local function GetUnitDistanceToPoint(unitID, tx, ty, tz, bool3D)
 	local x,y,z = GetUnitPosition(unitID)
