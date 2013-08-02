@@ -34,6 +34,7 @@ Spring.SetGameRulesParam("jumpJets",1)
 --
 
 local CMD_JUMP = GG.CustomCommands.GetCmdID("CMD_JUMP")
+local CMD_TURN = GG.CustomCommands.GetCmdID("CMD_TURN")
 -- needed for checks
 --local CMD_MORPH = 31210
 
@@ -422,6 +423,12 @@ function gadget:CommandFallback(unitID, unitDefID, teamID,    -- keeps getting
   if (jumping[unitID]) then
     return true, false -- command was used but don't remove it
   end
+  
+  --[[ Spring.GiveOrderToUnit(unitID,
+     CMD.INSERT,
+     {-1, CMD_TURN, CMD.OPT_SHIFT, cmdParams[1], cmdParams[2], cmdParams[3]},
+     {"alt"}
+   )]]
   local x, y, z = spGetUnitBasePosition(unitID)
   local distSqr = GetDist2Sqr({x, y, z}, cmdParams)
   local jumpDef = jumpDefs[unitDefID]
