@@ -305,11 +305,10 @@ local function WeaponCanFire(weaponID)
 	if weaponID == amsID then
 		return true
 	end
-	--[[if leftArmIDs[weaponID] and limbHPs["left_arm"] <= 0 then
+	-- TODO: Disable turret weapons, will require recursively checking parents or children?
+	--[[if turretIDs[weaponID] and limbHPs["turret"] <= 0 then
 		return false
-	elseif rightArmIDs[weaponID] and limbHPs["right_arm"] <= 0 then
-		return false
-	end]] --TODO Destroyable Turrets
+	end]]
 	local ammoType = ammoTypes[weaponID]
 	if ammoType and (currAmmo[ammoType] or 0) < (burstLengths[weaponID] or 0) then
 		if spinSpeeds[weaponID] then
@@ -398,6 +397,9 @@ function script.FireWeapon(weaponID)
 	if ammoType then
 		ChangeAmmo(ammoType, -burstLengths[weaponID])
 	end
+	if not missileWeaponIDs[weaponID] and weaponID ~= amsID then
+		EmitSfx(flares[weaponID], SFX.CEG + weaponID)
+	end
 end
 
 function script.Shot(weaponID)
@@ -407,10 +409,6 @@ function script.Shot(weaponID)
         if currPoints[weaponID] > burstLengths[weaponID] then 
 			currPoints[weaponID] = 1
         end
-	elseif weaponID == amsID then
-		return
-	else
-		EmitSfx(flares[weaponID], SFX.CEG + weaponID)
 	end
 end
 
