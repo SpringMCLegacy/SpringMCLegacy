@@ -68,10 +68,14 @@ local circleDivs  = 32
 local circleOffset  = 0
  
  
+local MY_TEAM_ID = Spring.GetMyTeamID()
+local NARC_DURATION = Spring.GetGameRulesParam("NARC_DURATION")
+ 
 local startTimer  = spGetTimer()
  
 local realRadii    = {}
 local heights = {}
+ 
  
 function widget:Initialize()
   circleLines = glCreateList(function()
@@ -123,6 +127,22 @@ local function CountDown(frame, height)
 	glPopMatrix()
 end
  
+function widget:GameFrame(n)
+	for _,unitID in ipairs(spGetAllUnits()) do
+		if (spIsUnitVisible(unitID)) then
+			-- check if it's NARCed
+			local NARCFrame = GetUnitRulesParam(unitID, "NARC") or 0
+			if NARCFrame - n + 1 == NARC_DURATION then
+				if Spring.GetUnitTeam(unitID) == MY_TEAM_ID then
+					Spring.PlaySoundFile("sounds/warn.wav", 5, "ui")
+				else
+					Spring.PlaySoundFile("sounds/narc.wav", 5, "ui")
+				end
+			end
+		end
+	end
+ end
+ 
 function widget:DrawWorldPreUnit()
   glLineWidth(4.0)
   glDepthTest(false)--true)
@@ -132,6 +152,7 @@ function widget:DrawWorldPreUnit()
     if (spIsUnitVisible(unitID)) then
                 -- check if it's NARCed
                 local NARCFrame = GetUnitRulesParam(unitID, "NARC") or 0
+				--Spring.Echo(NARCFrame, Spring.GetGameFrame())
                 if NARCFrame > 0 then
                         local teamID = spGetUnitTeam(unitID)
                         if (teamID and teamID ~= Spring.GetGaiaTeamID()) then
