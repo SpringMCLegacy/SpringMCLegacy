@@ -256,7 +256,7 @@ local function WakeUp(thread, ...)
 	local good, err = co_resume(co, ...)
 	if (not good) then
 		Spring.Log(section, LOG.ERROR, err)
-		Spring.Log(section, LOG.ERROR, debug.traceback(co))
+		--Spring.Log(section, LOG.ERROR, debug.traceback(co))
 		RunOnError(thread)
 	end
 end

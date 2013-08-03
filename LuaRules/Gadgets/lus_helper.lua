@@ -81,14 +81,28 @@ local function IsParentAnArm(parent, side)
 end
 local function GetArmMasterWeapon(input)
 	local lowestID = 32
-	for weaponID, _ in pairs(input) do
-		if weaponID < lowestID then lowestID = weaponID end
+	for weaponID, valid in pairs(input) do
+		if valid then
+			if weaponID < lowestID then lowestID = weaponID end
+		end
 	end
 	return lowestID
 end
 
+local function IsPieceAncestor(unitID, pieceName, ancestor)
+	local pieceMap = GetUnitPieceMap(unitID)
+	local parent = GetUnitPieceInfo(unitID, pieceMap[pieceName]).parent
+	if parent:find(ancestor) then return true
+	elseif parent == "" or parent == nil then
+		return false
+	else
+		return IsPieceAncestor(unitID, parent, ancestor)
+	end
+end
+
 function gadget:UnitCreated(unitID, unitDefID, teamID, builderID)
 	local info = GG.lusHelper[unitDefID]
+	local cp = UnitDefs[unitDefID].customParams
 	info.builderID = builderID
 	if info.arms == nil then --and not UnitDefs[unitDefID].name:find("dropship") then
 		-- Parse Model Data
@@ -115,27 +129,28 @@ function gadget:UnitCreated(unitID, unitDefID, teamID, builderID)
 			-- Find barrel pieces
 			elseif pieceName:find("barrel_") then
 				barrelIDs[weaponNum] = true
-				leftArmIDs[weaponNum] = leftArmIDs[weaponNum] or IsParentAnArm(parent, "left")
-				rightArmIDs[weaponNum] = rightArmIDs[weaponNum] or IsParentAnArm(parent, "right")
+				leftArmIDs[weaponNum] = leftArmIDs[weaponNum] or IsPieceAncestor(unitID, pieceName, "lupperarm")
+				rightArmIDs[weaponNum] = rightArmIDs[weaponNum] or IsPieceAncestor(unitID, pieceName, "rupperarm")
 			-- Find the number of wheels
 			elseif pieceName:find("wheel") then
 				numWheels = numWheels + 1
 			-- assign flare weaponIDs to left or right arms
 			elseif pieceName:find("flare_") then
-				leftArmIDs[weaponNum] = leftArmIDs[weaponNum] or IsParentAnArm(parent, "left")
-				rightArmIDs[weaponNum] = rightArmIDs[weaponNum] or IsParentAnArm(parent, "right")
+				leftArmIDs[weaponNum] = leftArmIDs[weaponNum] or IsPieceAncestor(unitID, pieceName, "lupperarm")
+				rightArmIDs[weaponNum] = rightArmIDs[weaponNum] or IsPieceAncestor(unitID, pieceName, "rupperarm")
 			-- assign launchpoint weaponIDs to left or right arms
 			elseif pieceName:find("launchpoint_") then
-				leftArmIDs[weaponNum] = leftArmIDs[weaponNum] or IsParentAnArm(parent, "left")
-				rightArmIDs[weaponNum] = rightArmIDs[weaponNum] or IsParentAnArm(parent, "right")
+				leftArmIDs[weaponNum] = leftArmIDs[weaponNum] or IsPieceAncestor(unitID, pieceName, "lupperarm")
+				rightArmIDs[weaponNum] = rightArmIDs[weaponNum] or IsPieceAncestor(unitID, pieceName, "rupperarm")
 			end
 		end
-
-		info.rightArmMasterID = GetArmMasterWeapon(rightArmIDs)
-		info.leftArmMasterID = GetArmMasterWeapon(leftArmIDs)
-		info.rightArmIDs = rightArmIDs
-		info.leftArmIDs = leftArmIDs
-		--Spring.Echo("Right: ", info.rightArmMasterID, "Left:", info.leftArmMasterID)
+		
+		if cp.unittype == "mech" then
+			info.rightArmMasterID = GetArmMasterWeapon(rightArmIDs)
+			info.leftArmMasterID = GetArmMasterWeapon(leftArmIDs)
+			info.rightArmIDs = rightArmIDs
+			info.leftArmIDs = leftArmIDs
+		end
 		
 		info.launcherIDs = launcherIDs
 		info.turretIDs = turretIDs

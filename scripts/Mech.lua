@@ -223,7 +223,9 @@ function SmokeLimb(limb, piece)
 	local maxHealth = info.limbHPs[limb] / 100
 	while true do
 		local health = limbHPs[limb]/maxHealth
+		--Spring.Echo("LIMB HEALTH", limb, health, piece)
 		if (health <= 66) then -- only smoke if less then 2/3rd limb maxhealth left
+			--Spring.Echo("CRASHTESTDUMMY", SFX.CEG + info.numWeapons + 2)
 			EmitSfx(piece, SFX.CEG + info.numWeapons + 2)
 			EmitSfx(piece, SFX.CEG + info.numWeapons + 3)
 		end
