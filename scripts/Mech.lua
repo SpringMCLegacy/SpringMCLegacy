@@ -396,7 +396,7 @@ function script.BlockShot(weaponID, targetID, userTarget)
 		if targetID then
 			local jammed = GetUnitUnderJammer(targetID) and (not IsUnitNARCed(targetID))
 			if jammed then
-				Spring.Echo("Can't fire weapon " .. weaponID .. " as target is jammed")
+				--Spring.Echo("Can't fire weapon " .. weaponID .. " as target is jammed")
 				return true 
 			end
 		end

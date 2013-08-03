@@ -32,7 +32,7 @@ local SetUnitLosState 	= Spring.SetUnitLosState
 -- Unsynced Ctrl
 -- Constants
 local NARC_ID = WeaponDefNames["narc"].id
-local NARC_DURATION = 32 * 60 -- 30 seconds
+local NARC_DURATION = 30 * 60 -- 60 seconds
 Spring.SetGameRulesParam("NARC_DURATION", NARC_DURATION)
 
 local TAG_ID = WeaponDefNames["tag"].id
