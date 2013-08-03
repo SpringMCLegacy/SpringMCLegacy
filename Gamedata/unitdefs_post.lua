@@ -69,6 +69,8 @@ for name, ud in pairs(UnitDefs) do
 			ud.usepiececollisionvolumes = true
 		elseif ud.canfly then
 			ud.buildtime = HANGAR_DISTANCE / (speed * 0.5)
+		elseif ud.customparams.unittype == "vehicle" then
+			ud.usepiececollisionvolumes = true
 		end
 	end
 	-- set maxvelocity by modoption

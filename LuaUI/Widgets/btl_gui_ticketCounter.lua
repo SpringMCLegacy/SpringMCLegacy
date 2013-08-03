@@ -70,6 +70,9 @@ function widget:Initialize()
 	Text2()
 end
 
+function widget:PlayerChanged()
+	MY_TEAM_ID = Spring.GetMyTeamID()
+end
 
 function widget:GameFrame(n)
 	if n % 30 == 0 then
@@ -83,8 +86,8 @@ function widget:GameFrame(n)
 	if n % 32 == 0 then
 		local cBills = floor(GetTeamResources(MY_TEAM_ID, "metal"))
 		local tonnage, maxTonnage = GetTeamResources(MY_TEAM_ID, "energy")
-		maxTonnage = floor(maxTonnage)
-		tonnage = floor(maxTonnage - tonnage)
+		maxTonnage = floor(maxTonnage) 
+		tonnage = floor(maxTonnage - (tonnage))
 		text = "C-Bills: " .. colors.grey .. cBills .. colors.white .. "\t\tTonnage: " .. colors.yellow .. tonnage .. colors.white .. " / " .. colors.yellow .. maxTonnage .. gameTime
 		Text2()
 	end

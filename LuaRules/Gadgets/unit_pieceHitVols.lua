@@ -10,7 +10,10 @@ function gadget:GetInfo()
 	}
 end
 
-local accept = {pelvis = true, torso = true, rupperarm = true, rlowerarm = true, lupperarm = true, llowerarm = true, lupperleg = true, llowerleg = true, rupperleg = true, rlowerleg = true}
+local accept = { 
+		mech = {pelvis = true, torso = true, rupperarm = true, rlowerarm = true, lupperarm = true, llowerarm = true, lupperleg = true, llowerleg = true, rupperleg = true, rlowerleg = true},
+		vehicle = {body = true, turret = true, launcher_1 = true, turret_2 = true},
+	}
 
 if gadgetHandler:IsSyncedCode() then
 --	SYNCED
@@ -24,21 +27,30 @@ local SetPieceColVol = Spring.SetUnitPieceCollisionVolumeData
 -- Constants
 local TORSO_SCALE = 0.75
 local LIMB_SCALE = 1.1
+local BODY_SCALE = 1.0
+local TURRET_SCALE = 1.1
 
 function gadget:UnitCreated(unitID, unitDefID, teamID, builderID)
 	local ud = UnitDefs[unitDefID]
 	local cp = ud.customParams
-	if not ud.name:find("dropship") then
+	if ud.speed > 0 then 
 		local pieces = Spring.GetUnitPieceList(unitID)
+		local unitType = cp.unittype
 		for i, pieceName in pairs(pieces) do
 			--Spring.Echo(i, pieceName)
-			if not accept[pieceName] and i ~= "n" then
+			if not accept[unitType][pieceName] and i ~= "n" then
 				--Spring.Echo("piece " .. i .. " called " .. pieceName .. " to be disabled")
 				SetPieceColVol (unitID, i - 1, false, 0,0,0, 0,0,0, -1, 0)
 			else 
 				local scaleX, scaleY, scaleZ, offsetX, offsetY, offsetZ, volumeType, _, primaryAxis = GetPieceColVol (unitID, i-1)
 				local scaleMult = (cp.limbscale or LIMB_SCALE)
-				if pieceName == "torso" or pieceName == "pelvis" then scaleMult = (cp.torsoscale or TORSO_SCALE) end
+				if pieceName == "torso" or pieceName == "pelvis" then 
+					scaleMult = (cp.torsoscale or TORSO_SCALE) 
+				elseif pieceName == "body" then
+					scaleMult = (cp.bodyscale or BODY_SCALE) 
+				elseif pieceName == "turret" or pieceName == "launcher_1" or pieceName == "turret_2" then
+					scaleMult = (cp.turretscale or TURRET_SCALE)
+				end
 				SetPieceColVol(unitID, i - 1, true, 
 								scaleMult*scaleX, scaleMult*scaleY, scaleMult*scaleZ, 
 								offsetX, offsetY, offsetZ, volumeType, primaryAxis)
