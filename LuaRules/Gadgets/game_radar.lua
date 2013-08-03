@@ -19,6 +19,7 @@ local SetUnitRulesParam	= Spring.SetUnitRulesParam
 -- Synced Read
 local GetGameFrame 		= Spring.GetGameFrame
 local GetTeamInfo		= Spring.GetTeamInfo
+local GetUnitIsActive 	= Spring.GetUnitIsActive
 local GetUnitIsDead 	= Spring.GetUnitIsDead
 local GetUnitLosState	= Spring.GetUnitLosState
 local GetUnitRulesParam	= Spring.GetUnitRulesParam
@@ -33,6 +34,8 @@ local SetUnitLosState 	= Spring.SetUnitLosState
 local NARC_ID = WeaponDefNames["narc"].id
 local NARC_DURATION = 32 * 60 -- 30 seconds
 Spring.SetGameRulesParam("NARC_DURATION", NARC_DURATION)
+
+local TAG_ID = WeaponDefNames["tag"].id
 
 -- Variables
 local modOptions = Spring.GetModOptions()
@@ -56,11 +59,17 @@ local function GetUnitUnderJammer(unitID, teamID)
 	if not teamID then teamID = GetUnitTeam(unitID) end
 	local allyTeam = select(6, GetTeamInfo(teamID))
 	for jammerID, radius in pairs(allyJammers[allyTeam]) do
-		if GetUnitSeparation(unitID, jammerID) < radius then return true end
+		if GetUnitSeparation(unitID, jammerID) < radius and GetUnitIsActive(jammerID) then return true end
 	end
 	return false
 end
 GG.GetUnitUnderJammer = GetUnitUnderJammer
+
+-- helper function for LUS
+local function IsUnitNARCed(unitID)
+	return (GetUnitRulesParam(unitID, "NARC") or 0) > 0
+end
+GG.IsUnitNARCed = IsUnitNARCed
 
 local function NARC(unitID, allyTeam, duration)
 	local narcFrame = GetGameFrame() + duration
@@ -96,7 +105,7 @@ end
 
 function gadget:UnitPreDamaged(unitID, unitDefID, unitTeam, damage, paralyzer, weaponID, projectileID, attackerID, attackerDefID, attackerTeam)
 	-- ignore non-NARC weapons
-	if weaponID ~= NARC_ID or not attackerID then return damage end
+	if weaponID ~= NARC_ID or weapon ~= TAG_ID or not attackerID then return damage end
 	if GetUnitUnderJammer(unitID, unitTeam) then return 0 end
 	local allyTeam = select(6, GetTeamInfo(attackerTeam))
 	-- do the NARC, delay the deNARC
@@ -142,10 +151,11 @@ function gadget:GameFrame(n)
 				outRadarUnits[allyTeam][unitID] = nil
 			end
 		end
-		for unitID, data in pairs(narcUnits) do
+		-- We no longer want to remove NARCS under ECM, only prevent them
+		--[[for unitID, data in pairs(narcUnits) do
 			local teamID = GetUnitTeam(unitID)
 			if GetUnitUnderJammer(unitID, teamID) then DeNARC(unitID, data.allyTeam, true) end
-		end
+		end]]
 	end
 end
 

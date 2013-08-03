@@ -17,6 +17,7 @@ local GetUnitLastAttackedPiece = Spring.GetUnitLastAttackedPiece
 -- localised GG functions
 local GetUnitDistanceToPoint = GG.GetUnitDistanceToPoint
 local GetUnitUnderJammer = GG.GetUnitUnderJammer
+local IsUnitNARCed = GG.IsUnitNARCed
 function PlaySound(sound, volume, channel)
 	GG.PlaySoundAtUnit(unitID, sound, volume, channel)
 end
@@ -399,7 +400,7 @@ function script.BlockShot(weaponID, targetID, userTarget)
 	local jammable = jammableIDs[weaponID]
 	if jammable then
 		if targetID then
-			local jammed = GetUnitUnderJammer(targetID)
+			local jammed = GetUnitUnderJammer(targetID) and (not IsUnitNARCed(targetID))
 			if jammed then
 				Spring.Echo("Can't fire weapon " .. weaponID .. " as target is jammed")
 				return true 
