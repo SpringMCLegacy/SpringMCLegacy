@@ -27,8 +27,10 @@ local function setWeaponClassAttribute(unitID, className, attrib, multiplier)
 	for weapNum, weapTable in pairs(weapons) do
 		if WeaponDefs[weapTable["weaponDef"]].customParams["weaponclass"] == className then
 			local currAttrib = Spring.GetUnitWeaponState(unitID, weapNum, attrib)
-			--Spring.Echo("Current " .. attrib .. ": ", currAttrib, weapNum, WeaponDefs[weapTable["weaponDef"]].name)
+			Spring.Echo("Current " .. attrib .. ": ", currAttrib, weapNum, WeaponDefs[weapTable["weaponDef"]].name)
 			Spring.SetUnitWeaponState(unitID, weapNum, attrib, currAttrib * multiplier)
+			local currAttrib = Spring.GetUnitWeaponState(unitID, weapNum, attrib)
+			Spring.Echo("Current " .. attrib .. ": ", currAttrib, weapNum, WeaponDefs[weapTable["weaponDef"]].name)
 		end
 	end
 end
@@ -156,7 +158,7 @@ return {
 		valid = function (unitDefID) return hasWeaponClass(unitDefID, "energy") end,
 		applyPerk = function (unitID) 
 			--Spring.Echo("Energy range selected") 
-			setWeaponClassAttribute(unitID, "energy", "range", 1.5)
+			setWeaponClassAttribute(unitID, "energy", "range", 0.5)
 		end,
 	},
 	projectilerange = {
@@ -169,7 +171,7 @@ return {
 		},
 		valid = function (unitDefID) return hasWeaponClass(unitDefID, "projectile") end,
 		applyPerk = function (unitID) 
-			--Spring.Echo("Energy range selected") 
+			--Spring.Echo("Projectile range selected") 
 			setWeaponClassAttribute(unitID, "projectile", "range", 1.5)
 		end,
 	},
