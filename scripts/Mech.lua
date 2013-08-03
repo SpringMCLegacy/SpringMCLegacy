@@ -430,6 +430,9 @@ function script.FireWeapon(weaponID)
 	if ammoType then
 		ChangeAmmo(ammoType, -burstLengths[weaponID])
 	end
+	if not missileWeaponIDs[weaponID] and weaponID ~= amsID then
+		EmitSfx(flares[weaponID], SFX.CEG + weaponID)
+	end
 end
 
 function script.Shot(weaponID)
@@ -439,10 +442,6 @@ function script.Shot(weaponID)
         if currPoints[weaponID] > burstLengths[weaponID] then 
 			currPoints[weaponID] = 1
         end
-	elseif weaponID == amsID then
-		return
-	else
-		EmitSfx(flares[weaponID], SFX.CEG + weaponID)
 	end
 end
 
