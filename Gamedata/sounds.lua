@@ -81,7 +81,8 @@ local Sounds = {
 			gainmod = 0.35,
 			pitchmod = 0.1,
 			priority = -0.1,
-			maxdist = 5000,
+			maxdist = 4000,
+			rolloff = 10.0,
 		}
 	},
 }
