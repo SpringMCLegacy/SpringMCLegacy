@@ -176,12 +176,16 @@ function gadget:GamePreload()
 		info.torsoTurnSpeed = math.rad(tonumber(cp.torsoturnspeed) or 100)
 		-- Limb HPs
 		info.limbHPs = {}
-		info.limbHPs["left_leg"] = unitDef.health * 0.1
-		info.limbHPs["right_leg"] = unitDef.health * 0.1
-		info.limbHPs["left_arm"] = unitDef.health * 0.15
-		info.limbHPs["right_arm"] = unitDef.health * 0.15
+		if cp.unittype == "mech" then
+			info.limbHPs["left_leg"] = unitDef.health * 0.1
+			info.limbHPs["right_leg"] = unitDef.health * 0.1
+			info.limbHPs["left_arm"] = unitDef.health * 0.15
+			info.limbHPs["right_arm"] = unitDef.health * 0.15
+		elseif cp.unittype == "vehicle" then
+			info.limbHPs["turret"] = unitDef.health * 0.25
+		end
 		-- Vehicles
-		--info.hover = unitDef.canHover
+		info.hover = unitDef.moveData.family == "hover"
 		info.vtol = unitDef.hoverAttack
 		info.aero = unitDef.myGravity
 		info.turrets = StringToTable(cp.turrets)
