@@ -18,9 +18,7 @@ local GetUnitLastAttackedPiece = Spring.GetUnitLastAttackedPiece
 local GetUnitDistanceToPoint = GG.GetUnitDistanceToPoint
 local GetUnitUnderJammer = GG.GetUnitUnderJammer
 local IsUnitNARCed = GG.IsUnitNARCed
-function PlaySound(sound, volume, channel)
-	GG.PlaySoundAtUnit(unitID, sound, volume, channel)
-end
+
 -- includes
 include "smokeunit.lua"
 include ("walks/" .. unitDef.name .. "_walk.lua")
@@ -235,15 +233,11 @@ end
 
 function hideLimbPieces(limb)
 	if limb == "left_arm" then
-		local llowerarm = piece("llowerarm") or nil
-		if llowerarm then Hide(llowerarm) end
-		Hide(lupperarm)
+		RecursiveHide(lupperarm)
 		EmitSfx(lupperarm, SFX.CEG + info.numWeapons + 1)
 		Explode(lupperarm, SFX.FIRE + SFX.SMOKE)
 	elseif limb == "right_arm" then
-		local rlowerarm = piece("rlowerarm")
-		if rlowerarm then Hide(rlowerarm) end
-		Hide(rupperarm)	
+		RecursiveHide(rupperarm)
 		EmitSfx(rupperarm, SFX.CEG + info.numWeapons + 1)
 		Explode(rupperarm, SFX.FIRE + SFX.SMOKE)
 	end

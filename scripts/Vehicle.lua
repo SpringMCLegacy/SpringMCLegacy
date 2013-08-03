@@ -237,8 +237,7 @@ end
 
 function hideLimbPieces(limb)
 	if limb == "turret" then
-		-- TODO - hiding turret_2, launcher_1, mantlets, barrels...
-		Hide(turret)
+		RecursiveHide(turret)
 		EmitSfx(turret, SFX.CEG + info.numWeapons + 1)
 		Explode(turret, SFX.FIRE + SFX.SMOKE)
 	end

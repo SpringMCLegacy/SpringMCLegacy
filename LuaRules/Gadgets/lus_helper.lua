@@ -22,19 +22,37 @@ local GetUnitPieceMap		= Spring.GetUnitPieceMap
 local GetUnitPosition		= Spring.GetUnitPosition
 -- Synced Ctrl
 local PlaySoundFile			= Spring.PlaySoundFile
+-- LUS
+local CallAsUnit 			= Spring.UnitScript.CallAsUnit	
+
 -- Unsynced Ctrl
 -- Constants
 -- Variables
 
 -- Useful functions for GG
 
+local function RecursiveHide(unitID, pieceNum)
+	-- Hide this piece
+	CallAsUnit(unitID, Spring.UnitScript.Hide, pieceNum)
+	-- Recursively hide children
+	local pieceMap = GetUnitPieceMap(unitID)
+	local children = GetUnitPieceInfo(unitID, pieceNum).children
+	if children then
+		for _, pieceName in pairs(children) do
+			--Spring.Echo("pieceName:", pieceName, pieceMap[pieceName])
+			RecursiveHide(unitID, pieceMap[pieceName])
+		end
+	end
+end
+GG.RecursiveHide = RecursiveHide
+
 local function PlaySoundAtUnit(unitID, sound, volume, channel)
 	local x,y,z = GetUnitPosition(unitID)
 	volume = volume or 5
 	channel = channel or "sfx"
 	PlaySoundFile(sound, volume, x, y, z, channel)
- end
- GG.PlaySoundAtUnit = PlaySoundAtUnit
+end
+GG.PlaySoundAtUnit = PlaySoundAtUnit
 
 local function GetUnitDistanceToPoint(unitID, tx, ty, tz, bool3D)
 	local x,y,z = GetUnitPosition(unitID)
