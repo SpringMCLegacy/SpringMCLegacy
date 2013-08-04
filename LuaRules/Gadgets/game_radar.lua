@@ -72,7 +72,9 @@ end
 GG.IsUnitNARCed = IsUnitNARCed
 
 local function IsUnitTAGed(unitID)
-	return (GetUnitRulesParam(unitID, "TAG") or 0) == GetGameFrame()
+	local TAGFrame = GetUnitRulesParam(unitID, "TAG") or 0
+	local gameFrame = GetGameFrame()
+	return TAGFrame >= gameFrame - 5
 end
 GG.IsUnitTAGed = IsUnitTAGed
 
