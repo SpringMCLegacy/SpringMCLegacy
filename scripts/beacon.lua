@@ -29,6 +29,8 @@ function fx()
 	end
 	while stage == 0 do
 		Sleep(1000)
+		local beep = math.random(3)
+		PlaySound("sounds/NavBeacon" .. beep .. ".wav")
 		EmitSfx(blink, SFX.CEG + 2)
 	end
 end
@@ -47,6 +49,7 @@ function script.Create()
 	EmitSfx(base, SFX.CEG + 1)
 	Show(dirt)
 	StopSpin(base, y_axis)
+	PlaySound("sounds/gen_explode6.wav", 30)
 	Sleep(5400)
 	stage = 1
 	Hide(rocket)
