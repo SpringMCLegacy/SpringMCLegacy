@@ -35,7 +35,6 @@ function fx()
 end
 
 function script.Create()
-	Spring.Echo(unitID)
 	Hide(dirt)
 	Move(base, y_axis, 3750, 0)
 	WaitForMove(base, y_axis)
@@ -54,6 +53,7 @@ function script.Create()
 	Sleep(5400)
 	stage = 1
 	Hide(rocket)
+	PlaySound("NavBeacon_Pop")
 	Explode(rocket, SFX.FIRE + SFX.SMOKE)
 	Sleep(3500)
 	Turn(flaps[1], x_axis, -math.rad(60), math.rad(20))
