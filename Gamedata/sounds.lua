@@ -83,7 +83,7 @@ local Sounds = {
 			priority = -0.1,
 			maxdist = 4000,
 			rolloff = 10.0,
-		}
+		},
 		NavBeacon_Land = {
 			file = "sounds/beacon/land.wav",
 			maxconcurrent = 12,
@@ -92,7 +92,7 @@ local Sounds = {
 			priority = -0.1,
 			maxdist = 5000,
 			rolloff = 10.0,
-		}
+		},
 		NavBeacon_Beep = {
 			file = "sounds/beacon/beep.wav",
 			maxconcurrent = 12,
@@ -101,7 +101,7 @@ local Sounds = {
 			priority = -0.1,
 			maxdist = 3000,
 			rolloff = 10.0,
-		}
+		},
 		NavBeacon_Descend = {
 			file = "sounds/beacon/descend.wav",
 			maxconcurrent = 12,
@@ -110,7 +110,7 @@ local Sounds = {
 			priority = -0.1,
 			maxdist = 5000,
 			rolloff = 10.0,
-		}
+		},
 	},
 }
 
