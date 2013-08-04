@@ -19,13 +19,13 @@ local beacon = {
 	buildCostEnergy     = 0,
 	buildCostMetal      = 0,
 	buildTime           = 0,
-	canMove				= false,
+	--canMove				= false,
 	energyStorage		= 0,
 	metalMake			= 0,
 	metalStorage		= 0,
 	idleAutoHeal		= 0,
 	maxSlope			= 50,
-	
+		movementClass   = "LARGEMECH",
 	--[[sfxtypes = {
 		explosiongenerators = {"custom:reentry_fx", "custom:JumpJetTrail"},
 	},]]

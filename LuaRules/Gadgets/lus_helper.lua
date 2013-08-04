@@ -241,6 +241,18 @@ function gadget:Initialize()
 		local teamID = Spring.GetUnitTeam(unitID)
 		local unitDefID = Spring.GetUnitDefID(unitID)
 		gadget:UnitCreated(unitID, unitDefID, teamID)
+		-- restart all LUS too (none functional atm - unit_script runs first?)
+		--[[env = Spring.UnitScript.GetScriptEnv(unitID)
+		Spring.UnitScript.CallAsUnit(unitID, env.Script.Create)]]
+	end
+end
+
+function gadget:MoveCtrlNotify(unitID, unitDefID, unitTeam, data)
+	local BEACON_ID = UnitDefNames["beacon"].id
+	if unitDefID == BEACON_ID then
+		env = Spring.UnitScript.GetScriptEnv(unitID)
+		Spring.UnitScript.CallAsUnit(unitID, env.TouchDown)
+		Spring.MoveCtrl.Disable(unitID)
 	end
 end
 
