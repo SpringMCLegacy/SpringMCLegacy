@@ -14,7 +14,7 @@ local antenna2 = piece("antenna2")
 local antenna3 = piece("antenna3")
 
 -- Constants
-local DROP_HEIGHT = 5000
+local DROP_HEIGHT = 10000
 
 -- Variables
 local stage
@@ -43,11 +43,13 @@ function TouchDown()
 	touchDown = true
 end
 
+
 function script.Create()
 	Hide(dirt)
 	Spring.MoveCtrl.Enable(unitID)
 	local x,y,z = Spring.GetUnitPosition(unitID)
 	Spring.MoveCtrl.SetPosition(unitID, x, DROP_HEIGHT, z)
+	--Spring.MoveCtrl.SetVelocity(unitID, 0, -100, 0)
 	Turn(base, y_axis, unitID, 0) -- get a random facing
 	
 	Sleep(unitID / 10) -- lolhack
@@ -56,8 +58,12 @@ function script.Create()
 	Spring.MoveCtrl.SetTrackGround(unitID, true)
 	
 	stage = 3
-	PlaySound("NavBeacon_Descend") -- currently played once
 	StartThread(fx)
+	for i = 1, 4 do
+		local _, sy, _ = Spring.GetUnitVelocity(unitID)
+		PlaySound("NavBeacon_Descend", 10, 0,sy,0)
+		Sleep(2500)
+	end
 	while not touchDown do
 		Sleep(50)
 	end
@@ -71,7 +77,7 @@ function script.Create()
 	
 	stage = 1
 	Hide(rocket)
-	PlaySound("NavBeacon_Pop")
+	PlaySound("NavBeacon_Pop", 15)
 	Explode(rocket, SFX.FIRE + SFX.SMOKE)
 	Sleep(3500)
 	Turn(flaps[1], x_axis, -math.rad(60), math.rad(20))
