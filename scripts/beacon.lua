@@ -29,27 +29,28 @@ function fx()
 	end
 	while stage == 0 do
 		Sleep(1000)
-		local beep = math.random(3)
-		PlaySound("sounds/NavBeacon" .. beep .. ".wav")
+		PlaySound("NavBeacon_Beep")
 		EmitSfx(blink, SFX.CEG + 2)
 	end
 end
 
 function script.Create()
+	Spring.Echo(unitID)
 	Hide(dirt)
 	Move(base, y_axis, 3750, 0)
 	WaitForMove(base, y_axis)
-	Sleep(500)
+	Sleep(unitID / 10) -- lolhack
 	Spin(base, y_axis, math.rad(360), -math.rad(40))
 	Move(base, y_axis, 0, 875)
 	stage = 3
+	PlaySound("NavBeacon_Descend") -- currently played at base
 	StartThread(fx)
 	WaitForMove(base, y_axis)
 	stage = 2
 	EmitSfx(base, SFX.CEG + 1)
 	Show(dirt)
 	StopSpin(base, y_axis)
-	PlaySound("sounds/gen_explode6.wav", 30)
+	PlaySound("NavBeacon_Land", 30)
 	Sleep(5400)
 	stage = 1
 	Hide(rocket)
