@@ -12,9 +12,9 @@ end
 
 -- function localisations
 -- Synced Read
---local GetGroundNormal     = Spring.GetGroundNormal
+local GetGroundHeight     = Spring.GetGroundHeight
 local GetTeamUnitsByDefs   = Spring.GetTeamUnitsByDefs
-local GetUnitBasePosition = Spring.GetUnitBasePosition
+local GetUnitPosition = Spring.GetUnitPosition
 local GetUnitTeam         = Spring.GetUnitTeam
 local GetUnitViewPosition = Spring.GetUnitViewPosition
 local GetUnitRulesParam    = Spring.GetUnitRulesParam
@@ -104,25 +104,26 @@ function widget:DrawWorldPreUnit()
       for j = 1, #teamFlags do
         unitID = teamFlags[j]
         if IsUnitInView(unitID, FLAG_RADIUS, true) then
-          local x, y, z = GetUnitBasePosition(unitID)
-          glPushMatrix()
-            glTranslate(x, y, z)
-            glScale(FLAG_RADIUS, 1, FLAG_RADIUS)
-            glCallList(circleLists[teamID])
+          local x, y, z = GetUnitPosition(unitID)
+		  if y == GetGroundHeight(x, z) then
+			glPushMatrix()
+				glTranslate(x, y, z)
+				glScale(FLAG_RADIUS, 1, FLAG_RADIUS)
+				glCallList(circleLists[teamID])
           
-            for j = 1, #teams do
-              local capTeamID = teams[j]
-              local teamCapValue = GetUnitRulesParam(unitID, "cap" .. tostring(capTeamID))
-              if (teamCapValue or 0) > 0 then
-                local scale = teamCapValue / FLAG_CAP_THRESHOLD
-                glPushMatrix()
-                  glScale(scale, 1, scale)
-                  glCallList(circleLists[capTeamID])
-                glPopMatrix()
-              end
-            end
-          
+				for j = 1, #teams do
+				local capTeamID = teams[j]
+				local teamCapValue = GetUnitRulesParam(unitID, "cap" .. tostring(capTeamID))
+				if (teamCapValue or 0) > 0 then
+					local scale = teamCapValue / FLAG_CAP_THRESHOLD
+					glPushMatrix()
+						glScale(scale, 1, scale)
+						glCallList(circleLists[capTeamID])
+					glPopMatrix()
+				end
+			end
           glPopMatrix()
+		  end
         end
       end
     end

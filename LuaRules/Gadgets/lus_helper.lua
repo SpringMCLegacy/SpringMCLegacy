@@ -53,11 +53,11 @@ local function RecursiveHide(unitID, pieceNum)
 end
 GG.RecursiveHide = RecursiveHide
 
-local function PlaySoundAtUnit(unitID, sound, volume, channel)
+local function PlaySoundAtUnit(unitID, sound, volume, sx, sy, sz, channel)
 	local x,y,z = GetUnitPosition(unitID)
 	volume = volume or 5
 	channel = channel or "sfx"
-	PlaySoundFile(sound, volume, x, y, z, channel)
+	PlaySoundFile(sound, volume, x, y, z, sx, sy, sz, channel)
 end
 GG.PlaySoundAtUnit = PlaySoundAtUnit
 
