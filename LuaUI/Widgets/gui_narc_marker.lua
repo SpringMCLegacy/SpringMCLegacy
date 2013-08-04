@@ -129,7 +129,7 @@ end
  
 function widget:GameFrame(n)
 	for _,unitID in ipairs(spGetAllUnits()) do
-		if (spIsUnitVisible(unitID)) then
+		--if (spIsUnitVisible(unitID)) then
 			-- check if it's NARCed
 			local NARCFrame = GetUnitRulesParam(unitID, "NARC") or 0
 			if NARCFrame - n + 1 == NARC_DURATION then
@@ -139,7 +139,7 @@ function widget:GameFrame(n)
 					Spring.PlaySoundFile("sounds/narc.wav", 5, "ui")
 				end
 			end
-		end
+		--end
 	end
  end
  
