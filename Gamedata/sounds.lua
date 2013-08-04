@@ -110,6 +110,7 @@ local Sounds = {
 			priority = -0.1,
 			maxdist = 5000,
 			rolloff = 10.0,
+			looptime = 10000, -- 10s, 5s x2
 		},
 		NavBeacon_Pop = {
 			file = "sounds/beacon/pop.wav",

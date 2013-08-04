@@ -12,8 +12,13 @@ end
 local antenna1 = piece("antenna1")
 local antenna2 = piece("antenna2")
 local antenna3 = piece("antenna3")
--- includes
+
+-- Constants
+local DROP_HEIGHT = 5000
+
+-- Variables
 local stage
+local touchDown = false
 
 
 function fx()
@@ -34,23 +39,36 @@ function fx()
 	end
 end
 
+function TouchDown()
+	touchDown = true
+end
+
 function script.Create()
 	Hide(dirt)
-	Move(base, y_axis, 3750, 0)
-	WaitForMove(base, y_axis)
+	Spring.MoveCtrl.Enable(unitID)
+	local x,y,z = Spring.GetUnitPosition(unitID)
+	Spring.MoveCtrl.SetPosition(unitID, x, DROP_HEIGHT, z)
+	Turn(base, y_axis, unitID, 0) -- get a random facing
+	
 	Sleep(unitID / 10) -- lolhack
-	Spin(base, y_axis, math.rad(360), -math.rad(40))
-	Move(base, y_axis, 0, 875)
+	Spring.MoveCtrl.SetGravity(unitID, Game.gravity / 100)
+	Spring.MoveCtrl.SetCollideStop(unitID, true)
+	Spring.MoveCtrl.SetTrackGround(unitID, true)
+	
 	stage = 3
-	PlaySound("NavBeacon_Descend") -- currently played at base
+	PlaySound("NavBeacon_Descend") -- currently played once
 	StartThread(fx)
-	WaitForMove(base, y_axis)
+	while not touchDown do
+		Sleep(50)
+	end
+	
 	stage = 2
-	EmitSfx(base, SFX.CEG + 1)
+	EmitSfx(dirt, SFX.CEG + 1)
 	Show(dirt)
 	StopSpin(base, y_axis)
 	PlaySound("NavBeacon_Land", 30)
 	Sleep(5400)
+	
 	stage = 1
 	Hide(rocket)
 	PlaySound("NavBeacon_Pop")
@@ -69,6 +87,7 @@ function script.Create()
 	Sleep(500)
 	Move(antenna3, y_axis, 12, 48)
 	WaitForMove(antenna3, y_axis)
+	
 	stage = 0
 	StartThread(fx) -- restart for blink
 end
