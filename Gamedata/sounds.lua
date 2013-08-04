@@ -77,11 +77,38 @@ local Sounds = {
 		-- BTL Unit Animation Sounds
 		stomp = {
 			file = "sounds/unit/stomp.wav",
-			maxconcurrent = 4,
+			maxconcurrent = 12,
 			gainmod = 0.35,
 			pitchmod = 0.1,
 			priority = -0.1,
 			maxdist = 4000,
+			rolloff = 10.0,
+		}
+		NavBeacon_Land = {
+			file = "sounds/Beacon/Land.wav",
+			maxconcurrent = 12,
+			gainmod = 0.35,
+			pitchmod = 0.1,
+			priority = -0.1,
+			maxdist = 5000,
+			rolloff = 10.0,
+		}
+		NavBeacon_Beep = {
+			file = "sounds/Beacon/Beep.wav",
+			maxconcurrent = 12,
+			gainmod = 0,
+			pitchmod = 0,
+			priority = -0.1,
+			maxdist = 3000,
+			rolloff = 10.0,
+		}
+		NavBeacon_Descend = {
+			file = "sounds/Beacon/Descend.wav",
+			maxconcurrent = 12,
+			gainmod = 0.35,
+			pitchmod = 0.1,
+			priority = -0.1,
+			maxdist = 5000,
 			rolloff = 10.0,
 		}
 	},
