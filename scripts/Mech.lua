@@ -18,6 +18,7 @@ local GetUnitLastAttackedPiece = Spring.GetUnitLastAttackedPiece
 local GetUnitDistanceToPoint = GG.GetUnitDistanceToPoint
 local GetUnitUnderJammer = GG.GetUnitUnderJammer
 local IsUnitNARCed = GG.IsUnitNARCed
+local IsUnitTAGed = GG.IsUnitTAGed
 
 -- includes
 include "smokeunit.lua"
@@ -397,7 +398,7 @@ function script.BlockShot(weaponID, targetID, userTarget)
 	local jammable = jammableIDs[weaponID]
 	if jammable then
 		if targetID then
-			local jammed = GetUnitUnderJammer(targetID) and (not IsUnitNARCed(targetID))
+			local jammed = GetUnitUnderJammer(targetID) and (not IsUnitNARCed(targetID)) and (not IsUnitTAGed(targetID))
 			if jammed then
 				--Spring.Echo("Can't fire weapon " .. weaponID .. " as target is jammed")
 				return true 
