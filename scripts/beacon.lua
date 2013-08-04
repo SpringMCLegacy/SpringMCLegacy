@@ -48,7 +48,7 @@ function script.Create()
 	Hide(dirt)
 	Spring.MoveCtrl.Enable(unitID)
 	local x,y,z = Spring.GetUnitPosition(unitID)
-	Spring.MoveCtrl.SetPosition(unitID, x, DROP_HEIGHT, z)
+	Spring.MoveCtrl.SetPosition(unitID, x, y + DROP_HEIGHT, z)
 	--Spring.MoveCtrl.SetVelocity(unitID, 0, -100, 0)
 	Turn(base, y_axis, unitID, 0) -- get a random facing
 	
