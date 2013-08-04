@@ -67,18 +67,6 @@ local function StringToTable(input)
 end
 GG.StringToTable = StringToTable
 
-local function IsParentAnArm(parent, side)
-	if side == "left" then
-		if (parent == "lupperarm" or parent == "llowerarm") then
-			return true
-		end
-	elseif side == "right" then
-		if (parent == "rupperarm" or parent == "rlowerarm") then
-			return true
-		end
-	end
-	return nil
-end
 local function GetArmMasterWeapon(input)
 	local lowestID = 32
 	for weaponID, valid in pairs(input) do

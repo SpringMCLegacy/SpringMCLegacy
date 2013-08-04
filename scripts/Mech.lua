@@ -382,7 +382,7 @@ function script.AimWeapon(weaponID, heading, pitch)
 				Turn(launchPoints[weaponID][i], x_axis, -pitch, ELEVATION_SPEED)
 			end
 		end
-	else
+	elseif weaponID ~= amsID then
 		Turn(flares[weaponID], x_axis, -pitch, ELEVATION_SPEED)
 	end
 
