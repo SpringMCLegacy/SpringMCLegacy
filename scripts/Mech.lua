@@ -226,8 +226,8 @@ function SmokeLimb(limb, piece)
 		--Spring.Echo("LIMB HEALTH", limb, health, piece)
 		if (health <= 66) then -- only smoke if less then 2/3rd limb maxhealth left
 			--Spring.Echo("CRASHTESTDUMMY", SFX.CEG + info.numWeapons + 2)
-			EmitSfx(piece, SFX.CEG + info.numWeapons + 2)
-			EmitSfx(piece, SFX.CEG + info.numWeapons + 3)
+			EmitSfx(piece, SFX.CEG)-- + info.numWeapons + 2)
+			--EmitSfx(piece, SFX.CEG + info.numWeapons + 3)
 		end
 		Sleep(20*health + 150)
 	end
@@ -342,9 +342,6 @@ function script.Deactivate()
 end
 
 local function WeaponCanFire(weaponID)
-	if weaponID == amsID then
-		return true
-	end
 	if leftArmIDs[weaponID] and limbHPs["left_arm"] <= 0 then
 		return false
 	elseif rightArmIDs[weaponID] and limbHPs["right_arm"] <= 0 then
@@ -382,8 +379,13 @@ function script.AimWeapon(weaponID, heading, pitch)
 				Turn(launchPoints[weaponID][i], x_axis, -pitch, ELEVATION_SPEED)
 			end
 		end
-	elseif weaponID ~= amsID then
+	else
 		Turn(flares[weaponID], x_axis, -pitch, ELEVATION_SPEED)
+		if weaponID == amsID then 
+			Turn(flares[weaponID], y_axis, heading, TORSO_SPEED)
+			WaitForTurn(flares[weaponID], y_axis)
+			return true 
+		end
 	end
 
 	Turn(torso, y_axis, heading, TORSO_SPEED)
@@ -393,6 +395,7 @@ function script.AimWeapon(weaponID, heading, pitch)
 end
 
 function script.BlockShot(weaponID, targetID, userTarget)
+	if weaponID == amsID then return false end
 	local jammable = jammableIDs[weaponID]
 	if jammable then
 		if targetID then
