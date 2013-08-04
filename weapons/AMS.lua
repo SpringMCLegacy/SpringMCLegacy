@@ -10,7 +10,7 @@ weaponDef = {
 	collideFriendly			= false,
 	noSelfDamage            = true,
 	turret                  = true,
-	range                   = 5000,
+	range                   = 1000,
 	--accuracy                = 100,
 	areaOfEffect            = 100,
 	weaponVelocity          = 2400,
@@ -34,6 +34,9 @@ weaponDef = {
 	damage = {
 		default = 1,--1 DPS
 	},
+	customparams = {
+		cegflare			= "MG_MUZZLEFLASH",
+    },
 }
 
 return lowerkeys({ AMS = weaponDef })
