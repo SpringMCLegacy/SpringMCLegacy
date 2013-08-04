@@ -111,6 +111,15 @@ local Sounds = {
 			maxdist = 5000,
 			rolloff = 10.0,
 		},
+		NavBeacon_Pop = {
+			file = "sounds/beacon/pop.wav",
+			maxconcurrent = 12,
+			gainmod = 0.35,
+			pitchmod = 0.1,
+			priority = -0.1,
+			maxdist = 5000,
+			rolloff = 10.0,
+		},
 	},
 }
 
