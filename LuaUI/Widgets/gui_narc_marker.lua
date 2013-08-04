@@ -60,13 +60,12 @@ local spIsUnitSelected			= Spring.IsUnitSelected
 local spIsUnitVisible			= Spring.IsUnitVisible
 local spSendCommands			= Spring.SendCommands
 local GetUnitRulesParam			= Spring.GetUnitRulesParam
- 
+local GetGameFrame				= Spring.GetGameFrame
 local trackSlope  = true
  
 local circleLines  = 0
 local circleDivs  = 32
 local circleOffset  = 0
- 
  
 local MY_TEAM_ID = Spring.GetMyTeamID()
 local NARC_DURATION = Spring.GetGameRulesParam("NARC_DURATION")
@@ -89,6 +88,9 @@ function widget:Initialize()
   end)
 end
  
+function widget:PlayerChanged()
+	MY_TEAM_ID = Spring.GetMyTeamID()
+end
  
 function widget:Shutdown()
   glDeleteList(circleLines)
@@ -123,10 +125,17 @@ local function CountDown(frame, height)
 	local timeLeft = string.format('%.1f', (frame - Spring.GetGameFrame()) / 32.0)
 	glPushMatrix()
 	glBillboard()
-	glText("NARC: " .. timeLeft, 0, height + 10, 20, "c")
+	glText("NARC: " .. timeLeft, 0, height + 8, 20, "c")
 	glPopMatrix()
 end
  
+local function TagText(height)
+	glPushMatrix()
+	glBillboard()
+	glText("TAG", 0, height + 24, 20, "c")
+	glPopMatrix()
+end
+
 function widget:GameFrame(n)
 	for _,unitID in ipairs(spGetAllUnits()) do
 		--if (spIsUnitVisible(unitID)) then
@@ -184,6 +193,18 @@ function widget:DrawWorldPreUnit()
                                 end
                         end
                 end
+				-- check for TAG
+				local TAGFrame = GetUnitRulesParam(unitID, "TAG") or 0
+				if TAGFrame >= GetGameFrame() - 5 then -- unit is TAGed
+					local udid = spGetUnitDefID(unitID)
+					local height = heights[udid]
+					if not height then
+						height = spGetUnitHeight(unitID)
+						heights[udid] = height
+					end
+					glColor(1.0, 0.2, 0.2, 1)
+					glDrawFuncAtUnit(unitID, true, TagText, height)
+				end
     end
   end
  
