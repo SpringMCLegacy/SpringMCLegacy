@@ -65,11 +65,16 @@ local function GetUnitUnderJammer(unitID, teamID)
 end
 GG.GetUnitUnderJammer = GetUnitUnderJammer
 
--- helper function for LUS
+-- helper functions for LUS
 local function IsUnitNARCed(unitID)
 	return (GetUnitRulesParam(unitID, "NARC") or 0) > 0
 end
 GG.IsUnitNARCed = IsUnitNARCed
+
+local function IsUnitTAGed(unitID)
+	return (GetUnitRulesParam(unitID, "TAG") or 0) == GetGameFrame()
+end
+GG.IsUnitTAGed = IsUnitTAGed
 
 local function NARC(unitID, allyTeam, duration)
 	local narcFrame = GetGameFrame() + duration
@@ -104,16 +109,22 @@ function gadget:UnitLeftRadar(unitID, unitTeam, allyTeam, unitDefID)
 end
 
 function gadget:UnitPreDamaged(unitID, unitDefID, unitTeam, damage, paralyzer, weaponID, projectileID, attackerID, attackerDefID, attackerTeam)
-	-- ignore non-NARC weapons
-	if weaponID ~= NARC_ID or not attackerID then return damage end
-	--if GetUnitUnderJammer(unitID, unitTeam) then return 0 end
-	local allyTeam = select(6, GetTeamInfo(attackerTeam))
-	-- do the NARC, delay the deNARC
-	local duration = GetUnitRulesParam(attackerID, "NARC_DURATION") or NARC_DURATION
-	NARC(unitID, allyTeam, duration)
-	DelayCall(DeNARC, {unitID, allyTeam}, duration)
-	-- NARC does 0 damage
-	return 0
+	-- ignore none weapons
+	if not attackerID then return damage end
+	-- NARCs
+	if weaponID == NARC_ID then
+		--if GetUnitUnderJammer(unitID, unitTeam) then return 0 end
+		local allyTeam = select(6, GetTeamInfo(attackerTeam))
+		-- do the NARC, delay the deNARC
+		local duration = GetUnitRulesParam(attackerID, "NARC_DURATION") or NARC_DURATION
+		NARC(unitID, allyTeam, duration)
+		DelayCall(DeNARC, {unitID, allyTeam}, duration)
+		-- NARC does 0 damage
+		return 0
+	elseif weaponID == TAG_ID then
+		SetUnitRulesParam(unitID, "TAG", GetGameFrame(), {inlos = true})
+		return 0
+	end
 end
 
 function gadget:UnitCreated(unitID, unitDefID, teamID)
