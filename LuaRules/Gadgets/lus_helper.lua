@@ -19,9 +19,11 @@ sqrt = math.sqrt
 -- Synced Read
 local GetUnitPieceInfo 		= Spring.GetUnitPieceInfo
 local GetUnitPieceMap		= Spring.GetUnitPieceMap
+local GetUnitPiecePosDir	= Spring.GetUnitPiecePosDir
 local GetUnitPosition		= Spring.GetUnitPosition
 -- Synced Ctrl
 local PlaySoundFile			= Spring.PlaySoundFile
+local SpawnCEG				= Spring.SpawnCEG
 -- LUS
 local CallAsUnit 			= Spring.UnitScript.CallAsUnit	
 
@@ -30,6 +32,11 @@ local CallAsUnit 			= Spring.UnitScript.CallAsUnit
 -- Variables
 
 -- Useful functions for GG
+
+function EmitSfxName(unitID, pieceName, effectName)
+	local x,y,z,dx,dy,dz = GetUnitPiecePosDir(unitID, pieceName)
+	SpawnCEG(effectName, x,y,z, dx, dy, dz)
+end
 
 local function RecursiveHide(unitID, pieceNum)
 	-- Hide this piece
