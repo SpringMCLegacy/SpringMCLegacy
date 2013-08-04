@@ -85,7 +85,7 @@ local Sounds = {
 			rolloff = 10.0,
 		}
 		NavBeacon_Land = {
-			file = "sounds/Beacon/Land.wav",
+			file = "sounds/beacon/land.wav",
 			maxconcurrent = 12,
 			gainmod = 0.35,
 			pitchmod = 0.1,
@@ -94,7 +94,7 @@ local Sounds = {
 			rolloff = 10.0,
 		}
 		NavBeacon_Beep = {
-			file = "sounds/Beacon/Beep.wav",
+			file = "sounds/beacon/beep.wav",
 			maxconcurrent = 12,
 			gainmod = 0,
 			pitchmod = 0,
@@ -103,7 +103,7 @@ local Sounds = {
 			rolloff = 10.0,
 		}
 		NavBeacon_Descend = {
-			file = "sounds/Beacon/Descend.wav",
+			file = "sounds/beacon/descend.wav",
 			maxconcurrent = 12,
 			gainmod = 0.35,
 			pitchmod = 0.1,
