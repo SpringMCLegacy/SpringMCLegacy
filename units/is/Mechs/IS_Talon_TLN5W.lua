@@ -25,7 +25,7 @@ local IS_Talon_TLN5W = {
 --	trackType			= "Thick",--graphics file to use for the track decal, from \bitmaps\tracks\ folder
 --	trackWidth			= 20,--width to render the decal
 	buildCostEnergy     = 35,
-	buildCostMetal      = 15000,
+	buildCostMetal        = 0,--      = 15000,
 	buildTime           = 0,
 	upright				= true,
 	canMove				= true,

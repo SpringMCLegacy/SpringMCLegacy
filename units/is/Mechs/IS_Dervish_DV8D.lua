@@ -25,7 +25,7 @@ local IS_Dervish_DV8D = {
 --	trackType			= "Thick",--graphics file to use for the track decal, from \bitmaps\tracks\ folder
 --	trackWidth			= 20,--width to render the decal
 	buildCostEnergy     = 55,
-	buildCostMetal      = 21100,
+	buildCostMetal        = 0,--      = 21100,
 	buildTime           = 0,
 	upright				= true,
 	canMove				= true,

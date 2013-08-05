@@ -25,7 +25,7 @@ local IS_Catapult_CPLTC1 = {
 --	trackType			= "Thick",--graphics file to use for the track decal, from \bitmaps\tracks\ folder
 --	trackWidth			= 20,--width to render the decal
 	buildCostEnergy     = 65,
-	buildCostMetal      = 28820,
+	buildCostMetal        = 0,--      = 28820,
 	buildTime           = 0,
 	upright				= true,
 	canMove				= true,

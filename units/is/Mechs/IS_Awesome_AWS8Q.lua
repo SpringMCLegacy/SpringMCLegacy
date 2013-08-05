@@ -25,7 +25,7 @@ local IS_Awesome_AWS8Q = {
 --	trackType			= "Thick",--graphics file to use for the track decal, from \bitmaps\tracks\ folder
 --	trackWidth			= 20,--width to render the decal
 	buildCostEnergy     = 85,
-	buildCostMetal      = 35160,
+	buildCostMetal        = 0,--      = 35160,
 	buildTime           = 0,
 	upright				= true,
 	canMove				= true,

@@ -25,7 +25,7 @@ local IS_Devastator_DVS2 = {
 --	trackType			= "Thick",--graphics file to use for the track decal, from \bitmaps\tracks\ folder
 --	trackWidth			= 20,--width to render the decal
 	buildCostEnergy     = 100, -- in tons
-	buildCostMetal      = 36100,
+	buildCostMetal        = 0,--      = 36100,
 	buildTime           = 0,
 	upright				= true,
 	canMove				= true,

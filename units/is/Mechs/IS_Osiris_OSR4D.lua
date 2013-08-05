@@ -25,7 +25,7 @@ local IS_Osiris_OSR4D = {
 --	trackType			= "Thick",--graphics file to use for the track decal, from \bitmaps\tracks\ folder
 --	trackWidth			= 20,--width to render the decal
 	buildCostEnergy     = 30,
-	buildCostMetal      = 10780,
+	buildCostMetal        = 0,--      = 10780,
 	buildTime           = 0,
 	upright				= true,
 	canMove				= true,

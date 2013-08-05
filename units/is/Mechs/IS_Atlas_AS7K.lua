@@ -25,7 +25,7 @@ local IS_Atlas_AS7K = {
 --	trackType			= "Thick",--graphics file to use for the track decal, from \bitmaps\tracks\ folder
 --	trackWidth			= 20,--width to render the decal
 	buildCostEnergy     = 100, -- in tons
-	buildCostMetal      = 38600,
+	buildCostMetal        = 0,--      = 38600,
 	buildTime           = 0,
 	upright				= true,
 	canMove				= true,

@@ -25,7 +25,7 @@ local IS_Hollander_BZKF3 = {
 --	trackType			= "Thick",--graphics file to use for the track decal, from \bitmaps\tracks\ folder
 --	trackWidth			= 20,--width to render the decal
 	buildCostEnergy     = 45,
-	buildCostMetal      = 14900,
+	buildCostMetal        = 0,--      = 14900,
 	buildTime           = 0,
 	upright				= true,
 	canMove				= true,

@@ -25,7 +25,7 @@ local IS_Warhammer_WHM7A = {
 --	trackType			= "Thick",--graphics file to use for the track decal, from \bitmaps\tracks\ folder
 --	trackWidth			= 20,--width to render the decal
 	buildCostEnergy     = 70,
-	buildCostMetal      = 28300,
+	buildCostMetal        = 0,--      = 28300,
 	buildTime           = 0,
 	upright				= true,
 	canMove				= true,
