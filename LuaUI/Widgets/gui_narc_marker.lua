@@ -13,9 +13,9 @@
  
 function widget:GetInfo()
   return {
-    name  = "NARC indicator",
+    name  = "BT:L - NARC indicator",
     desc  = "NARC circles",
-    author  = "trepan, zwzsg, smoth, yuritch",
+    author  = "trepan, zwzsg, smoth, yuritch, FLOZi",
     date  = "Feb 6, 2011",
     license = "GNU GPL, v2 or later",
     layer  = 5,
