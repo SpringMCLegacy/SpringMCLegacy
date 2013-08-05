@@ -237,10 +237,22 @@ function hideLimbPieces(limb)
 		RecursiveHide(lupperarm)
 		EmitSfx(lupperarm, SFX.CEG + info.numWeapons + 1)
 		Explode(lupperarm, SFX.FIRE + SFX.SMOKE)
+		for id, valid in pairs(leftArmIDs) do
+			if valid then
+				local weapDef = WeaponDefs[unitDef.weapons[id].weaponDef]
+				Spring.Echo(unitDef.humanName .. ": " .. weapDef.name .. " destroyed!")
+			end
+		end
 	elseif limb == "right_arm" then
 		RecursiveHide(rupperarm)
 		EmitSfx(rupperarm, SFX.CEG + info.numWeapons + 1)
 		Explode(rupperarm, SFX.FIRE + SFX.SMOKE)
+		for id, valid in pairs(rightArmIDs) do
+			if valid then
+				local weapDef = WeaponDefs[unitDef.weapons[id].weaponDef]
+				Spring.Echo(unitDef.humanName .. ": " .. weapDef.name .. " destroyed!")
+			end
+		end
 	end
 end
 

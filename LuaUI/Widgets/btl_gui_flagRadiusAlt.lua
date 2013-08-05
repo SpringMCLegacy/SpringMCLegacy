@@ -105,7 +105,7 @@ function widget:DrawWorldPreUnit()
         unitID = teamFlags[j]
         if IsUnitInView(unitID, FLAG_RADIUS, true) then
           local x, y, z = GetUnitPosition(unitID)
-		  if y == GetGroundHeight(x, z) then
+		  if y <= GetGroundHeight(x, z) + 5 then
 			glPushMatrix()
 				glTranslate(x, y, z)
 				glScale(FLAG_RADIUS, 1, FLAG_RADIUS)
