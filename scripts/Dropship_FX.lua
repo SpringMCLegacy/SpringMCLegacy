@@ -63,16 +63,48 @@ for i = 1,4 do
 	exhausts[i] = piece("exhaust" .. i)
 end
 
+local dustlarge = piece("dust1")
+local dusts = {}
+for i = 1,4 do
+	dusts[i] = piece("dust" .. i + 1)
+end
+
 -- Constants
 local DROP_HEIGHT = 10000
 local GRAVITY = 1.2
 
 -- Variables
-local stage
-local touchDown = false
+local stage = 0
 
 function TouchDown()
-	touchDown = true
+	stage = 4
+end
+
+local function fx()
+	-- Free fall
+	while stage == 1 do
+		-- Some reentry glow here?
+		Sleep(5)
+	end
+	-- Rocket Burn
+	while stage == 2 do
+		-- EmitSfx(exhaustlarge, SOME_BIGASS_ROCKET)
+		for i = 1, 4 do
+			--EmitSfx(exhausts[i], SMALLER_ROCKET)
+		end
+		Sleep(5)
+	end
+	-- Final descent
+	while stage == 3 do
+		-- Dust clouds and continue rocket burn? (reduced?)
+		-- EmitSfx(exhaustlarge, SOME_SMALLER_BIGASS_ROCKET)
+		-- EmitSfx(dustlarge, SOME_BIGASS_DUST)
+		for i = 1, 4 do
+			--EmitSfx(exhausts[i], SMALLER_ROCKET)
+			--EmitSfx(dusts[i], SMALLER_DUST)
+		end		
+		Sleep(5)
+	end
 end
 
 local function LandingGear()
@@ -116,25 +148,10 @@ function script.Create()
 	Turn(gear3_joint, y_axis, rad(-45), SPEED)
 	Turn(gear4_door, y_axis, rad(45), SPEED)
 	Turn(gear4_joint, y_axis, rad(45), SPEED)
-	--[[--Launcher Setup--
-	Turn(launcher1, y_axis, rad(-45), SPEED)
-	Turn(launcher1, x_axis, rad(-30), SPEED)
-	Turn(launcher2, y_axis, rad(-135), SPEED)
-	Turn(launcher2, x_axis, rad(-30), SPEED)
-	Turn(launcher3, y_axis, rad(135), SPEED)
-	Turn(launcher3, x_axis, rad(-30), SPEED)
-	Turn(launcher4, y_axis, rad(-45), SPEED)
-	Turn(launcher4, x_axis, rad(-30), SPEED)
-	--Turret setup--
-	Turn(turret1, x_axis, rad(30), SPEED)
-	Turn(turret2, x_axis, rad(30), SPEED)
-	Turn(turret2, y_axis, rad(-90), SPEED)
-	Turn(turret3, x_axis, rad(30), SPEED)
-	Turn(turret3, y_axis, rad(180), SPEED)
-	Turn(turret4, x_axis, rad(30), SPEED)
-	Turn(turret4, y_axis, rad(90), SPEED)]]
 	
 	Spring.MoveCtrl.SetGravity(unitID, GRAVITY)
+	StartThread(fx)
+	stage = 1
 	
 	local x, y, z = Spring.GetUnitPosition(unitID)
 	local gy = Spring.GetGroundHeight(x, z)
@@ -142,6 +159,7 @@ function script.Create()
 		Sleep(100)
 		x, y, z = Spring.GetUnitPosition(unitID)
 	end
+	stage = 2
 	Spring.Echo("ROCKET FULL BURN NOW!")
 	Spring.MoveCtrl.SetGravity(unitID, 0)--Game.gravity / 10000)
 	
@@ -153,49 +171,8 @@ function script.Create()
 		Spring.MoveCtrl.SetVelocity(unitID, 0, sy * 0.9, 0)
 		--Spring.Echo(y - gy)
 	end
+	stage = 3
 	Spring.MoveCtrl.SetGravity(unitID, GRAVITY / 10)
 	Spring.MoveCtrl.SetCollideStop(unitID, true)
 	Spring.MoveCtrl.SetTrackGround(unitID, true)
 end
-
-	--PPCs come out--
-	--[[Turn(ppcdoors, y_axis, 10, SPEED)
-	Move(ppc1_platform, z_axis, 31, SPEED)
-	Move(ppc2_platform, x_axis, -20, SPEED)
-	Turn(ppc2_turret, x_axis, rad(-90), SPEED)
-	Move(ppc3_platform, z_axis, -20, SPEED)
-	Turn(ppc3_turret, x_axis, rad(180), SPEED)
-	Move(ppc4_platform, x_axis, 20, SPEED)
-	Turn(ppc4_turret, x_axis, rad(90), SPEED)
-	--Turrets come out--
-	Turn(laser_doors, y_axis, rad(25), SPEED)
-	Move(turret1_joint, y_axis, 20, SPEED)
-	Move(turret1_joint, z_axis, 10, SPEED)
-	Turn(turret1, x_axis, rad(0), SPEED)
-	Move(turret2_joint, y_axis, 20, SPEED)
-	Move(turret2_joint, x_axis, 10, SPEED)
-	Turn(turret2, x_axis, rad(0), SPEED)
-	Move(turret3_joint, y_axis, 20, SPEED)
-	Move(turret3_joint, z_axis, -10, SPEED)
-	Turn(turret3, x_axis, rad(0), SPEED)
-	Move(turret4_joint, y_axis, 20, SPEED)
-	Move(turret4_joint, x_axis, -10, SPEED)
-	Turn(turret4, x_axis, rad(0), SPEED)
-	--Launcher come out--
-	Turn(missile_doors, y_axis, rad(25), SPEED)
-	Move(launcher1_joint, y_axis, 25, SPEED)
-	Move(launcher1_joint, x_axis, 10, SPEED)
-	Move(launcher1_joint, z_axis, 10, SPEED)
-	Move(launcher2_joint, y_axis, 25, SPEED)
-	Move(launcher2_joint, x_axis, 10, SPEED)
-	Move(launcher2_joint, z_axis, -10, SPEED)
-	Move(launcher3_joint, y_axis, 25, SPEED)
-	Move(launcher3_joint, x_axis, -10, SPEED)
-	Move(launcher3_joint, z_axis, -10, SPEED)
-	Move(launcher4_joint, y_axis, 25, SPEED)
-	Move(launcher4_joint, x_axis, 10, SPEED)
-	Move(launcher4_joint, z_axis, -10, SPEED)
-	Turn(launcher1, x_axis, rad(0), SPEED)
-	Turn(launcher2, x_axis, rad(0), SPEED)
-	Turn(launcher3, x_axis, rad(0), SPEED)
-	Turn(launcher4, x_axis, rad(0), SPEED)]]--
