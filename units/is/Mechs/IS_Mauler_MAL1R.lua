@@ -23,7 +23,7 @@ local IS_Mauler_MAL1R = {
 --	trackType			= "Thick",--graphics file to use for the track decal, from \bitmaps\tracks\ folder
 --	trackWidth			= 20,--width to render the decal
 	buildCostEnergy     = 90,
-	buildCostMetal      = 28200,
+	buildCostMetal        = 0,--      = 28200,
 	buildTime           = 0,
 	upright				= true,
 	canMove				= true,

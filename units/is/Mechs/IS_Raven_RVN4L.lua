@@ -26,7 +26,7 @@ local IS_Raven_RVN4L = {
 --	trackType			= "Thick",--graphics file to use for the track decal, from \bitmaps\tracks\ folder
 --	trackWidth			= 20,--width to render the decal
 	buildCostEnergy     = 35,
-	buildCostMetal      = 13260,
+	buildCostMetal        = 0,--      = 13260,
 	buildTime           = 0,
 	upright				= true,
 	canMove				= true,

@@ -25,7 +25,7 @@ local IS_Chimera_CMA1S = {
 --	trackType			= "Thick",--graphics file to use for the track decal, from \bitmaps\tracks\ folder
 --	trackWidth			= 20,--width to render the decal
 	buildCostEnergy     = 40,
-	buildCostMetal      = 17270,
+	buildCostMetal        = 0,--      = 17270,
 	buildTime           = 0,
 	upright				= true,
 	canMove				= true,
