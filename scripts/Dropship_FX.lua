@@ -56,8 +56,16 @@ local gear2 = piece("gear2")
 local gear3 = piece("gear3")
 local gear4 = piece("gear4")
 
+-- Exhaust Pieces
+local exhaustlarge = piece("exhaustlarge")
+local exhausts = {}
+for i = 1,4 do
+	exhausts[i] = piece("exhaust" .. i)
+end
+
 -- Constants
 local DROP_HEIGHT = 10000
+local GRAVITY = 1.2
 
 -- Variables
 local stage
@@ -126,7 +134,7 @@ function script.Create()
 	Turn(turret4, x_axis, rad(30), SPEED)
 	Turn(turret4, y_axis, rad(90), SPEED)]]
 	
-	Spring.MoveCtrl.SetGravity(unitID, Game.gravity / 100)
+	Spring.MoveCtrl.SetGravity(unitID, GRAVITY)
 	
 	local x, y, z = Spring.GetUnitPosition(unitID)
 	local gy = Spring.GetGroundHeight(x, z)
@@ -138,14 +146,14 @@ function script.Create()
 	Spring.MoveCtrl.SetGravity(unitID, 0)--Game.gravity / 10000)
 	
 	StartThread(LandingGear)
-	while y - gy > 950 do
+	while y - gy > 925 do
 		Sleep(100)
 		x, y, z = Spring.GetUnitPosition(unitID)
 		local _, sy, _ = Spring.GetUnitVelocity(unitID)
 		Spring.MoveCtrl.SetVelocity(unitID, 0, sy * 0.9, 0)
 		--Spring.Echo(y - gy)
 	end
-	Spring.MoveCtrl.SetGravity(unitID, Game.gravity / 500)
+	Spring.MoveCtrl.SetGravity(unitID, GRAVITY / 10)
 	Spring.MoveCtrl.SetCollideStop(unitID, true)
 	Spring.MoveCtrl.SetTrackGround(unitID, true)
 end
