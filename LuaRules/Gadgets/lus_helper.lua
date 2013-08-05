@@ -244,9 +244,6 @@ function gadget:Initialize()
 		local teamID = Spring.GetUnitTeam(unitID)
 		local unitDefID = Spring.GetUnitDefID(unitID)
 		gadget:UnitCreated(unitID, unitDefID, teamID)
-		-- restart all LUS too (none functional atm - unit_script runs first?)
-		--[[env = Spring.UnitScript.GetScriptEnv(unitID)
-		Spring.UnitScript.CallAsUnit(unitID, env.Script.Create)]]
 	end
 end
 
