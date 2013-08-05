@@ -12,9 +12,9 @@
 
 function widget:GetInfo()
   return {
-    name      = "HealthBars",
+    name      = "BT:L - HealthBars",
     desc      = "Gives various informations about units in form of bars.",
-    author    = "jK",
+    author    = "jK", -- BTL mods by FLOZi
     date      = "2009",
     license   = "GNU GPL, v2 or later",
     layer     = -10,
