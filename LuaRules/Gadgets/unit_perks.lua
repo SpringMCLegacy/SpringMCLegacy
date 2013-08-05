@@ -43,6 +43,12 @@ end
 
 function gadget:Initialize()
 	Spring.SetExperienceGrade(MINIMUM_XP_INCREASE_TO_CHECK)
+	-- Support /luarules reload
+	for _,unitID in ipairs(Spring.GetAllUnits()) do
+		local teamID = Spring.GetUnitTeam(unitID)
+		local unitDefID = Spring.GetUnitDefID(unitID)
+		gadget:UnitCreated(unitID, unitDefID, teamID)
+	end
 end
 	
 function gadget:UnitExperience(unitID, unitDefID, teamID, newExp, oldExp)
