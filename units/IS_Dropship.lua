@@ -258,5 +258,6 @@ IS_Dropship_FX["weapons"] = {} -- remove all weapons
 IS_Dropship_FX["yardmap"] = "" -- remove yardmap
 IS_Dropship_FX["moveclass"] = "LARGEMECH" -- make it a mobile unit
 IS_Dropship_FX["script"] = "dropship_fx.lua" -- change script
+IS_Dropship_FX["objectName"] = "dropship.s3o" -- change model
 
 return lowerkeys({ ["IS_Dropship"] = IS_Dropship, ["IS_Dropship_FX"] = IS_Dropship_FX })

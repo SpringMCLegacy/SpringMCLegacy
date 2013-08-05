@@ -249,7 +249,8 @@ end
 
 function gadget:MoveCtrlNotify(unitID, unitDefID, unitTeam, data)
 	local BEACON_ID = UnitDefNames["beacon"].id
-	if unitDefID == BEACON_ID then
+	local DROPSHIP_FX_ID = UnitDefNames["is_dropship_fx"].id
+	if unitDefID == BEACON_ID or unitDefID == DROPSHIP_FX_ID then
 		env = Spring.UnitScript.GetScriptEnv(unitID)
 		Spring.UnitScript.CallAsUnit(unitID, env.TouchDown)
 		Spring.MoveCtrl.Disable(unitID)
