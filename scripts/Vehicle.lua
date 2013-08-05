@@ -43,6 +43,7 @@ local amsID = info.amsID
 local hover = info.hover
 local vtol = info.vtol
 local aero = info.aero
+local turretIDs = info.turretIDs
 local limbHPs = {}
 for k,v in pairs(info.limbHPs) do -- copy table from defaults
 	limbHPs[k] = v
@@ -240,6 +241,12 @@ function hideLimbPieces(limb)
 		RecursiveHide(turret)
 		EmitSfx(turret, SFX.CEG + info.numWeapons + 1)
 		Explode(turret, SFX.FIRE + SFX.SMOKE)
+		for id, valid in pairs(turretIDs) do
+			if valid then
+				local weapDef = WeaponDefs[unitDef.weapons[id].weaponDef]
+				Spring.Echo(unitDef.humanName .. ": " .. weapDef.name .. " destroyed!")
+			end
+		end
 	end
 end
 
@@ -306,9 +313,9 @@ local function WeaponCanFire(weaponID)
 		return true
 	end
 	-- TODO: Disable turret weapons, will require recursively checking parents or children?
-	--[[if turretIDs[weaponID] and limbHPs["turret"] <= 0 then
+	if turretIDs[weaponID] and limbHPs["turret"] <= 0 then
 		return false
-	end]]
+	end
 	local ammoType = ammoTypes[weaponID]
 	if ammoType and (currAmmo[ammoType] or 0) < (burstLengths[weaponID] or 0) then
 		if spinSpeeds[weaponID] then

@@ -133,6 +133,7 @@ function gadget:UnitCreated(unitID, unitDefID, teamID, builderID)
 			elseif pieceName:find("flare_") then
 				leftArmIDs[weaponNum] = leftArmIDs[weaponNum] or IsPieceAncestor(unitID, pieceName, "lupperarm")
 				rightArmIDs[weaponNum] = rightArmIDs[weaponNum] or IsPieceAncestor(unitID, pieceName, "rupperarm")
+				turretIDs[weaponNum] = turretIDs[weaponNum] or IsPieceAncestor(unitID, pieceName, "turret")
 			-- assign launchpoint weaponIDs to left or right arms
 			elseif pieceName:find("launchpoint_") then
 				leftArmIDs[weaponNum] = leftArmIDs[weaponNum] or IsPieceAncestor(unitID, pieceName, "lupperarm")
@@ -145,6 +146,8 @@ function gadget:UnitCreated(unitID, unitDefID, teamID, builderID)
 			info.leftArmMasterID = GetArmMasterWeapon(leftArmIDs)
 			info.rightArmIDs = rightArmIDs
 			info.leftArmIDs = leftArmIDs
+		elseif cp.unittype == "vehicle" then
+			info.turretIDs = turretIDs
 		end
 		
 		info.launcherIDs = launcherIDs
