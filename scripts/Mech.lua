@@ -22,7 +22,7 @@ local IsUnitTAGed = GG.IsUnitTAGed
 
 -- includes
 include "smokeunit.lua"
-include ("walks/" .. unitDef.name .. "_walk.lua")
+include ("anims/" .. unitDef.name:sub(1, unitDef.name:find("_", 4) - 1) .. ".lua")
 
 -- Info from lusHelper gadget
 -- non-local so perks can change them (flagrant lack of encapsulation!)
