@@ -241,4 +241,22 @@ local IS_Dropship = {
 	},
 }
 
-return lowerkeys({ ["IS_Dropship"] = IS_Dropship })
+local function copytable(input, output)
+	for k,v in pairs(input) do
+		if type(v) == "table" then
+			output[k] = {}
+			copytable(v, output[k])
+		else
+			output[k] = v
+		end
+	end
+end
+
+local IS_Dropship_FX = {}
+copytable(IS_Dropship, IS_Dropship_FX)
+IS_Dropship_FX["weapons"] = {} -- remove all weapons
+IS_Dropship_FX["yardmap"] = "" -- remove yardmap
+IS_Dropship_FX["moveclass"] = "LARGEMECH" -- make it a mobile unit
+IS_Dropship_FX["script"] = "dropship_fx.lua" -- change script
+
+return lowerkeys({ ["IS_Dropship"] = IS_Dropship, ["IS_Dropship_FX"] = IS_Dropship_FX })
