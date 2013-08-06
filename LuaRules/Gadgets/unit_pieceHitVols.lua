@@ -12,7 +12,7 @@ end
 
 local accept = { 
 		mech = {pelvis = true, torso = true, rupperarm = true, rlowerarm = true, lupperarm = true, llowerarm = true, lupperleg = true, llowerleg = true, rupperleg = true, rlowerleg = true},
-		vehicle = {body = true, turret = true, launcher_1 = true, turret_2 = true},
+		vehicle = {body = true, turret = true, launcher_1 = true, turret_2 = true, lwing = true, rwing = true},
 	}
 
 if gadgetHandler:IsSyncedCode() then
@@ -33,7 +33,7 @@ local TURRET_SCALE = 1.1
 function gadget:UnitCreated(unitID, unitDefID, teamID, builderID)
 	local ud = UnitDefs[unitDefID]
 	local cp = ud.customParams
-	if ud.speed > 0 then 
+	if ud.speed > 0 or ud.canFly then 
 		local pieces = Spring.GetUnitPieceList(unitID)
 		local unitType = cp.unittype
 		for i, pieceName in pairs(pieces) do
