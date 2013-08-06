@@ -231,6 +231,7 @@ local IS_Dropship = {
 		"custom:dropship_main_engine_stage2",
 		"custom:dropship_main_engine_stage3",
 		"custom:dropship_heavy_dust",
+		"custom:heavy_jet_trail",
 		},
 	},
 	customparams = {
