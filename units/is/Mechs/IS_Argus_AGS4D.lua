@@ -52,14 +52,14 @@ local IS_Argus_AGS4D = {
 				name	= "MBL",
 				--mainDir = "0 0 1",
 				--maxAngleDif = 270,
-				OnlyTargetCategory = "notbeacon",
+				OnlyTargetCategory = "ground",
 				SlaveTo = 1,
 			},
 			[4] = {
 				name	= "MBL",
 				--mainDir = "0 0 1",
 				--maxAngleDif = 270,
-				OnlyTargetCategory = "notbeacon",
+				OnlyTargetCategory = "ground",
 				SlaveTo = 1,
 			},
 			[5] = {

@@ -26,7 +26,7 @@ local Turret_AC20 = {
 		--Makes unit use weapon from /weapons folder
 		weapons 		= {	
 			[1] = {
-				name	= "UAC20",
+				name	= "AC20",
 				OnlyTargetCategory = "notbeacon",
 			},
 		},

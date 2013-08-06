@@ -60,7 +60,7 @@ local IS_Chimera_CMA1S = {
 				name	= "MRM20",
 				--mainDir = "0 0 1",
 				--maxAngleDif = 270,
-				OnlyTargetCategory = "notbeacon",
+				OnlyTargetCategory = "ground",
 				SlaveTo = 1,
 			},
 		},

@@ -40,7 +40,7 @@ local IS_Hunchback_HBK4G = {
 				name	= "AC20",
 				--mainDir = "0 0 1",
 				--maxAngleDif = 270,
-				OnlyTargetCategory = "notbeacon",
+				OnlyTargetCategory = "ground",
 			},
 			[2] = {
 				name	= "MBL",
@@ -60,7 +60,7 @@ local IS_Hunchback_HBK4G = {
 				name	= "SBL",
 				--mainDir = "0 0 1",
 				--maxAngleDif = 220,
-				OnlyTargetCategory = "notbeacon",
+				OnlyTargetCategory = "ground",
 				SlaveTo = 1,
 			},
 		},

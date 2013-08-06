@@ -51,7 +51,7 @@ local IS_Mauler_MAL3R = {
 				name	= "SBL",
 				--mainDir = "0 0 1",
 				--maxAngleDif = 270,
-				OnlyTargetCategory = "notbeacon",
+				OnlyTargetCategory = "ground",
 				SlaveTo = 1,
 			},
 			[4] = {
