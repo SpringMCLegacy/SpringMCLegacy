@@ -89,22 +89,23 @@ local function fx()
 	end
 	-- Rocket Burn
 	while stage == 2 do
-		-- EmitSfx(exhaustlarge, SOME_BIGASS_ROCKET)
+		EmitSfx(exhaustlarge, 1027)
 		for i = 1, 4 do
 			--EmitSfx(exhausts[i], SMALLER_ROCKET)
 		end
-		Sleep(5)
+		Sleep(32)
 	end
 	-- Final descent
 	while stage == 3 do
 		-- Dust clouds and continue rocket burn? (reduced?)
 		-- EmitSfx(exhaustlarge, SOME_SMALLER_BIGASS_ROCKET)
-		-- EmitSfx(dustlarge, SOME_BIGASS_DUST)
+		EmitSfx(dustlarge, 1029)
+		EmitSfx(exhaustlarge, 1028)
 		for i = 1, 4 do
 			--EmitSfx(exhausts[i], SMALLER_ROCKET)
 			--EmitSfx(dusts[i], SMALLER_DUST)
 		end		
-		Sleep(5)
+		Sleep(32)
 	end
 	if stage == 4 then
 		local REST = 10
