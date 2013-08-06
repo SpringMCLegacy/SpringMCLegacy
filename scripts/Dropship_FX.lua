@@ -113,7 +113,7 @@ local function fx()
 		for i = 1, 4 do
 			EmitSfx(exhausts[i], 1031)
 			if feetDown then
-				EmitSfx(dusts[i], 1030)
+				EmitSfx(dusts[i], 1031)
 			end
 			--EmitSfx(dusts[i], SMALLER_DUST)
 		end		
@@ -167,10 +167,10 @@ function script.Create()
 	Spin(exhaustlarge, y_axis, math.rad(360))
 	for i = 1, 4 do
 		Turn(dusts[i], x_axis, math.rad(89), 0)
+		Spin(dusts[i], y_axis, math.rad(360))
 		Turn(exhausts[i], x_axis, math.rad(89), 0)
 		Spin(exhausts[i], y_axis, math.rad(360))
 	end
-	
 	Spring.MoveCtrl.Enable(unitID)
 	Spring.MoveCtrl.SetPosition(unitID, X, GY + DROP_HEIGHT, Z)
 	--Spring.MoveCtrl.SetVelocity(unitID, 0, -100, 0)
