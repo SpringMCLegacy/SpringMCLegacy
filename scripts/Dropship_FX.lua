@@ -97,7 +97,7 @@ local function fx()
 		EmitSfx(exhaustlarge, 1027)
 		EmitSfx(exhaustlarge, 1030)
 		for i = 1, 4 do
-			--EmitSfx(exhausts[i], SMALLER_ROCKET)
+			EmitSfx(exhausts[i], 1030)
 		end
 		Sleep(32)
 	end
@@ -108,8 +108,9 @@ local function fx()
 		--EmitSfx(dustlarge, 1029)
 		SpawnCEG("dropship_heavy_dust", X, GY, Z) -- Use SpawnCEG for ground FX :)
 		EmitSfx(exhaustlarge, 1028)
+		EmitSfx(exhaustlarge, 1030)
 		for i = 1, 4 do
-			--EmitSfx(exhausts[i], SMALLER_ROCKET)
+			EmitSfx(exhausts[i], 1030)
 			--EmitSfx(dusts[i], SMALLER_DUST)
 		end		
 		Sleep(32)
@@ -156,6 +157,13 @@ local function LandingGear()
 end
 
 function script.Create()
+	Spring.Echo(Spring.UnitScript.GetPieceRotation(exhaustlarge))
+	Turn(exhaustlarge, x_axis, math.rad(89), 0)
+	Spin(exhaustlarge, y_axis, math.rad(360))
+	for i = 1, 4 do
+		Turn(exhausts[i], x_axis, math.rad(89), 0)
+		Spin(exhausts[i], y_axis, math.rad(360))
+	end
 	Spring.MoveCtrl.Enable(unitID)
 	Spring.MoveCtrl.SetPosition(unitID, X, GY + DROP_HEIGHT, Z)
 	--Spring.MoveCtrl.SetVelocity(unitID, 0, -100, 0)
