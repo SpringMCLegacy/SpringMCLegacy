@@ -247,6 +247,12 @@ function hideLimbPieces(limb)
 				Spring.Echo(unitDef.humanName .. ": " .. weapDef.name .. " destroyed!")
 			end
 		end
+	else -- asumme limb is a wing
+		local wingPiece = piece(limb) -- asuume pieces are lwing rwing
+		RecursiveHide(wingPiece)
+		EmitSfx(wingPiece, SFX.CEG + info.numWeapons + 1)
+		Explode(wingPiece, SFX.FIRE + SFX.SMOKE)
+		SetUnitValue(COB.CRASHING, 1)
 	end
 end
 
@@ -265,16 +271,20 @@ end
 
 function script.HitByWeapon(x, z, weaponID, damage)
 	local wd = WeaponDefs[weaponID]
+	if not wd then return damage end
 	local heatDamage = wd.customParams.heatdamage or 0
 	--Spring.Echo(wd.customParams.heatdamage)
 	currHeatLevel = currHeatLevel + heatDamage
 	SetUnitRulesParam(unitID, "heat", currHeatLevel)
 	local hitPiece = GetUnitLastAttackedPiece(unitID) or ""
+	--Spring.Echo("HIT ON ", hitPiece)
 	if hitPiece == "body" then 
 		return damage
 	elseif hitPiece == "turret" or hitPiece == "launcher_1" or hitPiece == "turret_2" then
 		--deduct Turret HP
 		limbHPControl("turret", damage)
+	elseif hitPiece == "lwing" or hitPiece == "rwing" then
+		limbHPControl(hitPiece, damage) -- asumes wings are single pieces
 	end
 	return 0
 end
@@ -426,7 +436,7 @@ function script.EndBurst(weaponID)
 end
 
 function script.AimFromWeapon(weaponID) 
-	return turret
+	return turret or body
 end
 
 function script.QueryWeapon(weaponID) 
