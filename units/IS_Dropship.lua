@@ -228,6 +228,9 @@ local IS_Dropship = {
 		"custom:MISSILE_MUZZLEFLASH",
 		"custom:PPC_MUZZLEFLASH",
 		"custom:LASER_MUZZLEFLASH",
+		"custom:dropship_main_engine_stage2",
+		"custom:dropship_main_engine_stage3",
+		"custom:dropship_heavy_dust",
 		},
 	},
 	customparams = {
