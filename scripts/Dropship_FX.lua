@@ -81,6 +81,7 @@ local GY = Spring.GetGroundHeight(X, Z)
 
 -- Variables
 local stage = 0
+local feetDown = false
 
 function TouchDown()
 	stage = 4
@@ -111,7 +112,9 @@ local function fx()
 		EmitSfx(exhaustlarge, 1030)
 		for i = 1, 4 do
 			EmitSfx(exhausts[i], 1030)
-			EmitSfx(dusts[i], 1030)
+			if feetDown then
+				EmitSfx(dusts[i], 1030)
+			end
 			--EmitSfx(dusts[i], SMALLER_DUST)
 		end		
 		Sleep(32)
@@ -154,6 +157,7 @@ local function LandingGear()
 	Turn(gear4, x_axis, rad(-160), SPEED)
 	
 	WaitForTurn(gear4, x_axis)
+	feetDown = true
 	Spring.Echo("GEAR DEPLOYED.")
 end
 
@@ -166,6 +170,7 @@ function script.Create()
 		Turn(exhausts[i], x_axis, math.rad(89), 0)
 		Spin(exhausts[i], y_axis, math.rad(360))
 	end
+	
 	Spring.MoveCtrl.Enable(unitID)
 	Spring.MoveCtrl.SetPosition(unitID, X, GY + DROP_HEIGHT, Z)
 	--Spring.MoveCtrl.SetVelocity(unitID, 0, -100, 0)
