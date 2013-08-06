@@ -67,6 +67,13 @@ for name, ud in pairs(UnitDefs) do
 		if ud.customparams.unittype == "mech" then
 			ud.buildtime = RAMP_DISTANCE / speed
 			ud.usepiececollisionvolumes = true
+			ud.losemitheight = ud.mass / 100
+			ud.radaremitheight = ud.mass / 100
+			if ud.customparams.hasbap == "true" then
+				Spring.Echo("I HAVE BAPS SNICKER")
+				ud.losemitheight = 10000000
+				ud.radaremitheight = 10000000
+			end
 		elseif ud.canfly then
 			ud.buildtime = HANGAR_DISTANCE / (speed * 0.5)
 		elseif ud.customparams.unittype == "vehicle" then
