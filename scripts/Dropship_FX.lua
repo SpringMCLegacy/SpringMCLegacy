@@ -40,6 +40,7 @@ local laser9, laser10, laser11, laser12 = piece ("laser9", "laser10", "laser11",
 local ams = piece ("ams")
 
 
+local hull = piece("hull")
 -- Landing Gear Pieces
 local gear1_door = piece("gear1_door")
 local gear2_door = piece("gear2_door")
@@ -105,6 +106,22 @@ local function fx()
 		end		
 		Sleep(5)
 	end
+	if stage == 4 then
+		Spring.Echo("BABABABABA")
+		local REST = 10
+		local RETURN = 6
+		Move(hull, y_axis, -REST, REST)
+		Move(gear1_joint, y_axis, REST, REST)
+		Move(gear2_joint, y_axis, REST, REST)
+		Move(gear3_joint, y_axis, REST, REST)
+		Move(gear4_joint, y_axis, REST, REST)
+		WaitForMove(hull, y_axis)
+		Move(hull, y_axis, -RETURN, RETURN)
+		Move(gear1_joint, y_axis, RETURN, RETURN)
+		Move(gear2_joint, y_axis, RETURN, RETURN)
+		Move(gear3_joint, y_axis, RETURN, RETURN)
+		Move(gear4_joint, y_axis, RETURN, RETURN)
+	end
 end
 
 local function LandingGear()
@@ -133,7 +150,6 @@ end
 
 function script.Create()
 	Spring.MoveCtrl.Enable(unitID)
-	Spring.Echo("MAPGRAV:", Game.gravity)
 	local x,y,z = Spring.GetUnitPosition(unitID)
 	local gy = Spring.GetGroundHeight(x, z)
 	Spring.MoveCtrl.SetPosition(unitID, x, gy + DROP_HEIGHT, z)
@@ -152,8 +168,8 @@ function script.Create()
 	Turn(gear4_joint, y_axis, rad(45), SPEED)
 	
 	Spring.MoveCtrl.SetGravity(unitID, GRAVITY)
-	StartThread(fx)
 	stage = 1
+	StartThread(fx)
 	
 	local x, y, z = Spring.GetUnitPosition(unitID)
 	local gy = Spring.GetGroundHeight(x, z)
