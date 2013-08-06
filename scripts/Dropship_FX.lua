@@ -98,7 +98,7 @@ local function fx()
 		EmitSfx(exhaustlarge, 1027)
 		EmitSfx(exhaustlarge, 1030)
 		for i = 1, 4 do
-			EmitSfx(exhausts[i], 1030)
+			EmitSfx(exhausts[i], 1031)
 		end
 		Sleep(32)
 	end
@@ -111,7 +111,7 @@ local function fx()
 		EmitSfx(exhaustlarge, 1028)
 		EmitSfx(exhaustlarge, 1030)
 		for i = 1, 4 do
-			EmitSfx(exhausts[i], 1030)
+			EmitSfx(exhausts[i], 1031)
 			if feetDown then
 				EmitSfx(dusts[i], 1030)
 			end

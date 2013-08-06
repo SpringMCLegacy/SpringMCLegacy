@@ -232,6 +232,7 @@ local IS_Dropship = {
 		"custom:dropship_main_engine_stage3",
 		"custom:dropship_heavy_dust",
 		"custom:heavy_jet_trail",
+		"custom:heavy_jet_trail_blue",
 		},
 	},
 	customparams = {
