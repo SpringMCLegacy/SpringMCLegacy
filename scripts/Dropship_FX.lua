@@ -71,7 +71,7 @@ end
 
 -- Constants
 local DROP_HEIGHT = 10000
-local GRAVITY = 1.2
+local GRAVITY = 120/Game.gravity * 1.3
 
 -- Variables
 local stage = 0
@@ -133,8 +133,10 @@ end
 
 function script.Create()
 	Spring.MoveCtrl.Enable(unitID)
+	Spring.Echo("MAPGRAV:", Game.gravity)
 	local x,y,z = Spring.GetUnitPosition(unitID)
-	Spring.MoveCtrl.SetPosition(unitID, x, y + DROP_HEIGHT, z)
+	local gy = Spring.GetGroundHeight(x, z)
+	Spring.MoveCtrl.SetPosition(unitID, x, gy + DROP_HEIGHT, z)
 	--Spring.MoveCtrl.SetVelocity(unitID, 0, -100, 0)
 	
 	local SPEED = 0
@@ -156,23 +158,25 @@ function script.Create()
 	local x, y, z = Spring.GetUnitPosition(unitID)
 	local gy = Spring.GetGroundHeight(x, z)
 	while y - gy > 2500 do
-		Sleep(100)
+		Sleep(120)
 		x, y, z = Spring.GetUnitPosition(unitID)
 	end
 	stage = 2
 	Spring.Echo("ROCKET FULL BURN NOW!")
-	Spring.MoveCtrl.SetGravity(unitID, 0)--Game.gravity / 10000)
+	Spring.MoveCtrl.SetGravity(unitID, 0) ---3.9 * GRAVITY)
 	
 	StartThread(LandingGear)
 	while y - gy > 925 do
-		Sleep(100)
+	--local _, sy, _ = Spring.GetUnitVelocity(unitID)
+	--while -sy > 5 do
+		Sleep(120)
 		x, y, z = Spring.GetUnitPosition(unitID)
-		local _, sy, _ = Spring.GetUnitVelocity(unitID)
+		_, sy, _ = Spring.GetUnitVelocity(unitID)
 		Spring.MoveCtrl.SetVelocity(unitID, 0, sy * 0.9, 0)
 		--Spring.Echo(y - gy)
 	end
 	stage = 3
-	Spring.MoveCtrl.SetGravity(unitID, GRAVITY / 10)
+	Spring.MoveCtrl.SetGravity(unitID, -0.01 * GRAVITY)
 	Spring.MoveCtrl.SetCollideStop(unitID, true)
 	Spring.MoveCtrl.SetTrackGround(unitID, true)
 end
