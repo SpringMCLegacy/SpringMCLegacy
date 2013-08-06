@@ -1,7 +1,7 @@
-local AC20Turret = {
-	name              	= "Defense Turret",
-	description         = "Ultra Autocannon/20",
-	objectName        	= "AC20Turret.s3o",
+local Turret_LAMS = {
+	name              	= "Weapon Emplacement",
+	description         = "Laser AMS",
+	objectName        	= "Turret_LAMS.s3o",
 	script				= "Turret.lua",
 	category 			= "structure notbeacon",
 		activateWhenBuilt   = true,
@@ -26,7 +26,7 @@ local AC20Turret = {
 		--Makes unit use weapon from /weapons folder
 		weapons 		= {	
 			[1] = {
-				name	= "UAC20",
+				name	= "AMS_Dropship",
 				OnlyTargetCategory = "notbeacon",
 			},
 		},
@@ -42,4 +42,4 @@ local AC20Turret = {
 	},
 }
 
-return lowerkeys({ ["AC20Turret"] = AC20Turret })
+return lowerkeys({ ["Turret_LAMS"] = Turret_LAMS })

@@ -1,7 +1,7 @@
-local LRMTurret = {
-	name              	= "Defense Turret",
-	description         = "LRM-20",
-	objectName        	= "LRMTurret.s3o",
+local Turret_AC10 = {
+	name              	= "Weapon Emplacement",
+	description         = "Dual AC/10",
+	objectName        	= "Turret_AC10.s3o",
 	script				= "Turret.lua",
 	category 			= "structure notbeacon",
 		activateWhenBuilt   = true,
@@ -26,8 +26,13 @@ local LRMTurret = {
 		--Makes unit use weapon from /weapons folder
 		weapons 		= {	
 			[1] = {
-				name	= "LRM20",
+				name	= "AC10",
 				OnlyTargetCategory = "notbeacon",
+			},
+			[2] = {
+				name	= "AC10",
+				OnlyTargetCategory = "notbeacon",
+				SlaveTo = 1,
 			},
 		},
 	customparams = {
@@ -35,10 +40,11 @@ local LRMTurret = {
 		supplyradius	= "0",
 		flagdefendrate	= "100",
 		helptext		= "An auto-spawning defensive turret for Garrisons.",
+		barrelrecoildist = "{[1] = 5}",
     },
 	sounds = {
     underattack        = "Dropship_Alarm",
 	},
 }
 
-return lowerkeys({ ["LRMTurret"] = LRMTurret })
+return lowerkeys({ ["Turret_AC10"] = Turret_AC10 })

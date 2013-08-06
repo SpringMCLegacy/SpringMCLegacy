@@ -1,7 +1,7 @@
-local MBLTurret = {
-	name              	= "Defense Turret",
-	description         = "Dual Large Pulse Lasers",
-	objectName        	= "MBLTurret.s3o",
+local Turret_LPL = {
+	name              	= "Weapon Emplacement",
+	description         = "Quad Medium Pulse Laser",
+	objectName        	= "Turret_LPL.s3o",
 	script				= "Turret.lua",
 	category 			= "structure notbeacon",
 		activateWhenBuilt   = true,
@@ -32,17 +32,29 @@ local MBLTurret = {
 			[2] = {
 				name	= "LPL",
 				OnlyTargetCategory = "notbeacon",
+				SlaveTo = 1,
+			},
+			[3] = {
+				name	= "LPL",
+				OnlyTargetCategory = "notbeacon",
+				SlaveTo = 1,
+			},
+			[4] = {
+				name	= "LPL",
+				OnlyTargetCategory = "notbeacon",
+				SlaveTo = 1,
 			},
 		},
 	customparams = {
 		ammosupplier	= "0",
-		flagdefendrate	= "100",
 		supplyradius	= "0",
+		flagdefendrate	= "100",
 		helptext		= "An auto-spawning defensive turret for Garrisons.",
+		barrelrecoildist = "{[1] = 5}",
     },
 	sounds = {
     underattack        = "Dropship_Alarm",
 	},
 }
 
-return lowerkeys({ ["MBLTurret"] = MBLTurret })
+return lowerkeys({ ["Turret_LPL"] = Turret_LPL })
