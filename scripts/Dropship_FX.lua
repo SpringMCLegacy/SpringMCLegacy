@@ -70,9 +70,14 @@ for i = 1,4 do
 	dusts[i] = piece("dust" .. i + 1)
 end
 
+-- localised functions
+-- SyncedCtrl
+local SpawnCEG = Spring.SpawnCEG
 -- Constants
 local DROP_HEIGHT = 10000
 local GRAVITY = 120/Game.gravity * 1.3
+local X, _, Z = Spring.GetUnitPosition(unitID)
+local GY = Spring.GetGroundHeight(X, Z)
 
 -- Variables
 local stage = 0
@@ -99,7 +104,8 @@ local function fx()
 	while stage == 3 do
 		-- Dust clouds and continue rocket burn? (reduced?)
 		-- EmitSfx(exhaustlarge, SOME_SMALLER_BIGASS_ROCKET)
-		EmitSfx(dustlarge, 1029)
+		--EmitSfx(dustlarge, 1029)
+		SpawnCEG("dropship_heavy_dust", X, GY, Z) -- Use SpawnCEG for ground FX :)
 		EmitSfx(exhaustlarge, 1028)
 		for i = 1, 4 do
 			--EmitSfx(exhausts[i], SMALLER_ROCKET)
@@ -150,9 +156,7 @@ end
 
 function script.Create()
 	Spring.MoveCtrl.Enable(unitID)
-	local x,y,z = Spring.GetUnitPosition(unitID)
-	local gy = Spring.GetGroundHeight(x, z)
-	Spring.MoveCtrl.SetPosition(unitID, x, gy + DROP_HEIGHT, z)
+	Spring.MoveCtrl.SetPosition(unitID, X, GY + DROP_HEIGHT, Z)
 	--Spring.MoveCtrl.SetVelocity(unitID, 0, -100, 0)
 	
 	local SPEED = 0
@@ -171,25 +175,23 @@ function script.Create()
 	stage = 1
 	StartThread(fx)
 	
-	local x, y, z = Spring.GetUnitPosition(unitID)
-	local gy = Spring.GetGroundHeight(x, z)
-	while y - gy > 2500 do
+	local _, y, _ = Spring.GetUnitPosition(unitID)
+	while y - GY > 2500 do
 		Sleep(120)
-		x, y, z = Spring.GetUnitPosition(unitID)
+		_, y, _ = Spring.GetUnitPosition(unitID)
 	end
 	stage = 2
 	Spring.Echo("ROCKET FULL BURN NOW!")
 	Spring.MoveCtrl.SetGravity(unitID, 0) ---3.9 * GRAVITY)
 	
 	StartThread(LandingGear)
-	while y - gy > 925 do
+	while y - GY > 925 do
 	--local _, sy, _ = Spring.GetUnitVelocity(unitID)
 	--while -sy > 5 do
 		Sleep(120)
-		x, y, z = Spring.GetUnitPosition(unitID)
+		_, y, _ = Spring.GetUnitPosition(unitID)
 		_, sy, _ = Spring.GetUnitVelocity(unitID)
 		Spring.MoveCtrl.SetVelocity(unitID, 0, sy * 0.9, 0)
-		--Spring.Echo(y - gy)
 	end
 	stage = 3
 	Spring.MoveCtrl.SetGravity(unitID, -0.01 * GRAVITY)
