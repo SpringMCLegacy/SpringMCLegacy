@@ -63,21 +63,21 @@ for name, ud in pairs(UnitDefs) do
 	--ud.nochasecategory = (ud.nochasecategory or "") .. " all"
 	-- set buildtimes based on walking speed, so units roll off the ramp at their correct speed
 	local speed = (ud.maxvelocity or 0) * 30
-	if speed > 0 then
+	if speed > 0 or ud.canfly then
 		if ud.customparams.unittype == "mech" then
 			ud.buildtime = RAMP_DISTANCE / speed
 			ud.usepiececollisionvolumes = true
 			ud.losemitheight = ud.mass / 100
 			ud.radaremitheight = ud.mass / 100
 			if ud.customparams.hasbap == "true" then
-				Spring.Echo("I HAVE BAPS SNICKER")
 				ud.losemitheight = 10000000
 				ud.radaremitheight = 10000000
 			end
-		elseif ud.canfly then
-			ud.buildtime = HANGAR_DISTANCE / (speed * 0.5)
 		elseif ud.customparams.unittype == "vehicle" then
 			ud.usepiececollisionvolumes = true
+			if ud.canfly then
+				ud.buildtime = HANGAR_DISTANCE / (speed * 0.5)
+			end
 		end
 	end
 	-- set maxvelocity by modoption
