@@ -107,14 +107,13 @@ local function fx()
 		Sleep(5)
 	end
 	if stage == 4 then
-		Spring.Echo("BABABABABA")
 		local REST = 10
 		local RETURN = 6
-		Move(hull, y_axis, -REST, REST)
-		Move(gear1_joint, y_axis, REST, REST)
-		Move(gear2_joint, y_axis, REST, REST)
-		Move(gear3_joint, y_axis, REST, REST)
-		Move(gear4_joint, y_axis, REST, REST)
+		Move(hull, y_axis, -REST, 2 * REST)
+		Move(gear1_joint, y_axis, REST, 2 * REST)
+		Move(gear2_joint, y_axis, REST, 2 * REST)
+		Move(gear3_joint, y_axis, REST, 2 * REST)
+		Move(gear4_joint, y_axis, REST, 2 * REST)
 		WaitForMove(hull, y_axis)
 		Move(hull, y_axis, -RETURN, RETURN)
 		Move(gear1_joint, y_axis, RETURN, RETURN)
