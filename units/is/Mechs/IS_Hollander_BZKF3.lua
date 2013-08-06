@@ -40,7 +40,7 @@ local IS_Hollander_BZKF3 = {
 				name	= "Gauss",
 				--mainDir = "0 0 1",
 				--maxAngleDif = 270,
-				OnlyTargetCategory = "notbeacon",
+				OnlyTargetCategory = "ground",
 			},
 		},
     customparams = {

@@ -40,7 +40,7 @@ local IS_Atlas_AS7D = {
 				name	= "AC20",
 				--mainDir = "0 0 1",
 				--maxAngleDif = 270,
-				OnlyTargetCategory = "notbeacon",
+				OnlyTargetCategory = "ground",
 			},
 			[2] = {
 				name	= "MBL",
@@ -60,14 +60,14 @@ local IS_Atlas_AS7D = {
 				name	= "MBL",
 				--mainDir = "0 0 1",
 				--maxAngleDif = 270,
-				OnlyTargetCategory = "notbeacon",
+				OnlyTargetCategory = "ground",
 				SlaveTo = 1,
 			},
 			[5] = {
 				name	= "MBL",
 				--mainDir = "0 0 1",
 				--maxAngleDif = 240,
-				OnlyTargetCategory = "notbeacon",
+				OnlyTargetCategory = "ground",
 				SlaveTo = 1,
 			},
 			[6] = {

@@ -40,7 +40,7 @@ local IS_Hollander_BZKG1 = {
 				name	= "LBX10",
 				--mainDir = "0 0 1",
 				--maxAngleDif = 270,
-				OnlyTargetCategory = "notbeacon",
+				OnlyTargetCategory = "ground",
 			},
 			[2] = {
 				name	= "MBL",

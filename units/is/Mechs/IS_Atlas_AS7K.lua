@@ -40,7 +40,7 @@ local IS_Atlas_AS7K = {
 				name	= "Gauss",
 				--mainDir = "0 0 1",
 				--maxAngleDif = 270,
-				OnlyTargetCategory = "notbeacon",
+				OnlyTargetCategory = "ground",
 			},
 			[2] = {
 				name	= "ERLBL",
@@ -60,14 +60,14 @@ local IS_Atlas_AS7K = {
 				name	= "MPL",
 				--mainDir = "0 0 1",
 				--maxAngleDif = 270,
-				OnlyTargetCategory = "notbeacon",
+				OnlyTargetCategory = "ground",
 				SlaveTo = 1,
 			},
 			[5] = {
 				name	= "MPL",
 				--mainDir = "0 0 1",
 				--maxAngleDif = 240,
-				OnlyTargetCategory = "notbeacon",
+				OnlyTargetCategory = "ground",
 				SlaveTo = 1,
 			},
 			[6] = {

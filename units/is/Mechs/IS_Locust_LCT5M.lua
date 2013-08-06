@@ -40,7 +40,7 @@ local IS_Locust_LCT5M = {
 				name	= "ERMBL",
 				--mainDir = "0 0 1",
 				--maxAngleDif = 180,
-				OnlyTargetCategory = "notbeacon",
+				OnlyTargetCategory = "ground",
 			},
 			[2] = {
 				name	= "ERSBL",

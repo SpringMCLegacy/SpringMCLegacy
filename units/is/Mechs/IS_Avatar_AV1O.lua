@@ -59,14 +59,14 @@ local IS_Avatar_AV1O = {
 				name	= "MBL",
 				--mainDir = "0 0 1",
 				--maxAngleDif = 270,
-				OnlyTargetCategory = "notbeacon",
+				OnlyTargetCategory = "ground",
 				SlaveTo = 1,
 			},
 			[5] = {
 				name	= "MBL",
 				--mainDir = "0 0 1",
 				--maxAngleDif = 270,
-				OnlyTargetCategory = "notbeacon",
+				OnlyTargetCategory = "ground",
 				SlaveTo = 1,
 			},
 			[6] = {

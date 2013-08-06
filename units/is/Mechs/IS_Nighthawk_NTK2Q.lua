@@ -53,7 +53,7 @@ local IS_Nighthawk_NTK2Q = {
 				name	= "MPL",
 				--mainDir = "0 0 1",
 				--maxAngleDif = 220,
-				OnlyTargetCategory = "notbeacon",
+				OnlyTargetCategory = "ground",
 				SlaveTo = 1,
 			},
 		},
