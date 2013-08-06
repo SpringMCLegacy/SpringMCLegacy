@@ -95,6 +95,7 @@ local function fx()
 	-- Rocket Burn
 	while stage == 2 do
 		EmitSfx(exhaustlarge, 1027)
+		EmitSfx(exhaustlarge, 1030)
 		for i = 1, 4 do
 			--EmitSfx(exhausts[i], SMALLER_ROCKET)
 		end
