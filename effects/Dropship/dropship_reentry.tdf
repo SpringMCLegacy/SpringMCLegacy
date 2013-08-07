@@ -1,6 +1,87 @@
 [dropship_reentry]
 {
 	usedefaultexplosions=0;	
+[steam1]
+	{
+		class=CSimpleParticleSystem;
+		[properties]
+		{
+		sizeGrowth=0.50;
+		sizeMod=1.0;
+		pos=0, 1, 0; 
+		gravity=0, 0.1, 0;
+		
+
+		Texture=GenericSmokeCloud;
+		airdrag=0.87;
+		colorMap=1 1 1 0.01 0.8 0.8 0.8 0.01 0.0 0.0 0.0 0.01;
+
+		particleLifeSpread=15; 
+		particleSpeedSpread=5;  
+		particleSizeSpread=1;   
+		
+		particleLife=15;
+		numParticles=4; 
+		particleSpeed=80; 
+		particleSize=5;
+		
+		
+		emitVector=0, 1, 0; 
+		emitRot=180;
+		emitRotSpread=20; 
+		directional=0; 
+		
+
+		}
+	air=1;
+	water=1;
+	ground=1;
+	count=1;
+	}
+
+[steam2]
+	{
+		class=CSimpleParticleSystem;
+		[properties]
+		{
+		sizeGrowth=0.50;
+		sizeMod=1.0;
+		pos=0, 1, 0; 
+		gravity=0, 0.1, 0;
+		
+
+		Texture=GenericSmokeCloud;
+		airdrag=0.87;
+		colorMap=1 1 1 0.05 0.8 0.8 0.8 0.02 0.0 0.0 0.0 0.01;
+
+		particleLifeSpread=50; 
+		particleSpeedSpread=10;  
+		particleSizeSpread=1;   
+		
+		particleLife=10;
+		numParticles=4; 
+		particleSpeed=80; 
+		particleSize=8;
+		
+		
+		emitVector=0, 1, 0; 
+		emitRot=180;
+		emitRotSpread=20; 
+		directional=0; 
+		
+
+		}
+	air=1;
+	water=1;
+	ground=1;
+	count=1;
+	}
+}
+
+
+[dropship_reentry_old]
+{
+	usedefaultexplosions=0;	
 [exhale]
 	{
 		class=CSimpleParticleSystem;
