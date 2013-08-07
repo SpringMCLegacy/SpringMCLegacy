@@ -91,7 +91,8 @@ local function fx()
 	-- Free fall
 	while stage == 1 do
 		-- Some reentry glow here?
-		Sleep(5)
+		EmitSfx(dustlarge, 1032)
+		Sleep(32)
 	end
 	-- Rocket Burn
 	while stage == 2 do
