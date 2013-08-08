@@ -3,7 +3,7 @@ weaponDef = {
 	
 	weaponType              = "BeamLaser",
 	beamLaser				= true,
-	explosionGenerator    	= "custom:Laser_Small",
+	explosionGenerator		= "custom:burn",
 --	soundHit              	= [[GEN_Pulse_Explode1]],
 	soundStart           	= [[SPL_Fire]],
 	burnblow				= true, 	--Bullets explode at range limit.
