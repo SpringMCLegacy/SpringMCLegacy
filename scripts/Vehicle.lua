@@ -117,7 +117,9 @@ end
 
 local function RestoreAfterDelay(unitID)
 	Sleep(RESTORE_DELAY)
-	Turn(turret, y_axis, 0, TURRET_SPEED)
+	if turret then
+		Turn(turret, y_axis, 0, TURRET_SPEED)
+	end
 	for id in pairs(mantlets) do
 		Turn(mantlets[id], x_axis, 0, ELEVATION_SPEED)
 	end
@@ -247,8 +249,8 @@ function hideLimbPieces(limb)
 				Spring.Echo(unitDef.humanName .. ": " .. weapDef.name .. " destroyed!")
 			end
 		end
-	else -- asumme limb is a wing
-		local wingPiece = piece(limb) -- asuume pieces are lwing rwing
+	else -- asumme limb is a wing or rotor
+		local wingPiece = piece(limb) -- asuume pieces are lwing, rwing, rotor
 		RecursiveHide(wingPiece)
 		EmitSfx(wingPiece, SFX.CEG + info.numWeapons + 1)
 		Explode(wingPiece, SFX.FIRE + SFX.SMOKE)
@@ -277,13 +279,13 @@ function script.HitByWeapon(x, z, weaponID, damage)
 	currHeatLevel = currHeatLevel + heatDamage
 	SetUnitRulesParam(unitID, "heat", currHeatLevel)
 	local hitPiece = GetUnitLastAttackedPiece(unitID) or ""
-	--Spring.Echo("HIT ON ", hitPiece)
+	Spring.Echo("HIT ON ", hitPiece)
 	if hitPiece == "body" then 
 		return damage
 	elseif hitPiece == "turret" or hitPiece == "launcher_1" or hitPiece == "turret_2" then
 		--deduct Turret HP
 		limbHPControl("turret", damage)
-	elseif hitPiece == "lwing" or hitPiece == "rwing" then
+	elseif hitPiece == "lwing" or hitPiece == "rwing" or hitPiece == "rotor" then
 		limbHPControl(hitPiece, damage) -- asumes wings are single pieces
 	end
 	return 0
@@ -346,7 +348,7 @@ function script.AimWeapon(weaponID, heading, pitch)
 	-- use a weapon-specific turret if it exists
 	if turrets[weaponID] then
 		Turn(turrets[weaponID], y_axis, heading, TURRET_2_SPEED)
-	else -- otherwise use main
+	elseif turret then -- otherwise use main
 		Turn(turret, y_axis, heading, TURRET_SPEED)
 	end
 	if mantlets[weaponID] then
@@ -364,7 +366,7 @@ function script.AimWeapon(weaponID, heading, pitch)
 	end
 	if turrets[weaponID] then
 		WaitForTurn(turrets[weaponID], y_axis)
-	else
+	elseif turret then 
 		WaitForTurn(turret, y_axis) -- CL_Mars shouldn't really wait here for missiles
 	end
 	if mantlets[weaponID] then
