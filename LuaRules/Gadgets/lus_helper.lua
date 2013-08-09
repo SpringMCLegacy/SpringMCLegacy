@@ -174,6 +174,7 @@ function gadget:GamePreload()
 		local ammoTypes = {}
 		local minRanges = {}
 		local spinSpeeds = {}
+		local flareOnShots = {}
 		for i = 1, #weapons do
 			local weaponInfo = weapons[i]
 			local weaponDef = WeaponDefs[weaponInfo.weaponDef]
@@ -190,9 +191,11 @@ function gadget:GamePreload()
 				info.amsID = i
 			end
 			jammableIDs[i] = (tonumber(weaponDef.customParams.jammable) == 1)
+			flareOnShots[i] = (tonumber(weaponDef.customParams.flareonshot) == 1)
 		end
 		-- WeaponDef Level Info
 		info.missileWeaponIDs = missileWeaponIDs
+		info.flareOnShots = flareOnShots
 		info.reloadTimes = reloadTimes
 		info.burstLengths = burstLengths
 		info.firingHeats = firingHeats
