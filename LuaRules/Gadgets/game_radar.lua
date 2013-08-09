@@ -43,6 +43,8 @@ local inRadarUnits = {}
 local outRadarUnits = {}
 local allyJammers = {}
 
+local givenUnits = {} -- hack
+
 local allyTeams = Spring.GetAllyTeamList()
 local numAllyTeams = #allyTeams
 
@@ -78,6 +80,12 @@ local function IsUnitTAGed(unitID)
 end
 GG.IsUnitTAGed = IsUnitTAGed
 
+local function ResetLosStates(unitID, allyTeam)
+	local radarState = GetUnitLosState(unitID, allyTeam).radar
+	SetUnitLosState(unitID, allyTeam, {los = radarState})
+	SetUnitLosMask(unitID, allyTeam, {los=radarState, prevLos=radarState, radar=false, contRadar=false} )
+end
+
 local function NARC(unitID, allyTeam, duration)
 	local narcFrame = GetGameFrame() + duration
 	narcUnits[unitID] = {frame = narcFrame, allyTeam = allyTeam}
@@ -92,9 +100,7 @@ local function DeNARC(unitID, allyTeam, force)
 		narcUnits[unitID] = nil
 		-- unset rules param
 		SetUnitRulesParam(unitID, "NARC", -1, {inlos = true})
-		local radarState = GetUnitLosState(unitID, allyTeam).radar
-		SetUnitLosState(unitID, allyTeam, {los = radarState})
-		SetUnitLosMask(unitID, allyTeam, {los=radarState, prevLos=radarState, radar=false, contRadar=false} )
+		ResetLosStates(unitID, allyTeam)
 	end
 end
 
@@ -105,7 +111,7 @@ function gadget:UnitEnteredRadar(unitID, unitTeam, allyTeam, unitDefID)
 end
 
 function gadget:UnitLeftRadar(unitID, unitTeam, allyTeam, unitDefID)
-	--Spring.Echo(UnitDefs[unitDefID].name .. " left radar " .. allyTeam)
+	--Spring.Echo(UnitDefs[unitDefID].name .. " left radar " .. allyTeam, givenUnits[unitID])
 	outRadarUnits[allyTeam][unitID] = true
 	inRadarUnits[allyTeam][unitID] = nil
 end
@@ -148,6 +154,21 @@ function gadget:UnitDestroyed(unitID, unitDefID, teamID)
 	narcUnits[unitID] = nil
 end
 
+function gadget:UnitGiven(unitID, unitDefID, newTeam, oldTeam)
+	--Spring.Echo("Unit Given: " .. unitID)
+	givenUnits[unitID] = true
+	for i = 1, numAllyTeams do
+		local allyTeam = allyTeams[i]
+		DelayCall(ResetLosStates, {unitID, allyTeam}, 2)
+	end
+end
+
+--[[function gadget:AllowUnitTransfer(unitID, unitDefID, oldTeam, newTeam, capture)
+	Spring.Echo("Allow Unit Given: " .. unitID)
+	return true
+end]]
+
+
 function gadget:GameFrame(n)
 	for i = 1, numAllyTeams do
 		local allyTeam = allyTeams[i]
@@ -170,6 +191,7 @@ function gadget:GameFrame(n)
 			if GetUnitUnderJammer(unitID, teamID) then DeNARC(unitID, data.allyTeam, true) end
 		end]]
 	end
+	givenUnits = {}
 end
 
 else
