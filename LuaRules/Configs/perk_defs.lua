@@ -158,7 +158,7 @@ return {
 		valid = function (unitDefID) return hasWeaponClass(unitDefID, "energy") end,
 		applyPerk = function (unitID) 
 			--Spring.Echo("Energy range selected") 
-			setWeaponClassAttribute(unitID, "energy", "range", 0.5)
+			setWeaponClassAttribute(unitID, "energy", "range", 1.5)
 		end,
 	},
 	projectilerange = {
