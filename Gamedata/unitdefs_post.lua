@@ -70,8 +70,9 @@ for name, ud in pairs(UnitDefs) do
 			ud.losemitheight = ud.mass / 100
 			ud.radaremitheight = ud.mass / 100
 			if ud.customparams.hasbap == "true" then
-				ud.losemitheight = 10000000
-				ud.radaremitheight = 10000000
+				Spring.Echo(name, ud.mass / 100)
+				--ud.losemitheight = 1000
+				ud.radaremitheight = 1000
 			end
 		elseif ud.customparams.unittype == "vehicle" then
 			ud.usepiececollisionvolumes = true
