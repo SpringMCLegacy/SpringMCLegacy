@@ -32,6 +32,7 @@ local coolRate = baseCoolRate
 local inWater = false
 
 local missileWeaponIDs = info.missileWeaponIDs
+local flareOnShots = info.flareOnShots
 local jammableIDs = info.jammableIDs
 local launcherIDs = info.launcherIDs
 local barrelRecoils = info.barrelRecoilDist
@@ -446,7 +447,7 @@ function script.FireWeapon(weaponID)
 	if ammoType then
 		ChangeAmmo(ammoType, -burstLengths[weaponID])
 	end
-	if not missileWeaponIDs[weaponID] and weaponID ~= amsID then
+	if not missileWeaponIDs[weaponID] and not flareOnShots[weaponID] then
 		EmitSfx(flares[weaponID], SFX.CEG + weaponID)
 	end
 end
@@ -458,6 +459,8 @@ function script.Shot(weaponID)
         if currPoints[weaponID] > burstLengths[weaponID] then 
 			currPoints[weaponID] = 1
         end
+	elseif flareOnShots[weaponID] then
+		EmitSfx(flares[weaponID], SFX.CEG + weaponID)
 	end
 end
 

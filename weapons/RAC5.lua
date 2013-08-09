@@ -34,6 +34,7 @@ weaponDef = {
 		weaponclass			= "projectile",
 		ammotype			= "ac5",
 		spinspeed			= "600",
+		flareonshot 		= true,
     },	
 }
 

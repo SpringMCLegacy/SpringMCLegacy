@@ -30,6 +30,7 @@ weaponDef = {
 		--heatgenerated		= "0",--0/s
 		cegflare			= "MG_MUZZLEFLASH",
 		weaponclass			= "projectile",
+		flareonshot 		= true,
     },
 	
 	
