@@ -25,7 +25,7 @@ local GetActiveCommand		= Spring.GetActiveCommand
 local GetSelectedUnits		= Spring.GetSelectedUnits
 
 local AttackRed = {1.0, 0.2, 0.2, 0.7}
-local BuildGreen = {0.3, 1.0, 0.3, 0.5}
+local BuildGreen = {0.3, 1.0, 0.3, 0.5} -- doesn't match engine for some reason so make less opaque
 
 local minRanges = {} -- minRange[unitDefID] = {weapName = range, ...}
 local buildRanges = {} -- buildRange[unitDefID] = minRange
@@ -79,7 +79,7 @@ function widget:DrawWorldPreUnit()
 					gl.PopMatrix()
 				end
 			end
-		elseif UnitDefNames[select(4, GetActiveCommand())] then -- ewwww
+		elseif UnitDefNames[select(4, GetActiveCommand())] then -- command is a valid unitname i.e. build command
 			rangesToDraw = buildRanges[unitDefID]
 			if rangesToDraw then
 				local x, y, z = GetUnitPosition(unitID)

@@ -105,7 +105,7 @@ function script.AimWeapon(weaponID, heading, pitch)
 	if mantlets[weaponID] then
 		WaitForTurn(mantlets[weaponID], x_axis)
 	end
-	Sleep(100 * weaponID)
+	Sleep(100 * weaponID) -- desync barrels to fire independently
 	return true
 end
 

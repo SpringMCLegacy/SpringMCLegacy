@@ -43,8 +43,6 @@ local inRadarUnits = {}
 local outRadarUnits = {}
 local allyJammers = {}
 
-local givenUnits = {} -- hack
-
 local allyTeams = Spring.GetAllyTeamList()
 local numAllyTeams = #allyTeams
 
@@ -111,7 +109,7 @@ function gadget:UnitEnteredRadar(unitID, unitTeam, allyTeam, unitDefID)
 end
 
 function gadget:UnitLeftRadar(unitID, unitTeam, allyTeam, unitDefID)
-	--Spring.Echo(UnitDefs[unitDefID].name .. " left radar " .. allyTeam, givenUnits[unitID])
+	--Spring.Echo(UnitDefs[unitDefID].name .. " left radar " .. allyTeam)
 	outRadarUnits[allyTeam][unitID] = true
 	inRadarUnits[allyTeam][unitID] = nil
 end
@@ -156,18 +154,11 @@ end
 
 function gadget:UnitGiven(unitID, unitDefID, newTeam, oldTeam)
 	--Spring.Echo("Unit Given: " .. unitID)
-	givenUnits[unitID] = true
 	for i = 1, numAllyTeams do
 		local allyTeam = allyTeams[i]
 		DelayCall(ResetLosStates, {unitID, allyTeam}, 2)
 	end
 end
-
---[[function gadget:AllowUnitTransfer(unitID, unitDefID, oldTeam, newTeam, capture)
-	Spring.Echo("Allow Unit Given: " .. unitID)
-	return true
-end]]
-
 
 function gadget:GameFrame(n)
 	for i = 1, numAllyTeams do
@@ -191,7 +182,6 @@ function gadget:GameFrame(n)
 			if GetUnitUnderJammer(unitID, teamID) then DeNARC(unitID, data.allyTeam, true) end
 		end]]
 	end
-	givenUnits = {}
 end
 
 else
