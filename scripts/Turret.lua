@@ -105,6 +105,7 @@ function script.AimWeapon(weaponID, heading, pitch)
 	if mantlets[weaponID] then
 		WaitForTurn(mantlets[weaponID], x_axis)
 	end
+	Sleep(100 * weaponID)
 	return true
 end
 
