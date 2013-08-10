@@ -222,9 +222,9 @@ function PlaceFlag(spot, flagType)
 	flagCapStatuses[newFlag] = {}
 	
 	SetUnitNeutral(newFlag, true)
-	if flagType == "beacon" then -- ugly
+	--[[if flagType == "beacon" then -- ugly
 		SetUnitNoSelect(newFlag, true)
-	end
+	end]]
 	SetUnitAlwaysVisible(newFlag, true)
 	
 	local squareSize = 100

@@ -4,6 +4,8 @@ local dirt = piece ("dirt")
 local rocket = piece("rocket")
 local blink = piece("blink")
 
+Spring.SetUnitNanoPieces(unitID, {base})
+
 local flaps = {}
 for i = 1, 4 do
 	flaps[i] = piece("flap" .. i)
@@ -96,6 +98,7 @@ function script.Create()
 	
 	stage = 0
 	StartThread(fx) -- restart for blink
+	SetUnitValue(COB.INBUILDSTANCE, 1)
 end
 
 function script.Killed(recentDamage, maxHealth)

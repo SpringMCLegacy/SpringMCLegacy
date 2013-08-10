@@ -47,6 +47,9 @@ local IS_DROPSHIP_BUILDOPTIONS = {}
 local CL_DROPSHIP_UD
 local CL_DROPSHIP_BUILDOPTIONS = {}
 
+local BEACON_UD
+local BEACON_BUILDOPTIONS = {}
+
 for name, ud in pairs(UnitDefs) do
 	-- convert all customparams subtables back into strings for Spring
 	if ud.customparams then
@@ -70,7 +73,6 @@ for name, ud in pairs(UnitDefs) do
 			ud.losemitheight = ud.mass / 100
 			ud.radaremitheight = ud.mass / 100
 			if ud.customparams.hasbap == "true" then
-				Spring.Echo(name, ud.mass / 100)
 				--ud.losemitheight = 1000
 				ud.radaremitheight = 1000
 			end
@@ -103,6 +105,7 @@ for name, ud in pairs(UnitDefs) do
 		ud.seismicsignature = 0
 	end
 	
+	if not ud.buildpic then ud.buildpic = "cl_bashkir.png" end
 	
 	-- Automatically build dropship buildmenus
 	if ud.customparams.unittype == "mech" then
@@ -111,9 +114,14 @@ for name, ud in pairs(UnitDefs) do
 		elseif name:sub(1, 2) == "cl" then
 			table.insert(CL_DROPSHIP_BUILDOPTIONS, name)
 		end
+	elseif name:find("turret") then
+		Spring.Echo("FOUND TURRET", name)
+		table.insert(BEACON_BUILDOPTIONS, name)
 	end
 	if name == "is_dropship" then IS_DROPSHIP_UD = ud end
 	if name == "cl_dropship" then CL_DROPSHIP_UD = ud end
+	if name == "beacon" then BEACON_UD = ud Spring.Echo("FOUND BEACON", ud) end
 end
 IS_DROPSHIP_UD["buildoptions"] = IS_DROPSHIP_BUILDOPTIONS
 CL_DROPSHIP_UD["buildoptions"] = CL_DROPSHIP_BUILDOPTIONS
+BEACON_UD["buildoptions"] = BEACON_BUILDOPTIONS
