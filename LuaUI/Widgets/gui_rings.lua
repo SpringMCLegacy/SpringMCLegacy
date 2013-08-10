@@ -25,8 +25,10 @@ local GetActiveCommand		= Spring.GetActiveCommand
 local GetSelectedUnits		= Spring.GetSelectedUnits
 
 local AttackRed = {1.0, 0.2, 0.2, 0.7}
+local BuildGreen = {0.3, 1.0, 0.3, 0.5}
 
 local minRanges = {} -- minRange[unitDefID] = {weapName = range, ...}
+local buildRanges = {} -- buildRange[unitDefID] = minRange
 
 function widget:Initialize()
 	-- Change default command menu font
@@ -48,6 +50,10 @@ function widget:Initialize()
 				minRanges[unitDefID][weaponDef.name] = minRange
 			end
 		end
+		local buildRange = unitDef.customParams.minbuildrange or nil
+		if buildRange then
+			buildRanges[unitDefID] = buildRange
+		end
 	end
 	-- Setup fonts for drawing
 	btFont = gl.LoadFont("LuaUI/Fonts/bt_oldstyle.ttf", 24, 2, 30)
@@ -57,10 +63,10 @@ function widget:Initialize()
 end
 
 function widget:DrawWorldPreUnit()
-	if select(4, GetActiveCommand()) == "Attack" then
-		glColor(AttackRed)
-		for _,unitID in ipairs(GetSelectedUnits()) do
-			local unitDefID = GetUnitDefID(unitID)
+	for _,unitID in ipairs(GetSelectedUnits()) do
+		local unitDefID = GetUnitDefID(unitID)
+		if select(4, GetActiveCommand()) == "Attack" then
+			glColor(AttackRed)
 			local rangesToDraw = minRanges[unitDefID]
 			if rangesToDraw then
 				local x, y, z = GetUnitPosition(unitID)
@@ -72,6 +78,15 @@ function widget:DrawWorldPreUnit()
 					btFont:Print("Min Range: " .. weapName, 0, 0, 24, "c")
 					gl.PopMatrix()
 				end
+			end
+		elseif UnitDefNames[select(4, GetActiveCommand())] then -- ewwww
+			rangesToDraw = buildRanges[unitDefID]
+			if rangesToDraw then
+				local x, y, z = GetUnitPosition(unitID)
+				glColor(BuildGreen)
+				gl.PushMatrix()
+					glDrawGroundCircle(x,y,z, rangesToDraw,24)
+				gl.PopMatrix()
 			end
 		end
 		glColor(1,1,1,1)
