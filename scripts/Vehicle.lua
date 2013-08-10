@@ -25,6 +25,7 @@ local heatLimit = info.heatLimit
 local coolRate = info.coolRate * 2
 local inWater = false
 local missileWeaponIDs = info.missileWeaponIDs
+local flareOnShots = info.flareOnShots
 local jammableIDs = info.jammableIDs
 local launcherIDs = info.launcherIDs
 local barrelRecoils = info.barrelRecoilDist
@@ -382,7 +383,7 @@ function script.BlockShot(weaponID, targetID, userTarget)
 		if targetID then
 			local jammed = GetUnitUnderJammer(targetID) and (not IsUnitNARCed(targetID))
 			if jammed then
-				Spring.Echo("Can't fire weapon " .. weaponID .. " as target is jammed")
+				--Spring.Echo("Can't fire weapon " .. weaponID .. " as target is jammed")
 				return true 
 			end
 		end
@@ -416,7 +417,7 @@ function script.FireWeapon(weaponID)
 	if ammoType then
 		ChangeAmmo(ammoType, -burstLengths[weaponID])
 	end
-	if not missileWeaponIDs[weaponID] and weaponID ~= amsID then
+	if not missileWeaponIDs[weaponID] and not flareOnShots[weaponID] then
 		EmitSfx(flares[weaponID], SFX.CEG + weaponID)
 	end
 end
@@ -428,6 +429,8 @@ function script.Shot(weaponID)
         if currPoints[weaponID] > burstLengths[weaponID] then 
 			currPoints[weaponID] = 1
         end
+	elseif flareOnShots[weaponID] then
+		EmitSfx(flares[weaponID], SFX.CEG + weaponID)
 	end
 end
 

@@ -25,7 +25,6 @@ local GetUnitDistanceToPoint = GG.GetUnitDistanceToPoint
 local BEACON_ID = UnitDefNames["beacon"].id
 local MIN_BUILD_RANGE = tonumber(UnitDefNames["beacon"].customParams.minbuildrange) or 230
 local MAX_BUILD_RANGE = UnitDefNames["beacon"].buildDistance
-Spring.Echo(MAX_BUILD_RANGE)
 
 function gadget:AllowCommand(unitID, unitDefID, teamID, cmdID, cmdParams, cmdOptions)
 	if unitDefID == BEACON_ID and cmdID < 0 then
