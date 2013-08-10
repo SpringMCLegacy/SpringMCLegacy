@@ -105,8 +105,6 @@ for name, ud in pairs(UnitDefs) do
 		ud.seismicsignature = 0
 	end
 	
-	if not ud.buildpic then ud.buildpic = "cl_bashkir.png" end
-	
 	-- Automatically build dropship buildmenus
 	if ud.customparams.unittype == "mech" then
 		if name:sub(1, 2) == "is" then
@@ -115,7 +113,6 @@ for name, ud in pairs(UnitDefs) do
 			table.insert(CL_DROPSHIP_BUILDOPTIONS, name)
 		end
 	elseif name:find("turret") then
-		Spring.Echo("FOUND TURRET", name)
 		table.insert(BEACON_BUILDOPTIONS, name)
 	end
 	if name == "is_dropship" then IS_DROPSHIP_UD = ud end
