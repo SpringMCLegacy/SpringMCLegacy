@@ -38,6 +38,9 @@ weaponDef = {
 	damage = {
 		default = 10,--1 DPS
 	},
+	customparams = {
+		cegflare			= "LASER_MUZZLEFLASH",
+	},
 
 }
 
