@@ -44,6 +44,8 @@ for weapName, wd in pairs(WeaponDefs) do
 			wd.customparams.jammable = true
 			--Spring.Echo(weapName .. " is a jammable missile")
 		end
+	elseif wd.weapontype == "BeamLaser" or cp and cp.ammotype == "gauss" then -- lasers and gauss are impactOnly
+		wd.impactonly = true
 	end
 end
 
