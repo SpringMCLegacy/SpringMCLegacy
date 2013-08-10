@@ -114,6 +114,7 @@ for name, ud in pairs(UnitDefs) do
 		end
 	elseif name:find("turret") then
 		table.insert(BEACON_BUILDOPTIONS, name)
+		ud.buildpic = "cl_donar.png"
 	end
 	if name == "is_dropship" then IS_DROPSHIP_UD = ud end
 	if name == "cl_dropship" then CL_DROPSHIP_UD = ud end
