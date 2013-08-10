@@ -29,6 +29,7 @@ local beacon = {
 		
 	-- Constructor stuff
 	builder				= true,
+	builddistance 		= 460,
 	workerTime			= 10, -- ?	
 	--[[sfxtypes = {
 		explosiongenerators = {"custom:reentry_fx", "custom:JumpJetTrail"},
@@ -37,6 +38,7 @@ local beacon = {
 	customparams = {
 		dontcount		= 1,
 		helptext		= "A Beacon indicating a strategically important location.",
+		minbuildrange	= 230,
     },
 	
 	sounds = {
