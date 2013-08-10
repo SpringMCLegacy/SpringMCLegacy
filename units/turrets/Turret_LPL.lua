@@ -50,7 +50,8 @@ local Turret_LPL = {
 		supplyradius	= "0",
 		flagdefendrate	= "100",
 		helptext		= "An auto-spawning defensive turret for Garrisons.",
-		barrelrecoildist = "{[1] = 5}",
+		turretturnspeed = "175",
+		elevationspeed  = "250",
     },
 	sounds = {
     underattack        = "Dropship_Alarm",

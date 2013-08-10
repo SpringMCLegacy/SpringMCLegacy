@@ -35,7 +35,8 @@ local Turret_LAMS = {
 		supplyradius	= "0",
 		flagdefendrate	= "100",
 		helptext		= "An auto-spawning defensive turret for Garrisons.",
-		turretturnspeed = 360,
+		turretturnspeed = "300",
+		elevationspeed  = "300",
     },
 	sounds = {
 		underattack        = "Dropship_Alarm",

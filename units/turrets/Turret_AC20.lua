@@ -36,6 +36,8 @@ local Turret_AC20 = {
 		flagdefendrate	= "100",
 		helptext		= "An auto-spawning defensive turret for Garrisons.",
 		barrelrecoildist = "{[1] = 5}",
+		turretturnspeed = "100",
+		elevationspeed  = "150",
     },
 	sounds = {
     underattack        = "Dropship_Alarm",

@@ -70,7 +70,7 @@ local IS_Partisan = {
 		helptext		= "Armament: 4 x AC/5 (Anti-Aircraft) - Armor: 7 tons",
 		heatlimit		= "20",
 		unittype		= "vehicle",
-		turretturnspeed = "120",
+		turretturnspeed = "250",
 		elevationspeed  = "300",
 		wheelspeed      = "200",
 		maxammo 		= {ac5 = 200},
