@@ -7,7 +7,7 @@ local beacon = {
 	category 			= "beacon",
 	sightDistance       = 0,
 	radarDistance      	= 0,
-		activateWhenBuilt   = true,
+	activateWhenBuilt   = true,
 	maxDamage           = 50000,
 	mass                = 1000,
 	footprintX			= 2,
@@ -26,6 +26,10 @@ local beacon = {
 	idleAutoHeal		= 0,
 	maxSlope			= 50,
 		movementClass   = "LARGEMECH",
+		
+	-- Constructor stuff
+	builder				= true,
+	workerTime			= 10, -- ?	
 	--[[sfxtypes = {
 		explosiongenerators = {"custom:reentry_fx", "custom:JumpJetTrail"},
 	},]]
