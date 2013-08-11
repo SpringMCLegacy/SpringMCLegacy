@@ -112,7 +112,7 @@ for name, ud in pairs(UnitDefs) do
 		elseif name:sub(1, 2) == "cl" then
 			table.insert(CL_DROPSHIP_BUILDOPTIONS, name)
 		end
-	elseif name:find("turret") then
+	elseif ud.customparams.towertype then
 		table.insert(BEACON_BUILDOPTIONS, name)
 		ud.buildpic = "cl_donar.png"
 	end
