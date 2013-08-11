@@ -27,10 +27,8 @@ local function setWeaponClassAttribute(unitID, className, attrib, multiplier)
 	for weapNum, weapTable in pairs(weapons) do
 		if WeaponDefs[weapTable["weaponDef"]].customParams["weaponclass"] == className then
 			local currAttrib = Spring.GetUnitWeaponState(unitID, weapNum, attrib)
-			Spring.Echo("Current " .. attrib .. ": ", currAttrib, weapNum, WeaponDefs[weapTable["weaponDef"]].name)
+			--Spring.Echo("Current " .. attrib .. ": ", currAttrib, weapNum, WeaponDefs[weapTable["weaponDef"]].name)
 			Spring.SetUnitWeaponState(unitID, weapNum, attrib, currAttrib * multiplier)
-			local currAttrib = Spring.GetUnitWeaponState(unitID, weapNum, attrib)
-			Spring.Echo("Current " .. attrib .. ": ", currAttrib, weapNum, WeaponDefs[weapTable["weaponDef"]].name)
 		end
 	end
 end

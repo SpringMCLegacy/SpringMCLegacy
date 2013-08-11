@@ -21,12 +21,14 @@ local EditUnitCmdDesc		= Spring.EditUnitCmdDesc
 local InsertUnitCmdDesc		= Spring.InsertUnitCmdDesc
 local FindUnitCmdDesc		= Spring.FindUnitCmdDesc
 local TransferUnit			= Spring.TransferUnit
+local SetUnitNeutral		= Spring.SetUnitNeutral
 
 -- GG
 local GetUnitDistanceToPoint = GG.GetUnitDistanceToPoint
 local DelayCall				 = GG.Delay.DelayCall
 
 -- Constants
+local GAIA_TEAM_ID = Spring.GetGaiaTeamID()
 local BEACON_ID = UnitDefNames["beacon"].id
 local MIN_BUILD_RANGE = tonumber(UnitDefNames["beacon"].customParams.minbuildrange) or 230
 local MAX_BUILD_RANGE = UnitDefNames["beacon"].buildDistance
@@ -53,7 +55,7 @@ function gadget:UnitCreated(unitID, unitDefID, teamID, builderID)
 	elseif cp and cp.towertype then
 		-- track creation of turrets and their originating beacons so we can give back slots if a turret dies
 		if builderID then -- ignore /give turrets
-			towerOwners[unitID] = builderID -- TODO: Opposite table also? e.g. towerSlaves[towerID] = {slave1ID, slave2ID...}
+			towerOwners[unitID] = builderID
 		end
 	end
 end
@@ -74,6 +76,13 @@ function gadget:UnitGiven(unitID, unitDefID, newTeam, oldTeam)
 		for towerID, beaconID in pairs(towerOwners) do
 			if beaconID == unitID then
 				DelayCall(TransferUnit, {towerID, newTeam}, 1)
+				local env = Spring.UnitScript.GetScriptEnv(towerID)
+				Spring.UnitScript.CallAsUnit(towerID, env.TeamChange, newTeam)
+				if newTeam == GAIA_TEAM_ID then
+					SetUnitNeutral(towerID, true)
+				else
+					SetUnitNeutral(towerID, false)
+				end
 			end
 		end
 	end

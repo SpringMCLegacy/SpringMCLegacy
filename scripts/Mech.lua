@@ -329,7 +329,7 @@ function StopTurn()
 end
 
 function script.StartMoving(reversing)
-	Spring.Echo("Reversing?", reversing)
+	--Spring.Echo("Reversing?", reversing)
 	StartThread(anim_Walk)
 end
 
