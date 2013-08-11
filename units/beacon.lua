@@ -31,6 +31,7 @@ local beacon = {
 	builder				= true,
 	builddistance 		= 460,
 	workerTime			= 10, -- ?	
+	terraformSpeed		= 10000,
 	showNanoSpray		= false,
 	--[[sfxtypes = {
 		explosiongenerators = {"custom:reentry_fx", "custom:JumpJetTrail"},
