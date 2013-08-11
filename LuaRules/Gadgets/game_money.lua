@@ -118,8 +118,8 @@ function gadget:GameFrame(n)
 					elseif weight > weightLeft then
 						EditUnitCmdDesc(unitID, cmdDescID, {disabled = true, params = {"T"}})
 					else
-						local disabled = GetUnitCmdDescs(unitID, cmdDescID, cmdDescID)[1]["disabled"]
-						if disabled then
+						local cmdDesc = GetUnitCmdDescs(unitID, cmdDescID, cmdDescID)[1]
+						if cmdDesc.disabled and cmdDesc.params[1] ~= "L" then -- don't clear build 'L'imited units
 							EditUnitCmdDesc(unitID, cmdDescID, {disabled = false, params = {}})
 						end
 					end

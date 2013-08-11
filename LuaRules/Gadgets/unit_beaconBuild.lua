@@ -17,6 +17,9 @@ if gadgetHandler:IsSyncedCode() then
 --SyncedRead
 
 --SyncedCtrl
+local EditUnitCmdDesc		= Spring.EditUnitCmdDesc
+local InsertUnitCmdDesc		= Spring.InsertUnitCmdDesc
+local FindUnitCmdDesc		= Spring.FindUnitCmdDesc
 
 -- GG
 local GetUnitDistanceToPoint = GG.GetUnitDistanceToPoint
@@ -27,8 +30,17 @@ local MIN_BUILD_RANGE = tonumber(UnitDefNames["beacon"].customParams.minbuildran
 local MAX_BUILD_RANGE = UnitDefNames["beacon"].buildDistance
 
 -- Variables
+local turretDefIDs = {} -- turretDefIDs[unitDefID] = true
 local buildLimits = {} -- buildLimits[unitID] = {turret = 4, ecm = 1, sensor = 1}
 local turretOwners = {} -- turretOwners[turretID] = beaconID
+
+function gadget:GamePreload()
+	for unitDefID, unitDef in pairs(UnitDefs) do
+		if unitDef.name:find("turret") then
+			turretDefIDs[unitDefID] = true
+		end
+	end
+end
 
 function gadget:UnitCreated(unitID, unitDefID, teamID, builderID)
 	if unitDefID == BEACON_ID then
@@ -45,6 +57,9 @@ function gadget:UnitDestroyed(unitID, unitDefID, teamID)
 	local turretOwnerID = turretOwners[unitID]
 	if turretOwnerID then -- unit was a turret with owning beacon, open the slot back up
 		buildLimits[turretOwnerID].turret = buildLimits[turretOwnerID].turret + 1
+		for turretDefID in pairs(turretDefIDs) do
+			EditUnitCmdDesc(turretOwnerID, FindUnitCmdDesc(turretOwnerID, -turretDefID), {disabled = false, params = {}})
+		end
 	end
 end
 
@@ -60,13 +75,19 @@ function gadget:AllowCommand(unitID, unitDefID, teamID, cmdID, cmdParams, cmdOpt
 			return false
 		end
 		-- TODO: check which kind of structure it is and deduct accordingly
-		-- TODO: overlay a number on the buildpics with count remaining
-		local turretsRemaining = buildLimits[unitID].turret
-		if turretsRemaining == 0 then 
-			Spring.Echo("Turret limit reached")
-			return false 
-		else
-			buildLimits[unitID].turret = turretsRemaining - 1
+		if turretDefIDs[-cmdID] then -- Proposed unit is a turret
+			local turretsRemaining = buildLimits[unitID].turret
+			if turretsRemaining == 0 then 
+				Spring.Echo("Turret limit reached")
+				return false 
+			else
+				buildLimits[unitID].turret = turretsRemaining - 1
+				if turretsRemaining == 1 then
+					for turretDefID in pairs(turretDefIDs) do
+						EditUnitCmdDesc(unitID, FindUnitCmdDesc(unitID, -turretDefID), {disabled = true, params = {"L"}})
+					end
+				end
+			end
 		end
 	end
 	return true
