@@ -31,8 +31,7 @@ local Turret_LRM = {
 			},
 		},
 	customparams = {
-		ammosupplier	= "0",
-		supplyradius	= "0",
+		towertype = "turret",
 		flagdefendrate	= "100",
 		helptext		= "An auto-spawning defensive turret for Garrisons.",
 		turretturnspeed = "100",

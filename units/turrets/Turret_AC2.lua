@@ -46,8 +46,7 @@ local Turret_AC2 = {
 			},
 		},
 	customparams = {
-		ammosupplier	= "0",
-		supplyradius	= "0",
+		towertype = "turret",
 		flagdefendrate	= "100",
 		helptext		= "An auto-spawning defensive turret for Garrisons.",
 		barrelrecoildist = {2, 2, 2, 2},

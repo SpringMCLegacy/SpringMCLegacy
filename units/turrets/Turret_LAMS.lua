@@ -31,6 +31,7 @@ local Turret_LAMS = {
 			},
 		},
 	customparams = {
+		towertype = "turret",
 		ammosupplier	= "0",
 		supplyradius	= "0",
 		flagdefendrate	= "100",
