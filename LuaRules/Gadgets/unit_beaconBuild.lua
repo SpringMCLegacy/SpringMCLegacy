@@ -20,9 +20,11 @@ if gadgetHandler:IsSyncedCode() then
 local EditUnitCmdDesc		= Spring.EditUnitCmdDesc
 local InsertUnitCmdDesc		= Spring.InsertUnitCmdDesc
 local FindUnitCmdDesc		= Spring.FindUnitCmdDesc
+local TransferUnit			= Spring.TransferUnit
 
 -- GG
 local GetUnitDistanceToPoint = GG.GetUnitDistanceToPoint
+local DelayCall				 = GG.Delay.DelayCall
 
 -- Constants
 local BEACON_ID = UnitDefNames["beacon"].id
@@ -30,36 +32,68 @@ local MIN_BUILD_RANGE = tonumber(UnitDefNames["beacon"].customParams.minbuildran
 local MAX_BUILD_RANGE = UnitDefNames["beacon"].buildDistance
 
 -- Variables
-local turretDefIDs = {} -- turretDefIDs[unitDefID] = true
+local towerDefIDs = {} -- towerDefIDs[unitDefID] = "turret" or "ecm" or "sensor"
 local buildLimits = {} -- buildLimits[unitID] = {turret = 4, ecm = 1, sensor = 1}
-local turretOwners = {} -- turretOwners[turretID] = beaconID
+local towerOwners = {} -- towerOwners[towerID] = beaconID
 
 function gadget:GamePreload()
 	for unitDefID, unitDef in pairs(UnitDefs) do
-		if unitDef.name:find("turret") then
-			turretDefIDs[unitDefID] = true
+		local cp = unitDef.customParams
+		if cp and cp.towertype then
+			towerDefIDs[unitDefID] = cp.towertype
 		end
 	end
 end
 
 function gadget:UnitCreated(unitID, unitDefID, teamID, builderID)
+	local unitDef = UnitDefs[unitDefID]
+	local cp = unitDef.customParams
 	if unitDefID == BEACON_ID then
 		buildLimits[unitID] = {["turret"] = 4, ["ecm"] = 1, ["sensor"] = 1}
-	elseif UnitDefs[unitDefID].name:find("turret") then -- TODO: Use a customparam here
+	elseif cp and cp.towertype then
 		-- track creation of turrets and their originating beacons so we can give back slots if a turret dies
 		if builderID then -- ignore /give turrets
-			turretOwners[unitID] = builderID
+			towerOwners[unitID] = builderID -- TODO: Opposite table also? e.g. towerSlaves[towerID] = {slave1ID, slave2ID...}
 		end
 	end
 end
 
 function gadget:UnitDestroyed(unitID, unitDefID, teamID)
-	local turretOwnerID = turretOwners[unitID]
-	if turretOwnerID then -- unit was a turret with owning beacon, open the slot back up
-		buildLimits[turretOwnerID].turret = buildLimits[turretOwnerID].turret + 1
-		for turretDefID in pairs(turretDefIDs) do
-			EditUnitCmdDesc(turretOwnerID, FindUnitCmdDesc(turretOwnerID, -turretDefID), {disabled = false, params = {}})
+	local towerOwnerID = towerOwners[unitID]
+	if towerOwnerID then -- unit was a turret with owning beacon, open the slot back up
+		buildLimits[towerOwnerID].turret = buildLimits[towerOwnerID].turret + 1
+		for turretDefID in pairs(towerDefIDs) do
+			EditUnitCmdDesc(towerOwnerID, FindUnitCmdDesc(towerOwnerID, -turretDefID), {disabled = false, params = {}})
 		end
+		towerOwners[unitID] = nil
+	end
+end
+
+function gadget:UnitGiven(unitID, unitDefID, newTeam, oldTeam)
+	if unitDefID == BEACON_ID then
+		for towerID, beaconID in pairs(towerOwners) do
+			if beaconID == unitID then
+				DelayCall(TransferUnit, {towerID, newTeam}, 1)
+			end
+		end
+	end
+end
+
+function LimitTowerType(unitID, towerType)	
+	local towersRemaining = buildLimits[unitID][towerType]
+	if towersRemaining == 0 then 
+		Spring.Echo("Limit reached for " .. towerType)
+		return false 
+	else
+		buildLimits[unitID][towerType] = towersRemaining - 1
+		if towersRemaining == 1 then
+			for tDefID, tType in pairs(towerDefIDs) do
+				if tType == towerType then
+					EditUnitCmdDesc(unitID, FindUnitCmdDesc(unitID, -tDefID), {disabled = true, params = {"L"}})
+				end
+			end
+		end
+		return true
 	end
 end
 
@@ -74,21 +108,8 @@ function gadget:AllowCommand(unitID, unitDefID, teamID, cmdID, cmdParams, cmdOpt
 			Spring.Echo("Too far from beacon")
 			return false
 		end
-		-- TODO: check which kind of structure it is and deduct accordingly
-		if turretDefIDs[-cmdID] then -- Proposed unit is a turret
-			local turretsRemaining = buildLimits[unitID].turret
-			if turretsRemaining == 0 then 
-				Spring.Echo("Turret limit reached")
-				return false 
-			else
-				buildLimits[unitID].turret = turretsRemaining - 1
-				if turretsRemaining == 1 then
-					for turretDefID in pairs(turretDefIDs) do
-						EditUnitCmdDesc(unitID, FindUnitCmdDesc(unitID, -turretDefID), {disabled = true, params = {"L"}})
-					end
-				end
-			end
-		end
+		local towerType = towerDefIDs[-cmdID]
+		if towerType then return LimitTowerType(unitID, towerType) end
 	end
 	return true
 end
