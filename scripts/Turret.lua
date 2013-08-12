@@ -69,6 +69,14 @@ for weaponID = 1, info.numWeapons do
 	end
 end
 
+-- Constants
+local DROP_HEIGHT = 10000
+local GRAVITY = 120/Game.gravity
+
+-- Variables
+local stage
+local touchDown = false
+
 function TeamChange(teamID)
 	if teamID == GAIA_TEAM_ID then
 		noFiring = true
@@ -77,7 +85,41 @@ function TeamChange(teamID)
 	end
 end
 
+function TouchDown()
+	touchDown = true
+end
+
+local legs = {}
+for i = 1, 4 do
+	legs[i] = piece("leg_" .. i)
+end
+
 function script.Create()
+	-- Orbital insertion anim
+	Spring.MoveCtrl.Enable(unitID)
+	local x,y,z = Spring.GetUnitPosition(unitID)
+	y = y + DROP_HEIGHT
+	Spring.MoveCtrl.SetPosition(unitID, x, y, z)
+	--Spring.MoveCtrl.SetRotationVelocity(unitID, 0, 0.25, 0)
+	Spin(base, y_axis, 8)
+	Spring.MoveCtrl.SetGravity(unitID, GRAVITY)
+	Spring.MoveCtrl.SetCollideStop(unitID, true)
+	Spring.MoveCtrl.SetTrackGround(unitID, true)
+	
+	while y > 2000 do
+		_,y,_ = Spring.GetUnitPosition(unitID)
+		Sleep(100)
+	end
+	Spring.Echo("At 2000?", y)
+	StopSpin(base, y_axis, 0.1)
+	--Spring.MoveCtrl.SetVelocity(unitID, 0,0,0)
+	
+	for i = 1,4 do
+		Explode(legs[i], SFX.FIRE + SFX.FALL)
+	end
+	Spring.MoveCtrl.SetGravity(unitID, -4.65 * GRAVITY)
+	
+	-- Start acting like a real boy
 	StartThread(SmokeUnit, {base, turret})
 end
 
@@ -167,8 +209,6 @@ end
 function script.QueryWeapon(weaponID) 
 	if missileWeaponIDs[weaponID] then
 		return launchPoints[weaponID][currPoints[weaponID]]
-	--[[elseif weaponID == amsID then
-		return turret]]
 	else
 		return flares[weaponID]
 	end
