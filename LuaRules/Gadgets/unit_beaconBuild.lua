@@ -88,6 +88,16 @@ function gadget:UnitGiven(unitID, unitDefID, newTeam, oldTeam)
 	end
 end
 
+--[[function DropshipDelivery(cmdID, cmdParams, teamID)
+	local tx,ty,tz = unpack(cmdParams)
+	-- add some random nums to x,z, maybe based on sin,cos of radial distance - for insertion point
+	-- need a way to find dropship unit? probably ok to limit based on type of call
+	-- GetTeamInfo for race if we have different IS / Clan dropships
+	-- calculate facing based on x,z heading to tx,tz
+	-- local dropShipID = CreateUnit(dropshipDefID, x,y,z, facing, teamID)
+	-- MoveCtrl.SetRelativeVelocity and DelayCall used to perform the drop maneuver?
+end]]
+
 function LimitTowerType(unitID, towerType)	
 	local towersRemaining = buildLimits[unitID][towerType]
 	if towersRemaining == 0 then 
