@@ -1,0 +1,79 @@
+[heavy_jumpjet_smoke_trail]
+{
+	usedefaultexplosions=0;	
+[exhale]
+	{
+		class=CSimpleParticleSystem;
+		[properties]
+		{
+		sizeGrowth=0.80;
+		sizeMod=0.9;
+		pos=0, 1, 0; 
+		gravity=0, 0.001, 0;
+		
+
+		Texture=smoke;
+		airdrag=0.87;
+		colorMap=0.7 0.5 0.2 0.1 0.15 0.15 0.15 0.2 0.0 0.0 0.0 0.01;
+
+		particleLifeSpread=15; 
+		particleSpeedSpread=5;  
+		particleSizeSpread=1;   
+		
+		particleLife=12;
+		numParticles=4; 
+		particleSpeed=15; 
+		particleSize=1;
+		
+		
+		emitVector=0, 1, 0; 
+		emitRot=180;
+		emitRotSpread=5; 
+		directional=0; 
+		
+
+		}
+	air=1;
+	water=1;
+	ground=1;
+	count=1;
+	}
+
+[exhale2]
+	{
+		class=CSimpleParticleSystem;
+		[properties]
+		{
+		sizeGrowth=1;
+		sizeMod=0.9;
+		pos=0, 1, 0; 
+		gravity=0, 0.001, 0;
+		
+
+		Texture=smoke;
+		airdrag=0.87;
+		colorMap=0.6 0.35 0.2 0.1 0.1 0.1 0.1 0.2 0.0 0.0 0.0 0.01;
+
+		particleLifeSpread=50; 
+		particleSpeedSpread=10;  
+		particleSizeSpread=1;   
+		
+		particleLife=12;
+		numParticles=4; 
+		particleSpeed=10; 
+		particleSize=1;
+		
+		
+		emitVector=0, 1, 0; 
+		emitRot=180;
+		emitRotSpread=10; 
+		directional=0; 
+		
+
+		}
+	air=1;
+	water=1;
+	ground=1;
+	count=1;
+	}
+}

@@ -307,7 +307,8 @@ end
 
 function Jumping()-- Gets called throughout by gadget
 	for i = 1, #jets do -- emit JumpJetTrail
-		EmitSfx(jets[i], SFX.CEG)
+		EmitSfx(jets[i], 1026)
+		EmitSfx(jets[i], 1027)
 	end
 end
 
