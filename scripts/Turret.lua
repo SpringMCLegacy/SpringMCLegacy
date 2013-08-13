@@ -74,6 +74,7 @@ local DROP_HEIGHT = 10000
 local GRAVITY = 120/Game.gravity
 local X, _, Z = Spring.GetUnitPosition(unitID)
 local GY = Spring.GetGroundHeight(X, Z)
+local FACING
 
 -- Variables
 local stage = 1
@@ -86,10 +87,6 @@ function TeamChange(teamID)
 	end
 end
 
-function TouchDown()
-	stage = 3
-end
-
 local legs = {}
 local breaks = {}
 local exhausts = {}
@@ -97,6 +94,12 @@ for i = 1, 4 do
 	legs[i] = piece("leg_" .. i)
 	breaks[i] = piece("break_" .. i)
 	exhausts[i] = piece("exhaust_" .. i)
+end
+
+local SPEED = math.rad(30)
+function TouchDown()
+	stage = 3
+	FACING = select(2, Spring.UnitScript.GetPieceRotation(base))
 end
 
 function fx()
@@ -107,22 +110,48 @@ function fx()
 		for i = 1,4 do
 			EmitSfx(exhausts[i], SFX.CEG)
 		end
-		Sleep(30)
+		Sleep(50)
+	end
+	if stage == 3 then -- for clarity only
+		for i = 1,4 do
+			local axis = (i % 2 == 0 and z_axis) or x_axis -- even use z, odd use x
+			local dir = (i == 1 or i == 4) and -1 or 1
+			Turn(legs[i], axis, math.rad(dir * 83), SPEED)
+		end
+		WaitForTurn(legs[4], z_axis)
+		for i = 1,4 do
+			local axis = (i % 2 == 0 and z_axis) or x_axis -- even use z, odd use x
+			local dir = (i == 1 or i == 4) and -1 or 1
+			Turn(legs[i], axis, math.rad(dir * 110), SPEED / 5)
+		end
+		local height = 0
+		local angleDiff = math.rad(110 - 83)
+		local hyp = 5 / math.sin(angleDiff)
+		while height < 5 do
+			local angle = angleDiff - (Spring.UnitScript.GetPieceRotation(legs[1]) - math.rad(250))
+			height = math.sin(angle) * hyp
+			Move(base, y_axis, height)
+			Sleep(50)
+		end
+		Turn(mantlets[1], x_axis, 0, SPEED)
+		WaitForTurn(mantlets[1], x_axis)
+		-- Start acting like a real boy
+		StartThread(SmokeUnit, {base, turret})
 	end
 end
 
 function script.Create()
-	-- Orbital insertion anim
-	Spring.MoveCtrl.Enable(unitID)
-	Spring.MoveCtrl.SetPosition(unitID, X, GY + DROP_HEIGHT, Z)
-	--Spring.MoveCtrl.SetRotationVelocity(unitID, 0, 0.25, 0)
+	-- Pre-setup
 	Turn(mantlets[1], x_axis, math.rad(-90))
 	Turn(exhausts[1], y_axis, math.rad(180))	
 	Turn(exhausts[2], y_axis, math.rad(-90))
 	Turn(exhausts[4], y_axis, math.rad(90))
+	-- Orbital insertion anim
+	Spring.MoveCtrl.Enable(unitID)
+	Spring.MoveCtrl.SetPosition(unitID, X, GY + DROP_HEIGHT, Z)
 	
 	for i = 1,4 do
-		Turn(exhausts[i], x_axis, math.rad(45))
+		Turn(exhausts[i], x_axis, math.rad(70))
 		Spin(exhausts[i], z_axis, math.rad(360)) -- doesn't seem to be working?
 	end
 
@@ -137,7 +166,7 @@ function script.Create()
 		_,y,_ = Spring.GetUnitPosition(unitID)
 		Sleep(100)
 	end
-	Spring.Echo("At 2000?", y)
+
 	stage = 2
 	StopSpin(base, y_axis, 0.1)
 	
@@ -145,9 +174,9 @@ function script.Create()
 		Hide(breaks[i])
 		Explode(breaks[i], SFX.FIRE + SFX.FALL)
 	end
-	--Spring.MoveCtrl.SetGravity(unitID, -4.75 * GRAVITY)
+
 	Spring.MoveCtrl.SetGravity(unitID, 0)
-	--while y - GY > 925 do
+
 	local _, sy, _ = Spring.GetUnitVelocity(unitID)
 	Spring.MoveCtrl.SetVelocity(unitID, 0, sy * 0.75, 0)
 	while -sy > 5 do
@@ -157,8 +186,6 @@ function script.Create()
 		Spring.MoveCtrl.SetVelocity(unitID, 0, sy * 0.8, 0)
 	end	
 	Spring.MoveCtrl.SetGravity(unitID, -0.01 * GRAVITY)
-	-- Start acting like a real boy
-	StartThread(SmokeUnit, {base, turret})
 end
 
 
@@ -167,7 +194,7 @@ function script.AimWeapon(weaponID, heading, pitch)
 	Signal(2 ^ weaponID) -- 2 'to the power of' weapon ID
 	SetSignalMask(2 ^ weaponID)
 	
-	Turn(turret, y_axis, heading, TURRET_SPEED)
+	Turn(turret, y_axis, heading - FACING, TURRET_SPEED)
 	if mantlets[weaponID] then
 		Turn(mantlets[weaponID], x_axis, -pitch, TURRET_SPEED)
 	elseif missileWeaponIDs[weaponID] then
