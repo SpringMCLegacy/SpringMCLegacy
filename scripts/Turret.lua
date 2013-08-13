@@ -72,10 +72,11 @@ end
 -- Constants
 local DROP_HEIGHT = 10000
 local GRAVITY = 120/Game.gravity
+local X, _, Z = Spring.GetUnitPosition(unitID)
+local GY = Spring.GetGroundHeight(X, Z)
 
 -- Variables
-local stage
-local touchDown = false
+local stage = 1
 
 function TeamChange(teamID)
 	if teamID == GAIA_TEAM_ID then
@@ -86,39 +87,76 @@ function TeamChange(teamID)
 end
 
 function TouchDown()
-	touchDown = true
+	stage = 3
 end
 
 local legs = {}
+local breaks = {}
+local exhausts = {}
 for i = 1, 4 do
 	legs[i] = piece("leg_" .. i)
+	breaks[i] = piece("break_" .. i)
+	exhausts[i] = piece("exhaust_" .. i)
+end
+
+function fx()
+	while stage == 1 do
+		Sleep(50)
+	end
+	while stage == 2 do
+		for i = 1,4 do
+			EmitSfx(exhausts[i], SFX.CEG)
+		end
+		Sleep(30)
+	end
 end
 
 function script.Create()
 	-- Orbital insertion anim
 	Spring.MoveCtrl.Enable(unitID)
-	local x,y,z = Spring.GetUnitPosition(unitID)
-	y = y + DROP_HEIGHT
-	Spring.MoveCtrl.SetPosition(unitID, x, y, z)
+	Spring.MoveCtrl.SetPosition(unitID, X, GY + DROP_HEIGHT, Z)
 	--Spring.MoveCtrl.SetRotationVelocity(unitID, 0, 0.25, 0)
-	Spin(base, y_axis, 8)
+	Turn(mantlets[1], x_axis, math.rad(-90))
+	Turn(exhausts[1], y_axis, math.rad(180))	
+	Turn(exhausts[2], y_axis, math.rad(-90))
+	Turn(exhausts[4], y_axis, math.rad(90))
+	
+	for i = 1,4 do
+		Turn(exhausts[i], x_axis, math.rad(45))
+		Spin(exhausts[i], z_axis, math.rad(360)) -- doesn't seem to be working?
+	end
+
+	Spin(base, y_axis, 10)
 	Spring.MoveCtrl.SetGravity(unitID, GRAVITY)
 	Spring.MoveCtrl.SetCollideStop(unitID, true)
 	Spring.MoveCtrl.SetTrackGround(unitID, true)
+	StartThread(fx)
 	
-	while y > 2000 do
+	local _, y, _ = Spring.GetUnitPosition(unitID)
+	while y - GY > 1000 do
 		_,y,_ = Spring.GetUnitPosition(unitID)
 		Sleep(100)
 	end
 	Spring.Echo("At 2000?", y)
+	stage = 2
 	StopSpin(base, y_axis, 0.1)
-	--Spring.MoveCtrl.SetVelocity(unitID, 0,0,0)
 	
 	for i = 1,4 do
-		Explode(legs[i], SFX.FIRE + SFX.FALL)
+		Hide(breaks[i])
+		Explode(breaks[i], SFX.FIRE + SFX.FALL)
 	end
-	Spring.MoveCtrl.SetGravity(unitID, -4.65 * GRAVITY)
-	
+	--Spring.MoveCtrl.SetGravity(unitID, -4.75 * GRAVITY)
+	Spring.MoveCtrl.SetGravity(unitID, 0)
+	--while y - GY > 925 do
+	local _, sy, _ = Spring.GetUnitVelocity(unitID)
+	Spring.MoveCtrl.SetVelocity(unitID, 0, sy * 0.75, 0)
+	while -sy > 5 do
+		Sleep(120)
+		_, y, _ = Spring.GetUnitPosition(unitID)
+		_, sy, _ = Spring.GetUnitVelocity(unitID)
+		Spring.MoveCtrl.SetVelocity(unitID, 0, sy * 0.8, 0)
+	end	
+	Spring.MoveCtrl.SetGravity(unitID, -0.01 * GRAVITY)
 	-- Start acting like a real boy
 	StartThread(SmokeUnit, {base, turret})
 end

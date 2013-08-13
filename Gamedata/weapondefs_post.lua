@@ -54,7 +54,11 @@ for unitName, ud in pairs(UnitDefs) do
 	if weapons then
 		if not ud.sfxtypes then
 			ud.sfxtypes = { explosiongenerators = {} }
-			table.insert(ud.sfxtypes.explosiongenerators, "custom:JumpJetTrail")
+			if ud.customparams.unittype then
+				table.insert(ud.sfxtypes.explosiongenerators, "custom:JumpJetTrail")
+			elseif ud.customparams.towertype then
+				table.insert(ud.sfxtypes.explosiongenerators, "custom:heavy_jumpjet_trail_blue") --heavy_jet_trail_blue")
+			end
 			for weaponID = 1, #weapons do
 				local cegFlare = cegCache[string.lower(weapons[weaponID].name)]
 				if cegFlare then

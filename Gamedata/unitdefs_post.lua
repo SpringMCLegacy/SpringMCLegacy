@@ -115,6 +115,7 @@ for name, ud in pairs(UnitDefs) do
 	elseif ud.customparams.towertype then
 		table.insert(BEACON_BUILDOPTIONS, name)
 		ud.buildpic = "cl_donar.png"
+		ud.levelground = false
 	end
 	if name == "is_dropship" then IS_DROPSHIP_UD = ud end
 	if name == "cl_dropship" then CL_DROPSHIP_UD = ud end
