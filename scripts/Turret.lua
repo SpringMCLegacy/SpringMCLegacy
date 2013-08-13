@@ -96,7 +96,7 @@ for i = 1, 4 do
 	exhausts[i] = piece("exhaust_" .. i)
 end
 
-local SPEED = math.rad(30)
+local SPEED = math.rad(150)
 function TouchDown()
 	stage = 3
 	FACING = select(2, Spring.UnitScript.GetPieceRotation(base))
@@ -113,6 +113,7 @@ function fx()
 		Sleep(50)
 	end
 	if stage == 3 then -- for clarity only
+		Sleep(1000)
 		for i = 1,4 do
 			local axis = (i % 2 == 0 and z_axis) or x_axis -- even use z, odd use x
 			local dir = (i == 1 or i == 4) and -1 or 1
