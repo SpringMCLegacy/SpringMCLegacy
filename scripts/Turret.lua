@@ -36,7 +36,7 @@ local BARREL_SPEED = info.barrelRecoilSpeed
 local RESTORE_DELAY = Spring.UnitScript.GetLongestReloadTime(unitID) * 2
 
 local currLaunchPoint = 1
-local noFiring = false
+local noFiring = true
 local GAIA_TEAM_ID = Spring.GetGaiaTeamID()
 
 --piece defines
@@ -138,6 +138,7 @@ function fx()
 		WaitForTurn(mantlets[1], x_axis)
 		-- Start acting like a real boy
 		StartThread(SmokeUnit, {base, turret})
+		noFiring = true
 	end
 end
 
