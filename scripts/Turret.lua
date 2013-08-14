@@ -139,6 +139,11 @@ function fx()
 		-- Start acting like a real boy
 		StartThread(SmokeUnit, {base, turret})
 		noFiring = false
+		Spring.SetUnitNeutral(unitID, false)
+		Spring.SetUnitStealth(unitID, false)
+		Spring.SetUnitSensorRadius(unitID, "los", unitDef.losRadius)
+		Spring.SetUnitSensorRadius(unitID, "los", unitDef.airLosRadius)
+		Spring.SetUnitSensorRadius(unitID, "radar", unitDef.radarRadius)
 	end
 end
 
@@ -151,6 +156,11 @@ function script.Create()
 	-- Orbital insertion anim
 	Spring.MoveCtrl.Enable(unitID)
 	Spring.MoveCtrl.SetPosition(unitID, X, GY + DROP_HEIGHT, Z)
+	Spring.SetUnitNeutral(unitID, true)
+	Spring.SetUnitStealth(unitID, true)
+	Spring.SetUnitSensorRadius(unitID, "los", 0)
+	Spring.SetUnitSensorRadius(unitID, "airLos", 0)
+	Spring.SetUnitSensorRadius(unitID, "radar", 0)
 	
 	for i = 1,4 do
 		Turn(exhausts[i], x_axis, math.rad(70))
