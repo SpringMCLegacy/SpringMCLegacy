@@ -138,7 +138,7 @@ function fx()
 		WaitForTurn(mantlets[1], x_axis)
 		-- Start acting like a real boy
 		StartThread(SmokeUnit, {base, turret})
-		noFiring = true
+		noFiring = false
 	end
 end
 
