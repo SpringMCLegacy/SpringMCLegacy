@@ -60,9 +60,9 @@ function gadget:GamePreload()
 	for unitDefID, unitDef in pairs(UnitDefs) do
 		local name = unitDef.name
 		local cp = unitDef.customParams
-		if cp and cp.towertype then
+		if cp and cp.towertype then -- automatically build table of towers
 			towerDefIDs[unitDefID] = cp.towertype
-		elseif name:find("outpost") then
+		elseif name:find("outpost") then -- automatically build beacon upgrade cmdDescs
 			local cBillCost = unitDef.metalCost
 			local upgradeCmdDesc = {
 				id     = GG.CustomCommands.GetCmdID("CMD_UPGRADE_" .. name),
@@ -103,7 +103,7 @@ function gadget:UnitDestroyed(unitID, unitDefID, teamID)
 		towerOwners[unitID] = nil
 	end
 	local beaconID = outpostIDs[unitID]
-	if outpostID then
+	if beaconID then
 		Spring.SetUnitNoSelect(beaconID, false)
 		env = Spring.UnitScript.GetScriptEnv(unitID)
 		Spring.UnitScript.CallAsUnit(unitID, env.ChangeType, false)
@@ -123,6 +123,11 @@ function gadget:UnitGiven(unitID, unitDefID, newTeam, oldTeam)
 				else
 					SetUnitNeutral(towerID, false)
 				end
+			end
+		end
+		for outpostID, beaconID in pairs(outpostIDs) do			
+			if beaconID == unitID then
+				DelayCall(TransferUnit, {outpostID, newTeam}, 1)
 			end
 		end
 	end
