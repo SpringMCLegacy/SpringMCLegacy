@@ -82,7 +82,7 @@ end
 
 local jets = {}
 if info.jumpjets then
-	for i = 1, 4 do
+	for i = 1, info.jumpjets do
 		jets[i] = piece("jet" .. i)
 	end
 end
@@ -310,7 +310,7 @@ function StartJump()
 end
 
 function Jumping()-- Gets called throughout by gadget
-	for i = 1, #jets do -- emit JumpJetTrail
+	for i = 1, info.jumpjets do -- emit JumpJetTrail
 		EmitSfx(jets[i], SFX.CEG)
 	end
 end

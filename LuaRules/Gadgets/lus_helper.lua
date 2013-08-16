@@ -111,6 +111,7 @@ function gadget:UnitCreated(unitID, unitDefID, teamID, builderID)
 		local mantletIDs = {}
 		local barrelIDs = {}
 		local numWheels = 0
+		local numJets = 0
 		for pieceName, pieceNum in pairs(pieceMap) do
 			local parent = GetUnitPieceInfo(unitID, pieceNum)["parent"]
 			local weapNumPos = pieceName:find("_") or 0
@@ -129,6 +130,9 @@ function gadget:UnitCreated(unitID, unitDefID, teamID, builderID)
 			-- Find the number of wheels
 			elseif pieceName:find("wheel") then
 				numWheels = numWheels + 1
+			-- Find the number of jumpjets
+			elseif pieceName:find("jet") then
+				numJets = numJets + 1
 			-- assign flare weaponIDs to left or right arms
 			elseif pieceName:find("flare_") then
 				leftArmIDs[weaponNum] = leftArmIDs[weaponNum] or IsPieceAncestor(unitID, pieceName, "lupperarm")
@@ -155,6 +159,7 @@ function gadget:UnitCreated(unitID, unitDefID, teamID, builderID)
 		info.mantletIDs = mantletIDs
 		info.barrelIDs = barrelIDs
 		info.numWheels = numWheels
+		info.jumpjets = numJets
 	end
 end
 
@@ -206,7 +211,7 @@ function gadget:GamePreload()
 		
 		-- UnitDef Level Info
 		-- Mechs
-		info.jumpjets = GG.jumpDefs[unitDefID] ~= nil
+		--info.jumpjets = GG.jumpDefs[unitDefID] ~= nil
 		info.torsoTurnSpeed = math.rad(tonumber(cp.torsoturnspeed) or 100)
 		-- Limb HPs
 		info.limbHPs = {}
