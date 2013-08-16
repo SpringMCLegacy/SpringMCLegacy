@@ -1,17 +1,17 @@
-local Outpost_Garrison = {
-	name              	= "Garrison",
-	description         = "Armed Defensive Garrison",
-	objectName        	= "Outpost_Garrison.s3o",
-	script				= "Outpost_Garrison.lua",
+local Upgrade_C3Array = {
+	name              	= "C3 Network Relay",
+	description         = "Command & Control Capacity Upgrade",
+	objectName        	= "Upgrade_C3Array.s3o",
+	script				= "Upgrade_C3Array.lua",
 	iconType			= "beacon",
-	category 			= "structure beacon",
+	category 			= "structure ground notbeacon",
 		activateWhenBuilt   = true,
-	maxDamage           = 22000,
+	maxDamage           = 2200,
 	mass                = 5000,
-	footprintX			= 3,
-	footprintZ 			= 3,
+	footprintX			= 7,
+	footprintZ 			= 7,
 	collisionVolumeType = "box",
-	collisionVolumeScales = "25 25 25",
+	collisionVolumeScales = "75 75 75",
 	collisionVolumeOffsets = "0 0 0",
 	collisionVolumeTest = 1,
 	buildCostEnergy     = 0,
@@ -25,13 +25,12 @@ local Outpost_Garrison = {
 	TEDClass			= "FORT",
 		--Makes unit use weapon from /weapons folder
 	customparams = {
-		ammosupplier	= "0",
-		supplyradius	= "0",
-		helptext		= "Fortified Garrison with defensive weapon emplacements.",
+		dontcount		= 1,
+		helptext		= "Adds additional control slots for your forces",
     },
 	--sounds = {
     --underattack        = "Dropship_Alarm",
 	--},
 }
 
-return lowerkeys({ ["Outpost_Garrison"] = Outpost_Garrison })
+return lowerkeys({ ["Upgrade_C3Array"] = Upgrade_C3Array })
