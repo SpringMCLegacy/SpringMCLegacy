@@ -48,11 +48,12 @@ end
 function ChangeType(upgrade)
 	if upgrade then
 		stage = -1
-		-- TODO: hide all pieces
+		RecursiveHide(base, true)
 	else
+		RecursiveHide(base, false)
+		Hide(rocket)
 		stage = 0
 		StartThread(fx)
-		-- TODO: show all pieces
 	end
 end
 

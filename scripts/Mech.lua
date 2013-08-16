@@ -237,7 +237,7 @@ end
 
 function hideLimbPieces(limb)
 	if limb == "left_arm" then
-		RecursiveHide(lupperarm)
+		RecursiveHide(lupperarm, true)
 		EmitSfx(lupperarm, SFX.CEG + info.numWeapons + 1)
 		Explode(lupperarm, SFX.FIRE + SFX.SMOKE)
 		for id, valid in pairs(leftArmIDs) do
@@ -247,7 +247,7 @@ function hideLimbPieces(limb)
 			end
 		end
 	elseif limb == "right_arm" then
-		RecursiveHide(rupperarm)
+		RecursiveHide(rupperarm, true)
 		EmitSfx(rupperarm, SFX.CEG + info.numWeapons + 1)
 		Explode(rupperarm, SFX.FIRE + SFX.SMOKE)
 		for id, valid in pairs(rightArmIDs) do
