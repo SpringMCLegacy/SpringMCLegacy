@@ -39,6 +39,6 @@ local function PlaySound(sound, volume, channel)
 	GG.PlaySoundAtUnit(unitID, sound, volume, channel)
 end
 
-local function RecursiveHide(pieceNum)
-	GG.RecursiveHide(unitID, pieceNum)
+local function RecursiveHide(pieceNum, hide)
+	GG.RecursiveHide(unitID, pieceNum, hide)
 end

@@ -241,7 +241,7 @@ end
 
 function hideLimbPieces(limb)
 	if limb == "turret" then
-		RecursiveHide(turret)
+		RecursiveHide(turret, true)
 		EmitSfx(turret, SFX.CEG + info.numWeapons + 1)
 		Explode(turret, SFX.FIRE + SFX.SMOKE)
 		for id, valid in pairs(turretIDs) do
@@ -252,7 +252,7 @@ function hideLimbPieces(limb)
 		end
 	else -- asumme limb is a wing or rotor
 		local wingPiece = piece(limb) -- asuume pieces are lwing, rwing, rotor
-		RecursiveHide(wingPiece)
+		RecursiveHide(wingPiece, true)
 		EmitSfx(wingPiece, SFX.CEG + info.numWeapons + 1)
 		Explode(wingPiece, SFX.FIRE + SFX.SMOKE)
 		SetUnitValue(COB.CRASHING, 1)

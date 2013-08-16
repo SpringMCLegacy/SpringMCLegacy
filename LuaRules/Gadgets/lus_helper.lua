@@ -38,16 +38,17 @@ function EmitSfxName(unitID, pieceName, effectName)
 	SpawnCEG(effectName, x,y,z, dx, dy, dz)
 end
 
-local function RecursiveHide(unitID, pieceNum)
+local function RecursiveHide(unitID, pieceNum, hide)
 	-- Hide this piece
-	CallAsUnit(unitID, Spring.UnitScript.Hide, pieceNum)
+	local func = (hide and Spring.UnitScript.Hide) or Spring.UnitScript.Show
+	CallAsUnit(unitID, func, pieceNum)
 	-- Recursively hide children
 	local pieceMap = GetUnitPieceMap(unitID)
 	local children = GetUnitPieceInfo(unitID, pieceNum).children
 	if children then
 		for _, pieceName in pairs(children) do
 			--Spring.Echo("pieceName:", pieceName, pieceMap[pieceName])
-			RecursiveHide(unitID, pieceMap[pieceName])
+			RecursiveHide(unitID, pieceMap[pieceName], hide)
 		end
 	end
 end
