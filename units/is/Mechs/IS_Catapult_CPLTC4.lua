@@ -66,14 +66,14 @@ local IS_Catapult_CPLTC4 = {
 		
 	--Gets CEG effects from /gamedata/explosions folder
 
-	sfxtypes = {
+	--[[sfxtypes = {
 		explosiongenerators = {
 		"custom:MISSILE_MUZZLEFLASH",
 		"custom:LASER_MUZZLEFLASH",
 		"custom:heavy_jumpjet_trail_blue",
 		"custom:heavy_jumpjet_smoke_trail",
 		},
-	},
+	},]]
     customparams = {
 		hasturnbutton	= "1",
 		helptext		= "Armament: 2 x LRM-20, 2 x Medium Beam Laser - Armor: 10 tons Standard",

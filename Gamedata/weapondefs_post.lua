@@ -55,7 +55,7 @@ for unitName, ud in pairs(UnitDefs) do
 		if not ud.sfxtypes then
 			ud.sfxtypes = { explosiongenerators = {} }
 			if ud.customparams.unittype then
-				table.insert(ud.sfxtypes.explosiongenerators, "custom:JumpJetTrail")
+				table.insert(ud.sfxtypes.explosiongenerators, "custom:heavy_jumpjet_trail_blue")
 			elseif ud.customparams.towertype then
 				table.insert(ud.sfxtypes.explosiongenerators, "custom:heavy_jumpjet_trail_blue") --heavy_jet_trail_blue")
 			end
