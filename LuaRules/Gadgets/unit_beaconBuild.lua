@@ -63,14 +63,15 @@ function gadget:GamePreload()
 		if cp and cp.towertype then
 			towerDefIDs[unitDefID] = cp.towertype
 		elseif name:find("outpost") then
+			local cBillCost = unitDef.metalCost
 			local upgradeCmdDesc = {
 				id     = GG.CustomCommands.GetCmdID("CMD_UPGRADE_" .. name),
 				type   = CMDTYPE.ICON,
 				name   = unitDef.humanName,
 				action = 'upgrade',
-				tooltip = "blah!", -- TODO: add c-bill cost and w/e else
+				tooltip = "C-Bill cost: " .. cBillCost, -- TODO: add c-bill cost and w/e else
 			}
-			outpostDefs[unitDefID] = {cmdDesc = upgradeCmdDesc, cost = unitDef.metalCost}
+			outpostDefs[unitDefID] = {cmdDesc = upgradeCmdDesc, cost = cBillCost}
 			upgradeIDs[upgradeCmdDesc.id] = unitDefID
 		end
 	end
@@ -105,7 +106,7 @@ function gadget:UnitDestroyed(unitID, unitDefID, teamID)
 	if outpostID then
 		Spring.SetUnitNoSelect(beaconID, false)
 		env = Spring.UnitScript.GetScriptEnv(unitID)
-		Spring.UnitScript.CallAsUnit(unitID, env.ChangeType(false))
+		Spring.UnitScript.CallAsUnit(unitID, env.ChangeType, false)
 		outpostIDs[unitID] = nil
 	end
 end
@@ -139,7 +140,7 @@ function DropshipDelivery(unitID, unitDefID, teamID)
 	local outpostID = Spring.CreateUnit(unitDefID, tx,ty,tz, "s", teamID)
 	outpostIDs[outpostID] = unitID
 	env = Spring.UnitScript.GetScriptEnv(unitID)
-	Spring.UnitScript.CallAsUnit(unitID, env.ChangeType(true))
+	Spring.UnitScript.CallAsUnit(unitID, env.ChangeType, true)
 end
 
 function LimitTowerType(unitID, towerType)	
