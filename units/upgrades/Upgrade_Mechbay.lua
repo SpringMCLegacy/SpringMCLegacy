@@ -1,12 +1,12 @@
-local Outpost_VehicleDepot = {
-	name              	= "Vehicle Depot",
-	description         = "Grants access to Vehicles",
-	objectName        	= "Outpost_VehicleDepot.s3o",
-	script				= "Outpost_VehicleDepot.lua",
+local Upgrade_Mechbay = {
+	name              	= "Mobile Mech Bay",
+	description         = "Repair & Rearm Upgrade",
+	objectName        	= "Upgrade_Mechbay.s3o",
+	script				= "Upgrade_Mechbay.lua",
 	iconType			= "beacon",
-	category 			= "structure beacon",
+	category 			= "structure ground notbeacon",
 		--activateWhenBuilt   = true,
-	maxDamage           = 45000,
+	maxDamage           = 10000,
 	mass                = 9000,
 	footprintX			= 8,
 	footprintZ 			= 8,
@@ -34,11 +34,11 @@ local Outpost_VehicleDepot = {
 	
 	customparams = {
 		dontcount		= 1,
-		helptext		= "A Vehicle Depot that can build ground vehicles.",
+		helptext		= "Repairs and re-arms Mechs and Vehicles.",
     },
 	sounds = {
     underattack        = "Dropship_Alarm",
 	},
 }
 
-return lowerkeys({ ["Outpost_VehicleDepot"] = Outpost_VehicleDepot })
+return lowerkeys({ ["Upgrade_Mechbay"] = Upgrade_Mechbay })

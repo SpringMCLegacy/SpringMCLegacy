@@ -1,12 +1,12 @@
-local Outpost_ListeningPost = {
-	name              	= "Observation Outpost",
-	description         = "Automated Observation Post",
-	objectName        	= "Outpost_ListeningPost.s3o",
-	script				= "Outpost_ListeningPost.lua",
+local Upgrade_Uplink = {
+	name              	= "Orbital Uplink",
+	description         = "Orbital Asset Upgrade",
+	objectName        	= "Upgrade_Uplink.s3o",
+	script				= "Upgrade_Uplink.lua",
 	iconType			= "beacon",
-	category 			= "structure beacon",
+	category 			= "structure ground notbeacon",
 		activateWhenBuilt   = true,
-	maxDamage           = 22000,
+	maxDamage           = 10000,
 	mass                = 5000,
 	footprintX			= 3,
 	footprintZ 			= 3,
@@ -26,7 +26,7 @@ local Outpost_ListeningPost = {
 		--Makes unit use weapon from /weapons folder
 	customparams = {
 		dontcount		= 1,
-		helptext		= "An observation outpost equipped with advanced sensors.",
+		helptext		= "Grants access to various abilities and upgrades.",
 		hasbap			= true,
     },
 	--sounds = {
@@ -34,4 +34,4 @@ local Outpost_ListeningPost = {
 	--},
 }
 
-return lowerkeys({ ["Outpost_ListeningPost"] = Outpost_ListeningPost })
+return lowerkeys({ ["Upgrade_Uplink"] = Upgrade_Uplink })
