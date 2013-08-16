@@ -134,8 +134,10 @@ function fx()
 			Move(base, y_axis, height)
 			Sleep(50)
 		end
-		Turn(mantlets[1], x_axis, 0, SPEED)
-		WaitForTurn(mantlets[1], x_axis)
+		if mantlets[1] then 
+			Turn(mantlets[1], x_axis, 0, SPEED)
+			WaitForTurn(mantlets[1], x_axis)
+		end
 		-- Start acting like a real boy
 		StartThread(SmokeUnit, {base, turret})
 		noFiring = false
@@ -149,10 +151,13 @@ end
 
 function script.Create()
 	-- Pre-setup
-	Turn(mantlets[1], x_axis, math.rad(-90))
+	if mantlets[1] then 
+		Turn(mantlets[1], x_axis, math.rad(-90))
+	end
 	Turn(exhausts[1], y_axis, math.rad(180))	
 	Turn(exhausts[2], y_axis, math.rad(-90))
 	Turn(exhausts[4], y_axis, math.rad(90))
+		
 	-- Orbital insertion anim
 	Spring.MoveCtrl.Enable(unitID)
 	Spring.MoveCtrl.SetPosition(unitID, X, GY + DROP_HEIGHT, Z)
