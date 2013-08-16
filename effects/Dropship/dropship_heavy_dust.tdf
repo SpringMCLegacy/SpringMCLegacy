@@ -14,7 +14,7 @@
 
 		Texture=smoke;
 		airdrag=0.87;
-		colorMap=0.25 0.20 0.10 1.0	0 0 0 0.0;
+		colorMap=0.25 0.20 0.10 0.7	0 0 0 0.0;
 
 		particleLifeSpread=15; 
 		particleSpeedSpread=5;  
@@ -52,7 +52,7 @@
 
 		Texture=smoke;
 		airdrag=0.87;
-		colorMap=0.25 0.20 0.10 1.0	0 0 0 0.0;
+		colorMap=0.25 0.20 0.10 0.7	0 0 0 0.0;
 
 		particleLifeSpread=100; 
 		particleSpeedSpread=10;  
