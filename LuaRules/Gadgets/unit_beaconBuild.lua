@@ -22,6 +22,7 @@ local InsertUnitCmdDesc		= Spring.InsertUnitCmdDesc
 local FindUnitCmdDesc		= Spring.FindUnitCmdDesc
 local TransferUnit			= Spring.TransferUnit
 local SetUnitNeutral		= Spring.SetUnitNeutral
+local UseTeamResource 		= Spring.UseTeamResource
 
 -- GG
 local GetUnitDistanceToPoint = GG.GetUnitDistanceToPoint
@@ -134,6 +135,7 @@ function gadget:UnitGiven(unitID, unitDefID, newTeam, oldTeam)
 end
 
 function DropshipDelivery(unitID, unitDefID, teamID)
+	UseTeamResource(teamID, "metal", outpostDefs[unitDefID].cost)
 	local tx,ty,tz = Spring.GetUnitPosition(unitID)
 	-- TODO:
 	-- add some random nums to x,z, maybe based on sin,cos of radial distance - for insertion point
