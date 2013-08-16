@@ -22,4 +22,28 @@
    ground=1;
    count=1;
    }
+   
+   [glow]
+   {
+   class=heatcloud;
+
+      [properties]
+            {
+			alwaysVisible=1;
+			texture=smokesmall;
+            heat = 10;
+            maxheat = 15;
+            heatFalloff = 1.2;
+
+            size = 5;
+            sizeGrowth = 15;
+
+            pos = r-2 r2, 5, r-2 r2;
+            speed=0, 1 0, 0;
+            }
+		air=1;
+        water=1;
+        ground=1;
+        count=1;
+   }
 }
