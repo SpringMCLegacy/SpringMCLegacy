@@ -10,11 +10,12 @@ SIG_ANIMATE = {}
 jumping = false
 
 -- localised API functions
-local SetUnitRulesParam = Spring.SetUnitRulesParam
-local GetUnitSeparation = Spring.GetUnitSeparation
-local GetUnitCommands   = Spring.GetUnitCommands
-local GetUnitLastAttackedPiece = Spring.GetUnitLastAttackedPiece
-local GetUnitPosition = Spring.GetUnitPosition
+local SetUnitRulesParam 		= Spring.SetUnitRulesParam
+local GetUnitSeparation 		= Spring.GetUnitSeparation
+local GetUnitCommands   		= Spring.GetUnitCommands
+local GetUnitLastAttackedPiece 	= Spring.GetUnitLastAttackedPiece
+local GetUnitPosition 			= Spring.GetUnitPosition
+local SpawnCEG 					= Spring.SpawnCEG
 -- localised GG functions
 local GetUnitDistanceToPoint = GG.GetUnitDistanceToPoint
 local GetUnitUnderJammer = GG.GetUnitUnderJammer
@@ -305,7 +306,7 @@ function StartJump()
 	currHeatLevel = currHeatLevel + jumpHeat
 	StartThread(anim_StartJump)
 	local x,y,z = GetUnitPosition(unitID)
-	Spring.SpawnCEG("mech_jump_dust", x,y,z)
+	SpawnCEG("mech_jump_dust", x,y,z)
 end
 
 function Jumping()-- Gets called throughout by gadget
@@ -320,6 +321,8 @@ end
 
 function StopJump()
 	jumping = false
+	local x,y,z = GetUnitPosition(unitID)
+	SpawnCEG("mech_jump_dust", x,y,z)
 	StartThread(anim_StopJump)
 end
 
