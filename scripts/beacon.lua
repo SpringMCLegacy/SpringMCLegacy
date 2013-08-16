@@ -45,6 +45,16 @@ function TouchDown()
 	touchDown = true
 end
 
+function ChangeType(upgrade)
+	if upgrade then
+		stage = -1
+		-- TODO: hide all pieces
+	else
+		stage = 0
+		StartThread(fx)
+		-- TODO: show all pieces
+	end
+end
 
 function script.Create()
 	Hide(dirt)

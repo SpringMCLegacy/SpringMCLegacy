@@ -33,16 +33,45 @@ local BEACON_ID = UnitDefNames["beacon"].id
 local MIN_BUILD_RANGE = tonumber(UnitDefNames["beacon"].customParams.minbuildrange) or 230
 local MAX_BUILD_RANGE = UnitDefNames["beacon"].buildDistance
 
+local CMD_UPGRADE = GG.CustomCommands.GetCmdID("CMD_UPGRADE")
+
 -- Variables
 local towerDefIDs = {} -- towerDefIDs[unitDefID] = "turret" or "ecm" or "sensor"
 local buildLimits = {} -- buildLimits[unitID] = {turret = 4, ecm = 1, sensor = 1}
 local towerOwners = {} -- towerOwners[towerID] = beaconID
 
+local outpostDefs = {} -- outpostDefs[unitDefID] = {tooltip = "some string"}
+local upgradeIDs = {} -- upradeIDs[cmdID] = unitDefID
+local outpostIDs = {} -- outpostIDs[unitID] = beaconID
+
+--[[local function HotSwap(unitID, unitDefID, teamID)
+	local x,y,z = Spring.GetUnitPosition(unitID)
+	if not Spring.GetUnitIsDead(unitID) then
+		Spring.DestroyUnit(unitID)
+		Spring.Echo("Destroy:", unitID)
+	end
+	if not teamID then
+		teamID = Spring.GetUnitTeam(unitID)
+	end
+	DelayCall(Spring.CreateUnit,{unitDefID, x,y,z, "s", teamID, false, false, unitID, nil}, 3) -- 3 frame delay appears to be minimum
+end]]
+
 function gadget:GamePreload()
 	for unitDefID, unitDef in pairs(UnitDefs) do
+		local name = unitDef.name
 		local cp = unitDef.customParams
 		if cp and cp.towertype then
 			towerDefIDs[unitDefID] = cp.towertype
+		elseif name:find("outpost") then
+			local upgradeCmdDesc = {
+				id     = GG.CustomCommands.GetCmdID("CMD_UPGRADE_" .. name),
+				type   = CMDTYPE.ICON,
+				name   = unitDef.humanName,
+				action = 'upgrade',
+				tooltip = "blah!", -- TODO: add c-bill cost and w/e else
+			}
+			outpostDefs[unitDefID] = {cmdDesc = upgradeCmdDesc, cost = unitDef.metalCost}
+			upgradeIDs[upgradeCmdDesc.id] = unitDefID
 		end
 	end
 end
@@ -52,6 +81,9 @@ function gadget:UnitCreated(unitID, unitDefID, teamID, builderID)
 	local cp = unitDef.customParams
 	if unitDefID == BEACON_ID then
 		buildLimits[unitID] = {["turret"] = 4, ["ecm"] = 1, ["sensor"] = 1}
+		for outpostDefID, outpostInfo in pairs(outpostDefs) do
+			Spring.InsertUnitCmdDesc(unitID, outpostInfo.cmdDesc)
+		end
 	elseif cp and cp.towertype then
 		-- track creation of turrets and their originating beacons so we can give back slots if a turret dies
 		if builderID then -- ignore /give turrets
@@ -68,6 +100,13 @@ function gadget:UnitDestroyed(unitID, unitDefID, teamID)
 			EditUnitCmdDesc(towerOwnerID, FindUnitCmdDesc(towerOwnerID, -turretDefID), {disabled = false, params = {}})
 		end
 		towerOwners[unitID] = nil
+	end
+	local beaconID = outpostIDs[unitID]
+	if outpostID then
+		Spring.SetUnitNoSelect(beaconID, false)
+		env = Spring.UnitScript.GetScriptEnv(unitID)
+		Spring.UnitScript.CallAsUnit(unitID, env.ChangeType(false))
+		outpostIDs[unitID] = nil
 	end
 end
 
@@ -88,15 +127,20 @@ function gadget:UnitGiven(unitID, unitDefID, newTeam, oldTeam)
 	end
 end
 
---[[function DropshipDelivery(cmdID, cmdParams, teamID)
-	local tx,ty,tz = unpack(cmdParams)
+function DropshipDelivery(unitID, unitDefID, teamID)
+	local tx,ty,tz = Spring.GetUnitPosition(unitID)
+	-- TODO:
 	-- add some random nums to x,z, maybe based on sin,cos of radial distance - for insertion point
-	-- need a way to find dropship unit? probably ok to limit based on type of call
 	-- GetTeamInfo for race if we have different IS / Clan dropships
 	-- calculate facing based on x,z heading to tx,tz
 	-- local dropShipID = CreateUnit(dropshipDefID, x,y,z, facing, teamID)
 	-- MoveCtrl.SetRelativeVelocity and DelayCall used to perform the drop maneuver?
-end]]
+	Spring.SetUnitNoSelect(unitID, true) -- Need a way to undo this on upgrade death
+	local outpostID = Spring.CreateUnit(unitDefID, tx,ty,tz, "s", teamID)
+	outpostIDs[outpostID] = unitID
+	env = Spring.UnitScript.GetScriptEnv(unitID)
+	Spring.UnitScript.CallAsUnit(unitID, env.ChangeType(true))
+end
 
 function LimitTowerType(unitID, towerType)	
 	local towersRemaining = buildLimits[unitID][towerType]
@@ -117,18 +161,25 @@ function LimitTowerType(unitID, towerType)
 end
 
 function gadget:AllowCommand(unitID, unitDefID, teamID, cmdID, cmdParams, cmdOptions)
-	if unitDefID == BEACON_ID and cmdID < 0 then
-		local tx, ty, tz = unpack(cmdParams)
-		local dist = GetUnitDistanceToPoint(unitID, tx, ty, tz, false)
-		if dist < MIN_BUILD_RANGE then
-			Spring.Echo("Too close to beacon")
-			return false
-		elseif dist > MAX_BUILD_RANGE then
-			Spring.Echo("Too far from beacon")
+	if unitDefID == BEACON_ID then
+		if cmdID < 0 then
+			local tx, ty, tz = unpack(cmdParams)
+			local dist = GetUnitDistanceToPoint(unitID, tx, ty, tz, false)
+			if dist < MIN_BUILD_RANGE then
+				Spring.Echo("Too close to beacon")
+				return false
+			elseif dist > MAX_BUILD_RANGE then
+				Spring.Echo("Too far from beacon")
+				return false
+			end
+			local towerType = towerDefIDs[-cmdID]
+			if towerType then return LimitTowerType(unitID, towerType) end
+		elseif upgradeIDs[cmdID] then
+			Spring.Echo("I'm totally gonna upgrade your beacon bro!")
+			 DropshipDelivery(unitID, upgradeIDs[cmdID], teamID)
+		elseif cmdID == CMD.SELFD then -- Disallow self-d
 			return false
 		end
-		local towerType = towerDefIDs[-cmdID]
-		if towerType then return LimitTowerType(unitID, towerType) end
 	end
 	return true
 end

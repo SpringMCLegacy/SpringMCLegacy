@@ -5,11 +5,11 @@ local armorDefs = {
 	},
 	beacons = {
 		"beacon",
-		"outpost_c3center",
+		--[["outpost_c3center",
 		"outpost_vehicledepot",
 		"outpost_listeningpost",
 		"outpost_garrison",
-		"outpost_controltower",
+		"outpost_controltower",]]
 	},
 	light = {
 		--[["IS_Locust",

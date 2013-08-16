@@ -59,15 +59,6 @@ local auras = {
 						mask = {"all"},
 				},
         },
-		outpost_c3center = {
-                range = 600,
-                transport = false,
-                weapons = {
-						range = 1.25,     --Range multiplier. This also increases the projectile speed so lasers don't fade out.
-						accuracy = 2,  --Accuracy multiplier.
-						mask = {"all"},
-				},
-        },
 }
  
 return auras
