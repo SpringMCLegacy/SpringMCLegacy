@@ -28,6 +28,7 @@ local Upgrade_Bunker = {
 		ammosupplier	= "0",
 		supplyradius	= "0",
 		helptext		= "Heavily-fortified structure resilient to all attacks to fortify captured control points.",
+		flagdefendrate = 100,
     },
 	--sounds = {
     --underattack        = "Dropship_Alarm",
