@@ -31,8 +31,6 @@ local Upgrade_Mechbay = {
 		showNanoSpray		= 0,
 		workerTime			= 1,
 		canBeAssisted	= false,
-		yardmap			= "oyyyyyyo oyyyyyyo oyyyyyyo oyyyyyyo oyyyyyyo oyyyyyyo oyyyyyyo oyyyyyyo ",
-	TEDClass			= PLANT,
 	
 	customparams = {
 		dontcount		= 1,

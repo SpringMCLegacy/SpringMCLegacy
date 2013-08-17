@@ -17,7 +17,7 @@ local touchDown = false
 local cargoID
 
 function LoadCargo(outpostID)
-	Spring.Echo("Loading", outpostID, "of type", UnitDefs[Spring.GetUnitDefID(outpostID)].name)
+	--Spring.Echo("Loading", outpostID, "of type", UnitDefs[Spring.GetUnitDefID(outpostID)].name)
 	cargoID = outpostID
 	Spring.UnitScript.AttachUnit(cargo, cargoID)
 end
@@ -67,9 +67,9 @@ function script.Create()
 	WaitForTurn(body, x_axis)
 	Spring.MoveCtrl.SetGravity(unitID, -4 * GRAVITY)
 	Sleep(1500)
-	Spin(body, z_axis, math.rad(360), math.rad(90))
-	Sleep(1000)
-	StopSpin(body, z_axis, math.rad(90))
+	Spin(body, z_axis, math.rad(180), math.rad(45))
+	Sleep(2000)
+	StopSpin(body, z_axis, math.rad(45))
 end
 
 function script.Killed(recentDamage, maxHealth)

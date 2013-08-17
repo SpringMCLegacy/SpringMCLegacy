@@ -20,6 +20,7 @@ local Upgrade_C3Array = {
 	maxVelocity			= 0,
 	idleAutoHeal		= 0,
 	maxSlope			= 100,
+	energyStorage		= 200, -- grants 200 extra Tonnage space, need to lua it arriving with 200 e
 	cantbetransported	= false,
 
 	customparams = {
