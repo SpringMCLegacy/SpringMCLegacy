@@ -5,7 +5,7 @@ local Upgrade_Mechbay = {
 	script				= "Upgrade_Mechbay.lua",
 	iconType			= "beacon",
 	category 			= "structure ground notbeacon",
-		--activateWhenBuilt   = true,
+	--activateWhenBuilt   = true,
 	maxDamage           = 10000,
 	mass                = 9000,
 	footprintX			= 8,
@@ -23,6 +23,8 @@ local Upgrade_Mechbay = {
 	metalStorage		= 0,
 	idleAutoHeal		= 0,
 	maxSlope			= 100,
+	cantbetransported	= false,
+
 	builder				= true,
 	moveState			= 0,
 		showNanoFrame		= 0,

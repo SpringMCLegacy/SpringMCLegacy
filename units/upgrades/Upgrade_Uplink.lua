@@ -21,8 +21,8 @@ local Upgrade_Uplink = {
 	maxVelocity			= 0,
 	idleAutoHeal		= 0,
 	maxSlope			= 100,
-	builder				= false,
-	TEDClass			= "FORT",
+	cantbetransported	= false,
+
 		--Makes unit use weapon from /weapons folder
 	customparams = {
 		dontcount		= 1,
