@@ -66,7 +66,7 @@ function script.Create()
 	Spring.UnitScript.DropUnit(cargoID)
 	-- Let the cargo know it is unloaded
 	env = Spring.UnitScript.GetScriptEnv(cargoID)
-	Spring.UnitScript.CallAsUnit(cargoID, env.Unpack)
+	Spring.UnitScript.CallAsUnit(cargoID, env.Unloaded)
 	-- Let the beacon know upgrade is ready
 	env = Spring.UnitScript.GetScriptEnv(beaconID)
 	Spring.UnitScript.CallAsUnit(beaconID, env.ChangeType, true)
