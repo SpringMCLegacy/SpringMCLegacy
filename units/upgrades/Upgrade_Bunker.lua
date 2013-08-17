@@ -5,7 +5,7 @@ local Upgrade_Bunker = {
 	script				= "Upgrade_Bunker.lua",
 	iconType			= "beacon",
 	category 			= "structure ground notbeacon",
-		activateWhenBuilt   = true,
+	activateWhenBuilt   = true,
 	maxDamage           = 50000,
 	mass                = 10000,
 	footprintX			= 3,
@@ -21,9 +21,8 @@ local Upgrade_Bunker = {
 	maxVelocity			= 0,
 	idleAutoHeal		= 0,
 	maxSlope			= 100,
-	builder				= false,
-	TEDClass			= "FORT",
-		--Makes unit use weapon from /weapons folder
+	cantbetransported	= false,
+
 	customparams = {
 		ammosupplier	= "0",
 		supplyradius	= "0",
