@@ -15,9 +15,11 @@ local UZ = math.sin(ANGLE) * RADIAL_DIST
 local stage
 local touchDown = false
 local cargoID
+local beaconID
 
-function LoadCargo(outpostID)
+function LoadCargo(callerID, outpostID)
 	--Spring.Echo("Loading", outpostID, "of type", UnitDefs[Spring.GetUnitDefID(outpostID)].name)
+	beaconID = callerID
 	cargoID = outpostID
 	Spring.UnitScript.AttachUnit(cargo, cargoID)
 end
@@ -56,11 +58,19 @@ function script.Create()
 		Spring.MoveCtrl.SetRelativeVelocity(unitID, 0, 0, math.max(dist/50, 2))
 		Sleep(30)
 	end
+	-- We're in place. Halt and lower the cargo!
 	Spring.MoveCtrl.SetRelativeVelocity(unitID, 0, 0, 0)
 	_, y, _ = Spring.GetUnitPosition(unitID)
 	Move(cargo, y_axis, -(y - TY), 20)
 	WaitForMove(cargo, y_axis)
 	Spring.UnitScript.DropUnit(cargoID)
+	-- Let the cargo know it is unloaded
+	env = Spring.UnitScript.GetScriptEnv(cargoID)
+	Spring.UnitScript.CallAsUnit(cargoID, env.Unpack)
+	-- Let the beacon know upgrade is ready
+	env = Spring.UnitScript.GetScriptEnv(beaconID)
+	Spring.UnitScript.CallAsUnit(beaconID, env.ChangeType, true)
+	-- Take off!	
 	Spring.MoveCtrl.SetRelativeVelocity(unitID, 0, 0, 5)
 	Spring.MoveCtrl.SetGravity(unitID, -0.75 * GRAVITY)
 	Turn(body, x_axis, math.rad(-80), math.rad(15))
