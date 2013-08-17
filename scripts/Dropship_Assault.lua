@@ -37,7 +37,7 @@ function script.Create()
 	Spring.MoveCtrl.SetVelocity(unitID, 0, -100, 0)
 	Spring.MoveCtrl.SetRelativeVelocity(unitID, 0, 0, 10)
 	
-	Spring.MoveCtrl.SetGravity(unitID, -3.75 * GRAVITY)
+	Spring.MoveCtrl.SetGravity(unitID, -3.80 * GRAVITY)
 	
 	local x, y, z = Spring.GetUnitPosition(unitID)
 	while y - TY > 200 do
@@ -61,10 +61,14 @@ function script.Create()
 	Move(cargo, y_axis, -(y - TY), 20)
 	WaitForMove(cargo, y_axis)
 	Spring.UnitScript.DropUnit(cargoID)
-	Spring.MoveCtrl.SetRelativeVelocity(unitID, 0, 0, 4)
-	Turn(body, x_axis, math.rad(-60), math.rad(10))
+	Spring.MoveCtrl.SetRelativeVelocity(unitID, 0, 1, 4)
+	Turn(body, x_axis, math.rad(-80), math.rad(15))
 	WaitForTurn(body, x_axis)
 	Spring.MoveCtrl.SetGravity(unitID, -4 * GRAVITY)
+	Sleep(2500)
+	Spin(body, z_axis, math.rad(360), math.rad(90))
+	Sleep(1000)
+	StopSpin(body, z_axis, math.rad(90))
 end
 
 function script.Killed(recentDamage, maxHealth)
