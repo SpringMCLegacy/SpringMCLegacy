@@ -140,24 +140,15 @@ function SpawnCargo(beaconID, dropshipID, unitDefID, teamID)
 	local outpostID = Spring.CreateUnit(unitDefID, tx, ty, tz, "s", teamID)
 	env = Spring.UnitScript.GetScriptEnv(dropshipID)
 	Spring.UnitScript.CallAsUnit(dropshipID, env.LoadCargo, outpostID)
-	--env.LoadCargo(outpostID)
 	outpostIDs[outpostID] = beaconID 
-	--[[env = Spring.UnitScript.GetScriptEnv(beaconID) -- TODO: Delay this somehow
+	--[[env = Spring.UnitScript.GetScriptEnv(beaconID) -- TODO: Delay this somehow, best called by upgrade
 	env.ChangeType(true)]]
 end
 
 function DropshipDelivery(unitID, unitDefID, teamID)
 	UseTeamResource(teamID, "metal", outpostDefs[unitDefID].cost)
 	local tx,ty,tz = Spring.GetUnitPosition(unitID)
-	-- TODO:
-	-- add some random nums to x,z, maybe based on sin,cos of radial distance - for insertion point
-	-- GetTeamInfo for race if we have different IS / Clan dropships
-	-- calculate facing based on x,z heading to tx,tz
-	-- local dropShipID = CreateUnit(dropshipDefID, x,y,z, facing, teamID)
-	-- MoveCtrl.SetRelativeVelocity and DelayCall used to perform the drop maneuver?
 	Spring.SetUnitNoSelect(unitID, true) -- Need a way to undo this on upgrade death
-	-- TODO: instead, create dropship here and pass it upgradeDefID
-	--local outpostID = Spring.CreateUnit(unitDefID, tx,ty,tz, "s", teamID)
 	local dropshipID = Spring.CreateUnit("is_avenger", tx, ty, tz, "s", teamID)
 	DelayCall(SpawnCargo, {unitID, dropshipID, unitDefID, teamID}, 1)
 end

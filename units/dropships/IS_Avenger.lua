@@ -26,9 +26,8 @@ local IS_Avenger = {
 	movementClass		= "LARGEMECH", -- herp
 	
 	-- Transport tags
-	transportSize		= 7,
-	--minTransportSize	= 5, -- ?
-	transportCapacity	= 7, -- 1x transportSize
+	transportSize		= 8,
+	transportCapacity	= 8, -- 1x transportSize
 	transportMass		= 10000,
 	--minTransportMass	= 10000,
 
