@@ -144,6 +144,7 @@ function DropshipDelivery(unitID, unitDefID, teamID)
 	-- local dropShipID = CreateUnit(dropshipDefID, x,y,z, facing, teamID)
 	-- MoveCtrl.SetRelativeVelocity and DelayCall used to perform the drop maneuver?
 	Spring.SetUnitNoSelect(unitID, true) -- Need a way to undo this on upgrade death
+	-- TODO: instead, create dropship here and pass it upgradeDefID
 	local outpostID = Spring.CreateUnit(unitDefID, tx,ty,tz, "s", teamID)
 	outpostIDs[outpostID] = unitID
 	env = Spring.UnitScript.GetScriptEnv(unitID)

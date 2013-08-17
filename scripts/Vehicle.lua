@@ -280,7 +280,6 @@ function script.HitByWeapon(x, z, weaponID, damage)
 	currHeatLevel = currHeatLevel + heatDamage
 	SetUnitRulesParam(unitID, "heat", currHeatLevel)
 	local hitPiece = GetUnitLastAttackedPiece(unitID) or ""
-	Spring.Echo("HIT ON ", hitPiece)
 	if hitPiece == "body" then 
 		return damage
 	elseif hitPiece == "turret" or hitPiece == "launcher_1" or hitPiece == "turret_2" then
