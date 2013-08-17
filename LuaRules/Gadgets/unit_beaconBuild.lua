@@ -139,10 +139,8 @@ function SpawnCargo(beaconID, dropshipID, unitDefID, teamID)
 	local tx, ty, tz = Spring.GetUnitPosition(dropshipID)
 	local outpostID = Spring.CreateUnit(unitDefID, tx, ty, tz, "s", teamID)
 	env = Spring.UnitScript.GetScriptEnv(dropshipID)
-	Spring.UnitScript.CallAsUnit(dropshipID, env.LoadCargo, outpostID)
+	Spring.UnitScript.CallAsUnit(dropshipID, env.LoadCargo, beaconID, outpostID)
 	outpostIDs[outpostID] = beaconID 
-	--[[env = Spring.UnitScript.GetScriptEnv(beaconID) -- TODO: Delay this somehow, best called by upgrade
-	env.ChangeType(true)]]
 end
 
 function DropshipDelivery(unitID, unitDefID, teamID)
