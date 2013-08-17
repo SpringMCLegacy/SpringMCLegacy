@@ -21,8 +21,7 @@ local Upgrade_C3Array = {
 	idleAutoHeal		= 0,
 	maxSlope			= 100,
 	cantbetransported	= false,
-	movementClass		= "SMALLMECH", -- required to be loadable?
-		--Makes unit use weapon from /weapons folder
+
 	customparams = {
 		dontcount		= 1,
 		helptext		= "Adds additional control slots for your forces",
