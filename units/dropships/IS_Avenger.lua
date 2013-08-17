@@ -23,13 +23,14 @@ local IS_Avenger = {
 	maxSlope			= 50,
 	moveState			= 0,
 	levelGround			= false,
+	movementClass		= "LARGEMECH", -- herp
 	
 	-- Transport tags
-	transportSize		= 5,
-	minTransportSize	= 5, -- ?
-	transportCapacity	= 5, -- 1x transportSize
+	transportSize		= 7,
+	--minTransportSize	= 5, -- ?
+	transportCapacity	= 7, -- 1x transportSize
 	transportMass		= 10000,
-	minTransportMass	= 10000,
+	--minTransportMass	= 10000,
 
 	--Makes unit use weapon from /weapons folder
 	weapons	= {	
