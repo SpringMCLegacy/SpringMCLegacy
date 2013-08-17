@@ -134,6 +134,18 @@ function gadget:UnitGiven(unitID, unitDefID, newTeam, oldTeam)
 	end
 end
 
+function SpawnCargo(beaconID, dropshipID, unitDefID, teamID)
+	env = Spring.UnitScript.GetScriptEnv(dropshipID)
+	local tx, ty, tz = Spring.GetUnitPosition(dropshipID)
+	local outpostID = Spring.CreateUnit(unitDefID, tx, ty, tz, "s", teamID)
+	env = Spring.UnitScript.GetScriptEnv(dropshipID)
+	Spring.UnitScript.CallAsUnit(dropshipID, env.LoadCargo, outpostID)
+	--env.LoadCargo(outpostID)
+	outpostIDs[outpostID] = beaconID 
+	--[[env = Spring.UnitScript.GetScriptEnv(beaconID) -- TODO: Delay this somehow
+	env.ChangeType(true)]]
+end
+
 function DropshipDelivery(unitID, unitDefID, teamID)
 	UseTeamResource(teamID, "metal", outpostDefs[unitDefID].cost)
 	local tx,ty,tz = Spring.GetUnitPosition(unitID)
@@ -145,10 +157,9 @@ function DropshipDelivery(unitID, unitDefID, teamID)
 	-- MoveCtrl.SetRelativeVelocity and DelayCall used to perform the drop maneuver?
 	Spring.SetUnitNoSelect(unitID, true) -- Need a way to undo this on upgrade death
 	-- TODO: instead, create dropship here and pass it upgradeDefID
-	local outpostID = Spring.CreateUnit(unitDefID, tx,ty,tz, "s", teamID)
-	outpostIDs[outpostID] = unitID
-	env = Spring.UnitScript.GetScriptEnv(unitID)
-	Spring.UnitScript.CallAsUnit(unitID, env.ChangeType, true)
+	--local outpostID = Spring.CreateUnit(unitDefID, tx,ty,tz, "s", teamID)
+	local dropshipID = Spring.CreateUnit("is_avenger", tx, ty, tz, "s", teamID)
+	DelayCall(SpawnCargo, {unitID, dropshipID, unitDefID, teamID}, 1)
 end
 
 function LimitTowerType(unitID, towerType)	

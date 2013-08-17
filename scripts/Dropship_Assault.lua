@@ -1,31 +1,36 @@
 --pieces
 local body = piece ("body")
+local cargo = piece ("cargo")
 
 -- Constants
 local DROP_HEIGHT = 10000
 local GRAVITY = 120 / Game.gravity
 local TX, TY, TZ = Spring.GetUnitPosition(unitID)
-local RADIAL_DIST = 2000
-local ANGLE = unitID / 100
+local RADIAL_DIST = 2500
+local ANGLE = math.floor(unitID / 100)
 local UX = math.cos(ANGLE) * RADIAL_DIST
 local UZ = math.sin(ANGLE) * RADIAL_DIST
 
 -- Variables
 local stage
 local touchDown = false
+local cargoID
 
+function LoadCargo(outpostID)
+	Spring.Echo("Loading", outpostID, "of type", UnitDefs[Spring.GetUnitDefID(outpostID)].name)
+	cargoID = outpostID
+	Spring.UnitScript.AttachUnit(cargo, cargoID)
+end
 
 function fx()
 
 end
 
-
 function script.Create()
 	Spring.MoveCtrl.Enable(unitID)
 	Spring.MoveCtrl.SetPosition(unitID, TX + UX, TY + DROP_HEIGHT, TZ + UZ)
-
-	local newHeading = math.deg(math.atan2(UX, UZ)) * 182 --COB_ANGULAR	
-	Spring.SetUnitCOBValue(unitID, COB.HEADING, newHeading + 180 * 182)
+	local newAngle = math.atan2(UX, UZ)
+	Spring.MoveCtrl.SetRotation(unitID, 0, newAngle + math.pi, 0)
 	
 	Turn(body, x_axis, math.rad(-45))
 	Turn(body, x_axis, 0, math.rad(5))
@@ -33,49 +38,33 @@ function script.Create()
 	Spring.MoveCtrl.SetRelativeVelocity(unitID, 0, 0, 10)
 	
 	Spring.MoveCtrl.SetGravity(unitID, -3.75 * GRAVITY)
-	--[[[Spring.MoveCtrl.SetCollideStop(unitID, true)
-	Spring.MoveCtrl.SetTrackGround(unitID, true)
 	
-	stage = 3
-	StartThread(fx)
-	for i = 1, 4 do
-		local _, sy, _ = Spring.GetUnitVelocity(unitID)
-		PlaySound("NavBeacon_Descend", 10, 0,sy,0)
-		Sleep(2500)
+	local x, y, z = Spring.GetUnitPosition(unitID)
+	while y - TY > 200 do
+		x, y, z = Spring.GetUnitPosition(unitID)
+		Sleep(100)
 	end
-	while not touchDown do
-		Sleep(50)
+	--Spring.Echo("At 500?", y - TY)
+	Spring.MoveCtrl.SetVelocity(unitID, 0, 0, 0)
+	Spring.MoveCtrl.SetGravity(unitID, 0)
+	local x, _, _ = Spring.GetUnitPosition(unitID)
+	local dist = math.abs(x - TX)
+	while dist > 1 do
+		--Spring.Echo("dist", dist)
+		x, _, z = Spring.GetUnitPosition(unitID)
+		dist = math.abs(x - TX)
+		Spring.MoveCtrl.SetRelativeVelocity(unitID, 0, 0, math.max(dist/50, 2))
+		Sleep(30)
 	end
-	
-	stage = 2
-	EmitSfx(dirt, SFX.CEG + 1)
-	Show(dirt)
-	StopSpin(base, y_axis)
-	PlaySound("NavBeacon_Land", 30)
-	Sleep(5400)
-	
-	stage = 1
-	Hide(rocket)
-	PlaySound("NavBeacon_Pop", 15)
-	Explode(rocket, SFX.FIRE + SFX.SMOKE)
-	Sleep(3500)
-	Turn(flaps[1], x_axis, -math.rad(80), math.rad(20))
-	Turn(flaps[2], z_axis, -math.rad(80), math.rad(20))
-	Turn(flaps[3], x_axis, math.rad(80), math.rad(20))
-	Turn(flaps[4], z_axis, math.rad(80), math.rad(20))
-	WaitForTurn(flaps[4], z_axis)
-	Sleep(800)
-	Move(antenna1, y_axis, 4, 2)
-	WaitForMove(antenna1, y_axis)
-	Move(antenna2, y_axis, 4, 2)
-	WaitForMove(antenna2, y_axis)
-	Sleep(500)
-	Move(antenna3, y_axis, 12, 48)
-	WaitForMove(antenna3, y_axis)
-	
-	stage = 0
-	StartThread(fx) -- restart for blink
-	SetUnitValue(COB.INBUILDSTANCE, 1)]]
+	Spring.MoveCtrl.SetRelativeVelocity(unitID, 0, 0, 0)
+	_, y, _ = Spring.GetUnitPosition(unitID)
+	Move(cargo, y_axis, -(y - TY), 20)
+	WaitForMove(cargo, y_axis)
+	Spring.UnitScript.DropUnit(cargoID)
+	Spring.MoveCtrl.SetRelativeVelocity(unitID, 0, 0, 4)
+	Turn(body, x_axis, math.rad(-60), math.rad(10))
+	WaitForTurn(body, x_axis)
+	Spring.MoveCtrl.SetGravity(unitID, -4 * GRAVITY)
 end
 
 function script.Killed(recentDamage, maxHealth)
