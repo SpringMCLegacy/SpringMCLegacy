@@ -68,7 +68,7 @@ function gadget:GamePreload()
 			local upgradeCmdDesc = {
 				id     = GG.CustomCommands.GetCmdID("CMD_UPGRADE_" .. name),
 				type   = CMDTYPE.ICON,
-				name   = unitDef.humanName,
+				name   = unitDef.humanName:gsub(" ", "  \n"),
 				action = 'upgrade',
 				tooltip = "C-Bill cost: " .. cBillCost, -- TODO: add c-bill cost and w/e else
 			}
@@ -141,6 +141,13 @@ function SpawnCargo(beaconID, dropshipID, unitDefID, teamID)
 	env = Spring.UnitScript.GetScriptEnv(dropshipID)
 	Spring.UnitScript.CallAsUnit(dropshipID, env.LoadCargo, beaconID, outpostID)
 	outpostIDs[outpostID] = beaconID 
+	-- copy build limits
+	Spring.SetUnitNanoPieces(outpostID, {1})
+	buildLimits[outpostID] = {}
+	for k,v in pairs(buildLimits[beaconID]) do
+		buildLimits[outpostID][k] = v + 1
+		LimitTowerType(outpostID, k)
+	end
 end
 
 function DropshipDelivery(unitID, unitDefID, teamID)
@@ -170,7 +177,7 @@ function LimitTowerType(unitID, towerType)
 end
 
 function gadget:AllowCommand(unitID, unitDefID, teamID, cmdID, cmdParams, cmdOptions)
-	if unitDefID == BEACON_ID then
+	if unitDefID == BEACON_ID or outpostIDs[unitID] then
 		if cmdID < 0 then
 			local tx, ty, tz = unpack(cmdParams)
 			local dist = GetUnitDistanceToPoint(unitID, tx, ty, tz, false)
@@ -182,10 +189,17 @@ function gadget:AllowCommand(unitID, unitDefID, teamID, cmdID, cmdParams, cmdOpt
 				return false
 			end
 			local towerType = towerDefIDs[-cmdID]
-			if towerType then return LimitTowerType(unitID, towerType) end
+			if towerType then 
+				if outpostIDs[unitID] then
+					LimitTowerType(unitID, towerType)
+					DelayCall(Spring.GiveOrderToUnit, {outpostIDs[unitID], cmdID, cmdParams, cmdOptions}, 1)
+					return false
+				end
+				return LimitTowerType(unitID, towerType) 
+			end
 		elseif upgradeIDs[cmdID] then
-			Spring.Echo("I'm totally gonna upgrade your beacon bro!")
-			 DropshipDelivery(unitID, upgradeIDs[cmdID], teamID)
+			--Spring.Echo("I'm totally gonna upgrade your beacon bro!")
+			DropshipDelivery(unitID, upgradeIDs[cmdID], teamID)
 		elseif cmdID == CMD.SELFD then -- Disallow self-d
 			return false
 		end
@@ -204,4 +218,5 @@ end
 
 else
 --	UNSYNCED
+
 end

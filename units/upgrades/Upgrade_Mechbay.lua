@@ -1,5 +1,5 @@
 local Upgrade_Mechbay = {
-	name              	= "Mobile Mech Bay",
+	name              	= "Mobile Mech-Bay",
 	description         = "Repair & Rearm Upgrade",
 	objectName        	= "Upgrade_Mechbay.s3o",
 	script				= "Upgrade_Mechbay.lua",
