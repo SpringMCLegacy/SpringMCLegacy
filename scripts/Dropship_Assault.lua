@@ -2,6 +2,7 @@
 local body = piece ("body")
 local cargo = piece ("cargo")
 
+local GetUnitDistanceToPoint = GG.GetUnitDistanceToPoint
 -- Constants
 local HOVER_HEIGHT = 300
 local DROP_HEIGHT = 10000 + HOVER_HEIGHT
@@ -50,11 +51,9 @@ function script.Create()
 	-- Descent complete, move over the target
 	Spring.MoveCtrl.SetVelocity(unitID, 0, 0, 0)
 	Spring.MoveCtrl.SetGravity(unitID, 0)
-	local x, _, _ = Spring.GetUnitPosition(unitID)
-	local dist = math.abs(x - TX)
-	while dist > 1 do
-		x, _, z = Spring.GetUnitPosition(unitID)
-		dist = math.abs(x - TX)
+	local dist = GetUnitDistanceToPoint(unitID, TX, 0, TZ, false)
+	while dist > 10 do
+		dist = GetUnitDistanceToPoint(unitID, TX, 0, TZ, false)
 		Spring.MoveCtrl.SetRelativeVelocity(unitID, 0, 0, math.max(dist/50, 2))
 		Sleep(30)
 	end
