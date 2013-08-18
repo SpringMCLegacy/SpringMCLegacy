@@ -230,7 +230,7 @@ function gadget:GamePreload()
 			end
 		end
 		-- Vehicles
-		info.hover = unitDef.moveData.family == "hover"
+		info.hover = unitDef.moveData and unitDef.moveData.family == "hover"
 		info.vtol = unitDef.hoverAttack
 		--info.aero = unitDef.myGravity
 		info.turrets = StringToTable(cp.turrets)
