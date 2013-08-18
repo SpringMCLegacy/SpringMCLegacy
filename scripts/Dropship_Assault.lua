@@ -3,7 +3,8 @@ local body = piece ("body")
 local cargo = piece ("cargo")
 
 -- Constants
-local DROP_HEIGHT = 10000
+local HOVER_HEIGHT = 300
+local DROP_HEIGHT = 10000 + HOVER_HEIGHT
 local GRAVITY = 120 / Game.gravity
 local TX, TY, TZ = Spring.GetUnitPosition(unitID)
 local RADIAL_DIST = 2500
@@ -29,35 +30,37 @@ function fx()
 end
 
 function script.Create()
+	-- Move us up to the drop position
 	Spring.MoveCtrl.Enable(unitID)
 	Spring.MoveCtrl.SetPosition(unitID, TX + UX, TY + DROP_HEIGHT, TZ + UZ)
 	local newAngle = math.atan2(UX, UZ)
 	Spring.MoveCtrl.SetRotation(unitID, 0, newAngle + math.pi, 0)
-	
 	Turn(body, x_axis, math.rad(-45))
+	-- Begin the drop
 	Turn(body, x_axis, 0, math.rad(5))
 	Spring.MoveCtrl.SetVelocity(unitID, 0, -100, 0)
 	Spring.MoveCtrl.SetRelativeVelocity(unitID, 0, 0, 10)
-	
 	Spring.MoveCtrl.SetGravity(unitID, -3.78 * GRAVITY)
 	
 	local x, y, z = Spring.GetUnitPosition(unitID)
-	while y - TY > 150 do
+	while y - TY > 150 + HOVER_HEIGHT do
 		x, y, z = Spring.GetUnitPosition(unitID)
 		Sleep(100)
 	end
-	--Spring.Echo("At 500?", y - TY)
+	-- Descent complete, move over the target
 	Spring.MoveCtrl.SetVelocity(unitID, 0, 0, 0)
 	Spring.MoveCtrl.SetGravity(unitID, 0)
 	local x, _, _ = Spring.GetUnitPosition(unitID)
 	local dist = math.abs(x - TX)
 	while dist > 1 do
-		--Spring.Echo("dist", dist)
 		x, _, z = Spring.GetUnitPosition(unitID)
 		dist = math.abs(x - TX)
 		Spring.MoveCtrl.SetRelativeVelocity(unitID, 0, 0, math.max(dist/50, 2))
 		Sleep(30)
 	end
+	-- We're over the target area, reduce height!
+	Spring.MoveCtrl.SetRelativeVelocity(unitID, 0, -2, 0)
+	Sleep(HOVER_HEIGHT / 2 * 33)
 	-- We're in place. Halt and lower the cargo!
 	Spring.MoveCtrl.SetRelativeVelocity(unitID, 0, 0, 0)
 	_, y, _ = Spring.GetUnitPosition(unitID)
@@ -80,6 +83,10 @@ function script.Create()
 	Spin(body, z_axis, math.rad(180), math.rad(45))
 	Sleep(2000)
 	StopSpin(body, z_axis, math.rad(45))
+	Sleep(2000)
+	-- We're out of the atmosphere, bye bye!
+	Spring.DestroyUnit(unitID, false, true)
+	Spring.Echo("toodlepip!")
 end
 
 function script.Killed(recentDamage, maxHealth)
