@@ -74,16 +74,15 @@ for name, ud in pairs(UnitDefs) do
 			ud.usepiececollisionvolumes = true
 			ud.losemitheight = ud.mass / 100
 			ud.radaremitheight = ud.mass / 100
-			if ud.customparams.hasbap == "true" then
-				--ud.losemitheight = 1000
-				ud.radaremitheight = 1000
-			end
 		elseif ud.customparams.unittype == "vehicle" then
 			ud.usepiececollisionvolumes = true
 			if ud.canfly then
 				ud.buildtime = HANGAR_DISTANCE / (speed * 0.5)
 			end
 		end
+	end
+	if ud.customparams.hasbap == "true" then
+		ud.radaremitheight = 1000
 	end
 	-- set maxvelocity by modoption
 	ud.maxvelocity = (ud.maxvelocity or 0) * (modOptions.speed or 1)

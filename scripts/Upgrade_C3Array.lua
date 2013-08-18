@@ -15,7 +15,6 @@ function Unloaded()
 end
 
 function Unpack()
-	Spring.AddTeamResource(Spring.GetUnitTeam(unitID), "energy", 200)
 	Turn(crate_front, x_axis, rad(45), CRATE_SPEED)
 	Turn(crate_back, x_axis, rad(-45), CRATE_SPEED)
 	Turn(crate_left, z_axis, rad(45), CRATE_SPEED)

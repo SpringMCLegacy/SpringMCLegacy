@@ -64,7 +64,7 @@ end
 
 function gadget:UnitCreated(unitID, unitDefID, teamID, builderID)
 	local ud = UnitDefs[unitDefID]
-	if ud.builder then -- warning, assumes no other builders or factories!
+	if ud.isBuilder then -- warning, assumes no other builders or factories!
 		dropShips[unitID] = true
 		if modOptions and modOptions.income == "none" then
 			SetUnitResourcing(unitID, "umm", 0)
