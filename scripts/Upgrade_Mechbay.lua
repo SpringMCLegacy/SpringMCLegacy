@@ -1,74 +1,75 @@
--- Outpost - VehicleDepot Script
--- useful global stuff
-local ud = UnitDefs[Spring.GetUnitDefID(unitID)] -- unitID is available automatically to all LUS
-local deg, rad = math.deg, math.rad
-local currUnitDefID = nil
-
---piece defines
+--pieces
 local base = piece ("base")
-local doors = {}
-for i = 1, 4 do
-	doors[i] = piece ("door" .. i)
+
+local rampr, rampl, ramprfoldrear, ramprfoldfront, ramplfoldrear, ramplfoldfront = piece ("rampr", "rampl", "ramprfoldrear", "ramprfoldfront", "ramplfoldrear", "ramplfoldfront")
+local supportrlower, supportllower, supportrupper, supportlupper = piece ("supportrlower", "supportllower", "supportrupper", "supportlupper")
+local ramprtoolupper, ramprtoolmid, ramprtoollower, ramprtoolfinger1, ramprtoolfinger2 = piece ("ramprtoolupper", "ramprtoolmid", "ramprtoollower", "ramprtoolfinger1", "ramprtoolfinger2")
+local rampltoolupper, rampltoolmid, rampltoollower, rampltoolfinger1, rampltoolfinger2 = piece ("rampltoolupper", "rampltoolmid", "rampltoollower", "rampltoolfinger1", "rampltoolfinger2")
+
+local crate_base, crate_top, crate_right, crate_left, crate_front, crate_back = piece ("crate_base", "crate_top", "crate_right", "crate_left", "crate_front", "crate_back")
+
+
+
+-- includes
+local rad = math.rad
+local CRATE_SPEED = math.rad(50)
+
+function script.Create()
 end
 
--- Constants
-local DOOR_SPEED = 4
-
-function GetUnitDef(unitDefID)
-	currUnitDefID = unitDefID
+function Unloaded()
+	StartThread(Unpack)
 end
 
-function Doors(open)
-	Signal(2)
-	SetSignalMask(2)
-	local position = 9 * open
-	if open == 1 then 
-		for i = #doors, 1, -1 do
-			Move(doors[i], x_axis, position, DOOR_SPEED)
-			WaitForMove(doors[i], x_axis)
-		end
-		-- open yard after doors are done
-		SetUnitValue(COB.YARD_OPEN, open)
-		SetUnitValue(COB.INBUILDSTANCE, open)
-		SetUnitValue(COB.BUGGER_OFF, open)
-	else
-		-- close yard before closing doors
-		SetUnitValue(COB.YARD_OPEN, open)
-		SetUnitValue(COB.INBUILDSTANCE, open)
-		SetUnitValue(COB.BUGGER_OFF, open)
-		for i = 1, #doors do
-			Move(doors[i], x_axis, position, DOOR_SPEED)
-			WaitForMove(doors[i], x_axis)
-		end
-	end
-end
-
-function script.Activate()
-	StartThread(Doors, 1)
-end
-
-function script.Deactivate()
-	StartThread(Doors, 0)
-end
-
-function script.QueryBuildInfo() 
-	return base
-end
-
-function script.QueryNanopiece() 
-	return base 
+function Unpack()
+	-- TODO: Unpack anim goes here!
+	-- TODO: Don't forget to Move(crate_base, y_axis, -SOME_NUMBER, SOME_SLOW_SPEED) :)
+	Turn(crate_front, x_axis, rad(45), CRATE_SPEED)
+	Turn(crate_back, x_axis, rad(-45), CRATE_SPEED)
+	Turn(crate_left, z_axis, rad(45), CRATE_SPEED)
+	Turn(crate_right, z_axis, rad(-45), CRATE_SPEED)
+	WaitForTurn(crate_right, z_axis)
+	WaitForTurn(crate_left, z_axis)
+	WaitForTurn(crate_back, x_axis)
+	WaitForTurn(crate_front, x_axis)
+	Turn(crate_front, x_axis, rad(90), CRATE_SPEED * 2)
+	Turn(crate_back, x_axis, rad(-90), CRATE_SPEED * 2)
+	Turn(crate_left, z_axis, rad(90), CRATE_SPEED * 2)
+	Turn(crate_right, z_axis, rad(-90), CRATE_SPEED * 2)
+	WaitForTurn(crate_right, z_axis)
+	WaitForTurn(crate_left, z_axis)
+	WaitForTurn(crate_back, x_axis)
+	WaitForTurn(crate_front, x_axis)
+	Turn(crate_top, z_axis, rad(-45), CRATE_SPEED)
+	WaitForTurn(crate_top, z_axis)
+	Turn(crate_top, z_axis, rad(-90), CRATE_SPEED * 2)
+	Move(rampr, x_axis, 10, CRATE_SPEED * 10)
+	Move(ramprtoolupper, x_axis, 10, CRATE_SPEED * 5)
+	Move(rampl, x_axis, -10, CRATE_SPEED * 10)
+	Move(rampltoolupper, x_axis, -10, CRATE_SPEED * 5)
+	Sleep(100)
+	Turn(ramprtoolupper, x_axis, rad(90), CRATE_SPEED)
+	Turn(rampltoolupper, x_axis, rad(-90), CRATE_SPEED)
+	Turn(ramprtoolmid, z_axis, rad(-70), CRATE_SPEED)
+	Turn(rampltoolmid, z_axis, rad(70), CRATE_SPEED)
+	Turn(ramprtoollower, x_axis, rad(-90), CRATE_SPEED)
+	Turn(rampltoollower, x_axis, rad(90), CRATE_SPEED)
+	Turn(ramprtoolfinger1, y_axis, rad(-45), CRATE_SPEED)
+	Turn(ramprtoolfinger2, y_axis, rad(45), CRATE_SPEED)
+	Turn(rampltoolfinger1, y_axis, rad(-30), CRATE_SPEED)
+	Turn(rampltoolfinger2, y_axis, rad(30), CRATE_SPEED)
+	Move(supportrupper, y_axis, 22, CRATE_SPEED * 10)
+	Move(supportlupper, y_axis, 22, CRATE_SPEED * 10)
+	Sleep(100)
+	Turn(ramplfoldfront, x_axis, rad(179), CRATE_SPEED)
+	Turn(ramprfoldfront, x_axis, rad(179), CRATE_SPEED)
+	Turn(ramplfoldrear, x_axis, rad(-179), CRATE_SPEED)
+	Turn(ramprfoldrear, x_axis, rad(-179), CRATE_SPEED)
+	Sleep(10000)
+	Move(crate_base, y_axis, -5, CRATE_SPEED)
+	Sleep (5000)
+	RecursiveHide(crate_base, true)
 end
 
 function script.Killed(recentDamage, maxHealth)
-	--local severity = recentDamage / maxHealth * 100
-	--if severity <= 25 then
-	--	Explode(body, math.bit_or({SFX.BITMAPONLY, SFX.BITMAP1}))
-	--	return 1
-	--elseif severity <= 50 then
-	--	Explode(body, math.bit_or({SFX.FALL, SFX.BITMAP1}))
-	--	return 2
-	--else
-	--	Explode(body, math.bit_or({SFX.FALL, SFX.SMOKE, SFX.FIRE, SFX.EXPLODE_ON_HIT, SFX.BITMAP1}))
-	--	return 3
-	--end
 end
