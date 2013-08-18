@@ -46,14 +46,17 @@ function script.Create()
 	local x, y, z = Spring.GetUnitPosition(unitID)
 	while y - TY > 150 + HOVER_HEIGHT do
 		x, y, z = Spring.GetUnitPosition(unitID)
+		local newAngle = math.atan2(x - TX, z - TZ)
+		Spring.MoveCtrl.SetRotation(unitID, 0, newAngle + math.pi, 0)
 		Sleep(100)
 	end
 	-- Descent complete, move over the target
 	Spring.MoveCtrl.SetVelocity(unitID, 0, 0, 0)
 	Spring.MoveCtrl.SetGravity(unitID, 0)
 	local dist = GetUnitDistanceToPoint(unitID, TX, 0, TZ, false)
-	while dist > 10 do
+	while dist > 1 do
 		dist = GetUnitDistanceToPoint(unitID, TX, 0, TZ, false)
+		--Spring.Echo("dist", dist)
 		Spring.MoveCtrl.SetRelativeVelocity(unitID, 0, 0, math.max(dist/50, 2))
 		Sleep(30)
 	end
