@@ -111,7 +111,7 @@ end
 function gadget:UnitCreated(unitID, unitDefID, unitTeam)
   --enable/disable for the constructor
 	local ud = UnitDefs[unitDefID]
-	if ud.builder then
+	if ud.isBuilder then
 		--Spring.Echo("Builder! ", unitTeam)
 		for buildDefID, buildability in pairs(buildables) do
 			--Spring.Echo(unitTeam, " : ", (buildability[unitTeam] or "nil"))
