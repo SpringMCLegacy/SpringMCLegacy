@@ -48,10 +48,9 @@ end
 function ChangeType(upgrade)
 	if upgrade then
 		stage = -1
-		RecursiveHide(base, true)
+		Spring.SetUnitNoDraw(unitID, true)
 	else
-		RecursiveHide(base, false)
-		Hide(rocket)
+		Spring.SetUnitNoDraw(unitID, false)
 		stage = 0
 		StartThread(fx)
 	end
