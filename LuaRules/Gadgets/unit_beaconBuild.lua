@@ -193,6 +193,15 @@ function gadget:AllowCommand(unitID, unitDefID, teamID, cmdID, cmdParams, cmdOpt
 	return true
 end
 
+function gadget:Initialize()
+	gadget:GamePreload()
+	for _,unitID in ipairs(Spring.GetAllUnits()) do
+		local teamID = Spring.GetUnitTeam(unitID)
+		local unitDefID = Spring.GetUnitDefID(unitID)
+		gadget:UnitCreated(unitID, unitDefID, teamID)
+	end
+end
+
 else
 --	UNSYNCED
 end

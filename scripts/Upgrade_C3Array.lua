@@ -2,7 +2,7 @@
 local base = piece ("base")
 
 local crate_base, crate_top, crate_right, crate_left, crate_front, crate_back = piece ("crate_base", "crate_top", "crate_right", "crate_left", "crate_front", "crate_back")
-local antennarot, antenna1, antenna2, antenna3, emitter = piece ("antennarot", "antenna1", "antenna2", "antenna3", "emitter")
+local antennarot, antenna1, antenna2, antenna3, emitter, geo = piece ("antennarot", "antenna1", "antenna2", "antenna3", "emitter", "geo")
 -- includes
 local rad = math.rad
 local CRATE_SPEED = math.rad(50)
@@ -15,8 +15,6 @@ function Unloaded()
 end
 
 function Unpack()
-	-- TODO: Unpack anim goes here!
-	-- TODO: Don't forget to Move(crate_base, y_axis, -SOME_NUMBER, SOME_SLOW_SPEED) :)
 	Turn(crate_front, x_axis, rad(45), CRATE_SPEED)
 	Turn(crate_back, x_axis, rad(-45), CRATE_SPEED)
 	Turn(crate_left, z_axis, rad(45), CRATE_SPEED)
@@ -42,6 +40,10 @@ function Unpack()
 	Move(antenna1, z_axis, 20, CRATE_SPEED * 10)
 	Move(antenna2, z_axis, 20, CRATE_SPEED * 10)
 	Move(antenna3, z_axis, 20, CRATE_SPEED * 10)
+	WaitForMove(emitter, y_axis)
+	Spin(geo, y_axis, math.rad(20), math.rad(5))
+	-- We're deployed, grant the extra tonnage
+	Spring.AddTeamResource(Spring.GetUnitTeam(unitID), "energy", 200)
 	Sleep(10000)
 	Move(crate_base, y_axis, -5, CRATE_SPEED)
 	Sleep (5000)
