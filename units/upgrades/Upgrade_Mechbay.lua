@@ -31,6 +31,10 @@ local Upgrade_Mechbay = {
 		showNanoSpray		= 0,
 		workerTime			= 1,
 		canBeAssisted	= false,
+		
+	transportSize		= 8,
+	transportCapacity	= 8, -- 1x transportSize
+	transportMass		= 10000,
 	
 	customparams = {
 		dontcount		= 1,

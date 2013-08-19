@@ -14,6 +14,7 @@ if gadgetHandler:IsSyncedCode() then
 --	SYNCED
 
 -- localisations
+local SetUnitRulesParam		= Spring.SetUnitRulesParam
 --SyncedRead
 
 --SyncedCtrl
@@ -79,14 +80,24 @@ function gadget:GamePreload()
 	end
 end
 
+local function AddUpgradeOptions(unitID)
+	for outpostDefID, outpostInfo in pairs(outpostDefs) do
+		Spring.InsertUnitCmdDesc(unitID, outpostInfo.cmdDesc)
+	end
+end
+
+local function RemoveUpgradeOptions(unitID)
+	for outpostDefID, outpostInfo in pairs(outpostDefs) do
+		Spring.RemoveUnitCmdDesc(unitID, FindUnitCmdDesc(unitID, outpostInfo.cmdDesc.id))
+	end
+end
+
 function gadget:UnitCreated(unitID, unitDefID, teamID, builderID)
 	local unitDef = UnitDefs[unitDefID]
 	local cp = unitDef.customParams
 	if unitDefID == BEACON_ID then
 		buildLimits[unitID] = {["turret"] = 4, ["ecm"] = 1, ["sensor"] = 1}
-		for outpostDefID, outpostInfo in pairs(outpostDefs) do
-			Spring.InsertUnitCmdDesc(unitID, outpostInfo.cmdDesc)
-		end
+		AddUpgradeOptions(unitID)
 	elseif cp and cp.towertype then
 		-- track creation of turrets and their originating beacons so we can give back slots if a turret dies
 		if builderID then -- ignore /give turrets
@@ -101,21 +112,17 @@ function gadget:UnitDestroyed(unitID, unitDefID, teamID)
 		local towerType = towerDefIDs[unitDefID]
 		buildLimits[towerOwnerID][towerType] = buildLimits[towerOwnerID][towerType] + 1
 		EditUnitCmdDesc(towerOwnerID, FindUnitCmdDesc(towerOwnerID, -unitDefID), {disabled = false, params = {}})
-		
-		local outpostID = outpostIDs[towerOwnerID]
-		if outpostID then -- beacon has an upgraded outpost, open its slots back up too
-			buildLimits[outpostID][towerType] = buildLimits[outpostID][towerType] + 1
-			EditUnitCmdDesc(outpostID, FindUnitCmdDesc(outpostID, -unitDefID), {disabled = false, params = {}})
-		end
 		towerOwners[unitID] = nil
 	end
 	local beaconID = beaconIDs[unitID]
 	if beaconID then -- unit was an upgrade/outpost
-		Spring.SetUnitNoSelect(beaconID, false)
+		SetUnitRulesParam(unitID, "beaconID", "")
 		env = Spring.UnitScript.GetScriptEnv(beaconID)
 		Spring.UnitScript.CallAsUnit(beaconID, env.ChangeType, false)
 		beaconIDs[unitID] = nil
 		outpostIDs[beaconID] = nil
+		-- Re-add upgrade options to beacon
+		AddUpgradeOptions(beaconID)
 	end
 end
 
@@ -149,19 +156,14 @@ function SpawnCargo(beaconID, dropshipID, unitDefID, teamID)
 	Spring.UnitScript.CallAsUnit(dropshipID, env.LoadCargo, beaconID, outpostID)
 	beaconIDs[outpostID] = beaconID 
 	outpostIDs[beaconID] = outpostID
-	-- copy build limits
-	Spring.SetUnitNanoPieces(outpostID, {1})
-	buildLimits[outpostID] = {}
-	for k,v in pairs(buildLimits[beaconID]) do
-		buildLimits[outpostID][k] = v + 1
-		LimitTowerType(outpostID, k)
-	end
+	-- Let unsynced know about this pairing
+	Spring.SetUnitRulesParam(outpostID, "beaconID", beaconID)
 end
 
 function DropshipDelivery(unitID, unitDefID, teamID)
 	UseTeamResource(teamID, "metal", outpostDefs[unitDefID].cost)
 	local tx,ty,tz = Spring.GetUnitPosition(unitID)
-	Spring.SetUnitNoSelect(unitID, true) -- Need a way to undo this on upgrade death
+	--Spring.SetUnitNoSelect(unitID, true) -- Need a way to undo this on upgrade death
 	local dropshipID = Spring.CreateUnit("is_avenger", tx, ty, tz, "s", teamID)
 	DelayCall(SpawnCargo, {unitID, dropshipID, unitDefID, teamID}, 1)
 end
@@ -185,7 +187,7 @@ function LimitTowerType(unitID, towerType)
 end
 
 function gadget:AllowCommand(unitID, unitDefID, teamID, cmdID, cmdParams, cmdOptions)
-	if unitDefID == BEACON_ID or beaconIDs[unitID] then
+	if unitDefID == BEACON_ID then
 		if cmdID < 0 then
 			local tx, ty, tz = unpack(cmdParams)
 			local dist = GetUnitDistanceToPoint(unitID, tx, ty, tz, false)
@@ -197,16 +199,10 @@ function gadget:AllowCommand(unitID, unitDefID, teamID, cmdID, cmdParams, cmdOpt
 				return false
 			end
 			local towerType = towerDefIDs[-cmdID]
-			if towerType then 
-				if beaconIDs[unitID] then -- unit is an upgraded outpost
-					LimitTowerType(unitID, towerType)
-					DelayCall(Spring.GiveOrderToUnit, {beaconIDs[unitID], cmdID, cmdParams, cmdOptions}, 1)
-					return false
-				end
-				return LimitTowerType(unitID, towerType) 
-			end
+			if towerType then return LimitTowerType(unitID, towerType) end
 		elseif upgradeIDs[cmdID] then
 			--Spring.Echo("I'm totally gonna upgrade your beacon bro!")
+			RemoveUpgradeOptions(unitID)
 			DropshipDelivery(unitID, upgradeIDs[cmdID], teamID)
 		elseif cmdID == CMD.SELFD then -- Disallow self-d
 			return false
@@ -226,5 +222,39 @@ end
 
 else
 --	UNSYNCED
+
+-- localisations
+local GetUnitRulesParam			= Spring.GetUnitRulesParam
+-- SyncedRead
+local GetGameFrame				= Spring.GetGameFrame
+-- UnsyncedRead
+local GetSelectedUnitsSorted	= Spring.GetSelectedUnitsSorted
+-- UnsyncedCtrl
+local SelectUnitArray			= Spring.SelectUnitArray
+-- variables
+local outpostDefIDs = {}
+for unitDefID, unitDef in pairs(UnitDefs) do
+	if unitDef.name:find("upgrade") then
+		outpostDefIDs[unitDefID] = true
+	end
+end
+local lastFrame = 0
+
+function gadget:Update()
+	local frameNum = Spring.GetGameFrame()
+	if lastFrame == frameNum then
+		return --same frame
+	end
+	lastFrame = frameNum
+	--Spring.Echo("unsynced gameframe: " .. lastFrame)
+	local selected = GetSelectedUnitsSorted()
+	for unitDefID, units in pairs(selected) do
+		if outpostDefIDs[unitDefID] then
+			for _, unitID in pairs(units) do
+				SelectUnitArray({GetUnitRulesParam(unitID, "beaconID")}, true)
+			end
+		end
+	end
+end
 
 end
