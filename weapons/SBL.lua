@@ -38,8 +38,9 @@ weaponDef = {
 	},
 	customparams = {
 		heatgenerated		= "2.5",--1/sec
-		cegflare			= "LASER_MUZZLEFLASH",
+		cegflare			= "SMALLLASER_MUZZLEFLASH",
 		weaponclass			= "energy",
+		flareonshot 		= true,
     },
 }
 

@@ -1,35 +1,77 @@
-[LASER_MUZZLEFLASH] //thanks to quantum, he rocks! Please credit him if you use this effect.
-
+[LARGELASER_MUZZLEFLASH] //thanks to quantum, he rocks! Please credit him if you use this effect.
 {
    [BitmapMuzzleFlame]
    {
-	class = CBitmapMuzzleFlame;
-      
-	[properties]
-      	{
-         	dir = dir;
-         	colorMap=1 1 1 0.01	1 1 1 0.01	1 1 1 0.01; 
-          	size=2.25;
-          	length=3;
-          	sizeGrowth=1;
-          	ttl=3;
-          	frontOffset=0.1;
-          	sideTexture=plasma2;
-          	frontTexture=flowerflash;
-      	}
+   class = CBitmapMuzzleFlame;
+
+   [properties]
+         {
+            dir = dir;
+            colorMap= 1.0 0.0 1.0 0.01   1.0 0.0 1.0 0.01   0 0 0 0.01;
+             size=6;
+             length=12;
+             sizeGrowth=1;
+             ttl=2;
+             frontOffset=0.05;
+             sideTexture=shot;
+             frontTexture=empty;
+         }
    water=1;
    air=1;
    underwater=1;
    ground=1;
    count=1;
-   	[GROUNDFLASH]
-	{
-		flashsize=10;
-		flashalpha=0.9;
-		circlegrowth=0;
-		circlealpha=1;
-		ttl=3;
-		color=1,0.7,0;
-	}
-    }
+   }
+}
+
+[MEDIUMLASER_MUZZLEFLASH] //thanks to quantum, he rocks! Please credit him if you use this effect.
+{
+   [BitmapMuzzleFlame]
+   {
+   class = CBitmapMuzzleFlame;
+
+   [properties]
+         {
+            dir = dir;
+            colorMap= 0.4 0.8 0.4 0.01   0.4 0.8 0.4 0.01   0 0 0 0.01;
+             size=4;
+             length=8;
+             sizeGrowth=1;
+             ttl=2;
+             frontOffset=0.05;
+             sideTexture=shot;
+             frontTexture=empty;
+         }
+   water=1;
+   air=1;
+   underwater=1;
+   ground=1;
+   count=1;
+   }
+}
+
+[SMALLLASER_MUZZLEFLASH] //thanks to quantum, he rocks! Please credit him if you use this effect.
+{
+   [BitmapMuzzleFlame]
+   {
+   class = CBitmapMuzzleFlame;
+
+   [properties]
+         {
+            dir = dir;
+            colorMap= 1.0 0.4 0.4 0.01   1.0 0.4 0.4 0.01   0 0 0 0.01;
+             size=2;
+             length=4;
+             sizeGrowth=1;
+             ttl=2;
+             frontOffset=0.05;
+             sideTexture=shot;
+             frontTexture=empty;
+         }
+   water=1;
+   air=1;
+   underwater=1;
+   ground=1;
+   count=1;
+   }
 }
