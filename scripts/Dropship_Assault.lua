@@ -21,7 +21,10 @@ for i = 1,3 do
 	hExhausts[i] = piece("hexhaust" .. i)
 end
 
+-- Localisations
+local SpawnCEG = Spring.SpawnCEG
 local GetUnitDistanceToPoint = GG.GetUnitDistanceToPoint
+
 -- Constants
 local HOVER_HEIGHT = 300
 local DROP_HEIGHT = 10000 + HOVER_HEIGHT
@@ -33,7 +36,7 @@ local UX = math.cos(ANGLE) * RADIAL_DIST
 local UZ = math.sin(ANGLE) * RADIAL_DIST
 
 -- Variables
-local stage
+local stage = 0
 local touchDown = false
 local cargoID
 local beaconID
@@ -50,6 +53,32 @@ function fx()
 		for _, exhaust in ipairs(vExhaustLarges) do
 			EmitSfx(exhaust, SFX.CEG)
 		end
+		for _, exhaust in ipairs(vExhausts) do
+			EmitSfx(exhaust, SFX.CEG + 1)
+		end
+		Sleep(30)
+	end
+	while stage == 2 do
+		for _, exhaust in ipairs(vExhaustLarges) do
+			EmitSfx(exhaust, SFX.CEG)
+		end		
+		for _, exhaust in ipairs(vExhausts) do
+			EmitSfx(exhaust, SFX.CEG + 1)
+		end
+		SpawnCEG("dropship_heavy_dust", TX, TY, TZ)
+		Sleep(30)
+	end
+	while stage == 3 do
+		for _, exhaust in ipairs(hExhausts) do
+			EmitSfx(exhaust, SFX.CEG)
+		end	
+		Sleep(30)
+	end
+	while stage == 4 do
+		for _, exhaust in ipairs(hExhausts) do
+			EmitSfx(exhaust, SFX.CEG + 2)
+			EmitSfx(exhaust, SFX.CEG + 3)
+		end
 		Sleep(30)
 	end
 end
@@ -57,7 +86,10 @@ end
 function script.Create()
 	-- setup fx pieces
 	for _, exhaust in ipairs(vExhaustLarges) do
-		Turn(exhaust, x_axis, math.rad(90))
+		Turn(exhaust, x_axis, math.rad(89))
+	end	
+	for _, exhaust in ipairs(vExhausts) do
+		Turn(exhaust, x_axis, math.rad(89))
 	end	
 	-- Move us up to the drop position
 	Spring.MoveCtrl.Enable(unitID)
@@ -66,8 +98,6 @@ function script.Create()
 	Spring.MoveCtrl.SetRotation(unitID, 0, newAngle + math.pi, 0)
 	Turn(body, x_axis, math.rad(-45))
 	-- Begin the drop
-	stage = 1
-	StartThread(fx)
 	Turn(body, x_axis, 0, math.rad(5))
 	Spring.MoveCtrl.SetVelocity(unitID, 0, -100, 0)
 	Spring.MoveCtrl.SetRelativeVelocity(unitID, 0, 0, 10)
@@ -78,6 +108,10 @@ function script.Create()
 		x, y, z = Spring.GetUnitPosition(unitID)
 		local newAngle = math.atan2(x - TX, z - TZ)
 		Spring.MoveCtrl.SetRotation(unitID, 0, newAngle + math.pi, 0)
+		if (y - TY) < 4 * HOVER_HEIGHT and stage == 0 then
+			stage = 1
+			StartThread(fx)
+		end
 		Sleep(100)
 	end
 	-- Descent complete, move over the target
@@ -91,6 +125,7 @@ function script.Create()
 		Sleep(30)
 	end
 	-- We're over the target area, reduce height!
+	stage = 2
 	local DOOR_SPEED = math.rad(60)
 	Turn(cargoDoor1, z_axis, math.rad(-90), DOOR_SPEED)
 	Turn(cargoDoor2, z_axis, math.rad(90), DOOR_SPEED)
@@ -124,11 +159,13 @@ function script.Create()
 	Turn(cargoDoor2, z_axis, 0, DOOR_SPEED)
 	WaitForTurn(cargoDoor2, z_axis)
 	-- Take off!
+	stage = 3
 	Spring.MoveCtrl.SetRelativeVelocity(unitID, 0, 0, 5)
 	Spring.MoveCtrl.SetGravity(unitID, -0.75 * GRAVITY)
 	Turn(body, x_axis, math.rad(-80), math.rad(15))
 	WaitForTurn(body, x_axis)
 	Spring.MoveCtrl.SetGravity(unitID, -4 * GRAVITY)
+	stage = 4
 	Sleep(1500)
 	Spin(body, z_axis, math.rad(180), math.rad(45))
 	Sleep(2000)

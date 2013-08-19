@@ -39,6 +39,9 @@ local IS_Avenger = {
 	sfxtypes = {
 		explosiongenerators = {
 			"custom:heavy_jet_trail_blue",
+			"custom:medium_jet_trail_blue",
+			"custom:heavy_jet_trail",
+			"custom:dropship_main_engine_stage2",
 		},
 	},
 	customparams = {
