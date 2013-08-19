@@ -91,6 +91,9 @@ function script.Create()
 	for _, exhaust in ipairs(vExhausts) do
 		Turn(exhaust, x_axis, math.rad(89))
 	end	
+	for _, exhaust in ipairs(hExhausts) do
+		Turn(exhaust, y_axis, math.rad(180))
+	end	
 	-- Move us up to the drop position
 	Spring.MoveCtrl.Enable(unitID)
 	Spring.MoveCtrl.SetPosition(unitID, TX + UX, TY + DROP_HEIGHT, TZ + UZ)
