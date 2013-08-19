@@ -33,12 +33,13 @@ weaponDef = {
 	rgbcolor				= "0.4 0.8 0.4",
 	intensity				= 0.6,
 	damage = {
-		default = 8.4, --70 DPS, 42 damage per reload
+		default = 42, --70 DPS, 210 damage per reload
 	},
 	customparams = {
 		heatgenerated		= "2.4",--4/sec
-		cegflare			= "LASER_MUZZLEFLASH",
+		cegflare			= "MEDIUMLASER_MUZZLEFLASH",
 		weaponclass			= "energy",
+		flareonshot 		= true,
     },
 }
 
