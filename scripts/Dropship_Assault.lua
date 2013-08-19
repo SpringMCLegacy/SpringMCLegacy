@@ -2,6 +2,11 @@
 local body = piece ("body")
 local cargo = piece ("cargo")
 local cargoDoor1, cargoDoor2 = piece("cargodoor1", "cargodoor2")
+local booms = {}
+for i = 1, 3 do
+	booms[i] = piece("boom" .. i)
+end
+local attachment = piece("attachment")
 
 local GetUnitDistanceToPoint = GG.GetUnitDistanceToPoint
 -- Constants
@@ -70,8 +75,15 @@ function script.Create()
 	-- We're in place. Halt and lower the cargo!
 	Spring.MoveCtrl.SetRelativeVelocity(unitID, 0, 0, 0)
 	_, y, _ = Spring.GetUnitPosition(unitID)
-	Move(cargo, y_axis, -(y - TY), 20)
-	WaitForMove(cargo, y_axis)
+	local BOOM_LENGTH = y - TY - 56
+	local BOOM_SPEED = 10
+	Move(attachment, y_axis, -56, BOOM_SPEED)
+	WaitForMove(attachment, y_axis)
+	for i = 2, 3 do
+		Move(booms[i], y_axis, -BOOM_LENGTH / 2, BOOM_SPEED)
+	end
+	WaitForMove(booms[3], y_axis)
+	Sleep(1500)
 	Spring.UnitScript.DropUnit(cargoID)
 	-- Let the cargo know it is unloaded
 	env = Spring.UnitScript.GetScriptEnv(cargoID)
@@ -80,10 +92,10 @@ function script.Create()
 	env = Spring.UnitScript.GetScriptEnv(beaconID)
 	Spring.UnitScript.CallAsUnit(beaconID, env.ChangeType, true)
 	-- Cargo is down, close the doors!
-	--[[for legPiece in pairs(legs) do
-		Move(legPiece, y_axis, 0, LEG_SPEED)
+	for i = 2, 3 do
+		Move(booms[i], y_axis, 0, BOOM_SPEED * 2)
 	end
-	WaitForMove(legs[8], y_axis)]]
+	WaitForMove(booms[3], y_axis)
 	Turn(cargoDoor1, z_axis, 0, DOOR_SPEED)
 	Turn(cargoDoor2, z_axis, 0, DOOR_SPEED)
 	WaitForTurn(cargoDoor2, z_axis)
@@ -100,7 +112,6 @@ function script.Create()
 	Sleep(2000)
 	-- We're out of the atmosphere, bye bye!
 	Spring.DestroyUnit(unitID, false, true)
-	Spring.Echo("toodlepip!")
 end
 
 function script.Killed(recentDamage, maxHealth)
