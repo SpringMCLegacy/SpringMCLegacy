@@ -61,6 +61,18 @@ function fx()
 	while stage == 2 do
 		for _, exhaust in ipairs(vExhaustLarges) do
 			EmitSfx(exhaust, SFX.CEG)
+		end
+		for _, exhaust in ipairs(vExhausts) do
+			EmitSfx(exhaust, SFX.CEG + 1)
+		end
+		for _, exhaust in ipairs(hExhausts) do
+			EmitSfx(exhaust, SFX.CEG + 1)
+		end	
+		Sleep(30)
+	end
+	while stage == 3 do
+		for _, exhaust in ipairs(vExhaustLarges) do
+			EmitSfx(exhaust, SFX.CEG)
 		end		
 		for _, exhaust in ipairs(vExhausts) do
 			EmitSfx(exhaust, SFX.CEG + 1)
@@ -68,13 +80,16 @@ function fx()
 		SpawnCEG("dropship_heavy_dust", TX, TY, TZ)
 		Sleep(30)
 	end
-	while stage == 3 do
+	while stage == 4 do
+		for _, exhaust in ipairs(vExhausts) do
+			EmitSfx(exhaust, SFX.CEG + 1)
+		end
 		for _, exhaust in ipairs(hExhausts) do
 			EmitSfx(exhaust, SFX.CEG)
 		end	
 		Sleep(30)
 	end
-	while stage == 4 do
+	while stage == 5 do
 		for _, exhaust in ipairs(hExhausts) do
 			EmitSfx(exhaust, SFX.CEG + 2)
 			EmitSfx(exhaust, SFX.CEG + 3)
@@ -118,6 +133,7 @@ function script.Create()
 		Sleep(100)
 	end
 	-- Descent complete, move over the target
+	stage = 2
 	Spring.MoveCtrl.SetVelocity(unitID, 0, 0, 0)
 	Spring.MoveCtrl.SetGravity(unitID, 0)
 	local dist = GetUnitDistanceToPoint(unitID, TX, 0, TZ, false)
@@ -128,7 +144,7 @@ function script.Create()
 		Sleep(30)
 	end
 	-- We're over the target area, reduce height!
-	stage = 2
+	stage = 3
 	local DOOR_SPEED = math.rad(60)
 	Turn(cargoDoor1, z_axis, math.rad(-90), DOOR_SPEED)
 	Turn(cargoDoor2, z_axis, math.rad(90), DOOR_SPEED)
@@ -162,13 +178,13 @@ function script.Create()
 	Turn(cargoDoor2, z_axis, 0, DOOR_SPEED)
 	WaitForTurn(cargoDoor2, z_axis)
 	-- Take off!
-	stage = 3
+	stage = 4
 	Spring.MoveCtrl.SetRelativeVelocity(unitID, 0, 0, 5)
 	Spring.MoveCtrl.SetGravity(unitID, -0.75 * GRAVITY)
 	Turn(body, x_axis, math.rad(-80), math.rad(15))
 	WaitForTurn(body, x_axis)
 	Spring.MoveCtrl.SetGravity(unitID, -4 * GRAVITY)
-	stage = 4
+	stage = 5
 	Sleep(1500)
 	Spin(body, z_axis, math.rad(180), math.rad(45))
 	Sleep(2000)

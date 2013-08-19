@@ -48,7 +48,6 @@ local CL_DROPSHIP_UD
 local CL_DROPSHIP_BUILDOPTIONS = {}
 
 local BEACON_UD
-local UPGRADE_UDS = {}
 local BEACON_BUILDOPTIONS = {}
 
 
@@ -106,15 +105,6 @@ for name, ud in pairs(UnitDefs) do
 		ud.seismicsignature = 0
 	end
 	
-	if name:find("upgrade") then
-		-- Constructor stuff from beacon def
-		ud.builder				= true
-		ud.builddistance 		= 230 -- Min build range of beacon
-		ud.workerTime			= 10
-		ud.terraformSpeed		= 10000
-		ud.showNanoSpray		= false
-		UPGRADE_UDS[name] = ud
-	end
 	-- Automatically build dropship buildmenus
 	if ud.customparams.unittype == "mech" then
 		if name:sub(1, 2) == "is" then
@@ -128,11 +118,22 @@ for name, ud in pairs(UnitDefs) do
 	end
 	if name == "is_dropship" then IS_DROPSHIP_UD = ud end
 	if name == "cl_dropship" then CL_DROPSHIP_UD = ud end
-	if name == "beacon" then BEACON_UD = ud end
+	if name == "beacon" or name:find("upgrade") then 
+		if name == "beacon" then
+			BEACON_UD = ud 
+		end
+		ud.canmove = false
+		ud.canrepair = false
+		ud.canrestore = false
+		ud.canpatrol = false
+		ud.canguard = false
+		ud.canreclaim = false
+		ud.canfight = false
+		ud.canassist = false
+		ud.canrepeat = false
+		ud.canselfdestruct = false
+	end
 end
 IS_DROPSHIP_UD["buildoptions"] = IS_DROPSHIP_BUILDOPTIONS
 CL_DROPSHIP_UD["buildoptions"] = CL_DROPSHIP_BUILDOPTIONS
 BEACON_UD["buildoptions"] = BEACON_BUILDOPTIONS
-for name, ud in pairs(UPGRADE_UDS) do
-	ud["buildoptions"] = BEACON_BUILDOPTIONS
-end
