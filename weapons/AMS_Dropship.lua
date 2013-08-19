@@ -40,6 +40,7 @@ weaponDef = {
 	},
 	customparams = {
 		cegflare			= "SMALLLASER_MUZZLEFLASH",
+		flareonshot			= true,
 	},
 
 }
