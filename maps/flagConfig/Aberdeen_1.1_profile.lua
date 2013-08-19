@@ -7,17 +7,32 @@ local resources = {
 	{
 		x = 4210,
 		z = 5770,
-		types = feature = nil
+		feature = nil
 	},
 	{
 		x = 2450,
 		z = 3000,
-		types = feature = nil
+		feature = nil
 	},
 	{
 		x = 6075,
 		z = 2675,
-		types = feature = nil
+		feature = nil
+	},
+	{
+		x = 3270,
+		z = 270,
+		feature = nil
+	},
+	{
+		x = 7900,
+		z = 5570,
+		feature = nil
+	},
+	{
+		x = 1125,
+		z = 7855,
+		feature = nil
 	},
 }
 
