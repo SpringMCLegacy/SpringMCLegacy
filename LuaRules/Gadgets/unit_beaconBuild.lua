@@ -42,8 +42,9 @@ local buildLimits = {} -- buildLimits[unitID] = {turret = 4, ecm = 1, sensor = 1
 local towerOwners = {} -- towerOwners[towerID] = beaconID
 
 local outpostDefs = {} -- outpostDefs[unitDefID] = {tooltip = "some string"}
-local upgradeIDs = {} -- upradeIDs[cmdID] = unitDefID
-local outpostIDs = {} -- outpostIDs[unitID] = beaconID
+local upgradeIDs = {} -- upgradeIDs[cmdID] = unitDefID
+local beaconIDs = {} -- beaconIDs[outpostID] = beaconID
+local outpostIDs = {} -- outpostIDs[beaconID] = outpostID
 
 --[[local function HotSwap(unitID, unitDefID, teamID)
 	local x,y,z = Spring.GetUnitPosition(unitID)
@@ -97,18 +98,24 @@ end
 function gadget:UnitDestroyed(unitID, unitDefID, teamID)
 	local towerOwnerID = towerOwners[unitID]
 	if towerOwnerID then -- unit was a turret with owning beacon, open the slot back up
-		buildLimits[towerOwnerID].turret = buildLimits[towerOwnerID].turret + 1
-		for turretDefID in pairs(towerDefIDs) do
-			EditUnitCmdDesc(towerOwnerID, FindUnitCmdDesc(towerOwnerID, -turretDefID), {disabled = false, params = {}})
+		local towerType = towerDefIDs[unitDefID]
+		buildLimits[towerOwnerID][towerType] = buildLimits[towerOwnerID][towerType] + 1
+		EditUnitCmdDesc(towerOwnerID, FindUnitCmdDesc(towerOwnerID, -unitDefID), {disabled = false, params = {}})
+		
+		local outpostID = outpostIDs[towerOwnerID]
+		if outpostID then -- beacon has an upgraded outpost, open its slots back up too
+			buildLimits[outpostID][towerType] = buildLimits[outpostID][towerType] + 1
+			EditUnitCmdDesc(outpostID, FindUnitCmdDesc(outpostID, -unitDefID), {disabled = false, params = {}})
 		end
 		towerOwners[unitID] = nil
 	end
-	local beaconID = outpostIDs[unitID]
-	if beaconID then
+	local beaconID = beaconIDs[unitID]
+	if beaconID then -- unit was an upgrade/outpost
 		Spring.SetUnitNoSelect(beaconID, false)
 		env = Spring.UnitScript.GetScriptEnv(beaconID)
 		Spring.UnitScript.CallAsUnit(beaconID, env.ChangeType, false)
-		outpostIDs[unitID] = nil
+		beaconIDs[unitID] = nil
+		outpostIDs[beaconID] = nil
 	end
 end
 
@@ -126,7 +133,7 @@ function gadget:UnitGiven(unitID, unitDefID, newTeam, oldTeam)
 				end
 			end
 		end
-		for outpostID, beaconID in pairs(outpostIDs) do			
+		for outpostID, beaconID in pairs(beaconIDs) do			
 			if beaconID == unitID then
 				DelayCall(TransferUnit, {outpostID, newTeam}, 1)
 			end
@@ -140,7 +147,8 @@ function SpawnCargo(beaconID, dropshipID, unitDefID, teamID)
 	local outpostID = Spring.CreateUnit(unitDefID, tx, ty, tz, "s", teamID)
 	env = Spring.UnitScript.GetScriptEnv(dropshipID)
 	Spring.UnitScript.CallAsUnit(dropshipID, env.LoadCargo, beaconID, outpostID)
-	outpostIDs[outpostID] = beaconID 
+	beaconIDs[outpostID] = beaconID 
+	outpostIDs[beaconID] = outpostID
 	-- copy build limits
 	Spring.SetUnitNanoPieces(outpostID, {1})
 	buildLimits[outpostID] = {}
@@ -177,7 +185,7 @@ function LimitTowerType(unitID, towerType)
 end
 
 function gadget:AllowCommand(unitID, unitDefID, teamID, cmdID, cmdParams, cmdOptions)
-	if unitDefID == BEACON_ID or outpostIDs[unitID] then
+	if unitDefID == BEACON_ID or beaconIDs[unitID] then
 		if cmdID < 0 then
 			local tx, ty, tz = unpack(cmdParams)
 			local dist = GetUnitDistanceToPoint(unitID, tx, ty, tz, false)
@@ -190,9 +198,9 @@ function gadget:AllowCommand(unitID, unitDefID, teamID, cmdID, cmdParams, cmdOpt
 			end
 			local towerType = towerDefIDs[-cmdID]
 			if towerType then 
-				if outpostIDs[unitID] then
+				if beaconIDs[unitID] then -- unit is an upgraded outpost
 					LimitTowerType(unitID, towerType)
-					DelayCall(Spring.GiveOrderToUnit, {outpostIDs[unitID], cmdID, cmdParams, cmdOptions}, 1)
+					DelayCall(Spring.GiveOrderToUnit, {beaconIDs[unitID], cmdID, cmdParams, cmdOptions}, 1)
 					return false
 				end
 				return LimitTowerType(unitID, towerType) 
