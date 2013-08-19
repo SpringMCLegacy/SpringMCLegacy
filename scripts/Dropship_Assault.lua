@@ -1,6 +1,7 @@
 --pieces
 local body = piece ("body")
 local cargo = piece ("cargo")
+local cargoDoor1, cargoDoor2 = piece("cargodoor1", "cargodoor2")
 
 local GetUnitDistanceToPoint = GG.GetUnitDistanceToPoint
 -- Constants
@@ -61,6 +62,9 @@ function script.Create()
 		Sleep(30)
 	end
 	-- We're over the target area, reduce height!
+	local DOOR_SPEED = math.rad(60)
+	Turn(cargoDoor1, z_axis, math.rad(-90), DOOR_SPEED)
+	Turn(cargoDoor2, z_axis, math.rad(90), DOOR_SPEED)
 	Spring.MoveCtrl.SetRelativeVelocity(unitID, 0, -2, 0)
 	Sleep(HOVER_HEIGHT / 2 * 33)
 	-- We're in place. Halt and lower the cargo!
@@ -75,7 +79,15 @@ function script.Create()
 	-- Let the beacon know upgrade is ready
 	env = Spring.UnitScript.GetScriptEnv(beaconID)
 	Spring.UnitScript.CallAsUnit(beaconID, env.ChangeType, true)
-	-- Take off!	
+	-- Cargo is down, close the doors!
+	--[[for legPiece in pairs(legs) do
+		Move(legPiece, y_axis, 0, LEG_SPEED)
+	end
+	WaitForMove(legs[8], y_axis)]]
+	Turn(cargoDoor1, z_axis, 0, DOOR_SPEED)
+	Turn(cargoDoor2, z_axis, 0, DOOR_SPEED)
+	WaitForTurn(cargoDoor2, z_axis)
+	-- Take off!
 	Spring.MoveCtrl.SetRelativeVelocity(unitID, 0, 0, 5)
 	Spring.MoveCtrl.SetGravity(unitID, -0.75 * GRAVITY)
 	Turn(body, x_axis, math.rad(-80), math.rad(15))
