@@ -7,6 +7,19 @@ for i = 1, 3 do
 	booms[i] = piece("boom" .. i)
 end
 local attachment = piece("attachment")
+-- FX pieces
+local vExhaustLarges = {}
+for i = 1,2 do
+	vExhaustLarges[i] = piece("vexhaustlarge" .. i)
+end
+local vExhausts = {}
+for i = 1,4 do
+	vExhausts[i] = piece("vexhaust" .. i)
+end
+local hExhausts = {}
+for i = 1,3 do
+	hExhausts[i] = piece("hexhaust" .. i)
+end
 
 local GetUnitDistanceToPoint = GG.GetUnitDistanceToPoint
 -- Constants
@@ -33,10 +46,19 @@ function LoadCargo(callerID, outpostID)
 end
 
 function fx()
-
+	while stage == 1 do
+		for _, exhaust in ipairs(vExhaustLarges) do
+			EmitSfx(exhaust, SFX.CEG)
+		end
+		Sleep(30)
+	end
 end
 
 function script.Create()
+	-- setup fx pieces
+	for _, exhaust in ipairs(vExhaustLarges) do
+		Turn(exhaust, x_axis, math.rad(90))
+	end	
 	-- Move us up to the drop position
 	Spring.MoveCtrl.Enable(unitID)
 	Spring.MoveCtrl.SetPosition(unitID, TX + UX, TY + DROP_HEIGHT, TZ + UZ)
@@ -44,6 +66,8 @@ function script.Create()
 	Spring.MoveCtrl.SetRotation(unitID, 0, newAngle + math.pi, 0)
 	Turn(body, x_axis, math.rad(-45))
 	-- Begin the drop
+	stage = 1
+	StartThread(fx)
 	Turn(body, x_axis, 0, math.rad(5))
 	Spring.MoveCtrl.SetVelocity(unitID, 0, -100, 0)
 	Spring.MoveCtrl.SetRelativeVelocity(unitID, 0, 0, 10)
