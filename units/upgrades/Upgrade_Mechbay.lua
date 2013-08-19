@@ -32,9 +32,10 @@ local Upgrade_Mechbay = {
 		workerTime			= 1,
 		canBeAssisted	= false,
 		
-	transportSize		= 8,
-	transportCapacity	= 8, -- 1x transportSize
+	transportSize		= 3,
+	transportCapacity	= 3, -- 1x transportSize
 	transportMass		= 10000,
+	loadingradius		= 100,
 	
 	customparams = {
 		dontcount		= 1,

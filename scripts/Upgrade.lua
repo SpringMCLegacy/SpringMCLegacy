@@ -113,5 +113,13 @@ function Unpack()
 	RecursiveHide(crate_base, true)
 end
 
+function script.TransportPickup (passengerID)
+	Spring.UnitScript.AttachUnit(base, passengerID)
+end
+
+function script.TransportDrop (passengerID, x, y, z)
+	Spring.UnitScript.DropUnit(passengerID)
+end
+
 function script.Killed(recentDamage, maxHealth)
 end
