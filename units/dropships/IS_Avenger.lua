@@ -36,10 +36,11 @@ local IS_Avenger = {
 
 	},
 	--Gets CEG effects from /gamedata/explosions folder
-	--[[sfxtypes = {
+	sfxtypes = {
 		explosiongenerators = {
+			"custom:heavy_jet_trail_blue",
 		},
-	},]]
+	},
 	customparams = {
 		helptext		= "A Dropship",
     },
