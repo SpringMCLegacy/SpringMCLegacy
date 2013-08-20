@@ -36,6 +36,7 @@ local DelayCall				 = GG.Delay.DelayCall
 local GAIA_TEAM_ID = Spring.GetGaiaTeamID()
 local BEACON_ID = UnitDefNames["beacon"].id
 local WALL_ID = UnitDefNames["wall"].id
+local GATE_ID = UnitDefNames["wall_gate"].id
 local MIN_BUILD_RANGE = tonumber(UnitDefNames["beacon"].customParams.minbuildrange) or 230
 local MAX_BUILD_RANGE = UnitDefNames["beacon"].buildDistance
 local RADIUS = 230
@@ -54,7 +55,9 @@ local beaconIDs = {} -- beaconIDs[outpostID] = beaconID
 local outpostIDs = {} -- outpostIDs[beaconID] = outpostID
 
 local wallIDs = {} -- wallIDs[beaconID] = {wall1, wall2 ... wall12}
+local wallInfos = {} -- wallInfos[wallID] = {beaconID = beaconID, angle = angle}
 local wallCmdDesc
+local gateCmdDesc
 --[[local function HotSwap(unitID, unitDefID, teamID)
 	local x,y,z = Spring.GetUnitPosition(unitID)
 	if not Spring.GetUnitIsDead(unitID) then
@@ -94,6 +97,16 @@ function gadget:GamePreload()
 				tooltip = "C-Bill cost: " .. cBillCost, -- TODO: add c-bill cost and w/e else
 			}
 			upgradeIDs[wallCmdDesc.id] = unitDefID
+		elseif unitDefID == GATE_ID then -- and gates too
+			local cBillCost = unitDef.metalCost
+			gateCmdDesc = {
+				id     = GG.CustomCommands.GetCmdID("CMD_UPGRADE_" .. name),
+				type   = CMDTYPE.ICON,
+				name   = "Install\n Gate",
+				action = 'upgrade',
+				tooltip = "C-Bill cost: " .. cBillCost, -- TODO: add c-bill cost and w/e else
+			}
+			upgradeIDs[gateCmdDesc.id] = unitDefID		
 		end
 	end
 end
@@ -118,10 +131,21 @@ local function BuildWalls(beaconID, teamID)
 		local angle = math.rad(i * (360 / NUM_SEGMENTS))
 		local px = x + math.sin(angle) * RADIUS
 		local pz = z + math.cos(angle) * RADIUS
-		local wall = CreateUnit("wall", px, 0, pz, "s", teamID)
-		SetUnitNeutral(wall, true)
-		SetUnitRotation(wall, 0, -angle, 0)
+		local wallID = CreateUnit("wall", px, 0, pz, "s", teamID)
+		InsertUnitCmdDesc(wallID, gateCmdDesc)
+		SetUnitNeutral(wallID, true)
+		SetUnitRotation(wallID, 0, -angle, 0)
+		wallIDs[beaconID][i+1] = wallID
+		wallInfos[wallID] = {beaconID = beaconID, angle = angle}
 	end
+end
+
+local function BuildGate(wallID, teamID)
+	local x,y,z = GetUnitPosition(wallID)
+	Spring.DestroyUnit(wallID)
+	local gateID = CreateUnit("wall_gate", x,y,z, "s", teamID)
+	SetUnitRotation(gateID, 0, -wallInfos[wallID].angle, 0)
+	SetUnitNeutral(gateID, true)
 end
 
 function gadget:UnitCreated(unitID, unitDefID, teamID, builderID)
@@ -243,6 +267,15 @@ function gadget:AllowCommand(unitID, unitDefID, teamID, cmdID, cmdParams, cmdOpt
 			end
 		elseif cmdID == CMD.SELFD then -- Disallow self-d
 			return false
+		end
+	elseif unitDefID == WALL_ID then
+		if upgradeIDs[cmdID] then
+			BuildGate(unitID, teamID)
+			-- Disable gates for all other wall segments in the ring
+			local beaconID = wallInfos[unitID].beaconID
+			for _, wallID in ipairs(wallIDs[beaconID]) do
+				RemoveUnitCmdDesc(wallID, FindUnitCmdDesc(wallID, cmdID))
+			end
 		end
 	end
 	return true
