@@ -16,13 +16,16 @@ if gadgetHandler:IsSyncedCode() then
 -- localisations
 local SetUnitRulesParam		= Spring.SetUnitRulesParam
 --SyncedRead
-
+local GetUnitPosition		= Spring.GetUnitPosition
 --SyncedCtrl
+local CreateUnit			= Spring.CreateUnit
 local EditUnitCmdDesc		= Spring.EditUnitCmdDesc
 local InsertUnitCmdDesc		= Spring.InsertUnitCmdDesc
 local FindUnitCmdDesc		= Spring.FindUnitCmdDesc
 local TransferUnit			= Spring.TransferUnit
+local RemoveUnitCmdDesc		= Spring.RemoveUnitCmdDesc
 local SetUnitNeutral		= Spring.SetUnitNeutral
+local SetUnitRotation		= Spring.SetUnitRotation
 local UseTeamResource 		= Spring.UseTeamResource
 
 -- GG
@@ -32,9 +35,12 @@ local DelayCall				 = GG.Delay.DelayCall
 -- Constants
 local GAIA_TEAM_ID = Spring.GetGaiaTeamID()
 local BEACON_ID = UnitDefNames["beacon"].id
+local WALL_ID = UnitDefNames["wall"].id
 local MIN_BUILD_RANGE = tonumber(UnitDefNames["beacon"].customParams.minbuildrange) or 230
 local MAX_BUILD_RANGE = UnitDefNames["beacon"].buildDistance
-
+local RADIUS = 230
+local NUM_SEGMENTS = 12
+	
 local CMD_UPGRADE = GG.CustomCommands.GetCmdID("CMD_UPGRADE")
 
 -- Variables
@@ -47,6 +53,8 @@ local upgradeIDs = {} -- upgradeIDs[cmdID] = unitDefID
 local beaconIDs = {} -- beaconIDs[outpostID] = beaconID
 local outpostIDs = {} -- outpostIDs[beaconID] = outpostID
 
+local wallIDs = {} -- wallIDs[beaconID] = {wall1, wall2 ... wall12}
+local wallCmdDesc
 --[[local function HotSwap(unitID, unitDefID, teamID)
 	local x,y,z = Spring.GetUnitPosition(unitID)
 	if not Spring.GetUnitIsDead(unitID) then
@@ -76,34 +84,43 @@ function gadget:GamePreload()
 			}
 			outpostDefs[unitDefID] = {cmdDesc = upgradeCmdDesc, cost = cBillCost}
 			upgradeIDs[upgradeCmdDesc.id] = unitDefID
+		elseif unitDefID == WALL_ID then -- handle walls separately
+			local cBillCost = unitDef.metalCost
+			wallCmdDesc = {
+				id     = GG.CustomCommands.GetCmdID("CMD_UPGRADE_" .. name),
+				type   = CMDTYPE.ICON,
+				name   = "Defensive\nWalls",
+				action = 'upgrade',
+				tooltip = "C-Bill cost: " .. cBillCost, -- TODO: add c-bill cost and w/e else
+			}
+			upgradeIDs[wallCmdDesc.id] = unitDefID
 		end
 	end
 end
 
 local function AddUpgradeOptions(unitID)
 	for outpostDefID, outpostInfo in pairs(outpostDefs) do
-		Spring.InsertUnitCmdDesc(unitID, outpostInfo.cmdDesc)
+		InsertUnitCmdDesc(unitID, outpostInfo.cmdDesc)
 	end
 end
 
 local function RemoveUpgradeOptions(unitID)
 	for outpostDefID, outpostInfo in pairs(outpostDefs) do
-		Spring.RemoveUnitCmdDesc(unitID, FindUnitCmdDesc(unitID, outpostInfo.cmdDesc.id))
+		RemoveUnitCmdDesc(unitID, FindUnitCmdDesc(unitID, outpostInfo.cmdDesc.id))
 	end
 end
 
-local function BuildWalls(unitID, teamID)
-	local x,y,z = Spring.GetUnitPosition(unitID)
-	local RADIUS = 230
-	local NUM_SEGMENTS = 12
-	y = 0
+local function BuildWalls(beaconID, teamID)
+	UseTeamResource(teamID, "metal", UnitDefs[BEACON_ID].metalCost)
+	wallIDs[beaconID] = {}
+	local x,_,z = GetUnitPosition(beaconID)
 	for i = 0, NUM_SEGMENTS - 1 do
 		local angle = math.rad(i * (360 / NUM_SEGMENTS))
 		local px = x + math.sin(angle) * RADIUS
 		local pz = z + math.cos(angle) * RADIUS
-		local wall = Spring.CreateUnit("wall", px, y, pz, "s", teamID)
-		Spring.SetUnitNeutral(wall, true)
-		Spring.SetUnitRotation(wall, 0, -angle, 0)
+		local wall = CreateUnit("wall", px, 0, pz, "s", teamID)
+		SetUnitNeutral(wall, true)
+		SetUnitRotation(wall, 0, -angle, 0)
 	end
 end
 
@@ -113,7 +130,7 @@ function gadget:UnitCreated(unitID, unitDefID, teamID, builderID)
 	if unitDefID == BEACON_ID then
 		buildLimits[unitID] = {["turret"] = 4, ["ecm"] = 1, ["sensor"] = 1}
 		AddUpgradeOptions(unitID)
-		DelayCall(BuildWalls, {unitID, teamID}, 1)
+		InsertUnitCmdDesc(unitID, wallCmdDesc)
 	elseif cp and cp.towertype then
 		-- track creation of turrets and their originating beacons so we can give back slots if a turret dies
 		if builderID then -- ignore /give turrets
@@ -166,8 +183,8 @@ end
 
 function SpawnCargo(beaconID, dropshipID, unitDefID, teamID)
 	env = Spring.UnitScript.GetScriptEnv(dropshipID)
-	local tx, ty, tz = Spring.GetUnitPosition(dropshipID)
-	local outpostID = Spring.CreateUnit(unitDefID, tx, ty, tz, "s", teamID)
+	local tx, ty, tz = GetUnitPosition(dropshipID)
+	local outpostID = CreateUnit(unitDefID, tx, ty, tz, "s", teamID)
 	env = Spring.UnitScript.GetScriptEnv(dropshipID)
 	Spring.UnitScript.CallAsUnit(dropshipID, env.LoadCargo, beaconID, outpostID)
 	beaconIDs[outpostID] = beaconID 
@@ -179,8 +196,7 @@ end
 function DropshipDelivery(unitID, unitDefID, teamID)
 	UseTeamResource(teamID, "metal", outpostDefs[unitDefID].cost)
 	local tx,ty,tz = Spring.GetUnitPosition(unitID)
-	--Spring.SetUnitNoSelect(unitID, true) -- Need a way to undo this on upgrade death
-	local dropshipID = Spring.CreateUnit("is_avenger", tx, ty, tz, "s", teamID)
+	local dropshipID = CreateUnit("is_avenger", tx, ty, tz, "s", teamID)
 	DelayCall(SpawnCargo, {unitID, dropshipID, unitDefID, teamID}, 1)
 end
 
@@ -217,9 +233,14 @@ function gadget:AllowCommand(unitID, unitDefID, teamID, cmdID, cmdParams, cmdOpt
 			local towerType = towerDefIDs[-cmdID]
 			if towerType then return LimitTowerType(unitID, towerType) end
 		elseif upgradeIDs[cmdID] then
-			--Spring.Echo("I'm totally gonna upgrade your beacon bro!")
-			RemoveUpgradeOptions(unitID)
-			DropshipDelivery(unitID, upgradeIDs[cmdID], teamID)
+			if upgradeIDs[cmdID] == WALL_ID then
+				BuildWalls(unitID, teamID)
+				RemoveUnitCmdDesc(unitID, FindUnitCmdDesc(unitID, cmdID))
+			else
+				--Spring.Echo("I'm totally gonna upgrade your beacon bro!")
+				RemoveUpgradeOptions(unitID)
+				DropshipDelivery(unitID, upgradeIDs[cmdID], teamID)
+			end
 		elseif cmdID == CMD.SELFD then -- Disallow self-d
 			return false
 		end
