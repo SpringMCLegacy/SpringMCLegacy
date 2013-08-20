@@ -1,13 +1,13 @@
-local Wall = {
-	name              	= "Wall",
-	description         = "Fortified Barrier",
-	objectName        	= "Wall.s3o",
+local Wall_Gate = {
+	name              	= "Gate",
+	description         = "Wall Entrance",
+	objectName        	= "Wall_Gate.s3o",
 	script				= "Wall.lua",
 	corpse				= "Wall_X",
 	--iconType			= "",
 	category 			= "structure ground notbeacon",
 	activateWhenBuilt   = true,
-	maxDamage           = 10000,
+	maxDamage           = 5000,
 	mass                = 1000,
 	footprintX			= 7,
 	footprintZ 			= 7,
@@ -35,4 +35,4 @@ local Wall = {
 	--},
 }
 
-return lowerkeys({ ["Wall"] = Wall })
+return lowerkeys({ ["Wall_Gate"] = Wall_Gate })
