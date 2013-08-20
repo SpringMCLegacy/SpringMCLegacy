@@ -92,12 +92,28 @@ local function RemoveUpgradeOptions(unitID)
 	end
 end
 
+local function BuildWalls(unitID, teamID)
+	local x,y,z = Spring.GetUnitPosition(unitID)
+	local RADIUS = 230
+	local NUM_SEGMENTS = 12
+	y = 0
+	for i = 0, NUM_SEGMENTS - 1 do
+		local angle = math.rad(i * (360 / NUM_SEGMENTS))
+		local px = x + math.sin(angle) * RADIUS
+		local pz = z + math.cos(angle) * RADIUS
+		local wall = Spring.CreateUnit("wall", px, y, pz, "s", teamID)
+		Spring.SetUnitNeutral(wall, true)
+		Spring.SetUnitRotation(wall, 0, -angle, 0)
+	end
+end
+
 function gadget:UnitCreated(unitID, unitDefID, teamID, builderID)
 	local unitDef = UnitDefs[unitDefID]
 	local cp = unitDef.customParams
 	if unitDefID == BEACON_ID then
 		buildLimits[unitID] = {["turret"] = 4, ["ecm"] = 1, ["sensor"] = 1}
 		AddUpgradeOptions(unitID)
+		DelayCall(BuildWalls, {unitID, teamID}, 1)
 	elseif cp and cp.towertype then
 		-- track creation of turrets and their originating beacons so we can give back slots if a turret dies
 		if builderID then -- ignore /give turrets
