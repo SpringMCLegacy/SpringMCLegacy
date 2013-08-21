@@ -1,6 +1,42 @@
 [GAUSS_MUZZLEFLASH]
 {
    usedefaultexplosions=0;
+   [shatter]
+	{
+	class=CSimpleParticleSystem;
+
+		[properties]
+		{
+		alwaysVisible=1;
+		Texture=longshot;
+
+		colorMap	= 0.9 0.9 0.0 0.04	1.0 0.5 0.0 0.01	1.0 0.5 0.0 0.00;
+
+      		pos 		= 0, 2, 0;
+		gravity		= 0, -0.01, 0;
+	       	emitVector	=dir;
+		emitRot		= 10;
+		emitRotSpread	= 1;
+
+		sizeGrowth	= 1;
+		sizeMod		= 0.5;
+
+		airdrag			= 0.8;
+		particleLife		= 7;
+		particleLifeSpread	= 0;
+		numParticles		= 30;
+		particleSpeed		= 3;
+		particleSpeedSpread	= 5;
+		particleSize		= 5;
+		particleSizeSpread	= 2;
+
+		directional		= 1;
+		useAirLos		= 0;
+		}
+	air=1;
+	ground=1;
+	count=1;
+	}
 	[sphere] 
 	{
 		class=CSpherePartSpawner;
@@ -8,7 +44,7 @@
 		{
 			expansionSpeed=3;
 			ttl=12;
-			alpha=0.125;
+			alpha=0.01;
 			color=1,1,1;
 		}
 		air=1;
