@@ -118,59 +118,66 @@ function Unpack()
 	RecursiveHide(crate_base, true)
 end
 
+
+-- Code for MechBay Only
+
+-- Localisations
+local GetUnitDefID	= Spring.GetUnitDefID
+local GetUnitHealth	= Spring.GetUnitHealth
+local SetUnitHealth	= Spring.SetUnitHealth
+-- Constants
 local REPAIR_RATE = 0.1
 local LIMB_REPAIR_RATE = REPAIR_RATE
+-- Variables
+local passengerDefID
+local passengerInfo
+local passengerEnv
+
 local repaired = false
 local resupplied = false
 local restored = false
 
+
 function Repair(passengerID)
-	local curHP, maxHP = Spring.GetUnitHealth(passengerID)
+	local curHP, maxHP = GetUnitHealth(passengerID)
 	while curHP ~= maxHP do
 		local newHP = math.min(curHP + maxHP * REPAIR_RATE, maxHP)
-		Spring.SetUnitHealth(passengerID, newHP)
-		curHP, maxHP = Spring.GetUnitHealth(passengerID)
+		SetUnitHealth(passengerID, newHP)
+		curHP, maxHP = GetUnitHealth(passengerID)
+		curHP, maxHP = GetUnitHealth(passengerID)
 		Sleep(1000)
 	end
-	-- Repaired up, move out!
 	repaired = true
-	if resupplied and restored then
+	if resupplied and restored then -- I'm the last task to finish, move out!
 		script.TransportDrop(passengerID)
 	end
 end
 
 function Restore(passengerID)
-	--TODO: function to restore lost limbs / limb health
-	local unitDefID = Spring.GetUnitDefID(passengerID)
-	local info = GG.lusHelper[unitDefID]
-	local limbHPs = info.limbHPs
-	local env = Spring.UnitScript.GetScriptEnv(passengerID)
-	if env.limbHPControl then -- N.B. currently this runs for all mechs
+	local limbHPs = passengerInfo.limbHPs
+	if passengerEnv.limbHPControl then -- N.B. currently this runs for all mechs
 		for limb, maxHP in pairs(limbHPs) do
-			local curHP = env.limbHPControl(limb, 0)
+			local curHP = passengerEnv.limbHPControl(limb, 0)
 			while curHP ~= maxHP do
-				curHP = env.limbHPControl(limb, -maxHP * LIMB_REPAIR_RATE)
+				curHP = passengerEnv.limbHPControl(limb, -maxHP * LIMB_REPAIR_RATE)
 				Sleep(1000)
 			end
 		end
 	end
 	restored = true
-	if repaired and resupplied then
+	if repaired and resupplied then -- I'm the last task to finish, move out!
 		script.TransportDrop(passengerID)
 	end	
 end
 
 function Resupply(passengerID)
-	local unitDefID = Spring.GetUnitDefID(passengerID)
-	local info = GG.lusHelper[unitDefID]
-	local ammoTypes = info.ammoTypes
-	local env = Spring.UnitScript.GetScriptEnv(passengerID)
-	if env.ChangeAmmo then -- N.B. currently this runs for all mechs regardless of whether they have any ammo using weapons...
+	local ammoTypes = passengerInfo.ammoTypes
+	if passengerEnv.ChangeAmmo then -- N.B. currently this runs for all mechs regardless of whether they have any ammo using weapons...
 		while true do
 			local moreToDo = false
 			for weaponNum, ammoType in pairs(ammoTypes) do --... but this loop will finish immediatly in that case
-				local amount = info.burstLengths[weaponNum]
-				local supplied = env.ChangeAmmo(ammoType, amount)
+				local amount = passengerInfo.burstLengths[weaponNum]
+				local supplied = passengerEnv.ChangeAmmo(ammoType, amount)
 				--if supplied then Spring.Echo("Deduct " .. amount .. " " .. ammoType) end
 				moreToDo = moreToDo or supplied
 			end
@@ -179,12 +186,15 @@ function Resupply(passengerID)
 		end
 	end
 	resupplied = true
-	if repaired and restored then
+	if repaired and restored then -- I'm the last task to finish, move out!
 		script.TransportDrop(passengerID)
 	end	
 end
 
 function script.TransportPickup (passengerID)
+	passengerDefID = GetUnitDefID(passengerID)
+	passengerInfo = GG.lusHelper[passengerDefID]
+	passengerEnv = Spring.UnitScript.GetScriptEnv(passengerID)
 	-- TODO: pickup animation
 	Spring.UnitScript.AttachUnit(base, passengerID)
 	StartThread(Repair, passengerID)
@@ -195,11 +205,13 @@ end
 
 
 function script.TransportDrop (passengerID, x, y, z)
-	Spring.SetUnitBlocking(unitID, false, false)
+	Spring.SetUnitBlocking(unitID, false, false) -- make it easy to get out
 	Spring.UnitScript.DropUnit(passengerID)
-	Spring.SetUnitMoveGoal(passengerID, UNLOAD_X, 0, UNLOAD_Z, 50)
+	Spring.SetUnitMoveGoal(passengerID, UNLOAD_X, 0, UNLOAD_Z, 50) -- bug out over here
+	-- reset states
 	repaired = false
 	resupplied = false
+	restored = false
 	-- wait for current passenger to get out
 	Sleep(1000)
 	Spring.SetUnitBlocking(unitID, true, true)
