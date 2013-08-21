@@ -239,37 +239,46 @@ function SmokeLimb(limb, piece)
 	end
 end
 
-function hideLimbPieces(limb)
+function hideLimbPieces(limb, hide)
+	local rootPiece
+	local limbWeapons
 	if limb == "turret" then
-		RecursiveHide(turret, true)
-		EmitSfx(turret, SFX.CEG + info.numWeapons + 1)
-		Explode(turret, SFX.FIRE + SFX.SMOKE)
-		for id, valid in pairs(turretIDs) do
+		rootPiece = turret
+		limbWeapons = turretIDs
+	else  -- asumme limb is a wing or rotor
+		rootPiece = piece(limb)-- asuume pieces are lwing, rwing, rotor
+		limbWeapons = {}
+		if hide then
+			SetUnitValue(COB.CRASHING, 1)
+		end
+	end
+	RecursiveHide(rootPiece, hide)
+	if hide then
+		EmitSfx(rootPiece, SFX.CEG + info.numWeapons + 1)
+		Explode(rootPiece, SFX.FIRE + SFX.SMOKE)
+		for id, valid in pairs(limbWeapons) do
 			if valid then
 				local weapDef = WeaponDefs[unitDef.weapons[id].weaponDef]
 				Spring.Echo(unitDef.humanName .. ": " .. weapDef.name .. " destroyed!")
 			end
 		end
-	else -- asumme limb is a wing or rotor
-		local wingPiece = piece(limb) -- asuume pieces are lwing, rwing, rotor
-		RecursiveHide(wingPiece, true)
-		EmitSfx(wingPiece, SFX.CEG + info.numWeapons + 1)
-		Explode(wingPiece, SFX.FIRE + SFX.SMOKE)
-		SetUnitValue(COB.CRASHING, 1)
 	end
 end
 
 function limbHPControl(limb, damage)
 	local currHP = limbHPs[limb]
-	if currHP > 0 then
-		local newHP = limbHPs[limb] - damage
+	if currHP > 0 or damage < 0 then
+		local newHP = math.min(limbHPs[limb] - damage, info.limbHPs[limb]) -- don't allow HP above max
 		--Spring.Echo(unitDef.name, limb, newHP)
 		if newHP < 0 then 
-			hideLimbPieces(limb)
+			hideLimbPieces(limb, true)
 			newHP = 0
+		elseif currHP == 0 then -- can only get here if damage < 0 i.e. repairing
+			hideLimbPieces(limb, false)
 		end
 		limbHPs[limb] = newHP
 	end
+	return currHP
 end
 
 function script.HitByWeapon(x, z, weaponID, damage)
