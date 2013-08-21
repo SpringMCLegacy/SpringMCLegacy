@@ -56,7 +56,7 @@ end
 
 function gadget:UnitDamaged(unitID, unitDefID, unitTeam, damage, paralyzer, weaponID, attackerID, attackerDefID, attackerTeam)
 	if modOptions and (modOptions.income ~= "none" and modOptions.income ~= "dropship") then
-		if attackerID and not AreTeamsAllied(unitTeam, attackerTeam) then
+		if attackerID and attackerTeam and not AreTeamsAllied(unitTeam, attackerTeam) then
 			AddTeamResource(attackerTeam, "metal", damage * DAMAGE_REWARD_MULT)
 		end
 	end

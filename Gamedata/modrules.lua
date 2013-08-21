@@ -5,4 +5,8 @@ return {
 		healthScale = 0,
 		reloadScale = 0,
 	},
+	transportability = {
+		transportAir = true,
+		transportHover = true,
+	},
 }
