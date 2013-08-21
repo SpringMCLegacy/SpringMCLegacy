@@ -22,6 +22,7 @@ local name = unitDef.name
 local rad = math.rad
 local CRATE_SPEED = math.rad(50)
 local RANDOM_ROT = math.random(-180, 180)
+local UNLOAD_X, UNLOAD_Z
 
 function script.Create()
 	Sleep(100) -- wait a few frames
@@ -93,6 +94,10 @@ function Unpack()
 		Turn(ramprfoldfront, x_axis, rad(179), CRATE_SPEED)
 		Turn(ramplfoldrear, x_axis, rad(-179), CRATE_SPEED)
 		Turn(ramprfoldrear, x_axis, rad(-179), CRATE_SPEED)
+		local x, _ ,z = Spring.GetUnitPosition(unitID)
+		local dx, _, dz = Spring.GetUnitDirection(unitID)
+		UNLOAD_X = x + 150 * dx
+		UNLOAD_Z = z + 150 * dz
 	elseif name == "upgrade_uplink" then
 		Move(antennabase, z_axis, -15, CRATE_SPEED * 5)
 		Turn(antennamast, x_axis, rad(90), CRATE_SPEED)
@@ -113,13 +118,72 @@ function Unpack()
 	RecursiveHide(crate_base, true)
 end
 
-function script.TransportPickup (passengerID)
-	Spring.UnitScript.AttachUnit(base, passengerID)
+local REPAIR_RATE = 0.1
+local repaired = false
+local resupplied = false
+
+function Repair(passengerID)
+	local curHP, maxHP = Spring.GetUnitHealth(passengerID)
+	while curHP ~= maxHP do
+		local newHP = math.min(curHP + maxHP * REPAIR_RATE, maxHP)
+		Spring.SetUnitHealth(passengerID, newHP)
+		curHP, maxHP = Spring.GetUnitHealth(passengerID)
+		Sleep(1000)
+	end
+	-- Repaired up, move out!
+	repaired = true
+	if resupplied then
+		script.TransportDrop(passengerID)
+	end
 end
+
+function Restore(passengerID)
+	--TODO: function to restore lost limbs / limb health
+end
+
+function Resupply(passengerID)
+	local unitDefID = Spring.GetUnitDefID(passengerID)
+	local info = GG.lusHelper[unitDefID]
+	local ammoTypes = info.ammoTypes
+	local env = Spring.UnitScript.GetScriptEnv(passengerID)
+	if env.ChangeAmmo then -- N.B. currently this runs for all mechs regardless of whether they have any ammo using weapons...
+		while true do
+			local moreToDo = false
+			for weaponNum, ammoType in pairs(ammoTypes) do --... but this loop will finish immediatly in that case
+				local amount = info.burstLengths[weaponNum]
+				local supplied = env.ChangeAmmo(ammoType, amount)
+				--if supplied then Spring.Echo("Deduct " .. amount .. " " .. ammoType) end
+				moreToDo = moreToDo or supplied
+			end
+			if not moreToDo then break end
+			Sleep(1000)
+		end
+	end
+	resupplied = true
+	if repaired then
+		script.TransportDrop(passengerID)
+	end	
+end
+
+function script.TransportPickup (passengerID)
+	-- TODO: pickup animation
+	Spring.UnitScript.AttachUnit(base, passengerID)
+	StartThread(Repair, passengerID)
+	StartThread(Resupply, passengerID)
+end
+
+
 
 function script.TransportDrop (passengerID, x, y, z)
+	Spring.SetUnitBlocking(unitID, false, false)
 	Spring.UnitScript.DropUnit(passengerID)
+	Spring.SetUnitMoveGoal(passengerID, UNLOAD_X, 0, UNLOAD_Z, 50)
+	repaired = false
+	resupplied = false
+	-- wait for current passenger to get out
+	Sleep(1000)
+	Spring.SetUnitBlocking(unitID, true, true)
 end
 
-function script.Killed(recentDamage, maxHealth)
+function script.Killed(recentDamage, maxRepairth)
 end

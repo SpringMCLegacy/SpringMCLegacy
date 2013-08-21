@@ -62,12 +62,14 @@ for name, ud in pairs(UnitDefs) do
 	end
 	-- no OTA nanoframes please
 	ud.shownanoframe = false
+	ud.idleautoheal = 0
 	-- override nochasecategories so units don't do anything.
 	--ud.category = (ud.category or "") .. " all"
 	--ud.nochasecategory = (ud.nochasecategory or "") .. " all"
 	-- set buildtimes based on walking speed, so units roll off the ramp at their correct speed
 	local speed = (ud.maxvelocity or 0) * 30
 	if speed > 0 or ud.canfly then
+		ud.cantbetransported = false
 		if ud.customparams.unittype == "mech" then
 			ud.buildtime = RAMP_DISTANCE / speed
 			ud.usepiececollisionvolumes = true
