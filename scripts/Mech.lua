@@ -235,22 +235,21 @@ function SmokeLimb(limb, piece)
 	end
 end
 
-function hideLimbPieces(limb)
+function hideLimbPieces(limb, hide)
+	local rootPiece
+	local limbWeapons
 	if limb == "left_arm" then
-		RecursiveHide(lupperarm, true)
-		EmitSfx(lupperarm, SFX.CEG + info.numWeapons + 1)
-		Explode(lupperarm, SFX.FIRE + SFX.SMOKE)
-		for id, valid in pairs(leftArmIDs) do
-			if valid then
-				local weapDef = WeaponDefs[unitDef.weapons[id].weaponDef]
-				Spring.Echo(unitDef.humanName .. ": " .. weapDef.name .. " destroyed!")
-			end
-		end
+		rootPiece = lupperarm
+		limbWeapons = leftArmIDs
 	elseif limb == "right_arm" then
-		RecursiveHide(rupperarm, true)
-		EmitSfx(rupperarm, SFX.CEG + info.numWeapons + 1)
-		Explode(rupperarm, SFX.FIRE + SFX.SMOKE)
-		for id, valid in pairs(rightArmIDs) do
+		rootPiece = rupperarm
+		limbWeapons = rightArmIDs
+	end
+	RecursiveHide(rootPiece, hide)
+	if hide then
+		EmitSfx(rootPiece, SFX.CEG + info.numWeapons + 1)
+		Explode(rootPiece, SFX.FIRE + SFX.SMOKE)
+		for id, valid in pairs(limbWeapons) do
 			if valid then
 				local weapDef = WeaponDefs[unitDef.weapons[id].weaponDef]
 				Spring.Echo(unitDef.humanName .. ": " .. weapDef.name .. " destroyed!")
@@ -259,14 +258,17 @@ function hideLimbPieces(limb)
 	end
 end
 
+
 function limbHPControl(limb, damage)
 	local currHP = limbHPs[limb]
 	if currHP > 0 or damage < 0 then
 		local newHP = math.min(limbHPs[limb] - damage, info.limbHPs[limb]) -- don't allow HP above max
 		--Spring.Echo(unitDef.name, limb, newHP)
 		if newHP < 0 then 
-			hideLimbPieces(limb)
+			hideLimbPieces(limb, true)
 			newHP = 0
+		elseif currHP == 0 then -- can only get here if damage < 0 i.e. repairing
+			hideLimbPieces(limb, false)
 		end
 		limbHPs[limb] = newHP
 	end
