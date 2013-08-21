@@ -119,8 +119,10 @@ function Unpack()
 end
 
 local REPAIR_RATE = 0.1
+local LIMB_REPAIR_RATE = REPAIR_RATE
 local repaired = false
 local resupplied = false
+local restored = false
 
 function Repair(passengerID)
 	local curHP, maxHP = Spring.GetUnitHealth(passengerID)
@@ -132,13 +134,30 @@ function Repair(passengerID)
 	end
 	-- Repaired up, move out!
 	repaired = true
-	if resupplied then
+	if resupplied and restored then
 		script.TransportDrop(passengerID)
 	end
 end
 
 function Restore(passengerID)
 	--TODO: function to restore lost limbs / limb health
+	local unitDefID = Spring.GetUnitDefID(passengerID)
+	local info = GG.lusHelper[unitDefID]
+	local limbHPs = info.limbHPs
+	local env = Spring.UnitScript.GetScriptEnv(passengerID)
+	if env.limbHPControl then -- N.B. currently this runs for all mechs
+		for limb, maxHP in pairs(limbHPs) do
+			local curHP = env.limbHPControl(limb, 0)
+			while curHP ~= maxHP do
+				curHP = env.limbHPControl(limb, -maxHP * LIMB_REPAIR_RATE)
+				Sleep(1000)
+			end
+		end
+	end
+	restored = true
+	if repaired and resupplied then
+		script.TransportDrop(passengerID)
+	end	
 end
 
 function Resupply(passengerID)
@@ -160,7 +179,7 @@ function Resupply(passengerID)
 		end
 	end
 	resupplied = true
-	if repaired then
+	if repaired and restored then
 		script.TransportDrop(passengerID)
 	end	
 end
@@ -170,6 +189,7 @@ function script.TransportPickup (passengerID)
 	Spring.UnitScript.AttachUnit(base, passengerID)
 	StartThread(Repair, passengerID)
 	StartThread(Resupply, passengerID)
+	StartThread(Restore, passengerID)
 end
 
 

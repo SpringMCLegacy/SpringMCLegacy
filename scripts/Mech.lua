@@ -261,8 +261,8 @@ end
 
 function limbHPControl(limb, damage)
 	local currHP = limbHPs[limb]
-	if currHP > 0 then
-		local newHP = limbHPs[limb] - damage
+	if currHP > 0 or damage < 0 then
+		local newHP = math.min(limbHPs[limb] - damage, info.limbHPs[limb]) -- don't allow HP above max
 		--Spring.Echo(unitDef.name, limb, newHP)
 		if newHP < 0 then 
 			hideLimbPieces(limb)
@@ -270,6 +270,7 @@ function limbHPControl(limb, damage)
 		end
 		limbHPs[limb] = newHP
 	end
+	return currHP
 end
 
 function script.HitByWeapon(x, z, weaponID, damage)
