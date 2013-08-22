@@ -77,11 +77,13 @@ for unitName, ud in pairs(UnitDefs) do
 			end
 			Spring.Echo("~~~~~~")]]
 		end
-	end
-	if unitName == "beacon" then
+	elseif unitName == "beacon" then
 		ud.sfxtypes = { explosiongenerators = {} }
 		table.insert(ud.sfxtypes.explosiongenerators, "custom:reentry_fx")
 		table.insert(ud.sfxtypes.explosiongenerators, "custom:ROACHPLOSION")
+		table.insert(ud.sfxtypes.explosiongenerators, "custom:beacon")
+	elseif unitName == "upgrade_dropzone" then
+		ud.sfxtypes = { explosiongenerators = {} }
 		table.insert(ud.sfxtypes.explosiongenerators, "custom:beacon")
 	end
 end

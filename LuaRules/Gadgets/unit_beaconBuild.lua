@@ -19,6 +19,7 @@ local SetUnitRulesParam		= Spring.SetUnitRulesParam
 local GetUnitPosition		= Spring.GetUnitPosition
 --SyncedCtrl
 local CreateUnit			= Spring.CreateUnit
+local DestroyUnit			= Spring.DestroyUnit
 local EditUnitCmdDesc		= Spring.EditUnitCmdDesc
 local InsertUnitCmdDesc		= Spring.InsertUnitCmdDesc
 local FindUnitCmdDesc		= Spring.FindUnitCmdDesc
@@ -35,6 +36,7 @@ local DelayCall				 = GG.Delay.DelayCall
 -- Constants
 local GAIA_TEAM_ID = Spring.GetGaiaTeamID()
 local BEACON_ID = UnitDefNames["beacon"].id
+local DROPZONE_ID = UnitDefNames["upgrade_dropzone"].id
 local WALL_ID = UnitDefNames["wall"].id
 local GATE_ID = UnitDefNames["wall_gate"].id
 local MIN_BUILD_RANGE = tonumber(UnitDefNames["beacon"].customParams.minbuildrange) or 230
@@ -53,6 +55,8 @@ local outpostDefs = {} -- outpostDefs[unitDefID] = {tooltip = "some string"}
 local upgradeIDs = {} -- upgradeIDs[cmdID] = unitDefID
 local beaconIDs = {} -- beaconIDs[outpostID] = beaconID
 local outpostIDs = {} -- outpostIDs[beaconID] = outpostID
+local dropZoneIDs = {} -- dropZoneIDs[teamID] = dropZoneID
+local dropZoneBeaconIDs = {} -- dropZoneBeaconIDs[teamID] = beaconID
 
 local wallIDs = {} -- wallIDs[beaconID] = {wall1, wall2 ... wall12}
 local wallInfos = {} -- wallInfos[wallID] = {beaconID = beaconID, angle = angle}
@@ -111,6 +115,7 @@ function gadget:GamePreload()
 	end
 end
 
+-- REGULAR UPGRADES
 local function AddUpgradeOptions(unitID)
 	for outpostDefID, outpostInfo in pairs(outpostDefs) do
 		InsertUnitCmdDesc(unitID, outpostInfo.cmdDesc)
@@ -123,6 +128,39 @@ local function RemoveUpgradeOptions(unitID)
 	end
 end
 
+function SpawnCargo(beaconID, dropshipID, unitDefID, teamID)
+	env = Spring.UnitScript.GetScriptEnv(dropshipID)
+	local tx, ty, tz = GetUnitPosition(dropshipID)
+	local outpostID = CreateUnit(unitDefID, tx, ty, tz, "s", teamID)
+	env = Spring.UnitScript.GetScriptEnv(dropshipID)
+	Spring.UnitScript.CallAsUnit(dropshipID, env.LoadCargo, beaconID, outpostID)
+	beaconIDs[outpostID] = beaconID 
+	outpostIDs[beaconID] = outpostID
+	-- Let unsynced know about this pairing
+	Spring.SetUnitRulesParam(outpostID, "beaconID", beaconID)
+end
+
+function DropshipDelivery(unitID, unitDefID, teamID)
+	UseTeamResource(teamID, "metal", outpostDefs[unitDefID].cost)
+	local tx,ty,tz = GetUnitPosition(unitID)
+	local dropshipID = CreateUnit("is_avenger", tx, ty, tz, "s", teamID)
+	DelayCall(SpawnCargo, {unitID, dropshipID, unitDefID, teamID}, 1)
+end
+
+-- DROPZONE
+local function SetDropZone(beaconID, teamID)
+	local currDropZone = dropZoneIDs[teamID]
+	if currDropZone then
+		AddUpgradeOptions(dropZoneBeaconIDs[teamID])
+		DestroyUnit(currDropZone, false, true)
+	end
+	local x,y,z = GetUnitPosition(beaconID)
+	local dropZoneID = CreateUnit("upgrade_dropzone", x,y,z, "s", teamID)
+	dropZoneIDs[teamID] = dropZoneID
+	dropZoneBeaconIDs[teamID] = beaconID
+end
+
+-- WALLS & GATES
 local function BuildWalls(beaconID, teamID)
 	UseTeamResource(teamID, "metal", UnitDefs[BEACON_ID].metalCost)
 	wallIDs[beaconID] = {}
@@ -146,6 +184,25 @@ local function BuildGate(wallID, teamID)
 	local gateID = CreateUnit("wall_gate", x,y,z, "s", teamID)
 	SetUnitRotation(gateID, 0, -wallInfos[wallID].angle, 0)
 	SetUnitNeutral(gateID, true)
+end
+
+-- TOWERS
+function LimitTowerType(unitID, towerType)	
+	local towersRemaining = buildLimits[unitID][towerType]
+	if towersRemaining == 0 then 
+		Spring.Echo("Limit reached for " .. towerType)
+		return false 
+	else
+		buildLimits[unitID][towerType] = towersRemaining - 1
+		if towersRemaining == 1 then
+			for tDefID, tType in pairs(towerDefIDs) do
+				if tType == towerType then
+					EditUnitCmdDesc(unitID, FindUnitCmdDesc(unitID, -tDefID), {disabled = true, params = {"L"}})
+				end
+			end
+		end
+		return true
+	end
 end
 
 function gadget:UnitCreated(unitID, unitDefID, teamID, builderID)
@@ -205,43 +262,6 @@ function gadget:UnitGiven(unitID, unitDefID, newTeam, oldTeam)
 	end
 end
 
-function SpawnCargo(beaconID, dropshipID, unitDefID, teamID)
-	env = Spring.UnitScript.GetScriptEnv(dropshipID)
-	local tx, ty, tz = GetUnitPosition(dropshipID)
-	local outpostID = CreateUnit(unitDefID, tx, ty, tz, "s", teamID)
-	env = Spring.UnitScript.GetScriptEnv(dropshipID)
-	Spring.UnitScript.CallAsUnit(dropshipID, env.LoadCargo, beaconID, outpostID)
-	beaconIDs[outpostID] = beaconID 
-	outpostIDs[beaconID] = outpostID
-	-- Let unsynced know about this pairing
-	Spring.SetUnitRulesParam(outpostID, "beaconID", beaconID)
-end
-
-function DropshipDelivery(unitID, unitDefID, teamID)
-	UseTeamResource(teamID, "metal", outpostDefs[unitDefID].cost)
-	local tx,ty,tz = Spring.GetUnitPosition(unitID)
-	local dropshipID = CreateUnit("is_avenger", tx, ty, tz, "s", teamID)
-	DelayCall(SpawnCargo, {unitID, dropshipID, unitDefID, teamID}, 1)
-end
-
-function LimitTowerType(unitID, towerType)	
-	local towersRemaining = buildLimits[unitID][towerType]
-	if towersRemaining == 0 then 
-		Spring.Echo("Limit reached for " .. towerType)
-		return false 
-	else
-		buildLimits[unitID][towerType] = towersRemaining - 1
-		if towersRemaining == 1 then
-			for tDefID, tType in pairs(towerDefIDs) do
-				if tType == towerType then
-					EditUnitCmdDesc(unitID, FindUnitCmdDesc(unitID, -tDefID), {disabled = true, params = {"L"}})
-				end
-			end
-		end
-		return true
-	end
-end
-
 function gadget:AllowCommand(unitID, unitDefID, teamID, cmdID, cmdParams, cmdOptions)
 	if unitDefID == BEACON_ID then
 		if cmdID < 0 then
@@ -260,6 +280,9 @@ function gadget:AllowCommand(unitID, unitDefID, teamID, cmdID, cmdParams, cmdOpt
 			if upgradeIDs[cmdID] == WALL_ID then
 				BuildWalls(unitID, teamID)
 				RemoveUnitCmdDesc(unitID, FindUnitCmdDesc(unitID, cmdID))
+			elseif upgradeIDs[cmdID] == DROPZONE_ID then
+				RemoveUpgradeOptions(unitID)
+				SetDropZone(unitID, teamID)
 			else
 				--Spring.Echo("I'm totally gonna upgrade your beacon bro!")
 				RemoveUpgradeOptions(unitID)
