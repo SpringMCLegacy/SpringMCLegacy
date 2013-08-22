@@ -17,6 +17,7 @@ if gadgetHandler:IsSyncedCode() then
 local SetUnitRulesParam		= Spring.SetUnitRulesParam
 --SyncedRead
 local GetUnitPosition		= Spring.GetUnitPosition
+local GetTeamResources		= Spring.GetTeamResources
 --SyncedCtrl
 local CreateUnit			= Spring.CreateUnit
 local DestroyUnit			= Spring.DestroyUnit
@@ -27,6 +28,7 @@ local TransferUnit			= Spring.TransferUnit
 local RemoveUnitCmdDesc		= Spring.RemoveUnitCmdDesc
 local SetUnitNeutral		= Spring.SetUnitNeutral
 local SetUnitRotation		= Spring.SetUnitRotation
+local SpawnProjectile		= Spring.SpawnProjectile
 local UseTeamResource 		= Spring.UseTeamResource
 
 -- GG
@@ -40,10 +42,11 @@ local UPLINK_ID = UnitDefNames["upgrade_uplink"].id
 
 local ARTY_WEAPON_ID = WeaponDefNames["sniper"].id
 local ARTY_HEIGHT = 10000
-local ARTY_SALVO = 100
+local ARTY_SALVO = 10
 local ARTY_RADIAL_SPREAD = 500
-
-local CMD_UPGRADE = GG.CustomCommands.GetCmdID("CMD_UPGRADE")
+local ARTY_COST = 10000
+local ARTY_COOLDOWN = 10 * 30 -- 10s
+local artyLastFired = {} -- artyLastFired[teamID] = gameFrame
 
 -- Variables
 local artyCmdDesc = {
@@ -51,7 +54,7 @@ local artyCmdDesc = {
 	type	= CMDTYPE.ICON_MAP, -- UNIT_OR_MAP?
 	name 	= " Artillery \n Strike ",
 	action	= "uplink_arty",
-	tooltip = "C-Bill cost: ", -- ..cBillCost
+	tooltip = "C-Bill cost: " .. ARTY_COST,
 	cursor	= "Attack",
 }
 
@@ -68,10 +71,22 @@ local function ArtyShot(x,y,z)
 	local projParams = {}
 	projParams.gravity = -3 + math.random()
 	projParams.pos = {x, y, z}
-	Spring.SpawnProjectile(ARTY_WEAPON_ID, projParams)
+	SpawnProjectile(ARTY_WEAPON_ID, projParams)
 end
 
-local function ArtyStrike(x, y, z)
+local function ArtyStrike(teamID, x, y, z)
+	local lastFrame = artyLastFired[teamID]
+	if lastFrame and lastFrame > Spring.GetGameFrame() - ARTY_COOLDOWN then -- still cooling
+		Spring.Echo("Not yet! " .. (10 - math.floor((Spring.GetGameFrame() - lastFrame) / 30)) .. " seconds left")
+		return false
+	end
+	local money = GetTeamResources(teamID, "metal")
+	if money < ARTY_COST then  -- not enough C-Bills
+		Spring.Echo("Not enough C-Bills!")
+		return false 
+	end
+	UseTeamResource(teamID, "metal", ARTY_COST)
+	artyLastFired[teamID] = Spring.GetGameFrame()
 	local dx, dz
 	for i = 1, ARTY_SALVO do
 		local angle = math.random(360)
@@ -87,7 +102,7 @@ function gadget:AllowCommand(unitID, unitDefID, teamID, cmdID, cmdParams, cmdOpt
 	if unitDefID == UPLINK_ID then
 		if cmdID == artyCmdDesc.id then
 			local x,y,z = unpack(cmdParams)
-			return ArtyStrike(x, y, z)
+			return ArtyStrike(teamID, x, y, z)
 		end
 	end
 	return true
