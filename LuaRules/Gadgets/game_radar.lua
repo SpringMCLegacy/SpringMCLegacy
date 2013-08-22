@@ -32,6 +32,7 @@ local SetUnitLosState 	= Spring.SetUnitLosState
 -- Unsynced Ctrl
 -- Constants
 local BEACON_ID = UnitDefNames["beacon"].id
+local DROPZONE_ID = UnitDefNames["upgrade_dropzone"].id
 
 local NARC_ID = WeaponDefNames["narc"].id
 local NARC_DURATION = 30 * 60 -- 60 seconds
@@ -117,8 +118,8 @@ function gadget:UnitLeftRadar(unitID, unitTeam, allyTeam, unitDefID)
 end
 
 function gadget:UnitPreDamaged(unitID, unitDefID, unitTeam, damage, paralyzer, weaponID, projectileID, attackerID, attackerDefID, attackerTeam)
-	-- Don't allow any damage to beacons
-	if unitDefID == BEACON_ID then return 0 end
+	-- Don't allow any damage to beacons or dropzones
+	if unitDefID == BEACON_ID or unitDefID == DROPZONE_ID then return 0 end
 	-- ignore none weapons
 	if not attackerID then return damage end
 	-- NARCs
