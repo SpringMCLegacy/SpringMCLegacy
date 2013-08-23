@@ -45,7 +45,7 @@ local ARTY_HEIGHT = 10000
 local ARTY_SALVO = 10
 local ARTY_RADIAL_SPREAD = 500
 local ARTY_COST = 10000
-local ARTY_COOLDOWN = 10 * 30 -- 10s
+local ARTY_COOLDOWN = 60 * 30 -- 60s
 local artyLastFired = {} -- artyLastFired[teamID] = gameFrame
 
 -- Variables
@@ -77,7 +77,7 @@ end
 local function ArtyStrike(teamID, x, y, z)
 	local lastFrame = artyLastFired[teamID]
 	if lastFrame and lastFrame > Spring.GetGameFrame() - ARTY_COOLDOWN then -- still cooling
-		Spring.Echo("Not yet! " .. (10 - math.floor((Spring.GetGameFrame() - lastFrame) / 30)) .. " seconds left")
+		Spring.Echo("Not yet! " .. math.floor((ARTY_COOLDOWN - (Spring.GetGameFrame() - lastFrame)) / 30) .. " seconds left")
 		return false
 	end
 	local money = GetTeamResources(teamID, "metal")
@@ -95,6 +95,7 @@ local function ArtyStrike(teamID, x, y, z)
 		dz = math.cos(angle) * length
 		DelayCall(ArtyShot, {x + dx, y + ARTY_HEIGHT, z + dz}, math.random(150))
 	end
+	Spring.Echo("Nothin' but the rain!")
 	return true
 end
 
