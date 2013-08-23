@@ -83,7 +83,7 @@ function gadget:GamePreload()
 		elseif name:find("upgrade") then -- automatically build beacon upgrade cmdDescs
 			local cBillCost = unitDef.metalCost
 			local upgradeCmdDesc = {
-				id     = GG.CustomCommands.GetCmdID("CMD_UPGRADE_" .. name),
+				id     = GG.CustomCommands.GetCmdID("CMD_UPGRADE_" .. name, cBillCost),
 				type   = CMDTYPE.ICON,
 				name   = unitDef.humanName:gsub(" ", "  \n"),
 				action = 'upgrade',
@@ -92,9 +92,9 @@ function gadget:GamePreload()
 			outpostDefs[unitDefID] = {cmdDesc = upgradeCmdDesc, cost = cBillCost}
 			upgradeIDs[upgradeCmdDesc.id] = unitDefID
 		elseif unitDefID == WALL_ID then -- handle walls separately
-			local cBillCost = unitDef.metalCost
+			local cBillCost = unitDef.metalCost * NUM_SEGMENTS
 			wallCmdDesc = {
-				id     = GG.CustomCommands.GetCmdID("CMD_UPGRADE_" .. name),
+				id     = GG.CustomCommands.GetCmdID("CMD_UPGRADE_" .. name, cBillCost),
 				type   = CMDTYPE.ICON,
 				name   = "Defensive\nWalls",
 				action = 'upgrade',
@@ -104,7 +104,7 @@ function gadget:GamePreload()
 		elseif unitDefID == GATE_ID then -- and gates too
 			local cBillCost = unitDef.metalCost
 			gateCmdDesc = {
-				id     = GG.CustomCommands.GetCmdID("CMD_UPGRADE_" .. name),
+				id     = GG.CustomCommands.GetCmdID("CMD_UPGRADE_" .. name, cBillCost),
 				type   = CMDTYPE.ICON,
 				name   = "Install\n Gate",
 				action = 'upgrade',
