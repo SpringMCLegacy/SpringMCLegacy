@@ -15,6 +15,7 @@ end
 -- Note that loading order != execution order, which is what layer in GetInfo controls!
 
 -- Setup
+GG.CommandCosts = {} -- CommandCosts[cmdID] = cBillCost
 GG.CustomCommands = {}
 GG.CustomCommands.numCmds = 0
 GG.CustomCommands.IDs = {}
@@ -27,20 +28,21 @@ local BASE_CMD_ID = 1001
 -- Variables
 local customCommands = GG.CustomCommands
 
-local function GetCmdID(name)
+local function GetCmdID(name, cost)
 	if (not customCommands) then
 		customCommands = GG.CustomCommands
 	end
 	local cmdID = customCommands.IDs[name]
 	if not cmdID then
 		cmdID = BASE_CMD_ID + customCommands.numCmds
+		GG.CommandCosts[cmdID] = cost or 0
 		customCommands.numCmds = customCommands.numCmds + 1
 		customCommands.IDs[name] = cmdID
 		_G.CustomCommandIDs[name] = cmdID
 		gadgetHandler:RegisterCMDID(cmdID)
 		--Spring.Echo(name, cmdID)
 	end
-	return cmdID
+	return cmdID, cost or 0
 end
 
 GG.CustomCommands.GetCmdID = GetCmdID

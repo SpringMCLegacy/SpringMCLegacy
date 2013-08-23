@@ -38,6 +38,9 @@ local incomeIncrease = 0
 local modOptions = Spring.GetModOptions()
 local dropShips = {}
 
+local commandCosts = {} -- commandCosts[cmdID] = cBillCost
+GG.CommandCosts = commandCosts
+
 function gadget:AllowUnitCreation(unitDefID, builderID, teamID, x, y, z)
 	ud = UnitDefs[unitDefID]
 	local money = GetTeamResources(teamID, "metal")
@@ -64,7 +67,7 @@ end
 
 function gadget:UnitCreated(unitID, unitDefID, teamID, builderID)
 	local ud = UnitDefs[unitDefID]
-	if ud.isBuilder then -- warning, assumes no other builders or factories!
+	if ud.speed == 0 then --ud.isBuilder then -- warning, assumes no other builders or factories!
 		dropShips[unitID] = true
 		if modOptions and modOptions.income == "none" then
 			SetUnitResourcing(unitID, "umm", 0)
@@ -110,18 +113,22 @@ function gadget:GameFrame(n)
 			local cmdDescs = GetUnitCmdDescs(unitID)
 			for cmdDescID = 1, #cmdDescs do
 				local buildDefID = cmdDescs[cmdDescID].id
+				local cCost, tCost
 				if buildDefID < 0 then -- a build order
-					local buildCost = UnitDefs[-buildDefID].metalCost
-					local weight = UnitDefs[-buildDefID].energyCost
-					if buildCost > money then
-						EditUnitCmdDesc(unitID, cmdDescID, {disabled = true, params = {"C"}})
-					elseif weight > weightLeft then
-						EditUnitCmdDesc(unitID, cmdDescID, {disabled = true, params = {"T"}})
-					else
-						local cmdDesc = GetUnitCmdDescs(unitID, cmdDescID, cmdDescID)[1]
-						if cmdDesc.disabled and cmdDesc.params[1] ~= "L" then -- don't clear build 'L'imited units
-							EditUnitCmdDesc(unitID, cmdDescID, {disabled = false, params = {}})
-						end
+					cCost = UnitDefs[-buildDefID].metalCost
+					tCost = UnitDefs[-buildDefID].energyCost
+				else
+					cCost = GG.CommandCosts[buildDefID] or 0
+					tCost = 0
+				end
+				if cCost > money then
+					EditUnitCmdDesc(unitID, cmdDescID, {disabled = true, params = {"C"}})
+				elseif tCost > weightLeft then
+					EditUnitCmdDesc(unitID, cmdDescID, {disabled = true, params = {"T"}})
+				else
+					local cmdDesc = GetUnitCmdDescs(unitID, cmdDescID, cmdDescID)[1]
+					if cmdDesc.disabled and cmdDesc.params[1] ~= "L" then -- don't clear build 'L'imited units
+						EditUnitCmdDesc(unitID, cmdDescID, {disabled = false, params = {}})
 					end
 				end
 			end

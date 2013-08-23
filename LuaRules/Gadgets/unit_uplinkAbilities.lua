@@ -45,12 +45,12 @@ local ARTY_HEIGHT = 10000
 local ARTY_SALVO = 10
 local ARTY_RADIAL_SPREAD = 500
 local ARTY_COST = 10000
-local ARTY_COOLDOWN = 60 * 30 -- 60s
+local ARTY_COOLDOWN = 1 * 30 -- 60s
 local artyLastFired = {} -- artyLastFired[teamID] = gameFrame
 
 -- Variables
 local artyCmdDesc = {
-	id 		= GG.CustomCommands.GetCmdID("CMD_UPLINK_ARTILLERY"),
+	id 		= GG.CustomCommands.GetCmdID("CMD_UPLINK_ARTILLERY", ARTY_COST),
 	type	= CMDTYPE.ICON_MAP, -- UNIT_OR_MAP?
 	name 	= " Artillery \n Strike ",
 	action	= "uplink_arty",
