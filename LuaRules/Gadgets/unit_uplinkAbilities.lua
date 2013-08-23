@@ -16,6 +16,7 @@ if gadgetHandler:IsSyncedCode() then
 -- localisations
 local SetUnitRulesParam		= Spring.SetUnitRulesParam
 --SyncedRead
+local GetGameFrame			= Spring.GetGameFrame
 local GetUnitPosition		= Spring.GetUnitPosition
 local GetTeamResources		= Spring.GetTeamResources
 --SyncedCtrl
@@ -32,7 +33,7 @@ local SpawnProjectile		= Spring.SpawnProjectile
 local UseTeamResource 		= Spring.UseTeamResource
 
 -- GG
-local GetUnitDistanceToPoint = GG.GetUnitDistanceToPoint
+local FramesToMinutesAndSeconds = GG.FramesToMinutesAndSeconds
 local DelayCall				 = GG.Delay.DelayCall
 
 -- Constants
@@ -45,14 +46,14 @@ local ARTY_HEIGHT = 10000
 local ARTY_SALVO = 10
 local ARTY_RADIAL_SPREAD = 500
 local ARTY_COST = 10000
-local ARTY_COOLDOWN = 1 * 30 -- 60s
+local ARTY_COOLDOWN = 60 * 30 -- 60s
 local artyLastFired = {} -- artyLastFired[teamID] = gameFrame
 
 -- Variables
 local artyCmdDesc = {
 	id 		= GG.CustomCommands.GetCmdID("CMD_UPLINK_ARTILLERY", ARTY_COST),
 	type	= CMDTYPE.ICON_MAP, -- UNIT_OR_MAP?
-	name 	= " Artillery \n Strike ",
+	name 	= " Artillery \n Strike",
 	action	= "uplink_arty",
 	tooltip = "C-Bill cost: " .. ARTY_COST,
 	cursor	= "Attack",
@@ -77,11 +78,12 @@ end
 local function ArtyStrike(teamID, x, y, z)
 	local lastFrame = artyLastFired[teamID]
 	if lastFrame and lastFrame > Spring.GetGameFrame() - ARTY_COOLDOWN then -- still cooling
-		Spring.Echo("Not yet! " .. math.floor((ARTY_COOLDOWN - (Spring.GetGameFrame() - lastFrame)) / 30) .. " seconds left")
+		local minutes, seconds = FramesToMinutesAndSeconds(ARTY_COOLDOWN - (GetGameFrame() - lastFrame))
+		Spring.Echo("Not yet! " .. minutes .. " min " .. seconds .. " seconds left")
 		return false
 	end
 	local money = GetTeamResources(teamID, "metal")
-	if money < ARTY_COST then  -- not enough C-Bills
+	if money < ARTY_COST then  -- not enough C-Bills (Should never get this far, button disabled by game_money.lua)
 		Spring.Echo("Not enough C-Bills!")
 		return false 
 	end

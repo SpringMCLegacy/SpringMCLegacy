@@ -22,9 +22,11 @@ GG.CustomCommands.IDs = {}
 
 _G.CustomCommandIDs = {}
 
+-- localisations
+local floor 			= math.floor
+local format			= string.format
 -- Constants
 local BASE_CMD_ID = 1001
-
 -- Variables
 local customCommands = GG.CustomCommands
 
@@ -44,8 +46,15 @@ local function GetCmdID(name, cost)
 	end
 	return cmdID, cost or 0
 end
-
 GG.CustomCommands.GetCmdID = GetCmdID
+
+local function FramesToMinutesAndSeconds(frames)
+	local gameSecs = floor(frames / 30)
+	local minutes = format("%02d",  floor(gameSecs / 60))
+	local seconds = format("%02d", gameSecs % 60)
+	return minutes, seconds
+end
+GG.FramesToMinutesAndSeconds = FramesToMinutesAndSeconds
 
 if (gadgetHandler:IsSyncedCode()) then
   function gadget:Initialize()
