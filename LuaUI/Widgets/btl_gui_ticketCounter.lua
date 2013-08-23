@@ -33,7 +33,7 @@ end
 local xMax, yMax = Spring.GetViewGeometry()
 
 local colors = {}
-colors.red = "\255\255\001\001"
+colors.red = "\255\255\101\101"
 colors.yellow = "\255\255\255\001"
 colors.green = "\255\001\255\001"
 colors.white = "\255\255\255\255"
@@ -44,7 +44,16 @@ local btFont
 local text = "C-Bills: " .. colors.grey .. 0 .. colors.white .. "\t\tTonnage: " .. colors.yellow .. 0 .. colors.white .. " / " .. colors.yellow .. 0 .. colors.white .. "\t\tTime: 0:00:00"
 local text2
 local gameTime = ""
+local artyTime = ""
+local haveArty = 0
 local fps = colors.yellow .. "fps: " ..Spring.GetFPS()
+
+local function FramesToMinutesAndSeconds(frames)
+	local gameSecs = floor(frames / 30)
+	local minutes = format("%02d",  floor(gameSecs / 60))
+	local seconds = format("%02d", gameSecs % 60)
+	return minutes, seconds
+end
 
 local function Text2()
 	text2 = "Tickets\n"
@@ -74,6 +83,18 @@ function widget:PlayerChanged()
 	MY_TEAM_ID = Spring.GetMyTeamID()
 end
 
+function widget:UnitCreated(unitID, unitDefID, teamID)
+	if teamID == MY_TEAM_ID and unitDefID == UnitDefNames["upgrade_uplink"].id then
+		haveArty = haveArty + 1 -- TODO: won't carry over on PlayerChanged atm
+	end
+end
+
+function widget:UnitDestroyed(unitID, unitDefID, teamID)
+	if teamID == MY_TEAM_ID and unitDefID == UnitDefNames["upgrade_uplink"].id then
+		haveArty = haveArty - 1 -- TODO: won't carry over on PlayerChanged atm
+	end
+end
+
 function widget:GameFrame(n)
 	if n % 30 == 0 then
 		local gameSecs = Spring.GetGameSeconds()
@@ -81,6 +102,11 @@ function widget:GameFrame(n)
 		local minutes = format("%02d",  floor(gameSecs / 60))
 		local seconds = format("%02d", gameSecs % 60)
 		gameTime = colors.white .. "\t\tTime: " .. hours .. ":" .. minutes .. ":" .. seconds
+		if haveArty > 0 then
+			local frames = math.max(tonumber(Spring.GetTeamRulesParam(MY_TEAM_ID, "UPLINK_ARTILLERY") or 0) - n, 0)
+			minutes, seconds = FramesToMinutesAndSeconds(frames)
+			artyTime = colors.red .. "Artillery: " .. minutes .. ":" .. seconds
+		end
 		fps = colors.yellow .. "fps: " ..Spring.GetFPS()
 	end
 	if n % 32 == 0 then
@@ -96,6 +122,9 @@ end
 function widget:DrawScreen()
 	btFont:Begin()
 		btFont:Print(text, xMax/2, yMax - 32, 16, "cod")
+		if haveArty > 0 then
+			btFont:Print(artyTime, xMax * 0.75, yMax - 32, 16, "cod")
+		end
 		btFont:Print(text2, xMax - 148, yMax - 32, 16, "od")
 		btFont:Print(fps, xMax - 148, yMax - 72 - (16 * #allyTeams), 12, "od")
 	btFont:End()
