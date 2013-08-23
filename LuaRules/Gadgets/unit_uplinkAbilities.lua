@@ -14,7 +14,6 @@ if gadgetHandler:IsSyncedCode() then
 --	SYNCED
 
 -- localisations
-local SetUnitRulesParam		= Spring.SetUnitRulesParam
 --SyncedRead
 local GetGameFrame			= Spring.GetGameFrame
 local GetUnitPosition		= Spring.GetUnitPosition
@@ -25,10 +24,9 @@ local DestroyUnit			= Spring.DestroyUnit
 local EditUnitCmdDesc		= Spring.EditUnitCmdDesc
 local InsertUnitCmdDesc		= Spring.InsertUnitCmdDesc
 local FindUnitCmdDesc		= Spring.FindUnitCmdDesc
-local TransferUnit			= Spring.TransferUnit
 local RemoveUnitCmdDesc		= Spring.RemoveUnitCmdDesc
-local SetUnitNeutral		= Spring.SetUnitNeutral
-local SetUnitRotation		= Spring.SetUnitRotation
+local SetUnitRulesParam		= Spring.SetUnitRulesParam
+local SetTeamRulesParam		= Spring.SetTeamRulesParam
 local SpawnProjectile		= Spring.SpawnProjectile
 local UseTeamResource 		= Spring.UseTeamResource
 
@@ -77,8 +75,9 @@ end
 
 local function ArtyStrike(teamID, x, y, z)
 	local lastFrame = artyLastFired[teamID]
-	if lastFrame and lastFrame > Spring.GetGameFrame() - ARTY_COOLDOWN then -- still cooling
-		local minutes, seconds = FramesToMinutesAndSeconds(ARTY_COOLDOWN - (GetGameFrame() - lastFrame))
+	local currFrame = GetGameFrame()
+	if lastFrame and lastFrame > currFrame - ARTY_COOLDOWN then -- still cooling
+		local minutes, seconds = FramesToMinutesAndSeconds(ARTY_COOLDOWN - (currFrame - lastFrame))
 		Spring.Echo("Not yet! " .. minutes .. " min " .. seconds .. " seconds left")
 		return false
 	end
@@ -88,7 +87,8 @@ local function ArtyStrike(teamID, x, y, z)
 		return false 
 	end
 	UseTeamResource(teamID, "metal", ARTY_COST)
-	artyLastFired[teamID] = Spring.GetGameFrame()
+	artyLastFired[teamID] = currFrame
+	SetTeamRulesParam(teamID, "UPLINK_ARTILLERY", currFrame + ARTY_COOLDOWN)
 	local dx, dz
 	for i = 1, ARTY_SALVO do
 		local angle = math.random(360)
