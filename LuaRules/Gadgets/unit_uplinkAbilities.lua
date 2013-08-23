@@ -88,7 +88,7 @@ local function ArtyStrike(teamID, x, y, z)
 	end
 	UseTeamResource(teamID, "metal", ARTY_COST)
 	artyLastFired[teamID] = currFrame
-	SetTeamRulesParam(teamID, "UPLINK_ARTILLERY", currFrame + ARTY_COOLDOWN)
+	SetTeamRulesParam(teamID, "UPLINK_ARTILLERY", currFrame + ARTY_COOLDOWN) -- frame this team can fire arty again
 	local dx, dz
 	for i = 1, ARTY_SALVO do
 		local angle = math.random(360)

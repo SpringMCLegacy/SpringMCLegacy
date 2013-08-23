@@ -62,17 +62,18 @@ local wallIDs = {} -- wallIDs[beaconID] = {wall1, wall2 ... wall12}
 local wallInfos = {} -- wallInfos[wallID] = {beaconID = beaconID, angle = angle}
 local wallCmdDesc
 local gateCmdDesc
---[[local function HotSwap(unitID, unitDefID, teamID)
+
+local function HotSwap(unitID, unitDefID, teamID)
 	local x,y,z = Spring.GetUnitPosition(unitID)
 	if not Spring.GetUnitIsDead(unitID) then
-		Spring.DestroyUnit(unitID)
-		Spring.Echo("Destroy:", unitID)
+		Spring.DestroyUnit(unitID, false, true)
+		--Spring.Echo("Destroy:", unitID)
 	end
 	if not teamID then
 		teamID = Spring.GetUnitTeam(unitID)
 	end
 	DelayCall(Spring.CreateUnit,{unitDefID, x,y,z, "s", teamID, false, false, unitID, nil}, 3) -- 3 frame delay appears to be minimum
-end]]
+end
 
 function gadget:GamePreload()
 	for unitDefID, unitDef in pairs(UnitDefs) do
@@ -179,11 +180,14 @@ local function BuildWalls(beaconID, teamID)
 end
 
 local function BuildGate(wallID, teamID)
-	local x,y,z = GetUnitPosition(wallID)
-	Spring.DestroyUnit(wallID)
+	HotSwap(wallID, "wall_gate", teamID)
+	--[[local x,y,z = GetUnitPosition(wallID)
+	DestroyUnit(wallID)
 	local gateID = CreateUnit("wall_gate", x,y,z, "s", teamID)
 	SetUnitRotation(gateID, 0, -wallInfos[wallID].angle, 0)
-	SetUnitNeutral(gateID, true)
+	SetUnitNeutral(gateID, true)]]
+	DelayCall(SetUnitRotation, {wallID, 0, -wallInfos[wallID].angle, 0}, 3)
+	DelayCall(SetUnitNeutral, {wallID, true}, 3)
 end
 
 -- TOWERS
@@ -258,6 +262,10 @@ function gadget:UnitGiven(unitID, unitDefID, newTeam, oldTeam)
 			if beaconID == unitID then
 				DelayCall(TransferUnit, {outpostID, newTeam}, 1)
 			end
+		end
+		local walls = wallIDs[unitID] or {}
+		for _, wallID in pairs(walls) do
+			DelayCall(TransferUnit, {wallID, newTeam}, 1)
 		end
 	end
 end
