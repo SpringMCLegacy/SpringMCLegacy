@@ -340,7 +340,7 @@ local function WeaponCanFire(weaponID)
 	if turretIDs[weaponID] and limbHPs["turret"] <= 0 then
 		return false
 	end
-	if jammable[weaponID] and not activated then
+	if jammableIDs[weaponID] and not activated then
 		return false
 	end
 	local ammoType = ammoTypes[weaponID]
