@@ -371,7 +371,7 @@ local function WeaponCanFire(weaponID)
 	elseif rightArmIDs[weaponID] and limbHPs["right_arm"] <= 0 then
 		return false
 	end
-	if jammable[weaponID] and not activated then
+	if jammableIDs[weaponID] and not activated then
 		return false
 	end
 	local ammoType = ammoTypes[weaponID]

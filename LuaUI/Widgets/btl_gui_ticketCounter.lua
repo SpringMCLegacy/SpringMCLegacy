@@ -19,11 +19,18 @@ local GAIA_TEAM_ID = Spring.GetGaiaTeamID()
 local GAIA_ALLY_ID = select(6, Spring.GetTeamInfo(GAIA_TEAM_ID))
 local MY_TEAM_ID = Spring.GetMyTeamID()
 
+local UPLINK_ID = UnitDefNames["upgrade_uplink"].id
+
 -- localisations
+-- lua
 local floor 			= math.floor
 local format			= string.format
+-- SyncedRead
+local GetFPS 			= Spring.GetFPS
 local GetGameRulesParam	= Spring.GetGameRulesParam
+local GetGameSeconds 	= Spring.GetGameSeconds
 local GetTeamResources	= Spring.GetTeamResources
+local GetTeamRulesParam	= Spring.GetTeamRulesParam
 
 local allyTeams = Spring.GetAllyTeamList()
 for i = 1, #allyTeams do
@@ -39,14 +46,17 @@ colors.green = "\255\001\255\001"
 colors.white = "\255\255\255\255"
 colors.black = "\255\001\001\001"
 colors.grey = "\255\160\160\160"
+colors.slategray = "\255\198\226\255"
 
 local btFont
-local text = "C-Bills: " .. colors.grey .. 0 .. colors.white .. "\t\tTonnage: " .. colors.yellow .. 0 .. colors.white .. " / " .. colors.yellow .. 0 .. colors.white .. "\t\tTime: 0:00:00"
-local text2
-local gameTime = ""
+
+local ticketText
+local cBillsText = "C-Bills: " .. colors.grey .. 0
+local tonnageText= "Tonnage: " .. colors.yellow .. 0
+local gameTime = "Time: 0:00:00"
 local artyTime = ""
 local haveArty = 0
-local fps = colors.yellow .. "fps: " ..Spring.GetFPS()
+local fps = "fps: " .. colors.slategray .. GetFPS()
 
 local function FramesToMinutesAndSeconds(frames)
 	local gameSecs = floor(frames / 30)
@@ -55,8 +65,8 @@ local function FramesToMinutesAndSeconds(frames)
 	return minutes, seconds
 end
 
-local function Text2()
-	text2 = "Tickets\n"
+local function TicketText()
+	ticketText = "Tickets\n"
 	for i = 1, #allyTeams do
 		local allyTeam = allyTeams[i]
 		local tickets = GetGameRulesParam("tickets" .. allyTeam) or START_TICKETS
@@ -69,63 +79,70 @@ local function Text2()
 		else
 			tickets = colors.red .. tickets
 		end
-		text2 = text2 .. colors.white .. "\nTeam " .. allyTeam .. ": " .. tickets
+		ticketText = ticketText .. colors.white .. "\nTeam " .. allyTeam .. ": " .. tickets
 	end
 end
 
 function widget:Initialize()
 	Spring.SendCommands("resbar 0", "clock 0", "fps 0")
 	btFont = gl.LoadFont("LuaUI/Fonts/bt_oldstyle.ttf", 16, 2, 30)
-	Text2()
+	TicketText()
+	haveArty = Spring.GetTeamUnitsCounts(MY_TEAM_ID)[UPLINK_ID] or 0
 end
 
 function widget:PlayerChanged()
 	MY_TEAM_ID = Spring.GetMyTeamID()
+	haveArty = Spring.GetTeamUnitsCounts(MY_TEAM_ID)[UPLINK_ID] or 0 
 end
 
 function widget:UnitCreated(unitID, unitDefID, teamID)
-	if teamID == MY_TEAM_ID and unitDefID == UnitDefNames["upgrade_uplink"].id then
-		haveArty = haveArty + 1 -- TODO: won't carry over on PlayerChanged atm
+	if teamID == MY_TEAM_ID and unitDefID == UPLINK_ID then
+		haveArty = haveArty + 1
 	end
 end
 
 function widget:UnitDestroyed(unitID, unitDefID, teamID)
-	if teamID == MY_TEAM_ID and unitDefID == UnitDefNames["upgrade_uplink"].id then
-		haveArty = haveArty - 1 -- TODO: won't carry over on PlayerChanged atm
+	if teamID == MY_TEAM_ID and unitDefID == UPLINK_ID then
+		haveArty = haveArty - 1
 	end
 end
 
 function widget:GameFrame(n)
 	if n % 30 == 0 then
-		local gameSecs = Spring.GetGameSeconds()
+		local gameSecs = GetGameSeconds()
 		local hours = format("%d",  floor(gameSecs / 3600))
 		local minutes = format("%02d",  floor(gameSecs / 60))
 		local seconds = format("%02d", gameSecs % 60)
-		gameTime = colors.white .. "\t\tTime: " .. hours .. ":" .. minutes .. ":" .. seconds
+		gameTime = "Time: " .. colors.slategray .. hours .. colors.white .. ":" .. colors.slategray .. minutes .. colors.white .. ":" .. colors.slategray .. seconds
 		if haveArty > 0 then
-			local frames = math.max(tonumber(Spring.GetTeamRulesParam(MY_TEAM_ID, "UPLINK_ARTILLERY") or 0) - n, 0)
+			local frames = math.max(tonumber(GetTeamRulesParam(MY_TEAM_ID, "UPLINK_ARTILLERY") or 0) - n, 0)
 			minutes, seconds = FramesToMinutesAndSeconds(frames)
-			artyTime = colors.red .. "Artillery: " .. minutes .. ":" .. seconds
+			artyTime = "Artillery: " .. colors.red .. minutes .. colors.white .. ":" .. colors.red .. seconds
 		end
-		fps = colors.yellow .. "fps: " ..Spring.GetFPS()
+		fps = "fps: " .. colors.slategray .. GetFPS()
 	end
 	if n % 32 == 0 then
 		local cBills = floor(GetTeamResources(MY_TEAM_ID, "metal"))
+		cBillsText = "C-Bills: " .. colors.grey .. cBills
 		local tonnage, maxTonnage = GetTeamResources(MY_TEAM_ID, "energy")
 		maxTonnage = floor(maxTonnage) 
 		tonnage = floor(maxTonnage - (tonnage))
-		text = "C-Bills: " .. colors.grey .. cBills .. colors.white .. "\t\tTonnage: " .. colors.yellow .. tonnage .. colors.white .. " / " .. colors.yellow .. maxTonnage .. gameTime
-		Text2()
+		tonnageText = "Tonnage: " .. colors.yellow .. tonnage .. colors.white .. " / " .. colors.yellow .. maxTonnage
+		TicketText()
 	end
 end
 
+local timeHeight = yMax - 80 - (16 * #allyTeams)
+
 function widget:DrawScreen()
 	btFont:Begin()
-		btFont:Print(text, xMax/2, yMax - 32, 16, "cod")
-		if haveArty > 0 then
-			btFont:Print(artyTime, xMax * 0.75, yMax - 32, 16, "cod")
+		btFont:Print(cBillsText, xMax * 0.25, yMax - 32, 16, "od")
+		btFont:Print(tonnageText, xMax * 0.45, yMax - 32, 16, "od")
+		if (haveArty or 0) > 0 then
+			btFont:Print(artyTime, xMax * 0.65, yMax - 32, 16, "od")
 		end
-		btFont:Print(text2, xMax - 148, yMax - 32, 16, "od")
-		btFont:Print(fps, xMax - 148, yMax - 72 - (16 * #allyTeams), 12, "od")
+		btFont:Print(ticketText, xMax - 148, yMax - 32, 16, "od")
+		btFont:Print(gameTime, xMax - 148, timeHeight, 12, "od")
+		btFont:Print(fps, xMax - 148, timeHeight - 16, 12, "od")
 	btFont:End()
 end
