@@ -24,6 +24,8 @@ include "smokeunit.lua"
 local heatLimit = info.heatLimit
 local coolRate = info.coolRate * 2
 local inWater = false
+local activated = true
+
 local missileWeaponIDs = info.missileWeaponIDs
 local flareOnShots = info.flareOnShots
 local jammableIDs = info.jammableIDs
@@ -323,18 +325,22 @@ end
 
 function script.Activate()
 	Spring.SetUnitStealth(unitID, false)
+	activated = true
 end
 
 function script.Deactivate()
 	Spring.SetUnitStealth(unitID, true)
+	activated = false
 end
 
 local function WeaponCanFire(weaponID)
 	if weaponID == amsID then
 		return true
 	end
-	-- TODO: Disable turret weapons, will require recursively checking parents or children?
 	if turretIDs[weaponID] and limbHPs["turret"] <= 0 then
+		return false
+	end
+	if jammable[weaponID] and not activated then
 		return false
 	end
 	local ammoType = ammoTypes[weaponID]
