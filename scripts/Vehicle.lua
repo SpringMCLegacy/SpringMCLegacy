@@ -4,6 +4,8 @@ unitDefID = Spring.GetUnitDefID(unitID)
 unitDef = UnitDefs[unitDefID]
 info = GG.lusHelper[unitDefID]
 
+moving = false
+
 -- localised API functions
 local SetUnitRulesParam = Spring.SetUnitRulesParam
 local GetUnitSeparation = Spring.GetUnitSeparation
@@ -21,8 +23,9 @@ end
 include "smokeunit.lua"
 
 -- Info from lusHelper gadget
-local heatLimit = info.heatLimit
-local coolRate = info.coolRate * 2
+heatLimit = info.heatLimit
+baseCoolRate = info.coolRate
+local coolRate = baseCoolRate
 local inWater = false
 local activated = true
 
@@ -155,8 +158,9 @@ local function SpinBarrels(weaponID, start)
 end
 
 local function CoolOff()
-	local max = math.max
+	local min = math.min
 	-- localised API functions
+	local AddUnitSeismicPing = Spring.AddUnitSeismicPing
 	local GetGameFrame = Spring.GetGameFrame
 	local GetGroundHeight = Spring.GetGroundHeight
 	local GetUnitBasePosition = Spring.GetUnitBasePosition
@@ -164,16 +168,18 @@ local function CoolOff()
 	-- lusHelper info
 	local reloadTimes = info.reloadTimes
 	local numWeapons = info.numWeapons
-	local baseCoolRate = info.coolRate
+	local waterCoolRate = info.waterCoolRate
+	local hasEcm = info.hasEcm
 	-- variables	
-	local heatElevatedLimit = 0.5 * heatLimit
 	local heatElevated = false
 	local heatCritical = false
 	while true do
+		local heatElevatedLimit = 0.5 * heatLimit
+		coolRate = baseCoolRate -- reset coolRate in case of perk
 		if inWater then
 			local x, _, z = GetUnitBasePosition(unitID)
-			local depth = max(4, GetGroundHeight(x, z) / -3)
-			coolRate = baseCoolRate * depth
+			local depth = min(4, GetGroundHeight(x, z) / -10)
+			coolRate = baseCoolRate * waterCoolRate * depth
 		end
 		currHeatLevel = currHeatLevel - coolRate
 		if currHeatLevel < 0 then 
@@ -216,6 +222,9 @@ local function CoolOff()
 			heatElevated = false
 		end
 		SetUnitRulesParam(unitID, "heat", currHeatLevel)
+		if hasEcm and not moving then
+			AddUnitSeismicPing(unitID, 20)
+		end
 		Sleep(1000) -- cools once per second
 	end
 end
@@ -225,7 +234,7 @@ function script.setSFXoccupy(terrainType)
 		inWater = true
 	else
 		inWater = false
-		coolRate = info.coolRate * 2
+		coolRate = baseCoolRate
 	end
 end
 
@@ -289,6 +298,9 @@ function script.HitByWeapon(x, z, weaponID, damage)
 	local heatDamage = wd.customParams.heatdamage or 0
 	--Spring.Echo(wd.customParams.heatdamage)
 	currHeatLevel = currHeatLevel + heatDamage
+	if currHeatLevel > 2 * heatLimit then
+		Spring.DestroyUnit(unitID, true)
+	end
 	SetUnitRulesParam(unitID, "heat", currHeatLevel)
 	local hitPiece = GetUnitLastAttackedPiece(unitID) or ""
 	if hitPiece == "body" then 
@@ -315,12 +327,14 @@ function script.StartMoving()
 	for i = 1, #wheels do
 		Spin(wheels[i], x_axis, WHEEL_SPEED, WHEEL_ACCEL)
 	end
+	moving = true
 end
 
 function script.StopMoving()
 	for i = 1, #wheels do
 		StopSpin(wheels[i], x_axis, WHEEL_ACCEL)
 	end
+	moving = false
 end
 
 function script.Activate()
@@ -469,6 +483,9 @@ function script.QueryWeapon(weaponID)
 end
 
 function script.Killed(recentDamage, maxHealth)
+	if currHeatLevel > 2 * heatLimit then
+		Spring.Echo("NUUUUUUUUUUUKKKKKE")
+	end
 	--local severity = recentDamage / maxHealth * 100
 	--if severity <= 25 then
 	--	Explode(body, math.bit_or({SFX.BITMAPONLY, SFX.BITMAP1}))
