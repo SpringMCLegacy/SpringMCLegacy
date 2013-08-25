@@ -107,6 +107,14 @@ for name, ud in pairs(UnitDefs) do
 		ud.seismicsignature = 0
 	end
 	
+	-- Give all mechs 179d torso twist
+	local weapons = ud.weapons
+	if weapons and ud.customparams.unittype == "mech" then
+		for i, weapon in pairs(weapons) do
+			weapon.maxangledif = 179
+		end
+	end
+	
 	-- Automatically build dropship buildmenus
 	if ud.customparams.unittype == "mech" then
 		if name:sub(1, 2) == "is" then
