@@ -94,11 +94,16 @@ for name, ud in pairs(UnitDefs) do
 	ud.turnrate = ud.maxvelocity * 200
 	-- set sightrange/radardistance based on hasbap customparam
 	if ud.customparams.hasbap == "true" or ud.customparams.hasecm == "true" then
-		ud.seismicdistance = 3000
 		ud.sightdistance = 1500
 		ud.radardistance = 3000
 		ud.airsightdistance = 3000
-		ud.seismicsignature = 100
+		if ud.customparams.hasecm == "true" then
+			ud.seismicdistance = 0
+			ud.seismicsignature = 1
+		else -- BAP
+			ud.seismicdistance = 3000
+			ud.seismicsignature = 0
+		end
 	else
 		ud.seismicdistance = 0
 		ud.sightdistance = 1000
@@ -112,7 +117,7 @@ for name, ud in pairs(UnitDefs) do
 	if weapons and ud.customparams.unittype == "mech" then
 		for i, weapon in pairs(weapons) do
 			weapon.maxangledif = 179
-			if weapon.name == "ams" then
+			if weapon.name:lower() == "ams" then
 				weapon.maxangledif = 360
 			end
 		end
