@@ -7,6 +7,7 @@ info = GG.lusHelper[unitDefID]
 rad = math.rad
 
 SIG_ANIMATE = {}
+moving = false
 jumping = false
 
 -- localised API functions
@@ -152,6 +153,7 @@ end
 local function CoolOff()
 	local min = math.min
 	-- localised API functions
+	local AddUnitSeismicPing = Spring.AddUnitSeismicPing
 	local GetGameFrame = Spring.GetGameFrame
 	local GetGroundHeight = Spring.GetGroundHeight
 	local GetUnitBasePosition = Spring.GetUnitBasePosition
@@ -160,6 +162,7 @@ local function CoolOff()
 	local reloadTimes = info.reloadTimes
 	local numWeapons = info.numWeapons
 	local waterCoolRate = info.waterCoolRate
+	local hasEcm = info.hasEcm
 	-- variables	
 	local heatElevated = false
 	local heatCritical = false
@@ -212,6 +215,9 @@ local function CoolOff()
 			heatElevated = false
 		end
 		SetUnitRulesParam(unitID, "heat", currHeatLevel)
+		if hasEcm and not moving then
+			AddUnitSeismicPing(unitID, 20)
+		end
 		Sleep(1000) -- cools once per second
 	end
 end
@@ -342,10 +348,12 @@ end
 function script.StartMoving(reversing)
 	--Spring.Echo("Reversing?", reversing)
 	StartThread(anim_Walk)
+	moving = true
 end
 
 function script.StopMoving()
 	StartThread(anim_Reset)
+	moving = false
 end
 
 function script.Create()
