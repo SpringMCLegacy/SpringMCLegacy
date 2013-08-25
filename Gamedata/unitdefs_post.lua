@@ -112,6 +112,9 @@ for name, ud in pairs(UnitDefs) do
 	if weapons and ud.customparams.unittype == "mech" then
 		for i, weapon in pairs(weapons) do
 			weapon.maxangledif = 179
+			if weapon.name == "ams" then
+				weapon.maxangledif = 360
+			end
 		end
 	end
 	
