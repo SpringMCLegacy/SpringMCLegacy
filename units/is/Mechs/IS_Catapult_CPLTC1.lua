@@ -6,6 +6,7 @@ local IS_Catapult_CPLTC1 = {
 	script				= "Mech.lua",
 	corpse				= "IS_Catapult_X",
 	explodeAs          	= "mechexplode",
+	selfDestructAs		= "meltdown",
 	category 			= "mech ground notbeacon",
 	noChaseCategory		= "beacon air",
 		activateWhenBuilt   = true,
