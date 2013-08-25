@@ -5,7 +5,7 @@ function gadget:GetInfo()
 		author    = "FLOZi",
 		date      = "Adopted from S44 flagManager 10/02/2011",
 		license   = "GNU GPL v2",
-		layer     = 1,
+		layer     = -2,
 		enabled   = true  --  loaded by default?
 	}
 end
@@ -55,7 +55,7 @@ local DEF_MULT = 1 --multiplies against the FBI defined DefRate
 
 -- variables
 
-local flagTypes = {"beacon"} --, "outpost_c3center", "outpost_garrison", "outpost_listeningpost", "outpost_vehicledepot", "outpost_controltower"}
+local flagTypes = {"beacon"}
 local flags = {} -- flags[flagType][index] == flagUnitID
 local numFlags = {} -- numFlags[flagType] == numberOfFlagsOfType
 local totalFlags = 0
@@ -149,61 +149,14 @@ function DecrementTickets(allyTeam)
 	end
 end
 
-function HeadingToFacing(heading)
-	return ((heading + 8192) / 16384) % 4
-end
-
-function Facing(x, z)
-	local heading = Spring.GetHeadingFromVector(x, z)
-	return HeadingToFacing(heading)
-end
-
-
-local function SpawnTurret(x, y, z, facing, flagID, unitDefID, teamID)
-	if not teamID then teamID = GetUnitTeam(flagID) end
-	
-	local turretID = CreateUnit(unitDefID, x, y, z, 0, teamID)
-	flagTurrets[flagID][turretID] = true
-	turretFlags[turretID] = flagID
-	SetUnitAlwaysVisible(turretID, true)
-	if teamID == GAIA_TEAM_ID then
-		SetUnitNeutral(turretID, true)
-		local env = Spring.UnitScript.GetScriptEnv(turretID)
-		Spring.UnitScript.CallAsUnit(turretID, env.TeamChange, GAIA_TEAM_ID)
-	end
-	return turretID
-end
-
 
 -- this function is used to add any additional flagType specific behaviour
 function FlagSpecialBehaviour(action, flagType, flagID, flagTeamID, teamID)
-	if action == "placed" then
-		if flagType == "outpost_garrison" then
-			flagTurrets[flagID] = {}
-			local x, y, z = Spring.GetUnitPosition(flagID)
-			local turrList = {"mblturret", "lrmturret", "mblturret", "ac20turret"}
-			local placementRadius = 180
-			local angle = 0
-			for i = 1, #turrList do
-				local dx = placementRadius * math.sin(angle)
-				local dz = placementRadius * math.cos(angle)
-				local turretID = SpawnTurret(x + dx, y, z + dz, Facing(dx, dz), flagID, turrList[i], teamID)
-				angle = angle + (2 * math.pi / #turrList)
-			end
-		end
+	--[[if action == "placed" then
+
 	elseif action == "capped" then
-		if flagType == "outpost_garrison" then
-			if flagTeamID ~= GAIA_TEAM_ID then -- flag is neutralised
-				teamID = GAIA_TEAM_ID
-			end
-			for turretID in pairs(flagTurrets[flagID]) do
-				TransferUnit(turretID, teamID, false)
-				SetUnitNeutral(turretID, teamID == GAIA_TEAM_ID)
-				local env = Spring.UnitScript.GetScriptEnv(turretID)
-				Spring.UnitScript.CallAsUnit(turretID, env.TeamChange, teamID)
-			end
-		end
-	end
+
+	end]]
 end
 
 
@@ -222,9 +175,6 @@ function PlaceFlag(spot, flagType)
 	flagCapStatuses[newFlag] = {}
 	
 	SetUnitNeutral(newFlag, true)
-	--[[if flagType == "beacon" then -- ugly
-		SetUnitNoSelect(newFlag, true)
-	end]]
 	SetUnitAlwaysVisible(newFlag, true)
 	
 	local squareSize = 100
@@ -240,32 +190,24 @@ function gadget:GamePreload()
 	if DEBUG then Spring.Echo(PROFILE_PATH) end
 	-- CHECK FOR PROFILES
 	if VFS.FileExists(PROFILE_PATH) then
-		local flagSpots, outpostSpots = VFS.Include(PROFILE_PATH)
+		local flagSpots, temps = VFS.Include(PROFILE_PATH)
 		if flagSpots and #flagSpots > 0 then 
-			Spring.Echo("Map Beacon Profile found. Loading Beacon positions..." .. (#flagSpots or 0))
+			Spring.Echo("Map Beacon Profile found. Loading " .. (#flagSpots or 0) .. " Beacon positions...")
 			flagTypeSpots["beacon"] = flagSpots 
 		end
-		if outpostSpots and #outpostSpots > 0 then 
-			Spring.Echo("Map Outposts Profile found. Loading Outpost positions..." .. (#outpostSpots or 0))
-			--flagTypeSpots["buoy"] = buoySpots 
-			for i = 1, #outpostSpots do
-				local spot = outpostSpots[i]
-				if type(spot.types) == "table" then
-					--[[for i = 1, math.random(100, 500) do
-						math.random(math.random(100))
-					end]]
-					local number = math.random(spot.x * spot.z) % #spot.types + 1
-					--Spring.Echo(#spot.types, number)
-					local outpostType = spot.types[number] 
-					spot.types = nil
-					flagTypeSpots[outpostType][#flagTypeSpots[outpostType] + 1] = spot
-				end
-			end
-		end
+		-- setup default ambient temps
+		if not temps then temps = {} end
+		temps.ambient = temps.ambient or 20
+		temps.water = temps.water or 10
+		GG.MapTemperatures = temps
+		Spring.SetGameRulesParam("MAP_TEMP_AMBIENT", temps.ambient)
+		Spring.SetGameRulesParam("MAP_TEMP_WATER", temps.water)
 	else
 		for i=1,20 do
 			Spring.Echo("NO MAP PROFILE FOUND FOR " .. Game.mapName)
 		end
+		local temps = {ambient = 20, water = 10}
+		GG.MapTemperatures = temps
 	end
 end
 
@@ -421,6 +363,17 @@ function gadget:UnitDestroyed(unitID, unitDefID, unitTeam, attackerID, attackerD
 		for _, flagCapType in pairs(flagTypes) do
 			flagTypeDefenders[flagCapType][unitID] = nil
 		end
+	end
+end
+
+function gadget:Initialize()
+	if Spring.GetGameFrame() >  1 then
+		gadget:GamePreload()
+		--[[for _,unitID in ipairs(Spring.GetAllUnits()) do
+			local teamID = Spring.GetUnitTeam(unitID)
+			local unitDefID = Spring.GetUnitDefID(unitID)
+			gadget:UnitCreated(unitID, unitDefID, teamID)
+		end]]
 	end
 end
 

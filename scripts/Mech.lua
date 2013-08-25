@@ -28,8 +28,8 @@ include ("anims/" .. unitDef.name:sub(1, unitDef.name:find("_", 4) - 1) .. ".lua
 
 -- Info from lusHelper gadget
 -- non-local so perks can change them (flagrant lack of encapsulation!)
-heatLimit = info.heatLimit 
-baseCoolRate = info.coolRate * 2
+heatLimit = info.heatLimit
+baseCoolRate = info.coolRate
 local coolRate = baseCoolRate
 local inWater = false
 local activated = true
@@ -150,7 +150,7 @@ local function SpinBarrels(weaponID, start)
 end
 
 local function CoolOff()
-	local max = math.max
+	local min = math.min
 	-- localised API functions
 	local GetGameFrame = Spring.GetGameFrame
 	local GetGroundHeight = Spring.GetGroundHeight
@@ -159,6 +159,7 @@ local function CoolOff()
 	-- lusHelper info
 	local reloadTimes = info.reloadTimes
 	local numWeapons = info.numWeapons
+	local waterCoolRate = info.waterCoolRate
 	-- variables	
 	local heatElevated = false
 	local heatCritical = false
@@ -167,8 +168,8 @@ local function CoolOff()
 		coolRate = baseCoolRate -- reset coolRate in case of perk
 		if inWater then
 			local x, _, z = GetUnitBasePosition(unitID)
-			local depth = max(4, GetGroundHeight(x, z) / -3)
-			coolRate = baseCoolRate * depth
+			local depth = min(4, GetGroundHeight(x, z) / -10)
+			coolRate = baseCoolRate * waterCoolRate * depth
 		end
 		currHeatLevel = currHeatLevel - coolRate
 		if currHeatLevel < 0 then 
@@ -278,7 +279,7 @@ end
 
 function script.HitByWeapon(x, z, weaponID, damage)
 	local wd = WeaponDefs[weaponID]
-	local heatDamage = wd.customParams.heatdamage or 0
+	local heatDamage = wd and wd.customParams.heatdamage or 0
 	--Spring.Echo(wd.customParams.heatdamage)
 	currHeatLevel = currHeatLevel + heatDamage
 	SetUnitRulesParam(unitID, "heat", currHeatLevel)

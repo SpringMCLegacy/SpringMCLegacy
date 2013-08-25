@@ -240,9 +240,17 @@ function gadget:GamePreload()
 		info.barrelRecoilDist = StringToTable(cp.barrelrecoildist)
 		info.wheelSpeed = math.rad(tonumber(cp.wheelspeed) or 100)
 		info.wheelAccel = math.rad(tonumber(cp.wheelaccel) or info.wheelSpeed * 2)
+		-- Temperatures
+		local MapTemps = GG.MapTemperatures
+		if MapTemps then -- purely for dumb loading bug
+			local mapAmbientTempMult = 0.9 ^ (MapTemps.ambient / 20)
+			local waterSign = MapTemps.ambient - MapTemps.water < 0 and -1 or 1
+			local mapWaterTempMult = waterSign * 0.9 ^ (waterSign * MapTemps.water / 10)
+			info.heatLimit = (tonumber(cp.heatlimit) or 50) * 10
+			info.coolRate = info.heatLimit / 25 * mapAmbientTempMult
+			info.waterCoolRate = mapWaterTempMult
+		end
 		-- General
-		info.heatLimit = (tonumber(cp.heatlimit) or 50) * 10
-		info.coolRate = info.heatLimit / 50 -- or a constant rate of 10?
 		info.numWeapons = #weapons
 		info.elevationSpeed = math.rad(tonumber(cp.elevationspeed) or math.deg(info.torsoTurnSpeed))
 		info.maxAmmo = StringToTable(cp.maxammo)
