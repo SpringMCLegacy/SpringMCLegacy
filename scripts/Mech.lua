@@ -288,6 +288,9 @@ function script.HitByWeapon(x, z, weaponID, damage)
 	local heatDamage = wd and wd.customParams.heatdamage or 0
 	--Spring.Echo(wd.customParams.heatdamage)
 	currHeatLevel = currHeatLevel + heatDamage
+	if currHeatLevel > 2 * heatLimit then
+		Spring.DestroyUnit(unitID, true)
+	end
 	SetUnitRulesParam(unitID, "heat", currHeatLevel)
 	local hitPiece = GetUnitLastAttackedPiece(unitID) or ""
 	if hitPiece == "torso" or hitPiece == "pelvis" then 
@@ -509,6 +512,9 @@ function script.QueryWeapon(weaponID)
 end
 
 function script.Killed(recentDamage, maxHealth)
+	if currHeatLevel > 2 * heatLimit then
+		Spring.Echo("NUUUUUUUUUUUKKKKKE")
+	end
 	--local severity = recentDamage / maxHealth * 100
 	--if severity <= 25 then
 	--	Explode(body, math.bit_or({SFX.BITMAPONLY, SFX.BITMAP1}))
