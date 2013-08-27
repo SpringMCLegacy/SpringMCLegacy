@@ -132,12 +132,22 @@ function widget:DrawWorldPreUnit()
   --glSmoothing(false, false, false)
 end
 
-function widget:UnitTaken(unitID, unitDefID, unitTeam, newTeam)
+function widget:UnitTaken(unitID, unitDefID, oldTeam, newTeam)
 	local ud = UnitDefs[unitDefID]
-	if ud.name == "flag" then
-		if unitTeam == Spring.GetMyPlayerID() then
-			local x,y,z = Spring.GetUnitPosition(unitID)
-			Spring.PlaySoundFile("sounds/GEN_Explo_Flag.wav", 1, x, y, z)
+	if ud.name == "beacon" then
+		if oldTeam == Spring.GetMyPlayerID() then
+			--local x,y,z = Spring.GetUnitPosition(unitID)
+			Spring.PlaySoundFile("BB_NavBeacon_Lost", 1) --, x, y, z)
+		end
+	end
+end
+
+function widget:UnitGiven(unitID, unitDefID, newTeam, oldTeam)
+	local ud = UnitDefs[unitDefID]
+	if ud.name == "beacon" then
+		if newTeam == Spring.GetMyPlayerID() then
+			--local x,y,z = Spring.GetUnitPosition(unitID)
+			Spring.PlaySoundFile("BB_NavBeacon_Captured", 1) --, x, y, z)
 		end
 	end
 end
