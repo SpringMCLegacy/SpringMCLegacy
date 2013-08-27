@@ -121,6 +121,20 @@ local Sounds = {
 			maxdist = 5000,
 			rolloff = 10.0,
 		},
+		
+		
+		----BITCHING BETTY----
+		
+		
+		BB_NavBeacon_Captured = {
+			file = "sounds/betty/Beacon_Captured.wav",
+			in3d = false,
+		},
+		
+		BB_NavBeacon_Lost = {
+			file = "sounds/betty/Beacon_Lost.wav",
+			in3d = false,
+		},
 	},
 }
 
