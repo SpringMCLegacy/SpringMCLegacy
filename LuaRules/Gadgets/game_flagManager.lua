@@ -270,6 +270,9 @@ function gadget:GameFrame(n)
 					end
 					for teamID, capTotal in pairs(capTotals) do
 						if capTotal > defendTotal then
+							if (flagCapStatuses[flagID][teamID] or 0) == 0 then -- first cap step
+								GG.PlaySoundForTeam(flagTeamID, "BB_NavBeacon_UnderAttack", 1)
+							end
 							flagCapStatuses[flagID][teamID] = (flagCapStatuses[flagID][teamID] or 0) + capTotal
 						end
 					end
