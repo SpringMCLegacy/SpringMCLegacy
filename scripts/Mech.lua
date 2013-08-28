@@ -515,6 +515,7 @@ function script.Killed(recentDamage, maxHealth)
 	if currHeatLevel > 2 * heatLimit then
 		Spring.Echo("NUUUUUUUUUUUKKKKKE")
 	end
+	GG.PlaySoundForTeam(Spring.GetUnitTeam(unitID), "BB_BattleMech_destroyed", 1)
 	--local severity = recentDamage / maxHealth * 100
 	--if severity <= 25 then
 	--	Explode(body, math.bit_or({SFX.BITMAPONLY, SFX.BITMAP1}))
