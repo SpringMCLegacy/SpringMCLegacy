@@ -255,8 +255,8 @@ function gadget:UnitDamaged(unitID, unitDefID, teamID, damage)
 	if name:find("upgrade") then -- unit is an upgrade 
 		local lastDamagedFrame = lastDamaged[unitID] or 0
 		local currFrame = GetGameFrame()
-		lastDamaged[unitID] = currFrame
 		if lastDamagedFrame < currFrame - MIN_LAST_DAMAGED then
+			lastDamaged[unitID] = currFrame
 			GG.PlaySoundForTeam(teamID, "BB_" .. name .. "_UnderAttack", 1)
 		end
 	end
