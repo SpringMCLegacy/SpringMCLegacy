@@ -135,6 +135,46 @@ local Sounds = {
 			file = "sounds/betty/Beacon_Lost.wav",
 			in3d = false,
 		},
+		
+		BB_NavBeacon_UnderAttack = {
+			file = "sounds/betty/Beacon_UnderAttack.wav", --also Beacon_UnderAttack_2.wav
+			in3d = false,
+		},
+		
+		BB_NavBeacon_Secured = {
+			file = "sounds/betty/Beacon_Secured.wav",
+			in3d = false,
+		},
+		
+		BB_Dropship_Inbound = {
+			file = "sounds/betty/Dropship_Inbound.wav",
+			in3d = false,
+		},
+		
+		BB_BAP_Deployed = {
+			file = "sounds/betty/BAP_Deployed.wav",
+			in3d = false,
+		},
+		
+		BB_Turret_Deployed = {
+			file = "sounds/betty/Turret_Deployed.wav",
+			in3d = false,
+		},
+		
+		BB_Uplink_Deployed = {
+			file = "sounds/betty/Uplink_Deployed.wav",
+			in3d = false,
+		},
+		
+		BB_Mechbay_Deployed = {
+			file = "sounds/betty/Mechbay_Deployed.wav",
+			in3d = false,
+		},
+		
+		BB_Wall_Deployed = {
+			file = "sounds/betty/Wall_Deployed.wav",
+			in3d = false,
+		},
 	},
 }
 
