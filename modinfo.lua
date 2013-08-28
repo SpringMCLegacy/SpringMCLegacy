@@ -1,8 +1,8 @@
 local modinfo = {
-		name					= "BattleTech: Legacy",
-		shortName				= "BTL",
-		game					= "BattleTech: Legacy",
-		shortGame				= "BTL",
+		name					= "MechCommander: Legacy",
+		shortName				= "MCL",
+		game					= "MechCommander: Legacy",
+		shortGame				= "MCL",
 		mutator					= "Official",
 		description				= "War is hell.",
 		url						= "http://springrts.com/phpbb/viewforum.php?f=70",

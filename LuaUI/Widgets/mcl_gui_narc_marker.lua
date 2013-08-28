@@ -13,7 +13,7 @@
  
 function widget:GetInfo()
   return {
-    name  = "BT:L - NARC indicator",
+    name  = "MC:L - NARC indicator",
     desc  = "NARC circles",
     author  = "trepan, zwzsg, smoth, yuritch, FLOZi",
     date  = "Feb 6, 2011",
