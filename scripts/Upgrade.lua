@@ -94,6 +94,7 @@ function Unpack()
 		Turn(ramprfoldfront, x_axis, rad(179), CRATE_SPEED)
 		Turn(ramplfoldrear, x_axis, rad(-179), CRATE_SPEED)
 		Turn(ramprfoldrear, x_axis, rad(-179), CRATE_SPEED)
+		WaitForTurn(ramprfoldrear, x_axis)
 		local x, _ ,z = Spring.GetUnitPosition(unitID)
 		local dx, _, dz = Spring.GetUnitDirection(unitID)
 		UNLOAD_X = x + 150 * dx
@@ -109,8 +110,9 @@ function Unpack()
 			Turn(dishs[i], y_axis, rad(24), CRATE_SPEED / 4)
 		end
 		Turn(antennabase, y_axis, rad(RANDOM_ROT), CRATE_SPEED)
+		WaitForTurn(antennabase, y_axis)
 	end
-	
+	GG.PlaySoundForTeam(Spring.GetUnitTeam(unitID), "BB_" .. name .. "_deployed", 1)
 	-- Let the sands of time cover the crate
 	Sleep(10000)
 	Move(crate_base, y_axis, -5, CRATE_SPEED)

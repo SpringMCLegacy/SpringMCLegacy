@@ -161,12 +161,12 @@ local Sounds = {
 			in3d = false,
 		},
 		
-		BB_Uplink_Deployed = {
+		BB_Upgrade_Uplink_Deployed = {
 			file = "sounds/betty/Uplink_Deployed.wav",
 			in3d = false,
 		},
 		
-		BB_Mechbay_Deployed = {
+		BB_Upgrade_Mechbay_Deployed = {
 			file = "sounds/betty/Mechbay_Deployed.wav",
 			in3d = false,
 		},

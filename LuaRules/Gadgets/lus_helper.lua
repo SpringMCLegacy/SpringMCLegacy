@@ -62,6 +62,19 @@ local function PlaySoundAtUnit(unitID, sound, volume, sx, sy, sz, channel)
 end
 GG.PlaySoundAtUnit = PlaySoundAtUnit
 
+local unsyncedBuffer = {}
+local function PlaySoundForTeam(teamID, sound, volume)
+	table.insert(unsyncedBuffer, {teamID, sound, volume})
+end
+GG.PlaySoundForTeam = PlaySoundForTeam
+
+function gadget:GameFrame(n)
+	for _, callInfo in pairs(unsyncedBuffer) do
+		SendToUnsynced("SOUND", callInfo[1], callInfo[2], callInfo[3])
+	end
+	unsyncedBuffer = {}
+end
+
 local function GetUnitDistanceToPoint(unitID, tx, ty, tz, bool3D)
 	local x,y,z = GetUnitPosition(unitID)
 	local dy = (bool3D and ty and (ty - y)^2) or 0
@@ -286,5 +299,18 @@ end
 else
 
 -- UNSYNCED
+
+local PlaySoundFile	= Spring.PlaySoundFile
+local MY_TEAM_ID = Spring.GetMyTeamID()
+
+function PlayTeamSound(eventID, teamID, sound, volume)
+	if teamID == MY_TEAM_ID then
+		PlaySoundFile(sound, volume, "ui")
+	end
+end
+
+function gadget:Initialize()
+	gadgetHandler:AddSyncAction("SOUND", PlayTeamSound)
+end
 
 end
