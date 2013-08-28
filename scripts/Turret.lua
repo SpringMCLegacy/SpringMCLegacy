@@ -139,6 +139,11 @@ function fx()
 			WaitForTurn(mantlets[1], x_axis)
 		end
 		-- Start acting like a real boy
+		if unitDef.customParams.hasbap then
+			GG.PlaySoundForTeam(Spring.GetUnitTeam(unitID), "BB_bap_deployed", 1)
+		else
+			GG.PlaySoundForTeam(Spring.GetUnitTeam(unitID), "BB_turret_deployed", 1)
+		end
 		StartThread(SmokeUnit, {base, turret})
 		noFiring = false
 		Spring.SetUnitNeutral(unitID, false)
