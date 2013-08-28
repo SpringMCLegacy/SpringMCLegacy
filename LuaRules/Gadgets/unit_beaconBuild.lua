@@ -249,7 +249,7 @@ end
 
 
 local lastDamaged = {} -- lastDamaged[unitID] = lastDamagedFrame
-local MIN_LAST_DAMAGED = 60 * 30 -- 60s
+local MIN_LAST_DAMAGED = 20 * 30 -- 20s
 function gadget:UnitDamaged(unitID, unitDefID, teamID, damage)
 	local name = UnitDefs[unitDefID].name
 	if name:find("upgrade") then -- unit is an upgrade 
