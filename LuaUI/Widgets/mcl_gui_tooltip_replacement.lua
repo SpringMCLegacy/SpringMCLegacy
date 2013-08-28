@@ -13,7 +13,7 @@
 
 function widget:GetInfo()
   return {
-    name      = "BT:L - Tooltip Replacement",
+    name      = "MC:L - Tooltip Replacement",
     desc      = "A colorful tooltip modification",
     author    = "trepan",
     date      = "Jan 8, 2007",

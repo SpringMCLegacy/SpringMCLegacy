@@ -1,6 +1,6 @@
 function widget:GetInfo()
   return {
-    name      = "BT:L - Minimum Ranges",
+    name      = "MC:L - Minimum Ranges",
     desc      = "Draws minimum range rings",
     author    = "FLOZi (C. Lawrence)",
     date      = "28/07/2013",

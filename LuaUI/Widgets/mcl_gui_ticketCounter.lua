@@ -1,6 +1,6 @@
 function widget:GetInfo()
   return {
-    name      = "BT:L - Tickets & Resources",
+    name      = "MC:L - Tickets & Resources",
     desc      = "Displays Current Team Tickets and Resources",
     author    = "FLOZi",
     date      = "06/04/2011",

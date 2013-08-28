@@ -12,7 +12,7 @@
 
 function widget:GetInfo()
   return {
-    name      = "BT:L - HealthBars",
+    name      = "MC:L - HealthBars",
     desc      = "Gives various informations about units in form of bars.",
     author    = "jK", -- BTL mods by FLOZi
     date      = "2009",
