@@ -177,6 +177,7 @@ local function BuildWalls(beaconID, teamID)
 		wallIDs[beaconID][i+1] = wallID
 		wallInfos[wallID] = {beaconID = beaconID, angle = angle}
 	end
+	GG.PlaySoundForTeam(teamID, "BB_wall_deployed", 1)
 end
 
 local function BuildGate(wallID, teamID)
