@@ -16,6 +16,7 @@ if gadgetHandler:IsSyncedCode() then
 -- localisations
 local SetUnitRulesParam		= Spring.SetUnitRulesParam
 --SyncedRead
+local GetGameFrame			= Spring.GetGameFrame
 local GetUnitPosition		= Spring.GetUnitPosition
 --SyncedCtrl
 local CreateUnit			= Spring.CreateUnit
@@ -243,6 +244,21 @@ function gadget:UnitDestroyed(unitID, unitDefID, teamID)
 		outpostIDs[beaconID] = nil
 		-- Re-add upgrade options to beacon
 		AddUpgradeOptions(beaconID)
+	end
+end
+
+
+local lastDamaged = {} -- lastDamaged[unitID] = lastDamagedFrame
+local MIN_LAST_DAMAGED = 60 * 30 -- 60s
+function gadget:UnitDamaged(unitID, unitDefID, teamID, damage)
+	local name = UnitDefs[unitDefID].name
+	if name:find("upgrade") then -- unit is an upgrade 
+		local lastDamagedFrame = lastDamaged[unitID] or 0
+		local currFrame = GetGameFrame()
+		lastDamaged[unitID] = currFrame
+		if lastDamagedFrame < currFrame - MIN_LAST_DAMAGED then
+			GG.PlaySoundForTeam(teamID, "BB_" .. name .. "_UnderAttack", 1)
+		end
 	end
 end
 
