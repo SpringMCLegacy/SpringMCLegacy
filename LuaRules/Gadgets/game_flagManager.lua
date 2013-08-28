@@ -236,6 +236,7 @@ function gadget:GameFrame(n)
 				local flagTeamID = GetUnitTeam(flagID)
 				local spots = flagTypeSpots[flagType]
 				local cappers = flagTypeCappers[flagType]
+				local capTotals = {}
 				local defenders = flagTypeDefenders[flagType]
 				local defendTotal = 0
 				local unitsAtFlag = GetUnitsInCylinder(spots[spotNum].x, spots[spotNum].z, flagData.radius)
@@ -246,6 +247,9 @@ function gadget:GameFrame(n)
 							if (flagCapStatuses[flagID][teamID] or 0) > 0 then
 								flagCapStatuses[flagID][teamID] = flagCapStatuses[flagID][teamID] - flagData.regen
 								SetUnitRulesParam(flagID, "cap" .. tostring(teamID), flagCapStatuses[flagID][teamID], {public = true})
+								if flagCapStatuses[flagID][teamID] <= 0 then
+									GG.PlaySoundForTeam(flagTeamID, "BB_NavBeacon_Secured", 1)
+								end
 							end
 						end
 					end
@@ -260,17 +264,23 @@ function gadget:GameFrame(n)
 						if cappers[unitID] and (not AreTeamsAllied(unitTeamID, flagTeamID)) then
 							if (flagTeamID ~= GAIA_TEAM_ID or GetTeamUnitDefCount(unitTeamID, UnitDefNames[flagType].id) < flagData.limit) then
 								--Spring.Echo("Capper at flag " .. flagID .. " Value is: " .. cappers[unitID])
-								flagCapStatuses[flagID][unitTeamID] = (flagCapStatuses[flagID][unitTeamID] or 0) + cappers[unitID]
+								capTotals[unitTeamID] = (capTotals[unitTeamID] or 0) + cappers[unitID]
 							end
+						end
+					end
+					for teamID, capTotal in pairs(capTotals) do
+						if capTotal > defendTotal then
+							flagCapStatuses[flagID][teamID] = (flagCapStatuses[flagID][teamID] or 0) + capTotal
 						end
 					end
 					for j = 1, #teams do
 						teamID = teams[j]
 						if teamID ~= flagTeamID then
-							if (flagCapStatuses[flagID][teamID] or 0) > 0 then
+							if (flagCapStatuses[flagID][teamID] or 0) > 0 and capTotals[teamID] ~= defendTotal then
 								--Spring.Echo("Capping: " .. flagCapStatuses[flagID][teamID] .. " Defending: " .. defendTotal)
 								flagCapStatuses[flagID][teamID] = flagCapStatuses[flagID][teamID] - defendTotal
-								if flagCapStatuses[flagID][teamID] < 0 then
+								if flagCapStatuses[flagID][teamID] <= 0 then
+									GG.PlaySoundForTeam(flagTeamID, "BB_NavBeacon_Secured", 1)
 									flagCapStatuses[flagID][teamID] = 0
 								end
 								SetUnitRulesParam(flagID, "cap" .. tostring(teamID), flagCapStatuses[flagID][teamID], {public = true})
@@ -281,12 +291,14 @@ function gadget:GameFrame(n)
 							if (flagTeamID == GAIA_TEAM_ID) then
 								-- Neutral flag being capped
 								Spring.SendMessageToTeam(teamID, flagData.tooltip .. " Captured!")
+								GG.PlaySoundForTeam(teamID, "BB_NavBeacon_Captured", 1)
 								TransferUnit(flagID, teamID, false)
 								UpdateBeacons(teamID, 1)
 								SetTeamRulesParam(teamID, flagType .. "s", (GetTeamRulesParam(teamID, flagType .. "s") or 0) + 1, {public = true})
 							else
 								-- Team flag being neutralised
 								Spring.SendMessageToTeam(teamID, flagData.tooltip .. " Neutralised!")
+								GG.PlaySoundForTeam(flagTeamID, "BB_NavBeacon_Lost", 1)
 								TransferUnit(flagID, GAIA_TEAM_ID, false)
 								UpdateBeacons(flagTeamID, -1)
 								SetTeamRulesParam(teamID, flagType .. "s", (GetTeamRulesParam(teamID, flagType .. "s") or 0) - 1, {public = true})
