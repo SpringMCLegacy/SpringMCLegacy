@@ -145,6 +145,7 @@ function DropshipDelivery(unitID, unitDefID, teamID)
 	UseTeamResource(teamID, "metal", outpostDefs[unitDefID].cost)
 	local tx,ty,tz = GetUnitPosition(unitID)
 	local dropshipID = CreateUnit("is_avenger", tx, ty, tz, "s", teamID)
+	GG.PlaySoundForTeam(teamID, "BB_Dropship_Inbound", 1)
 	DelayCall(SpawnCargo, {unitID, dropshipID, unitDefID, teamID}, 1)
 end
 
