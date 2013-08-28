@@ -125,7 +125,7 @@ local Sounds = {
 		
 		----BITCHING BETTY----
 		
-		
+		-- Beacons
 		BB_NavBeacon_Captured = {
 			file = "sounds/betty/Beacon_Captured.wav",
 			in3d = false,
@@ -146,6 +146,7 @@ local Sounds = {
 			in3d = false,
 		},
 		
+		-- Dropships
 		BB_Dropship_Inbound = {
 			file = "sounds/betty/Dropship_Inbound.wav",
 			in3d = false,
@@ -156,6 +157,7 @@ local Sounds = {
 			in3d = false,
 		},
 		
+		-- Towers
 		BB_BAP_Deployed = {
 			file = "sounds/betty/BAP_Deployed.wav",
 			in3d = false,
@@ -166,6 +168,7 @@ local Sounds = {
 			in3d = false,
 		},
 		
+		-- Upgrades
 		BB_Upgrade_Uplink_Deployed = {
 			file = "sounds/betty/Uplink_Deployed.wav",
 			in3d = false,

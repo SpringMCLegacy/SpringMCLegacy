@@ -1,5 +1,5 @@
-local Upgrade_Bunker = {
-	name              	= "Bunker",
+local Upgrade_Garrison = {
+	name              	= "Garrison",
 	description         = "Fortified Defensive Upgrade",
 	objectName        	= "Upgrade_Bunker.s3o",
 	script				= "Upgrade.lua",
@@ -34,4 +34,4 @@ local Upgrade_Bunker = {
 	--},
 }
 
-return lowerkeys({ ["Upgrade_Bunker"] = Upgrade_Bunker })
+return lowerkeys({ ["Upgrade_Garrison"] = Upgrade_Garrison })
