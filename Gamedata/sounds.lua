@@ -163,6 +163,36 @@ local Sounds = {
 			in3d = false,
 		},
 		
+		BB_Reinforcements_Inbound_ETA_30 = {
+			file = "sounds/betty/Reinforcements_InboundETA_30.ogg",
+			in3d = false,
+		},
+		
+		BB_Reinforcements_Inbound_ETA_20 = {
+			file = "sounds/betty/Reinforcements_InboundETA_20.ogg",
+			in3d = false,
+		},
+		
+		BB_Reinforcements_Available = {
+			file = "sounds/betty/Reinforcements_Available.ogg",
+			in3d = false,
+		},
+		
+		BB_Reinforcements_Available_5 = {
+			file = "sounds/betty/Reinforcements_Available_5.ogg",
+			in3d = false,
+		},
+		
+		BB_Reinforcements_Available_60 = {
+			file = "sounds/betty/Reinforcements_Available_5.ogg",
+			in3d = false,
+		},
+		
+		BB_EnemyDropship_Detected = {
+			file = "sounds/betty/EnemyDropship_Detected.ogg",
+			in3d = false,
+		},
+		
 		-- Towers
 		BB_BAP_Deployed = {
 			file = "sounds/betty/BAP_Deployed.ogg",
@@ -242,6 +272,23 @@ local Sounds = {
 		
 		BB_Aerofighter_Destroyed = {
 			file = "sounds/betty/Vehicle_Destroyed.ogg",
+			in3d = false,
+		},
+		
+		--Orbital Strike
+		
+		BB_OrbitalStrike_Available = {
+			file = "sounds/betty/OrbitalStrike_Available.ogg",
+			in3d = false,
+		},
+		
+		BB_OrbitalStrike_Available_In_60 = {
+			file = "sounds/betty/OrbitalStrike_Available_In_60.ogg",
+			in3d = false,
+		},
+		
+		BB_OrbitalStrike_Inbound = {
+			file = "sounds/betty/OrbitalStrike_Inbound.ogg",
 			in3d = false,
 		},
 	},
