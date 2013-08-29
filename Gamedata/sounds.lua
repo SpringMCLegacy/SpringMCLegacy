@@ -164,12 +164,12 @@ local Sounds = {
 		},
 		
 		BB_Reinforcements_Inbound_ETA_30 = {
-			file = "sounds/betty/Reinforcements_InboundETA_30.ogg",
+			file = "sounds/betty/Reinforcements_Inbound_ETA_30.ogg",
 			in3d = false,
 		},
 		
 		BB_Reinforcements_Inbound_ETA_20 = {
-			file = "sounds/betty/Reinforcements_InboundETA_20.ogg",
+			file = "sounds/betty/Reinforcements_Inbound_ETA_20.ogg",
 			in3d = false,
 		},
 		
@@ -178,13 +178,13 @@ local Sounds = {
 			in3d = false,
 		},
 		
-		BB_Reinforcements_Available_5 = {
-			file = "sounds/betty/Reinforcements_Available_5.ogg",
+		BB_Reinforcements_Available_In_5 = {
+			file = "sounds/betty/Reinforcements_Available_In_5.ogg",
 			in3d = false,
 		},
 		
-		BB_Reinforcements_Available_60 = {
-			file = "sounds/betty/Reinforcements_Available_5.ogg",
+		BB_Reinforcements_Available_In_60 = {
+			file = "sounds/betty/Reinforcements_Available_In_60.ogg",
 			in3d = false,
 		},
 		
