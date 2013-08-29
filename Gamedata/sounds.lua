@@ -127,121 +127,121 @@ local Sounds = {
 		
 		--Startgame
 		BB_All_Systems_Nominal = {
-			file = "sounds/betty/All_Systems_Nominal.wav",
+			file = "sounds/betty/All_Systems_Nominal.ogg",
 			in3d = false,
 		},
 		
 		-- Beacons
 		BB_NavBeacon_Captured = {
-			file = "sounds/betty/Beacon_Captured.wav",
+			file = "sounds/betty/Beacon_Captured.ogg",
 			in3d = false,
 		},
 		
 		BB_NavBeacon_Lost = {
-			file = "sounds/betty/Beacon_Lost.wav",
+			file = "sounds/betty/Beacon_Lost.ogg",
 			in3d = false,
 		},
 		
 		BB_NavBeacon_UnderAttack = {
-			file = "sounds/betty/Beacon_UnderAttack.wav", --also Beacon_UnderAttack_2.wav
+			file = "sounds/betty/Beacon_UnderAttack.ogg",
 			in3d = false,
 		},
 		
 		BB_NavBeacon_Secured = {
-			file = "sounds/betty/Beacon_Secured.wav",
+			file = "sounds/betty/Beacon_Secured.ogg",
 			in3d = false,
 		},
 		
 		-- Dropships
 		BB_Dropship_Inbound = {
-			file = "sounds/betty/Dropship_Inbound.wav",
+			file = "sounds/betty/Dropship_Inbound.ogg",
 			in3d = false,
 		},
 		
 		BB_Dropship_UnderAttack= {
-			file = "sounds/betty/Dropship_UnderAttack.wav",
+			file = "sounds/betty/Dropship_UnderAttack.ogg",
 			in3d = false,
 		},
 		
 		-- Towers
 		BB_BAP_Deployed = {
-			file = "sounds/betty/BAP_Deployed.wav",
+			file = "sounds/betty/BAP_Deployed.ogg",
 			in3d = false,
 		},
 		
 		BB_Turret_Deployed = {
-			file = "sounds/betty/Turret_Deployed.wav",
+			file = "sounds/betty/Turret_Deployed.ogg",
 			in3d = false,
 		},
 		
 		-- Upgrades
 		BB_Upgrade_Uplink_Deployed = {
-			file = "sounds/betty/Uplink_Deployed.wav",
+			file = "sounds/betty/Uplink_Deployed.ogg",
 			in3d = false,
 		},
 		
 		BB_Upgrade_Uplink_UnderAttack = {
-			file = "sounds/betty/Uplink_UnderAttack.wav",
+			file = "sounds/betty/Uplink_UnderAttack.ogg",
 			in3d = false,
 		},
 		
 		BB_Upgrade_Uplink_Destroyed = {
-			file = "sounds/betty/Uplink_Destroyed.wav",
+			file = "sounds/betty/Uplink_Destroyed.ogg",
 			in3d = false,
 		},
 		
 		BB_Upgrade_Mechbay_Deployed = {
-			file = "sounds/betty/Mechbay_Deployed.wav",
+			file = "sounds/betty/Mechbay_Deployed.ogg",
 			in3d = false,
 		},
 		
 		BB_Upgrade_Mechbay_UnderAttack = {
-			file = "sounds/betty/Mechbay_UnderAttack.wav",
+			file = "sounds/betty/Mechbay_UnderAttack.ogg",
 			in3d = false,
 		},
 		
 		BB_Upgrade_Mechbay_Destroyed = {
-			file = "sounds/betty/Mechbay_Destroyed.wav",
+			file = "sounds/betty/Mechbay_Destroyed.ogg",
 			in3d = false,
 		},
 		
 		BB_Upgrade_Garrison_Deployed = {
-			file = "sounds/betty/Garrison_Deployed.wav",
+			file = "sounds/betty/Garrison_Deployed.ogg",
 			in3d = false,
 		},
 		
 		BB_Upgrade_Garrison_UnderAttack = {
-			file = "sounds/betty/Garrison_UnderAttack.wav",
+			file = "sounds/betty/Garrison_UnderAttack.ogg",
 			in3d = false,
 		},
 		
 		BB_Upgrade_Garrison_Destroyed = {
-			file = "sounds/betty/Garrison_Destroyed.wav",
+			file = "sounds/betty/Garrison_Destroyed.ogg",
 			in3d = false,
 		},
 		
 		BB_Wall_Deployed = {
-			file = "sounds/betty/Wall_Deployed.wav",
+			file = "sounds/betty/Wall_Deployed.ogg",
 			in3d = false,
 		},
 		
 		BB_Battlemech_Destroyed = {
-			file = "sounds/betty/Battlemech_Destroyed.wav",
+			file = "sounds/betty/Battlemech_Destroyed.ogg",
 			in3d = false,
 		},
 		
 		BB_Vehicle_Destroyed = {
-			file = "sounds/betty/Vehicle_Destroyed.wav",
+			file = "sounds/betty/Vehicle_Destroyed.ogg",
 			in3d = false,
 		},
 		
 		BB_VTOL_Destroyed = {
-			file = "sounds/betty/Vehicle_Destroyed.wav",
+			file = "sounds/betty/Vehicle_Destroyed.ogg",
 			in3d = false,
 		},
 		
 		BB_Aerofighter_Destroyed = {
-			file = "sounds/betty/Vehicle_Destroyed.wav",
+			file = "sounds/betty/Vehicle_Destroyed.ogg",
 			in3d = false,
 		},
 	},
