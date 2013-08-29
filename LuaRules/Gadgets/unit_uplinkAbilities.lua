@@ -44,7 +44,8 @@ local ARTY_HEIGHT = 10000
 local ARTY_SALVO = 10
 local ARTY_RADIAL_SPREAD = 500
 local ARTY_COST = 10000
-local ARTY_COOLDOWN = 60 * 30 -- 60s
+local ARTY_COOLDOWN = 75 * 30 -- 75s
+local ARTY_DELAY = 10 * 30 -- 10s
 local artyLastFired = {} -- artyLastFired[teamID] = gameFrame
 
 -- Variables
@@ -95,9 +96,11 @@ local function ArtyStrike(teamID, x, y, z)
 		local length = math.random(ARTY_RADIAL_SPREAD)
 		dx = math.sin(angle) * length
 		dz = math.cos(angle) * length
-		DelayCall(ArtyShot, {x + dx, y + ARTY_HEIGHT, z + dz}, math.random(150))
+		DelayCall(ArtyShot, {x + dx, y + ARTY_HEIGHT, z + dz}, ARTY_DELAY + math.random(150))
 	end
-	Spring.Echo("Nothin' but the rain!")
+	GG.PlaySoundForTeam(teamID, "BB_OrbitalStrike_Inbound", 1)
+	DelayCall(GG.PlaySoundForTeam, {teamID, "BB_OrbitalStrike_Available_In_60", 1}, ARTY_COOLDOWN - 62 * 30) -- fudge
+	DelayCall(GG.PlaySoundForTeam, {teamID, "BB_OrbitalStrike_Available", 1}, ARTY_COOLDOWN)
 	return true
 end
 
