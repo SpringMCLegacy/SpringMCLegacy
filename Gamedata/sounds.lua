@@ -291,6 +291,11 @@ local Sounds = {
 			file = "sounds/betty/OrbitalStrike_Inbound.ogg",
 			in3d = false,
 		},
+		
+		BB_EnemyOrbitalStrike_Imminent = {
+			file = "sounds/betty/EnemyOrbitalStrike_Imminent.ogg",
+			in3d = false,
+		},
 	},
 }
 
