@@ -213,6 +213,7 @@ end
 
 
 function gadget:GameStart()
+	Spring.PlaySoundFile("BB_All_Systems_Nominal", 1, "ui") -- TODO: Put this somewhere more sensible
 	-- FLAG PLACEMENT
 	for _, flagType in pairs(flagTypes) do
 		if DEBUG then Spring.Echo("-- flagType is " .. flagType) end
