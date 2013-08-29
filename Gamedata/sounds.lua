@@ -125,6 +125,12 @@ local Sounds = {
 		
 		----BITCHING BETTY----
 		
+		--Startgame
+		BB_All_Systems_Nominal = {
+			file = "sounds/betty/All_Systems_Nominal.wav",
+			in3d = false,
+		},
+		
 		-- Beacons
 		BB_NavBeacon_Captured = {
 			file = "sounds/betty/Beacon_Captured.wav",
