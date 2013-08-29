@@ -60,11 +60,15 @@ local dropZoneIDs = {} -- dropZoneIDs[teamID] = dropZoneID
 local dropZoneBeaconIDs = {} -- dropZoneBeaconIDs[teamID] = beaconID
 
 local wallIDs = {} -- wallIDs[beaconID] = {wall1, wall2 ... wall12}
-local wallInfos = {} -- wallInfos[wallID] = {beaconID = beaconID, angle = angle}
+local wallInfos = {} -- wallInfos[wallID] = {beaconID = beaconID, angle = angle, px = px, pz = pz}
+local beaconGateIDs = {} -- beaconGateIDs[beaconID] = gateID
 local wallCmdDesc
 local gateCmdDesc
+local wallRepairCmdDesc
 
+local hotSwapIDs = {} -- hotSwapIDs[unitID] = true
 local function HotSwap(unitID, unitDefID, teamID)
+	hotSwapIDs[unitID] = true
 	local x,y,z = Spring.GetUnitPosition(unitID)
 	if not Spring.GetUnitIsDead(unitID) then
 		Spring.DestroyUnit(unitID, false, true)
@@ -103,6 +107,13 @@ function gadget:GamePreload()
 				tooltip = "C-Bill cost: " .. cBillCost, -- TODO: add c-bill cost and w/e else
 			}
 			upgradeIDs[wallCmdDesc.id] = unitDefID
+			wallRepairCmdDesc = {
+				id     = GG.CustomCommands.GetCmdID("CMD_WALLREPAIR", cBillCost * 0.5),
+				type   = CMDTYPE.ICON,
+				name   = "Repair\n Walls",
+				action = 'upgrade',
+				tooltip = "C-Bill cost: " .. cBillCost * 0.5, -- TODO: add c-bill cost and w/e else
+			}
 		elseif unitDefID == GATE_ID then -- and gates too
 			local cBillCost = unitDef.metalCost
 			gateCmdDesc = {
@@ -165,7 +176,7 @@ end
 
 -- WALLS & GATES
 local function BuildWalls(beaconID, teamID)
-	UseTeamResource(teamID, "metal", UnitDefs[BEACON_ID].metalCost)
+	UseTeamResource(teamID, "metal", UnitDefs[BEACON_ID].metalCost * NUM_SEGMENTS) -- FIXME: ugly!
 	wallIDs[beaconID] = {}
 	local x,_,z = GetUnitPosition(beaconID)
 	for i = 0, NUM_SEGMENTS - 1 do
@@ -177,7 +188,7 @@ local function BuildWalls(beaconID, teamID)
 		SetUnitNeutral(wallID, true)
 		SetUnitRotation(wallID, 0, -angle, 0)
 		wallIDs[beaconID][i+1] = wallID
-		wallInfos[wallID] = {beaconID = beaconID, angle = angle}
+		wallInfos[wallID] = {beaconID = beaconID, angle = angle, px = px, pz = pz}
 	end
 	GG.PlaySoundForTeam(teamID, "BB_wall_deployed", 1)
 end
@@ -191,6 +202,33 @@ local function BuildGate(wallID, teamID)
 	SetUnitNeutral(gateID, true)]]
 	DelayCall(SetUnitRotation, {wallID, 0, -wallInfos[wallID].angle, 0}, 3)
 	DelayCall(SetUnitNeutral, {wallID, true}, 3)
+	beaconGateIDs[wallInfos[wallID].beaconID] = wallID
+end
+
+local function RepairWalls(beaconID, teamID)
+	UseTeamResource(teamID, "metal", UnitDefs[BEACON_ID].metalCost * NUM_SENGMENTS * 0.5) -- FIXME: ugly!
+	for i, wallID in pairs(wallIDs[beaconID]) do
+		local unitDefID = Spring.GetUnitDefID(wallID)
+		if not Spring.GetUnitIsDead(wallID) and (unitDefID == WALL_ID or unitDefID == GATE_ID) then
+			Spring.SetUnitHealth(wallID, UnitDefs[WALL_ID].health)
+			local wallRepairCmdPos = FindUnitCmdDesc(wallID, wallRepairCmdDesc.id)
+			if wallRepairCmdPos then
+				RemoveUnitCmdDesc(wallID, wallRepairCmdPos)
+			end
+		else -- unit needs replacing
+			local info = wallInfos[wallID]
+			local newWallID = CreateUnit("wall", info.px, 0, info.pz, "s", teamID) -- can't rely on creating with old ID here incase it was reused
+			SetUnitNeutral(newWallID, true)
+			SetUnitRotation(newWallID, 0, -info.angle, 0)
+			--  TODO: sub the new ID back into everything else in place of old ID :(
+			wallInfos[newWallID] = {beaconID = beaconID, angle = info.angle, px = info.px, pz = info.pz}
+			wallInfos[wallID] = nil
+			wallIDs[beaconID][i] = newWallID
+			if not beaconGateIDs[beaconID] then
+				InsertUnitCmdDesc(newWallID, gateCmdDesc)
+			end
+		end	
+	end
 end
 
 -- TOWERS
@@ -213,6 +251,7 @@ function LimitTowerType(unitID, towerType)
 end
 
 function gadget:UnitCreated(unitID, unitDefID, teamID, builderID)
+	hotSwapIDs[unitID] = nil
 	local unitDef = UnitDefs[unitDefID]
 	local cp = unitDef.customParams
 	if unitDefID == BEACON_ID then
@@ -244,6 +283,21 @@ function gadget:UnitDestroyed(unitID, unitDefID, teamID)
 		outpostIDs[beaconID] = nil
 		-- Re-add upgrade options to beacon
 		AddUpgradeOptions(beaconID)
+	end
+	local wallInfo = wallInfos[unitID]
+	if wallInfo and not hotSwapIDs[unitID] then -- unit was a wall or gate piece, not being hotswapped
+		for _, wallID in pairs(wallIDs[wallInfo.beaconID]) do
+			local wallRepairCmdPos = FindUnitCmdDesc(wallID, wallRepairCmdDesc.id)
+			if not wallRepairCmdPos then
+				InsertUnitCmdDesc(wallID, wallRepairCmdDesc)
+			end
+		end
+		if unitDefID == GATE_ID then
+			beaconGateIDs[wallInfo.beaconID] = nil
+			for _, wallID in pairs(wallIDs[wallInfo.beaconID]) do
+				InsertUnitCmdDesc(wallID, gateCmdDesc)
+			end
+		end
 	end
 end
 
@@ -317,14 +371,17 @@ function gadget:AllowCommand(unitID, unitDefID, teamID, cmdID, cmdParams, cmdOpt
 		elseif cmdID == CMD.SELFD then -- Disallow self-d
 			return false
 		end
-	elseif unitDefID == WALL_ID then
-		if upgradeIDs[cmdID] then
+	elseif unitDefID == WALL_ID or unitDefID == GATE_ID then
+		if unitDefID == WALL_ID and upgradeIDs[cmdID] then
 			BuildGate(unitID, teamID)
 			-- Disable gates for all other wall segments in the ring
 			local beaconID = wallInfos[unitID].beaconID
 			for _, wallID in ipairs(wallIDs[beaconID]) do
 				RemoveUnitCmdDesc(wallID, FindUnitCmdDesc(wallID, cmdID))
 			end
+		elseif cmdID == wallRepairCmdDesc.id then
+			local beaconID = wallInfos[unitID].beaconID
+			RepairWalls(beaconID, teamID)
 		end
 	end
 	return true
