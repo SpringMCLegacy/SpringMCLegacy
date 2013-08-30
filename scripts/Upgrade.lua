@@ -60,6 +60,7 @@ function Unpack()
 	Turn(crate_top, z_axis, rad(-90), CRATE_SPEED * 2)
 	
 	-- Begin upgrade-specific anims
+	GG.PlaySoundForTeam(Spring.GetUnitTeam(unitID), "BB_" .. name .. "_deployed", 1)
 	if name == "upgrade_c3array" then
 		Move(emitter, y_axis, 30, CRATE_SPEED * 5)
 		Turn(antennarot, x_axis, rad(-90), CRATE_SPEED)
@@ -112,7 +113,6 @@ function Unpack()
 		Turn(antennabase, y_axis, rad(RANDOM_ROT), CRATE_SPEED)
 		WaitForTurn(antennabase, y_axis)
 	end
-	GG.PlaySoundForTeam(Spring.GetUnitTeam(unitID), "BB_" .. name .. "_deployed", 1)
 	-- Let the sands of time cover the crate
 	Sleep(10000)
 	Move(crate_base, y_axis, -5, CRATE_SPEED)
