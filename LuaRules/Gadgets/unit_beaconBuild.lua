@@ -37,7 +37,6 @@ local DelayCall				 = GG.Delay.DelayCall
 -- Constants
 local GAIA_TEAM_ID = Spring.GetGaiaTeamID()
 local BEACON_ID = UnitDefNames["beacon"].id
-local DROPZONE_ID = UnitDefNames["upgrade_dropzone"].id
 local WALL_ID = UnitDefNames["wall"].id
 local GATE_ID = UnitDefNames["wall_gate"].id
 local MIN_BUILD_RANGE = tonumber(UnitDefNames["beacon"].customParams.minbuildrange) or 230
@@ -58,6 +57,7 @@ local beaconIDs = {} -- beaconIDs[outpostID] = beaconID
 local outpostIDs = {} -- outpostIDs[beaconID] = outpostID
 local dropZoneIDs = {} -- dropZoneIDs[teamID] = dropZoneID
 local dropZoneBeaconIDs = {} -- dropZoneBeaconIDs[teamID] = beaconID
+local dropZoneCmdDesc
 
 local wallIDs = {} -- wallIDs[beaconID] = {wall1, wall2 ... wall12}
 local wallInfos = {} -- wallInfos[wallID] = {beaconID = beaconID, angle = angle, px = px, pz = pz}
@@ -126,6 +126,13 @@ function gadget:GamePreload()
 			upgradeIDs[gateCmdDesc.id] = unitDefID		
 		end
 	end
+	dropZoneCmdDesc = {
+		id     = GG.CustomCommands.GetCmdID("CMD_DROPZONE", 0), -- dropzone is free
+		type   = CMDTYPE.ICON,
+		name   = "Dropzone",
+		action = 'dropzone',
+		tooltip = "Set as primary dropzone",
+	}
 end
 
 -- REGULAR UPGRADES
@@ -133,12 +140,14 @@ local function AddUpgradeOptions(unitID)
 	for outpostDefID, outpostInfo in pairs(outpostDefs) do
 		InsertUnitCmdDesc(unitID, outpostInfo.cmdDesc)
 	end
+	InsertUnitCmdDesc(unitID, dropZoneCmdDesc)
 end
 
 local function RemoveUpgradeOptions(unitID)
 	for outpostDefID, outpostInfo in pairs(outpostDefs) do
 		RemoveUnitCmdDesc(unitID, FindUnitCmdDesc(unitID, outpostInfo.cmdDesc.id))
 	end
+	RemoveUnitCmdDesc(unitID, FindUnitCmdDesc(unitID, dropZoneCmdDesc.id))
 end
 
 function SpawnCargo(beaconID, dropshipID, unitDefID, teamID)
@@ -169,7 +178,9 @@ local function SetDropZone(beaconID, teamID)
 		DestroyUnit(currDropZone, false, true)
 	end
 	local x,y,z = GetUnitPosition(beaconID)
-	local dropZoneID = CreateUnit("upgrade_dropzone", x,y,z, "s", teamID)
+	local side = select(5, Spring.GetTeamInfo(teamID))
+	if side == "" then side = (teamID == 0 and "IS") or "CL" end -- ugly hack for spring.exe blank sides
+	local dropZoneID = CreateUnit(side .. "_dropzone", x,y,z, "s", teamID)
 	dropZoneIDs[teamID] = dropZoneID
 	dropZoneBeaconIDs[teamID] = beaconID
 end
@@ -206,7 +217,7 @@ local function BuildGate(wallID, teamID)
 end
 
 local function RepairWalls(beaconID, teamID)
-	UseTeamResource(teamID, "metal", UnitDefs[BEACON_ID].metalCost * NUM_SENGMENTS * 0.5) -- FIXME: ugly!
+	UseTeamResource(teamID, "metal", UnitDefs[BEACON_ID].metalCost * NUM_SEGMENTS * 0.5) -- FIXME: ugly!
 	for i, wallID in pairs(wallIDs[beaconID]) do
 		local unitDefID = Spring.GetUnitDefID(wallID)
 		if not Spring.GetUnitIsDead(wallID) and (unitDefID == WALL_ID or unitDefID == GATE_ID) then
@@ -360,14 +371,14 @@ function gadget:AllowCommand(unitID, unitDefID, teamID, cmdID, cmdParams, cmdOpt
 			if upgradeIDs[cmdID] == WALL_ID then
 				BuildWalls(unitID, teamID)
 				RemoveUnitCmdDesc(unitID, FindUnitCmdDesc(unitID, cmdID))
-			elseif upgradeIDs[cmdID] == DROPZONE_ID then
-				RemoveUpgradeOptions(unitID)
-				SetDropZone(unitID, teamID)
 			else
 				--Spring.Echo("I'm totally gonna upgrade your beacon bro!")
 				RemoveUpgradeOptions(unitID)
 				DropshipDelivery(unitID, upgradeIDs[cmdID], teamID)
 			end
+		elseif cmdID == dropZoneCmdDesc.id then
+			RemoveUpgradeOptions(unitID)
+			SetDropZone(unitID, teamID)
 		elseif cmdID == CMD.SELFD then -- Disallow self-d
 			return false
 		end
