@@ -41,7 +41,7 @@ local touchDown = false
 local cargoID
 local beaconID
 
-function LoadCargo(callerID, outpostID)
+function LoadCargo(outpostID, callerID)
 	--Spring.Echo("Loading", outpostID, "of type", UnitDefs[Spring.GetUnitDefID(outpostID)].name)
 	beaconID = callerID
 	cargoID = outpostID

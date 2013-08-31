@@ -50,10 +50,10 @@ function gadget:AllowUnitCreation(unitDefID, builderID, teamID, x, y, z)
 	if buildCost > money or weight > weightLeft then
 		return false
 	end
-	if ud.speed > 0 then
+	--[[if ud.speed > 0 then
 		local env = Spring.UnitScript.GetScriptEnv(builderID)
 		Spring.UnitScript.CallAsUnit(builderID, env.GetUnitDef, unitDefID)
-	end
+	end]] -- This was for ramp / flightdeck choice
 	return true
 end
 

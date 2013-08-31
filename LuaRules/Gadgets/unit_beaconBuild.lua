@@ -51,7 +51,7 @@ local towerDefIDs = {} -- towerDefIDs[unitDefID] = "turret" or "ecm" or "sensor"
 local buildLimits = {} -- buildLimits[unitID] = {turret = 4, ecm = 1, sensor = 1}
 local towerOwners = {} -- towerOwners[towerID] = beaconID
 
-local outpostDefs = {} -- outpostDefs[unitDefID] = {tooltip = "some string"}
+local outpostDefs = {} -- outpostDefs[unitDefID] = {cmdDesc = {cmdDescTable}, cost = cost}
 local upgradeIDs = {} -- upgradeIDs[cmdID] = unitDefID
 local beaconIDs = {} -- beaconIDs[outpostID] = beaconID
 local outpostIDs = {} -- outpostIDs[beaconID] = outpostID
@@ -153,22 +153,36 @@ end
 function SpawnCargo(beaconID, dropshipID, unitDefID, teamID)
 	env = Spring.UnitScript.GetScriptEnv(dropshipID)
 	local tx, ty, tz = GetUnitPosition(dropshipID)
-	local outpostID = CreateUnit(unitDefID, tx, ty, tz, "s", teamID)
+	local cargoID = CreateUnit(unitDefID, tx, ty, tz, "s", teamID)
 	env = Spring.UnitScript.GetScriptEnv(dropshipID)
-	Spring.UnitScript.CallAsUnit(dropshipID, env.LoadCargo, beaconID, outpostID)
-	beaconIDs[outpostID] = beaconID 
-	outpostIDs[beaconID] = outpostID
-	-- Let unsynced know about this pairing
-	Spring.SetUnitRulesParam(outpostID, "beaconID", beaconID)
+	Spring.UnitScript.CallAsUnit(dropshipID, env.LoadCargo, cargoID, beaconID)
+	-- extra behaviour to link outposts with beacons
+	if outpostDefs[unitDefID] then
+		beaconIDs[outpostID] = beaconID 
+		outpostIDs[beaconID] = outpostID
+		-- Let unsynced know about this pairing
+		Spring.SetUnitRulesParam(outpostID, "beaconID", beaconID)
+	end
 end
 
-function DropshipDelivery(unitID, unitDefID, teamID)
-	UseTeamResource(teamID, "metal", outpostDefs[unitDefID].cost)
+function DropshipDelivery(unitID, teamID, dropshipType, cargo, cost)
+	UseTeamResource(teamID, "metal", cost)
 	local tx,ty,tz = GetUnitPosition(unitID)
-	local dropshipID = CreateUnit("is_avenger", tx, ty, tz, "s", teamID)
+	local dropshipID = CreateUnit(dropshipType, tx, ty, tz, "s", teamID)
 	GG.PlaySoundForTeam(teamID, "BB_Dropship_Inbound", 1)
-	DelayCall(SpawnCargo, {unitID, dropshipID, unitDefID, teamID}, 1)
+	if type(cargo) == "table" then
+		for i, order in ipairs(cargo) do -- preserve order here
+			for orderDefID, count in pairs(order) do
+				for i = 1, count do
+					DelayCall(SpawnCargo, {unitID, dropshipID, orderDefID, teamID}, 1)
+				end
+			end
+		end
+	else
+		DelayCall(SpawnCargo, {unitID, dropshipID, cargo, teamID}, 1)
+	end
 end
+GG.DropshipDelivery = DropshipDelivery
 
 -- DROPZONE
 local function SetDropZone(beaconID, teamID)
@@ -356,6 +370,8 @@ end
 function gadget:AllowCommand(unitID, unitDefID, teamID, cmdID, cmdParams, cmdOptions)
 	if unitDefID == BEACON_ID then
 		if cmdID < 0 then
+			local towerType = towerDefIDs[-cmdID]
+			if not towerType then return false end
 			local tx, ty, tz = unpack(cmdParams)
 			local dist = GetUnitDistanceToPoint(unitID, tx, ty, tz, false)
 			if dist < MIN_BUILD_RANGE then
@@ -365,16 +381,16 @@ function gadget:AllowCommand(unitID, unitDefID, teamID, cmdID, cmdParams, cmdOpt
 				Spring.Echo("Too far from beacon")
 				return false
 			end
-			local towerType = towerDefIDs[-cmdID]
-			if towerType then return LimitTowerType(unitID, towerType) end
+			return LimitTowerType(unitID, towerType)
 		elseif upgradeIDs[cmdID] then
-			if upgradeIDs[cmdID] == WALL_ID then
+			local upgradeDefID = upgradeIDs[cmdID]
+			if upgradeDefID == WALL_ID then
 				BuildWalls(unitID, teamID)
 				RemoveUnitCmdDesc(unitID, FindUnitCmdDesc(unitID, cmdID))
 			else
 				--Spring.Echo("I'm totally gonna upgrade your beacon bro!")
 				RemoveUpgradeOptions(unitID)
-				DropshipDelivery(unitID, upgradeIDs[cmdID], teamID)
+				DropshipDelivery(unitID, teamID, "is_avenger", upgradeDefID, outpostDefs[upgradeDefID].cost)
 			end
 		elseif cmdID == dropZoneCmdDesc.id then
 			RemoveUpgradeOptions(unitID)

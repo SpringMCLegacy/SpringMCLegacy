@@ -265,5 +265,8 @@ IS_Dropship_FX["yardmap"] = "" -- remove yardmap
 IS_Dropship_FX["moveclass"] = "LARGEMECH" -- make it a mobile unit
 IS_Dropship_FX["script"] = "dropship_fx.lua" -- change script
 IS_Dropship_FX["objectName"] = "dropship.s3o" -- change model
+IS_Dropship_FX["transportSize"]		= 8
+IS_Dropship_FX["transportCapacity"]	= 80 -- 10x transportSize
+IS_Dropship_FX["transportMass"]		= 100000
 
 return lowerkeys({ ["IS_Dropship"] = IS_Dropship, ["IS_Dropship_FX"] = IS_Dropship_FX })

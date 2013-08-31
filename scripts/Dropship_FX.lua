@@ -79,6 +79,7 @@ local GRAVITY = 120/Game.gravity * 1.3
 local X, _, Z = Spring.GetUnitPosition(unitID)
 local GY = Spring.GetGroundHeight(X, Z)
 
+-- LANDING CODE
 -- Variables
 local stage = 0
 local feetDown = false
@@ -134,7 +135,9 @@ local function fx()
 		Move(gear2_joint, y_axis, RETURN, RETURN)
 		Move(gear3_joint, y_axis, RETURN, RETURN)
 		Move(gear4_joint, y_axis, RETURN, RETURN)
+		WaitForMove(hull, y_axis)
 	end
+	StartThread(UnloadCargo)
 end
 
 local function LandingGear()
@@ -214,4 +217,34 @@ function script.Create()
 	Spring.MoveCtrl.SetGravity(unitID, -0.01 * GRAVITY)
 	Spring.MoveCtrl.SetCollideStop(unitID, true)
 	Spring.MoveCtrl.SetTrackGround(unitID, true)
+end
+
+-- CARGO CODE
+local WAIT_TIME = 10000
+
+local cargo = {}
+local numCargo = 0
+function LoadCargo(cargoID, callerID)
+	--Spring.Echo("Loading", outpostID, "of type", UnitDefs[Spring.GetUnitDefID(outpostID)].name)
+	Spring.UnitScript.AttachUnit(pad, cargoID)
+	numCargo = numCargo + 1
+	cargo[numCargo] = cargoID
+end
+
+function UnloadCargo()
+	-- TODO: ramp anim etc
+	for i, cargoID in ipairs(cargo) do
+		Spring.UnitScript.DropUnit(cargoID)
+		Sleep(500)
+	end
+	Sleep(WAIT_TIME)
+	stage = 2
+	StartThread(fx)
+	Spring.MoveCtrl.SetCollideStop(unitID, false)
+	Spring.MoveCtrl.SetTrackGround(unitID, false)
+	Spring.MoveCtrl.Enable(unitID)
+	Spring.MoveCtrl.SetGravity(unitID, -5 * GRAVITY)
+	Sleep(5000)
+	-- We're out of the atmosphere, bye bye!
+	Spring.DestroyUnit(unitID, false, true)
 end
