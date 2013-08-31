@@ -43,8 +43,10 @@ local RAMP_DISTANCE = 156 -- 206
 local HANGAR_DISTANCE = 256
 
 local IS_DROPSHIP_UD
+local IS_DROPZONE_UD
 local IS_DROPSHIP_BUILDOPTIONS = {}
 local CL_DROPSHIP_UD
+local CL_DROPZONE_UD
 local CL_DROPSHIP_BUILDOPTIONS = {}
 
 local BEACON_UD
@@ -138,7 +140,11 @@ for name, ud in pairs(UnitDefs) do
 	end
 	if name == "is_dropship" then IS_DROPSHIP_UD = ud end
 	if name == "cl_dropship" then CL_DROPSHIP_UD = ud end
-	if name == "beacon" or name:find("upgrade") then 
+	
+	if name == "is_dropzone" then IS_DROPZONE_UD = ud end
+	if name == "cl_dropzone" then CL_DROPZONE_UD = ud end
+	
+	if name == "beacon" or name:find("upgrade") or name:find("dropzone") then 
 		if name == "beacon" then
 			BEACON_UD = ud 
 		end
@@ -156,4 +162,8 @@ for name, ud in pairs(UnitDefs) do
 end
 IS_DROPSHIP_UD["buildoptions"] = IS_DROPSHIP_BUILDOPTIONS
 CL_DROPSHIP_UD["buildoptions"] = CL_DROPSHIP_BUILDOPTIONS
+
+IS_DROPZONE_UD["buildoptions"] = IS_DROPSHIP_BUILDOPTIONS
+CL_DROPZONE_UD["buildoptions"] = CL_DROPSHIP_BUILDOPTIONS
+
 BEACON_UD["buildoptions"] = BEACON_BUILDOPTIONS

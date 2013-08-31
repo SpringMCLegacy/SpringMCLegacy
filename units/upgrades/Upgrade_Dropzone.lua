@@ -27,4 +27,24 @@ local Upgrade_Dropzone = {
     },
 }
 
-return lowerkeys({ ["Upgrade_Dropzone"] = Upgrade_Dropzone })
+local function copytable(input, output)
+	for k,v in pairs(input) do
+		if type(v) == "table" then
+			output[k] = {}
+			copytable(v, output[k])
+		else
+			output[k] = v
+		end
+	end
+end
+
+local IS_Dropzone = {}
+copytable(Upgrade_Dropzone, IS_Dropzone)
+local CL_Dropzone = {}
+copytable(Upgrade_Dropzone, CL_Dropzone)
+
+return lowerkeys({
+	--["Upgrade_Dropzone"] = Upgrade_Dropzone, 
+	["CL_Dropzone"] = CL_Dropzone,
+	["IS_Dropzone"] = IS_Dropzone,
+})

@@ -36,7 +36,6 @@ local DelayCall				 = GG.Delay.DelayCall
 
 -- Constants
 local BEACON_ID = UnitDefNames["beacon"].id
-local DROPZONE_ID = UnitDefNames["upgrade_dropzone"].id
 
 -- local NUM_ICONS_PER_PAGE = 3 * 8
 	
@@ -93,7 +92,7 @@ end
 
 function gadget:UnitCreated(unitID, unitDefID, teamID)
 	local unitDef = UnitDefs[unitDefID]
-	if unitDef.name:find("dropship") then
+	if unitDef.name:find("dropship") or unitDef.name:find("dropzone") then
 		ClearBuildOptions(unitID, true)
 		AddBuildMenu(unitID)
 	end
