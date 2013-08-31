@@ -6,11 +6,12 @@ local Upgrade_Dropzone = {
 	script				= "Upgrade_Dropzone.lua",
 	category 			= "beacon",
 	maxDamage           = 50000, -- should never take damage
-	footprintX			= 2,
-	footprintZ 			= 2,
+	footprintX			= 5,
+	footprintZ 			= 5,
+	yardMap				= "yyyyy yyyyy yyyyy yyyyy yyyyy",
 	-- Colvol
-	collisionVolumeType = "box",
-	collisionVolumeScales = "4 25 4",
+	--[[collisionVolumeType = "box",
+	collisionVolumeScales = "4 25 4",]]
 	-- Constructor stuff
 	builder				= true,
 	builddistance 		= 460,

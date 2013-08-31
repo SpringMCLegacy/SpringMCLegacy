@@ -57,9 +57,18 @@ for i, typeString in ipairs(typeStrings) do
 	menuCmdIDs[cmdID] = typeString
 end
 
+local sendOrderCmdDesc = {
+	id = CMD_SEND_ORDER,
+	type   = CMDTYPE.ICON,
+	name   = "Submit \nOrder ",
+	action = 'submit_order',
+	tooltip = "Submit your purchasing order",
+}
+
 local unitTypes = {} -- unitTypes[unitDefID] = "lightmech" etc from typeStrings
 
 local function AddBuildMenu(unitID)
+	InsertUnitCmdDesc(unitID, sendOrderCmdDesc)
 	for i, cmdDesc in ipairs(menuCmdDescs) do
 		InsertUnitCmdDesc(unitID, cmdDesc)
 	end
@@ -82,12 +91,41 @@ local function ShowBuildOptionsByType(unitID, unitType)
 end
 
 function gadget:AllowCommand(unitID, unitDefID, teamID, cmdID, cmdParams, cmdOptions)
-	local typeString = menuCmdIDs[cmdID]
-	if typeString then
-		ClearBuildOptions(unitID)
-		ShowBuildOptionsByType(unitID, typeString)
+	local ud = UnitDefs[unitDefID]
+	if ud.name:find("dropzone") then -- TODO: cache dropzone unitDefIDs
+		local typeString = menuCmdIDs[cmdID]
+		if typeString then
+			ClearBuildOptions(unitID)
+			ShowBuildOptionsByType(unitID, typeString)
+			return true
+		elseif cmdID < 0 then
+			-- TODO: limit count
+			-- TODO: check we can afford it
+		elseif cmdID == CMD_SEND_ORDER then
+			-- TODO: DropshipDelivery() from unit_beaconBuild
+			-- TODO: check we can afford the whole lot?
+			-- TODO: cooldown - remove all options
+			local orderQueue = Spring.GetFullBuildQueue(unitID)
+			local cost = 1 -- TODO: track cost
+			GG.DropshipDelivery(unitID, teamID, "is_dropship_fx", orderQueue, cost) -- TODO: send dropship of correct side
+			Spring.Echo("Sending purchase order for the following:")
+			for i, order in ipairs(orderQueue) do
+				for orderDefID, count in pairs(order) do
+					Spring.Echo(UnitDefs[orderDefID].name, count)
+				end
+			end
+			return true
+		end
 	end
 	return true
+end
+
+function gadget:AllowUnitBuildStep(builderID, builderTeam, unitID, unitDefID, part)
+	local builderDefID = Spring.GetUnitDefID(builderID)
+	local builderDef = UnitDefs[builderDefID]
+	if builderDef.name:find("dropzone") then
+		return false
+	end
 end
 
 function gadget:UnitCreated(unitID, unitDefID, teamID)
