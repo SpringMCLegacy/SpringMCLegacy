@@ -220,6 +220,11 @@ local Sounds = {
 			in3d = false,
 		},
 		
+		BB_Upgrade_Uplink_Lost = {
+			file = "sounds/betty/Uplink_Lost.ogg",
+			in3d = false,
+		},
+		
 		BB_Upgrade_Mechbay_Deployed = {
 			file = "sounds/betty/Mechbay_Deployed.ogg",
 			in3d = false,
@@ -232,6 +237,11 @@ local Sounds = {
 		
 		BB_Upgrade_Mechbay_Destroyed = {
 			file = "sounds/betty/Mechbay_Destroyed.ogg",
+			in3d = false,
+		},
+		
+		BB_Upgrade_Mechbay_Lost = {
+			file = "sounds/betty/Mechbay_Lost.ogg",
 			in3d = false,
 		},
 		
