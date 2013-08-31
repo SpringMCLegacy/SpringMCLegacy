@@ -125,7 +125,8 @@ for name, ud in pairs(UnitDefs) do
 	end
 	
 	-- Automatically build dropship buildmenus
-	if ud.customparams.unittype == "mech" then
+	local unitType = ud.customparams.unittype
+	if unitType == "mech" or unitType == "vehicle" then
 		if name:sub(1, 2) == "is" then
 			table.insert(IS_DROPSHIP_BUILDOPTIONS, name)
 		elseif name:sub(1, 2) == "cl" then
