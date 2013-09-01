@@ -90,6 +90,13 @@ local function ShowBuildOptionsByType(unitID, unitType)
 	end
 end
 
+local function ResetBuildQueue(unitID)
+	local orderQueue = Spring.GetFactoryCommands(unitID)
+	for i, order in ipairs(orderQueue) do
+		Spring.GiveOrderToUnit(unitID, CMD.REMOVE, {order.tag}, {"ctrl"})
+	end
+end
+
 function gadget:AllowCommand(unitID, unitDefID, teamID, cmdID, cmdParams, cmdOptions)
 	local ud = UnitDefs[unitDefID]
 	if ud.name:find("dropzone") then -- TODO: cache dropzone unitDefIDs
@@ -115,6 +122,7 @@ function gadget:AllowCommand(unitID, unitDefID, teamID, cmdID, cmdParams, cmdOpt
 					Spring.Echo(UnitDefs[orderDefID].name, count)
 				end
 			end
+			ResetBuildQueue(unitID)
 			return true
 		end
 	end

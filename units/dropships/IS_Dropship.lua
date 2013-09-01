@@ -268,5 +268,6 @@ IS_Dropship_FX["objectName"] = "dropship.s3o" -- change model
 IS_Dropship_FX["transportSize"]		= 8
 IS_Dropship_FX["transportCapacity"]	= 80 -- 10x transportSize
 IS_Dropship_FX["transportMass"]		= 100000
+IS_Dropship_FX["holdSteady"] = true
 
 return lowerkeys({ ["IS_Dropship"] = IS_Dropship, ["IS_Dropship_FX"] = IS_Dropship_FX })
