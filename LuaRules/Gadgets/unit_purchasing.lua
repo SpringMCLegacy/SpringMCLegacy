@@ -36,7 +36,7 @@ local DelayCall				 = GG.Delay.DelayCall
 
 -- Constants
 local BEACON_ID = UnitDefNames["beacon"].id
-local DROPSHIP_DELAY = 10 * 30 -- 10s
+local DROPSHIP_DELAY = 30 * 30 -- 30s
 
 -- local NUM_ICONS_PER_PAGE = 3 * 8
 	
@@ -115,7 +115,7 @@ function gadget:AllowCommand(unitID, unitDefID, teamID, cmdID, cmdParams, cmdOpt
 			-- TODO: cooldown - remove all options
 			local orderQueue = Spring.GetFullBuildQueue(unitID)
 			local cost = 1 -- TODO: track cost
-			GG.DropshipDelivery(unitID, teamID, "is_dropship_fx", orderQueue, cost, DROPSHIP_DELAY) -- TODO: send dropship of correct side
+			GG.DropshipDelivery(unitID, teamID, "is_dropship_fx", orderQueue, cost, "BB_Reinforcements_Inbound_ETA_30", DROPSHIP_DELAY) -- TODO: send dropship of correct side
 			Spring.Echo("Sending purchase order for the following:")
 			for i, order in ipairs(orderQueue) do
 				for orderDefID, count in pairs(order) do

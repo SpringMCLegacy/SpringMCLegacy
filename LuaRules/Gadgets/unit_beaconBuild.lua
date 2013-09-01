@@ -43,7 +43,7 @@ local MIN_BUILD_RANGE = tonumber(UnitDefNames["beacon"].customParams.minbuildran
 local MAX_BUILD_RANGE = UnitDefNames["beacon"].buildDistance
 local RADIUS = 230
 local NUM_SEGMENTS = 12
-local DROPSHIP_DELAY = 5 * 30 -- 5s
+local DROPSHIP_DELAY = 10 * 30 -- 10s
 	
 local CMD_UPGRADE = GG.CustomCommands.GetCmdID("CMD_UPGRADE")
 
@@ -183,9 +183,9 @@ function SpawnDropship(unitID, teamID, dropshipType, cargo)
 	end
 end
 
-function DropshipDelivery(unitID, teamID, dropshipType, cargo, cost, delay)
+function DropshipDelivery(unitID, teamID, dropshipType, cargo, cost, sound, delay)
 	UseTeamResource(teamID, "metal", cost)
-	GG.PlaySoundForTeam(teamID, "BB_Dropship_Inbound", 1)
+	GG.PlaySoundForTeam(teamID, sound, 1)
 	DelayCall(SpawnDropship, {unitID, teamID, dropshipType, cargo}, delay)
 end
 GG.DropshipDelivery = DropshipDelivery
@@ -396,7 +396,7 @@ function gadget:AllowCommand(unitID, unitDefID, teamID, cmdID, cmdParams, cmdOpt
 			else
 				--Spring.Echo("I'm totally gonna upgrade your beacon bro!")
 				RemoveUpgradeOptions(unitID)
-				DropshipDelivery(unitID, teamID, "is_avenger", upgradeDefID, outpostDefs[upgradeDefID].cost, DROPSHIP_DELAY)
+				DropshipDelivery(unitID, teamID, "is_avenger", upgradeDefID, outpostDefs[upgradeDefID].cost, "BB_Dropship_Inbound", DROPSHIP_DELAY)
 			end
 		elseif cmdID == dropZoneCmdDesc.id then
 			RemoveUpgradeOptions(unitID)

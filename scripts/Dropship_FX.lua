@@ -42,7 +42,7 @@ end
 -- SyncedCtrl
 local SpawnCEG = Spring.SpawnCEG
 -- Constants
-local DROP_HEIGHT = 11000
+local DROP_HEIGHT = 10000
 local GRAVITY = 120/Game.gravity
 local X, _, Z = Spring.GetUnitPosition(unitID)
 local GY = Spring.GetGroundHeight(X, Z)
