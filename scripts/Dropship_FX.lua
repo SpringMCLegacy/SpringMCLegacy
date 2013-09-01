@@ -120,13 +120,13 @@ local function LandingGearDown()
 	SPEED = math.rad(25)
 	--Legs Come Out--
 	Turn(gear1_joint, x_axis, rad(125), SPEED)
-	Turn(gear1, x_axis, rad(-160), SPEED)
+	Turn(gear1, x_axis, rad(-155), SPEED)
 	Turn(gear2_joint, x_axis, rad(-125), SPEED)
-	Turn(gear2, x_axis, rad(160), SPEED)
+	Turn(gear2, x_axis, rad(155), SPEED)
 	Turn(gear3_joint, x_axis, rad(-125), SPEED)
-	Turn(gear3, x_axis, rad(160), SPEED)
+	Turn(gear3, x_axis, rad(155), SPEED)
 	Turn(gear4_joint, x_axis, rad(125), SPEED)
-	Turn(gear4, x_axis, rad(-160), SPEED)
+	Turn(gear4, x_axis, rad(-155), SPEED)
 	
 	WaitForTurn(gear4, x_axis)
 	feetDown = true
@@ -157,12 +157,12 @@ local function LandingGearUp()
 end
 
 function script.Create()
-	Turn(exhaustlarge, x_axis, math.rad(89), 0)
+	Turn(exhaustlarge, x_axis, math.rad(90), 0)
 	Spin(exhaustlarge, y_axis, math.rad(360))
 	for i = 1, 4 do
-		Turn(dusts[i], x_axis, math.rad(89), 0)
+		Turn(dusts[i], x_axis, math.rad(90), 0)
 		Spin(dusts[i], y_axis, math.rad(360))
-		Turn(exhausts[i], x_axis, math.rad(89), 0)
+		Turn(exhausts[i], x_axis, math.rad(90), 0)
 		Spin(exhausts[i], y_axis, math.rad(360))
 	end
 	Spring.MoveCtrl.Enable(unitID)
@@ -239,6 +239,7 @@ function UnloadCargo()
 	for i, cargoID in ipairs(cargo) do
 		Move(link, z_axis, 0, 100)
 		Move(pad, z_axis, 0, 100)
+		Turn(pad, x_axis, math.rad(-35))
 		--Move(vtol_pad, z_axis, 0)
 		WaitForMove(link, z_axis)
 		WaitForMove(pad, z_axis)
@@ -262,6 +263,9 @@ function UnloadCargo()
 			local moveSpeed = currUnitDef.speed * 0.5 --173 / buildTime
 			Move(link, z_axis, 73, moveSpeed)
 			WaitForMove(link, z_axis)
+			if currUnitDef.customParams.unittype == "vehicle" then
+				Turn(pad, x_axis, 0) -- vehicles should follow the slope
+			end
 			Move(pad, z_axis, 100, moveSpeed)
 			WaitForMove(pad, z_axis)
 		end
@@ -278,7 +282,7 @@ function UnloadCargo()
 	StartThread(fx)
 	Spring.MoveCtrl.Enable(unitID)
 	Spring.MoveCtrl.SetGravity(unitID, -1 * GRAVITY)
-	Sleep(1000)
+	Sleep(2500)
 	stage = 2
 	StartThread(fx) -- need to restart here as we're going back up a step
 	StartThread(LandingGearUp)
