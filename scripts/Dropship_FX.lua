@@ -42,8 +42,8 @@ end
 -- SyncedCtrl
 local SpawnCEG = Spring.SpawnCEG
 -- Constants
-local DROP_HEIGHT = 10000
-local GRAVITY = 120/Game.gravity * 1.3
+local DROP_HEIGHT = 11000
+local GRAVITY = 120/Game.gravity
 local X, _, Z = Spring.GetUnitPosition(unitID)
 local GY = Spring.GetGroundHeight(X, Z)
 
@@ -97,13 +97,13 @@ local function fx()
 		Move(gear2_joint, y_axis, REST, 2 * REST)
 		Move(gear3_joint, y_axis, REST, 2 * REST)
 		Move(gear4_joint, y_axis, REST, 2 * REST)
-		WaitForMove(hull, y_axis)
+		WaitForMove(gear4_joint, y_axis)
 		Move(hull, y_axis, -RETURN, RETURN)
 		Move(gear1_joint, y_axis, RETURN, RETURN)
 		Move(gear2_joint, y_axis, RETURN, RETURN)
 		Move(gear3_joint, y_axis, RETURN, RETURN)
 		Move(gear4_joint, y_axis, RETURN, RETURN)
-		WaitForMove(hull, y_axis)
+		WaitForMove(gear4_joint, y_axis)
 		StartThread(UnloadCargo)
 	end
 end
@@ -168,6 +168,8 @@ function script.Create()
 	Spring.MoveCtrl.Enable(unitID)
 	Spring.MoveCtrl.SetPosition(unitID, X, GY + DROP_HEIGHT, Z)
 	--Spring.MoveCtrl.SetVelocity(unitID, 0, -100, 0)
+	Spring.MoveCtrl.SetVelocity(unitID, 0, -50, 0)
+	--Spring.MoveCtrl.SetGravity(unitID, -0.5 * GRAVITY)
 	
 	local SPEED = 0
 	--Setups: Quickly do this before the dropship appears)
@@ -181,30 +183,26 @@ function script.Create()
 	Turn(gear4_door, y_axis, rad(45), SPEED)
 	Turn(gear4_joint, y_axis, rad(45), SPEED)
 	
-	Spring.MoveCtrl.SetGravity(unitID, GRAVITY)
+	--Spring.MoveCtrl.SetGravity(unitID, GRAVITY)
 	stage = 1
 	StartThread(fx)
 	
 	local _, y, _ = Spring.GetUnitPosition(unitID)
-	while y - GY > 2500 do
+	while y - GY > 3500 do
 		Sleep(120)
 		_, y, _ = Spring.GetUnitPosition(unitID)
 	end
 	stage = 2
 	Spring.Echo("ROCKET FULL BURN NOW!")
-	Spring.MoveCtrl.SetGravity(unitID, 0) ---3.9 * GRAVITY)
+	Spring.MoveCtrl.SetGravity(unitID, -3.72 * GRAVITY)
 	
 	StartThread(LandingGearDown)
 	while y - GY > 925 do
-	--local _, sy, _ = Spring.GetUnitVelocity(unitID)
-	--while -sy > 5 do
 		Sleep(120)
 		_, y, _ = Spring.GetUnitPosition(unitID)
-		_, sy, _ = Spring.GetUnitVelocity(unitID)
-		Spring.MoveCtrl.SetVelocity(unitID, 0, sy * 0.9, 0)
 	end
 	stage = 3
-	Spring.MoveCtrl.SetGravity(unitID, -0.01 * GRAVITY)
+	Spring.MoveCtrl.SetGravity(unitID, -0.02 * GRAVITY)
 	Spring.MoveCtrl.SetCollideStop(unitID, true)
 	Spring.MoveCtrl.SetTrackGround(unitID, true)
 end
@@ -264,7 +262,9 @@ function UnloadCargo()
 			Move(link, z_axis, 73, moveSpeed)
 			WaitForMove(link, z_axis)
 			if currUnitDef.customParams.unittype == "vehicle" then
-				Turn(pad, x_axis, 0) -- vehicles should follow the slope
+				Turn(pad, x_axis, 0, DOOR_SPEED) -- vehicles should follow the slope
+				WaitForTurn(pad, x_axis)
+				Sleep(250)
 			end
 			Move(pad, z_axis, 100, moveSpeed)
 			WaitForMove(pad, z_axis)
