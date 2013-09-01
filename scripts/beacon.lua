@@ -43,6 +43,15 @@ end
 
 function TouchDown()
 	touchDown = true
+	-- check if we're the first beacon on a non-gaia team -> start unit
+	local teamID = Spring.GetUnitTeam(unitID)
+	if teamID ~= Spring.GetGaiaTeamID() then
+		local count = Spring.GetTeamUnitDefCount(teamID, Spring.GetUnitDefID(unitID))
+		if count == 1 then
+			Spring.GiveOrderToUnit(unitID, GG.CustomCommands.GetCmdID("CMD_DROPZONE"), {}, {})
+		end
+	end
+	Spring.SetUnitNoSelect(unitID, false)
 end
 
 function ChangeType(upgrade)
@@ -58,6 +67,7 @@ end
 
 function script.Create()
 	Hide(dirt)
+	Spring.SetUnitNoSelect(unitID, true)
 	Spring.MoveCtrl.Enable(unitID)
 	local x,y,z = Spring.GetUnitPosition(unitID)
 	Spring.MoveCtrl.SetPosition(unitID, x, y + DROP_HEIGHT, z)

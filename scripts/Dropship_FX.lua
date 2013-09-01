@@ -7,38 +7,6 @@ local currUnitDef
 local BUILD_FACING = Spring.GetUnitBuildFacing(unitID)
 
 --piece defines
-local hull, link, pad, beam, main_door, hanger_door, vtol_pad = piece ("hull", "link", "pad", "beam", "main_door", "hanger_door", "vtol_pad")
---Weapon 1 and 2, dual lasers
-local turret1_joint, turret1, turret1_flare1, turret1_flare2 = piece ("turret1_joint", "turret1", "turret1_flare1", "turret1_flare2")
---Weapon 3 and 4, dual lasers
-local turret2_joint, turret2, turret2_flare1, turret2_flare2 = piece ("turret2_joint", "turret2", "turret2_flare1", "turret2_flare2")
---Weapon 5 and 6, dual lasers
-local turret3_joint, turret3, turret3_flare1, turret3_flare2 = piece ("turret3_joint", "turret3", "turret3_flare1", "turret3_flare2")
---Weapon 7 and 8, dual lasers
-local turret4_joint, turret4, turret4_flare1, turret4_flare2 = piece ("turret4_joint", "turret4", "turret4_flare1", "turret4_flare2")
---Weapon 9, PPC
-local ppc1_platform, ppc1_turret, ppc1_mantlet, ppc1_barrel, ppc1_flare = piece ("ppc1_platform", "ppc1_turret", "ppc1_mantlet", "ppc1_barrel", "ppc1_flare")
---Weapon 10, PPC
-local ppc2_platform, ppc2_turret, ppc2_mantlet, ppc2_barrel, ppc2_flare = piece ("ppc2_platform", "ppc2_turret", "ppc2_mantlet", "ppc2_barrel", "ppc2_flare")
---Weapon 11, PPC
-local ppc3_platform, ppc3_turret, ppc3_mantlet, ppc3_barrel, ppc3_flare = piece ("ppc3_platform", "ppc3_turret", "ppc3_mantlet", "ppc3_barrel", "ppc3_flare")
---Weapon 12, PPC
-local ppc4_platform, ppc4_turret, ppc4_mantlet, ppc4_barrel, ppc4_flare = piece ("ppc4_platform", "ppc4_turret", "ppc4_mantlet", "ppc4_barrel", "ppc4_flare")
---Weapon 13, LRM
-local launcher1_joint, launcher1 = piece ("launcher1_joint", "launcher1")
---Weapon 14, LRM
-local launcher2_joint, launcher2 = piece ("launcher2_joint", "launcher2")
---Weapon 15, LRM
-local launcher3_joint, launcher3 = piece ("launcher3_joint", "launcher3")
---Weapon 16, LRM
-local launcher4_joint, launcher4 = piece ("launcher4_joint", "launcher4")
---ERMBLs
-local laser1, laser2, laser3, laser4, laser5, laser6, laser7, laser8 = piece ("laser1", "laser2", "laser3", "laser4", "laser5", "laser6", "laser7", "laser8")
---LBLs
-local laser9, laser10, laser11, laser12 = piece ("laser9", "laser10", "laser11", "laser12")
---Anti-Missile System
-local ams = piece ("ams")
-
 
 local hull = piece("hull")
 -- Landing Gear Pieces
@@ -136,11 +104,11 @@ local function fx()
 		Move(gear3_joint, y_axis, RETURN, RETURN)
 		Move(gear4_joint, y_axis, RETURN, RETURN)
 		WaitForMove(hull, y_axis)
+		StartThread(UnloadCargo)
 	end
-	StartThread(UnloadCargo)
 end
 
-local function LandingGear()
+local function LandingGearDown()
 	SPEED = math.rad(15)
 	-- Landing--
 	--Open Landing Gear Doors--
@@ -165,8 +133,30 @@ local function LandingGear()
 	Spring.Echo("GEAR DEPLOYED.")
 end
 
+local function LandingGearUp()
+	feetDown = false
+	SPEED = math.rad(50)
+	--Legs Go In--
+	Turn(gear1_joint, x_axis, 0, SPEED)
+	Turn(gear1, x_axis, 0, SPEED)
+	Turn(gear2_joint, x_axis, 0, SPEED)
+	Turn(gear2, x_axis, 0, SPEED)
+	Turn(gear3_joint, x_axis, 0, SPEED)
+	Turn(gear3, x_axis, 0, SPEED)
+	Turn(gear4_joint, x_axis, 0, SPEED)
+	Turn(gear4, x_axis, 0, SPEED)	
+	WaitForTurn(gear4, x_axis)
+	--SPEED = math.rad(30)
+	--Close Landing Gear Doors--
+	Turn(gear1_door, x_axis, 0, SPEED)
+	Turn(gear2_door, x_axis, 0, SPEED)
+	Turn(gear3_door, x_axis, 0, SPEED)
+	Turn(gear4_door, x_axis, 0, SPEED)
+	WaitForTurn(gear4_door, x_axis)
+	Spring.MoveCtrl.SetGravity(unitID, -4 * GRAVITY)
+end
+
 function script.Create()
-	Spring.Echo(Spring.UnitScript.GetPieceRotation(exhaustlarge))
 	Turn(exhaustlarge, x_axis, math.rad(89), 0)
 	Spin(exhaustlarge, y_axis, math.rad(360))
 	for i = 1, 4 do
@@ -204,7 +194,7 @@ function script.Create()
 	Spring.Echo("ROCKET FULL BURN NOW!")
 	Spring.MoveCtrl.SetGravity(unitID, 0) ---3.9 * GRAVITY)
 	
-	StartThread(LandingGear)
+	StartThread(LandingGearDown)
 	while y - GY > 925 do
 	--local _, sy, _ = Spring.GetUnitVelocity(unitID)
 	--while -sy > 5 do
@@ -220,31 +210,79 @@ function script.Create()
 end
 
 -- CARGO CODE
-local WAIT_TIME = 10000
+local link, pad, main_door, hanger_door, vtol_pad = piece ("link", "pad", "main_door", "hanger_door", "vtol_pad")
 
+local WAIT_TIME = 10000
+local DOOR_SPEED = math.rad(20)
+local x, _ ,z = Spring.GetUnitPosition(unitID)
+local dx, _, dz = Spring.GetUnitDirection(unitID)
+local UNLOAD_X = x + 300 * dx
+local UNLOAD_Z = z + 300 * dz
+		
 local cargo = {}
 local numCargo = 0
 function LoadCargo(cargoID, callerID)
 	--Spring.Echo("Loading", outpostID, "of type", UnitDefs[Spring.GetUnitDefID(outpostID)].name)
-	Spring.UnitScript.AttachUnit(pad, cargoID)
+	Spring.UnitScript.AttachUnit(hull, cargoID)
 	numCargo = numCargo + 1
 	cargo[numCargo] = cargoID
 end
 
 function UnloadCargo()
 	-- TODO: ramp anim etc
+	Turn(main_door, x_axis, math.rad(110), DOOR_SPEED)
+	Turn(hanger_door, y_axis, math.rad(90), DOOR_SPEED)
+	Turn(link, x_axis, math.rad(35), DOOR_SPEED * 10)
+	Turn(vtol_pad, y_axis, math.rad(90), DOOR_SPEED * 10)
+	WaitForTurn(main_door, x_axis)
+	
 	for i, cargoID in ipairs(cargo) do
+		Move(link, z_axis, 0, 100)
+		Move(pad, z_axis, 0, 100)
+		--Move(vtol_pad, z_axis, 0)
+		WaitForMove(link, z_axis)
+		WaitForMove(pad, z_axis)
+		
+		-- start cargo moving anim
+		env = Spring.UnitScript.GetScriptEnv(cargoID)
+		Spring.UnitScript.CallAsUnit(cargoID, env.script.StartMoving, false)
+		
+		-- attach and move
+		local currUnitDef = UnitDefs[Spring.GetUnitDefID(cargoID)]
+		local buildTime = currUnitDef.buildTime
+
+		if currUnitDef.canFly then
+			--[[Spring.UnitScript.AttachUnit(vtol_pad, cargoID)
+			local moveSpeed = currUnitDef.speed * 0.5 --256 / buildTime
+			Move(vtol_pad, x_axis, 256, moveSpeed)
+			WaitForMove(vtol_pad, z_axis)]]
+			--Spring.SetUnitRelativeVelocity(cargoID, 0, 0, moveSpeed / 30)
+		else
+			Spring.UnitScript.AttachUnit(pad, cargoID)
+			local moveSpeed = currUnitDef.speed * 0.5 --173 / buildTime
+			Move(link, z_axis, 73, moveSpeed)
+			WaitForMove(link, z_axis)
+			Move(pad, z_axis, 100, moveSpeed)
+			WaitForMove(pad, z_axis)
+		end
 		Spring.UnitScript.DropUnit(cargoID)
-		Sleep(500)
+		Spring.SetUnitMoveGoal(cargoID, UNLOAD_X +  math.random(-100, 100), 0, UNLOAD_Z +  math.random(-100, 100), 25) -- bug out over here
+		Sleep(2000)
 	end
+	Turn(main_door, x_axis, 0, DOOR_SPEED)
+	Turn(hanger_door, y_axis, 0, DOOR_SPEED)
+	WaitForTurn(hanger_door, y_axis)
+	WaitForTurn(main_door, x_axis)
 	Sleep(WAIT_TIME)
-	stage = 2
+	stage = 3
 	StartThread(fx)
-	Spring.MoveCtrl.SetCollideStop(unitID, false)
-	Spring.MoveCtrl.SetTrackGround(unitID, false)
 	Spring.MoveCtrl.Enable(unitID)
-	Spring.MoveCtrl.SetGravity(unitID, -3 * GRAVITY)
-	Sleep(5000)
+	Spring.MoveCtrl.SetGravity(unitID, -1 * GRAVITY)
+	Sleep(1000)
+	stage = 2
+	StartThread(fx) -- need to restart here as we're going back up a step
+	StartThread(LandingGearUp)
+	Sleep(10000)
 	-- We're out of the atmosphere, bye bye!
 	Spring.DestroyUnit(unitID, false, true)
 end
