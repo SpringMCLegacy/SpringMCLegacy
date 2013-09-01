@@ -243,7 +243,7 @@ function UnloadCargo()
 	Spring.MoveCtrl.SetCollideStop(unitID, false)
 	Spring.MoveCtrl.SetTrackGround(unitID, false)
 	Spring.MoveCtrl.Enable(unitID)
-	Spring.MoveCtrl.SetGravity(unitID, -5 * GRAVITY)
+	Spring.MoveCtrl.SetGravity(unitID, -3 * GRAVITY)
 	Sleep(5000)
 	-- We're out of the atmosphere, bye bye!
 	Spring.DestroyUnit(unitID, false, true)
