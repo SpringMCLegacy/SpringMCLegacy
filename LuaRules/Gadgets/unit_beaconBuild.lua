@@ -158,10 +158,10 @@ function SpawnCargo(beaconID, dropshipID, unitDefID, teamID)
 	Spring.UnitScript.CallAsUnit(dropshipID, env.LoadCargo, cargoID, beaconID)
 	-- extra behaviour to link outposts with beacons
 	if outpostDefs[unitDefID] then
-		beaconIDs[outpostID] = beaconID 
-		outpostIDs[beaconID] = outpostID
+		beaconIDs[cargoID] = beaconID 
+		outpostIDs[beaconID] = cargoID
 		-- Let unsynced know about this pairing
-		Spring.SetUnitRulesParam(outpostID, "beaconID", beaconID)
+		Spring.SetUnitRulesParam(cargoID, "beaconID", beaconID)
 	end
 end
 

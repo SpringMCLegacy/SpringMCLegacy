@@ -105,6 +105,7 @@ function gadget:AllowCommand(unitID, unitDefID, teamID, cmdID, cmdParams, cmdOpt
 			-- TODO: DropshipDelivery() from unit_beaconBuild
 			-- TODO: check we can afford the whole lot?
 			-- TODO: cooldown - remove all options
+			-- TODO: reset all current orders
 			local orderQueue = Spring.GetFullBuildQueue(unitID)
 			local cost = 1 -- TODO: track cost
 			GG.DropshipDelivery(unitID, teamID, "is_dropship_fx", orderQueue, cost) -- TODO: send dropship of correct side
