@@ -17,6 +17,7 @@ if gadgetHandler:IsSyncedCode() then
 local SetUnitRulesParam		= Spring.SetUnitRulesParam
 --SyncedRead
 local GetGameFrame			= Spring.GetGameFrame
+local GetTeamResources		= Spring.GetTeamResources
 local GetUnitPosition		= Spring.GetUnitPosition
 --SyncedCtrl
 local CreateUnit			= Spring.CreateUnit
@@ -57,6 +58,8 @@ for i, typeString in ipairs(typeStrings) do
 	}
 	menuCmdIDs[cmdID] = typeString
 end
+local orderCosts = {} -- orderCosts[unitID] = cost
+local dropZones = {} -- dropZones[unitID] = teamID
 
 local sendOrderCmdDesc = {
 	id = CMD_SEND_ORDER,
@@ -98,23 +101,70 @@ local function ResetBuildQueue(unitID)
 	end
 end
 
+local function CheckBuildOptions(unitID, teamID, money, cmdID)
+	local weightLeft = GetTeamResources(teamID, "energy")
+	local cmdDescs = Spring.GetUnitCmdDescs(unitID)
+	for cmdDescID = 1, #cmdDescs do
+		local buildDefID = cmdDescs[cmdDescID].id
+		local cmdDesc = cmdDescs[cmdDescID] -- GetUnitCmdDescs(unitID, cmdDescID, cmdDescID)[1]
+		if cmdDesc.id ~= cmdID then
+			local currParam = cmdDesc.params[1] or ""
+			local cCost, tCost
+			if buildDefID < 0 then -- a build order
+				cCost = UnitDefs[-buildDefID].metalCost
+				tCost = UnitDefs[-buildDefID].energyCost
+			else
+				cCost = GG.CommandCosts[buildDefID] or 0
+				tCost = 0
+			end
+			if cCost > money and (currParam == "" or currParam == "C") then
+				EditUnitCmdDesc(unitID, cmdDescID, {disabled = true, params = {"C"}})
+			elseif tCost > weightLeft then
+				EditUnitCmdDesc(unitID, cmdDescID, {disabled = true, params = {"T"}})
+			else
+				if cmdDesc.disabled and currParam == "C" then
+					EditUnitCmdDesc(unitID, cmdDescID, {disabled = false, params = {}})
+				end
+			end
+		end
+	end
+end
+
 function gadget:AllowCommand(unitID, unitDefID, teamID, cmdID, cmdParams, cmdOptions)
 	local ud = UnitDefs[unitDefID]
 	if ud.name:find("dropzone") then -- TODO: cache dropzone unitDefIDs
 		local typeString = menuCmdIDs[cmdID]
+		local rightClick = cmdOptions.right
 		if typeString then
 			ClearBuildOptions(unitID)
 			ShowBuildOptionsByType(unitID, typeString)
 			return true
 		elseif cmdID < 0 then
-			-- TODO: limit count
-			-- TODO: check we can afford it
+			local cost = UnitDefs[-cmdID].metalCost
+			local runningTotal = orderCosts[unitID] or 0
+			local money = GetTeamResources(teamID, "metal")
+			if not rightClick then
+				-- TODO: limit count
+				if runningTotal + cost < money then -- check we can afford it
+					Spring.Echo("Running Total: " .. runningTotal + cost)
+					orderCosts[unitID] = runningTotal + cost
+					CheckBuildOptions(unitID, teamID, money - (runningTotal + cost), cmdID)
+					return true
+				else
+					return false -- not enough money
+				end
+			else
+				orderCosts[unitID] = runningTotal - cost
+				CheckBuildOptions(unitID, teamID, money - (runningTotal - cost))
+				return true -- always allow removal
+			end
+			
 		elseif cmdID == CMD_SEND_ORDER then
 			-- TODO: DropshipDelivery() from unit_beaconBuild
 			-- TODO: check we can afford the whole lot?
 			-- TODO: cooldown - remove all options
 			local orderQueue = Spring.GetFullBuildQueue(unitID)
-			local cost = 1 -- TODO: track cost
+			local cost = orderCosts[unitID]
 			GG.DropshipDelivery(unitID, teamID, "is_dropship_fx", orderQueue, cost, "BB_Reinforcements_Inbound_ETA_30", DROPSHIP_DELAY) -- TODO: send dropship of correct side
 			Spring.Echo("Sending purchase order for the following:")
 			for i, order in ipairs(orderQueue) do
@@ -123,6 +173,7 @@ function gadget:AllowCommand(unitID, unitDefID, teamID, cmdID, cmdParams, cmdOpt
 				end
 			end
 			ResetBuildQueue(unitID)
+			orderCosts[unitID] = 0
 			return true
 		end
 	end
@@ -142,7 +193,12 @@ function gadget:UnitCreated(unitID, unitDefID, teamID)
 	if unitDef.name:find("dropship") or unitDef.name:find("dropzone") then
 		ClearBuildOptions(unitID, true)
 		AddBuildMenu(unitID)
+		dropZones[unitID] = teamID
 	end
+end
+
+function gadget:UnitDestroyed(unitID, unitDefID, teamID)
+	dropZones[unitID] = nil
 end
 
 function gadget:GamePreload()
@@ -168,7 +224,17 @@ function gadget:GamePreload()
 	end
 end
 
-
+function gadget:GameFrame(n)
+	if n > 0 and n % 30 == 0 then -- once a second
+		for _, teamID in pairs(Spring.GetTeamList()) do
+			Spring.AddTeamResource(teamID, "metal", 500)
+		end
+		-- check if orders are still too expensive
+		for unitID, teamID in pairs(dropZones) do
+			CheckBuildOptions(unitID, teamID, GetTeamResources(teamID, "metal") - (orderCosts[unitID] or 0))
+		end
+	end
+end
 
 function gadget:Initialize()
 	gadget:GamePreload()

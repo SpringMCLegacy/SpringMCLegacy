@@ -6,7 +6,7 @@ function gadget:GetInfo()
 		date = "30/01/2011",
 		license = "GNU GPL v2",
 		layer = 1,
-		enabled = true
+		enabled = false
 	}
 end
 
@@ -105,7 +105,7 @@ function gadget:UnitGiven(unitID, unitDefID, unitTeam, oldTeam)
 end
 
 function gadget:GameFrame(n)
-	if n % 30 == 0 then
+	--[[if n % 30 == 0 then
 		for unitID in pairs(dropShips) do
 			local teamID = GetUnitTeam(unitID)
 			local money = GetTeamResources(teamID, "metal")
@@ -133,13 +133,10 @@ function gadget:GameFrame(n)
 				end
 			end
 		end
-	end
+	end]]
 	
-	if n > 0 and n % 1800 == 0 then
-		incomeIncrease = incomeIncrease + 50
-		for dropship in pairs(dropShips) do
-			Spring.SetUnitResourcing(dropship, "umm", incomeIncrease)
-		end
+	if n > 0 and n % 30 == 0 then -- once a second
+
 	end
 end
 
