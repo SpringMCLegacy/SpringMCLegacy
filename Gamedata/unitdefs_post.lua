@@ -77,6 +77,7 @@ for name, ud in pairs(UnitDefs) do
 			ud.usepiececollisionvolumes = true
 			ud.losemitheight = ud.mass / 100
 			ud.radaremitheight = ud.mass / 100
+			ud.buildcostmetal = 5000 -- TODO: remove this
 		elseif ud.customparams.unittype == "vehicle" then
 			ud.usepiececollisionvolumes = true
 			if ud.canfly then
