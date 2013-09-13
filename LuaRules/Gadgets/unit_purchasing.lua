@@ -60,6 +60,7 @@ for i, typeString in ipairs(typeStrings) do
 end
 local orderCosts = {} -- orderCosts[unitID] = cost
 local dropZones = {} -- dropZones[unitID] = teamID
+local teamDropZones = {} -- teamDropZone[teamID] = unitID
 
 local sendOrderCmdDesc = {
 	id = CMD_SEND_ORDER,
@@ -106,7 +107,7 @@ local function CheckBuildOptions(unitID, teamID, money, cmdID)
 	local cmdDescs = Spring.GetUnitCmdDescs(unitID)
 	for cmdDescID = 1, #cmdDescs do
 		local buildDefID = cmdDescs[cmdDescID].id
-		local cmdDesc = cmdDescs[cmdDescID] -- GetUnitCmdDescs(unitID, cmdDescID, cmdDescID)[1]
+		local cmdDesc = cmdDescs[cmdDescID]
 		if cmdDesc.id ~= cmdID then
 			local currParam = cmdDesc.params[1] or ""
 			local cCost, tCost
@@ -130,9 +131,17 @@ local function CheckBuildOptions(unitID, teamID, money, cmdID)
 	end
 end
 
+local DROPSHIP_COOLDOWN = 10 * 30 -- 10s
+local startMin, startSec = GG.FramesToMinutesAndSeconds(DROPSHIP_COOLDOWN)
+local coolDowns = {} -- coolDowns[teamID] = enableFrame
+
+function SendButtonCoolDown(unitID, teamID)
+	EditUnitCmdDesc(unitID, FindUnitCmdDesc(unitID, CMD_SEND_ORDER), {disabled = true, name = startMin .. ":" .. startSec})
+	coolDowns[teamID] = GetGameFrame() + DROPSHIP_COOLDOWN
+end
+
 function gadget:AllowCommand(unitID, unitDefID, teamID, cmdID, cmdParams, cmdOptions)
-	local ud = UnitDefs[unitDefID]
-	if ud.name:find("dropzone") then -- TODO: cache dropzone unitDefIDs
+	if dropZones[unitID] then
 		local typeString = menuCmdIDs[cmdID]
 		local rightClick = cmdOptions.right
 		if typeString then
@@ -160,12 +169,14 @@ function gadget:AllowCommand(unitID, unitDefID, teamID, cmdID, cmdParams, cmdOpt
 			end
 			
 		elseif cmdID == CMD_SEND_ORDER then
-			-- TODO: DropshipDelivery() from unit_beaconBuild
-			-- TODO: check we can afford the whole lot?
-			-- TODO: cooldown - remove all options
+			-- TODO: cooldown - remove all options / disable send order button?
 			local orderQueue = Spring.GetFullBuildQueue(unitID)
+			local money = GetTeamResources(teamID, "metal")
 			local cost = orderCosts[unitID]
-			GG.DropshipDelivery(unitID, teamID, "is_dropship_fx", orderQueue, cost, "BB_Reinforcements_Inbound_ETA_30", DROPSHIP_DELAY) -- TODO: send dropship of correct side
+			-- check we can afford the order; possible that a previously affordable order is now too much e.g. if towers have been purchased
+			if cost > money then return false end
+			local side = UnitDefs[unitDefID].name:sub(1,2) -- send dropship of correct side
+			GG.DropshipDelivery(unitID, teamID, side .. "_dropship_fx", orderQueue, cost, "BB_Reinforcements_Inbound_ETA_30", DROPSHIP_DELAY)
 			Spring.Echo("Sending purchase order for the following:")
 			for i, order in ipairs(orderQueue) do
 				for orderDefID, count in pairs(order) do
@@ -174,6 +185,7 @@ function gadget:AllowCommand(unitID, unitDefID, teamID, cmdID, cmdParams, cmdOpt
 			end
 			ResetBuildQueue(unitID)
 			orderCosts[unitID] = 0
+			SendButtonCoolDown(unitID, teamID)
 			return true
 		end
 	end
@@ -194,11 +206,13 @@ function gadget:UnitCreated(unitID, unitDefID, teamID)
 		ClearBuildOptions(unitID, true)
 		AddBuildMenu(unitID)
 		dropZones[unitID] = teamID
+		teamDropZones[teamID] = unitID
 	end
 end
 
 function gadget:UnitDestroyed(unitID, unitDefID, teamID)
 	dropZones[unitID] = nil
+	teamDropZones[teamID] = nil
 end
 
 function gadget:GamePreload()
@@ -232,6 +246,18 @@ function gadget:GameFrame(n)
 		-- check if orders are still too expensive
 		for unitID, teamID in pairs(dropZones) do
 			CheckBuildOptions(unitID, teamID, GetTeamResources(teamID, "metal") - (orderCosts[unitID] or 0))
+		end
+		-- reduce cooldown timers
+		for teamID, enableFrame in pairs(coolDowns) do
+			local framesRemaining = enableFrame - n
+			local unitID = teamDropZones[teamID]
+			if framesRemaining > 0 then
+				local minutes, seconds = GG.FramesToMinutesAndSeconds(framesRemaining)
+				EditUnitCmdDesc(unitID, FindUnitCmdDesc(unitID, CMD_SEND_ORDER), {disabled = true, name = minutes .. ":" .. seconds})
+			else
+				EditUnitCmdDesc(unitID, FindUnitCmdDesc(unitID, CMD_SEND_ORDER), {disabled = false, name = "Submit \nOrder "})
+				coolDowns[teamID] = nil
+			end
 		end
 	end
 end
