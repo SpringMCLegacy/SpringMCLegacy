@@ -59,6 +59,7 @@ for i, typeString in ipairs(typeStrings) do
 	menuCmdIDs[cmdID] = typeString
 end
 local orderCosts = {} -- orderCosts[unitID] = cost
+local orderSizes = {} -- orderSizes[teamID] = numberOfUnitsInCurrentOrder
 local dropZones = {} -- dropZones[unitID] = teamID
 local teamDropZones = {} -- teamDropZone[teamID] = unitID
 
@@ -137,7 +138,9 @@ local coolDowns = {} -- coolDowns[teamID] = enableFrame
 
 function SendButtonCoolDown(unitID, teamID)
 	EditUnitCmdDesc(unitID, FindUnitCmdDesc(unitID, CMD_SEND_ORDER), {disabled = true, name = startMin .. ":" .. startSec})
-	coolDowns[teamID] = GetGameFrame() + DROPSHIP_COOLDOWN
+	local enableFrame = GetGameFrame() + DROPSHIP_COOLDOWN
+	coolDowns[teamID] = enableFrame
+	Spring.SetTeamRulesParam(teamID, "DROPSHIP_COOLDOWN", enableFrame) -- frame this team can call dropship again
 end
 
 function gadget:AllowCommand(unitID, unitDefID, teamID, cmdID, cmdParams, cmdOptions)
@@ -169,7 +172,6 @@ function gadget:AllowCommand(unitID, unitDefID, teamID, cmdID, cmdParams, cmdOpt
 			end
 			
 		elseif cmdID == CMD_SEND_ORDER then
-			-- TODO: cooldown - remove all options / disable send order button?
 			local orderQueue = Spring.GetFullBuildQueue(unitID)
 			local money = GetTeamResources(teamID, "metal")
 			local cost = orderCosts[unitID]

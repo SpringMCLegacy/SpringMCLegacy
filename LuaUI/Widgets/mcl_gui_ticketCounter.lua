@@ -54,6 +54,7 @@ local ticketText
 local cBillsText = "C-Bills: " .. colors.grey .. 0
 local tonnageText= "Tonnage: " .. colors.yellow .. 0
 local gameTime = "Time: 0:00:00"
+local dropTime = "Dropship: 00:00"
 local artyTime = ""
 local haveArty = 0
 local fps = "fps: " .. colors.slategray .. GetFPS()
@@ -114,8 +115,11 @@ function widget:GameFrame(n)
 		local minutes = format("%02d",  floor(gameSecs / 60))
 		local seconds = format("%02d", gameSecs % 60)
 		gameTime = "Time: " .. colors.slategray .. hours .. colors.white .. ":" .. colors.slategray .. minutes .. colors.white .. ":" .. colors.slategray .. seconds
+		local frames = math.max(tonumber(GetTeamRulesParam(MY_TEAM_ID, "DROPSHIP_COOLDOWN") or 0) - n, 0)
+		minutes, seconds = FramesToMinutesAndSeconds(frames)
+		dropTime = "Dropship: " .. minutes .. ":" .. seconds
 		if haveArty > 0 then
-			local frames = math.max(tonumber(GetTeamRulesParam(MY_TEAM_ID, "UPLINK_ARTILLERY") or 0) - n, 0)
+			frames = math.max(tonumber(GetTeamRulesParam(MY_TEAM_ID, "UPLINK_ARTILLERY") or 0) - n, 0)
 			minutes, seconds = FramesToMinutesAndSeconds(frames)
 			artyTime = "Artillery: " .. colors.red .. minutes .. colors.white .. ":" .. colors.red .. seconds
 		end
@@ -138,8 +142,9 @@ function widget:DrawScreen()
 	btFont:Begin()
 		btFont:Print(cBillsText, xMax * 0.25, yMax - 32, 16, "od")
 		btFont:Print(tonnageText, xMax * 0.45, yMax - 32, 16, "od")
+		btFont:Print(dropTime, xMax * 0.75, yMax - 32, 16, "odr")
 		if (haveArty or 0) > 0 then
-			btFont:Print(artyTime, xMax * 0.65, yMax - 32, 16, "od")
+			btFont:Print(artyTime, xMax * 0.75, yMax - 48, 16, "odr")
 		end
 		btFont:Print(ticketText, xMax - 148, yMax - 32, 16, "od")
 		btFont:Print(gameTime, xMax - 148, timeHeight, 12, "od")
