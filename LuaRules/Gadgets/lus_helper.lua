@@ -175,6 +175,16 @@ function gadget:UnitCreated(unitID, unitDefID, teamID, builderID)
 		info.numWheels = numWheels
 		info.jumpjets = numJets
 	end
+	
+	-- Remove aircraft land and repairlevel buttons
+	if UnitDefs[unitDefID].canFly then
+		Spring.GiveOrderToUnit(unitID, CMD.IDLEMODE, {0}, {})
+		local toRemove = {CMD.IDLEMODE, CMD.AUTOREPAIRLEVEL}
+		for _, cmdID in pairs(toRemove) do
+			local cmdDescID = Spring.FindUnitCmdDesc(unitID, cmdID)
+			Spring.RemoveUnitCmdDesc(unitID, cmdDescID)
+		end
+	end
 end
 
 function gadget:GamePreload()
