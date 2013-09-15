@@ -71,7 +71,10 @@ function Unpack()
 		WaitForMove(emitter, y_axis)
 		Spin(geo, y_axis, math.rad(20), math.rad(5))
 		-- We're deployed, grant the extra tonnage
-		Spring.AddTeamResource(Spring.GetUnitTeam(unitID), "energy", 200)
+		local teamID = Spring.GetUnitTeam(unitID)
+		Spring.AddTeamResource(teamID, "energy", 200)
+		GG.LanceControl(teamID, true)
+		Spring.SetTeamRulesParam(teamID, "LANCES", GG.Lances[teamID])
 	elseif name == "upgrade_mechbay" then
 		Move(rampr, x_axis, 10, CRATE_SPEED * 10)
 		Move(ramprtoolupper, x_axis, 10, CRATE_SPEED * 5)
@@ -221,4 +224,5 @@ end
 
 function script.Killed(recentDamage, maxRepairth)
 	GG.PlaySoundForTeam(Spring.GetUnitTeam(unitID), "BB_" .. name .. "_destroyed", 1)
+	GG.LanceControl(teamID, false)
 end

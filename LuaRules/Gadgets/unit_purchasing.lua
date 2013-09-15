@@ -20,6 +20,7 @@ local GetGameFrame			= Spring.GetGameFrame
 local GetTeamResources		= Spring.GetTeamResources
 local GetUnitPosition		= Spring.GetUnitPosition
 --SyncedCtrl
+local AddTeamResource 		= Spring.AddTeamResource
 local CreateUnit			= Spring.CreateUnit
 local DestroyUnit			= Spring.DestroyUnit
 local EditUnitCmdDesc		= Spring.EditUnitCmdDesc
@@ -38,10 +39,19 @@ local DelayCall				 = GG.Delay.DelayCall
 -- Constants
 local BEACON_ID = UnitDefNames["beacon"].id
 local DROPSHIP_DELAY = 30 * 30 -- 30s
+local DAMAGE_REWARD_MULT = 0.1
+local KILL_REWARD_MULT = 0.1
 
 -- local NUM_ICONS_PER_PAGE = 3 * 8
 	
 local CMD_SEND_ORDER = GG.CustomCommands.GetCmdID("CMD_SEND_ORDER")
+local sendOrderCmdDesc = {
+	id = CMD_SEND_ORDER,
+	type   = CMDTYPE.ICON,
+	name   = "Submit \nOrder ",
+	action = 'submit_order',
+	tooltip = "Submit your purchasing order",
+}
 
 -- Variables
 local typeStrings = {"lightmech", "mediummech", "heavymech", "assaultmech", "vehicle", "vtol", "aero"}
@@ -58,20 +68,12 @@ for i, typeString in ipairs(typeStrings) do
 	}
 	menuCmdIDs[cmdID] = typeString
 end
-local orderCosts = {} -- orderCosts[unitID] = cost
-local orderSizes = {} -- orderSizes[teamID] = numberOfUnitsInCurrentOrder
-local dropZones = {} -- dropZones[unitID] = teamID
-local teamDropZones = {} -- teamDropZone[teamID] = unitID
-
-local sendOrderCmdDesc = {
-	id = CMD_SEND_ORDER,
-	type   = CMDTYPE.ICON,
-	name   = "Submit \nOrder ",
-	action = 'submit_order',
-	tooltip = "Submit your purchasing order",
-}
 
 local unitTypes = {} -- unitTypes[unitDefID] = "lightmech" etc from typeStrings
+local orderCosts = {} -- orderCosts[unitID] = cost
+local teamSlotsRemaining = {} -- teamSlotsRemaining[teamID] = numberOfUnitsSlotsRemaining
+local dropZones = {} -- dropZones[unitID] = teamID
+local teamDropZones = {} -- teamDropZone[teamID] = unitID
 
 local function AddBuildMenu(unitID)
 	InsertUnitCmdDesc(unitID, sendOrderCmdDesc)
@@ -119,12 +121,14 @@ local function CheckBuildOptions(unitID, teamID, money, cmdID)
 				cCost = GG.CommandCosts[buildDefID] or 0
 				tCost = 0
 			end
-			if cCost > money and (currParam == "" or currParam == "C") then
+			if cCost > 0 and teamSlotsRemaining[teamID] < 1 and (currParam == "C" or currParam == "" or currParam == "L") then
+				EditUnitCmdDesc(unitID, cmdDescID, {disabled = true, params = {"L"}})
+			elseif cCost > money and (currParam == "" or currParam == "C") then
 				EditUnitCmdDesc(unitID, cmdDescID, {disabled = true, params = {"C"}})
 			elseif tCost > weightLeft then
 				EditUnitCmdDesc(unitID, cmdDescID, {disabled = true, params = {"T"}})
 			else
-				if cmdDesc.disabled and currParam == "C" then
+				if cmdDesc.disabled and (currParam == "C" or currParam == "L") then
 					EditUnitCmdDesc(unitID, cmdDescID, {disabled = false, params = {}})
 				end
 			end
@@ -156,16 +160,19 @@ function gadget:AllowCommand(unitID, unitDefID, teamID, cmdID, cmdParams, cmdOpt
 			local runningTotal = orderCosts[unitID] or 0
 			local money = GetTeamResources(teamID, "metal")
 			if not rightClick then
+				if teamSlotsRemaining[teamID] < 1 then return false end
 				-- TODO: limit count
 				if runningTotal + cost < money then -- check we can afford it
 					Spring.Echo("Running Total: " .. runningTotal + cost)
 					orderCosts[unitID] = runningTotal + cost
+					teamSlotsRemaining[teamID] = teamSlotsRemaining[teamID] - 1
 					CheckBuildOptions(unitID, teamID, money - (runningTotal + cost), cmdID)
 					return true
 				else
 					return false -- not enough money
 				end
 			else
+				teamSlotsRemaining[teamID] = teamSlotsRemaining[teamID] + 1
 				orderCosts[unitID] = runningTotal - cost
 				CheckBuildOptions(unitID, teamID, money - (runningTotal - cost))
 				return true -- always allow removal
@@ -177,6 +184,15 @@ function gadget:AllowCommand(unitID, unitDefID, teamID, cmdID, cmdParams, cmdOpt
 			local cost = orderCosts[unitID]
 			-- check we can afford the order; possible that a previously affordable order is now too much e.g. if towers have been purchased
 			if cost > money then return false end
+			
+			for i, order in pairs(orderQueue) do -- we need to double all orders for vehicles
+				for orderDefID, count in pairs(order) do
+					if unitTypes[orderDefID] == "vehicle" then -- TODO: vtol and aero?
+						orderQueue[i][orderDefID] = count * 2
+					end
+				end
+			end
+			
 			local side = UnitDefs[unitDefID].name:sub(1,2) -- send dropship of correct side
 			GG.DropshipDelivery(unitID, teamID, side .. "_dropship_fx", orderQueue, cost, "BB_Reinforcements_Inbound_ETA_30", DROPSHIP_DELAY)
 			Spring.Echo("Sending purchase order for the following:")
@@ -202,9 +218,18 @@ function gadget:AllowUnitBuildStep(builderID, builderTeam, unitID, unitDefID, pa
 	end
 end
 
+function LanceControl(teamID, add)
+	if add and teamSlotsRemaining[teamID] <= 8 then
+		teamSlotsRemaining[teamID] = teamSlotsRemaining[teamID] + 4
+	else
+		teamSlotsRemaining[teamID] = teamSlotsRemaining[teamID] - 4 -- TODO: control loss of control over lances etc
+	end
+end
+GG.LanceControl = LanceControl
+
 function gadget:UnitCreated(unitID, unitDefID, teamID)
 	local unitDef = UnitDefs[unitDefID]
-	if unitDef.name:find("dropship") or unitDef.name:find("dropzone") then
+	if unitDef.name:find("dropzone") then
 		ClearBuildOptions(unitID, true)
 		AddBuildMenu(unitID)
 		dropZones[unitID] = teamID
@@ -212,9 +237,42 @@ function gadget:UnitCreated(unitID, unitDefID, teamID)
 	end
 end
 
-function gadget:UnitDestroyed(unitID, unitDefID, teamID)
-	dropZones[unitID] = nil
-	teamDropZones[teamID] = nil
+function gadget:UnitDamaged(unitID, unitDefID, teamID, damage, paralyzer, weaponID, attackerID, attackerDefID, attackerTeam)
+	if modOptions and (modOptions.income ~= "none" and modOptions.income ~= "dropship") then
+		if attackerID and attackerTeam and not AreTeamsAllied(teamID, attackerTeam) then
+			AddTeamResource(attackerTeam, "metal", damage * DAMAGE_REWARD_MULT)
+		end
+	end
+end
+
+function gadget:UnitDestroyed(unitID, unitDefID, teamID, attackerID, attackerDefID, attackerTeam)
+	if dropZones[unitID] then -- dropZone switched
+		dropZones[unitID] = nil
+		teamDropZones[teamID] = nil
+	end
+	if modOptions and (modOptions.income ~= "none" and modOptions.income ~= "dropship") then
+		if attackerID and not AreTeamsAllied(teamID, attackerTeam) then
+			AddTeamResource(attackerTeam, "metal", UnitDefs[unitDefID].metalCost * KILL_REWARD_MULT)
+		end
+	end
+	-- reimburse 'weight'
+	AddTeamResource(teamID, "energy", UnitDefs[unitDefID].energyCost)
+	local currSlots = teamSlotsRemaining[teamID]
+	local unitType = unitTypes[unitDefID]
+	if unitType then
+		if unitType:find("mech") then
+			teamSlotsRemaining[teamID] = currSlots + 1
+		else -- any other combat unit is worth 1/2 a slot
+			teamSlotsRemaining[teamID] = currSlots + 0.5
+		end
+	end
+end
+
+function gadget:UnitGiven(unitID, unitDefID, newTeam, oldTeam)
+	-- reimburse 'weight'
+	local weight = UnitDefs[unitDefID].energyCost
+	AddTeamResource(oldTeam, "energy", weight)
+	UseTeamResource(newTeam, "energy", weight)
 end
 
 function gadget:GamePreload()
@@ -238,12 +296,17 @@ function gadget:GamePreload()
 			unitTypes[unitDefID] = vtol and "vtol" or aero and "aero" or "vehicle"
 		end
 	end
+	GG.Lances = {}
+	for _, teamID in pairs(Spring.GetTeamList()) do
+		GG.Lances[teamID] = 1
+		teamSlotsRemaining[teamID] = 4
+	end
 end
 
 function gadget:GameFrame(n)
 	if n > 0 and n % 30 == 0 then -- once a second
 		for _, teamID in pairs(Spring.GetTeamList()) do
-			Spring.AddTeamResource(teamID, "metal", 500)
+			Spring.AddTeamResource(teamID, "metal", 50)
 		end
 		-- check if orders are still too expensive
 		for unitID, teamID in pairs(dropZones) do
