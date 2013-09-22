@@ -224,5 +224,4 @@ end
 
 function script.Killed(recentDamage, maxRepairth)
 	GG.PlaySoundForTeam(Spring.GetUnitTeam(unitID), "BB_" .. name .. "_destroyed", 1)
-	GG.LanceControl(teamID, false)
 end

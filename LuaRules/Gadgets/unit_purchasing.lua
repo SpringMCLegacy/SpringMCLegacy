@@ -38,6 +38,7 @@ local DelayCall				 = GG.Delay.DelayCall
 
 -- Constants
 local BEACON_ID = UnitDefNames["beacon"].id
+local C3_ID = UnitDefNames["upgrade_c3array"].id
 local DROPSHIP_DELAY = 30 * 30 -- 30s
 local DAMAGE_REWARD_MULT = 0.1
 local KILL_REWARD_MULT = 0.1
@@ -221,8 +222,13 @@ end
 function LanceControl(teamID, add)
 	if add and teamSlotsRemaining[teamID] <= 8 then
 		teamSlotsRemaining[teamID] = teamSlotsRemaining[teamID] + 4
-	else
-		teamSlotsRemaining[teamID] = teamSlotsRemaining[teamID] - 4 -- TODO: control loss of control over lances etc
+	else -- lost a C3
+		-- TODO: if numCombatUnits > numSlots then loss of control over lances etc
+		-- check if there were any backup C3 towers
+		local C3count = Spring.GetTeamUnitDefCount(teamID, C3_ID) -- TODO: cache
+		if C3count < 2 then -- team lost control of / capacity for a lance
+			teamSlotsRemaining[teamID] = teamSlotsRemaining[teamID] - 4
+		end
 	end
 end
 GG.LanceControl = LanceControl
@@ -249,6 +255,8 @@ function gadget:UnitDestroyed(unitID, unitDefID, teamID, attackerID, attackerDef
 	if dropZones[unitID] then -- dropZone switched
 		dropZones[unitID] = nil
 		teamDropZones[teamID] = nil
+	elseif unitDefID == C3_ID then
+		LanceControl(teamID, false)
 	end
 	if modOptions and (modOptions.income ~= "none" and modOptions.income ~= "dropship") then
 		if attackerID and not AreTeamsAllied(teamID, attackerTeam) then
