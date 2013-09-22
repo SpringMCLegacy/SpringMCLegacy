@@ -288,6 +288,7 @@ function limbHPControl(limb, damage)
 			hideLimbPieces(limb, false)
 		end
 		limbHPs[limb] = newHP
+		SetUnitRulesParam(unitID, "LIMB_HP_" .. limb:upper(), newHP/info.limbHPs[limb]*100)
 	end
 	return currHP
 end
