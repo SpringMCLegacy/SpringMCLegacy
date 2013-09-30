@@ -1,32 +1,14 @@
-local IS_Atlas = Unit:New{
-	name              	= "Atlas AS7-D",
-	iconType			= "assaultmech",
-	script				= "Mech.lua",
+local IS_Atlas = Assault:New{
 	corpse				= "IS_Atlas_X",
-	explodeAs          	= "mechexplode",
-	category 			= "mech ground notbeacon",
-	noChaseCategory		= "beacon air",
-	activateWhenBuilt   = true,
-	onoffable           = true,
 	maxDamage           = 30400,
 	mass                = 10000,
-	footprintX			= 3,
-	footprintZ 			= 3,
 	buildCostEnergy     = 100, -- in tons
 	buildCostMetal        = 0,--      = 38600,
-	buildTime           = 0,
-	upright				= true,
-	canMove				= true,
-	movementClass   = "LARGEMECH",
 	maxVelocity		= 2.5, --50kph/20
-	
-	canAttack 			= true,
 		
     customparams = {
-		hasturnbutton	= "1",
 		heatlimit		= "20",
 		torsoturnspeed	= "100",
-		unittype		= "mech",
     },
 }
 
@@ -42,37 +24,30 @@ local AS7D = IS_Atlas:New{
 		[2] = {
 			name	= "MBL",
 			OnlyTargetCategory = "notbeacon",
-			SlaveTo = 1,
 		},
 		[3] = {
 			name	= "MBL",
 			OnlyTargetCategory = "notbeacon",
-			SlaveTo = 1,
 		},
 		[4] = {
 			name	= "MBL",
 			OnlyTargetCategory = "ground",
-			SlaveTo = 1,
 		},
 		[5] = {
 			name	= "MBL",
 			OnlyTargetCategory = "ground",
-			SlaveTo = 1,
 		},
 		[6] = {
 			name	= "LRM10",
 			OnlyTargetCategory = "notbeacon",
-			SlaveTo = 1,
 		},
 		[7] = {
 			name	= "LRM10",
 			OnlyTargetCategory = "notbeacon",
-			SlaveTo = 1,
 		},
 		[8] = {
 			name	= "SRM6",
 			OnlyTargetCategory = "notbeacon",
-			SlaveTo = 1,
 		},
 	},
     customparams = {
