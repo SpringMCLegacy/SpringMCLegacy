@@ -120,9 +120,13 @@ for name, ud in pairs(UnitDefs) do
 	local weapons = ud.weapons
 	if weapons and ud.customparams.unittype == "mech" then
 		for i, weapon in pairs(weapons) do
-			weapon.maxangledif = 179
 			if weapon.name:lower() == "ams" then
 				weapon.maxangledif = 360
+			else
+				weapon.maxangledif = 179
+				if i ~= 1 then
+					weapon.slaveto = 1
+				end
 			end
 		end
 	end

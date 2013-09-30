@@ -33,10 +33,62 @@ function Unit:New(newAttribs, concatName)
 	inherit(newClass, self, concatName)
 	return newClass
 end
+---------------------------------------------------------------------------------------------
+-- Base Classes
+---------------------------------------------------------------------------------------------
+local Mech = Unit:New{
+	upright				= true,
+	canMove				= true,
+	script				= "Mech.lua",	
+	explodeAs          	= "mechexplode",
+	category 			= "mech ground notbeacon",
+	noChaseCategory		= "beacon air",
+	activateWhenBuilt   = true,
+	onoffable           = true,
+	
+	customparams = {
+		hasturnbutton	= "1",
+		unittype		= "mech",
+    },
+}
 
+local Light = Mech:New{
+	iconType			= "lightmech",
+	footprintX			= 3,
+	footprintZ 			= 3,
+	movementClass		= "LARGEMECH",
+}
+
+local Medium = Mech:New{
+	iconType			= "mediummech",
+	footprintX			= 2,
+	footprintZ 			= 2,
+	movementClass		= "SMALLMECH",
+}
+
+local Heavy = Mech:New{
+	iconType			= "heavymech",
+	footprintX			= 3,
+	footprintZ 			= 3,
+	movementClass		= "LARGEMECH",
+}
+
+local Assault = Mech:New{
+	iconType			= "assaultmech",
+	footprintX			= 3,
+	footprintZ 			= 3,
+	movementClass		= "LARGEMECH",
+}
+
+---------------------------------------------------------------------------------------------
+-- This is where the magic happens
 local sharedEnv = {
 	Unit = Unit,
-	inherit = inherit, -- should not really be shared!
+	Mech = Mech,
+	Light = Light,
+	Medium = Medium,
+	Heavy = Heavy,
+	Assault = Assault,
 	printTable = printTable,
 }
 local sharedEnvMT = nil
