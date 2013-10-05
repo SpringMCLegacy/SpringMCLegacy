@@ -1,5 +1,4 @@
 local IS_Argus = Heavy:New{
-	-- Argus
 	corpse				= "IS_Argus_X",
 	maxDamage           = 19200,
 	mass                = 6000,
@@ -17,7 +16,7 @@ local AGS4D = IS_Argus:New{
 	name              	= "Argus AGS-4D",
 	description         = "Heavy-class Mid Range Skirmisher",
 	objectName        	= "IS_Argus_AGS4D.s3o",
-	weapons 		= {	
+	weapons = {	
 		[1] = {
 			name	= "RAC5",
 			OnlyTargetCategory = "notbeacon",
