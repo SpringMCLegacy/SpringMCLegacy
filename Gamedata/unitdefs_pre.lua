@@ -80,15 +80,91 @@ local Assault = Mech:New{
 	movementClass		= "LARGEMECH",
 }
 
+local Vehicle = Unit:New{
+	iconType			= "vehicle",
+	script				= "Vehicle.lua",
+	activateWhenBuilt   = true,
+	onoffable           = true,
+	canMove 			= true,
+	footprintX			= 3,-- current both TANK and HOVER movedefs are 2x2 even if unitdefs are not
+	footprintZ 			= 3,
+	
+	customparams = {
+		unittype		= "vehicle",
+    },
+}
+
+local Tank = Vehicle:New{
+	explodeAs          	= "mechexplode",
+	category 			= "tank ground notbeacon",
+	noChaseCategory		= "beacon air",
+	movementClass   	= "TANK",
+	leaveTracks			= true,
+	trackType			= "Thick",
+	trackOffset			= 10,
+	customparams = {
+		hasturnbutton	= "1",
+    },
+}
+
+local LightTank = Tank:New{
+	footprintX			= 2, 
+	footprintZ 			= 2,
+	trackType			= "Thin",
+}
+
+local Hover = LightTank:New{
+	movementClass   = "HOVER",
+	leaveTracks		= false,
+}
+
+local Aircraft = Vehicle:New{
+	footprintX			= 2,
+	footprintZ 			= 2,
+	iconType			= "aero",
+	explodeAs          	= "mechexplode",
+	canFly				= true,
+	factoryHeadingTakeoff = false,
+	
+	customparams = {
+		flagcaprate		= "0",
+		flagdefendrate	= "0",
+	}
+}
+	
+local Aero = Aircraft:New{
+	category 			= "aero air notbeacon",
+	noChaseCategory		= "beacon ground",
+	cruiseAlt			= 300,
+	canLoopbackAttack 	= true,
+}
+
+local VTOL = Aircraft:New{
+	category 			= "vtol air notbeacon",
+	noChaseCategory		= "beacon air vtol",
+	cruiseAlt			= 250,
+	hoverAttack			= true,
+	airHoverFactor		= -0.0001,
+	
+	customparams = {
+		hasturnbutton	= "1",
+    },
+}
+
 ---------------------------------------------------------------------------------------------
 -- This is where the magic happens
 local sharedEnv = {
-	Unit = Unit,
-	Mech = Mech,
+	--Unit = Unit,
+	--Mech = Mech,
 	Light = Light,
 	Medium = Medium,
 	Heavy = Heavy,
 	Assault = Assault,
+	Tank = Tank,
+	LightTank = LightTank,
+	Hover = Hover,
+	VTOL = VTOL,
+	Aero = Aero,
 	printTable = printTable,
 }
 local sharedEnvMT = nil
