@@ -1,58 +1,35 @@
-local IS_Hawkmoth = {
+local IS_Hawkmoth = VTOL:New{
 	name              	= "Hawk Moth",
 	description         = "Light Attack VTOL",
 	objectName        	= "IS_Hawkmoth.s3o",
-	iconType			= "aero",
-	script				= "Vehicle.lua",
 	corpse				= "IS_Hawkmoth_X",
-	explodeAs          	= "mechexplode",
-	category 			= "vtol air notbeacon",
-	noChaseCategory		= "beacon air vtol",
 	sightDistance       = 1200,
 	radarDistance      	= 2000,
-		activateWhenBuilt   = true,
-		onoffable           = true,
 	maxDamage           = 3500,
 	mass                = 2000,
-	footprintX			= 2,
-	footprintZ 			= 2,
-	collisionVolumeType = "box",
-	collisionVolumeScales = "25 25 35",
-	collisionVolumeOffsets = "0 1 0",
-	collisionVolumeTest = 1,
 	buildCostEnergy     = 20,
 	buildCostMetal      = 8000,
-	buildTime           = 0,
-	canFly				= true,
-		cruiseAlt		= 250,
-		hoverAttack		= true,
-	canMove				= true,
-		movementClass   = "VTOL",
-		airHoverFactor	= -0.0001,
-		maxVelocity		= 8.6,
-		acceleration	= 0.2,
-		brakeRate 		= 1600,
-		turnRate 		= 800,
-		verticalSpeed	= 1,
-	canAttack 			= true,
-		--Makes unit use weapon from /weapons folder
-		weapons 		= {	
-			[1] = {
-				name	= "Gauss",
-				OnlyTargetCategory = "notbeacon",
-				mainDir = "0 0 1",
-				maxAngleDif = 180,
-			},
+	maxVelocity		= 8.6,
+	acceleration	= 0.2,
+	brakeRate 		= 1600,
+	turnRate 		= 800,
+	verticalSpeed	= 1,
+
+	weapons	= {	
+		[1] = {
+			name	= "Gauss",
+			OnlyTargetCategory = "notbeacon",
+			maxAngleDif = 180,
 		},
+	},
+	
 	customparams = {
-		hasturnbutton	= "1",
 		helptext		= "Armament: 1 x Gauss Rifle - Armor: 2 tons",
-		flagcaprate		= "0",
-		flagdefendrate	= "0",
 		heatlimit		= "15",
-		unittype		= "vehicle",
 		maxammo 		= {gauss = 30},
     },
 }
 
-return lowerkeys({ ["IS_Hawkmoth"] = IS_Hawkmoth })
+return lowerkeys({
+	["IS_Hawkmoth"] = IS_Hawkmoth,
+})

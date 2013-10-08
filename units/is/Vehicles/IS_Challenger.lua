@@ -1,84 +1,56 @@
-local IS_Challenger = {
+local IS_Challenger = Tank:New{
 	name              	= "Challenger",
 	description         = "Heavy Strike Tank",
 	objectName        	= "IS_Challenger.s3o",
-	script				= "Vehicle.lua",
 	corpse				= "IS_Challenger_X",
-	explodeAs          	= "mechexplode",
-	category 			= "tank ground notbeacon",
-	noChaseCategory		= "beacon air",
-	sightDistance       = 800,
-	radarDistance      	= 1500,
-		activateWhenBuilt   = true,
-		onoffable           = true,
 	maxDamage           = 22400,
 	mass                = 9000,
-	footprintX			= 3,
-	footprintZ 			= 3,
-	collisionVolumeType = "box",
-	collisionVolumeScales = "33 22 45",
-	collisionVolumeOffsets = "0 5 0",
-	collisionVolumeTest = 1,
-	leaveTracks			= 1,
-	trackOffset			= 10,--no idea what this does
-	trackStrength		= 9,--how visible the tracks are
-	trackStretch		= 1,-- how much the tracks stretch, the higher the number the more "compact" they become
-	trackType			= "Thick",--graphics file to use for the track decal, from \bitmaps\tracks\ folder
 	trackWidth			= 32,--width to render the decal
 	buildCostEnergy     = 70,
 	buildCostMetal      = 23850,
-	buildTime           = 0,
-	canMove				= true,
-		movementClass   = "TANK",
-		maxVelocity		= 1.8, --54kph/30
-		maxReverseVelocity= 1.3,
-		acceleration    = 0.6,
-		brakeRate       = 0.1,
-		turnRate 		= 425,
+	maxVelocity		= 1.8, --54kph/30
+	maxReverseVelocity= 1.3,
+	acceleration    = 0.6,
+	brakeRate       = 0.1,
+	turnRate 		= 425,
 	
-	canAttack 			= true,
-		--Makes unit use weapon from /weapons folder
-		weapons 		= {	
-			[1] = {
-				name	= "Gauss",
-				OnlyTargetCategory = "notbeacon",
-			},
-			[2] = {
-				name	= "LBX10",
-				OnlyTargetCategory = "notbeacon",
-				SlaveTo = 1,
-			},
-			[3] = {
-				name	= "LRM10",
-				OnlyTargetCategory = "notbeacon",
-				SlaveTo = 1,
-			},
-			[4] = {
-				name	= "MPL",
-				OnlyTargetCategory = "notbeacon",
-				SlaveTo = 1,
-			},
-			[5] = {
-				name	= "MPL",
-				OnlyTargetCategory = "notbeacon",
-				SlaveTo = 1,
-			},
-			[6] = {
-				name	= "AMS",
-			},
+	weapons	= {	
+		[1] = {
+			name	= "Gauss",
+			OnlyTargetCategory = "notbeacon",
 		},
-	--Gets CEG effects from /gamedata/explosions folder
+		[2] = {
+			name	= "LBX10",
+			OnlyTargetCategory = "notbeacon",
+		},
+		[3] = {
+			name	= "LRM10",
+			OnlyTargetCategory = "notbeacon",
+		},
+		[4] = {
+			name	= "MPL",
+			OnlyTargetCategory = "notbeacon",
+		},
+		[5] = {
+			name	= "MPL",
+			OnlyTargetCategory = "notbeacon",
+		},
+		[6] = {
+			name	= "AMS",
+		},
+	},
+
 	customparams = {
-		hasturnbutton	= "1",
 		helptext		= "Armament: 1 x Gauss Rifle, 1 x LBX/10, 1 x LRM-10, 2 x Medium Pulse Laser - Armor: 14 tons",
-		heatlimit		= "20",
-		unittype		= "vehicle",
-		turretturnspeed = "75",
-		elevationspeed  = "200",
-		wheelspeed      = "200",
-		barrelrecoildist = "{[1] = 5, [2] = 5}",
+		heatlimit		= 20,
+		turretturnspeed = 75,
+		elevationspeed  = 200,
+		wheelspeed      = 200,
+		barrelrecoildist = {[1] = 5, [2] = 5},
 		maxammo 		= {lrm = 180, ac10 = 30, gauss = 30},
 	},
 }
 
-return lowerkeys({ ["IS_Challenger"] = IS_Challenger })
+return lowerkeys({
+	["IS_Challenger"] = IS_Challenger,
+})

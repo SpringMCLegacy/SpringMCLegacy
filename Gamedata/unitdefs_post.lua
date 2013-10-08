@@ -115,17 +115,24 @@ for name, ud in pairs(UnitDefs) do
 		ud.airsightdistance = 2000
 		ud.seismicsignature = 0
 	end
-	
-	-- Give all mechs 179d torso twist
+	-- track strength should be 1/1000th of mass
+	if ud.leavetracks then
+		ud.trackstrength = ud.mass / 1000
+	end
 	local weapons = ud.weapons
-	if weapons and ud.customparams.unittype == "mech" then
+	if weapons then
 		for i, weapon in pairs(weapons) do
 			if weapon.name:lower() == "ams" then
 				weapon.maxangledif = 360
 			else
-				weapon.maxangledif = 179
+				if ud.customparams.unittype == "mech" then
+					-- Give all mechs 179d torso twist
+					weapon.maxangledif = 179
+				end
 				if i ~= 1 then
-					weapon.slaveto = 1
+					if not weapon.slaveto then -- don't overwrite unitdef [sniper slaves 3 to 2]
+						weapon.slaveto = 1
+					end
 				end
 			end
 		end
