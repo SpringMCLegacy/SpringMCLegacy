@@ -19,11 +19,9 @@ local NTK2Q = IS_Nighthawk:New{
 	weapons	= {	
 		[1] = {
 			name	= "ERLBL",
-			OnlyTargetCategory = "notbeacon",
 		},
 		[2] = {
 			name	= "LBL",
-			OnlyTargetCategory = "notbeacon",
 		},
 		[3] = {
 			name	= "MPL",

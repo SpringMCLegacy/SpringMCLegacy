@@ -22,22 +22,18 @@ local CL_Bashkir = Aero:New{
 	weapons	= {	
 		[1] = {
 			name	= "CERMBL",
-			OnlyTargetCategory = "notbeacon",
 			maxAngleDif = 35,
 		},
 		[2] = {
 			name	= "CERMBL",
-			OnlyTargetCategory = "notbeacon",
 			maxAngleDif = 35,
 		},
 		[3] = {
 			name	= "CERSBL",
-			OnlyTargetCategory = "notbeacon",
 			maxAngleDif = 35,
 		},
 		[4] = {
 			name	= "SSRM4",
-			OnlyTargetCategory = "notbeacon",
 			maxAngleDif = 70,
 		},
 	},

@@ -18,19 +18,15 @@ local CL_Morrigu = Tank:New{
 	weapons = {	
 		[1] = {
 			name	= "CERLBL",
-			OnlyTargetCategory = "notbeacon",
 		},
 		[2] = {
 			name	= "CERLBL",
-			OnlyTargetCategory = "notbeacon",
 		},
 		[3] = {
 			name	= "LRM15",
-			OnlyTargetCategory = "notbeacon",
 		},
 		[4] = {
 			name	= "LRM15",
-			OnlyTargetCategory = "notbeacon",
 		},
 	},
 	

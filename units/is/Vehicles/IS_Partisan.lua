@@ -17,22 +17,18 @@ local IS_Partisan = Tank:New{
 	weapons	= {	
 		[1] = {
 			name	= "AC5_AA",
-			OnlyTargetCategory = "notbeacon",
 			badTargetCategory = "ground",
 		},
 		[2] = {
 			name	= "AC5_AA",
-			OnlyTargetCategory = "notbeacon",
 			badTargetCategory = "ground",
 		},
 		[3] = {
 			name	= "AC5_AA",
-			OnlyTargetCategory = "notbeacon",
 			badTargetCategory = "ground",
 		},
 		[4] = {
 			name	= "AC5_AA",
-			OnlyTargetCategory = "notbeacon",
 			badTargetCategory = "ground",
 		},
 	},

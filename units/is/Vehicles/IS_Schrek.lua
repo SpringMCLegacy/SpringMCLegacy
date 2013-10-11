@@ -17,15 +17,12 @@ local IS_Schrek = Tank:New{
 	weapons	= {	
 		[1] = {
 			name	= "PPC",
-			OnlyTargetCategory = "notbeacon",
 		},
 		[2] = {
 			name	= "PPC",
-			OnlyTargetCategory = "notbeacon",
 		},
 		[3] = {
 			name	= "PPC",
-			OnlyTargetCategory = "notbeacon",
 		},
 	},
 	

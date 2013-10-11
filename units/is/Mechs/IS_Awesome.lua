@@ -18,7 +18,6 @@ local AWS8Q = IS_Awesome:New{
 	weapons	= {	
 		[1] = {
 			name	= "PPC",
-			OnlyTargetCategory = "notbeacon",
 		},
 		[2] = {
 			name	= "PPC",
@@ -47,7 +46,7 @@ local AWS9M = IS_Awesome:New{
 	weapons	= {	
 		[1] = {
 			name	= "ERPPC",
-			OnlyTargetCategory = "notbeacon",
+			OnlyTargetCategory = "ground",
 		},
 		[2] = {
 			name	= "ERPPC",
@@ -67,7 +66,6 @@ local AWS9M = IS_Awesome:New{
 		},
 		[6] = {
 			name	= "SSRM4",
-			OnlyTargetCategory = "notbeacon",
 		},
 	},
 		

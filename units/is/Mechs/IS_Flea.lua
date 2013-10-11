@@ -21,11 +21,9 @@ local FLE17 = IS_Flea:New{
 	weapons	= {	
 		[1] = {
 			name	= "MPL",
-			OnlyTargetCategory = "notbeacon",
 		},
 		[2] = {
 			name	= "MPL",
-			OnlyTargetCategory = "notbeacon",
 		},
 		[3] = {
 			name	= "SBL",

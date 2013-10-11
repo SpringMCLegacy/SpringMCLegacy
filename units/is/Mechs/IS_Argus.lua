@@ -19,11 +19,9 @@ local AGS4D = IS_Argus:New{
 	weapons = {	
 		[1] = {
 			name	= "RAC5",
-			OnlyTargetCategory = "notbeacon",
 		},
 		[2] = {
 			name	= "MG",
-			OnlyTargetCategory = "notbeacon",
 		},
 		[3] = {
 			name	= "MBL",
@@ -35,7 +33,6 @@ local AGS4D = IS_Argus:New{
 		},
 		[5] = {
 			name	= "LRM10",
-			OnlyTargetCategory = "notbeacon",
 		},
 	},
 		

@@ -19,11 +19,9 @@ local DVS2 = IS_Devastator:New{
 	weapons = {	
 		[1] = {
 			name	= "Gauss",
-			OnlyTargetCategory = "notbeacon",
 		},
 		[2] = {
 			name	= "Gauss",
-			OnlyTargetCategory = "notbeacon",
 		},
 		[3] = {
 			name	= "PPC",

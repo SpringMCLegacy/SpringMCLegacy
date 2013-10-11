@@ -16,11 +16,9 @@ local IS_Harasser = Hover:New{
 	weapons 		= {	
 		[1] = {
 			name	= "SRM6",
-			OnlyTargetCategory = "notbeacon",
 		},
 		[2] = {
 			name	= "SRM6",
-			OnlyTargetCategory = "notbeacon",
 		},
 	},
 	

@@ -26,11 +26,9 @@ local RVN3L = IS_Raven:New{
 		},
 		[2] = {
 			name	= "MBL",
-			OnlyTargetCategory = "notbeacon",
 		},
 		[3] = {
 			name	= "MBL",
-			OnlyTargetCategory = "notbeacon",
 		},
 		[4] = {
 			name	= "SRM6",
@@ -59,11 +57,9 @@ local RVN4L = IS_Raven:New{
 		},
 		[2] = {
 			name	= "ERMBL",
-			OnlyTargetCategory = "notbeacon",
 		},
 		[3] = {
 			name	= "ERMBL",
-			OnlyTargetCategory = "notbeacon",
 		},
 		[4] = {
 			name	= "SRM6",

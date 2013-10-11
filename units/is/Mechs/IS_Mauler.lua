@@ -18,11 +18,9 @@ local MAL1R = IS_Mauler:New{
 	weapons	= {	
 		[1] = {
 			name	= "ERLBL",
-			OnlyTargetCategory = "notbeacon",
 		},
 		[2] = {
 			name	= "ERLBL",
-			OnlyTargetCategory = "notbeacon",
 		},
 		[3] = {
 			name	= "AC2",
@@ -42,11 +40,9 @@ local MAL1R = IS_Mauler:New{
 		},
 		[7] = {
 			name	= "LRM15",
-			OnlyTargetCategory = "notbeacon",
 		},
 		[8] = {
 			name	= "LRM15",
-			OnlyTargetCategory = "notbeacon",
 		},
 	},
 		
@@ -64,11 +60,9 @@ local MAL3R = IS_Mauler:New{
 	weapons	= {	
 		[1] = {
 			name	= "LBX10",
-			OnlyTargetCategory = "notbeacon",
 		},
 		[2] = {
 			name	= "LBX10",
-			OnlyTargetCategory = "notbeacon",
 		},
 		[3] = {
 			name	= "SBL",
@@ -76,11 +70,9 @@ local MAL3R = IS_Mauler:New{
 		},
 		[4] = {
 			name	= "LRM15",
-			OnlyTargetCategory = "notbeacon",
 		},
 		[5] = {
 			name	= "LRM15",
-			OnlyTargetCategory = "notbeacon",
 		},
 	},
 		

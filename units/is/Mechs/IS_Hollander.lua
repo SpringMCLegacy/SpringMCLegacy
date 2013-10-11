@@ -40,11 +40,9 @@ local BZKG1 = IS_Hollander:New{
 		},
 		[2] = {
 			name	= "MBL",
-			OnlyTargetCategory = "notbeacon",
 		},
 		[3] = {
 			name	= "MBL",
-			OnlyTargetCategory = "notbeacon",
 		},
 	},
 	

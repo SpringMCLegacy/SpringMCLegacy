@@ -22,22 +22,18 @@ local IS_Sparrowhawk = Aero:New{
 	weapons = {	
 		[1] = {
 			name	= "MBL",
-			OnlyTargetCategory = "notbeacon",
 			maxAngleDif = 35,
 		},
 		[2] = {
 			name	= "MBL",
-			OnlyTargetCategory = "notbeacon",
 			maxAngleDif = 35,
 		},
 		[3] = {
 			name	= "ERSBL",
-			OnlyTargetCategory = "notbeacon",
 			maxAngleDif = 35,
 		},
 		[4] = {
 			name	= "ERSBL",
-			OnlyTargetCategory = "notbeacon",
 			maxAngleDif = 35,
 		},
 	},

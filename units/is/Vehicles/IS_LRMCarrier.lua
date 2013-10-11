@@ -17,11 +17,9 @@ local IS_LRMCarrier = LightTank:New{
 	weapons	= {	
 		[1] = {
 			name	= "LRM20",
-			OnlyTargetCategory = "notbeacon",
 		},
 		[2] = {
 			name	= "LRM20",
-			OnlyTargetCategory = "notbeacon",
 		},
 	},
 	

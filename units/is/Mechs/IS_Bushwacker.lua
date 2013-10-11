@@ -19,7 +19,6 @@ local BSWS2 = IS_Bushwacker:New{
 	weapons = {	
 		[1] = {
 			name	= "LBX10",
-			OnlyTargetCategory = "notbeacon",
 		},
 		[2] = {
 			name	= "ERLBL",

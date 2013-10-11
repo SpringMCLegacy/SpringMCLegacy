@@ -24,11 +24,9 @@ local Oro_HAG = CL_Oro:New{
 	weapons 		= {	
 		[1] = {
 			name	= "HAG30",
-			OnlyTargetCategory = "notbeacon",
 		},
 		[2] = {
 			name	= "CLPL",
-			OnlyTargetCategory = "notbeacon",
 		},
 	},
 	customparams = {
@@ -47,15 +45,12 @@ local Oro_LBX = CL_Oro:New{
 	weapons = {	
 		[1] = {
 			name	= "LBX20",
-			OnlyTargetCategory = "notbeacon",
 		},
 		[2] = {
 			name	= "CLPL",
-			OnlyTargetCategory = "notbeacon",
 		},
 		[3] = {
 			name	= "CERMBL",
-			OnlyTargetCategory = "notbeacon",
 		},
 	},
 	customparams = {
