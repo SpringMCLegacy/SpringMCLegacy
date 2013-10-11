@@ -135,6 +135,9 @@ for name, ud in pairs(UnitDefs) do
 					end
 				end
 			end
+			for k,v in pairs(weapon) do Spring.Echo(k, v) end
+			weapon.onlytargetcategory = (weapon.onlytargetcategory or "") .. " notbeacon"
+			Spring.Echo("TARGET CAT: ", weapon.onlytargetcategory)
 		end
 	end
 	

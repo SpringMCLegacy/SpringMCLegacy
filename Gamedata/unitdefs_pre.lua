@@ -179,8 +179,8 @@ local Tower = Unit:New{
 ---------------------------------------------------------------------------------------------
 -- This is where the magic happens
 local sharedEnv = {
-	--Unit = Unit,
-	--Mech = Mech,
+	Unit = Unit,
+	Mech = Mech,
 	Light = Light,
 	Medium = Medium,
 	Heavy = Heavy,
