@@ -36,6 +36,8 @@ end
 ---------------------------------------------------------------------------------------------
 -- Base Classes
 ---------------------------------------------------------------------------------------------
+
+-- Mechs ----
 local Mech = Unit:New{
 	upright				= true,
 	canMove				= true,
@@ -80,6 +82,7 @@ local Assault = Mech:New{
 	movementClass		= "LARGEMECH",
 }
 
+-- Vehicles ----
 local Vehicle = Unit:New{
 	iconType			= "vehicle",
 	script				= "Vehicle.lua",
@@ -118,6 +121,7 @@ local Hover = LightTank:New{
 	leaveTracks		= false,
 }
 
+-- Aircraft ----
 local Aircraft = Vehicle:New{
 	footprintX			= 2,
 	footprintZ 			= 2,
@@ -151,6 +155,27 @@ local VTOL = Aircraft:New{
     },
 }
 
+-- Towers ----
+local Tower = Unit:New{
+	name              	= "Weapon Emplacement", -- overwritten by ecm & bap
+	script				= "Turret.lua",
+	category 			= "structure notbeacon ground",
+	activateWhenBuilt   = true, -- false? activate when deployed?
+	maxDamage           = 12000,
+	mass                = 5000,
+	footprintX			= 3,
+	footprintZ 			= 3,
+	collisionVolumeType = "box",
+	collisionVolumeScales = "25 25 25",
+	canMove				= false,
+	maxVelocity			= 0,
+	idleAutoHeal		= 0,
+
+	customparams = {
+		towertype = "turret", -- overwritten by ecm & bap
+	}
+}
+
 ---------------------------------------------------------------------------------------------
 -- This is where the magic happens
 local sharedEnv = {
@@ -165,6 +190,7 @@ local sharedEnv = {
 	Hover = Hover,
 	VTOL = VTOL,
 	Aero = Aero,
+	Tower = Tower,
 	printTable = printTable,
 }
 local sharedEnvMT = nil
