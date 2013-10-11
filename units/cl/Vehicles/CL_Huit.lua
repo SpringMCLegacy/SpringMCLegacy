@@ -18,19 +18,15 @@ local CL_Huit = LightTank:New{
 	weapons = {	
 		[1] = {
 			name	= "ArrowIV",
-			OnlyTargetCategory = "notbeacon",
 		},
 		[2] = {
 			name	= "ArrowIV",
-			OnlyTargetCategory = "notbeacon",
 		},
 		[3] = {
 			name	= "CMPL",
-			OnlyTargetCategory = "notbeacon",
 		},
 		[4] = {
 			name	= "CMPL",
-			OnlyTargetCategory = "notbeacon",
 		},
 	},
 	customparams = {

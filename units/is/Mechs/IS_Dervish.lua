@@ -18,27 +18,21 @@ local DV6M = IS_Dervish:New{
 	weapons = {	
 		[1] = {
 			name	= "LRM10",
-			OnlyTargetCategory = "notbeacon",
 		},
 		[2] = {
 			name	= "LRM10",
-			OnlyTargetCategory = "notbeacon",
 		},
 		[3] = {
 			name	= "MBL",
-			OnlyTargetCategory = "notbeacon",
 		},
 		[4] = {
 			name	= "MBL",
-			OnlyTargetCategory = "notbeacon",
 		},
 		[5] = {
 			name	= "SRM2",
-			OnlyTargetCategory = "notbeacon",
 		},
 		[6] = {
 			name	= "SRM2",
-			OnlyTargetCategory = "notbeacon",
 		},
 	},
 		
@@ -56,27 +50,21 @@ local DV8D = IS_Dervish:New{
 	weapons = {	
 		[1] = {
 			name	= "LRM15",
-			OnlyTargetCategory = "notbeacon",
 		},
 		[2] = {
 			name	= "LRM15",
-			OnlyTargetCategory = "notbeacon",
 		},
 		[3] = {
 			name	= "ERMBL",
-			OnlyTargetCategory = "notbeacon",
 		},
 		[4] = {
 			name	= "ERMBL",
-			OnlyTargetCategory = "notbeacon",
 		},
 		[5] = {
 			name	= "ERMBL",
-			OnlyTargetCategory = "notbeacon",
 		},
 		[6] = {
 			name	= "ERMBL",
-			OnlyTargetCategory = "notbeacon",
 		},
 	},
 		

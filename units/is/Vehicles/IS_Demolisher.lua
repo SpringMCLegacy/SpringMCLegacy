@@ -17,11 +17,9 @@ local IS_Demolisher = Tank:New{
 	weapons = {	
 		[1] = {
 			name	= "AC20",
-			OnlyTargetCategory = "notbeacon",
 		},
 		[2] = {
 			name	= "AC20",
-			OnlyTargetCategory = "notbeacon",
 		},
 	},
 

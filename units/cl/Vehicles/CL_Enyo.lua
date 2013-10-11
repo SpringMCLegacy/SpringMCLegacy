@@ -17,15 +17,12 @@ local CL_Enyo = LightTank:New{
 	weapons 		= {	
 		[1] = {
 			name	= "CLPL",
-			OnlyTargetCategory = "notbeacon",
 		},
 		[2] = {
 			name	= "SSRM6",
-			OnlyTargetCategory = "notbeacon",
 		},
 		[3] = {
 			name	= "SSRM6",
-			OnlyTargetCategory = "notbeacon",
 		},
 	},
 	customparams = {

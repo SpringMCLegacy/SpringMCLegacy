@@ -18,41 +18,33 @@ local CL_Mars = Tank:New{
 	weapons = {	
 		[1] = {
 			name	= "Gauss",
-			OnlyTargetCategory = "notbeacon",
 		},
 		[2] = {
 			name	= "CERLBL",
-			OnlyTargetCategory = "notbeacon",
 		},
 		[3] = {
 			name	= "LBX10",
 			maxAngleDif = 35,
-			OnlyTargetCategory = "notbeacon",
 		},
 		[4] = {
 			name	= "LRM15",
 			maxAngleDif = 180,
-			OnlyTargetCategory = "notbeacon",
 		},
 		[5] = {
 			name	= "LRM15",
 			maxAngleDif = 180,
-			OnlyTargetCategory = "notbeacon",
 			SlaveTo = 4,
 		},
 		[6] = {
 			name	= "LRM15",
 			maxAngleDif = 180,
-			OnlyTargetCategory = "notbeacon",
 			SlaveTo = 4,
 		},
 		[7] = {
 			name	= "MG",
-			OnlyTargetCategory = "notbeacon",
 		},
 		[8] = {
 			name	= "MG",
-			OnlyTargetCategory = "notbeacon",
 		},
 	},
 	customparams = {

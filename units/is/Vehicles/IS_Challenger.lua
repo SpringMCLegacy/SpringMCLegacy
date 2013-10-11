@@ -17,23 +17,18 @@ local IS_Challenger = Tank:New{
 	weapons	= {	
 		[1] = {
 			name	= "Gauss",
-			OnlyTargetCategory = "notbeacon",
 		},
 		[2] = {
 			name	= "LBX10",
-			OnlyTargetCategory = "notbeacon",
 		},
 		[3] = {
 			name	= "LRM10",
-			OnlyTargetCategory = "notbeacon",
 		},
 		[4] = {
 			name	= "MPL",
-			OnlyTargetCategory = "notbeacon",
 		},
 		[5] = {
 			name	= "MPL",
-			OnlyTargetCategory = "notbeacon",
 		},
 		[6] = {
 			name	= "AMS",

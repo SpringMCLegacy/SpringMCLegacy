@@ -18,11 +18,9 @@ local WHM6R = IS_Warhammer:New{
 	weapons = {	
 		[1] = {
 			name	= "PPC",
-			OnlyTargetCategory = "notbeacon",
 		},
 		[2] = {
 			name	= "PPC",
-			OnlyTargetCategory = "notbeacon",
 		},
 		[3] = {
 			name	= "MBL",
@@ -68,11 +66,9 @@ local WHM7A = IS_Warhammer:New{
 	weapons = {	
 		[1] = {
 			name	= "ERPPC",
-			OnlyTargetCategory = "notbeacon",
 		},
 		[2] = {
 			name	= "ERPPC",
-			OnlyTargetCategory = "notbeacon",
 		},
 		[3] = {
 			name	= "ERMBL",

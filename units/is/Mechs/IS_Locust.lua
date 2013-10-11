@@ -23,19 +23,15 @@ local LCT3M = IS_Locust:New{
 		},
 		[2] = {
 			name	= "SBL",
-			OnlyTargetCategory = "notbeacon",
 		},
 		[3] = {
 			name	= "SBL",
-			OnlyTargetCategory = "notbeacon",
 		},
 		[4] = {
 			name	= "SBL",
-			OnlyTargetCategory = "notbeacon",
 		},
 		[5] = {
 			name	= "SBL",
-			OnlyTargetCategory = "notbeacon",
 		},
 		[6] = {
 			name	= "AMS",

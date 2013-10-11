@@ -18,16 +18,13 @@ local IS_Sniper = LightTank:New{
 		[1] = {
 			name	= "Sniper",
 			maxAngleDif = 15,
-			OnlyTargetCategory = "notbeacon",
 		},
 		[2] = {
 			name	= "ERSBL",
-			OnlyTargetCategory = "notbeacon",
 		},
 		[3] = {
 			name	= "ERSBL",
 			SlaveTo = 2,
-			OnlyTargetCategory = "notbeacon",
 		},
 	},
 	

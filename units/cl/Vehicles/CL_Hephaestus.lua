@@ -19,15 +19,12 @@ local CL_Hephaestus = Hover:New{
 	weapons 		= {	
 		[1] = {
 			name	= "CERMBL",
-			OnlyTargetCategory = "notbeacon",
 		},
 		[2] = {
 			name	= "CERMBL",
-			OnlyTargetCategory = "notbeacon",
 		},
 		[3] = {
 			name	= "NARC",
-			OnlyTargetCategory = "notbeacon",
 		},
 	},
 	customparams = {

@@ -17,15 +17,12 @@ local CL_Ares = LightTank:New{
 	weapons = {	
 		[1] = {
 			name	= "CERLBL",
-			OnlyTargetCategory = "notbeacon",
 		},
 		[2] = {
 			name	= "ATM9",
-			OnlyTargetCategory = "notbeacon",
 		},
 		[3] = {
 			name	= "ATM9",
-			OnlyTargetCategory = "notbeacon",
 		},
 	},
 	customparams = {

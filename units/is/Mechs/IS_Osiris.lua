@@ -20,11 +20,9 @@ local OSR3D = IS_Osiris:New{
 	weapons = {	
 		[1] = {
 			name	= "ERMBL",
-			OnlyTargetCategory = "notbeacon",
 		},
 		[2] = {
 			name	= "ERMBL",
-			OnlyTargetCategory = "notbeacon",
 		},
 		[3] = {
 			name	= "ERMBL",
@@ -69,19 +67,15 @@ local OSR4D = IS_Osiris:New{
 		},
 		[3] = {
 			name	= "ERMBL",
-			OnlyTargetCategory = "notbeacon",
 		},
 		[4] = {
 			name	= "ERMBL",
-			OnlyTargetCategory = "notbeacon",
 		},
 		[5] = {
 			name	= "ERMBL",
-			OnlyTargetCategory = "notbeacon",
 		},
 		[6] = {
 			name	= "ERMBL",
-			OnlyTargetCategory = "notbeacon",
 		},
 	},
 		

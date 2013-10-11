@@ -20,15 +20,12 @@ local CMA1S = IS_Chimera:New{
 	weapons	= {	
 		[1] = {
 			name	= "ERLBL",
-			OnlyTargetCategory = "notbeacon",
 		},
 		[2] = {
 			name	= "ERMBL",
-			OnlyTargetCategory = "notbeacon",
 		},
 		[3] = {
 			name	= "MG",
-			OnlyTargetCategory = "notbeacon",
 		},
 		[4] = {
 			name	= "MRM20",

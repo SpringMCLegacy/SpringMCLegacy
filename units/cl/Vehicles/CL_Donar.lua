@@ -16,17 +16,14 @@ local CL_Donar = VTOL:New{
 	weapons	= {	
 		[1] = {
 			name	= "CERLBL",
-			OnlyTargetCategory = "notbeacon",
 			maxAngleDif = 90,
 		},
 		[2] = {
 			name	= "SSRM2",
-			OnlyTargetCategory = "notbeacon",
 			maxAngleDif = 90,
 		},
 		[3] = {
 			name	= "SSRM2",
-			OnlyTargetCategory = "notbeacon",
 			maxAngleDif = 90,
 		},
 	},

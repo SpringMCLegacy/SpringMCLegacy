@@ -19,15 +19,12 @@ local AV10 = IS_Avatar:New{
 	weapons	= {	
 		[1] = {
 			name	= "LBX10",
-			OnlyTargetCategory = "notbeacon",
 		},
 		[2] = {
 			name	= "MPL",
-			OnlyTargetCategory = "notbeacon",
 		},
 		[3] = {
 			name	= "MPL",
-			OnlyTargetCategory = "notbeacon",
 		},
 		[4] = {
 			name	= "MBL",
@@ -39,11 +36,9 @@ local AV10 = IS_Avatar:New{
 		},
 		[6] = {
 			name	= "LRM10",
-			OnlyTargetCategory = "notbeacon",
 		},
 		[7] = {
 			name	= "LRM10",
-			OnlyTargetCategory = "notbeacon",
 		},
 	},
 
@@ -62,11 +57,9 @@ local AV10A = IS_Avatar:New{
 	weapons 		= {	
 		[1] = {
 			name	= "AC20",
-			OnlyTargetCategory = "notbeacon",
 		},
 		[2] = {
 			name	= "ERLBL",
-			OnlyTargetCategory = "notbeacon",
 		},
 		[3] = {
 			name	= "MBL",

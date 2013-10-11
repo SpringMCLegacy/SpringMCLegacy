@@ -17,19 +17,15 @@ local IS_Goblin = LightTank:New{
 	weapons	= {	
 		[1] = {
 			name	= "LPL",
-			OnlyTargetCategory = "notbeacon",
 		},
 		[2] = {
 			name	= "SRM6",
-			OnlyTargetCategory = "notbeacon",
 		},
 		[3] = {
 			name	= "MG",
-			OnlyTargetCategory = "notbeacon",
 		},
 		[4] = {
 			name	= "MG",
-			OnlyTargetCategory = "notbeacon",
 		},
 		[5] = {
 			name	= "AMS",

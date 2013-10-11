@@ -25,15 +25,12 @@ local Scorpion_AC5 = IS_Scorpion:New{
 	weapons	= {	
 		[1] = {
 			name	= "AC5",
-			OnlyTargetCategory = "notbeacon",
 		},
 		[2] = {
 			name	= "MG",
-			OnlyTargetCategory = "notbeacon",
 		},
 		[3] = {
 			name	= "MG",
-			OnlyTargetCategory = "notbeacon",
 		},
 	},
 		
@@ -51,15 +48,12 @@ local Scorpion_LGauss = {
 	weapons	= {	
 		[1] = {
 			name	= "LightGauss",
-			OnlyTargetCategory = "notbeacon",
 		},
 		[2] = {
 			name	= "MG",
-			OnlyTargetCategory = "notbeacon",
 		},
 		[3] = {
 			name	= "MG",
-			OnlyTargetCategory = "notbeacon",
 		},
 	},
 		

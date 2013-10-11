@@ -22,11 +22,9 @@ local HBK4G = IS_Hunchback:New{
 		},
 		[2] = {
 			name	= "MBL",
-			OnlyTargetCategory = "notbeacon",
 		},
 		[3] = {
 			name	= "MBL",
-			OnlyTargetCategory = "notbeacon",
 		},
 		[4] = {
 			name	= "SBL",
@@ -72,11 +70,9 @@ local HBK4P = IS_Hunchback:New{
 		},
 		[7] = {
 			name	= "MBL",
-			OnlyTargetCategory = "notbeacon",
 		},
 		[8] = {
 			name	= "MBL",
-			OnlyTargetCategory = "notbeacon",
 		},
 	},
 		

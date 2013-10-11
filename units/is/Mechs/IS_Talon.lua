@@ -19,15 +19,12 @@ local TLN5W = IS_Talon:New{
 	weapons = {	
 		[1] = {
 			name	= "ERPPC",
-			OnlyTargetCategory = "notbeacon",
 		},
 		[2] = {
 			name	= "MBL",
-			OnlyTargetCategory = "notbeacon",
 		},
 		[3] = {
 			name	= "MBL",
-			OnlyTargetCategory = "notbeacon",
 		},
 	},
 		

@@ -19,11 +19,9 @@ local CPLTC1 = IS_Catapult:New{
 	weapons	= {	
 		[1] = {
 			name	= "LRM15",
-			OnlyTargetCategory = "ground",
 		},
 		[2] = {
 			name	= "LRM15",
-			OnlyTargetCategory = "ground",
 		},
 		[3] = {
 			name	= "MBL",
@@ -57,11 +55,9 @@ local CPLTC4 = IS_Catapult:New{
 	weapons 		= {	
 		[1] = {
 			name	= "LRM20",
-			OnlyTargetCategory = "notbeacon",
 		},
 		[2] = {
 			name	= "LRM20",
-			OnlyTargetCategory = "notbeacon",
 		},
 		[3] = {
 			name	= "ERSBL",
