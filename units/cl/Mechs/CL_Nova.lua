@@ -1,140 +1,38 @@
-local CL_Nova = {
-	name              	= "Nova (Black Hawk)",
-	description         = "Medium Strike Mech",
-	objectName        	= "CL_Nova.s3o",
-	iconType			= "mediummech",
-	script				= "Mech.lua",
+local CL_Nova = Medium:New{
 	corpse				= "CL_Nova_X",
-	explodeAs          	= "mechexplode",
-	category 			= "mech ground notbeacon",
-	noChaseCategory		= "beacon air",
-	sightDistance       = 800,
-	radarDistance      	= 1500,
-		activateWhenBuilt   = true,
-		onoffable           = true,
 	maxDamage           = 16000,
 	mass                = 5000,
-	footprintX			= 2,
-	footprintZ 			= 2,
-	collisionVolumeType = "box",
-	collisionVolumeScales = "30 50 25",
-	collisionVolumeOffsets = "0 0 0",
-	collisionVolumeTest = 1,
---	leaveTracks			= 1,
---	trackOffset			= 10,--no idea what this does
---	trackStrength		= 2.5,--how visible the tracks are
---	trackStretch		= 1,-- how much the tracks stretch, the higher the number the more "compact" they become
---	trackType			= "Thick",--graphics file to use for the track decal, from \bitmaps\tracks\ folder
---	trackWidth			= 20,--width to render the decal
 	buildCostEnergy     = 50,
 	buildCostMetal      = 29280,
-	buildTime           = 0,
-	upright				= true,
-	canMove				= true,
-		movementClass   = "SMALLMECH",
-		maxVelocity		= 4.3, --86kph/20
-		maxReverseVelocity= 2.15,
-		acceleration    = 1.8,
-		brakeRate       = 0.1,
-		turnRate 		= 850,
-		smoothAnim		= 1,
+	maxVelocity		= 4.3, --86kph/20
+	maxReverseVelocity= 2.15,
+	acceleration    = 1.8,
+	brakeRate       = 0.1,
+	turnRate 		= 850,
 	
-	canAttack 			= true,
-		--Makes unit use weapon from /weapons folder
-		weapons 		= {	
-			[1] = {
-				name	= "CERMBL",
-				mainDir = "0 0 1",
-				maxAngleDif = 200,
-				OnlyTargetCategory = "notbeacon",
-			},
-			[2] = {
-				name	= "CERMBL",
-				mainDir = "0 0 1",
-				maxAngleDif = 200,
-				OnlyTargetCategory = "notbeacon",
-				SlaveTo = 1,
-			},
-			[3] = {
-				name	= "CERMBL",
-				mainDir = "0 0 1",
-				maxAngleDif = 200,
-				OnlyTargetCategory = "notbeacon",
-				SlaveTo = 1,
-			},
-			[4] = {
-				name	= "CERMBL",
-				mainDir = "0 0 1",
-				maxAngleDif = 200,
-				OnlyTargetCategory = "notbeacon",
-				SlaveTo = 1,
-			},
-			[5] = {
-				name	= "CERMBL",
-				mainDir = "0 0 1",
-				maxAngleDif = 200,
-				OnlyTargetCategory = "notbeacon",
-				SlaveTo = 1,
-			},
-			[6] = {
-				name	= "CERMBL",
-				mainDir = "0 0 1",
-				maxAngleDif = 200,
-				OnlyTargetCategory = "notbeacon",
-				SlaveTo = 1,
-			},
-			[7] = {
-				name	= "CERMBL",
-				mainDir = "0 0 1",
-				maxAngleDif = 200,
-				OnlyTargetCategory = "notbeacon",
-				SlaveTo = 1,
-			},
-			[8] = {
-				name	= "CERMBL",
-				mainDir = "0 0 1",
-				maxAngleDif = 200,
-				OnlyTargetCategory = "notbeacon",
-				SlaveTo = 1,
-			},
-			[9] = {
-				name	= "CERMBL",
-				mainDir = "0 0 1",
-				maxAngleDif = 200,
-				OnlyTargetCategory = "notbeacon",
-				SlaveTo = 1,
-			},
-			[10] = {
-				name	= "CERMBL",
-				mainDir = "0 0 1",
-				maxAngleDif = 200,
-				OnlyTargetCategory = "notbeacon",
-				SlaveTo = 1,
-			},
-			[11] = {
-				name	= "CERMBL",
-				mainDir = "0 0 1",
-				maxAngleDif = 200,
-				OnlyTargetCategory = "notbeacon",
-				SlaveTo = 1,
-			},
-			[12] = {
-				name	= "CERMBL",
-				mainDir = "0 0 1",
-				maxAngleDif = 200,
-				OnlyTargetCategory = "notbeacon",
-				SlaveTo = 1,
-			},
-		},
-
-    customparams = {
-		hasturnbutton	= "1",
-		helptext		= "Armament: 12 x ER Medium Beam Laser - Armor: 10 tons",
-		heatlimit		= "36",
-		torsoturnspeed	= "150",
+	customparams = {
+		heatlimit		= 36,
+		torsoturnspeed	= 150,
 		canjump			= "1",
-		unittype		= "mech",
     },
 }
 
-return lowerkeys({ ["CL_Nova"] = CL_Nova })
+local Prime = CL_Nova:New{
+	name              	= "Nova (Black Hawk) Prime",
+	description         = "Medium Strike Mech",
+	objectName        	= "CL_Nova.s3o",
+	weapons = {	
+		-- put these in via a loop
+	},
+
+	customparams = {
+		helptext		= "Armament: 12 x ER Medium Beam Laser - Armor: 10 tons",
+    },
+}
+for i = 1, 12 do -- yep that's 12 ERMBLs, count 'em!
+	Prime.weapons[i] = {name = "CERMBL"}
+end
+
+return lowerkeys({
+	["CL_Nova_Prime"] = Prime
+})

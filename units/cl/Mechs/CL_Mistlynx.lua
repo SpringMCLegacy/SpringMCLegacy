@@ -1,91 +1,52 @@
-local CL_Mistlynx = {
-	name              	= "Mist Lynx (Koshi)",
-	description         = "Light Missile Support Mech",
-	objectName        	= "CL_Mistlynx.s3o",
-	iconType			= "lightmech",
-	script				= "Mech.lua",
+local CL_Mistlynx = Light:New{
 	corpse				= "CL_Mistlynx_X",
-	explodeAs          	= "mechexplode",
-	category 			= "mech ground notbeacon",
-	noChaseCategory		= "beacon air",
 	sightDistance       = 1200,
 	radarDistance      	= 2000,
-		activateWhenBuilt   = true,
-		onoffable           = true,
 	maxDamage           = 6700,
 	mass                = 2000,
-	footprintX			= 2,
-	footprintZ 			= 2,
-	collisionVolumeType = "box",
-	collisionVolumeScales = "15 35 15",
-	collisionVolumeOffsets = "0 0 0",
-	collisionVolumeTest = 1,
---	leaveTracks			= 1,
---	trackOffset			= 10,--no idea what this does
---	trackStrength		= 2.5,--how visible the tracks are
---	trackStretch		= 1,-- how much the tracks stretch, the higher the number the more "compact" they become
---	trackType			= "Thick",--graphics file to use for the track decal, from \bitmaps\tracks\ folder
---	trackWidth			= 20,--width to render the decal
 	buildCostEnergy     = 20,
 	buildCostMetal      = 13650,
-	buildTime           = 0,
-	upright				= true,
-	canMove				= true,
-		movementClass   = "SMALLMECH",
-		maxVelocity		= 6.5, --130kph/30
-		maxReverseVelocity= 3.25,
-		acceleration    = 2.0,
-		brakeRate       = 0.1,
-		turnRate 		= 900,
-		smoothAnim		= 1,
+	maxVelocity		= 6.5, --130kph/30
+	maxReverseVelocity= 3.25,
+	acceleration    = 2.0,
+	brakeRate       = 0.1,
+	turnRate 		= 900,
 	
-	canAttack 			= true,
-		--Makes unit use weapon from /weapons folder
-		weapons 		= {	
-			[1] = {
-				name	= "LRM10",
-				mainDir = "0 0 1",
-				maxAngleDif = 270,
-				OnlyTargetCategory = "notbeacon",
-			},
-			[2] = {
-				name	= "NARC",
-				mainDir = "0 0 1",
-				maxAngleDif = 270,
-				OnlyTargetCategory = "notbeacon",
-				SlaveTo = 1,
-			},
-			[3] = {
-				name	= "MG",
-				mainDir = "0 0 1",
-				maxAngleDif = 270,
-				OnlyTargetCategory = "notbeacon",
-				SlaveTo = 1,
-			},
-			[4] = {
-				name	= "MG",
-				mainDir = "0 0 1",
-				maxAngleDif = 270,
-				OnlyTargetCategory = "notbeacon",
-				SlaveTo = 1,
-			},
-			[5] = {
-				name	= "SSRM4",
-				mainDir = "0 0 1",
-				maxAngleDif = 270,
-				OnlyTargetCategory = "notbeacon",
-				SlaveTo = 1,
-			},
-		},
-
-    customparams = {
-		hasturnbutton	= "1",
-		helptext		= "Armament: 1 x LRM-10, 1 x SSRM-4, 2 x MG - Armor: 3.5 tons Ferro-Fibrous",
-		heatlimit		= "20",
-		torsoturnspeed	= "200",
+	customparams = {
+		hasbap 			= true,
+		heatlimit		= 20,
+		torsoturnspeed	= 200,
 		canjump			= "1",
-		unittype		= "mech",
     },
 }
 
-return lowerkeys({ ["CL_Mistlynx"] = CL_Mistlynx })
+local Prime = CL_Mistlynx:New{
+	name              	= "Mist Lynx (Koshi) Prime",
+	description         = "Light Missile Support Mech",
+	objectName        	= "CL_Mistlynx.s3o",	
+	weapons = {	
+		[1] = {
+			name	= "LRM10",
+		},
+		[2] = {
+			name	= "NARC",
+		},
+		[3] = {
+			name	= "MG",
+		},
+		[4] = {
+			name	= "MG",
+		},
+		[5] = {
+			name	= "SSRM4",
+		},
+	},
+
+	customparams = {
+		helptext		= "Armament: 1 x LRM-10, 1 x SSRM-4, 2 x MG - Armor: 3.5 tons Ferro-Fibrous",
+    },
+}
+
+return lowerkeys({
+	["CL_Mistlynx_Prime"] = Prime,
+})

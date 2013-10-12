@@ -1,92 +1,52 @@
-local CL_Iceferret = {
-	name              	= "Ice Ferret (Fenris)",
-	description         = "Medium Brawler Mech",
-	objectName        	= "CL_Iceferret.s3o",
-	iconType			= "mediummech",
-	script				= "Mech.lua",
+local CL_Iceferret = Medium:New{
 	corpse				= "CL_Iceferret_X",
-	explodeAs          	= "mechexplode",
-	category 			= "mech ground notbeacon",
-	noChaseCategory		= "beacon air",
 	sightDistance       = 1200,
 	radarDistance      	= 2000,
-		activateWhenBuilt   = true,
-		onoffable           = true,
 	maxDamage           = 11400,
 	mass                = 4500,
-	footprintX			= 2,
-	footprintZ 			= 2,
-	collisionVolumeType = "box",
-	collisionVolumeScales = "30 50 25",
-	collisionVolumeOffsets = "0 0 0",
-	collisionVolumeTest = 1,
---	leaveTracks			= 1,
---	trackOffset			= 10,--no idea what this does
---	trackStrength		= 2.5,--how visible the tracks are
---	trackStretch		= 1,-- how much the tracks stretch, the higher the number the more "compact" they become
---	trackType			= "Thick",--graphics file to use for the track decal, from \bitmaps\tracks\ folder
---	trackWidth			= 20,--width to render the decal
 	buildCostEnergy     = 45,
 	buildCostMetal      = 20020,
-	buildTime           = 0,
-	upright				= true,
-	canMove				= true,
-		movementClass   = "SMALLMECH",
-		maxVelocity		= 6.5, --130kph/30
-		maxReverseVelocity= 3.25,
-		acceleration    = 1.8,
-		brakeRate       = 0.1,
-		turnRate 		= 850,
-		smoothAnim		= 1,
+	maxVelocity		= 6.5, --130kph/30
+	maxReverseVelocity= 3.25,
+	acceleration    = 1.8,
+	brakeRate       = 0.1,
+	turnRate 		= 850,
 	
-	canAttack 			= true,
-		--Makes unit use weapon from /weapons folder
-		weapons 		= {	
-			[1] = {
-				name	= "CMPL",
-				mainDir = "0 0 1",
-				maxAngleDif = 320,
-				OnlyTargetCategory = "notbeacon",
-			},
-			[2] = {
-				name	= "CMPL",
-				mainDir = "0 0 1",
-				maxAngleDif = 320,
-				OnlyTargetCategory = "notbeacon",
-				SlaveTo = 1,
-			},
-			[3] = {
-				name	= "CMPL",
-				mainDir = "0 0 1",
-				maxAngleDif = 320,
-				OnlyTargetCategory = "notbeacon",
-				SlaveTo = 1,
-			},
-			[4] = {
-				name	= "CMPL",
-				mainDir = "0 0 1",
-				maxAngleDif = 320,
-				OnlyTargetCategory = "notbeacon",
-				SlaveTo = 1,
-			},
-			[5] = {
-				name	= "SRM6",
-				mainDir = "0 0 1",
-				maxAngleDif = 320,
-				OnlyTargetCategory = "notbeacon",
-				SlaveTo = 1,
-			},
-			[6] = {
-				name	= "AMS",
-			},
+	customparams = {
+		heatlimit		= 24,
+		torsoturnspeed	= 190,
+    },
+}
+	
+local D = CL_Iceferret:New{
+	name              	= "Ice Ferret (Fenris) D",
+	description         = "Medium Brawler Mech",
+	objectName        	= "CL_Iceferret.s3o",
+	weapons	= {	
+		[1] = {
+			name	= "CMPL",
 		},
-    customparams = {
-		hasturnbutton	= "1",
+		[2] = {
+			name	= "CMPL",
+		},
+		[3] = {
+			name	= "CMPL",
+		},
+		[4] = {
+			name	= "CMPL",
+		},
+		[5] = {
+			name	= "SRM6",
+		},
+		[6] = {
+			name	= "AMS",
+		},
+	},
+	customparams = {
 		helptext		= "Armament: 4 x Medium Pulse Laser, 1 x SRM-6 - Armor: 7.5 tons Ferro-Fibrous",
-		heatlimit		= "24",
-		torsoturnspeed	= "190",
-		unittype		= "mech",
     },
 }
 
-return lowerkeys({ ["CL_Iceferret"] = CL_Iceferret })
+return lowerkeys({
+	["CL_Iceferret_D"] = D,
+})
