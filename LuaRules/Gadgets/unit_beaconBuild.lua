@@ -199,7 +199,9 @@ local function SetDropZone(beaconID, teamID)
 	end
 	local x,y,z = GetUnitPosition(beaconID)
 	local side = select(5, Spring.GetTeamInfo(teamID))
-	if side == "" then side = (teamID == 0 and "IS") or "CL" end -- ugly hack for spring.exe blank sides
+	if side:find("inner") then side = "IS"
+	elseif side:find("clan") then side = "CL"
+	elseif side == "" then side = (teamID == 0 and "IS") or "CL" end -- ugly hack for spring.exe blank sides
 	local dropZoneID = CreateUnit(side .. "_dropzone", x,y,z, "s", teamID)
 	dropZoneIDs[teamID] = dropZoneID
 	dropZoneBeaconIDs[teamID] = beaconID

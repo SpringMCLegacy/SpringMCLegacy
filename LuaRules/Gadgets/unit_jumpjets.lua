@@ -95,7 +95,7 @@ local goalSet	  = {}
 --------------------------------------------------------------------------------
 --------------------------------------------------------------------------------
 
-local jumpDefNames  = VFS.Include"LuaRules/Configs/jump_defs.lua"
+local jumpDefNames  = VFS.Include("LuaRules/Configs/jump_defs.lua")
 
 local jumpDefs = {}
 for name, data in pairs(jumpDefNames) do
