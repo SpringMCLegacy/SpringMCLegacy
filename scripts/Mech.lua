@@ -253,7 +253,9 @@ function hideLimbPieces(limb, hide)
 		rootPiece = rupperarm
 		limbWeapons = rightArmIDs
 	end
-	RecursiveHide(rootPiece, hide)
+	if rootPiece then
+		RecursiveHide(rootPiece, hide)
+	end
 	if hide then
 		EmitSfx(rootPiece, SFX.CEG + info.numWeapons + 1)
 		Explode(rootPiece, SFX.FIRE + SFX.SMOKE)
