@@ -165,6 +165,7 @@ local Tower = Unit:New{
 	mass                = 5000,
 	footprintX			= 3,
 	footprintZ 			= 3,
+	maxSlope			= 100,
 	collisionVolumeType = "box",
 	collisionVolumeScales = "25 25 25",
 	canMove				= false,
