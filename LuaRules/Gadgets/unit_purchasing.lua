@@ -221,6 +221,7 @@ function gadget:AllowUnitBuildStep(builderID, builderTeam, unitID, unitDefID, pa
 	if builderDef.name:find("dropzone") then
 		return false
 	end
+	return true -- beacons!
 end
 
 function LanceControl(teamID, add)
