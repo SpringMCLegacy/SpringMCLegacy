@@ -157,6 +157,10 @@ function gadget:AllowCommand(unitID, unitDefID, teamID, cmdID, cmdParams, cmdOpt
 			ShowBuildOptionsByType(unitID, typeString)
 			return true
 		elseif cmdID < 0 then
+			-- Don't allow dropzones to consider towers
+			local towerType = UnitDefs[-cmdID].customParams.towertype
+			if towerType then return false end
+			
 			local cost = UnitDefs[-cmdID].metalCost
 			local runningTotal = orderCosts[unitID] or 0
 			local money = GetTeamResources(teamID, "metal")
