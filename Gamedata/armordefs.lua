@@ -39,7 +39,7 @@ for unitName, unitDef in pairs(DEFS.unitDefs) do
 		elseif towerType then
 			typeString = "tower"
 		end
-		Spring.Echo(unitName, typeString)
+		--Spring.Echo(unitName, typeString)
 		table.insert(armorDefs[typeString], unitName)
 	end
 end
