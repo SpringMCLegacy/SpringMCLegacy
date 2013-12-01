@@ -1,96 +1,49 @@
 local armorDefs = {
 	dropships = {
-		"CL_Factory",
-		"IS_Factory",	
 	},
 	beacons = {
 		"beacon",
-		--[["outpost_c3center",
-		"outpost_vehicledepot",
-		"outpost_listeningpost",
-		"outpost_garrison",
-		"outpost_controltower",]]
 	},
-	light = {
-		--[["IS_Locust",
-		"IS_Osiris",
-		"IS_Wolfhound",
-		"IS_Owens",
-		"IS_Raven",
-		"IS_Hollander",
-		"IS_Hollander_BZK-G1",
-		"CL_Firemoth",
-		"CL_Kitfox",
-		"CL_MistLynx",
-		"CL_Cougar",
-		"CL_Adder",--]]
-	},
-	medium = {
-		--[["IS_Chimera",
-		"IS_Bushwacker",
-		"IS_Dervish",
-		"CL_Iceferret",
-		"CL_Nova",
-		"CL_Stormcrow",
-		"CL_Shadowcat",--]]
-	},
-	heavy = {
-		--[["IS_Orion",
-		"IS_Warhammer",
-		"IS_Catapult",
-		"CL_Summoner",
-		"CL_Timberwolf",
-		"CL_Hellbringer",
-		"CL_Maddog",--]]
-	},
-	assault = {
-		--[["IS_Awesome_AWS8Q",
-		"IS_Awesome_AWS9M",
-		"IS_Atlas_AS7D",
-		"IS_Atlas_AS7K",
-		"IS_Devastator",
-		"CL_Warhawk",
-		"CL_Direwolf",
-		"KH_Mauler",--]]
-	},
-    vehicle = {
-		--[["IS_Harasser",
-		"IS_Scorpion_ac5",
-		"IS_Scorpion_lgauss",
-		"IS_Goblin",
-		"IS_Schrek",
-		"IS_Demolisher",
-		"IS_Challenger",
-		"IS_LRMCarrier",
-		"IS_Sniper",
-		"IS_Partisan",
-		"CL_Hephaestus",
-		"CL_Enyo",
-		"CL_Oro_lbx",
-		"CL_Ares",
-		"CL_Oro_hag",
-		"CL_Morrigu",
-		"CL_Mars",
-		"CL_Huit",--]]
-	},
-	--[[aerospace = {
-		"",
-	},--]]
-	vtol = {
-		--[["IS_Hawkmoth",
-		"CL_Donar",
-		"IS_Sparrowhawk",
-		"CL_Bashkir",--]]
-	},
+	light = {},
+	medium = {},
+	heavy = {},
+	assault = {},
+    vehicle = {},
+	aero = {},
+	vtol = {},
+	tower = {},
 }
--- convert to named maps  (trepan is a noob)
---[[for categoryName, categoryTable in pairs(armorDefs) do
-  local t = {}
-  for _, unitName in pairs(categoryTable) do
-    t[unitName] = 1
-  end
-  armorDefs[categoryName] = t
-end]]
+
+-- TODO: Assign dropships, upgrades, walls?
+local DEFS = _G.DEFS
+for unitName, unitDef in pairs(DEFS.unitDefs) do
+	local cp = unitDef.customparams
+	local basicType = cp.unittype
+	local towerType = cp.towertype
+	if basicType or towerType then
+		local typeString = ""
+		if basicType == "mech" then
+			-- sort into light, medium, heavy, assault
+			local mass = unitDef.mass
+			local light = mass < 40 * 100
+			local medium = not light and mass < 60 * 100
+			local heavy = not light and not medium and mass < 80 * 100
+			local assault = not light and not medium and not heavy
+			local weight = light and "light" or medium and "medium" or heavy and "heavy" or "assault"
+			typeString = weight
+		elseif basicType == "vehicle" then
+			-- sort into vehicle, vtol, aero
+			local vtol = unitDef.hoverAttack
+			local aero = unitDef.canFly and not vtol
+			typeString = vtol and "vtol" or aero and "aero" or "vehicle"
+		elseif towerType then
+			typeString = "tower"
+		end
+		Spring.Echo(unitName, typeString)
+		table.insert(armorDefs[typeString], unitName)
+	end
+end
+
 
 local system = VFS.Include('gamedata/system.lua')  
 
