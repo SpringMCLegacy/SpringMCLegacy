@@ -3,7 +3,7 @@ local IS_Mauler = Assault:New{
 	maxDamage           = 20600,
 	mass                = 9000,
 	buildCostEnergy     = 90,
-	buildCostMetal        = 0,--      = 28200,
+	buildCostMetal        = 28200,
 	maxVelocity		= 2.5, --50kph/20
 
 	customparams = {

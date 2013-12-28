@@ -3,7 +3,7 @@ local IS_Hollander = Medium:New{
 	maxDamage           = 7100,
 	mass                = 4500,
 	buildCostEnergy     = 45,
-	buildCostMetal        = 0,--      = 14900,
+	buildCostMetal      = 14900,
 	maxVelocity		= 4, --80kph/20
 
 	customparams = {

@@ -3,7 +3,7 @@ local IS_Hunchback = Medium:New{
 	maxDamage           = 16000,
 	mass                = 5000,
 	buildCostEnergy     = 55,
-	buildCostMetal        = 0,--      = 21100,
+	buildCostMetal        = 21100,
 	maxVelocity		= 3, --60kph/20
 
 	customparams = {

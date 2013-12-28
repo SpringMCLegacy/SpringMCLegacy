@@ -77,7 +77,7 @@ for name, ud in pairs(UnitDefs) do
 			ud.usepiececollisionvolumes = true
 			ud.losemitheight = ud.mass / 100
 			ud.radaremitheight = ud.mass / 100
-			ud.buildcostmetal = 5000 -- TODO: remove this
+			-- TODO: For testing ud.buildcostmetal = 5000
 		elseif ud.customparams.unittype == "vehicle" then
 			ud.usepiececollisionvolumes = true
 			if ud.canfly then
@@ -148,8 +148,11 @@ for name, ud in pairs(UnitDefs) do
 			table.insert(CL_DROPSHIP_BUILDOPTIONS, name)
 		end
 	elseif ud.customparams.towertype then
+		ud.buildcostmetal = 5000 -- TODO: remove me
 		table.insert(BEACON_BUILDOPTIONS, name)
 		ud.levelground = false
+	elseif name:find("upgrade") then
+		ud.buildcostmetal = 50000 -- TODO: remove me
 	end
 	if name == "is_dropship" then IS_DROPSHIP_UD = ud end
 	if name == "cl_dropship" then CL_DROPSHIP_UD = ud end

@@ -3,7 +3,7 @@ local IS_Dervish = Medium:New{
 	maxDamage           = 12000,
 	mass                = 5500,
 	buildCostEnergy     = 55,
-	buildCostMetal        = 0,--      = 21100,
+	buildCostMetal        = 21100,
 	maxVelocity		= 4, --80kph/20
 
 	customparams = {

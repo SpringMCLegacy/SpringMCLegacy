@@ -3,7 +3,7 @@ local IS_Bushwacker = Medium:New{
 	maxDamage           = 16100,
 	mass                = 5500,
 	buildCostEnergy     = 55,
-	buildCostMetal        = 0,--      = 20100,
+	buildCostMetal        = 20100,
 	maxVelocity		= 4, --80kph/20
 
 	customparams = {

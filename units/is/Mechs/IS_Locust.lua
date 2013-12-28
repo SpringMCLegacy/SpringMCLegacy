@@ -3,7 +3,7 @@ local IS_Locust = Light:New{
 	maxDamage           = 5300,
 	mass                = 2000,
 	buildCostEnergy     = 20,
-	buildCostMetal        = 0,--      = 9200,
+	buildCostMetal        = 9200,
 	maxVelocity		= 6, --120kph/20
 	
 	customparams = {

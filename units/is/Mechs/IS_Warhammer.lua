@@ -3,7 +3,7 @@ local IS_Warhammer = Heavy:New{
 	maxDamage           = 16000,
 	mass                = 7000,
 	buildCostEnergy     = 70,
-	buildCostMetal        = 0,--      = 24000,
+	buildCostMetal        = 24000,
 	maxVelocity		= 3, --60kph/2
 	
 	customparams = {

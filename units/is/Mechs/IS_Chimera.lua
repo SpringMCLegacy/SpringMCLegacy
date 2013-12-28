@@ -3,7 +3,7 @@ local IS_Chimera = Medium:New{
 	maxDamage           = 11200,
 	mass                = 4000,
 	buildCostEnergy     = 40,
-	buildCostMetal        = 0,--      = 17270,
+	buildCostMetal        = 17270,
 	maxVelocity		= 4.5, --90kph/20
 	
 	customparams = {

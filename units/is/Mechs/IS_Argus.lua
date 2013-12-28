@@ -3,7 +3,7 @@ local IS_Argus = Heavy:New{
 	maxDamage           = 19200,
 	mass                = 6000,
 	buildCostEnergy     = 65,
-	buildCostMetal      = 0,-- = 28820,
+	buildCostMetal      = 28820,
 	maxVelocity			= 4, --80kph/20
 		
     customparams = {
