@@ -4,7 +4,7 @@ local IS_Raven = Light:New{
 	maxDamage           = 8000,
 	mass                = 3500,
 	buildCostEnergy     = 35,
-	buildCostMetal        = 0,--      = 13260,
+	buildCostMetal        = 13260,
 	maxVelocity		= 4.5, --90kph/30
 
 	customparams = {

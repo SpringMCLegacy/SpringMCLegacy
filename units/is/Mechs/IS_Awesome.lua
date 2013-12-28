@@ -3,7 +3,7 @@ local IS_Awesome = Assault:New{
 	maxDamage           = 24000,
 	mass                = 8500,
 	buildCostEnergy     = 85,
-	buildCostMetal        = 0,--      = 35160,
+	buildCostMetal        = 35160,
 	maxVelocity		= 2.5, --50kph/20
 
 	customparams = {

@@ -3,7 +3,7 @@ local IS_Catapult = Heavy:New{
 	maxDamage           = 16000,
 	mass                = 6500,
 	buildCostEnergy     = 65,
-	buildCostMetal        = 0,--      = 28820,
+	buildCostMetal        = 28820,
 	maxVelocity		= 3, --60kph/20
 
 	customparams = {

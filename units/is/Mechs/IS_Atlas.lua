@@ -3,7 +3,7 @@ local IS_Atlas = Assault:New{
 	maxDamage           = 30400,
 	mass                = 10000,
 	buildCostEnergy     = 100, -- in tons
-	buildCostMetal        = 0,--      = 38600,
+	buildCostMetal        = 38600,
 	maxVelocity		= 2.5, --50kph/20
 		
     customparams = {

@@ -3,7 +3,7 @@ local IS_Devastator = Assault:New{
 	maxDamage           = 29600,
 	mass                = 10000,
 	buildCostEnergy     = 100, -- in tons
-	buildCostMetal        = 0,--      = 36100,
+	buildCostMetal        = 36100,
 	maxVelocity		= 2.5, --50kph/20
 	
 	customparams = {

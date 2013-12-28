@@ -3,7 +3,7 @@ local IS_Nighthawk = Light:New{
 	maxDamage           = 11200,
 	mass                = 3500,
 	buildCostEnergy     = 35,
-	buildCostMetal        = 0,--      = 15000,
+	buildCostMetal        = 15000,
 	maxVelocity		= 4.5, --90kph/20
 	
 	customparams = {

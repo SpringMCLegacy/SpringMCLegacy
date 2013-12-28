@@ -3,7 +3,7 @@ local IS_Talon = Light:New{
 	maxDamage           = 11900,
 	mass                = 3500,
 	buildCostEnergy     = 35,
-	buildCostMetal        = 0,--      = 15000,
+	buildCostMetal        = 15000,
 	maxVelocity		= 6, --120kph/20
 
 	customparams = {

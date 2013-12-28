@@ -3,7 +3,7 @@ local IS_Avatar = Heavy:New{
 	maxDamage           = 19200,
 	mass                = 6000,
 	buildCostEnergy     = 65,
-	buildCostMetal        = 0,--      = 28820,
+	buildCostMetal        = 28820,
 	maxVelocity		= 3, --60kph/20
 	
 	customparams = {
