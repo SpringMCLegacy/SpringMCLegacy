@@ -14,11 +14,11 @@ local cegCache = {}
 local damageMults = {
 	beacons		= 0,
 	light		= 1,   --100% default
-	medium		= 0.8, --80% default
-	heavy		= 0.6, --60% default
-	assault		= 0.4, --40% default
-	vehicle		= 1.5, --150% default
-	vtol		= 1.5, --150% default
+	medium		= 0.9, --80% default
+	heavy		= 0.8, --60% default
+	assault		= 0.6, --40% default
+	vehicle		= 1.25, --150% default
+	vtol		= 1.25, --150% default
 }
 
 for weapName, wd in pairs(WeaponDefs) do 

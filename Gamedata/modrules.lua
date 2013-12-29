@@ -9,4 +9,8 @@ return {
 		transportAir = true,
 		transportHover = true,
 	},
+	movement = {
+		allowUnitCollisionDamage = false, -- default should be false
+		allowUnitCollisionOverlap = false,
+	}
 }
