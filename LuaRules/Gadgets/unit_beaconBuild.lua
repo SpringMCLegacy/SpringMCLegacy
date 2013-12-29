@@ -270,7 +270,7 @@ end
 function LimitTowerType(unitID, towerType)	
 	local towersRemaining = buildLimits[unitID][towerType]
 	if towersRemaining == 0 then 
-		Spring.Echo("Limit reached for " .. towerType)
+		Spring.SendMessageToTeam(teamID, "Limit reached for " .. towerType)
 		return false 
 	else
 		buildLimits[unitID][towerType] = towersRemaining - 1
@@ -385,10 +385,10 @@ function gadget:AllowCommand(unitID, unitDefID, teamID, cmdID, cmdParams, cmdOpt
 			local tx, ty, tz = unpack(cmdParams)
 			local dist = GetUnitDistanceToPoint(unitID, tx, ty, tz, false)
 			if dist < MIN_BUILD_RANGE then
-				Spring.Echo("Too close to beacon")
+				Spring.SendMessageToTeam(teamID, "Too close to beacon")
 				return false
 			elseif dist > MAX_BUILD_RANGE then
-				Spring.Echo("Too far from beacon")
+				Spring.SendMessageToTeam(teamID, "Too far from beacon")
 				return false
 			end
 			return LimitTowerType(unitID, towerType)
