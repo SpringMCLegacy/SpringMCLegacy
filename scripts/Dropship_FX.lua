@@ -112,7 +112,7 @@ local function LandingGearDown()
 	SPEED = math.rad(15)
 	-- Landing--
 	--Open Landing Gear Doors--
-	Spring.Echo("GEAR DEPLOYING...")
+	--Spring.Echo("GEAR DEPLOYING...")
 	Turn(gear1_door, x_axis, rad(-50), SPEED)
 	Turn(gear2_door, x_axis, rad(50), SPEED)
 	Turn(gear3_door, x_axis, rad(50), SPEED)
@@ -130,7 +130,7 @@ local function LandingGearDown()
 	
 	WaitForTurn(gear4, x_axis)
 	feetDown = true
-	Spring.Echo("GEAR DEPLOYED.")
+	--Spring.Echo("GEAR DEPLOYED.")
 end
 
 local function LandingGearUp()
@@ -193,7 +193,7 @@ function script.Create()
 		_, y, _ = Spring.GetUnitPosition(unitID)
 	end
 	stage = 2
-	Spring.Echo("ROCKET FULL BURN NOW!")
+	--Spring.Echo("ROCKET FULL BURN NOW!")
 	Spring.MoveCtrl.SetGravity(unitID, -3.72 * GRAVITY)
 	
 	StartThread(LandingGearDown)

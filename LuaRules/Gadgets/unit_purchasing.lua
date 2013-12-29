@@ -168,7 +168,7 @@ function gadget:AllowCommand(unitID, unitDefID, teamID, cmdID, cmdParams, cmdOpt
 				if teamSlotsRemaining[teamID] < 1 then return false end
 				-- TODO: limit count
 				if runningTotal + cost < money then -- check we can afford it
-					Spring.Echo("Running Total: " .. runningTotal + cost)
+					Spring.SendMessageToTeam(teamID, "Running Total: " .. runningTotal + cost)
 					orderCosts[unitID] = runningTotal + cost
 					teamSlotsRemaining[teamID] = teamSlotsRemaining[teamID] - 1
 					CheckBuildOptions(unitID, teamID, money - (runningTotal + cost), cmdID)
@@ -200,10 +200,10 @@ function gadget:AllowCommand(unitID, unitDefID, teamID, cmdID, cmdParams, cmdOpt
 			
 			local side = UnitDefs[unitDefID].name:sub(1,2) -- send dropship of correct side
 			GG.DropshipDelivery(unitID, teamID, side .. "_dropship", orderQueue, cost, "BB_Reinforcements_Inbound_ETA_30", DROPSHIP_DELAY)
-			Spring.Echo("Sending purchase order for the following:")
+			Spring.SendMessageToTeam(teamID, "Sending purchase order for the following:")
 			for i, order in ipairs(orderQueue) do
 				for orderDefID, count in pairs(order) do
-					Spring.Echo(UnitDefs[orderDefID].name, count)
+					Spring.SendMessageToTeam(teamID, UnitDefs[orderDefID].name .. ":\t" .. count)
 				end
 			end
 			ResetBuildQueue(unitID)
