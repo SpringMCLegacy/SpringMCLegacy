@@ -227,7 +227,6 @@ function LoadCargo(cargoID, callerID)
 end
 
 function UnloadCargo()
-	-- TODO: ramp anim etc
 	Turn(main_door, x_axis, math.rad(110), DOOR_SPEED)
 	Turn(hanger_door, y_axis, math.rad(90), DOOR_SPEED)
 	Turn(link, x_axis, math.rad(35), DOOR_SPEED * 10)
@@ -244,17 +243,19 @@ function UnloadCargo()
 		
 		-- start cargo moving anim
 		env = Spring.UnitScript.GetScriptEnv(cargoID)
-		Spring.UnitScript.CallAsUnit(cargoID, env.script.StartMoving, false)
+		if env and env.script and env.script.StartMoving then -- TODO: shouldn't be required, maybe if cargo died?
+			Spring.UnitScript.CallAsUnit(cargoID, env.script.StartMoving, false)
+		end
 		
 		-- attach and move
 		local currUnitDef = UnitDefs[Spring.GetUnitDefID(cargoID)]
 		local buildTime = currUnitDef.buildTime
 
 		if currUnitDef.canFly then
-			--[[Spring.UnitScript.AttachUnit(vtol_pad, cargoID)
+			Spring.UnitScript.AttachUnit(vtol_pad, cargoID)
 			local moveSpeed = currUnitDef.speed * 0.5 --256 / buildTime
 			Move(vtol_pad, x_axis, 256, moveSpeed)
-			WaitForMove(vtol_pad, z_axis)]]
+			WaitForMove(vtol_pad, z_axis)
 			--Spring.SetUnitRelativeVelocity(cargoID, 0, 0, moveSpeed / 30)
 		else
 			Spring.UnitScript.AttachUnit(pad, cargoID)
