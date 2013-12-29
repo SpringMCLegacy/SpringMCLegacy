@@ -153,6 +153,12 @@ local Sounds = {
 		},
 		
 		-- Dropships
+		BB_Insufficient_Funds = {
+			file = "sounds/betty/Insufficient_Funds.ogg",
+			in3d = false,
+			maxconcurrent = 1,
+		},
+		
 		BB_Dropship_Inbound = {
 			file = "sounds/betty/Dropship_Inbound.ogg",
 			in3d = false,

@@ -300,10 +300,10 @@ function script.HitByWeapon(x, z, weaponID, damage)
 		return damage
 	elseif hitPiece == "lupperleg" or hitPiece == "llowerleg" then
 		--deduct Left Leg HP
-		limbHPControl("left_leg", damage)
+		--limbHPControl("left_leg", damage) -- TODO: leg damage
 	elseif hitPiece == "rupperleg" or hitPiece == "rlowerleg" then
 		--deduct Right Leg HP
-		limbHPControl("right_leg", damage)
+		--limbHPControl("right_leg", damage)
 	elseif hitPiece == "lupperarm" or hitPiece == "llowerarm" then
 		--deduct Left Arm HP
 		limbHPControl("left_arm", damage)

@@ -249,7 +249,7 @@ function gadget:GamePreload()
 			if unitDef.canFly then
 				info.limbHPs["lwing"] =	 unitDef.health * 0.5
 				info.limbHPs["rwing"] = unitDef.health * 0.5
-				info.limbHPs["rotor"] = unitDef.health * 0.01
+				info.limbHPs["rotor"] = unitDef.health * 0.1 -- 0.01
 			end
 		end
 		-- Vehicles

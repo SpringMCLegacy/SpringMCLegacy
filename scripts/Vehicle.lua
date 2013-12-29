@@ -391,7 +391,7 @@ function script.AimWeapon(weaponID, heading, pitch)
 				Turn(launchPoints[weaponID][i], x_axis, -pitch, ELEVATION_SPEED)
 			end
 		end
-	else
+	elseif flares[weaponID] then -- TODO: 'else' should be sufficient here
 		Turn(flares[weaponID], x_axis, -pitch, ELEVATION_SPEED)
 	end
 	if turrets[weaponID] then

@@ -17,6 +17,7 @@ if gadgetHandler:IsSyncedCode() then
 local SetUnitRulesParam		= Spring.SetUnitRulesParam
 --SyncedRead
 local GetGameFrame			= Spring.GetGameFrame
+local GetTeamResources		= Spring.GetTeamResources
 local GetUnitPosition		= Spring.GetUnitPosition
 --SyncedCtrl
 local CreateUnit			= Spring.CreateUnit
@@ -44,6 +45,7 @@ local MAX_BUILD_RANGE = UnitDefNames["beacon"].buildDistance
 local RADIUS = 230
 local NUM_SEGMENTS = 12
 local DROPSHIP_DELAY = 10 * 30 -- 10s
+local WALL_COST = UnitDefs[WALL_ID].metalCost * NUM_SEGMENTS -- FIXME: ugly!
 	
 local CMD_UPGRADE = GG.CustomCommands.GetCmdID("CMD_UPGRADE")
 
@@ -209,7 +211,7 @@ end
 
 -- WALLS & GATES
 local function BuildWalls(beaconID, teamID)
-	UseTeamResource(teamID, "metal", UnitDefs[BEACON_ID].metalCost * NUM_SEGMENTS) -- FIXME: ugly!
+	UseTeamResource(teamID, "metal", WALL_COST)
 	wallIDs[beaconID] = {}
 	local x,_,z = GetUnitPosition(beaconID)
 	for i = 0, NUM_SEGMENTS - 1 do
@@ -392,13 +394,18 @@ function gadget:AllowCommand(unitID, unitDefID, teamID, cmdID, cmdParams, cmdOpt
 			return LimitTowerType(unitID, towerType)
 		elseif upgradeIDs[cmdID] then
 			local upgradeDefID = upgradeIDs[cmdID]
-			if upgradeDefID == WALL_ID then
-				BuildWalls(unitID, teamID)
-				RemoveUnitCmdDesc(unitID, FindUnitCmdDesc(unitID, cmdID))
+			local cost = outpostDefs[upgradeDefID] and outpostDefs[upgradeDefID].cost or WALL_COST
+			if cost <= GetTeamResources(teamID, "metal") then
+				if upgradeDefID == WALL_ID then
+					BuildWalls(unitID, teamID)
+					RemoveUnitCmdDesc(unitID, FindUnitCmdDesc(unitID, cmdID))
+				else
+					--Spring.Echo("I'm totally gonna upgrade your beacon bro!")
+					RemoveUpgradeOptions(unitID)
+					DropshipDelivery(unitID, teamID, "is_avenger", upgradeDefID, cost, "BB_Dropship_Inbound", DROPSHIP_DELAY)
+				end
 			else
-				--Spring.Echo("I'm totally gonna upgrade your beacon bro!")
-				RemoveUpgradeOptions(unitID)
-				DropshipDelivery(unitID, teamID, "is_avenger", upgradeDefID, outpostDefs[upgradeDefID].cost, "BB_Dropship_Inbound", DROPSHIP_DELAY)
+				GG.PlaySoundForTeam(teamID, "BB_Insufficient_Funds", 1)
 			end
 		elseif cmdID == dropZoneCmdDesc.id then
 			RemoveUpgradeOptions(unitID)

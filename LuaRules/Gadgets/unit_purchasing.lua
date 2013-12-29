@@ -137,7 +137,7 @@ local function CheckBuildOptions(unitID, teamID, money, cmdID)
 	end
 end
 
-local DROPSHIP_COOLDOWN = 10 * 30 -- 10s
+local DROPSHIP_COOLDOWN = DROPSHIP_DELAY + 10 * 30 -- 10s
 local startMin, startSec = GG.FramesToMinutesAndSeconds(DROPSHIP_COOLDOWN)
 local coolDowns = {} -- coolDowns[teamID] = enableFrame
 

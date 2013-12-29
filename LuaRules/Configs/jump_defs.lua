@@ -40,10 +40,10 @@ jumpClassGroups = {
 	"is_catapult_cpltc4",
 	"is_osiris_osr3d",
 	"is_osiris_osr4d",
-	"cl_mistlynx",
-	"cl_nova",
-	"cl_summoner",
-	"cl_shadowcat",
+	"cl_mistlynx_prime",
+	"cl_nova_prime",
+	"cl_summoner_c",
+	"cl_shadowcat_prime",
 	},
 
 	-- iammissingstuff = {--bad category
