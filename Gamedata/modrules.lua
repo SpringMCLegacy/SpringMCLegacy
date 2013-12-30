@@ -11,6 +11,6 @@ return {
 	},
 	movement = {
 		allowUnitCollisionDamage = false, -- default should be false
-		allowUnitCollisionOverlap = false,
+		--allowUnitCollisionOverlap = false,
 	}
 }
