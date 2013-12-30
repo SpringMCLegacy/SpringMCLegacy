@@ -180,7 +180,7 @@ function gadget:AllowCommand(unitID, unitDefID, teamID, cmdID, cmdParams, cmdOpt
 				end
 			elseif runningSize > 0 then  -- only allow removal if order contains units (prevent -ve running totals!)
 				orderCosts[unitID] = runningTotal - cost
-				orderSizes[unitID] = orderSizes[unitID] - 1
+				orderSizes[unitID] = runningSize - 1
 				CheckBuildOptions(unitID, teamID, money - (runningTotal - cost))
 				return true
 			end
