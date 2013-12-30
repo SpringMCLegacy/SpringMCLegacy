@@ -38,6 +38,8 @@ local DelayCall				 = GG.Delay.DelayCall
 -- Constants
 local GAIA_TEAM_ID = Spring.GetGaiaTeamID()
 local BEACON_ID = UnitDefNames["beacon"].id
+local IS_DROPZONE_ID = UnitDefNames["is_dropzone"].id
+local CL_DROPZONE_ID = UnitDefNames["cl_dropzone"].id -- FIXME: ugly
 local WALL_ID = UnitDefNames["wall"].id
 local GATE_ID = UnitDefNames["wall_gate"].id
 local MIN_BUILD_RANGE = tonumber(UnitDefNames["beacon"].customParams.minbuildrange) or 230
@@ -136,6 +138,8 @@ function gadget:GamePreload()
 		action = 'dropzone',
 		tooltip = "Set as primary dropzone",
 	}
+	outpostDefs[IS_DROPZONE_ID] = {cmdDesc = dropZoneCmdDesc, cost = 0}
+	outpostDefs[CL_DROPZONE_ID] = {cmdDesc = dropZoneCmdDesc, cost = 0}
 end
 
 -- REGULAR UPGRADES
@@ -168,27 +172,33 @@ function SpawnCargo(beaconID, dropshipID, unitDefID, teamID)
 	end
 end
 
-function SpawnDropship(unitID, teamID, dropshipType, cargo)
-	local tx,ty,tz = GetUnitPosition(unitID)
-	local dropshipID = CreateUnit(dropshipType, tx, ty, tz, "s", teamID)
-	GG.PlaySoundForTeam(teamID, "BB_Dropship_Inbound", 1)
-	if type(cargo) == "table" then
-		for i, order in ipairs(cargo) do -- preserve order here
-			for orderDefID, count in pairs(order) do
-				for i = 1, count do
-					DelayCall(SpawnCargo, {unitID, dropshipID, orderDefID, teamID}, 1)
+function SpawnDropship(unitID, teamID, dropshipType, cargo, cost)
+	if Spring.ValidUnitID(unitID) and not Spring.GetUnitIsDead(unitID) then
+		local tx,ty,tz = GetUnitPosition(unitID)
+		local dropshipID = CreateUnit(dropshipType, tx, ty, tz, "s", teamID)
+		GG.PlaySoundForTeam(teamID, "BB_Dropship_Inbound", 1)
+		if type(cargo) == "table" then
+			for i, order in ipairs(cargo) do -- preserve order here
+				for orderDefID, count in pairs(order) do
+					for i = 1, count do
+						DelayCall(SpawnCargo, {unitID, dropshipID, orderDefID, teamID}, 1)
+					end
 				end
 			end
+		else
+			DelayCall(SpawnCargo, {unitID, dropshipID, cargo, teamID}, 1)
 		end
-	else
-		DelayCall(SpawnCargo, {unitID, dropshipID, cargo, teamID}, 1)
+	else -- dropzone moved or beacon was capped
+		-- TODO: It would be better if order were put on hold until new dropzone is established
+		-- Refund
+		Spring.AddTeamResource(teamID, "metal", cost)
 	end
 end
 
 function DropshipDelivery(unitID, teamID, dropshipType, cargo, cost, sound, delay)
 	UseTeamResource(teamID, "metal", cost)
 	GG.PlaySoundForTeam(teamID, sound, 1)
-	DelayCall(SpawnDropship, {unitID, teamID, dropshipType, cargo}, delay)
+	DelayCall(SpawnDropship, {unitID, teamID, dropshipType, cargo, cost}, delay)
 end
 GG.DropshipDelivery = DropshipDelivery
 
@@ -373,6 +383,10 @@ function gadget:UnitGiven(unitID, unitDefID, newTeam, oldTeam)
 		local walls = wallIDs[unitID] or {}
 		for _, wallID in pairs(walls) do
 			DelayCall(TransferUnit, {wallID, newTeam}, 1)
+		end
+		if dropZoneBeaconIDs[oldTeam] == unitID then
+			local dropZoneID = dropZoneIDs[oldTeam]
+			Spring.DestroyUnit(dropZoneID, false, true)
 		end
 	end
 end
