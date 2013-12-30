@@ -160,7 +160,7 @@ function FlagSpecialBehaviour(action, flagType, flagID, flagTeamID, teamID)
 end
 
 
-function PlaceFlag(spot, flagType)
+function PlaceFlag(spot, flagType, newFlag)
 	if DEBUG then
 		Spring.Echo("{")
 		Spring.Echo("	x = " .. spot.x .. ",")
@@ -168,7 +168,9 @@ function PlaceFlag(spot, flagType)
 		Spring.Echo("},")
 	end
 	
-	local newFlag = CreateUnit(flagType, spot.x, Spring.GetGroundHeight(spot.x, spot.z), spot.z, 0, GAIA_TEAM_ID)
+	if not newFlag then
+		newFlag = CreateUnit(flagType, spot.x, Spring.GetGroundHeight(spot.x, spot.z), spot.z, 0, GAIA_TEAM_ID)
+	end
 	numFlags[flagType] = numFlags[flagType] + 1
 	totalFlags = totalFlags + 1
 	flags[flagType][numFlags[flagType]] = newFlag
@@ -358,6 +360,12 @@ function gadget:UnitCreated(unitID, unitDefID, unitTeam, builderID)
 			flagTypeDefenders[flagCapType][unitID] = (DEF_MULT * flagDefendRate)
 		end
 	--end
+	if unitDefID == UnitDefNames["beacon"].id and unitTeam ~= GAIA_TEAM_ID then
+		local x,_, z = Spring.GetUnitPosition(unitID)
+		local newSpot = {["x"] = x, ["z"] = z}
+		table.insert(flagTypeSpots["beacon"], newSpot)
+		PlaceFlag(newSpot, "beacon", unitID)
+	end
 end
 
 

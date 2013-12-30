@@ -40,8 +40,8 @@ local DelayCall				 = GG.Delay.DelayCall
 local BEACON_ID = UnitDefNames["beacon"].id
 local C3_ID = UnitDefNames["upgrade_c3array"].id
 local DROPSHIP_DELAY = 30 * 30 -- 30s
-local DAMAGE_REWARD_MULT = 0.1
-local KILL_REWARD_MULT = 0.1
+local DAMAGE_REWARD_MULT = 0.2
+local KILL_REWARD_MULT = 0.5
 
 -- local NUM_ICONS_PER_PAGE = 3 * 8
 	
