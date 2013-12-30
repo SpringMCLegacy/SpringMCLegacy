@@ -72,6 +72,7 @@ end
 
 local unitTypes = {} -- unitTypes[unitDefID] = "lightmech" etc from typeStrings
 local orderCosts = {} -- orderCosts[unitID] = cost
+local orderSizes = {} -- orderSizes[unitID] = size
 local teamSlotsRemaining = {} -- teamSlotsRemaining[teamID] = numberOfUnitsSlotsRemaining
 local dropZones = {} -- dropZones[unitID] = teamID
 local teamDropZones = {} -- teamDropZone[teamID] = unitID
@@ -122,7 +123,7 @@ local function CheckBuildOptions(unitID, teamID, money, cmdID)
 				cCost = GG.CommandCosts[buildDefID] or 0
 				tCost = 0
 			end
-			if cCost > 0 and teamSlotsRemaining[teamID] < 1 and (currParam == "C" or currParam == "" or currParam == "L") then
+			if cCost > 0 and (teamSlotsRemaining[teamID] - (orderSizes[teamID] or 0)) < 1 and (currParam == "C" or currParam == "" or currParam == "L") then
 				EditUnitCmdDesc(unitID, cmdDescID, {disabled = true, params = {"L"}})
 			elseif cCost > money and (currParam == "" or currParam == "C") then
 				EditUnitCmdDesc(unitID, cmdDescID, {disabled = true, params = {"C"}})
@@ -163,22 +164,23 @@ function gadget:AllowCommand(unitID, unitDefID, teamID, cmdID, cmdParams, cmdOpt
 			
 			local cost = UnitDefs[-cmdID].metalCost
 			local runningTotal = orderCosts[unitID] or 0
+			local runningSize = orderSizes[unitID] or 0
 			local money = GetTeamResources(teamID, "metal")
 			if not rightClick then
-				if teamSlotsRemaining[teamID] < 1 then return false end
-				-- TODO: limit count
+				if (teamSlotsRemaining[teamID] - runningSize) < 1 then return false end
 				if runningTotal + cost < money then -- check we can afford it
 					Spring.SendMessageToTeam(teamID, "Running Total: " .. runningTotal + cost)
 					orderCosts[unitID] = runningTotal + cost
-					teamSlotsRemaining[teamID] = teamSlotsRemaining[teamID] - 1
+					orderSizes[unitID] = runningSize + 1
+					Spring.Echo(runningSize + 1)
 					CheckBuildOptions(unitID, teamID, money - (runningTotal + cost), cmdID)
 					return true
 				else
 					return false -- not enough money
 				end
 			else
-				teamSlotsRemaining[teamID] = teamSlotsRemaining[teamID] + 1
 				orderCosts[unitID] = runningTotal - cost
+				orderSizes[unitID] = orderSizes[unitID] - 1
 				CheckBuildOptions(unitID, teamID, money - (runningTotal - cost))
 				return true -- always allow removal
 			end
@@ -208,6 +210,7 @@ function gadget:AllowCommand(unitID, unitDefID, teamID, cmdID, cmdParams, cmdOpt
 			end
 			ResetBuildQueue(unitID)
 			orderCosts[unitID] = 0
+			orderSizes[unitID] = 0
 			SendButtonCoolDown(unitID, teamID)
 			return true
 		end
@@ -245,6 +248,16 @@ function gadget:UnitCreated(unitID, unitDefID, teamID)
 		AddBuildMenu(unitID)
 		dropZones[unitID] = teamID
 		teamDropZones[teamID] = unitID
+	else
+		local currSlots = teamSlotsRemaining[teamID]
+		local unitType = unitTypes[unitDefID]
+		if unitType then
+			if unitType:find("mech") then
+				teamSlotsRemaining[teamID] = currSlots - 1
+			else -- any other combat unit is worth 1/2 a slot
+				teamSlotsRemaining[teamID] = currSlots - 0.5
+			end
+		end
 	end
 end
 
