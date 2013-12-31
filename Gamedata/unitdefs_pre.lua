@@ -161,6 +161,7 @@ local Tower = Unit:New{
 	script				= "Turret.lua",
 	category 			= "structure notbeacon ground",
 	activateWhenBuilt   = true, -- false? activate when deployed?
+	buildCostMetal      = 3000,
 	maxDamage           = 12000,
 	mass                = 5000,
 	footprintX			= 3,

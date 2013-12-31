@@ -1,7 +1,7 @@
 local Turret_LRM = Tower:New{
 	description         = "LRM-20",
 	objectName        	= "Turret_LRM.s3o",
-	buildCostMetal      = 0,
+	--buildCostMetal      = 0,
 
 	weapons = {	
 		[1] = {
