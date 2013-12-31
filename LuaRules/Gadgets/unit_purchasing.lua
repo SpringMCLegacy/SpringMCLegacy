@@ -43,7 +43,7 @@ local BEACON_ID = UnitDefNames["beacon"].id
 local C3_ID = UnitDefNames["upgrade_c3array"].id
 local DROPSHIP_DELAY = 30 * 30 -- 30s
 local DAMAGE_REWARD_MULT = 0.2
-local KILL_REWARD_MULT = 0.5
+local KILL_REWARD_MULT = 0.0
 
 -- local NUM_ICONS_PER_PAGE = 3 * 8
 	
@@ -339,7 +339,7 @@ end
 function gadget:GameFrame(n)
 	if n > 0 and n % 30 == 0 then -- once a second
 		for _, teamID in pairs(Spring.GetTeamList()) do
-			AddTeamResource(teamID, "metal", 50)
+			AddTeamResource(teamID, "metal", 100)
 		end
 		-- check if orders are still too expensive
 		for unitID, teamID in pairs(dropZones) do
