@@ -19,6 +19,7 @@ local SetUnitRulesParam		= Spring.SetUnitRulesParam
 local GetGameFrame			= Spring.GetGameFrame
 local GetTeamResources		= Spring.GetTeamResources
 local GetUnitPosition		= Spring.GetUnitPosition
+local GetUnitCmdDescs 		= Spring.GetUnitCmdDescs
 --SyncedCtrl
 local AddTeamResource 		= Spring.AddTeamResource
 local CreateUnit			= Spring.CreateUnit
@@ -109,7 +110,7 @@ end
 
 local function CheckBuildOptions(unitID, teamID, money, cmdID)
 	local weightLeft = GetTeamResources(teamID, "energy")
-	local cmdDescs = Spring.GetUnitCmdDescs(unitID)
+	local cmdDescs = GetUnitCmdDescs(unitID)
 	for cmdDescID = 1, #cmdDescs do
 		local buildDefID = cmdDescs[cmdDescID].id
 		local cmdDesc = cmdDescs[cmdDescID]
@@ -123,6 +124,7 @@ local function CheckBuildOptions(unitID, teamID, money, cmdID)
 				cCost = GG.CommandCosts[buildDefID] or 0
 				tCost = 0
 			end
+			--Spring.Echo(cCost, teamSlotsRemaining[teamID] - (orderSizes[teamID] or 0))
 			if cCost > 0 and (teamSlotsRemaining[teamID] - (orderSizes[teamID] or 0)) < 1 and (currParam == "C" or currParam == "" or currParam == "L") then
 				EditUnitCmdDesc(unitID, cmdDescID, {disabled = true, params = {"L"}})
 			elseif cCost > money and (currParam == "" or currParam == "C") then
@@ -179,10 +181,17 @@ function gadget:AllowCommand(unitID, unitDefID, teamID, cmdID, cmdParams, cmdOpt
 					return false -- not enough money
 				end
 			elseif runningSize > 0 then  -- only allow removal if order contains units (prevent -ve running totals!)
-				orderCosts[unitID] = runningTotal - cost
-				orderSizes[unitID] = runningSize - 1
-				CheckBuildOptions(unitID, teamID, money - (runningTotal - cost))
-				return true
+				local cmdDesc = GetUnitCmdDescs(unitID, FindUnitCmdDesc(unitID, cmdID))[1] -- TODO: This is just awful
+				local currNumber = tonumber(cmdDesc.params[1]) or 0
+				if currNumber > 0 then -- only allow if more than 1 of **this** unit currently on order
+					orderCosts[unitID] = runningTotal - cost
+					orderSizes[unitID] = runningSize - 1
+					Spring.Echo(runningSize - 1)
+					CheckBuildOptions(unitID, teamID, money - (runningTotal - cost))
+					return true
+				else
+					return false
+				end
 			end
 			
 		elseif cmdID == CMD_SEND_ORDER then
