@@ -186,6 +186,9 @@ function gadget:GameFrame(n)
 			if GetUnitUnderJammer(unitID, teamID) then DeNARC(unitID, data.allyTeam, true) end
 		end]]
 	end
+	if Spring.IsGameOver() then
+		gadgetHandler:RemoveGadget()
+	end
 end
 
 else
