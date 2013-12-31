@@ -124,7 +124,6 @@ local function CheckBuildOptions(unitID, teamID, money, cmdID)
 				cCost = GG.CommandCosts[buildDefID] or 0
 				tCost = 0
 			end
-			--Spring.Echo(cCost, teamSlotsRemaining[teamID] - (orderSizes[teamID] or 0))
 			if cCost > 0 and (teamSlotsRemaining[teamID] - (orderSizes[teamID] or 0)) < 1 and (currParam == "C" or currParam == "" or currParam == "L") then
 				EditUnitCmdDesc(unitID, cmdDescID, {disabled = true, params = {"L"}})
 			elseif cCost > money and (currParam == "" or currParam == "C") then
@@ -174,7 +173,6 @@ function gadget:AllowCommand(unitID, unitDefID, teamID, cmdID, cmdParams, cmdOpt
 					Spring.SendMessageToTeam(teamID, "Running Total: " .. runningTotal + cost)
 					orderCosts[unitID] = runningTotal + cost
 					orderSizes[unitID] = runningSize + 1
-					Spring.Echo(runningSize + 1)
 					CheckBuildOptions(unitID, teamID, money - (runningTotal + cost), cmdID)
 					return true
 				else
@@ -186,7 +184,6 @@ function gadget:AllowCommand(unitID, unitDefID, teamID, cmdID, cmdParams, cmdOpt
 				if currNumber > 0 then -- only allow if more than 1 of **this** unit currently on order
 					orderCosts[unitID] = runningTotal - cost
 					orderSizes[unitID] = runningSize - 1
-					Spring.Echo(runningSize - 1)
 					CheckBuildOptions(unitID, teamID, money - (runningTotal - cost))
 					return true
 				else
