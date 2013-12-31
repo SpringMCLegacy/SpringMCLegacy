@@ -268,9 +268,13 @@ function gadget:UnitCreated(unitID, unitDefID, teamID)
 	end
 end
 
+
+local WALL_ID = UnitDefNames["wall"].id
+local GATE_ID = UnitDefNames["wall_gate"].id
+
 function gadget:UnitDamaged(unitID, unitDefID, teamID, damage, paralyzer, weaponID,  projectileID, attackerID, attackerDefID, attackerTeam)
 	if not modOptions or modOptions.income == "default" then
-		if attackerID and attackerTeam and not AreTeamsAllied(teamID, attackerTeam) then
+		if attackerID and attackerTeam and not AreTeamsAllied(teamID, attackerTeam) and unitDefID ~= WALL_ID and unitDefID ~= GATE_ID then
 			AddTeamResource(attackerTeam, "metal", damage * DAMAGE_REWARD_MULT)
 		end
 	end
@@ -284,7 +288,7 @@ function gadget:UnitDestroyed(unitID, unitDefID, teamID, attackerID, attackerDef
 		LanceControl(teamID, false)
 	end
 	if not modOptions or modOptions.income == "default" then
-		if attackerID and not AreTeamsAllied(teamID, attackerTeam) then
+		if attackerID and not AreTeamsAllied(teamID, attackerTeam) and unitDefID ~= WALL_ID and unitDefID ~= GATE_ID then
 			AddTeamResource(attackerTeam, "metal", UnitDefs[unitDefID].metalCost * KILL_REWARD_MULT)
 		end
 	end
