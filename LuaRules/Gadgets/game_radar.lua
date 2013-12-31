@@ -81,9 +81,11 @@ end
 GG.IsUnitTAGed = IsUnitTAGed
 
 local function ResetLosStates(unitID, allyTeam)
-	local radarState = GetUnitLosState(unitID, allyTeam).radar
-	SetUnitLosState(unitID, allyTeam, {los = radarState})
-	SetUnitLosMask(unitID, allyTeam, {los=radarState, prevLos=radarState, radar=false, contRadar=false} )
+	if Spring.ValidUnitID(unitID) and not Spring.GetUnitIsDead(unitID) then
+		local radarState = GetUnitLosState(unitID, allyTeam).radar
+		SetUnitLosState(unitID, allyTeam, {los = radarState})
+		SetUnitLosMask(unitID, allyTeam, {los=radarState, prevLos=radarState, radar=false, contRadar=false} )
+	end
 end
 
 local function NARC(unitID, allyTeam, duration)

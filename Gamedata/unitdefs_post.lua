@@ -148,7 +148,6 @@ for name, ud in pairs(UnitDefs) do
 			table.insert(CL_DROPSHIP_BUILDOPTIONS, name)
 		end
 	elseif ud.customparams.towertype then
-		ud.buildcostmetal = 3000 -- TODO: remove me
 		table.insert(BEACON_BUILDOPTIONS, name)
 		ud.levelground = false
 	elseif name:find("upgrade") then

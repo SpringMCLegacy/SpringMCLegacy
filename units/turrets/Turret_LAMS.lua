@@ -1,7 +1,7 @@
 local Turret_LAMS = Tower:New{
 	description         = "Laser AMS",
 	objectName        	= "Turret_LAMS.s3o",
-	buildCostMetal      = 0,
+	--buildCostMetal      = 0,
 
 	weapons = {	
 		[1] = {

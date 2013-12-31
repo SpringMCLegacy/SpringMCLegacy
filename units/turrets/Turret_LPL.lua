@@ -1,7 +1,7 @@
 local Turret_LPL = Tower:New{
 	description         = "Quad Medium Pulse Laser",
 	objectName        	= "Turret_LPL.s3o",
-	buildCostMetal      = 0,
+	buildCostMetal      = 5000,
 
 	weapons = {	
 		[1] = {
