@@ -349,12 +349,16 @@ function gadget:GameFrame(n)
 		for teamID, enableFrame in pairs(coolDowns) do
 			local framesRemaining = enableFrame - n
 			local unitID = teamDropZones[teamID]
-			if framesRemaining > 0 then
-				local minutes, seconds = GG.FramesToMinutesAndSeconds(framesRemaining)
-				EditUnitCmdDesc(unitID, FindUnitCmdDesc(unitID, CMD_SEND_ORDER), {disabled = true, name = minutes .. ":" .. seconds})
-			else
-				EditUnitCmdDesc(unitID, FindUnitCmdDesc(unitID, CMD_SEND_ORDER), {disabled = false, name = "Submit \nOrder "})
+			if Spring.GetUnitIsDead(unitID) or not Spring.ValidUnitID(unitID) then
 				coolDowns[teamID] = nil
+			else
+				if framesRemaining > 0 then
+					local minutes, seconds = GG.FramesToMinutesAndSeconds(framesRemaining)
+					EditUnitCmdDesc(unitID, FindUnitCmdDesc(unitID, CMD_SEND_ORDER), {disabled = true, name = minutes .. ":" .. seconds})
+				else
+					EditUnitCmdDesc(unitID, FindUnitCmdDesc(unitID, CMD_SEND_ORDER), {disabled = false, name = "Submit \nOrder "})
+					coolDowns[teamID] = nil
+				end
 			end
 		end
 	end
