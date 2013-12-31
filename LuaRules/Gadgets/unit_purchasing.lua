@@ -16,6 +16,7 @@ if gadgetHandler:IsSyncedCode() then
 -- localisations
 local SetUnitRulesParam		= Spring.SetUnitRulesParam
 --SyncedRead
+local AreTeamsAllied		= Spring.AreTeamsAllied
 local GetGameFrame			= Spring.GetGameFrame
 local GetTeamResources		= Spring.GetTeamResources
 local GetUnitPosition		= Spring.GetUnitPosition
@@ -267,8 +268,8 @@ function gadget:UnitCreated(unitID, unitDefID, teamID)
 	end
 end
 
-function gadget:UnitDamaged(unitID, unitDefID, teamID, damage, paralyzer, weaponID, attackerID, attackerDefID, attackerTeam)
-	if modOptions and (modOptions.income ~= "none" and modOptions.income ~= "dropship") then
+function gadget:UnitDamaged(unitID, unitDefID, teamID, damage, paralyzer, weaponID,  projectileID, attackerID, attackerDefID, attackerTeam)
+	if not modOptions or modOptions.income == "default" then
 		if attackerID and attackerTeam and not AreTeamsAllied(teamID, attackerTeam) then
 			AddTeamResource(attackerTeam, "metal", damage * DAMAGE_REWARD_MULT)
 		end
@@ -282,7 +283,7 @@ function gadget:UnitDestroyed(unitID, unitDefID, teamID, attackerID, attackerDef
 	elseif unitDefID == C3_ID then
 		LanceControl(teamID, false)
 	end
-	if modOptions and (modOptions.income ~= "none" and modOptions.income ~= "dropship") then
+	if not modOptions or modOptions.income == "default" then
 		if attackerID and not AreTeamsAllied(teamID, attackerTeam) then
 			AddTeamResource(attackerTeam, "metal", UnitDefs[unitDefID].metalCost * KILL_REWARD_MULT)
 		end
