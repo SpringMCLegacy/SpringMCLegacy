@@ -259,6 +259,8 @@ function gadget:UnitCreated(unitID, unitDefID, teamID)
 		local currSlots = teamSlotsRemaining[teamID]
 		local unitType = unitTypes[unitDefID]
 		if unitType then
+			-- Deduct weight from current tonnage limit
+			UseTeamResource(teamID, "energy", unitDef.energyCost)
 			if unitType:find("mech") then
 				teamSlotsRemaining[teamID] = currSlots - 1
 			else -- any other combat unit is worth 1/2 a slot
@@ -353,7 +355,7 @@ function gadget:GameFrame(n)
 		for teamID, enableFrame in pairs(coolDowns) do
 			local framesRemaining = enableFrame - n
 			local unitID = teamDropZones[teamID]
-			if Spring.GetUnitIsDead(unitID) or not Spring.ValidUnitID(unitID) then
+			if not Spring.ValidUnitID(unitID) or Spring.GetUnitIsDead(unitID) then -- check valid first (lazy evaluation means non-valid unitID is then not passed)
 				coolDowns[teamID] = nil
 			else
 				if framesRemaining > 0 then
