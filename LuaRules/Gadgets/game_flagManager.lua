@@ -369,6 +369,23 @@ function gadget:UnitCreated(unitID, unitDefID, unitTeam, builderID)
 end
 
 
+function CheckAllyTeamUnits(unitTeam)
+	if Spring.GetTeamUnitCount(unitTeam) <= 1 then -- TODO: Not sure why this gives 1 instead of 0, probably 'cleanup' issues as only called via UnitDestroyed and UnitGiven
+		-- Check if this was last unit on whole allyteam
+		local allyTeam = select(6, Spring.GetTeamInfo(unitTeam))
+		local allyTeamUnitCount = 0
+		for _, teamID in pairs(Spring.GetTeamList(allyTeam)) do
+			allyTeamUnitCount = allyTeamUnitCount + Spring.GetTeamUnitCount(teamID)
+		end
+		-- If it was, this implies they lost all beacons and DZ so can't get any more
+		if allyTeamUnitCount <= 1 then
+			-- Therefore deduct (nearly) all their remaining tickets
+			tickets[allyTeam] = 5
+			DecrementTickets(allyTeam)
+		end
+	end
+end
+
 function gadget:UnitDestroyed(unitID, unitDefID, unitTeam, attackerID, attackerDefID, attackerTeam)
 	local ud = UnitDefs[unitDefID]
 	if ud.speed > 0 and not ud.canFly then
@@ -377,7 +394,18 @@ function gadget:UnitDestroyed(unitID, unitDefID, unitTeam, attackerID, attackerD
 			flagTypeDefenders[flagCapType][unitID] = nil
 		end
 	end
-	local flagID = turretFlags[unitID]
+	
+	Spring.Echo("Self D: ", Spring.GetUnitSelfDTime(unitID))
+	
+	if ud.customParams.unittype then
+		-- Remove 1 ticket for each combat unit killed
+		local allyTeam = select(6, Spring.GetTeamInfo(unitTeam))
+		DecrementTickets(allyTeam)
+	end
+	
+	CheckAllyTeamUnits(unitTeam)
+	-- TODO: old turret system, remove
+	--[[local flagID = turretFlags[unitID]
 	if flagID then
 		local x, y, z = GetUnitPosition(unitID)
 		local turretRespawnDelay = 120 * 30
@@ -387,7 +415,12 @@ function gadget:UnitDestroyed(unitID, unitDefID, unitTeam, attackerID, attackerD
 		for _, flagCapType in pairs(flagTypes) do
 			flagTypeDefenders[flagCapType][unitID] = nil
 		end
-	end
+	end]]
+end
+
+function gadget:UnitGiven(unitID, unitDefID, newTeam, oldTeam)
+	--Spring.Echo("Unit Given: " .. unitID)
+	CheckAllyTeamUnits(oldTeam)
 end
 
 function gadget:Initialize()
