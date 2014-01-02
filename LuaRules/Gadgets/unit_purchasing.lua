@@ -78,6 +78,7 @@ local orderSizes = {} -- orderSizes[unitID] = size
 local teamSlotsRemaining = {} -- teamSlotsRemaining[teamID] = numberOfUnitsSlotsRemaining
 local dropZones = {} -- dropZones[unitID] = teamID
 local teamDropZones = {} -- teamDropZone[teamID] = unitID
+local teamHadFirstDrop = {} -- teamHadFirstDrop[teamID] = true/false -- FIXME: ugly hack
 
 local function AddBuildMenu(unitID)
 	InsertUnitCmdDesc(unitID, sendOrderCmdDesc)
@@ -208,7 +209,12 @@ function gadget:AllowCommand(unitID, unitDefID, teamID, cmdID, cmdParams, cmdOpt
 			end
 			
 			local side = UnitDefs[unitDefID].name:sub(1,2) -- send dropship of correct side
-			GG.DropshipDelivery(unitID, teamID, side .. "_dropship", orderQueue, cost, "BB_Reinforcements_Inbound_ETA_30", DROPSHIP_DELAY)
+			if not teamHadFirstDrop[teamID] then
+				GG.DropshipDelivery(unitID, teamID, side .. "_dropship", orderQueue, cost, nil, 0)
+				teamHadFirstDrop[teamID] = true
+			else
+				GG.DropshipDelivery(unitID, teamID, side .. "_dropship", orderQueue, cost, "BB_Reinforcements_Inbound_ETA_30", DROPSHIP_DELAY)
+			end
 			Spring.SendMessageToTeam(teamID, "Sending purchase order for the following:")
 			for i, order in ipairs(orderQueue) do
 				for orderDefID, count in pairs(order) do
