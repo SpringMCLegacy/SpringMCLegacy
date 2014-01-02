@@ -74,6 +74,7 @@ end
 
 local unitTypes = {} -- unitTypes[unitDefID] = "lightmech" etc from typeStrings
 local orderCosts = {} -- orderCosts[unitID] = cost
+local orderTons = {} -- orderTons[unitID] = totalTonnage
 local orderSizes = {} -- orderSizes[unitID] = size
 local teamSlotsRemaining = {} -- teamSlotsRemaining[teamID] = numberOfUnitsSlotsRemaining
 local dropZones = {} -- dropZones[unitID] = teamID
@@ -110,8 +111,8 @@ local function ResetBuildQueue(unitID)
 	end
 end
 
-local function CheckBuildOptions(unitID, teamID, money, cmdID)
-	local weightLeft = GetTeamResources(teamID, "energy")
+local function CheckBuildOptions(unitID, teamID, money, weightLeft, cmdID)
+	--local weightLeft = GetTeamResources(teamID, "energy")
 	local cmdDescs = GetUnitCmdDescs(unitID)
 	for cmdDescID = 1, #cmdDescs do
 		local buildDefID = cmdDescs[cmdDescID].id
@@ -130,10 +131,10 @@ local function CheckBuildOptions(unitID, teamID, money, cmdID)
 				EditUnitCmdDesc(unitID, cmdDescID, {disabled = true, params = {"L"}})
 			elseif cCost > money and (currParam == "" or currParam == "C") then
 				EditUnitCmdDesc(unitID, cmdDescID, {disabled = true, params = {"C"}})
-			elseif tCost > weightLeft then
+			elseif tCost > weightLeft and (currParam == "" or currParam == "T") then
 				EditUnitCmdDesc(unitID, cmdDescID, {disabled = true, params = {"T"}})
 			else
-				if cmdDesc.disabled and (currParam == "C" or currParam == "L") then
+				if cmdDesc.disabled and (currParam == "C" or currParam == "T" or currParam == "L") then
 					EditUnitCmdDesc(unitID, cmdDescID, {disabled = false, params = {}})
 				end
 			end
@@ -166,16 +167,21 @@ function gadget:AllowCommand(unitID, unitDefID, teamID, cmdID, cmdParams, cmdOpt
 			if towerType then return false end
 			
 			local cost = UnitDefs[-cmdID].metalCost
+			local weight = UnitDefs[-cmdID].energyCost
 			local runningTotal = orderCosts[unitID] or 0
+			local runningTons = orderTons[unitID] or 0
 			local runningSize = orderSizes[unitID] or 0
 			local money = GetTeamResources(teamID, "metal")
+			local tonnage = GetTeamResources(teamID, "energy")
 			if not rightClick then
 				if (teamSlotsRemaining[teamID] - runningSize) < 1 then return false end
-				if runningTotal + cost < money then -- check we can afford it
-					Spring.SendMessageToTeam(teamID, "Running Total: " .. runningTotal + cost)
+				if runningTotal + cost < money and runningTons + weight < tonnage then -- check we can afford it
+					Spring.SendMessageToTeam(teamID, "Running C-Bills: " .. runningTotal + cost)
+					Spring.SendMessageToTeam(teamID, "Running Tonnage: " .. runningTons + weight)
 					orderCosts[unitID] = runningTotal + cost
+					orderTons[unitID] = runningTons + weight
 					orderSizes[unitID] = runningSize + 1
-					CheckBuildOptions(unitID, teamID, money - (runningTotal + cost), cmdID)
+					CheckBuildOptions(unitID, teamID, money - (runningTotal + cost), tonnage - (runningTons + weight), cmdID)
 					return true
 				else
 					return false -- not enough money
@@ -185,8 +191,9 @@ function gadget:AllowCommand(unitID, unitDefID, teamID, cmdID, cmdParams, cmdOpt
 				local currNumber = tonumber(cmdDesc.params[1]) or 0
 				if currNumber > 0 then -- only allow if more than 1 of **this** unit currently on order
 					orderCosts[unitID] = runningTotal - cost
+					orderTons[unitID] = runningTons - weight
 					orderSizes[unitID] = runningSize - 1
-					CheckBuildOptions(unitID, teamID, money - (runningTotal - cost))
+					CheckBuildOptions(unitID, teamID, money - (runningTotal - cost), tonnage - (runningTons - weight))
 					return true
 				else
 					return false
@@ -198,6 +205,7 @@ function gadget:AllowCommand(unitID, unitDefID, teamID, cmdID, cmdParams, cmdOpt
 			local money = GetTeamResources(teamID, "metal")
 			local cost = orderCosts[unitID]
 			-- check we can afford the order; possible that a previously affordable order is now too much e.g. if towers have been purchased
+			-- N.B. It should not be possible for available tonnage to change between orders, so we don't need to check that
 			if cost > money then return false end
 			
 			for i, order in pairs(orderQueue) do -- we need to double all orders for vehicles
@@ -223,6 +231,7 @@ function gadget:AllowCommand(unitID, unitDefID, teamID, cmdID, cmdParams, cmdOpt
 			end
 			ResetBuildQueue(unitID)
 			orderCosts[unitID] = 0
+			orderTons[unitID] = 0
 			orderSizes[unitID] = 0
 			SendButtonCoolDown(unitID, teamID)
 			return true
@@ -355,7 +364,9 @@ function gadget:GameFrame(n)
 		end
 		-- check if orders are still too expensive
 		for unitID, teamID in pairs(dropZones) do
-			CheckBuildOptions(unitID, teamID, GetTeamResources(teamID, "metal") - (orderCosts[unitID] or 0))
+			local cBills = GetTeamResources(teamID, "metal") - (orderCosts[unitID] or 0)
+			local tonnage = GetTeamResources(teamID, "energy") - (orderTons[unitID] or 0)
+			CheckBuildOptions(unitID, teamID, cBills, tonnage)
 		end
 		-- reduce cooldown timers
 		for teamID, enableFrame in pairs(coolDowns) do
