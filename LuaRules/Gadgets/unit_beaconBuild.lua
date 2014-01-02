@@ -197,7 +197,9 @@ end
 
 function DropshipDelivery(unitID, teamID, dropshipType, cargo, cost, sound, delay)
 	UseTeamResource(teamID, "metal", cost)
-	GG.PlaySoundForTeam(teamID, sound, 1)
+	if sound then
+		GG.PlaySoundForTeam(teamID, sound, 1)
+	end
 	DelayCall(SpawnDropship, {unitID, teamID, dropshipType, cargo, cost}, delay)
 end
 GG.DropshipDelivery = DropshipDelivery

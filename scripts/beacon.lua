@@ -16,7 +16,9 @@ local antenna2 = piece("antenna2")
 local antenna3 = piece("antenna3")
 
 -- Constants
-local DROP_HEIGHT = 10000
+local DROP_HEIGHT = 12000
+local X, _, Z = Spring.GetUnitPosition(unitID)
+local GY = Spring.GetGroundHeight(X, Z)
 
 -- Variables
 local stage
@@ -70,22 +72,23 @@ function script.Create()
 	Spring.SetUnitNoSelect(unitID, true)
 	Spring.MoveCtrl.Enable(unitID)
 	local x,y,z = Spring.GetUnitPosition(unitID)
-	Spring.MoveCtrl.SetPosition(unitID, x, y + DROP_HEIGHT, z)
-	--Spring.MoveCtrl.SetVelocity(unitID, 0, -100, 0)
+	Spring.MoveCtrl.SetPosition(unitID, x, GY + DROP_HEIGHT, z)
 	Turn(base, y_axis, unitID, 0) -- get a random facing
 	
 	Sleep(unitID / 10) -- lolhack
-	Spring.MoveCtrl.SetGravity(unitID, Game.gravity / 100)
+	Spring.MoveCtrl.SetVelocity(unitID, 0, -50, 0)
+	Spring.MoveCtrl.SetGravity(unitID, Game.gravity / 75)
 	Spring.MoveCtrl.SetCollideStop(unitID, true)
 	Spring.MoveCtrl.SetTrackGround(unitID, true)
 	
 	stage = 3
 	StartThread(fx)
-	for i = 1, 4 do
+	-- TODO: Fix and re-implement rocket whoosh sound
+	--[[for i = 1, 4 do
 		local _, sy, _ = Spring.GetUnitVelocity(unitID)
 		PlaySound("NavBeacon_Descend", 10, 0,sy,0)
 		Sleep(2500)
-	end
+	end]]
 	while not touchDown do
 		Sleep(50)
 	end
