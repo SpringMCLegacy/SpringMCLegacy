@@ -162,6 +162,7 @@ for name, ud in pairs(UnitDefs) do
 	if name == "beacon" or name:find("upgrade") or name:find("dropzone") then 
 		if name == "beacon" then
 			BEACON_UD = ud 
+			ud.canselfdestruct = false
 		end
 		ud.canmove = false
 		ud.canrepair = false
@@ -172,7 +173,6 @@ for name, ud in pairs(UnitDefs) do
 		ud.canfight = false
 		ud.canassist = false
 		ud.canrepeat = false
-		ud.canselfdestruct = false
 	end
 end
 IS_DROPSHIP_UD["buildoptions"] = IS_DROPSHIP_BUILDOPTIONS
