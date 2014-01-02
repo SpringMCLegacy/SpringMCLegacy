@@ -277,7 +277,7 @@ local function RepairWalls(beaconID, teamID)
 end
 
 -- TOWERS
-function LimitTowerType(unitID, towerType)	
+function LimitTowerType(unitID, teamID, towerType)	
 	local towersRemaining = buildLimits[unitID][towerType]
 	if towersRemaining == 0 then 
 		Spring.SendMessageToTeam(teamID, "Limit reached for " .. towerType)
@@ -405,7 +405,7 @@ function gadget:AllowCommand(unitID, unitDefID, teamID, cmdID, cmdParams, cmdOpt
 				Spring.SendMessageToTeam(teamID, "Too far from beacon")
 				return false
 			end
-			return LimitTowerType(unitID, towerType)
+			return LimitTowerType(unitID, teamID, towerType)
 		elseif upgradeIDs[cmdID] then
 			local upgradeDefID = upgradeIDs[cmdID]
 			local cost = outpostDefs[upgradeDefID] and outpostDefs[upgradeDefID].cost or WALL_COST
