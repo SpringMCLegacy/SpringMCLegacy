@@ -36,6 +36,7 @@ weaponDef = {
 	},
 	customparams = {
 		cegflare			= "MG_MUZZLEFLASH",
+		flareonshot			= true,
     },
 }
 

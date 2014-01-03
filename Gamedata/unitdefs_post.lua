@@ -142,6 +142,7 @@ for name, ud in pairs(UnitDefs) do
 	-- Automatically build dropship buildmenus
 	local unitType = ud.customparams.unittype
 	if unitType == "mech" or unitType == "vehicle" then
+		ud.movestate = 0 -- Set default move state to Hold Position
 		if name:sub(1, 2) == "is" then
 			table.insert(IS_DROPSHIP_BUILDOPTIONS, name)
 		elseif name:sub(1, 2) == "cl" then

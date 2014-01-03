@@ -83,7 +83,6 @@ function script.Create()
 	
 	stage = 3
 	StartThread(fx)
-	-- TODO: Fix and re-implement rocket whoosh sound
 	for i = 1, 2 do
 		local _, sy, _ = Spring.GetUnitVelocity(unitID)
 		PlaySound("NavBeacon_Descend", 10, 0,sy,0)
