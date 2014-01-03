@@ -90,11 +90,17 @@ local function TicketText()
 	end
 end
 
+function widget:GamePreload()
+	tempAmbient = "Ambient: " .. GetGameRulesParam("MAP_TEMP_AMBIENT") .. " \'C"
+	tempWater = "Water: " .. GetGameRulesParam("MAP_TEMP_WATER") .. " \'C"
+end
+
 function widget:Initialize()
 	Spring.SendCommands("resbar 0", "clock 0", "fps 0")
 	btFont = gl.LoadFont("LuaUI/Fonts/bt_oldstyle.ttf", 16, 2, 30)
 	TicketText()
 	haveArty = Spring.GetTeamUnitsCounts(MY_TEAM_ID)[UPLINK_ID] or 0
+	widget:GamePreload()
 end
 
 function widget:PlayerChanged()
@@ -112,11 +118,6 @@ function widget:UnitDestroyed(unitID, unitDefID, teamID)
 	if teamID == MY_TEAM_ID and unitDefID == UPLINK_ID then
 		haveArty = haveArty - 1
 	end
-end
-
-function widget:GamePreload()
-	tempAmbient = "Ambient: " .. GetGameRulesParam("MAP_TEMP_AMBIENT") .. " \'C"
-	tempWater = "Water: " .. GetGameRulesParam("MAP_TEMP_WATER") .. " \'C"
 end
 
 function widget:GameFrame(n)
