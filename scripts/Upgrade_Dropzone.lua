@@ -7,7 +7,7 @@ end
 
 function script.Create()
 	local i = 1
-	Spring.SetUnitBlocking(unitID, false, false, true)
+	Spring.SetUnitBlocking(unitID, false, false, false, --[[true]]false, false, false, true)
 	while true do
 		EmitSfx(blinks[i], SFX.CEG)
 		Sleep(500)
