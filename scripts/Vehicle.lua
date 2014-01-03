@@ -104,7 +104,7 @@ for weaponID = 1, info.numWeapons do
 		for i = 1, burstLengths[weaponID] do
 			launchPoints[weaponID][i] = piece("launchpoint_" .. weaponID .. "_" .. i)
 		end	
-	elseif weaponID ~= amsID then
+	elseif weaponID then
 		flares[weaponID] = piece ("flare_" .. weaponID)
 	end
 	--[[if info.turretIDs[weaponID] then
@@ -349,11 +349,11 @@ function script.Deactivate()
 end
 
 local function WeaponCanFire(weaponID)
-	if weaponID == amsID then
-		return true
-	end
 	if turretIDs[weaponID] and limbHPs["turret"] <= 0 then
 		return false
+	end
+	if weaponID == amsID then -- check AMS after limbs
+		return true
 	end
 	if jammableIDs[weaponID] and not activated then
 		return false

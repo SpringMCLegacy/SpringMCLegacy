@@ -156,6 +156,7 @@ function gadget:UnitCreated(unitID, unitDefID, teamID, builderID)
 			elseif pieceName:find("launchpoint_") then
 				leftArmIDs[weaponNum] = leftArmIDs[weaponNum] or IsPieceAncestor(unitID, pieceName, "lupperarm")
 				rightArmIDs[weaponNum] = rightArmIDs[weaponNum] or IsPieceAncestor(unitID, pieceName, "rupperarm")
+				turretIDs[weaponNum] = turretIDs[weaponNum] or IsPieceAncestor(unitID, pieceName, "turret")
 			end
 		end
 		

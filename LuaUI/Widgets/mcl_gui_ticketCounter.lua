@@ -18,6 +18,7 @@ local START_TICKETS = tonumber(modOptions.start_tickets) or 100
 local GAIA_TEAM_ID = Spring.GetGaiaTeamID()
 local GAIA_ALLY_ID = select(6, Spring.GetTeamInfo(GAIA_TEAM_ID))
 local MY_TEAM_ID = Spring.GetMyTeamID()
+local MY_ALLY_ID = select(6, Spring.GetTeamInfo(MY_TEAM_ID))
 
 local UPLINK_ID = UnitDefNames["upgrade_uplink"].id
 
@@ -47,6 +48,8 @@ colors.white = "\255\255\255\255"
 colors.black = "\255\001\001\001"
 colors.grey = "\255\160\160\160"
 colors.slategray = "\255\198\226\255"
+colors.teamGreen = "\255\153\204\000"
+colors.teamRed = "\255\172\089\089"
 
 local btFont
 
@@ -80,7 +83,8 @@ local function TicketText()
 		else
 			tickets = colors.red .. tickets
 		end
-		ticketText = ticketText .. colors.white .. "\nTeam " .. allyTeam .. ": " .. tickets
+		local textCol = allyTeam == MY_ALLY_ID and colors.teamGreen or colors.teamRed
+		ticketText = ticketText .. textCol .. "\nTeam " .. allyTeam .. colors.white .. ": " .. tickets
 	end
 end
 
