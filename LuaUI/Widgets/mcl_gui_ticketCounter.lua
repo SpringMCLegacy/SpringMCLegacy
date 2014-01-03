@@ -100,7 +100,9 @@ function widget:Initialize()
 	btFont = gl.LoadFont("LuaUI/Fonts/bt_oldstyle.ttf", 16, 2, 30)
 	TicketText()
 	haveArty = Spring.GetTeamUnitsCounts(MY_TEAM_ID)[UPLINK_ID] or 0
-	widget:GamePreload()
+	if Spring.GetGameFrame() > 0 then
+		widget:GamePreload()
+	end
 end
 
 function widget:PlayerChanged()
