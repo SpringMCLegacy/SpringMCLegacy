@@ -55,6 +55,22 @@ local sendOrderCmdDesc = {
 	action = 'submit_order',
 	tooltip = "Submit your purchasing order",
 }
+local CMD_RUNNING_TOTAL = GG.CustomCommands.GetCmdID("CMD_RUNNING_TOTAL")
+local runningTotalCmdDesc = {
+	id = CMD_RUNNING_TOTAL,
+	type   = CMDTYPE.ICON,
+	name   = "Order C-Bills: \n0",
+	disabled = true,
+}
+local CMD_RUNNING_TONS = GG.CustomCommands.GetCmdID("CMD_RUNNING_TONS")
+local runningTonsCmdDesc = {
+	id = CMD_RUNNING_TONS,
+	type   = CMDTYPE.ICON,
+	name   = "Order Tonnes: \n0",
+	disabled = true,
+}
+
+
 
 -- Variables
 local typeStrings = {"lightmech", "mediummech", "heavymech", "assaultmech", "vehicle", "vtol", "aero"}
@@ -83,6 +99,8 @@ local teamHadFirstDrop = {} -- teamHadFirstDrop[teamID] = true/false -- FIXME: u
 
 local function AddBuildMenu(unitID)
 	InsertUnitCmdDesc(unitID, sendOrderCmdDesc)
+	InsertUnitCmdDesc(unitID, runningTotalCmdDesc)
+	InsertUnitCmdDesc(unitID, runningTonsCmdDesc)
 	for i, cmdDesc in ipairs(menuCmdDescs) do
 		InsertUnitCmdDesc(unitID, cmdDesc)
 	end
@@ -175,13 +193,17 @@ function gadget:AllowCommand(unitID, unitDefID, teamID, cmdID, cmdParams, cmdOpt
 			local tonnage = GetTeamResources(teamID, "energy")
 			if not rightClick then
 				if (teamSlotsRemaining[teamID] - runningSize) < 1 then return false end
-				if runningTotal + cost < money and runningTons + weight < tonnage then -- check we can afford it
-					Spring.SendMessageToTeam(teamID, "Running C-Bills: " .. runningTotal + cost)
-					Spring.SendMessageToTeam(teamID, "Running Tonnage: " .. runningTons + weight)
-					orderCosts[unitID] = runningTotal + cost
-					orderTons[unitID] = runningTons + weight
+				local newTotal = runningTotal + cost
+				local newTons = runningTons + weight
+				if  newTotal < money and newTons < tonnage then -- check we can afford it
+					Spring.SendMessageToTeam(teamID, "Running C-Bills: " .. newTotal)
+					Spring.SendMessageToTeam(teamID, "Running Tonnage: " .. newTons)
+					orderCosts[unitID] = newTotal
+					orderTons[unitID] = newTons
 					orderSizes[unitID] = runningSize + 1
-					CheckBuildOptions(unitID, teamID, money - (runningTotal + cost), tonnage - (runningTons + weight), cmdID)
+					CheckBuildOptions(unitID, teamID, money - (newTotal), tonnage - (newTons), cmdID)
+					EditUnitCmdDesc(unitID, FindUnitCmdDesc(unitID, CMD_RUNNING_TOTAL), {name = "Order C-Bills: \n" .. newTotal})
+					EditUnitCmdDesc(unitID, FindUnitCmdDesc(unitID, CMD_RUNNING_TONS), {name = "Order Tonnes: \n" .. newTons})
 					return true
 				else
 					return false -- not enough money
@@ -194,6 +216,8 @@ function gadget:AllowCommand(unitID, unitDefID, teamID, cmdID, cmdParams, cmdOpt
 					orderTons[unitID] = runningTons - weight
 					orderSizes[unitID] = runningSize - 1
 					CheckBuildOptions(unitID, teamID, money - (runningTotal - cost), tonnage - (runningTons - weight))
+					EditUnitCmdDesc(unitID, FindUnitCmdDesc(unitID, CMD_RUNNING_TOTAL), {name = "Order C-Bills: \n" .. runningTotal - cost})
+					EditUnitCmdDesc(unitID, FindUnitCmdDesc(unitID, CMD_RUNNING_TONS), {name = "Order Tonnes: \n" .. runningTons - weight})
 					return true
 				else
 					return false
@@ -380,6 +404,8 @@ function gadget:GameFrame(n)
 					EditUnitCmdDesc(unitID, FindUnitCmdDesc(unitID, CMD_SEND_ORDER), {disabled = true, name = minutes .. ":" .. seconds})
 				else
 					EditUnitCmdDesc(unitID, FindUnitCmdDesc(unitID, CMD_SEND_ORDER), {disabled = false, name = "Submit \nOrder "})
+					EditUnitCmdDesc(unitID, FindUnitCmdDesc(unitID, CMD_RUNNING_TOTAL), {name = "Order C-Bills: \n0"})
+					EditUnitCmdDesc(unitID, FindUnitCmdDesc(unitID, CMD_RUNNING_TONS), {name = "Order Tonnes: \n0"})
 					coolDowns[teamID] = nil
 				end
 			end
