@@ -99,6 +99,7 @@ function fx()
 end
 
 function script.Create()
+	Spring.SetUnitNoSelect(unitID, true)
 	-- setup fx pieces
 	for _, exhaust in ipairs(vExhaustLarges) do
 		Turn(exhaust, x_axis, math.rad(89))

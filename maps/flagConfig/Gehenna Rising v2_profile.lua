@@ -26,4 +26,9 @@ local resources = {
 	},
 }
 
-return resources
+local temps = {
+	ambient = 98,
+	water = 110, -- lava!
+}
+
+return resources, temps

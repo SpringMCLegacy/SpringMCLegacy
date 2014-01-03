@@ -210,6 +210,8 @@ function gadget:GamePreload()
 		end
 		local temps = {ambient = 20, water = 10}
 		GG.MapTemperatures = temps
+		Spring.SetGameRulesParam("MAP_TEMP_AMBIENT", temps.ambient)
+		Spring.SetGameRulesParam("MAP_TEMP_WATER", temps.water)
 	end
 end
 
@@ -402,18 +404,6 @@ function gadget:UnitDestroyed(unitID, unitDefID, unitTeam, attackerID, attackerD
 	end
 	
 	CheckAllyTeamUnits(unitTeam)
-	-- TODO: old turret system, remove
-	--[[local flagID = turretFlags[unitID]
-	if flagID then
-		local x, y, z = GetUnitPosition(unitID)
-		local turretRespawnDelay = 120 * 30
-		DelayCall(SpawnTurret, {x, y, z, HeadingToFacing(GetUnitHeading(unitID)), flagID, unitDefID}, turretRespawnDelay)
-		turretFlags[unitID] = nil
-		flagTurrets[flagID][unitID] = nil
-		for _, flagCapType in pairs(flagTypes) do
-			flagTypeDefenders[flagCapType][unitID] = nil
-		end
-	end]]
 end
 
 function gadget:UnitGiven(unitID, unitDefID, newTeam, oldTeam)
