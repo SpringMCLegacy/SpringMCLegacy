@@ -61,8 +61,8 @@ local dropTime = "Dropship: 00:00"
 local artyTime = ""
 local haveArty = 0
 local fps = "fps: " .. colors.slategray .. GetFPS()
-local tempAmbient = "Ambient: " .. (GetGameRulesParam("MAP_TEMP_AMBIENT") or 20) .. "\'C"
-local tempWater = "Water: " .. (GetGameRulesParam("MAP_TEMP_WATER") or 10) .. "\'C"
+local tempAmbient = ""
+local tempWater = ""
 
 local function FramesToMinutesAndSeconds(frames)
 	local gameSecs = floor(frames / 30)
@@ -114,11 +114,12 @@ function widget:UnitDestroyed(unitID, unitDefID, teamID)
 	end
 end
 
+function widget:GamePreload()
+	tempAmbient = "Ambient: " .. GetGameRulesParam("MAP_TEMP_AMBIENT") .. " \'C"
+	tempWater = "Water: " .. GetGameRulesParam("MAP_TEMP_WATER") .. " \'C"
+end
+
 function widget:GameFrame(n)
-	if n == 0 then
-		tempAmbient = "Ambient: " .. GetGameRulesParam("MAP_TEMP_AMBIENT") .. "\'C"
-		tempWater = "Water: " .. GetGameRulesParam("MAP_TEMP_WATER") .. "\'C"
-	end
 	if n % 30 == 0 then
 		local gameSecs = GetGameSeconds()
 		local hours = format("%d",  floor(gameSecs / 3600))
