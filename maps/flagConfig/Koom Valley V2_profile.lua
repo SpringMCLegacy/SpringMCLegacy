@@ -47,8 +47,8 @@ local resources = {
 }
 
 local temps = {
-	ambient = -20,
-	water = -20, -- no water on koom
+	ambient = 30,
+	water = 10, -- no water on koom
 }
 
 return resources, temps

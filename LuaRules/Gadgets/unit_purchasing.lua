@@ -184,8 +184,9 @@ function gadget:AllowCommand(unitID, unitDefID, teamID, cmdID, cmdParams, cmdOpt
 			local towerType = UnitDefs[-cmdID].customParams.towertype
 			if towerType then return false end
 			
-			local cost = UnitDefs[-cmdID].metalCost
-			local weight = UnitDefs[-cmdID].energyCost
+			local unitDef = UnitDefs[-cmdID]
+			local cost = unitDef.metalCost
+			local weight = unitDef.customParams.unittype == "vehicle" and 2 * unitDef.energyCost or unitDef.energyCost -- vehicles come in pairs
 			local runningTotal = orderCosts[unitID] or 0
 			local runningTons = orderTons[unitID] or 0
 			local runningSize = orderSizes[unitID] or 0

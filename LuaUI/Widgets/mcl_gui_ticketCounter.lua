@@ -61,6 +61,8 @@ local dropTime = "Dropship: 00:00"
 local artyTime = ""
 local haveArty = 0
 local fps = "fps: " .. colors.slategray .. GetFPS()
+local tempAmbient = "Ambient: " .. (GetGameRulesParam("MAP_TEMP_AMBIENT") or 20) .. "\'C"
+local tempWater = "Water: " .. (GetGameRulesParam("MAP_TEMP_WATER") or 10) .. "\'C"
 
 local function FramesToMinutesAndSeconds(frames)
 	local gameSecs = floor(frames / 30)
@@ -113,6 +115,10 @@ function widget:UnitDestroyed(unitID, unitDefID, teamID)
 end
 
 function widget:GameFrame(n)
+	if n == 0 then
+		tempAmbient = "Ambient: " .. GetGameRulesParam("MAP_TEMP_AMBIENT") .. "\'C"
+		tempWater = "Water: " .. GetGameRulesParam("MAP_TEMP_WATER") .. "\'C"
+	end
 	if n % 30 == 0 then
 		local gameSecs = GetGameSeconds()
 		local hours = format("%d",  floor(gameSecs / 3600))
@@ -142,7 +148,8 @@ function widget:GameFrame(n)
 	end
 end
 
-local timeHeight = yMax - 80 - (16 * #allyTeams)
+local tempHeight = yMax - 80 - (16 * #allyTeams)
+local timeHeight = tempHeight - 48
 
 function widget:DrawScreen()
 	btFont:Begin()
@@ -153,7 +160,10 @@ function widget:DrawScreen()
 			btFont:Print(artyTime, xMax * 0.75, yMax - 48, 16, "odr")
 		end
 		btFont:Print(ticketText, xMax - 148, yMax - 32, 16, "od")
-		btFont:Print(gameTime, xMax - 148, timeHeight, 12, "od")
-		btFont:Print(fps, xMax - 148, timeHeight - 16, 12, "od")
+		btFont:Print(tempAmbient, xMax - 16, tempHeight, 12, "odr")
+		btFont:Print(tempWater, xMax - 16, tempHeight - 16, 12, "odr")
+
+		btFont:Print(gameTime, xMax - 16, timeHeight, 12, "odr")
+		btFont:Print(fps, xMax - 16, timeHeight - 16, 12, "odr")
 	btFont:End()
 end

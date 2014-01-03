@@ -157,6 +157,7 @@ local function LandingGearUp()
 end
 
 function script.Create()
+	Spring.SetUnitNoSelect(unitID, true)
 	Turn(exhaustlarge, x_axis, math.rad(90), 0)
 	Spin(exhaustlarge, y_axis, math.rad(360))
 	for i = 1, 4 do
