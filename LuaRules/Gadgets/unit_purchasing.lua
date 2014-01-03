@@ -227,7 +227,7 @@ function gadget:AllowCommand(unitID, unitDefID, teamID, cmdID, cmdParams, cmdOpt
 		elseif cmdID == CMD_SEND_ORDER then
 			local orderQueue = Spring.GetFullBuildQueue(unitID)
 			local money = GetTeamResources(teamID, "metal")
-			local cost = orderCosts[unitID]
+			local cost = orderCosts[unitID] or 0
 			-- check we can afford the order; possible that a previously affordable order is now too much e.g. if towers have been purchased
 			-- N.B. It should not be possible for available tonnage to change between orders, so we don't need to check that
 			if cost > money then return false end
