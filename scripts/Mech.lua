@@ -60,7 +60,7 @@ local amsID = info.amsID
 local limbHPs = {}
 for limb,limbHP in pairs(info.limbHPs) do -- copy table from defaults
 	limbHPs[limb] = limbHP
-	SetUnitRulesParam(unitID, "LIMB_HP_" .. limb:upper(), 100)
+	SetUnitRulesParam(unitID, "limb_hp_" .. limb, 100)
 end
 
 --Turning/Movement Locals
@@ -73,7 +73,7 @@ local currLaunchPoint = 1
 local currHeatLevel = 0
 local excessHeat = 0
 SetUnitRulesParam(unitID, "heat", 0)
-SetUnitRulesParam(unitID, "excessheat", 0)
+SetUnitRulesParam(unitID, "excess_heat", 0)
 local jumpHeat = 40
 local SlowDownRate = 2
 
@@ -166,7 +166,7 @@ function ChangeHeat(amount)
 		currHeatLevel = 0
 	end
 	SetUnitRulesParam(unitID, "heat", math.floor(100 * currHeatLevel / heatLimit))
-	SetUnitRulesParam(unitID, "excessheat", math.floor(100 * excessHeat / heatLimit))
+	SetUnitRulesParam(unitID, "excess_heat", math.floor(100 * excessHeat / heatLimit))
 end
 
 local function CoolOff()
@@ -298,7 +298,7 @@ function limbHPControl(limb, damage)
 			hideLimbPieces(limb, false)
 		end
 		limbHPs[limb] = newHP
-		SetUnitRulesParam(unitID, "LIMB_HP_" .. limb:upper(), newHP/info.limbHPs[limb]*100)
+		SetUnitRulesParam(unitID, "limb_hp_" .. limb, newHP/info.limbHPs[limb]*100)
 	end
 	return currHP
 end

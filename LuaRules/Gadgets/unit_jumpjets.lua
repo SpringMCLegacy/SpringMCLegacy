@@ -252,7 +252,7 @@ local function Jump(unitID, goal, cmdTag)
 		Spring.UnitScript.CallAsUnit(unitID,env.PreJump,delay,turn,lineDist)
 	  end
   end
-  spSetUnitRulesParam(unitID,"jumpReloadBar",0)
+  spSetUnitRulesParam(unitID,"jump_reload_bar",0)
 ---------------------------------------------------------------
   local function JumpLoop()
   
@@ -327,7 +327,7 @@ local function Jump(unitID, goal, cmdTag)
 	
     local reloadTimeInv = 1/reloadTime
     for i=1, reloadTime do
-      spSetUnitRulesParam(unitID,"jumpReloadBar",100*i*reloadTimeInv)
+      spSetUnitRulesParam(unitID,"jump_reload_bar",100*i*reloadTimeInv)
       Sleep()
     end
   end
@@ -375,7 +375,7 @@ function gadget:UnitCreated(unitID, unitDefID, unitTeam)
   local t = spGetGameSeconds()
   lastJump[unitID] = t - jumpDefs[unitDefID].reload
   spInsertUnitCmdDesc(unitID, jumpCmdDesc)
-  spSetUnitRulesParam(unitID,"jumpReloadBar",100)
+  spSetUnitRulesParam(unitID,"jump_reload_bar",100)
   spSetUnitRulesParam(unitID,"jumpReload", jumpDefs[unitDefID].reload)
   spSetUnitRulesParam(unitID,"jumpSpeed", jumpDefs[unitDefID].speed)
   spSetUnitRulesParam(unitID,"jumpRange", jumpDefs[unitDefID].range)
@@ -434,7 +434,7 @@ function gadget:CommandFallback(unitID, unitDefID, teamID,    -- keeps getting
   local jumpDef = jumpDefs[unitDefID]
   local range   = spGetUnitRulesParam(unitID, "jumpRange") or jumpDef.range
   local reload  = spGetUnitRulesParam(unitID, "jumpReload") or jumpDef.reload or 0
-  local barFull = spGetUnitRulesParam(unitID, "jumpReloadBar") == 100
+  local barFull = spGetUnitRulesParam(unitID, "jump_reload_bar") == 100
   local t       = spGetGameSeconds()
 
   if (distSqr < (range*range)) then

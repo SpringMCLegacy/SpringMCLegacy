@@ -66,7 +66,7 @@ function gadget:UnitExperience(unitID, unitDefID, teamID, newExp, oldExp)
 				end
 			end
 		end
-		Spring.SetUnitRulesParam(unitID, "XP", math.min(100, 100 * newExp / PERK_XP_COST))
+		Spring.SetUnitRulesParam(unitID, "perk_xp", math.min(100, 100 * newExp / PERK_XP_COST))
 	end
 end
 
@@ -85,7 +85,7 @@ function gadget:AllowCommand(unitID, unitDefID, teamID, cmdID, cmdParams, cmdOpt
 			local newExp = currExp - PERK_XP_COST
 			--newExp = newExp >= 0 and newExp or 0 -- clamp >= 0, due to "first-perk-is-free"
 			SetUnitExperience(unitID, newExp)
-			Spring.SetUnitRulesParam(unitID, "XP", math.min(100, 100 * newExp / PERK_XP_COST))
+			Spring.SetUnitRulesParam(unitID, "perk_xp", math.min(100, 100 * newExp / PERK_XP_COST))
 			-- Check if we have enough xp left to select another perk
 			if newExp < PERK_XP_COST then
 				-- disable perks here
@@ -107,7 +107,7 @@ function gadget:UnitCreated(unitID, unitDefID, teamID, builderID)
 	local cp = ud.customParams
 	if cp and cp.unittype == "mech" then
 		 -- start out with enough XP for one perk
-		Spring.SetUnitRulesParam(unitID, "XP", 100)
+		Spring.SetUnitRulesParam(unitID, "perk_xp", 100)
 		SetUnitExperience(unitID, PERK_XP_COST)
 		-- Only give perks to mech pilots
 		currentPerks[unitID] = {}
