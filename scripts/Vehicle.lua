@@ -140,10 +140,10 @@ end
 
 -- non-local function called by gadgets/game_ammo.lua
 function ChangeAmmo(ammoType, amount) 
-	local newAmmoLevel = currAmmo[ammoType] + amount
+	local newAmmoLevel = currAmmo[ammoType] + amount -- amount is a -ve to deduct
 	if newAmmoLevel <= maxAmmo[ammoType] then
 		currAmmo[ammoType] = newAmmoLevel
-		SetUnitRulesParam(unitID, "ammo_" .. ammoType, newAmmoLevel)
+		SetUnitRulesParam(unitID, "ammo_" .. ammoType, 100 * newAmmoLevel / maxAmmo[ammoType])
 		return true -- Ammo was changed
 	end
 	return false -- Ammo was not changed
