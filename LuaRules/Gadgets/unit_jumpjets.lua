@@ -410,6 +410,13 @@ function gadget:AllowCommand(unitID, unitDefID, teamID,
   return true -- allowed
 end
 
+local function PrintCommands(unitID)
+  for pos, command in pairs(Spring.GetUnitCommands(unitID)) do
+     Spring.Echo("Command: " .. pos .. " is ID " .. command.id)
+   end
+end
+
+
 local function TurnOrder(unitID, x, y, z)
    --[[Spring.GiveOrderArrayToUnitArray(
      { unitID },
@@ -418,9 +425,20 @@ local function TurnOrder(unitID, x, y, z)
 	   { CMD_TURN, {x, y, z}, {"alt", "shift"} },
 	 }
    )]]
+   --[[Spring.Echo("TurnOrder before inserting")
+   PrintCommands(unitID)
    
-   Spring.GiveOrderToUnit(unitID, CMD_JUMP, {x, y, z}, {"alt", "shift"})
-   Spring.GiveOrderToUnit(unitID, CMD_TURN, {x, y, z}, {"alt", "shift"})
+   Spring.Echo("Now insert TURN")]]
+   --Spring.GiveOrderToUnit(unitID, CMD_TURN, {x, y, z}, {"alt", "shift"})
+   Spring.GiveOrderToUnit(unitID, CMD.INSERT, {0, CMD_TURN, CMD.OPT_ALT, x, y, z}, {"alt"})
+   
+   --Spring.Echo("Now insert JUMP")
+   --Spring.GiveOrderToUnit(unitID, CMD_JUMP, {x, y, z}, {"alt", "shift"})
+   Spring.GiveOrderToUnit(unitID, CMD.INSERT, {1, CMD_JUMP, CMD.OPT_SHIFT, x, y, z}, {"alt"}) --options.ALT     -> treat param0 as a position instead of a tag 
+   --[[PrintCommands(unitID)
+   
+   Spring.Echo("CMD_TURN: " .. CMD_TURN .. " CMD_JUMP: " .. CMD_JUMP)
+   PrintCommands(unitID)]]
 end
 
 
@@ -485,6 +503,7 @@ function gadget:CommandFallback(unitID, unitDefID, teamID,    -- keeps getting
 	
 	else -- need to turn
 	  if not GG.turning[unitID] then
+	    --Spring.Echo("not GG.turning")
 	    GG.Delay.DelayCall(TurnOrder, {unitID, cmdParams[1], cmdParams[2], cmdParams[3]}, 1)
 	  end
 	  return true, true
