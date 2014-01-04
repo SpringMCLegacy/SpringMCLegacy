@@ -67,8 +67,9 @@ local RESTORE_DELAY = Spring.UnitScript.GetLongestReloadTime(unitID) * 2
 
 local currLaunchPoint = 1
 local currHeatLevel = 0
-SetUnitRulesParam(unitID, "heat", 0)
 local excessHeat = 0
+SetUnitRulesParam(unitID, "heat", 0)
+SetUnitRulesParam(unitID, "excessheat", 0)
 
 --piece defines
 local body, turret = piece ("body", "turret")
