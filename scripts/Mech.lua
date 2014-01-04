@@ -49,7 +49,7 @@ local maxAmmo = info.maxAmmo
 local currAmmo = {} -- copy maxAmmo table into currAmmo
 for k,v in pairs(maxAmmo) do 
 	currAmmo[k] = v 
-	SetUnitRulesParam(unitID, "ammo_" .. k .. "_limit", v)
+	SetUnitRulesParam(unitID, "ammo_" .. k, 100)
 end
 local hasArms = info.arms
 local leftArmIDs = info.leftArmIDs
@@ -58,8 +58,9 @@ local leftArmMasterID = info.leftArmMasterID
 local rightArmMasterID = info.rightArmMasterID
 local amsID = info.amsID
 local limbHPs = {}
-for k,v in pairs(info.limbHPs) do -- copy table from defaults
-	limbHPs[k] = v
+for limb,limbHP in pairs(info.limbHPs) do -- copy table from defaults
+	limbHPs[limb] = limbHP
+	SetUnitRulesParam(unitID, "LIMB_HP_" .. limb:upper(), 100)
 end
 
 --Turning/Movement Locals
@@ -70,6 +71,8 @@ local RESTORE_DELAY = Spring.UnitScript.GetLongestReloadTime(unitID) * 2
 
 local currLaunchPoint = 1
 local currHeatLevel = 0
+SetUnitRulesParam(unitID, "heat", 0)
+local excessHeat = 0
 local jumpHeat = 40
 local SlowDownRate = 2
 
@@ -129,10 +132,10 @@ end
 
 -- non-local function called by gadgets/game_ammo.lua
 function ChangeAmmo(ammoType, amount) 
-	local newAmmoLevel = currAmmo[ammoType] + amount
+	local newAmmoLevel = currAmmo[ammoType] + amount -- amount is a -ve to deduct
 	if newAmmoLevel <= maxAmmo[ammoType] then
 		currAmmo[ammoType] = newAmmoLevel
-		SetUnitRulesParam(unitID, "ammo_" .. ammoType, newAmmoLevel)
+		SetUnitRulesParam(unitID, "ammo_" .. ammoType, newAmmoLevel / maxAmmo[ammoType] * 100)
 		return true -- Ammo was changed
 	end
 	return false -- Ammo was not changed
@@ -148,6 +151,21 @@ local function SpinBarrels(weaponID, start)
 		StopSpin(spinPieces[weaponID], z_axis, spinSpeeds[weaponID]/10)
 	end
 	spinPiecesState[weaponID] = start -- must come after the Sleep
+end
+
+function ChangeHeat(amount)
+	currHeatLevel = currHeatLevel + amount
+	if currHeatLevel > heatLimit then
+		excessHeat = excessHeat + currHeatLevel - heatLimit
+		currHeatLevel = heatLimit
+		if excessHeat >= heatLimit then
+			Spring.DestroyUnit(unitID, true)
+		end
+	elseif currHeatLevel < 0 then
+		currHeatLevel = 0
+	end
+	SetUnitRulesParam(unitID, "heat", math.floor(100 * currHeatLevel / heatLimit))
+	SetUnitRulesParam(unitID, "excessheat", math.floor(100 * excessHeat / heatLimit))
 end
 
 local function CoolOff()
@@ -168,17 +186,14 @@ local function CoolOff()
 	local heatCritical = false
 	while true do
 		local heatElevatedLimit = 0.5 * heatLimit
+		local heatCriticalLimit = 0.9 * heatLimit
 		coolRate = baseCoolRate -- reset coolRate in case of perk
 		if inWater then
 			local x, _, z = GetUnitBasePosition(unitID)
 			local depth = min(4, GetGroundHeight(x, z) / -10)
 			coolRate = baseCoolRate * waterCoolRate * depth
 		end
-		currHeatLevel = currHeatLevel - coolRate
-		if currHeatLevel < 0 then 
-			currHeatLevel = 0 
-		end
-		if currHeatLevel > heatLimit then 
+		if currHeatLevel > heatCriticalLimit then 
 			if not heatCritical then -- either elevated->critical or normal->critical
 				heatElevated = false
 				heatCritical = true
@@ -213,8 +228,9 @@ local function CoolOff()
 			end
 			heatCritical = false
 			heatElevated = false
+			excessHeat = 0 -- if we managed to get out of critical heat, remove all excess
 		end
-		SetUnitRulesParam(unitID, "heat", currHeatLevel)
+		ChangeHeat(-coolRate)
 		if hasEcm and not moving then
 			AddUnitSeismicPing(unitID, 20)
 		end
@@ -290,11 +306,7 @@ function script.HitByWeapon(x, z, weaponID, damage)
 	local wd = WeaponDefs[weaponID]
 	local heatDamage = wd and wd.customParams.heatdamage or 0
 	--Spring.Echo(wd.customParams.heatdamage)
-	currHeatLevel = currHeatLevel + heatDamage
-	if currHeatLevel > 2 * heatLimit then
-		Spring.DestroyUnit(unitID, true)
-	end
-	SetUnitRulesParam(unitID, "heat", currHeatLevel)
+	ChangeHeat(heatDamage)
 	local hitPiece = GetUnitLastAttackedPiece(unitID) or ""
 	if hitPiece == "torso" or hitPiece == "pelvis" then 
 		return damage
@@ -466,8 +478,7 @@ function script.BlockShot(weaponID, targetID, userTarget)
 end
 
 function script.FireWeapon(weaponID)
-	currHeatLevel = currHeatLevel + firingHeats[weaponID]
-	SetUnitRulesParam(unitID, "heat", currHeatLevel)
+	ChangeHeat(firingHeats[weaponID])
 	if barrels[weaponID] and barrelRecoils[weaponID] then
 		Move(barrels[weaponID], z_axis, -barrelRecoils[weaponID], BARREL_SPEED)
 		WaitForMove(barrels[weaponID], z_axis)
@@ -515,7 +526,7 @@ function script.QueryWeapon(weaponID)
 end
 
 function script.Killed(recentDamage, maxHealth)
-	if currHeatLevel > 2 * heatLimit then
+	if excessHeat >= heatLimit then
 		Spring.Echo("NUUUUUUUUUUUKKKKKE")
 	end
 	GG.PlaySoundForTeam(Spring.GetUnitTeam(unitID), "BB_BattleMech_destroyed", 1)
