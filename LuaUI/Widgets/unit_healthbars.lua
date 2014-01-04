@@ -135,7 +135,7 @@ local barColors = {
   emp_p   = { 0.40,0.40,0.80,barAlpha },
   emp_b   = { 0.60,0.60,0.90,barAlpha },
   capture = { 1.00,0.50,0.00,barAlpha },
-  build   = { 0.75,0.75,0.75,barAlpha },
+  xp   = { 0.75,0.75,0.75,barAlpha },
   stock   = { 0.50,0.50,0.50,barAlpha },
   reload  = { 0.00,0.60,0.60,barAlpha },
   ammo    = { 0.60,0.60,0.40,barAlpha },
@@ -620,6 +620,12 @@ do
         if jumpReload then
           AddBar("Jump Jets",jumpReload,"jump",'')
         end
+      end
+	  
+	   --// XP PERK
+	   local xp = GetUnitRulesParam(unitID, "XP")
+      if xp then
+          AddBar("Perk XP",xp/100,"xp",'')
       end
 	  
 	  --// AMMO
