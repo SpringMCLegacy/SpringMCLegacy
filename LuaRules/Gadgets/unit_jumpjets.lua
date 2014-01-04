@@ -410,6 +410,19 @@ function gadget:AllowCommand(unitID, unitDefID, teamID,
   return true -- allowed
 end
 
+local function TurnOrder(unitID, x, y, z)
+   --[[Spring.GiveOrderArrayToUnitArray(
+     { unitID },
+	 {
+	   { CMD_JUMP, {x, y, z}, {"alt", "shift"} },
+	   { CMD_TURN, {x, y, z}, {"alt", "shift"} },
+	 }
+   )]]
+   
+   Spring.GiveOrderToUnit(unitID, CMD_JUMP, {x, y, z}, {"alt", "shift"})
+   Spring.GiveOrderToUnit(unitID, CMD_TURN, {x, y, z}, {"alt", "shift"})
+end
+
 
 function gadget:CommandFallback(unitID, unitDefID, teamID,    -- keeps getting 
                                 cmdID, cmdParams, cmdOptions) -- called until
@@ -423,12 +436,10 @@ function gadget:CommandFallback(unitID, unitDefID, teamID,    -- keeps getting
   if (jumping[unitID]) then
     return true, false -- command was used but don't remove it
   end
+  if GG.turning[unitID] then
+    return true, false
+  end
   
-  --[[ Spring.GiveOrderToUnit(unitID,
-     CMD.INSERT,
-     {-1, CMD_TURN, CMD.OPT_SHIFT, cmdParams[1], cmdParams[2], cmdParams[3]},
-     {"alt"}
-   )]]
   local x, y, z = spGetUnitBasePosition(unitID)
   local distSqr = GetDist2Sqr({x, y, z}, cmdParams)
   local jumpDef = jumpDefs[unitDefID]
@@ -436,8 +447,18 @@ function gadget:CommandFallback(unitID, unitDefID, teamID,    -- keeps getting
   local reload  = spGetUnitRulesParam(unitID, "jumpReload") or jumpDef.reload or 0
   local barFull = spGetUnitRulesParam(unitID, "jump_reload_bar") == 100
   local t       = spGetGameSeconds()
+  
 
   if (distSqr < (range*range)) then
+    -- Extra FLOZi code
+    local dx, dz = cmdParams[1] - x, cmdParams[3] - z
+    local MINIMUM_TURN = 10 * 182
+	local newHeading = math.deg(math.atan2(dx, dz)) * 182 -- COB_ANGULAR	
+	local currHeading = Spring.GetUnitCOBValue(unitID, COB.HEADING)
+	local deltaHeading = newHeading - currHeading
+	if math.abs(deltaHeading) < MINIMUM_TURN then
+	
+	-- don't have to turn, continue as normal
     local cmdTag = spGetCommandQueue(unitID,1)[1].tag
 	 -- reload perk can change reload before bar is full so check both
     if ((t - lastJump[unitID]) >= reload) and barFull then
@@ -461,7 +482,14 @@ function gadget:CommandFallback(unitID, unitDefID, teamID,    -- keeps getting
         return true, false -- command was used, remove it 
       end
     end
-  else
+	
+	else -- need to turn
+	  if not GG.turning[unitID] then
+	    GG.Delay.DelayCall(TurnOrder, {unitID, cmdParams[1], cmdParams[2], cmdParams[3]}, 1)
+	  end
+	  return true, true
+	end
+  else -- out of range
 	if not goalSet[unitID] then
       Approach(unitID, cmdParams, range)
 	  goalSet[unitID] = true
