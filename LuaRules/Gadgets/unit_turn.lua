@@ -32,6 +32,7 @@ local turnCmdDesc = {
 
 -- Variables
 local turning = {} -- structure: turning = {unitID={turnRate=number COB units to rotate per frame, numFrames=number of frames left to rotate in, currHeading= current heading}}
+GG.turning = {} -- GG.turning[unitID] = true
 
 if (gadgetHandler:IsSyncedCode()) then
 -- SYNCED
@@ -71,6 +72,7 @@ local function StartTurn(unitID, unitDefID, tx, tz)
 	turnTable["numFrames"] = numFrames
 	turnTable["currHeading"] = currHeading
 	turning[unitID] = turnTable
+	GG.turning[unitID] = true
 	return true -- successful turn command
 end
 
@@ -81,6 +83,7 @@ local function StopTurn(unitID)
 		if env and env.StopTurn then
 			Spring.UnitScript.CallAsUnit(unitID,env.StopTurn)
 		end
+		GG.turning[unitID] = false
 	end
 end
 
@@ -129,6 +132,7 @@ function gadget:CommandFallback(unitID, unitDefID, unitTeam, cmdID, cmdParams, c
 				return true, false -- still turning
 			else
 				turning[unitID] = nil
+				GG.turning[unitID] = false
 				return true, true -- turn finished
 			end
 		end

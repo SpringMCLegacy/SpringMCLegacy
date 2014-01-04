@@ -633,9 +633,8 @@ do
 	    local ammoType = ammoTypes[i]
 		local ammoTypeLower = ammoType:lower()
 	    local ammo = GetUnitRulesParam(unitID,"ammo_" .. ammoTypeLower)
-	    --local ammoLimit = GetUnitRulesParam(unitID,"ammo_" .. ammoTypeLower .. "_limit")
-	    if ammo --[[and ammo < ammoLimit]] then
-		  AddBar(ammoType, ammo/100 --[[ammoLimit]], "ammo", "")
+	    if ammo then
+		  AddBar(ammoType, ammo/100, "ammo", "")
 	    end
 	  end
 --[[
