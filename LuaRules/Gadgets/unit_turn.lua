@@ -77,6 +77,7 @@ local function StartTurn(unitID, unitDefID, tx, tz)
 end
 
 local function StopTurn(unitID)
+	--Spring.Echo("StopTurn")
 	if turning[unitID].numFrames then -- only attempt to stop if we are actually turning
 		turning[unitID] = {} -- not nil here or gets started again by CommandFallback
 		env = Spring.UnitScript.GetScriptEnv(unitID)
@@ -108,13 +109,17 @@ function gadget:UnitCreated(unitID, unitDefID, unitTeam, builderID)
 	end
 end
 
+local CMD_JUMP = GG.CustomCommands.GetCmdID("CMD_JUMP")
 function gadget:AllowCommand(unitID, unitDefID, teamID, cmdID, cmdParams, cmdOptions)
 	local ud = UnitDefs[unitDefID]
-	if cmdID ~= CMD.SET_WANTED_MAX_SPEED and turning[unitID] and turning[unitID].numFrames then
+	if cmdID ~= CMD.SET_WANTED_MAX_SPEED and cmdID ~= CMD_JUMP and cmdID ~= CMD.INSERT and turning[unitID] and turning[unitID].numFrames then
+		--Spring.Echo("T1", cmdID)
 		if not cmdOptions["shift"] then
+			--Spring.Echo("T2")
 			StopTurn(unitID) -- Abort turn if another command issued directly (not queued)
 		end
 	elseif cmdID == CMD_TURN then
+		--Spring.Echo("CMD_TURN Allow")
 		return ud.customParams.hasturnbutton
 	end
 	return true
@@ -123,6 +128,7 @@ end
 function gadget:CommandFallback(unitID, unitDefID, unitTeam, cmdID, cmdParams, cmdOptions)
 	local ud = UnitDefs[unitDefID]
 	if cmdID == CMD_TURN then
+		--Spring.Echo("CMD_TURN Fallback")
 		if turning[unitID] == nil then
 			local tx, _, tz = cmdParams[1], cmdParams[2], cmdParams[3]
 			local canTurn = StartTurn(unitID, unitDefID, tx, tz)
