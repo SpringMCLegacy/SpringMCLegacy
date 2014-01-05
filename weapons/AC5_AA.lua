@@ -1,5 +1,5 @@
 weaponDef = {
-	name                    = "AutoCannon/5 with Flak Ammo",
+	name                    = "AC/5 Flak",
 	weaponType              = "Cannon",
 	explosionGenerator    	= "custom:HE_SMALL",
 	soundHit              	= [[AC5_Hit]],

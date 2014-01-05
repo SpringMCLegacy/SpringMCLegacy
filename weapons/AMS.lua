@@ -1,6 +1,5 @@
 weaponDef = {
-	name                    = "Anti-Missile System (AMS)",
-		
+	name                    = "AMS",
 	weaponType              = "Cannon",
 	explosionGenerator    	= "custom:MG_Hit",
 --	soundHit              	= [[MG_Hit]],

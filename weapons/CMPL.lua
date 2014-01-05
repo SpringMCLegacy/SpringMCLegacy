@@ -1,5 +1,5 @@
 weaponDef = {
-	name                    = "Clan Medium Pulse Laser",
+	name                    = "CMPulseLaser",
 	weaponType              = "BeamLaser",
 	beamLaser				= true,
 	beamBurst				= true,

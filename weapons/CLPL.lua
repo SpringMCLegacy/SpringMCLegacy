@@ -1,5 +1,5 @@
 weaponDef = {
-	name                    = "Clan Large Pulse Laser",
+	name                    = "CLPulseLaser",
 	weaponType              = "BeamLaser",
 	beamLaser				= true,
 	beamBurst				= true,

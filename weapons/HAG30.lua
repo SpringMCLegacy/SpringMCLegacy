@@ -1,5 +1,5 @@
 weaponDef = {
-	name                    = "Hyper-Assault Gauss 30",
+	name                    = "HAG 30",
 	weaponType              = "Cannon",
 	explosionGenerator    	= "custom:MG_Hit",
 	soundHit              	= [[GEN_Explode1]],

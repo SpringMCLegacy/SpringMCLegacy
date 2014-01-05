@@ -1,5 +1,5 @@
 weaponDef = {
-	name                    = "Clan Extended Range Particle Projector Cannon",
+	name                    = "CERPPC",
 	weaponType              = "Cannon",
 	explosionGenerator    	= "custom:PPC",
 --	cegTag					= "RailTrail",

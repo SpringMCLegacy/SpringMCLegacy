@@ -1,5 +1,5 @@
 weaponDef = {
-	name                    = "Rotary AutoCannon/5",
+	name                    = "Rotary AC/5",
 	weaponType              = "Cannon",
 	explosionGenerator    	= "custom:HE_SMALL",
 	soundHit              	= [[AC5_Hit]],

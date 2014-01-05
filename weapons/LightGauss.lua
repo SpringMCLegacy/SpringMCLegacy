@@ -1,5 +1,5 @@
 weaponDef = {
-	name                    = "Light Gauss Rifle",
+	name                    = "L. Gauss Rifle",
 	weaponType              = "Cannon",
 	explosionGenerator    	= "custom:LightGauss_Hit",
 	cegTag					= "RailTrail",
