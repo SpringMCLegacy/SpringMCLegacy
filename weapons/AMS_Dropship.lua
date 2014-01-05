@@ -1,5 +1,5 @@
 weaponDef = {
-	name                    = "Laser Anti-Missile System (LAMS)",
+	name                    = "Laser AMS",
 	
 	weaponType              = "BeamLaser",
 	beamLaser				= true,

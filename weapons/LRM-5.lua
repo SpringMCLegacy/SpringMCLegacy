@@ -1,5 +1,5 @@
 weaponDef = {
-	name                    = "Long Range Missile 5",
+	name                    = "LRM-5",
 	weaponType              = "MissileLauncher",
 	renderType				= 1,
 	explosionGenerator    	= "custom:HE_SMALL",

@@ -1,5 +1,5 @@
 weaponDef = {
-	name                    = "Extended Range Medium Beam Laser",
+	name                    = "ERMLaser",
 	weaponType              = "BeamLaser",
 	beamLaser				= true,
 	beamBurst				= true,

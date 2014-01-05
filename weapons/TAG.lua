@@ -1,5 +1,5 @@
 weaponDef = {
-	name                    = "Target Acquisition Gear (TAG) Laser Designator",
+	name                    = "TAG Laser",
 	weaponType              = "BeamLaser",
 	beamLaser				= true,
 	beamBurst				= true,

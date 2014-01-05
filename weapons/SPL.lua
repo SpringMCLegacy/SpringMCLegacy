@@ -1,5 +1,5 @@
 weaponDef = {
-	name                    = "Small Pulse Laser",
+	name                    = "SPulseLaser",
 	weaponType              = "BeamLaser",
 	beamLaser				= true,
 	beamBurst				= true,

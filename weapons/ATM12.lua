@@ -1,5 +1,5 @@
 weaponDef = {
-	name                    = "Advanced Tactical Missile 12",
+	name                    = "ATM 12",
 	weaponType              = "MissileLauncher",
 	renderType				= 1,
 	explosionGenerator    	= "custom:HE_MEDIUM",

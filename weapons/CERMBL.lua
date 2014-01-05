@@ -1,5 +1,5 @@
 weaponDef = {
-	name                    = "Clan Extended Range Medium Beam Laser",
+	name                    = "CERMLaser",
 	weaponType              = "BeamLaser",
 	beamLaser				= true,
 	beamBurst				= true,

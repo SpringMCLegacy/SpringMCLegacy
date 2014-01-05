@@ -1,5 +1,5 @@
 weaponDef = {
-	name                    = "LBX/10 AutoCannon",
+	name                    = "LBX/10",
 	weaponType              = "Cannon",
 	explosionGenerator    	= "custom:MG_Hit",
 --	soundHit              	= [[GEN_Explode1]],

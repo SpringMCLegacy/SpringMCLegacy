@@ -1,5 +1,5 @@
 weaponDef = {
-	name                    = "Medium Pulse Laser",
+	name                    = "MPulseLaser",
 	weaponType              = "BeamLaser",
 	interceptor				= true,
 	beamLaser				= true,
