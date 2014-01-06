@@ -382,7 +382,7 @@ function CheckAllyTeamUnits(unitTeam)
 		-- If it was, this implies they lost all beacons and DZ so can't get any more
 		if allyTeamUnitCount <= 1 then
 			-- Therefore deduct (nearly) all their remaining tickets
-			tickets[allyTeam] = 5
+			tickets[allyTeam] = math.min(5, tickets[allyTeam])
 			DecrementTickets(allyTeam)
 		end
 	end

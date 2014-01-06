@@ -20,3 +20,7 @@ weird unit movement
  it seems that the hitvolume of the dropzone is too large
 
  [f=0032972] [unit_script.lua] Error: [string "scripts/mech.lua"]:132: attempt to perform arithmetic on field '?' (a nil value)
+ 
+ can't rebuild dropzone once lost unless cap _new_ flag
+ 
+ [f=0007014] you have more than the lance supports in group #1
