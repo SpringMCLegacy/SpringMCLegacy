@@ -616,9 +616,9 @@ do
 	  
 	  --// JUMPJET
       if (drawJumpJet)and(ci.canJump) then
-        local jumpReload = GetUnitRulesParam(unitID,"jump_reload_bar") / 100
+        local jumpReload = GetUnitRulesParam(unitID,"jump_reload_bar")
         if jumpReload then
-          AddBar("Jump Jets",jumpReload,"jump",'')
+          AddBar("Jump Jets",jumpReload/100,"jump",'')
         end
       end
 	  
