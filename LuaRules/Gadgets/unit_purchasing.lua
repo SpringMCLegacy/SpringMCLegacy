@@ -145,7 +145,9 @@ local function CheckBuildOptions(unitID, teamID, money, weightLeft, cmdID)
 				cCost = GG.CommandCosts[buildDefID] or 0
 				tCost = 0
 			end
-			if cCost > 0 and (teamSlotsRemaining[teamID] - (orderSizes[teamID] or 0)) < 1 and (currParam == "C" or currParam == "" or currParam == "L") then
+			if buildDefID < 0 and teamSlotsRemaining[teamID] <= 0.5 then -- builder order but no team slots left
+				EditUnitCmdDesc(unitID, cmdDescID, {disabled = true, params = {"L"}})
+			elseif cCost > 0 and (teamSlotsRemaining[teamID] - (orderSizes[teamID] or 0)) < 1 and (currParam == "C" or currParam == "" or currParam == "L") then
 				EditUnitCmdDesc(unitID, cmdDescID, {disabled = true, params = {"L"}})
 			elseif cCost > money and (currParam == "" or currParam == "C") then
 				EditUnitCmdDesc(unitID, cmdDescID, {disabled = true, params = {"C"}})
@@ -299,6 +301,11 @@ function gadget:UnitCreated(unitID, unitDefID, teamID)
 		local currSlots = teamSlotsRemaining[teamID]
 		local unitType = unitTypes[unitDefID]
 		if unitType then
+			local C3count = Spring.GetTeamUnitDefCount(teamID, C3_ID) -- TODO: cache
+			local totalSlots = (C3count + 1) * 4 
+			local slotsUsed =  totalSlots - currSlots
+			local group = slotsUsed < 4 and 1 or slotsUsed < 8 and 2 or 3
+			Spring.SetUnitGroup(unitID, group)
 			-- Deduct weight from current tonnage limit
 			UseTeamResource(teamID, "energy", unitDef.energyCost)
 			if unitType:find("mech") then
