@@ -16,6 +16,7 @@ local spGetUnitDefID		= Spring.GetUnitDefID
 local spGetUnitRulesParam	= Spring.GetUnitRulesParam
 local spGetUnitHealth		= Spring.GetUnitHealth
 local spGetGroupUnits		= Spring.GetGroupUnits
+local spSendCommands		= Spring.SendCommands
 
 local green	= { 0.0, 1.0, 0.0, 1.0}
 local white	= { 1.0, 1.0, 1.0, 1.0}
@@ -30,6 +31,13 @@ local deckWindow
 -- child windows
 local cardSection
 
+-- TODO: until we get scaling of font size within elements this will have to do
+local vsx,vsy = gl.GetViewSizes()
+
+local fontSizes	={	large	= vsx/87.27272727272727,
+					medium	= vsx/160,
+					small	= vsx/240,}
+					
 -- unit buttons
 local units	= {}
 local unitIdCache	= {}
@@ -45,6 +53,7 @@ local lanceNames	= {"Alpha", "Bravo", "Charlie"}
 for k,v in pairs(lanceNames)do
 	lanceNames[v]=k
 end
+-- getting font in scale with screen
 
 -------------------------------------------------------------------------------------
 -- Initial gui setup
@@ -112,7 +121,7 @@ local function initializeSetView()
 				parent			= deckWindow;	
 				name			= "lance #" .. counter;
 				caption			= lanceNames[counter];
-				fontsize		= 22;
+				fontsize		= fontSizes.large;
 				fontShadow		= false;
 				font			= {	outline			= true;
 									outlineWidth	= 5;};
@@ -126,10 +135,9 @@ local function initializeSetView()
 						-- hide old tab
 						setWindow:RemoveChild(deckSets[currentLance])
 						updateButton(black, grey)
-						
-						-- TODO: select current lance
 						-- show new tab
 						currentLance = counter
+						spSendCommands("group" .. currentLance)
 						setWindow:AddChild(deckSets[currentLance])
 						updateButton(green, white)
 					end
@@ -167,7 +175,7 @@ local function initializeSetView()
 					children		= {
 						Chili.Button:New{		
 							caption		= "";
-							fontsize	= 10;
+							fontsize	= fontSizes.medium;
 							x			= 0;
 							y			= 0;
 							width		= "100%";
@@ -176,6 +184,7 @@ local function initializeSetView()
 							OnMouseUp = { 					
 								function()					
 									WG.currentUnitId = unitIdCache[lanceNumber][myIndex]
+									spSendCommands("selectunits clear +" .. WG.currentUnitId)
 								end
 							},
 						},	
@@ -184,14 +193,14 @@ local function initializeSetView()
 							valign		= "top";
 							y			= "20%";
 							x			= "10%";
-							fontsize	= 18;
+							fontsize	= fontSizes.large;
 						},				
 						Chili.Progressbar:New{
 							color			= green;
 							backgroundColor	= black;
 							font			= {	outline			= true;										
 												outlineWidth	= 6; };
-							fontsize		= 12;
+							fontsize		= fontSizes.medium;
 							x				= "5%";
 							height			= "20%";
 							width			= "90%";
@@ -237,7 +246,7 @@ local function updateLance()
 	local groupUnits = spGetGroupUnits(currentLance)
 	for unitNumber = 1, 8 do
 		local unitPreview = units[currentLance][unitNumber].children
-		
+		--Spring.Echo("removed", currentLance, unitNumber)
 		deckSets[currentLance]:RemoveChild(units[currentLance][unitNumber])
 		
 		-- if you want the preview back good for testing.
@@ -266,15 +275,19 @@ local function updateLance()
 			--Spring.Echo(currentLance,unitNumber)
 			--Spring.Echo(units[currentLance][unitNumber])
 			--unitPreview[3].color = green
-			
-			deckSets[currentLance]:AddChild(units[currentLance][unitNumber])
-			unitPreview[2]:SetCaption(currentDef.humanName)			
-			unitPreview[3]:SetValue(health/maxHealth*100)
-			unitPreview[3]:SetCaption(math.floor(maxHealth - (maxHealth - health)))--math.floor(maxHealth - health))
+			if currentDef then
+				deckSets[currentLance]:AddChild(units[currentLance][unitNumber])
+				unitPreview[2]:SetCaption(currentDef.humanName)			
+				unitPreview[3]:SetValue(health/maxHealth*100)
+				unitPreview[3]:SetCaption(math.floor(maxHealth - (maxHealth - health)))--math.floor(maxHealth - health))
 
-			unitPreview[4].file		= '#' .. unitDefId
-			unitPreview[4].color	= white
-			unitPreview[4]:Invalidate()
+				unitPreview[4].file		= '#' .. unitDefId
+				unitPreview[4].color	= white
+				unitPreview[4]:Invalidate()
+			else -- just a catch all for some reason this was happening after a unit was dead/removed causing the script to blowup
+				deckSets[currentLance]:RemoveChild(units[currentLance][unitNumber])
+				--Spring.Echo("removed def".. unitDefId .. "from lance " .. currentLance)
+			end
 		else
 			Spring.Echo("you have more than the lance supports in group #" .. currentLance)
 		end

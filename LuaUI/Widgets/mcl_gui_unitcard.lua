@@ -19,6 +19,7 @@ local spGetUnitHealth		= Spring.GetUnitHealth
 local green	= { 0.0, 1.0, 0.0, 1.0}
 local white	= { 1.0, 1.0, 1.0, 1.0}
 local grey	= { 0.4, 0.4, 0.4, 1.0}
+local red	= { 1.0, 0.0, 0.0, 1.0}
 local black = { 0.0, 0.0, 0.0, 1.0}
 local clear = { 0.0, 0.0, 0.0, 0.0}
 local olive = { 0.25, 0.3, 0.1, 1.0}
@@ -36,13 +37,19 @@ local ammoTypes = {	ac2		= "ammo_ac2",
 					arrow	= "ammo_arrow", }
 
 local jumpJetsColor	= { 0.3, 0.5, 1.0, 1.0}
-local HPColor		= { 0.8, 0.6, 0.0, 1.0}
+local HPColor		= { 0.0, 0.5, 1.0, 1.0}
 local XPColor		= white
 -- done so we are not frequently building a new table for colors
 local chestColorTable		= green
 local colortable			= green
 local heatColorTable		= clear
 
+-- TODO: until we get scaling of font size within elements this will have to do
+local vsx,vsy = gl.GetViewSizes()
+
+local fontSizes	={	large	= vsx/87.27272727272727,
+					medium	= vsx/160,
+					small	= vsx/240,}
 --chili stuffs
 local Chili 
 
@@ -65,18 +72,29 @@ local lastUnitId
 
 -- list for mech parts. Used to determine what parts are 
 -- displayed in card and what the image is named
-local partsList	= {	mech = {	"chest","arm_left","arm_right","leg_left","leg_right"},
-					vehicle	= {	"turret","base"}}
+local partsList	= {	mech	= {	"chest", "arm_left", "arm_right", "leg_left", "leg_right"},
+					tank	= {	"turret", "base"},
+					aero	= {	"body", "left_wing", "right_wing"},
+					vtol	= {	"body", "rotor"},}
+					
+
 local currentPartsList	= {}
 
-local mechPartsParamList	= {	arm_left = "limb_hp_left_arm",
-								arm_right = "limb_hp_right_arm",}
+local partsParamList	= {	arm_left	= "limb_hp_left_arm",
+							arm_right	= "limb_hp_right_arm",
+							turret		= "limb_hp_turret",
+							rotor		= "limb_hp_rotor",
+							left_wing	= "limb_hp_lwing",
+							right_wing	= "limb_hp_rwing",}
 						
 -- weapon lists for side bar
 local mechWeapons		= {}
 -- parts for display
 local parts			= { mech 	= {},
-						vehicle	= {},}
+						tank	= {},
+						vtol 	= {},
+						aero	= {},}
+						
 -- temporary storage for part list
 local currentParts	= {}
 
@@ -102,8 +120,8 @@ local function MechPartStatus(chestColorTable)
 	-- get part damage
 	for partId, partName in pairs(currentPartsList)do
 		-- check to ensure this part has been paired with a param
-		if mechPartsParamList[partName] then
-			local partHealth 	= spGetUnitRulesParam(currentUnitId, mechPartsParamList[partName]) or 100
+		if partsParamList[partName] then
+			local partHealth 	= spGetUnitRulesParam(currentUnitId, partsParamList[partName]) or 100
 			colortable	= {((100 - partHealth)/100), (partHealth/100), 0 ,1}
 			--Spring.Echo(partName,partHealth)
 			
@@ -177,8 +195,6 @@ local function FillCardStats()
 		chestColorTable	= {((maxHealth - health)/maxHealth), (health/maxHealth), 0 ,1}
 			
 		MechPartStatus(chestColorTable)
-		
-		mechStatsWindow.children[1]:SetValue(health/maxHealth*100)
 		mechStatsWindow.children[2]:SetValue(spGetUnitRulesParam(currentUnitId, "jump_reload_bar") or 0)
 		mechStatsWindow.children[3]:SetValue(spGetUnitRulesParam(currentUnitId, "perk_xp")  or 0)
 
@@ -214,6 +230,8 @@ local function FillCardStats()
 		end
 			
 		--Spring.Echo(heat)
+		mechStatsWindow.children[1].color	= heatColorTable
+		mechStatsWindow.children[1]:SetValue(heat)
 		mechHeat.color		= heatColorTable;
 		mechHeat:Invalidate()
 	end
@@ -241,7 +259,7 @@ local function CreateWindows()
 		caption	= "No Mech Selected";
 		valign	= "top";
 		x		= "5%";
-		fontsize	= 22;
+		fontsize	= fontSizes.large;
 		minWidth	= 0;
 		minHeight	= 0;
 	}	
@@ -282,10 +300,7 @@ local function CreateWindows()
 			Chili.Label:New{
 				caption		= "";	
 				y			= "10%";
-				fontsize	= 25;
-				fontsize	= 25;
-				fontsize	= 25;
-				fontsize	= 25;
+				fontsize	= fontSizes.large;
 				minWidth	= 0;
 				minHeight	= 0;
 			}			
@@ -347,19 +362,19 @@ local function CreateWindows()
 				caption	= "H";
 				y		= "0%";
 				x		= "0%";
-				fontsize = 12;
+				fontsize = fontSizes.medium;
 			},		
 			Chili.Label:New{
 				caption	= "J";
 				y		= "35%";
 				x		= "0%";
-				fontsize = 12;
+				fontsize = fontSizes.medium;
 			},		
 			Chili.Label:New{
 				caption	= "XP";
 				y		= "60%";
 				x		= "0%";
-				fontsize = 12;
+				fontsize = fontSizes.medium;
 			},		
 		}
 	}
@@ -389,7 +404,7 @@ local function FillOutWindows()
 				parent 				= mechWeaponsWindow;				
 				name				= "mech weapon #" .. counter;
 				caption				= '-- OFFLINE --';
-				fontsize			= 10;
+				fontsize			= fontSizes.medium;
 				x					= "0%";
 				y					= currentLevel .. "%";
 				width				= "100%";  
@@ -419,7 +434,7 @@ local function FillOutWindows()
 		local yPosition = (counter - 1) *25
 		ammoTotals[counter] = Chili.Progressbar:New{
 				caption			= "Ammo";
-				fontSize		= 12;
+				fontSize		= fontSizes.medium;
 				color			= grey;
 				font			= {	outline			= true;
 									outlineWidth	= 5;};
@@ -471,6 +486,13 @@ end
 -------------------------------------------------------------------------------------
 function widget:Update(s) 
 	local health, maxHealth	
+
+	--if we have anything selected
+	local currentUnits = spGetSelectedUnits()	
+	--if we have only 1 unit selected
+	if #currentUnits == 1 then
+		WG.currentUnitId = currentUnits[1]
+	end
 	
 	--only once, only on unit change
 	if WG.currentUnitId ~= lastUnitId then
@@ -479,9 +501,22 @@ function widget:Update(s)
 		lastUnitId			= WG.currentUnitId
 		currentUnitId		= WG.currentUnitId
 		currentUnitDefId	= spGetUnitDefID(currentUnitId)
-
+		local unitType		= UnitDefs[currentUnitDefId].customParams.unittype
+		local unitDef		= UnitDefs[currentUnitDefId]
+		
 		Chili.Screen0:AddChild(mechCardWindow)
-		local unitType	=	UnitDefs[currentUnitDefId].customParams.unittype
+		
+		--checking unit type if the thing is a vehicle
+		if unitType == "vehicle" then
+			if	unitDef.hoverAttack then
+				unitType = "vtol"
+			elseif unitDef.canFly and not unitDef.hoverAttack then
+				unitType = "aero"
+			else
+				unitType = "tank"
+			end
+		end
+
 		if unitType then
 			
 			-- TODO: FIND A MORE ELEGANT SOLUTON!
@@ -494,21 +529,20 @@ function widget:Update(s)
 			end	
 				
 			-- changes image set based on type.
-			if unitType == "mech" or unitType == "vehicle" then
+			if partsList[unitType]then
 				currentParts			= parts[unitType]
 				currentPartsList		= partsList[unitType]
-				Spring.Echo(unitType)
 				-- builds out mech image
 				for partNumber, partName in pairs(currentPartsList)do
 					mechWindow:AddChild(currentParts[partNumber])
 				end
 			else
-				Spring.Echo("it appears we have encountered an uncovered unitType")
+				Spring.Echo("it appears we have encountered an uncovered unitType", unitType)
 			end
 			
 			FillCardStats()		
-		else
-			Spring.Echo(UnitDefs[currentUnitDefId].customParams.unittype)
+		--else
+			--Spring.Echo(UnitDefs[currentUnitDefId].customParams.unittype)
 		end
 	-- not a new unit lets update it's stats.
 	else		
@@ -518,7 +552,6 @@ function widget:Update(s)
 				chestColorTable	= {((maxHealth - health)/maxHealth), (health/maxHealth), 0 ,1}
 					
 				MechPartStatus(chestColorTable)
-				mechStatsWindow.children[1]:SetValue(health/maxHealth*100)
 				mechStatsWindow.children[2]:SetValue(spGetUnitRulesParam(currentUnitId, "jump_reload_bar") or 0)
 				mechStatsWindow.children[3]:SetValue(spGetUnitRulesParam(currentUnitId, "perk_xp") or 0)
 
@@ -528,24 +561,29 @@ function widget:Update(s)
 						mechAmmoWindow.children[k]:SetValue(spGetUnitRulesParam(currentUnitId, ammoTypes[v])  or "0")
 					end
 				end
+
 				
-				if (spGetUnitRulesParam(currentUnitId, "excess_heat") or 0) > 50 then
-					dangerZONE = true
-					HeatPulse()
-				else
-					dangerZONE = false
-				end
-				
-				local heat = spGetUnitRulesParam(currentUnitId, "heat") or 0
+				local heat = spGetUnitRulesParam(currentUnitId, "heat") or 0				
+
 				if heat >10 then
-					heatColorTable	= { heat/100, 0, 0, 1}
+					heatColorTable	= { heat/100, (heat-75)/100, 0, 1}
 					--Spring.Echo(heatColorTable[1], heatColorTable[2], heatColorTable[3], heatColorTable[4])
 				else				
 					heatColorTable	= clear
 				end
 				
+				if (spGetUnitRulesParam(currentUnitId, "excess_heat") or 0) > 50 then
+					dangerZONE = true
+					heatColorTable	= red
+					HeatPulse()
+				else
+					dangerZONE = false
+				end	
+				
 				--Spring.Echo(heat)
-				mechHeat.color		= heatColorTable;
+				mechStatsWindow.children[1].color	= heatColorTable
+				mechStatsWindow.children[1]:SetValue(heat)
+				mechHeat.color			= heatColorTable;
 				mechHeat:Invalidate()
 			else			
 				Chili.Screen0:RemoveChild(mechCardWindow)

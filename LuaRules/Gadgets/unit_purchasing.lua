@@ -141,6 +141,9 @@ local function CheckBuildOptions(unitID, teamID, money, weightLeft, cmdID)
 			if buildDefID < 0 then -- a build order
 				cCost = UnitDefs[-buildDefID].metalCost
 				tCost = UnitDefs[-buildDefID].energyCost
+				if UnitDefs[-buildDefID].customParams.unittype == "vehicle" then
+					tCost = tCost * 2
+				end
 			else
 				cCost = GG.CommandCosts[buildDefID] or 0
 				tCost = 0
