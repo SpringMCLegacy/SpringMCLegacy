@@ -154,7 +154,7 @@ for name, ud in pairs(UnitDefs) do
 		table.insert(BEACON_BUILDOPTIONS, name)
 		ud.levelground = false
 	elseif name:find("upgrade") then
-		ud.buildcostmetal = 15000 -- TODO: remove me
+		ud.buildcostmetal = ud.buildcostmetal == 0 and 15000 or ud.buildcostmetal -- TODO: remove me
 	end
 	if name == "is_dropship" then IS_DROPSHIP_UD = ud end
 	if name == "cl_dropship" then CL_DROPSHIP_UD = ud end
