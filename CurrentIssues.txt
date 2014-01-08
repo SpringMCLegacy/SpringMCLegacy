@@ -26,3 +26,4 @@ Seperate dropship cooldown and inbound wait (i.e. inbound timer starts when call
  
  Clan walkscripts - Mistlynx, Firemoth Hellbringer Iceferret Summoner have forward legs (awesome) [mistlynx & summoner require forward-leg jump anims]
  
+ deck showing enemy units due to fail use of SetUnitGroup in synced code
