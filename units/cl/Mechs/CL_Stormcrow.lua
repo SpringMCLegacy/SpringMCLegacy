@@ -50,5 +50,5 @@ local A = CL_Stormcrow:New{
 }
 
 return lowerkeys({
-	["CL_Stormcrow"] = A,
+	["CL_Stormcrow_A"] = A,
 })
