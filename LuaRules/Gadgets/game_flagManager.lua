@@ -123,6 +123,7 @@ function UpdateBeacons(teamID, num)
 end
 
 function DecrementTickets(allyTeam)
+	if allyTeam == GAIA_ALLY_ID then return end -- Gaia does not have tickets
 	if tickets[allyTeam] > 0 then
 		tickets[allyTeam] = tickets[allyTeam] - 1
 		--Spring.Echo("AllyTeam " .. allyTeam .. ": " .. tickets[allyTeam])
@@ -372,6 +373,7 @@ end
 
 
 function CheckAllyTeamUnits(unitTeam)
+	if unitTeam == GAIA_TEAM_ID then return end -- Gaia does not have tickets
 	if Spring.GetTeamUnitCount(unitTeam) <= 1 then -- TODO: Not sure why this gives 1 instead of 0, probably 'cleanup' issues as only called via UnitDestroyed and UnitGiven
 		-- Check if this was last unit on whole allyteam
 		local allyTeam = select(6, Spring.GetTeamInfo(unitTeam))
