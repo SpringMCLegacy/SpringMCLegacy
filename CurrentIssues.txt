@@ -20,5 +20,5 @@ Seperate dropship cooldown and inbound wait (i.e. inbound timer starts when call
  
  --T and turn and track
  
- Clan walkscripts - Mistlynx, Firemoth Hellbringer Iceferret Summoner have forward legs (awesome)
+ Clan walkscripts - Mistlynx, Firemoth Hellbringer Iceferret Summoner have forward legs (awesome) [mistlynx & summoner require forward-leg jump anims]
  
