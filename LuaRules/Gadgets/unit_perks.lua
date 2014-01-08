@@ -29,7 +29,7 @@ local SetUnitExperience		= Spring.SetUnitExperience
 
 -- Constants
 local MINIMUM_XP_INCREASE_TO_CHECK = 0.01
-local PERK_XP_COST = 0.5
+local PERK_XP_COST = 1.5
 -- Variables
 local perkDefs = {} -- perkCmdID = PerkDef table
 local validPerks = {} -- unitDefID = {perkCmdID = true, etc}

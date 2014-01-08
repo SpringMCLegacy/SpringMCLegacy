@@ -3,7 +3,7 @@ local IS_Osiris = Light:New{
 	maxDamage           = 8000,
 	mass                = 3000,
 	buildCostEnergy     = 30,
-	buildCostMetal        = 10780,
+	buildCostMetal        = 12780,
 	maxVelocity		= 6, --120kph/20
 
 	customparams = {
