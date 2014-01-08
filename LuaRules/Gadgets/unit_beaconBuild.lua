@@ -330,6 +330,10 @@ function gadget:UnitDestroyed(unitID, unitDefID, teamID)
 		outpostIDs[beaconID] = nil
 		-- Re-add upgrade options to beacon
 		AddUpgradeOptions(beaconID)
+	elseif dropZoneIDs[teamID] == unitID then -- unit was a team's dropzone, reset upgrade options
+		dropZoneIDs[teamID] = nil
+		AddUpgradeOptions(dropZoneBeaconIDs[teamID])
+		dropZoneBeaconIDs[teamID] = nil -- TODO: needed?
 	end
 	local wallInfo = wallInfos[unitID]
 	if wallInfo and not hotSwapIDs[unitID] then -- unit was a wall or gate piece, not being hotswapped

@@ -1,27 +1,16 @@
-
 [f=0099197] <[S44]FLOZi> Aero units really don't like being delivered :(
-
--- armourdefs too damage reistant, 
 
 -- units too expensive / production too limited
 
--- vtol rotors too fragile
-
-[f=0011395] [unit_script.lua] Error: [string "LuaRules/Gadgets/unit_script.lua"]:373: bad argument #1 to 'co_create' (Lua function expected) -- Clans?
-
--- [f=0029250] Error: LuaRules::RunCallIn: error = 2, GameFrame, [string "LuaRules/Gadgets/unit_purchasing.lua"]:356: Bad unitID parameter in GetUnitIsDead()
-
 Seperate dropship cooldown and inbound wait (i.e. inbound timer starts when called in, cooldown starts when taking back off / leaves)
 
-weird unit movement
+-- weird unit movement
+
+-- "can't build upgrades on beacon that was capped dropzone"
 
 [f=0009450] Error: LuaRules::RunCallIn: error = 2, UnitExperience, [string "LuaRules/Gadgets/unit_perks.lua"]:64: attempt to index field '?' (a nil value)
 
- it seems that the hitvolume of the dropzone is too large
-
  [f=0032972] [unit_script.lua] Error: [string "scripts/mech.lua"]:132: attempt to perform arithmetic on field '?' (a nil value)
- 
- can't rebuild dropzone once lost unless cap _new_ flag
  
  [f=0007014] you have more than the lance supports in group #1
  
@@ -31,5 +20,5 @@ weird unit movement
  
  --T and turn and track
  
- Clan walkscripts - Firemoth Hellbringer Iceferret Summoner have forward legs (awesome)
+ Clan walkscripts - Mistlynx, Firemoth Hellbringer Iceferret Summoner have forward legs (awesome)
  
