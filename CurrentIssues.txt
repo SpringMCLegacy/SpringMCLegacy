@@ -27,39 +27,9 @@ weird unit movement
  
  top of ticket counter widget e.g. resources missing in certain window res
  
- [f=0002645] Error: LuaRules::RunCallIn: error = 2, UnitGiven, [string "LuaRules/Gadgets/game_flagmanager.lua"]:385: bad argument #2 to 'min' (number expected, got nil)
- 
  bug with mechbay?
  
- T and turn and track
+ --T and turn and track
  
+ Clan walkscripts - Firemoth Hellbringer Iceferret Summoner have forward legs (awesome)
  
- [f=0074826] Error: LuaRules::RunCallIn: error = 2, UnitGiven, [string "LuaRules/Gadgets/game_flagmanager.lua"]:385: bad argument #2 to 'min' (number expected, got nil)
-stack traceback:
-	[C]: in function 'min'
-	[string "LuaRules/Gadgets/game_flagmanager.lua"]:385: in function 'CheckAllyTeamUnits'
-	[string "LuaRules/Gadgets/game_flagmanager.lua"]:411: in function 'UnitGiven'
-	[string "luagadgets/gadgets.lua"]:1342: in function <[string "luagadgets/gadgets.lua"]:1340>
-	(tail call): ?
-	[C]: in function '?'
-	[string "LuaRules/Gadgets/api_delay.lua"]:57: in function 'GameFrame'
-	[string "luagadgets/gadgets.lua"]:838: in function <[string "luagadgets/gadgets.lua"]:836>
-	(tail call): ?
-[f=0074826] Error: LuaRules::RunCallIn: error = 2, UnitGiven, [string "LuaRules/Gadgets/game_flagmanager.lua"]:385: bad argument #2 to 'min' (number expected, got nil)
-stack traceback:
-	[C]: in function 'min'
-	[string "LuaRules/Gadgets/game_flagmanager.lua"]:385: in function 'CheckAllyTeamUnits'
-	[string "LuaRules/Gadgets/game_flagmanager.lua"]:411: in function 'UnitGiven'
-	[string "luagadgets/gadgets.lua"]:1342: in function <[string "luagadgets/gadgets.lua"]:1340>
-	(tail call): ?
-	[C]: in function '?'
-	[string "LuaRules/Gadgets/api_delay.lua"]:57: in function 'GameFrame'
-	[string "luagadgets/gadgets.lua"]:838: in function <[string "luagadgets/gadgets.lua"]:836>
-	(tail call): ?
-[f=0074877] Chimera CMA-1S: erlbl destroyed!
-[f=0075098] Error: LuaRules::RunCallIn: error = 2, UnitDestroyed, [string "LuaRules/Gadgets/game_flagmanager.lua"]:126: attempt to compare number with nil
-stack traceback:
-	[string "LuaRules/Gadgets/game_flagmanager.lua"]:126: in function 'DecrementTickets'
-	[string "LuaRules/Gadgets/game_flagmanager.lua"]:403: in function 'UnitDestroyed'
-	[string "luagadgets/gadgets.lua"]:1250: in function <[string "luagadgets/gadgets.lua"]:1247>
-	(tail call): ?
