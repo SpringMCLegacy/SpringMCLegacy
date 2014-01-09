@@ -129,10 +129,17 @@ function widget:GameFrame(n)
 		local minutes = format("%02d",  floor(gameSecs / 60))
 		local seconds = format("%02d", gameSecs % 60)
 		gameTime = "Time: " .. colors.slategray .. hours .. colors.white .. ":" .. colors.slategray .. minutes .. colors.white .. ":" .. colors.slategray .. seconds
-		local frames = math.max(tonumber(GetTeamRulesParam(MY_TEAM_ID, "DROPSHIP_COOLDOWN") or 0) - n, 0)
-		local countColour = frames == 0 and colors.green or colors.red
-		minutes, seconds = FramesToMinutesAndSeconds(frames)
-		dropTime = "Dropship: " .. countColour .. minutes .. colors.white .. ":" .. countColour ..seconds
+		local coolDownFrame = tonumber(GetTeamRulesParam(MY_TEAM_ID, "DROPSHIP_COOLDOWN") or 0)
+		local countColour
+		if coolDownFrame >= 0 then
+			local frames = math.max(coolDownFrame - n, 0)
+			countColour = frames == 0 and colors.green or colors.red		
+			minutes, seconds = FramesToMinutesAndSeconds(frames)
+		else -- dropship is currently ingame
+			countColour = colors.red
+			minutes, seconds = "00", "00"
+		end
+		dropTime = "Dropship: " .. countColour .. minutes .. colors.white .. ":" .. countColour ..seconds		
 		if haveArty > 0 then
 			frames = math.max(tonumber(GetTeamRulesParam(MY_TEAM_ID, "UPLINK_ARTILLERY") or 0) - n, 0)
 			countColour = frames == 0 and colors.green or colors.red
