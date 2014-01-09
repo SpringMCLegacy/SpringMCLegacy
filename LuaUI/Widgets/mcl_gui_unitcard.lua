@@ -410,6 +410,10 @@ local function FillOutWindows()
 				width				= "100%";  
 				height				= "12%";
 				backgroundColor 	= grey;
+				OnClick = { function(self)
+					Spring.Echo ( "Hello Smithers, you're really good. at. turning me. on.", counter )
+					--Spring.SendLuaRulesMsg ( cmd )
+				end },
 			}
 	end
 	

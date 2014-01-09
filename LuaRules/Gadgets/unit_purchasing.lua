@@ -97,6 +97,7 @@ local dropZones = {} -- dropZones[unitID] = teamID
 local teamDropZones = {} -- teamDropZone[teamID] = unitID
 local teamHadFirstDrop = {} -- teamHadFirstDrop[teamID] = true/false -- FIXME: ugly hack
 
+
 local function AddBuildMenu(unitID)
 	InsertUnitCmdDesc(unitID, sendOrderCmdDesc)
 	InsertUnitCmdDesc(unitID, runningTotalCmdDesc)
@@ -165,16 +166,23 @@ local function CheckBuildOptions(unitID, teamID, money, weightLeft, cmdID)
 	end
 end
 
-local DROPSHIP_COOLDOWN = DROPSHIP_DELAY + 10 * 30 -- 10s
-local startMin, startSec = GG.FramesToMinutesAndSeconds(DROPSHIP_COOLDOWN)
 local coolDowns = {} -- coolDowns[teamID] = enableFrame
 
-function SendButtonCoolDown(unitID, teamID)
-	EditUnitCmdDesc(unitID, FindUnitCmdDesc(unitID, CMD_SEND_ORDER), {disabled = true, name = startMin .. ":" .. startSec})
-	local enableFrame = GetGameFrame() + DROPSHIP_COOLDOWN
+function SendButtonCoolDown(unitID, teamID, firstTime)
+	EditUnitCmdDesc(unitID, FindUnitCmdDesc(unitID, CMD_SEND_ORDER), {disabled = true, name = "Order \nSent "})
+	local enableFrame = GetGameFrame() + (firstTime and 0 or DROPSHIP_DELAY)
 	coolDowns[teamID] = enableFrame
 	Spring.SetTeamRulesParam(teamID, "DROPSHIP_COOLDOWN", enableFrame) -- frame this team can call dropship again
 end
+
+-- TODO: Issues if dropzone is 'flipped' to another beacon
+function DropshipLeft(teamID) -- called by Dropship once it has left, to enable "Submit Order"
+	local unitID = teamDropZones[teamID]
+	EditUnitCmdDesc(unitID, FindUnitCmdDesc(unitID, CMD_SEND_ORDER), {disabled = false, name = "Submit \nOrder "})
+	local currFrame = GetGameFrame()
+	Spring.SetTeamRulesParam(teamID, "DROPSHIP_COOLDOWN", currFrame)
+end
+GG.DropshipLeft = DropshipLeft
 
 function gadget:AllowCommand(unitID, unitDefID, teamID, cmdID, cmdParams, cmdOptions)
 	if dropZones[unitID] then
@@ -247,11 +255,14 @@ function gadget:AllowCommand(unitID, unitDefID, teamID, cmdID, cmdParams, cmdOpt
 			end
 			
 			local side = UnitDefs[unitDefID].name:sub(1,2) -- send dropship of correct side
+			local firstTime
 			if not teamHadFirstDrop[teamID] then
-				GG.DropshipDelivery(unitID, teamID, side .. "_dropship", orderQueue, cost, nil, 0)
+				GG.DropshipDelivery(unitID, teamID, side .. "_dropship", orderQueue, cost, nil, 1)
 				teamHadFirstDrop[teamID] = true
+				firstTime = true
 			else
 				GG.DropshipDelivery(unitID, teamID, side .. "_dropship", orderQueue, cost, "BB_Reinforcements_Inbound_ETA_30", DROPSHIP_DELAY)
+				firstTime = false
 			end
 			Spring.SendMessageToTeam(teamID, "Sending purchase order for the following:")
 			for i, order in ipairs(orderQueue) do
@@ -263,7 +274,7 @@ function gadget:AllowCommand(unitID, unitDefID, teamID, cmdID, cmdParams, cmdOpt
 			orderCosts[unitID] = 0
 			orderTons[unitID] = 0
 			orderSizes[unitID] = 0
-			SendButtonCoolDown(unitID, teamID)
+			SendButtonCoolDown(unitID, teamID, firstTime)
 			return true
 		end
 	end
@@ -308,7 +319,7 @@ function gadget:UnitCreated(unitID, unitDefID, teamID)
 			local totalSlots = (C3count + 1) * 4 
 			local slotsUsed =  totalSlots - currSlots
 			local group = slotsUsed < 4 and 1 or slotsUsed < 8 and 2 or 3
-			Spring.SetUnitGroup(unitID, group)
+			CallAsTeam(teamID, Spring.SetUnitGroup, unitID, group)
 			-- Deduct weight from current tonnage limit
 			UseTeamResource(teamID, "energy", unitDef.energyCost)
 			if unitType:find("mech") then
@@ -410,11 +421,8 @@ function gadget:GameFrame(n)
 			if not Spring.ValidUnitID(unitID) or Spring.GetUnitIsDead(unitID) then -- check valid first (lazy evaluation means non-valid unitID is then not passed)
 				coolDowns[teamID] = nil
 			else
-				if framesRemaining > 0 then
-					local minutes, seconds = GG.FramesToMinutesAndSeconds(framesRemaining)
-					EditUnitCmdDesc(unitID, FindUnitCmdDesc(unitID, CMD_SEND_ORDER), {disabled = true, name = minutes .. ":" .. seconds})
-				else
-					EditUnitCmdDesc(unitID, FindUnitCmdDesc(unitID, CMD_SEND_ORDER), {disabled = false, name = "Submit \nOrder "})
+				if framesRemaining <= 0 then
+					EditUnitCmdDesc(unitID, FindUnitCmdDesc(unitID, CMD_SEND_ORDER), {name = "Dropship \nArrived "})
 					EditUnitCmdDesc(unitID, FindUnitCmdDesc(unitID, CMD_RUNNING_TOTAL), {name = "Order C-Bills: \n0"})
 					EditUnitCmdDesc(unitID, FindUnitCmdDesc(unitID, CMD_RUNNING_TONS), {name = "Order Tonnes: \n0"})
 					coolDowns[teamID] = nil

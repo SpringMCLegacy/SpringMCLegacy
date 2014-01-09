@@ -157,6 +157,7 @@ local function LandingGearUp()
 end
 
 function script.Create()
+	Spring.SetTeamRulesParam(Spring.GetUnitTeam(unitID), "DROPSHIP_COOLDOWN", -1)
 	Spring.SetUnitNoSelect(unitID, true)
 	Turn(exhaustlarge, x_axis, math.rad(90), 0)
 	Spin(exhaustlarge, y_axis, math.rad(360))
@@ -290,5 +291,6 @@ function UnloadCargo()
 	StartThread(LandingGearUp)
 	Sleep(10000)
 	-- We're out of the atmosphere, bye bye!
+	GG.DropshipLeft(Spring.GetUnitTeam(unitID)) -- let the world know
 	Spring.DestroyUnit(unitID, false, true)
 end
