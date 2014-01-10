@@ -368,7 +368,6 @@ function StopTurn()
 end
 
 function script.StartMoving(reversing)
-Spring.Echo("anims/" .. unitDef.name:sub(1, (unitDef.name:find("_", 4) or 0) - 1) .. ".lua")
 	--Spring.Echo("Reversing?", reversing)
 	StartThread(anim_Walk)
 	moving = true
@@ -444,7 +443,7 @@ function script.AimWeapon(weaponID, heading, pitch)
 			Turn(launchers[weaponID], x_axis, -pitch, ELEVATION_SPEED)
 		else
 			for i = 1, burstLengths[weaponID] do
-				Turn(launchPoints[weaponID][i], x_axis, -pitch, ELEVATION_SPEED)
+				Turn(launchPoints[weaponID][i] or launchPoints[weaponID][1], x_axis, -pitch, ELEVATION_SPEED)
 			end
 		end
 	else
@@ -509,7 +508,7 @@ end
 
 function script.Shot(weaponID)
 	if missileWeaponIDs[weaponID] then
-		EmitSfx(launchPoints[weaponID][currPoints[weaponID]], SFX.CEG + weaponID)
+		EmitSfx(launchPoints[weaponID][currPoints[weaponID]] or launchPoints[weaponID][1], SFX.CEG + weaponID)
         currPoints[weaponID] = currPoints[weaponID] + 1
         if currPoints[weaponID] > burstLengths[weaponID] then 
 			currPoints[weaponID] = 1
@@ -531,7 +530,7 @@ end
 
 function script.QueryWeapon(weaponID) 
 	if missileWeaponIDs[weaponID] then
-		return launchPoints[weaponID][currPoints[weaponID]]
+		return launchPoints[weaponID][currPoints[weaponID]] or launchPoints[weaponID][1]
 	elseif weaponID == amsID then
 		return torso
 	else
