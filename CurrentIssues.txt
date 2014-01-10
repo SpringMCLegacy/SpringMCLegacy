@@ -28,7 +28,7 @@
  
  -- deck showing enemy units due to fail use of SetUnitGroup in synced code
  
- Clan radii too small: Warhawk, Timberwolf, Stormcrow, summoner
+ -- Clan radii too small: Warhawk, Timberwolf, Stormcrow, summoner
  
  Clan nova breaks card widget
  
