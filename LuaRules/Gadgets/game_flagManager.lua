@@ -410,7 +410,7 @@ end
 
 function gadget:UnitGiven(unitID, unitDefID, newTeam, oldTeam)
 	--Spring.Echo("Unit Given: " .. unitID)
-	CheckAllyTeamUnits(oldTeam)
+	DelayCall(CheckAllyTeamUnits, {oldTeam}, 1)
 end
 
 function gadget:Initialize()
