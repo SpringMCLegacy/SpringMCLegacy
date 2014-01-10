@@ -13,6 +13,7 @@ local CL_Direwolf = Assault:New{
 	customparams = {
 		heatlimit		= 44,
 		torsoturnspeed	= 100,
+		maxammo 		= {ac5 = 100},
     },
 }
 

@@ -17,6 +17,7 @@ local CL_Hellbringer = Heavy:New{
 	customparams = {
 		heatlimit		= 26,
 		torsoturnspeed	= 130,
+		maxammo 		= {gauss = 20, ac10 = 20, lrm = 120},
     },
 }
 

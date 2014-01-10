@@ -14,6 +14,7 @@ local CL_Summoner = Heavy:New{
 		heatlimit		= 28,
 		torsoturnspeed	= 130,
 		canjump			= "1",
+		maxammo 		= {srm = 100, ac20 = 30},
     },
 }
 	

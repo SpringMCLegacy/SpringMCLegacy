@@ -13,6 +13,7 @@ local CL_Stormcrow = Medium:New{
 	customparams = {
 		heatlimit		= 20,
 		torsoturnspeed	= 160,
+		maxammo 		= {lrm = 180, srm = 80},
     },
 }
 	

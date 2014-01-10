@@ -13,6 +13,7 @@ local CL_Maddog = Heavy:New{
 	customparams = {
 		heatlimit		= 24,
 		torsoturnspeed	= 135,
+		maxammo 		= {lrm = 180},
     },
 }
 	
