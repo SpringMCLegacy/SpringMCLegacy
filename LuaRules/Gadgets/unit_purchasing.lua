@@ -319,7 +319,7 @@ function gadget:UnitCreated(unitID, unitDefID, teamID)
 			local totalSlots = (C3count + 1) * 4 
 			local slotsUsed =  totalSlots - currSlots
 			local group = slotsUsed < 4 and 1 or slotsUsed < 8 and 2 or 3
-			CallAsTeam(teamID, Spring.SetUnitGroup, unitID, group)
+			SendToUnsynced("LANCE", teamID, unitID, group)
 			-- Deduct weight from current tonnage limit
 			UseTeamResource(teamID, "energy", unitDef.energyCost)
 			if unitType:find("mech") then
@@ -444,5 +444,17 @@ end
 else
 --	UNSYNCED
 
+local MY_TEAM_ID = Spring.GetMyTeamID()
+
+function AddUnitToLance(eventID, teamID, unitID, group)
+	Spring.Echo("got to unsynced")
+	if teamID == MY_TEAM_ID then
+		CallAsTeam(teamID, Spring.SetUnitGroup, unitID, group)
+	end
+end
+
+function gadget:Initialize()
+	gadgetHandler:AddSyncAction("LANCE", AddUnitToLance)
+end
 
 end
