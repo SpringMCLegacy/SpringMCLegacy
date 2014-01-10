@@ -32,4 +32,6 @@
  
  Clan forward leg jump anim pushes into terrain (mistlynx, summoner)
  
- Clan mechs & vehicles missing ammo
+ --Clan mechs & vehicles missing ammo
+ 
+ some clan mechs with mismatched launchpoints due to weapon changes (cougar, warhawk, timberwolf)

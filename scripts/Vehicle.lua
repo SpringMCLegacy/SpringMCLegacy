@@ -98,6 +98,8 @@ local launchPoints = {}
 local currPoints = {}
 local spinPieces = {}
 local spinPiecesState = {}
+
+local playerDisabled = {}
 for weaponID = 1, info.numWeapons do
 	if missileWeaponIDs[weaponID] then
 		if launcherIDs[weaponID] then
