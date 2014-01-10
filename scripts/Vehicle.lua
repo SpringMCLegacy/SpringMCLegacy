@@ -123,6 +123,7 @@ for weaponID = 1, info.numWeapons do
 	elseif info.barrelIDs[weaponID] then
 		barrels[weaponID] = piece("barrel_" .. weaponID)
 	end
+	playerDisabled[weaponID] = false
 end
 
 local function RestoreAfterDelay(unitID)
@@ -361,7 +362,16 @@ function script.Deactivate()
 	activated = false
 end
 
+function ToggleWeapon(weaponID)
+	playerDisabled[weaponID] = not playerDisabled[weaponID]
+	SetUnitRulesParam(unitID, "weapon_" .. weaponID, playerDisabled[weaponID] and "disabled" or "active")
+	-- TODO: different codes for different types of being disabled?
+end
+
 local function WeaponCanFire(weaponID)
+	if playerDisabled[weaponID] then
+		return false
+	end
 	if turretIDs[weaponID] and limbHPs["turret"] <= 0 then
 		return false
 	end

@@ -30,6 +30,11 @@ local SetUnitExperience		= Spring.SetUnitExperience
 -- Constants
 local MINIMUM_XP_INCREASE_TO_CHECK = 0.01
 local PERK_XP_COST = 1.5
+
+-- function for toggling weapon status via gui
+local CMD_WEAPON_TOGGLE = GG.CustomCommands.GetCmdID("CMD_WEAPON_TOGGLE")
+
+
 -- Variables
 local perkDefs = {} -- perkCmdID = PerkDef table
 local validPerks = {} -- unitDefID = {perkCmdID = true, etc}
@@ -71,6 +76,11 @@ function gadget:UnitExperience(unitID, unitDefID, teamID, newExp, oldExp)
 end
 
 function gadget:AllowCommand(unitID, unitDefID, teamID, cmdID, cmdParams, cmdOptions)
+	if cmdID == CMD_WEAPON_TOGGLE then
+		env = Spring.UnitScript.GetScriptEnv(unitID)
+		Spring.UnitScript.CallAsUnit(unitID, env.ToggleWeapon, cmdParams[1]) -- 1st param is weaponNum
+		return false
+	end
 	local perkDef = perkDefs[cmdID]
 	if perkDef then
 		local ud = UnitDefs[unitDefID]

@@ -2,7 +2,7 @@
 
 -- units too expensive / production too limited
 
-Seperate dropship cooldown and inbound wait (i.e. inbound timer starts when called in, cooldown starts when taking back off / leaves)
+-- Seperate dropship cooldown and inbound wait (i.e. inbound timer starts when called in, cooldown starts when taking back off / leaves)
 
 -- weird unit movement
 
