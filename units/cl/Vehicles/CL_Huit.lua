@@ -34,6 +34,7 @@ local CL_Huit = LightTank:New{
 		heatlimit		= 20,
 		turretturnspeed = 50,
 		elevationspeed  = 75,
+		maxmmo = {arrow = 10},
     },
 }
 

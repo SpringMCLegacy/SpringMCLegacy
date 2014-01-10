@@ -32,6 +32,7 @@ local CL_Hephaestus = Hover:New{
 		heatlimit		= 20,
 		turretturnspeed = 75,
 		elevationspeed  = 200,
+		maxmmo = {narc = 10},
     },
 }
 

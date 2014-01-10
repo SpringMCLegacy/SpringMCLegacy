@@ -33,6 +33,7 @@ local Oro_HAG = CL_Oro:New{
 		helptext		= "Armament: 1 x Hyper Assault Gauss 30, 1 x Large Pulse Laser - Armor: 11 tons",
 		heatlimit		= 20,
 		barrelrecoildist = {[1] = 5},
+		maxmmo = {gauss = 40},
     },
 }
 
@@ -57,6 +58,7 @@ local Oro_LBX = CL_Oro:New{
 		helptext		= "Armament: 1 x LBX Autocannon/20, 1 x Large Pulse Laser, 1 x ER Medium Beam Laser - Armor: 11 tons",
 		heatlimit		= 15,
 		barrelrecoildist = {[1] = 5},
+		maxmmo = {ac20 = 40},
     },
 }
 

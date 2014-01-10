@@ -56,6 +56,7 @@ local CL_Mars = Tank:New{
 		barrelrecoildist = {[1] = 5, [3] = 5},
 		barrelrecoilspeed = 100,
 		turrets = {[3] = 3},
+		maxmmo = {gauss = 20, ac10 = 40, lrm = 180},
     },
 }
 
