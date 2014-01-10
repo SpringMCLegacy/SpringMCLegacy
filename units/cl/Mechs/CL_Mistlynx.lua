@@ -17,7 +17,7 @@ local CL_Mistlynx = Light:New{
 		heatlimit		= 20,
 		torsoturnspeed	= 200,
 		canjump			= "1",
-		maxammo 		= {lrm = 120, srm = 80},
+		maxammo 		= {narc = 20, lrm = 120, srm = 80},
     },
 }
 
