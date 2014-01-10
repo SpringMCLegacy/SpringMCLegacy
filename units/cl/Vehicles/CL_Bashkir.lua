@@ -40,6 +40,7 @@ local CL_Bashkir = Aero:New{
 	customparams = {
 		helptext		= "Armament: 2 x Medium Pulse Laser, 1 x ER Small Beam Laser, 1 x SSRM-4 - Armor: 2 tons",
 		heatlimit		= 15,
+		maxmmo = {srm = 120},
     },
 }
 

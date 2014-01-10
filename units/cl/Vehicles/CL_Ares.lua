@@ -30,6 +30,7 @@ local CL_Ares = LightTank:New{
 		heatlimit		= 26,
 		turretturnspeed = 75,
 		elevationspeed  = 100,
+		maxammo = {atm = 120},
     },
 }
 
