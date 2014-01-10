@@ -30,8 +30,6 @@
  
  -- Clan radii too small: Warhawk, Timberwolf, Stormcrow, summoner
  
- Clan nova breaks card widget
- 
  Clan forward leg jump anim pushes into terrain (mistlynx, summoner)
  
- Clan mechs missing ammo
+ Clan mechs & vehicles missing ammo

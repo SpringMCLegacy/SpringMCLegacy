@@ -22,10 +22,10 @@ local Prime = CL_Maddog:New{
 	objectName        	= "CL_Maddog.s3o",
 	weapons	= {	
 		[1] = {
-			name	= "ArtemisLRM20",
+			name	= "LRM20", -- TODO: Artemis
 		},
 		[2] = {
-			name	= "ArtemisLRM20",
+			name	= "LRM20", -- TODO: Artemis
 		},
 		[3] = {
 			name	= "CLPL",
