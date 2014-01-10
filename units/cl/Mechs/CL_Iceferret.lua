@@ -15,6 +15,7 @@ local CL_Iceferret = Medium:New{
 	customparams = {
 		heatlimit		= 24,
 		torsoturnspeed	= 190,
+		maxammo 		= {srm = 120},
     },
 }
 	

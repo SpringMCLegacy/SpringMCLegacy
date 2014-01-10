@@ -15,6 +15,7 @@ local CL_Warhawk = Assault:New{
 	customparams = {
 		heatlimit		= 50,
 		torsoturnspeed	= 100,
+		maxammo 		= {lrm = 120},
     },
 }
 	
@@ -36,7 +37,7 @@ local Prime = CL_Warhawk:New{
 			name	= "CERPPC",
 		},
 		[5] = {
-			name	= "ATM6",
+			name	= "LRM10",
 		},
 	},
 

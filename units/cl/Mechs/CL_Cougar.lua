@@ -14,6 +14,7 @@ local CL_Cougar = Light:New{
 		helptext		= "Armament: 2 x Large Pulse Laser, 2 x SSRM-4 - Armor: 5.5 tons",
 		heatlimit		= 20,
 		torsoturnspeed	= 180,
+		maxammo 		= {lrm = 180},
     },
 }
 	
@@ -29,10 +30,10 @@ local Prime = CL_Cougar:New{
 			name	= "CLPL",
 		},
 		[3] = {
-			name	= "SSRM4",
+			name	= "LRM10",
 		},
 		[4] = {
-			name	= "SSRM4",
+			name	= "LRM10",
 		},
 	},
 }

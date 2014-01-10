@@ -13,6 +13,7 @@ local CL_Kitfox = Light:New{
 	customparams = {
 		heatlimit		= 20,
 		torsoturnspeed	= 180,
+		maxammo 		= {lrm = 180, srm = 80},
     },
 
 }

@@ -37,7 +37,7 @@ local Prime = CL_Firemoth:New{
 
 	customparams = {
 		helptext		= "Armament: 2 x ER Medium Beam Laser, 1 x SRM-4, 1 x SRM-6 - Armor: 2 tons Ferro-Fibrous",
-		maxammo 		= {srm = 180},
+		maxammo 		= {srm = 160},
     },
 }
 

@@ -13,6 +13,7 @@ local CL_Timberwolf = Heavy:New{
 	customparams = {
 		heatlimit		= 34,
 		torsoturnspeed	= 130,
+		maxammo 		= {lrm = 180,
     },
 }
 	
@@ -46,10 +47,10 @@ local E = CL_Timberwolf:New{
 			name	= "MG",
 		},
 		[9] = {
-			name	= "ATM9",
+			name	= "LRM20",
 		},
 		[10] = {
-			name	= "ATM9",
+			name	= "LRM20",
 		},
 	},
 	customparams = {
