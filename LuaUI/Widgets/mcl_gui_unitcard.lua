@@ -189,7 +189,7 @@ local function FillCardStats()
 		mechCardName:SetCaption(UnitDefs[currentUnitDefId].humanName)
 		
 		--clear all weapons
-		for counter = 0, 10 do
+		for counter = 0, 11 do
 			mechWeaponsWindow:RemoveChild(mechWeapons[counter])
 		end
 		
@@ -415,7 +415,7 @@ end
 -------------------------------------------------------------------------------------
 local function FillOutWindows()
 	-- builds out weapon list
-	for counter = 0 ,10 do
+	for counter = 0 ,11 do
 		local currentLevel = (counter)*10
 		mechWeapons[counter] = 	Chili.Button:New{
 				parent 				= mechWeaponsWindow;				

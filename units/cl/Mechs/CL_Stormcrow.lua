@@ -22,7 +22,7 @@ local A = CL_Stormcrow:New{
 	objectName        	= "CL_Stormcrow.s3o",
 	weapons	= {	
 		[1] = {
-			name	= "ArtemisLRM20",
+			name	= "LRM20", -- TODO: Artemis
 		},
 		[2] = {
 			name	= "CMPL",
