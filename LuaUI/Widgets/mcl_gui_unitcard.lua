@@ -89,6 +89,8 @@ local partsParamList	= {	arm_left	= "limb_hp_left_arm",
 						
 -- weapon lists for side bar
 local mechWeapons		= {}
+local CMD_WEAPON_TOGGLE = Spring.GetGameRulesParam("CMD_WEAPON_TOGGLE")
+
 -- parts for display
 local parts			= { mech 	= {},
 						tank	= {},
@@ -161,6 +163,18 @@ local function HeatPulse()
 	end
 end
 
+local function ToggleWeapon(unitID, unitDefID, weaponNum, button)
+	local oldStatus = Spring.GetUnitRulesParam(unitID, "weapon_" .. weaponNum) or "active" -- nil at first
+	Spring.GiveOrderToUnit(unitID, CMD_WEAPON_TOGGLE, {weaponNum}, {})
+	if oldStatus == "active" then -- was just disabled
+		button:SetCaption("--Disabled--")
+	elseif oldStatus == "disabled" then -- was just enabled
+		button:SetCaption(WeaponDefs[unitDefID.weapons[weaponNum].weaponDef].description)
+	else -- weapon is destroyed
+	end
+		
+end
+
 -------------------------------------------------------------------------------------
 -- Initializes unit stats at start
 -------------------------------------------------------------------------------------
@@ -184,6 +198,9 @@ local function FillCardStats()
 		for weaponNum, weaponUnitDef in pairs(weapons) do
 			--Spring.Echo( WeaponDefs[weaponUnitDef.weaponDef].description)
 			mechWeapons[weaponNum-1]:SetCaption(WeaponDefs[weaponUnitDef.weaponDef].description)
+			mechWeapons[weaponNum-1].OnClick = { function(self)
+					ToggleWeapon(currentUnitId, currentDef, weaponNum, self)
+				end }
 			mechWeaponsWindow:AddChild(mechWeapons[weaponNum-1])
 			
 			lastWeaponId = weaponNum
@@ -411,9 +428,9 @@ local function FillOutWindows()
 				height				= "12%";
 				backgroundColor 	= grey;
 				OnClick = { function(self)
-					Spring.Echo ( "Hello Smithers, you're really good. at. turning me. on.", counter )
+					ToggleWeapon(counter)
 					--Spring.SendLuaRulesMsg ( cmd )
-				end },
+				end }, -- ToggleWeapon(counter)
 			}
 	end
 	

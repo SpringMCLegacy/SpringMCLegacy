@@ -100,6 +100,8 @@ local launchPoints = {}
 local currPoints = {}
 local spinPieces = {}
 local spinPiecesState = {}
+
+local playerDisabled = {}
 for weaponID = 1, info.numWeapons do
 	if missileWeaponIDs[weaponID] then
 		if launcherIDs[weaponID] then
@@ -119,6 +121,7 @@ for weaponID = 1, info.numWeapons do
 			barrels[weaponID] = piece("barrel_" .. weaponID)
 		end
 	end
+	playerDisabled[weaponID] = false
 end
 
 local function RestoreAfterDelay(unitID)
@@ -393,7 +396,16 @@ function script.Deactivate()
 	activated = false
 end
 
+function ToggleWeapon(weaponID)
+	playerDisabled[weaponID] = not playerDisabled[weaponID]
+	SetUnitRulesParam(unitID, "weapon_" .. weaponID, playerDisabled[weaponID] and "disabled" or "active")
+	-- TODO: different codes for different types of being disabled?
+end
+
 local function WeaponCanFire(weaponID)
+	if playerDisabled[weaponID] then
+		return false
+	end
 	if leftArmIDs[weaponID] and limbHPs["left_arm"] <= 0 then
 		return false
 	elseif rightArmIDs[weaponID] and limbHPs["right_arm"] <= 0 then

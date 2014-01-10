@@ -88,6 +88,7 @@ local function StringToTable(input)
 end
 GG.StringToTable = StringToTable
 
+-- functions for determining weapon placement
 local function GetArmMasterWeapon(input)
 	local lowestID = 32
 	for weaponID, valid in pairs(input) do
