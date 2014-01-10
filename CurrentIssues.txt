@@ -24,6 +24,14 @@
  
  -- Osiris OP (C: 10780 -> 12780)
  
- Clan walkscripts - Mistlynx, Firemoth Hellbringer Iceferret Summoner have forward legs (awesome) [mistlynx & summoner require forward-leg jump anims]
+ -- Clan walkscripts - Mistlynx, Firemoth Hellbringer Iceferret Summoner have forward legs (awesome) [mistlynx & summoner require forward-leg jump anims]
  
- deck showing enemy units due to fail use of SetUnitGroup in synced code
+ -- deck showing enemy units due to fail use of SetUnitGroup in synced code
+ 
+ Clan radii too small: Warhawk, Timberwolf, Stormcrow, summoner
+ 
+ Clan nova breaks card widget
+ 
+ Clan forward leg jump anim pushes into terrain (mistlynx, summoner)
+ 
+ Clan mechs missing ammo

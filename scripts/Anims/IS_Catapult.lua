@@ -7,7 +7,6 @@ local LEG_SPEED = rad(300)
 local LEG_TURN_SPEED = rad (200)
 
 --Turn script
-
 function anim_Turn(clockwise)
 	Signal(SIG_ANIMATE)
 	SetSignalMask(SIG_ANIMATE)
