@@ -368,6 +368,7 @@ function StopTurn()
 end
 
 function script.StartMoving(reversing)
+Spring.Echo("anims/" .. unitDef.name:sub(1, (unitDef.name:find("_", 4) or 0) - 1) .. ".lua")
 	--Spring.Echo("Reversing?", reversing)
 	StartThread(anim_Walk)
 	moving = true
