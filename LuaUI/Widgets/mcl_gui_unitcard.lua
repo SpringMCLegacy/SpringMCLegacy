@@ -15,6 +15,7 @@ local spGetSelectedUnits	= Spring.GetSelectedUnits
 local spGetUnitDefID		= Spring.GetUnitDefID
 local spGetUnitRulesParam	= Spring.GetUnitRulesParam
 local spGetUnitHealth		= Spring.GetUnitHealth
+local spGiveOrderToUnit		= Spring.GiveOrderToUnit
 
 local green	= { 0.0, 1.0, 0.0, 1.0}
 local darkGreen	= { 0.0, 0.7, 0.0, 1.0}
@@ -164,17 +165,16 @@ local function HeatPulse()
 	end
 end
 
-local function ToggleWeapon(unitID, unitDefID, weaponNum, button)
-	local oldStatus = spGetUnitRulesParam(unitID, "weapon_" .. weaponNum) or "active" -- nil at first
-	Spring.GiveOrderToUnit(unitID, CMD_WEAPON_TOGGLE, {weaponNum}, {})
+local function ToggleWeapon(unitDefID, weaponNum, button)
+	local oldStatus = spGetUnitRulesParam(currentUnitId, "weapon_" .. weaponNum) or "active" -- nil at first
+	spGiveOrderToUnit(currentUnitId, CMD_WEAPON_TOGGLE, {weaponNum}, {})
+	
 	if oldStatus == "active" then -- was just disabled
 		button.backgroundColor	= black
-		button:Invalidate()	
-		button:SetCaption("--Disabled--")			
+		button:Invalidate()
 	elseif oldStatus == "disabled" then -- was just enabled
 		button.backgroundColor	= darkGreen
 		button:Invalidate()	
-		button:SetCaption(WeaponDefs[unitDefID.weapons[weaponNum].weaponDef].description)
 	else -- weapon is destroyed
 	end
 		
@@ -202,27 +202,24 @@ local function FillCardStats()
 		local lastWeaponId
 		for weaponNum, weaponUnitDef in pairs(weapons) do
 			--Spring.Echo( WeaponDefs[weaponUnitDef.weaponDef].description)
-			local weaponStatus	= spGetUnitRulesParam(currentUnitId, "weapon_" .. weaponNum)		
 			local currentWeapon		= mechWeapons[weaponNum-1]
-			if weaponStatus == "disabled" then
-				weaponStatus	= "--Disabled--"
+			
+			if spGetUnitRulesParam(currentUnitId, "weapon_" .. weaponNum) == "disabled" then
 				currentWeapon.backgroundColor	= black
 				currentWeapon:Invalidate()	
 			else
-				weaponStatus	= WeaponDefs[weaponUnitDef.weaponDef].description
 				currentWeapon.backgroundColor	= darkGreen
 				currentWeapon:Invalidate()	
 			end
 			
-			currentWeapon:SetCaption(weaponStatus)
-			currentWeapon.OnClick = { function(self)
-					ToggleWeapon(currentUnitId, currentDef, weaponNum, self)
-				end }
+			currentWeapon:SetCaption(WeaponDefs[weaponUnitDef.weaponDef].description)
+			currentWeapon.OnClick = {	function(self)
+											ToggleWeapon(currentDef, weaponNum, self)
+										end }
 			mechWeaponsWindow:AddChild(mechWeapons[weaponNum-1])
 			
 			lastWeaponId = weaponNum
 		end
-
 		
 		-- set hp bar and chest damage
 		-- Spring.Echo(health/maxHealth,health,maxHealth)
@@ -246,14 +243,15 @@ local function FillCardStats()
 				mechAmmoWindow.children[k]:SetValue(spGetUnitRulesParam(currentUnitId, ammoTypes[v])  or "0")
 			end
 		end
+		
 		--Spring.Echo(spGetUnitRulesParam(currentUnitId, "heat") or 0)
 		if (spGetUnitRulesParam(currentUnitId, "excess_heat") or 0) > 50 then
 			dangerZONE = true
 		else
 			dangerZONE = false
 		end
-		HeatPulse()
 		
+		HeatPulse()		
 					
 		local heat = spGetUnitRulesParam(currentUnitId, "heat") or 0
 		if heat >10 then

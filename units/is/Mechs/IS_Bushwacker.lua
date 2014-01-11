@@ -7,6 +7,7 @@ local IS_Bushwacker = Medium:New{
 	maxVelocity		= 4, --80kph/20
 
 	customparams = {
+		barrelrecoildist = {[1] = 5},
 		heatlimit		= "22",
 		torsoturnspeed	= "160",
     },
@@ -41,7 +42,6 @@ local BSWS2 = IS_Bushwacker:New{
     customparams = {
 		helptext		= "Armament: 1 x LBX/10, 1 x ER Large Beam Laser, 2 x Small Pulse Laser, 2 x SRM-4 - Armor: 9 tons Ferro-Fibrous",
 		maxammo 		= {srm = 120, ac10 = 40},
-		barrelrecoildist = {[1] = 5},
     },
 }
 
