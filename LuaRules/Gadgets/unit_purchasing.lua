@@ -74,6 +74,15 @@ local runningTonsCmdDesc = {
 
 -- Variables
 local typeStrings = {"lightmech", "mediummech", "heavymech", "assaultmech", "vehicle", "vtol", "aero"}
+local typeStringAliases = { -- whitespace is to try and equalise resulting font size
+	["lightmech"] 	= "Light     \nMechs", 
+	["mediummech"] 	= "Medium  \nMechs", 
+	["heavymech"] 	= "Heavy    \nMechs", 
+	["assaultmech"] = "Assault  \nMechs", 
+	["vehicle"] 	= "Vehicles ", 
+	["vtol"] 		= "VTOL     ",
+	["aero"]		= "Aero     ",
+}
 local menuCmdDescs = {}
 local menuCmdIDs = {}
 for i, typeString in ipairs(typeStrings) do
@@ -81,7 +90,7 @@ for i, typeString in ipairs(typeStrings) do
 	menuCmdDescs[i] = {
 		id     = cmdID,
 		type   = CMDTYPE.ICON,
-		name   = typeString, -- TODO: nicely formatted names? or use textures
+		name   = typeStringAliases[typeString], -- TODO: texture?
 		action = 'menu',
 		tooltip = "Purchase " .. typeString,
 	}
