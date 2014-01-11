@@ -17,6 +17,7 @@ local spGetUnitRulesParam	= Spring.GetUnitRulesParam
 local spGetUnitHealth		= Spring.GetUnitHealth
 
 local green	= { 0.0, 1.0, 0.0, 1.0}
+local darkGreen	= { 0.0, 0.7, 0.0, 1.0}
 local white	= { 1.0, 1.0, 1.0, 1.0}
 local grey	= { 0.4, 0.4, 0.4, 1.0}
 local red	= { 1.0, 0.0, 0.0, 1.0}
@@ -133,7 +134,7 @@ local function MechPartStatus(chestColorTable)
 			end
 			currentParts[partId].color =	colortable
 			currentParts[partId]:Invalidate()
-		else	
+		else
 			currentParts[partId].color =	chestColorTable
 			currentParts[partId]:Invalidate()		
 		end
@@ -164,11 +165,15 @@ local function HeatPulse()
 end
 
 local function ToggleWeapon(unitID, unitDefID, weaponNum, button)
-	local oldStatus = Spring.GetUnitRulesParam(unitID, "weapon_" .. weaponNum) or "active" -- nil at first
+	local oldStatus = spGetUnitRulesParam(unitID, "weapon_" .. weaponNum) or "active" -- nil at first
 	Spring.GiveOrderToUnit(unitID, CMD_WEAPON_TOGGLE, {weaponNum}, {})
 	if oldStatus == "active" then -- was just disabled
-		button:SetCaption("--Disabled--")
+		button.backgroundColor	= black
+		button:Invalidate()	
+		button:SetCaption("--Disabled--")			
 	elseif oldStatus == "disabled" then -- was just enabled
+		button.backgroundColor	= darkGreen
+		button:Invalidate()	
 		button:SetCaption(WeaponDefs[unitDefID.weapons[weaponNum].weaponDef].description)
 	else -- weapon is destroyed
 	end
@@ -197,8 +202,20 @@ local function FillCardStats()
 		local lastWeaponId
 		for weaponNum, weaponUnitDef in pairs(weapons) do
 			--Spring.Echo( WeaponDefs[weaponUnitDef.weaponDef].description)
-			mechWeapons[weaponNum-1]:SetCaption(WeaponDefs[weaponUnitDef.weaponDef].description)
-			mechWeapons[weaponNum-1].OnClick = { function(self)
+			local weaponStatus	= spGetUnitRulesParam(currentUnitId, "weapon_" .. weaponNum)		
+			local currentWeapon		= mechWeapons[weaponNum-1]
+			if weaponStatus == "disabled" then
+				weaponStatus	= "--Disabled--"
+				currentWeapon.backgroundColor	= black
+				currentWeapon:Invalidate()	
+			else
+				weaponStatus	= WeaponDefs[weaponUnitDef.weaponDef].description
+				currentWeapon.backgroundColor	= darkGreen
+				currentWeapon:Invalidate()	
+			end
+			
+			currentWeapon:SetCaption(weaponStatus)
+			currentWeapon.OnClick = { function(self)
 					ToggleWeapon(currentUnitId, currentDef, weaponNum, self)
 				end }
 			mechWeaponsWindow:AddChild(mechWeapons[weaponNum-1])
