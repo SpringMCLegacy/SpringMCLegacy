@@ -30,7 +30,7 @@ local CL_Donar = VTOL:New{
 	customparams = {
 		helptext		= "Armament: 1 x Large Pulse Laser, 2 x SSRM-2- Armor: 3 tons",
 		heatlimit		= 24,
-		maxmmo = {srm = 120},
+		maxammo = {srm = 120},
     },
 }
 

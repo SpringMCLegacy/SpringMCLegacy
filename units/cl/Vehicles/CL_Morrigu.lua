@@ -36,7 +36,7 @@ local CL_Morrigu = Tank:New{
 		turretturnspeed = 50,
 		elevationspeed = 100,
 		wheelspeed = 200,
-		maxmmo = {lrm = 150},
+		maxammo = {lrm = 150},
     },
 }
 
