@@ -180,10 +180,12 @@ for name, ud in pairs(UnitDefs) do
 		ud.canrepeat = false
 	end
 end
-IS_DROPSHIP_UD["buildoptions"] = IS_DROPSHIP_BUILDOPTIONS
-CL_DROPSHIP_UD["buildoptions"] = CL_DROPSHIP_BUILDOPTIONS
+
+table.sort(IS_DROPSHIP_BUILDOPTIONS)
+table.sort(CL_DROPSHIP_BUILDOPTIONS)
 
 IS_DROPZONE_UD["buildoptions"] = IS_DROPSHIP_BUILDOPTIONS
 CL_DROPZONE_UD["buildoptions"] = CL_DROPSHIP_BUILDOPTIONS
 
+table.sort(BEACON_BUILDOPTIONS)
 BEACON_UD["buildoptions"] = BEACON_BUILDOPTIONS
