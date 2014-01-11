@@ -30,7 +30,7 @@ local CL_Enyo = LightTank:New{
 		heatlimit		= 28,
 		turretturnspeed = 100,
 		elevationspeed  = 150,
-		maxmmo = {srm = 120},
+		maxammo = {srm = 120},
     },
 }
 
