@@ -176,6 +176,7 @@ function SpawnDropship(unitID, teamID, dropshipType, cargo, cost)
 	if Spring.ValidUnitID(unitID) and not Spring.GetUnitIsDead(unitID) then
 		local tx,ty,tz = GetUnitPosition(unitID)
 		local dropshipID = CreateUnit(dropshipType, tx, ty, tz, "s", teamID)
+		Spring.SetUnitNoSelect(dropshipID, true)
 		GG.PlaySoundForTeam(teamID, "BB_Dropship_Inbound", 1)
 		if type(cargo) == "table" then
 			for i, order in ipairs(cargo) do -- preserve order here
@@ -435,9 +436,10 @@ function gadget:AllowCommand(unitID, unitDefID, teamID, cmdID, cmdParams, cmdOpt
 		end
 	elseif unitDefID == WALL_ID or unitDefID == GATE_ID then
 		if unitDefID == WALL_ID and upgradeIDs[cmdID] then
+			local beaconID = wallInfos[unitID].beaconID
+			if beaconGateIDs[beaconID] then return false end -- gate already exists
 			BuildGate(unitID, teamID)
 			-- Disable gates for all other wall segments in the ring
-			local beaconID = wallInfos[unitID].beaconID
 			for _, wallID in ipairs(wallIDs[beaconID]) do
 				RemoveUnitCmdDesc(wallID, FindUnitCmdDesc(wallID, cmdID))
 			end
@@ -445,6 +447,8 @@ function gadget:AllowCommand(unitID, unitDefID, teamID, cmdID, cmdParams, cmdOpt
 			local beaconID = wallInfos[unitID].beaconID
 			RepairWalls(beaconID, teamID)
 		end
+	elseif UnitDefs[unitDefID].customParams.decal then
+		return false -- disallow all commands to decals
 	end
 	return true
 end

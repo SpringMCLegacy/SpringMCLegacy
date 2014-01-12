@@ -58,6 +58,7 @@ end
 local narcUnits = {}
 
 local function GetUnitUnderJammer(unitID, teamID)
+	if not Spring.ValidUnitID(unitID) or Spring.GetUnitIsDead then return false end
 	if not teamID then teamID = GetUnitTeam(unitID) end
 	local allyTeam = select(6, GetTeamInfo(teamID))
 	for jammerID, radius in pairs(allyJammers[allyTeam]) do
