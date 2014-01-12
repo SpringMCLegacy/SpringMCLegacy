@@ -57,6 +57,9 @@ local spSendCommands      = Spring.SendCommands
 
 local trackSlope  = true
 
+local dodecLines  = 0
+local dodecePolys  = 0
+
 local circleLines  = 0
 local circlePolys  = 0
 local circleDivs  = 32
@@ -105,6 +108,26 @@ function widget:Initialize()
     glBeginEnd(GL_TRIANGLE_FAN, function()
     local radstep = (2.0 * math.pi) / circleDivs
       for i = 1, circleDivs do
+        local a = (i * radstep)
+        glVertex(math.sin(a), circleOffset, math.cos(a))
+      end
+    end)
+  end)
+  
+   dodecLines = glCreateList(function()
+    glBeginEnd(GL_LINE_LOOP, function()
+      local radstep = (2.0 * math.pi) / 12
+      for i = 1, 12 do
+        local a = (i * radstep)
+        glVertex(math.sin(a), circleOffset, math.cos(a))
+      end
+    end)
+  end)
+
+  dodecPolys = glCreateList(function()
+    glBeginEnd(GL_TRIANGLE_FAN, function()
+    local radstep = (2.0 * math.pi) / 12
+      for i = 1, 12 do
         local a = (i * radstep)
         glVertex(math.sin(a), circleOffset, math.cos(a))
       end
@@ -233,11 +256,16 @@ function widget:DrawWorldPreUnit()
             xs,zs=zs,xs
           end
         
-          if (UnitDefs[udid].speed <10) then
+		  if UnitDefs[udid].name:find("zone") then
+		      glColor(colorSet[4])
+              glDrawListAtUnit(unitID, dodecPolys, false, radius, 1.0, radius, degrot, gz, 0, -gx)
+              glColor(colorSet[4])
+              glDrawListAtUnit(unitID, dodecLines, false, radius, 1.0, radius, degrot, gz, 0, -gx)
+          elseif (UnitDefs[udid].speed <10) then
             glColor(colorSet[4])
             glDrawListAtUnit(unitID, squarePolys,false,xs,1,zs)
             glColor(colorSet[4])
-            glDrawListAtUnit(unitID, squareLines,false,xs,1,zs)
+            glDrawListAtUnit(unitID, squareLines,false,xs,1,zs)		
           elseif (trackSlope and (not UnitDefs[udid].canFly)) then
             if (UnitDefs[udid].isBuilder == true) then
               glColor(colorSet[1])
@@ -283,7 +311,13 @@ function widget:DrawWorldPreUnit()
       if (Spring.GetUnitBuildFacing(unitID) or 0)%2==1 then
         xs,zs=zs,xs
       end
-      if (UnitDefs[udid].speed <10) then
+	  if UnitDefs[udid].name:find("zone") then
+	    radius = radius - 28
+		glColor(colorSet[1])
+        glDrawListAtUnit(unitID, dodecPolys, false, radius, 1.0, radius)
+        glColor(colorSet[2])
+        glDrawListAtUnit(unitID, dodecLines, false, radius, 1.0, radius)
+      elseif (UnitDefs[udid].speed <10) then
         glColor(colorSet[1])
         glDrawListAtUnit(unitID, squarePolys,false,xs,1,zs)
         glColor(colorSet[2])

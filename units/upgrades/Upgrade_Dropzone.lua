@@ -1,3 +1,13 @@
+local footPrint = 14
+local yardMapString = ""
+local yardMapRow = ""
+for i = 1, footPrint do
+	yardMapRow = yardMapRow .. "y"
+end
+for i = 1, footPrint do
+	yardMapString = yardMapString .. yardMapRow
+end
+
 local Upgrade_Dropzone = {
 	name              	= "Dropzone",
 	description         = "Landing Demarcation",
@@ -6,12 +16,10 @@ local Upgrade_Dropzone = {
 	script				= "Upgrade_Dropzone.lua",
 	category 			= "beacon",
 	maxDamage           = 50000, -- should never take damage
-	footprintX			= 5,
-	footprintZ 			= 5,
-	yardMap				= "yyyyy yyyyy yyyyy yyyyy yyyyy",
-	-- Colvol
-	--[[collisionVolumeType = "box",
-	collisionVolumeScales = "4 25 4",]]
+	footprintX			= footPrint,
+	footprintZ 			= footPrint,
+	yardMap				= yardMapString,
+
 	-- Constructor stuff
 	builder				= true,
 	builddistance 		= 460,

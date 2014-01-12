@@ -204,6 +204,7 @@ function script.Create()
 		_, y, _ = Spring.GetUnitPosition(unitID)
 	end
 	stage = 3
+	GG.SpawnDecal("decal_drop", X, GY + 1, Z, Spring.GetUnitTeam(unitID), 30 * 2.5, 30 * 120)
 	Spring.MoveCtrl.SetGravity(unitID, -0.02 * GRAVITY)
 	Spring.MoveCtrl.SetCollideStop(unitID, true)
 	Spring.MoveCtrl.SetTrackGround(unitID, true)

@@ -110,7 +110,7 @@ for name, ud in pairs(UnitDefs) do
 		if ud.customparams.hasbap == "true" then
 			ud.seismicdistance = 3000
 		end
-	else
+	elseif not name:find("decal") then
 		ud.seismicdistance = 0
 		ud.sightdistance = 1000
 		ud.radardistance = 2000
@@ -156,8 +156,8 @@ for name, ud in pairs(UnitDefs) do
 	elseif name:find("upgrade") then
 		ud.buildcostmetal = ud.buildcostmetal == 0 and 15000 or ud.buildcostmetal -- TODO: remove me
 	end
-	if name == "is_dropship" then IS_DROPSHIP_UD = ud end
-	if name == "cl_dropship" then CL_DROPSHIP_UD = ud end
+	--if name == "is_dropship" then IS_DROPSHIP_UD = ud end
+	--if name == "cl_dropship" then CL_DROPSHIP_UD = ud end
 	
 	if name == "is_dropzone" then IS_DROPZONE_UD = ud end
 	if name == "cl_dropzone" then CL_DROPZONE_UD = ud end
@@ -168,6 +168,7 @@ for name, ud in pairs(UnitDefs) do
 			ud.canselfdestruct = false
 		elseif name:find("dropship") or name:find("dropzone") then
 			ud.canselfdestruct = false
+			ud.levelground = false
 		end
 		ud.canmove = false
 		ud.canrepair = false
