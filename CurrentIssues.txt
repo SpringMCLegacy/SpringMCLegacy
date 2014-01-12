@@ -2,25 +2,20 @@
 
 -- units too expensive / production too limited
 
--- Seperate dropship cooldown and inbound wait (i.e. inbound timer starts when called in, cooldown starts when taking back off / leaves)
-
 -- weird unit movement
 
 -- "can't build upgrades on beacon that was capped dropzone"
 
 [f=0009450] Error: LuaRules::RunCallIn: error = 2, UnitExperience, [string "LuaRules/Gadgets/unit_perks.lua"]:64: attempt to index field '?' (a nil value)
 
- [f=0032972] [unit_script.lua] Error: [string "scripts/mech.lua"]:132: attempt to perform arithmetic on field '?' (a nil value)
  
- [f=0007014] you have more than the lance supports in group #1
+ [f=0007014] you have more than the lance supports in group #1 - still possible by player directly assigning groups
  
  top of ticket counter widget e.g. resources missing in certain window res
  
  bug with mechbay?
  
- --T and turn and track
- 
- -- Perks too cheap (0.5 -> 1.5)
+  -- Perks too cheap (0.5 -> 1.5)
  
  -- Osiris OP (C: 10780 -> 12780)
  
@@ -39,3 +34,6 @@
  perking clears order queue
  
  add an "emergency get out" button to mechbay
+ 
+ 
+dropzones interfere with beacon capping
