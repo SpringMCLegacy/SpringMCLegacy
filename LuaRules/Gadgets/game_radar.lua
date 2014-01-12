@@ -120,7 +120,7 @@ end
 
 function gadget:UnitPreDamaged(unitID, unitDefID, unitTeam, damage, paralyzer, weaponID, projectileID, attackerID, attackerDefID, attackerTeam)
 	-- Don't allow any damage to beacons or dropzones
-	if unitDefID == BEACON_ID or UnitDefs[unitDefID].name:find("dropzone") then return 0 end
+	if unitDefID == BEACON_ID or UnitDefs[unitDefID].name:find("dropzone") or UnitDefs[unitDefID].customParams.decal then return 0 end
 	-- ignore none weapons
 	if not attackerID then return damage end
 	-- NARCs

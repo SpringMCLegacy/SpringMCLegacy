@@ -40,6 +40,7 @@ function SpawnDecal(decalType, x, y, z, teamID, delay, duration)
 		local decalID = Spring.CreateUnit(decalType, x, y + 1, z, 0, Spring.GetGaiaTeamID(), false, false)
 		Spring.SetUnitAlwaysVisible(decalID, teamID == nil and true)
 		Spring.SetUnitNoSelect(decalID, true)
+		Spring.SetUnitBlocking(decalID, false, false, false, false, false, false, false)
 		if duration then
 			GG.Delay.DelayCall(Spring.DestroyUnit, {decalID, false, true}, duration)
 		end
