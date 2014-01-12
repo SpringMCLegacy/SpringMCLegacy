@@ -54,6 +54,7 @@ function TouchDown()
 		end
 	end
 	Spring.SetUnitNoSelect(unitID, false)
+	GG.SpawnDecal("decal_beacon", X, GY + 1, Z)
 end
 
 function ChangeType(upgrade)

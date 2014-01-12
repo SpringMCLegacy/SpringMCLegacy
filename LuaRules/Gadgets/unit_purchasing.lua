@@ -364,11 +364,11 @@ function gadget:UnitDestroyed(unitID, unitDefID, teamID, attackerID, attackerDef
 			AddTeamResource(attackerTeam, "metal", UnitDefs[unitDefID].metalCost * KILL_REWARD_MULT)
 		end
 	end
-	-- reimburse 'weight'
-	AddTeamResource(teamID, "energy", UnitDefs[unitDefID].energyCost)
 	local currSlots = teamSlotsRemaining[teamID]
 	local unitType = unitTypes[unitDefID]
 	if unitType then
+		-- reimburse 'weight'
+		AddTeamResource(teamID, "energy", UnitDefs[unitDefID].energyCost)
 		if unitType:find("mech") then
 			teamSlotsRemaining[teamID] = currSlots + 1
 		else -- any other combat unit is worth 1/2 a slot

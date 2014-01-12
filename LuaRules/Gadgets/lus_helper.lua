@@ -33,7 +33,21 @@ local CallAsUnit 			= Spring.UnitScript.CallAsUnit
 
 -- Useful functions for GG
 
-function EmitSfxName(unitID, pieceName, effectName)
+function SpawnDecal(decalType, x, y, z, teamID, delay, duration)
+	if delay then
+		GG.Delay.DelayCall(SpawnDecal, {decalType, x, y, z, teamID, nil, duration}, delay)
+	else
+		local decalID = Spring.CreateUnit(decalType, x, y + 1, z, 0, Spring.GetGaiaTeamID(), false, false)
+		Spring.SetUnitAlwaysVisible(decalID, teamID == nil and true)
+		Spring.SetUnitNoSelect(decalID, true)
+		if duration then
+			GG.Delay.DelayCall(Spring.DestroyUnit, {decalID, false, true}, duration)
+		end
+	end
+end
+GG.SpawnDecal = SpawnDecal
+
+function EmitSfxName(unitID, pieceName, effectName) -- currently unused
 	local x,y,z,dx,dy,dz = GetUnitPiecePosDir(unitID, pieceName)
 	SpawnCEG(effectName, x,y,z, dx, dy, dz)
 end
