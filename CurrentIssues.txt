@@ -37,3 +37,13 @@
  
  
 dropzones interfere with beacon capping
+
+towers self d doesn't increase limit
+
+--[f=0013985] [unit_script.lua] Error: [string "scripts/mech.lua"]:452: bad argument #1 to 'Turn' (number expected, got nil)
+
+[f=0034811] [UnitScript] Error: LuaRules::RunCallIn: error = 1, CLuaUnitScript::BlockShot, [string "LuaRules/Gadgets/game_radar.lua"]:64: attempt to compare nil with number
+
+[f=0021195] <Anarchid> still cannot selfd bay
+
+[f=0026941] <Anarchid> now a ship sits on my bay
