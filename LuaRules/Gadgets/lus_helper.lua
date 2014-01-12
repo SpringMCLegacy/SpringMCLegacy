@@ -262,7 +262,7 @@ function gadget:GamePreload()
 			info.limbHPs["left_arm"] = unitDef.health * 0.15
 			info.limbHPs["right_arm"] = unitDef.health * 0.15
 		elseif cp.unittype == "vehicle" then
-			info.limbHPs["turret"] = unitDef.health * 0.25
+			info.limbHPs["turret"] = unitDef.health * 0.5
 			if unitDef.canFly then
 				info.limbHPs["lwing"] =	 unitDef.health * 0.5
 				info.limbHPs["rwing"] = unitDef.health * 0.5

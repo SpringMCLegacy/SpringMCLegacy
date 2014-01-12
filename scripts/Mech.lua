@@ -450,7 +450,7 @@ function script.AimWeapon(weaponID, heading, pitch)
 		Turn(flares[weaponID] or flares[1], x_axis, -pitch, ELEVATION_SPEED)
 		if weaponID == amsID then 
 			Turn(flares[weaponID] or flares[1], y_axis, heading, TORSO_SPEED)
-			WaitForTurn(flares[weaponID], y_axis)
+			WaitForTurn(flares[weaponID] or flares[1], y_axis)
 			return true 
 		end
 	end
