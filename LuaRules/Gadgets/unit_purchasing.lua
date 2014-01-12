@@ -248,6 +248,7 @@ function gadget:AllowCommand(unitID, unitDefID, teamID, cmdID, cmdParams, cmdOpt
 			end
 			
 		elseif cmdID == CMD_SEND_ORDER then
+			if (orderSizes[unitID] or 0) == 0 then return end -- don't allow empty orders
 			local orderQueue = Spring.GetFullBuildQueue(unitID)
 			local money = GetTeamResources(teamID, "metal")
 			local cost = orderCosts[unitID] or 0

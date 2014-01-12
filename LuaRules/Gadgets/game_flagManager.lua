@@ -247,7 +247,7 @@ function gadget:GameFrame(n)
 				local defendTotal = 0
 				local unitsAtFlag = GetUnitsInCylinder(spots[spotNum].x, spots[spotNum].z, flagData.radius)
 				--Spring.Echo ("There are " .. #unitsAtFlag .. " units at flag " .. flagID)
-				if #unitsAtFlag == 1 then -- Only the flag, no other units
+				if #unitsAtFlag == 2 then -- Only the flag, and decal no other units -- TODO: currently dropzone counts too
 					for teamID = 0, #teams-1 do
 						if teamID ~= flagTeamID then
 							if (flagCapStatuses[flagID][teamID] or 0) > 0 then
