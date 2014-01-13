@@ -31,30 +31,16 @@ local options = {
   },
 	
 	
- {
+  {
       key		= "income",
-      name		= "Income Modes",
-      desc		= "How do you earn CBills?",
-      type		= "list",
-      def		= "default",
+      name		= "Income",
+      desc		= "How many CBills per second?",
+      type		= "number",
+      def		= 100,
+	  min		= 50,
+	  max		= 1000,
+	  step		= 50,
 	  section	= '2gamemode',
-      items = {
-         {
-		 key = "default",
-		 name = "Dropship & Damage Income",
-		 desc = "Income from your dropship and from damaging and killing enemy units" ,
-		 },
-		 {
-		 key = "dropship",
-		 name = "Dropship Income",
-		 desc = "Income only from your dropship",
-		 },
-         {
-		 key = "none",
-		 name = "No Income",
-		 desc = "Only a fixed starting sum to spend, no income, deathmatch style",
-		 },
-      },
    },
    
 	{
