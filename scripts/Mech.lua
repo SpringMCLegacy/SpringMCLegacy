@@ -136,7 +136,7 @@ end
 
 -- non-local function called by gadgets/game_ammo.lua
 function ChangeAmmo(ammoType, amount) 
-	local newAmmoLevel = currAmmo[ammoType] + amount -- amount is a -ve to deduct
+	local newAmmoLevel = (currAmmo[ammoType] or 0) + amount -- amount is a -ve to deduct
 	if newAmmoLevel <= maxAmmo[ammoType] then
 		currAmmo[ammoType] = newAmmoLevel
 		SetUnitRulesParam(unitID, "ammo_" .. ammoType, 100 * newAmmoLevel / maxAmmo[ammoType])
@@ -291,7 +291,7 @@ end
 
 function limbHPControl(limb, damage)
 	local currHP = limbHPs[limb]
-	if currHP > 0 or damage < 0 then
+	if currHP > 0 or (damage or 0) < 0 then
 		local newHP = math.min(limbHPs[limb] - damage, info.limbHPs[limb]) -- don't allow HP above max
 		--Spring.Echo(unitDef.name, limb, newHP)
 		if newHP < 0 then 
