@@ -13,6 +13,8 @@ end
 if gadgetHandler:IsSyncedCode() then
 --	SYNCED
 
+local modOptions = Spring.GetModOptions()
+
 -- localisations
 local SetUnitRulesParam		= Spring.SetUnitRulesParam
 --SyncedRead
@@ -39,6 +41,7 @@ local GetUnitDistanceToPoint = GG.GetUnitDistanceToPoint
 local DelayCall				 = GG.Delay.DelayCall
 
 -- Constants
+local CBILLS_PER_SEC = (modOptions and tonumber(modOptions.income)) or 100
 local BEACON_ID = UnitDefNames["beacon"].id
 local C3_ID = UnitDefNames["upgrade_c3array"].id
 local DROPSHIP_DELAY = 30 * 30 -- 30s
@@ -346,10 +349,8 @@ local WALL_ID = UnitDefNames["wall"].id
 local GATE_ID = UnitDefNames["wall_gate"].id
 
 function gadget:UnitDamaged(unitID, unitDefID, teamID, damage, paralyzer, weaponID,  projectileID, attackerID, attackerDefID, attackerTeam)
-	if not modOptions or modOptions.income == "default" then
-		if attackerID and attackerTeam and not AreTeamsAllied(teamID, attackerTeam) and unitDefID ~= WALL_ID and unitDefID ~= GATE_ID then
-			AddTeamResource(attackerTeam, "metal", damage * DAMAGE_REWARD_MULT)
-		end
+	if attackerID and attackerTeam and not AreTeamsAllied(teamID, attackerTeam) and unitDefID ~= WALL_ID and unitDefID ~= GATE_ID then
+		AddTeamResource(attackerTeam, "metal", damage * DAMAGE_REWARD_MULT)
 	end
 end
 
@@ -360,10 +361,8 @@ function gadget:UnitDestroyed(unitID, unitDefID, teamID, attackerID, attackerDef
 	elseif unitDefID == C3_ID then
 		LanceControl(teamID, false)
 	end
-	if not modOptions or modOptions.income == "default" then
-		if attackerID and not AreTeamsAllied(teamID, attackerTeam) and unitDefID ~= WALL_ID and unitDefID ~= GATE_ID then
-			AddTeamResource(attackerTeam, "metal", UnitDefs[unitDefID].metalCost * KILL_REWARD_MULT)
-		end
+	if attackerID and not AreTeamsAllied(teamID, attackerTeam) and unitDefID ~= WALL_ID and unitDefID ~= GATE_ID then
+		AddTeamResource(attackerTeam, "metal", UnitDefs[unitDefID].metalCost * KILL_REWARD_MULT)
 	end
 	local currSlots = teamSlotsRemaining[teamID]
 	local unitType = unitTypes[unitDefID]
@@ -416,7 +415,7 @@ end
 function gadget:GameFrame(n)
 	if n > 0 and n % 30 == 0 then -- once a second
 		for _, teamID in pairs(Spring.GetTeamList()) do
-			AddTeamResource(teamID, "metal", 100)
+			AddTeamResource(teamID, "metal", CBILLS_PER_SEC)
 		end
 		-- check if orders are still too expensive
 		for unitID, teamID in pairs(dropZones) do
