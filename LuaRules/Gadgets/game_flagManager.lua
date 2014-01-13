@@ -55,6 +55,7 @@ local DEF_MULT = 1 --multiplies against the FBI defined DefRate
 
 -- variables
 
+local unitDefsToIgnore = {}
 local flagTypes = {"beacon"}
 local flags = {} -- flags[flagType][index] == flagUnitID
 local numFlags = {} -- numFlags[flagType] == numberOfFlagsOfType
@@ -214,6 +215,11 @@ function gadget:GamePreload()
 		Spring.SetGameRulesParam("MAP_TEMP_AMBIENT", temps.ambient)
 		Spring.SetGameRulesParam("MAP_TEMP_WATER", temps.water)
 	end
+	for unitDefID, ud in pairs(UnitDefs) do -- cache ignored unitDefIDs
+		if ud.canFly or ud.customParams.decal or ud.name:find("dropzone") or ud.name == "beacon" then -- TODO: single customparam?
+			unitDefsToIgnore[unitDefID] = true
+		end
+	end
 end
 
 
@@ -229,6 +235,15 @@ function gadget:GameStart()
 	end
 end
 
+function StripUnits(unitsAtFlag)
+	for i = #unitsAtFlag, 1, -1 do -- iterate over list in reverse so removing doesn't screw with index
+		local unitID = unitsAtFlag[i]
+		local unitDefID = Spring.GetUnitDefID(unitID)
+		if unitDefsToIgnore[unitDefID] then -- bad defs are cached
+			table.remove(unitsAtFlag, i)
+		end
+	end
+end
 
 function gadget:GameFrame(n)
 	local maxBeacon = 0
@@ -246,8 +261,9 @@ function gadget:GameFrame(n)
 				local defenders = flagTypeDefenders[flagType]
 				local defendTotal = 0
 				local unitsAtFlag = GetUnitsInCylinder(spots[spotNum].x, spots[spotNum].z, flagData.radius)
+				StripUnits(unitsAtFlag) -- strips table (in place) of ignored unitdefs
 				--Spring.Echo ("There are " .. #unitsAtFlag .. " units at flag " .. flagID)
-				if #unitsAtFlag == 2 then -- Only the flag, and decal no other units -- TODO: currently dropzone counts too
+				if #unitsAtFlag == 0 then -- no combat units
 					for teamID = 0, #teams-1 do
 						if teamID ~= flagTeamID then
 							if (flagCapStatuses[flagID][teamID] or 0) > 0 then
@@ -351,18 +367,16 @@ end
 
 function gadget:UnitCreated(unitID, unitDefID, unitTeam, builderID)
 	local ud = UnitDefs[unitDefID]
-	--if ud.speed > 0 then
-		local cp = ud.customParams
-		local flagCapRate = 0 --= 1 --cp.flagcaprate
-		if ud.speed > 0 and not ud.canFly then flagCapRate = 1 end
+	local cp = ud.customParams
+	if (ud.speed > 0 and not ud.canFly) or cp.flagdefendrate then -- only mobiles & garrision should be in cappers/defenders tables
+		local flagCapRate = cp.flagcaprate or 1
 		local flagDefendRate = cp.flagdefendrate or flagCapRate
-		--local flagCapType = ud.customParams.flagcaptype or flagTypes[1]
+
 		for _, flagCapType in pairs(flagTypes) do
-		--if flagCapRate then
 			flagTypeCappers[flagCapType][unitID] = (CAP_MULT * flagCapRate)
 			flagTypeDefenders[flagCapType][unitID] = (DEF_MULT * flagDefendRate)
 		end
-	--end
+	end
 	if unitDefID == UnitDefNames["beacon"].id and unitTeam ~= GAIA_TEAM_ID then
 		local x,_, z = Spring.GetUnitPosition(unitID)
 		local newSpot = {["x"] = x, ["z"] = z}

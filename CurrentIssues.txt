@@ -27,9 +27,6 @@
  perking clears order queue
  
  add an "emergency get out" button to mechbay
- 
- 
-dropzones interfere with beacon capping
 
 --towers self d / death only frees up more of that kind of turret, not others of same genus
 
