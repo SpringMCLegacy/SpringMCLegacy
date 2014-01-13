@@ -257,6 +257,7 @@ function widget:DrawWorldPreUnit()
           end
         
 		  if UnitDefs[udid].name:find("zone") then
+		  	  radius = radius - 28
 		      glColor(colorSet[4])
               glDrawListAtUnit(unitID, dodecPolys, false, radius, 1.0, radius, degrot, gz, 0, -gx)
               glColor(colorSet[4])

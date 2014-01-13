@@ -104,6 +104,7 @@ for name, ud in pairs(UnitDefs) do
 		ud.airsightdistance = 3000
 		if ud.customparams.hasecm == "true" then
 			ud.seismicsignature = 20
+			ud.radardistancejam	= 500
 		else
 			seismicsignature = 0
 		end

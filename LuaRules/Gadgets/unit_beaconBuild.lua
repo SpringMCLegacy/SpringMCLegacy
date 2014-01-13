@@ -48,7 +48,8 @@ local RADIUS = 230
 local NUM_SEGMENTS = 12
 local DROPSHIP_DELAY = 10 * 30 -- 10s
 local WALL_COST = UnitDefs[WALL_ID].metalCost * NUM_SEGMENTS -- FIXME: ugly!
-	
+
+local CMD_GATE = GG.CustomCommands.GetCmdID("CMD_GATE")
 local CMD_UPGRADE = GG.CustomCommands.GetCmdID("CMD_UPGRADE")
 
 -- Variables
@@ -122,13 +123,12 @@ function gadget:GamePreload()
 		elseif unitDefID == GATE_ID then -- and gates too
 			local cBillCost = unitDef.metalCost
 			gateCmdDesc = {
-				id     = GG.CustomCommands.GetCmdID("CMD_UPGRADE_" .. name, cBillCost),
+				id     = CMD_GATE,
 				type   = CMDTYPE.ICON,
 				name   = "Install\n Gate",
 				action = 'upgrade',
 				tooltip = "C-Bill cost: " .. cBillCost, -- TODO: add c-bill cost and w/e else
 			}
-			upgradeIDs[gateCmdDesc.id] = unitDefID		
 		end
 	end
 	dropZoneCmdDesc = {
@@ -280,9 +280,16 @@ local function RepairWalls(beaconID, teamID)
 end
 
 -- TOWERS
-function LimitTowerType(unitID, teamID, towerType)	
+function LimitTowerType(unitID, teamID, towerType, increase)	
 	local towersRemaining = buildLimits[unitID][towerType]
-	if towersRemaining == 0 then 
+	if increase then
+		buildLimits[unitID][towerType] = towersRemaining + 1
+		for tDefID, tType in pairs(towerDefIDs) do
+			if tType == towerType then
+				EditUnitCmdDesc(unitID, FindUnitCmdDesc(unitID, -tDefID), {disabled = false, params = {}})
+			end
+		end
+	elseif towersRemaining == 0 then 
 		Spring.SendMessageToTeam(teamID, "Limit reached for " .. towerType)
 		return false 
 	else
@@ -318,8 +325,7 @@ function gadget:UnitDestroyed(unitID, unitDefID, teamID)
 	local towerOwnerID = towerOwners[unitID]
 	if towerOwnerID then -- unit was a turret with owning beacon, open the slot back up
 		local towerType = towerDefIDs[unitDefID]
-		buildLimits[towerOwnerID][towerType] = buildLimits[towerOwnerID][towerType] + 1
-		EditUnitCmdDesc(towerOwnerID, FindUnitCmdDesc(towerOwnerID, -unitDefID), {disabled = false, params = {}})
+		LimitTowerType(towerOwnerID, teamID, towerType, true) -- increase limit
 		towerOwners[unitID] = nil
 	end
 	local beaconID = beaconIDs[unitID]
@@ -435,7 +441,7 @@ function gadget:AllowCommand(unitID, unitDefID, teamID, cmdID, cmdParams, cmdOpt
 			return false
 		end
 	elseif unitDefID == WALL_ID or unitDefID == GATE_ID then
-		if unitDefID == WALL_ID and upgradeIDs[cmdID] then
+		if unitDefID == WALL_ID and cmdID == CMD_GATE then
 			local beaconID = wallInfos[unitID].beaconID
 			if beaconGateIDs[beaconID] then return false end -- gate already exists
 			BuildGate(unitID, teamID)
