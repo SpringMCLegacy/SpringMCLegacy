@@ -105,9 +105,9 @@ function gadget:AllowCommand(unitID, unitDefID, teamID, cmdID, cmdParams, cmdOpt
 					end
 				end
 			end
-		else 
-			return false
 		end
+		-- always return false, even if command was carried out, so that command queue is not altered
+		return false
 	end
 	return true
 end

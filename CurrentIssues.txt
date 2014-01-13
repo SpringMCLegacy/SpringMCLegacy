@@ -24,9 +24,7 @@
  
  some clan mechs with mismatched launchpoints due to weapon changes (cougar, warhawk, timberwolf)
  
- perking clears order queue
- 
- add an "emergency get out" button to mechbay
+  add an "emergency get out" button to mechbay
 
 --towers self d / death only frees up more of that kind of turret, not others of same genus
 
