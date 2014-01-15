@@ -7,6 +7,7 @@ local Wall = {
 	--iconType			= "",
 	category 			= "structure ground notbeacon",
 	activateWhenBuilt   = true,
+	canSelfDestruct		= false,
 	maxDamage           = 10000,
 	mass                = 1000,
 	footprintX			= 7,
@@ -27,11 +28,7 @@ local Wall = {
 		ammosupplier	= "0",
 		supplyradius	= "0",
 		helptext		= "A Wall",
-		--flagdefendrate = 0,
     },
-	--sounds = {
-    --underattack        = "Dropship_Alarm",
-	--},
 }
 
 return lowerkeys({ ["Wall"] = Wall })

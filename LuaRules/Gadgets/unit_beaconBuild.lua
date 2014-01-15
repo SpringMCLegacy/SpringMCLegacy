@@ -254,7 +254,7 @@ local function BuildGate(wallID, teamID)
 end
 
 local function RepairWalls(beaconID, teamID)
-	UseTeamResource(teamID, "metal", UnitDefs[BEACON_ID].metalCost * NUM_SEGMENTS * 0.5) -- FIXME: ugly!
+	UseTeamResource(teamID, "metal", UnitDefs[WALL_ID].metalCost * NUM_SEGMENTS * 0.5) -- FIXME: ugly!
 	for i, wallID in pairs(wallIDs[beaconID]) do
 		local unitDefID = Spring.GetUnitDefID(wallID)
 		if not Spring.GetUnitIsDead(wallID) and (unitDefID == WALL_ID or unitDefID == GATE_ID) then
@@ -381,21 +381,19 @@ function gadget:UnitGiven(unitID, unitDefID, newTeam, oldTeam)
 				DelayCall(TransferUnit, {towerID, newTeam}, 1)
 				local env = Spring.UnitScript.GetScriptEnv(towerID)
 				Spring.UnitScript.CallAsUnit(towerID, env.TeamChange, newTeam)
-				if newTeam == GAIA_TEAM_ID then
-					SetUnitNeutral(towerID, true)
-				else
-					SetUnitNeutral(towerID, false)
-				end
+				DelayCall(SetUnitNeutral,{towerID, newTeam == GAIA_TEAM_ID}, 2)
 			end
 		end
 		for outpostID, beaconID in pairs(beaconIDs) do			
 			if beaconID == unitID then
 				DelayCall(TransferUnit, {outpostID, newTeam}, 1)
+				DelayCall(SetUnitNeutral,{outpostID, newTeam == GAIA_TEAM_ID}, 2)
 			end
 		end
 		local walls = wallIDs[unitID] or {}
 		for _, wallID in pairs(walls) do
 			DelayCall(TransferUnit, {wallID, newTeam}, 1)
+			DelayCall(SetUnitNeutral,{wallID, newTeam == GAIA_TEAM_ID}, 2)
 		end
 		if dropZoneBeaconIDs[oldTeam] == unitID then
 			local dropZoneID = dropZoneIDs[oldTeam]
@@ -450,8 +448,13 @@ function gadget:AllowCommand(unitID, unitDefID, teamID, cmdID, cmdParams, cmdOpt
 				RemoveUnitCmdDesc(wallID, FindUnitCmdDesc(wallID, cmdID))
 			end
 		elseif cmdID == wallRepairCmdDesc.id then
-			local beaconID = wallInfos[unitID].beaconID
-			RepairWalls(beaconID, teamID)
+			local _, cost = GG.CustomCommands.GetCmdID("CMD_WALLREPAIR")
+			if cost <= GetTeamResources(teamID, "metal") then
+				local beaconID = wallInfos[unitID].beaconID
+				RepairWalls(beaconID, teamID)
+			else 
+				return false 
+			end
 		end
 	elseif UnitDefs[unitDefID].customParams.decal then
 		return false -- disallow all commands to decals
