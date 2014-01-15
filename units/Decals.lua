@@ -3,6 +3,7 @@ local Decal = Unit:New{
 	script 					= "decal.lua",
 	useBuildingGroundDecal 	= true,
 	hideDamage				= true,
+	maxDamage				= 10, -- hack to avoid showing healthbar, never actually takes damage
 	
 	customParams = {
 		decal = true,
