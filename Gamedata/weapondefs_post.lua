@@ -54,29 +54,32 @@ for unitName, ud in pairs(UnitDefs) do
 	if weapons then
 		if not ud.sfxtypes then
 			ud.sfxtypes = { explosiongenerators = {} }
-			if ud.customparams.unittype then
-				table.insert(ud.sfxtypes.explosiongenerators, "custom:heavy_jumpjet_trail_blue")
-			elseif ud.customparams.towertype then
-				table.insert(ud.sfxtypes.explosiongenerators, "custom:heavy_jumpjet_trail_blue") --heavy_jet_trail_blue")
+		end
+		-- for now all untis have jumpjet CEG as 1 (SFX.CEG)
+		table.insert(ud.sfxtypes.explosiongenerators, 1, "custom:heavy_jumpjet_trail_blue")
+		for weaponID = 1, #weapons do -- SFX.CEG + weaponID
+			local cegFlare = cegCache[string.lower(weapons[weaponID].name)]
+			if cegFlare then
+				--Spring.Echo("cegFlare: " .. cegFlare)
+				--if not table.contains(ud.sfxtypes.explosiongenerators, "custom:" .. cegFlare) then
+					table.insert(ud.sfxtypes.explosiongenerators, weaponID + 1, "custom:" .. cegFlare)
+				--end
 			end
-			for weaponID = 1, #weapons do
-				local cegFlare = cegCache[string.lower(weapons[weaponID].name)]
-				if cegFlare then
-					--Spring.Echo("cegFlare: " .. cegFlare)
-					--if not table.contains(ud.sfxtypes.explosiongenerators, "custom:" .. cegFlare) then
-						table.insert(ud.sfxtypes.explosiongenerators, "custom:" .. cegFlare)
-					--end
-				end
-			end
+		end
+		if ud.customparams.unittype then
 			table.insert(ud.sfxtypes.explosiongenerators, "custom:HE_Large")
 			table.insert(ud.sfxtypes.explosiongenerators, "custom:BlackSmoke")
 			table.insert(ud.sfxtypes.explosiongenerators, "custom:Sparks")
-			--[[Spring.Echo("UNIT: " .. unitName)
-			for _, i in pairs(ud.sfxtypes.explosiongenerators) do
-				Spring.Echo(i)
-			end
-			Spring.Echo("~~~~~~")]]
+		--elseif ud.customparams.towertype then
+		--[[elseif unitName:find("dropship") then -- dropship
+			Spring.Echo("~~~~" .. unitName .. "~~~~")
+			for k, v in pairs(ud.sfxtypes.explosiongenerators) do Spring.Echo(k,v) end]]
 		end
+		--[[Spring.Echo("UNIT: " .. unitName)
+		for _, i in pairs(ud.sfxtypes.explosiongenerators) do
+			Spring.Echo(i)
+		end
+		Spring.Echo("~~~~~~")]]
 	elseif unitName == "beacon" then
 		ud.sfxtypes = { explosiongenerators = {} }
 		table.insert(ud.sfxtypes.explosiongenerators, "custom:reentry_fx")
