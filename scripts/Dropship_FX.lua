@@ -38,6 +38,12 @@ for i = 1,4 do
 	dusts[i] = piece("dust" .. i + 1)
 end
 
+-- weapons
+local trackEmitters = {}
+for i = 1, 4 do
+	trackEmitters[i] = piece("laser_emitter" .. i)
+end
+
 -- localised functions
 -- SyncedCtrl
 local SpawnCEG = Spring.SpawnCEG
@@ -46,6 +52,7 @@ local DROP_HEIGHT = 10000
 local GRAVITY = 120/Game.gravity
 local X, _, Z = Spring.GetUnitPosition(unitID)
 local GY = Spring.GetGroundHeight(X, Z)
+local CEG = SFX.CEG + #weapons
 
 -- LANDING CODE
 -- Variables
@@ -60,15 +67,15 @@ local function fx()
 	-- Free fall
 	while stage == 1 do
 		-- Some reentry glow here?
-		EmitSfx(dustlarge, 1032)
+		EmitSfx(dustlarge, CEG + 5) --1032)
 		Sleep(32)
 	end
 	-- Rocket Burn
 	while stage == 2 do
-		EmitSfx(exhaustlarge, 1027)
-		EmitSfx(exhaustlarge, 1030)
+		EmitSfx(exhaustlarge, CEG + 1) --1027)
+		EmitSfx(exhaustlarge, CEG + 3) --1030)
 		for i = 1, 4 do
-			EmitSfx(exhausts[i], 1031)
+			EmitSfx(exhausts[i], CEG + 4)--1031)
 		end
 		Sleep(32)
 	end
@@ -78,12 +85,12 @@ local function fx()
 		-- EmitSfx(exhaustlarge, SOME_SMALLER_BIGASS_ROCKET)
 		--EmitSfx(dustlarge, 1029)
 		SpawnCEG("dropship_heavy_dust", X, GY, Z) -- Use SpawnCEG for ground FX :)
-		EmitSfx(exhaustlarge, 1028)
-		EmitSfx(exhaustlarge, 1030)
+		EmitSfx(exhaustlarge, CEG + 2) --1028)
+		EmitSfx(exhaustlarge, CEG + 3)--1030)
 		for i = 1, 4 do
-			EmitSfx(exhausts[i], 1031)
+			EmitSfx(exhausts[i], CEG + 4)--1031)
 			if feetDown then
-				EmitSfx(dusts[i], 1031)
+				EmitSfx(dusts[i], CEG + 4)--1031)
 			end
 			--EmitSfx(dusts[i], SMALLER_DUST)
 		end		
@@ -295,3 +302,28 @@ function UnloadCargo()
 	GG.DropshipLeft(Spring.GetUnitTeam(unitID)) -- let the world know
 	Spring.DestroyUnit(unitID, false, true)
 end
+
+-- WEAPON CONTROL
+local TURRET_SPEED = math.rad(30)
+
+function script.AimWeapon(weaponID, heading, pitch)
+	Signal(2 ^ weaponID) -- 2 'to the power of' weapon ID
+	SetSignalMask(2 ^ weaponID)
+	
+	Turn(trackEmitters[weaponID], y_axis, heading, TURRET_SPEED)
+	WaitForTurn(trackEmitters[weaponID], y_axis)
+	--Sleep(100 * weaponID) -- desync barrels to fire independently
+	return true
+end
+
+function script.Shot(weaponID)
+	EmitSfx(trackEmitters[weaponID], SFX.CEG + weaponID)
+end
+
+function script.AimFromWeapon(weaponID) 
+	return trackEmitters[weaponID]
+end
+
+function script.QueryWeapon(weaponID) 
+	return trackEmitters[weaponID]
+end 

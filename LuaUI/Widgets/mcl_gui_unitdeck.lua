@@ -103,7 +103,7 @@ local function initializeSetView()
 	for counter = 1, 3 do
 		deckSets[counter]	= Chili.ScrollPanel:New{
 			name		= "lance list #" .. counter;
-			BorderTileImage 		= ":cl:panel2.png";
+			--BorderTileImage 		= ":cl:panel2.png";
 			padding 	= {0,0,0,0};
 			width		= "100%";  
 			height		= "100%"; 
