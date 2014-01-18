@@ -38,12 +38,6 @@ for i = 1,4 do
 	dusts[i] = piece("dust" .. i + 1)
 end
 
--- weapons
-local trackEmitters = {}
-for i = 1, 4 do
-	trackEmitters[i] = piece("laser_emitter" .. i)
-end
-
 -- localised functions
 -- SyncedCtrl
 local SpawnCEG = Spring.SpawnCEG
@@ -61,6 +55,9 @@ local feetDown = false
 
 function TouchDown()
 	stage = 4
+	for i = 1, 4 do
+		EmitSfx(dusts[i], CEG + 5)
+	end
 end
 
 local function fx()
@@ -304,26 +301,106 @@ function UnloadCargo()
 end
 
 -- WEAPON CONTROL
+info = GG.lusHelper[unitDefID]
+
+-- localised GG functions
+local GetUnitDistanceToPoint = GG.GetUnitDistanceToPoint
+local GetUnitUnderJammer = GG.GetUnitUnderJammer
+local IsUnitNARCed = GG.IsUnitNARCed
+local IsUnitTAGed = GG.IsUnitTAGed
+
+-- Info from lusHelper gadget
+local missileWeaponIDs = info.missileWeaponIDs
+local flareOnShots = info.flareOnShots
+local jammableIDs = info.jammableIDs
+local launcherIDs = info.launcherIDs
+local barrelRecoils = info.barrelRecoilDist
+local burstLengths = info.burstLengths
+local minRanges = info.minRanges
+local amsID = info.amsID
+local turretIDs = info.turretIDs
+
 local TURRET_SPEED = math.rad(30)
 
+-- weapons pieces
+local trackEmitters = {}
+for i = 1, 7, 2 do -- TODO: setup a table in lus_helper
+	trackEmitters[i] = piece("laser_emitter_" .. i)
+	trackEmitters[i+1] = trackEmitters[i]
+end
+
+local turrets = {}
+for i, valid in pairs(turretIDs) do
+	if valid then
+		turrets[i] = piece("turret_" .. i)
+	end
+end
+
+local flares = {}
+--local turrets = info.turrets
+
+local mantlets = {}
+local barrels = {}
+local launchers = {}
+local launchPoints = {}
+local currPoints = {}
+local spinPieces = {}
+local spinPiecesState = {}
+
+for weaponID = 1, info.numWeapons do
+	if missileWeaponIDs[weaponID] then
+		if launcherIDs[weaponID] then
+			launchers[weaponID] = piece("launcher_" .. weaponID)
+		end
+		launchPoints[weaponID] = {}
+		currPoints[weaponID] = 1
+		for i = 1, burstLengths[weaponID] do
+			launchPoints[weaponID][i] = piece("launchpoint_" .. weaponID .. "_" .. i)
+		end	
+	elseif weaponID then
+		flares[weaponID] = piece ("flare_" .. weaponID)
+	end
+	--[[if info.turretIDs[weaponID] then
+		turrets[weaponID] = piece("turret_" .. weaponID)
+	end]]
+	if info.mantletIDs[weaponID] then
+		mantlets[weaponID] = piece("mantlet_" .. weaponID)
+	end
+	if info.barrelIDs[weaponID] then
+		barrels[weaponID] = piece("barrel_" .. weaponID)
+	end
+end
+
 function script.AimWeapon(weaponID, heading, pitch)
-	Signal(2 ^ weaponID) -- 2 'to the power of' weapon ID
-	SetSignalMask(2 ^ weaponID)
-	
-	Turn(trackEmitters[weaponID], y_axis, heading, TURRET_SPEED)
-	WaitForTurn(trackEmitters[weaponID], y_axis)
+	Signal(2 ^ (weaponID - 1))
+	SetSignalMask(2 ^ (weaponID - 1))
+	if trackEmitters[weaponID] then -- LBLs
+		if weaponID % 2 == 1 then -- only first in each pair
+			Turn(trackEmitters[weaponID], y_axis, heading + math.rad(90 * (weaponID - 1)/2), TURRET_SPEED)
+			WaitForTurn(trackEmitters[weaponID], y_axis)
+		end
+	elseif turrets[weaponID] then -- PPCs
+		Turn(turrets[weaponID], y_axis, heading, TURRET_SPEED)
+		Turn(turrets[weaponID], x_axis, -pitch, TURRET_SPEED)
+		WaitForTurn(turrets[weaponID], y_axis)
+		WaitForTurn(turrets[weaponID], x_axis)
+		return true
+	elseif flares[weaponID] then -- ERMBLs
+		Turn(flares[weaponID], y_axis, heading)
+	end
+	Turn(flares[weaponID], x_axis, -pitch)
 	--Sleep(100 * weaponID) -- desync barrels to fire independently
 	return true
 end
 
 function script.Shot(weaponID)
-	EmitSfx(trackEmitters[weaponID], SFX.CEG + weaponID)
+	EmitSfx(flares[weaponID], SFX.CEG + weaponID)
 end
 
 function script.AimFromWeapon(weaponID) 
-	return trackEmitters[weaponID]
+	return trackEmitters[weaponID] or turrets[weaponID] or flares[weaponID] or hull
 end
 
-function script.QueryWeapon(weaponID) 
-	return trackEmitters[weaponID]
+function script.QueryWeapon(weaponID)
+	return flares[weaponID]
 end 
