@@ -117,7 +117,8 @@ end
 local function IsPieceAncestor(unitID, pieceName, ancestor)
 	local pieceMap = GetUnitPieceMap(unitID)
 	local parent = GetUnitPieceInfo(unitID, pieceMap[pieceName]).parent
-	if parent:find(ancestor) then return true
+	if parent:find(ancestor) then 
+		return true
 	elseif parent == "" or parent == nil then
 		return false
 	else
@@ -145,7 +146,8 @@ function gadget:UnitCreated(unitID, unitDefID, teamID, builderID)
 		for pieceName, pieceNum in pairs(pieceMap) do
 			local parent = GetUnitPieceInfo(unitID, pieceNum)["parent"]
 			local weapNumPos = pieceName:find("_") or 0
-			local weaponNum = tonumber(pieceName:sub(weapNumPos+1,weapNumPos+1))
+			local weapNumEndPos = pieceName:find("_", weapNumPos+1) or 0
+			local weaponNum = tonumber(pieceName:sub(weapNumPos+1,weapNumEndPos-1))
 			-- Find launcher pieces
 			if pieceName:find("launcher_") then
 				launcherIDs[weaponNum] = true

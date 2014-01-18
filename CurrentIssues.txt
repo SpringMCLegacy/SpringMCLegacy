@@ -8,6 +8,8 @@
 
 [f=0009450] Error: LuaRules::RunCallIn: error = 2, UnitExperience, [string "LuaRules/Gadgets/unit_perks.lua"]:64: attempt to index field '?' (a nil value)
 
+[f=0002520] Error: LuaRules::RunCallIn: error = 2, UnitExperience, [string "LuaRules/Gadgets/unit_perks.lua"]:69: attempt to index field '?' (a nil value)
+
   [f=0007014] you have more than the lance supports in group #1 - still possible by player directly assigning groups
  
  top of ticket counter widget e.g. resources missing in certain window res

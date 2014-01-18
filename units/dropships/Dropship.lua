@@ -18,6 +18,7 @@ local Dropship = Unit:New{
 	holdSteady 			= true,
 
 	weapons 		= {	
+		-- LBLs
 		[1] = {
 			name	= "LBL",
 			mainDir = "0 0 1",
@@ -25,18 +26,132 @@ local Dropship = Unit:New{
 		},
 		[2] = {
 			name	= "LBL",
-			mainDir = "1 0 0",
+			mainDir = "0 0 1",
 			maxAngleDif = 90,
+			slaveTo = 1,
 		},
 		[3] = {
 			name	= "LBL",
-			mainDir = "0 0 -1",
+			mainDir = "1 0 0",
 			maxAngleDif = 90,
 		},
 		[4] = {
 			name	= "LBL",
+			mainDir = "1 0 0",
+			maxAngleDif = 90,
+			slaveTo = 3,
+		},
+		[5] = {
+			name	= "LBL",
+			mainDir = "0 0 -1",
+			maxAngleDif = 90,
+		},
+		[6] = {
+			name	= "LBL",
+			mainDir = "0 0 -1",
+			maxAngleDif = 90,
+			slaveTo = 5,
+		},
+		[7] = {
+			name	= "LBL",
 			mainDir = "-1 0 0",
 			maxAngleDif = 90,
+		},
+		[8] = {
+			name	= "LBL",
+			mainDir = "-1 0 0",
+			maxAngleDif = 90,
+			slaveTo = 7,
+		},
+		-- ERMBLs
+		[9] = {
+			name	= "ERMBL",
+			mainDir = "1 -0.5 1",
+			maxAngleDif = 90,
+		},
+		[10] = {
+			name	= "ERMBL",
+			mainDir = "1 -0.5 1",
+			maxAngleDif = 90,
+			slaveTo = 9,
+		},
+		[11] = {
+			name	= "ERMBL",
+			mainDir = "1 -0.5 -1",
+			maxAngleDif = 90,
+		},
+		[12] = {
+			name	= "ERMBL",
+			mainDir = "1 -0.5 -1",
+			maxAngleDif = 90,
+			slaveTo = 11,
+		},
+		[13] = {
+			name	= "ERMBL",
+			mainDir = "-1 -0.5 -1",
+			maxAngleDif = 90,
+		},
+		[14] = {
+			name	= "ERMBL",
+			mainDir = "-1 -0.5 -1",
+			maxAngleDif = 90,
+			slaveTo = 13,
+		},
+		[15] = {
+			name	= "ERMBL",
+			mainDir = "-1 -0.5 1",
+			maxAngleDif = 90,
+		},
+		[16] = {
+			name	= "ERMBL",
+			mainDir = "-1 0 1",
+			maxAngleDif = 90,
+			slaveTo = 15,
+		},
+		-- PPCs
+		[17] = {
+			name	= "PPC",
+			mainDir = "1 -0.5 1",
+			maxAngleDif = 90,
+		},
+		[18] = {
+			name	= "PPC",
+			mainDir = "1 -0.5 1",
+			maxAngleDif = 90,
+			slaveTo = 17,
+		},
+		[19] = {
+			name	= "PPC",
+			mainDir = "1 -0.5 -1",
+			maxAngleDif = 90,
+		},
+		[20] = {
+			name	= "PPC",
+			mainDir = "1 -0.5 -1",
+			maxAngleDif = 90,
+			slaveTo = 19,
+		},
+		[21] = {
+			name	= "PPC",
+			mainDir = "-1 -0.5 -1",
+			maxAngleDif = 90,
+		},
+		[22] = {
+			name	= "PPC",
+			mainDir = "-1 -0.5 -1",
+			maxAngleDif = 90,
+			slaveTo = 21,
+		},
+		[23] = {
+			name	= "PPC",
+			mainDir = "-1 -0.5 1",
+			maxAngleDif = 90,
+		},
+		[24] = {
+			name	= "PPC",
+			mainDir = "-1 0 1",
+			maxAngleDif = 90,
+			slaveTo = 23,
 		},
 	},
 	
@@ -52,6 +167,7 @@ local Dropship = Unit:New{
 		"custom:heavy_jet_trail",
 		"custom:heavy_jet_trail_blue",
 		"custom:dropship_reentry",
+		"custom:mech_jump_dust"
 		},
 	},
 	customparams = {
