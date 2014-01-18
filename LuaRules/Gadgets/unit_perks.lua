@@ -66,7 +66,7 @@ function gadget:UnitExperience(unitID, unitDefID, teamID, newExp, oldExp)
 			--Spring.Echo("Unit " .. unitID .. " (" .. UnitDefs[unitDefID].name .. ") ready to perk up! " .."(Exp: " .. newExp ..")")
 			for perkCmdID, perkDef in pairs(perkDefs) do
 				--Spring.Echo(perkCmdDesc.name, FindUnitCmdDesc(unitID, perkCmdDesc.id))
-				if not currentPerks[unitID][perkDef.name] then
+				if currentPerks[unitID] and not currentPerks[unitID][perkDef.name] then
 					EditUnitCmdDesc(unitID, FindUnitCmdDesc(unitID, perkCmdID), {disabled = false})
 				end
 			end
