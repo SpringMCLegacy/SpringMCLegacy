@@ -216,6 +216,7 @@ local function CoolOff()
 		elseif currHeatLevel > heatElevatedLimit then
 			if heatCritical and not heatElevated then -- critical -> elevated
 				heatElevated = true
+				excessHeat = excessHeat / 2
 			elseif not heatElevated then -- normal -> elevated
 				heatElevated = true
 				-- reduce weapon rate here
@@ -239,7 +240,7 @@ local function CoolOff()
 			end
 			heatCritical = false
 			heatElevated = false
-			excessHeat = 0 -- if we managed to get out of critical heat, remove all excess
+			excessHeat = 0 -- if we managed to return to normal heat, remove all excess
 		end
 		ChangeHeat(-coolRate)
 		if hasEcm and not moving then

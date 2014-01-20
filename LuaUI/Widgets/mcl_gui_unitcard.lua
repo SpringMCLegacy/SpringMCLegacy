@@ -147,7 +147,7 @@ end
 -------------------------------------------------------------------------------------
 local function HeatPulse()
 	phase = phase + 0.2
-	if dangerZONE then -- LANA! LAAAAAAAAAANA!
+	if dangerZONE == true then -- LANA! LAAAAAAAAAANA!
 		local pulseValue = .5+.5*math.sin(phase)
 		local inversePulseValue = .5*math.sin(phase/2)
 		--Spring.Echo(inversePulseValue)
@@ -156,12 +156,11 @@ local function HeatPulse()
 		mechOverHeat.children[1].font.color	= {(inversePulseValue)+0.5,(0.5*inversePulseValue)+0.5,0,1};
 		mechOverHeat.children[1]:SetCaption("DANGER")
 		mechOverHeat.children[1]:Invalidate()
-		dangerZONE = true
 	else
-		dangerZONE = false
-		mechOverHeat.color	= {0,0,0,0};
+		mechOverHeat.color	= clear;
 		mechOverHeat:Invalidate()
 		mechOverHeat.children[1]:SetCaption("")
+		mechOverHeat.children[1]:Invalidate()
 	end
 end
 
@@ -243,6 +242,9 @@ local function FillCardStats()
 				mechAmmoWindow.children[k]:SetValue(spGetUnitRulesParam(currentUnitId, ammoTypes[v])  or "0")
 			end
 		end
+
+		local heat = spGetUnitRulesParam(currentUnitId, "heat") or 0		
+		local excessHeat = spGetUnitRulesParam(currentUnitId, "excess_heat") or 0		
 		
 		--Spring.Echo(spGetUnitRulesParam(currentUnitId, "heat") or 0)
 		if (spGetUnitRulesParam(currentUnitId, "excess_heat") or 0) > 50 then
@@ -253,7 +255,6 @@ local function FillCardStats()
 		
 		HeatPulse()		
 					
-		local heat = spGetUnitRulesParam(currentUnitId, "heat") or 0
 		if heat >10 then
 			heatColorTable	= { heat/100, 0, 0, 1}
 			--Spring.Echo(heatColorTable[1], heatColorTable[2], heatColorTable[3], heatColorTable[4])
@@ -264,8 +265,14 @@ local function FillCardStats()
 		--Spring.Echo(heat)
 		mechStatsWindow.children[1].color	= heatColorTable
 		mechStatsWindow.children[1]:SetValue(heat)
-		mechHeat.color		= heatColorTable;
-		mechHeat:Invalidate()
+		mechStatsWindow.children[1].children[1]:SetValue(excessHeat)
+		if heat > 50 then
+			mechHeat.color			= heatColorTable;
+			mechHeat:Invalidate()
+		else					
+			mechHeat.color			= clear;
+			mechHeat:Invalidate()
+		end
 	end
 end
 
@@ -364,13 +371,25 @@ local function CreateWindows()
 		padding		= {8,8,8,8};
 		children = {
 			Chili.Progressbar:New{
-				name			= "Mech health";
+				name			= "Mech heat";
 				color			= HPColor;
 				backgroundColor	= black;
 				y				= "00%";
 				x				= "15%";
 				height			= "30%";
 				width			= "85%";
+				padding			= {0,0,0,6};
+				children = {
+					Chili.Progressbar:New{
+					name			= "Mech excess health";				
+					TileImageFG		= ":cl:bitmaps/ui/infocard/tech_progressbar_danger.png";
+					color			= { 1.0, 1.0, 1.0, 0.8};
+					backgroundColor	= clear;
+					height			= "20%";
+					width			= "100%";
+					min				= 0;
+					}
+				}
 			},
 			Chili.Progressbar:New{
 				name			= "Mech Jumpjet Fuel";
@@ -533,6 +552,7 @@ function widget:Update(s)
 	--only once, only on unit change
 	if WG.currentUnitId ~= lastUnitId then
 		Chili.Screen0:RemoveChild(mechCardWindow)
+		--dangerZONE = false
 		
 		lastUnitId			= WG.currentUnitId
 		currentUnitId		= WG.currentUnitId
@@ -599,28 +619,37 @@ function widget:Update(s)
 				end
 
 				
-				local heat = spGetUnitRulesParam(currentUnitId, "heat") or 0				
-
+				local heat			= spGetUnitRulesParam(currentUnitId, "heat") or 0				
+				local excessHeat	= spGetUnitRulesParam(currentUnitId, "excess_heat") or 0
+				
 				if heat >10 then
-					heatColorTable	= { heat/100, (heat-75)/100, 0, 1}
+					heatColorTable	= { heat/100, (100-heat)/100, 0, 1}
 					--Spring.Echo(heatColorTable[1], heatColorTable[2], heatColorTable[3], heatColorTable[4])
 				else				
 					heatColorTable	= clear
 				end
 				
-				if (spGetUnitRulesParam(currentUnitId, "excess_heat") or 0) > 50 then
+				--Spring.Echo(excessHeat)
+				if ( excessHeat > 50 ) then
 					dangerZONE = true
-					heatColorTable	= red
+					--heatColorTable	= red
 					HeatPulse()
-				else
+				else					
 					dangerZONE = false
+					HeatPulse()
 				end	
 				
 				--Spring.Echo(heat)
 				mechStatsWindow.children[1].color	= heatColorTable
 				mechStatsWindow.children[1]:SetValue(heat)
-				mechHeat.color			= heatColorTable;
-				mechHeat:Invalidate()
+				mechStatsWindow.children[1].children[1]:SetValue(excessHeat)
+				if heat > 50 then
+					mechHeat.color			= heatColorTable;
+					mechHeat:Invalidate()
+				else					
+					mechHeat.color			= clear;
+					mechHeat:Invalidate()
+				end
 			else			
 				Chili.Screen0:RemoveChild(mechCardWindow)
 			end
