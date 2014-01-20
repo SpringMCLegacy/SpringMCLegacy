@@ -4,17 +4,11 @@
 
 -- weird unit movement
 
--- "can't build upgrades on beacon that was capped dropzone"
-
-[f=0009450] Error: LuaRules::RunCallIn: error = 2, UnitExperience, [string "LuaRules/Gadgets/unit_perks.lua"]:64: attempt to index field '?' (a nil value)
-
-[f=0002520] Error: LuaRules::RunCallIn: error = 2, UnitExperience, [string "LuaRules/Gadgets/unit_perks.lua"]:69: attempt to index field '?' (a nil value)
-
   [f=0007014] you have more than the lance supports in group #1 - still possible by player directly assigning groups
  
  top of ticket counter widget e.g. resources missing in certain window res
  
- bug with mechbay?
+-- bug with mechbay? -- can't reproduce
  
   -- Perks too cheap (0.5 -> 1.5)
  
@@ -22,13 +16,9 @@
   
  Clan forward leg jump anim pushes into terrain (mistlynx, summoner)
  
- --Clan mechs & vehicles missing ammo
- 
- some clan mechs with mismatched launchpoints due to weapon changes (cougar, warhawk, timberwolf)
+  some clan mechs with mismatched launchpoints due to weapon changes (cougar, warhawk, timberwolf)
  
   add an "emergency get out" button to mechbay
-
---towers self d / death only frees up more of that kind of turret, not others of same genus
 
 --[f=0013985] [unit_script.lua] Error: [string "scripts/mech.lua"]:452: bad argument #1 to 'Turn' (number expected, got nil)
 
@@ -38,8 +28,6 @@
 
 --[f=0023914] [unit_script.lua] Error: [string "scripts/mech.lua"]:294: attempt to compare number with nil
 --[f=0023914] [unit_script.lua] Error: [string "scripts/mech.lua"]:139: attempt to perform arithmetic on field '?' (a nil value)
-
-Repair Wall is free?
 
 Tweak movedefs for Melt?
 
