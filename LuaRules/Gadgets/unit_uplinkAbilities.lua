@@ -38,6 +38,7 @@ local DelayCall				 = GG.Delay.DelayCall
 local GAIA_TEAM_ID = Spring.GetGaiaTeamID()
 local BEACON_ID = UnitDefNames["beacon"].id
 local UPLINK_ID = UnitDefNames["upgrade_uplink"].id
+local MECHBAY_ID = UnitDefNames["upgrade_mechbay"].id
 
 local ARTY_WEAPON_ID = WeaponDefNames["sniper"].id
 local ARTY_HEIGHT = 10000
@@ -58,12 +59,22 @@ local artyCmdDesc = {
 	cursor	= "Attack",
 }
 
+local getOutCmdDesc = {
+	id 		= GG.CustomCommands.GetCmdID("CMD_MECHBAY_GETOUT", ARTY_COST),
+	type	= CMDTYPE.ICON,
+	name 	= " Get  \n Out  ",
+	action	= "mechbay_out",
+	tooltip = "Emergency unload",
+}
+
 
 function gadget:UnitCreated(unitID, unitDefID, teamID, builderID)
 	local unitDef = UnitDefs[unitDefID]
 	local cp = unitDef.customParams
 	if unitDefID == UPLINK_ID then
 		InsertUnitCmdDesc(unitID, artyCmdDesc)
+	elseif unitDefID == MECHBAY_ID then
+		InsertUnitCmdDesc(unitID, getOutCmdDesc)
 	end
 end
 
@@ -109,6 +120,18 @@ function gadget:AllowCommand(unitID, unitDefID, teamID, cmdID, cmdParams, cmdOpt
 		if cmdID == artyCmdDesc.id then
 			local x,y,z = unpack(cmdParams)
 			return ArtyStrike(teamID, x, y, z)
+		end
+	elseif unitDefID == MECHBAY_ID then
+		if cmdID == getOutCmdDesc.id then
+			env = Spring.UnitScript.GetScriptEnv(unitID)
+			if env and env.script and env.script.TransportDrop then
+				local transporting = Spring.GetUnitIsTransporting(unitID)
+				if transporting then
+					Spring.UnitScript.CallAsUnit(unitID, env.script.TransportDrop, transporting[1])
+					return true
+				end
+			end
+			return false
 		end
 	end
 	return true

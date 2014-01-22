@@ -18,7 +18,7 @@
  
   some clan mechs with mismatched launchpoints due to weapon changes (cougar, warhawk, timberwolf)
  
-  add an "emergency get out" button to mechbay
+  --add an "emergency get out" button to mechbay -- remove load/unload buttons?
 
 --[f=0013985] [unit_script.lua] Error: [string "scripts/mech.lua"]:452: bad argument #1 to 'Turn' (number expected, got nil)
 
