@@ -62,7 +62,9 @@ local function GetUnitUnderJammer(unitID, teamID)
 	if not teamID then teamID = GetUnitTeam(unitID) end
 	local allyTeam = select(6, GetTeamInfo(teamID))
 	for jammerID, radius in pairs(allyJammers[allyTeam]) do
-		if GetUnitSeparation(unitID, jammerID) < radius and GetUnitIsActive(jammerID) then return true end
+		if Spring.ValidUnitID(jammerID) and not Spring.GetUnitIsDead(jammerID) then
+			if GetUnitSeparation(unitID, jammerID) < radius and GetUnitIsActive(jammerID) then return true end
+		end
 	end
 	return false
 end

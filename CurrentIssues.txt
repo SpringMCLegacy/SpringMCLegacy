@@ -18,11 +18,10 @@
  
   some clan mechs with mismatched launchpoints due to weapon changes (cougar, warhawk, timberwolf)
  
-  --add an "emergency get out" button to mechbay -- remove load/unload buttons?
-
 --[f=0013985] [unit_script.lua] Error: [string "scripts/mech.lua"]:452: bad argument #1 to 'Turn' (number expected, got nil)
 
 --[f=0034811] [UnitScript] Error: LuaRules::RunCallIn: error = 1, CLuaUnitScript::BlockShot, [string "LuaRules/Gadgets/game_radar.lua"]:64: attempt to compare nil with number
+[f=0021227] [UnitScript] Error: LuaRules::RunCallIn: error = 1, CLuaUnitScript::BlockShot, [string "LuaRules/Gadgets/game_radar.lua"]:65: attempt to compare nil with number
 
 [f=0005587] [unit_script.lua] Error: [string "LuaRules/Gadgets/unit_script.lua"]:302: Incorrect arguments to CallAsUnit()
 
@@ -32,3 +31,13 @@
 Tweak movedefs for Melt?
 
 HAG30 dps!
+
+dropship legs poke through covers when unfolding
+
+[f=0004745] [[LCC]jK] seems a few Spring.RemoveGrass() are needed
+
+jump is broken
+
+[f=0027406] [UnitScript] Error: LuaRules::RunCallIn: error = 1, CLuaUnitScript::Shot, [string "scripts/mech.lua"]:518: bad argument #1 to 'EmitSfx' (number expected, got nil)
+
+random race?
