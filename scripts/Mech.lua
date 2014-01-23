@@ -447,8 +447,8 @@ function script.AimWeapon(weaponID, heading, pitch)
 				Turn(launchPoints[weaponID][i] or launchPoints[weaponID][1], x_axis, -pitch, ELEVATION_SPEED)
 			end
 		end
-	else
-		Turn(flares[weaponID] or flares[1], x_axis, -pitch, ELEVATION_SPEED)
+	elseif flares[weaponID] then
+		Turn(flares[weaponID], x_axis, -pitch, ELEVATION_SPEED)
 		if weaponID == amsID then 
 			Turn(flares[weaponID] or flares[1], y_axis, heading, TORSO_SPEED)
 			WaitForTurn(flares[weaponID] or flares[1], y_axis)
@@ -514,7 +514,7 @@ function script.Shot(weaponID)
         if currPoints[weaponID] > burstLengths[weaponID] then 
 			currPoints[weaponID] = 1
         end
-	elseif flareOnShots[weaponID] then
+	elseif flareOnShots[weaponID] and flares[weaponID] then
 		EmitSfx(flares[weaponID], SFX.CEG + weaponID)
 	end
 end

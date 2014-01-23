@@ -262,7 +262,7 @@ function UnloadCargo()
 			Spring.UnitScript.AttachUnit(vtol_pad, cargoID)
 			local moveSpeed = currUnitDef.speed * 0.5 --256 / buildTime
 			Move(vtol_pad, x_axis, 256, moveSpeed)
-			WaitForMove(vtol_pad, z_axis)
+			WaitForMove(vtol_pad, x_axis)
 			--Spring.SetUnitRelativeVelocity(cargoID, 0, 0, moveSpeed / 30)
 		else
 			Spring.UnitScript.AttachUnit(pad, cargoID)
