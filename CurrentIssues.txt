@@ -8,12 +8,6 @@
  
  top of ticket counter widget e.g. resources missing in certain window res
  
--- bug with mechbay? -- can't reproduce
- 
-  -- Perks too cheap (0.5 -> 1.5)
- 
- -- Osiris OP (C: 10780 -> 12780)
-  
  Clan forward leg jump anim pushes into terrain (mistlynx, summoner)
  
   some clan mechs with mismatched launchpoints due to weapon changes (cougar, warhawk, timberwolf)
@@ -38,6 +32,10 @@ dropship legs poke through covers when unfolding
 
 jump is broken
 
-[f=0027406] [UnitScript] Error: LuaRules::RunCallIn: error = 1, CLuaUnitScript::Shot, [string "scripts/mech.lua"]:518: bad argument #1 to 'EmitSfx' (number expected, got nil)
+--[f=0027406] [UnitScript] Error: LuaRules::RunCallIn: error = 1, CLuaUnitScript::Shot, [string "scripts/mech.lua"]:518: bad argument #1 to 'EmitSfx' (number expected, got nil)
 
 random race?
+
+modoption for damage income multiplier
+
+walls always visible?

@@ -195,18 +195,21 @@ function gadget:UnitCreated(unitID, unitDefID, teamID, builderID)
 		info.jumpjets = numJets
 	end
 	
-	local toRemove = {}
 	-- Remove aircraft land and repairlevel buttons
 	if UnitDefs[unitDefID].canFly then
 		Spring.GiveOrderToUnit(unitID, CMD.IDLEMODE, {0}, {})
-		toRemove = {CMD.IDLEMODE, CMD.AUTOREPAIRLEVEL}
+		local toRemove = {CMD.IDLEMODE, CMD.AUTOREPAIRLEVEL}
+		for _, cmdID in pairs(toRemove) do
+			local cmdDescID = Spring.FindUnitCmdDesc(unitID, cmdID)
+			Spring.RemoveUnitCmdDesc(unitID, cmdDescID)
+		end
 	-- Remove load/unload buttons from all transports
-	elseif UnitDefs[unitDefID].transportCapacity then
-		toRemove = {CMD.LOAD_UNITS, CMD.UNLOAD_UNITS, CMD.STOP, CMD.WAIT, CMD.MOVE_STATE}
-	end
-	for _, cmdID in pairs(toRemove) do
-		local cmdDescID = Spring.FindUnitCmdDesc(unitID, cmdID)
-		Spring.RemoveUnitCmdDesc(unitID, cmdDescID)
+	elseif UnitDefs[unitDefID].transportCapacity and UnitDefs[unitDefID].name:find("mechbay") then
+		local toRemove = {CMD.LOAD_UNITS, CMD.UNLOAD_UNITS, CMD.STOP, CMD.WAIT, CMD.MOVE_STATE}
+		for _, cmdID in pairs(toRemove) do
+			local cmdDescID = Spring.FindUnitCmdDesc(unitID, cmdID)
+			Spring.RemoveUnitCmdDesc(unitID, cmdDescID)
+		end
 	end
 end
 
