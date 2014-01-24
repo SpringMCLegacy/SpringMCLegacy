@@ -12,6 +12,7 @@ local armorDefs = {
 	aero = {},
 	vtol = {},
 	tower = {},
+	walls = {},
 }
 
 -- TODO: Assign dropships, upgrades, walls?
@@ -41,6 +42,8 @@ for unitName, unitDef in pairs(DEFS.unitDefs) do
 		end
 		--Spring.Echo(unitName, typeString)
 		table.insert(armorDefs[typeString], unitName)
+	elseif unitName == "wall" or unitName == "wall_gate" then
+		table.insert(armorDefs["walls"], unitName)
 	end
 end
 

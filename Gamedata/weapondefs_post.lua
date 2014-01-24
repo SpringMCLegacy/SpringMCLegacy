@@ -19,6 +19,7 @@ local damageMults = {
 	assault		= 0.6, --40% default
 	vehicle		= 1.25, --150% default
 	vtol		= 1.25, --150% default
+	walls		= 0.2, -- 20$ default
 }
 
 for weapName, wd in pairs(WeaponDefs) do 
