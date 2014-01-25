@@ -29,7 +29,7 @@
 
       [properties]
             {
-			alwaysVisible=1;
+			//alwaysVisible=1;
 			texture=smokesmall;
             heat = 10;
             maxheat = 15;
