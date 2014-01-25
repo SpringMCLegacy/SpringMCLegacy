@@ -1,6 +1,4 @@
-[f=0099197] <[S44]FLOZi> Aero units really don't like being delivered :(
-
--- units too expensive / production too limited
+--[f=0099197] <[S44]FLOZi> Aero units really don't like being delivered :(
 
 -- weird unit movement
 
@@ -14,15 +12,11 @@
  
 --[f=0013985] [unit_script.lua] Error: [string "scripts/mech.lua"]:452: bad argument #1 to 'Turn' (number expected, got nil)
 
---[f=0034811] [UnitScript] Error: LuaRules::RunCallIn: error = 1, CLuaUnitScript::BlockShot, [string "LuaRules/Gadgets/game_radar.lua"]:64: attempt to compare nil with number
-[f=0021227] [UnitScript] Error: LuaRules::RunCallIn: error = 1, CLuaUnitScript::BlockShot, [string "LuaRules/Gadgets/game_radar.lua"]:65: attempt to compare nil with number
+--[f=0021227] [UnitScript] Error: LuaRules::RunCallIn: error = 1, CLuaUnitScript::BlockShot, [string "LuaRules/Gadgets/game_radar.lua"]:65: attempt to compare nil with number
 
 [f=0005587] [unit_script.lua] Error: [string "LuaRules/Gadgets/unit_script.lua"]:302: Incorrect arguments to CallAsUnit()
 
---[f=0023914] [unit_script.lua] Error: [string "scripts/mech.lua"]:294: attempt to compare number with nil
---[f=0023914] [unit_script.lua] Error: [string "scripts/mech.lua"]:139: attempt to perform arithmetic on field '?' (a nil value)
-
-Tweak movedefs for Melt?
+-- Tweak movedefs for Melt?
 
 HAG30 dps!
 
@@ -32,10 +26,15 @@ dropship legs poke through covers when unfolding
 
 jump is broken
 
---[f=0027406] [UnitScript] Error: LuaRules::RunCallIn: error = 1, CLuaUnitScript::Shot, [string "scripts/mech.lua"]:518: bad argument #1 to 'EmitSfx' (number expected, got nil)
-
 random race?
 
-modoption for damage income multiplier
+--modoption for damage income multiplier
 
-walls always visible?
+-- walls always visible?
+
+-- [f=0013860] Error: LuaRules::RunCallIn: error = 2, UnitDestroyed, [string "LuaRules/Gadgets/game_flagmanager.lua"]:139: TransferUnit() recursion is not permitted
+stack traceback:
+
+-- [f=0013890] Error: LuaRules::RunCallIn: error = 2, GameFrame, [string "LuaRules/Gadgets/unit_purchasing.lua"]:148: attempt to get length of local 'cmdDescs' (a nil value)
+
+-- [f=0034224] [unit_script.lua] Error: [string "LuaRules/Gadgets/unit_purchasing.lua"]:193: Bad unitID parameter in FindUnitCmdDesc()

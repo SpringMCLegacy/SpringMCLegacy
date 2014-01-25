@@ -41,11 +41,12 @@ local GetUnitDistanceToPoint = GG.GetUnitDistanceToPoint
 local DelayCall				 = GG.Delay.DelayCall
 
 -- Constants
+local EMPTY_TABLE = {} -- keep as empty
 local CBILLS_PER_SEC = (modOptions and tonumber(modOptions.income)) or 100
 local BEACON_ID = UnitDefNames["beacon"].id
 local C3_ID = UnitDefNames["upgrade_c3array"].id
 local DROPSHIP_DELAY = 30 * 30 -- 30s
-local DAMAGE_REWARD_MULT = 0.2
+local DAMAGE_REWARD_MULT = (modOptions and tonumber(modOptions.income_damage)) or 0.2
 local KILL_REWARD_MULT = 0.0
 
 -- local NUM_ICONS_PER_PAGE = 3 * 8
@@ -144,7 +145,7 @@ end
 
 local function CheckBuildOptions(unitID, teamID, money, weightLeft, cmdID)
 	--local weightLeft = GetTeamResources(teamID, "energy")
-	local cmdDescs = GetUnitCmdDescs(unitID)
+	local cmdDescs = GetUnitCmdDescs(unitID) or EMPTY_TABLE
 	for cmdDescID = 1, #cmdDescs do
 		local buildDefID = cmdDescs[cmdDescID].id
 		local cmdDesc = cmdDescs[cmdDescID]
@@ -190,7 +191,9 @@ end
 -- TODO: Issues if dropzone is 'flipped' to another beacon
 function DropshipLeft(teamID) -- called by Dropship once it has left, to enable "Submit Order"
 	local unitID = teamDropZones[teamID]
-	EditUnitCmdDesc(unitID, FindUnitCmdDesc(unitID, CMD_SEND_ORDER), {disabled = false, name = "Submit \nOrder "})
+	if unitID then -- dropzone might have died in the meantime
+		EditUnitCmdDesc(unitID, FindUnitCmdDesc(unitID, CMD_SEND_ORDER), {disabled = false, name = "Submit \nOrder "})
+	end
 	local currFrame = GetGameFrame()
 	Spring.SetTeamRulesParam(teamID, "DROPSHIP_COOLDOWN", currFrame)
 end

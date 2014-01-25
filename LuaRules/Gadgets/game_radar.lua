@@ -112,13 +112,17 @@ end
 function gadget:UnitEnteredRadar(unitID, unitTeam, allyTeam, unitDefID)
 	--Spring.Echo(UnitDefs[unitDefID].name .. " entered radar " .. allyTeam)
 	inRadarUnits[allyTeam][unitID] = true
-	outRadarUnits[allyTeam][unitID] = nil
+	if UnitDefs[unitDefID].speed > 0 then
+		outRadarUnits[allyTeam][unitID] = nil
+	end
 end
 
 function gadget:UnitLeftRadar(unitID, unitTeam, allyTeam, unitDefID)
 	--Spring.Echo(UnitDefs[unitDefID].name .. " left radar " .. allyTeam)
-	outRadarUnits[allyTeam][unitID] = true
-	inRadarUnits[allyTeam][unitID] = nil
+	if UnitDefs[unitDefID].speed > 0 then
+		outRadarUnits[allyTeam][unitID] = true
+		inRadarUnits[allyTeam][unitID] = nil
+	end
 end
 
 function gadget:UnitPreDamaged(unitID, unitDefID, unitTeam, damage, paralyzer, weaponID, projectileID, attackerID, attackerDefID, attackerTeam)

@@ -31,7 +31,7 @@ local options = {
   },
 	
 	
-  {
+	{
       key		= "income",
       name		= "Income",
       desc		= "How many CBills per second?",
@@ -41,8 +41,18 @@ local options = {
 	  max		= 1000,
 	  step		= 50,
 	  section	= '2gamemode',
-   },
-   
+	},
+	{
+		key		= "income_damage",
+		name	= "Damage Income (Multiplier)",
+		desc	= "How many CBills per HP of damage?",
+		type	= "number",
+		def		= 0.2,
+		min		= 0.1,
+		max		= 10,
+		step	= 0.1,
+		section	= '2gamemode',
+	},
 	{
 		key = "start_tickets",
 		name = "Tickets",
