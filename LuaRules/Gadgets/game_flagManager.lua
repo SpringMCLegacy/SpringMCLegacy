@@ -416,10 +416,10 @@ function gadget:UnitDestroyed(unitID, unitDefID, unitTeam, attackerID, attackerD
 	if ud.customParams.unittype then
 		-- Remove 1 ticket for each combat unit killed
 		local allyTeam = select(6, Spring.GetTeamInfo(unitTeam))
-		DecrementTickets(allyTeam)
+		DelayCall(DecrementTickets, {allyTeam}, 1)
 	end
 	
-	CheckAllyTeamUnits(unitTeam)
+	DelayCall(CheckAllyTeamUnits, {unitTeam}, 1)
 end
 
 function gadget:UnitGiven(unitID, unitDefID, newTeam, oldTeam)
