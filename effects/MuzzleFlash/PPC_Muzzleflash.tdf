@@ -10,7 +10,7 @@
          	colorMap=0.3 0.3 0.8 0.01	0.0 0.0 0.5 0.01	0 0 0 0.01; 
           	size=5.26;
           	length=0.5;
-          	sizeGrowth=70;
+          	sizeGrowth=20;
           	ttl=5;
           	frontOffset=0.3;
           	sideTexture=plasma2;

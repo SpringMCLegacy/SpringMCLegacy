@@ -160,7 +160,7 @@ local function LandingGearUp()
 	Spring.MoveCtrl.SetGravity(unitID, -4 * GRAVITY)
 end
 
-function script.Create()
+local function Drop()
 	Spring.SetTeamRulesParam(Spring.GetUnitTeam(unitID), "DROPSHIP_COOLDOWN", -1)
 	Spring.SetUnitNoSelect(unitID, true)
 	Turn(exhaustlarge, x_axis, math.rad(90), 0)
@@ -370,6 +370,15 @@ for weaponID = 1, info.numWeapons do
 		barrels[weaponID] = piece("barrel_" .. weaponID)
 	end
 end
+
+function script.Create()
+	for id, turret in pairs(turrets) do
+		Turn(turret, y_axis, math.rad(-45 * id))
+	end
+	-- Start dropping
+	Drop()
+end
+
 
 function script.AimWeapon(weaponID, heading, pitch)
 	Signal(2 ^ (weaponID - 1))
