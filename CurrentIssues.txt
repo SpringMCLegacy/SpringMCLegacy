@@ -20,11 +20,11 @@
 
 HAG30 dps!
 
-dropship legs poke through covers when unfolding
+-- dropship legs poke through covers when unfolding
 
 [f=0004745] [[LCC]jK] seems a few Spring.RemoveGrass() are needed
 
-jump is broken
+--jump is broken?
 
 random race?
 
@@ -39,4 +39,4 @@ stack traceback:
 
 -- [f=0034224] [unit_script.lua] Error: [string "LuaRules/Gadgets/unit_purchasing.lua"]:193: Bad unitID parameter in FindUnitCmdDesc()
 
-giving units does not give back lance slots
+-- giving units does not give back lance slots

@@ -10,20 +10,13 @@ local BUILD_FACING = Spring.GetUnitBuildFacing(unitID)
 
 local hull = piece("hull")
 -- Landing Gear Pieces
-local gear1_door = piece("gear1_door")
-local gear2_door = piece("gear2_door")
-local gear3_door = piece("gear3_door")
-local gear4_door = piece("gear4_door")
-
-local gear1_joint = piece("gear1_joint")
-local gear2_joint = piece("gear2_joint")
-local gear3_joint = piece("gear3_joint")
-local gear4_joint = piece("gear4_joint")
-
-local gear1 = piece("gear1")
-local gear2 = piece("gear2")
-local gear3 = piece("gear3")
-local gear4 = piece("gear4")
+local gears = {}
+for i = 1,4 do
+	gears[i] = {}
+	gears[i].door = piece("gear" .. i .. "_door")
+	gears[i].joint = piece("gear" .. i .. "_joint")
+	gears[i].gear = piece("gear" .. i)
+end
 
 -- Exhaust Pieces
 local exhaustlarge = piece("exhaustlarge")
@@ -97,80 +90,74 @@ local function fx()
 		local REST = 10
 		local RETURN = 6
 		Move(hull, y_axis, -REST, 2 * REST)
-		Move(gear1_joint, y_axis, REST, 2 * REST)
-		Move(gear2_joint, y_axis, REST, 2 * REST)
-		Move(gear3_joint, y_axis, REST, 2 * REST)
-		Move(gear4_joint, y_axis, REST, 2 * REST)
-		WaitForMove(gear4_joint, y_axis)
+		for i = 1, 4 do
+			Move(gears[i].joint, y_axis, REST, 2 * REST)
+		end
+		WaitForMove(gears[4].joint, y_axis)
 		Move(hull, y_axis, -RETURN, RETURN)
-		Move(gear1_joint, y_axis, RETURN, RETURN)
-		Move(gear2_joint, y_axis, RETURN, RETURN)
-		Move(gear3_joint, y_axis, RETURN, RETURN)
-		Move(gear4_joint, y_axis, RETURN, RETURN)
-		WaitForMove(gear4_joint, y_axis)
+		for i = 1, 4 do
+			Move(gears[i].joint, y_axis, RETURN, RETURN)
+		end
+		WaitForMove(gears[4].joint, y_axis)
 		StartThread(UnloadCargo)
 	end
 end
 
 local function LandingGearDown()
-	SPEED = math.rad(15)
-	-- Landing--
-	--Open Landing Gear Doors--
-	--Spring.Echo("GEAR DEPLOYING...")
-	Turn(gear1_door, x_axis, rad(-50), SPEED)
-	Turn(gear2_door, x_axis, rad(50), SPEED)
-	Turn(gear3_door, x_axis, rad(50), SPEED)
-	Turn(gear4_door, x_axis, rad(-50), SPEED)
-	SPEED = math.rad(25)
-	--Legs Come Out--
-	Turn(gear1_joint, x_axis, rad(125), SPEED)
-	Turn(gear1, x_axis, rad(-155), SPEED)
-	Turn(gear2_joint, x_axis, rad(-125), SPEED)
-	Turn(gear2, x_axis, rad(155), SPEED)
-	Turn(gear3_joint, x_axis, rad(-125), SPEED)
-	Turn(gear3, x_axis, rad(155), SPEED)
-	Turn(gear4_joint, x_axis, rad(125), SPEED)
-	Turn(gear4, x_axis, rad(-155), SPEED)
+	SPEED = math.rad(40)
+	for i = 1, 4 do -- Doors open
+		Turn(gears[i].door, x_axis, math.rad(60), SPEED)
+	end
+	WaitForTurn(gears[4].door, x_axis)
+	for i = 1, 4 do -- feet into deploy position
+		Turn(gears[i].joint, x_axis, math.rad(5), SPEED)
+	end
+	WaitForTurn(gears[4].joint, x_axis)
+	for i = 1, 4 do -- joint and feet rotate out
+		Turn(gears[i].joint, x_axis, math.rad(-80), SPEED)
+		Turn(gears[i].gear, x_axis, math.rad(50), SPEED)
+	end
+	WaitForTurn(gears[4].joint, x_axis)
+	for i = 1, 4 do -- joint raises and locks into position
+		Move(gears[i].joint, y_axis, 0, 15)
+		Turn(gears[i].joint, x_axis, math.rad(-115), SPEED)
+		Turn(gears[i].gear, x_axis, math.rad(85), SPEED)
+	end
+	WaitForTurn(gears[4].gear, x_axis)
 	
-	WaitForTurn(gear4, x_axis)
 	feetDown = true
-	--Spring.Echo("GEAR DEPLOYED.")
 end
 
 local function LandingGearUp()
 	feetDown = false
-	SPEED = math.rad(50)
-	--Legs Go In--
-	Turn(gear1_joint, x_axis, 0, SPEED)
-	Turn(gear1, x_axis, 0, SPEED)
-	Turn(gear2_joint, x_axis, 0, SPEED)
-	Turn(gear2, x_axis, 0, SPEED)
-	Turn(gear3_joint, x_axis, 0, SPEED)
-	Turn(gear3, x_axis, 0, SPEED)
-	Turn(gear4_joint, x_axis, 0, SPEED)
-	Turn(gear4, x_axis, 0, SPEED)	
-	WaitForTurn(gear4, x_axis)
-	--SPEED = math.rad(30)
-	--Close Landing Gear Doors--
-	Turn(gear1_door, x_axis, 0, SPEED)
-	Turn(gear2_door, x_axis, 0, SPEED)
-	Turn(gear3_door, x_axis, 0, SPEED)
-	Turn(gear4_door, x_axis, 0, SPEED)
-	WaitForTurn(gear4_door, x_axis)
+	SPEED = math.rad(40)
+
+	for i = 1, 4 do -- joint lowers and unlocks
+		Move(gears[i].joint, y_axis, -13, 15)
+		Turn(gears[i].joint, x_axis, math.rad(-80), SPEED)
+		Turn(gears[i].gear, x_axis, math.rad(50), SPEED)
+	end
+	WaitForTurn(gears[4].gear, x_axis)
+	for i = 1, 4 do -- joint and feet rotate in
+		Turn(gears[i].joint, x_axis, math.rad(5), SPEED)
+		Turn(gears[i].gear, x_axis, 0, SPEED)
+	end
+	WaitForTurn(gears[4].joint, x_axis)
+	for i = 1, 4 do -- feet into stowed position
+		Turn(gears[i].joint, x_axis, math.rad(80), SPEED)
+	end	
+	for i = 1, 4 do -- Doors close
+		Turn(gears[i].door, x_axis, 0, SPEED)
+	end
+	WaitForTurn(gears[4].door, x_axis)
+	
 	Spring.MoveCtrl.SetGravity(unitID, -4 * GRAVITY)
 end
 
 local function Drop()
 	Spring.SetTeamRulesParam(Spring.GetUnitTeam(unitID), "DROPSHIP_COOLDOWN", -1)
 	Spring.SetUnitNoSelect(unitID, true)
-	Turn(exhaustlarge, x_axis, math.rad(90), 0)
-	Spin(exhaustlarge, y_axis, math.rad(360))
-	for i = 1, 4 do
-		Turn(dusts[i], x_axis, math.rad(90), 0)
-		Spin(dusts[i], y_axis, math.rad(360))
-		Turn(exhausts[i], x_axis, math.rad(90), 0)
-		Spin(exhausts[i], y_axis, math.rad(360))
-	end
+
 	Spring.MoveCtrl.Enable(unitID)
 	Spring.MoveCtrl.SetPosition(unitID, X, GY + DROP_HEIGHT, Z)
 	--Spring.MoveCtrl.SetVelocity(unitID, 0, -100, 0)
@@ -178,16 +165,6 @@ local function Drop()
 	--Spring.MoveCtrl.SetGravity(unitID, -0.5 * GRAVITY)
 	
 	local SPEED = 0
-	--Setups: Quickly do this before the dropship appears)
-	--Legs Setup--
-	Turn(gear1_door, y_axis, rad(-45), SPEED)
-	Turn(gear1_joint, y_axis, rad(-45), SPEED)
-	Turn(gear2_door, y_axis, rad(45), SPEED)
-	Turn(gear2_joint, y_axis, rad(45), SPEED)
-	Turn(gear3_door, y_axis, rad(-45), SPEED)
-	Turn(gear3_joint, y_axis, rad(-45), SPEED)
-	Turn(gear4_door, y_axis, rad(45), SPEED)
-	Turn(gear4_joint, y_axis, rad(45), SPEED)
 	
 	--Spring.MoveCtrl.SetGravity(unitID, GRAVITY)
 	stage = 1
@@ -201,7 +178,7 @@ local function Drop()
 	stage = 2
 	--Spring.Echo("ROCKET FULL BURN NOW!")
 	Spring.MoveCtrl.SetGravity(unitID, -3.72 * GRAVITY)
-	
+
 	StartThread(LandingGearDown)
 	while y - GY > 925 do
 		Sleep(120)
@@ -228,7 +205,7 @@ local cargo = {}
 local numCargo = 0
 function LoadCargo(cargoID, callerID)
 	--Spring.Echo("Loading", outpostID, "of type", UnitDefs[Spring.GetUnitDefID(outpostID)].name)
-	Spring.UnitScript.AttachUnit(hull, cargoID)
+	Spring.UnitScript.AttachUnit(-1, cargoID)
 	numCargo = numCargo + 1
 	cargo[numCargo] = cargoID
 end
@@ -260,13 +237,13 @@ function UnloadCargo()
 
 		if currUnitDef.canFly then
 			Spring.UnitScript.AttachUnit(vtol_pad, cargoID)
-			local moveSpeed = currUnitDef.speed * 0.5 --256 / buildTime
+			local moveSpeed = currUnitDef.speed * 0.5
 			Move(vtol_pad, x_axis, 256, moveSpeed)
 			WaitForMove(vtol_pad, x_axis)
 			--Spring.SetUnitRelativeVelocity(cargoID, 0, 0, moveSpeed / 30)
 		else
 			Spring.UnitScript.AttachUnit(pad, cargoID)
-			local moveSpeed = currUnitDef.speed * 0.5 --173 / buildTime
+			local moveSpeed = currUnitDef.speed * 0.5
 			Move(link, z_axis, 73, moveSpeed)
 			WaitForMove(link, z_axis)
 			if currUnitDef.customParams.unittype == "vehicle" then
@@ -372,8 +349,31 @@ for weaponID = 1, info.numWeapons do
 end
 
 function script.Create()
+	-- Put pieces into starting pos
+	Turn(exhaustlarge, x_axis, math.rad(90), 0)
+	Spin(exhaustlarge, y_axis, math.rad(360))
+	for i = 1, 4 do
+		Turn(dusts[i], x_axis, math.rad(90), 0)
+		Spin(dusts[i], y_axis, math.rad(360))
+		Turn(exhausts[i], x_axis, math.rad(90), 0)
+		Spin(exhausts[i], y_axis, math.rad(360))
+	end
+	-- Legs Setup
+	for i = 1,4 do
+		local angle = (i == 2 or i == 3) and rad(45) or rad(225)
+		local angleDir = i % 2 == 0 and angle or -angle
+		local angle2 = rad(80)
+		Turn(gears[i].door, y_axis, angleDir)
+		Turn(gears[i].joint, y_axis, angleDir)
+		Turn(gears[i].joint, x_axis, angle2)
+		Move(gears[i].joint, y_axis, -13)
+	end
+	-- weapon pieces too
 	for id, turret in pairs(turrets) do
 		Turn(turret, y_axis, math.rad(-45 * id))
+	end
+	for id, trackEmitter in pairs(trackEmitters) do
+		Turn(trackEmitter, y_axis, math.rad(90 * (id - 1)))
 	end
 	-- Start dropping
 	Drop()
@@ -385,7 +385,7 @@ function script.AimWeapon(weaponID, heading, pitch)
 	SetSignalMask(2 ^ (weaponID - 1))
 	if trackEmitters[weaponID] then -- LBLs
 		if weaponID % 2 == 1 then -- only first in each pair
-			Turn(trackEmitters[weaponID], y_axis, heading + math.rad(90 * (weaponID - 1)/2), TURRET_SPEED)
+			Turn(trackEmitters[weaponID], y_axis, heading, TURRET_SPEED) -- + math.rad(90 * (weaponID - 1)/2), TURRET_SPEED)
 			WaitForTurn(trackEmitters[weaponID], y_axis)
 		end
 	elseif turrets[weaponID] then -- PPCs
