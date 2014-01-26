@@ -32,12 +32,12 @@ local Dropship = Unit:New{
 		},
 		[3] = {
 			name	= "LBL",
-			mainDir = "1 0 0",
+			mainDir = "-1 0 0",
 			maxAngleDif = 90,
 		},
 		[4] = {
 			name	= "LBL",
-			mainDir = "1 0 0",
+			mainDir = "-1 0 0",
 			maxAngleDif = 90,
 			slaveTo = 3,
 		},
@@ -54,12 +54,12 @@ local Dropship = Unit:New{
 		},
 		[7] = {
 			name	= "LBL",
-			mainDir = "-1 0 0",
+			mainDir = "1 0 0",
 			maxAngleDif = 90,
 		},
 		[8] = {
 			name	= "LBL",
-			mainDir = "-1 0 0",
+			mainDir = "1 0 0",
 			maxAngleDif = 90,
 			slaveTo = 7,
 		},

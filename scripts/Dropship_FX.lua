@@ -380,8 +380,11 @@ function script.Create()
 	for id, turret in pairs(turrets) do
 		Turn(turret, y_axis, math.rad(-45 * id))
 	end
+	-- 1, 3, 5, 7 -> 2n - 1, .'. (id + 1)/2
 	for id, trackEmitter in pairs(trackEmitters) do
-		Turn(trackEmitter, y_axis, math.rad(90 * (id - 1)))
+		if id % 2 == 1 then -- only the first time for each pair
+			Turn(trackEmitter, y_axis, math.rad(90 * ((id + 1)/2 - 1)))
+		end
 	end
 	-- Start dropping
 	Drop()
