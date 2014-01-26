@@ -381,10 +381,8 @@ function gadget:UnitDestroyed(unitID, unitDefID, teamID, attackerID, attackerDef
 end
 
 function gadget:UnitGiven(unitID, unitDefID, newTeam, oldTeam)
-	-- reimburse 'weight'
-	local weight = UnitDefs[unitDefID].energyCost
-	AddTeamResource(oldTeam, "energy", weight)
-	UseTeamResource(newTeam, "energy", weight)
+	gadget:UnitDestroyed(unitID, unitDefID, oldTeam)
+	gadget:UnitCreated(unitID, unitDefID, newTeam)
 end
 
 function gadget:GamePreload()
