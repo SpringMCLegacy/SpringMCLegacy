@@ -298,11 +298,12 @@ end
 
 -- overwrites engine's CallAsUnit
 function Spring.UnitScript.CallAsUnit(unitID, fun, ...)
-	PushActiveUnitID(unitID)
-	local ret = {sp_CallAsUnit(unitID, fun, ...)}
-	PopActiveUnitID()
-
-	return unpack(ret)
+	if Spring.ValidUnitID(unitID) and not Spring.GetUnitIsDead(unitID) then
+		PushActiveUnitID(unitID)
+		local ret = {sp_CallAsUnit(unitID, fun, ...)}
+		PopActiveUnitID()
+		return unpack(ret)
+	end
 end
 
 local function CallAsUnitNoReturn(unitID, fun, ...)

@@ -213,16 +213,17 @@ end
 
 function UnloadCargo()
 	Turn(main_door, x_axis, math.rad(110), DOOR_SPEED)
-	Turn(hanger_door, y_axis, math.rad(90), DOOR_SPEED)
+	Turn(hanger_door, y_axis, math.rad(90), DOOR_SPEED * 0.5)
 	Turn(link, x_axis, math.rad(35), DOOR_SPEED * 10)
 	Turn(vtol_pad, y_axis, math.rad(90), DOOR_SPEED * 10)
 	WaitForTurn(main_door, x_axis)
 	
 	for i, cargoID in ipairs(cargo) do
-		Move(link, z_axis, 0, 100)
-		Move(pad, z_axis, 0, 100)
+		Move(link, z_axis, 0)
+		Move(pad, z_axis, 0)
 		Turn(pad, x_axis, math.rad(-35))
-		--Move(vtol_pad, z_axis, 0)
+		Move(vtol_pad, x_axis, 0)
+
 		WaitForMove(link, z_axis)
 		WaitForMove(pad, z_axis)
 		
@@ -238,10 +239,9 @@ function UnloadCargo()
 
 		if currUnitDef.canFly then
 			Spring.UnitScript.AttachUnit(vtol_pad, cargoID)
-			local moveSpeed = currUnitDef.speed * 0.5
-			Move(vtol_pad, x_axis, 256, moveSpeed)
+			Move(vtol_pad, x_axis, 128, 64)
 			WaitForMove(vtol_pad, x_axis)
-			--Spring.SetUnitRelativeVelocity(cargoID, 0, 0, moveSpeed / 30)
+			Spring.SetUnitVelocity(cargoID, 8, 4, 0)
 		else
 			Spring.UnitScript.AttachUnit(pad, cargoID)
 			local moveSpeed = currUnitDef.speed * 0.5
@@ -256,7 +256,11 @@ function UnloadCargo()
 			WaitForMove(pad, z_axis)
 		end
 		Spring.UnitScript.DropUnit(cargoID)
-		Spring.SetUnitMoveGoal(cargoID, UNLOAD_X +  math.random(-100, 100), 0, UNLOAD_Z +  math.random(-100, 100), 25) -- bug out over here
+		if currUnitDef.canFly then
+			Spring.GiveOrderToUnit(cargoID, CMD.MOVE, {X + 256, 0, Z}, {})
+		else
+			Spring.SetUnitMoveGoal(cargoID, UNLOAD_X +  math.random(-100, 100), 0, UNLOAD_Z +  math.random(-100, 100), 25) -- bug out over here
+		end
 		Sleep(2000)
 	end
 	Turn(main_door, x_axis, 0, DOOR_SPEED)
