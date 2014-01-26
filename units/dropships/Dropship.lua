@@ -153,6 +153,32 @@ local Dropship = Unit:New{
 			maxAngleDif = 90,
 			slaveTo = 23,
 		},
+		-- LRM-15s
+		[25] = {
+			name	= "LRM15",
+			mainDir = "0 0 1",
+			maxAngleDif = 90,
+		},
+		[26] = {
+			name	= "LRM15",
+			mainDir = "1 0 0",
+			maxAngleDif = 90,
+		},
+		[27] = {
+			name	= "LRM15",
+			mainDir = "0 0 -1",
+			maxAngleDif = 90,
+		},
+		[28] = {
+			name	= "LRM15",
+			mainDir = "-1 0 0",
+			maxAngleDif = 90,
+		},
+		[29] = {
+			name = "AMS_Dropship",
+			mainDir = "0 1 0", -- straight up
+			maxAngleDif = 175,
+		}
 	},
 	
 	--Gets CEG effects from /gamedata/explosions folder

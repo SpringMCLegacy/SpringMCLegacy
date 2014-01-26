@@ -124,11 +124,12 @@ local function LandingGearDown()
 		Turn(gears[i].gear, x_axis, math.rad(85), SPEED)
 	end
 	WaitForTurn(gears[4].gear, x_axis)
-	
+	Turn(piece("missile_doors"), y_axis, math.rad(16), math.rad(4))
 	feetDown = true
 end
 
 local function LandingGearUp()
+	Turn(piece("missile_doors"), y_axis, 0, math.rad(4))
 	feetDown = false
 	SPEED = math.rad(40)
 
@@ -280,6 +281,9 @@ end
 -- WEAPON CONTROL
 info = GG.lusHelper[unitDefID]
 
+-- localised API functions
+local GetUnitSeparation 		= Spring.GetUnitSeparation
+local GetUnitCommands   		= Spring.GetUnitCommands
 -- localised GG functions
 local GetUnitDistanceToPoint = GG.GetUnitDistanceToPoint
 local GetUnitUnderJammer = GG.GetUnitUnderJammer
@@ -324,16 +328,20 @@ local currPoints = {}
 local spinPieces = {}
 local spinPiecesState = {}
 
+local missileSignals = {}
+local amsSignal = {}
+
 for weaponID = 1, info.numWeapons do
 	if missileWeaponIDs[weaponID] then
 		if launcherIDs[weaponID] then
 			launchers[weaponID] = piece("launcher_" .. weaponID)
 		end
-		launchPoints[weaponID] = {}
+		missileSignals[weaponID] = {}
+		--[[launchPoints[weaponID] = {}
 		currPoints[weaponID] = 1
 		for i = 1, burstLengths[weaponID] do
 			launchPoints[weaponID][i] = piece("launchpoint_" .. weaponID .. "_" .. i)
-		end	
+		end	]]
 	elseif weaponID then
 		flares[weaponID] = piece ("flare_" .. weaponID)
 	end
@@ -381,8 +389,16 @@ end
 
 
 function script.AimWeapon(weaponID, heading, pitch)
-	Signal(2 ^ (weaponID - 1))
-	SetSignalMask(2 ^ (weaponID - 1))
+	if weaponID < 25 then
+		Signal(2 ^ (weaponID - 1))
+		SetSignalMask(2 ^ (weaponID - 1))
+	elseif missileWeaponIDs[weaponID] then -- can only use 24 weapons in this way, sor LRM are seperate
+		Signal(missileSignals[weaponID])
+		SetSignalMask(missileSignals[weaponID])
+	else -- LAMS
+		Signal(amsSignal)
+		SetSignalMask(amsSignal)
+	end
 	if trackEmitters[weaponID] then -- LBLs
 		if weaponID % 2 == 1 then -- only first in each pair
 			Turn(trackEmitters[weaponID], y_axis, heading, TURRET_SPEED) -- + math.rad(90 * (weaponID - 1)/2), TURRET_SPEED)
@@ -394,6 +410,15 @@ function script.AimWeapon(weaponID, heading, pitch)
 		WaitForTurn(turrets[weaponID], y_axis)
 		WaitForTurn(turrets[weaponID], x_axis)
 		return true
+	elseif missileWeaponIDs[weaponID] then
+		if launchers[weaponID] then
+			Turn(launchers[weaponID], x_axis, -pitch, ELEVATION_SPEED)
+		--[[else
+			for i = 1, burstLengths[weaponID] do
+				Turn(launchPoints[weaponID][i] or launchPoints[weaponID][1], x_axis, -pitch, ELEVATION_SPEED)
+			end]]
+		end
+		return stage == 4 -- only allow when on the ground
 	elseif flares[weaponID] then -- ERMBLs
 		Turn(flares[weaponID], y_axis, heading)
 	end
@@ -402,14 +427,56 @@ function script.AimWeapon(weaponID, heading, pitch)
 	return true
 end
 
+function script.BlockShot(weaponID, targetID, userTarget)
+	if weaponID == amsID then return false end
+	local jammable = jammableIDs[weaponID]
+	if jammable then
+		if targetID then
+			local jammed = GetUnitUnderJammer(targetID) and (not IsUnitNARCed(targetID)) and (not IsUnitTAGed(targetID))
+			if jammed then
+				--Spring.Echo("Can't fire weapon " .. weaponID .. " as target is jammed")
+				return true 
+			end
+		end
+	end
+	local minRange = minRanges[weaponID]
+	if minRange then
+		local distance
+		if targetID then
+			distance = GetUnitSeparation(unitID, targetID, true)
+		elseif userTarget then
+			local cmd = GetUnitCommands(unitID, 1)[1]
+			if cmd.id == CMD.ATTACK then
+				local tx,ty,tz = unpack(cmd.params)
+				distance = GetUnitDistanceToPoint(unitID, tx, ty, tz, false)
+			end
+		end
+		if distance < minRange then return true end
+	end
+	return false
+end
+
 function script.Shot(weaponID)
-	EmitSfx(flares[weaponID], SFX.CEG + weaponID)
+	if missileWeaponIDs[weaponID] then
+		EmitSfx(launchers[weaponID], SFX.CEG + weaponID)
+		--EmitSfx(launchPoints[weaponID][currPoints[weaponID]] or launchPoints[weaponID][1], SFX.CEG + weaponID)
+        --[[currPoints[weaponID] = currPoints[weaponID] + 1
+        if currPoints[weaponID] > burstLengths[weaponID] then 
+			currPoints[weaponID] = 1
+        end]]
+	elseif flares[weaponID] then
+		EmitSfx(flares[weaponID], SFX.CEG + weaponID)
+	end
 end
 
 function script.AimFromWeapon(weaponID) 
-	return trackEmitters[weaponID] or turrets[weaponID] or flares[weaponID] or hull
+	return trackEmitters[weaponID] or turrets[weaponID] or launchers[weaponID] or flares[weaponID] or hull
 end
 
 function script.QueryWeapon(weaponID)
-	return flares[weaponID]
+	if missileWeaponIDs[weaponID] then
+		return launchers[weaponID] --launchPoints[weaponID][currPoints[weaponID]] or launchPoints[weaponID][1]
+	else
+		return flares[weaponID]
+	end
 end 
