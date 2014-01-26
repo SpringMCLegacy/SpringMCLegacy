@@ -49,7 +49,7 @@ local options = {
 		type	= "number",
 		def		= 0.2,
 		min		= 0.1,
-		max		= 10,
+		max		= 10.0,
 		step	= 0.1,
 		section	= '2gamemode',
 	},

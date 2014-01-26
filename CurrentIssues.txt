@@ -1,5 +1,3 @@
---[f=0099197] <[S44]FLOZi> Aero units really don't like being delivered :(
-
 -- weird unit movement
 
   [f=0007014] you have more than the lance supports in group #1 - still possible by player directly assigning groups
@@ -10,17 +8,11 @@
  
   some clan mechs with mismatched launchpoints due to weapon changes (cougar, warhawk, timberwolf)
  
---[f=0013985] [unit_script.lua] Error: [string "scripts/mech.lua"]:452: bad argument #1 to 'Turn' (number expected, got nil)
-
---[f=0021227] [UnitScript] Error: LuaRules::RunCallIn: error = 1, CLuaUnitScript::BlockShot, [string "LuaRules/Gadgets/game_radar.lua"]:65: attempt to compare nil with number
-
-[f=0005587] [unit_script.lua] Error: [string "LuaRules/Gadgets/unit_script.lua"]:302: Incorrect arguments to CallAsUnit()
+-- [f=0005587] [unit_script.lua] Error: [string "LuaRules/Gadgets/unit_script.lua"]:302: Incorrect arguments to CallAsUnit()
 
 -- Tweak movedefs for Melt?
 
 HAG30 dps!
-
--- dropship legs poke through covers when unfolding
 
 [f=0004745] [[LCC]jK] seems a few Spring.RemoveGrass() are needed
 
@@ -28,15 +20,10 @@ HAG30 dps!
 
 random race?
 
---modoption for damage income multiplier
+Some IS vehicles ahve too small radius (partisan, challenger?)
 
--- walls always visible?
+make dropship bad targets for NARC
 
--- [f=0013860] Error: LuaRules::RunCallIn: error = 2, UnitDestroyed, [string "LuaRules/Gadgets/game_flagmanager.lua"]:139: TransferUnit() recursion is not permitted
-stack traceback:
+[f=0017630] [unit_script.lua] Error: [string "scripts/vehicle.lua"]:146: attempt to perform arithmetic on field '?' (a nil value) -- can't replicate
 
--- [f=0013890] Error: LuaRules::RunCallIn: error = 2, GameFrame, [string "LuaRules/Gadgets/unit_purchasing.lua"]:148: attempt to get length of local 'cmdDescs' (a nil value)
-
--- [f=0034224] [unit_script.lua] Error: [string "LuaRules/Gadgets/unit_purchasing.lua"]:193: Bad unitID parameter in FindUnitCmdDesc()
-
--- giving units does not give back lance slots
+avenger flame trail broken
