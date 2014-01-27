@@ -3,7 +3,7 @@ local Dropship = Unit:New{
 	description         = "Lance Delivery Dropship",
 	objectName        	= "Dropship.s3o",
 	iconType			= "dropship",
-	script				= "Dropship_fx.lua",
+	script				= "Dropship_union.lua",
 	category 			= "dropship structure notbeacon",
 	activateWhenBuilt   = true,
 	maxDamage           = 180000,
@@ -175,7 +175,7 @@ local Dropship = Unit:New{
 			maxAngleDif = 90,
 		},
 		[29] = {
-			name = "AMS_Dropship",
+			name = "LAMS",
 			mainDir = "0 1 0", -- straight up
 			maxAngleDif = 175,
 		}
@@ -184,12 +184,8 @@ local Dropship = Unit:New{
 	--Gets CEG effects from /gamedata/explosions folder
 	sfxtypes = {
 		explosiongenerators = {
-		--[["custom:MISSILE_MUZZLEFLASH",
-		"custom:PPC_MUZZLEFLASH",
-		"custom:LARGELASER_MUZZLEFLASH",]]
 		"custom:dropship_main_engine_stage2",
 		"custom:dropship_main_engine_stage3",
-		--"custom:dropship_heavy_dust",
 		"custom:heavy_jet_trail",
 		"custom:heavy_jet_trail_blue",
 		"custom:dropship_reentry",
