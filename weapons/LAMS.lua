@@ -45,4 +45,4 @@ weaponDef = {
 
 }
 
-return lowerkeys({ AMS_Dropship = weaponDef })
+return lowerkeys({ LAMS = weaponDef })

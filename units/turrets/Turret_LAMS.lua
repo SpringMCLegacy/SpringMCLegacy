@@ -5,8 +5,7 @@ local Turret_LAMS = Tower:New{
 
 	weapons = {	
 		[1] = {
-			name	= "AMS_Dropship",
-			OnlyTargetCategory = "notbeacon",
+			name	= "LAMS",
 		},
 	},
 	customparams = {

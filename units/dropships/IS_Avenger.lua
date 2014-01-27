@@ -32,16 +32,16 @@ local IS_Avenger = {
 	--minTransportMass	= 10000,
 
 	--Makes unit use weapon from /weapons folder
-	weapons	= {	
+	--[[weapons	= {	
 
-	},
+	},]]
 	--Gets CEG effects from /gamedata/explosions folder
 	sfxtypes = {
 		explosiongenerators = {
 			"custom:heavy_jet_trail_blue",
 			"custom:medium_jet_trail_blue",
-			"custom:heavy_jet_trail",
 			"custom:dropship_main_engine_stage2",
+			"custom:heavy_jet_trail",
 		},
 	},
 	customparams = {
