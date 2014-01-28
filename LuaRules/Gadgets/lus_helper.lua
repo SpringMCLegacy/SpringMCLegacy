@@ -33,6 +33,29 @@ local CallAsUnit 			= Spring.UnitScript.CallAsUnit
 
 -- Useful functions for GG
 
+function RemoveGrassSquare(x, z, r)
+	local startX = math.floor(x - r/2)
+	local startZ = math.floor(z - r/2)
+	for i = 0, r, Game.squareSize do
+		for j = 0, r, Game.squareSize do
+			--Spring.Echo(startX + i, startZ + j)
+			Spring.RemoveGrass((startX + i)/Game.squareSize, (startZ + j)/Game.squareSize)
+		end
+	end
+end
+GG.RemoveGrassSquare = RemoveGrassSquare
+
+function RemoveGrassCircle(cx, cz, r)
+	local r2 = r * r
+	for z = 0, 2 * r, Game.squareSize do -- top to bottom diameter
+		local lineLength = math.sqrt(r2 - (r - z) ^ 2)
+		for x = -lineLength, lineLength, Game.squareSize do
+			Spring.RemoveGrass((cx + x)/Game.squareSize, (cz + z - r)/Game.squareSize)
+		end
+	end
+end
+GG.RemoveGrassCircle = RemoveGrassCircle
+
 function SpawnDecal(decalType, x, y, z, teamID, delay, duration)
 	if delay then
 		GG.Delay.DelayCall(SpawnDecal, {decalType, x, y, z, teamID, nil, duration}, delay)
