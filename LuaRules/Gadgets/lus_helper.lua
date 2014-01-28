@@ -36,8 +36,8 @@ local CallAsUnit 			= Spring.UnitScript.CallAsUnit
 function RemoveGrassSquare(x, z, r)
 	local startX = math.floor(x - r/2)
 	local startZ = math.floor(z - r/2)
-	for i = 0, r, Game.squareSize do
-		for j = 0, r, Game.squareSize do
+	for i = 0, r, Game.squareSize * 4 do
+		for j = 0, r, Game.squareSize * 4 do
 			--Spring.Echo(startX + i, startZ + j)
 			Spring.RemoveGrass((startX + i)/Game.squareSize, (startZ + j)/Game.squareSize)
 		end
@@ -47,9 +47,9 @@ GG.RemoveGrassSquare = RemoveGrassSquare
 
 function RemoveGrassCircle(cx, cz, r)
 	local r2 = r * r
-	for z = 0, 2 * r, Game.squareSize do -- top to bottom diameter
+	for z = 0, 2 * r, Game.squareSize * 4 do -- top to bottom diameter
 		local lineLength = math.sqrt(r2 - (r - z) ^ 2)
-		for x = -lineLength, lineLength, Game.squareSize do
+		for x = -lineLength, lineLength, Game.squareSize * 4 do
 			Spring.RemoveGrass((cx + x)/Game.squareSize, (cz + z - r)/Game.squareSize)
 		end
 	end
