@@ -186,6 +186,7 @@ local function Drop()
 		_, y, _ = Spring.GetUnitPosition(unitID)
 	end
 	stage = 3
+	GG.RemoveGrassCircle(X, Z, 230)
 	GG.SpawnDecal("decal_drop", X, GY + 1, Z, Spring.GetUnitTeam(unitID), 30 * 2.5, 30 * 120)
 	Spring.MoveCtrl.SetGravity(unitID, -0.02 * GRAVITY)
 	Spring.MoveCtrl.SetCollideStop(unitID, true)

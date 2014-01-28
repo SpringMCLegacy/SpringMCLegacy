@@ -14,7 +14,7 @@
 
 HAG30 dps!
 
-[f=0004745] [[LCC]jK] seems a few Spring.RemoveGrass() are needed
+-- [f=0004745] [[LCC]jK] seems a few Spring.RemoveGrass() are needed
 
 --jump is broken?
 
@@ -25,5 +25,3 @@ Some IS vehicles ahve too small radius (partisan, challenger?)
 make dropship bad targets for NARC
 
 [f=0017630] [unit_script.lua] Error: [string "scripts/vehicle.lua"]:146: attempt to perform arithmetic on field '?' (a nil value) -- can't replicate
-
-avenger flame trail broken
