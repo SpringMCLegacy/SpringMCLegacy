@@ -31,6 +31,7 @@ weaponDef = {
 		cegflare			= "ARTILLERY_MUZZLEFLASH",
 		weaponclass			= "projectile",
 		ammotype			= "sniper",
+		shockwave			= true,
     },
 }
 
