@@ -30,6 +30,7 @@ weaponDef = {
 		cegflare			= "AC20_MUZZLEFLASH",
 		weaponclass			= "projectile",
 		ammotype			= "ac20",
+		shockwave			= true,
     },	
 }
 

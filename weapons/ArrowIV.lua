@@ -38,6 +38,7 @@ weaponDef = {
 		cegflare			= "ARROW_MUZZLEFLASH",
 		weaponclass			= "missile",
 		ammotype			= "arrow",
+		shockwave			= true,
     },
 }
 

@@ -245,6 +245,7 @@ function gadget:GamePreload()
 		
 		-- Parse UnitDef Weapon Data
 		local missileWeaponIDs = {}
+		local flamerIDs = {}
 		local jammableIDs = {}
 		local burstLengths = {}
 		local firingHeats = {}		
@@ -268,11 +269,13 @@ function gadget:GamePreload()
 			if weaponDef.interceptor == 1 then
 				info.amsID = i
 			end
+			flamerIDs[i] = weaponDef.name == "flamer"
 			jammableIDs[i] = (tonumber(weaponDef.customParams.jammable) == 1)
 			flareOnShots[i] = (tonumber(weaponDef.customParams.flareonshot) == 1)
 		end
 		-- WeaponDef Level Info
 		info.missileWeaponIDs = missileWeaponIDs
+		info.flamerIDs = flamerIDs
 		info.flareOnShots = flareOnShots
 		info.reloadTimes = reloadTimes
 		info.burstLengths = burstLengths

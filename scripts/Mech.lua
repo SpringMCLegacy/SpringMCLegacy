@@ -36,6 +36,7 @@ local inWater = false
 local activated = true
 
 local missileWeaponIDs = info.missileWeaponIDs
+local flamerIDs = info.flamerIDs
 local flareOnShots = info.flareOnShots
 local jammableIDs = info.jammableIDs
 local launcherIDs = info.launcherIDs
@@ -516,6 +517,9 @@ function script.Shot(weaponID)
         end
 	elseif flareOnShots[weaponID] and flares[weaponID] then
 		EmitSfx(flares[weaponID], SFX.CEG + weaponID)
+		if flamerIDs[weaponID] then
+			 GG.LUPS.FlameShot(unitID, unitDefID, _, weaponID)
+		end
 	end
 end
 
