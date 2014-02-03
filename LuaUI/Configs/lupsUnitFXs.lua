@@ -1,18 +1,19 @@
 effectUnitDefs = {
-
+	-- Aero
 	is_sparrowhawk = {
-		{class='AirJet',	options={color={1,0.5,0.0,0.75},	width =  4, length=35, piece="exhaust1", onActive=true}},
-		{class='AirJet',	options={color={1,0.5,0.0,0.75},	width =  4, length=35, piece="exhaust2", onActive=true}},
+		{class='AirJet',	options={color={1,0.5,0.0,0.75},	width =  2, length=35, piece="exhaust1", onActive=true}},
+		{class='AirJet',	options={color={1,0.5,0.0,0.75},	width =  2, length=35, piece="exhaust2", onActive=true}},
+		{class='AirJet',	options={color={1,0.5,0.0,0.75},	width =  1, length=15, piece="exhaust3", onActive=true}},
+		{class='AirJet',	options={color={1,0.5,0.0,0.75},	width =  1, length=15, piece="exhaust4", onActive=true}},
 		{class='Ribbon',	options={width=1, size=8, piece="lwingtip"}},
 		{class='Ribbon',	options={width=1, size=8, piece="rwingtip"}},
 	},
 	cl_bashkir = {
-		{class='AirJet',	options={color={1,0.5,0.0,0.75},	width =  4, length=35, piece="exhaust1", onActive=true}},
-		{class='AirJet',	options={color={1,0.5,0.0,0.75},	width =  4, length=35, piece="exhaust2", onActive=true}},
+		{class='AirJet',	options={color={1,0.5,0.0,0.75},	width =  2, length=35, piece="exhaust1", onActive=true}},
+		{class='AirJet',	options={color={1,0.5,0.0,0.75},	width =  2, length=35, piece="exhaust2", onActive=true}},
 		--{class='Ribbon',	options={width=1, size=8, piece="lwingtip"}},
 		--{class='Ribbon',	options={width=1, size=8, piece="rwingtip"}},
 	},	
-
  }
 
 effectUnitDefsXmas = {

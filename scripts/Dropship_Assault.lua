@@ -50,33 +50,33 @@ end
 
 function fx()
 	while stage == 1 do
-		for _, exhaust in ipairs(vExhaustLarges) do
+		--[[for _, exhaust in ipairs(vExhaustLarges) do
 			EmitSfx(exhaust, SFX.CEG)
 		end
 		for _, exhaust in ipairs(vExhausts) do
 			EmitSfx(exhaust, SFX.CEG + 1)
-		end
+		end]]
 		Sleep(30)
 	end
 	while stage == 2 do
-		for _, exhaust in ipairs(vExhaustLarges) do
+		--[[for _, exhaust in ipairs(vExhaustLarges) do
 			EmitSfx(exhaust, SFX.CEG)
 		end
 		for _, exhaust in ipairs(vExhausts) do
 			EmitSfx(exhaust, SFX.CEG + 1)
-		end
+		end]]
 		for _, exhaust in ipairs(hExhausts) do
 			EmitSfx(exhaust, SFX.CEG + 1)
 		end	
 		Sleep(30)
 	end
 	while stage == 3 do
-		for _, exhaust in ipairs(vExhaustLarges) do
+		--[[for _, exhaust in ipairs(vExhaustLarges) do
 			EmitSfx(exhaust, SFX.CEG)
 		end		
 		for _, exhaust in ipairs(vExhausts) do
 			EmitSfx(exhaust, SFX.CEG + 1)
-		end
+		end]]
 		SpawnCEG("dropship_heavy_dust", TX, TY, TZ)
 		Sleep(30)
 	end
@@ -94,6 +94,7 @@ function fx()
 			EmitSfx(exhaust, SFX.CEG + 2)
 			EmitSfx(exhaust, SFX.CEG + 3)
 		end
+		GG.Delay.DelayCall(GG.LUPS.FlameShot, {unitID, unitDefID, _, nil}, 0)
 		Sleep(30)
 	end
 end
