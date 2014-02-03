@@ -32,8 +32,12 @@ if (gadgetHandler:IsSyncedCode()) then
 
   function FlameShot(unitID,unitDefID,_, weapon)
     lastLupsSpawn[unitID] = lastLupsSpawn[unitID] or {}
-    if ( ((lastLupsSpawn[unitID][weapon] or 0) - thisGameFrame) <= -MIN_EFFECT_INTERVAL ) then
-      lastLupsSpawn[unitID][weapon] = thisGameFrame
+    if ( ((lastLupsSpawn[unitID][weapon] or lastLupsSpawn[unitID]["engine"] or 0) - thisGameFrame) <= -MIN_EFFECT_INTERVAL ) then
+      if weapon then
+	    lastLupsSpawn[unitID][weapon] = thisGameFrame
+	  else
+	    lastLupsSpawn[unitID]["engine"] = thisGameFrame
+	  end
       SendToUnsynced("flame_FlameShot", unitID, unitDefID, weapon)
     end
   end
@@ -72,31 +76,29 @@ else
   local lastShoot = {}
 
   function FlameShot(_,unitID, unitDefID, weapon)
-	-- why is this even needed? we limited frequency of fire FX back in synced
-	--[[
-    local n = Spring.GetGameFrame()
-	lastShoot[unitID] = lastShoot[unitID] or {}
-    if ((lastShoot[unitID][weapon] or 0) > (n-MIN_EFFECT_INTERVAL) ) then
-      return
-    end
-    lastShoot[unitID][weapon] = n
-	]]--
 
-    local posx,posy,posz, dirx,diry,dirz = Spring.GetUnitWeaponVectors(unitID,weapon)
-    local wd  = WeaponDefs[UnitDefs[unitDefID].weapons[weapon].weaponDef]
-    local weaponRange = wd.range*wd.duration
-	local weaponVelocity = wd.projectilespeed
+    local posx,posy,posz, dirx,diry,dirz 
+	local range
+	
+	if weapon then
+	  posx,posy,posz,dirx,diry,dirz = Spring.GetUnitWeaponVectors(unitID,weapon)
+      local wd  = WeaponDefs[UnitDefs[unitDefID].weapons[weapon].weaponDef]
+      range = wd.range*wd.duration
+	  --local weaponVelocity = wd.projectilespeed
+	else -- engine
+	  posx,posy,posz = Spring.GetUnitPosition(unitID)
+	  dirx,diry,dirz = 0, -1, 0
+	  range = 1000
+	end
 
     local speedx,speedy,speedz = Spring.GetUnitVelocity(unitID)
     local partpos = "x*delay,y*delay,z*delay|x="..speedx..",y="..speedy..",z="..speedz
-
-	local altFlameTexture = wd.customParams.altflametex	-- FIXME: more elegant solution when this is actually implemented (as in, one that doesn't rely on different unitdef)
 	
     particleList[particleCnt] = {
       class        = 'JitterParticles2',
       colormap     = { {1,1,1,1},{1,1,1,1} },
       count        = 6,
-      life         = weaponRange / 6,
+      life         = range / 6,
       delaySpread  = 25,
       force        = {0,1.5,0},
       --forceExp     = 0.2,
