@@ -58,6 +58,7 @@ local function fx()
 	while stage == 1 do
 		-- Some reentry glow here?
 		EmitSfx(dustlarge, CEG + 5) --1032)
+		GG.Delay.DelayCall(GG.LUPS.FlameShot, {unitID, unitDefID, _, nil}, 0)
 		Sleep(32)
 	end
 	-- Rocket Burn
@@ -67,6 +68,7 @@ local function fx()
 		for i = 1, 4 do
 			EmitSfx(exhausts[i], CEG + 4)--1031)
 		end
+		GG.Delay.DelayCall(GG.LUPS.FlameShot, {unitID, unitDefID, _, nil}, 0)
 		Sleep(32)
 	end
 	-- Final descent
@@ -84,6 +86,7 @@ local function fx()
 			end
 			--EmitSfx(dusts[i], SMALLER_DUST)
 		end		
+		GG.Delay.DelayCall(GG.LUPS.FlameShot, {unitID, unitDefID, _, nil}, 0)
 		Sleep(32)
 	end
 	if stage == 4 then
