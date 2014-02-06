@@ -21,13 +21,19 @@ local bufferSize = 0
 	local function EmitLupsSfx(unitID, effectName, pieceNum, options)
 		--GG.Delay.DelayCall(SendToUnsynced,{"lups_emitsfx", unitID, effectName, pieceNum, unpack(options)},0))
 		bufferSize = bufferSize + 1
-		unsyncedBuffer[bufferSize] = {unitID, effectName, pieceNum, options} -- TODO: serialise options table here, currently passed as string
+		unsyncedBuffer[bufferSize] = {"lups_emitsfx", unitID, effectName, pieceNum, options} -- TODO: serialise options table here, currently passed as string
 	end
 	GG.EmitLupsSfx = EmitLupsSfx
 
+	local function RemoveLupsSfx(unitID, pieceNum)
+		bufferSize = bufferSize + 1
+		unsyncedBuffer[bufferSize] = {"lups_removesfx", unitID, pieceNum}
+	end
+	GG.RemoveLupsSfx = RemoveLupsSfx
+	
 	function gadget:GameFrame(n)
 		for i = 1, bufferSize do
-			SendToUnsynced("lups_emitsfx", unpack(unsyncedBuffer[i]))
+			SendToUnsynced(unpack(unsyncedBuffer[i]))
 		end
 		bufferSize = 0
 		unsyncedBuffer = {}
@@ -51,6 +57,8 @@ local effects = {
 	},
 }
 
+local unitPieceFXs = {}
+
 	local function EmitLupsSfx(_, unitID, effectName, pieceNum, options)
 		local Lups = GG.Lups
 		--Spring.Echo("Got this far!", Lups, unitID, effectName, pieceNum, options)
@@ -63,15 +71,27 @@ local effects = {
 				overrides[k] = v
 			end
 		end
-		Lups.AddParticles(effect.class, overrides)
+		local fxID = Lups.AddParticles(effect.class, overrides)
+		if not unitPieceFXs[unitID] then -- first effect
+			unitPieceFXs[unitID] = {}
+		end
+		unitPieceFXs[unitID][pieceNum] = fxID
 	end
   
+	local function RemoveLupsSfx(_, unitID, pieceNum)
+		local Lups = GG.Lups
+		Lups.RemoveParticles(unitPieceFXs[unitID][pieceNum])
+		unitPieceFXs[unitID][pieceNum] = nil
+	end
+	
 	function gadget:Initialize()
 		gadgetHandler:AddSyncAction("lups_emitsfx", EmitLupsSfx)
+		gadgetHandler:AddSyncAction("lups_removesfx", RemoveLupsSfx)
 	end
 
 	function gadget:Shutdown()
 		gadgetHandler.RemoveSyncAction("lups_emitsfx")
+		gadgetHandler.RemoveSyncAction("lups_removesfx")
 	end
 
 end

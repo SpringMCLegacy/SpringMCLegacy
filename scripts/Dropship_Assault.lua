@@ -50,10 +50,10 @@ end
 
 function fx()
 	if stage == 1 then
-		for i, exhaust in ipairs(vExhaustLarges) do
+		for _, exhaust in ipairs(vExhaustLarges) do
 			GG.EmitLupsSfx(unitID, "dropship_vertical_exhaust", exhaust, "{width = 25, length = 70}")
 		end
-		for i, exhaust in ipairs(vExhausts) do
+		for _, exhaust in ipairs(vExhausts) do
 			GG.EmitLupsSfx(unitID, "dropship_vertical_exhaust", exhaust)
 		end
 	end
@@ -88,6 +88,11 @@ function fx()
 		SpawnCEG("dropship_heavy_dust", TX, TY, TZ)
 		Sleep(30)
 	end
+	if stage == 4 then
+		for _, exhaust in ipairs(vExhaustLarges) do
+			GG.RemoveLupsSfx(unitID, exhaust)
+		end
+	end
 	while stage == 4 do
 		--[[for _, exhaust in ipairs(vExhausts) do
 			EmitSfx(exhaust, SFX.CEG + 1)
@@ -96,6 +101,11 @@ function fx()
 			EmitSfx(exhaust, SFX.CEG)
 		end	
 		Sleep(30)
+	end
+	if stage == 5 then
+		for _, exhaust in ipairs(vExhausts) do
+			GG.RemoveLupsSfx(unitID, exhaust)
+		end
 	end
 	while stage == 5 do
 		for _, exhaust in ipairs(hExhausts) do
