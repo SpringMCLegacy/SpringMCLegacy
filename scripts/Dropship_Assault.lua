@@ -49,42 +49,45 @@ function LoadCargo(outpostID, callerID)
 end
 
 function fx()
-	if stage == 1 then
+	if stage == 0 then
 		for _, exhaust in ipairs(vExhaustLarges) do
-			GG.EmitLupsSfx(unitID, "dropship_vertical_exhaust", exhaust, "{width = 25, length = 70}")
+			GG.EmitLupsSfx(unitID, "dropship_vertical_exhaust", exhaust, "{width = 65, length = 115}")
 		end
 		for _, exhaust in ipairs(vExhausts) do
-			GG.EmitLupsSfx(unitID, "dropship_vertical_exhaust", exhaust)
+			GG.EmitLupsSfx(unitID, "dropship_vertical_exhaust", exhaust, "{width = 50, length = 95}")
+		end	
+	end
+	Sleep(30)
+	if stage == 1 then
+		for _, exhaust in ipairs(vExhaustLarges) do
+			GG.RemoveLupsSfx(unitID, exhaust)
+			GG.EmitLupsSfx(unitID, "dropship_vertical_exhaust", exhaust, "{width = 40, length = 90}")
+		end
+		for _, exhaust in ipairs(vExhausts) do
+			GG.RemoveLupsSfx(unitID, exhaust)
+			GG.EmitLupsSfx(unitID, "dropship_vertical_exhaust", exhaust, "{width = 25, length = 70}")
 		end
 	end
 	while stage == 1 do
-		--[[for _, exhaust in ipairs(vExhaustLarges) do
-			EmitSfx(exhaust, SFX.CEG)
-		end
-		for _, exhaust in ipairs(vExhausts) do
-			EmitSfx(exhaust, SFX.CEG + 1)
-		end]]
 		Sleep(30)
 	end
 	while stage == 2 do
-		--[[for _, exhaust in ipairs(vExhaustLarges) do
-			EmitSfx(exhaust, SFX.CEG)
-		end
-		for _, exhaust in ipairs(vExhausts) do
-			EmitSfx(exhaust, SFX.CEG + 1)
-		end]]
 		for _, exhaust in ipairs(hExhausts) do
 			EmitSfx(exhaust, SFX.CEG + 1)
 		end	
 		Sleep(30)
 	end
-	while stage == 3 do
-		--[[for _, exhaust in ipairs(vExhaustLarges) do
-			EmitSfx(exhaust, SFX.CEG)
-		end		
+	if stage == 3 then
+		for _, exhaust in ipairs(vExhaustLarges) do
+			GG.RemoveLupsSfx(unitID, exhaust)
+			GG.EmitLupsSfx(unitID, "dropship_vertical_exhaust", exhaust, "{width = 25, length = 70}")
+		end
 		for _, exhaust in ipairs(vExhausts) do
-			EmitSfx(exhaust, SFX.CEG + 1)
-		end]]
+			GG.RemoveLupsSfx(unitID, exhaust)
+			GG.EmitLupsSfx(unitID, "dropship_vertical_exhaust", exhaust)
+		end
+	end
+	while stage == 3 do
 		SpawnCEG("dropship_heavy_dust", TX, TY, TZ)
 		Sleep(30)
 	end
@@ -140,7 +143,7 @@ function script.Create()
 	Spring.MoveCtrl.SetVelocity(unitID, 0, -100, 0)
 	Spring.MoveCtrl.SetRelativeVelocity(unitID, 0, 0, 10)
 	Spring.MoveCtrl.SetGravity(unitID, -3.78 * GRAVITY)
-	
+	StartThread(fx)
 	local x, y, z = Spring.GetUnitPosition(unitID)
 	while y - TY > 150 + HOVER_HEIGHT do
 		x, y, z = Spring.GetUnitPosition(unitID)
