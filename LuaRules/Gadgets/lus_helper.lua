@@ -364,8 +364,14 @@ else
 
 -- UNSYNCED
 
+local function StringToTable(input) -- make this available to unsynced too
+	return loadstring("return " .. (input or "{}"))()
+end
+GG.StringToTable = StringToTable
+
 local PlaySoundFile	= Spring.PlaySoundFile
 local MY_TEAM_ID = Spring.GetMyTeamID()
+
 
 function PlayTeamSound(eventID, teamID, sound, volume)
 	if teamID == MY_TEAM_ID then

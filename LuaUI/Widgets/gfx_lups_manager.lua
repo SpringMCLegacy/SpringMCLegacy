@@ -109,18 +109,6 @@ end
 --------------------------------------------------------------------------------
 --------------------------------------------------------------------------------
 
---// cormex overdrive FX
-local cormexDefID 
-local cormexes    = {}
-local cormexFX    = cormexGlow
-
-if (UnitDefNames["cormex"]) then
-  cormexDefID = UnitDefNames["cormex"].id  
-end
-
---------------------------------------------------------------------------------
---------------------------------------------------------------------------------
-
 local abs = math.abs
 local min = math.min
 local max = math.max
@@ -183,14 +171,6 @@ end
 --------------------------------------------------------------------------------
 
 local function UnitFinished(_,unitID,unitDefID)
-
-  if (unitDefID == cormexDefID) then
-    cormexes[unitID] = 0
-    cormexFX.unit    = unitID
-    particleIDs[unitID] = {}
-    AddFxs( unitID, LupsAddFX("StaticParticles",cormexFX) )
-  end
-
   local effects = UnitEffects[unitDefID]
   if (effects) then
     for _,fx in ipairs(effects) do
@@ -211,10 +191,6 @@ end
 
 
 local function UnitDestroyed(_,unitID,unitDefID)
-  if (unitDefID == cormexDefID) then
-    cormexes[unitID] = nil
-  end
-
   ClearFxs(unitID)
 end
 
@@ -223,13 +199,6 @@ local function UnitEnteredLos(_,unitID)
   local spec, fullSpec = spGetSpectatingState()
   if (spec and fullSpec) then 
     return 
-  end
-
-  if (unitDefID == cormexDefID) then
-    cormexes[unitID] = 1
-    cormexFX.unit    = unitID
-    particleIDs[unitID] = {}
-    AddFxs( unitID, LupsAddFX("StaticParticles",cormexFX) )
   end
 
   local unitDefID = spGetUnitDefID(unitID)
@@ -251,10 +220,6 @@ local function UnitLeftLos(_,unitID)
   local spec, fullSpec = spGetSpectatingState()
   if (spec and fullSpec) then return end
 
-  if (unitDefID == cormexDefID) then
-    cormexes[unitID] = nil
-  end
-
   ClearFxs(unitID)
 end
 
@@ -265,28 +230,7 @@ local color1 = {0,0,0}
 local color2 = {1,0.5,0}
 
 local function GameFrame(_,n)
-  if (((n+48)%60)<1 and (next(cormexes))) then
-    --//Update Overdrive Fx
-    for unitID,strength in pairs(cormexes) do
-      local cur_strength = spGetUnitRulesParam(unitID,"overdrive") or 1
-      local diff         = abs(cur_strength - strength)
-      if (diff>0.1) then
-        -- limit the maximum change per update (else the fx would jump like hell)
-        cur_strength = (strength) + ((cur_strength>strength and 1) or -1)*0.3
 
-        local a = min(1,max(0,(cur_strength-1)*0.35));
-        ClearFxs(unitID)
-        cormexFX.unit     = unitID
-        cormexFX.colormap = {blendColor(cormexFX.color1,cormexFX.color2, a)}
-
-        cormexFX.size     = blend(cormexFX.size1,cormexFX.size2, a)
-        AddFxs( unitID, LupsAddFX("StaticParticles",cormexFX) )
-        cormexes[unitID]  = cur_strength
-      end
-    end
-    cormexFX.colormap = {cormexFX.color1}
-    cormexFX.size   = cormexFX.size1
-  end
 end
 
 --------------------------------------------------------------------------------

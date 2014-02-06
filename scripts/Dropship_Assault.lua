@@ -49,6 +49,14 @@ function LoadCargo(outpostID, callerID)
 end
 
 function fx()
+	if stage == 1 then
+		for i, exhaust in ipairs(vExhaustLarges) do
+			GG.EmitLupsSfx(unitID, "dropship_vertical_exhaust", exhaust, "{width = 25, length = 70}")
+		end
+		for i, exhaust in ipairs(vExhausts) do
+			GG.EmitLupsSfx(unitID, "dropship_vertical_exhaust", exhaust)
+		end
+	end
 	while stage == 1 do
 		--[[for _, exhaust in ipairs(vExhaustLarges) do
 			EmitSfx(exhaust, SFX.CEG)
@@ -81,9 +89,9 @@ function fx()
 		Sleep(30)
 	end
 	while stage == 4 do
-		for _, exhaust in ipairs(vExhausts) do
+		--[[for _, exhaust in ipairs(vExhausts) do
 			EmitSfx(exhaust, SFX.CEG + 1)
-		end
+		end]]
 		for _, exhaust in ipairs(hExhausts) do
 			EmitSfx(exhaust, SFX.CEG)
 		end	
@@ -164,13 +172,15 @@ function script.Create()
 	end
 	WaitForMove(booms[3], y_axis)
 	Sleep(1500)
-	Spring.UnitScript.DropUnit(cargoID)
-	-- Let the cargo know it is unloaded
-	env = Spring.UnitScript.GetScriptEnv(cargoID)
-	Spring.UnitScript.CallAsUnit(cargoID, env.Unloaded)
-	-- Let the beacon know upgrade is ready
-	env = Spring.UnitScript.GetScriptEnv(beaconID)
-	Spring.UnitScript.CallAsUnit(beaconID, env.ChangeType, true)
+	if cargoID then -- might be empty on /give testing
+		Spring.UnitScript.DropUnit(cargoID)
+		-- Let the cargo know it is unloaded
+		env = Spring.UnitScript.GetScriptEnv(cargoID)
+		Spring.UnitScript.CallAsUnit(cargoID, env.Unloaded)
+		-- Let the beacon know upgrade is ready
+		env = Spring.UnitScript.GetScriptEnv(beaconID)
+		Spring.UnitScript.CallAsUnit(beaconID, env.ChangeType, true)
+	end
 	-- Cargo is down, close the doors!
 	for i = 2, 3 do
 		Move(booms[i], y_axis, 0, BOOM_SPEED * 2)
