@@ -43,6 +43,7 @@ else
 
 -- UNSYNCED
 
+-- TODO: move to config file
 local effects = {
 	dropship_vertical_exhaust = {
 		class = "AirJet",
