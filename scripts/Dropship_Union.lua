@@ -72,6 +72,9 @@ local function fx()
 		Sleep(32)
 	end
 	-- Final descent
+	if stage == 3 then
+		GG.Delay.DelayCall(SendToUnsynced,{"lups_shockwave", X, GY, Z, 17, 35},0)
+	end
 	while stage == 3 do
 		-- Dust clouds and continue rocket burn? (reduced?)
 		-- EmitSfx(exhaustlarge, SOME_SMALLER_BIGASS_ROCKET)

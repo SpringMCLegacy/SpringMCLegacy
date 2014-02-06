@@ -75,6 +75,8 @@ local unitPieceFXs = {}
 		local fxID = Lups.AddParticles(effect.class, overrides)
 		if not unitPieceFXs[unitID] then -- first effect
 			unitPieceFXs[unitID] = {}
+		else -- remove existing ones first TODO: make a toggle via param?
+			Lups.RemoveParticles(unitPieceFXs[unitID][pieceNum])
 		end
 		unitPieceFXs[unitID][pieceNum] = fxID
 	end
