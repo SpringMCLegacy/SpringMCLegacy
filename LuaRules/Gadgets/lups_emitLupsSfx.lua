@@ -52,6 +52,7 @@ local effects = {
 			length = 55, 
 			width = 15,
 			color = {0.2, 0.5, 0.9, 0.01},
+			distortion    = 0.015,
 			texture2      = ":c:bitmaps/GPL/lups/shot.tga",       --// shape
 			texture3      = ":c:bitmaps/GPL/lups/shot.tga",       --// jitter shape			
 		}

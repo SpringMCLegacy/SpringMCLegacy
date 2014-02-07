@@ -69,20 +69,31 @@ function fx()
 	while stage == 1 do
 		Sleep(30)
 	end
+	if stage == 2 then
+		for i = 1, 10 do
+			for _, exhaust in ipairs(hExhausts) do
+				GG.EmitLupsSfx(unitID, "dropship_vertical_exhaust", exhaust, "{width = " .. i * 10 .. ", length = " .. i * 25 .. ", distortion = 0}")
+			end
+			Sleep(80)
+		end
+	end
 	while stage == 2 do
-		for _, exhaust in ipairs(hExhausts) do
-			EmitSfx(exhaust, SFX.CEG + 1)
-		end	
 		Sleep(30)
 	end
 	if stage == 3 then
+		for i = 10, 1, -1 do
+			for _, exhaust in ipairs(hExhausts) do
+				GG.EmitLupsSfx(unitID, "dropship_vertical_exhaust", exhaust, "{width = " .. i * 10 .. ", length = " .. i * 25 .. ", distortion = 0}")
+			end
+			Sleep(80)
+		end
 		for _, exhaust in ipairs(vExhaustLarges) do
 			GG.EmitLupsSfx(unitID, "dropship_vertical_exhaust", exhaust, "{width = 25, length = 70}")
 		end
 		for _, exhaust in ipairs(vExhausts) do
 			GG.EmitLupsSfx(unitID, "dropship_vertical_exhaust", exhaust)
 		end
-		GG.Delay.DelayCall(SendToUnsynced,{"lups_shockwave", TX, TY, TZ, 17, 35},0)
+		--GG.Delay.DelayCall(SendToUnsynced,{"lups_shockwave", TX, TY, TZ, 17, 35},0)
 	end
 	while stage == 3 do
 		SpawnCEG("dropship_heavy_dust", TX, TY, TZ)
@@ -92,11 +103,14 @@ function fx()
 		for _, exhaust in ipairs(vExhaustLarges) do
 			GG.RemoveLupsSfx(unitID, exhaust)
 		end
+		for i = 1, 10, 0.125 do
+			for _, exhaust in ipairs(hExhausts) do
+				GG.EmitLupsSfx(unitID, "dropship_vertical_exhaust", exhaust, "{width = " .. i * 10 .. ", length = " .. i * 25 .. ", distortion = 0}")
+			end
+			Sleep(90)
+		end
 	end
 	while stage == 4 do
-		for _, exhaust in ipairs(hExhausts) do
-			EmitSfx(exhaust, SFX.CEG)
-		end	
 		Sleep(30)
 	end
 	if stage == 5 then
