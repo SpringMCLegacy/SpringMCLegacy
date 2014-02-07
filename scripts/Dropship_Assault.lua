@@ -72,7 +72,7 @@ function fx()
 	if stage == 2 then
 		for i = 1, 10 do
 			for _, exhaust in ipairs(hExhausts) do
-				GG.EmitLupsSfx(unitID, "dropship_vertical_exhaust", exhaust, "{width = " .. i * 10 .. ", length = " .. i * 25 .. ", distortion = 0}")
+				GG.EmitLupsSfx(unitID, "dropship_vertical_exhaust", exhaust, "{width = " .. i * 8 .. ", length = " .. i * 20 .. ", distortion = 0}")
 			end
 			Sleep(80)
 		end
@@ -83,7 +83,7 @@ function fx()
 	if stage == 3 then
 		for i = 10, 1, -1 do
 			for _, exhaust in ipairs(hExhausts) do
-				GG.EmitLupsSfx(unitID, "dropship_vertical_exhaust", exhaust, "{width = " .. i * 10 .. ", length = " .. i * 25 .. ", distortion = 0}")
+				GG.EmitLupsSfx(unitID, "dropship_vertical_exhaust", exhaust, "{width = " .. i * 10 .. ", length = " .. i * 20 .. ", distortion = 0}")
 			end
 			Sleep(80)
 		end
@@ -105,7 +105,7 @@ function fx()
 		end
 		for i = 1, 10, 0.125 do
 			for _, exhaust in ipairs(hExhausts) do
-				GG.EmitLupsSfx(unitID, "dropship_vertical_exhaust", exhaust, "{width = " .. i * 10 .. ", length = " .. i * 25 .. ", distortion = 0}")
+				GG.EmitLupsSfx(unitID, "dropship_vertical_exhaust", exhaust, "{width = " .. i * 10 .. ", length = " .. i * 30 .. ", distortion = 0}")
 			end
 			Sleep(90)
 		end
@@ -160,11 +160,12 @@ function script.Create()
 		if (y - TY) < 4 * HOVER_HEIGHT and stage == 0 then
 			stage = 1
 			StartThread(fx)
+		elseif (y - TY) < 3 * HOVER_HEIGHT and stage == 1 then
+			stage = 2
 		end
 		Sleep(100)
 	end
 	-- Descent complete, move over the target
-	stage = 2
 	Spring.MoveCtrl.SetVelocity(unitID, 0, 0, 0)
 	Spring.MoveCtrl.SetGravity(unitID, 0)
 	local dist = GetUnitDistanceToPoint(unitID, TX, 0, TZ, false)
