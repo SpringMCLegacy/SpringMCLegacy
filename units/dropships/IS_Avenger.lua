@@ -10,12 +10,10 @@ local IS_Avenger = {
 	mass                = 36000,
 	footprintX			= 20,
 	footprintZ 			= 20,
-	--collisionVolumeType = "ellipsoid",
 	buildCostEnergy     = 0,
 	buildCostMetal      = 0,
 	buildTime           = 0,
 	canMove				= true,
-	maxVelocity			= 0,
 	energyStorage		= 0.01,
 	metalMake			= 400,
 	metalStorage		= 50000,
@@ -46,6 +44,7 @@ local IS_Avenger = {
 	},
 	customparams = {
 		helptext		= "A Dropship",
+		dropship		= true,
     },
 	sounds = {
 		underattack        = "Dropship_Alarm",

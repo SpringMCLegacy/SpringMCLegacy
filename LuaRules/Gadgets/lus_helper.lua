@@ -153,7 +153,7 @@ function gadget:UnitCreated(unitID, unitDefID, teamID, builderID)
 	local info = GG.lusHelper[unitDefID]
 	local cp = UnitDefs[unitDefID].customParams
 	info.builderID = builderID
-	if info.arms == nil then --and not UnitDefs[unitDefID].name:find("dropship") then
+	if info.arms == nil then
 		-- Parse Model Data
 		local pieceMap = GetUnitPieceMap(unitID)
 		info.arms = pieceMap["rupperarm"] ~= nil

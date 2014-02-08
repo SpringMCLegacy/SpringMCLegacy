@@ -195,6 +195,7 @@ local Dropship = Unit:New{
 	customparams = {
 		helptext		= "A Dropship",
 		hasbap			= true,
+		dropship		= true,
     },
 	sounds = {
 		underattack        = "Dropship_Alarm",

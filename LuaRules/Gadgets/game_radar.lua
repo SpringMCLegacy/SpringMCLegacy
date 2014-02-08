@@ -133,7 +133,7 @@ function gadget:UnitPreDamaged(unitID, unitDefID, unitTeam, damage, paralyzer, w
 	-- NARCs
 	if weaponID == NARC_ID then
 		-- Don't allow dropships to be NARCed
-		if UnitDefs[unitDefID].name:find("dropship") then return 0 end
+		if UnitDefs[unitDefID].customParams.dropship then return 0 end
 		--if GetUnitUnderJammer(unitID, unitTeam) then return 0 end
 		local allyTeam = select(6, GetTeamInfo(attackerTeam))
 		-- do the NARC, delay the deNARC
@@ -144,7 +144,7 @@ function gadget:UnitPreDamaged(unitID, unitDefID, unitTeam, damage, paralyzer, w
 		return 0
 	elseif weaponID == TAG_ID then
 		-- Don't allow dropships to be TAGed
-		if not UnitDefs[unitDefID].name:find("dropship") then
+		if not UnitDefs[unitDefID].customParams.dropship then
 			SetUnitRulesParam(unitID, "TAG", GetGameFrame(), {inlos = true})
 		end
 		return 0

@@ -6,6 +6,9 @@ local blink = piece("blink")
 
 Spring.SetUnitNanoPieces(unitID, {base})
 
+local teamID = Spring.GetUnitTeam(unitID)
+local startUnit = teamID ~= Spring.GetGaiaTeamID()
+		
 local flaps = {}
 for i = 1, 4 do
 	flaps[i] = piece("flap" .. i)
@@ -45,13 +48,8 @@ end
 
 function TouchDown()
 	touchDown = true
-	-- check if we're the first beacon on a non-gaia team -> start unit
-	local teamID = Spring.GetUnitTeam(unitID)
-	if teamID ~= Spring.GetGaiaTeamID() then
-		local count = Spring.GetTeamUnitDefCount(teamID, Spring.GetUnitDefID(unitID))
-		if count == 1 then
-			Spring.GiveOrderToUnit(unitID, GG.CustomCommands.GetCmdID("CMD_DROPZONE"), {}, {})
-		end
+	if startUnit then -- Place dropzone
+		Spring.GiveOrderToUnit(unitID, GG.CustomCommands.GetCmdID("CMD_DROPZONE"), {}, {})
 	end
 	Spring.SetUnitNoSelect(unitID, false)
 	GG.RemoveGrassSquare(X, Z, 64)
@@ -77,7 +75,9 @@ function script.Create()
 	Spring.MoveCtrl.SetPosition(unitID, x, GY + DROP_HEIGHT, z)
 	Turn(base, y_axis, unitID, 0) -- get a random facing
 	
-	Sleep(unitID / 10) -- lolhack
+	if not startUnit then -- only randomise gaia beacons
+		Sleep(unitID / 10) -- lolhack
+	end
 	Spring.MoveCtrl.SetVelocity(unitID, 0, -50, 0)
 	Spring.MoveCtrl.SetGravity(unitID, Game.gravity / 75)
 	Spring.MoveCtrl.SetCollideStop(unitID, true)
