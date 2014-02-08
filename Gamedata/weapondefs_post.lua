@@ -71,10 +71,6 @@ for unitName, ud in pairs(UnitDefs) do
 			table.insert(ud.sfxtypes.explosiongenerators, "custom:HE_Large")
 			table.insert(ud.sfxtypes.explosiongenerators, "custom:BlackSmoke")
 			table.insert(ud.sfxtypes.explosiongenerators, "custom:Sparks")
-		--elseif ud.customparams.towertype then
-		--[[elseif unitName:find("dropship") then -- dropship
-			Spring.Echo("~~~~" .. unitName .. "~~~~")
-			for k, v in pairs(ud.sfxtypes.explosiongenerators) do Spring.Echo(k,v) end]]
 		end
 		--[[Spring.Echo("UNIT: " .. unitName)
 		for _, i in pairs(ud.sfxtypes.explosiongenerators) do

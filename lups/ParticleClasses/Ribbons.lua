@@ -238,7 +238,7 @@ function Ribbon:Update(n)
 
       local vx,vy,vz = spGetUnitVelocity(self.unit)
 	  if vx and vy and vz then
-	    self.blendfactor = (vx*vx+vz*vz)/30
+	    self.blendfactor = (vx*vx+vz*vz+vy*vy)/30
 	  end
     end
   else

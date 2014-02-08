@@ -33,7 +33,7 @@ local TURRET_SCALE = 1.1
 function gadget:UnitCreated(unitID, unitDefID, teamID, builderID)
 	local ud = UnitDefs[unitDefID]
 	local cp = ud.customParams
-	if ud.speed > 0 or ud.canFly then 
+	if (ud.speed > 0 or ud.canFly) and not cp.dropship then 
 		local pieces = Spring.GetUnitPieceList(unitID)
 		local unitType = cp.unittype
 		for i, pieceName in pairs(pieces) do

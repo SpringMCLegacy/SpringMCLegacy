@@ -165,11 +165,11 @@ for name, ud in pairs(UnitDefs) do
 	if name == "is_dropzone" then IS_DROPZONE_UD = ud end
 	if name == "cl_dropzone" then CL_DROPZONE_UD = ud end
 	
-	if name == "beacon" or name:find("upgrade") or name:find("dropzone") or name:find("dropship") then 
+	if name == "beacon" or name:find("upgrade") or name:find("dropzone") or ud.customparams.dropship then 
 		if name == "beacon" then
 			BEACON_UD = ud 
 			ud.canselfdestruct = false
-		elseif name:find("dropship") or name:find("dropzone") then
+		elseif ud.customparams.dropship or name:find("dropzone") then
 			ud.canselfdestruct = false
 			ud.levelground = false
 		end
