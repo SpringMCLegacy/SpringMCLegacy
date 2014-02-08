@@ -93,7 +93,6 @@ function fx()
 		for _, exhaust in ipairs(vExhausts) do
 			GG.EmitLupsSfx(unitID, "dropship_vertical_exhaust", exhaust)
 		end
-		--GG.Delay.DelayCall(SendToUnsynced,{"lups_shockwave", TX, TY, TZ, 17, 35},0)
 	end
 	while stage == 3 do
 		SpawnCEG("dropship_heavy_dust", TX, TY, TZ)
