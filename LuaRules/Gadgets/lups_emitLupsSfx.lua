@@ -32,9 +32,12 @@ local bufferSize = 0
 	GG.RemoveLupsSfx = RemoveLupsSfx
 	
 	function gadget:GameFrame(n)
-		for i = 1, bufferSize do
+		--[[for i = 1, bufferSize do
 			SendToUnsynced(unpack(unsyncedBuffer[i]))
-		end
+		end]]
+		_G.unsyncedBuffer = unsyncedBuffer
+		SendToUnsynced("lups_updatefx")
+		_G.unsyncedBuffer = nil
 		bufferSize = 0
 		unsyncedBuffer = {}
 	end
@@ -61,11 +64,14 @@ local effects = {
 
 local unitPieceFXs = {}
 
-	local function EmitLupsSfx(_, unitID, effectName, pieceNum, options)
+	local function EmitLupsSfx(unitID, effectName, pieceNum, options)
 		local Lups = GG.Lups
 		--Spring.Echo("Got this far!", Lups, unitID, effectName, pieceNum, options)
+		local overrides = {}
+		if options then
+			for k,v in spairs(options) do overrides[k] = v end
+		end
 		local effect = effects[effectName]
-		local overrides = GG.StringToTable(options)
 		effect.options.unit = unitID
 		effect.options.piecenum = pieceNum
 		for k, v in pairs(effect.options) do
@@ -82,20 +88,32 @@ local unitPieceFXs = {}
 		unitPieceFXs[unitID][pieceNum] = fxID
 	end
   
-	local function RemoveLupsSfx(_, unitID, pieceNum)
+	local function RemoveLupsSfx(unitID, pieceNum)
 		local Lups = GG.Lups
 		Lups.RemoveParticles(unitPieceFXs[unitID][pieceNum])
 		unitPieceFXs[unitID][pieceNum] = nil
 	end
 	
+	local function UpdateLupsSfx()
+		local Lups = GG.Lups
+		for i, callInfo in spairs(SYNCED.unsyncedBuffer) do 
+			--for k,v in spairs(callInfo) do Spring.Echo(k,v) end
+			if callInfo[1] == "lups_emitsfx" then
+				local unitID, effectName, pieceNum, options = callInfo[2], callInfo[3], callInfo[4], callInfo[5]
+				EmitLupsSfx(unitID, effectName, pieceNum, options)
+			elseif callInfo[1] == "lups_removesfx" then
+				local unitID, pieceNum = callInfo[2], callInfo[3]
+				RemoveLupsSfx(unitID, pieceNum)
+			end
+		end
+	end
+
 	function gadget:Initialize()
-		gadgetHandler:AddSyncAction("lups_emitsfx", EmitLupsSfx)
-		gadgetHandler:AddSyncAction("lups_removesfx", RemoveLupsSfx)
+		gadgetHandler:AddSyncAction("lups_updatefx", UpdateLupsSfx)
 	end
 
 	function gadget:Shutdown()
-		gadgetHandler.RemoveSyncAction("lups_emitsfx")
-		gadgetHandler.RemoveSyncAction("lups_removesfx")
+		gadgetHandler.RemoveSyncAction("lups_updatefx")
 	end
 
 end

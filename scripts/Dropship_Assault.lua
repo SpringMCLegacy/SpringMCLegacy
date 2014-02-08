@@ -51,19 +51,19 @@ end
 function fx()
 	if stage == 0 then
 		for _, exhaust in ipairs(vExhaustLarges) do
-			GG.EmitLupsSfx(unitID, "dropship_vertical_exhaust", exhaust, "{width = 65, length = 115}")
+			GG.EmitLupsSfx(unitID, "dropship_vertical_exhaust", exhaust, {width = 65, length = 115})
 		end
 		for _, exhaust in ipairs(vExhausts) do
-			GG.EmitLupsSfx(unitID, "dropship_vertical_exhaust", exhaust, "{width = 50, length = 95}")
+			GG.EmitLupsSfx(unitID, "dropship_vertical_exhaust", exhaust, {width = 50, length = 95})
 		end	
 	end
 	Sleep(30)
 	if stage == 1 then
 		for _, exhaust in ipairs(vExhaustLarges) do
-			GG.EmitLupsSfx(unitID, "dropship_vertical_exhaust", exhaust, "{width = 40, length = 90}")
+			GG.EmitLupsSfx(unitID, "dropship_vertical_exhaust", exhaust, {width = 40, length = 90})
 		end
 		for _, exhaust in ipairs(vExhausts) do
-			GG.EmitLupsSfx(unitID, "dropship_vertical_exhaust", exhaust, "{width = 25, length = 70}")
+			GG.EmitLupsSfx(unitID, "dropship_vertical_exhaust", exhaust, {width = 25, length = 70})
 		end
 	end
 	while stage == 1 do
@@ -72,7 +72,7 @@ function fx()
 	if stage == 2 then
 		for i = 1, 10 do
 			for _, exhaust in ipairs(hExhausts) do
-				GG.EmitLupsSfx(unitID, "dropship_vertical_exhaust", exhaust, "{width = " .. i * 8 .. ", length = " .. i * 20 .. ", distortion = 0}")
+				GG.EmitLupsSfx(unitID, "dropship_vertical_exhaust", exhaust, {width = i * 8 , length = i * 20 , distortion = 0})
 			end
 			Sleep(80)
 		end
@@ -83,12 +83,12 @@ function fx()
 	if stage == 3 then
 		for i = 10, 1, -1 do
 			for _, exhaust in ipairs(hExhausts) do
-				GG.EmitLupsSfx(unitID, "dropship_vertical_exhaust", exhaust, "{width = " .. i * 10 .. ", length = " .. i * 20 .. ", distortion = 0}")
+				GG.EmitLupsSfx(unitID, "dropship_vertical_exhaust", exhaust, {width = i * 10, length = i * 20, distortion = 0})
 			end
 			Sleep(80)
 		end
 		for _, exhaust in ipairs(vExhaustLarges) do
-			GG.EmitLupsSfx(unitID, "dropship_vertical_exhaust", exhaust, "{width = 25, length = 70}")
+			GG.EmitLupsSfx(unitID, "dropship_vertical_exhaust", exhaust, {width = 25, length = 70})
 		end
 		for _, exhaust in ipairs(vExhausts) do
 			GG.EmitLupsSfx(unitID, "dropship_vertical_exhaust", exhaust)
@@ -104,7 +104,7 @@ function fx()
 		end
 		for i = 1, 10, 0.125 do
 			for _, exhaust in ipairs(hExhausts) do
-				GG.EmitLupsSfx(unitID, "dropship_vertical_exhaust", exhaust, "{width = " .. i * 10 .. ", length = " .. i * 30 .. ", distortion = 0}")
+				GG.EmitLupsSfx(unitID, "dropship_vertical_exhaust", exhaust, {width = i * 10, length = i * 30, distortion = 0})
 			end
 			Sleep(90)
 		end
