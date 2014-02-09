@@ -40,6 +40,7 @@ local GAIA_TEAM_ID = Spring.GetGaiaTeamID()
 local BEACON_ID = UnitDefNames["beacon"].id
 local IS_DROPZONE_ID = UnitDefNames["is_dropzone"].id
 local CL_DROPZONE_ID = UnitDefNames["cl_dropzone"].id -- FIXME: ugly
+local DROPZONE_IDS = {[IS_DROPZONE_ID] = true, [CL_DROPZONE_ID] = true}
 local WALL_ID = UnitDefNames["wall"].id
 local GATE_ID = UnitDefNames["wall_gate"].id
 local MIN_BUILD_RANGE = tonumber(UnitDefNames["beacon"].customParams.minbuildrange) or 230
@@ -467,7 +468,12 @@ function gadget:Initialize()
 	for _,unitID in ipairs(Spring.GetAllUnits()) do
 		local teamID = Spring.GetUnitTeam(unitID)
 		local unitDefID = Spring.GetUnitDefID(unitID)
-		gadget:UnitCreated(unitID, unitDefID, teamID)
+		if DROPZONE_IDS[unitDefID] then
+			Spring.Echo(unitID, "is a DZ! Kill it!")
+			Spring.DestroyUnit(unitID, false, false)
+		else
+			gadget:UnitCreated(unitID, unitDefID, teamID)
+		end
 	end
 end
 
