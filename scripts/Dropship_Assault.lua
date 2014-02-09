@@ -50,69 +50,101 @@ end
 
 function fx()
 	if stage == 0 then
+		for _, exhaust in ipairs(hExhausts) do
+			GG.EmitLupsSfx(unitID, "dropship_vertical_exhaust2", exhaust)
+			GG.EmitLupsSfx(unitID, "dropship_vertical_exhaust2", exhaust, {delay = 20})
+			GG.EmitLupsSfx(unitID, "dropship_vertical_exhaust",  exhaust, {repeatEffect = true, width = 30, length = 150, distortion = 0})
+		end
 		for _, exhaust in ipairs(vExhaustLarges) do
-			GG.EmitLupsSfx(unitID, "dropship_vertical_exhaust", exhaust, {width = 65, length = 115})
+			GG.EmitLupsSfx(unitID, "dropship_vertical_exhaust", exhaust, {replace = true, width = 65, length = 115, distortion = 0})
 		end
 		for _, exhaust in ipairs(vExhausts) do
-			GG.EmitLupsSfx(unitID, "dropship_vertical_exhaust", exhaust, {width = 50, length = 95})
-		end	
+			GG.EmitLupsSfx(unitID, "dropship_vertical_exhaust", exhaust, {replace = true, width = 50, length = 95, distortion = 0})
+		end
 	end
 	Sleep(30)
 	if stage == 1 then
 		for _, exhaust in ipairs(vExhaustLarges) do
-			GG.EmitLupsSfx(unitID, "dropship_vertical_exhaust", exhaust, {width = 40, length = 90})
+			GG.EmitLupsSfx(unitID, "dropship_vertical_exhaust", exhaust, {replace = true, width = 40, length = 90, distortion = 0})
 		end
 		for _, exhaust in ipairs(vExhausts) do
-			GG.EmitLupsSfx(unitID, "dropship_vertical_exhaust", exhaust, {width = 25, length = 70})
+			GG.EmitLupsSfx(unitID, "dropship_vertical_exhaust", exhaust, {replace = true, width = 25, length = 70, distortion = 0})
 		end
 	end
 	while stage == 1 do
 		Sleep(30)
 	end
 	if stage == 2 then
-		for i = 1, 10 do
+		for _, exhaust in ipairs(hExhausts) do
+			GG.RemoveLupsSfx(unitID, exhaust)
+		end
+		local time = 99
+		for t = 0, (time/3) do
+			local i = 1 - t / (time/3)
 			for _, exhaust in ipairs(hExhausts) do
-				GG.EmitLupsSfx(unitID, "dropship_vertical_exhaust", exhaust, {width = i * 8 , length = i * 20 , distortion = 0})
+				if (i == 0) then
+					GG.EmitLupsSfx(unitID, "dropship_vertical_exhaust", exhaust, {repeatEffect = true, delay = t*3, width = 20, length = 60, distortion = 0})
+				elseif (i > 0.33) then
+					GG.EmitLupsSfx(unitID, "dropship_vertical_exhaust", exhaust, {life = 3, delay = t*3, width = 20 + i * 60, length = 60 + i * 190, distortion = 0})
+				else
+					GG.EmitLupsSfx(unitID, "dropship_vertical_exhaust", exhaust, {life = 1, delay = t*3,   width = 20 + i * 60, length = 60 + i * 190, distortion = 0})
+					GG.EmitLupsSfx(unitID, "dropship_vertical_exhaust", exhaust, {life = 2, delay = t*3+1, width = 20 + i * 40, length = 60 + i * 90, distortion = 0})
+				end
 			end
-			Sleep(80)
 		end
 	end
 	while stage == 2 do
 		Sleep(30)
 	end
 	if stage == 3 then
-		for i = 10, 1, -1 do
-			for _, exhaust in ipairs(hExhausts) do
-				GG.EmitLupsSfx(unitID, "dropship_vertical_exhaust", exhaust, {width = i * 10, length = i * 20, distortion = 0})
-			end
-			Sleep(80)
-		end
-		for _, exhaust in ipairs(vExhaustLarges) do
-			GG.EmitLupsSfx(unitID, "dropship_vertical_exhaust", exhaust, {width = 25, length = 70})
-		end
-		for _, exhaust in ipairs(vExhausts) do
-			GG.EmitLupsSfx(unitID, "dropship_vertical_exhaust", exhaust)
-		end
-	end
-	while stage == 3 do
-		SpawnCEG("dropship_heavy_dust", TX, TY, TZ)
-		Sleep(30)
-	end
-	if stage == 4 then
 		for _, exhaust in ipairs(vExhaustLarges) do
 			GG.RemoveLupsSfx(unitID, exhaust)
 		end
-		for i = 1, 10, 0.125 do
+		for i, exhaust in ipairs(vExhausts) do
+			GG.EmitLupsSfx(unitID, "dropship_vertical_exhaust", exhaust, {replace = true, distortion = 0})
+		end
+		GG.EmitLupsSfx(unitID, "exhaust_ground_winds", body, {repeatEffect = 4, delay = 135})
+		GG.EmitLupsSfx(unitID, "exhaust_ground_winds", body, {repeatEffect = 4, delay = 135 + 80})
+	end
+	while stage == 3 do
+		--SpawnCEG("dropship_heavy_dust", TX, TY, TZ)
+		Sleep(30)
+	end
+	if stage == 4 then
+		for _, exhaust in ipairs(hExhausts) do
+			GG.RemoveLupsSfx(unitID, exhaust)
+		end
+		local time = 114
+		for t = 0, (time/3) do
+			local i = t / (time/3)
 			for _, exhaust in ipairs(hExhausts) do
-				GG.EmitLupsSfx(unitID, "dropship_vertical_exhaust", exhaust, {width = i * 10, length = i * 30, distortion = 0})
+				if (i == 1) then
+					GG.EmitLupsSfx(unitID, "dropship_vertical_exhaust", exhaust, {repeatEffect = true, delay = t*3, width = 110, length = 350, distortion = 0})
+				elseif (i > 0.33) then
+					GG.EmitLupsSfx(unitID, "dropship_vertical_exhaust", exhaust, {life = 2, delay = t*3, width = i * 110, length = i * 350, distortion = 0})
+					GG.EmitLupsSfx(unitID, "dropship_vertical_exhaust", exhaust, {life = 1, delay = t*3+2, width = i * 100, length = i * 300, distortion = 0})
+				else
+					GG.EmitLupsSfx(unitID, "dropship_vertical_exhaust", exhaust, {life = 1, delay = t*3,   width = i * 110, length = i * 350, distortion = 0})
+					GG.EmitLupsSfx(unitID, "dropship_vertical_exhaust", exhaust, {life = 2, delay = t*3+1, width = i * 80, length = i * 190, distortion = 0})
+				end
 			end
-			Sleep(90)
+		end
+		for _, exhaust in ipairs(vExhaustLarges) do
+			GG.EmitLupsSfx(unitID, "dropship_vertical_exhaust", exhaust, {replace = true, distortion = 0, length = 80, width = 45})
+		end
+		for i, exhaust in ipairs(vExhausts) do
+			if (i % 2 == 1) then
+				GG.EmitLupsSfx(unitID, "dropship_vertical_exhaust", exhaust, {replace = true, distortion = 0, length = 85, width = 55})
+			end
 		end
 	end
 	while stage == 4 do
 		Sleep(30)
 	end
 	if stage == 5 then
+		for _, exhaust in ipairs(vExhaustLarges) do
+			GG.RemoveLupsSfx(unitID, exhaust)
+		end
 		for _, exhaust in ipairs(vExhausts) do
 			GG.RemoveLupsSfx(unitID, exhaust)
 		end
@@ -212,6 +244,7 @@ function script.Create()
 	WaitForTurn(cargoDoor2, z_axis)
 	-- Take off!
 	stage = 4
+	--Spring.MoveCtrl.SetRelativeVelocity(unitID, 0, 0, 5)
 	Spring.MoveCtrl.SetRelativeVelocity(unitID, 0, 0, 5)
 	Spring.MoveCtrl.SetGravity(unitID, -0.75 * GRAVITY)
 	Turn(body, x_axis, math.rad(-80), math.rad(15))
