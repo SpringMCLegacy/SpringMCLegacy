@@ -49,7 +49,7 @@ local feetDown = false
 function TouchDown()
 	stage = 4
 	for i = 1, 4 do
-		EmitSfx(dusts[i], CEG + 5)
+		EmitSfx(dusts[i], CEG + 6)
 	end
 end
 
@@ -57,36 +57,27 @@ local function fx()
 	-- Free fall
 	while stage == 1 do
 		-- Some reentry glow here?
-		EmitSfx(dustlarge, CEG + 5) --1032)
-		GG.Delay.DelayCall(GG.LUPS.FlameShot, {unitID, unitDefID, _, nil}, 0)
+		EmitSfx(dustlarge, CEG + 5)
 		Sleep(32)
 	end
 	-- Rocket Burn
 	while stage == 2 do
-		EmitSfx(exhaustlarge, CEG + 1) --1027)
-		EmitSfx(exhaustlarge, CEG + 3) --1030)
+		EmitSfx(exhaustlarge, CEG + 1)
+		EmitSfx(exhaustlarge, CEG + 3)
 		for i = 1, 4 do
-			EmitSfx(exhausts[i], CEG + 4)--1031)
+			EmitSfx(exhausts[i], CEG + 4)
 		end
-		GG.Delay.DelayCall(GG.LUPS.FlameShot, {unitID, unitDefID, _, nil}, 0)
 		Sleep(32)
 	end
 	-- Final descent
 	while stage == 3 do
 		-- Dust clouds and continue rocket burn? (reduced?)
-		-- EmitSfx(exhaustlarge, SOME_SMALLER_BIGASS_ROCKET)
-		--EmitSfx(dustlarge, 1029)
 		SpawnCEG("dropship_heavy_dust", X, GY, Z) -- Use SpawnCEG for ground FX :)
-		EmitSfx(exhaustlarge, CEG + 2) --1028)
-		EmitSfx(exhaustlarge, CEG + 3)--1030)
+		EmitSfx(exhaustlarge, CEG + 2)
+		EmitSfx(exhaustlarge, CEG + 3)
 		for i = 1, 4 do
-			EmitSfx(exhausts[i], CEG + 4)--1031)
-			if feetDown then
-				EmitSfx(dusts[i], CEG + 4)--1031)
-			end
-			--EmitSfx(dusts[i], SMALLER_DUST)
+			EmitSfx(exhausts[i], CEG + 4)
 		end		
-		GG.Delay.DelayCall(GG.LUPS.FlameShot, {unitID, unitDefID, _, nil}, 0)
 		Sleep(32)
 	end
 	if stage == 4 then
