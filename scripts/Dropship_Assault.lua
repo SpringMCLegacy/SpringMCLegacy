@@ -41,18 +41,55 @@ local touchDown = false
 local cargoID
 local beaconID
 
-function LoadCargo(outpostID, callerID)
+local function LoadCargo(outpostID, callerID)
 	--Spring.Echo("Loading", outpostID, "of type", UnitDefs[Spring.GetUnitDefID(outpostID)].name)
 	beaconID = callerID
 	cargoID = outpostID
 	Spring.UnitScript.AttachUnit(cargo, cargoID)
 end
 
-function fx()
+
+local function BlendJet(time, unitID, piecenum)
+	for t = 0, (time/3) do
+		local i = 1 - t / (time/3)
+		if (i == 0) then
+			GG.EmitLupsSfx(unitID, "dropship_vertical_exhaust", piecenum, {repeatEffect = true, delay = t*3, width = 20, length = 60, distortion = 0})
+		elseif (i > 0.33) then
+			GG.EmitLupsSfx(unitID, "dropship_vertical_exhaust", piecenum, {life = 3, delay = t*3, width = 20 + i * 60, length = 60 + i * 190, distortion = 0})
+		else
+			GG.EmitLupsSfx(unitID, "dropship_vertical_exhaust", piecenum, {life = 1, delay = t*3,   width = 20 + i * 60, length = 60 + i * 190, distortion = 0})
+			GG.EmitLupsSfx(unitID, "dropship_vertical_exhaust", piecenum, {life = 2, delay = t*3+1, width = 20 + i * 40, length = 60 + i * 90, distortion = 0})
+		end
+	end
+end
+--[[
+	local time = 114
+	for t = 0, (time/3) do
+		local i = t / (time/3)
+		if (i == 1) then
+			GG.EmitLupsSfx(unitID, "dropship_vertical_exhaust", exhaust, {repeatEffect = true, delay = t*3, width = 110, length = 350, distortion = 0})
+		elseif (i > 0.33) then
+			GG.EmitLupsSfx(unitID, "dropship_vertical_exhaust", exhaust, {life = 2, delay = t*3, width = i * 110, length = i * 350, distortion = 0})
+			GG.EmitLupsSfx(unitID, "dropship_vertical_exhaust", exhaust, {life = 1, delay = t*3+2, width = i * 100, length = i * 300, distortion = 0})
+		else
+			GG.EmitLupsSfx(unitID, "dropship_vertical_exhaust", exhaust, {life = 1, delay = t*3,   width = i * 110, length = i * 350, distortion = 0})
+			GG.EmitLupsSfx(unitID, "dropship_vertical_exhaust", exhaust, {life = 2, delay = t*3+1, width = i * 80, length = i * 190, distortion = 0})
+		end
+	end
+--]]
+
+local function fx()
+	Signal(fx)
+	SetSignalMask(fx)
+
 	if stage == 0 then
+		GG.EmitLupsSfx(unitID, "dropship_hull_heat", body, {repeatEffect = 3})
+		GG.EmitLupsSfx(unitID, "dropship_hull_heat", body, {repeatEffect = 3, delay = 10})
+		GG.EmitLupsSfx(unitID, "dropship_hull_heat", body, {repeatEffect = 2, delay = 20})
 		for _, exhaust in ipairs(hExhausts) do
-			GG.EmitLupsSfx(unitID, "dropship_vertical_exhaust2", exhaust)
-			GG.EmitLupsSfx(unitID, "dropship_vertical_exhaust2", exhaust, {delay = 20})
+			GG.EmitLupsSfx(unitID, "dropship_horizontal_jitter_strong", exhaust)
+			GG.EmitLupsSfx(unitID, "dropship_horizontal_jitter_strong", exhaust, {delay = 20})
+			GG.EmitLupsSfx(unitID, "dropship_horizontal_jitter_strong", exhaust, {delay = 40})
 			GG.EmitLupsSfx(unitID, "dropship_vertical_exhaust",  exhaust, {repeatEffect = true, width = 30, length = 150, distortion = 0})
 		end
 		for _, exhaust in ipairs(vExhaustLarges) do
@@ -62,8 +99,15 @@ function fx()
 			GG.EmitLupsSfx(unitID, "dropship_vertical_exhaust", exhaust, {replace = true, width = 50, length = 95, distortion = 0})
 		end
 	end
-	Sleep(30)
+	while stage == 0 do
+		Sleep(30)
+	end
 	if stage == 1 then
+		for _, exhaust in ipairs(hExhausts) do
+			GG.EmitLupsSfx(unitID, "dropship_horizontal_jitter_weak", exhaust, {register = false})
+			GG.EmitLupsSfx(unitID, "dropship_horizontal_jitter_weak", exhaust, {register = false, delay = 20})
+			GG.EmitLupsSfx(unitID, "dropship_horizontal_jitter_weak", exhaust, {register = false, delay = 40})
+		end
 		for _, exhaust in ipairs(vExhaustLarges) do
 			GG.EmitLupsSfx(unitID, "dropship_vertical_exhaust", exhaust, {replace = true, width = 40, length = 90, distortion = 0})
 		end
@@ -78,19 +122,8 @@ function fx()
 		for _, exhaust in ipairs(hExhausts) do
 			GG.RemoveLupsSfx(unitID, exhaust)
 		end
-		local time = 99
-		for t = 0, (time/3) do
-			local i = 1 - t / (time/3)
-			for _, exhaust in ipairs(hExhausts) do
-				if (i == 0) then
-					GG.EmitLupsSfx(unitID, "dropship_vertical_exhaust", exhaust, {repeatEffect = true, delay = t*3, width = 20, length = 60, distortion = 0})
-				elseif (i > 0.33) then
-					GG.EmitLupsSfx(unitID, "dropship_vertical_exhaust", exhaust, {life = 3, delay = t*3, width = 20 + i * 60, length = 60 + i * 190, distortion = 0})
-				else
-					GG.EmitLupsSfx(unitID, "dropship_vertical_exhaust", exhaust, {life = 1, delay = t*3,   width = 20 + i * 60, length = 60 + i * 190, distortion = 0})
-					GG.EmitLupsSfx(unitID, "dropship_vertical_exhaust", exhaust, {life = 2, delay = t*3+1, width = 20 + i * 40, length = 60 + i * 90, distortion = 0})
-				end
-			end
+		for _, exhaust in ipairs(hExhausts) do
+			BlendJet(99, unitID, exhaust)
 		end
 	end
 	while stage == 2 do
@@ -103,8 +136,8 @@ function fx()
 		for i, exhaust in ipairs(vExhausts) do
 			GG.EmitLupsSfx(unitID, "dropship_vertical_exhaust", exhaust, {replace = true, distortion = 0})
 		end
-		GG.EmitLupsSfx(unitID, "exhaust_ground_winds", body, {repeatEffect = 4, delay = 135})
-		GG.EmitLupsSfx(unitID, "exhaust_ground_winds", body, {repeatEffect = 4, delay = 135 + 80})
+		GG.EmitLupsSfx(unitID, "exhaust_ground_winds", body, {repeatEffect = 4, delay = 125})
+		GG.EmitLupsSfx(unitID, "exhaust_ground_winds", body, {repeatEffect = 4, delay = 125 + 80})
 	end
 	while stage == 3 do
 		--SpawnCEG("dropship_heavy_dust", TX, TY, TZ)
@@ -113,6 +146,11 @@ function fx()
 	if stage == 4 then
 		for _, exhaust in ipairs(hExhausts) do
 			GG.RemoveLupsSfx(unitID, exhaust)
+		end
+		for _, exhaust in ipairs(hExhausts) do
+			GG.EmitLupsSfx(unitID, "dropship_horizontal_jitter_strong", exhaust)
+			GG.EmitLupsSfx(unitID, "dropship_horizontal_jitter_strong", exhaust, {delay = 20})
+			GG.EmitLupsSfx(unitID, "dropship_horizontal_jitter_strong", exhaust, {delay = 40})
 		end
 		local time = 114
 		for t = 0, (time/3) do
@@ -154,13 +192,13 @@ function fx()
 			EmitSfx(exhaust, SFX.CEG + 2)
 			EmitSfx(exhaust, SFX.CEG + 3)
 		end
-		GG.Delay.DelayCall(GG.LUPS.FlameShot, {unitID, unitDefID, _, nil}, 0)
 		Sleep(30)
 	end
 end
 
 function script.Create()
 	Spring.SetUnitNoSelect(unitID, true)
+	StartThread(fx)
 	-- setup fx pieces
 	for _, exhaust in ipairs(vExhaustLarges) do
 		Turn(exhaust, x_axis, math.rad(89))
@@ -176,13 +214,12 @@ function script.Create()
 	Spring.MoveCtrl.SetPosition(unitID, TX + UX, TY + DROP_HEIGHT, TZ + UZ)
 	local newAngle = math.atan2(UX, UZ)
 	Spring.MoveCtrl.SetRotation(unitID, 0, newAngle + math.pi, 0)
-	Turn(body, x_axis, math.rad(-45))
+	Turn(body, x_axis, math.rad(-50))
 	-- Begin the drop
-	Turn(body, x_axis, 0, math.rad(5))
+	Turn(body, x_axis, math.rad(-10), math.rad(5))
 	Spring.MoveCtrl.SetVelocity(unitID, 0, -100, 0)
 	Spring.MoveCtrl.SetRelativeVelocity(unitID, 0, 0, 10)
 	Spring.MoveCtrl.SetGravity(unitID, -3.78 * GRAVITY)
-	StartThread(fx)
 	local x, y, z = Spring.GetUnitPosition(unitID)
 	while y - TY > 150 + HOVER_HEIGHT do
 		x, y, z = Spring.GetUnitPosition(unitID)
@@ -197,6 +234,7 @@ function script.Create()
 		Sleep(100)
 	end
 	-- Descent complete, move over the target
+	Turn(body, x_axis, 0, math.rad(3.5))
 	Spring.MoveCtrl.SetVelocity(unitID, 0, 0, 0)
 	Spring.MoveCtrl.SetGravity(unitID, 0)
 	local dist = GetUnitDistanceToPoint(unitID, TX, 0, TZ, false)

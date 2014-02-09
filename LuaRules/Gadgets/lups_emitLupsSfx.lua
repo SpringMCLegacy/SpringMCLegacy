@@ -48,6 +48,38 @@ else
 
 -- TODO: move to config file
 local effects = {
+	dropship_hull_heat = {
+		class = "SimpleParticles2",
+		options = {
+			emitVector     = {0,1,0},
+			pos            = {0,-200,0}, --// start pos
+			partpos        = "0,0,0",
+
+			count          = 50,
+			force          = {0,15,0}, --// global effect force
+			forceExp       = 0.5,
+			speed          = 2,
+			speedSpread    = 10,
+			speedExp       = 5, --// >1 : first decrease slow, then fast;  <1 : decrease fast, then slow
+			life           = 20,
+			lifeSpread     = 0,
+			delaySpread    = 40,
+			rotSpeed       = 10,
+			rotSpeedSpread = -20,
+			rotSpread      = 360,
+			rotExp         = 1, --// >1 : first decrease slow, then fast;  <1 : decrease fast, then slow;  <0 : invert x-axis (start large become smaller)
+			emitRot        = 70,
+			emitRotSpread  = 10,
+			size           = 100,
+			sizeSpread     = 0,
+			sizeGrowth     = -1,
+			sizeExp        = 2, --// >1 : first decrease slow, then fast;  <1 : decrease fast, then slow;  <0 : invert x-axis (start large become smaller)
+			colormap       = { {0.05, 0.05, 0.05, 0.01}, {0.04, 0.04, 0.04, 0.01}, {0, 0, 0, 0} }, --//max 16 entries
+
+			texture        = ':c:bitmaps/gpl/lups/fire.png',
+			repeatEffect   = true, --can be a number,too
+		},
+	},
 	dropship_vertical_exhaust = {
 		class = "AirJet",
 		options = {
@@ -96,14 +128,51 @@ local effects = {
 			heat           = -5, --// brighten distorted regions by "length(distortionVec)*heat"
 		},
 	},
-	dropship_vertical_exhaust2 = {
+	dropship_horizontal_jitter_strong = {
 		class = "JitterParticles2",
 		options = {
 			pos            = {0,0,0}, --// start pos
 			partpos        = "0,0,0", --// particle relative start pos (can contain lua code!)
 			layer          = 0,
 
-			count          = 20,
+			count          = 10,
+
+			life           = 20,
+			lifeSpread     = 0,
+			delaySpread    = 30,
+
+			emitVector     = {0,0,-1},
+			emitRot        = 0,
+			emitRotSpread  = 25,
+
+			force          = {0,0,0}, --// global effect force
+			forceExp       = 1,
+
+			speed          = 5,
+			speedSpread    = 15,
+			speedExp       = 1.4, --// >1 : first decrease slow, then fast;  <1 : decrease fast, then slow
+
+			size           = 60,
+			sizeSpread     = 10,
+			sizeGrowth     = -1,
+			sizeExp        = 1, --// >1 : first decrease slow, then fast;  <1 : decrease fast, then slow;  <0 : invert x-axis (start large become smaller)
+
+			strength       = 0.50, --// distortion strength
+			scale          = 2.8, --// scales the distortion texture
+			animSpeed      = 0.03, --// speed of the distortion
+			heat           = 10, --// brighten distorted regions by "length(distortionVec)*heat"
+
+			repeatEffect   = 5,
+		},
+	},
+	dropship_horizontal_jitter_weak = {
+		class = "JitterParticles2",
+		options = {
+			pos            = {0,0,-30}, --// start pos
+			partpos        = "0,0,0", --// particle relative start pos (can contain lua code!)
+			layer          = 0,
+
+			count          = 10,
 
 			life           = 20,
 			lifeSpread     = 0,
@@ -113,21 +182,21 @@ local effects = {
 			emitRot        = 0,
 			emitRotSpread  = 15,
 
-			force          = {0,0,0}, --// global effect force
-			forceExp       = 1,
+			force          = {0,2,0}, --// global effect force
+			forceExp       = 2,
 
-			speed          = 10,
-			speedSpread    = 1,
+			speed          = 1,
+			speedSpread    = 5,
 			speedExp       = 1.3, --// >1 : first decrease slow, then fast;  <1 : decrease fast, then slow
 
 			size           = 50,
 			sizeSpread     = 50,
-			sizeGrowth     = -2,
+			sizeGrowth     = -1,
 			sizeExp        = 1, --// >1 : first decrease slow, then fast;  <1 : decrease fast, then slow;  <0 : invert x-axis (start large become smaller)
 
-			strength       = 0.25, --// distortion strength
+			strength       = 0.20, --// distortion strength
 			scale          = 2.8, --// scales the distortion texture
-			animSpeed      = 0.01, --// speed of the distortion
+			animSpeed      = 0.03, --// speed of the distortion
 			heat           = 10, --// brighten distorted regions by "length(distortionVec)*heat"
 
 			repeatEffect   = true, --can be a number,too
@@ -144,10 +213,10 @@ local unitPieceFXs = {}
 		local effect = effects[effectName]
 		local opts = {}
 
+		for k,v in pairs(effect.options) do
+			opts[k] = v
+		end
 		if options then
-			for k,v in pairs(effect.options) do
-				opts[k] = v
-			end
 			for k,v in spairs(options) do
 				opts[k] = v
 			end
@@ -157,16 +226,18 @@ local unitPieceFXs = {}
 
 		local fxID = Lups.AddParticles(effect.class, opts)
 
-		if opts.replace then
-			if unitPieceFXs[unitID] then -- remove existing ones first TODO: make a toggle via param?
-				Lups.RemoveParticles(unitPieceFXs[unitID][pieceNum])
-				unitPieceFXs[unitID][pieceNum] = nil
+		if (opts.register ~= false) then
+			if opts.replace then
+				if unitPieceFXs[unitID] then -- remove existing ones first TODO: make a toggle via param?
+					Lups.RemoveParticles(unitPieceFXs[unitID][pieceNum])
+					unitPieceFXs[unitID][pieceNum] = nil
+				end
 			end
+			if not unitPieceFXs[unitID] then
+				unitPieceFXs[unitID] = {}
+			end
+			unitPieceFXs[unitID][pieceNum] = fxID
 		end
-		if not unitPieceFXs[unitID] then
-			unitPieceFXs[unitID] = {}
-		end
-		unitPieceFXs[unitID][pieceNum] = fxID
 	end
 
 	local function RemoveLupsSfx(unitID, pieceNum)
