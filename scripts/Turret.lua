@@ -108,16 +108,14 @@ function fx()
 	end
 	if stage == 2 then
 		for i = 1,4 do
-			GG.EmitLupsSfx(unitID, "dropship_vertical_exhaust", exhausts[i], {width = 25, length = 70, distortion = 0})
+			GG.EmitLupsSfx(unitID, "dropship_vertical_exhaust", exhausts[i], {id = "turret_exhaust", width = 25, length = 70, distortion = 0})
 		end
 	end
 	while stage == 2 do
 		Sleep(50)
 	end
 	if stage == 3 then -- for clarity only
-		for i = 1,4 do
-			GG.RemoveLupsSfx(unitID, exhausts[i])
-		end
+		GG.RemoveLupsSfx(unitID, "turret_exhaust")
 		if unitDef.customParams.hasbap then
 			GG.PlaySoundForTeam(Spring.GetUnitTeam(unitID), "BB_bap_deployed", 1)
 		else

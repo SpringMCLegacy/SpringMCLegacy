@@ -25,9 +25,9 @@ local bufferSize = 0
 	end
 	GG.EmitLupsSfx = EmitLupsSfx
 
-	local function RemoveLupsSfx(unitID, pieceNum)
+	local function RemoveLupsSfx(unitID, fxNameID)
 		bufferSize = bufferSize + 1
-		unsyncedBuffer[bufferSize] = {"lups_removesfx", unitID, pieceNum}
+		unsyncedBuffer[bufferSize] = {"lups_removesfx", unitID, fxNameID}
 	end
 	GG.RemoveLupsSfx = RemoveLupsSfx
 	
@@ -75,6 +75,38 @@ local effects = {
 			sizeGrowth     = -1,
 			sizeExp        = 2, --// >1 : first decrease slow, then fast;  <1 : decrease fast, then slow;  <0 : invert x-axis (start large become smaller)
 			colormap       = { {0.05, 0.05, 0.05, 0.01}, {0.04, 0.04, 0.04, 0.01}, {0, 0, 0, 0} }, --//max 16 entries
+
+			texture        = ':c:bitmaps/gpl/lups/fire.png',
+			repeatEffect   = true, --can be a number,too
+		},
+	},
+	dropship_hull_heat = {
+		class = "SimpleParticles2",
+		options = {
+			emitVector     = {0,1,0},
+			pos            = {0,-200,0}, --// start pos
+			partpos        = "0,0,0",
+
+			count          = 70,
+			force          = {0,15,0}, --// global effect force
+			forceExp       = 0.5,
+			speed          = 2,
+			speedSpread    = 8,
+			speedExp       = 5, --// >1 : first decrease slow, then fast;  <1 : decrease fast, then slow
+			life           = 20,
+			lifeSpread     = 0,
+			delaySpread    = 40,
+			rotSpeed       = 10,
+			rotSpeedSpread = -20,
+			rotSpread      = 360,
+			rotExp         = 1, --// >1 : first decrease slow, then fast;  <1 : decrease fast, then slow;  <0 : invert x-axis (start large become smaller)
+			emitRot        = 70,
+			emitRotSpread  = 10,
+			size           = 100,
+			sizeSpread     = 0,
+			sizeGrowth     = -1,
+			sizeExp        = 2, --// >1 : first decrease slow, then fast;  <1 : decrease fast, then slow;  <0 : invert x-axis (start large become smaller)
+			colormap       = { {0.045, 0.045, 0.045, 0.01}, {0.035, 0.035, 0.035, 0.01}, {0, 0, 0, 0} }, --//max 16 entries
 
 			texture        = ':c:bitmaps/gpl/lups/fire.png',
 			repeatEffect   = true, --can be a number,too
@@ -204,7 +236,18 @@ local effects = {
 	},
 }
 
-local unitPieceFXs = {}
+local namedFXs = {}
+
+	local function foo(st, i, n, ...)
+		if i == 0 then return ... end
+		return foo(st,i-1,n, st[i], ...)
+	end
+
+	local function sunpack(st)
+		if #st > 0 then return unpack(st) end
+		local n = 1; while st[n] do n=n+1 end; n=n-1
+		return foo(st, n, n)
+	end
 
 	local function EmitLupsSfx(unitID, effectName, pieceNum, options)
 		local Lups = GG.Lups
@@ -212,6 +255,7 @@ local unitPieceFXs = {}
 
 		local effect = effects[effectName]
 		local opts = {}
+		assert(effect)
 
 		for k,v in pairs(effect.options) do
 			opts[k] = v
@@ -226,36 +270,37 @@ local unitPieceFXs = {}
 
 		local fxID = Lups.AddParticles(effect.class, opts)
 
-		if (opts.register ~= false) then
-			if opts.replace then
-				if unitPieceFXs[unitID] then -- remove existing ones first TODO: make a toggle via param?
-					Lups.RemoveParticles(unitPieceFXs[unitID][pieceNum])
-					unitPieceFXs[unitID][pieceNum] = nil
-				end
-			end
-			if not unitPieceFXs[unitID] then
-				unitPieceFXs[unitID] = {}
-			end
-			unitPieceFXs[unitID][pieceNum] = fxID
+		if opts.id then
+			local tu = namedFXs[unitID]
+			if not tu then tu = {}; namedFXs[unitID] = tu; end
+			local t = tu[opts.id]
+			if not t then t = {}; tu[opts.id] = t; end
+			t[#t+1] = fxID
 		end
 	end
 
-	local function RemoveLupsSfx(unitID, pieceNum)
+	local function RemoveLupsSfx(unitID, fxNameID)
 		local Lups = GG.Lups
-		Lups.RemoveParticles(unitPieceFXs[unitID][pieceNum])
-		unitPieceFXs[unitID][pieceNum] = nil
+
+		local tu = namedFXs[unitID]
+		if not tu then return end
+		local t = tu[fxNameID]
+		if not t then return end
+
+		for i=1,#t do
+			Lups.RemoveParticles(t[i])
+		end
+		tu[fxNameID] = nil
 	end
 	
 	local function UpdateLupsSfx()
 		local Lups = GG.Lups
-		for i, callInfo in spairs(SYNCED.unsyncedBuffer) do 
+		for i, callInfo in spairs(SYNCED.unsyncedBuffer) do
 			--for k,v in spairs(callInfo) do Spring.Echo(k,v) end
 			if callInfo[1] == "lups_emitsfx" then
-				local unitID, effectName, pieceNum, options = callInfo[2], callInfo[3], callInfo[4], callInfo[5]
-				EmitLupsSfx(unitID, effectName, pieceNum, options)
+				EmitLupsSfx(select(2, sunpack(callInfo)))
 			elseif callInfo[1] == "lups_removesfx" then
-				local unitID, pieceNum = callInfo[2], callInfo[3]
-				RemoveLupsSfx(unitID, pieceNum)
+				RemoveLupsSfx(select(2, sunpack(callInfo)))
 			end
 		end
 	end
