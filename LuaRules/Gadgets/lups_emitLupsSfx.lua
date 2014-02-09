@@ -51,14 +51,87 @@ local effects = {
 	dropship_vertical_exhaust = {
 		class = "AirJet",
 		options = {
-			emitVector = {0, 0, 1}, 
-			length = 55, 
+			emitVector = {0, 0, 1},
+			length = 55,
 			width = 15,
 			color = {0.2, 0.5, 0.9, 0.01},
 			distortion    = 0.015,
 			texture2      = ":c:bitmaps/GPL/lups/shot.tga",       --// shape
-			texture3      = ":c:bitmaps/GPL/lups/shot.tga",       --// jitter shape			
+			texture3      = ":c:bitmaps/GPL/lups/shot.tga",       --// jitter shape
+			repeatEffect  = false,
 		}
+	},
+	exhaust_ground_winds = {
+		class = "JitterParticles2",
+		options = {
+			pos            = {0,-150,0}, --// start pos
+			partpos        = "0,0,0", --// particle relative start pos (can contain lua code!)
+			layer          = 0,
+
+			count          = 200,
+
+			life           = 15,
+			lifeSpread     = 0,
+			delaySpread    = 80,
+
+			emitVector     = {0,1,0},
+			emitRot        = 85,
+			emitRotSpread  = 10,
+
+			force          = {0,-0.1,0}, --// global effect force
+			forceExp       = 1,
+
+			speed          = 15,
+			speedSpread    = 10,
+			speedExp       = 3.2, --// >1 : first decrease slow, then fast;  <1 : decrease fast, then slow
+
+			size           = 20,
+			sizeSpread     = 20,
+			sizeGrowth     = 10,
+			sizeExp        = 1, --// >1 : first decrease slow, then fast;  <1 : decrease fast, then slow;  <0 : invert x-axis (start large become smaller)
+
+			strength       = 0.4, --// distortion strength
+			scale          = 2, --// scales the distortion texture
+			animSpeed      = 0.1, --// speed of the distortion
+			heat           = -5, --// brighten distorted regions by "length(distortionVec)*heat"
+		},
+	},
+	dropship_vertical_exhaust2 = {
+		class = "JitterParticles2",
+		options = {
+			pos            = {0,0,0}, --// start pos
+			partpos        = "0,0,0", --// particle relative start pos (can contain lua code!)
+			layer          = 0,
+
+			count          = 20,
+
+			life           = 20,
+			lifeSpread     = 0,
+			delaySpread    = 20,
+
+			emitVector     = {0,0,-1},
+			emitRot        = 0,
+			emitRotSpread  = 15,
+
+			force          = {0,0,0}, --// global effect force
+			forceExp       = 1,
+
+			speed          = 10,
+			speedSpread    = 1,
+			speedExp       = 1.3, --// >1 : first decrease slow, then fast;  <1 : decrease fast, then slow
+
+			size           = 50,
+			sizeSpread     = 50,
+			sizeGrowth     = -2,
+			sizeExp        = 1, --// >1 : first decrease slow, then fast;  <1 : decrease fast, then slow;  <0 : invert x-axis (start large become smaller)
+
+			strength       = 0.25, --// distortion strength
+			scale          = 2.8, --// scales the distortion texture
+			animSpeed      = 0.01, --// speed of the distortion
+			heat           = 10, --// brighten distorted regions by "length(distortionVec)*heat"
+
+			repeatEffect   = true, --can be a number,too
+		},
 	},
 }
 
@@ -67,27 +140,35 @@ local unitPieceFXs = {}
 	local function EmitLupsSfx(unitID, effectName, pieceNum, options)
 		local Lups = GG.Lups
 		--Spring.Echo("Got this far!", Lups, unitID, effectName, pieceNum, options)
-		local overrides = {}
-		if options then
-			for k,v in spairs(options) do overrides[k] = v end
-		end
+
 		local effect = effects[effectName]
-		effect.options.unit = unitID
-		effect.options.piecenum = pieceNum
-		for k, v in pairs(effect.options) do
-			if not overrides[k] then
-				overrides[k] = v
+		local opts = {}
+
+		if options then
+			for k,v in pairs(effect.options) do
+				opts[k] = v
+			end
+			for k,v in spairs(options) do
+				opts[k] = v
 			end
 		end
-		local fxID = Lups.AddParticles(effect.class, overrides)
-		if not unitPieceFXs[unitID] then -- first effect
+		opts.unit = unitID
+		opts.piecenum = pieceNum
+
+		local fxID = Lups.AddParticles(effect.class, opts)
+
+		if opts.replace then
+			if unitPieceFXs[unitID] then -- remove existing ones first TODO: make a toggle via param?
+				Lups.RemoveParticles(unitPieceFXs[unitID][pieceNum])
+				unitPieceFXs[unitID][pieceNum] = nil
+			end
+		end
+		if not unitPieceFXs[unitID] then
 			unitPieceFXs[unitID] = {}
-		else -- remove existing ones first TODO: make a toggle via param?
-			Lups.RemoveParticles(unitPieceFXs[unitID][pieceNum])
 		end
 		unitPieceFXs[unitID][pieceNum] = fxID
 	end
-  
+
 	local function RemoveLupsSfx(unitID, pieceNum)
 		local Lups = GG.Lups
 		Lups.RemoveParticles(unitPieceFXs[unitID][pieceNum])
