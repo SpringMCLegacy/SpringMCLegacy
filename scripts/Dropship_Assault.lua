@@ -53,12 +53,12 @@ local function BlendJet(time, unitID, piecenum)
 	for t = 0, (time/3) do
 		local i = 1 - t / (time/3)
 		if (i == 0) then
-			GG.EmitLupsSfx(unitID, "dropship_vertical_exhaust", piecenum, {id = "hExhaustsJets", repeatEffect = true, delay = t*3, width = 20, length = 60, distortion = 0})
+			GG.EmitLupsSfx(unitID, "dropship_exhaust", piecenum, {id = "hExhaustsJets", repeatEffect = true, delay = t*3, width = 20, length = 60})
 		elseif (i > 0.33) then
-			GG.EmitLupsSfx(unitID, "dropship_vertical_exhaust", piecenum, {id = "hExhaustsJets", life = 3, delay = t*3, width = 20 + i * 60, length = 60 + i * 190, distortion = 0})
+			GG.EmitLupsSfx(unitID, "dropship_exhaust", piecenum, {id = "hExhaustsJets", life = 3, delay = t*3, width = 20 + i * 60, length = 60 + i * 190})
 		else
-			GG.EmitLupsSfx(unitID, "dropship_vertical_exhaust", piecenum, {id = "hExhaustsJets", life = 1, delay = t*3,   width = 20 + i * 60, length = 60 + i * 190, distortion = 0})
-			GG.EmitLupsSfx(unitID, "dropship_vertical_exhaust", piecenum, {id = "hExhaustsJets", life = 2, delay = t*3+1, width = 20 + i * 40, length = 60 + i * 90, distortion = 0})
+			GG.EmitLupsSfx(unitID, "dropship_exhaust", piecenum, {id = "hExhaustsJets", life = 1, delay = t*3,   width = 20 + i * 60, length = 60 + i * 190})
+			GG.EmitLupsSfx(unitID, "dropship_exhaust", piecenum, {id = "hExhaustsJets", life = 2, delay = t*3+1, width = 20 + i * 40, length = 60 + i * 90})
 		end
 	end
 end
@@ -76,13 +76,13 @@ local function fx()
 			GG.EmitLupsSfx(unitID, "dropship_horizontal_jitter_strong", exhaust)
 			GG.EmitLupsSfx(unitID, "dropship_horizontal_jitter_strong", exhaust, {delay = 20})
 			GG.EmitLupsSfx(unitID, "dropship_horizontal_jitter_strong", exhaust, {delay = 40})
-			GG.EmitLupsSfx(unitID, "dropship_vertical_exhaust",  exhaust, {id = "hExhaustsJets", repeatEffect = true, width = 30, length = 150, distortion = 0})
+			GG.EmitLupsSfx(unitID, "dropship_exhaust",  exhaust, {id = "hExhaustsJets", repeatEffect = true, width = 30, length = 150})
 		end
 		for _, exhaust in ipairs(vExhaustLarges) do
-			GG.EmitLupsSfx(unitID, "dropship_vertical_exhaust", exhaust, {id = "vExhaustsLargesJets", width = 65, length = 115, distortion = 0})
+			GG.EmitLupsSfx(unitID, "dropship_exhaust", exhaust, {id = "vExhaustsLargesJets", width = 65, length = 115})
 		end
 		for _, exhaust in ipairs(vExhausts) do
-			GG.EmitLupsSfx(unitID, "dropship_vertical_exhaust", exhaust, {id = "vExhaustsJets", width = 50, length = 95, distortion = 0})
+			GG.EmitLupsSfx(unitID, "dropship_exhaust", exhaust, {id = "vExhaustsJets", width = 50, length = 95})
 		end
 	end
 	while stage == 0 do
@@ -97,10 +97,10 @@ local function fx()
 			GG.EmitLupsSfx(unitID, "dropship_horizontal_jitter_weak", exhaust, {delay = 40})
 		end
 		for _, exhaust in ipairs(vExhaustLarges) do
-			GG.EmitLupsSfx(unitID, "dropship_vertical_exhaust", exhaust, {id = "vExhaustsLargesJets", replace = true, width = 40, length = 90, distortion = 0})
+			GG.EmitLupsSfx(unitID, "dropship_exhaust", exhaust, {id = "vExhaustsLargesJets", replace = true, width = 40, length = 90})
 		end
 		for _, exhaust in ipairs(vExhausts) do
-			GG.EmitLupsSfx(unitID, "dropship_vertical_exhaust", exhaust, {id = "vExhaustsJets", width = 25, length = 70, distortion = 0})
+			GG.EmitLupsSfx(unitID, "dropship_exhaust", exhaust, {id = "vExhaustsJets", width = 25, length = 70})
 		end
 	end
 	while stage == 1 do
@@ -119,7 +119,7 @@ local function fx()
 		GG.RemoveLupsSfx(unitID, "vExhaustsJets")
 		GG.RemoveLupsSfx(unitID, "vExhaustsLargesJets")
 		for _, exhaust in ipairs(vExhausts) do
-			GG.EmitLupsSfx(unitID, "dropship_vertical_exhaust", exhaust, {id = "vExhaustsJets", distortion = 0})
+			GG.EmitLupsSfx(unitID, "dropship_exhaust", exhaust, {id = "vExhaustsJets"})
 		end
 		GG.EmitLupsSfx(unitID, "exhaust_ground_winds", body, {repeatEffect = 4, delay = 125})
 		GG.EmitLupsSfx(unitID, "exhaust_ground_winds", body, {repeatEffect = 4, delay = 125 + 80})
@@ -142,24 +142,24 @@ local function fx()
 			local i = t / (time/3)
 			for _, exhaust in ipairs(hExhausts) do
 				if (i == 1) then
-					GG.EmitLupsSfx(unitID, "dropship_vertical_exhaust", exhaust, {id = "hExhaustsJets", repeatEffect = true, delay = t*3, width = 110, length = 350, distortion = 0})
+					GG.EmitLupsSfx(unitID, "dropship_exhaust", exhaust, {id = "hExhaustsJets", repeatEffect = true, delay = t*3, width = 110, length = 350})
 				elseif (i > 0.33) then
-					GG.EmitLupsSfx(unitID, "dropship_vertical_exhaust", exhaust, {id = "hExhaustsJets", life = 2, delay = t*3, width = i * 110, length = i * 350, distortion = 0})
-					GG.EmitLupsSfx(unitID, "dropship_vertical_exhaust", exhaust, {id = "hExhaustsJets", life = 1, delay = t*3+2, width = i * 100, length = i * 300, distortion = 0})
+					GG.EmitLupsSfx(unitID, "dropship_exhaust", exhaust, {id = "hExhaustsJets", life = 2, delay = t*3, width = i * 110, length = i * 350})
+					GG.EmitLupsSfx(unitID, "dropship_exhaust", exhaust, {id = "hExhaustsJets", life = 1, delay = t*3+2, width = i * 100, length = i * 300})
 				else
-					GG.EmitLupsSfx(unitID, "dropship_vertical_exhaust", exhaust, {id = "hExhaustsJets", life = 1, delay = t*3,   width = i * 110, length = i * 350, distortion = 0})
-					GG.EmitLupsSfx(unitID, "dropship_vertical_exhaust", exhaust, {id = "hExhaustsJets", life = 2, delay = t*3+1, width = i * 80, length = i * 190, distortion = 0})
+					GG.EmitLupsSfx(unitID, "dropship_exhaust", exhaust, {id = "hExhaustsJets", life = 1, delay = t*3,   width = i * 110, length = i * 350})
+					GG.EmitLupsSfx(unitID, "dropship_exhaust", exhaust, {id = "hExhaustsJets", life = 2, delay = t*3+1, width = i * 80, length = i * 190})
 				end
 			end
 		end
 		for _, exhaust in ipairs(vExhaustLarges) do
-			GG.EmitLupsSfx(unitID, "dropship_vertical_exhaust", exhaust, {id = "vExhaustsLargesJets", distortion = 0, length = 80, width = 45})
+			GG.EmitLupsSfx(unitID, "dropship_exhaust", exhaust, {id = "vExhaustsLargesJets", length = 80, width = 45})
 		end
 		for i, exhaust in ipairs(vExhausts) do
 			if (i % 2 == 1) then
-				GG.EmitLupsSfx(unitID, "dropship_vertical_exhaust", exhaust, {id = "vExhaustsJets", distortion = 0, length = 85, width = 55})
+				GG.EmitLupsSfx(unitID, "dropship_exhaust", exhaust, {id = "vExhaustsJets", length = 85, width = 55})
 			else
-				GG.EmitLupsSfx(unitID, "dropship_vertical_exhaust", exhaust, {id = "vExhaustsJets", distortion = 0})
+				GG.EmitLupsSfx(unitID, "dropship_exhaust", exhaust, {id = "vExhaustsJets"})
 			end
 		end
 	end

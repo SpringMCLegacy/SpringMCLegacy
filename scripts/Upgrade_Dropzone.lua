@@ -17,6 +17,5 @@ function script.Create()
 end
 
 function script.Killed(recentDamage, maxHealth)
-	Spring.Echo("I wanna die, die in the summertime")
 	return 1
 end

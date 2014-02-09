@@ -469,8 +469,7 @@ function gadget:Initialize()
 		local teamID = Spring.GetUnitTeam(unitID)
 		local unitDefID = Spring.GetUnitDefID(unitID)
 		if DROPZONE_IDS[unitDefID] then
-			Spring.Echo(unitID, "is a DZ! Kill it!")
-			Spring.DestroyUnit(unitID, false, false)
+			Spring.DestroyUnit(unitID, false, true)
 		else
 			gadget:UnitCreated(unitID, unitDefID, teamID)
 		end
