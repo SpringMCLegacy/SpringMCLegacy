@@ -19,7 +19,7 @@ local materials = {
          [2] = '$shadow',
          [3] = '$specular',
          [4] = '$reflection',
-         [6] = 'bitmaps/decal.png',
+         [6] = ':g:bitmaps/hull.jpg',
        },
    },
 }
