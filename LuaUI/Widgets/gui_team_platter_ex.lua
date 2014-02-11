@@ -262,7 +262,7 @@ function widget:DrawWorldPreUnit()
               glDrawListAtUnit(unitID, dodecPolys, false, radius, 1.0, radius, degrot, gz, 0, -gx)
               glColor(colorSet[4])
               glDrawListAtUnit(unitID, dodecLines, false, radius, 1.0, radius, degrot, gz, 0, -gx)
-          elseif (UnitDefs[udid].speed <10) then
+          elseif (UnitDefs[udid].speed <10) and  not UnitDefs[udid].customParams.dropship then
             glColor(colorSet[4])
             glDrawListAtUnit(unitID, squarePolys,false,xs,1,zs)
             glColor(colorSet[4])
@@ -273,13 +273,13 @@ function widget:DrawWorldPreUnit()
               glDrawListAtUnit(unitID, diamondPolys, false, radius, 1.0, radius, degrot, gz, 0, -gx)
               glColor(colorSet[2])
               glDrawListAtUnit(unitID, diamondLines, false, radius, 1.0, radius, degrot, gz, 0, -gx)
-            else
+            elseif not UnitDefs[udid].customParams.dropship then
               glColor(colorSet[1])
               glDrawListAtUnit(unitID, circlePolys, false, radius, 1.0, radius, degrot, gz, 0, -gx)
               glColor(colorSet[2])
               glDrawListAtUnit(unitID, circleLines, false, radius, 1.0, radius, degrot, gz, 0, -gx)
             end
-          else
+          elseif not UnitDefs[udid].customParams.dropship then
             glColor(colorSet[1])
             glDrawListAtUnit(unitID, circlePolys, false, radius, 1.0, radius)
             glColor(colorSet[2])

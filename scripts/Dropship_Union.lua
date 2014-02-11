@@ -55,32 +55,69 @@ end
 
 local function fx()
 	-- Free fall
+	if stage == 1 then
+		GG.EmitLupsSfx(unitID, "dropship_hull_heat", exhaustlarge, {repeatEffect = 3})
+		GG.EmitLupsSfx(unitID, "dropship_hull_heat", exhaustlarge, {repeatEffect = 3, delay = 10})
+		GG.EmitLupsSfx(unitID, "dropship_hull_heat", exhaustlarge, {repeatEffect = 2, delay = 20})
+		for _, exhaust in pairs(exhausts) do
+			GG.EmitLupsSfx(unitID, "dropship_vertical_exhaust",  exhaust, {id = "smallExhaustJets", repeatEffect = true, width = 30, length = 150})
+		end
+		GG.EmitLupsSfx(unitID, "dropship_vertical_exhaust",  exhaustlarge, {id = "largeExhaustJet", repeatEffect = true, width = 190, length = 250})
+	end
 	while stage == 1 do
 		-- Some reentry glow here?
-		EmitSfx(dustlarge, CEG + 5)
+		--EmitSfx(dustlarge, CEG + 5)
 		Sleep(32)
 	end
 	-- Rocket Burn
+	if stage == 2 then
+		local time = 114
+		for t = 0, (time/3) do
+			local i = t / (time/3)
+			for _, exhaust in ipairs(exhausts) do
+				if (i == 1) then
+					GG.EmitLupsSfx(unitID, "dropship_vertical_exhaust", exhaust, {id = "smallExhaustJets", repeatEffect = true, delay = t*3, width = 110, length = 350})
+				elseif (i > 0.33) then
+					GG.EmitLupsSfx(unitID, "dropship_vertical_exhaust", exhaust, {id = "smallExhaustJets", life = 2, delay = t*3, width = i * 110, length = i * 350})
+					GG.EmitLupsSfx(unitID, "dropship_vertical_exhaust", exhaust, {id = "smallExhaustJets", life = 1, delay = t*3+2, width = i * 100, length = i * 300})
+				else
+					GG.EmitLupsSfx(unitID, "dropship_vertical_exhaust", exhaust, {id = "smallExhaustJets", life = 1, delay = t*3,   width = i * 110, length = i * 350})
+					GG.EmitLupsSfx(unitID, "dropship_vertical_exhaust", exhaust, {id = "smallExhaustJets", life = 2, delay = t*3+1, width = i * 80, length = i * 190})
+				end
+			end
+		end
+	end
 	while stage == 2 do
-		EmitSfx(exhaustlarge, CEG + 1)
-		EmitSfx(exhaustlarge, CEG + 3)
+		--EmitSfx(exhaustlarge, CEG + 1)
+		--EmitSfx(exhaustlarge, CEG + 3)
 		for i = 1, 4 do
-			EmitSfx(exhausts[i], CEG + 4)
+			--EmitSfx(exhausts[i], CEG + 4)
 		end
 		Sleep(32)
 	end
 	-- Final descent
+	if stage == 3 then
+		GG.RemoveLupsSfx(unitID, "largeExhaustJet")
+		GG.RemoveLupsSfx(unitID, "smallExhaustJets")
+		for _, exhaust in ipairs(exhausts) do
+			GG.BlendJet(99, unitID, exhaust, "smallExhaustJets")
+		end
+	end
 	while stage == 3 do
 		-- Dust clouds and continue rocket burn? (reduced?)
 		SpawnCEG("dropship_heavy_dust", X, GY, Z) -- Use SpawnCEG for ground FX :)
-		EmitSfx(exhaustlarge, CEG + 2)
-		EmitSfx(exhaustlarge, CEG + 3)
+		--EmitSfx(exhaustlarge, CEG + 2)
+		--EmitSfx(exhaustlarge, CEG + 3)
 		for i = 1, 4 do
-			EmitSfx(exhausts[i], CEG + 4)
+			--EmitSfx(exhausts[i], CEG + 4)
 		end		
 		Sleep(32)
 	end
 	if stage == 4 then
+		GG.RemoveLupsSfx(unitID, "smallExhaustJets")
+		for _, exhaust in ipairs(exhausts) do
+			GG.EmitLupsSfx(unitID, "dropship_vertical_exhaust", exhaust, {id = "smallExhaustJets", replace = true, width = 20, length = 30})
+		end
 		local REST = 10
 		local RETURN = 6
 		Move(hull, y_axis, -REST, 2 * REST)
@@ -100,9 +137,11 @@ end
 local function LandingGearDown()
 	SPEED = math.rad(40)
 	for i = 1, 4 do -- Doors open
-		Turn(gears[i].door, x_axis, math.rad(60), SPEED)
+		Turn(gears[i].door, x_axis, math.rad(60), SPEED * 5)
 	end
 	WaitForTurn(gears[4].door, x_axis)
+	Spring.MoveCtrl.SetGravity(unitID, -4 * GRAVITY) -- -3.72
+	Sleep(2500)
 	for i = 1, 4 do -- feet into deploy position
 		Turn(gears[i].joint, x_axis, math.rad(5), SPEED)
 	end
@@ -156,8 +195,8 @@ local function Drop()
 	Spring.MoveCtrl.Enable(unitID)
 	Spring.MoveCtrl.SetPosition(unitID, X, GY + DROP_HEIGHT, Z)
 	--Spring.MoveCtrl.SetVelocity(unitID, 0, -100, 0)
-	Spring.MoveCtrl.SetVelocity(unitID, 0, -50, 0)
-	--Spring.MoveCtrl.SetGravity(unitID, -0.5 * GRAVITY)
+	Spring.MoveCtrl.SetVelocity(unitID, 0, -55, 0)
+	Spring.MoveCtrl.SetGravity(unitID, -0.4 * GRAVITY)
 	
 	local SPEED = 0
 	
@@ -172,7 +211,7 @@ local function Drop()
 	end
 	stage = 2
 	--Spring.Echo("ROCKET FULL BURN NOW!")
-	Spring.MoveCtrl.SetGravity(unitID, -3.72 * GRAVITY)
+
 
 	StartThread(LandingGearDown)
 	while y - GY > 925 do
@@ -358,7 +397,7 @@ end
 function script.Create()
 	-- Put pieces into starting pos
 	Turn(exhaustlarge, x_axis, math.rad(90), 0)
-	Spin(exhaustlarge, y_axis, math.rad(360))
+	--Spin(exhaustlarge, y_axis, math.rad(360))
 	for i = 1, 4 do
 		Turn(dusts[i], x_axis, math.rad(90), 0)
 		Spin(dusts[i], y_axis, math.rad(360))
