@@ -108,7 +108,7 @@ function fx()
 	end
 	if stage == 2 then
 		for i = 1,4 do
-			GG.EmitLupsSfx(unitID, "dropship_exhaust", exhausts[i], {id = "turret_exhaust", width = 25, length = 70})
+			GG.EmitLupsSfx(unitID, "dropship_vertical_exhaust", exhausts[i], {id = "turret_exhaust", width = 25, length = 70})
 		end
 	end
 	while stage == 2 do
