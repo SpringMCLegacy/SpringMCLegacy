@@ -44,6 +44,7 @@ local CEG = SFX.CEG + #weapons
 -- LANDING CODE
 -- Variables
 local stage = 0
+local up = false
 local feetDown = false
 
 function TouchDown()
@@ -56,9 +57,11 @@ end
 local function fx()
 	-- Free fall
 	if stage == 1 then
-		GG.EmitLupsSfx(unitID, "dropship_hull_heat", exhaustlarge, {repeatEffect = 3})
-		GG.EmitLupsSfx(unitID, "dropship_hull_heat", exhaustlarge, {repeatEffect = 3, delay = 10})
-		GG.EmitLupsSfx(unitID, "dropship_hull_heat", exhaustlarge, {repeatEffect = 2, delay = 20})
+		for _, dust in pairs(dusts) do
+			GG.EmitLupsSfx(unitID, "dropship_hull_heat", dust, {repeatEffect = 3})
+			GG.EmitLupsSfx(unitID, "dropship_hull_heat", dust, {repeatEffect = 3, delay = 10})
+			GG.EmitLupsSfx(unitID, "dropship_hull_heat", dust, {repeatEffect = 2, delay = 20})
+		end
 		for _, exhaust in pairs(exhausts) do
 			GG.EmitLupsSfx(unitID, "dropship_vertical_exhaust",  exhaust, {id = "smallExhaustJets", repeatEffect = true, width = 30, length = 150})
 		end
@@ -88,10 +91,9 @@ local function fx()
 		end
 	end
 	while stage == 2 do
-		--EmitSfx(exhaustlarge, CEG + 1)
-		--EmitSfx(exhaustlarge, CEG + 3)
-		for i = 1, 4 do
-			--EmitSfx(exhausts[i], CEG + 4)
+		if up then
+			EmitSfx(exhaustlarge, CEG + 1)
+			EmitSfx(exhaustlarge, CEG + 3)
 		end
 		Sleep(32)
 	end
@@ -102,10 +104,12 @@ local function fx()
 		for _, exhaust in ipairs(exhausts) do
 			GG.BlendJet(99, unitID, exhaust, "smallExhaustJets")
 		end
+		GG.EmitLupsSfx(unitID, "exhaust_ground_winds", exhaustlarge, {repeatEffect = 4}) --, delay = 125})
+		GG.EmitLupsSfx(unitID, "exhaust_ground_winds", exhaustlarge, {repeatEffect = 4, delay = 80})--125 + 80})
 	end
 	while stage == 3 do
 		-- Dust clouds and continue rocket burn? (reduced?)
-		SpawnCEG("dropship_heavy_dust", X, GY, Z) -- Use SpawnCEG for ground FX :)
+		--SpawnCEG("dropship_heavy_dust", X, GY, Z) -- Use SpawnCEG for ground FX :)
 		--EmitSfx(exhaustlarge, CEG + 2)
 		--EmitSfx(exhaustlarge, CEG + 3)
 		for i = 1, 4 do
@@ -116,7 +120,8 @@ local function fx()
 	if stage == 4 then
 		GG.RemoveLupsSfx(unitID, "smallExhaustJets")
 		for _, exhaust in ipairs(exhausts) do
-			GG.EmitLupsSfx(unitID, "dropship_vertical_exhaust", exhaust, {id = "smallExhaustJets", replace = true, width = 20, length = 30})
+			GG.BlendJet(33, unitID, exhaust, "smallExhaustJets", 20, 30)
+			--GG.EmitLupsSfx(unitID, "dropship_vertical_exhaust", exhaust, {id = "smallExhaustJets", replace = true, width = 20, length = 30})
 		end
 		local REST = 10
 		local RETURN = 6
@@ -131,6 +136,18 @@ local function fx()
 		end
 		WaitForMove(gears[4].joint, y_axis)
 		StartThread(UnloadCargo)
+	end
+	if stage == 5 then -- blast off
+		GG.RemoveGrassCircle(X, Z, 230)
+		GG.SpawnDecal("decal_drop", X, GY + 1, Z, Spring.GetUnitTeam(unitID), 30 * 2, 30 * 120)
+		up = true
+	end
+	while stage == 5 do
+		-- Dust clouds and continue rocket burn? (reduced?)
+		SpawnCEG("dropship_heavy_dust", X, GY, Z) -- Use SpawnCEG for ground FX :)
+		EmitSfx(exhaustlarge, CEG + 2)
+		EmitSfx(exhaustlarge, CEG + 3)
+		Sleep(32)
 	end
 end
 
@@ -219,8 +236,6 @@ local function Drop()
 		_, y, _ = Spring.GetUnitPosition(unitID)
 	end
 	stage = 3
-	GG.RemoveGrassCircle(X, Z, 230)
-	GG.SpawnDecal("decal_drop", X, GY + 1, Z, Spring.GetUnitTeam(unitID), 30 * 2.5, 30 * 120)
 	Spring.MoveCtrl.SetGravity(unitID, -0.02 * GRAVITY)
 	Spring.MoveCtrl.SetCollideStop(unitID, true)
 	Spring.MoveCtrl.SetTrackGround(unitID, true)
@@ -302,7 +317,7 @@ function UnloadCargo()
 	WaitForTurn(hanger_door, y_axis)
 	WaitForTurn(main_door, x_axis)
 	Sleep(WAIT_TIME)
-	stage = 3
+	stage = 5 --3
 	StartThread(fx)
 	Spring.MoveCtrl.Enable(unitID)
 	Spring.MoveCtrl.SetGravity(unitID, -1 * GRAVITY)
@@ -400,7 +415,7 @@ function script.Create()
 	--Spin(exhaustlarge, y_axis, math.rad(360))
 	for i = 1, 4 do
 		Turn(dusts[i], x_axis, math.rad(90), 0)
-		Spin(dusts[i], y_axis, math.rad(360))
+		--Spin(dusts[i], y_axis, math.rad(360))
 		Turn(exhausts[i], x_axis, math.rad(90), 0)
 		Spin(exhausts[i], y_axis, math.rad(360))
 	end
@@ -416,6 +431,7 @@ function script.Create()
 	end
 	-- weapon pieces too
 	for id, turret in pairs(turrets) do
+		Turn(dusts[(id - 15)/2], y_axis, math.rad(-45 * id))
 		Turn(turret, y_axis, math.rad(-45 * id))
 	end
 	-- 1, 3, 5, 7 -> 2n - 1, .'. (id + 1)/2
