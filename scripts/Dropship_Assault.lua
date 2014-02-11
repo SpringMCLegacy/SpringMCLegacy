@@ -48,22 +48,6 @@ function LoadCargo(outpostID, callerID)
 	Spring.UnitScript.AttachUnit(cargo, cargoID)
 end
 
-
-local function BlendJet(time, unitID, piecenum)
-	for t = 0, (time/3) do
-		local i = 1 - t / (time/3)
-		if (i == 0) then
-			GG.EmitLupsSfx(unitID, "dropship_vertical_exhaust", piecenum, {id = "hExhaustsJets", repeatEffect = true, delay = t*3, width = 20, length = 60})
-		elseif (i > 0.33) then
-			GG.EmitLupsSfx(unitID, "dropship_vertical_exhaust", piecenum, {id = "hExhaustsJets", life = 3, delay = t*3, width = 20 + i * 60, length = 60 + i * 190})
-		else
-			GG.EmitLupsSfx(unitID, "dropship_vertical_exhaust", piecenum, {id = "hExhaustsJets", life = 1, delay = t*3,   width = 20 + i * 60, length = 60 + i * 190})
-			GG.EmitLupsSfx(unitID, "dropship_vertical_exhaust", piecenum, {id = "hExhaustsJets", life = 2, delay = t*3+1, width = 20 + i * 40, length = 60 + i * 90})
-		end
-	end
-end
-
-
 local function fx()
 	Signal(fx)
 	SetSignalMask(fx)
@@ -109,7 +93,7 @@ local function fx()
 	if stage == 2 then
 		GG.RemoveLupsSfx(unitID, "hExhaustsJets")
 		for _, exhaust in ipairs(hExhausts) do
-			BlendJet(99, unitID, exhaust)
+			GG.BlendJet(99, unitID, exhaust, "hExhaustsJets")
 		end
 	end
 	while stage == 2 do

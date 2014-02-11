@@ -18,6 +18,21 @@ local bufferSize = 0
 
 -- SYNCED
 
+local function BlendJet(time, unitID, piecenum, ID)
+	for t = 0, (time/3) do
+		local i = 1 - t / (time/3)
+		if (i == 0) then
+			GG.EmitLupsSfx(unitID, "dropship_vertical_exhaust", piecenum, {id = ID, repeatEffect = true, delay = t*3, width = 20, length = 60})
+		elseif (i > 0.33) then
+			GG.EmitLupsSfx(unitID, "dropship_vertical_exhaust", piecenum, {id = ID, life = 3, delay = t*3, width = 20 + i * 60, length = 60 + i * 190})
+		else
+			GG.EmitLupsSfx(unitID, "dropship_vertical_exhaust", piecenum, {id = ID, life = 1, delay = t*3,   width = 20 + i * 60, length = 60 + i * 190})
+			GG.EmitLupsSfx(unitID, "dropship_vertical_exhaust", piecenum, {id = ID, life = 2, delay = t*3+1, width = 20 + i * 40, length = 60 + i * 90})
+		end
+	end
+end
+GG.BlendJet = BlendJet
+
 	local function EmitLupsSfx(unitID, effectName, pieceNum, options)
 		--GG.Delay.DelayCall(SendToUnsynced,{"lups_emitsfx", unitID, effectName, pieceNum, unpack(options)},0))
 		bufferSize = bufferSize + 1
