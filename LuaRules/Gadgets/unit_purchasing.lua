@@ -309,12 +309,14 @@ end
 function LanceControl(teamID, add)
 	if add and teamSlotsRemaining[teamID] <= 8 then
 		teamSlotsRemaining[teamID] = teamSlotsRemaining[teamID] + 4
+		Spring.SetTeamRulesParam(teamID, "TEAM_SLOTS_REMAINING", teamSlotsRemaining[teamID])
 	else -- lost a C3
 		-- TODO: if numCombatUnits > numSlots then loss of control over lances etc
 		-- check if there were any backup C3 towers
 		local C3count = Spring.GetTeamUnitDefCount(teamID, C3_ID) -- TODO: cache
 		if C3count < 2 then -- team lost control of / capacity for a lance
 			teamSlotsRemaining[teamID] = teamSlotsRemaining[teamID] - 4
+			Spring.SetTeamRulesParam(teamID, "TEAM_SLOTS_REMAINING", teamSlotsRemaining[teamID])
 		end
 	end
 end
@@ -343,6 +345,7 @@ function gadget:UnitCreated(unitID, unitDefID, teamID)
 			else -- any other combat unit is worth 1/2 a slot
 				teamSlotsRemaining[teamID] = currSlots - 0.5
 			end
+			Spring.SetTeamRulesParam(teamID, "TEAM_SLOTS_REMAINING", teamSlotsRemaining[teamID])
 		end
 	end
 end
