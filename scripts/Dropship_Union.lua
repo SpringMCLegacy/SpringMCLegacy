@@ -69,11 +69,10 @@ local fxStages = {
 	[3] = {
 		{"remove", "largeExhaustJet"},
 		{"remove", "smallExhaustJets"},
-		{1, "exhaust_ground_winds", {id = "groundWinds", repeatEffect = true}},
-		{1, "exhaust_ground_winds", {id = "groundWinds", repeatEffect = true, delay = 80}},
 	},
 	[4] = {
 		{"remove", "smallExhaustJets"},
+		{1, "exhaust_ground_winds", {id = "groundWinds", repeatEffect = true}},
 		{1, "exhaust_ground_winds", {id = "groundWinds", repeatEffect = true, delay = 80}},
 	},
 	[5] = {
@@ -128,9 +127,6 @@ local function fx()
 	end
 	if stage == 4 then
 		GG.EmitLupsSfxArray(unitID, fxStages[stage])
-		for _, exhaust in ipairs(exhausts) do
-			GG.BlendJet(33, unitID, exhaust, "smallExhaustJets", 20, 30)
-		end
 
 		local REST = 10
 		local RETURN = 6
@@ -148,6 +144,10 @@ local function fx()
 	end
 	if stage == 5 then -- blast off
 		GG.EmitLupsSfxArray(unitID, fxStages[stage])
+		for _, exhaust in ipairs(exhausts) do
+			GG.BlendJet(33, unitID, exhaust, "smallExhaustJets", 20, 30)
+		end
+
 		GG.RemoveGrassCircle(X, Z, 230)
 		GG.SpawnDecal("decal_drop", X, GY + 1, Z, Spring.GetUnitTeam(unitID), 30 * 2, 30 * 120)
 		up = true

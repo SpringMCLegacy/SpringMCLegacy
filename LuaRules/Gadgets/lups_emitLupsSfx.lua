@@ -273,7 +273,8 @@ local effects = {
 			volume = 100,
 			repeatEffect   = true,
 			length = 120,
-			file = "sounds/fire-flame-burner.wav",
+			--file = "sounds/fire-flame-burner.wav",
+			file = "sounds/spray.wav",
 		},
 	},
 }
