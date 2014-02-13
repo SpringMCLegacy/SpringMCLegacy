@@ -12,10 +12,11 @@ local hull = piece("hull")
 -- Landing Gear Pieces
 local gears = {}
 for i = 1,4 do
-	gears[i] = {}
-	gears[i].door = piece("gear" .. i .. "_door")
-	gears[i].joint = piece("gear" .. i .. "_joint")
-	gears[i].gear = piece("gear" .. i)
+	gears[i] = {
+		door  = piece("gear" .. i .. "_door"),
+		joint = piece("gear" .. i .. "_joint"),
+		gear  = piece("gear" .. i)
+	}
 end
 
 -- Exhaust Pieces
@@ -54,26 +55,44 @@ function TouchDown()
 	end
 end
 
+local fxStages = {
+	[1] = {
+		{dusts, "dropship_hull_heat", {repeatEffect = 3}},
+		{dusts, "dropship_hull_heat", {repeatEffect = 3, delay = 10}},
+		{dusts, "dropship_hull_heat", {repeatEffect = 2, delay = 20}},
+		{exhausts, "dropship_vertical_exhaust",  {id = "smallExhaustJets", repeatEffect = true, width = 30, length = 150}},
+		{exhaustlarge, "dropship_vertical_exhaust",  {id = "largeExhaustJet", repeatEffect = true, width = 190, length = 250}},
+		--{1, "engine_sound"},
+	},
+	[2] = {
+	},
+	[3] = {
+		{"remove", "largeExhaustJet"},
+		{"remove", "smallExhaustJets"},
+		{1, "exhaust_ground_winds", {id = "groundWinds", repeatEffect = true}},
+		{1, "exhaust_ground_winds", {id = "groundWinds", repeatEffect = true, delay = 80}},
+	},
+	[4] = {
+		{"remove", "smallExhaustJets"},
+		{1, "exhaust_ground_winds", {id = "groundWinds", repeatEffect = true, delay = 80}},
+	},
+	[5] = {
+		{"remove", "groundWinds"},
+	},
+}
+
+
 local function fx()
 	-- Free fall
 	if stage == 1 then
-		for _, dust in pairs(dusts) do
-			GG.EmitLupsSfx(unitID, "dropship_hull_heat", dust, {repeatEffect = 3})
-			GG.EmitLupsSfx(unitID, "dropship_hull_heat", dust, {repeatEffect = 3, delay = 10})
-			GG.EmitLupsSfx(unitID, "dropship_hull_heat", dust, {repeatEffect = 2, delay = 20})
-		end
-		for _, exhaust in pairs(exhausts) do
-			GG.EmitLupsSfx(unitID, "dropship_vertical_exhaust",  exhaust, {id = "smallExhaustJets", repeatEffect = true, width = 30, length = 150})
-		end
-		GG.EmitLupsSfx(unitID, "dropship_vertical_exhaust",  exhaustlarge, {id = "largeExhaustJet", repeatEffect = true, width = 190, length = 250})
+		GG.EmitLupsSfxArray(unitID, fxStages[stage])
 	end
 	while stage == 1 do
-		-- Some reentry glow here?
-		--EmitSfx(dustlarge, CEG + 5)
 		Sleep(32)
 	end
 	-- Rocket Burn
 	if stage == 2 then
+		GG.EmitLupsSfxArray(unitID, fxStages[stage])
 		local time = 114
 		for t = 0, (time/3) do
 			local i = t / (time/3)
@@ -99,30 +118,20 @@ local function fx()
 	end
 	-- Final descent
 	if stage == 3 then
-		GG.RemoveLupsSfx(unitID, "largeExhaustJet")
-		GG.RemoveLupsSfx(unitID, "smallExhaustJets")
+		GG.EmitLupsSfxArray(unitID, fxStages[stage])
 		for _, exhaust in ipairs(exhausts) do
 			GG.BlendJet(99, unitID, exhaust, "smallExhaustJets")
 		end
-		GG.EmitLupsSfx(unitID, "exhaust_ground_winds", exhaustlarge, {repeatEffect = 4}) --, delay = 125})
-		GG.EmitLupsSfx(unitID, "exhaust_ground_winds", exhaustlarge, {repeatEffect = 4, delay = 80})--125 + 80})
 	end
 	while stage == 3 do
-		-- Dust clouds and continue rocket burn? (reduced?)
-		--SpawnCEG("dropship_heavy_dust", X, GY, Z) -- Use SpawnCEG for ground FX :)
-		--EmitSfx(exhaustlarge, CEG + 2)
-		--EmitSfx(exhaustlarge, CEG + 3)
-		for i = 1, 4 do
-			--EmitSfx(exhausts[i], CEG + 4)
-		end		
 		Sleep(32)
 	end
 	if stage == 4 then
-		GG.RemoveLupsSfx(unitID, "smallExhaustJets")
+		GG.EmitLupsSfxArray(unitID, fxStages[stage])
 		for _, exhaust in ipairs(exhausts) do
 			GG.BlendJet(33, unitID, exhaust, "smallExhaustJets", 20, 30)
-			--GG.EmitLupsSfx(unitID, "dropship_vertical_exhaust", exhaust, {id = "smallExhaustJets", replace = true, width = 20, length = 30})
 		end
+
 		local REST = 10
 		local RETURN = 6
 		Move(hull, y_axis, -REST, 2 * REST)
@@ -138,6 +147,7 @@ local function fx()
 		StartThread(UnloadCargo)
 	end
 	if stage == 5 then -- blast off
+		GG.EmitLupsSfxArray(unitID, fxStages[stage])
 		GG.RemoveGrassCircle(X, Z, 230)
 		GG.SpawnDecal("decal_drop", X, GY + 1, Z, Spring.GetUnitTeam(unitID), 30 * 2, 30 * 120)
 		up = true
@@ -211,19 +221,17 @@ local function Drop()
 
 	Spring.MoveCtrl.Enable(unitID)
 	Spring.MoveCtrl.SetPosition(unitID, X, GY + DROP_HEIGHT, Z)
-	--Spring.MoveCtrl.SetVelocity(unitID, 0, -100, 0)
 	Spring.MoveCtrl.SetVelocity(unitID, 0, -55, 0)
 	Spring.MoveCtrl.SetGravity(unitID, -0.4 * GRAVITY)
 	
 	local SPEED = 0
-	
-	--Spring.MoveCtrl.SetGravity(unitID, GRAVITY)
+
 	stage = 1
 	StartThread(fx)
 	
 	local _, y, _ = Spring.GetUnitPosition(unitID)
 	while y - GY > 3500 do
-		Sleep(120)
+		Sleep(30)
 		_, y, _ = Spring.GetUnitPosition(unitID)
 	end
 	stage = 2
@@ -232,7 +240,7 @@ local function Drop()
 
 	StartThread(LandingGearDown)
 	while y - GY > 925 do
-		Sleep(120)
+		Sleep(30)
 		_, y, _ = Spring.GetUnitPosition(unitID)
 	end
 	stage = 3
