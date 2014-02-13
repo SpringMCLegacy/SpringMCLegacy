@@ -35,18 +35,41 @@ local function BlendJet(time, unitID, piecenum, ID, minWidth, minLength)
 end
 GG.BlendJet = BlendJet
 
+
 local function EmitLupsSfx(unitID, effectName, pieceNum, options)
 	bufferSize = bufferSize + 1
 	unsyncedBuffer[bufferSize] = {"lups_emitsfx", unitID, effectName, pieceNum, options}
 end
 GG.EmitLupsSfx = EmitLupsSfx
 
+
 local function RemoveLupsSfx(unitID, fxNameID)
 	bufferSize = bufferSize + 1
 	unsyncedBuffer[bufferSize] = {"lups_removesfx", unitID, fxNameID}
 end
 GG.RemoveLupsSfx = RemoveLupsSfx
-	
+
+
+local function EmitLupsSfxArray(unitID, effects)
+	for i=1,#effects do
+		local fx = effects[i]
+		local fxPieces = fx[1]
+		local fxName = fx[2]
+		local fxOpts = fx[3]
+		    if type(fxPieces) == "table" then
+			for n=1,#fxPieces do
+				EmitLupsSfx(unitID, fxName, fxPieces[n], fxOpts)
+			end
+		elseif type(fxPieces) == "number" then
+			EmitLupsSfx(unitID, fxName, fxPieces, fxOpts)
+		elseif fxPieces == "remove" then
+			RemoveLupsSfx(unitID, fxName)
+		end
+	end
+end
+GG.EmitLupsSfxArray = EmitLupsSfxArray
+
+
 function gadget:GameFrame(n)
 	_G.unsyncedBuffer = unsyncedBuffer
 	SendToUnsynced("lups_updatefx")
@@ -242,6 +265,15 @@ local effects = {
 			heat           = 10, --// brighten distorted regions by "length(distortionVec)*heat"
 
 			repeatEffect   = true, --can be a number,too
+		},
+	},
+	engine_sound = {
+		class = "Sound",
+		options = {
+			volume = 100,
+			repeatEffect   = true,
+			length = 120,
+			file = "sounds/fire-flame-burner.wav",
 		},
 	},
 }
