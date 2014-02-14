@@ -22,7 +22,7 @@ Sound.Default = {
   worldspace = true,
 
   file   = '',
-  volume = 1.0,
+  volume = 100,
   pos    = nil, --{0,0,0}
   blockfor = 55, --//in gameframes. used to block the sound for a specific amount of time (-> don't oversample the sound)
   length = 60,
