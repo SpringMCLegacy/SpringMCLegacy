@@ -267,12 +267,48 @@ local effects = {
 			repeatEffect   = true, --can be a number,too
 		},
 	},
+	valve_release = {
+		class = "JitterParticles2",
+		options = {
+			texture        = 'bitmaps/cgtextures/Flames0028_2_S.jpg',
+			pos            = {120,125,0}, --// start pos
+			partpos        = "0,0,0", --// particle relative start pos (can contain lua code!)
+			layer          = 0,
+
+			count          = 5,
+
+			life           = 25,
+			lifeSpread     = 0,
+			delaySpread    = 10,
+
+			emitVector     = {1,0,0},
+			emitRot        = 0,
+			emitRotSpread  = 10,
+
+			--force          = {0,-0.1,0}, --// global effect force
+			--forceExp       = 1,
+
+			speed          = 1,--5,
+			speedSpread    = 1,
+			speedExp       = 1.3, --// >1 : first decrease slow, then fast;  <1 : decrease fast, then slow
+
+			size           = 2,--4,
+			sizeSpread     = 0,
+			sizeGrowth     = 1,--4,
+			sizeExp        = 1, --// >1 : first decrease slow, then fast;  <1 : decrease fast, then slow;  <0 : invert x-axis (start large become smaller)
+
+			strength       = 0.4, --// distortion strength
+			scale          = 2, --// scales the distortion texture
+			animSpeed      = 0.1, --// speed of the distortion
+			heat           = 17, --// brighten distorted regions by "length(distortionVec)*heat"
+		},
+	},
 	engine_sound = {
 		class = "Sound",
 		options = {
-			volume = 100,
-			repeatEffect   = true,
-			length = 120,
+			volume = 1,
+			--repeatEffect   = true,
+			--length = 120,
 			--file = "sounds/fire-flame-burner.wav",
 			file = "sounds/spray.wav",
 		},
@@ -292,6 +328,18 @@ local function sunpack(st)
 	return foo(st, n, n)
 end
 
+local function scopytable(_in, _out)
+	for k,v in spairs(_in) do
+		if type(v)=="table" then
+			local t = {}
+			_out[k] = t
+			scopytable(v, t)
+		else
+			_out[k] = v
+		end
+	end
+end
+
 local function EmitLupsSfx(unitID, effectName, pieceNum, options)
 	local Lups = GG.Lups
 	--Spring.Echo("Got this far!", Lups, unitID, effectName, pieceNum, options)
@@ -304,9 +352,7 @@ local function EmitLupsSfx(unitID, effectName, pieceNum, options)
 		opts[k] = v
 	end
 	if options then
-		for k,v in spairs(options) do
-			opts[k] = v
-		end
+		scopytable(options, opts)
 	end
 	opts.unit = unitID
 	opts.piecenum = pieceNum
