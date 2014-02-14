@@ -275,7 +275,7 @@ local effects = {
 			partpos        = "0,0,0", --// particle relative start pos (can contain lua code!)
 			layer          = 0,
 
-			count          = 5,
+			count          = 18,
 
 			life           = 25,
 			lifeSpread     = 0,
@@ -288,13 +288,13 @@ local effects = {
 			--force          = {0,-0.1,0}, --// global effect force
 			--forceExp       = 1,
 
-			speed          = 1,--5,
-			speedSpread    = 1,
+			speed          = 1.1,--5,
+			speedSpread    = 0,
 			speedExp       = 1.3, --// >1 : first decrease slow, then fast;  <1 : decrease fast, then slow
 
 			size           = 2,--4,
 			sizeSpread     = 0,
-			sizeGrowth     = 1,--4,
+			sizeGrowth     = 1.4,--4,
 			sizeExp        = 1, --// >1 : first decrease slow, then fast;  <1 : decrease fast, then slow;  <0 : invert x-axis (start large become smaller)
 
 			strength       = 0.4, --// distortion strength
@@ -306,7 +306,7 @@ local effects = {
 	engine_sound = {
 		class = "Sound",
 		options = {
-			volume = 1,
+			volume = 5,
 			--repeatEffect   = true,
 			--length = 120,
 			--file = "sounds/fire-flame-burner.wav",
