@@ -60,7 +60,7 @@ if (gadgetHandler:IsSyncedCode()) then
   local blockFirst = {}
   function gadget:AllowUnitBuildStep(builderID, builderTeam, unitID, unitDefID, part)
     if (part < 0) then
-      local inbuild = not select(3,Spring.GetUnitIsStunned(unitID))
+      local inbuild = select(3,Spring.GetUnitIsStunned(unitID))
       if (not inbuild) then
         gadget:UnitReverseBuild(unitID,unitDefID,Spring.GetUnitTeam(unitID))
         if (not blockFirst[unitID]) then
@@ -93,7 +93,6 @@ end
 --------------------------------------------------------------------------------
 
 VFS.Include("LuaRules/UnitRendering.lua")
-
 if (not gl.CreateShader) then
   return false
 end
@@ -423,14 +422,12 @@ function gadget:Initialize()
   --// check user configs
   shadows = Spring.HaveShadows()
   advShading = Spring.HaveAdvShading()
-  normalMappingConfigInt = Spring.GetConfigInt("NormalMapping", 1) or 0
-  normalmapping = (normalMappingConfigInt>0)
+  normalmapping = (Spring.GetConfigInt("NormalMapping", 1)>0)
 
   --// load the materials config files
   local unitMaterialDefs = {}
   do
-    local GADGET_DIR = "LuaRules/Configs/"
-    local MATERIALS_DIR = GADGET_DIR .. "UnitMaterials/"
+    local MATERIALS_DIR = "LuaRules/Configs/UnitMaterials/"
 
     local files = VFS.DirList(MATERIALS_DIR)
     table.sort(files)

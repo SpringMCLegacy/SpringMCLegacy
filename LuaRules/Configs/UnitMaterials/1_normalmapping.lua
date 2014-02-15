@@ -1,18 +1,19 @@
 -- $Id$
 --------------------------------------------------------------------------------
 --------------------------------------------------------------------------------
-local GADGET_DIR = "LuaRules/Configs/"
 
 local materials = {
    normalMappedS3o = {
        shaderDefinitions = {
-	"#define use_perspective_correct_shadows",
+         "#define use_perspective_correct_shadows",
          "#define use_normalmapping",
          --"#define flip_normalmap",
        },
-       shader    = include(GADGET_DIR .. "UnitMaterials/Shaders/default.lua"),
+       shader    = include("LuaRules/Configs/UnitMaterials/Shaders/default.lua"),
        usecamera = false,
        culling   = GL.BACK,
+       predl  = nil,
+       postdl = nil,
        texunits  = {
          [0] = '%%UNITDEFID:0',
          [1] = '%%UNITDEFID:1',
@@ -38,7 +39,7 @@ local function FindNormalmap(tex1, tex2)
     local basefilename = tex1:gsub("%....","")
     if (tonumber(basefilename:sub(-1,-1))) then
       basefilename = basefilename:sub(1,-2)
-    end -- This code removes trailing numbers, but many S44 units end in a number, e.g. SU-76
+    end
     if (basefilename:sub(-1,-1) == "_") then
        basefilename = basefilename:sub(1,-2)
     end
@@ -48,7 +49,7 @@ local function FindNormalmap(tex1, tex2)
     end
   end --if FileExists
 
-  --[[if (not normaltex) and tex2 and (VFS.FileExists(tex2)) then
+  if (not normaltex) and tex2 and (VFS.FileExists(tex2)) then
     local basefilename = tex2:gsub("%....","")
     if (tonumber(basefilename:sub(-1,-1))) then
       basefilename = basefilename:sub(1,-2)
@@ -60,7 +61,7 @@ local function FindNormalmap(tex1, tex2)
     if (not VFS.FileExists(normaltex)) then
       normaltex = nil
     end
-  end --if FileExists ]] -- disable tex2 detection for S44
+  end
 
   return normaltex
 end
@@ -89,9 +90,9 @@ for i=1,#UnitDefs do
         then tex1 = "unittextures/" .. rawstr:sub(texPtrs[1]+1, texPtrs[2]-1) end
 
       -- output units without tex2
-      --[[if not tex2 then
-        Spring.Echo("CustomUnitShaders: " .. udef.name .. " no tex2")
-      end]]
+      if not tex2 then
+        Spring.Log(gadget:GetInfo().name, LOG.WARNING, "CustomUnitShaders: " .. udef.name .. " no tex2")
+      end
 
       local normaltex = FindNormalmap(tex1,tex2)
       if (normaltex and not unitMaterials[udef.name]) then
@@ -111,9 +112,9 @@ for i=1,#UnitDefs do
           local tex2 = "unittextures/" .. (infoTbl.tex2 or "")
 
           -- output units without tex2
-          --[[if not tex2 then
-            Spring.Echo("CustomUnitShaders: " .. udef.name .. " no tex2")
-          end]]
+          if not tex2 then
+            Spring.Log(gadget:GetInfo().name, LOG.WARNING, "CustomUnitShaders: " .. udef.name .. " no tex2")
+          end
 
           local normaltex = FindNormalmap(tex1,tex2)
           if (normaltex and not unitMaterials[udef.name]) then
