@@ -57,14 +57,14 @@ end
 
 local fxStages = {
 	[1] = {
-		{dusts, "dropship_hull_heat", {repeatEffect = 3}},
-		{dusts, "dropship_hull_heat", {repeatEffect = 3, delay = 10}},
-		{dusts, "dropship_hull_heat", {repeatEffect = 2, delay = 20}},
+		{1, "dropship_hull_heat", {count = 70, pos = {0,0,0}, repeatEffect = 4}},
+		{1, "dropship_hull_heat", {count = 90, pos = {0,0,0}, repeatEffect = 3, delay = 10}},
+		{1, "dropship_hull_heat", {count = 90, pos = {0,0,0}, repeatEffect = 3, delay = 20}},
 		{exhausts, "dropship_vertical_exhaust",  {id = "smallExhaustJets", repeatEffect = true, width = 30, length = 150}},
 		{exhaustlarge, "dropship_vertical_exhaust",  {id = "largeExhaustJet", repeatEffect = true, width = 190, length = 250}},
-		--{1, "engine_sound"},
 	},
 	[2] = {
+		{1, "engine_sound"},
 	},
 	[3] = {
 		{"remove", "largeExhaustJet"},
@@ -76,12 +76,18 @@ local fxStages = {
 		{1, "valve_release", {pos = {-80,100, 80}, emitVector = {-1,0, 1}} },
 		{1, "valve_release", {pos = { 80,100,-80}, emitVector = { 1,0,-1}} },
 		{1, "valve_release", {pos = {-80,100,-80}, emitVector = {-1,0,-1}} },
-		{1, "engine_sound"},
-		{1, "exhaust_ground_winds", {id = "groundWinds", repeatEffect = true}},
-		{1, "exhaust_ground_winds", {id = "groundWinds", repeatEffect = true, delay = 80}},
+		{1, "valve_sound"},
+		{1, "exhaust_ground_winds", {pos = {0,0,0}, repeatEffect = false}},
+		{1, "exhaust_ground_winds", {pos = {0,0,0}, repeatEffect = false, delay = 80}},
 	},
 	[5] = {
-		{"remove", "groundWinds"},
+		{1, "exhaust_ground_winds", {pos = {0,0,0}, repeatEffect = false}},
+		{1, "exhaust_ground_winds", {pos = {0,0,0}, repeatEffect = false, delay = 80}},
+		--{exhaustlarge, "plume", {worldpos=true}},
+		--{exhaustlarge, "plume", {worldpos=true}},
+		--{exhaustlarge, "plume", {worldpos=true}},
+		--{exhaustlarge, "plume", {worldpos=true}},
+		--{exhaustlarge, "plume", {worldpos=true}},
 	},
 }
 
@@ -158,8 +164,6 @@ local function fx()
 		up = true
 	end
 	while stage == 5 do
-		-- Dust clouds and continue rocket burn? (reduced?)
-		SpawnCEG("dropship_heavy_dust", X, GY, Z) -- Use SpawnCEG for ground FX :)
 		EmitSfx(exhaustlarge, CEG + 2)
 		EmitSfx(exhaustlarge, CEG + 3)
 		Sleep(32)
