@@ -21,14 +21,15 @@ local RVN3L = IS_Raven:New{
 	objectName        	= "IS_Raven_RVN3L.s3o",
 	weapons	= {	
 		[1] = {
-			name	= "NARC",
+			name	= "MBL",
 			OnlyTargetCategory = "ground",
 		},
 		[2] = {
 			name	= "MBL",
 		},
 		[3] = {
-			name	= "MBL",
+			name	= "NARC",
+			OnlyTargetCategory = "narctag",
 		},
 		[4] = {
 			name	= "SRM6",
@@ -36,7 +37,7 @@ local RVN3L = IS_Raven:New{
 		},
 		[5] = {
 			name	= "TAG",
-			OnlyTargetCategory = "ground",
+			OnlyTargetCategory = "narctag",
 		},
 	},
 		
@@ -52,14 +53,14 @@ local RVN4L = IS_Raven:New{
 	objectName        	= "IS_Raven_RVN4L.s3o",
 	weapons = {	
 		[1] = {
-			name	= "NARC",
+			name	= "ERMBL",
 			OnlyTargetCategory = "ground",
 		},
 		[2] = {
 			name	= "ERMBL",
 		},
 		[3] = {
-			name	= "ERMBL",
+			name	= "NARC",
 		},
 		[4] = {
 			name	= "SRM6",
@@ -67,7 +68,6 @@ local RVN4L = IS_Raven:New{
 		},
 		[5] = {
 			name	= "TAG",
-			OnlyTargetCategory = "ground",
 		},
 	},
 

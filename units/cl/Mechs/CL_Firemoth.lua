@@ -47,10 +47,10 @@ local A = CL_Firemoth:New{
 	objectName        	= "CL_Firemoth_A.s3o",
 	weapons	= {	
 		[1] = {
-			name	= "TAG",
+			name	= "SRM4",
 		},
 		[2] = {
-			name	= "SRM4",
+			name	= "TAG",
 		},
 	},
 

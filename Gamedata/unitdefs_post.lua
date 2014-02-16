@@ -127,6 +127,8 @@ for name, ud in pairs(UnitDefs) do
 		for i, weapon in pairs(weapons) do
 			if weapon.name:lower() == "ams" then
 				weapon.maxangledif = 360
+			elseif weapon.name:lower() == "narc" or weapon.name:lower() == "tag" then
+				weapon.onlytargetcategory = "narctag"			
 			else
 				if ud.customparams.unittype then
 					-- Give all mechs 179d torso twist
@@ -140,13 +142,14 @@ for name, ud in pairs(UnitDefs) do
 					end
 				end
 			end
-			weapon.onlytargetcategory = (weapon.onlytargetcategory or "") .. " notbeacon"
+			--weapon.onlytargetcategory = (weapon.onlytargetcategory or "") .. " notbeacon"
 		end
 	end
 	
 	-- Automatically build dropship buildmenus
 	local unitType = ud.customparams.unittype
 	if unitType == "mech" or unitType == "vehicle" then
+		ud.category = ud.category .. " narctag"
 		ud.movestate = 0 -- Set default move state to Hold Position
 		if name:sub(1, 2) == "is" then
 			table.insert(IS_DROPSHIP_BUILDOPTIONS, name)
