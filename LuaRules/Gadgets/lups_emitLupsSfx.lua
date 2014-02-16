@@ -118,31 +118,31 @@ local effects = {
 	plume = {
 		class = "SimpleParticles2",
 		options = {
-			emitVector     = {0,0,-1},
+			emitVector     = {0,-1,0},
 			pos            = {0,0,0}, --// start pos
 			partpos        = "0,0,0",
-			count          = 30,
-			force          = {0,0,0}, --// global effect force
+			count          = 10,
+			force          = {0,-3,0}, --// global effect force
 			forceExp       = 0.5,
 			speed          = 10,
-			speedSpread    = 20,
+			speedSpread    = 2,
 			speedExp       = 1.5, --// >1 : first decrease slow, then fast;  <1 : decrease fast, then slow
 			life           = 120,
 			lifeSpread     = 0,
-			delaySpread    = 120,
+			delaySpread    = 30,
 			rotSpeed       = 5,
 			rotSpeedSpread = -10,
 			rotSpread      = 360,
 			rotExp         = 2, --// >1 : first decrease slow, then fast;  <1 : decrease fast, then slow;  <0 : invert x-axis (start large become smaller)
 			emitRot        = 0,
-			emitRotSpread  = 10,
-			size           = 80,
-			sizeSpread     = 50,
-			sizeGrowth     = 10,
+			emitRotSpread  = 90,
+			size           = 4,
+			sizeSpread     = 0,
+			sizeGrowth     = 4,
 			sizeExp        = 1, --// >1 : first decrease slow, then fast;  <1 : decrease fast, then slow;  <0 : invert x-axis (start large become smaller)
-			colormap       = { {0.2, 0.2, 0.2, 0.01}, {0.2, 0.2, 0.2, 0.01}, {0, 0, 0, 0} }, --//max 16 entries
-			texture        = 'bitmaps/cgtextures/Flames0028_2_S.jpg',
-			repeatEffect   = true, --can be a number,too
+			colormap       = { {0.3, 0.3, 0.3, 0.01}, {0.3, 0.3, 0.3, 0.01}, {0.3, 0.3, 0.3, 0} }, --//max 16 entries
+			texture        = 'bitmaps/ProjectileTextures/kfoam.tga',
+			--repeatEffect   = true, --can be a number,too
 		},
 	},
 	dropship_vertical_exhaust = {
@@ -275,7 +275,7 @@ local effects = {
 			partpos        = "0,0,0", --// particle relative start pos (can contain lua code!)
 			layer          = 0,
 
-			count          = 18,
+			count          = 20,
 
 			life           = 25,
 			lifeSpread     = 0,
@@ -288,7 +288,7 @@ local effects = {
 			--force          = {0,-0.1,0}, --// global effect force
 			--forceExp       = 1,
 
-			speed          = 1.1,--5,
+			speed          = 1,--5,
 			speedSpread    = 0,
 			speedExp       = 1.3, --// >1 : first decrease slow, then fast;  <1 : decrease fast, then slow
 
@@ -300,10 +300,10 @@ local effects = {
 			strength       = 0.4, --// distortion strength
 			scale          = 2, --// scales the distortion texture
 			animSpeed      = 0.1, --// speed of the distortion
-			heat           = 17, --// brighten distorted regions by "length(distortionVec)*heat"
+			heat           = 12, --// brighten distorted regions by "length(distortionVec)*heat"
 		},
 	},
-	engine_sound = {
+	valve_sound = {
 		class = "Sound",
 		options = {
 			volume = 5,
@@ -311,6 +311,15 @@ local effects = {
 			--length = 120,
 			--file = "sounds/fire-flame-burner.wav",
 			file = "sounds/spray.wav",
+		},
+	},
+	engine_sound = {
+		class = "Sound",
+		options = {
+			volume = 50,
+			--repeatEffect = 1,
+			length = 210,
+			file = "sounds/fire-flame-burner.wav",
 		},
 	},
 }
@@ -354,8 +363,14 @@ local function EmitLupsSfx(unitID, effectName, pieceNum, options)
 	if options then
 		scopytable(options, opts)
 	end
-	opts.unit = unitID
-	opts.piecenum = pieceNum
+	if not opts.worldpos then
+		opts.unit = unitID
+		opts.piecenum = pieceNum
+	else
+		opts.pos = opts.pos or {}
+		local x,y,z = Spring.GetUnitPiecePosDir(unitID, pieceNum)
+		opts.pos[1] = opts.pos[1] + x; opts.pos[2] = opts.pos[2] + y; opts.pos[3] = opts.pos[3] + z;
+	end
 
 	local fxID = Lups.AddParticles(effect.class, opts)
 
