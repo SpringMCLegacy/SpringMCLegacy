@@ -1,11 +1,4 @@
-function table.contains(table, element)
-  for _, value in pairs(table) do
-    if value == element then
-      return true
-    end
-  end
-  return false
-end
+VFS.Include("LuaRules/Gadgets/Includes/utilities.lua", nil, VFS.ZIP)
 
 local UnitDefs = DEFS.unitDefs
 
@@ -27,6 +20,11 @@ for weapName, wd in pairs(WeaponDefs) do
 	if cp then
 		if cp.cegflare then
 			cegCache[weapName] = cp.cegflare
+		end
+		for k, v in pairs (cp) do
+			if type(v) == "table" or type(v) == "boolean" then
+				wd.customparams[k] = serializeTable(v)
+			end
 		end
 	end
 	
