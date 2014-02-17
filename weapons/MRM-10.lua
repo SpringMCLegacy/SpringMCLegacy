@@ -1,14 +1,10 @@
-weaponDef = {
-	name                    = "MRM-10",
+local MRM_Class = Weapon:New{
 	weaponType              = "MissileLauncher",
-	renderType				= 1,
 	explosionGenerator    	= "custom:HE_SMALL",
 	cegTag					= "MRMTrail",
 	smokeTrail				= false,
-	smokeDelay				= "0.05",
-	soundHit              	= [[MRM_Hit]],
-	soundStart            	= [[MRM_Fire]],
---	soundTrigger			= 0,
+	soundHit              	= "MRM_Hit",
+	soundStart            	= "MRM_Fire",
 	burnblow				= true, 	--Bullets explode at range limit.
 	collideFriendly			= true,
 	noSelfDamage            = true,
@@ -16,21 +12,17 @@ weaponDef = {
 	range                   = 1500,
 	accuracy                = 100,
 	sprayAngle				= 400,
-	ballistic				= true,
 	weaponTimer				= 5,
 	areaOfEffect            = 20,
 	startVelocity			= 900,
 	weaponVelocity          = 900,
 	reloadtime              = 10,
-	burst					= 10,
 	burstrate				= 0.1,
 	model					= "Missile.s3o",
-	interceptedByShieldType	= 32,
 	damage = {
 		default = 100,--10 DPS
 	},
 	customparams = {
-		heatgenerated		= "40",--4/sec
 		cegflare			= "MISSILE_MUZZLEFLASH",
 		weaponclass			= "missile",
 		jammable			= false,
@@ -38,4 +30,23 @@ weaponDef = {
     },
 }
 
-return lowerkeys({ MRM10 = weaponDef })
+local MRM10 = MRM_Class:New{
+	name                    = "MRM-10",
+	burst					= 10,
+	customparams = {
+		heatgenerated		= "40",--4/sec
+	}
+}
+
+local MRM20 = MRM_Class:New{
+	name                    = "MRM-20",
+	burst					= 20,
+	customparams = {
+		heatgenerated		= "60",--4/sec
+    },
+}
+
+return lowerkeys({ 
+	MRM10 = MRM10,
+	MRM20 = MRM20,
+})

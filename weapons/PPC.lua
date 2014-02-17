@@ -1,10 +1,9 @@
-weaponDef = {
-	name                    = "PPC",
+local PPC_Class = Weapon:New{
 	weaponType              = "Cannon",
 	explosionGenerator    	= "custom:PPC",
 	cegTag					= "PPCTrail",
-	soundHit              	= [[PPC_Hit]],
-	soundStart            	= [[PPC_Fire]],
+	soundHit              	= "PPC_Hit",
+	soundStart            	= "PPC_Fire",
 	burnblow				= false, 	--Bullets explode at range limit.
 	collideFriendly			= true,
 	noSelfDamage            = true,
@@ -27,11 +26,34 @@ weaponDef = {
 		default = 500, --100 DPS
 	},
 	customparams = {
-		heatgenerated		= "75",--10/sec
+		heatgenerated		= 75,--10/sec
 		cegflare			= "PPC_MUZZLEFLASH",
-		heatdamage			= "10",
+		heatdamage			= 10,
 		weaponclass			= "energy",
+		lupsribbon			= {size = 3, width = 6, color = {0.55, 0.65, 1,0.6}, texture1 = ":c:bitmaps/ProjectileTextures/ppcshot.png"},
     },
 }
 
-return lowerkeys({ PPC = weaponDef })
+local PPC = PPC_Class:New{
+	name                    = "PPC",
+}
+
+local CERPPC = PPC_Class:New{
+	name                    = "CERPPC",
+	heightBoostFactor		= 0,
+	range                   = 2300,
+	damage = {
+		default = 750, --150 DPS
+	},
+}
+
+local ERPPC = PPC_Class:New{
+	name                    = "ERPPC",
+	range                   = 2300,
+}
+
+return lowerkeys({ 
+	PPC = PPC,
+	ERPPC = ERPPC,
+	CERPPC = CERPPC,
+})

@@ -1,6 +1,6 @@
 function gadget:GetInfo()
   return {
-    name      = "Lups - Projectiles",
+    name      = "Lups Projectile Ribbons",
     desc      = "",
     author    = "FLOZi (C. Lawrence)",
     date      = "Feb. 2014",
@@ -19,7 +19,7 @@ local bufferSize = 0
 -- SYNCED
 
 function gadget:Initialize()
-	for weapDefID, weapDef in pairs(WeaponDefs) do -- TODO: base this on some customparam or config
+	for weapDefID, weapDef in pairs(WeaponDefs) do
 		if weapDef.customParams and weapDef.customParams.lupsribbon then
 			Script.SetWatchWeapon(weapDefID, true)
 		end

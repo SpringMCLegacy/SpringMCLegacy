@@ -25,6 +25,7 @@ if (gadgetHandler:IsSyncedCode()) then
 
   function gadget:Explosion(weaponID, px, py, pz, ownerID)
     local wd = WeaponDefs[weaponID]
+	if not wd.customParams.shockwave then return false end
     --if (wd.description=="PlasmaImplosionDumpRocket") then --// Liche
     --  SendToUnsynced("lups_shockwave", px, py, pz, 6.4, 30, 0.13, true)
     --  return true

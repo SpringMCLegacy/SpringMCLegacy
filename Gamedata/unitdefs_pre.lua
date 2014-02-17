@@ -33,6 +33,14 @@ function Unit:New(newAttribs, concatName)
 	inherit(newClass, self, concatName)
 	return newClass
 end
+
+local Weapon = {}
+function Weapon:New(newAttribs, concatName)
+	local newClass = {}
+	inherit(newClass, newAttribs)
+	inherit(newClass, self, concatName)
+	return newClass
+end
 ---------------------------------------------------------------------------------------------
 -- Base Classes
 ---------------------------------------------------------------------------------------------
@@ -181,6 +189,7 @@ local Tower = Unit:New{
 ---------------------------------------------------------------------------------------------
 -- This is where the magic happens
 local sharedEnv = {
+	Weapon = Weapon,
 	Unit = Unit,
 	Mech = Mech,
 	Light = Light,
