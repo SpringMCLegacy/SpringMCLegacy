@@ -1,14 +1,10 @@
-weaponDef = {
-	name                    = "SRM-2",
+local SRM_Class = Weapon:New{
 	weaponType              = "MissileLauncher",
-	renderType				= 1,
 	explosionGenerator    	= "custom:HE_MEDIUM",
 	cegTag					= "SRMTrail",
 	smokeTrail				= false,
-	smokeDelay				= "0.05",
-	soundHit              	= [[SRM_Hit]],
-	soundStart            	= [[SRM_Fire]],
---	soundTrigger			= 0,
+	soundHit              	= "SRM_Hit",
+	soundStart            	= "SRM_Fire",
 	burnblow				= true, 	--Bullets explode at range limit.
 	collideFriendly			= true,
 	noSelfDamage            = true,
@@ -18,9 +14,6 @@ weaponDef = {
 	sprayangle				= 2000,
 	wobble					= 900,
 	dance					= 65,
-	guidance				= true,
-	selfprop				= true,
-	lineOfSight				= true,
 	tracks					= true,
 	turnRate				= 2000,
 	weaponTimer				= 5,
@@ -28,15 +21,12 @@ weaponDef = {
 	startVelocity			= 1000,
 	weaponVelocity          = 1000,
 	reloadtime              = 5,
-	burst					= 2,
 	burstrate				= 0.1,
 	model					= "Missile.s3o",
-	interceptedByShieldType	= 32,
 	damage = {
 		default = 100,--10 DPS
 	},
 	customparams = {
-		heatgenerated		= "15",--3/sec
 		cegflare			= "MISSILE_MUZZLEFLASH",
 		weaponclass			= "missile",
 		jammable			= false,
@@ -44,4 +34,32 @@ weaponDef = {
     },
 }
 
-return lowerkeys({ SRM2 = weaponDef })
+local SRM2 = SRM_Class:New{
+	name                    = "SRM-2",
+	burst					= 2,
+	customparams = {
+		heatgenerated		= "15",--3/sec
+	}
+}
+
+local SRM4 = SRM_Class:New{
+	name                    = "SRM-4",
+	burst					= 4,
+	customparams = {
+		heatgenerated		= "15",--3/sec
+	}
+}
+
+local SRM6 = SRM_Class:New{
+	name                    = "SRM-6",
+	burst					= 6,
+	customparams = {
+		heatgenerated		= "20",--4/sec
+	}
+}
+
+return lowerkeys({ 
+	SRM2 = SRM2,
+	SRM4 = SRM4,
+	SRM6 = SRM6,
+})
