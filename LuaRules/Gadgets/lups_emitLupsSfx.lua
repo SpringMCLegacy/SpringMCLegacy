@@ -336,6 +336,7 @@ local function sunpack(st)
 	local n = 1; while st[n] do n=n+1 end; n=n-1
 	return foo(st, n, n)
 end
+GG.sunpack = sunpack
 
 local function scopytable(_in, _out)
 	for k,v in spairs(_in) do
@@ -348,6 +349,7 @@ local function scopytable(_in, _out)
 		end
 	end
 end
+GG.scopytable = scopytable
 
 local function EmitLupsSfx(unitID, effectName, pieceNum, options)
 	local Lups = GG.Lups

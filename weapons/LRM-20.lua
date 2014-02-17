@@ -44,6 +44,7 @@ weaponDef = {
 		weaponclass			= "missile",
 		ammotype			= "lrm",
 		minrange			= "500",
+		lupsribbon			= {size = 3, width = 2, color = {0.95, 0.65, 0,0.6}},
     },
 }
 

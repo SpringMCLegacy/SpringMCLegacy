@@ -32,6 +32,7 @@ weaponDef = {
 		cegflare			= "PPC_MUZZLEFLASH",
 		heatdamage			= "10",
 		weaponclass			= "energy",
+		lupsribbon			= {size = 3, width = 6, color = {0.55, 0.65, 1,1}, texture1 = ":c:bitmaps/ProjectileTextures/lightning3.tga"},
     },
 }
 
