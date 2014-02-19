@@ -126,6 +126,11 @@ local function StringToTable(input)
 end
 GG.StringToTable = StringToTable
 
+local function StringToBool(input)
+	return input == "true"
+end
+GG.StringToBool = StringToBool
+
 -- functions for determining weapon placement
 local function GetArmMasterWeapon(input)
 	local lowestID = 32
@@ -270,8 +275,8 @@ function gadget:GamePreload()
 				info.amsID = i
 			end
 			flamerIDs[i] = weaponDef.name == "flamer"
-			jammableIDs[i] = (tonumber(weaponDef.customParams.jammable) == 1)
-			flareOnShots[i] = (tonumber(weaponDef.customParams.flareonshot) == 1)
+			jammableIDs[i] = StringToBool(weaponDef.customParams.jammable)
+			flareOnShots[i] = StringToBool(weaponDef.customParams.flareonshot)
 		end
 		-- WeaponDef Level Info
 		info.missileWeaponIDs = missileWeaponIDs
