@@ -1,7 +1,7 @@
 local IS_MarkVII = {
 	name              	= "Mark VII Landing Craft",
 	description         = "Cargo Landing Craft",
-	objectName        	= "IS_MarkVII.s3o",
+	objectName        	= "IS_MarkVIIb.s3o",
 	iconType			= "dropship",
 	--script				= "Dropship_Assault.lua",
 	category 			= "dropship structure notbeacon",
