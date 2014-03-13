@@ -252,6 +252,7 @@ local function BuildGate(wallID, teamID)
 	DelayCall(SetUnitRotation, {wallID, 0, -wallInfos[wallID].angle, 0}, 3)
 	DelayCall(SetUnitNeutral, {wallID, true}, 3)
 	beaconGateIDs[wallInfos[wallID].beaconID] = wallID
+	DropshipDelivery(wallInfos[wallID].beaconID, teamID, "is_markvii", {{is_goblin = 1}}, 0, "BB_wall_deployed", 1)
 end
 
 local function RepairWalls(beaconID, teamID)
