@@ -96,11 +96,12 @@ for name, ud in pairs(UnitDefs) do
 			elseif weapon.name:lower() == "narc" or weapon.name:lower() == "tag" then
 				weapon.onlytargetcategory = "narctag"			
 			else
+				weapon.onlytargetcategory = (weapon.onlytargetcategory or "") .. " notbeacon"
 				if ud.customparams.unittype then
 					-- Give all mechs 179d torso twist
-					if ud.customparams.unittype == "mech" then
+					--[[if ud.customparams.unittype == "mech" then
 						weapon.maxangledif = 179
-					end
+					end]]
 					if i ~= 1 then
 						if not weapon.slaveto then -- don't overwrite unitdef [sniper slaves 3 to 2]
 							weapon.slaveto = 1
@@ -108,7 +109,6 @@ for name, ud in pairs(UnitDefs) do
 					end
 				end
 			end
-			--weapon.onlytargetcategory = (weapon.onlytargetcategory or "") .. " notbeacon"
 		end
 	end
 	
