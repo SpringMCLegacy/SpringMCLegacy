@@ -42,7 +42,7 @@ local DelayCall				 = GG.Delay.DelayCall
 
 -- Constants
 local EMPTY_TABLE = {} -- keep as empty
-local CBILLS_PER_SEC = (modOptions and tonumber(modOptions.income)) or 100
+local CBILLS_PER_SEC = (modOptions and tonumber(modOptions.income)) or 200
 local BEACON_ID = UnitDefNames["beacon"].id
 local C3_ID = UnitDefNames["upgrade_c3array"].id
 local DROPSHIP_DELAY = 30 * 30 -- 30s
