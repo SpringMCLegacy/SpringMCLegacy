@@ -353,6 +353,7 @@ function UnitPieceLight.ViewResize()
   gl.DeleteTextureFBO(blur4 or 0)
   gl.DeleteTextureFBO(blur8 or 0)
 
+  if vsx and vsx > 0 then
   depthtex = gl.CreateTexture(vsx,vsy, {
     border = false,
     format = GL_DEPTH_COMPONENT24,
@@ -413,6 +414,7 @@ function UnitPieceLight.ViewResize()
     wrap_t = GL.CLAMP,
     fbo = true,
   })
+  end
 end
 
 
