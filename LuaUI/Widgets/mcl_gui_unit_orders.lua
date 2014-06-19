@@ -15,7 +15,19 @@ VFS.Include("LuaRules/Gadgets/Includes/utilities.lua")
 
 -- CONSTANTS
 local MAXBUTTONSONROW = 3
-local COMMANDSTOEXCLUDE = {"timewait","deathwait","squadwait","gatherwait","loadonto","nextmenu","prevmenu"}
+local COMMANDSTOEXCLUDE = {
+	"timewait",
+	"deathwait",
+	"squadwait",
+	"gatherwait",
+	"loadonto",
+	"nextmenu",
+	"prevmenu", 
+	"submit_order",
+	"menu",
+	"label"
+}
+
 local Chili
 
 -- MEMBERS
@@ -111,16 +123,28 @@ function createMyButton(cmd)
 	end
 end
 
+local startsWith = function(self, piece)
+  return string.sub(self, 1, string.len(piece)) == piece
+end
+
 function filterUnwanted(commands)
 	local uniqueList = {}
 	if DEBUG then Spring.Echo("Total commands ", #commands) end
-	if not(#commands == 0)then
+	if not(#commands == 0) then
 		j = 1
 		for _, cmd in ipairs(commands) do
 			if DEBUG then Spring.Echo("Adding command ", cmd.action) end
-			if not table.contains(COMMANDSTOEXCLUDE,cmd.action) and cmd.type > 0 then
-				uniqueList[j] = cmd
-				j = j + 1
+			
+			if not table.contains(COMMANDSTOEXCLUDE,cmd.action) then
+				if (cmd.id < 0) then
+					if UnitDefs[-cmd.id].isImmobile then
+						uniqueList[j] = cmd
+						j = j + 1
+					end
+				else
+					uniqueList[j] = cmd
+					j = j + 1
+				end
 			end
 		end
 	end
