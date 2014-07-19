@@ -1,3 +1,14 @@
+function table.copy(input, output)
+	for k,v in pairs(input) do
+		if type(v) == "table" then
+			output[k] = {}
+			copytable(v, output[k])
+		else
+			output[k] = v
+		end
+	end
+end
+
 function table.contains(table, element)
   for _, value in pairs(table) do
     if value == element then
