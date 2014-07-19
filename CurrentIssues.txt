@@ -18,8 +18,6 @@ HAG30 dps!
 
 random race?
 
---Some IS vehicles ahve too small radius (partisan, challenger?) -- movedef footprint
-
 [f=0017630] [unit_script.lua] Error: [string "scripts/vehicle.lua"]:146: attempt to perform arithmetic on field '?' (a nil value) -- can't replicate
 
 buildpics should show ECM / Jump / BAPs / AMS (NARC, TAG?)
@@ -27,10 +25,6 @@ buildpics should show ECM / Jump / BAPs / AMS (NARC, TAG?)
 
 [f=0029431] [Sound] Error: WAV file sounds/warn.wav has data length 1996513652 greater than actual data length 96002
 
-[f=0032181] [Sound] Error: Unable to open audio file: sounds/fire-flame-burner.wav
-[f=0032181] [Sound] Error: CSound::GetSoundId: could not find sound: sounds/fire-flame-burner.wav
+--[f=0032181] [Sound] Error: Unable to open audio file: sounds/fire-flame-burner.wav
 
 --[f=0035745] Error: LuaRules::RunCallIn: error = 2, Update, [string "lups/ParticleClasses/ribbons.lua"]:276: bad argument #3 to 'spIsSphereInView' (number expected, got nil)
-
---[f=0037535] [unit_script.lua] Error: [string "scripts/turret.lua"]:222: attempt to perform arithmetic on upvalue 'FACING' (a nil value)
-

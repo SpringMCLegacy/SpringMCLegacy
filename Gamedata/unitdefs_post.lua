@@ -42,12 +42,9 @@ for name, ud in pairs(UnitDefs) do
 		ud.cantbetransported = false
 		if ud.customparams.unittype == "mech" then
 			ud.buildtime = RAMP_DISTANCE / speed
-			ud.usepiececollisionvolumes = true
 			ud.losemitheight = ud.mass / 100
 			ud.radaremitheight = ud.mass / 100
-			-- TODO: For testing ud.buildcostmetal = 5000
 		elseif ud.customparams.unittype == "vehicle" then
-			ud.usepiececollisionvolumes = true
 			if ud.canfly then
 				ud.buildtime = HANGAR_DISTANCE / (speed * 0.5)
 			end

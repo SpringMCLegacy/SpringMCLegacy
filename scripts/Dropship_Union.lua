@@ -64,7 +64,7 @@ local fxStages = {
 		{exhaustlarge, "dropship_vertical_exhaust",  {id = "largeExhaustJet", repeatEffect = true, width = 190, length = 250}},
 	},
 	[2] = {
-		{1, "engine_sound"},
+		--{1, "engine_sound"},
 	},
 	[3] = {
 		{"remove", "largeExhaustJet"},
@@ -322,6 +322,7 @@ function UnloadCargo()
 			WaitForMove(pad, z_axis)
 		end
 		Spring.UnitScript.DropUnit(cargoID)
+		Spring.SetUnitBlocking(cargoID, true, true, true, true, true, true, true)
 		if currUnitDef.canFly then
 			Spring.GiveOrderToUnit(cargoID, CMD.MOVE, {X + 256, 0, Z}, {})
 		else
