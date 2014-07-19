@@ -1,4 +1,4 @@
-VFS.Include("LuaRules/Gadgets/Includes/utilities.lua", nil, VFS.ZIP)
+VFS.Include("LuaRules/Includes/utilities.lua", nil, VFS.ZIP)
 
 local UnitDefs = DEFS.unitDefs
 
@@ -23,7 +23,7 @@ for weapName, wd in pairs(WeaponDefs) do
 		end
 		for k, v in pairs (cp) do
 			if type(v) == "table" or type(v) == "boolean" then
-				wd.customparams[k] = serializeTable(v)
+				wd.customparams[k] = table.serialize(v)
 			end
 		end
 	end
