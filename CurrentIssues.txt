@@ -1,30 +1,34 @@
--- weird unit movement
+---- BUGS
 
-  [f=0007014] you have more than the lance supports in group #1 - still possible by player directly assigning groups
+Spectators cannot see LUPS effects
+
+[f=0007014] you have more than the lance supports in group #1 - still possible by player directly assigning groups
  
- top of ticket counter widget e.g. resources missing in certain window res
+top of ticket counter widget e.g. resources missing in certain window res
  
- Clan forward leg jump anim pushes into terrain (mistlynx, summoner)
- 
-  some clan mechs with mismatched launchpoints due to weapon changes (cougar, warhawk, timberwolf)
+Clan forward leg jump anim pushes into terrain (mistlynx, summoner)
  
 -- [f=0005587] [unit_script.lua] Error: [string "LuaRules/Gadgets/unit_script.lua"]:302: Incorrect arguments to CallAsUnit()
 
--- Tweak movedefs for Melt?
-
-HAG30 dps!
-
---jump is broken?
-
-random race?
-
 [f=0017630] [unit_script.lua] Error: [string "scripts/vehicle.lua"]:146: attempt to perform arithmetic on field '?' (a nil value) -- can't replicate
-
-buildpics should show ECM / Jump / BAPs / AMS (NARC, TAG?)
-
 
 [f=0029431] [Sound] Error: WAV file sounds/warn.wav has data length 1996513652 greater than actual data length 96002
 
 --[f=0032181] [Sound] Error: Unable to open audio file: sounds/fire-flame-burner.wav
 
---[f=0035745] Error: LuaRules::RunCallIn: error = 2, Update, [string "lups/ParticleClasses/ribbons.lua"]:276: bad argument #3 to 'spIsSphereInView' (number expected, got nil)
+[f=0035745] Error: LuaRules::RunCallIn: error = 2, Update, [string "lups/ParticleClasses/ribbons.lua"]:276: bad argument #3 to 'spIsSphereInView' (number expected, got nil)
+
+---- TWEAKS
+
+-- Tweak movedefs for Melt?
+
+random race?
+
+buildpics should show ECM / Jump / BAPs / AMS (NARC, TAG?)
+
+some clan mechs with mismatched launchpoints due to weapon changes (cougar, warhawk, timberwolf)
+
+
+---- BALANCE
+
+HAG30 dps!

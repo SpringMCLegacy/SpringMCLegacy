@@ -11,7 +11,7 @@ function widget:GetInfo()
 	}
 end
 -- INCLUDES
-VFS.Include("LuaRules/Gadgets/Includes/utilities.lua")
+VFS.Include("LuaRules/Includes/utilities.lua")
 
 -- CONSTANTS
 local MAXBUTTONSONROW = 3
