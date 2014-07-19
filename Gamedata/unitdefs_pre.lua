@@ -55,6 +55,7 @@ local Mech = Unit:New{
 	noChaseCategory		= "beacon air",
 	activateWhenBuilt   = true,
 	onoffable           = true,
+	usepiececollisionvolumes = true,
 	
 	customparams = {
 		hasturnbutton	= "1",
