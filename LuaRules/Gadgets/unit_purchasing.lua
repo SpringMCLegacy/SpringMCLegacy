@@ -139,7 +139,7 @@ end
 local function ResetBuildQueue(unitID)
 	local orderQueue = Spring.GetFactoryCommands(unitID)
 	for i, order in ipairs(orderQueue) do
-		Spring.GiveOrderToUnit(unitID, CMD.REMOVE, {order.tag}, {"ctrl"})
+		GG.Delay.DelayCall(Spring.GiveOrderToUnit,{unitID, CMD.REMOVE, {order.tag}, {"ctrl"}},1)
 	end
 end
 
