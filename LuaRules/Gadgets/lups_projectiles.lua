@@ -68,7 +68,7 @@ function gadget:Initialize()
 	
 	for weapDefID, weapDef in pairs(WeaponDefs) do
 		if weapDef.customParams and weapDef.customParams.lupsribbon then
-			weapCache[weapDefID] = GG.StringToTable(weapDef.customParams.lupsribbon)
+			weapCache[weapDefID] = table.unserialize(weapDef.customParams.lupsribbon)
 		end
 	end
 end
