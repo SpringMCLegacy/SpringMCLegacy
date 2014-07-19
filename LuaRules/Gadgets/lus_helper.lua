@@ -31,6 +31,9 @@ local CallAsUnit 			= Spring.UnitScript.CallAsUnit
 -- Constants
 -- Variables
 
+-- Include table utilities
+VFS.Include("LuaRules/Includes/utilities.lua", nil, VFS.ZIP)
+
 -- Useful functions for GG
 
 function RemoveGrassSquare(x, z, r)
@@ -121,15 +124,7 @@ local function GetUnitDistanceToPoint(unitID, tx, ty, tz, bool3D)
 end
 GG.GetUnitDistanceToPoint = GetUnitDistanceToPoint
 
-local function StringToTable(input)
-	return loadstring("return " .. (input or "{}"))()
-end
-GG.StringToTable = StringToTable
-
-local function StringToBool(input)
-	return input == "true"
-end
-GG.StringToBool = StringToBool
+GG.StringToTable = table.unserialize
 
 -- functions for determining weapon placement
 local function GetArmMasterWeapon(input)
@@ -275,8 +270,8 @@ function gadget:GamePreload()
 				info.amsID = i
 			end
 			flamerIDs[i] = weaponDef.name == "flamer"
-			jammableIDs[i] = StringToBool(weaponDef.customParams.jammable)
-			flareOnShots[i] = StringToBool(weaponDef.customParams.flareonshot)
+			jammableIDs[i] = tobool(weaponDef.customParams.jammable)
+			flareOnShots[i] = tobool(weaponDef.customParams.flareonshot)
 		end
 		-- WeaponDef Level Info
 		info.missileWeaponIDs = missileWeaponIDs
@@ -313,11 +308,11 @@ function gadget:GamePreload()
 		info.hover = unitDef.moveDef.family == "hover"
 		info.vtol = unitDef.hoverAttack
 		info.aero = unitDef.canFly and not info.vtol
-		info.turrets = StringToTable(cp.turrets)
+		info.turrets = table.unserialize(cp.turrets)
 		info.turretTurnSpeed = math.rad(tonumber(cp.turretturnspeed) or 75)
 		info.turret2TurnSpeed = math.rad(tonumber(cp.turret2turnspeed) or 75)
 		info.barrelRecoilSpeed = (tonumber(cp.barrelrecoilspeed) or 100)
-		info.barrelRecoilDist = StringToTable(cp.barrelrecoildist)
+		info.barrelRecoilDist = table.unserialize(cp.barrelrecoildist)
 		info.wheelSpeed = math.rad(tonumber(cp.wheelspeed) or 100)
 		info.wheelAccel = math.rad(tonumber(cp.wheelaccel) or info.wheelSpeed * 2)
 		-- Temperatures
@@ -334,7 +329,7 @@ function gadget:GamePreload()
 		info.hasEcm = cp.hasecm == "true" -- TODO: use proper bools here
 		info.numWeapons = #weapons
 		info.elevationSpeed = math.rad(tonumber(cp.elevationspeed) or math.deg(info.torsoTurnSpeed))
-		info.maxAmmo = StringToTable(cp.maxammo)
+		info.maxAmmo = table.unserialize(cp.maxammo)
 		-- And finally, stick it in GG for the script to access
 		GG.lusHelper[unitDefID] = info
 	end

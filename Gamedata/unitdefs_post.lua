@@ -1,4 +1,4 @@
-VFS.Include("LuaRules/Gadgets/Includes/utilities.lua", nil, VFS.ZIP)
+VFS.Include("LuaRules/Includes/utilities.lua", nil, VFS.ZIP)
 
 local modOptions
 if (Spring.GetModOptions) then
@@ -24,7 +24,7 @@ for name, ud in pairs(UnitDefs) do
 	if ud.customparams then
 		for k, v in pairs (ud.customparams) do
 			if type(v) == "table" or type(v) == "boolean" then
-				ud.customparams[k] = serializeTable(v)
+				ud.customparams[k] = table.serialize(v)
 			end
 		end
 	end

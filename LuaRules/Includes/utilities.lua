@@ -1,8 +1,22 @@
+function tobool(val)
+  local t = type(val)
+  if (t == 'nil') then
+    return false
+  elseif (t == 'boolean') then
+    return val
+  elseif (t == 'number') then
+    return (val ~= 0)
+  elseif (t == 'string') then
+    return ((val ~= '0') and (val ~= 'false'))
+  end
+  return false
+end
+
 function table.copy(input, output)
 	for k,v in pairs(input) do
 		if type(v) == "table" then
 			output[k] = {}
-			copytable(v, output[k])
+			table.copy(v, output[k])
 		else
 			output[k] = v
 		end
@@ -18,9 +32,13 @@ function table.contains(table, element)
   return false
 end
 
+function table.unserialize(input)
+	return loadstring("return " .. (input or "{}"))()
+end
+
 -- function to serialize tables (and bools) to strings
 -- used to convert customparams subtables for Spring
-function serializeTable(val, name, skipnewlines, depth)
+function table.serialize(val, name, skipnewlines, depth)
     skipnewlines = skipnewlines or false
     depth = depth or 0
 
@@ -38,7 +56,7 @@ function serializeTable(val, name, skipnewlines, depth)
         tmp = tmp .. "{" .. (not skipnewlines and "\n" or "")
 
         for k, v in pairs(val) do
-            tmp =  tmp .. serializeTable(v, k, skipnewlines, depth + 1) .. "," .. (not skipnewlines and "\n" or "")
+            tmp =  tmp .. table.serialize(v, k, skipnewlines, depth + 1) .. "," .. (not skipnewlines and "\n" or "")
         end
 
         tmp = tmp .. string.rep(" ", depth) .. "}"
