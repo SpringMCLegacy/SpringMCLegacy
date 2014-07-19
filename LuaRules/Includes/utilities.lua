@@ -1,4 +1,4 @@
-function tobool(val)
+function string.tobool(val)
   local t = type(val)
   if (t == 'nil') then
     return false
@@ -11,6 +11,8 @@ function tobool(val)
   end
   return false
 end
+
+if System then System.tobool = tobool end
 
 function table.copy(input, output)
 	for k,v in pairs(input) do

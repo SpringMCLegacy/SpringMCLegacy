@@ -15,6 +15,7 @@ if (gadgetHandler:IsSyncedCode()) then
 
 -- Localisations
 GG.lusHelper = {}
+
 sqrt = math.sqrt
 -- Synced Read
 local GetUnitPieceInfo 		= Spring.GetUnitPieceInfo
@@ -30,9 +31,6 @@ local CallAsUnit 			= Spring.UnitScript.CallAsUnit
 -- Unsynced Ctrl
 -- Constants
 -- Variables
-
--- Include table utilities
-VFS.Include("LuaRules/Includes/utilities.lua", nil, VFS.ZIP)
 
 -- Useful functions for GG
 
@@ -124,7 +122,6 @@ local function GetUnitDistanceToPoint(unitID, tx, ty, tz, bool3D)
 end
 GG.GetUnitDistanceToPoint = GetUnitDistanceToPoint
 
-GG.StringToTable = table.unserialize
 
 -- functions for determining weapon placement
 local function GetArmMasterWeapon(input)
@@ -270,8 +267,8 @@ function gadget:GamePreload()
 				info.amsID = i
 			end
 			flamerIDs[i] = weaponDef.name == "flamer"
-			jammableIDs[i] = tobool(weaponDef.customParams.jammable)
-			flareOnShots[i] = tobool(weaponDef.customParams.flareonshot)
+			jammableIDs[i] = string.tobool(weaponDef.customParams.jammable)
+			flareOnShots[i] = string.tobool(weaponDef.customParams.flareonshot)
 		end
 		-- WeaponDef Level Info
 		info.missileWeaponIDs = missileWeaponIDs
@@ -363,11 +360,6 @@ end
 else
 
 -- UNSYNCED
-
-local function StringToTable(input) -- make this available to unsynced too
-	return loadstring("return " .. (input or "{}"))()
-end
-GG.StringToTable = StringToTable
 
 local PlaySoundFile	= Spring.PlaySoundFile
 local MY_TEAM_ID = Spring.GetMyTeamID()
