@@ -271,7 +271,7 @@ end
 
 
 function Ribbon:Visible()
-  self.isvalid = (self.unit ~= 0 and not spGetUnitIsDead(self.unit)) or (self.projectile and Spring.GetProjectileDefID(self.projectile))
+  self.isvalid = (self.unit ~= 0 and not spGetUnitIsDead(self.unit)) or (self.projectile and select(3,Spring.GetProjectilePosition(self.projectile)))
   local pos = self.oldPos[self.posIdx]
   return (self.blendfactor>0) and (spIsSphereInView(pos[1],pos[2],pos[3], self.radius))
 end
