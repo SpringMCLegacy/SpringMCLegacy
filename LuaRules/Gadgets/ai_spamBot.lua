@@ -50,22 +50,24 @@ end
 
 local function Spam(teamID)
 	local unitID = dropZoneIDs[teamID]
-	Spring.AddTeamResource(teamID, "metal", 10000000)
-	local cmdDescs = Spring.GetUnitCmdDescs(unitID)
-	orderSizes[teamID] = 0
-	while orderSizes[teamID] < GG.teamSlotsRemaining[teamID] do
-		local cmdDesc = cmdDescs[math.random(1, #cmdDescs)]
-		if cmdDesc.id < 0 then
-			GG.Delay.DelayCall(Spring.GiveOrderToUnit, {unitID, cmdDesc.id, {}, {}}, 1)
-			orderSizes[teamID] = orderSizes[teamID] + 1
-			--Spring.Echo(orderSizes[teamID], cmdDesc.name, GG.teamSlotsRemaining[teamID])
+	if Spring.ValidUnitID(unitID) then
+		Spring.AddTeamResource(teamID, "metal", 10000000)
+		local cmdDescs = Spring.GetUnitCmdDescs(unitID)
+		orderSizes[teamID] = 0
+		while orderSizes[teamID] < GG.teamSlotsRemaining[teamID] do
+			local cmdDesc = cmdDescs[math.random(1, #cmdDescs)]
+			if cmdDesc.id < 0 then
+				GG.Delay.DelayCall(Spring.GiveOrderToUnit, {unitID, cmdDesc.id, {}, {}}, 1)
+				orderSizes[teamID] = orderSizes[teamID] + 1
+				--Spring.Echo(orderSizes[teamID], cmdDesc.name, GG.teamSlotsRemaining[teamID])
+			end
 		end
+		--orderSizes[teamID] = 0
+		--GG.Delay.DelayCall(Spring.GiveOrderToUnit, {unitID, CMD_SEND_ORDER, {}, {}}, 1)
+		local readyFrame = GG.coolDowns[teamID] or 0 --Spring.GetTeamRulesParam(teamID, "DROPSHIP_COOLDOWN") or 0
+		local frameDelay = 0 --math.max(readyFrame - Spring.GetGameFrame(), 0)
+		GG.Delay.DelayCall(SendOrder, {teamID}, frameDelay + 30)
 	end
-	--orderSizes[teamID] = 0
-	--GG.Delay.DelayCall(Spring.GiveOrderToUnit, {unitID, CMD_SEND_ORDER, {}, {}}, 1)
-	local readyFrame = GG.coolDowns[teamID] or 0 --Spring.GetTeamRulesParam(teamID, "DROPSHIP_COOLDOWN") or 0
-	local frameDelay = 0 --math.max(readyFrame - Spring.GetGameFrame(), 0)
-	GG.Delay.DelayCall(SendOrder, {teamID}, frameDelay + 30)
 end
 
 function gadget:UnitCreated(unitID, unitDefID, teamID)
@@ -127,15 +129,17 @@ function gadget:UnitGiven(unitID, unitDefID, newTeam, oldTeam)
 	end
 end
 
-function gadget:UnitIdle(unitID, unitDefID, unitTeam)
-	if UnitDefs[unitDefID].customParams.unittype then
-		-- random chance a idle unit will wander somewhere else
-		local chance = math.random(1, 100)
-		if chance < 75 then
-			--Spring.Echo(UnitDefs[unitDefID].name .. [[ "Fuck it, I'm off for a wander"]])
-			GG.Delay.DelayCall(Wander, {unitID}, 30 * 6)
-		else
-			--Spring.Echo(UnitDefs[unitDefID].name .. [[ "I think I'll stay here..."]])
+function gadget:UnitIdle(unitID, unitDefID, teamID)
+	if AI_TEAMS[teamID] then
+		if UnitDefs[unitDefID].customParams.unittype then
+			-- random chance a idle unit will wander somewhere else
+			local chance = math.random(1, 100)
+			if chance < 75 then
+				--Spring.Echo(UnitDefs[unitDefID].name .. [[ "Fuck it, I'm off for a wander"]])
+				GG.Delay.DelayCall(Wander, {unitID}, 30 * 6)
+			else
+				--Spring.Echo(UnitDefs[unitDefID].name .. [[ "I think I'll stay here..."]])
+			end
 		end
 	end
 end
