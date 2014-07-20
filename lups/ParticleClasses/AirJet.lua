@@ -37,7 +37,7 @@ AirJet.Default = {
   --// visibility check
   los            = true,
   airLos         = true,
-  radar          = false,
+  radar          = true,
   
   layer = 4,
   life  = math.huge,
