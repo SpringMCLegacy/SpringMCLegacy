@@ -105,7 +105,6 @@ local unitTypes = {} -- unitTypes[unitDefID] = "lightmech" etc from typeStrings
 local orderCosts = {} -- orderCosts[unitID] = cost
 local orderTons = {} -- orderTons[unitID] = totalTonnage
 local orderSizes = {} -- orderSizes[unitID] = size
-GG.orderSizes = orderSizes
 local teamSlotsRemaining = {} -- teamSlotsRemaining[teamID] = numberOfUnitsSlotsRemaining
 GG.teamSlotsRemaining = teamSlotsRemaining
 local dropZones = {} -- dropZones[unitID] = teamID
@@ -182,12 +181,13 @@ local function CheckBuildOptions(unitID, teamID, money, weightLeft, cmdID)
 end
 
 local coolDowns = {} -- coolDowns[teamID] = enableFrame
+GG.coolDowns = coolDowns
 
 function SendButtonCoolDown(unitID, teamID, firstTime)
 	EditUnitCmdDesc(unitID, FindUnitCmdDesc(unitID, CMD_SEND_ORDER), {disabled = true, name = "Order \nSent "})
-	local enableFrame = GetGameFrame() + (firstTime and 0 or DROPSHIP_DELAY)
+	--[[local enableFrame = GetGameFrame() + DROPSHIP_DELAY --(firstTime and 0 or DROPSHIP_DELAY)
 	coolDowns[teamID] = enableFrame
-	Spring.SetTeamRulesParam(teamID, "DROPSHIP_COOLDOWN", enableFrame) -- frame this team can call dropship again
+	Spring.SetTeamRulesParam(teamID, "DROPSHIP_COOLDOWN", enableFrame) -- frame this team can call dropship again]]
 end
 
 -- TODO: Issues if dropzone is 'flipped' to another beacon
@@ -257,6 +257,8 @@ function gadget:AllowCommand(unitID, unitDefID, teamID, cmdID, cmdParams, cmdOpt
 			
 		elseif cmdID == CMD_SEND_ORDER then
 			if (orderSizes[unitID] or 0) == 0 then return end -- don't allow empty orders
+			Spring.Echo("CD:", coolDowns[teamID], "GF:", Spring.GetGameFrame())
+			if (coolDowns[teamID] or 0) - Spring.GetGameFrame() > 0 then Spring.Echo("fail", 260) return end -- don't allow to send when dropship isn't ready (eek!)
 			local orderQueue = Spring.GetFullBuildQueue(unitID)
 			local money = GetTeamResources(teamID, "metal")
 			local cost = orderCosts[unitID] or 0
@@ -368,6 +370,10 @@ function gadget:UnitDestroyed(unitID, unitDefID, teamID, attackerID, attackerDef
 		teamDropZones[teamID] = nil
 	elseif unitDefID == C3_ID then
 		LanceControl(teamID, false)
+	elseif	UnitDefs[unitDefID].customParams.dropship == "union" then -- TODO: This is dreadful
+		local enableFrame = GetGameFrame() + DROPSHIP_DELAY --(firstTime and 0 or DROPSHIP_DELAY)
+		coolDowns[teamID] = enableFrame
+		Spring.SetTeamRulesParam(teamID, "DROPSHIP_COOLDOWN", enableFrame) -- frame this team can call dropship again
 	end
 	if attackerID and not AreTeamsAllied(teamID, attackerTeam) and unitDefID ~= WALL_ID and unitDefID ~= GATE_ID then
 		AddTeamResource(attackerTeam, "metal", UnitDefs[unitDefID].metalCost * KILL_REWARD_MULT)
@@ -434,13 +440,13 @@ function gadget:GameFrame(n)
 			local framesRemaining = enableFrame - n
 			local unitID = teamDropZones[teamID]
 			if not Spring.ValidUnitID(unitID) or Spring.GetUnitIsDead(unitID) then -- check valid first (lazy evaluation means non-valid unitID is then not passed)
-				coolDowns[teamID] = nil
+				coolDowns[teamID] = -1
 			else
 				if framesRemaining <= 0 then
 					EditUnitCmdDesc(unitID, FindUnitCmdDesc(unitID, CMD_SEND_ORDER), {name = "Dropship \nArrived "})
 					EditUnitCmdDesc(unitID, FindUnitCmdDesc(unitID, CMD_RUNNING_TOTAL), {name = "Order C-Bills: \n0"})
 					EditUnitCmdDesc(unitID, FindUnitCmdDesc(unitID, CMD_RUNNING_TONS), {name = "Order Tonnes: \n0"})
-					coolDowns[teamID] = nil
+					coolDowns[teamID] = -2
 				end
 			end
 		end

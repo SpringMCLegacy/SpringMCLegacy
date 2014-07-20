@@ -35,7 +35,21 @@ function gadget:GamePreload()
 	end
 end
 
-local function Spam(unitID, teamID)
+local function SendOrder(teamID)
+	local unitID = dropZoneIDs[teamID]
+	local readyFrame = GG.coolDowns[teamID] or 0 --Spring.GetTeamRulesParam(teamID, "DROPSHIP_COOLDOWN") or 0
+	local frameDelay = math.max(readyFrame - Spring.GetGameFrame(), 0)
+	if frameDelay == 0 and Spring.ValidUnitID(unitID) then
+		orderSizes[teamID] = 0
+		Spring.GiveOrderToUnit(unitID, CMD_SEND_ORDER, {}, {})
+	else
+		Spring.Echo("Can't SEND_ORDER until", readyFrame, "(", frameDelay, ")")
+		GG.Delay.DelayCall(SendOrder, {teamID}, frameDelay + 30)
+	end
+end
+
+local function Spam(teamID)
+	local unitID = dropZoneIDs[teamID]
 	Spring.AddTeamResource(teamID, "metal", 10000000)
 	local cmdDescs = Spring.GetUnitCmdDescs(unitID)
 	orderSizes[teamID] = 0
@@ -47,10 +61,9 @@ local function Spam(unitID, teamID)
 			--Spring.Echo(orderSizes[teamID], cmdDesc.name, GG.teamSlotsRemaining[teamID])
 		end
 	end
-	local readyFrame = Spring.GetTeamRulesParam(teamID, "DROPSHIP_COOLDOWN") or 0
+	local readyFrame = GG.coolDowns[teamID] or 0 --Spring.GetTeamRulesParam(teamID, "DROPSHIP_COOLDOWN") or 0
 	local frameDelay = math.max(readyFrame - Spring.GetGameFrame(), 0)
-	GG.Delay.DelayCall(Spring.GiveOrderToUnit, {unitID, CMD_SEND_ORDER, {}, {}}, frameDelay + 30)
-	orderSizes[teamID] = 0
+	GG.Delay.DelayCall(SendOrder, {teamID}, frameDelay + 30)
 end
 
 function gadget:UnitCreated(unitID, unitDefID, teamID)
@@ -62,14 +75,14 @@ function gadget:UnitCreated(unitID, unitDefID, teamID)
 		local unitDef = UnitDefs[unitDefID]
 		if unitDef.name:find("dropzone") then
 			dropZoneIDs[teamID] = unitID	
-			Spam(unitID, teamID)
+			Spam(teamID)
 		end
 	end
 end
 
 function gadget:UnitDestroyed(unitID, unitDefID, teamID)
 	if AI_TEAMS[teamID] then
-		Spam(dropZoneIDs[teamID], teamID)
+		Spam(teamID)
 		if unitDefID == C3_ID then
 			GG.Delay.DelayCall(Spring.GiveOrderToUnit, {tonumber(Spring.GetUnitRulesParam(unitID, "beaconID")), CMD_C3, {}, {}}, 1)
 		end
@@ -80,7 +93,7 @@ function gadget:UnitUnloaded(unitID, unitDefID, teamID, transportID, transportTe
 	if AI_TEAMS[teamID] then
 		if unitDefID == C3_ID then
 			--Spring.Echo("C3!")
-			Spam(dropZoneIDs[teamID], teamID)
+			Spam(teamID)
 		elseif UnitDefs[unitDefID].canFly then
 			--Spring.Echo("VTOL!")
 			for _, spot in pairs(flagSpots) do
