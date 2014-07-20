@@ -45,7 +45,8 @@ local EMPTY_TABLE = {} -- keep as empty
 local CBILLS_PER_SEC = (modOptions and tonumber(modOptions.income)) or 200
 local BEACON_ID = UnitDefNames["beacon"].id
 local C3_ID = UnitDefNames["upgrade_c3array"].id
-local DROPSHIP_DELAY = 30 * 30 -- 30s
+local DROPSHIP_COOLDOWN = 30 * 30 -- 30s, time before the dropship has regained orbit, refuelled etc ready to drop again
+local DROPSHIP_DELAY = 2 * 30 -- 2s, time taken to arrive on the map from SPACE!
 local DAMAGE_REWARD_MULT = (modOptions and tonumber(modOptions.income_damage)) or 0.2
 local KILL_REWARD_MULT = 0.0
 
@@ -95,7 +96,7 @@ for i, typeString in ipairs(typeStrings) do
 		id     = cmdID,
 		type   = CMDTYPE.ICON,
 		name   = typeStringAliases[typeString], -- TODO: texture?
-		action = 'menu',
+		action = 'menu' .. typeString,
 		tooltip = "Purchase " .. typeString,
 	}
 	menuCmdIDs[cmdID] = typeString
@@ -109,8 +110,7 @@ local teamSlotsRemaining = {} -- teamSlotsRemaining[teamID] = numberOfUnitsSlots
 GG.teamSlotsRemaining = teamSlotsRemaining
 local dropZones = {} -- dropZones[unitID] = teamID
 local teamDropZones = {} -- teamDropZone[teamID] = unitID
-local teamHadFirstDrop = {} -- teamHadFirstDrop[teamID] = true/false -- FIXME: ugly hack
-
+local dropShipStatus = {} -- dropShipStatus[teamID] = number, where 0 = Ready, 1 = Active, 2 = Cooldown
 
 local function AddBuildMenu(unitID)
 	InsertUnitCmdDesc(unitID, sendOrderCmdDesc)
@@ -185,7 +185,8 @@ GG.coolDowns = coolDowns
 
 function SendButtonCoolDown(unitID, teamID, firstTime)
 	EditUnitCmdDesc(unitID, FindUnitCmdDesc(unitID, CMD_SEND_ORDER), {disabled = true, name = "Order \nSent "})
-	--[[local enableFrame = GetGameFrame() + DROPSHIP_DELAY --(firstTime and 0 or DROPSHIP_DELAY)
+	coolDowns[teamID] = math.huge -- will be corrected when the dropship leaves
+	--[[local enableFrame = GetGameFrame() + DROPSHIP_COOLDOWN --(firstTime and 0 or DROPSHIP_COOLDOWN)
 	coolDowns[teamID] = enableFrame
 	Spring.SetTeamRulesParam(teamID, "DROPSHIP_COOLDOWN", enableFrame) -- frame this team can call dropship again]]
 end
@@ -196,10 +197,47 @@ function DropshipLeft(teamID) -- called by Dropship once it has left, to enable 
 	if unitID then -- dropzone might have died in the meantime
 		EditUnitCmdDesc(unitID, FindUnitCmdDesc(unitID, CMD_SEND_ORDER), {disabled = false, name = "Submit \nOrder "})
 	end
-	local currFrame = GetGameFrame()
-	Spring.SetTeamRulesParam(teamID, "DROPSHIP_COOLDOWN", currFrame)
+	-- Dropship is no longer ACTIVE, it is entering COOLDOWN
+	GG.PlaySoundForTeam(teamID, "BB_Reinforcements_Inbound_ETA_30", 1)
+	dropShipStatus[teamID] = 2
+	local enableFrame = GetGameFrame() + DROPSHIP_COOLDOWN
+	coolDowns[teamID] = enableFrame
+	Spring.SetTeamRulesParam(teamID, "DROPSHIP_COOLDOWN", enableFrame) -- frame this team can call dropship again
 end
 GG.DropshipLeft = DropshipLeft
+
+-- Factories can't implement gadget:CommandFallback, so fake it ourselves
+local function SendCommandFallback(unitID, unitDefID, teamID)
+	if dropShipStatus[teamID] == 0 then -- Dropship is READY
+		-- CALL DROPSHIP
+		local orderQueue = Spring.GetFullBuildQueue(unitID)
+		for i, order in pairs(orderQueue) do -- we need to double all orders for vehicles
+			for orderDefID, count in pairs(order) do
+				if unitTypes[orderDefID] == "vehicle" then -- TODO: vtol and aero?
+					orderQueue[i][orderDefID] = count * 2
+				end
+			end
+		end
+		
+		local side = UnitDefs[unitDefID].name:sub(1,2) -- send dropship of correct side
+		-- TODO: Sound needs to change?
+		GG.DropshipDelivery(unitID, teamID, side .. "_dropship", orderQueue, 0, nil, DROPSHIP_DELAY)
+		Spring.SendMessageToTeam(teamID, "Sending purchase order for the following:")
+		for i, order in ipairs(orderQueue) do
+			for orderDefID, count in pairs(order) do
+				Spring.SendMessageToTeam(teamID, UnitDefs[orderDefID].name .. ":\t" .. count)
+			end
+		end
+		ResetBuildQueue(unitID)
+		orderCosts[unitID] = 0
+		orderTons[unitID] = 0
+		orderSizes[unitID] = 0
+		-- Dropship can now be considered ACTIVE even though it hasn't arrived yet
+		dropShipStatus[teamID] = 1
+	else -- Dropship is ACTIVE or COOLDOWN
+		GG.Delay.DelayCall(SendCommandFallback, {unitID, unitDefID, teamID}, 16)
+	end
+end
 
 function gadget:AllowCommand(unitID, unitDefID, teamID, cmdID, cmdParams, cmdOptions)
 	if dropZones[unitID] then
@@ -256,45 +294,17 @@ function gadget:AllowCommand(unitID, unitDefID, teamID, cmdID, cmdParams, cmdOpt
 			end
 			
 		elseif cmdID == CMD_SEND_ORDER then
-			if (orderSizes[unitID] or 0) == 0 then return end -- don't allow empty orders
-			Spring.Echo("CD:", coolDowns[teamID], "GF:", Spring.GetGameFrame())
-			if (coolDowns[teamID] or 0) - Spring.GetGameFrame() > 0 then Spring.Echo("fail", 260) return end -- don't allow to send when dropship isn't ready (eek!)
-			local orderQueue = Spring.GetFullBuildQueue(unitID)
+			if (orderSizes[unitID] or 0) == 0 then return false end -- don't allow empty orders
 			local money = GetTeamResources(teamID, "metal")
 			local cost = orderCosts[unitID] or 0
 			-- check we can afford the order; possible that a previously affordable order is now too much e.g. if towers have been purchased
 			-- N.B. It should not be possible for available tonnage to change between orders, so we don't need to check that
 			if cost > money then return false end
-			
-			for i, order in pairs(orderQueue) do -- we need to double all orders for vehicles
-				for orderDefID, count in pairs(order) do
-					if unitTypes[orderDefID] == "vehicle" then -- TODO: vtol and aero?
-						orderQueue[i][orderDefID] = count * 2
-					end
-				end
-			end
-			
-			local side = UnitDefs[unitDefID].name:sub(1,2) -- send dropship of correct side
-			local firstTime
-			if not teamHadFirstDrop[teamID] then
-				GG.DropshipDelivery(unitID, teamID, side .. "_dropship", orderQueue, cost, nil, 1)
-				teamHadFirstDrop[teamID] = true
-				firstTime = true
-			else
-				GG.DropshipDelivery(unitID, teamID, side .. "_dropship", orderQueue, cost, "BB_Reinforcements_Inbound_ETA_30", DROPSHIP_DELAY)
-				firstTime = false
-			end
-			Spring.SendMessageToTeam(teamID, "Sending purchase order for the following:")
-			for i, order in ipairs(orderQueue) do
-				for orderDefID, count in pairs(order) do
-					Spring.SendMessageToTeam(teamID, UnitDefs[orderDefID].name .. ":\t" .. count)
-				end
-			end
-			ResetBuildQueue(unitID)
-			orderCosts[unitID] = 0
-			orderTons[unitID] = 0
-			orderSizes[unitID] = 0
-			SendButtonCoolDown(unitID, teamID, firstTime)
+
+			-- We are going ahead with this order. Deduct the cost now, TODO: if it is cancelled it will be refunded
+			UseTeamResource(teamID, "metal", cost)
+			SendButtonCoolDown(unitID, teamID)
+			GG.Delay.DelayCall(SendCommandFallback, {unitID, unitDefID, teamID}, 16)
 			return true
 		end
 	end
@@ -333,6 +343,8 @@ function gadget:UnitCreated(unitID, unitDefID, teamID)
 		AddBuildMenu(unitID)
 		dropZones[unitID] = teamID
 		teamDropZones[teamID] = unitID
+	elseif UnitDefs[unitDefID].customParams.dropship == "union" then -- TODO: This is dreadful
+		EditUnitCmdDesc(teamDropZones[teamID], FindUnitCmdDesc(teamDropZones[teamID], CMD_SEND_ORDER), {name = "Dropship \nArrived "})
 	else
 		local currSlots = teamSlotsRemaining[teamID]
 		local unitType = unitTypes[unitDefID]
@@ -370,10 +382,6 @@ function gadget:UnitDestroyed(unitID, unitDefID, teamID, attackerID, attackerDef
 		teamDropZones[teamID] = nil
 	elseif unitDefID == C3_ID then
 		LanceControl(teamID, false)
-	elseif	UnitDefs[unitDefID].customParams.dropship == "union" then -- TODO: This is dreadful
-		local enableFrame = GetGameFrame() + DROPSHIP_DELAY --(firstTime and 0 or DROPSHIP_DELAY)
-		coolDowns[teamID] = enableFrame
-		Spring.SetTeamRulesParam(teamID, "DROPSHIP_COOLDOWN", enableFrame) -- frame this team can call dropship again
 	end
 	if attackerID and not AreTeamsAllied(teamID, attackerTeam) and unitDefID ~= WALL_ID and unitDefID ~= GATE_ID then
 		AddTeamResource(attackerTeam, "metal", UnitDefs[unitDefID].metalCost * KILL_REWARD_MULT)
@@ -421,6 +429,7 @@ function gadget:GamePreload()
 	for _, teamID in pairs(Spring.GetTeamList()) do
 		GG.Lances[teamID] = 1
 		teamSlotsRemaining[teamID] = 4
+		dropShipStatus[teamID] = 0
 	end
 end
 
@@ -447,6 +456,8 @@ function gadget:GameFrame(n)
 					EditUnitCmdDesc(unitID, FindUnitCmdDesc(unitID, CMD_RUNNING_TOTAL), {name = "Order C-Bills: \n0"})
 					EditUnitCmdDesc(unitID, FindUnitCmdDesc(unitID, CMD_RUNNING_TONS), {name = "Order Tonnes: \n0"})
 					coolDowns[teamID] = -2
+					-- dropship is now READY
+					dropShipStatus[teamID] = 0
 				end
 			end
 		end
