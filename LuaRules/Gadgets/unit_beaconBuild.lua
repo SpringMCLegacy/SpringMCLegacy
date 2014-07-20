@@ -174,7 +174,7 @@ function SpawnCargo(beaconID, dropshipID, unitDefID, teamID)
 end
 
 function SpawnDropship(unitID, teamID, dropshipType, cargo, cost)
-	if Spring.ValidUnitID(unitID) and not Spring.GetUnitIsDead(unitID) then
+	if Spring.ValidUnitID(unitID) and not Spring.GetUnitIsDead(unitID) and not outpostIDs[unitID] and Spring.GetUnitTeam(unitID) == teamID then
 		local tx,ty,tz = GetUnitPosition(unitID)
 		local dropshipID = CreateUnit(dropshipType, tx, ty, tz, "s", teamID)
 		Spring.SetUnitNoSelect(dropshipID, true)
