@@ -43,7 +43,7 @@ local function SendOrder(teamID)
 		orderSizes[teamID] = 0
 		Spring.GiveOrderToUnit(unitID, CMD_SEND_ORDER, {}, {})
 	else
-		Spring.Echo("Can't SEND_ORDER until", readyFrame, "(", frameDelay, ")")
+		--Spring.Echo("Can't SEND_ORDER until", readyFrame, "(", frameDelay, ")")
 		GG.Delay.DelayCall(SendOrder, {teamID}, frameDelay + 30)
 	end
 end
@@ -61,8 +61,10 @@ local function Spam(teamID)
 			--Spring.Echo(orderSizes[teamID], cmdDesc.name, GG.teamSlotsRemaining[teamID])
 		end
 	end
+	--orderSizes[teamID] = 0
+	--GG.Delay.DelayCall(Spring.GiveOrderToUnit, {unitID, CMD_SEND_ORDER, {}, {}}, 1)
 	local readyFrame = GG.coolDowns[teamID] or 0 --Spring.GetTeamRulesParam(teamID, "DROPSHIP_COOLDOWN") or 0
-	local frameDelay = math.max(readyFrame - Spring.GetGameFrame(), 0)
+	local frameDelay = 0 --math.max(readyFrame - Spring.GetGameFrame(), 0)
 	GG.Delay.DelayCall(SendOrder, {teamID}, frameDelay + 30)
 end
 
@@ -89,6 +91,17 @@ function gadget:UnitDestroyed(unitID, unitDefID, teamID)
 	end
 end
 
+local function Wander(unitID)
+	if Spring.ValidUnitID(unitID) then
+		local spot = flagSpots[math.random(1, #flagSpots)]
+		local offsetX = math.random(50, 150)
+		local offsetZ = math.random(50, 150)
+		offsetX = offsetX * -1 ^ (offsetX % 2)
+		offsetZ = offsetZ * -1 ^ (offsetZ % 2)
+		GG.Delay.DelayCall(Spring.GiveOrderToUnit, {unitID, CMD.FIGHT, {spot.x + offsetX, 0, spot.z + offsetZ}, {}}, 1)
+	end
+end
+
 function gadget:UnitUnloaded(unitID, unitDefID, teamID, transportID, transportTeam)
 	if AI_TEAMS[teamID] then
 		if unitDefID == C3_ID then
@@ -101,12 +114,7 @@ function gadget:UnitUnloaded(unitID, unitDefID, teamID, transportID, transportTe
 			end
 		else
 			--Spring.Echo("VEHICLE OR MECH!")
-			local spot = flagSpots[math.random(1, #flagSpots)]
-			local offsetX = math.random(50, 150)
-			local offsetZ = math.random(50, 150)
-			offsetX = offsetX * -1 ^ (offsetX % 2)
-			offsetZ = offsetZ * -1 ^ (offsetZ % 2)
-			GG.Delay.DelayCall(Spring.GiveOrderToUnit, {unitID, CMD.FIGHT, {spot.x + offsetX, 0, spot.z + offsetZ}, {}}, 30)
+			Wander(unitID)
 		end
 	end
 end
@@ -115,6 +123,19 @@ function gadget:UnitGiven(unitID, unitDefID, newTeam, oldTeam)
 	if AI_TEAMS[newTeam] then
 		if unitDefID == BEACON_ID then
 			GG.Delay.DelayCall(Spring.GiveOrderToUnit, {unitID, CMD_C3, {}, {}}, 1)
+		end
+	end
+end
+
+function gadget:UnitIdle(unitID, unitDefID, unitTeam)
+	if UnitDefs[unitDefID].customParams.unittype then
+		-- random chance a idle unit will wander somewhere else
+		local chance = math.random(1, 100)
+		if chance < 75 then
+			--Spring.Echo(UnitDefs[unitDefID].name .. [[ "Fuck it, I'm off for a wander"]])
+			GG.Delay.DelayCall(Wander, {unitID}, 30 * 6)
+		else
+			--Spring.Echo(UnitDefs[unitDefID].name .. [[ "I think I'll stay here..."]])
 		end
 	end
 end
