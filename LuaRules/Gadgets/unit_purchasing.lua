@@ -105,7 +105,9 @@ local unitTypes = {} -- unitTypes[unitDefID] = "lightmech" etc from typeStrings
 local orderCosts = {} -- orderCosts[unitID] = cost
 local orderTons = {} -- orderTons[unitID] = totalTonnage
 local orderSizes = {} -- orderSizes[unitID] = size
+GG.orderSizes = orderSizes
 local teamSlotsRemaining = {} -- teamSlotsRemaining[teamID] = numberOfUnitsSlotsRemaining
+GG.teamSlotsRemaining = teamSlotsRemaining
 local dropZones = {} -- dropZones[unitID] = teamID
 local teamDropZones = {} -- teamDropZone[teamID] = unitID
 local teamHadFirstDrop = {} -- teamHadFirstDrop[teamID] = true/false -- FIXME: ugly hack
