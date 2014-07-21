@@ -121,8 +121,10 @@ function Ribbon:Draw()
   local j = ((self.posIdx==self.size) and 1) or (self.posIdx+1)
   for i=1,quads0 do
     local dir = self.oldPos[j]
-    j = ((j==self.size) and 1) or (j+1)
-    glUniform( oldPosUniform[i] , dir[1], dir[2], dir[3] )
+    if dir[1] then
+      j = ((j==self.size) and 1) or (j+1)
+      glUniform( oldPosUniform[i] , dir[1], dir[2], dir[3] )
+	end
   end
 
   --// insert interpolated current unit pos
@@ -273,8 +275,7 @@ end
 function Ribbon:Visible()
   self.isvalid = (self.unit ~= 0 and not spGetUnitIsDead(self.unit)) or (self.projectile and Spring.GetProjectileDefID(self.projectile))
   local pos = self.oldPos[self.posIdx]
-  if not pos[3] then pos = {Spring.GetProjectilePosition(self.projectile)} end
-  return (self.blendfactor>0) and (spIsSphereInView(pos[1],pos[2],pos[3], self.radius))
+  return (self.blendfactor>0) and (pos[3] and spIsSphereInView(pos[1],pos[2],pos[3], self.radius))
 end
 
 

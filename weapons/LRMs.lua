@@ -29,7 +29,7 @@ local LRM_Class = Weapon:New{
 	},
 	customparams = {
 		cegflare			= "MISSILE_MUZZLEFLASH",
-		--lupsribbon			= {size = 1, width = 2, color = {0.95, 0.65, 0,0.6}},
+		lupsribbon			= {size = 1, width = 2, color = {0.95, 0.65, 0,0.6}},
 		weaponclass			= "missile",
 		ammotype			= "lrm",
 		minrange			= 500,

@@ -344,7 +344,9 @@ function gadget:UnitCreated(unitID, unitDefID, teamID)
 		dropZones[unitID] = teamID
 		teamDropZones[teamID] = unitID
 	elseif UnitDefs[unitDefID].customParams.dropship == "union" then -- TODO: This is dreadful
-		EditUnitCmdDesc(teamDropZones[teamID], FindUnitCmdDesc(teamDropZones[teamID], CMD_SEND_ORDER), {name = "Dropship \nArrived "})
+		if Spring.ValidUnitID(teamDropZones[teamID]) then -- even worse
+			EditUnitCmdDesc(teamDropZones[teamID], FindUnitCmdDesc(teamDropZones[teamID], CMD_SEND_ORDER), {name = "Dropship \nArrived "})
+		end
 	else
 		local currSlots = teamSlotsRemaining[teamID]
 		local unitType = unitTypes[unitDefID]
