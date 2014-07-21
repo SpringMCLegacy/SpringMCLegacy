@@ -136,7 +136,7 @@ function gadget:UnitIdle(unitID, unitDefID, teamID)
 			local chance = math.random(1, 100)
 			if chance < 75 then
 				--Spring.Echo(UnitDefs[unitDefID].name .. [[ "Fuck it, I'm off for a wander"]])
-				GG.Delay.DelayCall(Wander, {unitID}, 30 * 6)
+				GG.Delay.DelayCall(Wander, {unitID}, 30 * 20)
 			else
 				--Spring.Echo(UnitDefs[unitDefID].name .. [[ "I think I'll stay here..."]])
 			end

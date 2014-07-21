@@ -485,6 +485,7 @@ function script.Shot(weaponID)
 			currPoints[weaponID] = 1
         end
 	elseif flareOnShots[weaponID] then
+		if not flares[weaponID] then Spring.Echo(unitDef.name, "sonofabitch") end
 		EmitSfx(flares[weaponID], SFX.CEG + weaponID)
 		if flamerIDs[weaponID] then
 			 GG.LUPS.FlameShot(unitID, unitDefID, _, weaponID)
