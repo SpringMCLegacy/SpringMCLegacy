@@ -2,15 +2,15 @@
 -----------------------------------------------------------------------------------------------------------------
 -----------------------------------------------------------------------------------------------------------------
 
-local SantaHat = {}
-SantaHat.__index = SantaHat
+local Flag = {}
+Flag.__index = Flag
 
 -----------------------------------------------------------------------------------------------------------------
 -----------------------------------------------------------------------------------------------------------------
 
-function SantaHat.GetInfo()
+function Flag.GetInfo()
   return {
-    name      = "SantaHat",
+    name      = "Flag",
     backup    = "", --// backup class, if this class doesn't work (old cards,ati's,etc.)
     desc      = "",
 
@@ -24,7 +24,7 @@ function SantaHat.GetInfo()
   }
 end
 
-SantaHat.Default = {
+Flag.Default = {
   pos        = {0,0,0}, -- start pos
   emitVector = {0.25,1,0},
   layer      = -24,
@@ -43,7 +43,7 @@ SantaHat.Default = {
 -----------------------------------------------------------------------------------------------------------------
 -----------------------------------------------------------------------------------------------------------------
 
-function SantaHat:BeginDraw()
+function Flag:BeginDraw()
   gl.DepthMask(true)
   gl.Lighting(true)
   gl.Light(0, true )
@@ -54,14 +54,14 @@ function SantaHat:BeginDraw()
   --gl.Culling(GL.BACK)
 end
 
-function SantaHat:EndDraw()
+function Flag:EndDraw()
   gl.DepthMask(false)
   gl.Lighting(false)
   gl.Light(0, false )
   --gl.Culling(false)
 end
 
-function SantaHat:Draw()
+function Flag:Draw()
   --gl.Color(self.color)
   local color = self.color
   gl.Material({
@@ -79,7 +79,7 @@ function SantaHat:Draw()
 
   gl.PushMatrix()
   gl.Scale(self.width,self.height,self.width)
-  gl.CallList(self.ConeList)
+  gl.CallList(self.CylinderList)
   gl.PopMatrix()
 
   gl.Color(1,1,1,1)
@@ -95,32 +95,25 @@ function SantaHat:Draw()
   gl.Scale(self.ballSize,self.ballSize,self.ballSize)
   gl.CallList(self.BallList)
   gl.PopMatrix()
-
-  gl.Scale(self.width+0.3,self.width+0.1,self.width+0.3)
-  gl.CallList(self.TorusList)
-
-  gl.PopMatrix()
 end
 
 -----------------------------------------------------------------------------------------------------------------
 -----------------------------------------------------------------------------------------------------------------
 
-function SantaHat:Initialize()
-  SantaHat.ConeList  = gl.CreateList(DrawPin,1,1,8)
-  SantaHat.BallList  = gl.CreateList(DrawSphere,0,0,0,1,14)
-  SantaHat.TorusList = gl.CreateList(DrawTorus,1,0.15,16,16)
+function Flag:Initialize()
+  Flag.BallList  = gl.CreateList(DrawSphere,0,0,0,1,14)
+  Flag.CylinderList  = gl.CreateList(DrawCylinder,0,0,0,1,40,1)
 end
 
-function SantaHat:Finalize()
-  gl.DeleteList(SantaHat.ConeList)
-  gl.DeleteList(SantaHat.BallList)
-  gl.DeleteList(SantaHat.TorusList)
+function Flag:Finalize()
+  gl.DeleteList(Flag.BallList)
+  gl.DeleteList(Flag.CylinderList)
 end
 
 -----------------------------------------------------------------------------------------------------------------
 -----------------------------------------------------------------------------------------------------------------
 
-function SantaHat:CreateParticle()
+function Flag:CreateParticle()
   self.firstGameFrame = Spring.GetGameFrame()
   self.dieGameFrame   = self.firstGameFrame + self.life
 end
@@ -128,25 +121,25 @@ end
 -----------------------------------------------------------------------------------------------------------------
 -----------------------------------------------------------------------------------------------------------------
 
-function SantaHat:Update()
+function Flag:Update()
 end
 
 -- used if repeatEffect=true;
-function SantaHat:ReInitialize()
+function Flag:ReInitialize()
   self.dieGameFrame = self.dieGameFrame + self.life
 end
 
-function SantaHat.Create(Options)
-  local newObject = MergeTable(Options, SantaHat.Default)
-  setmetatable(newObject,SantaHat)  -- make handle lookup
+function Flag.Create(Options)
+  local newObject = MergeTable(Options, Flag.Default)
+  setmetatable(newObject,Flag)  -- make handle lookup
   newObject:CreateParticle()
   return newObject
 end
 
-function SantaHat:Destroy()
+function Flag:Destroy()
 end
 
 -----------------------------------------------------------------------------------------------------------------
 -----------------------------------------------------------------------------------------------------------------
 
-return SantaHat
+return Flag

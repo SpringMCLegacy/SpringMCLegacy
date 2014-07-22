@@ -26,7 +26,6 @@ function AirJet.GetInfo()
     fbo       = true,
     shader    = true,
     distortion= true,
-    atiseries = 2,
     ms        = -1,
     intel     = -1,
   }
@@ -37,7 +36,7 @@ AirJet.Default = {
   --// visibility check
   los            = true,
   airLos         = true,
-  radar          = true,
+  radar          = false,
   
   layer = 4,
   life  = math.huge,
