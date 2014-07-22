@@ -36,7 +36,7 @@ weaponDef = {
 	customparams = {
 		cegflare			= "MG_MUZZLEFLASH",
 		flareonshot			= true,
-		lupsribbon			= {size = 2, width = 1, color = {0.95, 0.65, 0,0.6}},
+		projectilelups		= {"amsTracer"},
     },
 }
 

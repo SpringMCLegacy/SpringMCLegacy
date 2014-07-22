@@ -22,7 +22,7 @@ Sound.Default = {
   worldspace = true,
 
   file   = '',
-  volume = 100,
+  volume = 1.0,
   pos    = nil, --{0,0,0}
   blockfor = 55, --//in gameframes. used to block the sound for a specific amount of time (-> don't oversample the sound)
   length = 60,
@@ -35,9 +35,6 @@ Sound.Default = {
 
 -----------------------------------------------------------------------------------------------------------------
 -----------------------------------------------------------------------------------------------------------------
-
-local GetUnitLosState = Spring.GetUnitLosState
-local PlaySoundFile   = Spring.PlaySoundFile
 
 local lastPlayed = {}
 
@@ -54,8 +51,8 @@ function Sound:CreateParticle()
   local pos    = self.pos
 
   if (self.unit) then
-    local losState = GetUnitLosState(self.unit,LocalAllyTeamID) or {}
-    if (not losState.los) then return false end
+    local losState = Spring.GetUnitLosState(self.unit,LocalAllyTeamID) or {}
+    if not(losState and losState.los) then return false end
     pos = {Spring.GetUnitPosition(self.unit)}
   end
 

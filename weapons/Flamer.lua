@@ -36,6 +36,7 @@ weaponDef = {
 		heatdamage			= 2.5,
 		weaponclass			= "energy",
 		flareonshot 		= true,
+		projectilelups		= {"flameHeat"},
     },
 }
 
