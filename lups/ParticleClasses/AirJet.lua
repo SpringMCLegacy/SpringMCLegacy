@@ -36,7 +36,7 @@ AirJet.Default = {
   --// visibility check
   los            = true,
   airLos         = true,
-  radar          = false,
+  radar          = true,
   
   layer = 4,
   life  = math.huge,
@@ -358,7 +358,7 @@ function AirJet:Visible()
   local posX,posY,posZ = self.pos[1],self.pos[2],self.pos[3]
   local losState
   if (self.unit and not self.worldspace) then
-    losState = (spGetUnitLosState(self.unit, LocalAllyTeamID) or {}).los or false
+    losState = (spGetUnitLosState(self.unit, LocalAllyTeamID))-- or {}).los or false
     local ux,uy,uz = spGetUnitViewPosition(self.unit)
     posX,posY,posZ = posX+ux,posY+uy,posZ+uz
     radius = radius + spGetUnitRadius(self.unit)
