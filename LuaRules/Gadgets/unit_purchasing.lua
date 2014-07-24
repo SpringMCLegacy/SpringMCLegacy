@@ -75,8 +75,6 @@ local runningTonsCmdDesc = {
 	disabled = true,
 }
 
-
-
 -- Variables
 local typeStrings = {"lightmech", "mediummech", "heavymech", "assaultmech", "vehicle", "vtol", "aero"}
 local typeStringAliases = { -- whitespace is to try and equalise resulting font size
@@ -110,7 +108,9 @@ local teamSlotsRemaining = {} -- teamSlotsRemaining[teamID] = numberOfUnitsSlots
 GG.teamSlotsRemaining = teamSlotsRemaining
 local dropZones = {} -- dropZones[unitID] = teamID
 local teamDropZones = {} -- teamDropZone[teamID] = unitID
+
 local dropShipStatus = {} -- dropShipStatus[teamID] = number, where 0 = Ready, 1 = Active, 2 = Cooldown
+local orderStatus = {} -- orderStatus[teamID] = number, where 0 = Ready for a new order, 1 = order submitted, 2 = can't submit atm?
 
 local function AddBuildMenu(unitID)
 	InsertUnitCmdDesc(unitID, sendOrderCmdDesc)
@@ -150,7 +150,7 @@ local function CheckBuildOptions(unitID, teamID, money, weightLeft, cmdID)
 	for cmdDescID = 1, #cmdDescs do
 		local buildDefID = cmdDescs[cmdDescID].id
 		local cmdDesc = cmdDescs[cmdDescID]
-		if cmdDesc.id ~= cmdID then
+		if cmdDesc.id ~= cmdID and buildDefID < 0 then
 			local currParam = cmdDesc.params[1] or ""
 			local cCost, tCost
 			if buildDefID < 0 then -- a build order
@@ -183,19 +183,26 @@ end
 local coolDowns = {} -- coolDowns[teamID] = enableFrame
 GG.coolDowns = coolDowns
 
-function SendButtonCoolDown(unitID, teamID, firstTime)
-	EditUnitCmdDesc(unitID, FindUnitCmdDesc(unitID, CMD_SEND_ORDER), {disabled = true, name = "Order \nSent "})
-	coolDowns[teamID] = math.huge -- will be corrected when the dropship leaves
-	--[[local enableFrame = GetGameFrame() + DROPSHIP_COOLDOWN --(firstTime and 0 or DROPSHIP_COOLDOWN)
-	coolDowns[teamID] = enableFrame
-	Spring.SetTeamRulesParam(teamID, "DROPSHIP_COOLDOWN", enableFrame) -- frame this team can call dropship again]]
+function UpdateButtons(teamID)
+	local unitID = teamDropZones[teamID]
+	if orderStatus[teamID] == 0 then
+		EditUnitCmdDesc(unitID, FindUnitCmdDesc(unitID, CMD_SEND_ORDER), {disabled = false, name = "Submit \nOrder "})
+		if orderSizes[teamID] == 0 then
+			EditUnitCmdDesc(unitID, FindUnitCmdDesc(unitID, CMD_RUNNING_TOTAL), {name = "Order C-Bills: \n0"})
+			EditUnitCmdDesc(unitID, FindUnitCmdDesc(unitID, CMD_RUNNING_TONS), {name = "Order Tonnes: \n0"})
+		end
+	elseif orderStatus[teamID] == 1 then
+		EditUnitCmdDesc(unitID, FindUnitCmdDesc(unitID, CMD_SEND_ORDER), {--[[disabled = false, ]]name = "Order \nSent "})
+	end
+	--coolDowns[teamID] = math.huge -- TODO: allow orders when ACTIVE? -> will be corrected when the dropship leave
 end
 
 -- TODO: Issues if dropzone is 'flipped' to another beacon
 function DropshipLeft(teamID) -- called by Dropship once it has left, to enable "Submit Order"
 	local unitID = teamDropZones[teamID]
+	orderStatus[teamID] = 0
 	if unitID then -- dropzone might have died in the meantime
-		EditUnitCmdDesc(unitID, FindUnitCmdDesc(unitID, CMD_SEND_ORDER), {disabled = false, name = "Submit \nOrder "})
+		UpdateButtons(teamID)
 	end
 	-- Dropship is no longer ACTIVE, it is entering COOLDOWN
 	GG.PlaySoundForTeam(teamID, "BB_Reinforcements_Inbound_ETA_30", 1)
@@ -208,6 +215,7 @@ GG.DropshipLeft = DropshipLeft
 
 -- Factories can't implement gadget:CommandFallback, so fake it ourselves
 local function SendCommandFallback(unitID, unitDefID, teamID)
+	if orderStatus[teamID] == 0 then return end -- order was cancelled
 	if dropShipStatus[teamID] == 0 then -- Dropship is READY
 		-- CALL DROPSHIP
 		local orderQueue = Spring.GetFullBuildQueue(unitID)
@@ -294,16 +302,26 @@ function gadget:AllowCommand(unitID, unitDefID, teamID, cmdID, cmdParams, cmdOpt
 			end
 			
 		elseif cmdID == CMD_SEND_ORDER then
-			if (orderSizes[unitID] or 0) == 0 then return false end -- don't allow empty orders
 			local money = GetTeamResources(teamID, "metal")
 			local cost = orderCosts[unitID] or 0
+			if rightClick and orderStatus[teamID] == 1 then
+				orderStatus[teamID] = 0
+				AddTeamResource(teamID, "metal", cost)
+				UpdateButtons(teamID)
+				return true
+			elseif orderStatus[teamID] == 1 then
+				return false -- we already have submitted an order and not cancelled it
+			end
+			if (orderSizes[unitID] or 0) == 0 then return false end -- don't allow empty orders
+
 			-- check we can afford the order; possible that a previously affordable order is now too much e.g. if towers have been purchased
 			-- N.B. It should not be possible for available tonnage to change between orders, so we don't need to check that
 			if cost > money then return false end
 
 			-- We are going ahead with this order. Deduct the cost now, TODO: if it is cancelled it will be refunded
 			UseTeamResource(teamID, "metal", cost)
-			SendButtonCoolDown(unitID, teamID)
+			orderStatus[teamID] = 1
+			UpdateButtons(teamID)
 			GG.Delay.DelayCall(SendCommandFallback, {unitID, unitDefID, teamID}, 16)
 			return true
 		end
@@ -345,7 +363,7 @@ function gadget:UnitCreated(unitID, unitDefID, teamID)
 		teamDropZones[teamID] = unitID
 	elseif UnitDefs[unitDefID].customParams.dropship == "union" then -- TODO: This is dreadful
 		if Spring.ValidUnitID(teamDropZones[teamID]) then -- even worse
-			EditUnitCmdDesc(teamDropZones[teamID], FindUnitCmdDesc(teamDropZones[teamID], CMD_SEND_ORDER), {name = "Dropship \nArrived "})
+			EditUnitCmdDesc(teamDropZones[teamID], FindUnitCmdDesc(teamDropZones[teamID], CMD_SEND_ORDER), {disabled = true, name = "Dropship \nArrived "})
 		end
 	else
 		local currSlots = teamSlotsRemaining[teamID]
@@ -432,6 +450,7 @@ function gadget:GamePreload()
 		GG.Lances[teamID] = 1
 		teamSlotsRemaining[teamID] = 4
 		dropShipStatus[teamID] = 0
+		orderStatus[teamID] = 0
 	end
 end
 
@@ -453,10 +472,8 @@ function gadget:GameFrame(n)
 			if not Spring.ValidUnitID(unitID) or Spring.GetUnitIsDead(unitID) then -- check valid first (lazy evaluation means non-valid unitID is then not passed)
 				coolDowns[teamID] = -1
 			else
-				if framesRemaining <= 0 then
-					EditUnitCmdDesc(unitID, FindUnitCmdDesc(unitID, CMD_SEND_ORDER), {name = "Dropship \nArrived "})
-					EditUnitCmdDesc(unitID, FindUnitCmdDesc(unitID, CMD_RUNNING_TOTAL), {name = "Order C-Bills: \n0"})
-					EditUnitCmdDesc(unitID, FindUnitCmdDesc(unitID, CMD_RUNNING_TONS), {name = "Order Tonnes: \n0"})
+				if framesRemaining <= 0 and dropShipStatus[teamID] > 0 then
+					Spring.Echo("Setting status to 0")
 					coolDowns[teamID] = -2
 					-- dropship is now READY
 					dropShipStatus[teamID] = 0
