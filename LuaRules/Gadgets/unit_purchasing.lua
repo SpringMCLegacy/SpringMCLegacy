@@ -305,6 +305,7 @@ function gadget:AllowCommand(unitID, unitDefID, teamID, cmdID, cmdParams, cmdOpt
 			local money = GetTeamResources(teamID, "metal")
 			local cost = orderCosts[unitID] or 0
 			if rightClick and orderStatus[teamID] == 1 then
+				-- cancelling the order, refund the cost and update the buttons
 				orderStatus[teamID] = 0
 				AddTeamResource(teamID, "metal", cost)
 				UpdateButtons(teamID)
@@ -318,7 +319,7 @@ function gadget:AllowCommand(unitID, unitDefID, teamID, cmdID, cmdParams, cmdOpt
 			-- N.B. It should not be possible for available tonnage to change between orders, so we don't need to check that
 			if cost > money then return false end
 
-			-- We are going ahead with this order. Deduct the cost now, TODO: if it is cancelled it will be refunded
+			-- We are going ahead with this order. Deduct the cost now.
 			UseTeamResource(teamID, "metal", cost)
 			orderStatus[teamID] = 1
 			UpdateButtons(teamID)
