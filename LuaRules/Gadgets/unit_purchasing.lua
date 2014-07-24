@@ -348,6 +348,7 @@ function LanceControl(teamID, add)
 		-- So remove the extra tonnage manually
 		UseTeamResource(teamID, "energy", 200)
 		-- TODO: if numCombatUnits > numSlots then loss of control over lances etc
+		-- TODO: This should also be the case if new tonnage limit < current active tonnage?
 		-- check if there were any backup C3 towers
 		local C3count = Spring.GetTeamUnitDefCount(teamID, C3_ID) -- TODO: cache
 		if C3count < 2 then -- team lost control of / capacity for a lance

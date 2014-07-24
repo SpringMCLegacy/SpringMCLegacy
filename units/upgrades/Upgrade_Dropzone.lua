@@ -8,7 +8,7 @@ for i = 1, footPrint do
 	yardMapString = yardMapString .. yardMapRow
 end
 
-local Upgrade_Dropzone = {
+local Upgrade_Dropzone = Upgrade:New{
 	name              	= "Dropzone",
 	description         = "Landing Demarcation",
 	objectName        	= "Upgrade_Dropzone.s3o",
@@ -22,38 +22,18 @@ local Upgrade_Dropzone = {
 
 	-- Constructor stuff
 	builder				= true,
-	builddistance 		= 460,
-	workerTime			= 10, -- ?	
-	terraformSpeed		= 10000,
-	showNanoSpray		= false,
+	workerTime			= 10, -- required in order to have a build menu
 	-- Set in weapondefs_post.lua
 	--[[sfxtypes = {
 		explosiongenerators = {"custom:beacon"},
 	},]]
 	
 	customparams = {
-		helptext		= "A Beacon indicating a strategically important location.",
+		helptext		= "Primary Drop Zone",
     },
 }
 
-local function copytable(input, output)
-	for k,v in pairs(input) do
-		if type(v) == "table" then
-			output[k] = {}
-			copytable(v, output[k])
-		else
-			output[k] = v
-		end
-	end
-end
-
-local IS_Dropzone = {}
-copytable(Upgrade_Dropzone, IS_Dropzone)
-local CL_Dropzone = {}
-copytable(Upgrade_Dropzone, CL_Dropzone)
-
 return lowerkeys({
-	--["Upgrade_Dropzone"] = Upgrade_Dropzone, 
-	["CL_Dropzone"] = CL_Dropzone,
-	["IS_Dropzone"] = IS_Dropzone,
+	["CL_Dropzone"] = Upgrade_Dropzone:New{},
+	["IS_Dropzone"] = Upgrade_Dropzone:New{},
 })
