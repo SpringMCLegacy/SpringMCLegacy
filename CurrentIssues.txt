@@ -12,6 +12,8 @@ Clan forward leg jump anim pushes into terrain (mistlynx, summoner)
 
 --[f=0032181] [Sound] Error: Unable to open audio file: sounds/fire-flame-burner.wav
 
+"Jump doesn't work a lot of the time" -> caused by having to turn to face jump
+
 ---- TWEAKS
 
 -- Tweak movedefs for Melt?

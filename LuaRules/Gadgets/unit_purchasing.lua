@@ -160,7 +160,7 @@ local function CheckBuildOptions(unitID, teamID, money, weightLeft, cmdID)
 					tCost = tCost * 2
 				end
 			else
-				cCost = GG.CommandCosts[buildDefID] or 0
+				cCost = GG.CommandCosts[buildDefID] or 0 -- TODO: the intention was to disable e.g. Orbital Strike if you can't afford it
 				tCost = 0
 			end
 			if buildDefID < 0 and teamSlotsRemaining[teamID] <= 0.5 then -- builder order but no team slots left
@@ -343,6 +343,10 @@ function LanceControl(teamID, add)
 		teamSlotsRemaining[teamID] = teamSlotsRemaining[teamID] + 4
 		Spring.SetTeamRulesParam(teamID, "TEAM_SLOTS_REMAINING", teamSlotsRemaining[teamID])
 	else -- lost a C3
+		-- When you gain a C3 you get 200 extra e, when you lose one, you lose 200 storage... 
+		-- ..but Spring helpfully fills it with all that extra e, screwing the tonnage system
+		-- So remove the extra tonnage manually
+		UseTeamResource(teamID, "energy", 200)
 		-- TODO: if numCombatUnits > numSlots then loss of control over lances etc
 		-- check if there were any backup C3 towers
 		local C3count = Spring.GetTeamUnitDefCount(teamID, C3_ID) -- TODO: cache
