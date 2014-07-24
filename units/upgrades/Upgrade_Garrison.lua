@@ -1,37 +1,16 @@
-local Upgrade_Garrison = {
+local Upgrade_Garrison = Upgrade:New{
 	name              	= "Garrison",
 	description         = "Fortified Defensive Upgrade",
 	objectName        	= "Upgrade_Bunker.s3o",
-	script				= "Upgrade.lua",
-	iconType			= "beacon",
-	category 			= "structure ground notbeacon",
-	activateWhenBuilt   = true,
 	maxDamage           = 50000,
 	mass                = 10000,
-	footprintX			= 3,
-	footprintZ 			= 3,
-	collisionVolumeType = "box",
-	collisionVolumeScales = "25 25 25",
-	collisionVolumeOffsets = "0 0 0",
-	collisionVolumeTest = 1,
-	buildCostEnergy     = 0,
+	collisionVolumeScales = [[25 25 25]],
 	buildCostMetal      = 7500,
-	buildTime           = 0,
-	canMove				= false,
-	maxVelocity			= 0,
-	idleAutoHeal		= 0,
-	maxSlope			= 100,
-	cantbetransported	= false,
 
 	customparams = {
-		ammosupplier	= "0",
-		supplyradius	= "0",
 		helptext		= "Heavily-fortified structure resilient to all attacks to fortify captured control points.",
 		flagdefendrate = 100,
     },
-	--sounds = {
-    --underattack        = "Dropship_Alarm",
-	--},
 }
 
 return lowerkeys({ ["Upgrade_Garrison"] = Upgrade_Garrison })

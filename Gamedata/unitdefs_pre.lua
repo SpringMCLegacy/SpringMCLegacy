@@ -188,6 +188,29 @@ local Tower = Unit:New{
 	}
 }
 
+-- Upgrades ----
+local Upgrade = Unit:New{
+	script				= "Upgrade.lua",
+	iconType			= "beacon",
+	category 			= "structure ground notbeacon",
+	activateWhenBuilt   = true,
+	footprintX			= 4,
+	footprintZ 			= 4,
+	collisionVolumeType = "box",
+	collisionVolumeScales = [[75 75 75]],
+	buildCostEnergy     = 0,
+	buildCostMetal      = 15000, -- overridden by C3 & Garrison
+	canMove				= true,
+	maxVelocity			= 0,
+	idleAutoHeal		= 0,
+	maxSlope			= 100,
+	cantbetransported	= false,
+
+	customparams = {
+		dontcount		= 1,
+    },
+}
+
 ---------------------------------------------------------------------------------------------
 -- This is where the magic happens
 local sharedEnv = {
@@ -204,6 +227,7 @@ local sharedEnv = {
 	VTOL = VTOL,
 	Aero = Aero,
 	Tower = Tower,
+	Upgrade = Upgrade,
 	printTable = printTable,
 }
 local sharedEnvMT = nil
