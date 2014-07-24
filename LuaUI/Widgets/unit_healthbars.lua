@@ -938,7 +938,7 @@ do
       unitID    = visibleUnits[i]
       unitDefID = GetUnitDefID(unitID)
       unitDef   = UnitDefs[unitDefID or -1]
-      if (unitDef) then
+      if (unitDef and not Spring.GetUnitTransporter(unitID)) then
         DrawUnitInfos(unitID, unitDefID, unitDef)
       end
     end
