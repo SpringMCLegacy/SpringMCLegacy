@@ -38,7 +38,6 @@ local beacon = {
 	},]]
 	
 	customparams = {
-		dontcount		= 1,
 		helptext		= "A Beacon indicating a strategically important location.",
 		minbuildrange	= 230,
     },

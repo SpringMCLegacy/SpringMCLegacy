@@ -28,6 +28,7 @@ local Wall_Gate = {
 		ammosupplier	= "0",
 		supplyradius	= "0",
 		helptext		= "A Wall",
+		wall			= true,
     },
 }
 

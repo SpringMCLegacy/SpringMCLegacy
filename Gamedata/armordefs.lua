@@ -13,9 +13,9 @@ local armorDefs = {
 	vtol = {},
 	tower = {},
 	walls = {},
+	upgrades = {},
 }
 
--- TODO: Assign dropships, upgrades, walls?
 local DEFS = _G.DEFS
 for unitName, unitDef in pairs(DEFS.unitDefs) do
 	local cp = unitDef.customparams
@@ -42,7 +42,11 @@ for unitName, unitDef in pairs(DEFS.unitDefs) do
 		end
 		--Spring.Echo(unitName, typeString)
 		table.insert(armorDefs[typeString], unitName)
-	elseif unitName == "wall" or unitName == "wall_gate" then
+	elseif cp.dropship then
+		table.insert(armorDefs["dropships"], unitName)
+	elseif cp.upgrade then
+		table.insert(armorDefs["upgrades"], unitName)
+	elseif cp.wall then
 		table.insert(armorDefs["walls"], unitName)
 	end
 end
