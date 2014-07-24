@@ -205,10 +205,10 @@ local Upgrade = Unit:New{
 	idleAutoHeal		= 0,
 	maxSlope			= 100,
 	cantbetransported	= false,
-
+	
 	customparams = {
-		dontcount		= 1,
-    },
+		upgrade = true,
+	},
 }
 
 ---------------------------------------------------------------------------------------------
