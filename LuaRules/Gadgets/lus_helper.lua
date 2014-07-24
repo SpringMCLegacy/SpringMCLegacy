@@ -320,7 +320,7 @@ function gadget:GamePreload()
 			info.waterCoolRate = mapWaterTempMult
 		end
 		-- General
-		info.hasEcm = cp.hasecm == "true" -- TODO: use proper bools here
+		info.hasEcm = string.tobool(cp.hasecm)
 		info.numWeapons = #weapons
 		info.elevationSpeed = math.rad(tonumber(cp.elevationspeed) or math.deg(info.torsoTurnSpeed))
 		info.maxAmmo = table.unserialize(cp.maxammo)

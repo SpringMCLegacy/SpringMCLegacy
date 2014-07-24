@@ -77,6 +77,7 @@ local fxStages = {
 		{1, "valve_release", {pos = { 80,100,-80}, emitVector = { 1,0,-1}} },
 		{1, "valve_release", {pos = {-80,100,-80}, emitVector = {-1,0,-1}} },
 		{1, "valve_sound"},
+		{1, "land_sound"},
 		{1, "exhaust_ground_winds", {pos = {0,0,0}, repeatEffect = false}},
 		{1, "exhaust_ground_winds", {pos = {0,0,0}, repeatEffect = false, delay = 80}},
 	},
