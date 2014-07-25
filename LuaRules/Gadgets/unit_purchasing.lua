@@ -480,7 +480,6 @@ function gadget:GameFrame(n)
 				coolDowns[teamID] = -1
 			else
 				if framesRemaining <= 0 and dropShipStatus[teamID] > 0 then
-					Spring.Echo("Setting status to 0")
 					coolDowns[teamID] = -2
 					-- dropship is now READY
 					dropShipStatus[teamID] = 0

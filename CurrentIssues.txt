@@ -12,10 +12,11 @@ Clan forward leg jump anim pushes into terrain (mistlynx, summoner)
 
 --[f=0032181] [Sound] Error: Unable to open audio file: sounds/fire-flame-burner.wav
 
-"Jump doesn't work a lot of the time" -> caused by having to turn to face jump
+"Jump doesn't work a lot of the time" -> caused by having to turn to face jump, after a while jumps outside of jump range cease working
 
 some clan mechs with mismatched launchpoints due to weapon changes (cougar, warhawk, timberwolf)
 
+PPCs do no damage to heavies?
 
 ---- WISHLIST
 
@@ -23,9 +24,13 @@ random race?
 
 buildpics should show ECM / Jump / BAPs / AMS (NARC, TAG?)
 
+Implement leg damage (& MASC?)
+
 Salvage yard upgrade
 
-non-magical wall delivery
+non-magical wall delivery & repair
+
+Make TAG & NARC increase missile accuracy / guidance
 
 vehicles or BAs as AI controlled 'grunts'
 
