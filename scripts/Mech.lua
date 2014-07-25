@@ -259,7 +259,7 @@ function ToggleWeapon(weaponID, code)
 		playerDisabled[weaponID] = not playerDisabled[weaponID]
 		SetUnitRulesParam(unitID, "weapon_" .. weaponID, playerDisabled[weaponID] and "disabled" or "active")
 	elseif code == 1 then
-		SetUnitRulesParam(unitID, "weapon_" .. weaponID, code)
+		SetUnitRulesParam(unitID, "weapon_" .. weaponID, "destroyed")
 	elseif code == 2 then
 		-- restore to previous setting
 		SetUnitRulesParam(unitID, "weapon_" .. weaponID, playerDisabled[weaponID] and "disabled" or "active")
