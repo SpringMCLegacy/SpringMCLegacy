@@ -540,7 +540,7 @@ do
 
   local customInfo = {}
   local ci
-  local ammoTypes = {"AC2", "AC5", "AC10", "AC20", "LRM", "SRM", "MRM", "ATM", "Gauss", "NARC", "Arrow"}
+  local ammoTypes = {"AC2", "AC5", "AC10", "AC20", "LRM", "SRM", "MRM", "ATM", "Gauss", "NARC", "Arrow", "Sniper"}
 
   function DrawUnitInfos(unitID,unitDefID, ud)
     if (not customInfo[unitDefID]) then

@@ -259,6 +259,19 @@ function script.setSFXoccupy(terrainType)
 	end
 end
 
+function ToggleWeapon(weaponID, code)
+	-- codes are: 1: destroyed, 2: repaired, nil implies player toggle
+	if not code then
+		playerDisabled[weaponID] = not playerDisabled[weaponID]
+		SetUnitRulesParam(unitID, "weapon_" .. weaponID, playerDisabled[weaponID] and "disabled" or "active")
+	elseif code == 1 then
+		SetUnitRulesParam(unitID, "weapon_" .. weaponID, code)
+	elseif code == 2 then
+		-- restore to previous setting
+		SetUnitRulesParam(unitID, "weapon_" .. weaponID, playerDisabled[weaponID] and "disabled" or "active")
+	end
+end
+
 function SmokeLimb(limb, piece)
 	local maxHealth = info.limbHPs[limb] / 100
 	while true do
@@ -292,8 +305,16 @@ function hideLimbPieces(limb, hide)
 			if valid then
 				local weapDef = WeaponDefs[unitDef.weapons[id].weaponDef]
 				Spring.Echo(unitDef.humanName .. ": " .. weapDef.name .. " destroyed!")
+				ToggleWeapon(id, 1)
 			end
 		end
+	else
+		for id, valid in pairs(limbWeapons) do
+			if valid then
+				local weapDef = WeaponDefs[unitDef.weapons[id].weaponDef]
+				ToggleWeapon(id, 2)
+			end
+		end		
 	end
 end
 
@@ -363,12 +384,6 @@ end
 function script.Deactivate()
 	Spring.SetUnitStealth(unitID, true)
 	activated = false
-end
-
-function ToggleWeapon(weaponID)
-	playerDisabled[weaponID] = not playerDisabled[weaponID]
-	SetUnitRulesParam(unitID, "weapon_" .. weaponID, playerDisabled[weaponID] and "disabled" or "active")
-	-- TODO: different codes for different types of being disabled?
 end
 
 local function WeaponCanFire(weaponID)
