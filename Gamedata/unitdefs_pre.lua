@@ -208,6 +208,7 @@ local Upgrade = Unit:New{
 	
 	customparams = {
 		upgrade = true,
+		ignoreatbeacon	= true,
 	},
 }
 

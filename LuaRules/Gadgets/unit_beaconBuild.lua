@@ -100,7 +100,7 @@ function gadget:GamePreload()
 				type   = CMDTYPE.ICON,
 				name   = unitDef.humanName:gsub(" ", "  \n"),
 				action = 'upgrade',
-				tooltip = "C-Bill cost: " .. cBillCost, -- TODO: add c-bill cost and w/e else
+				tooltip = "C-Bill cost: " .. cBillCost,
 			}
 			outpostDefs[unitDefID] = {cmdDesc = upgradeCmdDesc, cost = cBillCost}
 			upgradeIDs[upgradeCmdDesc.id] = unitDefID
@@ -111,7 +111,7 @@ function gadget:GamePreload()
 				type   = CMDTYPE.ICON,
 				name   = "Defensive\nWalls",
 				action = 'upgrade',
-				tooltip = "C-Bill cost: " .. cBillCost, -- TODO: add c-bill cost and w/e else
+				tooltip = "C-Bill cost: " .. cBillCost,
 			}
 			upgradeIDs[wallCmdDesc.id] = unitDefID
 			wallRepairCmdDesc = {
@@ -119,7 +119,7 @@ function gadget:GamePreload()
 				type   = CMDTYPE.ICON,
 				name   = "Repair\n Walls",
 				action = 'upgrade',
-				tooltip = "C-Bill cost: " .. cBillCost * 0.5, -- TODO: add c-bill cost and w/e else
+				tooltip = "C-Bill cost: " .. cBillCost * 0.5,
 			}
 		elseif unitDefID == GATE_ID then -- and gates too
 			local cBillCost = unitDef.metalCost
@@ -128,7 +128,7 @@ function gadget:GamePreload()
 				type   = CMDTYPE.ICON,
 				name   = "Install\n Gate",
 				action = 'upgrade',
-				tooltip = "C-Bill cost: " .. cBillCost, -- TODO: add c-bill cost and w/e else
+				tooltip = "C-Bill cost: " .. cBillCost,
 			}
 		end
 	end
@@ -191,7 +191,6 @@ function SpawnDropship(unitID, teamID, dropshipType, cargo, cost)
 			DelayCall(SpawnCargo, {unitID, dropshipID, cargo, teamID}, 1)
 		end
 	else -- dropzone moved or beacon was capped
-		-- TODO: It would be better if order were put on hold until new dropzone is established
 		-- Refund
 		Spring.AddTeamResource(teamID, "metal", cost)
 	end
@@ -269,7 +268,7 @@ local function RepairWalls(beaconID, teamID)
 			local newWallID = CreateUnit("wall", info.px, 0, info.pz, "s", teamID) -- can't rely on creating with old ID here incase it was reused
 			SetUnitNeutral(newWallID, true)
 			SetUnitRotation(newWallID, 0, -info.angle, 0)
-			--  TODO: sub the new ID back into everything else in place of old ID :(
+			-- sub the new ID back into everything in place of old ID
 			wallInfos[newWallID] = {beaconID = beaconID, angle = info.angle, px = info.px, pz = info.pz}
 			wallInfos[wallID] = nil
 			wallIDs[beaconID][i] = newWallID
@@ -341,7 +340,7 @@ function gadget:UnitDestroyed(unitID, unitDefID, teamID)
 	elseif dropZoneIDs[teamID] == unitID then -- unit was a team's dropzone, reset upgrade options
 		dropZoneIDs[teamID] = nil
 		AddUpgradeOptions(dropZoneBeaconIDs[teamID])
-		dropZoneBeaconIDs[teamID] = nil -- TODO: needed?
+		dropZoneBeaconIDs[teamID] = nil
 	end
 	local wallInfo = wallInfos[unitID]
 	if wallInfo and not hotSwapIDs[unitID] then -- unit was a wall or gate piece, not being hotswapped
