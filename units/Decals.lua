@@ -7,6 +7,7 @@ local Decal = Unit:New{
 	
 	customParams = {
 		decal = true,
+		ignoreatbeacon	= true,
 	}
 }
 

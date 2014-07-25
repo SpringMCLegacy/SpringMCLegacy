@@ -40,6 +40,7 @@ local beacon = {
 	customparams = {
 		helptext		= "A Beacon indicating a strategically important location.",
 		minbuildrange	= 230,
+		ignoreatbeacon	= true,
     },
 	
 	sounds = {

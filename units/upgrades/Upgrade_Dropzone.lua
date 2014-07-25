@@ -32,6 +32,7 @@ local Upgrade_Dropzone = Upgrade:New{
 	
 	customparams = {
 		helptext		= "Primary Drop Zone",
+		ignoreatbeacon	= true,
     },
 }
 

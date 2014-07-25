@@ -216,7 +216,7 @@ function gadget:GamePreload()
 		Spring.SetGameRulesParam("MAP_TEMP_WATER", temps.water)
 	end
 	for unitDefID, ud in pairs(UnitDefs) do -- cache ignored unitDefIDs
-		if ud.canFly or ud.customParams.decal or ud.name:find("dropzone") or ud.name == "beacon" then -- TODO: single customparam?
+		if ud.canFly or string.tobool(ud.customParams.ignoreatbeacon) then
 			unitDefsToIgnore[unitDefID] = true
 		end
 	end
@@ -224,7 +224,6 @@ end
 
 
 function gadget:GameStart()
-	Spring.PlaySoundFile("BB_All_Systems_Nominal", 1, "ui") -- TODO: Put this somewhere more sensible
 	-- FLAG PLACEMENT
 	for _, flagType in pairs(flagTypes) do
 		if DEBUG then Spring.Echo("-- flagType is " .. flagType) end
@@ -388,7 +387,7 @@ end
 
 function CheckAllyTeamUnits(unitTeam)
 	if unitTeam == GAIA_TEAM_ID then return end -- Gaia does not have tickets
-	if Spring.GetTeamUnitCount(unitTeam) <= 1 then -- TODO: Not sure why this gives 1 instead of 0, probably 'cleanup' issues as only called via UnitDestroyed and UnitGiven
+	if Spring.GetTeamUnitCount(unitTeam) <= 1 then -- Not sure why this gives 1 instead of 0; probably 'cleanup' issues as only called via UnitDestroyed and UnitGiven
 		-- Check if this was last unit on whole allyteam
 		local allyTeam = select(6, Spring.GetTeamInfo(unitTeam))
 		local allyTeamUnitCount = 0

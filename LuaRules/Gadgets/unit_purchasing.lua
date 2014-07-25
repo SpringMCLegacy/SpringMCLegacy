@@ -229,6 +229,7 @@ local function SendCommandFallback(unitID, unitDefID, teamID)
 		
 		local side = UnitDefs[unitDefID].name:sub(1,2) -- send dropship of correct side
 		-- TODO: Sound needs to change?
+		-- TODO: Remove the 3 second delay here? causes a bug where you can quickly cancel to get refund & units, and feels 'laggy'
 		GG.DropshipDelivery(unitID, teamID, side .. "_dropship", orderQueue, 0, nil, DROPSHIP_DELAY)
 		Spring.SendMessageToTeam(teamID, "Sending purchase order for the following:")
 		for i, order in ipairs(orderQueue) do
@@ -349,7 +350,7 @@ function LanceControl(teamID, add)
 		-- So remove the extra tonnage manually
 		UseTeamResource(teamID, "energy", 200)
 		-- TODO: if numCombatUnits > numSlots then loss of control over lances etc
-		-- TODO: This should also be the case if new tonnage limit < current active tonnage?
+		-- TODO: but being over tonnage just means you can't order any extras?
 		-- check if there were any backup C3 towers
 		local C3count = Spring.GetTeamUnitDefCount(teamID, C3_ID) -- TODO: cache
 		if C3count < 2 then -- team lost control of / capacity for a lance

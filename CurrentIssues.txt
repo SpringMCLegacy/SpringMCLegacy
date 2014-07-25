@@ -14,17 +14,24 @@ Clan forward leg jump anim pushes into terrain (mistlynx, summoner)
 
 "Jump doesn't work a lot of the time" -> caused by having to turn to face jump
 
----- TWEAKS
+some clan mechs with mismatched launchpoints due to weapon changes (cougar, warhawk, timberwolf)
 
--- Tweak movedefs for Melt?
+
+---- WISHLIST
 
 random race?
 
 buildpics should show ECM / Jump / BAPs / AMS (NARC, TAG?)
 
-some clan mechs with mismatched launchpoints due to weapon changes (cougar, warhawk, timberwolf)
+Salvage yard upgrade
+
+non-magical wall delivery
+
+vehicles or BAs as AI controlled 'grunts'
 
 
 ---- BALANCE
 
 HAG30 dps!
+
+repair walls is ridiculously exploitable

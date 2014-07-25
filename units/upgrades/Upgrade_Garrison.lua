@@ -10,6 +10,7 @@ local Upgrade_Garrison = Upgrade:New{
 	customparams = {
 		helptext		= "Heavily-fortified structure resilient to all attacks to fortify captured control points.",
 		flagdefendrate = 100,
+		ignoreatbeacon	= false,
     },
 }
 
