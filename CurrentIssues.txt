@@ -34,6 +34,8 @@ vehicles or BAs as AI controlled 'grunts'
 
 include or GG shared script functions between Mech/Vehicle/Turret
 
+sendtounsynced key events e.g. 'mech loses arm' to avoid polling rules params in widgets
+
 ---- BALANCE
 
 HAG30 dps!

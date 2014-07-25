@@ -122,6 +122,7 @@ for weaponID = 1, info.numWeapons do
 		end
 	end
 	playerDisabled[weaponID] = false
+	SetUnitRulesParam(unitID, "weapon_" .. weaponID, "active")
 end
 
 local function RestoreAfterDelay(unitID)
