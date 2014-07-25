@@ -1,6 +1,6 @@
 local Turret_BAP = Tower:New{
 	name              	= "Sensor Emplacement",
-	description         = "Beagle Active Probe (BAP)",
+	description         = "Beagle Active Probe",
 	objectName        	= "Turret_LAMS.s3o",
 	--buildCostMetal      = 0,
 

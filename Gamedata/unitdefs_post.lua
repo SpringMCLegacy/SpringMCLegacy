@@ -44,6 +44,9 @@ for name, ud in pairs(UnitDefs) do
 			ud.buildtime = RAMP_DISTANCE / speed
 			ud.losemitheight = ud.mass / 100
 			ud.radaremitheight = ud.mass / 100
+			if ud.customparams.canjump then
+				ud.description = ud.description .. " \255\001\179\214[JUMP]"
+			end
 		elseif ud.customparams.unittype == "vehicle" then
 			if ud.canfly then
 				ud.buildtime = HANGAR_DISTANCE / (speed * 0.5)
@@ -68,11 +71,13 @@ for name, ud in pairs(UnitDefs) do
 		if ud.customparams.hasecm == "true" then
 			ud.seismicsignature = 20
 			ud.radardistancejam	= 500
+			ud.description = ud.description .. " \255\128\128\128[ECM]"
 		else
 			seismicsignature = 0
 		end
 		if ud.customparams.hasbap == "true" then
 			ud.seismicdistance = 3000
+			ud.description = ud.description .. " \255\001\255\001[BAP]"
 		end
 	elseif not name:find("decal") then
 		ud.seismicdistance = 0
@@ -88,10 +93,15 @@ for name, ud in pairs(UnitDefs) do
 	local weapons = ud.weapons
 	if weapons then
 		for i, weapon in pairs(weapons) do
-			if weapon.name:lower() == "ams" then
+			if weapon.name:lower() == "ams" or weapon.name:lower() == "lams" then
 				weapon.maxangledif = 360
-			elseif weapon.name:lower() == "narc" or weapon.name:lower() == "tag" then
+				ud.description = ud.description .. " \255\230\160\016[AMS]"
+			elseif weapon.name:lower() == "narc" then
 				weapon.onlytargetcategory = "narctag"			
+				ud.description = ud.description .. " \255\255\255\001[NARC]"
+			elseif weapon.name:lower() == "tag" then
+				weapon.onlytargetcategory = "narctag"			
+				ud.description = ud.description .. " \255\255\051\051[TAG]"
 			else
 				weapon.onlytargetcategory = (weapon.onlytargetcategory or "") .. " notbeacon"
 				weapon.badtargetcategory = (weapon.badtargetcategory or "") .. " dropship structure"
