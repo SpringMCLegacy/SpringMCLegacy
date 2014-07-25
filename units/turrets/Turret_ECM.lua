@@ -1,6 +1,6 @@
 local Turret_ECM = Tower:New{
 	name              	= "ECM Emplacement",
-	description         = "Electronic Counter-Measure (ECM)",
+	description         = "Electronic Counter-Measure",
 	objectName        	= "Turret_LAMS.s3o",
 	--buildCostMetal      = 0,
 
