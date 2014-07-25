@@ -398,15 +398,7 @@ function gadget:AllowCommand(unitID, unitDefID, teamID,
           unitDefID, cmdParams[1], cmdParams[2], cmdParams[3], 1) == 0) then
       return true --false FIX ME!
   end
-  -- do no allow morphing while jumping
-  --[[if (jumping[unitID] and GG.MorphInfo and cmdID >= CMD_MORPH and cmdID < CMD_MORPH+GG.MorphInfo["MAX_MORPH"]) then
-    -- allow to queue
-    if cmdOptions.shift then
-      return true
-    else
-      return false
-    end
-  end]]
+  if not cmdOptions.shift then goalSet[unitID] = false end
   return true -- allowed
 end
 
@@ -429,11 +421,9 @@ local function TurnOrder(unitID, x, y, z)
    PrintCommands(unitID)
    
    Spring.Echo("Now insert TURN")]]
-   --Spring.GiveOrderToUnit(unitID, CMD_TURN, {x, y, z}, {"alt", "shift"})
    Spring.GiveOrderToUnit(unitID, CMD.INSERT, {0, CMD_TURN, CMD.OPT_ALT, x, y, z}, {"alt"})
    
    --Spring.Echo("Now insert JUMP")
-   --Spring.GiveOrderToUnit(unitID, CMD_JUMP, {x, y, z}, {"alt", "shift"})
    Spring.GiveOrderToUnit(unitID, CMD.INSERT, {1, CMD_JUMP, CMD.OPT_SHIFT, x, y, z}, {"alt"}) --options.ALT     -> treat param0 as a position instead of a tag 
    --[[PrintCommands(unitID)
    
@@ -442,80 +432,75 @@ local function TurnOrder(unitID, x, y, z)
 end
 
 
-function gadget:CommandFallback(unitID, unitDefID, teamID,    -- keeps getting 
-                                cmdID, cmdParams, cmdOptions) -- called until
-  if (not jumpDefs[unitDefID]) then
-	return false
-  end
-  if (cmdID ~= CMD_JUMP) then      -- you remove the
-	goalSet[unitID] = false
-	return false  -- command was not used                     -- order
-  end
-  if (jumping[unitID]) then
-    return true, false -- command was used but don't remove it
-  end
-  if GG.turning[unitID] then
-    return true, false
-  end
-  
-  local x, y, z = spGetUnitBasePosition(unitID)
-  local distSqr = GetDist2Sqr({x, y, z}, cmdParams)
-  local jumpDef = jumpDefs[unitDefID]
-  local range   = spGetUnitRulesParam(unitID, "jumpRange") or jumpDef.range
-  local reload  = spGetUnitRulesParam(unitID, "jumpReload") or jumpDef.reload or 0
-  local barFull = spGetUnitRulesParam(unitID, "jump_reload_bar") == 100
-  local t       = spGetGameSeconds()
-  
+function gadget:CommandFallback(unitID, unitDefID, teamID, cmdID, cmdParams, cmdOptions)
+	if (not jumpDefs[unitDefID]) then
+		return false
+	end
+	if (cmdID ~= CMD_JUMP) then      -- you remove the
+		goalSet[unitID] = false
+		return false  -- command was not used                     -- order
+	end
+	if (jumping[unitID]) then
+		return true, false -- command was used but don't remove it
+	end
+	if GG.turning[unitID] then
+		return true, false
+	end
 
-  if (distSqr < (range*range)) then
-    -- Extra FLOZi code
-    local dx, dz = cmdParams[1] - x, cmdParams[3] - z
-    local MINIMUM_TURN = 10 * 182
-	local newHeading = math.deg(math.atan2(dx, dz)) * 182 -- COB_ANGULAR	
-	local currHeading = Spring.GetUnitCOBValue(unitID, COB.HEADING)
-	local deltaHeading = newHeading - currHeading
-	if math.abs(deltaHeading) < MINIMUM_TURN then
-	
-	-- don't have to turn, continue as normal
-    local cmdTag = spGetCommandQueue(unitID,1)[1].tag
-	 -- reload perk can change reload before bar is full so check both
-    if ((t - lastJump[unitID]) >= reload) and barFull then
-      local coords = table.concat(cmdParams)
-      if (not jumps[coords]) then
-        if (not Jump(unitID, cmdParams, cmdTag)) then
-          return true, true -- command was used, remove it 
-        end
-        jumps[coords] = 1
-        return true, false -- command was used, remove it 
-      else
-        local r = landBoxSize*jumps[coords]^0.5/2
-        local randpos = {
-          cmdParams[1] + random(-r, r),
-          cmdParams[2],
-          cmdParams[3] + random(-r, r)}
-        if (not Jump(unitID, randpos, cmdTag)) then
-          return true, true -- command was used, remove it 
-        end
-        jumps[coords] = jumps[coords] + 1
-        return true, false -- command was used, remove it 
-      end
-    end
-	
-	else -- need to turn
-	  if not GG.turning[unitID] then
-	    --Spring.Echo("not GG.turning")
-	    GG.Delay.DelayCall(TurnOrder, {unitID, cmdParams[1], cmdParams[2], cmdParams[3]}, 1)
-	  end
-	  return true, true
-	end
-  else -- out of range
-	if not goalSet[unitID] then
-      Approach(unitID, cmdParams, range)
-	  goalSet[unitID] = true
-	end
-  end
+	local x, y, z = spGetUnitBasePosition(unitID)
+	local distSqr = GetDist2Sqr({x, y, z}, cmdParams)
+	local jumpDef = jumpDefs[unitDefID]
+	local range   = spGetUnitRulesParam(unitID, "jumpRange") or jumpDef.range
+	local reload  = spGetUnitRulesParam(unitID, "jumpReload") or jumpDef.reload or 0
+	local barFull = spGetUnitRulesParam(unitID, "jump_reload_bar") == 100
+	local t       = spGetGameSeconds()
   
-  return true, false -- command was used but don't remove it
+	if (distSqr < (range*range)) then -- we are within jumping range
+		-- Extra FLOZi code
+		local dx, dz = cmdParams[1] - x, cmdParams[3] - z
+		local MINIMUM_TURN = 10 * 182
+		local newHeading = math.deg(math.atan2(dx, dz)) * 182 -- COB_ANGULAR	
+		local currHeading = Spring.GetUnitCOBValue(unitID, COB.HEADING)
+		local deltaHeading = newHeading - currHeading
+		if math.abs(deltaHeading) < MINIMUM_TURN then
+			-- don't have to turn, continue as normal
+			local cmdTag = spGetCommandQueue(unitID,1)[1].tag
+			-- reload perk can change reload before bar is full so check both
+			if ((t - lastJump[unitID]) >= reload) and barFull then
+				local coords = table.concat(cmdParams)
+				if (not jumps[coords]) then
+					if (not Jump(unitID, cmdParams, cmdTag)) then
+						return true, true -- command was used, remove it 
+					end
+					jumps[coords] = 1
+					return true, false -- command was used, remove it 
+				else
+					local r = landBoxSize*jumps[coords]^0.5/2
+					local randpos = {
+						cmdParams[1] + random(-r, r),
+						cmdParams[2],
+						cmdParams[3] + random(-r, r)}
+					if (not Jump(unitID, randpos, cmdTag)) then
+						return true, true -- command was used, remove it 
+					end
+					jumps[coords] = jumps[coords] + 1
+					return true, false -- command was used, remove it 
+				end
+			end
+		else -- need to turn
+			if not GG.turning[unitID] then
+				--Spring.Echo("not GG.turning")
+				GG.Delay.DelayCall(TurnOrder, {unitID, cmdParams[1], cmdParams[2], cmdParams[3]}, 1)
+			end
+			return true, true
+		end
+	else -- out of range
+		if not goalSet[unitID] then
+			Approach(unitID, cmdParams, range)
+			goalSet[unitID] = true
+		end
+	end
+	return true, false -- command was used but don't remove it
 end
 
 
