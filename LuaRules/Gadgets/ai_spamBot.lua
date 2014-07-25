@@ -62,11 +62,7 @@ local function Spam(teamID)
 				--Spring.Echo(orderSizes[teamID], cmdDesc.name, GG.teamSlotsRemaining[teamID])
 			end
 		end
-		--orderSizes[teamID] = 0
-		--GG.Delay.DelayCall(Spring.GiveOrderToUnit, {unitID, CMD_SEND_ORDER, {}, {}}, 1)
-		local readyFrame = GG.coolDowns[teamID] or 0 --Spring.GetTeamRulesParam(teamID, "DROPSHIP_COOLDOWN") or 0
-		local frameDelay = 0 --math.max(readyFrame - Spring.GetGameFrame(), 0)
-		GG.Delay.DelayCall(SendOrder, {teamID}, frameDelay + 30)
+		GG.Delay.DelayCall(SendOrder, {teamID}, 2) -- frame after orders
 	end
 end
 
