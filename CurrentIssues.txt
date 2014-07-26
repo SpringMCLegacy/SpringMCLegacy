@@ -4,8 +4,6 @@
  
 top of ticket counter widget e.g. resources missing in certain window res
  
-Clan forward leg jump anim pushes into terrain (mistlynx, summoner)
- 
 -- [f=0005587] [unit_script.lua] Error: [string "LuaRules/Gadgets/unit_script.lua"]:302: Incorrect arguments to CallAsUnit()
 
 [f=0017630] [unit_script.lua] Error: [string "scripts/vehicle.lua"]:146: attempt to perform arithmetic on field '?' (a nil value) -- can't replicate
@@ -20,7 +18,7 @@ PPCs do no damage to heavies?
 
 random race?
 
-buildpics should show ECM / Jump / BAPs / AMS (NARC, TAG?)
+--buildpics should show ECM / Jump / BAPs / AMS (NARC, TAG?)
 
 Implement leg damage (& MASC?)
 
