@@ -162,6 +162,11 @@ end
 local tempHeight = yMax - 80 - (16 * #allyTeams)
 local timeHeight = tempHeight - 48
 
+
+function widget:ViewResize(viewSizeX, viewSizeY)
+	xMax, yMax = viewSizeX, viewSizeY
+end
+
 function widget:DrawScreen()
 	btFont:Begin()
 		btFont:Print(cBillsText, xMax * 0.25, yMax - 32, 16, "od")
