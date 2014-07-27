@@ -14,6 +14,14 @@ end
 
 if gadgetHandler:IsSyncedCode() then
 --	SYNCED
+
+local modOptions = Spring.GetModOptions()
+local difficulty = tonumber(modOptions and modOptions.ai_difficulty or "1")
+
+local DIREWOLF_ID = UnitDefNames["cl_direwolf_prime"].id
+local DEVASTATOR_ID = UnitDefNames["is_devastator_dvs2"].id
+
+
 local AI_TEAMS = {}
 local BEACON_ID = UnitDefNames["beacon"].id
 local C3_ID = UnitDefNames["upgrade_c3array"].id
@@ -26,6 +34,7 @@ local PERK_JUMP_RANGE = GG.CustomCommands.GetCmdID("PERK_JUMP_RANGE")
 local CMD_C3 = GG.CustomCommands.GetCmdID("CMD_UPGRADE_upgrade_c3array")
 local dropZoneIDs = {}
 local orderSizes = {}
+local sides = {}
 
 local flagSpots = {} --VFS.Include("maps/flagConfig/" .. Game.mapName .. "_profile.lua")
 
@@ -59,11 +68,18 @@ local function Spam(teamID)
 		local cmdDescs = Spring.GetUnitCmdDescs(unitID)
 		orderSizes[teamID] = 0
 		while orderSizes[teamID] < GG.teamSlotsRemaining[teamID] do
-			local cmdDesc = cmdDescs[math.random(1, #cmdDescs)]
-			if cmdDesc.id < 0 then
-				GG.Delay.DelayCall(Spring.GiveOrderToUnit, {unitID, cmdDesc.id, {}, {}}, 1)
+			local buildID
+			if difficulty > 1 then
+				buildID = (sides[teamID] == "clans" and -DIREWOLF_ID) or -DEVASTATOR_ID
+				Spring.AddTeamResource(teamID, "energy", 100)
+			else
+				local cmdDesc = cmdDescs[math.random(1, #cmdDescs)]
+				buildID = cmdDesc.id
+			end
+			if buildID < 0 then
+				GG.Delay.DelayCall(Spring.GiveOrderToUnit, {unitID, buildID, {}, {}}, 1)
 				orderSizes[teamID] = orderSizes[teamID] + 1
-				--Spring.Echo(orderSizes[teamID], cmdDesc.name, GG.teamSlotsRemaining[teamID])
+				--Spring.Echo("Adding to order;", orderSizes[teamID], UnitDefs[-buildID].name, GG.teamSlotsRemaining[teamID])
 			end
 		end
 		GG.Delay.DelayCall(SendOrder, {teamID}, 2) -- frame after orders
@@ -79,7 +95,12 @@ function gadget:UnitCreated(unitID, unitDefID, teamID)
 		local unitDef = UnitDefs[unitDefID]
 		if unitDef.name:find("dropzone") then
 			dropZoneIDs[teamID] = unitID	
+			sides[teamID] = unitDef.name:find("cl") and "clans" or "IS"
 			Spam(teamID)
+		end
+		if difficulty > 1 then -- harder AI tonnage cheats, needs storage to do so
+			Spring.SetTeamResource(teamID, "es", 1000000)
+			Spring.AddTeamResource(teamID, "energy", 1000000)
 		end
 	end
 end
@@ -162,7 +183,7 @@ function gadget:UnitIdle(unitID, unitDefID, teamID)
 			local chance = math.random(1, 100)
 			if chance < 75 then
 				--Spring.Echo(UnitDefs[unitDefID].name .. [[ "Fuck it, I'm off for a wander"]])
-				GG.Delay.DelayCall(Wander, {unitID, cp.canjump and CMD_JUMP}, 30 * 20)
+				GG.Delay.DelayCall(Wander, {unitID, cp.canjump and CMD_JUMP}, 30 * 25)
 			else
 				--Spring.Echo(UnitDefs[unitDefID].name .. [[ "I think I'll stay here..."]])
 			end

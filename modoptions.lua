@@ -22,25 +22,22 @@
 --------------------------------------------------------------------------------
 --------------------------------------------------------------------------------
 local options = {
-
-  {
-	key    = '2gamemode',
-	name   = 'Gameplay Settings',
-	desc   = 'Sets options regarding income and winning conditions',
-	type   = 'section',
-  },
-	
-	
 	{
-      key		= "income",
-      name		= "Income",
-      desc		= "How many CBills per second?",
-      type		= "number",
-      def		= 200,
-	  min		= 50,
-	  max		= 1000,
-	  step		= 50,
-	  section	= '2gamemode',
+		key    = '2gamemode',
+		name   = 'Gameplay Settings',
+		desc   = 'Sets options regarding income and winning conditions',
+		type   = 'section',
+	},
+	{
+		key		= "income",
+		name		= "Income",
+		desc		= "How many CBills per second?",
+		type		= "number",
+		def		= 200,
+		min		= 50,
+		max		= 1000,
+		step		= 50,
+		section	= '2gamemode',
 	},
 	{
 		key		= "income_damage",
@@ -74,8 +71,32 @@ local options = {
 		max = 100,
 		section = "2gamemode",
 	},
- 
---------------------------------------------------------------------------------
---------------------------------------------------------------------------------
+	------------------------------------
+	{
+		key    = '2AI',
+		name   = 'AI Settings',
+		desc   = 'Sets options regarding income and winning conditions',
+		type   = 'section',
+	},	
+	{
+		key    = "ai_difficulty",
+		name   = "SpamBot AI difficulty level",
+		desc   = "Sets the difficulty level of the SpamBot.",
+		type   = "list",
+		section = "2AI",
+		def    = "1",
+		items = {
+			{
+				key = "1",
+				name = "Regular",
+				desc = "Random unit selection. C-Bill cheating."
+			},
+			{
+				key = "2",
+				name = "Direbolical",
+				desc = "Only assault mechs. C-Bill & Tonnage cheating."
+			},
+		}
+	},
 }
 return options
