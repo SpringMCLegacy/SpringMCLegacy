@@ -26,17 +26,18 @@ local black = { 0.0, 0.0, 0.0, 1.0}
 local clear = { 0.0, 0.0, 0.0, 0.0}
 local olive = { 0.25, 0.3, 0.1, 1.0}
 
-local ammoTypes = {	ac2		= "ammo_ac2", 
-					ac5		= "ammo_ac5", 
-					ac10	= "ammo_ac10", 
-					ac20	= "ammo_ac20", 
-					lrm		= "ammo_lrm", 
-					srm		= "ammo_srm",  
-					mrm		= "ammo_mrm",  
-					atm		= "ammo_atm",  
-					gauss	= "ammo_gauss",  
-					narc	= "ammo_narc", 
-					arrow	= "ammo_arrow", }
+local ammoTypes = {	ac2		= "ammo_ac2",
+					ac5		= "ammo_ac5",
+					ac10	= "ammo_ac10",
+					ac20	= "ammo_ac20",
+					lrm		= "ammo_lrm",
+					srm		= "ammo_srm",
+					mrm		= "ammo_mrm",
+					atm		= "ammo_atm",
+					gauss	= "ammo_gauss",
+					narc	= "ammo_narc",
+					arrow	= "ammo_arrow",
+					sniper	= "ammo_sniper", }
 
 local jumpJetsColor	= { 0.3, 0.5, 1.0, 1.0}
 local HPColor		= { 0.0, 0.5, 1.0, 1.0}
@@ -90,7 +91,7 @@ local partsParamList	= {	arm_left	= "limb_hp_left_arm",
 							right_wing	= "limb_hp_rwing",}
 						
 -- weapon lists for side bar
-local mechWeapons		= {}
+local weaponButton		= {}
 local CMD_WEAPON_TOGGLE = Spring.GetGameRulesParam("CMD_WEAPON_TOGGLE")
 
 -- parts for display
@@ -104,11 +105,27 @@ local currentParts	= {}
 
 -- ammo details for display
 local ammoTotals		= {}
+
 -- stores all known ammo types for this mech
 local ammoNameCache		= {}
 
 local dangerZONE	= false
 local phase			= 0
+
+local maxWeaponCount = 12;
+
+-- because concatination creates strings in mem that can flood the garbage collector
+-- we are going to use this lookuptable to mittigate the string building
+local weapon_Lookup	= {}
+
+for i=1,maxWeaponCount do
+	weapon_Lookup[i] = "weapon_" .. i
+end
+
+-- look up for status setting
+local weaponStatus	=	{	active = darkGreen,
+							disabled = black,	
+							destroyed = red,}
 
 -------------------------------------------------------------------------------------
 -- Function to read string into table
@@ -165,25 +182,19 @@ local function HeatPulse()
 end
 
 local function ToggleWeapon(unitDefID, weaponNum, button)
-	local oldStatus = spGetUnitRulesParam(currentUnitId, "weapon_" .. weaponNum) or "active" -- nil at first
-	spGiveOrderToUnit(currentUnitId, CMD_WEAPON_TOGGLE, {weaponNum}, {})
-	
-	if oldStatus == "active" then -- was just disabled
-		button.backgroundColor	= black
-		button:Invalidate()
-	elseif oldStatus == "disabled" then -- was just enabled
-		button.backgroundColor	= darkGreen
-		button:Invalidate()	
-	else -- weapon is destroyed
+	if spGetUnitRulesParam(currentUnitId, weapon_Lookup[weaponNum]) ~= "destroyed" then
+		spGiveOrderToUnit(currentUnitId, CMD_WEAPON_TOGGLE, {weaponNum}, {})	
+		local status = spGetUnitRulesParam(currentUnitId, weapon_Lookup[weaponNum])
+		button.backgroundColor	= weaponStatus[status]
+		button:Invalidate()		
 	end
-		
 end
 
 -------------------------------------------------------------------------------------
 -- Initializes unit stats at start
 -------------------------------------------------------------------------------------
 local function FillCardStats()
-	if currentUnitId then
+	if currentUnitId and spGetUnitDefID(currentUnitId) then
 		local health, maxHealth	= spGetUnitHealth(currentUnitId)
 		local currentDef		= UnitDefs[currentUnitDefId]
 		local weapons			= currentDef.weapons
@@ -193,29 +204,24 @@ local function FillCardStats()
 		mechCardName:SetCaption(UnitDefs[currentUnitDefId].humanName)
 		
 		--clear all weapons
-		for counter = 0, 11 do
-			mechWeaponsWindow:RemoveChild(mechWeapons[counter])
+		for counter = 0, maxWeaponCount-1 do
+			mechWeaponsWindow:RemoveChild(weaponButton[counter])
 		end
 		
 		--get weapon status
 		local lastWeaponId
 		for weaponNum, weaponUnitDef in pairs(weapons) do
 			--Spring.Echo( WeaponDefs[weaponUnitDef.weaponDef].description)
-			local currentWeapon		= mechWeapons[weaponNum-1]
+			local currentWeapon		= weaponButton[weaponNum-1]
+			local status			= spGetUnitRulesParam(currentUnitId, weapon_Lookup[weaponNum])
 			
-			if spGetUnitRulesParam(currentUnitId, "weapon_" .. weaponNum) == "disabled" then
-				currentWeapon.backgroundColor	= black
-				currentWeapon:Invalidate()	
-			else
-				currentWeapon.backgroundColor	= darkGreen
-				currentWeapon:Invalidate()	
-			end
+			currentWeapon.backgroundColor	= weaponStatus[status]
 			
 			currentWeapon:SetCaption(WeaponDefs[weaponUnitDef.weaponDef].description)
 			currentWeapon.OnClick = {	function(self)
 											ToggleWeapon(currentDef, weaponNum, self)
 										end }
-			mechWeaponsWindow:AddChild(mechWeapons[weaponNum-1])
+			mechWeaponsWindow:AddChild(weaponButton[weaponNum-1])
 			
 			lastWeaponId = weaponNum
 		end
@@ -236,10 +242,14 @@ local function FillCardStats()
 		-- show only what we have, if we have ammo
 		if ammoNameCache[currentUnitDefId] then
 			for k,v in pairs(ammoNameCache[currentUnitDefId])do
-				--Spring.Echo(k, ammoTypes[v])
 				mechAmmoWindow:AddChild(ammoTotals[k])
 				mechAmmoWindow.children[k]:SetCaption(v)
-				mechAmmoWindow.children[k]:SetValue(spGetUnitRulesParam(currentUnitId, ammoTypes[v])  or "0")
+				if ammoTypes[v] then
+					mechAmmoWindow.children[k]:SetValue(spGetUnitRulesParam(currentUnitId, ammoTypes[v])  or "0")
+				else
+					mechAmmoWindow.children[k]:SetValue("0")
+					Spring.Echo("ammo type:", v, "is new, please edit the table ammoTypes in mcl_gui_unitcard.lua")
+				end
 			end
 		end
 
@@ -449,10 +459,9 @@ end
 -------------------------------------------------------------------------------------
 local function FillOutWindows()
 	-- builds out weapon list
-	for counter = 0 ,11 do
+	for counter = 0 ,maxWeaponCount-1 do
 		local currentLevel = (counter)*10
-		mechWeapons[counter] = 	Chili.Button:New{
-				parent 				= mechWeaponsWindow;				
+		weaponButton[counter] = 	Chili.Button:New{			
 				name				= "mech weapon #" .. counter;
 				caption				= '-- OFFLINE --';
 				fontsize			= fontSizes.medium;
@@ -473,7 +482,6 @@ local function FillOutWindows()
 		-- for each type, as in mech, unit etc
 		for partNumber, partName in pairs(partsList[partType])do
 			parts[partType][partNumber] = Chili.Image:New{
-				parent		= mechWindow;
 				file 		= ":cl:bitmaps/ui/infocard/"..partType.."/dummy_"..partName..".png";
 				x			= "5%";
 				y			= "5%";
@@ -489,6 +497,7 @@ local function FillOutWindows()
 		local yPosition = (counter - 1) *25
 		ammoTotals[counter] = Chili.Progressbar:New{
 				caption			= "Ammo";
+				name			= "ammo progressbar #" .. counter;
 				fontSize		= fontSizes.medium;
 				color			= grey;
 				font			= {	outline			= true;
@@ -546,12 +555,26 @@ function widget:Update(s)
 	local currentUnits = spGetSelectedUnits()	
 	--if we have only 1 unit selected
 	if #currentUnits == 1 then
-		WG.currentUnitId = currentUnits[1]
+		WG.currentUnitId = currentUnits[1]	
 	end
+	
+	--start flozi needs to add a proper sendtounsynced but for now..	
+	if currentUnitId and spGetUnitDefID(currentUnitId) then
+		local weapons		= UnitDefs[spGetUnitDefID(currentUnitId)].weapons
+		
+		for weaponNum, weaponUnitDef in pairs(weapons) do
+			--Spring.Echo( WeaponDefs[weaponUnitDef.weaponDef].description)
+			local currentWeapon		= weaponButton[weaponNum-1]
+			local status			= spGetUnitRulesParam(currentUnitId, weapon_Lookup[weaponNum])
+			
+			currentWeapon.backgroundColor	= weaponStatus[status]
+			currentWeapon:Invalidate()		
+		end
+	end
+	--end flozi needs to add a proper sendtounsynced but for now..	
 	
 	--only once, only on unit change
 	if WG.currentUnitId ~= lastUnitId then
-		Chili.Screen0:RemoveChild(mechCardWindow)
 		--dangerZONE = false
 		
 		lastUnitId			= WG.currentUnitId
@@ -559,8 +582,7 @@ function widget:Update(s)
 		currentUnitDefId	= spGetUnitDefID(currentUnitId)
 		local unitType		= UnitDefs[currentUnitDefId].customParams.unittype
 		local unitDef		= UnitDefs[currentUnitDefId]
-		
-		Chili.Screen0:AddChild(mechCardWindow)
+
 		
 		--checking unit type if the thing is a vehicle
 		if unitType == "vehicle" then
@@ -574,7 +596,8 @@ function widget:Update(s)
 		end
 
 		if unitType then
-			
+			Chili.Screen0:RemoveChild(mechCardWindow)
+			Chili.Screen0:AddChild(mechCardWindow)
 			-- TODO: FIND A MORE ELEGANT SOLUTON!
 			-- rips out all possible unit images
 			for partType,_	in pairs(partsList)do
@@ -602,7 +625,7 @@ function widget:Update(s)
 		end
 	-- not a new unit lets update it's stats.
 	else		
-		if currentUnitId then		
+		if currentUnitId and spGetUnitDefID(currentUnitId) then		
 			health, maxHealth	= spGetUnitHealth(currentUnitId)
 			if maxHealth and health > 0 then
 				chestColorTable	= {((maxHealth - health)/maxHealth), (health/maxHealth), 0 ,1}
@@ -614,7 +637,12 @@ function widget:Update(s)
 				-- update ammo display when units have ammo
 				if ammoNameCache[currentUnitDefId] then
 					for k,v in pairs(ammoNameCache[currentUnitDefId])do
-						mechAmmoWindow.children[k]:SetValue(spGetUnitRulesParam(currentUnitId, ammoTypes[v])  or "0")
+						if ammoTypes[v] then
+							mechAmmoWindow.children[k]:SetValue(spGetUnitRulesParam(currentUnitId, ammoTypes[v])  or 0)
+						else
+							mechAmmoWindow.children[k]:SetValue(0)
+							Spring.Echo("ammo type:", v, "is new, please edit the table ammoTypes in mcl_gui_unitcard.lua")
+						end
 					end
 				end
 
