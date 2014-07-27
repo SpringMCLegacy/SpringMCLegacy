@@ -341,9 +341,11 @@ function gadget:AllowUnitBuildStep(builderID, builderTeam, unitID, unitDefID, pa
 end
 
 function LanceControl(teamID, add)
-	if add and teamSlotsRemaining[teamID] <= 8 then
-		teamSlotsRemaining[teamID] = teamSlotsRemaining[teamID] + 4
-		Spring.SetTeamRulesParam(teamID, "TEAM_SLOTS_REMAINING", teamSlotsRemaining[teamID])
+	if add then
+		if teamSlotsRemaining[teamID] <= 8 then
+			teamSlotsRemaining[teamID] = teamSlotsRemaining[teamID] + 4
+			Spring.SetTeamRulesParam(teamID, "TEAM_SLOTS_REMAINING", teamSlotsRemaining[teamID])
+		end
 	else -- lost a C3
 		-- When you gain a C3 you get 200 extra e, when you lose one, you lose 200 storage... 
 		-- ..but Spring helpfully fills it with all that extra e, screwing the tonnage system
