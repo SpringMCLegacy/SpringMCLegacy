@@ -19,6 +19,10 @@ local BEACON_ID = UnitDefNames["beacon"].id
 local C3_ID = UnitDefNames["upgrade_c3array"].id
 --local DelayCall = GG.Delay.DelayCall
 local CMD_SEND_ORDER = GG.CustomCommands.GetCmdID("CMD_SEND_ORDER")
+local CMD_JUMP = GG.CustomCommands.GetCmdID("CMD_JUMP")
+
+local PERK_JUMP_RANGE = GG.CustomCommands.GetCmdID("PERK_JUMP_RANGE")
+
 local CMD_C3 = GG.CustomCommands.GetCmdID("CMD_UPGRADE_upgrade_c3array")
 local dropZoneIDs = {}
 local orderSizes = {}
@@ -89,30 +93,54 @@ function gadget:UnitDestroyed(unitID, unitDefID, teamID)
 	end
 end
 
-local function Wander(unitID)
+local function Wander(unitID, cmd)
 	if Spring.ValidUnitID(unitID) then
 		local spot = flagSpots[math.random(1, #flagSpots)]
 		local offsetX = math.random(50, 150)
 		local offsetZ = math.random(50, 150)
 		offsetX = offsetX * -1 ^ (offsetX % 2)
 		offsetZ = offsetZ * -1 ^ (offsetZ % 2)
-		GG.Delay.DelayCall(Spring.GiveOrderToUnit, {unitID, CMD.FIGHT, {spot.x + offsetX, 0, spot.z + offsetZ}, {}}, 1)
+		if cmd then
+			GG.Delay.DelayCall(Spring.GiveOrderToUnit, {unitID, cmd, {spot.x + offsetX, 0, spot.z + offsetZ}, {}}, 1)
+		end
+		GG.Delay.DelayCall(Spring.GiveOrderToUnit, {unitID, CMD.FIGHT, {spot.x + offsetX, 0, spot.z + offsetZ}, {"shift"}}, 1)
 	end
+end
+
+local function Perk(unitID, perkID)
+	if not perkID then
+		local cmdDescs = Spring.GetUnitCmdDescs(unitID)
+		local cmdDesc = cmdDescs[math.random(1, #cmdDescs)]
+		while not cmdDesc.action:find("perk") do
+			cmdDesc = cmdDescs[math.random(1, #cmdDescs)]
+		end
+		perkID = cmdDesc.id
+	end
+	GG.Delay.DelayCall(Spring.GiveOrderToUnit, {unitID, perkID, {}, {}}, 1)
 end
 
 function gadget:UnitUnloaded(unitID, unitDefID, teamID, transportID, transportTeam)
 	if AI_TEAMS[teamID] then
+		local ud = UnitDefs[unitDefID]
+		local cp = ud.customParams
 		if unitDefID == C3_ID then
 			--Spring.Echo("C3!")
 			Spam(teamID)
-		elseif UnitDefs[unitDefID].canFly then
+		elseif ud.canFly then
 			--Spring.Echo("VTOL!")
 			for _, spot in pairs(flagSpots) do
 				GG.Delay.DelayCall(Spring.GiveOrderToUnit, {unitID, CMD.PATROL, {spot.x, 0, spot.z}, {"shift"}}, 30)
 			end
+		elseif cp.canjump then
+			--Spring.Echo("JUMP MECH!")
+			Wander(unitID, CMD_JUMP)
+			Perk(unitID, PERK_JUMP_RANGE)
 		else
 			--Spring.Echo("VEHICLE OR MECH!")
 			Wander(unitID)
+			if cp.unittype == "mech" then
+				Perk(unitID)
+			end
 		end
 	end
 end
@@ -127,12 +155,14 @@ end
 
 function gadget:UnitIdle(unitID, unitDefID, teamID)
 	if AI_TEAMS[teamID] then
-		if UnitDefs[unitDefID].customParams.unittype then
+		local ud = UnitDefs[unitDefID]
+		local cp = ud.customParams
+		if cp.unittype then
 			-- random chance a idle unit will wander somewhere else
 			local chance = math.random(1, 100)
 			if chance < 75 then
 				--Spring.Echo(UnitDefs[unitDefID].name .. [[ "Fuck it, I'm off for a wander"]])
-				GG.Delay.DelayCall(Wander, {unitID}, 30 * 20)
+				GG.Delay.DelayCall(Wander, {unitID, cp.canjump and CMD_JUMP}, 30 * 20)
 			else
 				--Spring.Echo(UnitDefs[unitDefID].name .. [[ "I think I'll stay here..."]])
 			end

@@ -1,18 +1,12 @@
 ---- BUGS
 
 [f=0007014] you have more than the lance supports in group #1 - still possible by player directly assigning groups
- 
-top of ticket counter widget e.g. resources missing in certain window res
- 
--- [f=0005587] [unit_script.lua] Error: [string "LuaRules/Gadgets/unit_script.lua"]:302: Incorrect arguments to CallAsUnit()
-
-[f=0017630] [unit_script.lua] Error: [string "scripts/vehicle.lua"]:146: attempt to perform arithmetic on field '?' (a nil value) -- can't replicate
 
 --[f=0032181] [Sound] Error: Unable to open audio file: sounds/fire-flame-burner.wav
 
 some clan mechs with mismatched launchpoints due to weapon changes (cougar, warhawk, timberwolf)
 
-PPCs do no damage to heavies?
+PPCs & AC5 do no damage to MadDogs from the front, AoE not hitting origin
 
 ---- WISHLIST
 
