@@ -270,6 +270,7 @@ function gadget:AllowCommand(unitID, unitDefID, teamID, cmdID, cmdParams, cmdOpt
 			local money = GetTeamResources(teamID, "metal")
 			local tonnage = GetTeamResources(teamID, "energy")
 			if not rightClick then
+				if cmdOptions.shift or cmdOptions.ctrl then return false end -- otherwise we can (dramatically) circumvent unit limits
 				if (teamSlotsRemaining[teamID] - runningSize) < 1 then return false end
 				local newTotal = runningTotal + cost
 				local newTons = runningTons + weight
