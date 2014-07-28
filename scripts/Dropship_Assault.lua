@@ -211,48 +211,51 @@ function script.Create()
 		Spring.MoveCtrl.SetRelativeVelocity(unitID, 0, 0, math.max(dist/50, 2))
 		Sleep(30)
 	end
-	-- We're over the target area, reduce height!
-	stage = 3
-	local DOOR_SPEED = math.rad(60)
-	Turn(cargoDoor1, z_axis, math.rad(-90), DOOR_SPEED)
-	Turn(cargoDoor2, z_axis, math.rad(90), DOOR_SPEED)
-	local vertSpeed = 4
-	local wantedHeight = select(2, Spring.GetUnitPosition(unitID)) - HOVER_HEIGHT
-	local dist = select(2, Spring.GetUnitPosition(unitID)) - wantedHeight
-	while (dist > 0) do
-		Spring.MoveCtrl.SetRelativeVelocity(unitID, 0, -math.max(0.33, vertSpeed * (dist/HOVER_HEIGHT)), 0)
-		Sleep(10)
-		dist = select(2, Spring.GetUnitPosition(unitID)) - wantedHeight
+	-- only proceed if the beacon is still ours
+	if Spring.GetUnitTeam(beaconID) == Spring.GetUnitTeam(unitID) then
+		-- We're over the target area, reduce height!
+		stage = 3
+		local DOOR_SPEED = math.rad(60)
+		Turn(cargoDoor1, z_axis, math.rad(-90), DOOR_SPEED)
+		Turn(cargoDoor2, z_axis, math.rad(90), DOOR_SPEED)
+		local vertSpeed = 4
+		local wantedHeight = select(2, Spring.GetUnitPosition(unitID)) - HOVER_HEIGHT
+		local dist = select(2, Spring.GetUnitPosition(unitID)) - wantedHeight
+		while (dist > 0) do
+			Spring.MoveCtrl.SetRelativeVelocity(unitID, 0, -math.max(0.33, vertSpeed * (dist/HOVER_HEIGHT)), 0)
+			Sleep(10)
+			dist = select(2, Spring.GetUnitPosition(unitID)) - wantedHeight
+		end
+		-- We're in place. Halt and lower the cargo!
+		Spring.MoveCtrl.SetRelativeVelocity(unitID, 0, 0, 0)
+		_, y, _ = Spring.GetUnitPosition(unitID)
+		local BOOM_LENGTH = y - TY - 56
+		local BOOM_SPEED = 15
+		Move(attachment, y_axis, -56, BOOM_SPEED)
+		--WaitForMove(attachment, y_axis)
+		for i = 2, 3 do
+			Move(booms[i], y_axis, -BOOM_LENGTH / 2, BOOM_SPEED)
+		end
+		WaitForMove(booms[3], y_axis)
+		Sleep(1500)
+		if cargoID then -- might be empty on /give testing
+			Spring.UnitScript.DropUnit(cargoID)
+			-- Let the cargo know it is unloaded
+			env = Spring.UnitScript.GetScriptEnv(cargoID)
+			Spring.UnitScript.CallAsUnit(cargoID, env.Unloaded)
+			-- Let the beacon know upgrade is ready
+			env = Spring.UnitScript.GetScriptEnv(beaconID)
+			Spring.UnitScript.CallAsUnit(beaconID, env.ChangeType, true)
+		end
+		-- Cargo is down, close the doors!
+		for i = 2, 3 do
+			Move(booms[i], y_axis, 0, BOOM_SPEED * 2)
+		end
+		WaitForMove(booms[3], y_axis)
+		Turn(cargoDoor1, z_axis, 0, DOOR_SPEED)
+		Turn(cargoDoor2, z_axis, 0, DOOR_SPEED)
+		WaitForTurn(cargoDoor2, z_axis)
 	end
-	-- We're in place. Halt and lower the cargo!
-	Spring.MoveCtrl.SetRelativeVelocity(unitID, 0, 0, 0)
-	_, y, _ = Spring.GetUnitPosition(unitID)
-	local BOOM_LENGTH = y - TY - 56
-	local BOOM_SPEED = 15
-	Move(attachment, y_axis, -56, BOOM_SPEED)
-	--WaitForMove(attachment, y_axis)
-	for i = 2, 3 do
-		Move(booms[i], y_axis, -BOOM_LENGTH / 2, BOOM_SPEED)
-	end
-	WaitForMove(booms[3], y_axis)
-	Sleep(1500)
-	if cargoID then -- might be empty on /give testing
-		Spring.UnitScript.DropUnit(cargoID)
-		-- Let the cargo know it is unloaded
-		env = Spring.UnitScript.GetScriptEnv(cargoID)
-		Spring.UnitScript.CallAsUnit(cargoID, env.Unloaded)
-		-- Let the beacon know upgrade is ready
-		env = Spring.UnitScript.GetScriptEnv(beaconID)
-		Spring.UnitScript.CallAsUnit(beaconID, env.ChangeType, true)
-	end
-	-- Cargo is down, close the doors!
-	for i = 2, 3 do
-		Move(booms[i], y_axis, 0, BOOM_SPEED * 2)
-	end
-	WaitForMove(booms[3], y_axis)
-	Turn(cargoDoor1, z_axis, 0, DOOR_SPEED)
-	Turn(cargoDoor2, z_axis, 0, DOOR_SPEED)
-	WaitForTurn(cargoDoor2, z_axis)
 	-- Take off!
 	stage = 4
 	--Spring.MoveCtrl.SetRelativeVelocity(unitID, 0, 0, 5)
