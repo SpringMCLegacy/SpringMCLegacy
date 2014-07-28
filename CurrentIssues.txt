@@ -9,8 +9,6 @@ some clan mechs with mismatched launchpoints due to weapon changes (cougar, warh
 PPCs & AC5 do no damage to MadDogs from the front, AoE not hitting origin
 
  maybe look at what happens if one team orders an upgrade on a beacon and then other team captures beacon before its done being placed
- 
-MAJOR: ctrl+shift, et al allow circumvention of unit limits
 
 ---- WISHLIST
 
