@@ -104,7 +104,64 @@ local unitTypes = {} -- unitTypes[unitDefID] = "lightmech" etc from typeStrings
 local orderCosts = {} -- orderCosts[unitID] = cost
 local orderTons = {} -- orderTons[unitID] = totalTonnage
 local orderSizes = {} -- orderSizes[unitID] = size
-local teamSlotsRemaining = {} -- teamSlotsRemaining[teamID] = numberOfUnitsSlotsRemaining
+local orderSizesPending = {} -- orderSizesPending[unitID] = size -- used to track slots of untis pending arrival
+
+-- teamSlots[teamID] = {[1] = {active = true, used = number_used, available = number_available, units = {unitID1 = 1, unitID2 = 1,  unitID3 = 0.5, ...}}, ...}
+local teamSlots = {}
+local unitLances = {} -- unitLances[unitID] = group_number
+
+for _, teamID in pairs(Spring.GetTeamList()) do
+	teamSlots[teamID] = {}
+	for i = 1, 3 do
+		teamSlots[teamID][i] = {}
+		teamSlots[teamID][i].active = i == 1
+		teamSlots[teamID][i].used = 0
+		teamSlots[teamID][i].available = 4
+		teamSlots[teamID][i].units = {}
+	end
+end
+
+local function TeamSlotsRemaining(teamID)
+	local slots = 0
+	for i = 1, 3 do
+		slots = slots + ((teamSlots[teamID][i].active and teamSlots[teamID][i].available) or 0)
+	end
+	return slots
+end
+
+local function TeamAvailableGroup(teamID)
+	for i = 1, 3 do
+		if teamSlots[teamID][i].active and teamSlots[teamID][i].available > 0 then return i end
+	end
+	return false
+end
+
+local function UpdateTeamSlots(teamID, unitID, unitDefID, add)
+	local ud = UnitDefs[unitDefID]
+	local slotChange = ((ud.customParams.unittype == "mech" or ud.canFly) and 1) or 0.5
+	if add then -- new unit
+		-- Deduct weight from current tonnage limit
+		UseTeamResource(teamID, "energy", ud.energyCost)
+		local group = TeamAvailableGroup(teamID)
+		unitLances[unitID] = group
+		SendToUnsynced("LANCE", teamID, unitID, group)
+		local groupSlots = teamSlots[teamID][group]
+		groupSlots.used = groupSlots.used + slotChange
+		groupSlots.available = groupSlots.available - slotChange
+		groupSlots.units[unitID] = slotChange
+	else -- unit died
+		-- reimburse 'weight'
+		AddTeamResource(teamID, "energy", ud.energyCost)
+		local group = unitLances[unitID]
+		local groupSlots = teamSlots[teamID][group]
+		groupSlots.used = groupSlots.used - slotChange
+		groupSlots.available = groupSlots.available + slotChange
+		groupSlots.units[unitID] = nil
+		unitLances[unitID] = nil
+	end
+	Spring.SetTeamRulesParam(teamID, "TEAM_SLOTS_REMAINING", TeamSlotsRemaining(teamID))
+end
+
 GG.teamSlotsRemaining = teamSlotsRemaining
 local dropZones = {} -- dropZones[unitID] = teamID
 local teamDropZones = {} -- teamDropZone[teamID] = unitID
@@ -127,6 +184,7 @@ local function ClearBuildOptions(unitID, everything)
 			EditUnitCmdDesc(unitID, i, {hidden = true})
 		end
 	end
+	orderSizesPending[unitID] = 0
 end
 
 local function ShowBuildOptionsByType(unitID, unitType)
@@ -163,9 +221,9 @@ local function CheckBuildOptions(unitID, teamID, money, weightLeft, cmdID)
 				cCost = GG.CommandCosts[buildDefID] or 0 -- TODO: the intention was to disable e.g. Orbital Strike if you can't afford it
 				tCost = 0
 			end
-			if buildDefID < 0 and teamSlotsRemaining[teamID] <= 0.5 then -- builder order but no team slots left
+			if buildDefID < 0 and TeamSlotsRemaining(teamID) <= 0.5 then -- builder order but no team slots left
 				EditUnitCmdDesc(unitID, cmdDescID, {disabled = true, params = {"L"}})
-			elseif cCost > 0 and (teamSlotsRemaining[teamID] - (orderSizes[teamID] or 0)) < 1 and (currParam == "C" or currParam == "" or currParam == "L") then
+			elseif cCost > 0 and (TeamSlotsRemaining(teamID) - (orderSizes[teamID] or 0)) < 1 and (currParam == "C" or currParam == "" or currParam == "L") then
 				EditUnitCmdDesc(unitID, cmdDescID, {disabled = true, params = {"L"}})
 			elseif cCost > money and (currParam == "" or currParam == "C") then
 				EditUnitCmdDesc(unitID, cmdDescID, {disabled = true, params = {"C"}})
@@ -215,7 +273,11 @@ GG.DropshipLeft = DropshipLeft
 
 -- Factories can't implement gadget:CommandFallback, so fake it ourselves
 local function SendCommandFallback(unitID, unitDefID, teamID)
-	if orderStatus[teamID] == 0 then return end -- order was cancelled
+	if orderStatus[teamID] == 0 then  -- order was cancelled
+		teamSlotsRemaining[teamID] = teamSlotsRemaining[teamID] + orderSizes[unitID]
+		Spring.SetTeamRulesParam(teamID, "TEAM_SLOTS_REMAINING", teamSlotsRemaining[teamID])
+		return 
+	end
 	if dropShipStatus[teamID] == 0 then -- Dropship is READY
 		-- CALL DROPSHIP
 		local orderQueue = Spring.GetFullBuildQueue(unitID)
@@ -240,6 +302,7 @@ local function SendCommandFallback(unitID, unitDefID, teamID)
 		ResetBuildQueue(unitID)
 		orderCosts[unitID] = 0
 		orderTons[unitID] = 0
+		orderSizesPending[unitID] = orderSizes[unitID]
 		orderSizes[unitID] = 0
 		-- Dropship can now be considered ACTIVE even though it hasn't arrived yet
 		dropShipStatus[teamID] = 1
@@ -271,7 +334,7 @@ function gadget:AllowCommand(unitID, unitDefID, teamID, cmdID, cmdParams, cmdOpt
 			local tonnage = GetTeamResources(teamID, "energy")
 			if not rightClick then
 				if cmdOptions.shift or cmdOptions.ctrl then return false end -- otherwise we can (dramatically) circumvent unit limits
-				if (teamSlotsRemaining[teamID] - runningSize) < 1 then return false end
+				if (TeamSlotsRemaining(teamID) - orderSizesPending[unitID] - runningSize) < 1 then return false end -- <1 as may be 0.5, but _ordering_ is always 1
 				local newTotal = runningTotal + cost
 				local newTons = runningTons + weight
 				if  newTotal < money and newTons < tonnage then -- check we can afford it
@@ -316,11 +379,9 @@ function gadget:AllowCommand(unitID, unitDefID, teamID, cmdID, cmdParams, cmdOpt
 				return false -- we already have submitted an order and not cancelled it
 			end
 			if (orderSizes[unitID] or 0) == 0 then return false end -- don't allow empty orders
-
 			-- check we can afford the order; possible that a previously affordable order is now too much e.g. if towers have been purchased
 			-- N.B. It should not be possible for available tonnage to change between orders, so we don't need to check that
 			if cost > money then return false end
-
 			-- We are going ahead with this order. Deduct the cost now.
 			UseTeamResource(teamID, "metal", cost)
 			orderStatus[teamID] = 1
@@ -342,10 +403,12 @@ function gadget:AllowUnitBuildStep(builderID, builderTeam, unitID, unitDefID, pa
 end
 
 function LanceControl(teamID, add)
+	local C3Count = Spring.GetTeamUnitDefCount(teamID, C3_ID) -- TODO: cache?
 	if add then
-		if teamSlotsRemaining[teamID] <= 8 then
-			teamSlotsRemaining[teamID] = teamSlotsRemaining[teamID] + 4
-			Spring.SetTeamRulesParam(teamID, "TEAM_SLOTS_REMAINING", teamSlotsRemaining[teamID])
+		if C3Count <= 2 then -- only the first 2 C3s give you an extra lance
+			local newLance = C3Count + 1
+			local groupSlots = teamSlots[teamID][newLance]
+			groupSlots.active = true
 		end
 	else -- lost a C3
 		-- When you gain a C3 you get 200 extra e, when you lose one, you lose 200 storage... 
@@ -355,10 +418,10 @@ function LanceControl(teamID, add)
 		-- TODO: if numCombatUnits > numSlots then loss of control over lances etc
 		-- TODO: but being over tonnage just means you can't order any extras?
 		-- check if there were any backup C3 towers
-		local C3count = Spring.GetTeamUnitDefCount(teamID, C3_ID) -- TODO: cache
-		if C3count < 2 then -- team lost control of / capacity for a lance
-			teamSlotsRemaining[teamID] = teamSlotsRemaining[teamID] - 4
-			Spring.SetTeamRulesParam(teamID, "TEAM_SLOTS_REMAINING", teamSlotsRemaining[teamID])
+		if C3Count < 2 then -- team lost control of / capacity for a lance
+			local lostLance = C3Count + 2
+			local groupSlots = teamSlots[teamID][lostLance]
+			groupSlots.active = false
 		end
 	end
 end
@@ -376,22 +439,8 @@ function gadget:UnitCreated(unitID, unitDefID, teamID)
 			EditUnitCmdDesc(teamDropZones[teamID], FindUnitCmdDesc(teamDropZones[teamID], CMD_SEND_ORDER), {disabled = true, name = "Dropship \nArrived "})
 		end
 	else
-		local currSlots = teamSlotsRemaining[teamID]
-		local unitType = unitTypes[unitDefID]
-		if unitType then
-			local C3count = Spring.GetTeamUnitDefCount(teamID, C3_ID) -- TODO: cache
-			local totalSlots = (C3count + 1) * 4 
-			local slotsUsed =  totalSlots - currSlots
-			local group = slotsUsed < 4 and 1 or slotsUsed < 8 and 2 or 3
-			SendToUnsynced("LANCE", teamID, unitID, group)
-			-- Deduct weight from current tonnage limit
-			UseTeamResource(teamID, "energy", unitDef.energyCost)
-			if unitType:find("mech") then
-				teamSlotsRemaining[teamID] = currSlots - 1
-			else -- any other combat unit is worth 1/2 a slot
-				teamSlotsRemaining[teamID] = currSlots - 0.5
-			end
-			Spring.SetTeamRulesParam(teamID, "TEAM_SLOTS_REMAINING", teamSlotsRemaining[teamID])
+		if unitTypes[unitDefID] then
+			UpdateTeamSlots(teamID, unitID, unitDefID, true)
 		end
 	end
 end
@@ -416,16 +465,8 @@ function gadget:UnitDestroyed(unitID, unitDefID, teamID, attackerID, attackerDef
 	if attackerID and not AreTeamsAllied(teamID, attackerTeam) and unitDefID ~= WALL_ID and unitDefID ~= GATE_ID then
 		AddTeamResource(attackerTeam, "metal", UnitDefs[unitDefID].metalCost * KILL_REWARD_MULT)
 	end
-	local currSlots = teamSlotsRemaining[teamID]
-	local unitType = unitTypes[unitDefID]
-	if unitType then
-		-- reimburse 'weight'
-		AddTeamResource(teamID, "energy", UnitDefs[unitDefID].energyCost)
-		if unitType:find("mech") then
-			teamSlotsRemaining[teamID] = currSlots + 1
-		else -- any other combat unit is worth 1/2 a slot
-			teamSlotsRemaining[teamID] = currSlots + 0.5
-		end
+	if unitTypes[unitDefID] then
+		UpdateTeamSlots(teamID, unitID, unitDefID, false)
 	end
 end
 
@@ -458,7 +499,6 @@ function gadget:GamePreload()
 	GG.Lances = {}
 	for _, teamID in pairs(Spring.GetTeamList()) do
 		GG.Lances[teamID] = 1
-		teamSlotsRemaining[teamID] = 4
 		dropShipStatus[teamID] = 0
 		orderStatus[teamID] = 0
 	end
