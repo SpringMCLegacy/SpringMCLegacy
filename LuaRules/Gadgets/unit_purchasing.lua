@@ -399,9 +399,11 @@ function gadget:AllowUnitBuildStep(builderID, builderTeam, unitID, unitDefID, pa
 	return true -- beacons!
 end
 
+
 function LanceControl(teamID, add)
 	local C3Count = Spring.GetTeamUnitDefCount(teamID, C3_ID)
 	if add then
+		AddTeamResource(teamID, "energy", 200)
 		if C3Count <= 2 then -- only the first 2 C3s give you an extra lance
 			local newLance = C3Count + 1
 			local groupSlots = teamSlots[teamID][newLance]
@@ -470,6 +472,10 @@ end
 function gadget:UnitGiven(unitID, unitDefID, newTeam, oldTeam)
 	gadget:UnitDestroyed(unitID, unitDefID, oldTeam)
 	gadget:UnitCreated(unitID, unitDefID, newTeam)
+	if unitDefID == C3_ID then
+		LanceControl(newTeam, true)
+		LanceControl(oldTeam, false)
+	end
 end
 
 function gadget:GamePreload()
