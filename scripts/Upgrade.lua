@@ -72,7 +72,6 @@ function Unpack()
 		Spin(geo, y_axis, math.rad(20), math.rad(5))
 		-- We're deployed, grant the extra tonnage
 		local teamID = Spring.GetUnitTeam(unitID)
-		Spring.AddTeamResource(teamID, "energy", 200)
 		GG.LanceControl(teamID, true)
 		Spring.SetTeamRulesParam(teamID, "LANCES", GG.Lances[teamID])
 	elseif name == "upgrade_mechbay" then
