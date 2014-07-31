@@ -1,7 +1,5 @@
 -- Vehicle Script
 -- useful global stuff
-unitDefID = Spring.GetUnitDefID(unitID)
-unitDef = UnitDefs[unitDefID]
 info = GG.lusHelper[unitDefID]
 
 moving = false

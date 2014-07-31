@@ -8,7 +8,7 @@
 
 local unitID = unitID
 local unitDefID = unitDefID
-local UnitDef = UnitDefs[unitDefID]
+local unitDef = UnitDefs[unitDefID]
 
 local UnitScript = Spring.UnitScript
 
