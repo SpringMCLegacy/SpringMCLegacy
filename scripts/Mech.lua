@@ -9,6 +9,7 @@ rad = math.rad
 SIG_ANIMATE = {}
 moving = false
 jumping = false
+speedMod = (GG.modOptions and GG.modOptions.speed) or 1.0
 
 -- localised API functions
 local SetUnitRulesParam 		= Spring.SetUnitRulesParam

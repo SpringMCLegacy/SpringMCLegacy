@@ -5,9 +5,6 @@ if (Spring.GetModOptions) then
   modOptions = Spring.GetModOptions()
 end
 
-local RAMP_DISTANCE = 156 -- 206
-local HANGAR_DISTANCE = 256
-
 local IS_DROPSHIP_UD
 local IS_DROPZONE_UD
 local IS_DROPSHIP_BUILDOPTIONS = {}
@@ -41,15 +38,10 @@ for name, ud in pairs(UnitDefs) do
 	if speed > 0 or ud.canfly then
 		ud.cantbetransported = false
 		if ud.customparams.unittype == "mech" then
-			ud.buildtime = RAMP_DISTANCE / speed
 			ud.losemitheight = ud.mass / 100
 			ud.radaremitheight = ud.mass / 100
 			if ud.customparams.canjump then
 				ud.description = ud.description .. " \255\001\179\214[JUMP]"
-			end
-		elseif ud.customparams.unittype == "vehicle" then
-			if ud.canfly then
-				ud.buildtime = HANGAR_DISTANCE / (speed * 0.5)
 			end
 		end
 	end
@@ -57,7 +49,7 @@ for name, ud in pairs(UnitDefs) do
 		ud.radaremitheight = 1000
 	end
 	-- set maxvelocity by modoption
-	ud.maxvelocity = (ud.maxvelocity or 0) * (modOptions.speed or 1)
+	ud.maxvelocity = (ud.maxvelocity or 0) * (modOptions.speed or 0.5)
 	-- calculate reverse, acceleration, brake and turning speed based on maxvelocity
 	ud.maxreversevelocity = ud.maxvelocity / 1.5
 	ud.acceleration = ud.maxvelocity / 4
