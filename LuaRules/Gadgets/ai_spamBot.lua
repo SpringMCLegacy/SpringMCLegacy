@@ -20,6 +20,7 @@ local difficulty = tonumber(modOptions and modOptions.ai_difficulty or "1")
 
 local DIREWOLF_ID = UnitDefNames["cl_direwolf_prime"].id
 local DEVASTATOR_ID = UnitDefNames["is_devastator_dvs2"].id
+local ATLAS_ID = UnitDefNames["is_atlas_as7k"].id
 
 
 local AI_TEAMS = {}
@@ -67,10 +68,11 @@ local function Spam(teamID)
 		Spring.AddTeamResource(teamID, "metal", 10000000)
 		local cmdDescs = Spring.GetUnitCmdDescs(unitID)
 		orderSizes[teamID] = 0
-		while orderSizes[teamID] < GG.teamSlotsRemaining[teamID] do
+		while orderSizes[teamID] < GG.TeamSlotsRemaining(teamID) do
+			--Spring.Echo("COMPARING:", orderSizes[teamID], GG.TeamSlotsRemaining(teamID))
 			local buildID
 			if difficulty > 1 then
-				buildID = (sides[teamID] == "clans" and -DIREWOLF_ID) or -DEVASTATOR_ID
+				buildID = (sides[teamID] == "clans" and -DIREWOLF_ID) or -ATLAS_ID --DEVASTATOR_ID
 				Spring.AddTeamResource(teamID, "energy", 100)
 			else
 				local cmdDesc = cmdDescs[math.random(1, #cmdDescs)]
@@ -79,7 +81,7 @@ local function Spam(teamID)
 			if buildID < 0 then
 				GG.Delay.DelayCall(Spring.GiveOrderToUnit, {unitID, buildID, {}, {}}, 1)
 				orderSizes[teamID] = orderSizes[teamID] + 1
-				--Spring.Echo("Adding to order;", orderSizes[teamID], UnitDefs[-buildID].name, GG.teamSlotsRemaining[teamID])
+				--Spring.Echo("Adding to order;", orderSizes[teamID], UnitDefs[-buildID].name, GG.TeamSlotsRemaining(teamID))
 			end
 		end
 		GG.Delay.DelayCall(SendOrder, {teamID}, 2) -- frame after orders
@@ -146,7 +148,8 @@ function gadget:UnitUnloaded(unitID, unitDefID, teamID, transportID, transportTe
 		local cp = ud.customParams
 		if unitDefID == C3_ID then
 			--Spring.Echo("C3!")
-			Spam(teamID)
+			-- C3's take a little time to deploy and grant the extra tonnage & slots, so delay 10s
+			GG.Delay.DelayCall(Spam, {teamID}, 10 * 30)
 		elseif ud.canFly then
 			--Spring.Echo("VTOL!")
 			for _, spot in pairs(flagSpots) do

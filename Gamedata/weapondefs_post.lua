@@ -45,6 +45,7 @@ for weapName, wd in pairs(WeaponDefs) do
 		end
 	elseif wd.weapontype == "BeamLaser" or cp and cp.ammotype == "gauss" then -- lasers and gauss are impactOnly
 		wd.impactonly = true
+		wd.minintensity = 1.0
 	end
 end
 
