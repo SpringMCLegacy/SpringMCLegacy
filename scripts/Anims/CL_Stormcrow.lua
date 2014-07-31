@@ -3,7 +3,7 @@
 local pelvis, lfoot, rfoot, lupperleg, llowerleg, rupperleg, rlowerleg, rfronttoes, rbacktoe, lfronttoes, lbacktoe = piece ("pelvis", "lfoot", "rfoot", "lupperleg", "llowerleg", "rupperleg", "rlowerleg", "rfronttoes", "rbacktoe", "lfronttoes", "lbacktoe")
 
 --Turning/Movement Locals
-local LEG_SPEED = rad(650) * speedMod
+local LEG_SPEED = rad(400) * speedMod
 local LEG_TURN_SPEED = rad (200) * speedMod
 
 --Turn script
@@ -153,6 +153,7 @@ function anim_Walk()
 		WaitForTurn(rlowerleg, x_axis)
 		WaitForTurn(rbacktoe, x_axis)
 		WaitForTurn(rfronttoes, x_axis)
+		PlaySound("stomp")
 		Sleep(10)
 		--Spring.Echo("Step FIVE")
 		--Left Leg--
@@ -237,6 +238,7 @@ function anim_Walk()
 		WaitForTurn(rlowerleg, x_axis)
 		WaitForTurn(rbacktoe, x_axis)
 		WaitForTurn(rfronttoes, x_axis)
+		PlaySound("stomp")
 		Sleep(10)
 	end
 end
