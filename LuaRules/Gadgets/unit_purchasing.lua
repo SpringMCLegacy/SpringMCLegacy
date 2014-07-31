@@ -137,6 +137,7 @@ local function TeamAvailableGroup(teamID)
 end
 
 local function UpdateTeamSlots(teamID, unitID, unitDefID, add)
+	if select(3,Spring.GetTeamInfo(teamID)) then return end -- team died
 	local ud = UnitDefs[unitDefID]
 	local slotChange = ((ud.customParams.unittype == "mech" or ud.canFly) and 1) or 0.5
 	if add then -- new unit
@@ -162,7 +163,7 @@ local function UpdateTeamSlots(teamID, unitID, unitDefID, add)
 	Spring.SetTeamRulesParam(teamID, "TEAM_SLOTS_REMAINING", TeamSlotsRemaining(teamID))
 end
 
-GG.teamSlotsRemaining = teamSlotsRemaining
+GG.TeamSlotsRemaining = TeamSlotsRemaining
 local dropZones = {} -- dropZones[unitID] = teamID
 local teamDropZones = {} -- teamDropZone[teamID] = unitID
 
@@ -273,11 +274,7 @@ GG.DropshipLeft = DropshipLeft
 
 -- Factories can't implement gadget:CommandFallback, so fake it ourselves
 local function SendCommandFallback(unitID, unitDefID, teamID)
-	if orderStatus[teamID] == 0 then  -- order was cancelled
-		teamSlotsRemaining[teamID] = teamSlotsRemaining[teamID] + orderSizes[unitID]
-		Spring.SetTeamRulesParam(teamID, "TEAM_SLOTS_REMAINING", teamSlotsRemaining[teamID])
-		return 
-	end
+	if orderStatus[teamID] == 0 then return end -- order was cancelled
 	if dropShipStatus[teamID] == 0 then -- Dropship is READY
 		-- CALL DROPSHIP
 		local orderQueue = Spring.GetFullBuildQueue(unitID)
@@ -403,7 +400,7 @@ function gadget:AllowUnitBuildStep(builderID, builderTeam, unitID, unitDefID, pa
 end
 
 function LanceControl(teamID, add)
-	local C3Count = Spring.GetTeamUnitDefCount(teamID, C3_ID) -- TODO: cache?
+	local C3Count = Spring.GetTeamUnitDefCount(teamID, C3_ID)
 	if add then
 		if C3Count <= 2 then -- only the first 2 C3s give you an extra lance
 			local newLance = C3Count + 1
