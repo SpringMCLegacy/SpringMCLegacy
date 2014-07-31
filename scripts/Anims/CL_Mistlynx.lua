@@ -208,6 +208,7 @@ function anim_Walk()
 		WaitForTurn(rupperleg, x_axis)
 		WaitForTurn(rlowerleg, x_axis)
 		WaitForTurn(rtoe, x_axis)
+		PlaySound("stomp")
 		Sleep(10)
 		--Spring.Echo("Step FIVE")
 		--Left Leg--
@@ -276,6 +277,7 @@ function anim_Walk()
 		WaitForTurn(rupperleg, x_axis)
 		WaitForTurn(rlowerleg, x_axis)
 		WaitForTurn(rtoe, x_axis)
+		PlaySound("stomp")
 		Sleep(10)
 	end
 end
