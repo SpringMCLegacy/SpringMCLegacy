@@ -35,6 +35,7 @@ function anim_Turn(clockwise)
 		WaitForTurn(llowerleg, x_axis)
 		WaitForTurn(lbacktoes, x_axis)
 		WaitForTurn(lfronttoes, x_axis)
+		PlaySound("stomp")
 		--Right Leg Up...
 		Turn(pelvis, z_axis, rad(5), LEG_TURN_SPEED)
 		Turn(rupperleg, x_axis, rad(30), LEG_TURN_SPEED)
@@ -59,6 +60,7 @@ function anim_Turn(clockwise)
 		WaitForTurn(rlowerleg, x_axis)
 		WaitForTurn(rbacktoes, x_axis)
 		WaitForTurn(rfronttoes, x_axis)
+		PlaySound("stomp")
 	end
 end
 		
@@ -309,6 +311,7 @@ function anim_Walk()
 		WaitForTurn(rfoot, x_axis)
 		WaitForTurn(rbacktoes, x_axis)
 		WaitForTurn(rfronttoes, x_axis)
+		PlaySound("stomp")
 		--Sleep(10)
 		
 		--Spring.Echo("Step 3")
@@ -469,6 +472,7 @@ function anim_Walk()
 		WaitForTurn(rfoot, x_axis)
 		WaitForTurn(rbacktoes, x_axis)
 		WaitForTurn(rfronttoes, x_axis)
+		PlaySound("stomp")
 		--Sleep(10)
 		
 		--Spring.Echo("Step SIX")
@@ -513,5 +517,6 @@ function anim_Reset()
 	Turn(rfoot, x_axis, rad(0), LEG_SPEED)
 	Turn(rfronttoes, x_axis, rad(0), LEG_SPEED)
 	Turn(rbacktoes, x_axis, rad(0),LEG_SPEED)
+	PlaySound("stomp")
 	Sleep(100)
 end

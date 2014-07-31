@@ -6,112 +6,6 @@ local pelvis, torso, lupperleg, llowerleg, rupperleg, rlowerleg, rfronttoe, rbac
 local LEG_SPEED = rad(500) * speedMod
 local LEG_TURN_SPEED = rad (200) * speedMod
 
---[[
---JUMPING SCRIPT--
---Crouch...
-Turn(rupperleg, x_axis, rad(30), LEG_SPEED)
-Turn(rlowerleg, x_axis, rad(-30), LEG_SPEED)
-Turn(lupperleg, x_axis, rad(30), LEG_SPEED)
-Turn(llowerleg, x_axis, rad(-30), LEG_SPEED)
-Move(pelvis, y_axis, 7.6, LEG_SPEED)
-Move(pelvis, z_axis, 4.3, LEG_SPEED)
---Hold a bit...
-Sleep(100)
---Wait for turns...
-WaitForTurn(rupperleg, x_axis)
-WaitForTurn(rlowerleg, x_axis)
-WaitForTurn(lupperleg, x_axis)
-WaitForTurn(llowerleg, x_axis)
---Jump!
-Turn(rupperleg, x_axis, rad(5), LEG_SPEED * 4)
-Turn(rlowerleg, x_axis, rad(20), LEG_SPEED * 4)
-Turn(rbacktoe, x_axis, rad(-15), LEG_SPEED * 4)
-Turn(rfronttoe, x_axis, rad(15), LEG_SPEED * 4)
-Turn(lupperleg, x_axis, rad(5), LEG_SPEED * 4)
-Turn(llowerleg, x_axis, rad(20), LEG_SPEED * 4)
-Turn(lbacktoe, x_axis, rad(-15), LEG_SPEED * 4)
-Turn(lfronttoe, x_axis, rad(15), LEG_SPEED * 4)
-Move(pelvis, y_axis, 0, LEG_SPEED * 4)
-Move(pelvis, z_axis, 0, LEG_SPEED * 4)
---Wait for turns...
-WaitForTurn(rupperleg, x_axis)
-WaitForTurn(rlowerleg, x_axis)
-WaitForTurn(rbacktoe, x_axis)
-WaitForTurn(rfronttoe, x_axis)
-WaitForTurn(lupperleg, x_axis)
-WaitForTurn(llowerleg, x_axis)
-WaitForTurn(lbacktoe, x_axis)
-WaitForTurn(lfronttoe, x_axis)
-
---LANDING SCRIPT--
---Brace for impact...
-Turn(rupperleg, x_axis, rad(-15), LEG_SPEED / 4)
-Turn(rlowerleg, x_axis, rad(20), LEG_SPEED / 4)
-Turn(rfoot, x_axis, rad(-10), LEG_SPEED / 4)
-Turn(rbacktoe, x_axis, rad(-15), LEG_SPEED / 4)
-Turn(rfronttoe, x_axis, rad(15), LEG_SPEED / 4)
-Turn(lupperleg, x_axis, rad(-15), LEG_SPEED / 4)
-Turn(llowerleg, x_axis, rad(20), LEG_SPEED / 4)
-Turn(lfoot, x_axis, rad(-10), LEG_SPEED / 4)
-Turn(lbacktoe, x_axis, rad(-15), LEG_SPEED / 4)
-Turn(lfronttoe, x_axis, rad(15), LEG_SPEED / 4)
---WaitForTurns...
-WaitForTurn(rupperleg, x_axis)
-WaitForTurn(rlowerleg, x_axis)
-WaitForTurn(rfoot, x_axis)
-WaitForTurn(rbacktoe, x_axis)
-WaitForTurn(rfronttoe, x_axis)
-WaitForTurn(lupperleg, x_axis)
-WaitForTurn(lfoot, x_axis)
-WaitForTurn(llowerleg, x_axis)
-WaitForTurn(lbacktoe, x_axis)
-WaitForTurn(lfronttoe, x_axis)
---Absorb shock on landing
-Turn(rupperleg, x_axis, rad(20), LEG_SPEED * 4)
-Turn(rlowerleg, x_axis, rad(-25), LEG_SPEED * 4)
-Turn(rfoot, x_axis, rad(5), LEG_SPEED * 4)
-Turn(rbacktoe, x_axis, rad(0), LEG_SPEED * 4)
-Turn(rfronttoe, x_axis, rad(0), LEG_SPEED * 4)
-Turn(lupperleg, x_axis, rad(20), LEG_SPEED * 4)
-Turn(llowerleg, x_axis, rad(-25), LEG_SPEED * 4)
-Turn(lfoot, x_axis, rad(5), LEG_SPEED * 4)
-Turn(lbacktoe, x_axis, rad(0), LEG_SPEED * 4)
-Turn(lfronttoe, x_axis, rad(0), LEG_SPEED * 4)
---Wait for turns...
-WaitForTurn(rupperleg, x_axis)
-WaitForTurn(rlowerleg, x_axis)
-WaitForTurn(rfoot, x_axis)
-WaitForTurn(rbacktoe, x_axis)
-WaitForTurn(rfronttoe, x_axis)
-WaitForTurn(lupperleg, x_axis)
-WaitForTurn(llowerleg, x_axis)
-WaitForTurn(lfoot, x_axis)
-WaitForTurn(lbacktoe, x_axis)
-WaitForTurn(lfronttoe, x_axis)
---Slowly return to normal stance
-Turn(rupperleg, x_axis, rad(-0), LEG_SPEED / 4)
-Turn(rlowerleg, x_axis, rad(0), LEG_SPEED / 4)
-Turn(rfoot, x_axis, rad(0), LEG_SPEED / 4)
-Turn(rbacktoe, x_axis, rad(0), LEG_SPEED / 4)
-Turn(rfronttoe, x_axis, rad(0), LEG_SPEED / 4)
-Turn(lupperleg, x_axis, rad(0), LEG_SPEED / 4)
-Turn(llowerleg, x_axis, rad(0), LEG_SPEED / 4)
-Turn(lfoot, x_axis, rad(0), LEG_SPEED / 4)
-Turn(lbacktoe, x_axis, rad(0), LEG_SPEED / 4)
-Turn(lfronttoe, x_axis, rad(0), LEG_SPEED / 4)
---Wait for turns?
-WaitForTurn(rupperleg, x_axis)
-WaitForTurn(rlowerleg, x_axis)
-WaitForTurn(rfoot, x_axis)
-WaitForTurn(rbacktoe, x_axis)
-WaitForTurn(rfronttoe, x_axis)
-WaitForTurn(lupperleg, x_axis)
-WaitForTurn(lfoot, x_axis)
-WaitForTurn(llowerleg, x_axis)
-WaitForTurn(lbacktoe, x_axis)
-WaitForTurn(lfronttoe, x_axis)
-]]
-
 --Turn script
 
 function anim_Turn(clockwise)
@@ -143,6 +37,7 @@ function anim_Turn(clockwise)
 		WaitForTurn(llowerleg, x_axis)
 		WaitForTurn(lbacktoe, x_axis)
 		WaitForTurn(lfronttoe, x_axis)
+		PlaySound("stomp")
 		--Right Leg Up...
 		Turn(pelvis, z_axis, rad(5), LEG_TURN_SPEED)
 		Turn(rupperleg, x_axis, rad(30), LEG_TURN_SPEED)
@@ -167,6 +62,7 @@ function anim_Turn(clockwise)
 		WaitForTurn(rlowerleg, x_axis)
 		WaitForTurn(rbacktoe, x_axis)
 		WaitForTurn(rfronttoe, x_axis)
+		PlaySound("stomp")
 	end
 end
 		
@@ -444,6 +340,7 @@ function anim_Walk()
 		WaitForTurn(rfoot, x_axis)
 		WaitForTurn(rbacktoe, x_axis)
 		WaitForTurn(rfronttoe, x_axis)
+		PlaySound("stomp")
 		--Sleep(10)
 		
 		--Spring.Echo("Step 3")
@@ -604,6 +501,7 @@ function anim_Walk()
 		WaitForTurn(rfoot, x_axis)
 		WaitForTurn(rbacktoe, x_axis)
 		WaitForTurn(rfronttoe, x_axis)
+		PlaySound("stomp")
 		--Sleep(10)
 		
 		--Spring.Echo("Step SIX")
@@ -648,5 +546,6 @@ function anim_Reset()
 	Turn(rfoot, x_axis, rad(0), LEG_SPEED)
 	Turn(rfronttoe, x_axis, rad(0), LEG_SPEED)
 	Turn(rbacktoe, x_axis, rad(0),LEG_SPEED)
+	PlaySound("stomp")
 	Sleep(100)
 end

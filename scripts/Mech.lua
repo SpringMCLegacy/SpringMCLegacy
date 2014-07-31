@@ -1,7 +1,5 @@
 -- Test Mech Script
 -- useful global stuff
-unitDefID = Spring.GetUnitDefID(unitID)
-unitDef = UnitDefs[unitDefID]
 info = GG.lusHelper[unitDefID]
 -- the following have to be non-local for the walkscript include to find them
 rad = math.rad
