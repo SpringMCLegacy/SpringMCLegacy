@@ -14,9 +14,11 @@ if (gadgetHandler:IsSyncedCode()) then
 --SYNCED
 
 -- Localisations
+local modOptions = Spring.GetModOptions()
+GG.modOptions = modOptions
 GG.lusHelper = {}
-
 sqrt = math.sqrt
+
 -- Synced Read
 local GetUnitPieceInfo 		= Spring.GetUnitPieceInfo
 local GetUnitPieceMap		= Spring.GetUnitPieceMap
