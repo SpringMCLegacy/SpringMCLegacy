@@ -257,7 +257,6 @@ end
 local function DrainMASC()
 	while moving do
 		mascLevel = mascLevel - 2
-		--Spring.Echo("Drain MASC", mascLevel)
 		SetUnitRulesParam(unitID, "masc", mascLevel)
 		ChangeHeat(1)
 		if currHeatLevel > heatLimit or mascLevel == 0 then
@@ -271,7 +270,6 @@ end
 local function RestoreMASC()
 	while mascLevel < 100 do
 		mascLevel = mascLevel + 1
-		--Spring.Echo("Restore MASC", mascLevel)
 		SetUnitRulesParam(unitID, "masc", mascLevel)
 		Sleep(100)
 	end
@@ -294,7 +292,6 @@ end
 
 function FlushCoolant()
 	if currAmmo.coolant > 0 then
-		Spring.Echo("FLUSHING COOLANT!")
 		ChangeHeat(-50)
 		ChangeAmmo("coolant", -20)
 	end
