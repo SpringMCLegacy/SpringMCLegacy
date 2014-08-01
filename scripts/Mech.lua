@@ -33,6 +33,8 @@ baseCoolRate = info.coolRate
 local coolRate = baseCoolRate
 local inWater = false
 local activated = true
+local mascLevel = 100
+local mascActive = false
 
 local missileWeaponIDs = info.missileWeaponIDs
 local flareOnShots = info.flareOnShots
@@ -131,6 +133,42 @@ local function RestoreAfterDelay(unitID)
 	if hasArms then
 		Turn(lupperarm, x_axis, 0, ELEVATION_SPEED)
 		Turn(rupperarm, x_axis, 0, ELEVATION_SPEED)
+	end
+end
+
+local function DrainMASC()
+	while moving do
+		mascLevel = mascLevel - 2
+		--Spring.Echo("Drain MASC", mascLevel)
+		SetUnitRulesParam(unitID, "masc", mascLevel)
+		Sleep(100)
+		if mascLevel == 0 then
+			MASC(false)
+			return
+		end
+	end
+end
+
+local function RestoreMASC()
+	while mascLevel < 100 do
+		mascLevel = mascLevel + 1
+		--Spring.Echo("Restore MASC", mascLevel)
+		SetUnitRulesParam(unitID, "masc", mascLevel)
+		Sleep(100)
+	end
+end
+
+function MASC(activated)
+	if activated and mascLevel == 100 then
+		speedMod = speedMod * 2
+		mascActive = true
+		GG.StartMASC(unitID, unitDefID)
+		StartThread(DrainMASC)
+	else
+		speedMod = speedMod / 2
+		mascActive = false
+		GG.FinishMASC(unitID, unitDefID)
+		StartThread(RestoreMASC)
 	end
 end
 
@@ -394,6 +432,9 @@ function script.StartMoving(reversing)
 	--Spring.Echo("Reversing?", reversing)
 	StartThread(anim_Walk)
 	moving = true
+	if mascActive then
+		StartThread(DrainMASC)
+	end
 end
 
 function script.StopMoving()
