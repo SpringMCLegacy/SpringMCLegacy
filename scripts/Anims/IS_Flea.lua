@@ -10,6 +10,7 @@ function anim_Turn(clockwise)
 	Signal(SIG_ANIMATE)
 	SetSignalMask(SIG_ANIMATE)
 	while true do
+		LEG_TURN_SPEED = rad (400) * speedMod
 		--Left Leg Up...
 		Turn(pelvis, z_axis, rad(-5), LEG_TURN_SPEED)
 		Turn(lupperleg, x_axis, rad(30), LEG_TURN_SPEED)
@@ -53,6 +54,7 @@ function anim_Walk()
 	Signal(SIG_ANIMATE)
 	SetSignalMask(SIG_ANIMATE)
 	while true do
+		LEG_SPEED = rad(600) * speedMod
 		--Spring.Echo("START")
 		Turn(pelvis, z_axis, rad(5), LEG_SPEED / 10)
 		--Left Leg--
