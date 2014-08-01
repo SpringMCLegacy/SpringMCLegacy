@@ -136,42 +136,6 @@ local function RestoreAfterDelay(unitID)
 	end
 end
 
-local function DrainMASC()
-	while moving do
-		mascLevel = mascLevel - 2
-		--Spring.Echo("Drain MASC", mascLevel)
-		SetUnitRulesParam(unitID, "masc", mascLevel)
-		Sleep(100)
-		if mascLevel == 0 then
-			MASC(false)
-			return
-		end
-	end
-end
-
-local function RestoreMASC()
-	while mascLevel < 100 do
-		mascLevel = mascLevel + 1
-		--Spring.Echo("Restore MASC", mascLevel)
-		SetUnitRulesParam(unitID, "masc", mascLevel)
-		Sleep(100)
-	end
-end
-
-function MASC(activated)
-	if activated and mascLevel == 100 then
-		speedMod = speedMod * 2
-		mascActive = true
-		GG.StartMASC(unitID, unitDefID)
-		StartThread(DrainMASC)
-	else
-		speedMod = speedMod / 2
-		mascActive = false
-		GG.FinishMASC(unitID, unitDefID)
-		StartThread(RestoreMASC)
-	end
-end
-
 -- non-local function called by gadgets/game_ammo.lua
 function ChangeAmmo(ammoType, amount) 
 	local newAmmoLevel = (currAmmo[ammoType] or 0) + amount -- amount is a -ve to deduct
@@ -287,6 +251,43 @@ function script.setSFXoccupy(terrainType)
 	else
 		inWater = false
 		coolRate = baseCoolRate
+	end
+end
+
+local function DrainMASC()
+	while moving do
+		mascLevel = mascLevel - 2
+		--Spring.Echo("Drain MASC", mascLevel)
+		SetUnitRulesParam(unitID, "masc", mascLevel)
+		ChangeHeat(1)
+		if currHeatLevel > heatLimit or mascLevel == 0 then
+			MASC(false)
+			return
+		end
+		Sleep(100)
+	end
+end
+
+local function RestoreMASC()
+	while mascLevel < 100 do
+		mascLevel = mascLevel + 1
+		--Spring.Echo("Restore MASC", mascLevel)
+		SetUnitRulesParam(unitID, "masc", mascLevel)
+		Sleep(100)
+	end
+end
+
+function MASC(activated)
+	if activated and mascLevel == 100 then
+		speedMod = speedMod * 2
+		mascActive = true
+		GG.StartMASC(unitID, unitDefID)
+		StartThread(DrainMASC)
+	else
+		speedMod = speedMod / 2
+		mascActive = false
+		GG.FinishMASC(unitID, unitDefID)
+		StartThread(RestoreMASC)
 	end
 end
 
