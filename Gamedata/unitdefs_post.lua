@@ -43,6 +43,9 @@ for name, ud in pairs(UnitDefs) do
 			if ud.customparams.canjump then
 				ud.description = ud.description .. " \255\001\179\214[JUMP]"
 			end
+			if ud.customparams.canmasc then
+				ud.description = ud.description .. " \255\128\026\179[MASC]"
+			end
 		end
 	end
 	if ud.customparams.hasbap == "true" then

@@ -146,7 +146,10 @@ local function UpdateTeamSlots(teamID, unitID, unitDefID, add)
 	local ud = UnitDefs[unitDefID]
 	local slotChange = ((ud.customParams.unittype == "mech" or ud.canFly) and 1) or 0.5
 	if add then -- new unit
-		orderSizesPending[teamDropZones[teamID]] = orderSizesPending[teamDropZones[teamID]] - 1
+		local dz = teamDropZones[teamID]
+		if dz then
+			orderSizesPending[dz] = orderSizesPending[dz] - 1
+		end
 		-- Deduct weight from current tonnage limit
 		UseTeamResource(teamID, "energy", ud.energyCost)
 		local group = TeamAvailableGroup(teamID)

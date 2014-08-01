@@ -14,7 +14,7 @@ random race?
 
 --buildpics should show ECM / Jump / BAPs / AMS (NARC, TAG?)
 
-Implement leg damage (& MASC?)
+Implement leg damage
 
 Salvage yard upgrade
 

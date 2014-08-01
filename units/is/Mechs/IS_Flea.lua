@@ -11,6 +11,7 @@ local IS_Flea = Light:New{
 	customparams = {
 		heatlimit		= "10",
 		torsoturnspeed	= "195",
+		canmasc			= true,
     },
 }
 
