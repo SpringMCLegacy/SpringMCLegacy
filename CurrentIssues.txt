@@ -10,8 +10,6 @@ PPCs & AC5 do no damage to MadDogs from the front, AoE not hitting origin
 
 leftarm vs rightarm are reveresed in some models (Devastator, Atlas)
 
-Sometimes build menu locks up (when you gain a C3? e.g. light pane doesn't work until you right click a medium to clear menu)
-
 ---- WISHLIST
 
 random race?
