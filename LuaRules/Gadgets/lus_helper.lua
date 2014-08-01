@@ -326,6 +326,10 @@ function gadget:GamePreload()
 		info.numWeapons = #weapons
 		info.elevationSpeed = math.rad(tonumber(cp.elevationspeed) or math.deg(info.torsoTurnSpeed))
 		info.maxAmmo = table.unserialize(cp.maxammo)
+		-- coolant
+		info.maxAmmo["coolant"] = 100
+		info.ammoTypes[-1] = "coolant"
+		info.burstLengths[-1] = 20
 		-- And finally, stick it in GG for the script to access
 		GG.lusHelper[unitDefID] = info
 	end
