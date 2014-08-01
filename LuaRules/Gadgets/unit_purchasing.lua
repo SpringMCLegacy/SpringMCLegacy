@@ -106,6 +106,11 @@ local orderTons = {} -- orderTons[unitID] = totalTonnage
 local orderSizes = {} -- orderSizes[unitID] = size
 local orderSizesPending = {} -- orderSizesPending[unitID] = size -- used to track slots of untis pending arrival
 
+local dropZones = {} -- dropZones[unitID] = teamID
+local teamDropZones = {} -- teamDropZone[teamID] = unitID
+local dropShipStatus = {} -- dropShipStatus[teamID] = number, where 0 = Ready, 1 = Active, 2 = Cooldown
+local orderStatus = {} -- orderStatus[teamID] = number, where 0 = Ready for a new order, 1 = order submitted, 2 = can't submit atm?
+
 -- teamSlots[teamID] = {[1] = {active = true, used = number_used, available = number_available, units = {unitID1 = tons, unitID2 = tons, ...}}, ...}
 local teamSlots = {}
 local unitLances = {} -- unitLances[unitID] = group_number
@@ -141,6 +146,7 @@ local function UpdateTeamSlots(teamID, unitID, unitDefID, add)
 	local ud = UnitDefs[unitDefID]
 	local slotChange = ((ud.customParams.unittype == "mech" or ud.canFly) and 1) or 0.5
 	if add then -- new unit
+		orderSizesPending[teamDropZones[teamID]] = orderSizesPending[teamDropZones[teamID]] - 1
 		-- Deduct weight from current tonnage limit
 		UseTeamResource(teamID, "energy", ud.energyCost)
 		local group = TeamAvailableGroup(teamID)
@@ -164,11 +170,6 @@ local function UpdateTeamSlots(teamID, unitID, unitDefID, add)
 end
 
 GG.TeamSlotsRemaining = TeamSlotsRemaining
-local dropZones = {} -- dropZones[unitID] = teamID
-local teamDropZones = {} -- teamDropZone[teamID] = unitID
-
-local dropShipStatus = {} -- dropShipStatus[teamID] = number, where 0 = Ready, 1 = Active, 2 = Cooldown
-local orderStatus = {} -- orderStatus[teamID] = number, where 0 = Ready for a new order, 1 = order submitted, 2 = can't submit atm?
 
 local function AddBuildMenu(unitID)
 	InsertUnitCmdDesc(unitID, sendOrderCmdDesc)
@@ -331,7 +332,10 @@ function gadget:AllowCommand(unitID, unitDefID, teamID, cmdID, cmdParams, cmdOpt
 			local tonnage = GetTeamResources(teamID, "energy")
 			if not rightClick then
 				if cmdOptions.shift or cmdOptions.ctrl then return false end -- otherwise we can (dramatically) circumvent unit limits
-				if (TeamSlotsRemaining(teamID) - orderSizesPending[unitID] - runningSize) < 1 then return false end -- <1 as may be 0.5, but _ordering_ is always 1
+				if (TeamSlotsRemaining(teamID) - orderSizesPending[unitID] - runningSize) < 1 then 
+					Spring.Echo("not enough slots", TeamSlotsRemaining(teamID), orderSizesPending[unitID], runningSize)
+					return false 
+				end -- <1 as may be 0.5, but _ordering_ is always 1
 				local newTotal = runningTotal + cost
 				local newTons = runningTons + weight
 				if  newTotal < money and newTons < tonnage then -- check we can afford it
@@ -345,6 +349,7 @@ function gadget:AllowCommand(unitID, unitDefID, teamID, cmdID, cmdParams, cmdOpt
 					EditUnitCmdDesc(unitID, FindUnitCmdDesc(unitID, CMD_RUNNING_TONS), {name = "Order Tonnes: \n" .. newTons})
 					return true
 				else
+					Spring.Echo("not enough money")
 					return false -- not enough money
 				end
 			elseif runningSize > 0 then  -- only allow removal if order contains units (prevent -ve running totals!)
