@@ -8,8 +8,6 @@ some clan mechs with mismatched launchpoints due to weapon changes (cougar, warh
 
 PPCs & AC5 do no damage to MadDogs from the front, AoE not hitting origin
 
-leftarm vs rightarm are reveresed in some models (Devastator, Atlas)
-
 ---- WISHLIST
 
 random race?

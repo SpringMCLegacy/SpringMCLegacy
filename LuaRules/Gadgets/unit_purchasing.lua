@@ -412,6 +412,7 @@ function LanceControl(teamID, add)
 		if C3Count <= 2 then -- only the first 2 C3s give you an extra lance
 			local newLance = C3Count + 1
 			Spring.SendMessageToTeam(teamID, "Gained lance #" .. newLance)
+			Spring.SetTeamRulesParam(teamID, "LANCES", newLance)
 			local groupSlots = teamSlots[teamID][newLance]
 			groupSlots.active = true
 			-- If there were any mechs in this lance, make them selectable again
@@ -430,6 +431,7 @@ function LanceControl(teamID, add)
 		if C3Count < 2 then -- team lost control of / capacity for a lance
 			local lostLance = C3Count + 1
 			Spring.SendMessageToTeam(teamID, "Lost lance #" .. lostLance)
+			Spring.SetTeamRulesParam(teamID, "LANCES", lostLance)
 			local groupSlots = teamSlots[teamID][lostLance]
 			groupSlots.active = false
 			-- stop any mechs in this lance and make them unselectable
@@ -517,9 +519,7 @@ function gadget:GamePreload()
 			unitTypes[unitDefID] = vtol and "vtol" or aero and "aero" or "vehicle"
 		end
 	end
-	GG.Lances = {}
 	for _, teamID in pairs(Spring.GetTeamList()) do
-		GG.Lances[teamID] = 1
 		dropShipStatus[teamID] = 0
 		orderStatus[teamID] = 0
 	end
