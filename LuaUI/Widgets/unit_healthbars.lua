@@ -135,14 +135,14 @@ local barColors = {
   emp_p   = { 0.40,0.40,0.80,barAlpha },
   emp_b   = { 0.60,0.60,0.90,barAlpha },
   capture = { 1.00,0.50,0.00,barAlpha },
-  xp   = { 0.75,0.75,0.75,barAlpha },
+  xp      = { 0.75,0.75,0.75,barAlpha },
   stock   = { 0.50,0.50,0.50,barAlpha },
   reload  = { 0.00,0.60,0.60,barAlpha },
   ammo    = { 0.60,0.60,0.40,barAlpha },
   jump    = { 0.00,0.70,0.84,barAlpha },
   fuel    = { 0.70,0.30,0.00,barAlpha },
   masc    = { 0.50,0.10,0.70,barAlpha },
-  goo     = { 0.50,0.50,0.50,barAlpha },
+  coolant = { 0.45,0.60,0.44,barAlpha },
   shield  = { 0.20,0.60,0.60,barAlpha },
 
   resurrect = { 1.00,0.50,0.00,featureBarAlpha },
@@ -645,6 +645,13 @@ do
 		  AddBar(ammoType, ammo/100, "ammo", "")
 	    end
 	  end
+	  
+	  --// COOLANT
+	  local coolant = GetUnitRulesParam(unitID,"ammo_coolant")
+	  if coolant then
+		AddBar("Coolant", coolant/100, "coolant", "")
+	  end
+		
 --[[
       --// BUILD
       if (build<1) then

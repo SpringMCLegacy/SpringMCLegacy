@@ -275,6 +275,7 @@ local function RestoreMASC()
 		SetUnitRulesParam(unitID, "masc", mascLevel)
 		Sleep(100)
 	end
+	GG.ReadyMASC(unitID)
 end
 
 function MASC(activated)
@@ -283,11 +284,19 @@ function MASC(activated)
 		mascActive = true
 		GG.StartMASC(unitID, unitDefID)
 		StartThread(DrainMASC)
-	else
+	elseif not activated then
 		speedMod = speedMod / 2
 		mascActive = false
 		GG.FinishMASC(unitID, unitDefID)
 		StartThread(RestoreMASC)
+	end
+end
+
+function FlushCoolant()
+	if currAmmo.coolant > 0 then
+		Spring.Echo("FLUSHING COOLANT!")
+		ChangeHeat(-50)
+		ChangeAmmo("coolant", -20)
 	end
 end
 
