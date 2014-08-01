@@ -136,6 +136,16 @@ local function TagText(height)
 	glPopMatrix()
 end
 
+local function LinkText(height)
+	glPushMatrix()
+	glBillboard()
+	local num = Spring.GetGameSeconds() % 4
+	local dots = ""
+	for i = 1, num do dots = dots .. "." end
+	glText("Link lost" .. dots, -40, height - 8, 20, "l")
+	glPopMatrix()
+end
+
 function widget:GameFrame(n)
 	for _,unitID in ipairs(spGetAllUnits()) do
 		--if (spIsUnitVisible(unitID)) then
@@ -204,6 +214,19 @@ function widget:DrawWorldPreUnit()
 					end
 					glColor(1.0, 0.2, 0.2, 1)
 					glDrawFuncAtUnit(unitID, true, TagText, height)
+				end
+				-- check Link
+				local linkLost = (GetUnitRulesParam(unitID, "LOST_LINK") or 0) == 1
+				if linkLost then
+					--Spring.Echo(unitID, "LINK LOST")
+					local udid = spGetUnitDefID(unitID)
+					local height = heights[udid]
+					if not height then
+						height = spGetUnitHeight(unitID)
+						heights[udid] = height
+					end
+					glColor(1.0, 1.0, 1.0, 1)
+					glDrawFuncAtUnit(unitID, true, LinkText, height)
 				end
     end
   end

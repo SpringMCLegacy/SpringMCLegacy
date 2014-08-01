@@ -106,7 +106,7 @@ local orderTons = {} -- orderTons[unitID] = totalTonnage
 local orderSizes = {} -- orderSizes[unitID] = size
 local orderSizesPending = {} -- orderSizesPending[unitID] = size -- used to track slots of untis pending arrival
 
--- teamSlots[teamID] = {[1] = {active = true, used = number_used, available = number_available, units = {unitID1 = 1, unitID2 = 1,  unitID3 = 0.5, ...}}, ...}
+-- teamSlots[teamID] = {[1] = {active = true, used = number_used, available = number_available, units = {unitID1 = tons, unitID2 = tons, ...}}, ...}
 local teamSlots = {}
 local unitLances = {} -- unitLances[unitID] = group_number
 
@@ -149,7 +149,7 @@ local function UpdateTeamSlots(teamID, unitID, unitDefID, add)
 		local groupSlots = teamSlots[teamID][group]
 		groupSlots.used = groupSlots.used + slotChange
 		groupSlots.available = groupSlots.available - slotChange
-		groupSlots.units[unitID] = slotChange
+		groupSlots.units[unitID] = ud.energyCost
 	else -- unit died
 		-- reimburse 'weight'
 		AddTeamResource(teamID, "energy", ud.energyCost)
@@ -232,7 +232,7 @@ local function CheckBuildOptions(unitID, teamID, money, weightLeft, cmdID)
 				EditUnitCmdDesc(unitID, cmdDescID, {disabled = true, params = {"T"}})
 			else
 				if cmdDesc.disabled and (currParam == "C" or currParam == "T" or currParam == "L") then
-					EditUnitCmdDesc(unitID, cmdDescID, {disabled = false, params = {}})
+					EditUnitCmdDesc(unitID, cmdDescID, {disabled = false, params = EMPTY_TABLE})
 				end
 			end
 		end
@@ -406,21 +406,34 @@ function LanceControl(teamID, add)
 		AddTeamResource(teamID, "energy", 200)
 		if C3Count <= 2 then -- only the first 2 C3s give you an extra lance
 			local newLance = C3Count + 1
+			Spring.SendMessageToTeam(teamID, "Gained lance #" .. newLance)
 			local groupSlots = teamSlots[teamID][newLance]
 			groupSlots.active = true
+			-- If there were any mechs in this lance, make them selectable again
+			for unitID, tonnage in pairs(groupSlots.units) do
+				Spring.SetUnitNoSelect(unitID, false)
+				UseTeamResource(teamID, "energy", tonnage)
+				Spring.SetUnitRulesParam(unitID, "LOST_LINK", 0)
+			end
 		end
 	else -- lost a C3
 		-- When you gain a C3 you get 200 extra e, when you lose one, you lose 200 storage... 
 		-- ..but Spring helpfully fills it with all that extra e, screwing the tonnage system
 		-- So remove the extra tonnage manually
 		UseTeamResource(teamID, "energy", 200)
-		-- TODO: if numCombatUnits > numSlots then loss of control over lances etc
-		-- TODO: but being over tonnage just means you can't order any extras?
 		-- check if there were any backup C3 towers
 		if C3Count < 2 then -- team lost control of / capacity for a lance
-			local lostLance = C3Count + 2
+			local lostLance = C3Count + 1
+			Spring.SendMessageToTeam(teamID, "Lost lance #" .. lostLance)
 			local groupSlots = teamSlots[teamID][lostLance]
 			groupSlots.active = false
+			-- stop any mechs in this lance and make them unselectable
+			Spring.GiveOrderToUnitMap(groupSlots.units, CMD.STOP, EMPTY_TABLE, EMPTY_TABLE)
+			for unitID, tonnage in pairs(groupSlots.units) do
+				Spring.SetUnitNoSelect(unitID, true)
+				AddTeamResource(teamID, "energy", tonnage)
+				Spring.SetUnitRulesParam(unitID, "LOST_LINK", 1)
+			end
 		end
 	end
 end
