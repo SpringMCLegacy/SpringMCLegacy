@@ -18,7 +18,7 @@ local CL_Shadowcat = Medium:New{
 		heatlimit		= 20,
 		torsoturnspeed	= 175,
 		canjump			= "1",
-		cammasc			= true,
+		canmasc			= true,
 		maxammo 		= {gauss = 20},
     },
 }

@@ -13,7 +13,7 @@ local CL_Firemoth = Light:New{
 	customparams = {
 		heatlimit		= 20,
 		torsoturnspeed	= 200,
-		cammasc			= true,
+		canmasc			= true,
     },
 }
 	
