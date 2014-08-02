@@ -219,7 +219,8 @@ function gadget:UnitGiven(unitID, unitDefID, newTeam, oldTeam)
 end
 
 local function UnitIdleCheck(unitID, unitDefID, teamID)
-	local cmdQueueSize = Spring.GetCommandQueue(unitID, -1, false)
+	if Spring.GetUnitIsDead(unitID) then return false end
+	local cmdQueueSize = Spring.GetCommandQueue(unitID, -1, false) or 0
 	if cmdQueueSize > 0 then 
 		--Spring.Echo("I'm so not idle!") 
 		return
