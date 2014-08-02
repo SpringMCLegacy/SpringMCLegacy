@@ -255,7 +255,7 @@ function script.setSFXoccupy(terrainType)
 end
 
 local function DrainMASC()
-	while moving do
+	while moving and mascActive do
 		mascLevel = mascLevel - 2
 		SetUnitRulesParam(unitID, "masc", mascLevel)
 		ChangeHeat(1)
