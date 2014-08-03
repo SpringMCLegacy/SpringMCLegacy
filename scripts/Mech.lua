@@ -292,6 +292,7 @@ end
 
 function FlushCoolant()
 	if currAmmo.coolant > 0 then
+		GG.EmitSfxName(unitID, torso, "reentry_fx")
 		ChangeHeat(-50)
 		ChangeAmmo("coolant", -20)
 	end
