@@ -151,7 +151,8 @@ local function RunAndJump(unitID, unitDefID)
 		GG.Delay.DelayCall(Spring.GiveOrderToUnit, {unitID, CMD.MOVE, {x, Spring.GetGroundHeight(x,z), z}, {"shift"}}, 1)
 		x = x + targetVector.x*jumpLength
 		z = z + targetVector.z*jumpLength
-		GG.Delay.DelayCall(Spring.GiveOrderToUnit, {unitID, CMD_JUMP, {x, Spring.GetGroundHeight(x,z), z}, {"shift"}}, 1)
+		local y = Spring.GetGroundHeight(x,z)
+		GG.Delay.DelayCall(Spring.GiveOrderToUnit, {unitID, y > 0 and CMD_JUMP or CMD.MOVE, {x, y, z}, {"shift"}}, 1)
 	end
 	-- make sure last command is a jump onto beacon
 	GG.Delay.DelayCall(Spring.GiveOrderToUnit, {unitID, CMD_JUMP, {target.x, Spring.GetGroundHeight(target.x, target.z), target.z}, {"shift"}}, 1)

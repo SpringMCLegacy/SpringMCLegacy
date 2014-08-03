@@ -8,6 +8,19 @@ some clan mechs with mismatched launchpoints due to weapon changes (cougar, warh
 
 PPCs & AC5 do no damage to MadDogs from the front, AoE not hitting origin
 
+[09:26:59] <[S44]yuritch> (was watching MCL bots again, v1109)
+[09:27:01] <[S44]yuritch> [f=0014532] Error: LuaRules::RunCallIn: error = 2, UnitCreated, [string "LuaRules/Gadgets/unit_purchasing.lua"]:159: attempt to index local 'groupSlots' (a nil value)
+[09:27:01] <[S44]yuritch> stack traceback:
+[09:27:01] <[S44]yuritch> 	[string "LuaRules/Gadgets/unit_purchasing.lua"]:159: in function 'UpdateTeamSlots'
+[09:27:01] <[S44]yuritch> 	[string "LuaRules/Gadgets/unit_purchasing.lua"]:465: in function 'UnitCreated'
+[09:27:01] <[S44]yuritch> 	[string "luagadgets/gadgets.lua"]:1234: in function <[string "luagadgets/gadgets.lua"]:1232>
+[09:27:02] <[S44]yuritch> 	(tail call): ?
+[09:27:02] <[S44]yuritch> 	[C]: in function 'CreateUnit'
+[09:27:02] <[S44]yuritch> 	[string "LuaRules/Gadgets/unit_beaconbuild.lua"]:164: in function '?'
+[09:27:02] <[S44]yuritch> 	[string "LuaRules/Gadgets/api_delay.lua"]:57: in function 'GameFrame'
+[09:27:02] <[S44]yuritch> 	[string "luagadgets/gadgets.lua"]:838: in function <[string "luagadgets/gadgets.lua"]:836>
+[09:27:02] <[S44]yuritch> 	(tail call): ?
+
 ---- WISHLIST
 
 random race?
