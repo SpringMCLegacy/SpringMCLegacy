@@ -343,6 +343,7 @@ function gadget:Initialize()
 		local unitDefID = Spring.GetUnitDefID(unitID)
 		gadget:UnitCreated(unitID, unitDefID, teamID)
 	end
+	Script.SetWatchWeapon(WeaponDefNames["meltdown"].id, true)
 end
 
 function gadget:MoveCtrlNotify(unitID, unitDefID, unitTeam, data)
@@ -357,6 +358,12 @@ function gadget:MoveCtrlNotify(unitID, unitDefID, unitTeam, data)
 	if env.TouchDown then
 		Spring.UnitScript.CallAsUnit(unitID, env.TouchDown)
 		Spring.MoveCtrl.Disable(unitID)
+	end
+end
+
+function gadget:ProjectileCreated(proID, proOwnerID, weaponDefID)
+	if weaponDefID == WeaponDefNames["meltdown"].id then
+		Spring.SetProjectileAlwaysVisible(proID, true)
 	end
 end
 

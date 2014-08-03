@@ -606,6 +606,9 @@ end
 function script.Killed(recentDamage, maxHealth)
 	if excessHeat >= heatLimit then
 		Spring.Echo("NUUUUUUUUUUUKKKKKE")
+		local x,y,z = Spring.GetUnitPosition(unitID)
+		local nukeID = Spring.SpawnProjectile(WeaponDefNames["meltdown"].id, {pos = {x,y,z}, owner = unitID, ttl = 5})
+		Spring.SetProjectileAlwaysVisible(nukeID, true)
 	end
 	GG.PlaySoundForTeam(Spring.GetUnitTeam(unitID), "BB_BattleMech_destroyed", 1)
 	--local severity = recentDamage / maxHealth * 100

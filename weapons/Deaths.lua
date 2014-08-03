@@ -27,5 +27,5 @@ local MeltDown = Death_Class:New{
 
 return lowerkeys({ 
 	MechExplode = MechExplode,
-	MeltDown = Meltdown,
+	MeltDown = MeltDown,
 })
