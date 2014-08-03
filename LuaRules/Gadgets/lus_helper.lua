@@ -74,10 +74,11 @@ function SpawnDecal(decalType, x, y, z, teamID, delay, duration)
 end
 GG.SpawnDecal = SpawnDecal
 
-function EmitSfxName(unitID, pieceName, effectName) -- currently unused
+function EmitSfxName(unitID, pieceName, effectName)
 	local x,y,z,dx,dy,dz = GetUnitPiecePosDir(unitID, pieceName)
 	SpawnCEG(effectName, x,y,z, dx, dy, dz)
 end
+GG.EmitSfxName = EmitSfxName
 
 local function RecursiveHide(unitID, pieceNum, hide)
 	-- Hide this piece

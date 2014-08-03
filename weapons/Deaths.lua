@@ -23,6 +23,7 @@ local MeltDown = Death_Class:New{
 	damage = {
 		default = 10000,
 	},	
+	alwaysVisible = true,
 }
 
 return lowerkeys({ 
