@@ -153,12 +153,14 @@ local function UpdateTeamSlots(teamID, unitID, unitDefID, add)
 		-- Deduct weight from current tonnage limit
 		UseTeamResource(teamID, "energy", ud.energyCost)
 		local group = TeamAvailableGroup(teamID)
-		unitLances[unitID] = group
-		SendToUnsynced("LANCE", teamID, unitID, group)
-		local groupSlots = teamSlots[teamID][group]
-		groupSlots.used = groupSlots.used + slotChange
-		groupSlots.available = groupSlots.available - slotChange
-		groupSlots.units[unitID] = ud.energyCost
+		if group then
+			unitLances[unitID] = group
+			SendToUnsynced("LANCE", teamID, unitID, group)
+			local groupSlots = teamSlots[teamID][group]
+			groupSlots.used = groupSlots.used + slotChange
+			groupSlots.available = groupSlots.available - slotChange
+			groupSlots.units[unitID] = ud.energyCost
+		else Spring.Echo("FLOZi logic fail: No available group") end
 	else -- unit died
 		-- reimburse 'weight'
 		AddTeamResource(teamID, "energy", ud.energyCost)
@@ -460,10 +462,8 @@ function gadget:UnitCreated(unitID, unitDefID, teamID)
 		if Spring.ValidUnitID(teamDropZones[teamID]) then -- even worse
 			EditUnitCmdDesc(teamDropZones[teamID], FindUnitCmdDesc(teamDropZones[teamID], CMD_SEND_ORDER), {disabled = true, name = "Dropship \nArrived "})
 		end
-	else
-		if unitTypes[unitDefID] then
-			UpdateTeamSlots(teamID, unitID, unitDefID, true)
-		end
+	elseif unitTypes[unitDefID] then
+		UpdateTeamSlots(teamID, unitID, unitDefID, true)
 	end
 end
 
