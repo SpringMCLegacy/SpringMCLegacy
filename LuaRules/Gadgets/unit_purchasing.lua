@@ -136,7 +136,7 @@ end
 
 local function TeamAvailableGroup(teamID)
 	for i = 1, 3 do
-		if teamSlots[teamID][i].active and teamSlots[teamID][i].available > 0 then return i end
+		if --[[teamSlots[teamID][i].active and]] teamSlots[teamID][i].available > 0 then return i end
 	end
 	return false
 end
@@ -338,7 +338,7 @@ function gadget:AllowCommand(unitID, unitDefID, teamID, cmdID, cmdParams, cmdOpt
 			if not rightClick then
 				if cmdOptions.shift or cmdOptions.ctrl then return false end -- otherwise we can (dramatically) circumvent unit limits
 				if (TeamSlotsRemaining(teamID) - orderSizesPending[unitID] - runningSize) < 1 then 
-					Spring.Echo("not enough slots", TeamSlotsRemaining(teamID), orderSizesPending[unitID], runningSize)
+					--Spring.Echo("not enough slots", TeamSlotsRemaining(teamID), orderSizesPending[unitID], runningSize)
 					return false 
 				end -- <1 as may be 0.5, but _ordering_ is always 1
 				local newTotal = runningTotal + cost
@@ -354,7 +354,7 @@ function gadget:AllowCommand(unitID, unitDefID, teamID, cmdID, cmdParams, cmdOpt
 					EditUnitCmdDesc(unitID, FindUnitCmdDesc(unitID, CMD_RUNNING_TONS), {name = "Order Tonnes: \n" .. newTons})
 					return true
 				else
-					Spring.Echo("not enough money")
+					--Spring.Echo("not enough money")
 					return false -- not enough money
 				end
 			elseif runningSize > 0 then  -- only allow removal if order contains units (prevent -ve running totals!)
