@@ -123,6 +123,7 @@ function gadget:UnitDestroyed(unitID, unitDefID, teamID)
 end
 
 local function RunAndJump(unitID, unitDefID)
+	if not Spring.ValidUnitID(unitID) or Spring.GetUnitIsDead(unitID) then return end
 	local jumpLength = 900 -- TODO: unhardcode this
 	local jumpReload = 10
 	local speed = UnitDefs[unitDefID].speed

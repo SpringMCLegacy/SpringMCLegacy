@@ -42,9 +42,11 @@ local DelayCall				 = GG.Delay.DelayCall
 
 -- Constants
 local EMPTY_TABLE = {} -- keep as empty
+local GAIA_TEAM_ID = Spring.GetGaiaTeamID()
 local CBILLS_PER_SEC = (modOptions and tonumber(modOptions.income)) or 200
 local BEACON_ID = UnitDefNames["beacon"].id
 local C3_ID = UnitDefNames["upgrade_c3array"].id
+
 local DROPSHIP_COOLDOWN = 30 * 30 -- 30s, time before the dropship has regained orbit, refuelled etc ready to drop again
 local DROPSHIP_DELAY = 2 * 30 -- 2s, time taken to arrive on the map from SPACE!
 local DAMAGE_REWARD_MULT = (modOptions and tonumber(modOptions.income_damage)) or 0.2
@@ -108,6 +110,8 @@ local orderSizesPending = {} -- orderSizesPending[unitID] = size -- used to trac
 
 local dropZones = {} -- dropZones[unitID] = teamID
 local teamDropZones = {} -- teamDropZone[teamID] = unitID
+local C3Status = {} -- C3Status[unitID] = bool deployed
+local teamC3Counts = {} -- teamC3Counts[teamID] = number
 local dropShipStatus = {} -- dropShipStatus[teamID] = number, where 0 = Ready, 1 = Active, 2 = Cooldown
 local orderStatus = {} -- orderStatus[teamID] = number, where 0 = Ready for a new order, 1 = order submitted, 2 = can't submit atm?
 
@@ -117,6 +121,7 @@ local unitLances = {} -- unitLances[unitID] = group_number
 
 for _, teamID in pairs(Spring.GetTeamList()) do
 	teamSlots[teamID] = {}
+	teamC3Counts[teamID] = 0
 	for i = 1, 3 do
 		teamSlots[teamID][i] = {}
 		teamSlots[teamID][i].active = i == 1
@@ -129,43 +134,107 @@ end
 local function TeamSlotsRemaining(teamID)
 	local slots = 0
 	for i = 1, 3 do
-		slots = slots + ((teamSlots[teamID][i].active and teamSlots[teamID][i].available) or 0)
+		-- we only want to consider slots in lances we actively control... 
+		-- ...and only whole slots should be counted (can't split a mech across 2x 0.5 slots!)
+		slots = slots + ((teamSlots[teamID][i].active and math.floor(teamSlots[teamID][i].available)) or 0)
 	end
 	return slots
 end
 
-local function TeamAvailableGroup(teamID)
+local function TeamAvailableGroup(teamID, size)
 	for i = 1, 3 do
-		if --[[teamSlots[teamID][i].active and]] teamSlots[teamID][i].available > 0 then return i end
+		if teamSlots[teamID][i].available >= size then return i, teamSlots[teamID][i].active end
 	end
 	return false
 end
 
+local function ToggleLink(unitID, teamID, lost, tonnage)
+	if lost then
+		Spring.SetUnitNoSelect(unitID, true)
+		AddTeamResource(teamID, "energy", tonnage)
+		Spring.SetUnitRulesParam(unitID, "LOST_LINK", 1)
+	else
+		Spring.SetUnitNoSelect(unitID, false)
+		UseTeamResource(teamID, "energy", tonnage)
+		Spring.SetUnitRulesParam(unitID, "LOST_LINK", 0)
+	end
+end
+
+function LanceControl(teamID, unitID, add)
+	if teamID == GAIA_TEAM_ID then return end -- no need to track for gaia
+	if add then
+		C3Status[unitID] = true
+		teamC3Counts[teamID] = teamC3Counts[teamID] + 1
+		AddTeamResource(teamID, "energy", 200)
+		Spring.Echo(teamID, "C3 Count INCREASE", teamC3Counts[teamID])
+		if teamC3Counts[teamID] <= 2 then -- only the first 2 C3s give you an extra lance
+			local newLance = teamC3Counts[teamID] + 1
+			Spring.Echo(teamID, "Gained lance #" .. newLance) --SendMessageToTeam
+			Spring.SetTeamRulesParam(teamID, "LANCES", newLance)
+			local groupSlots = teamSlots[teamID][newLance]
+			groupSlots.active = true
+			-- If there were any mechs in this lance, make them selectable again
+			for unitID, tonnage in pairs(groupSlots.units) do
+				ToggleLink(unitID, teamID, false, tonnage)
+			end
+		end
+	elseif C3Status[unitID] then -- lost a deployed C3
+		teamC3Counts[teamID] = teamC3Counts[teamID] - 1
+		-- When you gain a C3 you get 200 extra e, when you lose one, you lose 200 storage... 
+		-- ..but Spring helpfully fills it with all that extra e, screwing the tonnage system
+		-- So remove the extra tonnage manually
+		UseTeamResource(teamID, "energy", 200)
+		-- check if there were any backup C3 towers
+		Spring.Echo(teamID, "C3 Count DECREASE", teamC3Counts[teamID])
+		if teamC3Counts[teamID] < 2 then -- team lost control of / capacity for a lance
+			local lostLance = teamC3Counts[teamID] + 2
+			Spring.Echo(teamID, "Lost lance #" .. lostLance) --SendMessageToTeam
+			Spring.SetTeamRulesParam(teamID, "LANCES", lostLance)
+			local groupSlots = teamSlots[teamID][lostLance]
+			groupSlots.active = false
+			-- stop any mechs in this lance and make them unselectable
+			Spring.GiveOrderToUnitMap(groupSlots.units, CMD.STOP, EMPTY_TABLE, EMPTY_TABLE)
+			for unitID, tonnage in pairs(groupSlots.units) do
+				ToggleLink(unitID, teamID, true, tonnage)
+			end
+		end
+	end
+end
+GG.LanceControl = LanceControl
+
 local function UpdateTeamSlots(teamID, unitID, unitDefID, add)
-	if select(3,Spring.GetTeamInfo(teamID)) then return end -- team died
+	if select(3,Spring.GetTeamInfo(teamID)) or teamID == GAIA_TEAM_ID then return end -- team died
 	local ud = UnitDefs[unitDefID]
 	local slotChange = ((ud.customParams.unittype == "mech" or ud.canFly) and 1) or 0.5
 	if add then -- new unit
 		local dz = teamDropZones[teamID]
 		if dz then
-			orderSizesPending[dz] = orderSizesPending[dz] - 1
+			orderSizesPending[dz] = orderSizesPending[dz] - slotChange
+			if orderSizesPending[dz] < 0 then Spring.Echo(teamID, "ORDER SIZES NEGATIVE L213", orderSizesPending[dz]) end
 		end
 		-- Deduct weight from current tonnage limit
 		UseTeamResource(teamID, "energy", ud.energyCost)
-		local group = TeamAvailableGroup(teamID)
+		local group, active = TeamAvailableGroup(teamID, slotChange)
 		if group then
+			if not active then 
+				Spring.Echo(teamID, "Assigned to an inactive group!") 
+				ToggleLink(unitID, teamID, true, ud.energyCost)
+			end
 			unitLances[unitID] = group
 			SendToUnsynced("LANCE", teamID, unitID, group)
 			local groupSlots = teamSlots[teamID][group]
 			groupSlots.used = groupSlots.used + slotChange
 			groupSlots.available = groupSlots.available - slotChange
 			groupSlots.units[unitID] = ud.energyCost
-		else Spring.Echo("FLOZi logic fail: No available group") end
+		else 
+			Spring.Echo(teamID, "FLOZi logic fail: No available group", TeamSlotsRemaining(teamID), slotChange, ud.name) 
+		end
 	else -- unit died
 		-- reimburse 'weight'
 		AddTeamResource(teamID, "energy", ud.energyCost)
 		local group = unitLances[unitID]
 		local groupSlots = teamSlots[teamID][group]
+		if not teamID or not group then Spring.Echo("UHOH!", teamID, group) return end
 		groupSlots.used = groupSlots.used - slotChange
 		groupSlots.available = groupSlots.available + slotChange
 		groupSlots.units[unitID] = nil
@@ -306,6 +375,7 @@ local function SendCommandFallback(unitID, unitDefID, teamID)
 		orderCosts[unitID] = 0
 		orderTons[unitID] = 0
 		orderSizesPending[unitID] = orderSizes[unitID]
+		if orderSizesPending[unitID] < 0 then Spring.Echo(teamID, "ORDER SIZES NEGATIVE L377", orderSizesPending[unitID]) end
 		orderSizes[unitID] = 0
 		-- Dropship can now be considered ACTIVE even though it hasn't arrived yet
 		dropShipStatus[teamID] = 1
@@ -329,7 +399,7 @@ function gadget:AllowCommand(unitID, unitDefID, teamID, cmdID, cmdParams, cmdOpt
 			
 			local unitDef = UnitDefs[-cmdID]
 			local cost = unitDef.metalCost
-			local weight = unitDef.customParams.unittype == "vehicle" and 2 * unitDef.energyCost or unitDef.energyCost -- vehicles come in pairs
+			local weight = (unitDef.customParams.unittype == "vehicle" and not unitDef.canFly) and 2 * unitDef.energyCost or unitDef.energyCost -- vehicles come in pairs
 			local runningTotal = orderCosts[unitID] or 0
 			local runningTons = orderTons[unitID] or 0
 			local runningSize = orderSizes[unitID] or 0
@@ -338,7 +408,6 @@ function gadget:AllowCommand(unitID, unitDefID, teamID, cmdID, cmdParams, cmdOpt
 			if not rightClick then
 				if cmdOptions.shift or cmdOptions.ctrl then return false end -- otherwise we can (dramatically) circumvent unit limits
 				if (TeamSlotsRemaining(teamID) - orderSizesPending[unitID] - runningSize) < 1 then 
-					--Spring.Echo("not enough slots", TeamSlotsRemaining(teamID), orderSizesPending[unitID], runningSize)
 					return false 
 				end -- <1 as may be 0.5, but _ordering_ is always 1
 				local newTotal = runningTotal + cost
@@ -352,6 +421,7 @@ function gadget:AllowCommand(unitID, unitDefID, teamID, cmdID, cmdParams, cmdOpt
 					CheckBuildOptions(unitID, teamID, money - (newTotal), tonnage - (newTons), cmdID)
 					EditUnitCmdDesc(unitID, FindUnitCmdDesc(unitID, CMD_RUNNING_TOTAL), {name = "Order C-Bills: \n" .. newTotal})
 					EditUnitCmdDesc(unitID, FindUnitCmdDesc(unitID, CMD_RUNNING_TONS), {name = "Order Tonnes: \n" .. newTons})
+					Spring.Echo(teamID, "SLOTS", TeamSlotsRemaining(teamID), orderSizesPending[unitID], runningSize)
 					return true
 				else
 					--Spring.Echo("not enough money")
@@ -409,48 +479,6 @@ function gadget:AllowUnitBuildStep(builderID, builderTeam, unitID, unitDefID, pa
 	return true -- beacons!
 end
 
-
-function LanceControl(teamID, add)
-	local C3Count = Spring.GetTeamUnitDefCount(teamID, C3_ID)
-	if add then
-		AddTeamResource(teamID, "energy", 200)
-		if C3Count <= 2 then -- only the first 2 C3s give you an extra lance
-			local newLance = C3Count + 1
-			Spring.SendMessageToTeam(teamID, "Gained lance #" .. newLance)
-			Spring.SetTeamRulesParam(teamID, "LANCES", newLance)
-			local groupSlots = teamSlots[teamID][newLance]
-			groupSlots.active = true
-			-- If there were any mechs in this lance, make them selectable again
-			for unitID, tonnage in pairs(groupSlots.units) do
-				Spring.SetUnitNoSelect(unitID, false)
-				UseTeamResource(teamID, "energy", tonnage)
-				Spring.SetUnitRulesParam(unitID, "LOST_LINK", 0)
-			end
-		end
-	else -- lost a C3
-		-- When you gain a C3 you get 200 extra e, when you lose one, you lose 200 storage... 
-		-- ..but Spring helpfully fills it with all that extra e, screwing the tonnage system
-		-- So remove the extra tonnage manually
-		UseTeamResource(teamID, "energy", 200)
-		-- check if there were any backup C3 towers
-		if C3Count < 2 then -- team lost control of / capacity for a lance
-			local lostLance = C3Count + 1
-			Spring.SendMessageToTeam(teamID, "Lost lance #" .. lostLance)
-			Spring.SetTeamRulesParam(teamID, "LANCES", lostLance)
-			local groupSlots = teamSlots[teamID][lostLance]
-			groupSlots.active = false
-			-- stop any mechs in this lance and make them unselectable
-			Spring.GiveOrderToUnitMap(groupSlots.units, CMD.STOP, EMPTY_TABLE, EMPTY_TABLE)
-			for unitID, tonnage in pairs(groupSlots.units) do
-				Spring.SetUnitNoSelect(unitID, true)
-				AddTeamResource(teamID, "energy", tonnage)
-				Spring.SetUnitRulesParam(unitID, "LOST_LINK", 1)
-			end
-		end
-	end
-end
-GG.LanceControl = LanceControl
-
 function gadget:UnitCreated(unitID, unitDefID, teamID)
 	local unitDef = UnitDefs[unitDefID]
 	if unitDef.name:find("dropzone") then
@@ -482,7 +510,8 @@ function gadget:UnitDestroyed(unitID, unitDefID, teamID, attackerID, attackerDef
 		dropZones[unitID] = nil
 		teamDropZones[teamID] = nil
 	elseif unitDefID == C3_ID then
-		LanceControl(teamID, false)
+		LanceControl(teamID, unitID, false)
+		C3Status[unitID] = nil
 	end
 	if attackerID and not AreTeamsAllied(teamID, attackerTeam) and unitDefID ~= WALL_ID and unitDefID ~= GATE_ID then
 		AddTeamResource(attackerTeam, "metal", UnitDefs[unitDefID].metalCost * KILL_REWARD_MULT)
@@ -494,10 +523,11 @@ end
 
 function gadget:UnitGiven(unitID, unitDefID, newTeam, oldTeam)
 	gadget:UnitDestroyed(unitID, unitDefID, oldTeam)
-	gadget:UnitCreated(unitID, unitDefID, newTeam)
-	if unitDefID == C3_ID then
-		LanceControl(newTeam, true)
-		LanceControl(oldTeam, false)
+	if newTeam ~= GAIA_TEAM_ID then
+		gadget:UnitCreated(unitID, unitDefID, newTeam)
+		if unitDefID == C3_ID then
+			LanceControl(newTeam, unitID, true)
+		end
 	end
 end
 

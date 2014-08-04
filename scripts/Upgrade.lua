@@ -72,7 +72,7 @@ function Unpack()
 		Spin(geo, y_axis, math.rad(20), math.rad(5))
 		-- We're deployed, grant the extra tonnage
 		local teamID = Spring.GetUnitTeam(unitID)
-		GG.LanceControl(teamID, true)
+		GG.LanceControl(teamID, unitID, true)
 	elseif name == "upgrade_mechbay" then
 		Move(rampr, x_axis, 10, CRATE_SPEED * 10)
 		Move(ramprtoolupper, x_axis, 10, CRATE_SPEED * 5)

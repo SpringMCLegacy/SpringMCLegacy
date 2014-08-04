@@ -954,7 +954,9 @@ do
       unitDefID = GetUnitDefID(unitID)
       unitDef   = UnitDefs[unitDefID or -1]
 	  local transporter = Spring.GetUnitTransporter(unitID)
-      if (unitDef and not (transporter and UnitDefs[GetUnitDefID(transporter)].customParams.dropship)) then
+	  local transDef
+	  if transporter then transDef = UnitDefs[GetUnitDefID(transporter)] end
+      if (unitDef and not (transporter and transDef and transDef.customParams.dropship)) then
         DrawUnitInfos(unitID, unitDefID, unitDef)
       end
     end
