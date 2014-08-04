@@ -166,10 +166,10 @@ function LanceControl(teamID, unitID, add)
 		C3Status[unitID] = true
 		teamC3Counts[teamID] = teamC3Counts[teamID] + 1
 		AddTeamResource(teamID, "energy", 200)
-		Spring.Echo(teamID, "C3 Count INCREASE", teamC3Counts[teamID])
+		--Spring.Echo(teamID, "C3 Count INCREASE", teamC3Counts[teamID])
 		if teamC3Counts[teamID] <= 2 then -- only the first 2 C3s give you an extra lance
 			local newLance = teamC3Counts[teamID] + 1
-			Spring.Echo(teamID, "Gained lance #" .. newLance) --SendMessageToTeam
+			Spring.SendMessageToTeam(teamID, "Gained lance #" .. newLance)
 			Spring.SetTeamRulesParam(teamID, "LANCES", newLance)
 			local groupSlots = teamSlots[teamID][newLance]
 			groupSlots.active = true
@@ -185,10 +185,10 @@ function LanceControl(teamID, unitID, add)
 		-- So remove the extra tonnage manually
 		UseTeamResource(teamID, "energy", 200)
 		-- check if there were any backup C3 towers
-		Spring.Echo(teamID, "C3 Count DECREASE", teamC3Counts[teamID])
+		--Spring.Echo(teamID, "C3 Count DECREASE", teamC3Counts[teamID])
 		if teamC3Counts[teamID] < 2 then -- team lost control of / capacity for a lance
 			local lostLance = teamC3Counts[teamID] + 2
-			Spring.Echo(teamID, "Lost lance #" .. lostLance) --SendMessageToTeam
+			Spring.SendMessageToTeam(teamID, "Lost lance #" .. lostLance)
 			Spring.SetTeamRulesParam(teamID, "LANCES", lostLance)
 			local groupSlots = teamSlots[teamID][lostLance]
 			groupSlots.active = false
@@ -210,14 +210,14 @@ local function UpdateTeamSlots(teamID, unitID, unitDefID, add)
 		local dz = teamDropZones[teamID]
 		if dz then
 			orderSizesPending[dz] = orderSizesPending[dz] - slotChange
-			if orderSizesPending[dz] < 0 then Spring.Echo(teamID, "ORDER SIZES NEGATIVE L213", orderSizesPending[dz]) end
+			--if orderSizesPending[dz] < 0 then Spring.Echo(teamID, "ORDER SIZES NEGATIVE L213", orderSizesPending[dz]) end
 		end
 		-- Deduct weight from current tonnage limit
 		UseTeamResource(teamID, "energy", ud.energyCost)
 		local group, active = TeamAvailableGroup(teamID, slotChange)
 		if group then
 			if not active then 
-				Spring.Echo(teamID, "Assigned to an inactive group!") 
+				--Spring.Echo(teamID, "Assigned to an inactive group!") 
 				ToggleLink(unitID, teamID, true, ud.energyCost)
 			end
 			unitLances[unitID] = group
@@ -234,7 +234,7 @@ local function UpdateTeamSlots(teamID, unitID, unitDefID, add)
 		AddTeamResource(teamID, "energy", ud.energyCost)
 		local group = unitLances[unitID]
 		local groupSlots = teamSlots[teamID][group]
-		if not teamID or not group then Spring.Echo("UHOH!", teamID, group) return end
+		--if not teamID or not group then Spring.Echo("UHOH!", teamID, group) return end
 		groupSlots.used = groupSlots.used - slotChange
 		groupSlots.available = groupSlots.available + slotChange
 		groupSlots.units[unitID] = nil
@@ -375,7 +375,7 @@ local function SendCommandFallback(unitID, unitDefID, teamID)
 		orderCosts[unitID] = 0
 		orderTons[unitID] = 0
 		orderSizesPending[unitID] = orderSizes[unitID]
-		if orderSizesPending[unitID] < 0 then Spring.Echo(teamID, "ORDER SIZES NEGATIVE L377", orderSizesPending[unitID]) end
+		--if orderSizesPending[unitID] < 0 then Spring.Echo(teamID, "ORDER SIZES NEGATIVE L377", orderSizesPending[unitID]) end
 		orderSizes[unitID] = 0
 		-- Dropship can now be considered ACTIVE even though it hasn't arrived yet
 		dropShipStatus[teamID] = 1
@@ -421,7 +421,7 @@ function gadget:AllowCommand(unitID, unitDefID, teamID, cmdID, cmdParams, cmdOpt
 					CheckBuildOptions(unitID, teamID, money - (newTotal), tonnage - (newTons), cmdID)
 					EditUnitCmdDesc(unitID, FindUnitCmdDesc(unitID, CMD_RUNNING_TOTAL), {name = "Order C-Bills: \n" .. newTotal})
 					EditUnitCmdDesc(unitID, FindUnitCmdDesc(unitID, CMD_RUNNING_TONS), {name = "Order Tonnes: \n" .. newTons})
-					Spring.Echo(teamID, "SLOTS", TeamSlotsRemaining(teamID), orderSizesPending[unitID], runningSize)
+					--Spring.Echo(teamID, "SLOTS", TeamSlotsRemaining(teamID), orderSizesPending[unitID], runningSize)
 					return true
 				else
 					--Spring.Echo("not enough money")
