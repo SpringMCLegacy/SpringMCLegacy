@@ -286,7 +286,10 @@ function LimitTowerType(unitID, teamID, towerType, increase)
 		buildLimits[unitID][towerType] = towersRemaining + 1
 		for tDefID, tType in pairs(towerDefIDs) do
 			if tType == towerType then
-				EditUnitCmdDesc(unitID, FindUnitCmdDesc(unitID, -tDefID), {disabled = false, params = {}})
+				local cmdDescID = FindUnitCmdDesc(unitID, -tDefID)
+				if cmdDescID then
+					EditUnitCmdDesc(unitID, cmdDescID, {disabled = false, params = {}})
+				end
 			end
 		end
 	elseif towersRemaining == 0 then 

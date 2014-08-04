@@ -283,9 +283,24 @@ function gadget:GamePreload()
 		info.jammableIDs = jammableIDs
 		
 		-- UnitDef Level Info
+		-- General
+		info.hasEcm = string.tobool(cp.hasecm)
+		info.numWeapons = #weapons
+		info.maxAmmo = table.unserialize(cp.maxammo)
+		-- Temperatures
+		local MapTemps = GG.MapTemperatures
+		if MapTemps then -- purely for dumb loading bug
+			local mapAmbientTempMult = 0.9 ^ (MapTemps.ambient / 20)
+			local waterSign = MapTemps.ambient - MapTemps.water < 0 and -1 or 1
+			local mapWaterTempMult = waterSign * 0.9 ^ (waterSign * MapTemps.water / 10)
+			info.heatLimit = (tonumber(cp.heatlimit) or 50) * 10
+			info.coolRate = info.heatLimit / 25 * mapAmbientTempMult
+			info.waterCoolRate = mapWaterTempMult
+		end
 		-- Mechs
 		--info.jumpjets = GG.jumpDefs[unitDefID] ~= nil
 		info.torsoTurnSpeed = math.rad(tonumber(cp.torsoturnspeed) or 100)
+		info.elevationSpeed = math.rad(tonumber(cp.elevationspeed) or math.deg(info.torsoTurnSpeed))
 		-- Limb HPs
 		info.limbHPs = {}
 		if cp.unittype == "mech" then
@@ -293,6 +308,10 @@ function gadget:GamePreload()
 			info.limbHPs["right_leg"] = unitDef.health * 0.1
 			info.limbHPs["left_arm"] = unitDef.health * 0.15
 			info.limbHPs["right_arm"] = unitDef.health * 0.15
+			-- coolant
+			info.maxAmmo["coolant"] = 100
+			info.ammoTypes[-1] = "coolant"
+			info.burstLengths[-1] = 20	
 		elseif cp.unittype == "vehicle" then
 			info.limbHPs["turret"] = unitDef.health * 0.3
 			if unitDef.canFly then
@@ -312,25 +331,6 @@ function gadget:GamePreload()
 		info.barrelRecoilDist = table.unserialize(cp.barrelrecoildist)
 		info.wheelSpeed = math.rad(tonumber(cp.wheelspeed) or 100)
 		info.wheelAccel = math.rad(tonumber(cp.wheelaccel) or info.wheelSpeed * 2)
-		-- Temperatures
-		local MapTemps = GG.MapTemperatures
-		if MapTemps then -- purely for dumb loading bug
-			local mapAmbientTempMult = 0.9 ^ (MapTemps.ambient / 20)
-			local waterSign = MapTemps.ambient - MapTemps.water < 0 and -1 or 1
-			local mapWaterTempMult = waterSign * 0.9 ^ (waterSign * MapTemps.water / 10)
-			info.heatLimit = (tonumber(cp.heatlimit) or 50) * 10
-			info.coolRate = info.heatLimit / 25 * mapAmbientTempMult
-			info.waterCoolRate = mapWaterTempMult
-		end
-		-- General
-		info.hasEcm = string.tobool(cp.hasecm)
-		info.numWeapons = #weapons
-		info.elevationSpeed = math.rad(tonumber(cp.elevationspeed) or math.deg(info.torsoTurnSpeed))
-		info.maxAmmo = table.unserialize(cp.maxammo)
-		-- coolant
-		info.maxAmmo["coolant"] = 100
-		info.ammoTypes[-1] = "coolant"
-		info.burstLengths[-1] = 20
 		-- And finally, stick it in GG for the script to access
 		GG.lusHelper[unitDefID] = info
 	end
