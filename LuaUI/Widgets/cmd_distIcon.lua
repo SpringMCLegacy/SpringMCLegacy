@@ -18,5 +18,5 @@ function widget:Initialize()
 end
 
 function widget:Shutdown()
-	Spring.SendCommands("disticon " .. unitIconDist)
+	Spring.SetConfigInt('UnitIconDist', unitIconDist)
 end

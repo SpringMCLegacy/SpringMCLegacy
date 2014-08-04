@@ -211,6 +211,25 @@ local Sounds = {
 		},
 		
 		-- Upgrades
+		BB_Upgrade_C3Array_Deployed = {
+			file = "sounds/betty/C3Array_Deployed.ogg",
+			in3d = false,
+		},
+		
+		BB_Upgrade_C3Array_UnderAttack = {
+			file = "sounds/betty/C3Array_UnderAttack.ogg",
+			in3d = false,
+		},
+		
+		BB_Upgrade_C3Array_Destroyed = {
+			file = "sounds/betty/C3Array_Destroyed.ogg",
+			in3d = false,
+		},
+		
+		BB_Upgrade_C3Array_Lost = {
+			file = "sounds/betty/C3Array_Lost.ogg",
+			in3d = false,
+		},
 		BB_Upgrade_Uplink_Deployed = {
 			file = "sounds/betty/Uplink_Deployed.ogg",
 			in3d = false,

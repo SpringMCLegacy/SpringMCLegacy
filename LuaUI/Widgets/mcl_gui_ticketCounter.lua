@@ -22,6 +22,10 @@ local MY_ALLY_ID = select(6, Spring.GetTeamInfo(MY_TEAM_ID))
 
 local UPLINK_ID = UnitDefNames["upgrade_uplink"].id
 
+-- user settings
+local clockConfig
+local fpsConfig
+
 -- localisations
 -- lua
 local floor 			= math.floor
@@ -96,6 +100,8 @@ function widget:GamePreload()
 end
 
 function widget:Initialize()
+	clockConfig = Spring.GetConfigInt('ShowClock')
+	fpsConfig = Spring.GetConfigInt('ShowFPS')
 	Spring.SendCommands("resbar 0", "clock 0", "fps 0")
 	btFont = gl.LoadFont("LuaUI/Fonts/bt_oldstyle.ttf", 16, 2, 30)
 	TicketText()
@@ -103,6 +109,11 @@ function widget:Initialize()
 	if Spring.GetGameFrame() > 0 then
 		widget:GamePreload()
 	end
+end
+
+function widget:Shutdown()
+	Spring.SetConfigInt('ShowClock', clockConfig)
+	Spring.SetConfigInt('FPSClock', fpsConfig)
 end
 
 function widget:PlayerChanged()
