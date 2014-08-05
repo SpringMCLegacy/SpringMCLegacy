@@ -238,7 +238,7 @@ function script.Create()
 		end
 		WaitForMove(booms[3], y_axis)
 		Sleep(1500)
-		if cargoID then -- might be empty on /give testing
+		if Spring.ValidUnitID(cargoID) and not Spring.GetUnitIsDead(cargoID) then -- might be empty on /give testing
 			Spring.UnitScript.DropUnit(cargoID)
 			-- Let the cargo know it is unloaded
 			env = Spring.UnitScript.GetScriptEnv(cargoID)
