@@ -250,6 +250,7 @@ local function CoolOff()
 end
 
 function script.setSFXoccupy(terrainType)
+	if vtol or aero then return end
 	if terrainType == 2 or terrainType == 1 then -- water
 		inWater = true
 	else

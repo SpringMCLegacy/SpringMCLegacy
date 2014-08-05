@@ -385,6 +385,11 @@ local function SendCommandFallback(unitID, unitDefID, teamID)
 end
 
 function gadget:AllowCommand(unitID, unitDefID, teamID, cmdID, cmdParams, cmdOptions)
+	if unitTypes[unitDefID] then -- strictly no commands to lost link units
+		local group = unitLances[unitID]
+		local groupSlots = teamSlots[teamID][group]
+		if groupSlots then return groupSlots.active else return true end
+	end
 	if dropZones[unitID] then
 		local typeString = menuCmdIDs[cmdID]
 		local rightClick = cmdOptions.right

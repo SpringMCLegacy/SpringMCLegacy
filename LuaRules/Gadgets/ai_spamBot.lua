@@ -185,41 +185,6 @@ local function Perk(unitID, perkID)
 	GG.Delay.DelayCall(Spring.GiveOrderToUnit, {unitID, perkID, {}, {}}, 1)
 end
 
-function gadget:UnitUnloaded(unitID, unitDefID, teamID, transportID, transportTeam)
-	if AI_TEAMS[teamID] then
-		local ud = UnitDefs[unitDefID]
-		local cp = ud.customParams
-		if unitDefID == C3_ID then
-			--Spring.Echo("C3!")
-			-- C3's take a little time to deploy and grant the extra tonnage & slots, so delay 10s
-			GG.Delay.DelayCall(Spam, {teamID}, 10 * 30)
-		elseif ud.canFly then
-			--Spring.Echo("VTOL!")
-			for _, spot in pairs(flagSpots) do
-				GG.Delay.DelayCall(Spring.GiveOrderToUnit, {unitID, CMD.PATROL, {spot.x, 0, spot.z}, {"shift"}}, 30)
-			end
-		elseif cp.canjump then
-			--Spring.Echo("JUMP MECH!")
-			Perk(unitID, PERK_JUMP_RANGE)
-			RunAndJump(unitID, unitDefID)
-		else
-			--Spring.Echo("VEHICLE OR MECH!")
-			Wander(unitID)
-			if cp.unittype == "mech" then
-				Perk(unitID)
-			end
-		end
-	end
-end
-
-function gadget:UnitGiven(unitID, unitDefID, newTeam, oldTeam)
-	if AI_TEAMS[newTeam] then
-		if unitDefID == BEACON_ID then
-			GG.Delay.DelayCall(Spring.GiveOrderToUnit, {unitID, CMD_C3, {}, {}}, 1)
-		end
-	end
-end
-
 local function UnitIdleCheck(unitID, unitDefID, teamID)
 	if Spring.GetUnitIsDead(unitID) then return false end
 	local cmdQueueSize = Spring.GetCommandQueue(unitID, -1, false) or 0
@@ -249,6 +214,44 @@ end
 function gadget:UnitIdle(unitID, unitDefID, teamID)
 	if AI_TEAMS[teamID] then
 		GG.Delay.DelayCall(UnitIdleCheck, {unitID, unitDefID, teamID}, 10)
+	end
+end
+
+function gadget:UnitUnloaded(unitID, unitDefID, teamID, transportID, transportTeam)
+	if AI_TEAMS[teamID] then
+		local ud = UnitDefs[unitDefID]
+		local cp = ud.customParams
+		if unitDefID == C3_ID then
+			--Spring.Echo("C3!")
+			-- C3's take a little time to deploy and grant the extra tonnage & slots, so delay 10s
+			GG.Delay.DelayCall(Spam, {teamID}, 10 * 30)
+			for k,v in pairs(Spring.GetTeamUnits(teamID)) do
+				GG.Delay.DelayCall(UnitIdleCheck, {unitID, unitDefID, teamID}, 10 * 30)
+			end
+		elseif ud.canFly then
+			--Spring.Echo("VTOL!")
+			for _, spot in pairs(flagSpots) do
+				GG.Delay.DelayCall(Spring.GiveOrderToUnit, {unitID, CMD.PATROL, {spot.x, 0, spot.z}, {"shift"}}, 30)
+			end
+		elseif cp.canjump then
+			--Spring.Echo("JUMP MECH!")
+			Perk(unitID, PERK_JUMP_RANGE)
+			RunAndJump(unitID, unitDefID)
+		else
+			--Spring.Echo("VEHICLE OR MECH!")
+			Wander(unitID)
+			if cp.unittype == "mech" then
+				Perk(unitID)
+			end
+		end
+	end
+end
+
+function gadget:UnitGiven(unitID, unitDefID, newTeam, oldTeam)
+	if AI_TEAMS[newTeam] then
+		if unitDefID == BEACON_ID then
+			GG.Delay.DelayCall(Spring.GiveOrderToUnit, {unitID, CMD_C3, {}, {}}, 1)
+		end
 	end
 end
 

@@ -8,18 +8,7 @@ some clan mechs with mismatched launchpoints due to weapon changes (cougar, warh
 
 PPCs & AC5 do no damage to MadDogs from the front, AoE not hitting origin
 
-[21:32:32] <[S44]yuritch> [f=0014893] Error: LuaRules::RunCallIn: error = 2, UnitDestroyed, [string "LuaRules/Gadgets/unit_purchasing.lua"]:169: attempt to index local 'groupSlots' (a nil value)
-
-ticket counter widget doesn't respect user's /fps and /clock settings
-
-SpamBot can issue orders to lost link units
-
-[f=0006364] [unit_script.lua] Error: [string "scripts/dropship_assault.lua"]:245: attempt to index global 'env' (a nil value) -- presumably caused when cargo killed whilst unloading
-
-[11:56:26] <[S44]yuritch> [f=0014005] [widgets.lua] Error: Error in DrawWorld(): [string "LuaUI/Widgets/unit_healthbars.lua"]:957: attempt to index field '?' (a nil value)
-
-[11:57:23] <[S44]yuritch> this was when I placed some turret near navpoint:
-[11:57:24] <[S44]yuritch> [f=0055082] Error: LuaRules::RunCallIn: error = 2, UnitDestroyed, [string "LuaRules/Gadgets/unit_beaconbuild.lua"]:289: bad argument #2 to 'EditUnitCmdDesc' (number expected, got nil)
+--ticket counter widget doesn't respect user's /fps and /clock settings
 
 ---- WISHLIST
 
