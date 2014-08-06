@@ -59,12 +59,12 @@ function RemoveGrassCircle(cx, cz, r)
 end
 GG.RemoveGrassCircle = RemoveGrassCircle
 
-function SpawnDecal(decalType, x, y, z, teamID, delay, duration)
+function SpawnDecal(decalType, x, y, z, teamID, alwaysVisible, delay, duration)
 	if delay then
 		GG.Delay.DelayCall(SpawnDecal, {decalType, x, y, z, teamID, nil, duration}, delay)
 	else
-		local decalID = Spring.CreateUnit(decalType, x, y + 1, z, 0, Spring.GetGaiaTeamID(), false, false)
-		Spring.SetUnitAlwaysVisible(decalID, teamID == nil and true)
+		local decalID = Spring.CreateUnit(decalType, x, y + 1, z, 0, teamID, false, false)
+		Spring.SetUnitAlwaysVisible(decalID, alwaysVisible)
 		Spring.SetUnitNoSelect(decalID, true)
 		Spring.SetUnitBlocking(decalID, false, false, false, false, false, false, false)
 		if duration then

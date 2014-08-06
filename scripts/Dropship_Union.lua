@@ -161,7 +161,7 @@ local function fx()
 		end
 
 		GG.RemoveGrassCircle(X, Z, 230)
-		GG.SpawnDecal("decal_drop", X, GY + 1, Z, Spring.GetUnitTeam(unitID), 30 * 2, 30 * 120)
+		GG.SpawnDecal("decal_drop", X, GY + 1, Z, teamID, false, 30 * 2, 30 * 120)
 		up = true
 	end
 	while stage == 5 do

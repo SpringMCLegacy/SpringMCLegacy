@@ -10,6 +10,8 @@ PPCs & AC5 do no damage to MadDogs from the front, AoE not hitting origin
 
 --ticket counter widget doesn't respect user's /fps and /clock settings
 
+Flamer doesn't always hit / add heat? -> caused by hitting limbs
+
 ---- WISHLIST
 
 random race?

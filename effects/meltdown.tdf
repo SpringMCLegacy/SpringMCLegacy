@@ -8,6 +8,7 @@
 
       [properties]
             {
+			useairlos=1;
       alwaysVisible=1;
       texture=bigexplosmoke;
             heat = 10;
@@ -33,6 +34,7 @@
 
       [properties]
             {
+			useairlos=1;
       alwaysVisible=1;
       texture=bigexplosmoke;
             heat = 10;
@@ -57,6 +59,7 @@
 
       [properties]
       {
+	  useairlos=1;
       alwaysVisible=1;
       Texture=bigexplosmoke;
 
@@ -94,6 +97,7 @@
 
       [properties]
       {
+	  useairlos=1;
 	  alwaysVisible=1;
       Texture=cloudexplo;
 
@@ -131,6 +135,7 @@
 
       [properties]
       {
+	  useairlos=1;
 	  alwaysVisible=1;
       Texture=cloudexplo;
 
@@ -168,6 +173,7 @@
 
       [properties]
       {
+	  useairlos=1;
       alwaysVisible=1;
       Texture=bigexplosmoke;
 
@@ -203,6 +209,7 @@
    {
       [properties]
       {
+	  useairlos=1;
       alwaysVisible=1;
       size=40;
       color=0.2, 0.1, 0.05;
@@ -237,6 +244,7 @@
 
       [properties]
             {
+			useairlos=1;
 			alwaysVisible=1;
 			texture=smokesmall;
             heat = 10;
@@ -260,6 +268,8 @@
 		class=CSpherePartSpawner;
 		[properties] 
 		{
+		useairlos=1;
+			alwaysVisible=1;
 			expansionSpeed=50;
 			ttl=25;
 			alpha=0.1;
