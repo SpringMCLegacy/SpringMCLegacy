@@ -64,11 +64,13 @@ function SpawnDecal(decalType, x, y, z, teamID, alwaysVisible, delay, duration)
 		GG.Delay.DelayCall(SpawnDecal, {decalType, x, y, z, teamID, nil, duration}, delay)
 	else
 		local decalID = Spring.CreateUnit(decalType, x, y + 1, z, 0, teamID, false, false)
-		Spring.SetUnitAlwaysVisible(decalID, alwaysVisible or false)
-		Spring.SetUnitNoSelect(decalID, true)
-		Spring.SetUnitBlocking(decalID, false, false, false, false, false, false, false)
-		if duration then
-			GG.Delay.DelayCall(Spring.DestroyUnit, {decalID, false, true}, duration)
+		if decalID then -- can fail if e.g. team just died
+			Spring.SetUnitAlwaysVisible(decalID, alwaysVisible or false)
+			Spring.SetUnitNoSelect(decalID, true)
+			Spring.SetUnitBlocking(decalID, false, false, false, false, false, false, false)
+			if duration then
+				GG.Delay.DelayCall(Spring.DestroyUnit, {decalID, false, true}, duration)
+			end
 		end
 	end
 end

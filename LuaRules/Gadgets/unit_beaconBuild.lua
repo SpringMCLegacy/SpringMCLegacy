@@ -331,8 +331,14 @@ function gadget:UnitDestroyed(unitID, unitDefID, teamID)
 		LimitTowerType(towerOwnerID, teamID, towerType, true) -- increase limit
 		towerOwners[unitID] = nil
 	end
-	local beaconID = beaconIDs[unitID]
-	if beaconID then -- unit was an upgrade/outpost
+	if dropZoneIDs[teamID] == unitID then -- unit was a team's dropzone, reset upgrade options
+		Spring.Echo("DROPZONE DIED")	
+		dropZoneIDs[teamID] = nil
+		AddUpgradeOptions(dropZoneBeaconIDs[teamID])
+		dropZoneBeaconIDs[teamID] = nil
+	elseif outpostDefs[unitDefID] then
+		local beaconID = beaconIDs[unitID]
+		if not beaconID then Spring.Echo("Error: unit_beaconBuild beaconID was nil", beaconID) end
 		SetUnitRulesParam(unitID, "beaconID", "")
 		env = Spring.UnitScript.GetScriptEnv(beaconID)
 		Spring.UnitScript.CallAsUnit(beaconID, env.ChangeType, false)
@@ -340,10 +346,6 @@ function gadget:UnitDestroyed(unitID, unitDefID, teamID)
 		outpostIDs[beaconID] = nil
 		-- Re-add upgrade options to beacon
 		AddUpgradeOptions(beaconID)
-	elseif dropZoneIDs[teamID] == unitID then -- unit was a team's dropzone, reset upgrade options
-		dropZoneIDs[teamID] = nil
-		AddUpgradeOptions(dropZoneBeaconIDs[teamID])
-		dropZoneBeaconIDs[teamID] = nil
 	end
 	local wallInfo = wallInfos[unitID]
 	if wallInfo and not hotSwapIDs[unitID] then -- unit was a wall or gate piece, not being hotswapped
