@@ -79,6 +79,7 @@ GG.IsUnitNARCed = IsUnitNARCed
 local function IsUnitTAGed(unitID)
 	local TAGFrame = GetUnitRulesParam(unitID, "TAG") or 0
 	local gameFrame = GetGameFrame()
+	Spring.Echo("FUCK: Unit TAGed?", TAGFrame >= gameFrame - 5)
 	return TAGFrame >= gameFrame - 5
 end
 GG.IsUnitTAGed = IsUnitTAGed
@@ -147,6 +148,7 @@ function gadget:UnitPreDamaged(unitID, unitDefID, unitTeam, damage, paralyzer, w
 		-- Don't allow dropships to be TAGed
 		if not UnitDefs[unitDefID].customParams.dropship then
 			SetUnitRulesParam(unitID, "TAG", GetGameFrame(), {inlos = true})
+			--Spring.Echo("I AM BEING TAGGED!")
 		end
 		return 0
 	end

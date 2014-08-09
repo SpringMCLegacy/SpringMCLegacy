@@ -37,6 +37,7 @@ weaponDef = {
 		cegflare			= "MG_MUZZLEFLASH",
 		flareonshot			= true,
 		projectilelups		= {"amsTracer"},
+		weaponclass			= "ams",
     },
 }
 

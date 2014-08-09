@@ -173,4 +173,18 @@ return {
 			setWeaponClassAttribute(unitID, "projectile", "range", 1.5)
 		end,
 	},
+	amsrange = {
+		cmdDesc = {
+			id = GetCmdID('PERK_AMS_RANGE'),
+			action = 'perkamsrange',
+			name = '  AMS:\n  Range     ',
+			tooltip = '+50% AMS Weapon Range',
+			texture = 'bitmaps/ui/perkbg.png',	
+		},
+		valid = function (unitDefID) return hasWeaponClass(unitDefID, "ams") end,
+		applyPerk = function (unitID) 
+			--Spring.Echo("Projectile range selected") 
+			setWeaponClassAttribute(unitID, "ams", "range", 1.5)
+		end,
+	},
 }
