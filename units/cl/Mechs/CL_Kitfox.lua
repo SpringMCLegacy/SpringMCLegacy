@@ -42,6 +42,42 @@ local Prime = CL_Kitfox:New{
     },
 }
 
+local C = CL_Kitfox:New{
+	name              	= "Kit Fox (Uller) Alt. Config C",
+	description         = "Light Support Mech",
+	objectName        	= "CL_Kitfox_C.s3o",	
+	weapons = {	
+		[1] = {
+			name	= "CERLBL",
+		},
+		[2] = {
+			name	= "CSPL",
+		},
+		[3] = {
+			name	= "MG",
+		},
+		[4] = {
+			name	= "MG",
+		},
+		[5] = {
+			name	= "AMS",
+		},
+		[6] = {
+			name	= "AMS",
+		},
+		[7] = {
+			name	= "AMS",
+		},
+	},
+	
+	customparams = {
+		hasbap = true,
+		hasecm = true,
+		helptext		= "Armament: 1 x ER Large Beam Laser, 1 x Small Pulse Laser, 2 x MG, 3 x AMS - Armor: 4 tons Ferro-Fibrous",
+    },
+}
+
 return lowerkeys({
-	["CL_Kitfox_Prime"] = Prime
+	["CL_Kitfox_Prime"] = Prime,
+	["CL_Kitfox_C"] = C,
 })

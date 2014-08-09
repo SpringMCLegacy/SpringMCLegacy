@@ -48,9 +48,6 @@ for name, ud in pairs(UnitDefs) do
 			end
 		end
 	end
-	if ud.customparams.hasbap == "true" then
-		ud.radaremitheight = 1000
-	end
 	-- set maxvelocity by modoption
 	ud.maxvelocity = (ud.maxvelocity or 0) * (modOptions.speed or 0.5)
 	ud.turninplacespeedlimit = (tonumber(ud.maxvelocity) or 0) * 1 
@@ -74,6 +71,7 @@ for name, ud in pairs(UnitDefs) do
 		end
 		if ud.customparams.hasbap == "true" then
 			ud.seismicdistance = 3000
+			ud.radaremitheight = 1000
 			ud.description = ud.description .. " \255\001\255\001[BAP]"
 		end
 	elseif not name:find("decal") then

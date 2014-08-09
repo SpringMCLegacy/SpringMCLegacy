@@ -1,9 +1,5 @@
 local CL_Hellbringer = Heavy:New{
 	corpse				= "CL_Hellbringer_X",
-	sightDistance       = 1200,
-	radarDistance      	= 2000,
-	stealth				= 1,
-	radarDistanceJam    = 500,
 	maxDamage           = 12800,
 	mass                = 6500,
 	buildCostEnergy     = 65,
@@ -18,6 +14,7 @@ local CL_Hellbringer = Heavy:New{
 		heatlimit		= 26,
 		torsoturnspeed	= 130,
 		maxammo 		= {gauss = 20, ac10 = 20, lrm = 120},
+		hasecm			= true,
     },
 }
 
