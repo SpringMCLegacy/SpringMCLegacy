@@ -238,7 +238,8 @@ function StripUnits(unitsAtFlag)
 	for i = #unitsAtFlag, 1, -1 do -- iterate over list in reverse so removing doesn't screw with index
 		local unitID = unitsAtFlag[i]
 		local unitDefID = Spring.GetUnitDefID(unitID)
-		if unitDefsToIgnore[unitDefID] then -- bad defs are cached
+		 -- bad defs are cached, but also ignore any units currently being transported
+		if unitDefsToIgnore[unitDefID] or Spring.GetUnitTransporter(unitID) then
 			table.remove(unitsAtFlag, i)
 		end
 	end
