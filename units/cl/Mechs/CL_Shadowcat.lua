@@ -1,8 +1,5 @@
 local CL_Shadowcat = Medium:New{
 	corpse				= "CL_Shadowcat_X",
-	sightDistance       = 1200,
-	radarDistance      	= 2000,
-	radarDistanceJam    = 500,
 	maxDamage           = 13400,
 	mass                = 4500,
 	buildCostEnergy     = 45,
