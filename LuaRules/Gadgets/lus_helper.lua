@@ -248,6 +248,7 @@ function gadget:GamePreload()
 		-- Parse UnitDef Weapon Data
 		local missileWeaponIDs = {}
 		local jammableIDs = {}
+		local amsIDs = {}
 		local burstLengths = {}
 		local firingHeats = {}		
 		local reloadTimes = {}
@@ -268,7 +269,7 @@ function gadget:GamePreload()
 				missileWeaponIDs[i] = true
 			end
 			if weaponDef.interceptor == 1 then
-				info.amsID = i
+				amsIDs[i] = true
 			end
 			jammableIDs[i] = string.tobool(weaponDef.customParams.jammable)
 			flareOnShots[i] = string.tobool(weaponDef.customParams.flareonshot)
@@ -283,6 +284,7 @@ function gadget:GamePreload()
 		info.minRanges = minRanges
 		info.spinSpeeds = spinSpeeds
 		info.jammableIDs = jammableIDs
+		info.amsIDs = amsIDs
 		
 		-- UnitDef Level Info
 		-- General

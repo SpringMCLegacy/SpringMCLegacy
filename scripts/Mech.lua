@@ -57,7 +57,7 @@ local leftArmIDs = info.leftArmIDs
 local rightArmIDs = info.rightArmIDs
 local leftArmMasterID = info.leftArmMasterID
 local rightArmMasterID = info.rightArmMasterID
-local amsID = info.amsID
+local amsIDs = info.amsIDs
 local limbHPs = {}
 for limb,limbHP in pairs(info.limbHPs) do -- copy table from defaults
 	limbHPs[limb] = limbHP
@@ -514,7 +514,7 @@ function script.AimWeapon(weaponID, heading, pitch)
 		end
 	elseif flares[weaponID] then
 		Turn(flares[weaponID], x_axis, -pitch, ELEVATION_SPEED)
-		if weaponID == amsID then 
+		if amsIDs[weaponID] then 
 			Turn(flares[weaponID] or flares[1], y_axis, heading, TORSO_SPEED)
 			WaitForTurn(flares[weaponID] or flares[1], y_axis)
 			return true 
@@ -528,7 +528,7 @@ function script.AimWeapon(weaponID, heading, pitch)
 end
 
 function script.BlockShot(weaponID, targetID, userTarget)
-	if weaponID == amsID then return false end
+	if amsIDs[weaponID] then return false end
 	local jammable = jammableIDs[weaponID]
 	if jammable then
 		if targetID then
@@ -597,10 +597,8 @@ end
 function script.QueryWeapon(weaponID) 
 	if missileWeaponIDs[weaponID] then
 		return launchPoints[weaponID][currPoints[weaponID]] or launchPoints[weaponID][1]
-	elseif weaponID == amsID then
-		return torso
 	else
-		return flares[weaponID]
+		return flares[weaponID] or torso
 	end
 end
 

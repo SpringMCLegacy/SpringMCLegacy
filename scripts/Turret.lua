@@ -56,7 +56,7 @@ for weaponID = 1, info.numWeapons do
 		for i = 1, burstLengths[weaponID] do
 			launchPoints[weaponID][i] = piece("launchpoint_" .. weaponID .. "_" .. i)
 		end	
-	elseif weaponID ~= amsID then
+	else
 		flares[weaponID] = piece ("flare_" .. weaponID)
 	end
 	if info.mantletIDs[weaponID] then

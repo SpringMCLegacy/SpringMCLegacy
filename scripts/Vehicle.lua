@@ -43,7 +43,7 @@ for k,v in pairs(maxAmmo) do
 	currAmmo[k] = v 
 	SetUnitRulesParam(unitID, "ammo_" .. k, 100)
 end
-local amsID = info.amsID
+local amsIDs = info.amsIDs
 local hover = info.hover
 local vtol = info.vtol
 local aero = info.aero
@@ -393,7 +393,7 @@ local function WeaponCanFire(weaponID)
 	if turretIDs[weaponID] and limbHPs["turret"] <= 0 then
 		return false
 	end
-	if weaponID == amsID then -- check AMS after limbs
+	if amsIDs[weaponID] then -- check AMS after limbs
 		return true
 	end
 	if jammableIDs[weaponID] and not activated then
@@ -448,10 +448,11 @@ function script.AimWeapon(weaponID, heading, pitch)
 end
 
 function script.BlockShot(weaponID, targetID, userTarget)
+	if amsIDs[weaponID] then return false end
 	local jammable = jammableIDs[weaponID]
 	if jammable then
 		if targetID then
-			local jammed = GetUnitUnderJammer(targetID) and (not IsUnitNARCed(targetID))
+			local jammed = GetUnitUnderJammer(targetID) and (not IsUnitNARCed(targetID)) and (not IsUnitTAGed(targetID))
 			if jammed then
 				--Spring.Echo("Can't fire weapon " .. weaponID .. " as target is jammed")
 				return true 
@@ -517,10 +518,8 @@ end
 function script.QueryWeapon(weaponID) 
 	if missileWeaponIDs[weaponID] then
 		return launchPoints[weaponID][currPoints[weaponID]]
-	elseif weaponID == amsID then
-		return turret
 	else
-		return flares[weaponID]
+		return flares[weaponID] or turret
 	end
 end
 
