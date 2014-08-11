@@ -332,13 +332,13 @@ function gadget:UnitDestroyed(unitID, unitDefID, teamID)
 		towerOwners[unitID] = nil
 	end
 	if dropZoneIDs[teamID] == unitID then -- unit was a team's dropzone, reset upgrade options
-		Spring.Echo("DROPZONE DIED")	
+		--Spring.Echo("DROPZONE DIED")	
 		dropZoneIDs[teamID] = nil
 		AddUpgradeOptions(dropZoneBeaconIDs[teamID])
 		dropZoneBeaconIDs[teamID] = nil
 	elseif outpostDefs[unitDefID] then
 		local beaconID = beaconIDs[unitID]
-		if not beaconID then Spring.Echo("Error: unit_beaconBuild beaconID was nil", beaconID) end
+		if not beaconID then Spring.Echo("Error: unit_beaconBuild beaconID was nil", beaconID) return end
 		SetUnitRulesParam(unitID, "beaconID", "")
 		env = Spring.UnitScript.GetScriptEnv(beaconID)
 		Spring.UnitScript.CallAsUnit(beaconID, env.ChangeType, false)

@@ -16,6 +16,12 @@ unable to upgrade 'home' beacon when capped after team died?
 
 Godde menu ordering bug
 
+
+
+[f=0043000] Error: LuaRules::RunCallIn: error = 2, UnitDestroyed, [string "LuaRules/Gadgets/unit_beaconbuild.lua"]:344: attempt to index global 'env' (a nil value)
+How can beaconID become nil?
+
+
 ---- WISHLIST
 
 random race?

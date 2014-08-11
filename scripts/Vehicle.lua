@@ -13,6 +13,8 @@ local GetUnitLastAttackedPiece = Spring.GetUnitLastAttackedPiece
 local GetUnitDistanceToPoint = GG.GetUnitDistanceToPoint
 local GetUnitUnderJammer = GG.GetUnitUnderJammer
 local IsUnitNARCed = GG.IsUnitNARCed
+local IsUnitTAGed = GG.IsUnitTAGed
+
 function PlaySound(sound, volume, channel)
 	GG.PlaySoundAtUnit(unitID, sound, volume, channel)
 end
