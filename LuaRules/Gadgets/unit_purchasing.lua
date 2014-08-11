@@ -150,13 +150,13 @@ end
 
 local function ToggleLink(unitID, teamID, lost, tonnage)
 	if lost then
-		Spring.SetUnitNoSelect(unitID, true)
+		--Spring.SetUnitNoSelect(unitID, true) -- can't do this as it makes enemies untargetable (manually)
 		AddTeamResource(teamID, "energy", tonnage)
-		Spring.SetUnitRulesParam(unitID, "LOST_LINK", 1)
+		Spring.SetUnitRulesParam(unitID, "LOST_LINK", 1, {inlos = true})
 	else
-		Spring.SetUnitNoSelect(unitID, false)
+		--Spring.SetUnitNoSelect(unitID, false)
 		UseTeamResource(teamID, "energy", tonnage)
-		Spring.SetUnitRulesParam(unitID, "LOST_LINK", 0)
+		Spring.SetUnitRulesParam(unitID, "LOST_LINK", 0, {inlos = true})
 	end
 end
 
