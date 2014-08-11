@@ -193,7 +193,7 @@ function LanceControl(teamID, unitID, add)
 			local groupSlots = teamSlots[teamID][lostLance]
 			groupSlots.active = false
 			-- stop any mechs in this lance and make them unselectable
-			Spring.GiveOrderToUnitMap(groupSlots.units, CMD.STOP, EMPTY_TABLE, EMPTY_TABLE)
+			--Spring.GiveOrderToUnitMap(groupSlots.units, CMD.STOP, EMPTY_TABLE, EMPTY_TABLE)
 			for unitID, tonnage in pairs(groupSlots.units) do
 				ToggleLink(unitID, teamID, true, tonnage)
 			end
