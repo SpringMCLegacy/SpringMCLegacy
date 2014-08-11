@@ -3,7 +3,7 @@
 local pelvis, torso, lupperleg, llowerleg, rupperleg, rlowerleg, rfronttoes, rbacktoe, lfronttoes, lbacktoe , lfoot, rfoot = piece ("pelvis", "torso", "lupperleg", "llowerleg", "rupperleg", "rlowerleg", "rfronttoes", "rbacktoe", "lfronttoes", "lbacktoe", "lfoot", "rfoot")
 
 --Turning/Movement Locals
-local LEG_SPEED = rad(800) * speedMod
+local LEG_SPEED = rad(500) * speedMod
 local LEG_TURN_SPEED = rad (200) * speedMod
 
 
