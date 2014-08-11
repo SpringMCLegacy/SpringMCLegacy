@@ -49,7 +49,7 @@ for name, ud in pairs(UnitDefs) do
 		end
 	end
 	-- set maxvelocity by modoption
-	ud.maxvelocity = (ud.maxvelocity or 0) * (modOptions.speed or 0.5)
+	ud.maxvelocity = (ud.maxvelocity or 0) * (modOptions.speed or 0.65)
 	ud.turninplacespeedlimit = (tonumber(ud.maxvelocity) or 0) * 1 
 	ud.turninplace = false
 	-- calculate reverse, acceleration, brake and turning speed based on maxvelocity
