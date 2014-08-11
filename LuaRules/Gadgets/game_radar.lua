@@ -79,7 +79,6 @@ GG.IsUnitNARCed = IsUnitNARCed
 local function IsUnitTAGed(unitID)
 	local TAGFrame = GetUnitRulesParam(unitID, "TAG") or 0
 	local gameFrame = GetGameFrame()
-	Spring.Echo("FUCK: Unit TAGed?", TAGFrame >= gameFrame - 5)
 	return TAGFrame >= gameFrame - 5
 end
 GG.IsUnitTAGed = IsUnitTAGed
