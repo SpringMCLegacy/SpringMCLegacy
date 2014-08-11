@@ -353,6 +353,7 @@ local function SendCommandFallback(unitID, unitDefID, teamID)
 	if dropShipStatus[teamID] == 0 then -- Dropship is READY
 		-- CALL DROPSHIP
 		local orderQueue = Spring.GetFullBuildQueue(unitID)
+		if not orderQueue then return end -- dropzone died TODO: Transfer to new DZ if there is one
 		for i, order in pairs(orderQueue) do -- we need to double all orders for vehicles
 			for orderDefID, count in pairs(order) do
 				if unitTypes[orderDefID] == "vehicle" then -- TODO: vtol and aero?
