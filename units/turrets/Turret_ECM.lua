@@ -5,7 +5,7 @@ local Turret_ECM = Tower:New{
 	--buildCostMetal      = 0,
 
 	customparams = {
-		towertype 		= "ecm",
+		towertype 		= "sensor",
 		hasecm			= true,
     },
 }

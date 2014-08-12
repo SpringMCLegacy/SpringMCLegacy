@@ -54,8 +54,8 @@ local CMD_GATE = GG.CustomCommands.GetCmdID("CMD_GATE")
 local CMD_UPGRADE = GG.CustomCommands.GetCmdID("CMD_UPGRADE")
 
 -- Variables
-local towerDefIDs = {} -- towerDefIDs[unitDefID] = "turret" or "ecm" or "sensor"
-local buildLimits = {} -- buildLimits[unitID] = {turret = 4, ecm = 1, sensor = 1}
+local towerDefIDs = {} -- towerDefIDs[unitDefID] = "turret" or "sensor"
+local buildLimits = {} -- buildLimits[unitID] = {turret = 4, sensor = 1}
 local towerOwners = {} -- towerOwners[towerID] = beaconID
 
 local outpostDefs = {} -- outpostDefs[unitDefID] = {cmdDesc = {cmdDescTable}, cost = cost}
@@ -313,7 +313,7 @@ function gadget:UnitCreated(unitID, unitDefID, teamID, builderID)
 	local unitDef = UnitDefs[unitDefID]
 	local cp = unitDef.customParams
 	if unitDefID == BEACON_ID then
-		buildLimits[unitID] = {["turret"] = 4, ["ecm"] = 1, ["sensor"] = 1}
+		buildLimits[unitID] = {["turret"] = 4, ["sensor"] = 1}
 		AddUpgradeOptions(unitID)
 		InsertUnitCmdDesc(unitID, wallCmdDesc)
 	elseif cp and cp.towertype then
