@@ -103,6 +103,8 @@ for i, typeString in ipairs(typeStrings) do
 end
 
 local unitTypes = {} -- unitTypes[unitDefID] = "lightmech" etc from typeStrings
+local unitSlotChanges = {} -- unitSlotChanges = 1 or 0.5
+
 local orderCosts = {} -- orderCosts[unitID] = cost
 local orderTons = {} -- orderTons[unitID] = totalTonnage
 local orderSizes = {} -- orderSizes[unitID] = size
@@ -160,6 +162,20 @@ local function ToggleLink(unitID, teamID, lost, tonnage)
 	end
 end
 
+local function AssignGroup(unitID, unitDefID, teamID, slotChange, group)
+	local groupSlots = teamSlots[teamID][group]
+	groupSlots.used = groupSlots.used + slotChange
+	groupSlots.available = groupSlots.available - slotChange
+	if slotChange > 0 then -- adding a unit to group
+		unitLances[unitID] = group
+		SendToUnsynced("LANCE", teamID, unitID, group)
+		groupSlots.units[unitID] = UnitDefs[unitDefID].energyCost
+	else -- removing a unit from a group
+		groupSlots.units[unitID] = nil
+		unitLances[unitID] = nil
+	end
+end
+
 function LanceControl(teamID, unitID, add)
 	if teamID == GAIA_TEAM_ID then return end -- no need to track for gaia
 	if add then
@@ -195,7 +211,17 @@ function LanceControl(teamID, unitID, add)
 			-- stop any mechs in this lance and make them unselectable
 			--Spring.GiveOrderToUnitMap(groupSlots.units, CMD.STOP, EMPTY_TABLE, EMPTY_TABLE)
 			for unitID, tonnage in pairs(groupSlots.units) do
-				ToggleLink(unitID, teamID, true, tonnage)
+				local unitDefID = Spring.GetUnitDefID(unitID)
+				local slotChange = unitSlotChanges[unitDefID]
+				local lowerGroup, lowerActive = TeamAvailableGroup(teamID, slotChange)
+				if lowerGroup and lowerActive then -- if there is a slot lower down, take it
+					-- cleanup old group
+					AssignGroup(unitID, unitDefID, teamID, -slotChange, unitLances[unitID])
+					-- add to new group
+					AssignGroup(unitID, unitDefID, teamID, slotChange, lowerGroup)
+				else -- otherwise we've lost the link
+					ToggleLink(unitID, teamID, true, tonnage)
+				end
 			end
 		end
 	end
@@ -205,7 +231,7 @@ GG.LanceControl = LanceControl
 local function UpdateTeamSlots(teamID, unitID, unitDefID, add)
 	if select(3,Spring.GetTeamInfo(teamID)) or teamID == GAIA_TEAM_ID then return end -- team died
 	local ud = UnitDefs[unitDefID]
-	local slotChange = ((ud.customParams.unittype == "mech" or ud.canFly) and 1) or 0.5
+	local slotChange = unitSlotChanges[unitDefID]
 	if add then -- new unit
 		local dz = teamDropZones[teamID]
 		if dz then
@@ -220,12 +246,7 @@ local function UpdateTeamSlots(teamID, unitID, unitDefID, add)
 				--Spring.Echo(teamID, "Assigned to an inactive group!") 
 				ToggleLink(unitID, teamID, true, ud.energyCost)
 			end
-			unitLances[unitID] = group
-			SendToUnsynced("LANCE", teamID, unitID, group)
-			local groupSlots = teamSlots[teamID][group]
-			groupSlots.used = groupSlots.used + slotChange
-			groupSlots.available = groupSlots.available - slotChange
-			groupSlots.units[unitID] = ud.energyCost
+			AssignGroup(unitID, unitDefID, teamID, slotChange, group)
 		else 
 			Spring.Echo(teamID, "FLOZi logic fail: No available group", TeamSlotsRemaining(teamID), slotChange, ud.name) 
 		end
@@ -233,12 +254,7 @@ local function UpdateTeamSlots(teamID, unitID, unitDefID, add)
 		-- reimburse 'weight'
 		AddTeamResource(teamID, "energy", ud.energyCost)
 		local group = unitLances[unitID]
-		local groupSlots = teamSlots[teamID][group]
-		--if not teamID or not group then Spring.Echo("UHOH!", teamID, group) return end
-		groupSlots.used = groupSlots.used - slotChange
-		groupSlots.available = groupSlots.available + slotChange
-		groupSlots.units[unitID] = nil
-		unitLances[unitID] = nil
+		AssignGroup(unitID, unitDefID, teamID, -slotChange, group)
 	end
 	Spring.SetTeamRulesParam(teamID, "TEAM_SLOTS_REMAINING", TeamSlotsRemaining(teamID))
 end
@@ -299,7 +315,9 @@ local function CheckBuildOptions(unitID, teamID, money, weightLeft, cmdID)
 			end
 			if buildDefID < 0 and TeamSlotsRemaining(teamID) <= 0.5 then -- builder order but no team slots left
 				EditUnitCmdDesc(unitID, cmdDescID, {disabled = true, params = {"L"}})
-			elseif cCost > 0 and (TeamSlotsRemaining(teamID) - (orderSizes[teamID] or 0)) < 1 and (currParam == "C" or currParam == "" or currParam == "L") then
+			elseif cCost > 0 and 
+				(TeamSlotsRemaining(teamID) - (orderSizes[teamID] or 0) - (orderSizesPending[teamID] or 0)) < 1 and 
+				(currParam == "C" or currParam == "" or currParam == "L") then
 				EditUnitCmdDesc(unitID, cmdDescID, {disabled = true, params = {"L"}})
 			elseif cCost > money and (currParam == "" or currParam == "C") then
 				EditUnitCmdDesc(unitID, cmdDescID, {disabled = true, params = {"C"}})
@@ -551,11 +569,13 @@ function gadget:GamePreload()
 			local assault = not light and not medium and not heavy
 			local weight = light and "light" or medium and "medium" or heavy and "heavy" or "assault"
 			unitTypes[unitDefID] = weight .. "mech"
+			unitSlotChanges[unitDefID] = 1
 		elseif basicType == "vehicle" then
 			-- sort into vehicle, vtol, aero
 			local vtol = unitDef.hoverAttack
 			local aero = unitDef.canFly and not vtol
 			unitTypes[unitDefID] = vtol and "vtol" or aero and "aero" or "vehicle"
+			unitSlotChanges[unitDefID] = (unitDef.canFly and 1) or 0.5
 		end
 	end
 	for _, teamID in pairs(Spring.GetTeamList()) do
