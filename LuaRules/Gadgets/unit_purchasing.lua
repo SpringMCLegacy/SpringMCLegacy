@@ -142,6 +142,7 @@ local function TeamSlotsRemaining(teamID)
 	end
 	return slots
 end
+GG.TeamSlotsRemaining = TeamSlotsRemaining
 
 local function TeamAvailableGroup(teamID, size)
 	for i = 1, 3 do
@@ -259,8 +260,6 @@ local function UpdateTeamSlots(teamID, unitID, unitDefID, add)
 	Spring.SetTeamRulesParam(teamID, "TEAM_SLOTS_REMAINING", TeamSlotsRemaining(teamID))
 end
 
-GG.TeamSlotsRemaining = TeamSlotsRemaining
-
 local function AddBuildMenu(unitID)
 	InsertUnitCmdDesc(unitID, sendOrderCmdDesc)
 	InsertUnitCmdDesc(unitID, runningTotalCmdDesc)
@@ -300,7 +299,7 @@ local function CheckBuildOptions(unitID, teamID, money, weightLeft, cmdID)
 	for cmdDescID = 1, #cmdDescs do
 		local buildDefID = cmdDescs[cmdDescID].id
 		local cmdDesc = cmdDescs[cmdDescID]
-		if cmdDesc.id ~= cmdID and buildDefID < 0 then
+		if cmdDesc.id ~= cmdID then
 			local currParam = cmdDesc.params[1] or ""
 			local cCost, tCost
 			if buildDefID < 0 then -- a build order
@@ -313,12 +312,14 @@ local function CheckBuildOptions(unitID, teamID, money, weightLeft, cmdID)
 				cCost = GG.CommandCosts[buildDefID] or 0 -- TODO: the intention was to disable e.g. Orbital Strike if you can't afford it
 				tCost = 0
 			end
-			if buildDefID < 0 and TeamSlotsRemaining(teamID) <= 0.5 then -- builder order but no team slots left
+			if buildDefID < 0 
+			and (currParam == "C" or currParam == "" or currParam == "L")
+			and (TeamSlotsRemaining(teamID) - (orderSizes[unitID] or 0) - (orderSizesPending[unitID] or 0)) < 1 then -- builder order but no team slots left
 				EditUnitCmdDesc(unitID, cmdDescID, {disabled = true, params = {"L"}})
-			elseif cCost > 0 and 
+			--[[elseif cCost > 0 and 
 				(TeamSlotsRemaining(teamID) - (orderSizes[teamID] or 0) - (orderSizesPending[teamID] or 0)) < 1 and 
 				(currParam == "C" or currParam == "" or currParam == "L") then
-				EditUnitCmdDesc(unitID, cmdDescID, {disabled = true, params = {"L"}})
+				EditUnitCmdDesc(unitID, cmdDescID, {disabled = true, params = {"L"}})]]
 			elseif cCost > money and (currParam == "" or currParam == "C") then
 				EditUnitCmdDesc(unitID, cmdDescID, {disabled = true, params = {"C"}})
 			elseif tCost > weightLeft and (currParam == "" or currParam == "T") then
