@@ -378,7 +378,6 @@ GG.limbHPControl = limbHPControl
 function script.HitByWeapon(x, z, weaponID, damage)
 	local wd = WeaponDefs[weaponID]
 	local heatDamage = wd and wd.customParams.heatdamage or 0
-	--Spring.Echo(wd.customParams.heatdamage)
 	ChangeHeat(heatDamage)
 	local hitPiece = GetUnitLastAttackedPiece(unitID) or ""
 	if hitPiece == "torso" or hitPiece == "pelvis" then 
@@ -396,6 +395,8 @@ function script.HitByWeapon(x, z, weaponID, damage)
 		--deduct Right Arm HP
 		limbHPControl("right_arm", damage)
 	end
+	--Spring.Echo(weaponID, wd.name, wd.customParams.heatdamage)
+	--Spring.Echo("HIT PIECE?", hitPiece, damage, heatDamage)
 	return 0
 end
 
