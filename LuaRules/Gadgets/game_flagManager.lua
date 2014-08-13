@@ -53,6 +53,8 @@ local DEBUG	= false -- enable to print out flag locations in profile format
 local CAP_MULT = 1 --multiplies against the FBI defined CapRate
 local DEF_MULT = 1 --multiplies against the FBI defined DefRate
 
+local BEACON_ID = UnitDefNames["beacon"].id 
+
 -- variables
 
 local unitDefsToIgnore = {}
@@ -81,10 +83,13 @@ for _, flagType in pairs(flagTypes) do
 	flagTypeDefenders[flagType] = {}
 end
 
-local flagTurrets = {}
-local turretFlags = {}
 local flagCapStatuses = {} -- table of flag's capping statuses
 local teams	= Spring.GetTeamList()
+local teamUnitCounts = {}
+
+for _, teamID in pairs(Spring.GetTeamList()) do
+	teamUnitCounts[teamID] = 0
+end
 
 local modOptions
 if (Spring.GetModOptions) then
@@ -376,8 +381,11 @@ function gadget:UnitCreated(unitID, unitDefID, unitTeam, builderID)
 			flagTypeCappers[flagCapType][unitID] = (CAP_MULT * flagCapRate)
 			flagTypeDefenders[flagCapType][unitID] = (DEF_MULT * flagDefendRate)
 		end
+		if ud.customParams.unittype then -- only count mechs & vehicles
+			teamUnitCounts[unitTeam] = teamUnitCounts[unitTeam] + 1
+		end
 	end
-	if unitDefID == UnitDefNames["beacon"].id and unitTeam ~= GAIA_TEAM_ID then
+	if unitDefID == BEACON_ID and unitTeam ~= GAIA_TEAM_ID then
 		local x,_, z = Spring.GetUnitPosition(unitID)
 		local newSpot = {["x"] = x, ["z"] = z}
 		table.insert(flagTypeSpots["beacon"], newSpot)
@@ -388,15 +396,15 @@ end
 
 function CheckAllyTeamUnits(unitTeam)
 	if unitTeam == GAIA_TEAM_ID then return end -- Gaia does not have tickets
-	if Spring.GetTeamUnitCount(unitTeam) <= 1 then -- Not sure why this gives 1 instead of 0; probably 'cleanup' issues as only called via UnitDestroyed and UnitGiven
+	if teamUnitCounts[unitTeam] + Spring.GetTeamUnitDefCount(unitTeam, BEACON_ID) == 0 then
 		-- Check if this was last unit on whole allyteam
 		local allyTeam = select(6, Spring.GetTeamInfo(unitTeam))
 		local allyTeamUnitCount = 0
 		for _, teamID in pairs(Spring.GetTeamList(allyTeam)) do
-			allyTeamUnitCount = allyTeamUnitCount + Spring.GetTeamUnitCount(teamID)
+			allyTeamUnitCount = allyTeamUnitCount + teamUnitCounts[teamID] + Spring.GetTeamUnitDefCount(teamID, BEACON_ID)
 		end
 		-- If it was, this implies they lost all beacons and DZ so can't get any more
-		if allyTeamUnitCount <= 1 then
+		if allyTeamUnitCount == 0 then
 			-- Therefore deduct (nearly) all their remaining tickets
 			tickets[allyTeam] = math.min(5, tickets[allyTeam])
 			DecrementTickets(allyTeam)
@@ -414,6 +422,7 @@ function gadget:UnitDestroyed(unitID, unitDefID, unitTeam, attackerID, attackerD
 	end
 	
 	if ud.customParams.unittype then
+		teamUnitCounts[unitTeam] = teamUnitCounts[unitTeam] - 1
 		-- Remove 1 ticket for each combat unit killed
 		local allyTeam = select(6, Spring.GetTeamInfo(unitTeam))
 		DelayCall(DecrementTickets, {allyTeam}, 1)
@@ -424,6 +433,11 @@ end
 
 function gadget:UnitGiven(unitID, unitDefID, newTeam, oldTeam)
 	--Spring.Echo("Unit Given: " .. unitID)
+	local ud = UnitDefs[unitDefID]
+	if ud.customParams.unittype
+		teamUnitCounts[oldTeam] = teamUnitCounts[oldTeam] - 1
+		teamUnitCounts[newTeam] = teamUnitCounts[newTeam] + 1
+	end
 	DelayCall(CheckAllyTeamUnits, {oldTeam}, 1)
 end
 

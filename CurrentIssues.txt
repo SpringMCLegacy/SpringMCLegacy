@@ -10,8 +10,6 @@ PPCs & AC5 do no damage to MadDogs from the front, AoE not hitting origin AND Fl
 
 Godde menu ordering bug
 
-lost all beacons + mechs -> lose tickets check is broken
-
 ---- WISHLIST
 
 random race?

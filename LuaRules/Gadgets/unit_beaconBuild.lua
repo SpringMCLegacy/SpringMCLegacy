@@ -167,7 +167,6 @@ function SpawnCargo(beaconID, dropshipID, unitDefID, teamID)
 	-- extra behaviour to link outposts with beacons
 	if outpostDefs[unitDefID] then
 		beaconIDs[cargoID] = beaconID 
-		if not beaconID then Spring.Echo("Error: unit_beaconBuild.lua L 170 beaconID was nil") end
 		outpostIDs[beaconID] = cargoID
 		-- Let unsynced know about this pairing
 		Spring.SetUnitRulesParam(cargoID, "beaconID", beaconID)
@@ -221,7 +220,6 @@ local function SetDropZone(beaconID, teamID)
 	local dropZoneID = CreateUnit(side .. "_dropzone", x,y,z, "s", teamID)
 	dropZoneIDs[teamID] = dropZoneID
 	dropZoneBeaconIDs[teamID] = beaconID
-	Spring.Echo(teamID, "DropZone:", dropZoneID, beaconID)
 end
 
 -- WALLS & GATES
