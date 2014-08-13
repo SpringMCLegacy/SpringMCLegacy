@@ -6,19 +6,11 @@
 
 some clan mechs with mismatched launchpoints due to weapon changes (cougar, warhawk, timberwolf)
 
-PPCs & AC5 do no damage to MadDogs from the front, AoE not hitting origin
-
---ticket counter widget doesn't respect user's /fps and /clock settings
-
-Flamer doesn't always hit / add heat? -> caused by hitting limbs
-
-unable to upgrade 'home' beacon when capped after team died?
+PPCs & AC5 do no damage to MadDogs from the front, AoE not hitting origin AND Flamer doesn't always hit / add heat
 
 Godde menu ordering bug
 
-[f=0043000] Error: LuaRules::RunCallIn: error = 2, UnitDestroyed, [string "LuaRules/Gadgets/unit_beaconbuild.lua"]:344: attempt to index global 'env' (a nil value)
-How can beaconID become nil?
-
+lost all beacons + mechs -> lose tickets check is broken
 
 ---- WISHLIST
 

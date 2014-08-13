@@ -167,6 +167,7 @@ function SpawnCargo(beaconID, dropshipID, unitDefID, teamID)
 	-- extra behaviour to link outposts with beacons
 	if outpostDefs[unitDefID] then
 		beaconIDs[cargoID] = beaconID 
+		if not beaconID then Spring.Echo("Error: unit_beaconBuild.lua L 170 beaconID was nil") end
 		outpostIDs[beaconID] = cargoID
 		-- Let unsynced know about this pairing
 		Spring.SetUnitRulesParam(cargoID, "beaconID", beaconID)
@@ -220,6 +221,7 @@ local function SetDropZone(beaconID, teamID)
 	local dropZoneID = CreateUnit(side .. "_dropzone", x,y,z, "s", teamID)
 	dropZoneIDs[teamID] = dropZoneID
 	dropZoneBeaconIDs[teamID] = beaconID
+	Spring.Echo(teamID, "DropZone:", dropZoneID, beaconID)
 end
 
 -- WALLS & GATES
@@ -331,14 +333,12 @@ function gadget:UnitDestroyed(unitID, unitDefID, teamID)
 		LimitTowerType(towerOwnerID, teamID, towerType, true) -- increase limit
 		towerOwners[unitID] = nil
 	end
-	if dropZoneIDs[teamID] == unitID then -- unit was a team's dropzone, reset upgrade options
-		--Spring.Echo("DROPZONE DIED")	
-		dropZoneIDs[teamID] = nil
+	if unitDefID == IS_DROPZONE_ID or unitDefID == CL_DROPZONE_ID then -- unit was a team's dropzone, reset upgrade options
 		AddUpgradeOptions(dropZoneBeaconIDs[teamID])
+		dropZoneIDs[teamID] = nil
 		dropZoneBeaconIDs[teamID] = nil
 	elseif outpostDefs[unitDefID] then
 		local beaconID = beaconIDs[unitID]
-		if not beaconID then Spring.Echo("Error: unit_beaconBuild beaconID was nil", beaconID) return end
 		SetUnitRulesParam(unitID, "beaconID", "")
 		env = Spring.UnitScript.GetScriptEnv(beaconID)
 		Spring.UnitScript.CallAsUnit(beaconID, env.ChangeType, false)
@@ -400,9 +400,13 @@ function gadget:UnitGiven(unitID, unitDefID, newTeam, oldTeam)
 			DelayCall(TransferUnit, {wallID, newTeam}, 1)
 			DelayCall(SetUnitNeutral,{wallID, newTeam == GAIA_TEAM_ID}, 2)
 		end
-		if dropZoneBeaconIDs[oldTeam] == unitID then
+		if dropZoneBeaconIDs[oldTeam] == unitID and oldTeam ~= GAIA_TEAM_ID then
 			local dropZoneID = dropZoneIDs[oldTeam]
 			Spring.DestroyUnit(dropZoneID, false, true)
+			if newTeam == GAIA_TEAM_ID then -- dropzone given on team death, 
+				-- will be destroyed next frame but needs beaconID in UnitDestroyed
+				dropZoneBeaconIDs[newTeam] = unitID
+			end
 		end
 	end
 end

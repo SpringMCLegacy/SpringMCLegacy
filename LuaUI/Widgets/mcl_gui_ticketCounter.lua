@@ -113,7 +113,7 @@ end
 
 function widget:Shutdown()
 	Spring.SetConfigInt('ShowClock', clockConfig)
-	Spring.SetConfigInt('FPSClock', fpsConfig)
+	Spring.SetConfigInt('ShowFPS', fpsConfig)
 end
 
 function widget:PlayerChanged()
