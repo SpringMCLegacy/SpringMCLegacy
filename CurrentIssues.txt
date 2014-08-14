@@ -6,13 +6,9 @@
 
 some clan mechs with mismatched launchpoints due to weapon changes (cougar, warhawk, timberwolf)
 
-PPCs & AC5 do no damage to MadDogs from the front, AoE not hitting origin AND Flamer doesn't always hit / add heat
-
 Godde menu ordering bug
 
 ---- WISHLIST
-
-random race?
 
 --buildpics should show ECM / Jump / BAPs / AMS (NARC, TAG?)
 
