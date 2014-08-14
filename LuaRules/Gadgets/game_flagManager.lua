@@ -434,7 +434,7 @@ end
 function gadget:UnitGiven(unitID, unitDefID, newTeam, oldTeam)
 	--Spring.Echo("Unit Given: " .. unitID)
 	local ud = UnitDefs[unitDefID]
-	if ud.customParams.unittype
+	if ud.customParams.unittype then
 		teamUnitCounts[oldTeam] = teamUnitCounts[oldTeam] - 1
 		teamUnitCounts[newTeam] = teamUnitCounts[newTeam] + 1
 	end
