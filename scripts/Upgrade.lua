@@ -14,6 +14,11 @@ local dishs = {}
 for i = 1, 15 do
 	dishs[i] = piece("dish" .. i)
 end
+-- Vehicle Pad pieces
+local ramps = {}
+for i = 1, 6 do
+	ramps[i] = piece("ramp" .. i)
+end
 
 -- Constants
 local unitDefID = Spring.GetUnitDefID(unitID)
@@ -25,6 +30,11 @@ local RANDOM_ROT = math.random(-180, 180)
 local UNLOAD_X, UNLOAD_Z
 
 function script.Create()
+	if ramps[1] then 
+		for i = 1, 6 do
+			Turn(ramps[i], y_axis, rad((i-1) * -60))
+		end
+	end
 	Sleep(100) -- wait a few frames
 	if not Spring.GetUnitTransporter(unitID) then
 		Unloaded()
@@ -113,6 +123,11 @@ function Unpack()
 		end
 		Turn(antennabase, y_axis, rad(RANDOM_ROT), CRATE_SPEED)
 		WaitForTurn(antennabase, y_axis)
+	elseif name == "upgrade_vehiclepad" then
+		for i = 1, 6 do
+			Turn(ramps[i], x_axis, rad(-115), CRATE_SPEED)
+		end
+		WaitForTurn(ramps[6], x_axis)
 	end
 	-- Let the sands of time cover the crate
 	Sleep(10000)
