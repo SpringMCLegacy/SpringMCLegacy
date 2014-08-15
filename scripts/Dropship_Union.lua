@@ -4,7 +4,6 @@ local ud = UnitDefs[Spring.GetUnitDefID(unitID)] -- unitID is available automati
 local weapons = ud.weapons
 local deg, rad = math.deg, math.rad
 local currUnitDef
-local BUILD_FACING = Spring.GetUnitBuildFacing(unitID)
 
 --piece defines
 
@@ -41,6 +40,14 @@ local GRAVITY = 120/Game.gravity
 local X, _, Z = Spring.GetUnitPosition(unitID)
 local GY = Spring.GetGroundHeight(X, Z)
 local CEG = SFX.CEG + #weapons
+
+local HALF_MAP_X = Game.mapSizeX/2
+local HALF_MAP_Z = Game.mapSizeZ/2
+local facing = math.abs(HALF_MAP_X - X) > math.abs(HALF_MAP_Z - Z)
+			and ((X > HALF_MAP_X) and 3 or 1)
+			or ((Z > HALF_MAP_Z) and 2 or 0)
+			
+local HEADING = facing * 16384 + math.random(-1820, 1820)
 
 -- LANDING CODE
 -- Variables
@@ -231,6 +238,8 @@ local function Drop()
 
 	Spring.MoveCtrl.Enable(unitID)
 	Spring.MoveCtrl.SetPosition(unitID, X, GY + DROP_HEIGHT, Z)
+	Spring.MoveCtrl.SetHeading(unitID, HEADING)
+	--Spring.SetUnitDirection(unitID, 0, facing * math.rad(90 + math.random(-10, 10)), 0)
 	Spring.MoveCtrl.SetVelocity(unitID, 0, -55, 0)
 	Spring.MoveCtrl.SetGravity(unitID, -0.4 * GRAVITY)
 	
@@ -265,7 +274,10 @@ local link, pad, main_door, hanger_door, vtol_pad = piece ("link", "pad", "main_
 local WAIT_TIME = 10000
 local DOOR_SPEED = math.rad(20)
 local x, _ ,z = Spring.GetUnitPosition(unitID)
-local dx, _, dz = Spring.GetUnitDirection(unitID)
+--local dx, _, dz = Spring.GetUnitDirection(unitID)
+local dirAngle = HEADING / 2^16 * 2 * math.pi
+local dx = math.sin(dirAngle)
+local dz = math.cos(dirAngle)
 local UNLOAD_X = x + 300 * dx
 local UNLOAD_Z = z + 300 * dz
 		
