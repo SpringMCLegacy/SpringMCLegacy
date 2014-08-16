@@ -28,6 +28,7 @@ local IS_Harasser = Hover:New{
 		turretturnspeed = "100",
 		elevationspeed  = "200",
 		maxammo 		= {srm = 120},
+		squadsize 		= 4,
     },
 }
 

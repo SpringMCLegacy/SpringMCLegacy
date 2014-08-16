@@ -26,6 +26,7 @@ local IS_Hawkmoth = VTOL:New{
 		helptext		= "Armament: 1 x Gauss Rifle - Armor: 2 tons",
 		heatlimit		= "15",
 		maxammo 		= {gauss = 30},
+		squadsize 		= 2,
     },
 }
 
