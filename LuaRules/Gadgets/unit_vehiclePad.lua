@@ -145,6 +145,9 @@ end
 
 function gadget:UnitGiven(unitID, unitDefID, newTeam, oldTeam)
 	-- TODO check if VPad is capped
+	if unitDefID == VPAD_ID then
+		GG.Delay.DelayCall(Deliver, {unitID, newTeam}, BASE_DELAY + math.random(10) * 30)
+	end
 end
 
 else

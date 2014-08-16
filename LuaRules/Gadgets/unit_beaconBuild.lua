@@ -178,7 +178,6 @@ function SpawnDropship(unitID, teamID, dropshipType, cargo, cost)
 		local tx,ty,tz = GetUnitPosition(unitID)
 		local dropshipID = CreateUnit(dropshipType, tx, ty, tz, "s", teamID)
 		Spring.SetUnitNoSelect(dropshipID, true)
-		GG.PlaySoundForTeam(teamID, "BB_Dropship_Inbound", 1)
 		if type(cargo) == "table" then
 			for i, order in ipairs(cargo) do -- preserve order here
 				for orderDefID, count in pairs(order) do

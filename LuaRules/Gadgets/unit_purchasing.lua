@@ -438,7 +438,7 @@ function gadget:AllowCommand(unitID, unitDefID, teamID, cmdID, cmdParams, cmdOpt
 				end -- <1 as may be 0.5, but _ordering_ is always 1
 				local newTotal = runningTotal + cost
 				local newTons = runningTons + weight
-				if  newTotal < money and newTons < tonnage then -- check we can afford it
+				if  newTotal <= money and newTons <= tonnage then -- check we can afford it
 					Spring.SendMessageToTeam(teamID, "Running C-Bills: " .. newTotal)
 					Spring.SendMessageToTeam(teamID, "Running Tonnage: " .. newTons)
 					orderCosts[unitID] = newTotal
