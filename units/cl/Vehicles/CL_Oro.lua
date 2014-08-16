@@ -34,6 +34,7 @@ local Oro_HAG = CL_Oro:New{
 		heatlimit		= 20,
 		barrelrecoildist = {[1] = 5},
 		maxammo = {gauss = 40},
+		squadsize 		= 1,
     },
 }
 
@@ -59,6 +60,7 @@ local Oro_LBX = CL_Oro:New{
 		heatlimit		= 15,
 		barrelrecoildist = {[1] = 5},
 		maxammo = {ac20 = 40},
+		squadsize 		= 2,
     },
 }
 

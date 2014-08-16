@@ -37,6 +37,7 @@ local CL_Morrigu = Tank:New{
 		elevationspeed = 100,
 		wheelspeed = 200,
 		maxammo = {lrm = 150},
+		squadsize 		= 2,
     },
 }
 
