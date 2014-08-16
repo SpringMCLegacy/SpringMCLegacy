@@ -183,6 +183,7 @@ function script.Create()
 	Spring.MoveCtrl.SetRotation(unitID, 0, newAngle + math.pi, 0)
 	Turn(body, x_axis, math.rad(-50))
 	-- Begin the drop
+	GG.PlaySoundForTeam(teamID, "BB_Dropship_Inbound", 1)
 	Turn(body, x_axis, math.rad(-10), math.rad(5))
 	Spring.MoveCtrl.SetVelocity(unitID, 0, -100, 0)
 	Spring.MoveCtrl.SetRelativeVelocity(unitID, 0, 0, 10)

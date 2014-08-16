@@ -472,6 +472,7 @@ function script.Create()
 		end
 	end
 	-- Start dropping
+	GG.PlaySoundForTeam(teamID, "BB_Dropship_Inbound", 1)
 	Drop()
 end
 

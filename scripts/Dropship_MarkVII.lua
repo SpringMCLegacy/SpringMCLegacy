@@ -1,6 +1,6 @@
 --pieces
 local body = piece ("body")
-local cargo, pad = piece ("cargo", "pad")
+local link, pad = piece ("cargo", "pad")
 local cargoDoor1, cargoDoor2 = piece("cargodoor1", "cargodoor2")
 local booms = {}
 for i = 1, 3 do
@@ -42,17 +42,42 @@ local touchDown = false
 local cargoID
 local beaconID
 
-function LoadCargo(outpostID, callerID)
-	--Spring.Echo("Loading", outpostID, "of type", UnitDefs[Spring.GetUnitDefID(outpostID)].name)
+local cargo = {}
+local numCargo = 0
+
+function LoadCargo(cargoID, callerID)
 	beaconID = callerID
-	local x,y,z = Spring.GetUnitDirection(beaconID)
-	ANGLE = ANGLE + math.atan(x,z)
-	UX = math.cos(ANGLE) * RADIAL_DIST
-	UZ = math.sin(ANGLE) * RADIAL_DIST
-	TX = TX + math.cos(ANGLE) * 73
-	TZ = TZ + math.sin(ANGLE) * 73
-	cargoID = outpostID
-	Spring.UnitScript.AttachUnit(cargo, cargoID)
+	--Spring.Echo("Loading", outpostID, "of type", UnitDefs[Spring.GetUnitDefID(outpostID)].name)
+	Spring.UnitScript.AttachUnit(-1, cargoID)
+	numCargo = numCargo + 1
+	cargo[numCargo] = cargoID
+end
+
+
+function UnloadCargo()
+	for i, cargoID in ipairs(cargo) do
+		Move(link, z_axis, 0)
+		Move(pad, z_axis, 0)
+		Turn(link, x_axis, 0)
+		Sleep(30)
+		
+		-- start cargo moving anim
+		env = Spring.UnitScript.GetScriptEnv(cargoID)
+		if env and env.script and env.script.StartMoving then -- TODO: shouldn't be required, maybe if cargo died?
+			Spring.UnitScript.CallAsUnit(cargoID, env.script.StartMoving, false)
+		end
+		
+		Spring.UnitScript.AttachUnit(pad, cargoID)
+		Move(link, z_axis, 90, UnitDefs[Spring.GetUnitDefID(cargoID)].speed / 2) -- 50
+		WaitForMove(link, z_axis)
+		if not UnitDefs[Spring.GetUnitDefID(cargoID)].canFly then
+			Turn(link, x_axis, math.rad(20), math.rad(20))
+			WaitForTurn(link, x_axis)
+			Move(pad, z_axis, 30, UnitDefs[Spring.GetUnitDefID(cargoID)].speed / 2)
+			WaitForMove(pad, z_axis)
+		end
+		Spring.UnitScript.DropUnit(cargoID)
+	end
 end
 
 local function fx()
@@ -82,10 +107,12 @@ local function fx()
 	if stage == 1 then
 		GG.RemoveLupsSfx(unitID, "vExhaustsJets")
 		GG.RemoveLupsSfx(unitID, "vExhaustsLargesJets")
+		GG.RemoveLupsSfx(unitID, "hExhaustsJets")
 		for _, exhaust in ipairs(hExhausts) do
 			GG.EmitLupsSfx(unitID, "dropship_horizontal_jitter_weak", exhaust)
 			GG.EmitLupsSfx(unitID, "dropship_horizontal_jitter_weak", exhaust, {delay = 20})
 			GG.EmitLupsSfx(unitID, "dropship_horizontal_jitter_weak", exhaust, {delay = 40})
+			GG.BlendJet(99, unitID, exhaust, "hExhaustsJets", 7, 30)
 		end
 		for _, exhaust in ipairs(vExhaustLarges) do
 			GG.EmitLupsSfx(unitID, "dropship_vertical_exhaust", exhaust, {id = "vExhaustsLargesJets", replace = true, width = 40, length = 90})
@@ -98,15 +125,18 @@ local function fx()
 		Sleep(30)
 	end
 	if stage == 2 then
-		GG.RemoveLupsSfx(unitID, "hExhaustsJets")
+		GG.RemoveLupsSfx(unitID, "vExhaustsJets")
 		for _, exhaust in ipairs(hExhausts) do
-			GG.BlendJet(99, unitID, exhaust, "hExhaustsJets")
+			GG.BlendJet(99, unitID, exhaust, "vExhaustsJets")
 		end
 	end
 	while stage == 2 do
 		Sleep(30)
 	end
 	if stage == 3 then
+		--[[for _, exhaust in ipairs(hExhausts) do
+			GG.EmitLupsSfx(unitID, "dropship_vertical_exhaust",  exhaust, {id = "hExhaustsJets", repeatEffect = true, width = 7, length = 30})
+		end]]
 		GG.RemoveLupsSfx(unitID, "vExhaustsJets")
 		GG.RemoveLupsSfx(unitID, "vExhaustsLargesJets")
 		for _, exhaust in ipairs(vExhausts) do
@@ -187,6 +217,16 @@ function script.Create()
 	Spring.MoveCtrl.Enable(unitID)
 	Spring.MoveCtrl.SetPosition(unitID, TX, TY + DROP_HEIGHT, TZ)
 	while not beaconID do Sleep(30) end
+	local x,y,z = Spring.GetUnitDirection(beaconID)
+	local x1,y1,z1 = Spring.GetUnitRotation(beaconID)
+	--Spring.Echo("VPad angle is", math.deg(math.atan(x,z)), math.deg(y1))
+	ANGLE = --[[ANGLE + math.atan(x,z)]] y1 + math.rad(30)--+ math.rad((math.floor(math.random(0, 5)) * 60) + 30)
+	ANGLE = ANGLE + math.rad(math.random(0, 5) * 60)
+	--Spring.Echo("My angle is", math.deg(ANGLE))
+	UX = math.cos(ANGLE) * RADIAL_DIST
+	UZ = math.sin(ANGLE) * RADIAL_DIST
+	TX = TX + math.cos(ANGLE) * 73
+	TZ = TZ + math.sin(ANGLE) * 73
 	Spring.MoveCtrl.SetPosition(unitID, TX + UX, TY + DROP_HEIGHT, TZ + UZ)
 	local newAngle = math.atan2(UX, UZ)
 	Spring.MoveCtrl.SetRotation(unitID, 0, newAngle + math.pi, 0)
@@ -249,17 +289,8 @@ function script.Create()
 	local BOOM_SPEED = 15
 	Move(attachment, y_axis, -(cargoDoor1 and 56 or 30), BOOM_SPEED)
 	WaitForMove(attachment, y_axis)
-	if cargoID then -- might be empty on /give testing
-		Spring.UnitScript.AttachUnit(pad, cargoID)
-		Move(cargo, z_axis, 90, UnitDefs[Spring.GetUnitDefID(cargoID)].speed / 2) -- 50
-		WaitForMove(cargo, z_axis)
-		if not UnitDefs[Spring.GetUnitDefID(cargoID)].canFly then
-			Turn(cargo, x_axis, math.rad(20), math.rad(20))
-			WaitForTurn(cargo, x_axis)
-			Move(pad, z_axis, 30, UnitDefs[Spring.GetUnitDefID(cargoID)].speed / 2)
-			WaitForMove(pad, z_axis)
-		end
-		Spring.UnitScript.DropUnit(cargoID)
+	if #cargo > 0 then -- might be empty on /give testing
+		UnloadCargo()
 	else
 		Sleep(2000)
 	end
