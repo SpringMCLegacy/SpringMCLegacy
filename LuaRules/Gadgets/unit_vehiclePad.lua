@@ -16,7 +16,7 @@ if gadgetHandler:IsSyncedCode() then
 --	SYNCED
 
 local modOptions = Spring.GetModOptions()
-local BASE_DELAY = tonumber(modOptions and modOptions.vehicle_delay or "30") -- base line delay, may be +-10s
+local BASE_DELAY = tonumber(modOptions and modOptions.vehicle_delay or "3") -- base line delay, may be +{0,10}s
 
 local BEACON_ID = UnitDefNames["beacon"].id
 local VPAD_ID = UnitDefNames["upgrade_vehiclepad"].id
@@ -31,6 +31,8 @@ local IS_VehicleDefs = {} -- IS_VehicleDefs[1] = {unitDefID = unitDefID, squadSi
 local C_VehicleDefs = {} -- C_VehicleDefs[1] = {unitDefID = unitDefID, squadSize = customParams.squadsize}
 
 local teamVehicleDefs = {} -- e.g. vehicleDefs[teamID] = IS_VehicleDefs or C_VehicleDefs
+
+local vehiclePads = {} -- uvehiclePads[unitID] = teamID
 
 function gadget:Initialize()
 	for unitDefID, unitDef in pairs(UnitDefs) do
@@ -65,6 +67,20 @@ local function RandomVehicle(teamID)
 	return teamVehicleDefs[teamID][math.random(1, #teamVehicleDefs[teamID])]
 end
 
+local function Deliver(unitID, teamID)
+	-- check VP didn't die or switch teams during delay
+	if Spring.ValidUnitID(unitID) and not Spring.GetUnitIsDead(unitID) and teamID == Spring.GetUnitTeam(unitID) then
+		local vehInfo = RandomVehicle(teamID)
+		Spring.Echo("Random vehicle:", UnitDefs[vehInfo.unitDefID].name, vehInfo.squadSize)
+		GG.DropshipDelivery(unitID, teamID, "is_markvii", {{[vehInfo.unitDefID] = vehInfo.squadSize}}, 0, nil, 1) 
+	end
+end
+
+function LCLeft(unitID, teamID) -- called by LC once it has left, to start countdown
+	GG.Delay.DelayCall(Deliver, {unitID, teamID}, BASE_DELAY + math.random(10) * 30)
+end
+GG.LCLeft = LCLeft
+
 function gadget:UnitCreated(unitID, unitDefID, teamID)
 	if unitDefID == BEACON_ID then
 		local x,_,z = Spring.GetUnitPosition(unitID)
@@ -72,9 +88,8 @@ function gadget:UnitCreated(unitID, unitDefID, teamID)
 	end
 	if unitDefID == VPAD_ID then
 		-- TODO: add to list of spawning points
-		local vehInfo = RandomVehicle(teamID)
-		Spring.Echo("Random vehicle:", UnitDefs[vehInfo.unitDefID].name, vehInfo.squadSize)
-		GG.DropshipDelivery(unitID, teamID, "is_markvii", {{[vehInfo.unitDefID] = vehInfo.squadSize}}, 0, nil, 1) --BASE_DELAY)
+		vehiclePads[unitID] = teamID
+		Deliver(unitID, teamID)
 	end
 end
 

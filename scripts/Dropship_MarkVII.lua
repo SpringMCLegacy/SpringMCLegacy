@@ -1,6 +1,6 @@
 --pieces
 local body = piece ("body")
-local cargo = piece ("cargo")
+local cargo, pad = piece ("cargo", "pad")
 local cargoDoor1, cargoDoor2 = piece("cargodoor1", "cargodoor2")
 local booms = {}
 for i = 1, 3 do
@@ -26,14 +26,17 @@ local SpawnCEG = Spring.SpawnCEG
 local GetUnitDistanceToPoint = GG.GetUnitDistanceToPoint
 
 -- Constants
-local HOVER_HEIGHT = 43
+local HOVER_HEIGHT = 43 + 12.5
 local DROP_HEIGHT = 10000 + HOVER_HEIGHT
 local GRAVITY = 120 / Game.gravity
 local TX, TY, TZ = Spring.GetUnitPosition(unitID)
 local RADIAL_DIST = 2500
-local ANGLE = math.floor(unitID / 100)
+local ANGLE = math.rad(math.random(0, 5) * 60 + 30)
+
 local UX = math.cos(ANGLE) * RADIAL_DIST
 local UZ = math.sin(ANGLE) * RADIAL_DIST
+TX = TX + math.cos(ANGLE) * 73
+TZ = TZ + math.sin(ANGLE) * 73
 
 -- Variables
 local stage = 0
@@ -241,8 +244,15 @@ function script.Create()
 	Move(attachment, y_axis, -(cargoDoor1 and 56 or 30), BOOM_SPEED)
 	WaitForMove(attachment, y_axis)
 	if cargoID then -- might be empty on /give testing
-		Move(cargo, z_axis, 50, UnitDefs[Spring.GetUnitDefID(cargoID)].speed / 2)
+		Spring.UnitScript.AttachUnit(pad, cargoID)
+		Move(cargo, z_axis, 90, UnitDefs[Spring.GetUnitDefID(cargoID)].speed / 2) -- 50
 		WaitForMove(cargo, z_axis)
+		if not UnitDefs[Spring.GetUnitDefID(cargoID)].canFly then
+			Turn(cargo, x_axis, math.rad(20), math.rad(20))
+			WaitForTurn(cargo, x_axis)
+			Move(pad, z_axis, 30, UnitDefs[Spring.GetUnitDefID(cargoID)].speed / 2)
+			WaitForMove(pad, z_axis)
+		end
 		Spring.UnitScript.DropUnit(cargoID)
 	else
 		Sleep(2000)
@@ -291,6 +301,7 @@ function script.Create()
 	StopSpin(body, z_axis, math.rad(45))
 	Sleep(2000)
 	-- We're out of the atmosphere, bye bye!
+	GG.LCLeft(beaconID, teamID) -- let the world know
 	Spring.DestroyUnit(unitID, false, true)
 end
 

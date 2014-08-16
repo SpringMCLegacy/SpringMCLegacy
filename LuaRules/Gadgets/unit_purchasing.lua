@@ -572,12 +572,12 @@ function gadget:GamePreload()
 			local weight = light and "light" or medium and "medium" or heavy and "heavy" or "assault"
 			unitTypes[unitDefID] = weight .. "mech"
 			unitSlotChanges[unitDefID] = 1
-		elseif basicType == "vehicle" then
+		--[[elseif basicType == "vehicle" then
 			-- sort into vehicle, vtol, aero
 			local vtol = unitDef.hoverAttack
 			local aero = unitDef.canFly and not vtol
 			unitTypes[unitDefID] = vtol and "vtol" or aero and "aero" or "vehicle"
-			unitSlotChanges[unitDefID] = (unitDef.canFly and 1) or 0.5
+			unitSlotChanges[unitDefID] = (unitDef.canFly and 1) or 0.5]]
 		end
 	end
 	for _, teamID in pairs(Spring.GetTeamList()) do

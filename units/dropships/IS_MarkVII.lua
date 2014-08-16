@@ -29,6 +29,7 @@ local IS_MarkVII = {
 	transportSize		= 8,
 	transportCapacity	= 8, -- 1x transportSize
 	transportMass		= 10000,
+	holdSteady 			= true,
 	--minTransportMass	= 10000,
 
 	--Makes unit use weapon from /weapons folder
@@ -46,6 +47,7 @@ local IS_MarkVII = {
 	},
 	customparams = {
 		helptext		= "A Dropship",
+		dropship		= true,
     },
 	sounds = {
 		underattack        = "Dropship_Alarm",

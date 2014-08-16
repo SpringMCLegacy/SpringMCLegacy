@@ -81,7 +81,7 @@ for unitName, ud in pairs(UnitDefs) do
 		table.insert(ud.sfxtypes.explosiongenerators, "custom:reentry_fx")
 		table.insert(ud.sfxtypes.explosiongenerators, "custom:ROACHPLOSION")
 		table.insert(ud.sfxtypes.explosiongenerators, "custom:beacon")
-	elseif unitName:find("dropzone") then
+	elseif unitName:find("dropzone") or unitName:find("vehiclepad") then
 		ud.sfxtypes = { explosiongenerators = {} }
 		table.insert(ud.sfxtypes.explosiongenerators, "custom:beacon")
 	end

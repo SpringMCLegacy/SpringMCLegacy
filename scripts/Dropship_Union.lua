@@ -358,7 +358,7 @@ function UnloadCargo()
 	StartThread(LandingGearUp)
 	Sleep(10000)
 	-- We're out of the atmosphere, bye bye!
-	GG.DropshipLeft(Spring.GetUnitTeam(unitID)) -- let the world know
+	GG.DropshipLeft(teamID) -- let the world know
 	Spring.DestroyUnit(unitID, false, true)
 end
 

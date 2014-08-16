@@ -373,7 +373,7 @@ end
 function gadget:UnitCreated(unitID, unitDefID, unitTeam, builderID)
 	local ud = UnitDefs[unitDefID]
 	local cp = ud.customParams
-	if (ud.speed > 0 and not ud.canFly) or cp.flagdefendrate then -- only mobiles & garrision should be in cappers/defenders tables
+	if cp.unittype == "mech" or cp.flagdefendrate then -- only mechs & garrision should be in cappers/defenders tables
 		local flagCapRate = cp.flagcaprate or 1
 		local flagDefendRate = cp.flagdefendrate or flagCapRate
 
@@ -381,7 +381,7 @@ function gadget:UnitCreated(unitID, unitDefID, unitTeam, builderID)
 			flagTypeCappers[flagCapType][unitID] = (CAP_MULT * flagCapRate)
 			flagTypeDefenders[flagCapType][unitID] = (DEF_MULT * flagDefendRate)
 		end
-		if ud.customParams.unittype then -- only count mechs & vehicles
+		if ud.customParams.unittype == "mech" then -- only count mechs
 			teamUnitCounts[unitTeam] = teamUnitCounts[unitTeam] + 1
 		end
 	end
@@ -421,20 +421,19 @@ function gadget:UnitDestroyed(unitID, unitDefID, unitTeam, attackerID, attackerD
 		end
 	end
 	
-	if ud.customParams.unittype then
+	if ud.customParams.unittype == "mech" then
 		teamUnitCounts[unitTeam] = teamUnitCounts[unitTeam] - 1
-		-- Remove 1 ticket for each combat unit killed
+		-- Remove 1 ticket for each mech killed
 		local allyTeam = select(6, Spring.GetTeamInfo(unitTeam))
 		DelayCall(DecrementTickets, {allyTeam}, 1)
+		DelayCall(CheckAllyTeamUnits, {unitTeam}, 1)
 	end
-	
-	DelayCall(CheckAllyTeamUnits, {unitTeam}, 1)
 end
 
 function gadget:UnitGiven(unitID, unitDefID, newTeam, oldTeam)
 	--Spring.Echo("Unit Given: " .. unitID)
 	local ud = UnitDefs[unitDefID]
-	if ud.customParams.unittype then
+	if ud.customParams.unittype == "mech" then
 		teamUnitCounts[oldTeam] = teamUnitCounts[oldTeam] - 1
 		teamUnitCounts[newTeam] = teamUnitCounts[newTeam] + 1
 	end
