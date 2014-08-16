@@ -27,6 +27,7 @@ local OSIRIS_ID = UnitDefNames["is_osiris_osr3d"].id
 local AI_TEAMS = {}
 local BEACON_ID = UnitDefNames["beacon"].id
 local C3_ID = UnitDefNames["upgrade_c3array"].id
+local VPAD_ID = UnitDefNames["upgrade_vehiclepad"].id
 --local DelayCall = GG.Delay.DelayCall
 local CMD_SEND_ORDER = GG.CustomCommands.GetCmdID("CMD_SEND_ORDER")
 local CMD_JUMP = GG.CustomCommands.GetCmdID("CMD_JUMP")
@@ -35,16 +36,23 @@ local CMD_MASC = GG.CustomCommands.GetCmdID("CMD_MASC")
 local PERK_JUMP_RANGE = GG.CustomCommands.GetCmdID("PERK_JUMP_RANGE")
 
 local CMD_C3 = GG.CustomCommands.GetCmdID("CMD_UPGRADE_upgrade_c3array")
+local CMD_VPAD = GG.CustomCommands.GetCmdID("CMD_UPGRADE_upgrade_vehiclepad")
+
 local dropZoneIDs = {}
 local orderSizes = {}
 local sides = {}
 
 local flagSpots = {} --VFS.Include("maps/flagConfig/" .. Game.mapName .. "_profile.lua")
 
+local teamUpgradeCounts = {} -- teamUpgradeCounts[teamID] = {c3 = 1, vpad = 1} etc
+
 function gadget:GamePreload()
 	-- Initialise unit limit for all AI teams.
 	local name = gadget:GetInfo().name
 	for _,t in ipairs(Spring.GetTeamList()) do
+		teamUpgradeCounts[t] = {}
+		teamUpgradeCounts[t][C3_ID] = 0
+		teamUpgradeCounts[t][VPAD_ID] = 0
 		if Spring.GetTeamLuaAI(t) ==  name then
 			AI_TEAMS[t] = true
 		end
@@ -222,12 +230,15 @@ function gadget:UnitUnloaded(unitID, unitDefID, teamID, transportID, transportTe
 		local ud = UnitDefs[unitDefID]
 		local cp = ud.customParams
 		if unitDefID == C3_ID then
+			teamUpgradeCounts[teamID][C3_ID] = teamUpgradeCounts[teamID][C3_ID] + 1
 			--Spring.Echo("C3!")
 			-- C3's take a little time to deploy and grant the extra tonnage & slots, so delay 10s
 			GG.Delay.DelayCall(Spam, {teamID}, 10 * 30)
 			for k,v in pairs(Spring.GetTeamUnits(teamID)) do
 				GG.Delay.DelayCall(UnitIdleCheck, {unitID, unitDefID, teamID}, 10 * 30)
 			end
+		elseif unitDefID == VPAD_ID then
+			teamUpgradeCounts[teamID][VPAD_ID] = teamUpgradeCounts[teamID][VPAD_ID] + 1
 		elseif ud.canFly then
 			--Spring.Echo("VTOL!")
 			for _, spot in pairs(flagSpots) do
@@ -247,10 +258,30 @@ function gadget:UnitUnloaded(unitID, unitDefID, teamID, transportID, transportTe
 	end
 end
 
+function gadget:UnitDestroyed(unitID, unitDefID, teamID)
+	if AI_TEAMS[teamID] then
+		local ud = UnitDefs[unitDefID]
+		local cp = ud.customParams
+		if unitDefID == C3_ID then
+			teamUpgradeCounts[teamID][C3_ID] = teamUpgradeCounts[teamID][C3_ID] - 1
+		elseif unitDefID == VPAD_ID then
+			teamUpgradeCounts[teamID][VPAD_ID] = teamUpgradeCounts[teamID][VPAD_ID] - 1
+		end
+	end
+end
+
 function gadget:UnitGiven(unitID, unitDefID, newTeam, oldTeam)
 	if AI_TEAMS[newTeam] then
 		if unitDefID == BEACON_ID then
-			GG.Delay.DelayCall(Spring.GiveOrderToUnit, {unitID, CMD_C3, {}, {}}, 1)
+			if (teamUpgradeCounts[newTeam][C3_ID] + teamUpgradeCounts[newTeam][VPAD_ID]) % 2 == 0 then -- even number of upgrades get another C3
+				GG.Delay.DelayCall(Spring.GiveOrderToUnit, {unitID, CMD_C3, {}, {}}, 1)
+			else
+				GG.Delay.DelayCall(Spring.GiveOrderToUnit, {unitID, CMD_VPAD, {}, {}}, 1)
+			end
+		end
+		if unitDefID == C3_ID or unitDefID == VPAD_ID then
+			gadget:UnitDestroyed(unitID, unitDefID, oldTeam)
+			gadget:UnitUnloaded(unitID, unitDefID, newTeam)
 		end
 	end
 end
