@@ -89,7 +89,6 @@ function gadget:UnitCreated(unitID, unitDefID, teamID)
 	if unitDefID == VPAD_ID then
 		-- TODO: add to list of spawning points
 		vehiclePads[unitID] = teamID
-		Deliver(unitID, teamID)
 	end
 end
 
