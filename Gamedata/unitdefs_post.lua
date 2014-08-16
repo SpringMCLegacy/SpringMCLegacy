@@ -120,10 +120,12 @@ for name, ud in pairs(UnitDefs) do
 	if unitType == "mech" or unitType == "vehicle" then
 		ud.category = ud.category .. " narctag"
 		ud.movestate = 0 -- Set default move state to Hold Position
-		if name:sub(1, 2) == "is" then
-			table.insert(IS_DROPSHIP_BUILDOPTIONS, name)
-		elseif name:sub(1, 2) == "cl" then
-			table.insert(CL_DROPSHIP_BUILDOPTIONS, name)
+		if unitType == "mech" then -- add only mechs to Dropship buildoptions
+			if name:sub(1, 2) == "is" then
+				table.insert(IS_DROPSHIP_BUILDOPTIONS, name)
+			elseif name:sub(1, 2) == "cl" then
+				table.insert(CL_DROPSHIP_BUILDOPTIONS, name)
+			end
 		end
 	elseif ud.customparams.towertype then
 		table.insert(BEACON_BUILDOPTIONS, name)

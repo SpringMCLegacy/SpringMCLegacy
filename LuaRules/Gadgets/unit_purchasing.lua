@@ -79,7 +79,7 @@ local runningTonsCmdDesc = {
 local ignoredCmdDescs = {CMD_SEND_ORDER = true, CMD_RUNNING_TOTAL = true, CMD_RUNNING_TONS = true}
 
 -- Variables
-local typeStrings = {"lightmech", "mediummech", "heavymech", "assaultmech", "vehicle", "vtol", "aero"}
+local typeStrings = {"lightmech", "mediummech", "heavymech", "assaultmech"}--, "vehicle", "vtol", "aero"}
 local typeStringAliases = { -- whitespace is to try and equalise resulting font size
 	["lightmech"] 	= "Light     \nMechs", 
 	["mediummech"] 	= "Medium  \nMechs", 
