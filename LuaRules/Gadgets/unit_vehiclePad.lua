@@ -130,6 +130,7 @@ end
 
 function gadget:UnitUnloaded(unitID, unitDefID, teamID, transportID, transportTeam)
 	if vehiclesDefCache[unitDefID] then -- a vehicle
+		--Spring.SetUnitNoSelect(unitID, true)
 		local ud = UnitDefs[unitDefID]
 		if ud.canFly then
 			--Spring.Echo("VTOL!")
@@ -149,6 +150,12 @@ function gadget:UnitGiven(unitID, unitDefID, newTeam, oldTeam)
 		GG.Delay.DelayCall(Deliver, {unitID, newTeam}, BASE_DELAY + math.random(10) * 30)
 	end
 end
+
+--[[function gadget:AllowCommand(unitID, unitDefID, teamID, cmdID, cmdParams, cmdOptions, cmdTag, synced)
+	if vehiclesDefCache[unitDefID] then -- a vehicle
+		return synced -- only allow synced gadget commands to vehicles
+	end
+end]]
 
 else
 --	UNSYNCED

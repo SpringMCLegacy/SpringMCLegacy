@@ -27,10 +27,9 @@ local IS_MarkVII = {
 	
 	-- Transport tags
 	transportSize		= 8,
-	transportCapacity	= 8, -- 1x transportSize
-	transportMass		= 10000,
+	transportCapacity	= 64, -- 1x transportSize
+	transportMass		= 1000000,
 	holdSteady 			= true,
-	--minTransportMass	= 10000,
 
 	--Makes unit use weapon from /weapons folder
 	weapons	= {	
