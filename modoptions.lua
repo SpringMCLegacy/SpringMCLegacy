@@ -62,6 +62,17 @@ local options = {
 		step   = 10,
 	},
 	{
+		key = "vehicle_delay",
+		name = "Vehicle Delay",
+		desc = "Minimum delay between vehicle spoawns",
+		type   = "number",
+		def    = 30,
+		min    = 0,
+		max    = 300,
+		section = '2gamemode',
+		step   = 5,
+	},
+	{
 		key = "speed",
 		name = "Test Speed Multipliers",
 		desc = "Developer tool",

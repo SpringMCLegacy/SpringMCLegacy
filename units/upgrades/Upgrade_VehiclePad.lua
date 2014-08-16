@@ -5,7 +5,9 @@ local Upgrade_VehiclePad = Upgrade:New{
 	maxDamage           = 10000,
 	mass                = 5000,
 
-	collisionVolumeScales = [[25 25 25]],
+	collisionVolumeOffsets = [[0 -12 0]],
+	collisionVolumeScales = [[125 12 125]],
+	collisionVolumeType = "cylY",
 
 	customparams = {
 		helptext		= "Grants access to friendly vehicle support.",
