@@ -71,7 +71,7 @@ local function Deliver(unitID, teamID)
 	-- check VP didn't die or switch teams during delay
 	if Spring.ValidUnitID(unitID) and not Spring.GetUnitIsDead(unitID) and teamID == Spring.GetUnitTeam(unitID) then
 		local vehInfo = RandomVehicle(teamID)
-		Spring.Echo("Random vehicle:", UnitDefs[vehInfo.unitDefID].name, vehInfo.squadSize)
+		--Spring.Echo("Random vehicle:", UnitDefs[vehInfo.unitDefID].name, vehInfo.squadSize)
 		GG.DropshipDelivery(unitID, teamID, "is_markvii", {{[vehInfo.unitDefID] = vehInfo.squadSize}}, 0, nil, 1) 
 	end
 end

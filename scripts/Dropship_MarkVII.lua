@@ -33,10 +33,8 @@ local TX, TY, TZ = Spring.GetUnitPosition(unitID)
 local RADIAL_DIST = 2500
 local ANGLE = math.rad(math.random(0, 5) * 60 + 30)
 
-local UX = math.cos(ANGLE) * RADIAL_DIST
-local UZ = math.sin(ANGLE) * RADIAL_DIST
-TX = TX + math.cos(ANGLE) * 73
-TZ = TZ + math.sin(ANGLE) * 73
+local UX --= math.cos(ANGLE) * RADIAL_DIST
+local UZ --= math.sin(ANGLE) * RADIAL_DIST
 
 -- Variables
 local stage = 0
@@ -47,6 +45,12 @@ local beaconID
 function LoadCargo(outpostID, callerID)
 	--Spring.Echo("Loading", outpostID, "of type", UnitDefs[Spring.GetUnitDefID(outpostID)].name)
 	beaconID = callerID
+	local x,y,z = Spring.GetUnitDirection(beaconID)
+	ANGLE = ANGLE + math.atan(x,z)
+	UX = math.cos(ANGLE) * RADIAL_DIST
+	UZ = math.sin(ANGLE) * RADIAL_DIST
+	TX = TX + math.cos(ANGLE) * 73
+	TZ = TZ + math.sin(ANGLE) * 73
 	cargoID = outpostID
 	Spring.UnitScript.AttachUnit(cargo, cargoID)
 end
@@ -181,6 +185,8 @@ function script.Create()
 	end	
 	-- Move us up to the drop position
 	Spring.MoveCtrl.Enable(unitID)
+	Spring.MoveCtrl.SetPosition(unitID, TX, TY + DROP_HEIGHT, TZ)
+	while not beaconID do Sleep(30) end
 	Spring.MoveCtrl.SetPosition(unitID, TX + UX, TY + DROP_HEIGHT, TZ + UZ)
 	local newAngle = math.atan2(UX, UZ)
 	Spring.MoveCtrl.SetRotation(unitID, 0, newAngle + math.pi, 0)
