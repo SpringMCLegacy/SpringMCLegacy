@@ -126,6 +126,8 @@ for name, ud in pairs(UnitDefs) do
 			elseif name:sub(1, 2) == "cl" then
 				table.insert(CL_DROPSHIP_BUILDOPTIONS, name)
 			end
+		else -- a vehicle
+			ud.maxdamage = ud.maxdamage * 0.5
 		end
 	elseif ud.customparams.towertype then
 		table.insert(BEACON_BUILDOPTIONS, name)
