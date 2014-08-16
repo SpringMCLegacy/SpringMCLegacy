@@ -30,6 +30,7 @@ local IS_LRMCarrier = LightTank:New{
 		elevationspeed  = 50,
 		wheelspeed      = 200,
 		maxammo 		= {lrm = 720},
+		squadsize 		= 2,
     },
 }
 

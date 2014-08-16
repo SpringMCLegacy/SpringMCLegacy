@@ -31,6 +31,7 @@ local IS_Demolisher = Tank:New{
 		wheelspeed      = 200,
 		barrelrecoildist = {[1] = 5, [2] = 5},
 		maxammo 		= {ac20 = 40},
+		squadsize 		= 2,
     },
 }
 

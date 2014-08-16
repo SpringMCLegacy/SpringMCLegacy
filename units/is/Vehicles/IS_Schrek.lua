@@ -33,6 +33,7 @@ local IS_Schrek = Tank:New{
 		elevationspeed  = 100,
 		barrelrecoildist = {[1] = 5, [2] = 5, [3] = 5},
 		wheelspeed      = 200,
+		squadsize 		= 2,
     },
 }
 

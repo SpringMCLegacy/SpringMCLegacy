@@ -38,6 +38,7 @@ local Scorpion_AC5 = IS_Scorpion:New{
 		helptext		= "Armament: 1 x Autocannon/5, 2 x Machinegun - Armor: 2 tons",
 		barrelrecoildist = {[1] = 3},
 		maxammo 		= {ac5 = 80},
+		squadsize 		= 4,
     },
 }
 
@@ -61,6 +62,7 @@ local Scorpion_LGauss = {
 		helptext		= "Armament: 1 x Light Gauss Rifle, 2 x Machinegun - Armor: 2 tons",
 		barrelrecoildist = {[1] = 3},
 		maxammo 		= {gauss = 30},
+		squadsize 		= 2,
     },
 }
 

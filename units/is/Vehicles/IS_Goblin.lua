@@ -39,6 +39,7 @@ local IS_Goblin = LightTank:New{
 		elevationspeed  = 200,
 		wheelspeed      = 200,
 		maxammo 		= {srm = 120},
+		squadsize 		= 3,
     },
 }
 

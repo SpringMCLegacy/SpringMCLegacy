@@ -41,6 +41,7 @@ local IS_Sparrowhawk = Aero:New{
 	customparams = {
 		helptext		= "Armament: 2 x Medium Pulse Laser, 2 x ER Small Beam Laser - Armor: 2 tons",
 		heatlimit		= "15",
+		squadsize 		= 2,
     },
 }
 
