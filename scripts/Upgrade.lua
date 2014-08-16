@@ -144,6 +144,7 @@ function Unpack()
 		end
 		WaitForTurn(ramps[6], x_axis)
 		StartThread(Blinks)
+		GG.LCLeft(unitID, teamID)
 	end
 	-- Let the sands of time cover the crate
 	Sleep(10000)
