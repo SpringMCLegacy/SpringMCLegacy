@@ -26,7 +26,7 @@ local SpawnCEG = Spring.SpawnCEG
 local GetUnitDistanceToPoint = GG.GetUnitDistanceToPoint
 
 -- Constants
-local HOVER_HEIGHT = 43 + 12.5
+local HOVER_HEIGHT = 43 + 12
 local DROP_HEIGHT = 10000 + HOVER_HEIGHT
 local GRAVITY = 120 / Game.gravity
 local TX, TY, TZ = Spring.GetUnitPosition(unitID)
@@ -73,7 +73,7 @@ function UnloadCargo()
 		if not UnitDefs[Spring.GetUnitDefID(cargoID)].canFly then
 			Turn(link, x_axis, math.rad(20), math.rad(20))
 			WaitForTurn(link, x_axis)
-			Move(pad, z_axis, 30, UnitDefs[Spring.GetUnitDefID(cargoID)].speed / 2)
+			Move(pad, z_axis, 35, UnitDefs[Spring.GetUnitDefID(cargoID)].speed / 2)
 			WaitForMove(pad, z_axis)
 		end
 		Spring.UnitScript.DropUnit(cargoID)
@@ -287,6 +287,7 @@ function script.Create()
 	_, y, _ = Spring.GetUnitPosition(unitID)
 	local BOOM_LENGTH = y - TY - 56
 	local BOOM_SPEED = 15
+	Spring.UnitScript.AttachUnit(pad, cargo[1])
 	Move(attachment, y_axis, -(cargoDoor1 and 56 or 30), BOOM_SPEED)
 	WaitForMove(attachment, y_axis)
 	if #cargo > 0 then -- might be empty on /give testing
@@ -333,9 +334,9 @@ function script.Create()
 	Spring.MoveCtrl.SetGravity(unitID, -4 * GRAVITY)
 	stage = 5
 	Sleep(1500)
-	Spin(body, z_axis, math.rad(180), math.rad(45))
+	--Spin(body, z_axis, math.rad(180), math.rad(45))
 	Sleep(2000)
-	StopSpin(body, z_axis, math.rad(45))
+	--StopSpin(body, z_axis, math.rad(45))
 	Sleep(2000)
 	-- We're out of the atmosphere, bye bye!
 	GG.LCLeft(beaconID, teamID) -- let the world know
