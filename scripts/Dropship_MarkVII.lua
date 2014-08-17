@@ -91,6 +91,7 @@ function UnloadCargo()
 			WaitForMove(pad, z_axis)
 		end
 		Spring.UnitScript.DropUnit(cargoID)
+		Spring.SetUnitBlocking(cargoID, true, true, true, true, true, true, true)
 	end
 end
 

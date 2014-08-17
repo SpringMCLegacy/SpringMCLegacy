@@ -241,6 +241,7 @@ function script.Create()
 		Sleep(1500)
 		if Spring.ValidUnitID(cargoID) and not Spring.GetUnitIsDead(cargoID) then -- might be empty on /give testing
 			Spring.UnitScript.DropUnit(cargoID)
+			Spring.SetUnitBlocking(cargoID, true, true, true, true, true, true, true)
 			-- Let the cargo know it is unloaded
 			env = Spring.UnitScript.GetScriptEnv(cargoID)
 			Spring.UnitScript.CallAsUnit(cargoID, env.Unloaded)
