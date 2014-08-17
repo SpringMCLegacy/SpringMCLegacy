@@ -1,5 +1,5 @@
 local CL_Mithras = LightTank:New{
-	name              	= "Enyo",
+	name              	= "Mithras",
 	description         = "Light Strike Tank",
 	objectName        	= "CL_Mithras.s3o",
 	corpse				= "CL_Mithras_X",
@@ -16,7 +16,7 @@ local CL_Mithras = LightTank:New{
 	
 	weapons 		= {	
 		[1] = {
-			name	= "UAC2",
+			name	= "AC2",
 		},
 		[2] = {
 			name	= "CERMBL",
