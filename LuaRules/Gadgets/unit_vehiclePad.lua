@@ -130,7 +130,7 @@ end
 
 function gadget:UnitUnloaded(unitID, unitDefID, teamID, transportID, transportTeam)
 	if vehiclesDefCache[unitDefID] then -- a vehicle
-		--Spring.SetUnitNoSelect(unitID, true)
+		SendToUnsynced("VEHICLE_UNLOADED", unitID, teamID)
 		local ud = UnitDefs[unitDefID]
 		if ud.canFly then
 			--Spring.Echo("VTOL!")
@@ -151,12 +151,20 @@ function gadget:UnitGiven(unitID, unitDefID, newTeam, oldTeam)
 	end
 end
 
---[[function gadget:AllowCommand(unitID, unitDefID, teamID, cmdID, cmdParams, cmdOptions, cmdTag, synced)
-	if vehiclesDefCache[unitDefID] then -- a vehicle
-		return synced -- only allow synced gadget commands to vehicles
-	end
-end]]
-
 else
 --	UNSYNCED
+
+local MY_TEAM_ID = Spring.GetMyTeamID()
+
+function VehicleUnloaded(eventID, unitID, teamID)
+	if teamID == MY_TEAM_ID then
+		Spring.SetUnitNoSelect(unitID, true)
+	end
+end
+
+function gadget:Initialize()
+	gadgetHandler:AddSyncAction("VEHICLE_UNLOADED", VehicleUnloaded)
+end
+
+
 end
