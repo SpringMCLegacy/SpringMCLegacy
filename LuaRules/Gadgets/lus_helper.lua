@@ -317,7 +317,7 @@ function gadget:GamePreload()
 			info.ammoTypes[-1] = "coolant"
 			info.burstLengths[-1] = 20	
 		elseif cp.unittype == "vehicle" then
-			info.limbHPs["turret"] = unitDef.health * 0.3
+			info.limbHPs["turret"] = unitDef.health * 1.0
 			if unitDef.canFly then
 				info.limbHPs["lwing"] =	 unitDef.health * 0.5
 				info.limbHPs["rwing"] = unitDef.health * 0.5
