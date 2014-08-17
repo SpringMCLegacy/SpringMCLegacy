@@ -154,10 +154,8 @@ end
 else
 --	UNSYNCED
 
-local MY_TEAM_ID = Spring.GetMyTeamID()
-
 function VehicleUnloaded(eventID, unitID, teamID)
-	if teamID == MY_TEAM_ID then
+	if teamID == Spring.GetMyTeamID() then
 		Spring.SetUnitNoSelect(unitID, true)
 	end
 end

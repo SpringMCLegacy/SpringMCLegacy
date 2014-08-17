@@ -377,10 +377,9 @@ else
 -- UNSYNCED
 
 local PlaySoundFile	= Spring.PlaySoundFile
-local MY_TEAM_ID = Spring.GetMyTeamID()
 
 function PlayTeamSound(eventID, teamID, sound, volume)
-	if teamID == MY_TEAM_ID then
+	if teamID == Spring.GetMyTeamID() then
 		PlaySoundFile(sound, volume, "ui")
 	end
 end
