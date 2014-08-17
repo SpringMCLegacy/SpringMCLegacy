@@ -20,7 +20,7 @@ non-magical wall delivery & repair, replace with dragons teeth 'fired' in a circ
 
 Make TAG & NARC increase missile accuracy / guidance
 
-vehicles or BAs as AI controlled 'grunts'
+BA-filled APC
 
 include or GG shared script functions between Mech/Vehicle/Turret
 
