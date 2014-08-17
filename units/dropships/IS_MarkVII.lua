@@ -24,7 +24,7 @@ local IS_MarkVII = {
 	moveState			= 0,
 	levelGround			= false,
 	movementClass		= "LARGEMECH", -- herp
-	
+	usePieceCollisionVolumes = true,
 	-- Transport tags
 	transportSize		= 8,
 	transportCapacity	= 64, -- 1x transportSize

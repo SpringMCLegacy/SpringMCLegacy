@@ -55,21 +55,35 @@ end
 
 
 function UnloadCargo()
+	local BOOM_SPEED = 15
 	for i, cargoID in ipairs(cargo) do
+		-- reset
 		Move(link, z_axis, 0)
+		Move(link, y_axis, 0)
 		Move(pad, z_axis, 0)
 		Turn(link, x_axis, 0)
 		Sleep(30)
+		
+		-- lower the tray
+		Spring.UnitScript.AttachUnit(pad, cargo[i])
+		Move(link, y_axis, -(cargoDoor1 and 56 or 30), BOOM_SPEED)
+		Move(attachment, y_axis, -(cargoDoor1 and 56 or 30), BOOM_SPEED)
+		WaitForMove(attachment, y_axis)
 		
 		-- start cargo moving anim
 		env = Spring.UnitScript.GetScriptEnv(cargoID)
 		if env and env.script and env.script.StartMoving then -- TODO: shouldn't be required, maybe if cargo died?
 			Spring.UnitScript.CallAsUnit(cargoID, env.script.StartMoving, false)
 		end
-		
-		Spring.UnitScript.AttachUnit(pad, cargoID)
-		Move(link, z_axis, 90, UnitDefs[Spring.GetUnitDefID(cargoID)].speed / 2) -- 50
+		-- roll out
+		Move(link, z_axis, 40, UnitDefs[Spring.GetUnitDefID(cargoID)].speed / 2) -- 50
 		WaitForMove(link, z_axis)
+		-- off the tray, raise it up for the next one
+		Move(attachment, y_axis, 0, BOOM_SPEED * 1.5)
+		Move(link, y_axis, -31)
+		Move(link, z_axis, 90, UnitDefs[Spring.GetUnitDefID(cargoID)].speed / 2)
+		WaitForMove(link, z_axis)
+		-- only rollers need to deal with the ramp
 		if not UnitDefs[Spring.GetUnitDefID(cargoID)].canFly then
 			Turn(link, x_axis, math.rad(20), math.rad(20))
 			WaitForTurn(link, x_axis)
@@ -287,18 +301,12 @@ function script.Create()
 	_, y, _ = Spring.GetUnitPosition(unitID)
 	local BOOM_LENGTH = y - TY - 56
 	local BOOM_SPEED = 15
-	Spring.UnitScript.AttachUnit(pad, cargo[1])
-	Move(attachment, y_axis, -(cargoDoor1 and 56 or 30), BOOM_SPEED)
-	WaitForMove(attachment, y_axis)
 	if #cargo > 0 then -- might be empty on /give testing
 		UnloadCargo()
 	else
 		Sleep(2000)
 	end
 	-- Cargo is down, close the doors!
-	Move(attachment, y_axis, 0, BOOM_SPEED)
-	--WaitForMove(attachment, y_axis)
-
 	while (dist < HOVER_HEIGHT + 20) do
 		Spring.MoveCtrl.SetRelativeVelocity(unitID, 0, math.max(0.33, vertSpeed * (dist/HOVER_HEIGHT)), 0)
 		Sleep(10)
