@@ -65,6 +65,6 @@ local Oro_LBX = CL_Oro:New{
 }
 
 return lowerkeys({
-	["CL_Oro_HAG"] = Oro_HAG,
+	--["CL_Oro_HAG"] = Oro_HAG,
 	["CL_Oro_LBX"] = Oro_LBX,
 })

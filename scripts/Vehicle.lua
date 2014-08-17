@@ -530,7 +530,7 @@ function script.Killed(recentDamage, maxHealth)
 		Spring.Echo("NUUUUUUUUUUUKKKKKE")
 	end
 	local unitType = vtol and "VTOL" or aero and "Aerofighter" or "Vehicle"
-	GG.PlaySoundForTeam(Spring.GetUnitTeam(unitID), "BB_" .. unitType .. "_destroyed", 1)
+	--GG.PlaySoundForTeam(Spring.GetUnitTeam(unitID), "BB_" .. unitType .. "_destroyed", 1)
 	--local severity = recentDamage / maxHealth * 100
 	--if severity <= 25 then
 	--	Explode(body, math.bit_or({SFX.BITMAPONLY, SFX.BITMAP1}))
