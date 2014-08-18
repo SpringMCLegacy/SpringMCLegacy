@@ -26,7 +26,7 @@ local IS_Hunter = LightTank:New{
 		turretturnspeed = 25,
 		elevationspeed  = 50,
 		wheelspeed      = 200,
-		maxammo 		= {lrm = 720},
+		maxammo 		= {lrm = 520},
 		squadsize 		= 2,
     },
 }

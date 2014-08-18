@@ -16,13 +16,13 @@ local IS_Galleon = LightTank:New{
 
 	weapons	= {	
 		[1] = {
-			name	= "MBL",
+			name	= "ERMBL",
 		},
 		[2] = {
-			name	= "SBL",
+			name	= "ERSBL",
 		},
 		[3] = {
-			name	= "SBL",
+			name	= "ERSBL",
 		},
 	},
 	

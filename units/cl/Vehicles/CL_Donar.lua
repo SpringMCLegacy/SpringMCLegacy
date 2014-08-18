@@ -15,7 +15,7 @@ local CL_Donar = VTOL:New{
 	verticalSpeed	= 1,
 	weapons	= {	
 		[1] = {
-			name	= "CERLBL",
+			name	= "LBL",
 			maxAngleDif = 90,
 		},
 		[2] = {
