@@ -78,11 +78,11 @@ function UnloadCargo()
 		-- roll out
 		Move(link, z_axis, 40, UnitDefs[Spring.GetUnitDefID(cargoID)].speed / 2) -- 50
 		WaitForMove(link, z_axis)
-		-- off the tray, raise it up for the next one
-		Move(attachment, y_axis, 0, BOOM_SPEED * 1.5)
 		Move(link, y_axis, -31)
 		Move(link, z_axis, 90, UnitDefs[Spring.GetUnitDefID(cargoID)].speed / 2)
 		WaitForMove(link, z_axis)
+		-- off the tray, raise it up for the next one
+		Move(attachment, y_axis, 0, BOOM_SPEED * 1.5)
 		-- only rollers need to deal with the ramp
 		if not UnitDefs[Spring.GetUnitDefID(cargoID)].canFly then
 			Turn(link, x_axis, math.rad(20), math.rad(20))
