@@ -124,6 +124,7 @@ if (gadgetHandler:IsSyncedCode()) then
 local DelayCall = GG.Delay.DelayCall
 
 function UpdateBeacons(teamID, num)
+	if teamID == GAIA_TEAM_ID then return end -- Gaia does not have tickets
 	local allyTeam = select(6, GetTeamInfo(teamID))
 	beaconsPerAllyTeam[allyTeam] = beaconsPerAllyTeam[allyTeam] + num
 end

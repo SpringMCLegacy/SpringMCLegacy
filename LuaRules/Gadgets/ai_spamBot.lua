@@ -26,6 +26,9 @@ local OSIRIS_ID = UnitDefNames["is_osiris_osr3d"].id
 
 local AI_TEAMS = {}
 local BEACON_ID = UnitDefNames["beacon"].id
+local IS_DROPZONE_ID = UnitDefNames["is_dropzone"].id
+local CL_DROPZONE_ID = UnitDefNames["cl_dropzone"].id
+local DROPZONE_IDS = {[IS_DROPZONE_ID] = true, [CL_DROPZONE_ID] = true}
 local C3_ID = UnitDefNames["upgrade_c3array"].id
 local VPAD_ID = UnitDefNames["upgrade_vehiclepad"].id
 --local DelayCall = GG.Delay.DelayCall
@@ -35,6 +38,7 @@ local CMD_MASC = GG.CustomCommands.GetCmdID("CMD_MASC")
 
 local PERK_JUMP_RANGE = GG.CustomCommands.GetCmdID("PERK_JUMP_RANGE")
 
+local CMD_DROPZONE = GG.CustomCommands.GetCmdID("CMD_DROPZONE")
 local CMD_C3 = GG.CustomCommands.GetCmdID("CMD_UPGRADE_upgrade_c3array")
 local CMD_VPAD = GG.CustomCommands.GetCmdID("CMD_UPGRADE_upgrade_vehiclepad")
 
@@ -121,11 +125,22 @@ function gadget:UnitCreated(unitID, unitDefID, teamID)
 	end
 end
 
+local function Upgrade(unitID, newTeam)
+	-- FIXME: ugly as sin
+	if Spring.GetTeamUnitDefCount(newTeam, IS_DROPZONE_ID) + Spring.GetTeamUnitDefCount(newTeam, CL_DROPZONE_ID) == 0 then
+		GG.Delay.DelayCall(Spring.GiveOrderToUnit, {unitID, CMD_DROPZONE, {}, {}}, 1)
+	elseif (teamUpgradeCounts[newTeam][C3_ID] + teamUpgradeCounts[newTeam][VPAD_ID]) % 2 == 0 then -- even number of upgrades get another C3
+		GG.Delay.DelayCall(Spring.GiveOrderToUnit, {unitID, CMD_C3, {}, {}}, 1)
+	else
+		GG.Delay.DelayCall(Spring.GiveOrderToUnit, {unitID, CMD_VPAD, {}, {}}, 1)
+	end
+end
+
 function gadget:UnitDestroyed(unitID, unitDefID, teamID)
 	if AI_TEAMS[teamID] then
 		Spam(teamID)
-		if unitDefID == C3_ID then
-			GG.Delay.DelayCall(Spring.GiveOrderToUnit, {tonumber(Spring.GetUnitRulesParam(unitID, "beaconID")), CMD_C3, {}, {}}, 1)
+		if unitDefID == C3_ID or unitDefID == VPAD_ID then
+			Upgrade(tonumber(Spring.GetUnitRulesParam(unitID, "beaconID")), teamID)
 		end
 	end
 end
@@ -273,11 +288,7 @@ end
 function gadget:UnitGiven(unitID, unitDefID, newTeam, oldTeam)
 	if AI_TEAMS[newTeam] then
 		if unitDefID == BEACON_ID then
-			if (teamUpgradeCounts[newTeam][C3_ID] + teamUpgradeCounts[newTeam][VPAD_ID]) % 2 == 0 then -- even number of upgrades get another C3
-				GG.Delay.DelayCall(Spring.GiveOrderToUnit, {unitID, CMD_C3, {}, {}}, 1)
-			else
-				GG.Delay.DelayCall(Spring.GiveOrderToUnit, {unitID, CMD_VPAD, {}, {}}, 1)
-			end
+			Upgrade(unitID, newTeam)
 		end
 		if unitDefID == C3_ID or unitDefID == VPAD_ID then
 			gadget:UnitDestroyed(unitID, unitDefID, oldTeam)

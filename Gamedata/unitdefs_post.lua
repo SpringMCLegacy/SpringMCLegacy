@@ -119,7 +119,9 @@ for name, ud in pairs(UnitDefs) do
 	local unitType = ud.customparams.unittype
 	if unitType == "mech" or unitType == "vehicle" then
 		ud.category = ud.category .. " narctag"
-		ud.movestate = 0 -- Set default move state to Hold Position
+		if not ud.canfly then
+			ud.movestate = 0 -- Set default move state to Hold Position
+		end
 		if unitType == "mech" then -- add only mechs to Dropship buildoptions
 			if name:sub(1, 2) == "is" then
 				table.insert(IS_DROPSHIP_BUILDOPTIONS, name)
