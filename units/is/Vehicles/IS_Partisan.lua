@@ -39,7 +39,7 @@ local IS_Partisan = Tank:New{
 		turretturnspeed = 250,
 		elevationspeed  = 300,
 		wheelspeed      = 200,
-		maxammo 		= {ac5 = 200},
+		maxammo 		= {ac5 = 400},
 		squadsize 		= 2,
 	},
 }

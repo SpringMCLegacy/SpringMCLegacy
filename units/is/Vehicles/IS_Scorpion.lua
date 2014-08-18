@@ -68,5 +68,5 @@ local Scorpion_LGauss = {
 
 return lowerkeys({ 
 	["IS_Scorpion_AC5"] = Scorpion_AC5,
-	["IS_Scorpion_LGauss"] = Scorpion_LGauss,
+	--["IS_Scorpion_LGauss"] = Scorpion_LGauss,
 })
