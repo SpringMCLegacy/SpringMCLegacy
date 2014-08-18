@@ -18,18 +18,22 @@ local IS_Partisan = Tank:New{
 		[1] = {
 			name	= "AC5_AA",
 			badTargetCategory = "ground",
+			onlytargetcategory = "air ground",
 		},
 		[2] = {
 			name	= "AC5_AA",
 			badTargetCategory = "ground",
+			onlytargetcategory = "air ground",
 		},
 		[3] = {
 			name	= "AC5_AA",
 			badTargetCategory = "ground",
+			onlytargetcategory = "air ground",
 		},
 		[4] = {
 			name	= "AC5_AA",
 			badTargetCategory = "ground",
+			onlytargetcategory = "air ground",
 		},
 	},
 

@@ -98,8 +98,6 @@ for name, ud in pairs(UnitDefs) do
 				weapon.onlytargetcategory = "narctag"			
 				ud.description = ud.description .. " \255\255\051\051[TAG]"
 			else
-				weapon.onlytargetcategory = (weapon.onlytargetcategory or "") .. " notbeacon"
-				weapon.badtargetcategory = (weapon.badtargetcategory or "") .. " dropship structure"
 				if ud.customparams.unittype then
 					-- Give all mechs 179d torso twist
 					--[[if ud.customparams.unittype == "mech" then
@@ -110,7 +108,14 @@ for name, ud in pairs(UnitDefs) do
 							weapon.slaveto = 1
 						end
 					end
+					if ud.customparams.unittype == vehicle then
+						if not weapon.onlytargetcategory then
+							weapon.onlytargetcategory = "ground"
+						end
+					end
 				end
+				weapon.onlytargetcategory = (weapon.onlytargetcategory or "") .. " notbeacon"
+				weapon.badtargetcategory = (weapon.badtargetcategory or "") .. " dropship structure"
 			end
 		end
 	end

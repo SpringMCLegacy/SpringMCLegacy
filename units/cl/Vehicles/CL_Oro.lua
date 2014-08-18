@@ -47,6 +47,7 @@ local Oro_LBX = CL_Oro:New{
 	weapons = {	
 		[1] = {
 			name	= "LBX20",
+			onlytargetcategory = "air ground",
 		},
 		[2] = {
 			name	= "CLPL",
