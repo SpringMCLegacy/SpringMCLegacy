@@ -48,12 +48,12 @@ local CL_Mars = Tank:New{
 		},
 		[9] = {
 			name	= "SSRM6",
-			mainDir = "0 -1 0",
+			mainDir = [[-1 0 0]],
 			maxAngleDif = 180,
 		},
 		[10] = {
 			name	= "SSRM6",
-			mainDir = "0 1 0",
+			mainDir = [[1 0 0]],
 			maxAngleDif = 180,
 		},
 	},
@@ -65,7 +65,7 @@ local CL_Mars = Tank:New{
 		elevationspeed  = 100,
 		barrelrecoildist = {[1] = 5, [3] = 5},
 		barrelrecoilspeed = 100,
-		turrets = {[3] = 3},
+		turrets = {[3] = 9, [9] = 9, [10] = 10}, -- TODO: use value as turning speed?
 		maxammo = {gauss = 20, ac10 = 40, lrm = 180, srm = 120},
     },
 }
