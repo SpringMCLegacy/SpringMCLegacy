@@ -24,7 +24,7 @@ local CL_Mars = Tank:New{
 		},
 		[3] = {
 			name	= "LBX10",
-			maxAngleDif = 35,
+			maxAngleDif = 80,
 		},
 		[4] = {
 			name	= "LRM15",
@@ -46,9 +46,19 @@ local CL_Mars = Tank:New{
 		[8] = {
 			name	= "MG",
 		},
+		[9] = {
+			name	= "SSRM6",
+			mainDir = "0 -1 0",
+			maxAngleDif = 180,
+		},
+		[10] = {
+			name	= "SSRM6",
+			mainDir = "0 1 0",
+			maxAngleDif = 180,
+		},
 	},
 	customparams = {
-		helptext		= "Armament: 1 x Gauss Rifle, 1 x ER Large Beam Laser, 1 x LBX/10, 3 x LRM-15 - Armor: 15 tons",
+		helptext		= "Armament: 1 x Gauss Rifle, 1 x ER Large Beam Laser, 1 x LBX/10, 3 x LRM-15, 2 x Streak SRM-6, 2 x Machinegun - Armor: 15 tons",
 		heatlimit		= 36,
 		wheelspeed      = 50,
 		turretturnspeed = 50,
@@ -56,7 +66,7 @@ local CL_Mars = Tank:New{
 		barrelrecoildist = {[1] = 5, [3] = 5},
 		barrelrecoilspeed = 100,
 		turrets = {[3] = 3},
-		maxammo = {gauss = 20, ac10 = 40, lrm = 180},
+		maxammo = {gauss = 20, ac10 = 40, lrm = 180, srm = 120},
     },
 }
 
