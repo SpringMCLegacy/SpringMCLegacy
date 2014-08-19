@@ -113,9 +113,9 @@ for weaponID = 1, info.numWeapons do
 	elseif weaponID then
 		flares[weaponID] = piece ("flare_" .. weaponID)
 	end
-	--[[if info.turretIDs[weaponID] then
+	if turrets[weaponID] then
 		turrets[weaponID] = piece("turret_" .. weaponID)
-	end]]
+	end
 	if info.mantletIDs[weaponID] then
 		mantlets[weaponID] = piece("mantlet_" .. weaponID)
 	end
@@ -414,7 +414,7 @@ local function WeaponCanFire(weaponID)
 		return true
 	end
 end
-
+		
 function script.AimWeapon(weaponID, heading, pitch)
 	Signal(2 ^ weaponID) -- 2 'to the power of' weapon ID
 	SetSignalMask(2 ^ weaponID)
