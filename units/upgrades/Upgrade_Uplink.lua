@@ -7,6 +7,13 @@ local Upgrade_Uplink = Upgrade:New{
 
 	collisionVolumeScales = [[25 25 25]],
 
+	-- Constructor stuff
+	builder				= true,
+	builddistance 		= math.huge,
+	workerTime			= 10, -- ?	
+	terraformSpeed		= 10000,
+	showNanoSpray		= false,
+	
 	customparams = {
 		helptext		= "Grants access to various abilities and upgrades.",
 		hasbap			= true,

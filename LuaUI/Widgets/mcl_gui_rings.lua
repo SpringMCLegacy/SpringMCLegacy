@@ -79,7 +79,7 @@ function widget:DrawWorldPreUnit()
 					gl.PopMatrix()
 				end
 			end
-		elseif UnitDefNames[select(4, GetActiveCommand())] then -- command is a valid unitname i.e. build command
+		--[[elseif UnitDefNames[select(4, GetActiveCommand())] then -- command is a valid unitname i.e. build command
 			rangesToDraw = buildRanges[unitDefID]
 			if rangesToDraw then
 				local x, y, z = GetUnitPosition(unitID)
@@ -87,7 +87,7 @@ function widget:DrawWorldPreUnit()
 				gl.PushMatrix()
 					glDrawGroundCircle(x,y,z, rangesToDraw,24)
 				gl.PopMatrix()
-			end
+			end--]]
 		end
 		glColor(1,1,1,1)
 	end

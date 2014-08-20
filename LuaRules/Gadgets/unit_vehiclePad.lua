@@ -40,7 +40,6 @@ function gadget:Initialize()
 			vehiclesDefCache[unitDefID] = true
 			local squadSize = unitDef.customParams.squadsize or 1
 			if unitDef.name:sub(1,2) == "is" then -- Inner Sphere
-				Spring.Echo("found a IS vehicle", unitDef.name)
 				table.insert(IS_VehicleDefs, {["unitDefID"] = unitDefID, ["squadSize"] = squadSize})
 			else -- clans
 				table.insert(C_VehicleDefs, {["unitDefID"] = unitDefID, ["squadSize"] = squadSize})
@@ -58,7 +57,6 @@ function gadget:Initialize()
 			end
 		end
 		--sides[teamID] = side
-		Spring.Echo(teamID, "side", side)
 		teamVehicleDefs[teamID] = (side == "clans" and C_VehicleDefs) or IS_VehicleDefs
 	end
 end

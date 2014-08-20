@@ -38,6 +38,7 @@ local DelayCall				 = GG.Delay.DelayCall
 -- Constants
 local GAIA_TEAM_ID = Spring.GetGaiaTeamID()
 local BEACON_ID = UnitDefNames["beacon"].id
+local UPLINK_ID = UnitDefNames["upgrade_uplink"].id
 local IS_DROPZONE_ID = UnitDefNames["is_dropzone"].id
 local CL_DROPZONE_ID = UnitDefNames["cl_dropzone"].id -- FIXME: ugly
 local DROPZONE_IDS = {[IS_DROPZONE_ID] = true, [CL_DROPZONE_ID] = true}
@@ -312,9 +313,10 @@ function gadget:UnitCreated(unitID, unitDefID, teamID, builderID)
 	local unitDef = UnitDefs[unitDefID]
 	local cp = unitDef.customParams
 	if unitDefID == BEACON_ID then
-		buildLimits[unitID] = {["turret"] = 4, ["sensor"] = 1}
 		AddUpgradeOptions(unitID)
 		InsertUnitCmdDesc(unitID, wallCmdDesc)
+	elseif unitDefID == UPLINK_ID then
+		buildLimits[unitID] = {["turret"] = 4, ["sensor"] = 1}
 	elseif cp and cp.towertype then
 		-- track creation of turrets and their originating beacons so we can give back slots if a turret dies
 		if builderID then -- ignore /give turrets
@@ -378,14 +380,6 @@ end
 
 function gadget:UnitGiven(unitID, unitDefID, newTeam, oldTeam)
 	if unitDefID == BEACON_ID then
-		for towerID, beaconID in pairs(towerOwners) do
-			if beaconID == unitID then
-				DelayCall(TransferUnit, {towerID, newTeam}, 1)
-				local env = Spring.UnitScript.GetScriptEnv(towerID)
-				Spring.UnitScript.CallAsUnit(towerID, env.TeamChange, newTeam)
-				DelayCall(SetUnitNeutral,{towerID, newTeam == GAIA_TEAM_ID}, 2)
-			end
-		end
 		for outpostID, beaconID in pairs(beaconIDs) do			
 			if beaconID == unitID then
 				DelayCall(TransferUnit, {outpostID, newTeam}, 1)
@@ -405,25 +399,21 @@ function gadget:UnitGiven(unitID, unitDefID, newTeam, oldTeam)
 				dropZoneBeaconIDs[newTeam] = unitID
 			end
 		end
+	elseif unitDefID == UPLINK_ID then
+		for towerID, beaconID in pairs(towerOwners) do
+			if beaconID == unitID then
+				DelayCall(TransferUnit, {towerID, newTeam}, 1)
+				local env = Spring.UnitScript.GetScriptEnv(towerID)
+				Spring.UnitScript.CallAsUnit(towerID, env.TeamChange, newTeam)
+				DelayCall(SetUnitNeutral,{towerID, newTeam == GAIA_TEAM_ID}, 2)
+			end
+		end
 	end
 end
 
 function gadget:AllowCommand(unitID, unitDefID, teamID, cmdID, cmdParams, cmdOptions)
 	if unitDefID == BEACON_ID then
-		if cmdID < 0 then
-			local towerType = towerDefIDs[-cmdID]
-			if not towerType then return false end
-			local tx, ty, tz = unpack(cmdParams)
-			local dist = GetUnitDistanceToPoint(unitID, tx, ty, tz, false)
-			if dist < MIN_BUILD_RANGE then
-				Spring.SendMessageToTeam(teamID, "Too close to beacon")
-				return false
-			elseif dist > MAX_BUILD_RANGE then
-				Spring.SendMessageToTeam(teamID, "Too far from beacon")
-				return false
-			end
-			return LimitTowerType(unitID, teamID, towerType)
-		elseif upgradeIDs[cmdID] then
+		if upgradeIDs[cmdID] then
 			local upgradeDefID = upgradeIDs[cmdID]
 			local cost = outpostDefs[upgradeDefID] and outpostDefs[upgradeDefID].cost or WALL_COST
 			if cost <= GetTeamResources(teamID, "metal") then
@@ -443,6 +433,21 @@ function gadget:AllowCommand(unitID, unitDefID, teamID, cmdID, cmdParams, cmdOpt
 			SetDropZone(unitID, teamID)
 		elseif cmdID == CMD.SELFD then -- Disallow self-d
 			return false
+		end
+	elseif unitDefID == UPLINK_ID then
+		if cmdID < 0 then
+			local towerType = towerDefIDs[-cmdID]
+			if not towerType then return false end
+			--[[local tx, ty, tz = unpack(cmdParams)
+			local dist = GetUnitDistanceToPoint(unitID, tx, ty, tz, false)
+			if dist < MIN_BUILD_RANGE then
+				Spring.SendMessageToTeam(teamID, "Too close to beacon")
+				return false
+			elseif dist > MAX_BUILD_RANGE then
+				Spring.SendMessageToTeam(teamID, "Too far from beacon")
+				return false
+			end]]
+			return LimitTowerType(unitID, teamID, towerType)
 		end
 	elseif unitDefID == WALL_ID or unitDefID == GATE_ID then
 		if unitDefID == WALL_ID and cmdID == CMD_GATE then
