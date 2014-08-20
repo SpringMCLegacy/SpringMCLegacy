@@ -39,6 +39,13 @@ Spring.SetGameRulesParam("NARC_DURATION", NARC_DURATION)
 
 local TAG_ID = WeaponDefNames["tag"].id
 
+local PPC_IDS = {}
+for weaponDefID, weaponDef in pairs(WeaponDefs) do
+	if weaponDef.name:find("ppc") then
+		PPC_IDS[weaponDefID] = true
+	end
+end
+
 -- Variables
 local modOptions = Spring.GetModOptions()
 local inRadarUnits = {}
@@ -109,6 +116,33 @@ local function DeNARC(unitID, allyTeam, force)
 	end
 end
 
+local PPC_DURATION = 5 * 30 -- 5 seconds
+local sensorTypes = {"radar", "seismic", "radarJammer"}
+local unitSensorRadii = {} -- unitSensorRadii[unitID] = {radar = a, seismic = b ...}
+local ppcUnits = {} -- ppcUnits[unitID] = gameframe
+
+local function FinishPPC(unitID)
+	if ppcUnits[unitID] and ppcUnits[unitID] <= (Spring.GetGameFrame() - PPC_DURATION) then
+		for _, sensorType in pairs(sensorTypes) do
+			Spring.SetUnitSensorRadius(unitID, sensorType, unitSensorRadii[sensorType])
+		end
+		ppcUnits[unitID] = nil
+	end
+end
+
+local function ApplyPPC(unitID)
+	if not ppcUnits[unitID] then -- not yet under PPC effects
+		unitSensorRadii[unitID] = {}
+		for _, sensorType in pairs(sensorTypes) do
+			-- perks change radii so can't rely on unitdef values
+			unitSensorRadii[sensorType] = Spring.GetUnitSensorRadius(unitID, sensorType)
+			Spring.SetUnitSensorRadius(unitID, sensorType, 0)
+		end
+	end
+	ppcUnits[unitID] = Spring.GetGameFrame()
+	GG.Delay.DelayCall(FinishPPC, {unitID}, PPC_DURATION)
+end
+
 function gadget:UnitEnteredRadar(unitID, unitTeam, allyTeam, unitDefID)
 	--Spring.Echo(UnitDefs[unitDefID].name .. " entered radar " .. allyTeam)
 	inRadarUnits[allyTeam][unitID] = true
@@ -150,6 +184,8 @@ function gadget:UnitPreDamaged(unitID, unitDefID, unitTeam, damage, paralyzer, w
 			--Spring.Echo("I AM BEING TAGGED!")
 		end
 		return 0
+	elseif PPC_IDS[weaponID] then
+		ApplyPPC(unitID)
 	end
 	return damage, 1
 end
@@ -171,6 +207,7 @@ function gadget:UnitDestroyed(unitID, unitDefID, teamID)
 		allyJammers[allyTeam][unitID] = nil
 	end
 	narcUnits[unitID] = nil
+	ppcUnits[unitID] = nil
 end
 
 function gadget:UnitGiven(unitID, unitDefID, newTeam, oldTeam)
