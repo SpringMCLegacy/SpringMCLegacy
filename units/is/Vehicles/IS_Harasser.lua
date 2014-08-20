@@ -25,7 +25,7 @@ local IS_Harasser = Hover:New{
 	customparams = {
 		helptext		= "Armament: 2 x SRM-6 - Armor: 1.5 tons",
 		heatlimit		= "10",
-		turretturnspeed = "100",
+		turretturnspeed = "200",
 		elevationspeed  = "200",
 		maxammo 		= {srm = 120},
 		squadsize 		= 4,
