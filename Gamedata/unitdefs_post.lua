@@ -112,6 +112,7 @@ for name, ud in pairs(UnitDefs) do
 						if not weapon.onlytargetcategory then
 							weapon.onlytargetcategory = "ground"
 						end
+						ud.customparams.wheelspeed = ud.maxvelocity * 166
 					end
 				end
 				weapon.onlytargetcategory = (weapon.onlytargetcategory or "") .. " notbeacon"
