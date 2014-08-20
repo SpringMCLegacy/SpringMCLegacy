@@ -138,6 +138,7 @@ function Unpack()
 		end
 		Turn(antennabase, y_axis, rad(RANDOM_ROT), CRATE_SPEED)
 		WaitForTurn(antennabase, y_axis)
+		SetUnitValue(COB.INBUILDSTANCE, 1)
 	elseif name == "upgrade_vehiclepad" then
 		for i = 1, 6 do
 			Turn(ramps[i], x_axis, rad(-115), CRATE_SPEED)

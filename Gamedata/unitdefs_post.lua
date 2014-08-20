@@ -12,6 +12,7 @@ local CL_DROPSHIP_UD
 local CL_DROPZONE_UD
 local CL_DROPSHIP_BUILDOPTIONS = {}
 
+local UPLINK_UD
 local BEACON_UD
 local BEACON_BUILDOPTIONS = {}
 
@@ -151,6 +152,8 @@ for name, ud in pairs(UnitDefs) do
 		if name == "beacon" then
 			BEACON_UD = ud 
 			ud.canselfdestruct = false
+		elseif name == "upgrade_uplink" then
+			UPLINK_UD = ud
 		elseif ud.customparams.dropship or name:find("dropzone") then
 			ud.canselfdestruct = false
 			ud.levelground = false
@@ -174,4 +177,6 @@ IS_DROPZONE_UD["buildoptions"] = IS_DROPSHIP_BUILDOPTIONS
 CL_DROPZONE_UD["buildoptions"] = CL_DROPSHIP_BUILDOPTIONS
 
 table.sort(BEACON_BUILDOPTIONS)
-BEACON_UD["buildoptions"] = BEACON_BUILDOPTIONS
+--BEACON_UD["buildoptions"] = BEACON_BUILDOPTIONS
+UPLINK_UD["buildoptions"] = BEACON_BUILDOPTIONS
+
