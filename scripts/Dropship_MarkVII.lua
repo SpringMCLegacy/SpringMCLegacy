@@ -63,7 +63,8 @@ function UnloadCargo()
 		Move(pad, z_axis, 0)
 		Turn(link, x_axis, 0)
 		Sleep(30)
-		
+		if Spring.GetUnitIsDead(beaconID) or Spring.GetUnitTeam(beaconID) ~= teamID then return end
+		if not (cargoID and Spring.GetUnitDefID(cargoID)) then return end
 		-- lower the tray
 		Spring.UnitScript.AttachUnit(pad, cargo[i])
 		Move(link, y_axis, -(cargoDoor1 and 56 or 30), BOOM_SPEED)
@@ -96,8 +97,8 @@ function UnloadCargo()
 end
 
 local function fx()
-	Signal(fx)
-	SetSignalMask(fx)
+	Signal(4)--fx)
+	SetSignalMask(4)--fx)
 
 	if stage == 0 then
 		GG.EmitLupsSfx(unitID, "dropship_hull_heat", body, {repeatEffect = 3})
@@ -215,8 +216,9 @@ local function fx()
 	end
 end
 
-function script.Create()
-	Spring.SetUnitNoSelect(unitID, true)
+function Drop()
+	Signal(2)
+	SetSignalMask(2)
 	StartThread(fx)
 	-- setup fx pieces
 	for _, exhaust in ipairs(vExhaustLarges) do
@@ -352,5 +354,44 @@ function script.Create()
 	Spring.DestroyUnit(unitID, false, true)
 end
 
-function script.Killed(recentDamage, maxHealth)
+function script.Create()
+	StartThread(Drop)
+end
+
+function TouchDown() -- called when it hits the deck
+	local x,y,z = Spring.GetUnitPosition(unitID)
+	for i = 1, 5 do
+		Spring.SpawnCEG("dropship_heavy_dust", x,y,z)
+	end
+	Spring.SpawnCEG("mech_jump_dust", x,y,z)
+	
+	local lwing, rwing = piece("lwing", "rwing")
+	Explode(lwing, SFX.FIRE + SFX.FALL)
+	Explode(rwing, SFX.FIRE + SFX.FALL)
+	Explode(body, SFX.SHATTER)
+	-- This is a really awful hack , built on top of another hack. 
+	-- There's some issue with alwaysVisible not working (http://springrts.com/mantis/view.php?id=4483)
+	-- So instead make the owner the decal unit spawned by the teams starting beacon, as it can never die
+	local ownerID = Spring.GetTeamUnitsByDefs(teamID, UnitDefNames["decal_beacon"].id)[1] or unitID
+	local nukeID = Spring.SpawnProjectile(WeaponDefNames["meltdown"].id, {pos = {x,y,z}, owner = ownerID, team = teamID, ttl = 20})
+	-- delay next dropship by extra 30 seconds
+	GG.Delay.DelayCall(GG.LCLeft, {beaconID, teamID}, 30 * 30)
+	Spring.DestroyUnit(unitID, true, false)
+end
+
+local dead = false
+function script.HitByWeapon(x, z, weaponID, damage)
+	if damage > Spring.GetUnitHealth(unitID) then
+		if not dead then
+			dead = true
+			for i, cargoID in ipairs(cargo) do
+				Spring.DestroyUnit(cargoID, false, true)
+			end
+			Signal(2 + 4)
+			Spring.MoveCtrl.SetGravity(unitID, 0.75 * GRAVITY)	
+			Spring.MoveCtrl.SetCollideStop(unitID, true)
+			Spring.MoveCtrl.SetTrackGround(unitID, true)
+		end
+		return 0
+	end
 end

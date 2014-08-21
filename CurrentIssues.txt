@@ -8,6 +8,8 @@ some clan mechs with mismatched launchpoints due to weapon changes (cougar, warh
 
 Godde menu ordering bug
 
+capped vpad resulting in multiple LC at once
+
 ---- WISHLIST
 
 --buildpics should show ECM / Jump / BAPs / AMS (NARC, TAG?)

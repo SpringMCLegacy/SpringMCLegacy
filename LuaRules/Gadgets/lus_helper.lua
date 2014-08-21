@@ -352,13 +352,9 @@ function gadget:Initialize()
 end
 
 function gadget:MoveCtrlNotify(unitID, unitDefID, unitTeam, data)
-	local BEACON_ID = UnitDefNames["beacon"].id
-	local IS_DROPSHIP_ID = UnitDefNames["is_dropship"].id
-	local CL_DROPSHIP_ID = UnitDefNames["cl_dropship"].id
 	-- check for tower drops too
 	local unitDef = UnitDefs[unitDefID]
 	local cp = unitDef.customParams
-
 	env = Spring.UnitScript.GetScriptEnv(unitID)
 	if env.TouchDown then
 		Spring.UnitScript.CallAsUnit(unitID, env.TouchDown)
