@@ -26,22 +26,27 @@ local flagSpots = {} --VFS.Include("maps/flagConfig/" .. Game.mapName .. "_profi
 
 local vehiclesDefCache = {} -- unitDefID = true
 
-local IS_VehicleDefs = {} -- IS_VehicleDefs[1] = {unitDefID = unitDefID, squadSize = customParams.squadsize}
-local C_VehicleDefs = {} -- C_VehicleDefs[1] = {unitDefID = unitDefID, squadSize = customParams.squadsize}
+local IS_VehicleDefs = {} -- IS_VehicleDefs["light"][1] = {unitDefID = unitDefID, squadSize = customParams.squadsize}
+local C_VehicleDefs = {} -- C_VehicleDefs["light"][1] = {unitDefID = unitDefID, squadSize = customParams.squadsize}
 
 local teamVehicleDefs = {} -- e.g. vehicleDefs[teamID] = IS_VehicleDefs or C_VehicleDefs
 
-local vehiclePads = {} -- uvehiclePads[unitID] = teamID
+local vehiclePads = {} -- uvehiclePads[unitID] = unloadFrame
+
 
 function gadget:Initialize()
 	for unitDefID, unitDef in pairs(UnitDefs) do
 		if unitDef.customParams.unittype == "vehicle" then
 			vehiclesDefCache[unitDefID] = true
+			local mass = unitDef.mass
+			local weight = unitDef.canFly and "vtol" or GG.GetWeight(mass)
 			local squadSize = unitDef.customParams.squadsize or 1
 			if unitDef.name:sub(1,2) == "is" then -- Inner Sphere
-				table.insert(IS_VehicleDefs, {["unitDefID"] = unitDefID, ["squadSize"] = squadSize})
+				if not IS_VehicleDefs[weight] then IS_VehicleDefs[weight] = {} end
+				table.insert(IS_VehicleDefs[weight], {["unitDefID"] = unitDefID, ["squadSize"] = squadSize})
 			else -- clans
-				table.insert(C_VehicleDefs, {["unitDefID"] = unitDefID, ["squadSize"] = squadSize})
+				if not C_VehicleDefs[weight] then C_VehicleDefs[weight] = {} end
+				table.insert(C_VehicleDefs[weight], {["unitDefID"] = unitDefID, ["squadSize"] = squadSize})
 			end
 		end
 	end
@@ -60,14 +65,36 @@ function gadget:Initialize()
 	end
 end
 
-local function RandomVehicle(teamID)
-	return teamVehicleDefs[teamID][math.random(1, #teamVehicleDefs[teamID])]
+local function RandomVehicle(teamID, weight)
+	return teamVehicleDefs[teamID][weight][math.random(1, #teamVehicleDefs[teamID][weight])]
+end
+
+local MINUTE = 30 * 60
+local function AgeWeight(age)
+	local weight = "vtol"
+	-- make 5% of all deliveries VTOL
+	if math.random(100) < 5 then return weight end
+	-- 75% of the time, randomise the age so we don't always get the current max
+	if math.random(100) < 75 then
+		age = age * math.random()
+	end
+	if age < MINUTE then
+		weight = "light"
+	elseif age < 2 * MINUTE then
+		weight = "medium"
+	elseif age < 3 * MINUTE then
+		weight = "heavy"
+	else
+		weight = "assault"
+	end
+	return weight
 end
 
 local function Deliver(unitID, teamID)
 	-- check VP didn't die or switch teams during delay
 	if Spring.ValidUnitID(unitID) and (not Spring.GetUnitIsDead(unitID)) and (teamID == Spring.GetUnitTeam(unitID)) then
-		local vehInfo = RandomVehicle(teamID)
+		local age = Spring.GetGameFrame() - vehiclePads[unitID]
+		local vehInfo = RandomVehicle(teamID, AgeWeight(age))
 		--Spring.Echo("Random vehicle:", UnitDefs[vehInfo.unitDefID].name, vehInfo.squadSize)
 		GG.DropshipDelivery(unitID, teamID, "is_markvii", {{[vehInfo.unitDefID] = vehInfo.squadSize}}, 0, nil, 1) 
 	end
@@ -84,10 +111,9 @@ function gadget:UnitCreated(unitID, unitDefID, teamID)
 	if unitDefID == BEACON_ID then
 		local x,_,z = Spring.GetUnitPosition(unitID)
 		table.insert(flagSpots, {x = x, z = z})
-	end
-	if unitDefID == VPAD_ID then
-		-- TODO: add to list of spawning points
-		vehiclePads[unitID] = teamID
+	elseif unitDefID == VPAD_ID then
+		-- for /give, UnitUnloaded will set it again in 'real' play
+		vehiclePads[unitID] = Spring.GetGameFrame()	
 	end
 end
 
@@ -140,6 +166,9 @@ function gadget:UnitUnloaded(unitID, unitDefID, teamID, transportID, transportTe
 			--Spring.Echo("VEHICLE!")
 			Wander(unitID)
 		end
+	elseif unitDefID == VPAD_ID then
+		-- TODO: add to list of spawning points
+		vehiclePads[unitID] = Spring.GetGameFrame()
 	end
 end
 
@@ -147,6 +176,7 @@ function gadget:UnitGiven(unitID, unitDefID, newTeam, oldTeam)
 	-- TODO check if VPad is capped
 	if unitDefID == VPAD_ID then
 		GG.Delay.DelayCall(Deliver, {unitID, newTeam}, BASE_DELAY + math.random(10) * 30)
+		vehiclePads[unitID] = Spring.GetGameFrame()
 	end
 end
 

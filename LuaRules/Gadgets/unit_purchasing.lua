@@ -557,6 +557,16 @@ function gadget:UnitGiven(unitID, unitDefID, newTeam, oldTeam)
 	end
 end
 
+local function GetWeight(mass)
+	local light = mass < 40 * 100
+	local medium = not light and mass < 60 * 100
+	local heavy = not light and not medium and mass < 80 * 100
+	local assault = not light and not medium and not heavy
+	local weight = light and "light" or medium and "medium" or heavy and "heavy" or "assault"
+	return weight
+end
+GG.GetWeight = GetWeight
+
 function gadget:GamePreload()
 	for unitDefID, unitDef in pairs(UnitDefs) do
 		local name = unitDef.name
@@ -565,11 +575,7 @@ function gadget:GamePreload()
 		if basicType == "mech" then
 			-- sort into light, medium, heavy, assault
 			local mass = unitDef.mass
-			local light = mass < 40 * 100
-			local medium = not light and mass < 60 * 100
-			local heavy = not light and not medium and mass < 80 * 100
-			local assault = not light and not medium and not heavy
-			local weight = light and "light" or medium and "medium" or heavy and "heavy" or "assault"
+			local weight = GetWeight(mass)
 			unitTypes[unitDefID] = weight .. "mech"
 			unitSlotChanges[unitDefID] = 1
 		--[[elseif basicType == "vehicle" then

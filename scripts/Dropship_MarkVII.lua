@@ -97,8 +97,8 @@ function UnloadCargo()
 end
 
 local function fx()
-	Signal(4)--fx)
-	SetSignalMask(4)--fx)
+	Signal(fx)
+	SetSignalMask(fx)
 
 	if stage == 0 then
 		GG.EmitLupsSfx(unitID, "dropship_hull_heat", body, {repeatEffect = 3})
@@ -209,16 +209,16 @@ local function fx()
 	end
 	while stage == 5 do
 		for _, exhaust in ipairs(hExhausts) do
-			EmitSfx(exhaust, SFX.CEG + 2)
-			EmitSfx(exhaust, SFX.CEG + 3)
+			EmitSfx(exhaust, SFX.CEG)
+			--EmitSfx(exhaust, SFX.CEG + 3)
 		end
 		Sleep(30)
 	end
 end
 
 function Drop()
-	Signal(2)
-	SetSignalMask(2)
+	Signal(1)
+	SetSignalMask(1)
 	StartThread(fx)
 	-- setup fx pieces
 	for _, exhaust in ipairs(vExhaustLarges) do
@@ -392,11 +392,46 @@ function script.HitByWeapon(x, z, weaponID, damage)
 			for i, cargoID in ipairs(cargo) do
 				Spring.DestroyUnit(cargoID, false, true)
 			end
-			Signal(2 + 4)
+			Signal(1)
+			Signal(fx)
 			Spring.MoveCtrl.SetGravity(unitID, 0.75 * GRAVITY)	
 			Spring.MoveCtrl.SetCollideStop(unitID, true)
 			Spring.MoveCtrl.SetTrackGround(unitID, true)
 		end
 		return 0
 	end
+end
+
+-- Weapons Code
+-- useful global stuff
+info = GG.lusHelper[unitDefID]
+
+
+local flares = {}
+
+for weaponID = 1, info.numWeapons do
+	flares[weaponID] = piece("flare_" .. weaponID)
+end
+
+function script.AimWeapon(weaponID, heading, pitch)
+	Signal(2 ^ weaponID) -- 2 'to the power of' weapon ID
+	SetSignalMask(2 ^ weaponID)
+
+	Turn(flares[weaponID], x_axis, -pitch, ELEVATION_SPEED)
+	Turn(flares[weaponID], y_axis, heading, TORSO_SPEED)
+	WaitForTurn(flares[weaponID], y_axis)
+	
+	return true 
+end
+
+function script.Shot(weaponID)
+	EmitSfx(flares[weaponID], SFX.CEG + weaponID)
+end
+
+function script.AimFromWeapon(weaponID) 
+	return body
+end
+
+function script.QueryWeapon(weaponID) 
+	return flares[weaponID]
 end
