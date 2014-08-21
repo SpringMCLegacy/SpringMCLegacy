@@ -230,6 +230,9 @@ function Drop()
 	for _, exhaust in ipairs(hExhausts) do
 		Turn(exhaust, y_axis, math.rad(180))
 	end	
+	local lflap, rflap = piece("lflap", "rflap")
+	Turn(lflap, x_axis, math.rad(45))
+	Turn(rflap, x_axis, math.rad(45))
 	-- Move us up to the drop position
 	Spring.MoveCtrl.Enable(unitID)
 	Spring.MoveCtrl.SetPosition(unitID, TX, TY + DROP_HEIGHT, TZ)
@@ -273,6 +276,8 @@ function Drop()
 		local lwing, rwing = piece("lwing", "rwing")
 		Turn(lwing, z_axis, math.rad(100), math.rad(30))
 		Turn(rwing, z_axis, math.rad(-100), math.rad(30))
+		Turn(lflap, x_axis, 0, math.rad(5))
+		Turn(rflap, x_axis, 0, math.rad(5))
 		--WaitForTurn(rwing, z_axis)
 	end
 	Spring.MoveCtrl.SetVelocity(unitID, 0, 0, 0)
