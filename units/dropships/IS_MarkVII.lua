@@ -34,32 +34,32 @@ local IS_MarkVII = {
 	--Makes unit use weapon from /weapons folder
 	weapons	= {	
 		[1] = {
-			name	= "ERMBL",
+			name	= "ERSBL",
 			maxAngleDif = 100,
 		},
 		[2] = {
-			name	= "ERMBL",
+			name	= "ERSBL",
 			maxAngleDif = 100,
 		},
 		[3] = {
 			name	= "ERMBL",
 			maxAngleDif = 100,
-			mainDir = [[-1 0 0]],
+			--mainDir = [[-1 0 0]],
 		},
 		[4] = {
 			name	= "ERMBL",
 			maxAngleDif = 100,
-			mainDir = [[-1 0 0]],
+			--mainDir = [[-1 0 0]],
 		},
 		[5] = {
 			name	= "ERMBL",
 			maxAngleDif = 100,
-			mainDir = [[1 0 0]],
+			--mainDir = [[1 0 0]],
 		},
 		[6] = {
 			name	= "ERMBL",
 			maxAngleDif = 100,
-			mainDir = [[1 0 0]],
+			--mainDir = [[1 0 0]],
 		},
 		[7] = {
 			name	= "ERMBL",
@@ -75,9 +75,7 @@ local IS_MarkVII = {
 	--Gets CEG effects from /gamedata/explosions folder
 	sfxtypes = {
 		explosiongenerators = {
-			"custom:heavy_jet_trail_blue",
-			"custom:medium_jet_trail_blue",
-			"custom:heavy_jet_trail",
+			--"custom:heavy_jet_trail",
 			"custom:dropship_main_engine_stage2",
 		},
 	},
