@@ -16,8 +16,7 @@ if gadgetHandler:IsSyncedCode() then
 --	SYNCED
 
 local modOptions = Spring.GetModOptions()
-local BASE_DELAY = tonumber(modOptions and modOptions.vehicle_delay or "3") -- base line delay, may be +{0,10}s
-
+local BASE_DELAY = tonumber((modOptions and modOptions.vehicle_delay) or "15") * 30 -- base line delay, may be +{0,10}s
 local BEACON_ID = UnitDefNames["beacon"].id
 local VPAD_ID = UnitDefNames["upgrade_vehiclepad"].id
 --local DelayCall = GG.Delay.DelayCall
@@ -67,7 +66,7 @@ end
 
 local function Deliver(unitID, teamID)
 	-- check VP didn't die or switch teams during delay
-	if Spring.ValidUnitID(unitID) and not Spring.GetUnitIsDead(unitID) and teamID == Spring.GetUnitTeam(unitID) then
+	if Spring.ValidUnitID(unitID) and (not Spring.GetUnitIsDead(unitID)) and (teamID == Spring.GetUnitTeam(unitID)) then
 		local vehInfo = RandomVehicle(teamID)
 		--Spring.Echo("Random vehicle:", UnitDefs[vehInfo.unitDefID].name, vehInfo.squadSize)
 		GG.DropshipDelivery(unitID, teamID, "is_markvii", {{[vehInfo.unitDefID] = vehInfo.squadSize}}, 0, nil, 1) 
@@ -75,7 +74,9 @@ local function Deliver(unitID, teamID)
 end
 
 function LCLeft(unitID, teamID) -- called by LC once it has left, to start countdown
-	GG.Delay.DelayCall(Deliver, {unitID, teamID}, BASE_DELAY + math.random(10) * 30)
+	if Spring.ValidUnitID(unitID) and (not Spring.GetUnitIsDead(unitID)) and (teamID == Spring.GetUnitTeam(unitID)) then
+		GG.Delay.DelayCall(Deliver, {unitID, teamID}, BASE_DELAY + math.random(10) * 30)
+	end
 end
 GG.LCLeft = LCLeft
 

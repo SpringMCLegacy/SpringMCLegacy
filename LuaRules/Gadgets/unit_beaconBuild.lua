@@ -178,7 +178,7 @@ function SpawnDropship(unitID, teamID, dropshipType, cargo, cost)
 	if Spring.ValidUnitID(unitID) and not Spring.GetUnitIsDead(unitID) and not outpostIDs[unitID] and Spring.GetUnitTeam(unitID) == teamID then
 		local tx,ty,tz = GetUnitPosition(unitID)
 		local dropshipID = CreateUnit(dropshipType, tx, ty, tz, "s", teamID)
-		Spring.SetUnitNoSelect(dropshipID, true)
+		--SendToUnsynced("VEHICLE_UNLOADED", dropshipID, teamID)
 		if type(cargo) == "table" then
 			for i, order in ipairs(cargo) do -- preserve order here
 				for orderDefID, count in pairs(order) do
@@ -338,13 +338,15 @@ function gadget:UnitDestroyed(unitID, unitDefID, teamID)
 		dropZoneBeaconIDs[teamID] = nil
 	elseif outpostDefs[unitDefID] then
 		local beaconID = beaconIDs[unitID]
-		SetUnitRulesParam(unitID, "beaconID", "")
-		env = Spring.UnitScript.GetScriptEnv(beaconID)
-		Spring.UnitScript.CallAsUnit(beaconID, env.ChangeType, false)
-		beaconIDs[unitID] = nil
-		outpostIDs[beaconID] = nil
-		-- Re-add upgrade options to beacon
-		AddUpgradeOptions(beaconID)
+		if beaconID then -- baconID can be nil if /give testing
+			SetUnitRulesParam(unitID, "beaconID", "")
+			env = Spring.UnitScript.GetScriptEnv(beaconID)
+			Spring.UnitScript.CallAsUnit(beaconID, env.ChangeType, false)
+			beaconIDs[unitID] = nil
+			outpostIDs[beaconID] = nil
+			-- Re-add upgrade options to beacon
+			AddUpgradeOptions(beaconID)
+		end
 	end
 	local wallInfo = wallInfos[unitID]
 	if wallInfo and not hotSwapIDs[unitID] then -- unit was a wall or gate piece, not being hotswapped
