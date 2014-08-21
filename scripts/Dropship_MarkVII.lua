@@ -357,26 +357,31 @@ end
 function script.Create()
 	StartThread(Drop)
 end
-
-function TouchDown() -- called when it hits the deck
+	
+function Crashed()
 	local x,y,z = Spring.GetUnitPosition(unitID)
 	for i = 1, 5 do
 		Spring.SpawnCEG("dropship_heavy_dust", x,y,z)
 	end
 	Spring.SpawnCEG("mech_jump_dust", x,y,z)
-	
-	local lwing, rwing = piece("lwing", "rwing")
-	Explode(lwing, SFX.FIRE + SFX.FALL)
-	Explode(rwing, SFX.FIRE + SFX.FALL)
-	Explode(body, SFX.SHATTER)
+	Sleep(3000)
 	-- This is a really awful hack , built on top of another hack. 
 	-- There's some issue with alwaysVisible not working (http://springrts.com/mantis/view.php?id=4483)
 	-- So instead make the owner the decal unit spawned by the teams starting beacon, as it can never die
 	local ownerID = Spring.GetTeamUnitsByDefs(teamID, UnitDefNames["decal_beacon"].id)[1] or unitID
 	local nukeID = Spring.SpawnProjectile(WeaponDefNames["meltdown"].id, {pos = {x,y,z}, owner = ownerID, team = teamID, ttl = 20})
+	Sleep(500)
+	local lwing, rwing = piece("lwing", "rwing")
+	Explode(lwing, SFX.FIRE + SFX.FALL)
+	Explode(rwing, SFX.FIRE + SFX.FALL)
+	Explode(body, SFX.SHATTER)
 	-- delay next dropship by extra 30 seconds
 	GG.Delay.DelayCall(GG.LCLeft, {beaconID, teamID}, 30 * 30)
 	Spring.DestroyUnit(unitID, true, false)
+end
+
+function TouchDown() -- called when it hits the deck
+	StartThread(Crashed)
 end
 
 local dead = false
