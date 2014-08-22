@@ -136,12 +136,20 @@ local function Upgrade(unitID, newTeam)
 	end
 end
 
-function gadget:UnitDestroyed(unitID, unitDefID, teamID)
+function gadget:UnitDestroyed(unitID, unitDefID, teamID, attackerID, attackerDefID, attackerTeam)
 	if AI_TEAMS[teamID] then
 		Spam(teamID)
-		if unitDefID == C3_ID or unitDefID == VPAD_ID then
+		if unitDefID == C3_ID then
+			teamUpgradeCounts[teamID][C3_ID] = teamUpgradeCounts[teamID][C3_ID] - 1
+			Upgrade(tonumber(Spring.GetUnitRulesParam(unitID, "beaconID")), teamID)
+		elseif unitDefID == VPAD_ID then
+			teamUpgradeCounts[teamID][VPAD_ID] = teamUpgradeCounts[teamID][VPAD_ID] - 1
 			Upgrade(tonumber(Spring.GetUnitRulesParam(unitID, "beaconID")), teamID)
 		end
+	end
+	if attackerTeam and AI_TEAMS[attackerTeam] then
+		Spam(attackerTeam)
+		if attackerID and (UnitDefs[attackerDefID].unittype == "mech") then Perk(attackerID) end
 	end
 end
 
@@ -189,6 +197,7 @@ local function Wander(unitID, cmd)
 		local offsetZ = math.random(50, 150)
 		offsetX = offsetX * -1 ^ (offsetX % 2)
 		offsetZ = offsetZ * -1 ^ (offsetZ % 2)
+		GG.Delay.DelayCall(Spring.GiveOrderToUnit, {unitID, CMD.MOVE_STATE, {2}, {}}, 1)
 		if cmd then
 			GG.Delay.DelayCall(Spring.GiveOrderToUnit, {unitID, cmd, {spot.x + offsetX, 0, spot.z + offsetZ}, {}}, 1)
 		end
@@ -200,7 +209,7 @@ local function Perk(unitID, perkID)
 	if not perkID then
 		local cmdDescs = Spring.GetUnitCmdDescs(unitID)
 		local cmdDesc = cmdDescs[math.random(1, #cmdDescs)]
-		while not cmdDesc.action:find("perk") do
+		while not (cmdDesc.action:find("perk") and not cmdDesc.disabled) do
 			cmdDesc = cmdDescs[math.random(1, #cmdDescs)]
 		end
 		perkID = cmdDesc.id
@@ -273,17 +282,6 @@ function gadget:UnitUnloaded(unitID, unitDefID, teamID, transportID, transportTe
 	end
 end
 
-function gadget:UnitDestroyed(unitID, unitDefID, teamID)
-	if AI_TEAMS[teamID] then
-		local ud = UnitDefs[unitDefID]
-		local cp = ud.customParams
-		if unitDefID == C3_ID then
-			teamUpgradeCounts[teamID][C3_ID] = teamUpgradeCounts[teamID][C3_ID] - 1
-		elseif unitDefID == VPAD_ID then
-			teamUpgradeCounts[teamID][VPAD_ID] = teamUpgradeCounts[teamID][VPAD_ID] - 1
-		end
-	end
-end
 
 function gadget:UnitGiven(unitID, unitDefID, newTeam, oldTeam)
 	if AI_TEAMS[newTeam] then

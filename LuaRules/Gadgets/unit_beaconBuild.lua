@@ -146,6 +146,7 @@ end
 
 -- REGULAR UPGRADES
 local function AddUpgradeOptions(unitID)
+	if not Spring.ValidUnitID(unitID) then return end
 	for outpostDefID, outpostInfo in pairs(outpostDefs) do
 		InsertUnitCmdDesc(unitID, outpostInfo.cmdDesc)
 	end

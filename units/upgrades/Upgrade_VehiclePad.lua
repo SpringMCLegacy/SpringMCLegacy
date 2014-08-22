@@ -5,7 +5,7 @@ local Upgrade_VehiclePad = Upgrade:New{
 	maxDamage           = 10000,
 	mass                = 5000,
 
-	collisionVolumeOffsets = [[0 -12 0]],
+	collisionVolumeOffsets = [[0 2 0]],
 	collisionVolumeScales = [[125 12 125]],
 	collisionVolumeType = "cylY",
 

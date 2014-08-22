@@ -446,7 +446,7 @@ do
 
   local maxBars = 20
   local bars    = {}
-  local barHeightL = barHeight + 2
+  local barHeightL = barHeight + 0.5
   local barStart   = -(barWidth + 1)
   local fBarHeightL = featureBarHeight + 2
   local fBarStart   = -(featureBarWidth + 1)
@@ -463,7 +463,7 @@ do
   end
 
   function DrawBars(fullText)
-    local yoffset = 0
+    local yoffset = 10
     for i=1,barsN do
       local barInfo = bars[i]
       DrawUnitBar(yoffset,barInfo.progress,barInfo.color)

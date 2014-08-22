@@ -10,6 +10,8 @@ Godde menu ordering bug
 
 capped vpad resulting in multiple LC at once
 
+Avenger that 'bugs out' without unloading leads to beacon that cannot upgrade??
+
 ---- WISHLIST
 
 --buildpics should show ECM / Jump / BAPs / AMS (NARC, TAG?)
@@ -27,6 +29,10 @@ BA-filled APC
 include or GG shared script functions between Mech/Vehicle/Turret
 
 sendtounsynced key events e.g. 'mech loses arm' to avoid polling rules params in widgets
+
+16:12 - [buffyverse] flozi: in the long term (polish! remember that buzzword?) we (ie. you) should make corpses with all possible lost limb combinations
+16:13 - [buffyverse] flozi: so script can leave correct one
+
 
 ---- BALANCE
 
