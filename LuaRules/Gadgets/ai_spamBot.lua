@@ -136,23 +136,6 @@ local function Upgrade(unitID, newTeam)
 	end
 end
 
-function gadget:UnitDestroyed(unitID, unitDefID, teamID, attackerID, attackerDefID, attackerTeam)
-	if AI_TEAMS[teamID] then
-		Spam(teamID)
-		if unitDefID == C3_ID then
-			teamUpgradeCounts[teamID][C3_ID] = teamUpgradeCounts[teamID][C3_ID] - 1
-			Upgrade(tonumber(Spring.GetUnitRulesParam(unitID, "beaconID")), teamID)
-		elseif unitDefID == VPAD_ID then
-			teamUpgradeCounts[teamID][VPAD_ID] = teamUpgradeCounts[teamID][VPAD_ID] - 1
-			Upgrade(tonumber(Spring.GetUnitRulesParam(unitID, "beaconID")), teamID)
-		end
-	end
-	if attackerTeam and AI_TEAMS[attackerTeam] then
-		Spam(attackerTeam)
-		if attackerID and (UnitDefs[attackerDefID].unittype == "mech") then Perk(attackerID) end
-	end
-end
-
 local function RunAndJump(unitID, unitDefID)
 	if not Spring.ValidUnitID(unitID) or Spring.GetUnitIsDead(unitID) then return end
 	local jumpLength = 900 -- TODO: unhardcode this
@@ -205,14 +188,30 @@ local function Wander(unitID, cmd)
 	end
 end
 
-local function Perk(unitID, perkID)
-	if not perkID then
+local availablePerks = {} -- availablePerks[unitID] = {cmdDescID = true, ...}
+local availablePerkCounts = {} -- availablePerkCounts[unitID] = number
+
+local function Perk(unitID, perkID, firstTime)
+	if firstTime then
+		availablePerks[unitID] = {}
 		local cmdDescs = Spring.GetUnitCmdDescs(unitID)
-		local cmdDesc = cmdDescs[math.random(1, #cmdDescs)]
-		while not (cmdDesc.action:find("perk") and not cmdDesc.disabled) do
-			cmdDesc = cmdDescs[math.random(1, #cmdDescs)]
+		for id, cmdDesc in pairs(cmdDescs) do
+			if cmdDesc.action:find("perk") then
+				availablePerks[unitID][id] = true
+				availablePerkCounts[unitID] = (availablePerkCounts[unitID] or 0) + 1
+			end
 		end
-		perkID = cmdDesc.id
+	end
+	if Spring.GetUnitExperience(unitID) < 1.5 then return end
+	if not perkID and availablePerkCounts[unitID] > 0 then
+		local cmdDescs = Spring.GetUnitCmdDescs(unitID)
+		local ID = math.random(1, #cmdDescs)
+		while not (availablePerks[unitID][ID]) do
+			ID = math.random(1, #cmdDescs)
+		end
+		perkID = cmdDescs[ID].id
+		availablePerks[unitID][ID] = false
+		availablePerkCounts[unitID] = availablePerkCounts[unitID] - 1
 	end
 	GG.Delay.DelayCall(Spring.GiveOrderToUnit, {unitID, perkID, {}, {}}, 1)
 end
@@ -270,18 +269,36 @@ function gadget:UnitUnloaded(unitID, unitDefID, teamID, transportID, transportTe
 			end
 		elseif cp.canjump then
 			--Spring.Echo("JUMP MECH!")
-			Perk(unitID, PERK_JUMP_RANGE)
+			Perk(unitID, PERK_JUMP_RANGE, true)
 			RunAndJump(unitID, unitDefID)
 		else
 			--Spring.Echo("VEHICLE OR MECH!")
 			Wander(unitID)
 			if cp.unittype == "mech" then
-				Perk(unitID)
+				Perk(unitID, nil, true)
 			end
 		end
 	end
 end
 
+function gadget:UnitDestroyed(unitID, unitDefID, teamID, attackerID, attackerDefID, attackerTeam)
+	if AI_TEAMS[teamID] then
+		Spam(teamID)
+		if unitDefID == C3_ID then
+			teamUpgradeCounts[teamID][C3_ID] = teamUpgradeCounts[teamID][C3_ID] - 1
+			Upgrade(tonumber(Spring.GetUnitRulesParam(unitID, "beaconID")), teamID)
+		elseif unitDefID == VPAD_ID then
+			teamUpgradeCounts[teamID][VPAD_ID] = teamUpgradeCounts[teamID][VPAD_ID] - 1
+			Upgrade(tonumber(Spring.GetUnitRulesParam(unitID, "beaconID")), teamID)
+		end
+	end
+	if attackerTeam and AI_TEAMS[attackerTeam] then
+		Spam(attackerTeam)
+		if attackerID and (UnitDefs[attackerDefID].customParams.unittype == "mech") then 
+			Perk(attackerID) 
+		end
+	end
+end
 
 function gadget:UnitGiven(unitID, unitDefID, newTeam, oldTeam)
 	if AI_TEAMS[newTeam] then
