@@ -72,19 +72,19 @@ end
 local MINUTE = 30 * 60
 local function AgeWeight(age)
 	local weight = "vtol"
-	-- make 5% of all deliveries VTOL
-	if math.random(100) < 5 then return weight end
+	-- make 10% of all deliveries VTOL
+	if math.random(100) < 10 then return weight end
 	-- 75% of the time, randomise the age so we don't always get the current max
 	if math.random(100) < 75 then
 		age = age * math.random()
 	end
-	if age < MINUTE then
+	if age < 2 * MINUTE then
 		weight = "light"
-	elseif age < 2 * MINUTE then
+	elseif age < 5 * MINUTE then
 		weight = "medium"
-	elseif age < 3 * MINUTE then
+	elseif age < 10 * MINUTE then
 		weight = "heavy"
-	else
+	else -- age > 10 * MINUTE
 		weight = "assault"
 	end
 	return weight
