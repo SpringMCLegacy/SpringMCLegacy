@@ -64,6 +64,33 @@ end
 
 local narcUnits = {}
 
+local PPC_DURATION = 5 * 30 -- 5 seconds
+local sensorTypes = {"radar", "seismic", "radarJammer"}
+local unitSensorRadii = {} -- unitSensorRadii[unitID] = {radar = a, seismic = b ...}
+local ppcUnits = {} -- ppcUnits[unitID] = gameframe
+
+local function FinishPPC(unitID)
+	if ppcUnits[unitID] and ppcUnits[unitID] <= (Spring.GetGameFrame() - PPC_DURATION) then
+		for _, sensorType in pairs(sensorTypes) do
+			Spring.SetUnitSensorRadius(unitID, sensorType, unitSensorRadii[sensorType])
+		end
+		ppcUnits[unitID] = nil
+	end
+end
+
+local function ApplyPPC(unitID)
+	if not ppcUnits[unitID] then -- not yet under PPC effects
+		unitSensorRadii[unitID] = {}
+		for _, sensorType in pairs(sensorTypes) do
+			-- perks change radii so can't rely on unitdef values
+			unitSensorRadii[sensorType] = Spring.GetUnitSensorRadius(unitID, sensorType)
+			Spring.SetUnitSensorRadius(unitID, sensorType, 0)
+		end
+	end
+	ppcUnits[unitID] = Spring.GetGameFrame()
+	GG.Delay.DelayCall(FinishPPC, {unitID}, PPC_DURATION)
+end
+
 local function GetUnitUnderJammer(unitID, teamID)
 	if not Spring.ValidUnitID(unitID) or Spring.GetUnitIsDead(unitID) then return true end
 	if not teamID then teamID = GetUnitTeam(unitID) end
@@ -114,33 +141,6 @@ local function DeNARC(unitID, allyTeam, force)
 		SetUnitRulesParam(unitID, "NARC", -1, {inlos = true})
 		ResetLosStates(unitID, allyTeam)
 	end
-end
-
-local PPC_DURATION = 5 * 30 -- 5 seconds
-local sensorTypes = {"radar", "seismic", "radarJammer"}
-local unitSensorRadii = {} -- unitSensorRadii[unitID] = {radar = a, seismic = b ...}
-local ppcUnits = {} -- ppcUnits[unitID] = gameframe
-
-local function FinishPPC(unitID)
-	if ppcUnits[unitID] and ppcUnits[unitID] <= (Spring.GetGameFrame() - PPC_DURATION) then
-		for _, sensorType in pairs(sensorTypes) do
-			Spring.SetUnitSensorRadius(unitID, sensorType, unitSensorRadii[sensorType])
-		end
-		ppcUnits[unitID] = nil
-	end
-end
-
-local function ApplyPPC(unitID)
-	if not ppcUnits[unitID] then -- not yet under PPC effects
-		unitSensorRadii[unitID] = {}
-		for _, sensorType in pairs(sensorTypes) do
-			-- perks change radii so can't rely on unitdef values
-			unitSensorRadii[sensorType] = Spring.GetUnitSensorRadius(unitID, sensorType)
-			Spring.SetUnitSensorRadius(unitID, sensorType, 0)
-		end
-	end
-	ppcUnits[unitID] = Spring.GetGameFrame()
-	GG.Delay.DelayCall(FinishPPC, {unitID}, PPC_DURATION)
 end
 
 function gadget:UnitEnteredRadar(unitID, unitTeam, allyTeam, unitDefID)
