@@ -28,6 +28,7 @@ local CL_Zorya = LightTank:New{
 		turretturnspeed = 75,
 		elevationspeed  = 100,
 		maxammo = {ac5 = 100, lrm = 120},
+		barrelrecoildist = {[1] = 5},
 		squadsize 		= 4,
     },
 }

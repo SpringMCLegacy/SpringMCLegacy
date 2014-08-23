@@ -31,6 +31,7 @@ local CL_Mithras = LightTank:New{
 		turretturnspeed = 100,
 		elevationspeed  = 150,
 		maxammo = {ac2 = 300},
+		barrelrecoildist = {[1] = 3},
 		squadsize 		= 4,
     },
 }
