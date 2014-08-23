@@ -75,6 +75,7 @@ local function FinishPPC(unitID)
 			Spring.SetUnitSensorRadius(unitID, sensorType, unitSensorRadii[sensorType])
 		end
 		ppcUnits[unitID] = nil
+		SetUnitRulesParam(unitID, "PPC_HIT", -1, {inlos = true})
 	end
 end
 
@@ -88,6 +89,7 @@ local function ApplyPPC(unitID)
 		end
 	end
 	ppcUnits[unitID] = Spring.GetGameFrame()
+	SetUnitRulesParam(unitID, "PPC_HIT", ppcUnits[unitID], {inlos = true})
 	GG.Delay.DelayCall(FinishPPC, {unitID}, PPC_DURATION)
 end
 
