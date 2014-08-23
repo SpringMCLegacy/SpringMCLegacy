@@ -213,7 +213,9 @@ local function Perk(unitID, perkID, firstTime)
 		availablePerks[unitID][ID] = false
 		availablePerkCounts[unitID] = availablePerkCounts[unitID] - 1
 	end
-	GG.Delay.DelayCall(Spring.GiveOrderToUnit, {unitID, perkID, {}, {}}, 1)
+	if perkID then
+		GG.Delay.DelayCall(Spring.GiveOrderToUnit, {unitID, perkID, {}, {}}, 1)
+	end
 end
 
 local function UnitIdleCheck(unitID, unitDefID, teamID)

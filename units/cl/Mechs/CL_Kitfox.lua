@@ -13,7 +13,6 @@ local CL_Kitfox = Light:New{
 	customparams = {
 		heatlimit		= 20,
 		torsoturnspeed	= 180,
-		maxammo 		= {ac5 = 50, srm = 80},
     },
 
 }
@@ -39,6 +38,7 @@ local Prime = CL_Kitfox:New{
 	
 	customparams = {
 		helptext		= "Armament: 1 x ER Large Beam Laser, 1 x UAC/5, 1 x Small Pulse Laser, 1 x SSRM-6 - Armor: 4 tons Ferro-Fibrous",
+		maxammo 		= {ac5 = 50, srm = 80},
     },
 }
 
