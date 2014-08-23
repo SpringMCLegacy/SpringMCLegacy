@@ -12,6 +12,8 @@ capped vpad resulting in multiple LC at once
 
 Avenger that 'bugs out' without unloading leads to beacon that cannot upgrade??
 
+spambot can upgrade a dropzone
+
 ---- WISHLIST
 
 --buildpics should show ECM / Jump / BAPs / AMS (NARC, TAG?)
