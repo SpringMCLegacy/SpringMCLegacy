@@ -14,6 +14,8 @@ Avenger that 'bugs out' without unloading leads to beacon that cannot upgrade??
 
 spambot can upgrade a dropzone
 
+refactor Widgets/mcl_gui_narc_marker.lua
+
 ---- WISHLIST
 
 --buildpics should show ECM / Jump / BAPs / AMS (NARC, TAG?)
