@@ -33,6 +33,7 @@ local IS_Po = LightTank:New{
 		elevationspeed  = 200,
 		wheelspeed      = 200,
 		maxammo 		= {ac10 = 60},
+		barrelrecoildist = {[1] = 5},
 		squadsize 		= 3,
     },
 }
