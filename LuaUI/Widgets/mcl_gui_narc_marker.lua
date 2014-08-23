@@ -171,7 +171,7 @@ function widget:GameFrame(n)
  end
  
 function widget:DrawWorldPreUnit()
-	glLineWidth(4.0)
+	glLineWidth(2.0)
 	glDepthTest(false)--true)
 	glPolygonOffset(-50, -2)
  
@@ -192,7 +192,7 @@ function widget:DrawWorldPreUnit()
 					end
 					if (radius) then
 						local diffTime = spDiffTimers(spGetTimer(), startTimer)
-						local alpha = 1.8 * math.abs(0.5 - (diffTime * 3.0 % 1.0))
+						local alpha = 1 * math.abs(0.5 - (diffTime * 3.0 % 1.0))
 						local x, y, z = spGetUnitBasePosition(unitID)
 						local gx, gy, gz = spGetGroundNormal(x, z)
 						local degrot = math.acos(gy) * 180 / math.pi
