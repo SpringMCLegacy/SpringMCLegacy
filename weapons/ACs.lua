@@ -40,7 +40,7 @@ local AC2 = AC_Class:New{
 	reloadtime              = 0.2,
 	size					= 0.75,
 	damage = {
-		default = 8, --40 DPS
+		default = 16, --40 DPS
 	},
 	customparams = {
 		heatgenerated		= 0.1,--0.5/s
@@ -79,10 +79,10 @@ local AC5 = AC_Class:New{
 	accuracy                = 1,
 	impactOnly				= true,
 	weaponVelocity          = 3000,
-	reloadtime              = 0.5,
+	reloadtime              = 1,
 	size					= 1,
 	damage = {
-		default = 50, --100 DPS
+		default = 100, --100 DPS
 	},
 	customparams = {
 		heatgenerated		= 0.5,--1/sec
@@ -98,9 +98,10 @@ local AC5_AA = AC5:New{
 	areaOfEffect            = 50,
 	collisionSize			= 15,
 	edgeEffectiveness		= 1,
+	reloadtime              = 0.5,
 	damage = {
-		default = 25, --50 DPS
-		vtol	= 50, --200% of default
+		default = 50, --50 DPS
+		vtol	= 100, --200% of default
 	},
 }
 
@@ -111,8 +112,8 @@ local RAC5 = AC5:New{
 	sprayangle				= 250,
 	weaponVelocity          = 1750,
 	burst					= 8,
-	burstrate				= 0.1,
-	reloadtime              = 0.8,
+	burstrate				= 0.2,
+	reloadtime              = 1.5,
 	customparams = {
 		heatgenerated		= 4,--1/sec
 		--cegflare			= "MISSILE_MUZZLEFLASH",
@@ -125,7 +126,7 @@ local UAC5 = AC5:New{
 	name                    = "Ultra AC/5",
 	range                   = 2000,
 	accuracy                = 50,
-	reloadtime              = 0.25,
+	reloadtime              = 0.5,
 	customparams = {
 		heatgenerated		= 0.56,--1.5/sec
     },
