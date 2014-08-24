@@ -1,4 +1,4 @@
-local CL_Elemental = Light:New{
+local CL_Elemental = VTOL:New{
 	corpse				= "CL_Elemental_X",
 	maxDamage           = 400,
 	mass                = 3500,
