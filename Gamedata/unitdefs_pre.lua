@@ -65,9 +65,9 @@ local Mech = Unit:New{
 
 local Light = Mech:New{
 	iconType			= "lightmech",
-	footprintX			= 3,
-	footprintZ 			= 3,
-	movementClass		= "LARGEMECH",
+	footprintX			= 1,
+	footprintZ 			= 1,
+	movementClass		= "SMALLMECH",
 }
 
 local Medium = Mech:New{
