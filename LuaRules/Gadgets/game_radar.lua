@@ -31,6 +31,9 @@ local SetUnitLosState 	= Spring.SetUnitLosState
 
 -- Unsynced Ctrl
 -- Constants
+
+local FRAME_FUDGE = 16
+
 local BEACON_ID = UnitDefNames["beacon"].id
 
 local NARC_ID = WeaponDefNames["narc"].id
@@ -54,12 +57,15 @@ local allyJammers = {}
 
 local allyTeams = Spring.GetAllyTeamList()
 local numAllyTeams = #allyTeams
+local teamsInAllyTeams = {}
+local deadTeams = {}
 
 for i = 1, numAllyTeams do
 	local allyTeam = allyTeams[i]
 	inRadarUnits[allyTeam] = {}
 	outRadarUnits[allyTeam] = {}
 	allyJammers[allyTeam] = {}
+	teamsInAllyTeams[allyTeam] = Spring.GetTeamList(allyTeam)
 end
 
 local narcUnits = {}
@@ -93,16 +99,8 @@ local function ApplyPPC(unitID)
 	GG.Delay.DelayCall(FinishPPC, {unitID}, PPC_DURATION)
 end
 
-local function GetUnitUnderJammer(unitID, teamID)
-	if not Spring.ValidUnitID(unitID) or Spring.GetUnitIsDead(unitID) then return true end
-	if not teamID then teamID = GetUnitTeam(unitID) end
-	local allyTeam = select(6, GetTeamInfo(teamID))
-	for jammerID, radius in pairs(allyJammers[allyTeam]) do
-		if Spring.ValidUnitID(jammerID) and not Spring.GetUnitIsDead(jammerID) and not ppcUnits[jammerID] then
-			if GetUnitSeparation(unitID, jammerID) < radius and GetUnitIsActive(jammerID) then return true end
-		end
-	end
-	return false
+local function GetUnitUnderJammer(unitID)
+	return (GetUnitRulesParam(unitID, "FRIENDLY_ECM") or 0) + FRAME_FUDGE >= GetGameFrame() 
 end
 GG.GetUnitUnderJammer = GetUnitUnderJammer
 
@@ -113,9 +111,7 @@ end
 GG.IsUnitNARCed = IsUnitNARCed
 
 local function IsUnitTAGed(unitID)
-	local TAGFrame = GetUnitRulesParam(unitID, "TAG") or 0
-	local gameFrame = GetGameFrame()
-	return TAGFrame >= gameFrame - 5
+	return (GetUnitRulesParam(unitID, "TAG") or 0) + FRAME_FUDGE >= GetGameFrame()
 end
 GG.IsUnitTAGed = IsUnitTAGed
 
@@ -162,7 +158,6 @@ function gadget:UnitLeftRadar(unitID, unitTeam, allyTeam, unitDefID)
 end
 
 function gadget:UnitPreDamaged(unitID, unitDefID, unitTeam, damage, paralyzer, weaponID, projectileID, attackerID, attackerDefID, attackerTeam)
-	if damage == 0 then Spring.Echo("BULLSHIT!") end
 	-- Don't allow any damage to beacons or dropzones
 	if unitDefID == BEACON_ID or UnitDefs[unitDefID].name:find("dropzone") or UnitDefs[unitDefID].customParams.decal then return 0 end
 	-- ignore none weapons
@@ -210,6 +205,7 @@ function gadget:UnitDestroyed(unitID, unitDefID, teamID)
 	end
 	narcUnits[unitID] = nil
 	ppcUnits[unitID] = nil
+	SetUnitRulesParam(unitID, "FRIENDLY_ECM", 0)
 end
 
 function gadget:UnitGiven(unitID, unitDefID, newTeam, oldTeam)
@@ -241,10 +237,27 @@ function gadget:GameFrame(n)
 			local teamID = GetUnitTeam(unitID)
 			if GetUnitUnderJammer(unitID, teamID) then DeNARC(unitID, data.allyTeam, true) end
 		end]]
+		for jammerID, radius in pairs(allyJammers[allyTeam]) do
+			if Spring.ValidUnitID(jammerID) and not Spring.GetUnitIsDead(jammerID) and not ppcUnits[jammerID] and GetUnitIsActive(jammerID) then
+			local x,y,z = Spring.GetUnitPosition(jammerID)
+			for _, teamID in pairs(teamsInAllyTeams[allyTeam]) do
+				if not deadTeams[teamID] then
+					local nearbyUnits = Spring.GetUnitsInCylinder(x, z, radius, teamID)
+					for i = 1, #nearbyUnits do
+						SetUnitRulesParam(nearbyUnits[i], "FRIENDLY_ECM", n)
+					end
+				end
+			end
+		end
+	end
 	end
 	if Spring.IsGameOver() then
 		gadgetHandler:RemoveGadget()
 	end
+end
+
+function gadget:TeamDied(teamID)
+	deadTeams[teamID] = true
 end
 
 else

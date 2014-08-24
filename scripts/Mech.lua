@@ -530,16 +530,6 @@ end
 
 function script.BlockShot(weaponID, targetID, userTarget)
 	if amsIDs[weaponID] then return false end
-	local jammable = jammableIDs[weaponID]
-	if jammable then
-		if targetID then
-			local jammed = GetUnitUnderJammer(targetID) and (not IsUnitNARCed(targetID)) and (not IsUnitTAGed(targetID))
-			if jammed then
-				--Spring.Echo("Can't fire weapon " .. weaponID .. " as target is jammed")
-				return true 
-			end
-		end
-	end
 	local minRange = minRanges[weaponID]
 	if minRange then
 		local distance
@@ -553,6 +543,19 @@ function script.BlockShot(weaponID, targetID, userTarget)
 			end
 		end
 		if distance < minRange then return true end
+	end
+	local jammable = jammableIDs[weaponID]
+	if jammable then
+		if targetID then
+			local jammed = GetUnitUnderJammer(targetID) and (not IsUnitNARCed(targetID)) and (not IsUnitTAGed(targetID))
+			if jammed then
+				--Spring.Echo("Can't fire weapon " .. weaponID .. " as target is jammed")
+				Spring.SetUnitRulesParam(unitID, "MISSILE_TARGET_JAMMED", Spring.GetGameFrame())
+				return true 
+			else
+				Spring.SetUnitRulesParam(targetID, "ENEMY_MISSILE_LOCK", Spring.GetGameFrame())
+			end
+		end
 	end
 	return false
 end
