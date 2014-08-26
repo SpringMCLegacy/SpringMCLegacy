@@ -1,6 +1,6 @@
-local CL_Elemental = VTOL:New{
+local CL_Elemental = Light:New{
 	corpse				= "CL_Elemental_X",
-	maxDamage           = 400,
+	maxDamage           = 4000,
 	mass                = 3500,
 	buildCostEnergy     = 35,
 	buildCostMetal      = 16920,
@@ -9,6 +9,10 @@ local CL_Elemental = VTOL:New{
 	acceleration    = 1.7,
 	brakeRate       = 0.1,
 	turnRate 		= 3000,
+	--cruisealt = 50,
+	footprintX = 1,
+	footprintZ = 1,
+	script = "Infantry.lua",
 
 	customparams = {
 		helptext		= "Armament: Small Pulse Laser, SRM-2, Microlaser",
@@ -16,6 +20,7 @@ local CL_Elemental = VTOL:New{
 		torsoturnspeed	= 380,
 		maxammo 		= {srm = 40},
 		canjump			= "1",
+		unittype = "infantry",
     },
 }
 	

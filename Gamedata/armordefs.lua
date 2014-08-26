@@ -4,6 +4,7 @@ local armorDefs = {
 	beacons = {
 		"beacon",
 	},
+	infantry = {},
 	light = {},
 	medium = {},
 	heavy = {},
@@ -39,6 +40,8 @@ for unitName, unitDef in pairs(DEFS.unitDefs) do
 			typeString = vtol and "vtol" or aero and "aero" or "vehicle"
 		elseif towerType then
 			typeString = "tower"
+		elseif basicType == "infantry" then
+			typeString = basicType
 		end
 		--Spring.Echo(unitName, typeString)
 		table.insert(armorDefs[typeString], unitName)

@@ -135,6 +135,7 @@ local function Wander(unitID, cmd)
 	end
 end
 
+GG.Wander = Wander
 --[[local function UnitIdleCheck(unitID, unitDefID, teamID)
 	if Spring.GetUnitIsDead(unitID) then return false end
 	local cmdQueueSize = Spring.GetCommandQueue(unitID, -1, false) or 0
@@ -147,7 +148,7 @@ end]]
 
 	
 function gadget:UnitIdle(unitID, unitDefID, teamID)
-	if vehiclesDefCache[unitDefID] then -- a vehicle
+	if vehiclesDefCache[unitDefID] and not UnitDefs[unitDefID].name == "apc" then -- a vehicle
 		--GG.Delay.DelayCall(UnitIdleCheck, {unitID, unitDefID, teamID}, 10)
 		GG.Delay.DelayCall(Wander, {unitID}, 1)
 	end
@@ -179,6 +180,7 @@ function gadget:UnitGiven(unitID, unitDefID, newTeam, oldTeam)
 		vehiclePads[unitID] = Spring.GetGameFrame()
 	end
 end
+
 
 else
 --	UNSYNCED
