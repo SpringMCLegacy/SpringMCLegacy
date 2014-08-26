@@ -355,6 +355,25 @@ function script.HitByWeapon(x, z, weaponID, damage)
 	return 0
 end
 
+local cargo = {}
+local link = piece("link")
+local function Unload(targetID)
+	Spring.GiveOrderToUnit(unitID, CMD.STOP, {}, {})
+	for i = 1, #cargo do
+		local cargoID = cargo[i]
+		Spring.UnitScript.AttachUnit(link, cargoID)
+		Sleep(60)
+		Spring.UnitScript.DropUnit(cargoID)
+		Spring.GiveOrderToUnit(cargoID, CMD.ATTACK, {targetID}, {})
+		cargo[i] = nil
+	end
+end
+
+function script.TransportPickup(cargoID)
+	cargo[#cargo + 1] = cargoID
+	Spring.UnitScript.AttachUnit(-1, cargoID)
+end
+
 function script.Create()
 	StartThread(SmokeUnit, {body})
 	StartThread(SmokeLimb, "turret", turret)
@@ -478,6 +497,7 @@ function script.BlockShot(weaponID, targetID, userTarget)
 			end
 		end
 	end
+	if #cargo > 0 then StartThread(Unload, targetID) end
 	return false
 end
 

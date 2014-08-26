@@ -36,28 +36,30 @@ function gadget:UnitCreated(unitID, unitDefID, teamID, builderID)
 	if (ud.speed > 0 or ud.canFly) and not cp.dropship then 
 		local pieces = Spring.GetUnitPieceList(unitID)
 		local unitType = cp.unittype
-		for i, pieceName in pairs(pieces) do
-			--Spring.Echo(i, pieceName)
-			if not accept[unitType][pieceName] and i ~= "n" then
-				--Spring.Echo("piece " .. i .. " called " .. pieceName .. " to be disabled")
-				SetPieceColVol (unitID, i - 1, false, 0,0,0, 0,0,0, -1, 0)
-			else 
-				local scaleX, scaleY, scaleZ, offsetX, offsetY, offsetZ, volumeType, _, primaryAxis = GetPieceColVol (unitID, i-1)
-				local scaleMult = (cp.limbscale or LIMB_SCALE)
-				if pieceName == "torso" or pieceName == "pelvis" then 
-					scaleMult = (cp.torsoscale or TORSO_SCALE) 
-				elseif pieceName == "body" then
-					scaleMult = (cp.bodyscale or BODY_SCALE) 
-				elseif pieceName == "turret" or pieceName == "launcher_1" or pieceName == "turret_2" then
-					scaleMult = (cp.turretscale or TURRET_SCALE)
-				end
-				SetPieceColVol(unitID, i - 1, true, 
-								scaleMult*scaleX, scaleMult*scaleY, scaleMult*scaleZ, 
-								offsetX, offsetY, offsetZ, volumeType, primaryAxis)
-				if pieceName == "rotor" then -- replace with y-cylinder
+		if accept[unitType] then
+			for i, pieceName in pairs(pieces) do
+				--Spring.Echo(i, pieceName)
+				if not accept[unitType][pieceName] and i ~= "n" then
+					--Spring.Echo("piece " .. i .. " called " .. pieceName .. " to be disabled")
+					SetPieceColVol (unitID, i - 1, false, 0,0,0, 0,0,0, -1, 0)
+				else 
+					local scaleX, scaleY, scaleZ, offsetX, offsetY, offsetZ, volumeType, _, primaryAxis = GetPieceColVol (unitID, i-1)
+					local scaleMult = (cp.limbscale or LIMB_SCALE)
+					if pieceName == "torso" or pieceName == "pelvis" then 
+						scaleMult = (cp.torsoscale or TORSO_SCALE) 
+					elseif pieceName == "body" then
+						scaleMult = (cp.bodyscale or BODY_SCALE) 
+					elseif pieceName == "turret" or pieceName == "launcher_1" or pieceName == "turret_2" then
+						scaleMult = (cp.turretscale or TURRET_SCALE)
+					end
 					SetPieceColVol(unitID, i - 1, true, 
-									scaleMult*70, scaleMult*1, scaleMult*70,  -- use a constant radius
-									0, offsetY, 0, 1, 1)
+									scaleMult*scaleX, scaleMult*scaleY, scaleMult*scaleZ, 
+									offsetX, offsetY, offsetZ, volumeType, primaryAxis)
+					if pieceName == "rotor" then -- replace with y-cylinder
+						SetPieceColVol(unitID, i - 1, true, 
+										scaleMult*70, scaleMult*1, scaleMult*70,  -- use a constant radius
+										0, offsetY, 0, 1, 1)
+					end
 				end
 			end
 		end
