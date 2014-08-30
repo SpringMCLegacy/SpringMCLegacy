@@ -40,6 +40,7 @@ jumpClassGroups = {
 	"is_catapult_cpltc4",
 	"is_osiris_osr3d",
 	"is_osiris_osr4d",
+	"is_uziel_uzl2s",
 	"cl_mistlynx_prime",
 	"cl_nova_prime",
 	"cl_summoner_c",
