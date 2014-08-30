@@ -1,38 +1,99 @@
-weaponDef = {
-	name                    = "Gauss Rifle",
+local Gauss_Class = Weapon:New{
 	weaponType              = "Cannon",
-	explosionGenerator    	= "custom:Gauss_Hit",
 	cegTag					= "RailTrail",
-	soundHit              	= [[Gauss_Hit]],
-	soundStart            	= [[Gauss_Fire]],
-	burnblow				= false, 	--Bullets explode at range limit.
-	collideFriendly			= true,
-	noSelfDamage            = true,
 	turret                  = true,
-	ballistic				= 1,
-	range                   = 2200,
 	accuracy                = 10,
+	impactOnly				= true,
 	targetMoveError			= 0.01,
-	areaOfEffect            = 5,
 	weaponVelocity          = 4000,
-	reloadtime              = 6,
-	renderType				= 1,
 	size					= 2,
-	sizeDecay				= 0,
 	separation				= 2, 		--Distance between each plasma particle.
 	stages					= 250, 		--Number of particles used in one plasma shot.
---	AlphaDecay				= 0.05, 		--How much a plasma particle is more transparent than the previous particle. 
-	rgbcolor				= "0.75 0.75 1.0",
+	rgbcolor				= [[0.75 0.75 1.0]],
 	intensity				= 0.5,
-	damage = {
-		default = 1350, --225 DPS
-	},
+	
 	customparams = {
-		heatgenerated		= "6",--1/s
 		cegflare			= "GAUSS_MUZZLEFLASH",
 		weaponclass			= "projectile",
 		ammotype			= "gauss",
     },
 }
+	
+local LightGauss = Gauss_Class:New = {
+	name                    = "L. Gauss Rifle",
+	explosionGenerator    	= "custom:LightGauss_Hit",
+	soundHit              	= "LightGauss_Hit",
+	soundStart            	= "LightGauss_Fire",
+	range                   = 2500,
+	reloadtime              = 4,
+	size					= 1.5,
+	stages					= 200, 		--Number of particles used in one plasma shot.
+	damage = {
+		default = 480, --120 DPS
+	},
+	customparams = {
+		heatgenerated		= 4,
+    },
+}
 
-return lowerkeys({ Gauss = weaponDef })
+local Gauss = Gauss:Class:New = {
+	name                    = "Gauss Rifle",
+	explosionGenerator    	= "custom:Gauss_Hit",
+	soundHit              	= "Gauss_Hit",
+	soundStart            	= "Gauss_Fire",
+	range                   = 2200,
+	reloadtime              = 6,
+
+	damage = {
+		default = 1350, --225 DPS
+	},
+	customparams = {
+		heatgenerated		= 6,
+    },
+}
+
+local HeavyGauss = Gauss:Class:New = {
+	name                    = "H. Gauss Rifle",
+	explosionGenerator    	= "custom:HeavyGauss_Hit",
+	soundHit              	= "HeavyGauss_Hit",
+	soundStart            	= "HeavyGauss_Fire",
+	range                   = 1800,
+	weaponVelocity          = 2500,
+	reloadtime              = 12,
+	--DynDamageExp			= 1,
+	--DynDamageMin			= 1200,--100 DPS 
+	--DynDamageRange			= 1200,--Weapon will decrease in damage up to this range
+	
+	damage = {
+		default = 4500,--375 DPS
+	},
+	customparams = {
+		heatgenerated		= 24,
+    },
+}
+
+local HAG30 = HeavyGauss:New = {
+	name                    = "HAG 30",
+	explosionGenerator    	= "custom:MG_Hit",
+	soundHit              	= "GEN_Explode1",
+	accuracy                = 200,
+	areaOfEffect            = 1,
+	reloadtime              = 5,
+	sprayAngle				= 100,
+	projectiles				= 30,
+	size					= 0.5,
+	stages					= 50, 		--Number of particles used in one plasma shot.
+	damage = {
+		default = 100, --600 DPS
+	},
+	customparams = {
+		heatgenerated		= 30,
+    },
+}
+
+return lowerkeys({ 
+	LightGauss = LightGauss,
+	Gauss = Gauss,
+	HeavyGauss = HeavyGauss,
+	HAG30 = HAG30,
+})
