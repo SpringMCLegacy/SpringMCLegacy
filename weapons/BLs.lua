@@ -4,7 +4,6 @@ local BeamLaser_Class = Weapon:New{
 	explosionGenerator		= "custom:burn",
 	--soundHit              	= [[GEN_Beam_Explode1]],
 	soundTrigger			= true,
-	burnblow				= true, 	--Bullets explode at range limit.
 	tolerance				= 100,
 	turret                  = true,
 	targetMoveError			= 0.1,
