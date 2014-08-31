@@ -78,6 +78,10 @@ local ERSBL = SBL:New{
 
 local CERSBL = ERSBL:New{
 	name                    = "CERSLaser",
+	range                   = 900,
+	damage = {
+		default = 20, --50 DPS
+	},
 }
 
 local MBL = BeamLaser_Class:New{
