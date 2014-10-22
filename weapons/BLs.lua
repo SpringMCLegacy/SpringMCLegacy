@@ -1,6 +1,7 @@
 local BeamLaser_Class = Weapon:New{
 	weaponType				= "BeamLaser",
 	beamBurst				= true,
+	burstRate				= 0.01,
 	explosionGenerator		= "custom:burn",
 	--soundHit              	= [[GEN_Beam_Explode1]],
 	soundTrigger			= true,
@@ -56,7 +57,6 @@ local SBL = BeamLaser_Class:New{
 	beamTime           		= 0.35,
 	beamTTL           		= 0.35,
 	burst					= 10,
-	burstrate				= 0.01,
 	rgbcolor				= [[1.0 0.4 0.4]],
 	damage = {
 		default = 12.5, --30 DPS, 125 damage per reload
