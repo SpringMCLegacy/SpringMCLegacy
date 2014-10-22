@@ -19,7 +19,7 @@ local Gauss_Class = Weapon:New{
     },
 }
 	
-local LightGauss = Gauss_Class:New = {
+local LightGauss = Gauss_Class:New{
 	name                    = "L. Gauss Rifle",
 	explosionGenerator    	= "custom:LightGauss_Hit",
 	soundHit              	= "LightGauss_Hit",
@@ -36,7 +36,7 @@ local LightGauss = Gauss_Class:New = {
     },
 }
 
-local Gauss = Gauss:Class:New = {
+local Gauss = Gauss_Class:New{
 	name                    = "Gauss Rifle",
 	explosionGenerator    	= "custom:Gauss_Hit",
 	soundHit              	= "Gauss_Hit",
@@ -52,7 +52,7 @@ local Gauss = Gauss:Class:New = {
     },
 }
 
-local HeavyGauss = Gauss:Class:New = {
+local HeavyGauss = Gauss_Class:New{
 	name                    = "H. Gauss Rifle",
 	explosionGenerator    	= "custom:HeavyGauss_Hit",
 	soundHit              	= "HeavyGauss_Hit",
@@ -72,7 +72,7 @@ local HeavyGauss = Gauss:Class:New = {
     },
 }
 
-local HAG30 = HeavyGauss:New = {
+local HAG30 = HeavyGauss:New{
 	name                    = "HAG 30",
 	explosionGenerator    	= "custom:MG_Hit",
 	soundHit              	= "GEN_Explode1",
