@@ -33,20 +33,27 @@ local teamVehicleDefs = {} -- e.g. vehicleDefs[teamID] = IS_VehicleDefs or C_Veh
 
 local vehiclePads = {} -- uvehiclePads[unitID] = unloadFrame
 
+local unitSquads = {} -- unitSquads[unitID] = squadNum
+local teamSquadCounts = {} -- teamSquadCounts[teamID] = numberOfSquads
+local teamSquadSpots = {} -- teamSquadSpots[teamID][squadNum] = spotNum
+local teamSquads = {}
 
 function gadget:Initialize()
 	for unitDefID, unitDef in pairs(UnitDefs) do
-		if unitDef.customParams.unittype == "vehicle" then
-			vehiclesDefCache[unitDefID] = true
-			local mass = unitDef.mass
-			local weight = unitDef.canFly and "vtol" or GG.GetWeight(mass)
-			local squadSize = unitDef.customParams.squadsize or 1
-			if unitDef.name:sub(1,2) == "is" then -- Inner Sphere
-				if not IS_VehicleDefs[weight] then IS_VehicleDefs[weight] = {} end
-				table.insert(IS_VehicleDefs[weight], {["unitDefID"] = unitDefID, ["squadSize"] = squadSize})
-			else -- clans
-				if not C_VehicleDefs[weight] then C_VehicleDefs[weight] = {} end
-				table.insert(C_VehicleDefs[weight], {["unitDefID"] = unitDefID, ["squadSize"] = squadSize})
+		if unitDef.customParams.unittype then
+			local basicType = unitDef.customParams.unittype
+			if basicType == "vehicle" or basicType == "infantry" then
+				vehiclesDefCache[unitDefID] = true
+				local mass = unitDef.mass
+				local weight = (basicType == "infantry" and "infantry") or (unitDef.canFly and "vtol") or GG.GetWeight(mass)
+				local squadSize = unitDef.customParams.squadsize or 1
+				if unitDef.name:sub(1,2) == "is" then -- Inner Sphere
+					if not IS_VehicleDefs[weight] then IS_VehicleDefs[weight] = {} end
+					table.insert(IS_VehicleDefs[weight], {["unitDefID"] = unitDefID, ["squadSize"] = squadSize})
+				else -- clans
+					if not C_VehicleDefs[weight] then C_VehicleDefs[weight] = {} end
+					table.insert(C_VehicleDefs[weight], {["unitDefID"] = unitDefID, ["squadSize"] = squadSize})
+				end
 			end
 		end
 	end
@@ -62,6 +69,7 @@ function gadget:Initialize()
 		end
 		--sides[teamID] = side
 		teamVehicleDefs[teamID] = (side == "clans" and C_VehicleDefs) or IS_VehicleDefs
+		teamSquadSpots[teamID] = {}
 	end
 end
 
@@ -71,9 +79,11 @@ end
 
 local MINUTE = 30 * 60
 local function AgeWeight(age)
-	local weight = "vtol"
-	-- make 10% of all deliveries VTOL
-	if math.random(100) < 10 then return weight end
+	local weight = "infantry"
+	-- make 10% infantry (well not quite)
+	if math.random(100) < 95 then return weight end
+	-- make 10% of all deliveries VTOL (well not quite)
+	if math.random(100) < 10 then return "vtol" end
 	-- 75% of the time, randomise the age so we don't always get the current max
 	if math.random(100) < 75 then
 		age = age * math.random()
@@ -107,6 +117,19 @@ function LCLeft(unitID, teamID) -- called by LC once it has left, to start count
 end
 GG.LCLeft = LCLeft
 
+
+local function NewSquad(unitID, teamID)
+	local squadNum = (teamSquadCounts[teamID] or 0) + 1
+	teamSquadCounts[teamID] = squadNum
+	teamSquadSpots[teamID][squadNum] = math.random(1, #flagSpots)
+	Spring.Echo("SQUAD", squadNum, teamSquadSpots[teamID][squadNum])
+end
+
+local function SetSquad(cargoID, teamID)
+	unitSquads[cargoID] = teamSquadCounts[teamID]
+end
+GG.SetSquad = SetSquad
+
 function gadget:UnitCreated(unitID, unitDefID, teamID)
 	if unitDefID == BEACON_ID then
 		local x,_,z = Spring.GetUnitPosition(unitID)
@@ -114,16 +137,21 @@ function gadget:UnitCreated(unitID, unitDefID, teamID)
 	elseif unitDefID == VPAD_ID then
 		-- for /give, UnitUnloaded will set it again in 'real' play
 		vehiclePads[unitID] = Spring.GetGameFrame()	
+	elseif unitDefID == UnitDefNames["is_markvii"].id then
+		NewSquad(unitID, teamID)
 	end
 end
 
 function gadget:UnitDestroyed(unitID, unitDefID, teamID)
 	-- TODO: remove from list to spawn at
+	unitSquads[unitID] = nil
 end
 
 local function Wander(unitID, cmd)
 	if Spring.ValidUnitID(unitID) then
-		local spot = flagSpots[math.random(1, #flagSpots)]
+		local teamID = Spring.GetUnitTeam(unitID)
+		local spotNum = teamSquadSpots[teamID][unitSquads[unitID]] or math.random(1, #flagSpots)
+		local spot = flagSpots[spotNum]
 		local offsetX = math.random(50, 150)
 		local offsetZ = math.random(50, 150)
 		offsetX = offsetX * -1 ^ (offsetX % 2)
@@ -148,9 +176,21 @@ end]]
 
 	
 function gadget:UnitIdle(unitID, unitDefID, teamID)
-	if vehiclesDefCache[unitDefID] and not UnitDefs[unitDefID].name == "apc" then -- a vehicle
+	--Spring.Echo("UnitIdle", UnitDefs[unitDefID].name)
+	if vehiclesDefCache[unitDefID] then -- a vehicle
+		--Spring.Echo("Vehicle UnitIdle", UnitDefs[unitDefID].name)
 		--GG.Delay.DelayCall(UnitIdleCheck, {unitID, unitDefID, teamID}, 10)
-		GG.Delay.DelayCall(Wander, {unitID}, 1)
+		local unitSquad = unitSquads[unitID]
+		teamSquadSpots[teamID][unitSquad] = math.random(1, #flagSpots)
+		if UnitDefs[unitDefID].customParams.unittype == "infantry" then
+			for memberID, squadID in pairs(unitSquads) do -- TODO: this is gross and potentially really slow
+				if squadID == unitSquad then
+					GG.RunAndJump(memberID, unitDefID, CMD.FIGHT, teamSquadSpots[teamID][unitSquads[unitID]])
+				end
+			end
+		else
+			GG.Delay.DelayCall(Wander, {unitID}, 1)
+		end
 	end
 end
 
@@ -163,6 +203,9 @@ function gadget:UnitUnloaded(unitID, unitDefID, teamID, transportID, transportTe
 			for _, spot in pairs(flagSpots) do
 				GG.Delay.DelayCall(Spring.GiveOrderToUnit, {unitID, CMD.PATROL, {spot.x, 0, spot.z}, {"shift"}}, 30)
 			end
+		elseif ud.customParams.unittype == "infantry" then
+			Spring.Echo("Infantry! Run And Jump")
+			GG.RunAndJump(unitID, unitDefID, CMD.FIGHT, teamSquadSpots[teamID][unitSquads[unitID]], true)
 		else
 			--Spring.Echo("VEHICLE!")
 			Wander(unitID)
@@ -187,7 +230,7 @@ else
 
 function VehicleUnloaded(eventID, unitID, teamID)
 	if teamID == Spring.GetMyTeamID() then
-		Spring.SetUnitNoSelect(unitID, true)
+		--Spring.SetUnitNoSelect(unitID, true)
 	end
 end
 

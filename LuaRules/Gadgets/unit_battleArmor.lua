@@ -6,7 +6,7 @@ function gadget:GetInfo()
 		date		= "16/08/14",
 		license 	= "GNU GPL v2",
 		layer		= 10,
-		enabled	= true,	--	loaded by default?
+		enabled	= false --true,	--	loaded by default?
 	}
 end
 
@@ -71,7 +71,7 @@ end]]
 local idleCount = {}
 
 function gadget:UnitIdle(unitID, unitDefID, teamID)
-	if UnitDefs[unitDefID].name == "cl_elemental_prime" then
+	if UnitDefs[unitDefID].customParams.unittype == "infantry" then
 		idleCount[unitID] = (idleCount[unitID] or 0) + 1
 		if idleCount[unitID] == 2 then
 			Spring.Echo("Elemental Idle", unitID)
