@@ -136,14 +136,15 @@ local function Upgrade(unitID, newTeam)
 	end
 end
 
-local function RunAndJump(unitID, unitDefID)
+local function RunAndJump(unitID, unitDefID, cmdID, spotNum, replace)
 	if not Spring.ValidUnitID(unitID) or Spring.GetUnitIsDead(unitID) then return end
+	cmdID = cmdID or CMD.MOVE
 	local jumpLength = 900 -- TODO: unhardcode this
 	local jumpReload = 10
 	local speed = UnitDefs[unitDefID].speed
 	local distCovered = speed * jumpReload
 	-- find target
-	local spot = flagSpots[math.random(1, #flagSpots)]
+	local spot = flagSpots[spotNum or math.random(1, #flagSpots)]
 	local offsetX = math.random(50, 150)
 	local offsetZ = math.random(50, 150)
 	offsetX = offsetX * -1 ^ (offsetX % 2)
@@ -163,15 +164,16 @@ local function RunAndJump(unitID, unitDefID)
 	for i = 1, numSteps, 2 do
 		x = x + targetVector.x*distCovered
 		z = z + targetVector.z*distCovered
-		GG.Delay.DelayCall(Spring.GiveOrderToUnit, {unitID, CMD.MOVE, {x, Spring.GetGroundHeight(x,z), z}, {"shift"}}, 1)
+		GG.Delay.DelayCall(Spring.GiveOrderToUnit, {unitID, cmdID, {x, Spring.GetGroundHeight(x,z), z}, {replace and "" or "shift"}}, 1)
 		x = x + targetVector.x*jumpLength
 		z = z + targetVector.z*jumpLength
 		local y = Spring.GetGroundHeight(x,z)
-		GG.Delay.DelayCall(Spring.GiveOrderToUnit, {unitID, y > 0 and CMD_JUMP or CMD.MOVE, {x, y, z}, {"shift"}}, 1)
+		GG.Delay.DelayCall(Spring.GiveOrderToUnit, {unitID, y > 0 and CMD_JUMP or cmdID, {x, y, z}, {"shift"}}, 1)
 	end
 	-- make sure last command is a jump onto beacon
 	GG.Delay.DelayCall(Spring.GiveOrderToUnit, {unitID, CMD_JUMP, {target.x, Spring.GetGroundHeight(target.x, target.z), target.z}, {"shift"}}, 1)
 end
+GG.RunAndJump = RunAndJump
 
 local function Wander(unitID, cmd)
 	if Spring.ValidUnitID(unitID) then
