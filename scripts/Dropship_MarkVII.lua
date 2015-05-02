@@ -51,6 +51,7 @@ function LoadCargo(cargoID, callerID)
 	Spring.UnitScript.AttachUnit(-1, cargoID)
 	numCargo = numCargo + 1
 	cargo[numCargo] = cargoID
+	GG.SetSquad(cargoID, teamID)
 end
 
 

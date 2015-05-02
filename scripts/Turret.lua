@@ -17,6 +17,7 @@ local IsUnitTAGed = GG.IsUnitTAGed
 include "smokeunit.lua"
 
 -- Info from lusHelper gadget
+local amsIDs = info.amsIDs
 local missileWeaponIDs = info.missileWeaponIDs
 local flareOnShots = info.flareOnShots
 local jammableIDs = info.jammableIDs

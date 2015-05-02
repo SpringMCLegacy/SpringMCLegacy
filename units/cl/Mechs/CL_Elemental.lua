@@ -21,6 +21,7 @@ local CL_Elemental = Light:New{
 		maxammo 		= {srm = 40},
 		canjump			= "1",
 		unittype = "infantry",
+		squadsize		= 5,
     },
 }
 	
@@ -42,4 +43,5 @@ local Prime = CL_Elemental:New{
 }
 return lowerkeys({
 	["CL_Elemental_Prime"] = Prime,
+	["IS_Standard_BA"] = Prime,
 })

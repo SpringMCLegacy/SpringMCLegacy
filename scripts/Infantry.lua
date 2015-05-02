@@ -153,7 +153,6 @@ end
 
 function StartJump()
 	jumping = true
-	currHeatLevel = currHeatLevel + jumpHeat
 	StartThread(anim_StartJump)
 	local x,y,z = GetUnitPosition(unitID)
 	SpawnCEG("mech_jump_dust", x,y,z)
@@ -172,7 +171,7 @@ end
 function StopJump()
 	jumping = false
 	local x,y,z = GetUnitPosition(unitID)
-	SpawnCEG("mech_jump_dust", x,y,z)
+	--SpawnCEG("mech_jump_dust", x,y,z)
 	StartThread(anim_StopJump)
 end
 
