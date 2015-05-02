@@ -46,6 +46,7 @@ jumpClassGroups = {
 	"cl_summoner_c",
 	"cl_shadowcat_prime",
 	"cl_elemental_prime",
+	"is_standard_ba",
 	},
 
 	-- iammissingstuff = {--bad category
