@@ -340,7 +340,7 @@ end
 
 -- a bit convoluted for this but might be           
 -- useful for lua unit scripts
-local function UpdateCoroutines() 
+local function UpdateCoroutines()
   local newCoroutines = {} 
   for i=1, #coroutines do 
     local co = coroutines[i] 
