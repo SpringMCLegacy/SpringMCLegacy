@@ -102,6 +102,7 @@ local CLPL = LPL:New{
 
 return lowerkeys({ 
 	SPL = SPL,
+	InfSPL = SPL:New{range = 200},
 	CSPL = CSPL,
 	MPL = MPL,
 	CMPL = CMPL,

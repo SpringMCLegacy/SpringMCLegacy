@@ -60,6 +60,7 @@ local SRM6 = SRM_Class:New{
 
 return lowerkeys({ 
 	SRM2 = SRM2,
+	InfSRM2 = SRM2:New{range = 200},
 	SRM4 = SRM4,
 	SRM6 = SRM6,
 })

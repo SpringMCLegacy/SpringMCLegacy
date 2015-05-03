@@ -159,8 +159,11 @@ function StartJump()
 end
 
 function Jumping()-- Gets called throughout by gadget
+	while true do
 	for i = 1, info.jumpjets do -- emit JumpJetTrail
 		EmitSfx(jets[i], SFX.CEG)
+	end
+	Sleep(10)
 	end
 end
 
@@ -200,8 +203,20 @@ apc = nil
 	Spring.GiveOrderToUnit(apc, CMD.WAIT, {}, {})
 end]]
 
+local function bob()
+	while true do
+		Spring.MoveCtrl.SetGunshipMoveTypeData(unitID, "wantedHeight", 50 + math.random(-50, 50))
+		Sleep(1000 + math.random(-500, 500))
+	end
+end
+
 function script.Create()
 	apc = Spring.GetUnitTransporter(unitID)
+	for i = 1,2 do
+		Spring.SetUnitWeaponState(unitID, i, "range", 500)
+	end
+	StartThread(bob)
+	StartThread(Jumping)
 end
 
 local function WeaponCanFire(weaponID)

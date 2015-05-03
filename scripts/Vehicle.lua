@@ -501,6 +501,8 @@ function script.BlockShot(weaponID, targetID, userTarget)
 	return false
 end
 
+local runonce = false
+
 function script.FireWeapon(weaponID)
 	ChangeHeat(firingHeats[weaponID])
 	if barrels[weaponID] and barrelRecoils[weaponID] then
@@ -514,6 +516,10 @@ function script.FireWeapon(weaponID)
 	end
 	if not missileWeaponIDs[weaponID] and not flareOnShots[weaponID] then
 		EmitSfx(flares[weaponID], SFX.CEG + weaponID)
+	end
+	if unitDef.name:find("apc") and not runonce then
+		runonce = true
+		GG.LaunchDroneAsWeapon(unitID, teamID, select(3, Spring.GetUnitWeaponTarget(unitID, weaponID)), 1, 5, turret, 0, 90)
 	end
 end
 

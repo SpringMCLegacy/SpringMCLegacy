@@ -9,11 +9,29 @@ local CL_Elemental = Light:New{
 	acceleration    = 1.7,
 	brakeRate       = 0.1,
 	turnRate 		= 3000,
-	--cruisealt = 50,
+	
 	footprintX = 1,
 	footprintZ = 1,
 	script = "Infantry.lua",
 
+	cruisealt = 50,
+	canfly = true,
+	hoverattack = true,
+	airhoverfactor = 10,
+	canLoopbackAttack = true,
+	usesmoothmesh = false,
+	
+		maxAcc			= 0.2,
+	maxBank			= 0.07,
+	maxPitch		= 0.0007,
+	maxAileron		= 0.0045,
+	maxElevator		= 0.004,
+	maxRudder		= 0.2,
+	wingAngle		= 0.1,
+	wingDrag		= 0.07,
+	myGravity		= 0.8,
+	turnRadius		= 100,
+	
 	customparams = {
 		helptext		= "Armament: Small Pulse Laser, SRM-2, Microlaser",
 		heatlimit		= 20,
@@ -31,10 +49,10 @@ local Prime = CL_Elemental:New{
 	objectName        	= "CL_Elemental.s3o",
 	weapons 		= {	
 		[1] = {
-			name	= "CSPL",
+			name	= "InfSPL",
 		},
 		[2] = {
-			name	= "SRM2",
+			name	= "InfSRM2",
 		},
 		[3] = {
 			name	= "Microlaser",

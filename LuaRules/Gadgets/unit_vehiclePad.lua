@@ -173,6 +173,7 @@ local function UnitIdleCheck(unitID, unitDefID, teamID)
 		return
 	end
 	local unitSquad = unitSquads[unitID]
+	if not unitSquad then return end
 	teamSquadSpots[teamID][unitSquad] = math.random(1, #flagSpots)
 	if UnitDefs[unitDefID].customParams.unittype == "infantry" then
 		for memberID, squadID in pairs(unitSquads) do -- TODO: this is gross and potentially really slow, what we really want is for squad members to guard leader, but use JJ to keep up
