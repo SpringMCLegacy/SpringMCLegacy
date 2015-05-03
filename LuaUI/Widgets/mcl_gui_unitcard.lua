@@ -593,6 +593,8 @@ function widget:Update(s)
 			else
 				unitType = "tank"
 			end
+		elseif unitType == "infantry" then -- for now treat as mech
+			unitType = "mech"
 		end
 
 		if unitType then
