@@ -26,10 +26,8 @@ local name
   
 jumpCategory = { 
 	baseclass = {
-		range = 600, height = 200, speed = 6,  reload = 10,  aaShootMe = false, delay = 30, cobscript = false,rotateMidAir = true},	
-	-- category containining only optional tags for testing error code only.
-	-- iammissingstuff ={
-	-- 	reload	= 10, aaShootMe	= false, },	
+		range = 600, height = 200, speed = 6,  reload = 10,  aaShootMe = false, delay = 30, cobscript = false,rotateMidAir = true
+	},	
 }
 
 jumpClassGroups = {
@@ -48,14 +46,6 @@ jumpClassGroups = {
 	"cl_elemental_prime",
 	"is_standard_ba",
 	},
-
-	-- iammissingstuff = {--bad category
-	-- "puffthemagic",--bad unit left for testing purposes
-	-- },
-	
-	-- idontexist = {--nonexistant category
-	-- "chillichilli",--bad unit left for testing purposes
-	-- },
 }
 
 ------------------------------------------------------------------------------------------------------------------------------------------------
@@ -66,31 +56,12 @@ jumpClassGroups = {
 --		speed
 --		reload
 ------------------------------------------------------------------------------------------------------------------------------------------------	
---[[overCategory = {
-	is_chimera = { cobscript = false},
-	is_catapult = { cobscript = false},
-	is_osiris = { cobscript = false},
-	cl_mistlynx = { cobscript = false},
-	cl_nova = { cobscript = false},
-	cl_summoner = { cobscript = false},
-	cl_shadowcat = { cobscript = false},
- --[[noruas = {
-    reload = 0,  },
-	
- core_slicer = {
-    height = 150, speed = 4,  reload = 20,  aaShootMe = false,  },
-	
- corcan = {
-    speed = 4,},
-	
- chicken_leaper = {
-    range = 600, reload = 1, },
-	
- corsumo = {
-    delay = 30, height = 100, range = 300, reload = 13, cobscript = false, rotateMidAir = false},
-	-- corpyro = {
-		-- range = 400, height = 200, speed = 6,  reload = 10, },
-}--]]
+overCategory = {
+  cl_elemental_prime = {
+    range = 1200, height = 150, speed = 12,  reload = 5,},
+  is_standard_ba = {
+    range = 1200, height = 150, speed = 12,  reload = 5,},
+}
 ------------------------------------------------------------------------------------------------------------------------------------------------
 -- this is just an error checking block, not our configuration area
 -- I know n^2, bite me... see error checking comment

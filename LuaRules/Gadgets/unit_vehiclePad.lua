@@ -81,7 +81,7 @@ local MINUTE = 30 * 60
 local function AgeWeight(age)
 	local weight = "infantry"
 	-- make 10% infantry (well not quite)
-	if math.random(100) < 95 then return weight end
+	if math.random(100) < 100 then return weight end
 	-- make 10% of all deliveries VTOL (well not quite)
 	if math.random(100) < 10 then return "vtol" end
 	-- 75% of the time, randomise the age so we don't always get the current max
@@ -164,33 +164,34 @@ local function Wander(unitID, cmd)
 end
 
 GG.Wander = Wander
---[[local function UnitIdleCheck(unitID, unitDefID, teamID)
+
+local function UnitIdleCheck(unitID, unitDefID, teamID)
 	if Spring.GetUnitIsDead(unitID) then return false end
-	local cmdQueueSize = Spring.GetCommandQueue(unitID, -1, false) or 0
+	local cmdQueueSize = Spring.GetCommandQueue(unitID, 0) or 0
 	if cmdQueueSize > 0 then 
 		--Spring.Echo("I'm so not idle!") 
 		return
 	end
-	GG.Delay.DelayCall(Wander, {unitID}, 1)
-end]]
+	local unitSquad = unitSquads[unitID]
+	teamSquadSpots[teamID][unitSquad] = math.random(1, #flagSpots)
+	if UnitDefs[unitDefID].customParams.unittype == "infantry" then
+		for memberID, squadID in pairs(unitSquads) do -- TODO: this is gross and potentially really slow, what we really want is for squad members to guard leader, but use JJ to keep up
+			if squadID == unitSquad then
+				GG.Delay.DelayCall(GG.RunAndJump, {memberID, unitDefID, CMD.FIGHT, teamSquadSpots[teamID][unitSquads[unitID]]}, 1)
+			end
+		end
+	else
+		GG.Delay.DelayCall(Wander, {unitID}, 1)
+	end		
+end
 
-	
+
 function gadget:UnitIdle(unitID, unitDefID, teamID)
 	--Spring.Echo("UnitIdle", UnitDefs[unitDefID].name)
 	if vehiclesDefCache[unitDefID] then -- a vehicle
-		--Spring.Echo("Vehicle UnitIdle", UnitDefs[unitDefID].name)
-		--GG.Delay.DelayCall(UnitIdleCheck, {unitID, unitDefID, teamID}, 10)
-		local unitSquad = unitSquads[unitID]
-		teamSquadSpots[teamID][unitSquad] = math.random(1, #flagSpots)
-		if UnitDefs[unitDefID].customParams.unittype == "infantry" then
-			for memberID, squadID in pairs(unitSquads) do -- TODO: this is gross and potentially really slow
-				if squadID == unitSquad then
-					GG.RunAndJump(memberID, unitDefID, CMD.FIGHT, teamSquadSpots[teamID][unitSquads[unitID]])
-				end
-			end
-		else
-			GG.Delay.DelayCall(Wander, {unitID}, 1)
-		end
+		local commandQueue = Spring.GetCommandQueue(unitID)
+		for k, v in pairs(commandQueue) do Spring.Echo(k,v) end
+		GG.Delay.DelayCall(UnitIdleCheck, {unitID, unitDefID, teamID}, 10)
 	end
 end
 
@@ -205,7 +206,7 @@ function gadget:UnitUnloaded(unitID, unitDefID, teamID, transportID, transportTe
 			end
 		elseif ud.customParams.unittype == "infantry" then
 			Spring.Echo("Infantry! Run And Jump")
-			GG.RunAndJump(unitID, unitDefID, CMD.FIGHT, teamSquadSpots[teamID][unitSquads[unitID]], true)
+			--GG.RunAndJump(unitID, unitDefID, CMD.FIGHT, teamSquadSpots[teamID][unitSquads[unitID]], true)
 		else
 			--Spring.Echo("VEHICLE!")
 			Wander(unitID)
@@ -219,7 +220,7 @@ end
 function gadget:UnitGiven(unitID, unitDefID, newTeam, oldTeam)
 	-- TODO check if VPad is capped
 	if unitDefID == VPAD_ID then
-		GG.Delay.DelayCall(Deliver, {unitID, newTeam}, BASE_DELAY + math.random(10) * 30)
+		GG.Delay.DelayCall(Deliver, {unitID, newTeam}, BASE_DELAY + math.floor(math.random(1) * 30))
 		vehiclePads[unitID] = Spring.GetGameFrame()
 	end
 end

@@ -139,8 +139,8 @@ end
 local function RunAndJump(unitID, unitDefID, cmdID, spotNum, replace)
 	if not Spring.ValidUnitID(unitID) or Spring.GetUnitIsDead(unitID) then return end
 	cmdID = cmdID or CMD.MOVE
-	local jumpLength = 900 -- TODO: unhardcode this
-	local jumpReload = 10
+	local jumpLength = GG.jumpDefs[unitDefID].range
+	local jumpReload = GG.jumpDefs[unitDefID].reload
 	local speed = UnitDefs[unitDefID].speed
 	local distCovered = speed * jumpReload
 	-- find target
@@ -158,20 +158,28 @@ local function RunAndJump(unitID, unitDefID, cmdID, spotNum, replace)
 	local numSteps = math.floor(distToTarget / (jumpLength + distCovered)) * 2
 	targetVector.x = targetVector.x / targetVectorLength
 	targetVector.z = targetVector.z / targetVectorLength
-	
+
 	local x = cx
 	local z = cz
+	local y = Spring.GetGroundHeight(x,z)
+	local orderArray = {}
 	for i = 1, numSteps, 2 do
 		x = x + targetVector.x*distCovered
 		z = z + targetVector.z*distCovered
-		GG.Delay.DelayCall(Spring.GiveOrderToUnit, {unitID, cmdID, {x, Spring.GetGroundHeight(x,z), z}, {replace and "" or "shift"}}, 1)
+		y = Spring.GetGroundHeight(x,z)
+		local order = {cmdID, {x, y, z}, {replace and "" or "shift"}}
+		table.insert(orderArray, order)
 		x = x + targetVector.x*jumpLength
 		z = z + targetVector.z*jumpLength
-		local y = Spring.GetGroundHeight(x,z)
-		GG.Delay.DelayCall(Spring.GiveOrderToUnit, {unitID, y > 0 and CMD_JUMP or cmdID, {x, y, z}, {"shift"}}, 1)
+		y = Spring.GetGroundHeight(x,z)
+		order = {y > 0 and CMD_JUMP or cmdID, {x, y, z}, {"shift"}}
+		table.insert(orderArray, order)
 	end
 	-- make sure last command is a jump onto beacon
-	GG.Delay.DelayCall(Spring.GiveOrderToUnit, {unitID, CMD_JUMP, {target.x, Spring.GetGroundHeight(target.x, target.z), target.z}, {"shift"}}, 1)
+	order = {CMD_JUMP, {target.x, Spring.GetGroundHeight(target.x, target.z), target.z}, {"shift"}}
+	table.insert(orderArray, order)
+	--GG.Delay.DelayCall(Spring.GiveOrderToUnit, {unitID, CMD_JUMP, {target.x, Spring.GetGroundHeight(target.x, target.z), target.z}, {"shift"}}, 1)
+	Spring.GiveOrderArrayToUnitArray({unitID}, orderArray)
 end
 GG.RunAndJump = RunAndJump
 
