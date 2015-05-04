@@ -129,7 +129,8 @@ for weaponID = 1, info.numWeapons do
 	SetUnitRulesParam(unitID, "weapon_" .. weaponID, "active")
 end
 
-local function RestoreAfterDelay(unitID)
+local function RestoreAfterDelay()
+	Spring.SetUnitRulesParam(unitID, "fighting", 1)
 	Sleep(RESTORE_DELAY)
 	if turret then
 		Turn(turret, y_axis, 0, TURRET_SPEED)
@@ -140,6 +141,8 @@ local function RestoreAfterDelay(unitID)
 	for id in pairs(launchers) do
 		Turn(launchers[id], x_axis, 0, ELEVATION_SPEED)
 	end
+	Spring.SetUnitRulesParam(unitID, "fighting", 0)
+	GG.ComeHome(unitID)
 end
 
 -- non-local function called by gadgets/game_ammo.lua

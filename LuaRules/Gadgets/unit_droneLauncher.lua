@@ -35,6 +35,8 @@ local droneTypes = {
 	[1] = "cl_elemental_prime",
 	[2] = "is_standard_ba",
 }
+local droneOwners = {} -- droneOwners[ownerID] = {drone_1_ID, ...}
+local ownerStatus = {} -- ownerStatus[ownerID] = true -- implies drones out
 
 local function LaunchDroneAsWeapon(u, team, target, drone, number, piece, rotation, pitch)
 	local x,y,z,dx,dy,dz
@@ -75,10 +77,34 @@ function gadget:GameFrame(f)
 			--Spring.Echo(x,y,z, d.target)
 			--Spring.SetUnitMoveGoal(nu, x,y,z, 150)
 			Spring.MoveCtrl.Disable(nu)
+			ownerStatus[d.parent] = true
+			if not droneOwners[d.parent] then
+				droneOwners[d.parent] = {}
+			end
+			table.insert(droneOwners[d.parent], nu)
 		end
 		spawnList[i]=nil
 	end
 end
+
+function ComeHome(unitID)
+	local drones = droneOwners[unitID]
+	if drones and ownerStatus[unitID] then
+		-- check if APC is targetting anything
+		local target, userTarget, params = Spring.GetUnitWeaponTarget(unitID, 1)
+		Spring.Echo("Idle", drones, ownerStatus[unitID], target)
+		if target and target > 0 then -- there is a target, redirect drones
+			if target == 1 then -- a unit
+				Spring.GiveOrderToUnitArray(drones, CMD.ATTACK, params, {})	
+			end
+		elseif Spring.GetUnitRulesParam(unitID, "fighting") == 0 then -- no target, come home
+		Spring.Echo("COME HOME")
+			local x,y,z = Spring.GetUnitPosition(unitID)
+			Spring.GiveOrderToUnitArray(drones, CMD.MOVE, {x,y,z}, {})
+		end
+	end
+end
+GG.ComeHome = ComeHome
 
 function gadget:Initialize()
 	gadgetHandler:RegisterGlobal("LaunchDroneWeapon", LaunchDroneAsWeapon)
