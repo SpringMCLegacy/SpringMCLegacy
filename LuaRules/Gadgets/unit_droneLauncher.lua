@@ -97,7 +97,7 @@ function ComeHome(unitID)
 		--Spring.Echo("Idle", drones, ownerStatus[unitID], target)
 		if target and target > 0 then -- there is a target, redirect drones
 			if target == 1 then -- a unit
-				Spring.GiveOrderToUnitArray(drones, CMD.ATTACK, params, {})	
+				Spring.GiveOrderToUnitArray(drones, CMD.ATTACK, {params}, {})	
 			end
 		elseif Spring.GetUnitRulesParam(unitID, "fighting") == 0 then -- no target, come home
 			--Spring.Echo("COME HOME")

@@ -203,7 +203,9 @@ end]]
 
 local function bob()
 	while true do
-		Spring.MoveCtrl.SetGunshipMoveTypeData(unitID, "wantedHeight", 50 + math.random(-50, 50))
+		if not Spring.GetUnitIsDead(unitID) then
+			Spring.MoveCtrl.SetGunshipMoveTypeData(unitID, "wantedHeight", 50 + math.random(-50, 50))
+		end
 		Sleep(1000 + math.random(-500, 500))
 	end
 end
