@@ -1,7 +1,7 @@
 local CL_Elemental = Light:New{
 	corpse				= "CL_Elemental_X",
-	maxDamage           = 4000,
-	mass                = 3500,
+	maxDamage           = 500,
+	mass                = 500,
 	buildCostEnergy     = 35,
 	buildCostMetal      = 16920,
 	maxVelocity		= 4.3, --86kph/20
