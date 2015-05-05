@@ -34,7 +34,10 @@ function Unit:New(newAttribs, concatName)
 	return newClass
 end
 
-local Weapon = {}
+ local Weapon = {
+avoidFeature= false,
+collideFeature= true,
+}
 function Weapon:New(newAttribs, concatName)
 	local newClass = {}
 	inherit(newClass, newAttribs)
