@@ -208,7 +208,7 @@ function gadget:UnitCreated(unitID, unitDefID, teamID, builderID)
 			info.leftArmMasterID = GetArmMasterWeapon(leftArmIDs)
 			info.rightArmIDs = rightArmIDs
 			info.leftArmIDs = leftArmIDs
-		elseif cp.unittype == "vehicle" then
+		elseif cp.unittype == "vehicle" or cp.unittype == "apc" then
 			info.turretIDs = turretIDs
 		end
 		
@@ -316,7 +316,7 @@ function gadget:GamePreload()
 			info.maxAmmo["coolant"] = 100
 			info.ammoTypes[-1] = "coolant"
 			info.burstLengths[-1] = 20	
-		elseif cp.unittype == "vehicle" then
+		elseif cp.unittype == "vehicle"  or cp.unittype == "apc" then
 			info.limbHPs["turret"] = unitDef.health * 1.0
 			if unitDef.canFly then
 				info.limbHPs["lwing"] =	 unitDef.health * 0.5

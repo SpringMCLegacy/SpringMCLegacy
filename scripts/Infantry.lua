@@ -159,11 +159,9 @@ function StartJump()
 end
 
 function Jumping()-- Gets called throughout by gadget
-	while true do
 	for i = 1, info.jumpjets do -- emit JumpJetTrail
-		EmitSfx(jets[i], SFX.CEG)
-	end
-	Sleep(10)
+		Turn(jets[i], x_axis, math.rad(100))
+		GG.EmitLupsSfx(unitID, "dropship_vertical_exhaust", jets[i], {id = "vExhaustsJets", width = 25, length = 70})
 	end
 end
 

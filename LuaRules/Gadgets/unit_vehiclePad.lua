@@ -42,10 +42,10 @@ function gadget:Initialize()
 	for unitDefID, unitDef in pairs(UnitDefs) do
 		if unitDef.customParams.unittype then
 			local basicType = unitDef.customParams.unittype
-			if basicType == "vehicle" or basicType == "infantry" then
+			if basicType == "vehicle" or basicType == "apc" or basicType == "infantry" then
 				vehiclesDefCache[unitDefID] = true
 				local mass = unitDef.mass
-				local weight = (basicType == "infantry" and "infantry") or (unitDef.canFly and "vtol") or GG.GetWeight(mass)
+				local weight = (basicType == "apc" and "apc") or (unitDef.canFly and "vtol") or GG.GetWeight(mass)
 				local squadSize = unitDef.customParams.squadsize or 1
 				if unitDef.name:sub(1,2) == "is" then -- Inner Sphere
 					if not IS_VehicleDefs[weight] then IS_VehicleDefs[weight] = {} end
@@ -79,9 +79,9 @@ end
 
 local MINUTE = 30 * 60
 local function AgeWeight(age)
-	local weight = "infantry"
-	-- make 10% infantry (well not quite)
-	--if math.random(100) < 100 then return weight end
+	local weight = "apc"
+	-- make 10% infantry APC (well not quite)
+	if math.random(100) < 10 then return weight end
 	-- make 10% of all deliveries VTOL (well not quite)
 	if math.random(100) < 10 then return "vtol" end
 	-- 75% of the time, randomise the age so we don't always get the current max

@@ -41,11 +41,12 @@ local APC = IS_Galleon:New{
 	transportSize = 1,
 	objectName        	= "APC.s3o",
 	customparams = {
-		--unittype = "apc",
+		unittype 		= "apc",
+		squadsize 		= 1,
 	}
 }
 
 return lowerkeys({
 	["IS_Galleon"] = IS_Galleon,
-	["APC"] = APC,
+	["IS_APC"] = APC,
 })

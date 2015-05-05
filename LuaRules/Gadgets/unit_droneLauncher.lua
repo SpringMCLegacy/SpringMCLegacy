@@ -94,13 +94,13 @@ function ComeHome(unitID)
 	if drones and ownerStatus[unitID] then
 		-- check if APC is targetting anything
 		local target, userTarget, params = Spring.GetUnitWeaponTarget(unitID, 1)
-		Spring.Echo("Idle", drones, ownerStatus[unitID], target)
+		--Spring.Echo("Idle", drones, ownerStatus[unitID], target)
 		if target and target > 0 then -- there is a target, redirect drones
 			if target == 1 then -- a unit
 				Spring.GiveOrderToUnitArray(drones, CMD.ATTACK, params, {})	
 			end
 		elseif Spring.GetUnitRulesParam(unitID, "fighting") == 0 then -- no target, come home
-		Spring.Echo("COME HOME")
+			--Spring.Echo("COME HOME")
 			local x,y,z = Spring.GetUnitPosition(unitID)
 			Spring.GiveOrderToUnitArray(drones, CMD.LOAD_ONTO, {unitID}, {})
 		end
@@ -121,10 +121,10 @@ function gadget:UnitLoaded(unitID, unitDefID, teamID, transportID)
 			local droneDead = Spring.GetUnitIsDead(droneID)
 			if droneDead == nil then droneDead = true end -- horrible
 			allDead = allDead and droneDead
-			Spring.Echo(allDead, droneID, Spring.GetUnitIsDead(droneID))
+			--Spring.Echo(allDead, droneID, Spring.GetUnitIsDead(droneID))
 		end
 		if allDead then
-			Spring.Echo("All my boys are back in!")
+			--Spring.Echo("All my boys are back in!")
 			ownerStatus[transportID] = false
 			droneOwners[transportID] = {}
 			Spring.SetUnitRulesParam(transportID, "dronesout", 0)

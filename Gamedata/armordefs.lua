@@ -33,7 +33,7 @@ for unitName, unitDef in pairs(DEFS.unitDefs) do
 			local assault = not light and not medium and not heavy
 			local weight = light and "light" or medium and "medium" or heavy and "heavy" or "assault"
 			typeString = weight
-		elseif basicType == "vehicle" then
+		elseif basicType == "vehicle" or basicType == "apc" then
 			-- sort into vehicle, vtol, aero
 			local vtol = unitDef.hoverAttack
 			local aero = unitDef.canFly and not vtol
