@@ -32,13 +32,14 @@ if (gadgetHandler:IsSyncedCode()) then
 --SYNCED
 local spawnList={}
 local droneTypes = {
-	[1] = "cl_elemental_prime",
-	[2] = "is_standard_ba",
+	["cl_elemental_prime"] = true,
+	["is_standard_ba"] = true,
 }
 local droneOwners = {} -- droneOwners[ownerID] = {drone_1_ID, ...}
 local ownerStatus = {} -- ownerStatus[ownerID] = true -- implies drones out
 
 local function LaunchDroneAsWeapon(u, team, target, drone, number, piece, rotation, pitch)
+	if ownerStatus[u] then return end -- drones are already out, ignore
 	local x,y,z,dx,dy,dz
 	local lus = Spring.UnitScript.GetScriptEnv(u)
 	if lus then
@@ -55,11 +56,12 @@ local function LaunchDroneAsWeapon(u, team, target, drone, number, piece, rotati
 			})
 		end
 	end
+	Spring.SetUnitRulesParam(u, "dronesout", 1)
 end
 
 function gadget:GameFrame(f)
 	for i,d in pairs(spawnList) do
-		local nu = spCreateUnit(droneTypes[d.drone],d.x,d.y,d.z,0,d.team)
+		local nu = spCreateUnit(d.drone,d.x,d.y,d.z,0,d.team)
 		if nu then
 			local h = spGetHeadingFromVector(d.dx,d.dz)
 			Spring.MoveCtrl.Enable(nu)
@@ -68,7 +70,7 @@ function gadget:GameFrame(f)
 			Spring.MoveCtrl.SetRelativeVelocity(nu,0,0,4)
 			if d.target > 0 then
 				spGiveOrderToUnit(nu, CMD_ATTACK, {d.target},{})
-			elseif d.target == -1 and not (droneTypes[d.drone]:find("torpedo")) then
+			elseif d.target == -1 then
 				spGiveOrderToUnit(nu, CMD_GUARD, {d.parent},{})
 			else
 				spGiveOrderToUnit(nu, CMD_MOVE, {d.x-45+math.random(90),d.y,d.z-45+math.random(90)},{})
@@ -100,11 +102,35 @@ function ComeHome(unitID)
 		elseif Spring.GetUnitRulesParam(unitID, "fighting") == 0 then -- no target, come home
 		Spring.Echo("COME HOME")
 			local x,y,z = Spring.GetUnitPosition(unitID)
-			Spring.GiveOrderToUnitArray(drones, CMD.MOVE, {x,y,z}, {})
+			Spring.GiveOrderToUnitArray(drones, CMD.LOAD_ONTO, {unitID}, {})
 		end
 	end
 end
 GG.ComeHome = ComeHome
+
+function gadget:UnitLoaded(unitID, unitDefID, teamID, transportID)
+	local unitDef = UnitDefs[unitDefID]
+	if droneTypes[unitDef.name] then
+		Spring.DestroyUnit(unitID, false, true) --not selfd, reclaimed
+		-- FIXME: the following loop is really terrible
+		-- instead need a table where we can remove drones when they have died or returned
+		-- but that can't be passed to GiveOrderArrayToUnitArray
+		-- is there GiveOrderArrayToUnitMap?
+		local allDead = true
+		for i, droneID in pairs(droneOwners[transportID]) do
+			local droneDead = Spring.GetUnitIsDead(droneID)
+			if droneDead == nil then droneDead = true end -- horrible
+			allDead = allDead and droneDead
+			Spring.Echo(allDead, droneID, Spring.GetUnitIsDead(droneID))
+		end
+		if allDead then
+			Spring.Echo("All my boys are back in!")
+			ownerStatus[transportID] = false
+			droneOwners[transportID] = {}
+			Spring.SetUnitRulesParam(transportID, "dronesout", 0)
+		end
+	end
+end
 
 function gadget:Initialize()
 	gadgetHandler:RegisterGlobal("LaunchDroneWeapon", LaunchDroneAsWeapon)

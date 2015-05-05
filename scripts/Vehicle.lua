@@ -360,7 +360,7 @@ end
 
 local cargo = {}
 local link = piece("link")
-local function Unload(targetID)
+--[[local function Unload(targetID)
 	Spring.GiveOrderToUnit(unitID, CMD.STOP, {}, {})
 	for i = 1, #cargo do
 		local cargoID = cargo[i]
@@ -370,7 +370,7 @@ local function Unload(targetID)
 		Spring.GiveOrderToUnit(cargoID, CMD.ATTACK, {targetID}, {})
 		cargo[i] = nil
 	end
-end
+end]]
 
 function script.TransportPickup(cargoID)
 	cargo[#cargo + 1] = cargoID
@@ -500,11 +500,9 @@ function script.BlockShot(weaponID, targetID, userTarget)
 			end
 		end
 	end
-	if #cargo > 0 then StartThread(Unload, targetID) end
+	--if #cargo > 0 then StartThread(Unload, targetID) end
 	return false
 end
-
-local runonce = false
 
 function script.FireWeapon(weaponID)
 	ChangeHeat(firingHeats[weaponID])
@@ -520,9 +518,8 @@ function script.FireWeapon(weaponID)
 	if not missileWeaponIDs[weaponID] and not flareOnShots[weaponID] then
 		EmitSfx(flares[weaponID], SFX.CEG + weaponID)
 	end
-	if unitDef.name:find("apc") and not runonce then
-		runonce = true
-		GG.LaunchDroneAsWeapon(unitID, teamID, select(3, Spring.GetUnitWeaponTarget(unitID, weaponID)), 1, 5, turret, 0, 90)
+	if unitDef.name:find("apc") and not (Spring.GetUnitRulesParam(unitID, "dronesout") == 1) then
+		GG.LaunchDroneAsWeapon(unitID, teamID, select(3, Spring.GetUnitWeaponTarget(unitID, weaponID)), "cl_elemental_prime", 5, turret, 0, 90)
 	end
 end
 
