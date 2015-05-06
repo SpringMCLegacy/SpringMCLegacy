@@ -39,6 +39,7 @@ local IS_Badger = LightTank:New{
 		elevationspeed  = 200,
 		wheelspeed      = 200,
 		unittype 		= "apc",
+		maxammo = {srm = 60},
 		squadsize 		= 1,
     },
 }
