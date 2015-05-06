@@ -36,17 +36,6 @@ local IS_Galleon = LightTank:New{
     },
 }
 
-local APC = IS_Galleon:New{
-	transportCapacity		= 5,
-	transportSize = 1,
-	objectName        	= "APC.s3o",
-	customparams = {
-		unittype 		= "apc",
-		squadsize 		= 1,
-	}
-}
-
 return lowerkeys({
 	["IS_Galleon"] = IS_Galleon,
-	["IS_APC"] = APC,
 })
