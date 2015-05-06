@@ -9,7 +9,7 @@ local Upgrade_Uplink = Upgrade:New{
 
 	-- Constructor stuff
 	builder				= true,
-	builddistance 		= math.huge,
+	builddistance 		= 1000000,
 	workerTime			= 10, -- ?	
 	terraformSpeed		= 10000,
 	showNanoSpray		= false,
