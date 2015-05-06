@@ -10,11 +10,14 @@ local CL_Tyr = Hover:New{
 	mass                = 4500,
 	buildCostEnergy     = 30,
 	buildCostMetal      = 9270,
-	maxVelocity		= 6.5, --130kph/30
-	maxReverseVelocity= 3.25,
-	acceleration    = 1.8,
-	brakeRate       = 0.1,
-	turnRate 		= 450,
+	maxVelocity			= 6.5, --130kph/30
+	maxReverseVelocity	= 3.25,
+	acceleration    	= 1.8,
+	brakeRate       	= 0.1,
+	turnRate 			= 450,
+	
+	transportCapacity	= 5,
+	transportSize 		= 1,
 	
 	weapons 		= {	
 		[1] = {
@@ -34,6 +37,7 @@ local CL_Tyr = Hover:New{
 		elevationspeed  = 200,
 		maxammo = {srm = 80},
 		squadsize 		= 2,
+		unittype 		= "apc",
     },
 }
 
