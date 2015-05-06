@@ -518,7 +518,7 @@ function script.FireWeapon(weaponID)
 	if not missileWeaponIDs[weaponID] and not flareOnShots[weaponID] then
 		EmitSfx(flares[weaponID], SFX.CEG + weaponID)
 	end
-	if unitDef.name:find("apc") and not (Spring.GetUnitRulesParam(unitID, "dronesout") == 1) then
+	if unitDef.customParams.unittype == "apc" and not (Spring.GetUnitRulesParam(unitID, "dronesout") == 1) then
 		GG.LaunchDroneAsWeapon(unitID, teamID, select(3, Spring.GetUnitWeaponTarget(unitID, weaponID)), "cl_elemental_prime", 5, turret, 0, 90)
 	end
 end

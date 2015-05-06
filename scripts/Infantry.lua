@@ -213,7 +213,7 @@ end
 function script.Create()
 	apc = Spring.GetUnitTransporter(unitID)
 	for i = 1,2 do
-		Spring.SetUnitWeaponState(unitID, i, "range", 500)
+		--Spring.SetUnitWeaponState(unitID, i, "range", 500)
 	end
 	--StartThread(bob)
 	StartThread(Jumping)

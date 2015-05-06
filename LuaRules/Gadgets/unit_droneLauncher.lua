@@ -68,14 +68,15 @@ function gadget:GameFrame(f)
 			Spring.MoveCtrl.SetPosition(nu, d.x, d.y, d.z)
 			Spring.MoveCtrl.SetRotation(nu,d.pitch/32768 * math.pi, h /32768 * math.pi,d.rotation)
 			Spring.MoveCtrl.SetRelativeVelocity(nu,0,0,4)
+			local x,y,z = Spring.GetUnitPosition(d.target)
 			if d.target > 0 then
-				spGiveOrderToUnit(nu, CMD_ATTACK, {d.target},{})
+				--spGiveOrderToUnit(nu, CMD.FIGHT, {x,y,z},{})
+				spGiveOrderToUnit(nu, CMD_ATTACK, {d.target},{"shift"})
 			elseif d.target == -1 then
 				spGiveOrderToUnit(nu, CMD_GUARD, {d.parent},{})
 			else
 				spGiveOrderToUnit(nu, CMD_MOVE, {d.x-45+math.random(90),d.y,d.z-45+math.random(90)},{})
 			end
-			local x,y,z = Spring.GetUnitPosition(d.target)
 			--Spring.Echo(x,y,z, d.target)
 			--Spring.SetUnitMoveGoal(nu, x,y,z, 150)
 			Spring.MoveCtrl.Disable(nu)

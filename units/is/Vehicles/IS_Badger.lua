@@ -14,6 +14,9 @@ local IS_Badger = LightTank:New{
 	brakeRate       = 0.1,
 	turnRate 		= 450,
 
+	transportCapacity		= 5,
+	transportSize = 1,
+	
 	weapons	= {	
 		[1] = {
 			name	= "ERMBL",
@@ -35,21 +38,11 @@ local IS_Badger = LightTank:New{
 		turrettunspeed  = 500,
 		elevationspeed  = 200,
 		wheelspeed      = 200,
-		squadsize 		= 4,
-    },
-}
-
-local APC = IS_Badger:New{
-	transportCapacity		= 5,
-	transportSize = 1,
-	objectName        	= "IS_Badger.s3o",
-	customparams = {
 		unittype 		= "apc",
 		squadsize 		= 1,
-	}
+    },
 }
 
 return lowerkeys({
 	["IS_Badger"] = IS_Badger,
-	["IS_APC"] = APC,
 })
