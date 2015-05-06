@@ -161,7 +161,7 @@ end
 function Jumping()-- Gets called throughout by gadget
 	for i = 1, info.jumpjets do -- emit JumpJetTrail
 		Turn(jets[i], x_axis, math.rad(100))
-		GG.EmitLupsSfx(unitID, "dropship_vertical_exhaust", jets[i], {id = "vExhaustsJets", width = 25, length = 70})
+		GG.EmitLupsSfx(unitID, "dropship_vertical_exhaust", jets[i], {id = "vExhaustsJets", width = 7, length = 15})
 	end
 end
 
@@ -215,7 +215,7 @@ function script.Create()
 	for i = 1,2 do
 		Spring.SetUnitWeaponState(unitID, i, "range", 500)
 	end
-	StartThread(bob)
+	--StartThread(bob)
 	StartThread(Jumping)
 end
 
