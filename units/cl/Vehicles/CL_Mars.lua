@@ -5,6 +5,7 @@ local CL_Mars = Tank:New{
 	corpse				= "CL_Mars_X",
 	maxDamage           = 26800,
 	mass                = 10000,
+	radarDistanceJam    = 500,
 	trackType			= "Mars",--hueg like xbox
 	trackWidth			= 28,--width to render the decal
 	buildCostEnergy     = 100,

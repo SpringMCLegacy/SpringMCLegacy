@@ -15,7 +15,7 @@ local CL_Donar = VTOL:New{
 	verticalSpeed	= 1,
 	weapons	= {	
 		[1] = {
-			name	= "CMPL",
+			name	= "CERLBL",
 			maxAngleDif = 90,
 		},
 		[2] = {
@@ -28,7 +28,7 @@ local CL_Donar = VTOL:New{
 		},
 	},
 	customparams = {
-		helptext		= "Armament: 1 x Medium Pulse Laser, 2 x SSRM-2- Armor: 3 tons",
+		helptext		= "Armament: 1 x ER Large Laser, 2 x SSRM-2- Armor: 3 tons",
 		heatlimit		= 24,
 		maxammo = {srm = 120},
 		squadsize 		= 2,
