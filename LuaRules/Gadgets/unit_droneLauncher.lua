@@ -133,6 +133,11 @@ function gadget:UnitLoaded(unitID, unitDefID, teamID, transportID)
 	end
 end
 
+function gadget:UnitDestroyed(unitID, unitDefID, teamID)
+	droneOwners[unitID] = nil
+	ownerStatus[unitID] = nil
+end
+
 function gadget:Initialize()
 	gadgetHandler:RegisterGlobal("LaunchDroneWeapon", LaunchDroneAsWeapon)
 	GG.LaunchDroneAsWeapon = LaunchDroneAsWeapon
