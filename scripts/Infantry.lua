@@ -158,7 +158,7 @@ function StartJump()
 	SpawnCEG("mech_jump_dust", x,y,z)
 end
 
-function Jumping()-- Gets called throughout by gadget
+function Jets()
 	for i = 1, info.jumpjets do -- emit JumpJetTrail
 		Turn(jets[i], x_axis, math.rad(100))
 		GG.EmitLupsSfx(unitID, "dropship_vertical_exhaust", jets[i], {id = "vExhaustsJets", width = 7, length = 15})
@@ -216,7 +216,7 @@ function script.Create()
 		--Spring.SetUnitWeaponState(unitID, i, "range", 500)
 	end
 	--StartThread(bob)
-	StartThread(Jumping)
+	Jets()
 end
 
 local function WeaponCanFire(weaponID)
