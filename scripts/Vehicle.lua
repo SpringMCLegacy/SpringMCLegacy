@@ -440,6 +440,12 @@ end
 function script.AimWeapon(weaponID, heading, pitch)
 	Signal(2 ^ weaponID) -- 2 'to the power of' weapon ID
 	SetSignalMask(2 ^ weaponID)
+	if amsIDs[weaponID] then 
+		Turn(flares[weaponID], y_axis, heading, TURRET_SPEED * 10)
+		Turn(flares[weaponID], x_axis, -pitch, ELEVATION_SPEED * 50)
+		WaitForTurn(flares[weaponID], y_axis)
+		return true 
+	end
 	-- use a weapon-specific turret if it exists
 	if turrets[weaponID] then
 		Turn(turrets[weaponID], y_axis, heading, TURRET_2_SPEED)
