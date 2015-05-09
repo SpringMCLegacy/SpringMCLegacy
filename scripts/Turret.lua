@@ -136,8 +136,8 @@ function fx()
 		end
 		local height = 0
 		local angleDiff = math.rad(110 - 83)
-		local hyp = 5 / math.sin(angleDiff)
-		while height < 5 do
+		local hyp = 3.5 / math.sin(angleDiff)
+		while height < 3.5 do
 			local angle = angleDiff - (Spring.UnitScript.GetPieceRotation(legs[1]) - math.rad(250))
 			height = math.sin(angle) * hyp
 			Move(base, y_axis, height)
