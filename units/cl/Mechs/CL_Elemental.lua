@@ -37,7 +37,7 @@ local CL_Elemental = Light:New{
 		heatlimit		= 20,
 		torsoturnspeed	= 380,
 		maxammo 		= {srm = 40},
-		canjump			= "1",
+		--canjump			= "1",
 		unittype = "infantry",
 		squadsize		= 5,
     },

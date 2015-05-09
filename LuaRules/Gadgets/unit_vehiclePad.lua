@@ -42,7 +42,7 @@ function gadget:Initialize()
 	for unitDefID, unitDef in pairs(UnitDefs) do
 		if unitDef.customParams.unittype then
 			local basicType = unitDef.customParams.unittype
-			if basicType == "vehicle" or basicType == "apc" or basicType == "infantry" then
+			if basicType == "vehicle" or basicType == "apc" then
 				vehiclesDefCache[unitDefID] = true
 				local mass = unitDef.mass
 				local weight = (basicType == "apc" and "apc") or (unitDef.canFly and "vtol") or GG.GetWeight(mass)
@@ -175,15 +175,7 @@ local function UnitIdleCheck(unitID, unitDefID, teamID)
 	local unitSquad = unitSquads[unitID]
 	if not unitSquad then return end
 	teamSquadSpots[teamID][unitSquad] = math.random(1, #flagSpots)
-	if UnitDefs[unitDefID].customParams.unittype == "infantry" then
-		for memberID, squadID in pairs(unitSquads) do -- TODO: this is gross and potentially really slow, what we really want is for squad members to guard leader, but use JJ to keep up
-			if squadID == unitSquad then
-				GG.Delay.DelayCall(GG.RunAndJump, {memberID, unitDefID, CMD.FIGHT, teamSquadSpots[teamID][unitSquads[unitID]]}, 1)
-			end
-		end
-	else
-		GG.Delay.DelayCall(Wander, {unitID}, 1)
-	end		
+	GG.Delay.DelayCall(Wander, {unitID}, 1)
 end
 
 
@@ -205,9 +197,6 @@ function gadget:UnitUnloaded(unitID, unitDefID, teamID, transportID, transportTe
 			for _, spot in pairs(flagSpots) do
 				GG.Delay.DelayCall(Spring.GiveOrderToUnit, {unitID, CMD.PATROL, {spot.x, 0, spot.z}, {"shift"}}, 30)
 			end
-		elseif ud.customParams.unittype == "infantry" then
-			Spring.Echo("Infantry! Run And Jump")
-			--GG.RunAndJump(unitID, unitDefID, CMD.FIGHT, teamSquadSpots[teamID][unitSquads[unitID]], true)
 		else
 			--Spring.Echo("VEHICLE!")
 			Wander(unitID)

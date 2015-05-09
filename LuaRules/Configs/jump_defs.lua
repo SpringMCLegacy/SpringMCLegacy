@@ -43,8 +43,8 @@ jumpClassGroups = {
 	"cl_nova_prime",
 	"cl_summoner_c",
 	"cl_shadowcat_prime",
-	"cl_elemental_prime",
-	"is_standard_ba",
+	--"cl_elemental_prime",
+	--"is_standard_ba",
 	},
 }
 
@@ -57,10 +57,10 @@ jumpClassGroups = {
 --		reload
 ------------------------------------------------------------------------------------------------------------------------------------------------	
 overCategory = {
-  cl_elemental_prime = {
-    range = 1200, height = 150, speed = 12,  reload = 5,},
-  is_standard_ba = {
-    range = 1200, height = 150, speed = 12,  reload = 5,},
+--  cl_elemental_prime = {
+--    range = 1200, height = 150, speed = 12,  reload = 5,},
+--  is_standard_ba = {
+--    range = 1200, height = 150, speed = 12,  reload = 5,},
 }
 ------------------------------------------------------------------------------------------------------------------------------------------------
 -- this is just an error checking block, not our configuration area
