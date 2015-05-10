@@ -81,7 +81,7 @@ local MINUTE = 30 * 60
 local function AgeWeight(age)
 	local weight = "apc"
 	-- make 10% infantry APC (well not quite)
-	if math.random(100) < 10 then return weight end
+	if math.random(100) < 100 then return weight end
 	-- make 10% of all deliveries VTOL (well not quite)
 	if math.random(100) < 10 then return "vtol" end
 	-- 75% of the time, randomise the age so we don't always get the current max
@@ -181,7 +181,7 @@ end
 
 function gadget:UnitIdle(unitID, unitDefID, teamID)
 	--Spring.Echo("UnitIdle", UnitDefs[unitDefID].name)
-	if vehiclesDefCache[unitDefID] then -- a vehicle
+	if vehiclesDefCache[unitDefID] and not Spring.GetUnitRulesParam(unitID, "dronesout") == 1 then -- a vehicle
 		local commandQueue = Spring.GetCommandQueue(unitID)
 		for k, v in pairs(commandQueue) do Spring.Echo(k,v) end
 		GG.Delay.DelayCall(UnitIdleCheck, {unitID, unitDefID, teamID}, 10)

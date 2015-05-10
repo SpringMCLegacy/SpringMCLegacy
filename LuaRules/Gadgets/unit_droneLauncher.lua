@@ -12,6 +12,9 @@ local spGiveOrderToUnit      = Spring.GiveOrderToUnit
 local pairs					 = pairs
 local table	       			 = table
 
+local alt = {"alt"}
+local shift = {"shift"}
+local empty = {}
 --------------------------------------------------------------------------------
 --------------------------------------------------------------------------------
 
@@ -57,6 +60,7 @@ local function LaunchDroneAsWeapon(u, team, target, drone, number, piece, rotati
 		end
 	end
 	Spring.SetUnitRulesParam(u, "dronesout", 1)
+	Spring.GiveOrderToUnit(u, CMD.STOP, {}, empty)
 end
 
 function gadget:GameFrame(f)
@@ -71,11 +75,11 @@ function gadget:GameFrame(f)
 			local x,y,z = Spring.GetUnitPosition(d.target)
 			if d.target > 0 then
 				--spGiveOrderToUnit(nu, CMD.FIGHT, {x,y,z},{})
-				spGiveOrderToUnit(nu, CMD_ATTACK, {d.target},{"shift"})
+				spGiveOrderToUnit(nu, CMD_ATTACK, {d.target}, shift)
 			elseif d.target == -1 then
-				spGiveOrderToUnit(nu, CMD_GUARD, {d.parent},{})
+				spGiveOrderToUnit(nu, CMD_GUARD, {d.parent},empty)
 			else
-				spGiveOrderToUnit(nu, CMD_MOVE, {d.x-45+math.random(90),d.y,d.z-45+math.random(90)},{})
+				spGiveOrderToUnit(nu, CMD_MOVE, {d.x-45+math.random(90),d.y,d.z-45+math.random(90)},empty)
 			end
 			--Spring.Echo(x,y,z, d.target)
 			--Spring.SetUnitMoveGoal(nu, x,y,z, 150)
@@ -98,12 +102,12 @@ function ComeHome(unitID)
 		--Spring.Echo("Idle", drones, ownerStatus[unitID], target)
 		if target and target > 0 then -- there is a target, redirect drones
 			if target == 1 then -- a unit
-				Spring.GiveOrderToUnitArray(drones, CMD.ATTACK, {params}, {})	
+				Spring.GiveOrderToUnitArray(drones, CMD.ATTACK, {params}, empty)	
 			end
 		elseif Spring.GetUnitRulesParam(unitID, "fighting") == 0 then -- no target, come home
 			--Spring.Echo("COME HOME")
 			local x,y,z = Spring.GetUnitPosition(unitID)
-			Spring.GiveOrderToUnitArray(drones, CMD.LOAD_ONTO, {unitID}, {})
+			Spring.GiveOrderToUnitArray(drones, CMD.LOAD_ONTO, {unitID}, empty)
 		end
 	end
 end
@@ -129,6 +133,7 @@ function gadget:UnitLoaded(unitID, unitDefID, teamID, transportID)
 			ownerStatus[transportID] = false
 			droneOwners[transportID] = {}
 			Spring.SetUnitRulesParam(transportID, "dronesout", 0)
+			GG.Delay.DelayCall(GG.Wander, {transportID}, 1)
 		end
 	end
 end

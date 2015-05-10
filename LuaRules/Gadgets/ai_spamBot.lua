@@ -245,7 +245,9 @@ local function UnitIdleCheck(unitID, unitDefID, teamID)
 			if cp.canjump then
 				GG.Delay.DelayCall(RunAndJump, {unitID, unitDefID}, 30 * 25)
 			else
-				GG.Delay.DelayCall(Wander, {unitID}, 30 * 25)
+				if not Spring.GetUnitRulesParam(unitID, "dronesout") == 1 then
+					GG.Delay.DelayCall(Wander, {unitID}, 30 * 25)
+				end
 			end
 		else
 			--Spring.Echo(UnitDefs[unitDefID].name .. [[ "I think I'll stay here..."]])
