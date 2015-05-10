@@ -423,18 +423,18 @@ local function WeaponCanFire(weaponID)
 	if jammableIDs[weaponID] and not activated then
 		return false
 	end
-	local ammoType = ammoTypes[weaponID]
+	--[[local ammoType = ammoTypes[weaponID]
 	if ammoType and (currAmmo[ammoType] or 0) < (burstLengths[weaponID] or 0) then
 		if spinSpeeds[weaponID] then
 			StartThread(SpinBarrels, weaponID, false)
 		end
 		return false
-	else
+	else]]
 		if spinSpeeds[weaponID] and not spinPiecesState[weaponID] then
 			StartThread(SpinBarrels, weaponID, true)
 		end
 		return true
-	end
+	--end
 end
 		
 function script.AimWeapon(weaponID, heading, pitch)
@@ -517,10 +517,10 @@ function script.FireWeapon(weaponID)
 		WaitForMove(barrels[weaponID], z_axis)
 		Move(barrels[weaponID], z_axis, 0, 10)
 	end
-	local ammoType = ammoTypes[weaponID]
+	--[[local ammoType = ammoTypes[weaponID]
 	if ammoType then
 		ChangeAmmo(ammoType, -burstLengths[weaponID])
-	end
+	end]]
 	if not missileWeaponIDs[weaponID] and not flareOnShots[weaponID] then
 		EmitSfx(flares[weaponID], SFX.CEG + weaponID)
 	end

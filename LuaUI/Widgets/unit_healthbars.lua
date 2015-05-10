@@ -602,6 +602,7 @@ do
         end
       end
 	  
+	  if ud.customParams.unittype == "mech" then -- horrible
 	  --// HEAT
 	  local heat = GetUnitRulesParam(unitID,"heat")
 	  --local heatLimit = GetUnitRulesParam(unitID,"heatLimit") or ci.heatLimit
@@ -652,88 +653,8 @@ do
 		AddBar("Coolant", coolant/100, "coolant", "")
 	  end
 		
---[[
-      --// BUILD
-      if (build<1) then
-        AddBar("building",build,"build",(fullText and floor(build*100)..'%') or '')
-      end
-
-      --// MORPHING
-      if (morph) then
-        local build = morph.progress
-        AddBar("morph",build,"build",(fullText and floor(build*100)..'%') or '')
-      end
-
-      --// STOCKPILE
-      if (ci.canStockpile) then
-        local stockpileBuild
-        numStockpiled,numStockpileQued,stockpileBuild = GetUnitStockpile(unitID)
-        if (numStockpiled) then
-          stockpileBuild = stockpileBuild or 0
-          if (stockpileBuild>0) then
-            AddBar("stockpile",stockpileBuild,"stock",(fullText and floor(stockpileBuild*100)..'%') or '')
-          end
-        end
-      else
-        numStockpiled = false
-      end
-
-      --// PARALYZE
-      if (emp>0.01)and(hp>0.01)and(not morph)and(emp<1e8) then
-        local stunned = GetUnitIsStunned(unitID)
-        local infotext = ""
-        if (stunned) then
-          paraUnits[#paraUnits+1]=unitID
-          if (fullText) then
-            infotext = floor((paralyzeDamage-empHP)/(maxHealth*empDecline)) .. 's'
-          end
-          emp = 1
-        else
-          if (emp>1) then emp=1 end
-          if (fullText) then
-            infotext = floor(emp*100)..'%'
-          end
-        end
-        local empcolor_index = (stunned and ((blink and "emp_b") or "emp_p")) or ("emp")
-        AddBar("paralyze",emp,empcolor_index,infotext)
-      end
-
-      --// CAPTURE
-      if ((capture or -1)>0) then
-        AddBar("capture",capture,"capture",(fullText and floor(capture*100)..'%') or '')
-      end
-
-      --// RELOAD
-      --[[if (ci.reloadTime>=minReloadTime) then
-        _,reloaded,reloadFrame = GetUnitWeaponState(unitID,ci.primaryWeapon)
-        if (reloaded==false) then
-		  local reloadTime = Spring.GetUnitWeaponState(unitID, ci.primaryWeapon , 'reloadTime')
-		  ci.reloadTime = reloadTime
-          reload = 1 - ((reloadFrame-gameFrame)/30) / ci.reloadTime;
-          AddBar("reload",reload,"reload",(fullText and floor(reload*100)..'%') or '')
-        end
-      end]]
-
-	  --// SHEATH
-	  local sheathState = GetUnitRulesParam(unitID,"sheathState")
-	  if sheathState and (sheathState < 1) then
-			AddBar("sheath",sheathState,"sheath",(fullText and floor(sheathState*100)..'%') or '')
-	  end
-      	  
-	  --// SLOW
-      local slowState = GetUnitRulesParam(unitID,"slowState")
-      if (slowState and (slowState>0)) then
-        AddBar("slow",slowState,"slow",(fullText and floor(slowState*100)..'%') or '')
-      end
-	  
-	  --// GOO
-      local gooState = GetUnitRulesParam(unitID,"gooState")
-      if (gooState and (gooState>0)) then
-        AddBar("goo",gooState,"goo",(fullText and floor(gooState*100)..'%') or '')
-      end
-	  
-
---]]
+	end
+	
     if (barsN>0)or(numStockpiled) then
       glPushMatrix()
       glTranslate(ux, uy+ci.height, uz )

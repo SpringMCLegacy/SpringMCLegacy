@@ -68,6 +68,7 @@ function gadget:GameFrame(f)
 		local nu = spCreateUnit(d.drone,d.x,d.y,d.z,0,d.team)
 		if nu then
 			local h = spGetHeadingFromVector(d.dx,d.dz)
+			SendToUnsynced("VEHICLE_UNLOADED", nu, d.team) -- caught by unit_vehiclePad.lua
 			Spring.MoveCtrl.Enable(nu)
 			Spring.MoveCtrl.SetPosition(nu, d.x, d.y, d.z)
 			Spring.MoveCtrl.SetRotation(nu,d.pitch/32768 * math.pi, h /32768 * math.pi,d.rotation)

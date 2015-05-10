@@ -221,7 +221,7 @@ else
 
 function VehicleUnloaded(eventID, unitID, teamID)
 	if teamID == Spring.GetMyTeamID() then
-		--Spring.SetUnitNoSelect(unitID, true)
+		Spring.SetUnitNoSelect(unitID, true)
 	end
 end
 
