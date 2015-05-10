@@ -3,7 +3,7 @@ local IS_Galleon = LightTank:New{
 	description         = "Medium Skirmish Tank",
 	objectName        	= "IS_Galleon.s3o",
 	corpse				= "IS_Galleon_X",
-	maxDamage           = 3500,
+	maxDamage           = 4000,
 	mass                = 4500,
 	trackWidth			= 23,--width to render the decal
 	buildCostEnergy     = 45,
@@ -16,22 +16,23 @@ local IS_Galleon = LightTank:New{
 
 	weapons	= {	
 		[1] = {
-			name	= "ERMBL",
+			name	= "MPL",
 		},
 		[2] = {
-			name	= "ERSBL",
+			name	= "MBL",
 		},
 		[3] = {
-			name	= "ERSBL",
+			name	= "MBL",
 		},
 	},
 	
 	customparams = {
-		helptext		= "Armament: 1 x Medium Beam Laser, 2 x Small Beam Laser - Armor: 3.5 tons",
+		helptext		= "Armament: 1 x Medium Pulse Laser, 2 x Medium Beam Laser - Armor: 3.5 tons",
 		heatlimit		= 20,
 		turrettunspeed  = 200,
 		elevationspeed  = 200,
 		wheelspeed      = 200,
+		hasbap			= "true",
 		squadsize 		= 4,
     },
 }
