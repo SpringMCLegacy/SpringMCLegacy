@@ -33,7 +33,7 @@ local IS_Chevalier = LightTank:New{
 		elevationspeed  = 200,
 		wheelspeed      = 200,
 		maxammo 		= {srm = 120},
-		squadsize 		= 3,
+		squadsize 		= 4,
     },
 }
 
