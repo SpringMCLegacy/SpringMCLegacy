@@ -169,7 +169,7 @@ local function UnitIdleCheck(unitID, unitDefID, teamID)
 	if Spring.GetUnitIsDead(unitID) then return false end
 	local cmdQueueSize = Spring.GetCommandQueue(unitID, 0) or 0
 	if cmdQueueSize > 0 then 
-		--Spring.Echo("I'm so not idle!") 
+		--Spring.Echo("UnitIdleCheck: I'm so not idle!") 
 		return
 	end
 	local unitSquad = unitSquads[unitID]
@@ -181,10 +181,14 @@ end
 
 function gadget:UnitIdle(unitID, unitDefID, teamID)
 	--Spring.Echo("UnitIdle", UnitDefs[unitDefID].name)
-	if vehiclesDefCache[unitDefID] and not Spring.GetUnitRulesParam(unitID, "dronesout") == 1 then -- a vehicle
+	if vehiclesDefCache[unitDefID] and not (Spring.GetUnitRulesParam(unitID, "dronesout") == 1) then -- a vehicle
 		local commandQueue = Spring.GetCommandQueue(unitID)
 		--for k, v in pairs(commandQueue) do Spring.Echo(k,v) end
-		GG.Delay.DelayCall(UnitIdleCheck, {unitID, unitDefID, teamID}, 10)
+		local cmdQueueSize = Spring.GetCommandQueue(unitID, 0) or 0
+		if cmdQueueSize > 0 then 
+			Spring.Echo("UnitIdle: I'm so not idle!") 
+		end
+		GG.Delay.DelayCall(UnitIdleCheck, {unitID, unitDefID, teamID}, 1)
 	end
 end
 
@@ -221,7 +225,7 @@ else
 
 function VehicleUnloaded(eventID, unitID, teamID)
 	if teamID == Spring.GetMyTeamID() and not (GG.AI_TEAMS and GG.AI_TEAMS[teamID]) then
-		Spring.SetUnitNoSelect(unitID, true)
+		--Spring.SetUnitNoSelect(unitID, true)
 	end
 end
 

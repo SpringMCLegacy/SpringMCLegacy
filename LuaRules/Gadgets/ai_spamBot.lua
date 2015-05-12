@@ -238,7 +238,7 @@ local function UnitIdleCheck(unitID, unitDefID, teamID)
 	end
 	local ud = UnitDefs[unitDefID]
 	local cp = ud.customParams
-	if cp.unittype then
+	if cp.unittype == "mech" then -- vehicles handled by unit_vehiclePad as they are always 'automated'
 		-- random chance a idle unit will wander somewhere else
 		local chance = math.random(1, 100)
 		if chance < 75 then
