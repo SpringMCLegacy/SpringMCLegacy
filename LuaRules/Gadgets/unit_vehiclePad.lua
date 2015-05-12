@@ -220,7 +220,7 @@ else
 --	UNSYNCED
 
 function VehicleUnloaded(eventID, unitID, teamID)
-	if teamID == Spring.GetMyTeamID() and not GG.AI_TEAMS[teamID] then
+	if teamID == Spring.GetMyTeamID() and not (GG.AI_TEAMS and GG.AI_TEAMS[teamID]) then
 		Spring.SetUnitNoSelect(unitID, true)
 	end
 end
