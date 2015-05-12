@@ -61,6 +61,7 @@ function gadget:GamePreload()
 			AI_TEAMS[t] = true
 		end
 	end
+	GG.AI_TEAMS = AI_TEAMS
 end
 
 local function SendOrder(teamID)

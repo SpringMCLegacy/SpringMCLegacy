@@ -122,7 +122,7 @@ local function NewSquad(unitID, teamID)
 	local squadNum = (teamSquadCounts[teamID] or 0) + 1
 	teamSquadCounts[teamID] = squadNum
 	teamSquadSpots[teamID][squadNum] = math.random(1, #flagSpots)
-	Spring.Echo("SQUAD", squadNum, teamSquadSpots[teamID][squadNum])
+	--Spring.Echo("SQUAD", squadNum, teamSquadSpots[teamID][squadNum])
 end
 
 local function SetSquad(cargoID, teamID)
@@ -183,7 +183,7 @@ function gadget:UnitIdle(unitID, unitDefID, teamID)
 	--Spring.Echo("UnitIdle", UnitDefs[unitDefID].name)
 	if vehiclesDefCache[unitDefID] and not Spring.GetUnitRulesParam(unitID, "dronesout") == 1 then -- a vehicle
 		local commandQueue = Spring.GetCommandQueue(unitID)
-		for k, v in pairs(commandQueue) do Spring.Echo(k,v) end
+		--for k, v in pairs(commandQueue) do Spring.Echo(k,v) end
 		GG.Delay.DelayCall(UnitIdleCheck, {unitID, unitDefID, teamID}, 10)
 	end
 end
@@ -220,7 +220,7 @@ else
 --	UNSYNCED
 
 function VehicleUnloaded(eventID, unitID, teamID)
-	if teamID == Spring.GetMyTeamID() then
+	if teamID == Spring.GetMyTeamID() and not GG.AI_TEAMS[teamID] then
 		Spring.SetUnitNoSelect(unitID, true)
 	end
 end
