@@ -76,7 +76,7 @@ function gadget:GameFrame(f)
 			local x,y,z = Spring.GetUnitPosition(d.target)
 			if d.target > 0 then
 				--spGiveOrderToUnit(nu, CMD.FIGHT, {x,y,z},{})
-				spGiveOrderToUnit(nu, CMD_ATTACK, {d.target}, shift)
+				GG.Delay.DelayCall(spGiveOrderToUnit, {nu, CMD_ATTACK, {d.target}, shift}, 5)
 			elseif d.target == -1 then
 				spGiveOrderToUnit(nu, CMD_GUARD, {d.parent},empty)
 			else
