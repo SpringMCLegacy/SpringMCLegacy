@@ -17,7 +17,7 @@ local IS_Hawkmoth = VTOL:New{
 
 	weapons	= {	
 		[1] = {
-			name	= "Gauss",
+			name	= "LightGauss",
 			maxAngleDif = 180,
 		},
 	},
