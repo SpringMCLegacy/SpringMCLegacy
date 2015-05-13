@@ -38,6 +38,7 @@ local IS_Goblin = LightTank:New{
 		turrettunspeed  = 75,
 		elevationspeed  = 200,
 		wheelspeed      = 200,
+		--unittype 		= "apc",
 		maxammo 		= {srm = 120},
 		squadsize 		= 3,
     },

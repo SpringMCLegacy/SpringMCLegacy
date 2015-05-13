@@ -42,7 +42,7 @@ local SPL = PulseLaser_Class:New{
 
 local CSPL = SPL:New{
 	name                    = "CSPulseLaser",
-	range                   = 500,
+	range                   = 450,
 }
 
 local MPL = PulseLaser_Class:New{
@@ -66,7 +66,7 @@ local MPL = PulseLaser_Class:New{
 
 local CMPL = MPL:New{
 	name                    = "CMPulseLaser",
-	range                   = 800,
+	range                   = 750,
 	damage = {
 		default = 42, --70 DPS, 210 damage per reload
 	},
@@ -94,7 +94,7 @@ local LPL = PulseLaser_Class:New{
 
 local CLPL = LPL:New{
 	name                    = "CLPulseLaser",
-	range                   = 1100,
+	range                   = 1050,
 	damage = {
 		default = 75, --100 DPS, 375 damage per reload
 	},

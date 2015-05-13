@@ -20,6 +20,9 @@ local IS_Harasser = Hover:New{
 		[2] = {
 			name	= "SRM6",
 		},
+		[3] = {
+			name	= "TAG",
+		},
 	},
 	
 	customparams = {

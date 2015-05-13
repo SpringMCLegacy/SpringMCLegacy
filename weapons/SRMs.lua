@@ -11,7 +11,7 @@ local SRM_Class = Weapon:New{
 	turret                  = true,
 	range                   = 600,
 	accuracy                = 1000,
-	sprayangle				= 2000,
+	sprayangle				= 1750,
 	wobble					= 900,
 	dance					= 65,
 	tracks					= true,
@@ -24,7 +24,7 @@ local SRM_Class = Weapon:New{
 	burstrate				= 0.1,
 	model					= "Missile.s3o",
 	damage = {
-		default = 100,--10 DPS
+		default = 150,--10 DPS
 	},
 	customparams = {
 		cegflare			= "MISSILE_MUZZLEFLASH",

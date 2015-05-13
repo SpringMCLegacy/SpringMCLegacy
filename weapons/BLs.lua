@@ -69,7 +69,7 @@ local SBL = BeamLaser_Class:New{
 
 local ERSBL = SBL:New{
 	name                    = "ERSLaser",
-	range                   = 800,
+	range                   = 700,
 	accuracy                = 300,
 	customparams = {
 		heatgenerated		= 5,--2/sec
@@ -78,7 +78,7 @@ local ERSBL = SBL:New{
 
 local CERSBL = ERSBL:New{
 	name                    = "CERSLaser",
-	range                   = 900,
+	range                   = 800,
 	damage = {
 		default = 20, --50 DPS
 	},
@@ -107,7 +107,7 @@ local MBL = BeamLaser_Class:New{
 
 local ERMBL = MBL:New{
 	name                    = "ERMLaser",
-	range                   = 1200,
+	range                   = 1050,
 	customparams = {
 		heatgenerated		= 15,--5/sec
     },
@@ -115,7 +115,7 @@ local ERMBL = MBL:New{
 
 local CERMBL = ERMBL:New{
 	name                    = "CERMLaser",
-	range                   = 1500,
+	range                   = 1150,
 	damage = {
 		default = 14, --70 DPS, 210 damage per reload
 	},
@@ -144,7 +144,7 @@ local LBL = BeamLaser_Class:New{
 
 local ERLBL = LBL:New{
 	name                    = "ERLLaser",
-	range                   = 1900,
+	range                   = 1600,
 	customparams = {
 		heatgenerated		= 60,--12/sec
     },
@@ -152,7 +152,7 @@ local ERLBL = LBL:New{
 
 local CERLBL = ERLBL:New{
 	name                    = "CERLLaser",
-	range                   = 2000,
+	range                   = 1700,
 	damage = {
 		default = 25, --200 DPS, 500 damage per reload
 	},
