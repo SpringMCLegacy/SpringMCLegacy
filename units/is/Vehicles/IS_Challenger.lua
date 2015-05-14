@@ -16,10 +16,10 @@ local IS_Challenger = Tank:New{
 	
 	weapons	= {	
 		[1] = {
-			name	= "Gauss",
+			name	= "LBX10",
 		},
 		[2] = {
-			name	= "LBX10",
+			name	= "Gauss",
 		},
 		[3] = {
 			name	= "LRM10",

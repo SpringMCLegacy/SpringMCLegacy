@@ -16,13 +16,13 @@ local CL_Mithras = LightTank:New{
 	
 	weapons 		= {	
 		[1] = {
-			name	= "AC2",
+			name	= "CERMBL",
 		},
 		[2] = {
 			name	= "CERMBL",
 		},
 		[3] = {
-			name	= "CERMBL",
+			name	= "AC2",
 		},
 	},
 	customparams = {

@@ -16,13 +16,13 @@ local CL_Enyo = LightTank:New{
 	
 	weapons 		= {	
 		[1] = {
-			name	= "CLPL",
+			name	= "SSRM6",
 		},
 		[2] = {
 			name	= "SSRM6",
 		},
 		[3] = {
-			name	= "SSRM6",
+			name	= "CLPL",
 		},
 	},
 	customparams = {

@@ -18,10 +18,10 @@ local CL_Mars = Tank:New{
 
 	weapons = {	
 		[1] = {
-			name	= "Gauss",
+			name	= "CERLBL",
 		},
 		[2] = {
-			name	= "CERLBL",
+			name	= "Gauss",
 		},
 		[3] = {
 			name	= "LBX10",

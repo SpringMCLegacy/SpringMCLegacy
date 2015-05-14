@@ -16,10 +16,10 @@ local IS_Goblin = LightTank:New{
 
 	weapons	= {	
 		[1] = {
-			name	= "LPL",
+			name	= "SRM6",
 		},
 		[2] = {
-			name	= "SRM6",
+			name	= "LPL",
 		},
 		[3] = {
 			name	= "MG",
