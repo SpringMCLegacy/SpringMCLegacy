@@ -4,6 +4,7 @@ local CL_Elemental = Light:New{
 	mass                = 500,
 	buildCostEnergy     = 5,
 	buildCostMetal      = 5,
+	explodeAs			= "Death_Class",
 	maxVelocity		= 14.3, --86kph/20
 	--maxReverseVelocity= 2.15,
 	acceleration    = 1.7,
@@ -36,7 +37,7 @@ local CL_Elemental = Light:New{
 		helptext		= "Armament: Small Pulse Laser, SRM-2, Microlaser",
 		heatlimit		= 20,
 		torsoturnspeed	= 380,
-		maxammo 		= {srm = 40},
+		maxammo 		= {srm = 2},
 		--canjump			= "1",
 		unittype = "infantry",
 		squadsize		= 5,
