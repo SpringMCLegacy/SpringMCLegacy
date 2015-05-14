@@ -90,6 +90,7 @@ local weights = {"light", "medium", "heavy", "assault"}
 
 local function AgeWeight(age)
 	local topLevel = (age < LIGHT and 1) or (age < MEDIUM and 2) or (age < HEAVY and 3) or 4
+	Spring.Echo("Best Available: ", weights[topLevel])
 	local chance = math.random(100)
 	-- make 10% infantry APC (well not quite)
 	--if math.random(100) < 10 then return "apc" end
@@ -108,8 +109,9 @@ local function Deliver(unitID, teamID)
 	-- check VP didn't die or switch teams during delay
 	if Spring.ValidUnitID(unitID) and (not Spring.GetUnitIsDead(unitID)) and (teamID == Spring.GetUnitTeam(unitID)) then
 		local age = Spring.GetGameFrame() - vehiclePads[unitID]
-		local vehInfo = RandomVehicle(teamID, AgeWeight(age))
-		Spring.Echo("New Vehicle:", UnitDefs[vehInfo.unitDefID].name, vehInfo.squadSize, AgeWeight(age))
+		local ageWeight = AgeWeight(age)
+		local vehInfo = RandomVehicle(teamID, ageWeight)
+		Spring.Echo("New Vehicle:", UnitDefs[vehInfo.unitDefID].name, vehInfo.squadSize, ageWeight)
 		GG.DropshipDelivery(unitID, teamID, "is_markvii", {{[vehInfo.unitDefID] = vehInfo.squadSize}}, 0, nil, 1) 
 	end
 end
