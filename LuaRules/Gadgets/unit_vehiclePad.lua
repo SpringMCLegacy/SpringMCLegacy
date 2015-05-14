@@ -78,26 +78,30 @@ local function RandomVehicle(teamID, weight)
 end
 
 local MINUTE = 30 * 60
+local LIGHT = 2 * MINUTE
+local MEDIUM = 5 * MINUTE
+local HEAVY = 10 * MINUTE
+
+local L1 = 5
+local L2 = L1 + 10
+local L3 = L2 + 20
+
+local weights = {"light", "medium", "heavy", "assault"}
+
 local function AgeWeight(age)
-	local weight = "apc"
+	local topLevel = (age < LIGHT and 1) or (age < MEDIUM and 2) or (age < HEAVY and 3) or 4
+	local chance = math.random(100)
 	-- make 10% infantry APC (well not quite)
-	if math.random(100) < 10 then return weight end
-	-- make 10% of all deliveries VTOL (well not quite)
-	if math.random(100) < 10 then return "vtol" end
-	-- 75% of the time, randomise the age so we don't always get the current max
-	if math.random(100) < 100 then
-		age = age * math.random()
+	--if math.random(100) < 10 then return "apc" end
+	if chance < L1 then -- 5% of time return best
+		return weights[topLevel]
+	elseif chance < L2 then -- 10% of time return 2nd best
+		return weights[math.max(1, topLevel - 1)]
+	elseif chance < L3 then -- 20% of the time return 3rd best
+		return weights[math.max(1, topLevel - 2)]
+	else	-- 65% of the time return the worst
+		return weights[1]
 	end
-	if age < 2 * MINUTE then
-		weight = "light"
-	elseif age < 5 * MINUTE then
-		weight = "medium"
-	elseif age < 10 * MINUTE then
-		weight = "heavy"
-	else -- age > 10 * MINUTE
-		weight = "assault"
-	end
-	return weight
 end
 
 local function Deliver(unitID, teamID)
@@ -105,7 +109,7 @@ local function Deliver(unitID, teamID)
 	if Spring.ValidUnitID(unitID) and (not Spring.GetUnitIsDead(unitID)) and (teamID == Spring.GetUnitTeam(unitID)) then
 		local age = Spring.GetGameFrame() - vehiclePads[unitID]
 		local vehInfo = RandomVehicle(teamID, AgeWeight(age))
-		--Spring.Echo("Random vehicle:", UnitDefs[vehInfo.unitDefID].name, vehInfo.squadSize)
+		Spring.Echo("New Vehicle:", UnitDefs[vehInfo.unitDefID].name, vehInfo.squadSize, AgeWeight(age))
 		GG.DropshipDelivery(unitID, teamID, "is_markvii", {{[vehInfo.unitDefID] = vehInfo.squadSize}}, 0, nil, 1) 
 	end
 end
@@ -225,7 +229,7 @@ else
 
 function VehicleUnloaded(eventID, unitID, teamID)
 	if teamID == Spring.GetMyTeamID() and not (GG.AI_TEAMS and GG.AI_TEAMS[teamID]) then
-		Spring.SetUnitNoSelect(unitID, true)
+		--Spring.SetUnitNoSelect(unitID, true)
 	end
 end
 
