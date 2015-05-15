@@ -19,18 +19,18 @@ local CL_Ku = LightTank:New{
 			name	= "SSRM4",
 		},
 		[2] = {
-			name	= "LBX10",
+			name	= "UAC10",
 		},
 		[3] = {
 			name	= "CERLBL",
 		},
 	},
 	customparams = {
-		helptext		= "Armament: 1 x LBX-10, 1 x ER Large Beam Laser, 1 x SSRM-4 - Armor: 7 tons",
+		helptext		= "Armament: 1 x Ultra AC/10, 1 x ER Large Beam Laser, 1 x SSRM-4 - Armor: 7 tons",
 		heatlimit		= 22,
 		turretturnspeed = 100,
 		elevationspeed  = 150,
-		maxammo = {ac10 = 40, srm = 120},
+		maxammo = {ac10 = 50, srm = 120},
 		barrelrecoildist = {[2] = 5},
 		squadsize 		= 3,
     },
