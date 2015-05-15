@@ -12,5 +12,9 @@ return {
 	movement = {
 		allowUnitCollisionDamage = false, -- default should be false
 		allowUnitCollisionOverlap = false,
-	}
+		allowGroundUnitGravity = false,
+	},
+	system = {
+		pathFinderSystem = 1,
+	},
 }
