@@ -348,6 +348,7 @@ end
 
 
 function Spring.UnitScript.Sleep(milliseconds)
+	if not milliseconds then return end
 	local n = floor(milliseconds / 33)
 	if (n <= 0) then n = 1 end
 	n = n + sp_GetGameFrame()

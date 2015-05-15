@@ -433,7 +433,7 @@ local function WeaponCanFire(weaponID)
 		if spinSpeeds[weaponID] and not spinPiecesState[weaponID] then
 			StartThread(SpinBarrels, weaponID, true)
 		end
-		Sleep(100 * weaponID) -- desync barrels to fire independently
+		Sleep(info.chainFireDelays[weaponID])
 		return true
 	--end
 end
@@ -445,7 +445,7 @@ function script.AimWeapon(weaponID, heading, pitch)
 		Turn(flares[weaponID], y_axis, heading, TURRET_SPEED * 10)
 		Turn(flares[weaponID], x_axis, -pitch, ELEVATION_SPEED * 50)
 		WaitForTurn(flares[weaponID], y_axis)
-		return true 
+		return WeaponCanFire(weaponID)
 	end
 	-- use a weapon-specific turret if it exists
 	if turrets[weaponID] then

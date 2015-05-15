@@ -333,6 +333,7 @@ function gadget:GamePreload()
 		info.turret2TurnSpeed = math.rad(tonumber(cp.turret2turnspeed) or 75)
 		info.barrelRecoilSpeed = (tonumber(cp.barrelrecoilspeed) or 100)
 		info.barrelRecoilDist = table.unserialize(cp.barrelrecoildist)
+		info.chainFireDelays = table.unserialize(cp.chainfiredelays)
 		info.wheelSpeed = math.rad(tonumber(cp.wheelspeed) or 100)
 		info.wheelAccel = math.rad(tonumber(cp.wheelaccel) or info.wheelSpeed * 2)
 		-- And finally, stick it in GG for the script to access
