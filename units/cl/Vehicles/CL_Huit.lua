@@ -35,6 +35,7 @@ local CL_Huit = LightTank:New{
 		turretturnspeed = 50,
 		elevationspeed  = 75,
 		maxammo = {arrow = 10},
+		chainfiredelays = {[2] = 250},
     },
 }
 
