@@ -31,6 +31,7 @@ local CL_Ku = LightTank:New{
 		turretturnspeed = 100,
 		elevationspeed  = 150,
 		maxammo = {ac10 = 40, srm = 120},
+		barrelrecoildist = {[2] = 5},
 		squadsize 		= 3,
     },
 }
