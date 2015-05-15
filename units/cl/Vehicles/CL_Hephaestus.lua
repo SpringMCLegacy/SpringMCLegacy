@@ -18,10 +18,10 @@ local CL_Hephaestus = Hover:New{
 	
 	weapons 		= {	
 		[1] = {
-			name	= "CERMBL",
+			name	= "CMPL",
 		},
 		[2] = {
-			name	= "CERMBL",
+			name	= "CMPL",
 		},
 		[3] = {
 			name	= "NARC",

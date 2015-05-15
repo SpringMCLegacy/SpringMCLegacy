@@ -31,7 +31,7 @@ local CL_Ares = LightTank:New{
 		turretturnspeed = 75,
 		elevationspeed  = 100,
 		maxammo = {atm = 120},
-		squadsize 		= 2,
+		squadsize 		= 3,
     },
 }
 
