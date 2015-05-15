@@ -433,6 +433,7 @@ local function WeaponCanFire(weaponID)
 		if spinSpeeds[weaponID] and not spinPiecesState[weaponID] then
 			StartThread(SpinBarrels, weaponID, true)
 		end
+		Sleep(100 * weaponID) -- desync barrels to fire independently
 		return true
 	--end
 end
