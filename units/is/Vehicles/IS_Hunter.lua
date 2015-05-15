@@ -21,13 +21,13 @@ local IS_Hunter = LightTank:New{
 	},
 	
 	customparams = {
-		helptext		= "Armament: 2 x LRM-20 - Armor: 2 tons",
+		helptext		= "Armament: 1 x LRM-20 - Armor: 2 tons",
 		heatlimit		= 26,
 		turretturnspeed = 25,
 		elevationspeed  = 50,
 		wheelspeed      = 200,
 		maxammo 		= {lrm = 520},
-		squadsize 		= 2,
+		squadsize 		= 1,
     },
 }
 

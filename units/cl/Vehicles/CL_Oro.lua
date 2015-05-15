@@ -61,7 +61,7 @@ local Oro_LBX = CL_Oro:New{
 		heatlimit		= 15,
 		barrelrecoildist = {[1] = 5},
 		maxammo = {ac20 = 40},
-		squadsize 		= 2,
+		squadsize 		= 3,
     },
 }
 

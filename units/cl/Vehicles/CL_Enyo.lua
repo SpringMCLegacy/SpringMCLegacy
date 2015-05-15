@@ -31,7 +31,7 @@ local CL_Enyo = LightTank:New{
 		turretturnspeed = 100,
 		elevationspeed  = 150,
 		maxammo = {srm = 120},
-		squadsize 		= 2,
+		squadsize 		= 3,
     },
 }
 

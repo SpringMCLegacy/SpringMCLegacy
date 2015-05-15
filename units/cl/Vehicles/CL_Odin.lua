@@ -3,10 +3,12 @@ local CL_Odin = LightTank:New{
 	description         = "Light Brawler Tank",
 	objectName        	= "CL_Odin.s3o",
 	corpse				= "CL_Odin_X",
+	sightDistance       = 1200,
+	radarDistance      	= 2000,
 	maxDamage           = 3000,
 	mass                = 2000,
 	trackWidth			= 23,--width to render the decal
-	buildCostEnergy     = 45,
+	buildCostEnergy     = 20,
 	buildCostMetal      = 10710,
 	maxVelocity		= 4.3, --130kph/30
 	maxReverseVelocity= 2.2,
@@ -36,7 +38,7 @@ local CL_Odin = LightTank:New{
 		elevationspeed  = 200,
 		wheelspeed      = 200,
 		maxammo 		= {srm = 120},
-		squadsize 		= 3,
+		squadsize 		= 4,
     },
 }
 

@@ -3,6 +3,8 @@ local IS_Galleon = LightTank:New{
 	description         = "Medium Skirmish Tank",
 	objectName        	= "IS_Galleon.s3o",
 	corpse				= "IS_Galleon_X",
+	sightDistance       = 1200,
+	radarDistance      	= 2000,
 	maxDamage           = 5000,
 	mass                = 4500,
 	trackWidth			= 23,--width to render the decal
@@ -32,7 +34,6 @@ local IS_Galleon = LightTank:New{
 		turrettunspeed  = 200,
 		elevationspeed  = 200,
 		wheelspeed      = 200,
-		hasbap			= "true",
 		squadsize 		= 4,
     },
 }
