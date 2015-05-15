@@ -16,7 +16,7 @@ if gadgetHandler:IsSyncedCode() then
 --	SYNCED
 
 local modOptions = Spring.GetModOptions()
-local BASE_DELAY = tonumber((modOptions and modOptions.vehicle_delay) or "15") * 30 -- base line delay, may be +{0,10}s
+local BASE_DELAY = tonumber((modOptions and modOptions.vehicle_delay) or "30") * 30 -- base line delay, may be +{0,10}s
 local BEACON_ID = UnitDefNames["beacon"].id
 local VPAD_ID = UnitDefNames["upgrade_vehiclepad"].id
 --local DelayCall = GG.Delay.DelayCall
@@ -82,9 +82,9 @@ local LIGHT = 2 * MINUTE
 local MEDIUM = 5 * MINUTE
 local HEAVY = 10 * MINUTE
 
-local L1 = 5
-local L2 = L1 + 10
-local L3 = L2 + 20
+local L1 = 10
+local L2 = L1 + 20
+local L3 = L2 + 30
 
 local weights = {"light", "medium", "heavy", "assault"}
 
@@ -93,14 +93,14 @@ local function AgeWeight(age)
 	--Spring.Echo("Best Available: ", weights[topLevel])
 	local chance = math.random(100)
 	-- make 10% infantry APC (well not quite)
-	--if math.random(100) < 10 then return "apc" end
-	if chance < L1 then -- 5% of time return best
+	if math.random(100) < 10 then return "apc" end
+	if chance < L1 then -- 10% of time return best
 		return weights[topLevel]
-	elseif chance < L2 then -- 10% of time return 2nd best
+	elseif chance < L2 then -- 20% of time return 2nd best
 		return weights[math.max(1, topLevel - 1)]
-	elseif chance < L3 then -- 20% of the time return 3rd best
+	elseif chance < L3 then -- 30% of the time return 3rd best
 		return weights[math.max(1, topLevel - 2)]
-	else	-- 65% of the time return the worst
+	else	-- 40% of the time return the worst
 		return weights[1]
 	end
 end
