@@ -83,24 +83,25 @@ local MEDIUM = 5 * MINUTE
 local HEAVY = 10 * MINUTE
 
 local L1 = 10
-local L2 = L1 + 20
-local L3 = L2 + 30
+local L2 = L1 + 15
+local L3 = L2 + 20
+local L4 = L3 + 25
 
-local weights = {"light", "medium", "heavy", "assault"}
+local weights = {"light", "medium", "heavy", "apc", "assault"}
 
 local function AgeWeight(age)
 	local topLevel = (age < LIGHT and 1) or (age < MEDIUM and 2) or (age < HEAVY and 3) or 4
 	--Spring.Echo("Best Available: ", weights[topLevel])
 	local chance = math.random(100)
-	-- make 10% infantry APC (well not quite)
-	if math.random(100) < 10 then return "apc" end
 	if chance < L1 then -- 10% of time return best
 		return weights[topLevel]
-	elseif chance < L2 then -- 20% of time return 2nd best
+	elseif chance < L2 then -- 15% of time return 2nd best
 		return weights[math.max(1, topLevel - 1)]
-	elseif chance < L3 then -- 30% of the time return 3rd best
+	elseif chance < L3 then -- 20% of the time return 3rd best
 		return weights[math.max(1, topLevel - 2)]
-	else	-- 40% of the time return the worst
+	elseif chance < L4 then -- 25% of the time return 3rd best
+		return weights[math.max(1, topLevel - 3)]
+	else                    -- 30% of the time return the worst
 		return weights[1]
 	end
 end
