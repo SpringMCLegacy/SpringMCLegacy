@@ -14,7 +14,7 @@ return {
 		allowUnitCollisionOverlap = false,
 		allowGroundUnitGravity = false,
 	},
-	system = {
+	--system = {
 		--pathFinderSystem = 1,
-	},
+	--},
 }
