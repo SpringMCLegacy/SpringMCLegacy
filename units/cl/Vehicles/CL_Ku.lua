@@ -16,13 +16,13 @@ local CL_Ku = LightTank:New{
 	
 	weapons 		= {	
 		[1] = {
-			name	= "SSRM4",
-		},
-		[2] = {
 			name	= "UAC10",
 		},
-		[3] = {
+		[2] = {
 			name	= "CERLBL",
+		},
+		[3] = {
+			name	= "SSRM4",
 		},
 	},
 	customparams = {

@@ -31,18 +31,24 @@ local IS_Challenger = Tank:New{
 			name	= "MPL",
 		},
 		[6] = {
+			name	= "SSRM2",
+		},
+		[7] = {
+			name	= "SSRM2",
+		},
+		[8] = {
 			name	= "AMS",
 		},
 	},
 
 	customparams = {
-		helptext		= "Armament: 1 x Gauss Rifle, 1 x LBX/10, 1 x LRM-10, 2 x Medium Pulse Laser - Armor: 14 tons",
+		helptext		= "Armament: 1 x Gauss Rifle, 1 x LBX/10, 1 x LRM-10, 2 x Medium Pulse Laser, 2 x SSRM-2 - Armor: 14 tons",
 		heatlimit		= 20,
 		turretturnspeed = 75,
 		elevationspeed  = 200,
 		wheelspeed      = 200,
 		barrelrecoildist = {[1] = 5, [2] = 5},
-		maxammo 		= {lrm = 180, ac10 = 30, gauss = 30},
+		maxammo 		= {lrm = 180, ac10 = 30, gauss = 30, srm = 80},
 		squadsize 		= 2,
 	},
 }
