@@ -15,6 +15,6 @@ return {
 		allowGroundUnitGravity = false,
 	},
 	system = {
-		pathFinderSystem = 1,
+		--pathFinderSystem = 1,
 	},
 }
