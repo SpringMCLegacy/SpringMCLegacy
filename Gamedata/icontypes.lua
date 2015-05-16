@@ -14,7 +14,7 @@ local iconTypes = {
 		size			=	5,
 		distance	=	3.0,
 	},
-	lightmech = {
+	infantry = {
 		bitmap		=	"icons/infantry.png",
 		size			=	3,
 		distance	=	1.0,

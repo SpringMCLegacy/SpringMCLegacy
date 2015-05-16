@@ -5,6 +5,7 @@ local CL_Elemental = Light:New{
 	buildCostEnergy     = 5,
 	buildCostMetal      = 5,
 	explodeAs			= "Death_Class",
+	iconType			= "infantry",
 	maxVelocity		= 14.3, --86kph/20
 	--maxReverseVelocity= 2.15,
 	acceleration    = 1.7,
