@@ -352,6 +352,7 @@ function script.HitByWeapon(x, z, weaponID, damage)
 	elseif hitPiece == "turret" or hitPiece == "launcher_1" or hitPiece == "turret_2" then
 		--deduct Turret HP
 		limbHPControl("turret", damage)
+		return damage * 0.5 -- still apply 50% of the damage to main unit too
 	elseif hitPiece == "lwing" or hitPiece == "rwing" or hitPiece == "rotor" then
 		limbHPControl(hitPiece, damage) -- asumes wings are single pieces
 	end
