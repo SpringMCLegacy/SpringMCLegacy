@@ -26,7 +26,7 @@ local ATM_Class = Weapon:New{
 	burstrate				= 0.1,
 	model					= "Missile.s3o",
 	damage = {
-		default = 150,--200,--15 DPS
+		default = 200,--15 DPS
 	},
 	customparams = {
 		cegflare			= "MISSILE_MUZZLEFLASH",
