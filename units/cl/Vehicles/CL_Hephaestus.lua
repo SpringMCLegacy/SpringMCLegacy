@@ -16,6 +16,8 @@ local CL_Hephaestus = Hover:New{
 	brakeRate       = 0.1,
 	turnRate 		= 450,
 	
+	moveState			= 0,
+	
 	weapons 		= {	
 		[1] = {
 			name	= "CMPL",

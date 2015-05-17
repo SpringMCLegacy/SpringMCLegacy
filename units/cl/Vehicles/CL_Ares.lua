@@ -14,6 +14,8 @@ local CL_Ares = LightTank:New{
 	brakeRate       = 0.1,
 	turnRate 		= 450,
 	
+	moveState			= 0,
+	
 	weapons = {	
 		[1] = {
 			name	= "CERLBL",
@@ -31,7 +33,7 @@ local CL_Ares = LightTank:New{
 		turretturnspeed = 75,
 		elevationspeed  = 100,
 		maxammo = {atm = 120},
-		squadsize 		= 3,
+		squadsize 		= 2,
     },
 }
 

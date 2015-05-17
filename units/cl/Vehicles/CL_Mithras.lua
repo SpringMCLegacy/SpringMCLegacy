@@ -14,6 +14,8 @@ local CL_Mithras = LightTank:New{
 	brakeRate       = 0.1,
 	turnRate 		= 500,
 	
+	moveState			= 0,
+	
 	weapons 		= {	
 		[1] = {
 			name	= "CERMBL",
@@ -26,7 +28,7 @@ local CL_Mithras = LightTank:New{
 		},
 	},
 	customparams = {
-		helptext		= "Armament: 1 x Ultra AC/2, 2 x Clan ER Medium Beam Laser - Armor: 3 tons",
+		helptext		= "Armament: 1 x UAC/2, 2 x Clan ER Medium Beam Laser - Armor: 3 tons",
 		heatlimit		= 28,
 		turretturnspeed = 100,
 		elevationspeed  = 150,

@@ -7,6 +7,8 @@ local CL_Oro = Tank:New{
 	acceleration    = 0.8,
 	brakeRate       = 0.1,
 	turnRate 		= 400,
+	
+	moveState			= 0,
 
 	customparams = {
 		turretturnspeed = 85,

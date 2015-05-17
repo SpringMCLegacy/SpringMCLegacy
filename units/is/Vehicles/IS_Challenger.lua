@@ -14,6 +14,8 @@ local IS_Challenger = Tank:New{
 	brakeRate       = 0.1,
 	turnRate 		= 425,
 	
+	moveState			= 0,
+	
 	weapons	= {	
 		[1] = {
 			name	= "LBX10",

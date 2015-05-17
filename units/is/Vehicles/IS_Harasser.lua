@@ -13,6 +13,8 @@ local IS_Harasser = Hover:New{
 	brakeRate       = 0.1,
 	turnRate 		= 500,
 	
+	moveState			= 0,
+	
 	weapons 		= {	
 		[1] = {
 			name	= "SRM6",

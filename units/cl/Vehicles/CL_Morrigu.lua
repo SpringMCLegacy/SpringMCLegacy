@@ -15,6 +15,8 @@ local CL_Morrigu = Tank:New{
 	brakeRate       = 0.1,
 	turnRate 		= 350,
 	
+	moveState			= 0,
+	
 	weapons = {	
 		[1] = {
 			name	= "CERLBL",

@@ -14,6 +14,8 @@ local CL_Enyo = LightTank:New{
 	brakeRate       = 0.1,
 	turnRate 		= 500,
 	
+	moveState			= 0,
+	
 	weapons 		= {	
 		[1] = {
 			name	= "SSRM6",

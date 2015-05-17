@@ -13,6 +13,8 @@ local IS_Goblin = LightTank:New{
 	acceleration    = 0.8,
 	brakeRate       = 0.1,
 	turnRate 		= 450,
+	
+	moveState			= 0,
 
 	weapons	= {	
 		[1] = {

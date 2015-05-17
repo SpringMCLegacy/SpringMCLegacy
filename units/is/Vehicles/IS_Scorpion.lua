@@ -38,7 +38,7 @@ local Scorpion_AC5 = IS_Scorpion:New{
 		helptext		= "Armament: 1 x Autocannon/5, 2 x Machinegun - Armor: 2 tons",
 		barrelrecoildist = {[1] = 5},
 		maxammo 		= {ac5 = 80},
-		squadsize 		= 3,
+		squadsize 		= 4,
     },
 }
 
