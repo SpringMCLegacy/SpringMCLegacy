@@ -31,7 +31,7 @@ local IS_Myrmidon = LightTank:New{
 		wheelspeed      = 200,
 		maxammo 		= {srm = 120},
 		barrelrecoildist = {[1] = 5},
-		squadsize 		= 3,
+		squadsize 		= 2,
     },
 }
 

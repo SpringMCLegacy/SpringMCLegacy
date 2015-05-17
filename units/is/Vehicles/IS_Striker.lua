@@ -16,7 +16,7 @@ local IS_Striker = LightTank:New{
 
 	weapons	= {	
 		[1] = {
-			name	= "LRM15",
+			name	= "LRM10",
 		},
 		[2] = {
 			name	= "SSRM4",

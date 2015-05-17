@@ -3,7 +3,7 @@ local CL_Mithras = LightTank:New{
 	description         = "Light Strike Tank",
 	objectName        	= "CL_Mithras.s3o",
 	corpse				= "CL_Mithras_X",
-	maxDamage           = 3000,
+	maxDamage           = 3500,
 	mass                = 2500,
 	trackWidth			= 24,--width to render the decal
 	buildCostEnergy     = 55,
@@ -22,7 +22,7 @@ local CL_Mithras = LightTank:New{
 			name	= "CERMBL",
 		},
 		[3] = {
-			name	= "AC2",
+			name	= "UAC2",
 		},
 	},
 	customparams = {

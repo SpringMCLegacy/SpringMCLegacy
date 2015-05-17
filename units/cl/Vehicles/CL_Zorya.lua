@@ -8,7 +8,7 @@ local CL_Zorya = LightTank:New{
 	trackWidth			= 24,--width to render the decal
 	buildCostEnergy     = 40,
 	buildCostMetal      = 10530,
-	maxVelocity		= 2.1, --64kph/30
+	maxVelocity		= 2.8, --64kph/30
 	maxReverseVelocity= 1.2,
 	acceleration    = 0.8,
 	brakeRate       = 0.1,
@@ -19,11 +19,11 @@ local CL_Zorya = LightTank:New{
 			name	= "LBX5",
 		},
 		[2] = {
-			name	= "LRM10",
+			name	= "ATM6",
 		},
 	},
 	customparams = {
-		helptext		= "Armament: 1 x LBX-5, 1 x LRM-10 - Armor: 3.5 tons",
+		helptext		= "Armament: 1 x LBX AC/5, 1 x ATM-6 - Armor: 3.5 tons",
 		heatlimit		= 26,
 		turretturnspeed = 75,
 		elevationspeed  = 100,
