@@ -66,7 +66,7 @@ local RAC2 = AC2:New{
 
 local UAC2 = AC2:New{
 	name                    = "Ultra AC/2",
-	reloadtime              = 0.1,
+	reloadtime              = 0.15,
 }
 
 -- AC5 & Variants
@@ -129,7 +129,7 @@ local UAC5 = AC5:New{
 	name                    = "Ultra AC/5",
 	range                   = 1800,
 	accuracy                = 200,
-	reloadtime              = 0.5,
+	reloadtime              = 0.75,
 	customparams = {
 		heatgenerated		= 0.56,--1.5/sec
     },
@@ -177,7 +177,7 @@ local AC10 = AC_Class:New{
 
 local UAC10 = AC10:New{
 	name                    = "Ultra AC/10",
-	reloadtime              = 0.75,
+	reloadtime              = 1.0,
 }
 
 local LBX10 = AC10:New(LBX_Class):New{
@@ -225,7 +225,7 @@ local AC20 = AC_Class:New{
 local UAC20 = AC20:New{
 	name                    = "Ultra AC/20",
 	range                   = 1050,
-	reloadtime              = 1.25,
+	reloadtime              = 1.75,
 }
 
 local LBX20 = AC20:New(LBX_Class):New{
