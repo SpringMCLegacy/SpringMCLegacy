@@ -45,6 +45,15 @@ local CSPL = SPL:New{
 	range                   = 450,
 }
 
+local MicroSPL = SPL:New{
+	name                    = "MicroPulseLaser",
+	range                   = 200,
+	rgbcolor				= [[0.2 0.2 1.0]],
+	damage = {
+		default = 5, --15 DPS, 25 damage per reload
+	},
+}
+
 local MPL = PulseLaser_Class:New{
 	name                    = "MPulseLaser",
 	soundStart           	= [[MPL_Fire]],
@@ -102,7 +111,7 @@ local CLPL = LPL:New{
 
 return lowerkeys({ 
 	SPL = SPL,
-	InfSPL = SPL:New{range = 200},
+	MicroSPL = MicroSPL,
 	CSPL = CSPL,
 	MPL = MPL,
 	CMPL = CMPL,

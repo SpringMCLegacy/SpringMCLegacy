@@ -51,7 +51,7 @@ local Prime = CL_Elemental:New{
 	objectName        	= "CL_Elemental.s3o",
 	weapons 		= {	
 		[1] = {
-			name	= "InfSPL",
+			name	= "MicroSPL",
 		},
 		[2] = {
 			name	= "InfSRM2",

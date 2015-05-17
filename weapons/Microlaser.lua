@@ -13,7 +13,7 @@ weaponDef = {
 	collideFriendly			= true,
 	noSelfDamage            = true,
 	turret                  = true,
-	range                   = 150,
+	range                   = 200,
 	accuracy                = 200,
 	targetMoveError			= 0.1,
 	tolerance				= 100,
@@ -34,7 +34,7 @@ weaponDef = {
 	rgbcolor				= "1.0 1.0 0.1",
 	intensity				= 0.75,
 	damage = {
-		default = 20, --30 DPS, 125 damage per reload
+		default = 1, --30 DPS, 125 damage per reload
 	},
 	customparams = {
 		heatgenerated		= "1",--1/sec
