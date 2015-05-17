@@ -1,5 +1,5 @@
 local featureDefs = {
-  IS_Rommel_X = {
+  IS_Axel_X = {
     blocking           = false,
     category           = "corpses",
     damage             = 1150,
@@ -10,7 +10,7 @@ local featureDefs = {
     height             = "20",
     hitdensity         = "50",
     metal              = 2000,
-    object             = "IS_Rommel_X.s3o",
+    object             = "IS_Axel_X.s3o",
     reclaimable        = true,
     world              = "All Worlds",
   },
