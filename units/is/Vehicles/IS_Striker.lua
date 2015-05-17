@@ -16,7 +16,7 @@ local IS_Striker = LightTank:New{
 
 	weapons	= {	
 		[1] = {
-			name	= "LRM10",
+			name	= "LRM15",
 		},
 		[2] = {
 			name	= "SSRM4",
@@ -24,7 +24,7 @@ local IS_Striker = LightTank:New{
 	},
 	
 	customparams = {
-		helptext		= "Armament: 1 x LRM-10, 1 x Streak SRM-4 - Armor: 3 tons",
+		helptext		= "Armament: 1 x LRM-15, 1 x Streak SRM-4 - Armor: 3 tons",
 		heatlimit		= 20,
 		turrettunspeed  = 350,
 		elevationspeed  = 200,

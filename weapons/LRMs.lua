@@ -25,7 +25,7 @@ local LRM_Class = Weapon:New{
 	burstrate				= 0.1,
 	model					= "Missile.s3o",
 	damage = {
-		default = 100,--150,--10 DPS
+		default = 150,--10 DPS
 	},
 	customparams = {
 		cegflare			= "MISSILE_MUZZLEFLASH",

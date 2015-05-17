@@ -4,9 +4,9 @@ local IS_Hunter = LightTank:New{
 	objectName        	= "IS_Hunter.s3o",
 	corpse				= "IS_Hunter_X",
 	maxDamage           = 2000,
-	mass                = 3500,
+	mass                = 4500,
 	trackWidth			= 23,--width to render the decal
-	buildCostEnergy     = 40,
+	buildCostEnergy     = 45,
 	buildCostMetal      = 7000,
 	maxVelocity		= 2.8, --86kph/30
 	maxReverseVelocity= 1.2,
@@ -27,7 +27,7 @@ local IS_Hunter = LightTank:New{
 		elevationspeed  = 50,
 		wheelspeed      = 200,
 		maxammo 		= {lrm = 520},
-		squadsize 		= 1,
+		squadsize 		= 2,
     },
 }
 

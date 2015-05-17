@@ -33,7 +33,7 @@ local CL_Hephaestus = Hover:New{
 		turretturnspeed = 75,
 		elevationspeed  = 200,
 		maxammo = {narc = 10},
-		squadsize 		= 4,
+		squadsize 		= 3,
     },
 }
 
