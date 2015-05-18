@@ -17,9 +17,10 @@ local AC_Class = Weapon:New{
 
 local LBX_Class = Weapon:New{
 	explosionGenerator    	= "custom:MG_Hit",
+	impactOnly				= true,
 	areaOfEffect            = 1,
 	collisionSize			= 10,
-	weaponVelocity          = 2500,
+	weaponVelocity          = 2000,
 	size					= 0.8,
 	stages					= 5, 		--Number of particles used in one plasma shot.
 	intensity				= 0.5,
@@ -37,10 +38,10 @@ local AC2 = AC_Class:New{
 	accuracy                = 150,
 	impactOnly				= true,
 	weaponVelocity          = 4000,
-	reloadtime              = 0.2,
+	reloadtime              = 0.5,
 	size					= 0.75,
 	damage = {
-		default = 16, --40 DPS
+		default = 20, --40 DPS
 	},
 	customparams = {
 		heatgenerated		= 0.1,--0.5/s
@@ -54,9 +55,9 @@ local RAC2 = AC2:New{
 	range                   = 1800,
 	sprayangle				= 25,
 	weaponVelocity          = 2000,
-	burst					= 10,
+	burst					= 6,
 	burstrate				= 0.04,
-	reloadtime              = 0.4,
+	reloadtime              = 0.5,
 	customparams = {
 		heatgenerated		= 4,--0.5/s
 		spinspeed			= 600,
@@ -66,7 +67,7 @@ local RAC2 = AC2:New{
 
 local UAC2 = AC2:New{
 	name                    = "Ultra AC/2",
-	reloadtime              = 0.15,
+	reloadtime              = 0.375,
 }
 
 -- AC5 & Variants
@@ -79,10 +80,10 @@ local AC5 = AC_Class:New{
 	accuracy                = 200,
 	impactOnly				= true,
 	weaponVelocity          = 2000,
-	reloadtime              = 1,
+	reloadtime              = 2,
 	size					= 1,
 	damage = {
-		default = 100, --100 DPS
+		default = 200, --100 DPS
 	},
 	customparams = {
 		heatgenerated		= 0.5,--1/sec
@@ -114,9 +115,9 @@ local RAC5 = AC5:New{
 	accuracy                = 250,
 	sprayangle				= 250,
 	weaponVelocity          = 1750,
-	burst					= 8,
+	burst					= 6,
 	burstrate				= 0.2,
-	reloadtime              = 1.5,
+	reloadtime              = 2,
 	customparams = {
 		heatgenerated		= 7,--1/sec
 		--cegflare			= "MISSILE_MUZZLEFLASH",
@@ -129,7 +130,7 @@ local UAC5 = AC5:New{
 	name                    = "Ultra AC/5",
 	range                   = 1800,
 	accuracy                = 200,
-	reloadtime              = 0.75,
+	reloadtime              = 1.5,
 	customparams = {
 		heatgenerated		= 0.56,--1.5/sec
     },
@@ -140,12 +141,12 @@ local LBX5 = AC5:New(LBX_Class):New{
 	soundStart            	= "LBX5_Fire",
 	range                   = 1400,
 	accuracy                = 100,
-	reloadtime              = 1,
+	reloadtime              = 2,
 	sprayAngle				= 200,
 	projectiles				= 5,
 	dynDamageMin			= 30,
 	damage = {
-		default = 60, --150 DPS
+		default = 120, --150 DPS
 	},
 	customparams = {
 		heatgenerated		= 1,--1/sec
@@ -162,11 +163,11 @@ local AC10 = AC_Class:New{
 	accuracy                = 250,
 	areaOfEffect            = 25,
 	weaponVelocity          = 2000,
-	reloadtime              = 1.5,
+	reloadtime              = 4,
 	size					= 1.5,
 	stages					= 50, 		--Number of particles used in one plasma shot.
 	damage = {
-		default = 300, --200 DPS
+		default = 800, --200 DPS
 	},
 	customparams = {
 		heatgenerated		= 2,--3/sec
@@ -177,20 +178,21 @@ local AC10 = AC_Class:New{
 
 local UAC10 = AC10:New{
 	name                    = "Ultra AC/10",
-	reloadtime              = 1.0,
+	reloadtime              = 3,
 }
 
 local LBX10 = AC10:New(LBX_Class):New{
 	name                    = "LBX/10",
 	soundStart            	= "LBX10_Fire",
+	impactOnly				= true,
 	range                   = 1200,
 	accuracy                = 200,
-	reloadtime              = 3,
+	reloadtime              = 4,
 	sprayAngle				= 300,
 	projectiles				= 10,
 	dynDamageMin			= 45,
 	damage = {
-		default = 90, --300 DPS
+		default = 120, --300 DPS
 	},
 	customparams = {
 		heatgenerated		= 3,--2/sec
@@ -207,12 +209,12 @@ local AC20 = AC_Class:New{
 	accuracy                = 200,
 	areaOfEffect            = 50,
 	weaponVelocity          = 2000,
-	reloadtime              = 2.5,
+	reloadtime              = 5,
 	size					= 2,
 	stages					= 50, 		--Number of particles used in one plasma shot.
 	intensity				= 0.2,
 	damage = {
-		default = 1000, --400 DPS
+		default = 2000, --400 DPS
 	},
 	customparams = {
 		heatgenerated		= 17.5,--7/sec
@@ -225,12 +227,13 @@ local AC20 = AC_Class:New{
 local UAC20 = AC20:New{
 	name                    = "Ultra AC/20",
 	range                   = 1050,
-	reloadtime              = 1.75,
+	reloadtime              = 3.75,
 }
 
 local LBX20 = AC20:New(LBX_Class):New{
 	name                    = "LBX/20",
 	soundStart            	= "LBX20_Fire",
+	impactOnly				= true,
 	range                   = 700,
 	accuracy                = 150,
 	reloadtime              = 5,
