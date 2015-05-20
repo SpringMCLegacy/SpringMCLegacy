@@ -38,7 +38,7 @@ local IS_Behemoth = Tank:New{
 		turretturnspeed = 75,
 		elevationspeed  = 200,
 		wheelspeed      = 200,
-		barrelrecoildist = {[1] = 3, [2] = 3},
+		barrelrecoildist = {[1] = 5, [2] = 5},
 		maxammo 		= {lrm = 400, ac10 = 80, srm = 120},
 		squadsize 		= 1,
 	},
