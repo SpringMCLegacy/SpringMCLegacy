@@ -294,6 +294,10 @@ local function ResetBuildQueue(unitID)
 	end
 end
 
+local L = {"L"}
+local C = {"C"}
+local T = {"T"}
+
 local function CheckBuildOptions(unitID, teamID, money, weightLeft, cmdID)
 	--local weightLeft = GetTeamResources(teamID, "energy")
 	local cmdDescs = GetUnitCmdDescs(unitID) or EMPTY_TABLE
@@ -316,15 +320,15 @@ local function CheckBuildOptions(unitID, teamID, money, weightLeft, cmdID)
 			if buildDefID < 0 
 			and (currParam == "C" or currParam == "" or currParam == "L")
 			and (TeamSlotsRemaining(teamID) - (orderSizes[unitID] or 0) - (orderSizesPending[unitID] or 0)) < 1 then -- builder order but no team slots left
-				EditUnitCmdDesc(unitID, cmdDescID, {disabled = true, params = {"L"}})
+				EditUnitCmdDesc(unitID, cmdDescID, {disabled = true, params = L})
 			--[[elseif cCost > 0 and 
 				(TeamSlotsRemaining(teamID) - (orderSizes[teamID] or 0) - (orderSizesPending[teamID] or 0)) < 1 and 
 				(currParam == "C" or currParam == "" or currParam == "L") then
-				EditUnitCmdDesc(unitID, cmdDescID, {disabled = true, params = {"L"}})]]
+				EditUnitCmdDesc(unitID, cmdDescID, {disabled = true, params = L})]]
 			elseif cCost > money and (currParam == "" or currParam == "C") then
-				EditUnitCmdDesc(unitID, cmdDescID, {disabled = true, params = {"C"}})
+				EditUnitCmdDesc(unitID, cmdDescID, {disabled = true, params = C})
 			elseif tCost > weightLeft and (currParam == "" or currParam == "T") then
-				EditUnitCmdDesc(unitID, cmdDescID, {disabled = true, params = {"T"}})
+				EditUnitCmdDesc(unitID, cmdDescID, {disabled = true, params = T})
 			else
 				if cmdDesc.disabled and (currParam == "C" or currParam == "T" or currParam == "L") then
 					EditUnitCmdDesc(unitID, cmdDescID, {disabled = false, params = EMPTY_TABLE})
@@ -368,38 +372,37 @@ end
 GG.DropshipLeft = DropshipLeft
 
 -- Factories can't implement gadget:CommandFallback, so fake it ourselves
-local function SendCommandFallback(unitID, unitDefID, teamID)
+local function SendCommandFallback(unitID, unitDefID, teamID, cost)
 	if orderStatus[teamID] == 0 then return end -- order was cancelled
 	if dropShipStatus[teamID] == 0 then -- Dropship is READY
 		-- CALL DROPSHIP
 		local orderQueue = Spring.GetFullBuildQueue(unitID)
 		if not orderQueue then return end -- dropzone died TODO: Transfer to new DZ if there is one
-		for i, order in pairs(orderQueue) do -- we need to double all orders for vehicles
-			for orderDefID, count in pairs(order) do
-				if unitTypes[orderDefID] == "vehicle" then -- TODO: vtol and aero?
-					orderQueue[i][orderDefID] = count * 2
+		if #orderQueue > 0 then -- proceed with order
+			local side = UnitDefs[unitDefID].name:sub(1,2) -- send dropship of correct side
+			-- TODO: Sound needs to change?
+			GG.DropshipDelivery(unitID, teamID, side .. "_dropship", orderQueue, 0, nil, 0)
+			Spring.SendMessageToTeam(teamID, "Sending purchase order for the following:")
+			for i, order in ipairs(orderQueue) do
+				for orderDefID, count in pairs(order) do
+					Spring.SendMessageToTeam(teamID, UnitDefs[orderDefID].name .. ":\t" .. count)
 				end
 			end
+			-- Dropship can now be considered ACTIVE even though it hasn't arrived yet
+			dropShipStatus[teamID] = 1
+		else -- cancelled
+			AddTeamResource(teamID, "metal", cost)
+			dropShipStatus[teamID] = 0
+			orderStatus[teamID] = 0
+			UpdateButtons(teamID)
 		end
-		
-		local side = UnitDefs[unitDefID].name:sub(1,2) -- send dropship of correct side
-		-- TODO: Sound needs to change?
-		-- TODO: Remove the 3 second delay here? causes a bug where you can quickly cancel to get refund & units, and feels 'laggy'
-		GG.DropshipDelivery(unitID, teamID, side .. "_dropship", orderQueue, 0, nil, DROPSHIP_DELAY)
-		Spring.SendMessageToTeam(teamID, "Sending purchase order for the following:")
-		for i, order in ipairs(orderQueue) do
-			for orderDefID, count in pairs(order) do
-				Spring.SendMessageToTeam(teamID, UnitDefs[orderDefID].name .. ":\t" .. count)
-			end
-		end
+		-- clean up (regardless of whether or not order was fulfilled or cancelled)
 		ResetBuildQueue(unitID)
 		orderCosts[unitID] = 0
 		orderTons[unitID] = 0
 		orderSizesPending[unitID] = orderSizes[unitID]
 		--if orderSizesPending[unitID] < 0 then Spring.Echo(teamID, "ORDER SIZES NEGATIVE L377", orderSizesPending[unitID]) end
 		orderSizes[unitID] = 0
-		-- Dropship can now be considered ACTIVE even though it hasn't arrived yet
-		dropShipStatus[teamID] = 1
 	else -- Dropship is ACTIVE or COOLDOWN
 		GG.Delay.DelayCall(SendCommandFallback, {unitID, unitDefID, teamID}, 16)
 	end
@@ -489,7 +492,7 @@ function gadget:AllowCommand(unitID, unitDefID, teamID, cmdID, cmdParams, cmdOpt
 			UseTeamResource(teamID, "metal", cost)
 			orderStatus[teamID] = 1
 			UpdateButtons(teamID)
-			GG.Delay.DelayCall(SendCommandFallback, {unitID, unitDefID, teamID}, 16)
+			GG.Delay.DelayCall(SendCommandFallback, {unitID, unitDefID, teamID, cost}, 16)
 			return true
 		end
 	end
