@@ -4,7 +4,7 @@ local IS_Corsair = Aero:New{
 	objectName        	= "IS_Corsair.s3o",
 	sightDistance       = 1200,
 	radarDistance      	= 1500,
-	maxDamage           = 3350,
+	maxDamage           = 3000,
 	mass                = 2000,
 	buildCostEnergy     = 20,
 	buildCostMetal      = 4500,
@@ -55,7 +55,7 @@ local IS_Corsair = Aero:New{
 	},
 	
 	customparams = {
-		helptext		= "Armament: 2 x Large Beam Laser, 2 x ER Medium Beam Laser, 4 x ER Small Beam Laser - Armor: 13.5 tons",
+		helptext		= "Armament: 2 x Large Beam Laser, 2 x ER Medium Beam Laser, 4 x ER Small Beam Laser - Armor: 3 tons",
 		heatlimit		= "20",
 		squadsize 		= 2,
     },

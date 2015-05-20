@@ -3,7 +3,7 @@ local IS_LRMCarrier = LightTank:New{
 	description         = "Missile Support Vehicle",
 	objectName        	= "IS_LRMCarrier.s3o",
 	corpse				= "IS_LRMCarrier_X",
-	maxDamage           = 8000,
+	maxDamage           = 3360,
 	mass                = 6000,
 	trackWidth			= 23,--width to render the decal
 	buildCostEnergy     = 60,
@@ -24,7 +24,7 @@ local IS_LRMCarrier = LightTank:New{
 	},
 	
 	customparams = {
-		helptext		= "Armament: 2 x LRM-20 - Armor: 2 tons",
+		helptext		= "Armament: 2 x LRM-20 - Armor: 3 tons FF",
 		heatlimit		= 26,
 		turretturnspeed = 25,
 		elevationspeed  = 50,

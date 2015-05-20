@@ -5,7 +5,7 @@ local IS_Hawkmoth = VTOL:New{
 	corpse				= "IS_Hawkmoth_X",
 	sightDistance       = 1200,
 	radarDistance      	= 2000,
-	maxDamage           = 3500,
+	maxDamage           = 2240,
 	mass                = 2000,
 	buildCostEnergy     = 20,
 	buildCostMetal      = 8000,
@@ -23,7 +23,7 @@ local IS_Hawkmoth = VTOL:New{
 	},
 	
 	customparams = {
-		helptext		= "Armament: 1 x Gauss Rifle - Armor: 2 tons",
+		helptext		= "Armament: 1 x Gauss Rifle - Armor: 2 tons FF",
 		heatlimit		= "15",
 		maxammo 		= {gauss = 30},
 		squadsize 		= 2,

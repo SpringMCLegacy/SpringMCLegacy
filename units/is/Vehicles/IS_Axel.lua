@@ -3,7 +3,7 @@ local IS_Axel = LightTank:New{
 	description         = "Heavy Brawler Tank",
 	objectName        	= "IS_Axel.s3o",
 	corpse				= "IS_Axel_X",
-	maxDamage           = 11500,
+	maxDamage           = 10500,
 	mass                = 6500,
 	trackWidth			= 23,--width to render the decal
 	buildCostEnergy     = 65,
@@ -22,12 +22,12 @@ local IS_Axel = LightTank:New{
 			name	= "ERSBL",
 		},
 		[3] = {
-			name	= "SSRM4",
+			name	= "LRM5",
 		},
 	},
 	
 	customparams = {
-		helptext		= "Armament: 1 x AC/20, 1 x ER Small Beam Laser, 1 x SSRM-2 - Armor: 11.5 tons",
+		helptext		= "Armament: 1 x AC/20, 1 x ER Small Beam Laser, 1 x SSRM-2 - Armor: 10.5 tons",
 		heatlimit		= 20,
 		turrettunspeed  = 85,
 		elevationspeed  = 200,

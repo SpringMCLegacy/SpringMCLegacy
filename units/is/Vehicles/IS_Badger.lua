@@ -33,7 +33,7 @@ local IS_Badger = LightTank:New{
 	},
 	
 	customparams = {
-		helptext		= "Armament: 3 x Medium Beam Laser, 1 x SSRM-2 - Armor: 3.5 tons",
+		helptext		= "Armament: 3 x Medium Beam Laser, 1 x SSRM-2 - Armor: 5 tons",
 		heatlimit		= 20,
 		turrettunspeed  = 500,
 		elevationspeed  = 200,

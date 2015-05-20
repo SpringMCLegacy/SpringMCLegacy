@@ -29,7 +29,7 @@ local CL_Tyr = Hover:New{
 		},
 	},
 	customparams = {
-		helptext		= "Armament: 1 x ER Large Laser, 2 x SSRM-4 - Armor: 6.5 tons",
+		helptext		= "Armament: 1 x ER Large Laser, 2 x SSRM-4 - Armor: 6.5 tons FF",
 		heatlimit		= 25,
 		turretturnspeed = 75,
 		elevationspeed  = 200,

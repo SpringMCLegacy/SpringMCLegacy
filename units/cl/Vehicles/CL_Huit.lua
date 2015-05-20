@@ -4,7 +4,7 @@ local CL_Huit = LightTank:New{
 	objectName        	= "CL_Huit.s3o",
 	corpse				= "CL_Huit_X",
 	radarDistanceJam    = 500,
-	maxDamage           = 9800,
+	maxDamage           = 6600,
 	mass                = 8500,
 	trackWidth			= 22,--width to render the decal
 	buildCostEnergy     = 85,
@@ -30,7 +30,7 @@ local CL_Huit = LightTank:New{
 		},
 	},
 	customparams = {
-		helptext		= "Armament: 2 x Arrow IV Artillery Missle, 2 x Medium Pulse Laser - Armor: 5.5 tons",
+		helptext		= "Armament: 2 x Arrow IV Artillery Missle, 2 x Medium Pulse Laser - Armor: 5.5 tons FF",
 		heatlimit		= 20,
 		turretturnspeed = 50,
 		elevationspeed  = 75,

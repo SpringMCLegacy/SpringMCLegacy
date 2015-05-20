@@ -103,7 +103,7 @@ local Vehicle = Unit:New{
 	canMove 			= true,
 	footprintX			= 3,-- current both TANK and HOVER movedefs are 2x2 even if unitdefs are not
 	footprintZ 			= 3,
-	moveState			= 2, -- Roam
+	moveState			= 0, -- Hold Position
 	usepiececollisionvolumes = true,
 	
 	customparams = {

@@ -4,7 +4,7 @@ local IS_Manteuffel = LightTank:New{
 	objectName        	= "IS_Manteuffel.s3o",
 	corpse				= "IS_Manteuffel_X",
 	radarDistanceJam    = 500,
-	maxDamage           = 14000,
+	maxDamage           = 13440,
 	mass                = 7500,
 	trackWidth			= 23,--width to render the decal
 	buildCostEnergy     = 75,
@@ -31,7 +31,7 @@ local IS_Manteuffel = LightTank:New{
 	},
 	
 	customparams = {
-		helptext		= "Armament: 1 x Rotary AC/5, 3 x ER Medium Beam Laser - Armor: 11.5 tons",
+		helptext		= "Armament: 1 x Rotary AC/5, 3 x ER Medium Beam Laser - Armor: 12 tons FF",
 		heatlimit		= 10,
 		turrettunspeed  = 85,
 		elevationspeed  = 200,

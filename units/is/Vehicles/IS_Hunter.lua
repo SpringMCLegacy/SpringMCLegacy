@@ -3,7 +3,7 @@ local IS_Hunter = LightTank:New{
 	description         = "Missile Support Vehicle",
 	objectName        	= "IS_Hunter.s3o",
 	corpse				= "IS_Hunter_X",
-	maxDamage           = 2000,
+	maxDamage           = 4480,
 	mass                = 4500,
 	trackWidth			= 23,--width to render the decal
 	buildCostEnergy     = 45,
@@ -21,7 +21,7 @@ local IS_Hunter = LightTank:New{
 	},
 	
 	customparams = {
-		helptext		= "Armament: 1 x LRM-20 - Armor: 2 tons",
+		helptext		= "Armament: 1 x LRM-20 - Armor: 4 tons FF",
 		heatlimit		= 26,
 		turretturnspeed = 25,
 		elevationspeed  = 50,

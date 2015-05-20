@@ -6,7 +6,7 @@ local CL_Hephaestus = Hover:New{
 	sightDistance       = 1200,
 	radarDistance      	= 2000,
 	radarDistanceJam    = 500,
-	maxDamage           = 5000,
+	maxDamage           = 6000,
 	mass                = 3000,
 	buildCostEnergy     = 30,
 	buildCostMetal      = 9270,
@@ -16,8 +16,6 @@ local CL_Hephaestus = Hover:New{
 	brakeRate       = 0.1,
 	turnRate 		= 450,
 	
-	moveState			= 0,
-	
 	weapons 		= {	
 		[1] = {
 			name	= "CMPL",
@@ -26,11 +24,11 @@ local CL_Hephaestus = Hover:New{
 			name	= "CMPL",
 		},
 		[3] = {
-			name	= "NARC",
+			name	= "TAG",
 		},
 	},
 	customparams = {
-		helptext		= "Armament: 2 x Medium Pulse Laser, 1 x NARC Launcher - Armor: 5 tons",
+		helptext		= "Armament: 2 x Medium Pulse Laser, 1 x TAG Laser - Armor: 5 tons FF",
 		heatlimit		= 20,
 		turretturnspeed = 75,
 		elevationspeed  = 200,

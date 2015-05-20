@@ -3,7 +3,7 @@ local CL_Mars = Tank:New{
 	description         = "Heavy Strike Tank",
 	objectName        	= "CL_Mars.s3o",
 	corpse				= "CL_Mars_X",
-	maxDamage           = 26800,
+	maxDamage           = 13800,
 	mass                = 10000,
 	radarDistanceJam    = 500,
 	trackType			= "Mars",--hueg like xbox
@@ -15,8 +15,6 @@ local CL_Mars = Tank:New{
 	acceleration    = 0.8,
 	brakeRate       = 0.1,
 	turnRate 		= 400,
-	
-	moveState			= 0,
 
 	weapons = {	
 		[1] = {
@@ -61,7 +59,7 @@ local CL_Mars = Tank:New{
 		},
 	},
 	customparams = {
-		helptext		= "Armament: 1 x Gauss Rifle, 1 x ER Large Beam Laser, 1 x LBX/10, 3 x LRM-15, 2 x Streak SRM-6, 2 x Machinegun - Armor: 15 tons",
+		helptext		= "Armament: 1 x Gauss Rifle, 1 x ER Large Beam Laser, 1 x LBX/10, 3 x LRM-15, 2 x Streak SRM-6, 2 x Machinegun - Armor: 11.5 tons FF",
 		heatlimit		= 36,
 		wheelspeed      = 50,
 		turretturnspeed = 50,
@@ -70,7 +68,7 @@ local CL_Mars = Tank:New{
 		barrelrecoilspeed = 100,
 		turrets = {[3] = 9, [9] = 9, [10] = 10}, -- TODO: use value as turning speed?
 		maxammo = {gauss = 20, ac10 = 40, lrm = 180, srm = 120},
-		squadsize 		= 1,
+		squadsize 		= 2,
     },
 }
 

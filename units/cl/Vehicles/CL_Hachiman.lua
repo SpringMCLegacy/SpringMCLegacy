@@ -3,7 +3,7 @@ local CL_Hachiman = LightTank:New{
 	description         = "Medium Support Tank",
 	objectName        	= "CL_Hachiman.s3o",
 	corpse				= "CL_Hachiman_X",
-	maxDamage           = 7000,
+	maxDamage           = 8400,
 	mass                = 5000,
 	trackWidth			= 24,--width to render the decal
 	buildCostEnergy     = 50,
@@ -29,7 +29,7 @@ local CL_Hachiman = LightTank:New{
 		},
 	},
 	customparams = {
-		helptext		= "Armament: 2 x LRM-20, 2 x ER Medium Beam Laser - Armor: 7 tons",
+		helptext		= "Armament: 2 x LRM-20, 2 x ER Medium Beam Laser - Armor: 7 tons FF",
 		heatlimit		= 22,
 		turretturnspeed = 75,
 		elevationspeed  = 100,

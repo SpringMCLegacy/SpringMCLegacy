@@ -3,7 +3,7 @@ local IS_Demolisher = Tank:New{
 	description         = "Heavy Brawler Tank",
 	objectName        	= "IS_Demolisher.s3o",
 	corpse				= "IS_Demolisher_X",
-	maxDamage           = 22400,
+	maxDamage           = 12000,
 	mass                = 8000,
 	trackWidth			= 28,--width to render the decal
 	buildCostEnergy     = 80,
@@ -24,7 +24,7 @@ local IS_Demolisher = Tank:New{
 	},
 
 	customparams = {
-		helptext		= "Armament: 2 x AC/20 - Armor: 13 tons",
+		helptext		= "Armament: 2 x AC/20 - Armor: 12 tons",
 		heatlimit		= 10,
 		turretturnspeed = 75,
 		elevationspeed  = 200,

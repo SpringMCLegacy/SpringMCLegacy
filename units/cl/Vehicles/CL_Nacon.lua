@@ -3,9 +3,9 @@ local CL_Nacon = LightTank:New{
 	description         = "Light Brawler Tank",
 	objectName        	= "CL_Nacon.s3o",
 	corpse				= "CL_Nacon_X",
-	maxDamage           = 3000,
+	maxDamage           = 6000,
 	mass                = 2000,
-	trackWidth			= 23,--width to render the decal
+	trackWidth			= 15,--width to render the decal
 	buildCostEnergy     = 20,
 	buildCostMetal      = 10710,
 	maxVelocity		= 5.4, --130kph/30
@@ -13,7 +13,7 @@ local CL_Nacon = LightTank:New{
 	acceleration    = 1.8,
 	brakeRate       = 0.5,
 	turnRate 		= 550,
-
+	
 	weapons	= {	
 		[1] = {
 			name	= "ATM6",
@@ -21,7 +21,7 @@ local CL_Nacon = LightTank:New{
 	},
 	
 	customparams = {
-		helptext		= "Armament: 1 x ATM-6 Armor: ",
+		helptext		= "Armament: 1 x ATM-6 Armor: 5 tons FF",
 		heatlimit		= 20,
 		turrettunspeed  = 75,
 		elevationspeed  = 200,

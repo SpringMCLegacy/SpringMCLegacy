@@ -3,7 +3,7 @@ local CL_Enyo = LightTank:New{
 	description         = "Medium Strike Tank",
 	objectName        	= "CL_Enyo.s3o",
 	corpse				= "CL_Enyo_X",
-	maxDamage           = 13400,
+	maxDamage           = 9000,
 	mass                = 5500,
 	trackWidth			= 24,--width to render the decal
 	buildCostEnergy     = 55,
@@ -13,9 +13,7 @@ local CL_Enyo = LightTank:New{
 	acceleration    = 0.9,
 	brakeRate       = 0.1,
 	turnRate 		= 500,
-	
-	moveState			= 0,
-	
+
 	weapons 		= {	
 		[1] = {
 			name	= "SSRM6",
@@ -28,7 +26,7 @@ local CL_Enyo = LightTank:New{
 		},
 	},
 	customparams = {
-		helptext		= "Armament: 1 x Large Pulse Laser, 2 x SSRM-6 - Armor: 7 tons",
+		helptext		= "Armament: 1 x Large Pulse Laser, 2 x SSRM-6 - Armor: 7.5 tons FF",
 		heatlimit		= 28,
 		turretturnspeed = 100,
 		elevationspeed  = 150,

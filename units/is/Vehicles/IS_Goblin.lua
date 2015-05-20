@@ -3,7 +3,7 @@ local IS_Goblin = LightTank:New{
 	description         = "Medium Brawler Tank",
 	objectName        	= "IS_Goblin.s3o",
 	corpse				= "IS_Goblin_X",
-	maxDamage           = 9600,
+	maxDamage           = 8000,
 	mass                = 4500,
 	trackWidth			= 23,--width to render the decal
 	buildCostEnergy     = 45,
@@ -14,8 +14,6 @@ local IS_Goblin = LightTank:New{
 	brakeRate       = 0.1,
 	turnRate 		= 450,
 	
-	moveState			= 0,
-
 	weapons	= {	
 		[1] = {
 			name	= "SRM6",

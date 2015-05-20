@@ -3,7 +3,7 @@ local CL_Ku = LightTank:New{
 	description         = "Medium Brawler Tank",
 	objectName        	= "CL_Ku.s3o",
 	corpse				= "CL_Ku_X",
-	maxDamage           = 9000,
+	maxDamage           = 8400,
 	mass                = 5000,
 	trackWidth			= 24,--width to render the decal
 	buildCostEnergy     = 50,
@@ -13,8 +13,6 @@ local CL_Ku = LightTank:New{
 	acceleration    = 0.9,
 	brakeRate       = 0.1,
 	turnRate 		= 500,
-	
-	moveState			= 0,
 	
 	weapons 		= {	
 		[1] = {
@@ -28,7 +26,7 @@ local CL_Ku = LightTank:New{
 		},
 	},
 	customparams = {
-		helptext		= "Armament: 1 x Ultra AC/10, 1 x ER Large Beam Laser, 1 x SSRM-4 - Armor: 7 tons",
+		helptext		= "Armament: 1 x Ultra AC/10, 1 x ER Large Beam Laser, 1 x SSRM-4 - Armor: 7 tons FF",
 		heatlimit		= 22,
 		turretturnspeed = 100,
 		elevationspeed  = 150,

@@ -4,7 +4,7 @@ local CL_Sulla = Aero:New{
 	objectName        	= "CL_Sulla.s3o",
 	sightDistance       = 1200,
 	radarDistance      	= 1500,
-	maxDamage           = 2750,
+	maxDamage           = 2400,
 	mass                = 2000,
 	buildCostEnergy     = 20,
 	buildCostMetal      = 4500,
@@ -35,7 +35,7 @@ local CL_Sulla = Aero:New{
 	},
 	
 	customparams = {
-		helptext		= "Armament: 1 x Gauss Rifle, 2 x PPC - Armor: 2 tons",
+		helptext		= "Armament: 1 x Gauss Rifle, 2 x PPC - Armor: 2 tons FF",
 		heatlimit		= "15",
 		maxammo 		= {gauss = 15},
 		squadsize 		= 1,

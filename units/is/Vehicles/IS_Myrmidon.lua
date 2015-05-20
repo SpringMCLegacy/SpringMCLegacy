@@ -3,7 +3,7 @@ local IS_Myrmidon = LightTank:New{
 	description         = "Medium Sniper Tank",
 	objectName        	= "IS_Myrmidon.s3o",
 	corpse				= "IS_Myrmidon_X",
-	maxDamage           = 6000,
+	maxDamage           = 5000,
 	mass                = 6000,
 	trackWidth			= 23,--width to render the decal
 	buildCostEnergy     = 45,
@@ -24,7 +24,7 @@ local IS_Myrmidon = LightTank:New{
 	},
 	
 	customparams = {
-		helptext		= "Armament: 1 x PPC, 1 x SRM-6 - Armor: 6 tons",
+		helptext		= "Armament: 1 x PPC, 1 x SRM-6 - Armor: 5 tons",
 		heatlimit		= 20,
 		turrettunspeed  = 85,
 		elevationspeed  = 200,

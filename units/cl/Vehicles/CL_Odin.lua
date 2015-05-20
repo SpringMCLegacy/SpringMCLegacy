@@ -5,7 +5,7 @@ local CL_Odin = LightTank:New{
 	corpse				= "CL_Odin_X",
 	sightDistance       = 1200,
 	radarDistance      	= 2000,
-	maxDamage           = 3000,
+	maxDamage           = 1800,
 	mass                = 2000,
 	trackWidth			= 23,--width to render the decal
 	buildCostEnergy     = 20,
@@ -32,7 +32,7 @@ local CL_Odin = LightTank:New{
 	},
 	
 	customparams = {
-		helptext		= "Armament: 2 x Medium Pulse Laser, 1 x ER Small Beam Laser, 1 x Streak SRM-2",
+		helptext		= "Armament: 2 x Medium Pulse Laser, 1 x ER Small Beam Laser, 1 x Streak SRM-2 - Armor: 1.5 tons FF",
 		heatlimit		= 20,
 		turrettunspeed  = 75,
 		elevationspeed  = 200,

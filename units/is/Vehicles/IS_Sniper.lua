@@ -3,7 +3,7 @@ local IS_Sniper = LightTank:New{
 	description         = "Mobile Artillery",
 	objectName        	= "IS_Sniper.s3o",
 	corpse				= "IS_Sniper_X",
-	maxDamage           = 6400,
+	maxDamage           = 12000,
 	mass                = 8000,
 	trackWidth			= 24,--width to render the decal
 	buildCostEnergy     = 80,
@@ -29,7 +29,7 @@ local IS_Sniper = LightTank:New{
 	},
 	
 	customparams = {
-		helptext		= "Armament: 1 x Sniper Artillery Gun, 2 x ER Small Beam Laser - Armor: 7 tons",
+		helptext		= "Armament: 1 x Sniper Artillery Gun, 2 x ER Small Beam Laser - Armor: 12 tons",
 		heatlimit		= 15,
 		turretturnspeed = 50,
 		turret2turnspeed = 200,

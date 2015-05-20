@@ -3,7 +3,7 @@ local IS_Behemoth = Tank:New{
 	description         = "Assault Tank",
 	objectName        	= "IS_Behemoth.s3o",
 	corpse				= "IS_Behemoth_X",
-	maxDamage           = 24000,
+	maxDamage           = 18000,
 	mass                = 10000,
 	trackWidth			= 32,--width to render the decal
 	buildCostEnergy     = 100,
@@ -13,8 +13,6 @@ local IS_Behemoth = Tank:New{
 	acceleration    = 0.6,
 	brakeRate       = 0.1,
 	turnRate 		= 425,
-	
-	moveState			= 0,
 	
 	weapons	= {	
 		[1] = {

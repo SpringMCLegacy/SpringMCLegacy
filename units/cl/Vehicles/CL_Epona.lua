@@ -3,7 +3,7 @@ local CL_Epona = Hover:New{
 	description         = "Medium Brawler Hovercraft",
 	objectName        	= "CL_Epona.s3o",
 	corpse				= "CL_Epona_X",
-	maxDamage           = 6500,
+	maxDamage           = 6000,
 	mass                = 5000,
 	buildCostEnergy     = 50,
 	buildCostMetal      = 15400,
@@ -31,7 +31,7 @@ local CL_Epona = Hover:New{
 		},
 	},
 	customparams = {
-		helptext		= "Armament: 4 x Medium Pulse Laser, 1 x SSRM-4 - Armor: 5 tons",
+		helptext		= "Armament: 4 x Medium Pulse Laser, 1 x SSRM-4 - Armor: 5 tons FF",
 		heatlimit		= 25,
 		turretturnspeed = 75,
 		elevationspeed  = 200,

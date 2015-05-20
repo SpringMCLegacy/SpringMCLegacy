@@ -4,7 +4,7 @@ local CL_Bashkir = Aero:New{
 	objectName        	= "CL_Bashkir.s3o",
 	sightDistance       = 1200,
 	radarDistance      	= 1500,
-	maxDamage           = 1260,
+	maxDamage           = 1200,
 	mass                = 2000,
 	buildCostEnergy     = 20,
 	buildCostMetal      = 4500,
@@ -38,7 +38,7 @@ local CL_Bashkir = Aero:New{
 		},
 	},
 	customparams = {
-		helptext		= "Armament: 2 x Medium Pulse Laser, 1 x ER Small Beam Laser, 1 x SSRM-4 - Armor: 2 tons",
+		helptext		= "Armament: 2 x Medium Pulse Laser, 1 x ER Small Beam Laser, 1 x SSRM-4 - Armor: 1 ton FF",
 		heatlimit		= 15,
 		maxammo = {srm = 120},
 		squadsize 		= 2,

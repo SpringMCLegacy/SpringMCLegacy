@@ -7,8 +7,6 @@ local CL_Oro = Tank:New{
 	acceleration    = 0.8,
 	brakeRate       = 0.1,
 	turnRate 		= 400,
-	
-	moveState			= 0,
 
 	customparams = {
 		turretturnspeed = 85,
@@ -22,7 +20,7 @@ local Oro_HAG = CL_Oro:New{
 	description         = "Heavy Strike Tank",
 	objectName        	= "CL_Oro_HAG.s3o",
 	buildCostMetal      = 15500,
-	maxDamage           = 19700,
+	maxDamage           = 13200,
 	weapons 		= {	
 		[1] = {
 			name	= "HAG30",
@@ -32,7 +30,7 @@ local Oro_HAG = CL_Oro:New{
 		},
 	},
 	customparams = {
-		helptext		= "Armament: 1 x Hyper Assault Gauss 30, 1 x Large Pulse Laser - Armor: 11 tons",
+		helptext		= "Armament: 1 x Hyper Assault Gauss 30, 1 x Large Pulse Laser - Armor: 11 tons FF",
 		heatlimit		= 20,
 		barrelrecoildist = {[1] = 5},
 		maxammo = {gauss = 40},
@@ -45,7 +43,7 @@ local Oro_LBX = CL_Oro:New{
 	description         = "Medium Brawler Tank",
 	objectName        	= "CL_Oro_LBX.s3o",
 	buildCostMetal      = 12150,
-	maxDamage           = 9800,
+	maxDamage           = 13200,
 	weapons = {	
 		[1] = {
 			name	= "LBX20",
@@ -59,7 +57,7 @@ local Oro_LBX = CL_Oro:New{
 		},
 	},
 	customparams = {
-		helptext		= "Armament: 1 x LBX Autocannon/20, 1 x Large Pulse Laser, 1 x ER Medium Beam Laser - Armor: 11 tons",
+		helptext		= "Armament: 1 x LBX Autocannon/20, 1 x Large Pulse Laser, 1 x ER Medium Beam Laser - Armor: 11 tons FF",
 		heatlimit		= 15,
 		barrelrecoildist = {[1] = 5},
 		maxammo = {ac20 = 40},

@@ -3,7 +3,7 @@ local CL_Donar = VTOL:New{
 	description         = "Attack VTOL",
 	objectName        	= "CL_Donar.s3o",
 	corpse				= "CL_Donar_X",
-	maxDamage           = 3000,
+	maxDamage           = 3600,
 	mass                = 2500,
 	buildCostEnergy     = 20,
 	buildCostMetal      = 9500,
@@ -28,7 +28,7 @@ local CL_Donar = VTOL:New{
 		},
 	},
 	customparams = {
-		helptext		= "Armament: 1 x ER Large Laser, 2 x SSRM-2- Armor: 3 tons",
+		helptext		= "Armament: 1 x ER Large Laser, 2 x SSRM-2- Armor: 3 tons FF",
 		heatlimit		= 24,
 		maxammo = {srm = 120},
 		squadsize 		= 2,

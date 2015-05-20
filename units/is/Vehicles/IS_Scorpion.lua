@@ -1,5 +1,5 @@
 local IS_Scorpion = LightTank:New{
-	maxDamage           = 3200,
+	maxDamage           = 4000,
 	mass                = 2500,
 	trackWidth			= 20,--width to render the decal
 	buildCostEnergy     = 25,
@@ -35,7 +35,7 @@ local Scorpion_AC5 = IS_Scorpion:New{
 	},
 		
     customparams = {
-		helptext		= "Armament: 1 x Autocannon/5, 2 x Machinegun - Armor: 2 tons",
+		helptext		= "Armament: 1 x Autocannon/5, 2 x Machinegun - Armor: 4 tons",
 		barrelrecoildist = {[1] = 5},
 		maxammo 		= {ac5 = 80},
 		squadsize 		= 4,

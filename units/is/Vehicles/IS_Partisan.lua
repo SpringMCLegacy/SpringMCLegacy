@@ -3,10 +3,10 @@ local IS_Partisan = Tank:New{
 	description         = "Heavy Anti-Aircraft Tank",
 	objectName        	= "IS_Partisan.s3o",
 	corpse				= "IS_Partisan_X",
-	maxDamage           = 11200,
+	maxDamage           = 5600,
 	mass                = 8000,
 	trackWidth			= 32,--width to render the decal
-	buildCostEnergy     = 70,
+	buildCostEnergy     = 80,
 	buildCostMetal      = 11880,
 	maxVelocity		= 1.8, --54kph/30
 	maxReverseVelocity= 1.3,
@@ -38,7 +38,7 @@ local IS_Partisan = Tank:New{
 	},
 
 	customparams = {
-		helptext		= "Armament: 4 x AC/5 (Anti-Aircraft) - Armor: 7 tons",
+		helptext		= "Armament: 4 x AC/5 (Anti-Aircraft) - Armor: 5 tons FF",
 		heatlimit		= 20,
 		turretturnspeed = 250,
 		elevationspeed  = 300,

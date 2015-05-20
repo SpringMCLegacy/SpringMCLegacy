@@ -3,7 +3,7 @@ local CL_Ares = LightTank:New{
 	description         = "Medium Sniper Tank",
 	objectName        	= "CL_Ares.s3o",
 	corpse				= "CL_Ares_X",
-	maxDamage           = 8000,
+	maxDamage           = 5400,
 	mass                = 4000,
 	trackWidth			= 24,--width to render the decal
 	buildCostEnergy     = 40,
@@ -13,8 +13,6 @@ local CL_Ares = LightTank:New{
 	acceleration    = 0.8,
 	brakeRate       = 0.1,
 	turnRate 		= 450,
-	
-	moveState			= 0,
 	
 	weapons = {	
 		[1] = {
@@ -28,7 +26,7 @@ local CL_Ares = LightTank:New{
 		},
 	},
 	customparams = {
-		helptext		= "Armament: 1 x ER Large Beam Laser, 2 x ATM-9 - Armor: 4.5 tons",
+		helptext		= "Armament: 1 x ER Large Beam Laser, 2 x ATM-9 - Armor: 4.5 tons FF",
 		heatlimit		= 26,
 		turretturnspeed = 75,
 		elevationspeed  = 100,

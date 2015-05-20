@@ -3,7 +3,7 @@ local CL_Mithras = LightTank:New{
 	description         = "Light Strike Tank",
 	objectName        	= "CL_Mithras.s3o",
 	corpse				= "CL_Mithras_X",
-	maxDamage           = 3500,
+	maxDamage           = 3600,
 	mass                = 2500,
 	trackWidth			= 24,--width to render the decal
 	buildCostEnergy     = 55,
@@ -13,9 +13,7 @@ local CL_Mithras = LightTank:New{
 	acceleration    = 0.9,
 	brakeRate       = 0.1,
 	turnRate 		= 500,
-	
-	moveState			= 0,
-	
+
 	weapons 		= {	
 		[1] = {
 			name	= "CERMBL",
@@ -28,7 +26,7 @@ local CL_Mithras = LightTank:New{
 		},
 	},
 	customparams = {
-		helptext		= "Armament: 1 x UAC/2, 2 x Clan ER Medium Beam Laser - Armor: 3 tons",
+		helptext		= "Armament: 1 x UAC/2, 2 x Clan ER Medium Beam Laser - Armor: 3 tons FF",
 		heatlimit		= 28,
 		turretturnspeed = 100,
 		elevationspeed  = 150,

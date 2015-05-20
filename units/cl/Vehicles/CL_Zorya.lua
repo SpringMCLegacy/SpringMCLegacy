@@ -3,7 +3,7 @@ local CL_Zorya = LightTank:New{
 	description         = "Light Strike Tank",
 	objectName        	= "CL_Zorya.s3o",
 	corpse				= "CL_Zorya_X",
-	maxDamage           = 3500,
+	maxDamage           = 4200,
 	mass                = 3500,
 	trackWidth			= 24,--width to render the decal
 	buildCostEnergy     = 40,
@@ -13,9 +13,7 @@ local CL_Zorya = LightTank:New{
 	acceleration    = 0.8,
 	brakeRate       = 0.1,
 	turnRate 		= 450,
-	
-	moveState			= 0,
-	
+
 	weapons = {	
 		[1] = {
 			name	= "LBX5",

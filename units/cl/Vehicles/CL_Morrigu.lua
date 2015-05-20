@@ -4,7 +4,7 @@ local CL_Morrigu = Tank:New{
 	objectName        	= "CL_Morrigu.s3o",
 	corpse				= "CL_Morrigu_X",
 	radarDistanceJam    = 500,
-	maxDamage           = 23200,
+	maxDamage           = 15600,
 	mass                = 8000,
 	trackWidth			= 28,--width to render the decal
 	buildCostEnergy     = 80,
@@ -14,8 +14,6 @@ local CL_Morrigu = Tank:New{
 	acceleration    = 0.9,
 	brakeRate       = 0.1,
 	turnRate 		= 350,
-	
-	moveState			= 0,
 	
 	weapons = {	
 		[1] = {
@@ -33,7 +31,7 @@ local CL_Morrigu = Tank:New{
 	},
 	
 	customparams = {
-		helptext		= "Armament: 2 x ER Large Beam Laser, 2 x LRM-15 - Armor: 13 tons",
+		helptext		= "Armament: 2 x ER Large Beam Laser, 2 x LRM-15 - Armor: 13 tons FF",
 		heatlimit		= 26,
 		turretturnspeed = 50,
 		elevationspeed = 100,
