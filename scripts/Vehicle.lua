@@ -254,6 +254,20 @@ local function CoolOff()
 	end
 end
 
+local SIG_WAKE = 2 ^ (info.numWeapons + 1)
+local function HoverWake(water)
+	Signal(SIG_WAKE)
+	SetSignalMask(SIG_WAKE)
+	while true do
+		if water then
+			EmitSfx(SFX.WAKE, wakepoint)
+		else
+			--GG.EmitSfxName(unitID, wakepoint, "mech_jump_dust")
+		end
+		Sleep(500)
+	end
+end
+
 function script.setSFXoccupy(terrainType)
 	if vtol or aero then return end
 	if terrainType == 2 or terrainType == 1 then -- water
@@ -261,6 +275,9 @@ function script.setSFXoccupy(terrainType)
 	else
 		inWater = false
 		coolRate = baseCoolRate
+	end
+	if wakepoint then
+		StartThread(HoverWake, inWater)
 	end
 end
 
