@@ -315,7 +315,7 @@ function gadget:UnitCreated(unitID, unitDefID, teamID, builderID)
 	local cp = unitDef.customParams
 	if unitDefID == BEACON_ID then
 		AddUpgradeOptions(unitID)
-		InsertUnitCmdDesc(unitID, wallCmdDesc)
+		--InsertUnitCmdDesc(unitID, wallCmdDesc)
 	elseif unitDefID == UPLINK_ID then
 		buildLimits[unitID] = {["turret"] = 4, ["sensor"] = 1}
 	elseif cp and cp.towertype then
