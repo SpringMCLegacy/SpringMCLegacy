@@ -9,6 +9,7 @@ local IS_Firestarter = Light:New{
 	customparams = {
 		heatlimit 		= "10",
 		torsoturnspeed	= "225",
+		canjump			= "1",
     },
 }
 
@@ -44,7 +45,7 @@ local FS9S = IS_Firestarter:New{
 	},
 		
 	customparams = {
-		helptext		= "Armament: 1 x ER PPC, 2 x Medium Beam Laser - Armor: 7.5 tons Stabdard",
+		helptext		= "Armament: 4 x Flamer, 4 x Medium Beam Laser - Armor: 5.5 tons Standard",
 		hasbap 			= "true",
     },
 }
