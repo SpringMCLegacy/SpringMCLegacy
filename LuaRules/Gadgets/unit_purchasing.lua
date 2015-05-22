@@ -341,7 +341,7 @@ end
 local coolDowns = {} -- coolDowns[teamID] = enableFrame
 GG.coolDowns = coolDowns
 
-function UpdateButtons(teamID)
+function UpdateButtons(teamID) -- Toggles Submit Order vs Order Sent
 	local unitID = teamDropZones[teamID]
 	if orderStatus[teamID] == 0 then
 		EditUnitCmdDesc(unitID, FindUnitCmdDesc(unitID, CMD_SEND_ORDER), {disabled = false, name = "Submit \nOrder "})
@@ -353,6 +353,15 @@ function UpdateButtons(teamID)
 		EditUnitCmdDesc(unitID, FindUnitCmdDesc(unitID, CMD_SEND_ORDER), {--[[disabled = false, ]]name = "Order \nSent "})
 	end
 	--coolDowns[teamID] = math.huge -- TODO: allow orders when ACTIVE? -> will be corrected when the dropship leave
+end
+
+function OrderFinished(unitID, teamID)
+	ResetBuildQueue(unitID)
+	orderCosts[unitID] = 0
+	orderTons[unitID] = 0
+	orderSizesPending[unitID] = orderSizes[unitID]
+	--if orderSizesPending[unitID] < 0 then Spring.Echo(teamID, "ORDER SIZES NEGATIVE L377", orderSizesPending[unitID]) end
+	orderSizes[unitID] = 0
 end
 
 -- TODO: Issues if dropzone is 'flipped' to another beacon
@@ -375,6 +384,10 @@ GG.DropshipLeft = DropshipLeft
 local function SendCommandFallback(unitID, unitDefID, teamID, cost)
 	if orderStatus[teamID] == 0 then return end -- order was cancelled
 	if dropShipStatus[teamID] == 0 then -- Dropship is READY
+		local unitID = teamDropZones[teamID]
+		if not unitID then -- Dropzone has died and not been replaced whilst order is due!
+			AddTeamResource(teamID, "metal", cost) -- refund
+		end
 		-- CALL DROPSHIP
 		local orderQueue = Spring.GetFullBuildQueue(unitID)
 		if not orderQueue then return end -- dropzone died TODO: Transfer to new DZ if there is one
@@ -397,12 +410,7 @@ local function SendCommandFallback(unitID, unitDefID, teamID, cost)
 			UpdateButtons(teamID)
 		end
 		-- clean up (regardless of whether or not order was fulfilled or cancelled)
-		ResetBuildQueue(unitID)
-		orderCosts[unitID] = 0
-		orderTons[unitID] = 0
-		orderSizesPending[unitID] = orderSizes[unitID]
-		--if orderSizesPending[unitID] < 0 then Spring.Echo(teamID, "ORDER SIZES NEGATIVE L377", orderSizesPending[unitID]) end
-		orderSizes[unitID] = 0
+		OrderFinished(unitID, teamID)
 	else -- Dropship is ACTIVE or COOLDOWN
 		GG.Delay.DelayCall(SendCommandFallback, {unitID, unitDefID, teamID}, 16)
 	end
