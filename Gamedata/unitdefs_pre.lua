@@ -212,7 +212,7 @@ local Upgrade = Unit:New{
 	
 	customparams = {
 		upgrade = true,
-		ignoreatbeacon	= true,
+		--ignoreatbeacon	= true,
 		flagdefendrate	= 100,
 	},
 }
