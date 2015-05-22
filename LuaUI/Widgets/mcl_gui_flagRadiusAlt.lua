@@ -45,8 +45,8 @@ local FLAG_DEF_ID = {
 	UnitDefNames["outpost_controltower"].id, ]]
 }
 
-local FLAG_RADIUS          = 230 -- current flagkiller weapon radius, we may want to open this up to modoptions
-local FLAG_CAP_THRESHOLD  = 10 -- number of capping points needed for a flag to switch teams, again possibilities for modoptions
+local FLAG_RADIUS          = 460 -- current flagkiller weapon radius, we may want to open this up to modoptions TODO: read from a single customparam
+local FLAG_CAP_THRESHOLD  = 20 -- number of capping points needed for a flag to switch teams, again possibilities for modoptions -- TODO: ditto
 
 local maxAlpha = 0.5
 local innerSize = 0.875

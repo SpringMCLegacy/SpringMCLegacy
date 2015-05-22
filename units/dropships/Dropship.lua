@@ -196,6 +196,7 @@ local Dropship = Unit:New{
 		helptext		= "A Dropship",
 		hasbap			= true,
 		dropship		= "union",
+		flagdefendrate = 100,
     },
 	sounds = {
 		underattack        = "Dropship_Alarm",

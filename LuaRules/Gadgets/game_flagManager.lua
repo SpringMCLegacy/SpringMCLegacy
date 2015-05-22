@@ -70,8 +70,8 @@ local flagTypeDefenders	= {} -- defenders[flagType][unitID] = true
 for _, flagType in pairs(flagTypes) do
 	local cp = UnitDefNames[flagType].customParams
 	flagTypeData[flagType] = {
-		radius = tonumber(cp.flagradius) or 230, -- radius of flagTypes capping area
-		capThreshold = tonumber(cp.capthreshold) or 10, -- number of capping points needed for flagType to switch teams
+		radius = tonumber(cp.flagradius) or 460, -- radius of flagTypes capping area
+		capThreshold = tonumber(cp.capthreshold) or 20, -- number of capping points needed for flagType to switch teams
 		regen = tonumber(cp.flagregen) or 1, -- how fast a flagType with no defenders or attackers will reduce capping statuses
 		tooltip = UnitDefNames[flagType].tooltip or "Beacon", -- what to call the flagType when it switches teams
 		limit = cp.flaglimit or Game.maxUnits, -- How many of this flagType a player can hold at once

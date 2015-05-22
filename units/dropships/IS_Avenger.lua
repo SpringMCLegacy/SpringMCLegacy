@@ -46,6 +46,7 @@ local IS_Avenger = {
 	customparams = {
 		helptext		= "A Dropship",
 		dropship		= true,
+		flagdefendrate = 100,
     },
 	sounds = {
 		underattack        = "Dropship_Alarm",
