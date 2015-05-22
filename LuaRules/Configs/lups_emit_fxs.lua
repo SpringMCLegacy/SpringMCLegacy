@@ -241,7 +241,7 @@ local effects = {
 			volume = 50,
 			--repeatEffect = 1,
 			length = 210,
-			file = "sounds/fire-flame-burner.wav",
+			file = "sounds/beacon/descend.wav",
 		},
 	},
 }
