@@ -3,7 +3,7 @@ local CL_Shadowcat = Medium:New{
 	maxDamage           = 13400,
 	mass                = 4500,
 	buildCostEnergy     = 45,
-	buildCostMetal      = 21580,
+	buildCostMetal      = 26580,
 	maxVelocity		= 4.85, --97kph/30
 	maxReverseVelocity= 2.43,
 	acceleration    = 1.8,
@@ -29,7 +29,7 @@ local Prime = CL_Shadowcat:New{
 			name	= "Gauss",
 		},
 		[2] = {
-			name	= "CERLBL",
+			name	= "CERMBL",
 		},
 		[3] = {
 			name	= "CERMBL",
