@@ -29,10 +29,32 @@ local TLN5W = IS_Talon:New{
 	},
 		
 	customparams = {
-		helptext		= "Armament: 1 x ER PPC, 2 x Medium Beam Laser - Armor: 7.5 tons Stabdard",
+		helptext		= "Armament: 1 x ER PPC, 2 x Medium Beam Laser - Armor: 7.5 tons Standard",
+    },
+}
+
+local TLN5Z = IS_Talon:New{
+	name              	= "Talon TLN-5Z",
+	description         = "Light-class Long Range Fire Support",
+	objectName        	= "IS_Talon_TLN5Z.s3o",
+	maxVelocity			= 5.5, --110kph/20
+	buildCostMetal      = 14500,
+	weapons = {	
+		[1] = {
+			name	= "ERLBL",
+		},
+		[2] = {
+			name	= "ERLBL",
+		},
+	},
+		
+	customparams = {
+		helptext		= "Armament: 2 x ER Large Beam Laser - Armor: 7 tons Ferro-Fibrous",
+		heatlimit		= "20",
     },
 }
 
 return lowerkeys({
 	["IS_Talon_TLN5W"] = TLN5W,
+	["IS_Talon_TLN5Z"] = TLN5Z,
 })

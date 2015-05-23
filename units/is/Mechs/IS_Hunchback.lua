@@ -2,7 +2,7 @@ local IS_Hunchback = Medium:New{
 	corpse				= "IS_Hunchback_X",
 	maxDamage           = 16000,
 	mass                = 5000,
-	buildCostEnergy     = 55,
+	buildCostEnergy     = 50,
 	buildCostMetal        = 21100,
 	maxVelocity		= 3, --60kph/20
 
