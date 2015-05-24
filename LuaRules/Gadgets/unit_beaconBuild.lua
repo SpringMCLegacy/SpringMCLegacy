@@ -339,7 +339,7 @@ function gadget:UnitDestroyed(unitID, unitDefID, teamID)
 		dropZoneBeaconIDs[teamID] = nil
 	elseif outpostDefs[unitDefID] then
 		local beaconID = beaconIDs[unitID]
-		if beaconID then -- baconID can be nil if /give testing
+		if beaconID then -- beaconID can be nil if /give testing
 			SetUnitRulesParam(unitID, "beaconID", "")
 			env = Spring.UnitScript.GetScriptEnv(beaconID)
 			Spring.UnitScript.CallAsUnit(beaconID, env.ChangeType, false)
@@ -416,7 +416,7 @@ end
 
 function gadget:AllowCommand(unitID, unitDefID, teamID, cmdID, cmdParams, cmdOptions)
 	if unitDefID == BEACON_ID then
-		if upgradeIDs[cmdID] then
+		if upgradeIDs[cmdID] and not outpostIDs[unitID] then
 			local upgradeDefID = upgradeIDs[cmdID]
 			local cost = outpostDefs[upgradeDefID] and outpostDefs[upgradeDefID].cost or WALL_COST
 			if cost <= GetTeamResources(teamID, "metal") then
