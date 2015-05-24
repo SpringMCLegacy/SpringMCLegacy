@@ -40,8 +40,8 @@ local resources = {
 		feature = nil
 	},
 	{
-		x = 4000,
-		z = 4000,
+		x = 4080,
+		z = 4160,
 		feature = nil
 	},
 }
