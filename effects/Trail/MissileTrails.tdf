@@ -104,7 +104,7 @@
 			airdrag=0.5;
 			particleLife=1;
 			particleLifeSpread=1;
-			numParticles=5;
+			numParticles=1;
 			particleSpeed=20;
 			particleSpeedSpread=20;
 			particleSize=1;
@@ -118,7 +118,7 @@
 		air=1;
 		water=1;
 		ground=1;
-		count=1;
+		count=5;
 	}
    [smoke] {
 		class=CSimpleParticleSystem;
@@ -128,7 +128,7 @@
 			pos=0, 0, 0;
 			gravity=0, 1, 0;
 			colorMap=0.3 0.3 0.3 0.9  0.2 0.2 0.2 0.5  0 0 0 0  0 0 0 0;
-			Texture=smoke_particle;
+			Texture=smokesmall;
 			airdrag=0.5;
 			particleLife=10;
 			particleLifeSpread=10;
