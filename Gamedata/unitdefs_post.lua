@@ -5,16 +5,44 @@ if (Spring.GetModOptions) then
   modOptions = Spring.GetModOptions()
 end
 
--- TODO: I still don't quite follow why the Sides table from _pre (available to all defs) isn't available here
+-- TODO: I still don't quite follow why the SIDES table from _pre (available to all defs) isn't available here
 local sideData = VFS.Include("gamedata/sidedata.lua", VFS.ZIP)
-local Sides = {}
+local SIDES = {}
 for sideNum, data in pairs(sideData) do
-	Sides[sideNum] = data.shortName:lower()
+	SIDES[sideNum] = data.shortName:lower()
+end
+
+local function RecursiveReplaceStrings(t, name, side, replacedMap)
+	if (replacedMap[t]) then
+		return  -- avoid recursion / repetition
+	end
+	replacedMap[t] = true
+	local changes = {}
+	for k, v in pairs(t) do
+		if (type(v) == 'string') then
+			t[k] = v:gsub("<SIDE>", side):gsub("<NAME>", name)
+		end
+		if (type(v) == 'table') then
+			RecursiveReplaceStrings(v, name, side, replacedMap)
+		end
+	end 
+end
+
+local function ReplaceStrings(t, name)
+	local side = ""
+	local replacedMap = {}
+	for _, sideName in pairs(SIDES) do
+		if name:find(sideName) == 1 then
+			side = sideName
+			break
+		end
+	end
+	RecursiveReplaceStrings(t, name, side, replacedMap)
 end
 
 local DROPZONE_UDS = {} --DZ_IDS = {shortSideName = unitDef}
 local DROPZONE_BUILDOPTIONS = {} -- D_B = {shortSideName = {unitname1, ...}}
-for i, sideName in pairs(Sides) do
+for i, sideName in pairs(SIDES) do
 	DROPZONE_BUILDOPTIONS[sideName] = {}
 end
 
@@ -24,17 +52,12 @@ local UPLINK_BUILDOPTIONS = {}
 
 
 for name, ud in pairs(UnitDefs) do
-	-- convert all customparams subtables back into strings for Spring
-	if ud.customparams then
-		for k, v in pairs (ud.customparams) do
-			if type(v) == "table" or type(v) == "boolean" then
-				ud.customparams[k] = table.serialize(v)
-			end
-		end
+	-- Replace all occurences of <SIDE> and <NAME> with the respective values
+	ReplaceStrings(ud, ud.unitname or name)
+	if not ud.customparams then
+		ud.customparams = {}
 	end
-	-- no OTA nanoframes please
-	ud.shownanoframe = false
-	ud.idleautoheal = 0
+	local cp = ud.customparams
 	-- override nochasecategories so units don't do anything.
 	--ud.category = (ud.category or "") .. " all"
 	--ud.nochasecategory = (ud.nochasecategory or "") .. " all"
@@ -43,39 +66,55 @@ for name, ud in pairs(UnitDefs) do
 	local speed = (ud.maxvelocity or 0) * 30
 	if speed > 0 or ud.canfly then
 		ud.cantbetransported = false
-		if ud.customparams.unittype == "mech" then
+		if cp.unittype == "mech" then
 			ud.losemitheight = ud.mass / 100
 			ud.radaremitheight = ud.mass / 100
-			if ud.customparams.canjump then
+			if cp.canjump then
 				ud.description = ud.description .. " \255\001\179\214[JUMP]"
 			end
-			if ud.customparams.canmasc then
+			if cp.canmasc then
 				ud.description = ud.description .. " \255\128\026\179[MASC]"
 			end
+		end
+	end
+	if cp and cp.unittype then -- mech, vehicle, apc, vtol, infantry
+		ud.name = ud.name .. " " .. (cp.variant or "") -- concatenate variant code to name
+
+		ud.buildCostEnergy = (cp.tonnage or 0)
+		ud.buildCostMetal = (cp.price or 0)
+		if cp.tonnage then
+			ud.mass = (cp.tonnage or 0) * 100
+			if cp.armor then
+				ud.maxDamage = cp.tonnage / 10 + cp.armor.tons * 1000
+			end
+		end
+		if cp.speed then
+			ud.maxvelocity = tonumber(cp.speed or 0) / 20 -- convert kph to game speed
+			cp.torsoturnspeed = cp.speed * 5
 		end
 	end
 	-- set maxvelocity by modoption
 	ud.maxvelocity = (ud.maxvelocity or 0) * (modOptions.speed or 0.65)
 	ud.turninplacespeedlimit = (tonumber(ud.maxvelocity) or 0) * 1 
-	ud.turninplace = false
+	
 	-- calculate reverse, acceleration, brake and turning speed based on maxvelocity
 	ud.maxreversevelocity = ud.maxvelocity / 1.5
 	ud.acceleration = ud.maxvelocity / 4
 	ud.brakerate = ud.maxvelocity / 25
 	ud.turnrate = ud.maxvelocity * 200
-	-- set sightrange/radardistance based on hasbap customparam
-	if ud.customparams.hasbap == "true" or ud.customparams.hasecm == "true" then
+	-- set sightrange/radardistance based on bap customparam
+	if cp.bap or cp.ecm then
 		ud.sightdistance = 1500
 		ud.radardistance = 3000
 		ud.airsightdistance = 3000
-		if ud.customparams.hasecm == "true" then
+		if cp.ecm then
 			ud.seismicsignature = 20
 			ud.radardistancejam	= 500
 			ud.description = ud.description .. " \255\128\128\128[ECM]"
 		else
 			seismicsignature = 0
 		end
-		if ud.customparams.hasbap == "true" then
+		if cp.bap then
 			ud.seismicdistance = 3000
 			ud.radaremitheight = 1000
 			ud.description = ud.description .. " \255\001\255\001[BAP]"
@@ -169,6 +208,15 @@ for name, ud in pairs(UnitDefs) do
 		ud.canfight = false
 		ud.canassist = false
 		ud.canrepeat = false
+	end
+	
+	-- convert all customparams subtables back into strings for Spring
+	if cp then
+		for k, v in pairs (cp) do
+			if type(v) == "table" or type(v) == "boolean" then
+				cp[k] = table.serialize(v)
+			end
+		end
 	end
 end
 

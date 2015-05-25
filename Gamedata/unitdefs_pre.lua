@@ -50,42 +50,58 @@ for sideNum, data in pairs(sideData) do
 end
 
 -- Root Classes
-local Unit = {}
-function Unit:New(newAttribs, concatName)
+Def = {
+}
+
+function Def:New(newAttribs, concatName)
 	local newClass = {}
 	inherit(newClass, newAttribs)
 	inherit(newClass, self, concatName)
 	return newClass
 end
 
-local Weapon = {
+function Def:Clone(name) -- name is passed to <NAME> in _post, it is the unitname of the unit to copy from
+	local newClass = {}
+	inherit(newClass, self)
+	newClass.unitname = name:lower()
+	return newClass
+end
+
+Unit = Def:New{
+	objectName			= "<NAME>.s3o",
+	shownanoframe 		= false,
+	idleautoheal 		= 0,
+	turninplace 		= false,
+}
+
+Feature = Def:New{
+	objectName			= "<NAME>.s3o",
+}
+
+Weapon = Def:New{
 	avoidFeature	= false,
 	collideFeature	= true,
 }
-function Weapon:New(newAttribs, concatName)
-	local newClass = {}
-	inherit(newClass, newAttribs)
-	inherit(newClass, self, concatName)
-	return newClass
-end
+
 ---------------------------------------------------------------------------------------------
 -- Base Classes
 ---------------------------------------------------------------------------------------------
 
 -- Mechs ----
 local Mech = Unit:New{
-	upright				= true,
+	activateWhenBuilt   = true,
 	canMove				= true,
-	script				= "Mech.lua",	
+	corpse				= "<NAME>_x",
 	explodeAs          	= "mechexplode",
 	category 			= "mech ground notbeacon",
 	noChaseCategory		= "beacon air",
-	activateWhenBuilt   = true,
 	onoffable           = true,
+	script				= "Mech.lua",
+	upright				= true,
 	usepiececollisionvolumes = true,
 	
 	customparams = {
-		hasturnbutton	= "1",
+		hasturnbutton	= true,
 		unittype		= "mech",
     },
 }
@@ -120,14 +136,14 @@ local Assault = Mech:New{
 
 -- Vehicles ----
 local Vehicle = Unit:New{
-	iconType			= "vehicle",
-	script				= "Vehicle.lua",
 	activateWhenBuilt   = true,
-	onoffable           = true,
 	canMove 			= true,
 	footprintX			= 3,-- current both TANK and HOVER movedefs are 2x2 even if unitdefs are not
 	footprintZ 			= 3,
+	iconType			= "vehicle",
 	moveState			= 0, -- Hold Position
+	onoffable           = true,
+	script				= "Vehicle.lua",
 	usepiececollisionvolumes = true,
 	
 	customparams = {
@@ -136,11 +152,12 @@ local Vehicle = Unit:New{
 }
 
 local Tank = Vehicle:New{
-	explodeAs          	= "mechexplode",
 	category 			= "tank ground notbeacon",
-	noChaseCategory		= "beacon air",
+	corpse				= "<NAME>_x",
+	explodeAs          	= "mechexplode",
+	leaveTracks			= true,	
 	movementClass   	= "TANK",
-	leaveTracks			= true,
+	noChaseCategory		= "beacon air",
 	trackType			= "Thick",
 	trackOffset			= 10,
 	customparams = {
@@ -247,6 +264,8 @@ local sharedEnv = {
 	Sides = Sides,
 	printTable = printTable,
 	lowerkeys = lowerkeys,
+	Def = Def,
+	Feature = Feature,
 	Weapon = Weapon,
 	Unit = Unit,
 	Mech = Mech,
