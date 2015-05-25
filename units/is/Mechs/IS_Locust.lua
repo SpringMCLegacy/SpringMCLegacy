@@ -75,7 +75,29 @@ local LCT5M = IS_Locust:New{
     },
 }
 
+local LCT3D = IS_Locust:New{
+	name              	= "Locust LCT-3D",
+	description         = "Light-class LRM Support",
+	objectName        	= "IS_Locust_LCT3D.s3o",
+	weapons	= {	
+		[1] = {
+			name	= "LRM5",
+			OnlyTargetCategory = "notbeacon",
+		},
+		[2] = {
+			name	= "LRM5",
+			OnlyTargetCategory = "notbeacon",
+		},
+	},
+		
+	customparams = {
+		helptext		= "Armament: 2 x LRM-5 - Armor: 2.5 tons FF",
+		maxammo 		= {lrm = 120},
+    },
+}
+
 return lowerkeys({
 	["IS_Locust_LCT3M"] = LCT3M,
 	["IS_Locust_LCT5M"] = LCT5M,
+	["IS_Locust_LCT3D"] = LCT3D,
 })
