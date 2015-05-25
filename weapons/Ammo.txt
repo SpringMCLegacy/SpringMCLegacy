@@ -1,0 +1,19 @@
+Ammo per ton:
+
+LRM			= 120
+SRM/SSRM	= 90
+ATM			= 60
+MRM			= 240
+Arrow IV	= 5
+Narc		= 6
+
+AC/2		= 45
+AC/5		= 20
+AC/10 		= 10
+AC/20		= 5
+Thumper		= 20
+Sniper		= 10
+
+Gauss		= 8
+Light Gauss	= 16
+Heavy Gauss	= 4

@@ -1,8 +1,8 @@
 local IS_Hollander = Medium:New{
 	corpse				= "IS_Hollander_X",
 	maxDamage           = 7100,
-	mass                = 4500,
-	buildCostEnergy     = 45,
+	mass                = 3500,
+	buildCostEnergy     = 35,
 	buildCostMetal      = 14900,
 	maxVelocity		= 4, --80kph/20
 
@@ -25,7 +25,7 @@ local BZKF3 = IS_Hollander:New{
 	
     customparams = {
 		helptext		= "Armament: 1 x Gauss Rifle - Armor: 4 tons Ferro-Fibrous",
-		maxammo 		= {gauss = 20},
+		maxammo 		= {gauss = 16},
     },
 }
 
@@ -48,7 +48,7 @@ local BZKG1 = IS_Hollander:New{
 	
 	customparams = {
 		helptext		= "Armament: 1 x LBX-10, 2 x Medium Laser - Armor: 6 tons Ferro-Fibrous",
-		maxammo 		= {ac10 = 30},
+		maxammo 		= {ac10 = 20},
     },	
 }
 

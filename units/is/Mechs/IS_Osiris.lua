@@ -48,7 +48,7 @@ local OSR3D = IS_Osiris:New{
 		
 	customparams = {
 		helptext		= "Armament: 5 x Medium Beam Laser, 1 x Machinegun, 1 x SRM-6 - Armor: 4.5 tons Ferro-Fibrous",
-		maxammo 		= {srm = 120},
+		maxammo 		= {srm = 90},
     },
 }
 

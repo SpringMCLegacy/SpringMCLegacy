@@ -35,7 +35,7 @@ local JVN11B = IS_Javelin:New{
 		
 	customparams = {
 		helptext		= "Armament: 2 x SRM-4, 1 x TAG Laser - Armor: 5 tons Standard",
-		maxammo 		= {srm = 52},
+		maxammo 		= {srm = 180},
     },
 }
 
