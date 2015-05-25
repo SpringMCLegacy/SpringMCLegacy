@@ -36,7 +36,9 @@ local Upgrade_Dropzone = Upgrade:New{
     },
 }
 
-return lowerkeys({
-	["CL_Dropzone"] = Upgrade_Dropzone:New{},
-	["IS_Dropzone"] = Upgrade_Dropzone:New{},
-})
+dropZones = {}
+for i, sideName in pairs(Sides) do
+	dropZones[sideName .. "_dropzone"] = Upgrade_Dropzone:New{}
+	--Spring.Echo("Making Dropzone for", sideName)
+end
+return lowerkeys(dropZones)

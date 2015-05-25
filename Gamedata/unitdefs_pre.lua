@@ -1,3 +1,6 @@
+VFS.Include('gamedata/VFSUtils.lua') -- for RecursiveFileSearch()
+lowerkeys = VFS.Include('gamedata/system.lua').lowerkeys -- for lowerkeys()
+
 -- Our shared funcs
 local function printTable (input)
 	for k,v in pairs(input) do
@@ -9,9 +12,10 @@ local function printTable (input)
 end
 
 local function inherit (c, p, concatNames)
+	lowerkeys(c)
 	for k,v in pairs(p) do 
-		if type(k) == "string" then
-			k:lower() -- really we need to run lowerkeys() on both c and p
+		if type(k) == "string" and type(v) ~= "function" then
+			k = k:lower() -- can't use lowerkeys() on parent, as breaks e.g. New() -> new
 		end
 		if type(v) == "table" then
 			if c[k] == nil then c[k] = {} end
@@ -21,11 +25,31 @@ local function inherit (c, p, concatNames)
 				c[k] = v .. " " .. (c[k] or "")
 			else
 				if c[k] == nil then c[k] = v end
+				--Spring.Echo(c.name, k, v, c[k])
 			end
 		end
 	end
 end
 
+local function append (c, p)
+	lowerkeys(c)
+	for k,v in pairs(p) do
+		if type(v) == "string" then
+			c[k] = v .. " " .. (c[k] or "")
+		else
+			Spring.Log("ERROR: Attempt to concatenate non-string value")
+		end
+	end
+end
+
+-- Make sides available to all def files
+local sideData = VFS.Include("gamedata/sidedata.lua", VFS.ZIP)
+local Sides = {}
+for sideNum, data in pairs(sideData) do
+	Sides[sideNum] = data.shortName:lower()
+end
+
+-- Root Classes
 local Unit = {}
 function Unit:New(newAttribs, concatName)
 	local newClass = {}
@@ -220,6 +244,9 @@ local Upgrade = Unit:New{
 ---------------------------------------------------------------------------------------------
 -- This is where the magic happens
 local sharedEnv = {
+	Sides = Sides,
+	printTable = printTable,
+	lowerkeys = lowerkeys,
 	Weapon = Weapon,
 	Unit = Unit,
 	Mech = Mech,
@@ -234,7 +261,6 @@ local sharedEnv = {
 	Aero = Aero,
 	Tower = Tower,
 	Upgrade = Upgrade,
-	printTable = printTable,
 }
 local sharedEnvMT = nil
 

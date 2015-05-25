@@ -5,16 +5,22 @@ if (Spring.GetModOptions) then
   modOptions = Spring.GetModOptions()
 end
 
-local IS_DROPSHIP_UD
-local IS_DROPZONE_UD
-local IS_DROPSHIP_BUILDOPTIONS = {}
-local CL_DROPSHIP_UD
-local CL_DROPZONE_UD
-local CL_DROPSHIP_BUILDOPTIONS = {}
+-- TODO: I still don't quite follow why the Sides table from _pre (available to all defs) isn't available here
+local sideData = VFS.Include("gamedata/sidedata.lua", VFS.ZIP)
+local Sides = {}
+for sideNum, data in pairs(sideData) do
+	Sides[sideNum] = data.shortName:lower()
+end
+
+local DROPZONE_UDS = {} --DZ_IDS = {shortSideName = unitDef}
+local DROPZONE_BUILDOPTIONS = {} -- D_B = {shortSideName = {unitname1, ...}}
+for i, sideName in pairs(Sides) do
+	DROPZONE_BUILDOPTIONS[sideName] = {}
+end
 
 local UPLINK_UD
 local BEACON_UD
-local BEACON_BUILDOPTIONS = {}
+local UPLINK_BUILDOPTIONS = {}
 
 
 for name, ud in pairs(UnitDefs) do
@@ -34,7 +40,6 @@ for name, ud in pairs(UnitDefs) do
 	--ud.nochasecategory = (ud.nochasecategory or "") .. " all"
 	-- add buildpics to unitdefs even though engine loads them automatically, so the filenames are available to lua (Chili)
 	ud.buildpic = name .. ".png"
-	-- set buildtimes based on walking speed, so units roll off the ramp at their correct speed
 	local speed = (ud.maxvelocity or 0) * 30
 	if speed > 0 or ud.canfly then
 		ud.cantbetransported = false
@@ -124,30 +129,27 @@ for name, ud in pairs(UnitDefs) do
 	
 	-- Automatically build dropship buildmenus
 	local unitType = ud.customparams.unittype
+	local side = name:sub(1, 2)
+	
 	if unitType == "mech" or unitType == "vehicle" then
 		ud.category = ud.category .. " narctag"
 		if not ud.canfly and not ud.movestate then
 			ud.movestate = 0 -- Set default move state to Hold Position, unless already specified
 		end
 		if unitType == "mech" then -- add only mechs to Dropship buildoptions
-			if name:sub(1, 2) == "is" then
-				table.insert(IS_DROPSHIP_BUILDOPTIONS, name)
-			elseif name:sub(1, 2) == "cl" then
-				table.insert(CL_DROPSHIP_BUILDOPTIONS, name)
-			end
+			table.insert(DROPZONE_BUILDOPTIONS[side], name)
 		else -- a vehicle
 			ud.maxdamage = ud.maxdamage * 0.5
 		end
 	elseif ud.customparams.towertype then
-		table.insert(BEACON_BUILDOPTIONS, name)
+		table.insert(UPLINK_BUILDOPTIONS, name)
 		ud.levelground = false
 	end
-	--if name == "is_dropship" then IS_DROPSHIP_UD = ud end
-	--if name == "cl_dropship" then CL_DROPSHIP_UD = ud end
 	
-	if name == "is_dropzone" then IS_DROPZONE_UD = ud end
-	if name == "cl_dropzone" then CL_DROPZONE_UD = ud end
-	
+	if name:find("dropzone") then
+		DROPZONE_UDS[side] = ud
+	end
+		
 	if name == "beacon" or name:find("upgrade") or name:find("dropzone") or ud.customparams.dropship then 
 		if name == "beacon" then
 			BEACON_UD = ud 
@@ -170,13 +172,11 @@ for name, ud in pairs(UnitDefs) do
 	end
 end
 
-table.sort(IS_DROPSHIP_BUILDOPTIONS)
-table.sort(CL_DROPSHIP_BUILDOPTIONS)
+for side, dropZoneOptions in pairs(DROPZONE_BUILDOPTIONS) do
+	table.sort(dropZoneOptions)
+	DROPZONE_UDS[side]["buildoptions"] = dropZoneOptions
+end
 
-IS_DROPZONE_UD["buildoptions"] = IS_DROPSHIP_BUILDOPTIONS
-CL_DROPZONE_UD["buildoptions"] = CL_DROPSHIP_BUILDOPTIONS
-
-table.sort(BEACON_BUILDOPTIONS)
---BEACON_UD["buildoptions"] = BEACON_BUILDOPTIONS
-UPLINK_UD["buildoptions"] = BEACON_BUILDOPTIONS
+table.sort(UPLINK_BUILDOPTIONS)
+UPLINK_UD["buildoptions"] = UPLINK_BUILDOPTIONS
 

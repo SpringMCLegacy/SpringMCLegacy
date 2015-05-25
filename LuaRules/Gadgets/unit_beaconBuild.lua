@@ -39,9 +39,7 @@ local DelayCall				 = GG.Delay.DelayCall
 local GAIA_TEAM_ID = Spring.GetGaiaTeamID()
 local BEACON_ID = UnitDefNames["beacon"].id
 local UPLINK_ID = UnitDefNames["upgrade_uplink"].id
-local IS_DROPZONE_ID = UnitDefNames["is_dropzone"].id
-local CL_DROPZONE_ID = UnitDefNames["cl_dropzone"].id -- FIXME: ugly
-local DROPZONE_IDS = {[IS_DROPZONE_ID] = true, [CL_DROPZONE_ID] = true}
+local DROPZONE_IDS = {}
 local WALL_ID = UnitDefNames["wall"].id
 local GATE_ID = UnitDefNames["wall_gate"].id
 local MIN_BUILD_RANGE = tonumber(UnitDefNames["beacon"].customParams.minbuildrange) or 230
@@ -131,6 +129,8 @@ function gadget:GamePreload()
 				action = 'upgrade',
 				tooltip = "C-Bill cost: " .. cBillCost,
 			}
+		elseif name:find("dropzone") then
+			DROPZONE_IDS[unitDefID] = true
 		end
 	end
 	dropZoneCmdDesc = {
@@ -140,8 +140,9 @@ function gadget:GamePreload()
 		action = 'dropzone',
 		tooltip = "Set as primary dropzone",
 	}
-	outpostDefs[IS_DROPZONE_ID] = {cmdDesc = dropZoneCmdDesc, cost = 0}
-	outpostDefs[CL_DROPZONE_ID] = {cmdDesc = dropZoneCmdDesc, cost = 0}
+	for dropZoneDefID in pairs(DROPZONE_IDS) do
+		outpostDefs[dropZoneDefID] = {cmdDesc = dropZoneCmdDesc, cost = 0}
+	end
 end
 
 -- REGULAR UPGRADES
@@ -214,10 +215,7 @@ local function SetDropZone(beaconID, teamID)
 		DestroyUnit(currDropZone, false, true)
 	end
 	local x,y,z = GetUnitPosition(beaconID)
-	local side = select(5, Spring.GetTeamInfo(teamID))
-	if side:find("inner") then side = "IS"
-	elseif side:find("clan") then side = "CL"
-	elseif side == "" then side = (teamID == 0 and "IS") or "CL" end -- ugly hack for spring.exe blank sides
+	local side = GG.teamSide[teamID]
 	local dropZoneID = CreateUnit(side .. "_dropzone", x,y,z, "s", teamID)
 	dropZoneIDs[teamID] = dropZoneID
 	dropZoneBeaconIDs[teamID] = beaconID
@@ -333,7 +331,7 @@ function gadget:UnitDestroyed(unitID, unitDefID, teamID)
 		LimitTowerType(towerOwnerID, teamID, towerType, true) -- increase limit
 		towerOwners[unitID] = nil
 	end
-	if unitDefID == IS_DROPZONE_ID or unitDefID == CL_DROPZONE_ID then -- unit was a team's dropzone, reset upgrade options
+	if DROPZONE_IDS[unitDefID] then -- unit was a team's dropzone, reset upgrade options
 		AddUpgradeOptions(dropZoneBeaconIDs[teamID])
 		dropZoneIDs[teamID] = nil
 		dropZoneBeaconIDs[teamID] = nil

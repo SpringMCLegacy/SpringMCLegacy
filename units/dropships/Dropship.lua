@@ -203,7 +203,9 @@ local Dropship = Unit:New{
 	},
 }
 
-return lowerkeys({
-	["IS_Dropship"] = Dropship,
-	["CL_Dropship"] = Dropship:New{},
-})
+dropShips = {}
+for i, sideName in pairs(Sides) do
+	dropShips[sideName .. "_dropship"] = Dropship:New{}
+	--Spring.Echo("Making Dropship for", sideName)
+end
+return lowerkeys(dropShips)
