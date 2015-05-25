@@ -16,6 +16,7 @@ if gadgetHandler:IsSyncedCode() then
 --	SYNCED
 
 local modOptions = Spring.GetModOptions()
+local GAIA_TEAM_ID = Spring.GetGaiaTeamID()
 local BASE_DELAY = tonumber((modOptions and modOptions.vehicle_delay) or "30") * 30 -- base line delay, may be +{0,10}s
 local BEACON_ID = UnitDefNames["beacon"].id
 local VPAD_ID = UnitDefNames["upgrade_vehiclepad"].id
@@ -26,6 +27,7 @@ local flagSpots = {} --VFS.Include("maps/flagConfig/" .. Game.mapName .. "_profi
 
 local vehiclesDefCache = {} -- unitDefID = true
 
+local sideVehicleDefs = {} -- sideVehicleDefs[side]["light"][1] = {unitDefID = unitDefID, squadSize = customParams.squadsize}
 local IS_VehicleDefs = {} -- IS_VehicleDefs["light"][1] = {unitDefID = unitDefID, squadSize = customParams.squadsize}
 local C_VehicleDefs = {} -- C_VehicleDefs["light"][1] = {unitDefID = unitDefID, squadSize = customParams.squadsize}
 
@@ -37,8 +39,15 @@ local unitSquads = {} -- unitSquads[unitID] = squadNum
 local teamSquadCounts = {} -- teamSquadCounts[teamID] = numberOfSquads
 local teamSquadSpots = {} -- teamSquadSpots[teamID][squadNum] = spotNum
 local teamSquads = {}
+local weights = {"light", "medium", "heavy", "apc", "assault", "vtol"} -- TODO: this is repeated elsewhere
 
 function gadget:Initialize()
+	for sideName, shortName in pairs(GG.SideNames) do
+		sideVehicleDefs[shortName] = {}
+		for i, weight in pairs(weights) do
+			sideVehicleDefs[shortName][weight] = {}
+		end
+	end
 	for unitDefID, unitDef in pairs(UnitDefs) do
 		if unitDef.customParams.unittype then
 			local basicType = unitDef.customParams.unittype
@@ -47,34 +56,27 @@ function gadget:Initialize()
 				local mass = unitDef.mass
 				local weight = (basicType == "apc" and "apc") or (unitDef.canFly and "vtol") or GG.GetWeight(mass)
 				local squadSize = unitDef.customParams.squadsize or 1
-				if unitDef.name:sub(1,2) == "is" then -- Inner Sphere
-					if not IS_VehicleDefs[weight] then IS_VehicleDefs[weight] = {} end
-					table.insert(IS_VehicleDefs[weight], {["unitDefID"] = unitDefID, ["squadSize"] = squadSize})
-				else -- clans
-					if not C_VehicleDefs[weight] then C_VehicleDefs[weight] = {} end
-					table.insert(C_VehicleDefs[weight], {["unitDefID"] = unitDefID, ["squadSize"] = squadSize})
-				end
+				local side = unitDef.name:sub(1,2)
+				table.insert(sideVehicleDefs[side][weight], {["unitDefID"] = unitDefID, ["squadSize"] = squadSize})
+				--Spring.Echo("INSERTIN", unitDef.name, side, weight)
 			end
 		end
 	end
 	for _, teamID in pairs(Spring.GetTeamList()) do
-		local side = select(5, Spring.GetTeamInfo(teamID)):lower()
-		if (side == "") then
-			-- startscript didn't specify a side for this team
-			local sidedata = Spring.GetSideData()
-			if (sidedata and #sidedata > 0) then
-				local sideNum = 1 + teamID % #sidedata
-				side = sidedata[sideNum].sideName:lower()
-			end
+		if teamID ~= GAIA_TEAM_ID then
+			local side = GG.teamSide[teamID]
+			teamVehicleDefs[teamID] = sideVehicleDefs[side]
+			teamSquadSpots[teamID] = {}
 		end
-		--sides[teamID] = side
-		teamVehicleDefs[teamID] = (side == "clans" and C_VehicleDefs) or IS_VehicleDefs
-		teamSquadSpots[teamID] = {}
 	end
 end
 
 local function RandomVehicle(teamID, weight)
-	return teamVehicleDefs[teamID][weight][math.random(1, #teamVehicleDefs[teamID][weight])]
+	if #teamVehicleDefs[teamID][weight] > 0 then
+		return teamVehicleDefs[teamID][weight][math.random(1, #teamVehicleDefs[teamID][weight])]
+	else
+		return false -- This faction does not have a vehicle in that weight category
+	end
 end
 
 local MINUTE = 30 * 60
@@ -112,8 +114,10 @@ local function Deliver(unitID, teamID)
 		local age = Spring.GetGameFrame() - vehiclePads[unitID]
 		local ageWeight = AgeWeight(age)
 		local vehInfo = RandomVehicle(teamID, ageWeight)
-		--Spring.Echo("New Vehicle:", UnitDefs[vehInfo.unitDefID].name, vehInfo.squadSize, ageWeight)
-		GG.DropshipDelivery(unitID, teamID, "is_markvii", {{[vehInfo.unitDefID] = vehInfo.squadSize}}, 0, nil, 1) 
+		if vehInfo then
+			--Spring.Echo("New Vehicle:", UnitDefs[vehInfo.unitDefID].name, vehInfo.squadSize, ageWeight)
+			GG.DropshipDelivery(unitID, teamID, "is_markvii", {{[vehInfo.unitDefID] = vehInfo.squadSize}}, 0, nil, 1) 
+		end
 	end
 end
 

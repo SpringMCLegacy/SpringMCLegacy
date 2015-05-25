@@ -10,15 +10,12 @@ function widget:GetInfo()
 	}
 end
 
-function widget:GameFrame(n)
-	local teamID = Spring.GetLocalTeamID()
-	local clanDZ = Spring.GetTeamUnitDefCount(teamID, UnitDefNames["cl_dropzone"].id)
-	local isDZ = Spring.GetTeamUnitDefCount(teamID, UnitDefNames["is_dropzone"].id)
-	if clanDZ == 1 or isDZ == 1 then
-		local DZ = clanDZ == 1 and UnitDefNames["cl_dropzone"].id or UnitDefNames["is_dropzone"].id
-		local units =	Spring.GetTeamUnitsByDefs(teamID, DZ)
-		local x,y,z = Spring.GetUnitPosition(units[1])
-		Spring.SelectUnitArray({units[1]})
+
+function widget:UnitCreated(unitID, unitDefID)
+	local unitDef = UnitDefs[unitDefID]
+	if unitDef.name:find("dropzone") then
+		local x,y,z = Spring.GetUnitPosition(unitID)
+		Spring.SelectUnitArray({unitID})
 		Spring.SetCameraTarget(x,y,z)
 		widgetHandler:RemoveWidget()
 	end

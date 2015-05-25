@@ -1,4 +1,4 @@
-local IS_Javelin = Light:New{
+local Javelin = Light:New{
 	corpse				= "IS_Javelin_X",
 	sightDistance       = 800,
 	radarDistance      	= 1500,
@@ -16,7 +16,7 @@ local IS_Javelin = Light:New{
     },
 }
 
-local JVN11B = IS_Javelin:New{
+local JVN11B = Javelin:New{
 	name              	= "Javelin JVN-11B",
 	description         = "Light-class E-War Scout",
 	objectName        	= "IS_Javelin_JVN11B.s3o",
@@ -40,5 +40,5 @@ local JVN11B = IS_Javelin:New{
 }
 
 return lowerkeys({
-	["IS_Javelin_JVN11B"] = JVN11B,
+	["FS_Javelin_JVN11B"] = JVN11B,
 })

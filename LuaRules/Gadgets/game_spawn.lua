@@ -36,6 +36,15 @@ end
 
 local modOptions = Spring.GetModOptions()
 
+-- Need the raw sidedata for short names
+local sideData = VFS.Include("gamedata/sidedata.lua", nil, VFS.ZIP)
+local SideNames = {}
+for sideNum, data in pairs(sideData) do
+	SideNames[data.name:lower()] = data.shortName:lower()
+end
+GG.SideNames = SideNames
+
+local sideStartUnits = {}
 
 local function GetStartUnit(teamID)
 	-- get the team startup info
@@ -45,16 +54,31 @@ local function GetStartUnit(teamID)
 		-- startscript didn't specify a side for this team
 		local sidedata = Spring.GetSideData()
 		if (sidedata and #sidedata > 0) then
-			startUnit = sidedata[1 + teamID % #sidedata].startUnit
+			local sideNum = math.random(1,#Spring.GetSideData()) --TODO: 2 + teamID % #sidedata
+			startUnit = sidedata[sideNum].startUnit
+			side = sidedata[sideNum].sideName
 		end
+		-- set the gamerules param to notify other gadgets it was a direct launch
+		Spring.SetGameRulesParam("runningWithoutScript", 1)
 	else
 		startUnit = Spring.GetSideData(side)
 	end
+	-- Check for GM / Random team
+	--[[if startUnit == "gmtoolbox" then
+		local randSide = math.random(1,#GetSideData())	-- TODO: start at 2 to avoid picking random side again
+		if (modOptions.gm_team_enable == "0") then
+			side, startUnit = GetSideData(randSide)
+		else
+			side = GetSideData(randSide)
+		end
+	end--]]
+	GG.teamSide[teamID] = SideNames[side]
+	Spring.SetTeamRulesParam(teamID, "side", SideNames[side])
 	return startUnit
 end
 
 local function SpawnStartUnit(teamID)
-	local startUnit = GetStartUnit(teamID)
+	local startUnit = sideStartUnits[teamID]
 	if (startUnit and startUnit ~= "") then
 		-- spawn the specified start unit
 		local x,y,z = Spring.GetTeamStartPosition(teamID)
@@ -93,6 +117,18 @@ local function SpawnStartUnit(teamID)
 	end
 end
 
+function gadget:Initialize()
+	GG.teamSide = {}
+	local gaiaTeamID = Spring.GetGaiaTeamID()
+	local teams = Spring.GetTeamList()
+	for i = 1,#teams do
+		local teamID = teams[i]
+		-- don't spawn a start unit for the Gaia team
+		if (teamID ~= gaiaTeamID) then
+			sideStartUnits[teamID] = GetStartUnit(teamID)
+		end
+	end
+end
 
 function gadget:GameStart()
 	Spring.PlaySoundFile("BB_All_Systems_Nominal", 1, "ui")

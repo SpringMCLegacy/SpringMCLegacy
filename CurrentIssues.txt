@@ -1,14 +1,7 @@
 ---- BUGS
 	
-[f=0007014] you have more than the lance supports in group #1 - still possible by player directly assigning groups
-
---[f=0032181] [Sound] Error: Unable to open audio file: sounds/fire-flame-burner.wav
-
 some clan mechs with mismatched launchpoints due to weapon changes (cougar, warhawk, timberwolf)
 
-Godde menu ordering bug
-
-capped vpad resulting in multiple LC at once
 
 Avenger that 'bugs out' without unloading leads to beacon that cannot upgrade??
 
@@ -28,18 +21,9 @@ non-magical wall delivery & repair, replace with dragons teeth 'fired' in a circ
 
 Make TAG & NARC increase missile accuracy / guidance
 
-BA-filled APC
-
 include or GG shared script functions between Mech/Vehicle/Turret
 
 sendtounsynced key events e.g. 'mech loses arm' to avoid polling rules params in widgets
 
 16:12 - [buffyverse] flozi: in the long term (polish! remember that buzzword?) we (ie. you) should make corpses with all possible lost limb combinations
 16:13 - [buffyverse] flozi: so script can leave correct one
-
-
----- BALANCE
-
-HAG30 dps!
-
-repair walls is ridiculously exploitable
