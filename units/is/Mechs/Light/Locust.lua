@@ -91,7 +91,7 @@ local LCT3D = Locust:New{
 		price			= 10500,
 		heatlimit 		= 10,
 		armor			= {type = "ferro", tons = 2.5},
-		maxammo 		= {lrm = 1},
+		maxammo 		= {lrm = 120},
     },
 }
 
@@ -122,9 +122,37 @@ local LCT3S = Locust:New{
     },
 }
 
+local LCT1L = Locust:New{
+	description         = "Light Scout",
+	weapons	= {	
+		[1] = {
+			name	= "MBL",
+			OnlyTargetCategory = "ground",
+		},
+		[2] = {
+			name	= "MG",
+			OnlyTargetCategory = "notbeacon",
+		},
+		[3] = {
+			name	= "MG",
+			OnlyTargetCategory = "notbeacon",
+		},
+	},
+		
+	customparams = {
+		variant         = "LCT-1L",
+		speed			= 120,
+		price			= 10500,
+		heatlimit 		= 10,
+		armor			= {type = "ferro", tons = 2.5},
+		maxammo 		= {srm = 1},
+    },
+}
+
 return lowerkeys({
 	["FW_Locust_LCT3M"] = LCT3M:New(),
 	["FW_Locust_LCT5M"] = LCT5M:New(),
 	["FS_Locust_LCT3D"] = LCT3D:New(),
 	["LA_Locust_LCT3S"] = LCT3S:New(),
+	["CC_Locust_LCT1L"] = LCT1L:New(),
 })

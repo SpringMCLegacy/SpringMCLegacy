@@ -67,7 +67,7 @@ local RVN4L = Raven:New{
 	customparams = {
 		variant         = "RVN-4L",
 		speed			= 90,
-		price			= 19000,
+		price			= 18000,
 		heatlimit 		= 20,
 		armor			= {type = "stealth", tons = 6},
 		bap				= true,
@@ -110,7 +110,7 @@ local RVN3M = Raven:New{
 }
 
 return lowerkeys({
-	["CC_Raven_RVN3L"] = RVN3L:New(),
+	["DC_Raven_RVN3L"] = RVN3L:New(),
 	["CC_Raven_RVN4L"] = RVN4L:New(),
 	["FW_Raven_RVN3M"] = RVN3M:New(),
 })
