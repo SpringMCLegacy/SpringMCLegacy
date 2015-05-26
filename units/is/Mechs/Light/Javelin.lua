@@ -21,7 +21,7 @@ local JVN11B = Javelin:New{
 	},
 		
 	customparams = {
-		variant         = "JVN11B",
+		variant         = "JVN-11B",
 		speed			= 90,
 		price			= 15000,
 		heatlimit 		= 20,

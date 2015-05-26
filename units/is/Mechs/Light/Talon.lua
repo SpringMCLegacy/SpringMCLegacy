@@ -21,7 +21,7 @@ local TLN5W = Talon:New{
 	},
 		
 	customparams = {
-		variant         = "TLN5W",
+		variant         = "TLN-5W",
 		speed			= 120,
 		price			= 15000,
 		heatlimit 		= 22,
@@ -41,7 +41,7 @@ local TLN5Z = Talon:New{
 	},
 		
 	customparams = {
-		variant         = "TLN5Z",
+		variant         = "TLN-5Z",
 		speed			= 110,
 		price			= 14000,
 		heatlimit 		= 20,

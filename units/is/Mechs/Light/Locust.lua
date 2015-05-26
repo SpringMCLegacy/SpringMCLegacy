@@ -86,7 +86,7 @@ local LCT3D = Locust:New{
 	},
 		
 	customparams = {
-		variant         = "LCT3D",
+		variant         = "LCT-3D",
 		speed			= 120,
 		price			= 10500,
 		heatlimit 		= 10,
@@ -113,7 +113,7 @@ local LCT3S = Locust:New{
 	},
 		
 	customparams = {
-		variant         = "LCT3S",
+		variant         = "LCT-3S",
 		speed			= 120,
 		price			= 10500,
 		heatlimit 		= 10,
@@ -123,8 +123,8 @@ local LCT3S = Locust:New{
 }
 
 return lowerkeys({
-	["FWL_Locust_LCT3M"] = LCT3M:New(),
-	--["FWL_Locust_LCT5M"] = LCT5M:New(),
+	["FW_Locust_LCT3M"] = LCT3M:New(),
+	["FW_Locust_LCT5M"] = LCT5M:New(),
 	["FS_Locust_LCT3D"] = LCT3D:New(),
 	["LA_Locust_LCT3S"] = LCT3S:New(),
 })

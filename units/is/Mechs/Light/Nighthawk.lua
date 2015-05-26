@@ -22,7 +22,7 @@ local NTK2Q = Nighthawk:New{
 	},
 		
 	customparams = {
-		variant         = "NTK2Q",
+		variant         = "NTK-2Q",
 		speed			= 90,
 		price			= 15500,
 		heatlimit 		= 10,
@@ -42,7 +42,7 @@ local NTK2S = Nighthawk:New{
 	},
 		
 	customparams = {
-		variant         = "NTK2S",
+		variant         = "NTK-2S",
 		speed			= 90,
 		price			= 15500,
 		heatlimit 		= 10,

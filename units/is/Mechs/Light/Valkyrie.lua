@@ -18,7 +18,7 @@ local VLKQD = Valkyrie:New{
 	},
 		
 	customparams = {
-		variant         = "VLKQD",
+		variant         = "VLK-QD",
 		speed			= 80,
 		price			= 17000,
 		heatlimit 		= 10,

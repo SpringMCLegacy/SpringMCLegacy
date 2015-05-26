@@ -31,7 +31,7 @@ local RVN3L = Raven:New{
 	},
 		
 	customparams = {
-		variant         = "RVN3L",
+		variant         = "RVN-3L",
 		speed			= 90,
 		price			= 16000,
 		heatlimit 		= 11,
@@ -65,7 +65,7 @@ local RVN4L = Raven:New{
 	},
 
 	customparams = {
-		variant         = "RVN4L",
+		variant         = "RVN-4L",
 		speed			= 90,
 		price			= 19000,
 		heatlimit 		= 20,
@@ -100,7 +100,7 @@ local RVN3M = Raven:New{
 	},
 		
 	customparams = {
-		variant         = "RVN3M",
+		variant         = "RVN-3M",
 		speed			= 90,
 		price			= 16000,
 		heatlimit 		= 11,
@@ -112,5 +112,5 @@ local RVN3M = Raven:New{
 return lowerkeys({
 	["CC_Raven_RVN3L"] = RVN3L:New(),
 	["CC_Raven_RVN4L"] = RVN4L:New(),
-	["FWL_Raven_RVN3M"] = RVN3M:New(),
+	["FW_Raven_RVN3M"] = RVN3M:New(),
 })

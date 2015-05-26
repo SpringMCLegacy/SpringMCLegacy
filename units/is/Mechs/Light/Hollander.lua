@@ -15,7 +15,7 @@ local BZKF3 = Hollander:New{
 	},
 	
     customparams = {
-		variant         = "BZKF3",
+		variant         = "BZK-F3",
 		speed			= 80,
 		price			= 14900,
 		heatlimit 		= 10,
@@ -40,7 +40,7 @@ local BZKG1 = Hollander:New{
 	},
 	
 	customparams = {
-		variant         = "BZKG1",
+		variant         = "BZK-G1",
 		speed			= 80,
 		price			= 13000,
 		heatlimit 		= 10,

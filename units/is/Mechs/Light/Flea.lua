@@ -1,4 +1,5 @@
 local Flea = Light:New{
+	name				= "Flea",
 	customparams = {
 		tonnage			= 20,
     },
@@ -28,7 +29,7 @@ local FLE17 = Flea:New{
 	},
 		
 	customparams = {
-		variant         = "FLE17",
+		variant         = "FLE-17",
 		speed			= 90,
 		price			= 9200,
 		heatlimit 		= 10,

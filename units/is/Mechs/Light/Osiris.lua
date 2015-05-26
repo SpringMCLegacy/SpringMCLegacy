@@ -38,7 +38,7 @@ local OSR3D = Osiris:New{
 	},
 		
 	customparams = {
-		variant			= "OSR3D",
+		variant			= "OSR-3D",
 		speed			= 120,
 		price			= 15750,
 		heatlimit 		= 20,
@@ -74,7 +74,7 @@ local OSR4D = Osiris:New{
 	},
 		
 	customparams = {
-		variant			= "OSR4D",
+		variant			= "OSR-4D",
 		speed			= 120,
 		price			= 17500,
 		heatlimit 		= 20,

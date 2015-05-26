@@ -14,5 +14,25 @@ local sidedata = {
 		shortName = "FS",
 		startUnit = "beacon",
 	},
+	{
+		name = "Lyran Alliance",
+		shortName = "LA",
+		startUnit = "beacon",
+	},
+	{
+		name = "Draconis Combine",
+		shortName = "DC",
+		startUnit = "beacon",
+	},
+	{
+		name = "Capellan Confederation",
+		shortName = "CC",
+		startUnit = "beacon",
+	},
+	{
+		name = "Free Worlds League",
+		shortName = "FW",
+		startUnit = "beacon",
+	},
 }
 return sidedata
