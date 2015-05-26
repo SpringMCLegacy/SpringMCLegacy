@@ -30,7 +30,7 @@ local TLN5W = Talon:New{
 }
 
 local TLN5Z = Talon:New{
-	description         = "Light Striker Fire Support",
+	description         = "Light Striker",
 	weapons = {	
 		[1] = {
 			name	= "ERLBL",

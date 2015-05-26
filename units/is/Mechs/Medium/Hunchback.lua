@@ -1,24 +1,16 @@
-local IS_Hunchback = Medium:New{
-	corpse				= "IS_Hunchback_X",
-	maxDamage           = 16000,
-	mass                = 5000,
-	buildCostEnergy     = 50,
-	buildCostMetal        = 21100,
-	maxVelocity		= 3, --60kph/20
+local Hunchback = Medium:New{
+	name				= "Hunchback",
 
 	customparams = {
-		torsoturnspeed	= "160",
+		tonnage			= 50,
     },	
 }
 
-local HBK4G = IS_Hunchback:New{
-	name              	= "Hunchback HBK-4G",
-	description         = "Medium-class Close Range Brawler",
-	objectName        	= "IS_Hunchback_HBK4G.s3o",
+local HBK4G = Hunchback:New{
+	description         = "Medium Brawler",
 	weapons	= {	
 		[1] = {
 			name	= "AC20",
-			OnlyTargetCategory = "ground",
 		},
 		[2] = {
 			name	= "MBL",
@@ -28,45 +20,39 @@ local HBK4G = IS_Hunchback:New{
 		},
 		[4] = {
 			name	= "SBL",
-			OnlyTargetCategory = "ground",
 		},
 	},
 		
 	customparams = {
-		helptext		= "Armament: 1 x AC/20, 2 x Medium Beam Laser, 1 x Small Beam Laser - Armor: 10 tons Standard",
-		heatlimit		= "13",
-		maxammo 		= {ac20 = 16},
+		variant			= "HBK-4G",
+		speed			= 60,
+		price			= 18000,
+		heatlimit 		= 13,
+		armor			= {type = "standard", tons = 10},
+		maxammo 		= {ac20 = 2},
     },
 }
 
-local HBK4P = IS_Hunchback:New{
-	name              	= "Hunchback HBK-4P",
-	description         = "Medium-class Mid Range Fire Support",
-	objectName        	= "IS_Hunchback_HBK4P.s3o",
+local HBK4P = Hunchback:New{
+	description         = "Medium Striker",
 	weapons = {	
 		[1] = {
 			name	= "MBL",
-			OnlyTargetCategory = "ground",
 		},
 		[2] = {
 			name	= "MBL",
-			OnlyTargetCategory = "ground",
 		},
 		[3] = {
 			name	= "MBL",
-			OnlyTargetCategory = "ground",
 		},
 		[4] = {
 			name	= "MBL",
-			OnlyTargetCategory = "ground",
 		},
 		[5] = {
 			name	= "MBL",
-			OnlyTargetCategory = "ground",
 		},
 		[6] = {
 			name	= "MBL",
-			OnlyTargetCategory = "ground",
 		},
 		[7] = {
 			name	= "MBL",
@@ -77,12 +63,49 @@ local HBK4P = IS_Hunchback:New{
 	},
 		
 	customparams = {
-		helptext		= "Armament: 8 x Medium Beam Laser - Armor: 10 tons Standard",
-		heatlimit		= "23",
+		variant			= "HBK-4P",
+		speed			= 60,
+		price			= 18000,
+		heatlimit 		= 23,
+		armor			= {type = "standard", tons = 10},
+    },
+}
+
+local HBK5S = Hunchback:New{
+	description         = "Medium Brawler",
+	weapons	= {	
+		[1] = {
+			name	= "LBX20",
+		},
+		[2] = {
+			name	= "MPL",
+		},
+		[3] = {
+			name	= "MPL",
+		},
+		[4] = {
+			name	= "SBL",
+		},
+	},
+		
+	customparams = {
+		variant			= "HBK-5S",
+		speed			= 60,
+		price			= 21000,
+		heatlimit 		= 20,
+		armor			= {type = "standard", tons = 11},
+		jumpjets		= 4,
+		maxammo 		= {ac20 = 4},
     },
 }
 
 return lowerkeys({
-	["IS_Hunchback_HBK4G"] = HBK4G,
-	["IS_Hunchback_HBK4P"] = HBK4P,
+	["FS_Hunchback_HBK4G"] = HBK4G:New(),
+	["DC_Hunchback_HBK4G"] = HBK4G:New(),
+	["FW_Hunchback_HBK4G"] = HBK4G:New(),
+	["CC_Hunchback_HBK4G"] = HBK4G:New(),
+	["FW_Hunchback_HBK4P"] = HBK4P:New(),
+	["FS_Hunchback_HBK4P"] = HBK4P:New(),
+	["CC_Hunchback_HBK4P"] = HBK4P:New(),
+	["LA_Hunchback_HBK5S"] = HBK5S:New(),
 })

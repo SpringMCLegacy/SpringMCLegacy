@@ -1,22 +1,13 @@
-local IS_Chimera = Medium:New{
-	corpse				= "IS_Chimera_X",
-	maxDamage           = 11200,
-	mass                = 4000,
-	buildCostEnergy     = 40,
-	buildCostMetal        = 17270,
-	maxVelocity		= 4.5, --90kph/20
+local Chimera = Medium:New{
+	name				= "Chimera",
 	
 	customparams = {
-		heatlimit		= "20",
-		torsoturnspeed	= "170",
-		canjump			= "1",
+		tonnage			= 40,
     },
 }
 
-local CMA1S = IS_Chimera:New{
-	name              	= "Chimera CMA-1S",
-	description         = "Medium-class Mid Range Skirmisher",
-	objectName        	= "IS_Chimera_CMA1S.s3o",
+local CMA1S = Chimera:New{
+	description         = "Medium Skirmisher",
 	weapons	= {	
 		[1] = {
 			name	= "ERLBL",
@@ -29,16 +20,22 @@ local CMA1S = IS_Chimera:New{
 		},
 		[4] = {
 			name	= "MRM20",
-			OnlyTargetCategory = "ground",
 		},
 	},
 
 	customparams = {
-		helptext		= "Armament: 1 x ER Large Beam Laser, 1 x Medium Pulse Laser, 1 x Machinegun, 2 x MRM-10 - Armor: 7 tons Standard",
-		maxammo 		= {mrm = 400},
+		variant			= "CMA-1S",
+		speed			= 90,
+		price			= 19000,
+		heatlimit 		= 20,
+		armor			= {type = "standard", tons = 7},
+		jumpjets		= 6,
+		maxammo 		= {mrm = 2},
     },
 }
 
 return lowerkeys({ 
-	["IS_Chimera_CMA1S"] = CMA1S
+	["FS_Chimera_CMA1S"] = CMA1S:New(),
+	["DC_Chimera_CMA1S"] = CMA1S:New(),
+	["LA_Chimera_CMA1S"] = CMA1S:New(),
 })

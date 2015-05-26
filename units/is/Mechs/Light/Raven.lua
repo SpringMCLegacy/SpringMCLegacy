@@ -7,7 +7,7 @@ local Raven = Light:New{
 }
 
 local RVN3L = Raven:New{
-	description         = "Light EWAR",
+	description         = "Light EWAR Support",
 	weapons	= {	
 		[1] = {
 			name	= "MBL",
@@ -43,7 +43,7 @@ local RVN3L = Raven:New{
 }
 
 local RVN4L = Raven:New{
-	description         = "Light EWAR",
+	description         = "Light EWAR Support",
 	weapons = {	
 		[1] = {
 			name	= "ERMBL",

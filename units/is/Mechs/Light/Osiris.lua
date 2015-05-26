@@ -17,23 +17,18 @@ local OSR3D = Osiris:New{
 		},
 		[3] = {
 			name	= "ERMBL",
-			OnlyTargetCategory = "ground",
 		},
 		[4] = {
 			name	= "ERMBL",
-			OnlyTargetCategory = "ground",
 		},
 		[5] = {
 			name	= "ERMBL",
-			OnlyTargetCategory = "ground",
 		},
 		[6] = {
 			name	= "MG",
-			OnlyTargetCategory = "ground",
 		},
 		[7] = {
 			name	= "SRM6",
-			OnlyTargetCategory = "ground",
 		},
 	},
 		
@@ -53,11 +48,9 @@ local OSR4D = Osiris:New{
 	weapons = {	
 		[1] = {
 			name	= "MPL",
-			OnlyTargetCategory = "ground",
 		},
 		[2] = {
 			name	= "ERMBL",
-			OnlyTargetCategory = "ground",
 		},
 		[3] = {
 			name	= "ERMBL",
