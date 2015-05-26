@@ -3,7 +3,7 @@ local GetCmdID = GG.CustomCommands.GetCmdID
 
 -- Common valid() functions here:
 local function allMechs(unitDefID) return true end
-local function hasJumpjets(unitDefID) return (UnitDefs[unitDefID].customParams.canjump or false) end
+local function hasJumpjets(unitDefID) return (UnitDefs[unitDefID].customParams.jumpjets or false) end
 
 local function hasWeaponName(unitDefID, weapName)
 	local weapons = UnitDefs[unitDefID].weapons
