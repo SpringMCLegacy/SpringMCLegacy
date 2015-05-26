@@ -77,6 +77,11 @@ local spSetUnitLeaveTracks = Spring.SetUnitLeaveTracks
 -- added for BTL
 local spGetUnitRulesParam  = Spring.GetUnitRulesParam
 
+local jumpers = {} -- jumpers[unitDefID] = {range = number, height = number, speed = number}  
+local BASE_RELOAD = 10
+local BASE_RANGE = 600
+local BASE_HEIGHT = BASE_RANGE / 3
+
 local mcSetRotationVelocity = MoveCtrl.SetRotationVelocity
 local mcSetPosition         = MoveCtrl.SetPosition
 local mcSetRotation         = MoveCtrl.SetRotation
@@ -95,13 +100,13 @@ local goalSet	  = {}
 --------------------------------------------------------------------------------
 --------------------------------------------------------------------------------
 
-local jumpDefNames  = VFS.Include("LuaRules/Configs/jump_defs.lua")
+--local jumpDefNames  = VFS.Include("LuaRules/Configs/jump_defs.lua")
 
-local jumpDefs = {}
+--[[local jumpDefs = {}
 for name, data in pairs(jumpDefNames) do
   jumpDefs[UnitDefNames[name].id] = data
-end
-GG.jumpDefs = jumpDefs
+end]]
+--GG.jumpDefs = jumpDefs
 
 local jumpCmdDesc = {
   id      = CMD_JUMP,
@@ -112,7 +117,6 @@ local jumpCmdDesc = {
   tooltip = 'Jump to selected position.',
 }
 
-  
 --------------------------------------------------------------------------------
 --------------------------------------------------------------------------------
 
@@ -178,15 +182,15 @@ local function Jump(unitID, goal, cmdTag)
 
   local fakeUnitID
   local unitDefID     = spGetUnitDefID(unitID)
-  local jumpDef       = jumpDefs[unitDefID]
-  local speed         = Spring.GetUnitRulesParam(unitID, "jumpSpeed") or jumpDef.speed
-  local delay    	  = jumpDef.delay
+  local jumpDef       = jumpers[unitDefID]
+  local speed         = Spring.GetUnitRulesParam(unitID, "jumpSpeed") or 6
+  local delay    	  = 30 --jumpDef.delay
   local height        = jumpDef.height
-  local reloadTime    = (Spring.GetUnitRulesParam(unitID, "jumpReload") or (jumpDef.reload or 0))*30
+  local reloadTime    = (Spring.GetUnitRulesParam(unitID, "jumpReload") or (BASE_RELOAD))*30
   local teamID        = spGetUnitTeam(unitID)
   
-  local rotateMidAir  = jumpDef.rotateMidAir
-  local cob 	 	  = jumpDef.cobscript
+  local rotateMidAir  = false --jumpDef.rotateMidAir
+  local cob 	 	  = false --jumpDef.cobscript
   local env
 
   local vector        = {goal[1] - start[1],
@@ -365,20 +369,27 @@ function gadget:Initialize()
   for _, unitID in pairs(Spring.GetAllUnits()) do
     gadget:UnitCreated(unitID, Spring.GetUnitDefID(unitID))
   end
+  for unitDefID, unitDef in pairs(UnitDefs) do
+	local jumpjets = unitDef.customParams.jumpjets
+    if jumpjets then
+		jumpers[unitDefID] = {range = 100 * jumpjets, height = 33 * jumpjets, speed = 6}
+	end
+  end
+  GG.jumpDefs = jumpers
 end
 
 
 function gadget:UnitCreated(unitID, unitDefID, unitTeam)
-  if (not jumpDefs[unitDefID]) then
+  if (not jumpers[unitDefID]) then
     return
   end 
   local t = spGetGameSeconds()
-  lastJump[unitID] = t - jumpDefs[unitDefID].reload
+  lastJump[unitID] = t - BASE_RELOAD
   spInsertUnitCmdDesc(unitID, jumpCmdDesc)
   spSetUnitRulesParam(unitID,"jump_reload_bar",100)
-  spSetUnitRulesParam(unitID,"jumpReload", jumpDefs[unitDefID].reload)
-  spSetUnitRulesParam(unitID,"jumpSpeed", jumpDefs[unitDefID].speed)
-  spSetUnitRulesParam(unitID,"jumpRange", jumpDefs[unitDefID].range)
+  spSetUnitRulesParam(unitID,"jumpReload", BASE_RELOAD)
+  spSetUnitRulesParam(unitID,"jumpSpeed", jumpers[unitDefID].speed)
+  spSetUnitRulesParam(unitID,"jumpRange", jumpers[unitDefID].range)
 end
 
 
@@ -433,7 +444,7 @@ end
 
 
 function gadget:CommandFallback(unitID, unitDefID, teamID, cmdID, cmdParams, cmdOptions)
-	if (not jumpDefs[unitDefID]) then
+	if (not jumpers[unitDefID]) then
 		return false
 	end
 	if (cmdID ~= CMD_JUMP) then      -- you remove the
@@ -449,9 +460,9 @@ function gadget:CommandFallback(unitID, unitDefID, teamID, cmdID, cmdParams, cmd
 
 	local x, y, z = spGetUnitBasePosition(unitID)
 	local distSqr = GetDist2Sqr({x, y, z}, cmdParams)
-	local jumpDef = jumpDefs[unitDefID]
+	local jumpDef = jumpers[unitDefID]
 	local range   = spGetUnitRulesParam(unitID, "jumpRange") or jumpDef.range
-	local reload  = spGetUnitRulesParam(unitID, "jumpReload") or jumpDef.reload or 0
+	local reload  = spGetUnitRulesParam(unitID, "jumpReload") or BASE_RELOAD
 	local barFull = spGetUnitRulesParam(unitID, "jump_reload_bar") == 100
 	local t       = spGetGameSeconds()
   

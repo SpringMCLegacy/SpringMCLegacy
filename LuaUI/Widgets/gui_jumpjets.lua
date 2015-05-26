@@ -57,7 +57,7 @@ local green    = {0.5,   1, 0.5,   1}
 local yellow   = {  1,   1, 0.5,   1}
 local red      = {  1, 0.5, 0.5,   1}
 
-local jumpDefNames  = VFS.Include"LuaRules/Configs/jump_defs.lua"
+--local jumpDefNames  = VFS.Include"LuaRules/Configs/jump_defs.lua"
 
 local function ListToSet(t)
   local new = {}
@@ -69,8 +69,11 @@ end
 
 
 local jumpDefs = {}
-for name, data in pairs(jumpDefNames) do
-  jumpDefs[UnitDefNames[name].id] = data
+for unitDefID, unitDef in pairs(UnitDefs) do
+  local jumpjets = unitDef.customParams.jumpjets
+  if jumpjets then
+	jumpDefs[unitDefID] = {range = jumpjets * 100, speed = jumpjets, height = jumpjets * 33}
+  end
 end
 
 local ignore = {
