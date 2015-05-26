@@ -55,7 +55,9 @@ Def = {
 
 function Def:New(newAttribs, concatName)
 	local newClass = {}
-	inherit(newClass, newAttribs)
+	if type(newAttribs) == "table" then
+		inherit(newClass, newAttribs)
+	end
 	inherit(newClass, self, concatName)
 	return newClass
 end
