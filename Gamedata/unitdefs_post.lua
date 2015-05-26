@@ -93,7 +93,7 @@ for name, ud in pairs(UnitDefs) do
 			end
 		end
 		if cp.speed then
-			ud.maxvelocity = tonumber(cp.speed or 0) / 20 -- convert kph to game speed
+			ud.maxvelocity = tonumber(cp.speed or 0) / (cp.unittype == "mech" and 20 or 30) -- convert kph to game speed
 			cp.torsoturnspeed = cp.speed * 5
 		end
 		if cp.maxammo then
