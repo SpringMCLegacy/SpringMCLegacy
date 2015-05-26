@@ -118,7 +118,7 @@ end
 function gadget:UnitCreated(unitID, unitDefID, teamID, builderID)
 	local ud = UnitDefs[unitDefID]
 	local cp = ud.customParams
-	if cp and cp.canmasc then
+	if cp and cp.masc then
 		InsertUnitCmdDesc(unitID, MascCmdDesc)
 		Spring.SetUnitRulesParam(unitID, "masc", 100)
 		mascUnitDefs[unitDefID] = true
