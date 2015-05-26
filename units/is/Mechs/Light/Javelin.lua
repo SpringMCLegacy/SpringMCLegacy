@@ -28,7 +28,7 @@ local JVN11B = Javelin:New{
 		armor			= {type = "ferro", tons = 5},
 		bap 			= true,
 		ecm				= true,
-		maxammo 		= {srm = 180},
+		maxammo 		= {srm = 2},
     },
 }
 

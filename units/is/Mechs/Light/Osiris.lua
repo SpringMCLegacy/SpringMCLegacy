@@ -44,7 +44,7 @@ local OSR3D = Osiris:New{
 		heatlimit 		= 20,
 		armor			= {type = "ferro", tons = 4.5},
 		jumpjets		= 4,
-		maxammo 		= {srm = 90},
+		maxammo 		= {srm = 1},
     },
 }
 

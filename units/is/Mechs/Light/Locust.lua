@@ -91,7 +91,7 @@ local LCT3D = Locust:New{
 		price			= 10500,
 		heatlimit 		= 10,
 		armor			= {type = "ferro", tons = 2.5},
-		maxammo 		= {lrm = 120},
+		maxammo 		= {lrm = 1},
     },
 }
 
@@ -137,15 +137,22 @@ local LCT1L = Locust:New{
 			name	= "MG",
 			OnlyTargetCategory = "notbeacon",
 		},
+		[4] = {
+			name	= "MG",
+			OnlyTargetCategory = "notbeacon",
+		},
+		[5] = {
+			name	= "MG",
+			OnlyTargetCategory = "notbeacon",
+		},
 	},
 		
 	customparams = {
 		variant         = "LCT-1L",
 		speed			= 120,
-		price			= 10500,
+		price			= 8500,
 		heatlimit 		= 10,
-		armor			= {type = "ferro", tons = 2.5},
-		maxammo 		= {srm = 1},
+		armor			= {type = "standard", tons = 4},
     },
 }
 

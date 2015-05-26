@@ -38,7 +38,7 @@ local RVN3L = Raven:New{
 		armor			= {type = "ferro", tons = 4.5},
 		bap				= true,
 		ecm				= true,
-		maxammo 		= {narc = 12, srm = 90},
+		maxammo 		= {narc = 2, srm = 1},
     },
 }
 
@@ -72,7 +72,7 @@ local RVN4L = Raven:New{
 		armor			= {type = "stealth", tons = 6},
 		bap				= true,
 		ecm				= true,
-		maxammo 		= {narc = 12, srm = 90},
+		maxammo 		= {narc = 1, srm = 1},
     },
 }
 
@@ -105,7 +105,7 @@ local RVN3M = Raven:New{
 		price			= 16000,
 		heatlimit 		= 11,
 		armor			= {type = "ferro", tons = 3.5},
-		maxammo 		= {narc = 12, lrm = 240},
+		maxammo 		= {narc = 2, lrm = 2},
     },
 }
 

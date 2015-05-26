@@ -24,7 +24,7 @@ local VLKQD = Valkyrie:New{
 		heatlimit 		= 10,
 		armor			= {type = "ferro", tons = 6},
 		jumpjets		= 5,
-		maxammo 		= {lrm = 120},
+		maxammo 		= {lrm = 1},
     },
 }
 
