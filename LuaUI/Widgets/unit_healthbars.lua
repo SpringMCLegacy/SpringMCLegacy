@@ -540,7 +540,8 @@ do
 
   local customInfo = {}
   local ci
-  local ammoTypes = {"AC2", "AC5", "AC10", "AC20", "LRM", "SRM", "MRM", "ATM", "Gauss", "NARC", "Arrow", "Sniper"}
+  local ammoTypes = {}
+  for ammoType, tons in pairs (VFS.Include("weapons/AmmoTypes.lua", nil, VFS.ZIP)) do ammoTypes[#ammoTypes + 1] = ammoType end
 
   function DrawUnitInfos(unitID,unitDefID, ud)
     if (not customInfo[unitDefID]) then

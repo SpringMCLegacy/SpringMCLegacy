@@ -102,7 +102,7 @@ end
 function widget:Initialize()
 	clockConfig = Spring.GetConfigInt('ShowClock')
 	fpsConfig = Spring.GetConfigInt('ShowFPS')
-	Spring.SendCommands("resbar 0", "clock 0", "fps 0")
+	Spring.SendCommands("resbar 0", "clock 0", "fps 0", "togglelos 1")
 	btFont = gl.LoadFont("LuaUI/Fonts/bt_oldstyle.ttf", 16, 2, 30)
 	TicketText()
 	haveArty = Spring.GetTeamUnitsCounts(MY_TEAM_ID)[UPLINK_ID] or 0

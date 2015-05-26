@@ -1,3 +1,4 @@
+-- USEFUL FUNCTIONS & INCLUDES
 VFS.Include("LuaRules/Includes/utilities.lua", nil, VFS.ZIP)
 
 local modOptions
@@ -40,6 +41,9 @@ local function ReplaceStrings(t, name)
 	RecursiveReplaceStrings(t, name, side, replacedMap)
 end
 
+local ammoPerTon = lowerkeys(VFS.Include("weapons/AmmoTypes.lua", nil, VFS.ZIP))
+
+-- DROPZONES
 local DROPZONE_UDS = {} --DZ_IDS = {shortSideName = unitDef}
 local DROPZONE_BUILDOPTIONS = {} -- D_B = {shortSideName = {unitname1, ...}}
 for i, sideName in pairs(SIDES) do
@@ -92,6 +96,15 @@ for name, ud in pairs(UnitDefs) do
 			ud.maxvelocity = tonumber(cp.speed or 0) / 20 -- convert kph to game speed
 			cp.torsoturnspeed = cp.speed * 5
 		end
+		if cp.maxammo then
+			for ammoType, tons in pairs(cp.maxammo) do
+				if ammoPerTon[ammoType] then
+					cp.maxammo[ammoType] = tons * ammoPerTon[ammoType]
+				else
+					Spring.Echo("ERROR: unitdefs_post.lua; unknown ammoType (" .. ammoType .. ") for " .. ud.name)
+				end
+			end
+		end
 	end
 	-- set maxvelocity by modoption
 	ud.maxvelocity = (ud.maxvelocity or 0) * (modOptions.speed or 0.65)
@@ -143,7 +156,7 @@ for name, ud in pairs(UnitDefs) do
 				weapon.onlytargetcategory = "narctag"			
 				ud.description = ud.description .. " \255\255\051\051[TAG]"
 			else
-				if ud.customparams.unittype then
+				if cp.unittype then
 					-- Give all mechs 179d torso twist
 					--[[if ud.customparams.unittype == "mech" then
 						weapon.maxangledif = 179
@@ -153,11 +166,11 @@ for name, ud in pairs(UnitDefs) do
 							weapon.slaveto = 1
 						end
 					end
-					if ud.customparams.unittype == vehicle then
+					if cp.unittype == vehicle then
 						if not weapon.onlytargetcategory then
 							weapon.onlytargetcategory = "ground"
 						end
-						ud.customparams.wheelspeed = ud.maxvelocity * 166
+						cpwheelspeed = ud.maxvelocity * 166
 					end
 				end
 				weapon.onlytargetcategory = (weapon.onlytargetcategory or "") .. " notbeacon"
@@ -180,7 +193,7 @@ for name, ud in pairs(UnitDefs) do
 		else -- a vehicle
 			ud.maxdamage = ud.maxdamage * 0.5
 		end
-	elseif ud.customparams.towertype then
+	elseif cp.towertype then
 		table.insert(UPLINK_BUILDOPTIONS, name)
 		ud.levelground = false
 	end
@@ -189,13 +202,13 @@ for name, ud in pairs(UnitDefs) do
 		DROPZONE_UDS[side] = ud
 	end
 		
-	if name == "beacon" or name:find("upgrade") or name:find("dropzone") or ud.customparams.dropship then 
+	if name == "beacon" or name:find("upgrade") or name:find("dropzone") or cp.dropship then 
 		if name == "beacon" then
 			BEACON_UD = ud 
 			ud.canselfdestruct = false
 		elseif name == "upgrade_uplink" then
 			UPLINK_UD = ud
-		elseif ud.customparams.dropship or name:find("dropzone") then
+		elseif cp.dropship or name:find("dropzone") then
 			ud.canselfdestruct = false
 			ud.levelground = false
 		end
