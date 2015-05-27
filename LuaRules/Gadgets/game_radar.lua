@@ -190,7 +190,7 @@ end
 function gadget:UnitCreated(unitID, unitDefID, teamID)
 	local ud = UnitDefs[unitDefID]
 	local jamRadius = ud.jammerRadius
-	if jamRadius then
+	if jamRadius > 0 then
 		local allyTeam = select(6, GetTeamInfo(teamID))
 		allyJammers[allyTeam][unitID] = jamRadius
 	end
@@ -243,7 +243,9 @@ function gadget:GameFrame(n)
 			for _, teamID in pairs(teamsInAllyTeams[allyTeam]) do
 				if not deadTeams[teamID] then
 					local nearbyUnits = Spring.GetUnitsInCylinder(x, z, radius, teamID)
+						--Spring.Echo("Jammer", jammerID, "(", UnitDefs[Spring.GetUnitDefID(jammerID)].name, ")")
 					for i = 1, #nearbyUnits do
+						--Spring.Echo("nearby", UnitDefs[Spring.GetUnitDefID(nearbyUnits[i])].name)
 						SetUnitRulesParam(nearbyUnits[i], "FRIENDLY_ECM", n)
 					end
 				end

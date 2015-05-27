@@ -542,7 +542,10 @@ function script.BlockShot(weaponID, targetID, userTarget)
 				distance = GetUnitDistanceToPoint(unitID, tx, ty, tz, false)
 			end
 		end
-		if distance < minRange then return true end
+		if distance < minRange then 
+			--Spring.Echo("Can't fire weapon " .. weaponID .. " as target is within minimum range")
+			return true 
+		end
 	end
 	local jammable = jammableIDs[weaponID]
 	if jammable then
@@ -608,7 +611,7 @@ end
 
 function script.Killed(recentDamage, maxHealth)
 	if excessHeat >= heatLimit then
-		Spring.Echo("NUUUUUUUUUUUKKKKKE")
+		--Spring.Echo("NUUUUUUUUUUUKKKKKE")
 		local x,y,z = Spring.GetUnitPosition(unitID)
 		-- This is a really awful hack , built on top of another hack. 
 		-- There's some issue with alwaysVisible not working (http://springrts.com/mantis/view.php?id=4483)
