@@ -1,7 +1,5 @@
 local CL_Warhawk = Assault:New{
 	corpse				= "CL_Warhawk_X",
-	sightDistance       = 1200,
-	radarDistance      	= 2000,
 	maxDamage           = 25900,
 	mass                = 8500,
 	buildCostEnergy     = 85,
@@ -15,6 +13,7 @@ local CL_Warhawk = Assault:New{
 	customparams = {
 		heatlimit		= 50,
 		torsoturnspeed	= 100,
+		bap				= true,
 		maxammo 		= {lrm = 120},
     },
 }

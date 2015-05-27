@@ -30,6 +30,7 @@ local HBK4G = Hunchback:New{
 		heatlimit 		= 13,
 		armor			= {type = "standard", tons = 10},
 		maxammo 		= {ac20 = 2},
+		barrelrecoildist = {[1] = 3},
     },
 }
 
@@ -96,16 +97,45 @@ local HBK5S = Hunchback:New{
 		armor			= {type = "standard", tons = 11},
 		jumpjets		= 4,
 		maxammo 		= {ac20 = 4},
+		barrelrecoildist = {[1] = 3},
+    },
+}
+
+local HBK5M = Hunchback:New{
+	description         = "Medium Brawler",
+	weapons	= {	
+		[1] = {
+			name	= "AC20",
+		},
+		[2] = {
+			name	= "MBL",
+		},
+		[3] = {
+			name	= "MBL",
+		},
+		[4] = {
+			name	= "SBL",
+		},
+	},
+		
+	customparams = {
+		variant			= "HBK-5M",
+		speed			= 60,
+		price			= 20000,
+		heatlimit 		= 26,
+		armor			= {type = "standard", tons = 11},
+		maxammo 		= {ac20 = 2},
+		barrelrecoildist = {[1] = 3},
     },
 }
 
 return lowerkeys({
 	["FS_Hunchback_HBK4G"] = HBK4G:New(),
-	["DC_Hunchback_HBK4G"] = HBK4G:New(),
-	["FW_Hunchback_HBK4G"] = HBK4G:New(),
-	["CC_Hunchback_HBK4G"] = HBK4G:New(),
-	["FW_Hunchback_HBK4P"] = HBK4P:New(),
 	["FS_Hunchback_HBK4P"] = HBK4P:New(),
+	["DC_Hunchback_HBK4G"] = HBK4G:New(),
+	["CC_Hunchback_HBK4G"] = HBK4G:New(),
 	["CC_Hunchback_HBK4P"] = HBK4P:New(),
 	["LA_Hunchback_HBK5S"] = HBK5S:New(),
+	["FW_Hunchback_HBK5M"] = HBK5M:New(),
+	["FW_Hunchback_HBK4P"] = HBK4P:New(),
 })

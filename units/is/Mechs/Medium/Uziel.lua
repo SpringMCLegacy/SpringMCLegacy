@@ -69,6 +69,7 @@ local UZL3S = Uziel:New{
 		armor			= {type = "standard", tons = 8},
 		jumpjets		= 6,
 		maxammo 		= {srm = 1, ac2 = 1},
+		barrelrecoildist = {[1] = 4},
     },
 }
 

@@ -31,6 +31,7 @@ local Prime = HunchbackII:New{
 		armor			= {type = "standard", tons = 6},
 		maxammo 		= {ac20 = 2},
 		jumpjets		= 4,
+		barrelrecoildist = {[1] = 4, [2] = 4},
     },
 }
 
