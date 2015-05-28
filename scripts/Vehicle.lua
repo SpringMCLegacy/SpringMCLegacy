@@ -162,7 +162,7 @@ local function SpinBarrels(weaponID, start)
 	if start  then
 		Spin(spinPieces[weaponID], z_axis, spinSpeeds[weaponID], spinSpeeds[weaponID] / 5)
 	else
-		Sleep(2000)
+		Sleep(2500)
 		StopSpin(spinPieces[weaponID], z_axis, spinSpeeds[weaponID]/10)
 	end
 	spinPiecesState[weaponID] = start -- must come after the Sleep
