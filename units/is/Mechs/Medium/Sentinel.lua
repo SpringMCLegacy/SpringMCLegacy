@@ -29,6 +29,7 @@ local STN3L = Sentinel:New{
 		heatlimit 		= 10,
 		armor			= {type = "standard", tons = 5.5},
 		maxammo 		= {ac5 = 1, srm = 1},
+		barrelrecoildist = {[1] = 4},
     },
 }
 
@@ -53,6 +54,7 @@ local STN3M = Sentinel:New{
 		heatlimit 		= 10,
 		armor			= {type = "standard", tons = 5.5},
 		maxammo 		= {ac5 = 1, srm = 1},
+		barrelrecoildist = {[1] = 4},
     },
 }
 
