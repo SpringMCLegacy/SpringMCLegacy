@@ -39,7 +39,6 @@ local CMD_VPAD = GG.CustomCommands.GetCmdID("CMD_UPGRADE_upgrade_vehiclepad")
 
 local dropZoneIDs = {}
 local orderSizes = {}
-local sides = GG.teamSide
 
 local flagSpots = {} --VFS.Include("maps/flagConfig/" .. Game.mapName .. "_profile.lua")
 
@@ -63,11 +62,13 @@ function gadget:GamePreload()
 		if unitDef.customParams.jumpjets then
 			if not sideJumpers[side] then sideJumpers[side] = {} end
 			table.insert(sideJumpers[side], unitDefID)
+			--Spring.Echo("Adding jumper mech", unitDef.name, "to", side)
 		end
 		-- identify all assault mechs by faction
 		if unitDef.customParams.unittype == "mech" and GG.GetWeight(tonumber(unitDef.customParams.tonnage) or 0) == "assault"  then
 			if not sideAssaults[side] then sideAssaults[side] = {} end
 			table.insert(sideAssaults[side], unitDefID)
+			--Spring.Echo("Adding assault mech", unitDef.name, "to", side)
 		end
 	end
 end
@@ -90,15 +91,16 @@ local function Spam(teamID)
 	if Spring.ValidUnitID(unitID) then
 		Spring.AddTeamResource(teamID, "metal", 10000000)
 		local cmdDescs = Spring.GetUnitCmdDescs(unitID)
+		local side = GG.teamSide[teamID]
 		orderSizes[teamID] = 0
 		while orderSizes[teamID] < GG.TeamSlotsRemaining(teamID) do
 			--Spring.Echo("COMPARING:", orderSizes[teamID], GG.TeamSlotsRemaining(teamID))
 			local buildID
 			if difficulty > 1 then
 				if difficulty == 3 then -- Assaults only
-					buildID = sideAssaults[side][math.random(1, #sideAssaults[side])]
+					buildID = -sideAssaults[side][math.random(1, #sideAssaults[side])]
 				elseif difficulty == 2 then -- jumpers only
-					buildID = sideJumpers[side][math.random(1, #sideJumpers[side])]
+					buildID = -sideJumpers[side][math.random(1, #sideJumpers[side])]
 				end
 				Spring.AddTeamResource(teamID, "energy", 100)
 			else
@@ -289,7 +291,7 @@ function gadget:UnitUnloaded(unitID, unitDefID, teamID, transportID, transportTe
 				GG.Delay.DelayCall(Spring.GiveOrderToUnit, {unitID, CMD.PATROL, {spot.x, 0, spot.z}, {"shift"}}, 30)
 			end
 		elseif cp.jumpjets then
-			Spring.Echo("JUMP MECH!")
+			--Spring.Echo("JUMP MECH!")
 			Perk(unitID, PERK_JUMP_RANGE, true)
 			RunAndJump(unitID, unitDefID)
 		else
