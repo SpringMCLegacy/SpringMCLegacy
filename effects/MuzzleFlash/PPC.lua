@@ -1,4 +1,6 @@
 -- this is the first effect responsible for the unfolding of the sfx
+
+local PARTICLE_LIFE = 30
 return {
   ["ccssfxexpand"] = {
        alwaysvisible      = true,
@@ -19,7 +21,7 @@ return {
         emitvector         = [[0, 0 r0.001 , 0]],
         gravity            = [[0, 0, 0]],
         numparticles       = 1,
-        particlelife       = 55,
+        particlelife       = PARTICLE_LIFE * 0.6,
         particlelifespread = 0,
         particlesize       = [[1 ]],
         particlesizespread = 0,
@@ -48,7 +50,7 @@ return {
         emitvector         = [[0, 0 r0.001 , 0]],
         gravity            = [[0, 0, 0]],
         numparticles       = 1,
-        particlelife       = 90,
+        particlelife       = PARTICLE_LIFE,
         particlelifespread = 0,
         particlesize       = [[12 ]],
         particlesizespread = 0,
@@ -77,7 +79,7 @@ return {
         emitvector         = [[0, 0 r0.001 , 0]],
         gravity            = [[0, 0, 0]],
         numparticles       = 1,
-        particlelife       = 90,
+        particlelife       = PARTICLE_LIFE,
         particlelifespread = 0,
         particlesize       = [[2 ]],
         particlesizespread = 0,
@@ -106,7 +108,7 @@ return {
         emitvector         = [[0, 0 r0.001 , 0]],
         gravity            = [[0, 0, 0]],
         numparticles       = 1,
-        particlelife       = 90,
+        particlelife       = PARTICLE_LIFE,
         particlelifespread = 0,
         particlesize       = [[8 ]],
         particlesizespread = 0,
@@ -138,7 +140,7 @@ return {
         emitvector         = [[0 r-0.3 r0.3,-0.3, r-0.3 r0.3]],
       gravity            = [[0, 0.007, 0]], 
        numparticles       = 1,
-        particlelife       = 35,
+        particlelife       = PARTICLE_LIFE * 0.4,
         particlelifespread = 20,
         particlesize       = 0.5,
         particlesizespread = 0,
@@ -171,7 +173,7 @@ return {
         emitvector         = [[0 r-0.3 r0.3,0.3, r-0.3 r0.3]],
       gravity            = [[0, -0.007, 0]], 
        numparticles       = 1,
-        particlelife       = 35,
+        particlelife       = PARTICLE_LIFE * 0.4,
         particlelifespread = 20,
         particlesize       = 0.5,
         particlesizespread = 0,
