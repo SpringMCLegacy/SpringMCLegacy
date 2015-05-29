@@ -148,8 +148,10 @@ end
 local function RunAndJump(unitID, unitDefID, cmdID, spotNum, replace)
 	if not Spring.ValidUnitID(unitID) or Spring.GetUnitIsDead(unitID) then return end
 	cmdID = cmdID or CMD.MOVE
-	local jumpLength = GG.jumpDefs[unitDefID].range
-	local jumpReload = GG.jumpDefs[unitDefID].reload
+	local jumpDef = GG.jumpDefs[unitDefID]
+	local jumpLength = Spring.GetUnitRulesParam(unitID, "jumpRange") or jumpDef.range
+	local jumpReload = Spring.GetUnitRulesParam(unitID, "jumpReload") or jumpDef.reload
+
 	local speed = UnitDefs[unitDefID].speed
 	local distCovered = speed * jumpReload
 	-- find target
