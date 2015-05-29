@@ -18,17 +18,12 @@ if gadgetHandler:IsSyncedCode() then
 local modOptions = Spring.GetModOptions()
 local difficulty = tonumber(modOptions and modOptions.ai_difficulty or "1")
 
-local DIREWOLF_ID = UnitDefNames["cl_direwolf_prime"].id
-local ATLAS_ID = UnitDefNames["is_atlas_as7k"].id
-
-local SHADOWCAT_ID = UnitDefNames["cl_shadowcat_prime"].id
-local OSIRIS_ID = UnitDefNames["is_osiris_osr3d"].id
+local sideJumpers = {} -- sideJumpers[sideShortName] = {jumperDefID1, jumperDefID2, ...}
+local sideAssaults = {} -- sideAssaults[sideShortName] = {assaultDefID1, assaultDefID2, ...}
 
 local AI_TEAMS = {}
 local BEACON_ID = UnitDefNames["beacon"].id
-local IS_DROPZONE_ID = UnitDefNames["is_dropzone"].id
-local CL_DROPZONE_ID = UnitDefNames["cl_dropzone"].id
-local DROPZONE_IDS = {[IS_DROPZONE_ID] = true, [CL_DROPZONE_ID] = true}
+local DROPZONE_IDS = GG.DROPZONE_IDS
 local C3_ID = UnitDefNames["upgrade_c3array"].id
 local VPAD_ID = UnitDefNames["upgrade_vehiclepad"].id
 --local DelayCall = GG.Delay.DelayCall
@@ -44,7 +39,7 @@ local CMD_VPAD = GG.CustomCommands.GetCmdID("CMD_UPGRADE_upgrade_vehiclepad")
 
 local dropZoneIDs = {}
 local orderSizes = {}
-local sides = {}
+local sides = GG.teamSide
 
 local flagSpots = {} --VFS.Include("maps/flagConfig/" .. Game.mapName .. "_profile.lua")
 
@@ -62,6 +57,19 @@ function gadget:GamePreload()
 		end
 	end
 	GG.AI_TEAMS = AI_TEAMS
+	for unitDefID, unitDef in pairs(UnitDefs) do
+		local side = unitDef.name:sub(1,2)
+		-- identify all jump mechs by faction
+		if unitDef.customParams.jumpjets then
+			if not sideJumpers[side] then sideJumpers[side] = {} end
+			table.insert(sideJumpers[side], unitDefID)
+		end
+		-- identify all assault mechs by faction
+		if unitDef.customParams.unittype == "mech" and GG.GetWeight(tonumber(unitDef.customParams.tonnage) or 0) == "assault"  then
+			if not sideAssaults[side] then sideAssaults[side] = {} end
+			table.insert(sideAssaults[side], unitDefID)
+		end
+	end
 end
 
 local function SendOrder(teamID)
@@ -87,10 +95,10 @@ local function Spam(teamID)
 			--Spring.Echo("COMPARING:", orderSizes[teamID], GG.TeamSlotsRemaining(teamID))
 			local buildID
 			if difficulty > 1 then
-				if difficulty == 3 then
-					buildID = (sides[teamID] == "clans" and -DIREWOLF_ID) or -ATLAS_ID
-				elseif difficulty == 2 then
-					buildID = (sides[teamID] == "clans" and -SHADOWCAT_ID) or -OSIRIS_ID
+				if difficulty == 3 then -- Assaults only
+					buildID = sideAssaults[side][math.random(1, #sideAssaults[side])]
+				elseif difficulty == 2 then -- jumpers only
+					buildID = sideJumpers[side][math.random(1, #sideJumpers[side])]
 				end
 				Spring.AddTeamResource(teamID, "energy", 100)
 			else
@@ -116,7 +124,6 @@ function gadget:UnitCreated(unitID, unitDefID, teamID)
 		local unitDef = UnitDefs[unitDefID]
 		if unitDef.name:find("dropzone") then
 			dropZoneIDs[teamID] = unitID	
-			sides[teamID] = unitDef.name:find("cl") and "clans" or "IS"
 			Spam(teamID)
 		end
 		if difficulty > 1 then -- harder AI tonnage cheats, needs storage to do so
@@ -127,8 +134,7 @@ function gadget:UnitCreated(unitID, unitDefID, teamID)
 end
 
 local function Upgrade(unitID, newTeam)
-	-- FIXME: ugly as sin
-	if Spring.GetTeamUnitDefCount(newTeam, IS_DROPZONE_ID) + Spring.GetTeamUnitDefCount(newTeam, CL_DROPZONE_ID) == 0 then
+	if not dropZoneIDs[newTeam] then -- no dropzone left!
 		GG.Delay.DelayCall(Spring.GiveOrderToUnit, {unitID, CMD_DROPZONE, {}, {}}, 1)
 	elseif (teamUpgradeCounts[newTeam][C3_ID] + teamUpgradeCounts[newTeam][VPAD_ID]) % 2 == 0 then -- even number of upgrades get another C3
 		GG.Delay.DelayCall(Spring.GiveOrderToUnit, {unitID, CMD_C3, {}, {}}, 1)
@@ -243,7 +249,7 @@ local function UnitIdleCheck(unitID, unitDefID, teamID)
 		local chance = math.random(1, 100)
 		if chance < 75 then
 			--Spring.Echo(UnitDefs[unitDefID].name .. [[ "Fuck it, I'm off for a wander"]])
-			if cp.canjump then
+			if cp.jumpjets then
 				GG.Delay.DelayCall(RunAndJump, {unitID, unitDefID}, 30 * 25)
 			else
 				if not Spring.GetUnitRulesParam(unitID, "dronesout") == 1 then
@@ -282,8 +288,8 @@ function gadget:UnitUnloaded(unitID, unitDefID, teamID, transportID, transportTe
 			for _, spot in pairs(flagSpots) do
 				GG.Delay.DelayCall(Spring.GiveOrderToUnit, {unitID, CMD.PATROL, {spot.x, 0, spot.z}, {"shift"}}, 30)
 			end
-		elseif cp.canjump then
-			--Spring.Echo("JUMP MECH!")
+		elseif cp.jumpjets then
+			Spring.Echo("JUMP MECH!")
 			Perk(unitID, PERK_JUMP_RANGE, true)
 			RunAndJump(unitID, unitDefID)
 		else
@@ -305,6 +311,8 @@ function gadget:UnitDestroyed(unitID, unitDefID, teamID, attackerID, attackerDef
 		elseif unitDefID == VPAD_ID then
 			teamUpgradeCounts[teamID][VPAD_ID] = teamUpgradeCounts[teamID][VPAD_ID] - 1
 			Upgrade(tonumber(Spring.GetUnitRulesParam(unitID, "beaconID")), teamID)
+		elseif UnitDefs[unitDefID].name:find("dropzone") then -- TODO: "DROPZONE_IDS[unitDefID] then" should work here
+			dropZoneIDs[teamID] = nil
 		end
 	end
 	if attackerTeam and AI_TEAMS[attackerTeam] then

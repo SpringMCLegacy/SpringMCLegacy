@@ -133,6 +133,7 @@ function gadget:GamePreload()
 			DROPZONE_IDS[unitDefID] = true
 		end
 	end
+	GG.DROPZONE_IDS = DROPZONE_IDS
 	dropZoneCmdDesc = {
 		id     = GG.CustomCommands.GetCmdID("CMD_DROPZONE", 0), -- dropzone is free
 		type   = CMDTYPE.ICON,

@@ -372,7 +372,7 @@ function gadget:Initialize()
   for unitDefID, unitDef in pairs(UnitDefs) do
 	local jumpjets = unitDef.customParams.jumpjets
     if jumpjets then
-		jumpers[unitDefID] = {range = 100 * jumpjets, height = 33 * jumpjets, speed = 6}
+		jumpers[unitDefID] = {range = 100 * jumpjets, height = 33 * jumpjets, speed = 6, reload = BASE_RELOAD}
 	end
   end
   GG.jumpDefs = jumpers
