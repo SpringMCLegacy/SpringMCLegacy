@@ -85,6 +85,8 @@ local currentPartsList	= {}
 
 local partsParamList	= {	arm_left	= "limb_hp_right_arm", -- intentionally reversed
 							arm_right	= "limb_hp_left_arm",
+							leg_left	= "limb_hp_right_leg",
+							leg_right	= "limb_hp_left_leg",
 							turret		= "limb_hp_turret",
 							rotor		= "limb_hp_rotor",
 							left_wing	= "limb_hp_lwing",

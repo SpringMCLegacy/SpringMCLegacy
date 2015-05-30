@@ -79,7 +79,7 @@ local jumpHeat = 40
 local SlowDownRate = 2
 
 --piece defines
-local pelvis, torso = piece ("pelvis", "torso")
+local pelvis, torso, rlowerleg, llowerleg = piece ("pelvis", "torso", "rlowerleg", "llowerleg")
 
 local rupperarm, lupperarm
 if hasArms then
@@ -323,6 +323,8 @@ function SmokeLimb(limb, piece)
 	end
 end
 
+local legsDisabled = 0
+
 function hideLimbPieces(limb, hide)
 	local rootPiece
 	local limbWeapons
@@ -335,6 +337,18 @@ function hideLimbPieces(limb, hide)
 	end
 	if rootPiece then
 		RecursiveHide(rootPiece, hide)
+	else -- legs
+		if hide then
+			legsDisabled = legsDisabled + 1
+			Spring.Echo("Lost a leg! halving move speed")
+			speedMod = speedMod / 2
+		else -- leg is restored
+			legsDisabled = legsDisabled - 1
+			Spring.Echo("Regained a leg! doubling move speed")
+			speedMod = speedMod * 2
+		end
+		GG.StartMASC(unitID, unitDefID, 0.5 ^ legsDisabled)
+		return
 	end
 	if hide then
 		EmitSfx(rootPiece, SFX.CEG + info.numWeapons + 1)
@@ -384,10 +398,10 @@ function script.HitByWeapon(x, z, weaponID, damage)
 		return damage
 	elseif hitPiece == "lupperleg" or hitPiece == "llowerleg" then
 		--deduct Left Leg HP
-		--limbHPControl("left_leg", damage) -- TODO: leg damage
+		limbHPControl("left_leg", damage) -- TODO: leg damage
 	elseif hitPiece == "rupperleg" or hitPiece == "rlowerleg" then
 		--deduct Right Leg HP
-		--limbHPControl("right_leg", damage)
+		limbHPControl("right_leg", damage)
 	elseif hitPiece == "lupperarm" or hitPiece == "llowerarm" then
 		--deduct Left Arm HP
 		limbHPControl("left_arm", damage)
@@ -456,6 +470,8 @@ function script.Create()
 	--StartThread(SmokeUnit, {pelvis, torso})
 	StartThread(SmokeLimb, "left_arm", lupperarm)
 	StartThread(SmokeLimb, "right_arm", rupperarm)
+	StartThread(SmokeLimb, "left_leg", llowerleg)
+	StartThread(SmokeLimb, "right_leg", rlowerleg)
 	StartThread(CoolOff)
 end
 
