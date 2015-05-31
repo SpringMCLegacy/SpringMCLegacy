@@ -48,44 +48,27 @@ local coolantUnitDefs = {}
 
 -- Variables
 
-local function MascMoveData(unitDefID, masc, mult)
+local function ChangeMoveData(unitDefID, mult)
 	local ud = UnitDefs[unitDefID]
-	if masc then
-		return {
-			turnRate = ud.turnRate * mult,
-			accRate = ud.maxAcc * mult,
-			decRate = ud.maxDec * mult,
-			maxSpeed = ud.speed * mult,
-			maxReverseSpeed = ud.speed * mult / 1.5, -- no mRS in lua unitdefs table?
-			maxWantedSpeed = ud.speed * mult, -- TODO: doesn't work in 96, enable in 97+
-		}
-	else
-		return {
-			turnRate = ud.turnRate,
-			accRate = ud.maxAcc,
-			decRate = ud.maxDec,
-			maxSpeed = ud.speed,
-			maxReverseSpeed = ud.speed / 1.5, -- no mRS in lua unitdefs table?
-			maxWantedSpeed = ud.speed, -- TODO: doesn't work in 96, enable in 97+
-		}		
-	end
+	return {
+		turnRate = ud.turnRate * mult,
+		accRate = ud.maxAcc * mult,
+		decRate = ud.maxDec * mult,
+		maxSpeed = ud.speed * mult,
+		maxReverseSpeed = ud.speed * mult / 1.5, -- 98.0 no ud.rSpeed
+		maxWantedSpeed = ud.speed * mult,
+	}
 end
 
-function StartMASC(unitID, unitDefID, mult)
+function SpeedChange(unitID, unitDefID, mult, masc)
 	--Spring.Echo("MASC ACTIVATED!")
 	local hasMASC = FindUnitCmdDesc(unitID, CMD_MASC)
-	if hasMASC then
+	if hasMASC and masc then
 		EditUnitCmdDesc(unitID, hasMASC, {disabled = true})
 	end
-	Spring.MoveCtrl.SetGroundMoveTypeData(unitID, MascMoveData(unitDefID, true, mult or 2))
+	Spring.MoveCtrl.SetGroundMoveTypeData(unitID, ChangeMoveData(unitDefID, mult))
 end
-GG.StartMASC = StartMASC
-
-function FinishMASC(unitID, unitDefID)
-	--Spring.Echo("MASC DEACTIVATED!")
-	Spring.MoveCtrl.SetGroundMoveTypeData(unitID, MascMoveData(unitDefID, false))
-end
-GG.FinishMASC = FinishMASC
+GG.SpeedChange = SpeedChange
 
 function ReadyMASC(unitID)
 	EditUnitCmdDesc(unitID, FindUnitCmdDesc(unitID, CMD_MASC), {disabled = false})

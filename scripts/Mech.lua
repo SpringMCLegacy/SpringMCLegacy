@@ -280,12 +280,12 @@ function MASC(activated)
 	if activated and mascLevel == 100 then
 		speedMod = speedMod * 2
 		mascActive = true
-		GG.StartMASC(unitID, unitDefID)
+		GG.SpeedChange(unitID, unitDefID, speedMod, true)
 		StartThread(DrainMASC)
 	elseif not activated then
 		speedMod = speedMod / 2
 		mascActive = false
-		GG.FinishMASC(unitID, unitDefID)
+		GG.SpeedChange(unitID, unitDefID, speedMod)
 		StartThread(RestoreMASC)
 	end
 end
@@ -323,8 +323,6 @@ function SmokeLimb(limb, piece)
 	end
 end
 
-local legsDisabled = 0
-
 function hideLimbPieces(limb, hide)
 	local rootPiece
 	local limbWeapons
@@ -339,15 +337,13 @@ function hideLimbPieces(limb, hide)
 		RecursiveHide(rootPiece, hide)
 	else -- legs
 		if hide then
-			legsDisabled = legsDisabled + 1
 			Spring.Echo("Lost a leg! halving move speed")
 			speedMod = speedMod / 2
 		else -- leg is restored
-			legsDisabled = legsDisabled - 1
 			Spring.Echo("Regained a leg! doubling move speed")
 			speedMod = speedMod * 2
 		end
-		GG.StartMASC(unitID, unitDefID, 0.5 ^ legsDisabled)
+		GG.SpeedChange(unitID, unitDefID, speedMod)
 		return
 	end
 	if hide then

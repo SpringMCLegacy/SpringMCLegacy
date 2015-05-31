@@ -547,8 +547,8 @@ do
     if (not customInfo[unitDefID]) then
       customInfo[unitDefID] = {
         height        = ud.height+14,
-        canJump       = (ud.customParams.canjump=="1")or(GetUnitRulesParam(unitID,"jump_reload_bar")),
-		canMASC       = ud.customParams.canmasc,
+        canJump       = (ud.customParams.jumpjets) or (GetUnitRulesParam(unitID,"jump_reload_bar")),
+		canMASC       = ud.customParams.masc,
         maxShield     = ud.shieldPower,
         canStockpile  = ud.canStockpile,
         reloadTime    = ud.reloadTime,
