@@ -2,7 +2,8 @@ local Blackjack = Medium:New{
 	name				= "Blackjack",
 
 	customparams = {
-		tonnage			= 50,
+		tonnage			= 45,
+		torsoscale		= 1.0,
     },	
 }
 
@@ -92,6 +93,7 @@ local BJ4 = Blackjack:New{
 		jumpjets		= 4,
 		armor			= {type = "ferro", tons = 8},--should be light ferro
 		maxammo 		= {ac5 = 4},
+		barrelrecoildist = {[1] = 5, [2] = 5},
     },
 }
 
@@ -138,6 +140,7 @@ local BJ2O = Blackjack:New{
 		jumpjets		= 4,
 		armor			= {type = "standard", tons = 9.5},--should be light ferro
 		maxammo 		= {ac5 = 2},
+		barrelrecoildist = {[1] = 5, [2] = 5},
     },
 }
 
