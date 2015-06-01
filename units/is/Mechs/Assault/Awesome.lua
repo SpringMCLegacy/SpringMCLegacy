@@ -1,82 +1,77 @@
-local IS_Awesome = Assault:New{
-	corpse				= "IS_Awesome_X",
-	maxDamage           = 24000,
-	mass                = 8500,
-	buildCostEnergy     = 85,
-	buildCostMetal        = 35160,
-	maxVelocity		= 2.5, --50kph/20
+local Awesome = Assault:New{
+	name				= "Awesome",
 
 	customparams = {
-		torsoturnspeed	= "100",
+		tonnage			= "80",
     },
 }
 	
-local AWS8Q = IS_Awesome:New{
-	name              	= "Awesome AWS-8Q",
-	description         = "Assault-class Mid Range Fire Support",
-	objectName        	= "IS_Awesome_AWS8Q.s3o",
+local AWS8Q = Awesome:New{
+	description         = "Assault Sniper",
 	weapons	= {	
 		[1] = {
 			name	= "PPC",
 		},
 		[2] = {
 			name	= "PPC",
-			OnlyTargetCategory = "ground",
 		},
 		[3] = {
 			name	= "PPC",
-			OnlyTargetCategory = "ground",
 		},
 		[4] = {
 			name	= "SBL",
-			OnlyTargetCategory = "ground",
 		},
 	},
 		
     customparams = {
-		helptext		= "Armament: 3 x PPC, 1 x SBL - Armor: 15.5 tons Standard",
-		heatlimit		= "28",
+		variant			= "AWS-8Q",
+		speed			= 50,
+		price			= 16050,
+		heatlimit 		= 28,
+		armor			= {type = "standard", tons = 15},
     },
 }
 
-local AWS9M = IS_Awesome:New{
-	name              	= "Awesome AWS-9M",
-	description         = "Assault-class Long Range Fire Support/Sniper",
-	objectName        	= "IS_Awesome_AWS9M.s3o",
+local AWS9M = Awesome:New{
+	description         = "Assault Striker",
 	weapons	= {	
 		[1] = {
 			name	= "ERPPC",
-			OnlyTargetCategory = "ground",
 		},
 		[2] = {
 			name	= "ERPPC",
-			OnlyTargetCategory = "ground",
 		},
 		[3] = {
 			name	= "ERPPC",
-			OnlyTargetCategory = "ground",
 		},
 		[4] = {
-			name	= "SPL",
-			OnlyTargetCategory = "ground",
+			name	= "SBL",
 		},
 		[5] = {
 			name	= "MPL",
-			OnlyTargetCategory = "ground",
 		},
 		[6] = {
-			name	= "SSRM4",
+			name	= "SSRM2",
+		},
+		[7] = {
+			name	= "SSRM2",
 		},
 	},
 		
     customparams = {
-		helptext		= "Armament: 3 x ERPPC, 1 x MPL, 1 x SPL, 1 x SSRM-4 - Armor: 15.5 tons Standard",
-		heatlimit		= "38",
-		maxammo 		= {srm = 120},
+		variant			= "AWS-9M",
+		speed			= 60,
+		price			= 18120,
+		heatlimit 		= 40,
+		armor			= {type = "standard", tons = 15.5},
+		maxammo 		= {srm = 1},
     },
 }
 	
 return lowerkeys({ 
-	["IS_Awesome_AWS8Q"] = AWS8Q,
-	["IS_Awesome_AWS9M"] = AWS9M,
+	["CC_Awesome_AWS8Q"] = AWS8Q:New(),
+	["DC_Awesome_AWS8Q"] = AWS8Q:New(),
+	["FS_Awesome_AWS8Q"] = AWS8Q:New(),
+	["LA_Awesome_AWS8Q"] = AWS8Q:New(),
+	["FW_Awesome_AWS9M"] = AWS9M:New(),
 })
