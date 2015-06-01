@@ -21,6 +21,7 @@ local BZKF3 = Hollander:New{
 		heatlimit 		= 10,
 		armor			= {type = "ferro", tons = 4},
 		maxammo 		= {gauss = 2},
+		barrelrecoildist = {[1] = 5},
     },
 }
 
@@ -46,6 +47,7 @@ local BZKG1 = Hollander:New{
 		heatlimit 		= 10,
 		armor			= {type = "ferro", tons = 6},
 		maxammo 		= {ac10 = 2},
+		barrelrecoildist = {[1] = 5}
     },	
 }
 

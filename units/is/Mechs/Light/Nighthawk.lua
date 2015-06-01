@@ -53,6 +53,6 @@ local NTK2S = Nighthawk:New{
 }
 
 return lowerkeys({
-	["LA_Nighthawk_NTK2Q"] = NTK2Q:New(),
+	--["LA_Nighthawk_NTK2Q"] = NTK2Q:New(),
 	["LA_Nighthawk_NTK2S"] = NTK2S:New(),
 })

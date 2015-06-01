@@ -16,7 +16,7 @@ local JVN11B = Javelin:New{
 		},
 		--[3] = {
 		--	name	= "TAG",
-		-},
+		--},
 	},
 		
 	customparams = {
