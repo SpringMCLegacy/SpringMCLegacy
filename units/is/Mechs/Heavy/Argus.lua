@@ -1,21 +1,13 @@
-local IS_Argus = Heavy:New{
-	corpse				= "IS_Argus_X",
-	maxDamage           = 19200,
-	mass                = 6000,
-	buildCostEnergy     = 65,
-	buildCostMetal      = 28820,
-	maxVelocity			= 4, --80kph/20
+local Argus = Heavy:New{
+	name				= "Argus",
 		
     customparams = {
-		heatlimit		= "24",
-		torsoturnspeed	= "140",
+		tonnage			= 60,
     },
 }
 
-local AGS4D = IS_Argus:New{
-	name              	= "Argus AGS-4D",
-	description         = "Heavy-class Mid Range Skirmisher",
-	objectName        	= "IS_Argus_AGS4D.s3o",
+local AGS4D = Argus:New{
+	description         = "Heavy Skirmisher",
 	weapons = {	
 		[1] = {
 			name	= "RAC5",
@@ -37,12 +29,16 @@ local AGS4D = IS_Argus:New{
 	},
 		
     customparams = {
-		helptext		= "Armament: 1 x RAC/5, 2 x ER Medium Beam Laser, 1 x LRM-10, 1 x Machinegun - Armor: 12 tons Standard",
-		hasbap			= "true",
-		maxammo 		= {ac5 = 200, lrm = 360},
+		variant			= "AGS-4D",
+		speed			= 80,
+		price			= 29000,
+		heatlimit 		= 24,
+		armor			= {type = "standard", tons = 12},
+		maxammo 		= {ac5 = 2, lrm = 2},
+		barrelrecoildist = {[1] = 4},
     },
 }
 
 return lowerkeys({ 
-	["IS_Argus_AGS4D"] = AGS4D,
+	["FS_Argus_AGS4D"] = AGS4D,
 })

@@ -1,21 +1,13 @@
-local IS_Avatar = Heavy:New{
-	corpse				= "IS_Avatar_X",
-	maxDamage           = 19200,
-	mass                = 6000,
-	buildCostEnergy     = 65,
-	buildCostMetal        = 28820,
-	maxVelocity		= 3, --60kph/20
+local Avatar = Heavy:New{
+	name				= "Avatar",
 	
 	customparams = {
-		heatlimit		= "20",
-		torsoturnspeed	= "140",
+		tonnage			= 70,
 	},
 }
 
-local AV10 = IS_Avatar:New{
-	name              	= "Avatar AV1-O",
-	description         = "Heavy-class Mid Range Fire Support",
-	objectName        	= "IS_Avatar_AV1O.s3o",
+local AV1OP = Avatar:New{
+	description         = "Heavy Striker",
 	weapons	= {	
 		[1] = {
 			name	= "LBX10",
@@ -28,11 +20,9 @@ local AV10 = IS_Avatar:New{
 		},
 		[4] = {
 			name	= "MBL",
-			OnlyTargetCategory = "ground",
 		},
 		[5] = {
 			name	= "MBL",
-			OnlyTargetCategory = "ground",
 		},
 		[6] = {
 			name	= "LRM10",
@@ -40,19 +30,27 @@ local AV10 = IS_Avatar:New{
 		[7] = {
 			name	= "LRM10",
 		},
+		[8] = {
+			name	= "MG",
+		},
+		[9] = {
+			name	= "MG",
+		},
 	},
 
     customparams = {
-		helptext		= "Armament: 1 x LBX-10, 2 x Medium Pulse Laser, 2 x Medium Beam Laser, 2 x LRM-10 - Armor: 12 tons Standard",
-		hasbap			= "true",
-		maxammo 		= {ac10 = 50, lrm = 360},
+		variant			= "AV1-O Prime",
+		speed			= 60,
+		price			= 29500,
+		heatlimit 		= 20,
+		armor			= {type = "standard", tons = 12},
+		maxammo 		= {ac10 = 2, lrm = 3},
+		barrelrecoildist = {[1] = 5},
     },
 }
 
-local AV10A = IS_Avatar:New{
-	name              	= "Avatar AV1-OA",
-	description         = "Heavy-class Short Range Brawler",
-	objectName        	= "IS_Avatar_AV1OA.s3o",
+local AV1OA = Avatar:New{
+	description         = "Heavy Brawler",
 	
 	weapons 		= {	
 		[1] = {
@@ -80,13 +78,18 @@ local AV10A = IS_Avatar:New{
 	},
 
     customparams = {
-		helptext		= "Armament: 1 x AC/20, 1 x ER Large Beam Laser, 2 x Medium Beam Laser, 2 x LRM-10 - Armor: 12 tons Standard",
-		hasbap			= "true",
-		maxammo 		= {ac20 = 20, srm= 240},
+		variant			= "AV1-O A",
+		speed			= 60,
+		price			= 33000,
+		heatlimit 		= 20,
+		armor			= {type = "standard", tons = 12},
+		maxammo 		= {ac20 = 3, srm = 2},
+		barrelrecoildist = {[1] = 4},
+		jumpjets		= 4,
     },
 }
 
 return lowerkeys({
-	["IS_Avatar_AV1O"] = AV1O,
-	["IS_Avatar_AV1OA"] = AV1OA,
+	["DC_Avatar_AV1OP"] = AV1OP,
+	["DC_Avatar_AV1OA"] = AV1OA,
 })
