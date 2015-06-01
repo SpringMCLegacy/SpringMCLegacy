@@ -26,18 +26,11 @@ local black = { 0.0, 0.0, 0.0, 1.0}
 local clear = { 0.0, 0.0, 0.0, 0.0}
 local olive = { 0.25, 0.3, 0.1, 1.0}
 
-local ammoTypes = {	ac2		= "ammo_ac2",
-					ac5		= "ammo_ac5",
-					ac10	= "ammo_ac10",
-					ac20	= "ammo_ac20",
-					lrm		= "ammo_lrm",
-					srm		= "ammo_srm",
-					mrm		= "ammo_mrm",
-					atm		= "ammo_atm",
-					gauss	= "ammo_gauss",
-					narc	= "ammo_narc",
-					arrow	= "ammo_arrow",
-					sniper	= "ammo_sniper", }
+local ammoTypesInclude = VFS.Include("weapons/AmmoTypes.lua", nil, VFS.ZIP)
+local ammoTypes = {}
+for ammoType, _ in pairs(ammoTypesInclude) do
+	ammoTypes[ammoType:lower()] = "ammo_" .. ammoType:lower()
+end
 
 local jumpJetsColor	= { 0.3, 0.5, 1.0, 1.0}
 local HPColor		= { 0.0, 0.5, 1.0, 1.0}

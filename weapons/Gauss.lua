@@ -33,6 +33,7 @@ local LightGauss = Gauss_Class:New{
 	},
 	customparams = {
 		heatgenerated		= 4,
+		ammotype			= "ltgauss",
     },
 }
 
@@ -69,6 +70,7 @@ local HeavyGauss = Gauss_Class:New{
 	},
 	customparams = {
 		heatgenerated		= 24,
+		ammotype			= "hvgauss",
     },
 }
 
