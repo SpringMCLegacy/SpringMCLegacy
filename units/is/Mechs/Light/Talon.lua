@@ -23,7 +23,7 @@ local TLN5W = Talon:New{
 	customparams = {
 		variant         = "TLN-5W",
 		speed			= 120,
-		price			= 15000,
+		price			= 11750,
 		heatlimit 		= 22,
 		armor			= {type = "standard", tons = 7.5},
     },
@@ -43,7 +43,7 @@ local TLN5Z = Talon:New{
 	customparams = {
 		variant         = "TLN-5Z",
 		speed			= 110,
-		price			= 14000,
+		price			= 11680,
 		heatlimit 		= 20,
 		armor			= {type = "standard", tons = 7.5},
     },

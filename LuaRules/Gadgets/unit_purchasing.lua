@@ -43,13 +43,13 @@ local DelayCall				 = GG.Delay.DelayCall
 -- Constants
 local EMPTY_TABLE = {} -- keep as empty
 local GAIA_TEAM_ID = Spring.GetGaiaTeamID()
-local CBILLS_PER_SEC = (modOptions and tonumber(modOptions.income)) or 200
+local CBILLS_PER_SEC = (modOptions and tonumber(modOptions.income)) or 10
 local BEACON_ID = UnitDefNames["beacon"].id
 local C3_ID = UnitDefNames["upgrade_c3array"].id
 
 local DROPSHIP_COOLDOWN = 30 * 30 -- 30s, time before the dropship has regained orbit, refuelled etc ready to drop again
 local DROPSHIP_DELAY = 2 * 30 -- 2s, time taken to arrive on the map from SPACE!
-local DAMAGE_REWARD_MULT = (modOptions and tonumber(modOptions.income_damage)) or 0.2
+local DAMAGE_REWARD_MULT = (modOptions and tonumber(modOptions.income_damage)) or 1
 local KILL_REWARD_MULT = 0.0
 
 -- local NUM_ICONS_PER_PAGE = 3 * 8

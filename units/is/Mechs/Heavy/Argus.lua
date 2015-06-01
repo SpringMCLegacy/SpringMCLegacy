@@ -31,7 +31,7 @@ local AGS4D = Argus:New{
     customparams = {
 		variant			= "AGS-4D",
 		speed			= 80,
-		price			= 29000,
+		price			= 16380,
 		heatlimit 		= 24,
 		armor			= {type = "standard", tons = 12},
 		maxammo 		= {ac5 = 2, lrm = 2},

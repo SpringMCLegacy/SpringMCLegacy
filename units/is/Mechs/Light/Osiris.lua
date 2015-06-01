@@ -35,7 +35,7 @@ local OSR3D = Osiris:New{
 	customparams = {
 		variant			= "OSR-3D",
 		speed			= 120,
-		price			= 15750,
+		price			= 11380,
 		heatlimit 		= 20,
 		armor			= {type = "ferro", tons = 4.5},
 		jumpjets		= 4,
@@ -69,7 +69,7 @@ local OSR4D = Osiris:New{
 	customparams = {
 		variant			= "OSR-4D",
 		speed			= 120,
-		price			= 17500,
+		price			= 12300,
 		heatlimit 		= 20,
 		armor			= {type = "ferro", tons = 5.5},
 		jumpjets		= 8,

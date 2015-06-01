@@ -41,7 +41,7 @@ local AV1OP = Avatar:New{
     customparams = {
 		variant			= "AV1-O Prime",
 		speed			= 60,
-		price			= 29500,
+		price			= 13950,
 		heatlimit 		= 20,
 		armor			= {type = "standard", tons = 12},
 		maxammo 		= {ac10 = 2, lrm = 3},
@@ -76,7 +76,7 @@ local AV1OA = Avatar:New{
     customparams = {
 		variant			= "AV1-O A",
 		speed			= 60,
-		price			= 33000,
+		price			= 14810,
 		heatlimit 		= 20,
 		armor			= {type = "standard", tons = 12},
 		maxammo 		= {ac20 = 3, srm = 2},

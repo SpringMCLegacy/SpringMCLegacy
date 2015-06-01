@@ -31,7 +31,7 @@ local FLE17 = Flea:New{
 	customparams = {
 		variant         = "FLE-17",
 		speed			= 90,
-		price			= 9200,
+		price			= 5100,
 		heatlimit 		= 10,
 		armor			= {type = "standard", tons = 3},
 		masc 			= true,

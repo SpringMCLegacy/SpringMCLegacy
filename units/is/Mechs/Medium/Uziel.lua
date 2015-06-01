@@ -29,7 +29,7 @@ local UZL2S = Uziel:New{
 	customparams = {
 		variant			= "UZL-2S",
 		speed			= 90,
-		price			= 22000,
+		price			= 13520,
 		heatlimit 		= 20,
 		armor			= {type = "standard", tons = 8},
 		jumpjets		= 6,
@@ -64,7 +64,7 @@ local UZL3S = Uziel:New{
 	customparams = {
 		variant			= "UZL-2S",
 		speed			= 90,
-		price			= 22000,
+		price			= 11890,
 		heatlimit 		= 20,
 		armor			= {type = "standard", tons = 8},
 		jumpjets		= 6,

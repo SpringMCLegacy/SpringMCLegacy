@@ -25,7 +25,7 @@ local STN3L = Sentinel:New{
     customparams = {
 		variant			= "STN-3L",
 		speed			= 90,
-		price			= 21500,
+		price			= 7170,
 		heatlimit 		= 10,
 		armor			= {type = "standard", tons = 5.5},
 		maxammo 		= {ac5 = 1, srm = 1},
@@ -50,7 +50,7 @@ local STN3M = Sentinel:New{
     customparams = {
 		variant			= "STN-3M",
 		speed			= 90,
-		price			= 21000,
+		price			= 7580,
 		heatlimit 		= 10,
 		armor			= {type = "standard", tons = 5.5},
 		maxammo 		= {ac5 = 1, srm = 1},
@@ -72,7 +72,7 @@ local STN4D = Sentinel:New{
     customparams = {
 		variant			= "STN-4D",
 		speed			= 90,
-		price			= 23000,
+		price			= 11790,
 		heatlimit 		= 10,
 		armor			= {type = "ferro", tons = 7},
 		maxammo 		= {ac5 = 2},

@@ -26,7 +26,7 @@ local CMA1S = Chimera:New{
 	customparams = {
 		variant			= "CMA-1S",
 		speed			= 90,
-		price			= 19000,
+		price			= 11730,
 		heatlimit 		= 20,
 		armor			= {type = "standard", tons = 7},
 		jumpjets		= 6,

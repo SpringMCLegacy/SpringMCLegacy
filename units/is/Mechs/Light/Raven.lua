@@ -33,7 +33,7 @@ local RVN3L = Raven:New{
 	customparams = {
 		variant         = "RVN-3L",
 		speed			= 90,
-		price			= 16000,
+		price			= 7080,
 		heatlimit 		= 11,
 		armor			= {type = "ferro", tons = 4.5},
 		bap				= true,
@@ -67,7 +67,7 @@ local RVN4L = Raven:New{
 	customparams = {
 		variant         = "RVN-4L",
 		speed			= 90,
-		price			= 18000,
+		price			= 8730,
 		heatlimit 		= 20,
 		armor			= {type = "stealth", tons = 6},
 		bap				= true,
@@ -102,7 +102,7 @@ local RVN3M = Raven:New{
 	customparams = {
 		variant         = "RVN-3M",
 		speed			= 90,
-		price			= 16000,
+		price			= 6390,
 		heatlimit 		= 11,
 		armor			= {type = "ferro", tons = 3.5},
 		maxammo 		= {narc = 2, lrm = 2},

@@ -37,7 +37,7 @@ local FS9S = Firestarter:New{
 	customparams = {
 		variant         = "FS-9S",
 		speed			= 90,
-		price			= 12000,
+		price			= 7540,
 		heatlimit 		= 10,
 		armor			= {type = "standard", tons = 5.5},
 		bap 			= true,

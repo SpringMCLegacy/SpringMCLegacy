@@ -32,7 +32,7 @@ local DV6M = Dervish:New{
 	customparams = {
 		variant			= "DV-6M",
 		speed			= 80,
-		price			= 15000,
+		price			= 11460,
 		heatlimit 		= 10,
 		armor			= {type = "standard", tons = 7.5},
 		jumpjets		= 5,
@@ -66,7 +66,7 @@ local DV8D = Dervish:New{
     customparams = {
 		variant			= "DV-8D",
 		speed			= 80,
-		price			= 17000,
+		price			= 17650,
 		heatlimit 		= 20,
 		armor			= {type = "standard", tons = 10.5},
 		jumpjets		= 5,

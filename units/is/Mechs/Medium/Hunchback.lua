@@ -26,7 +26,7 @@ local HBK4G = Hunchback:New{
 	customparams = {
 		variant			= "HBK-4G",
 		speed			= 60,
-		price			= 18000,
+		price			= 10410,
 		heatlimit 		= 13,
 		armor			= {type = "standard", tons = 10},
 		maxammo 		= {ac20 = 2},
@@ -66,7 +66,7 @@ local HBK4P = Hunchback:New{
 	customparams = {
 		variant			= "HBK-4P",
 		speed			= 60,
-		price			= 18000,
+		price			= 11380,
 		heatlimit 		= 23,
 		armor			= {type = "standard", tons = 10},
     },
@@ -92,7 +92,7 @@ local HBK5S = Hunchback:New{
 	customparams = {
 		variant			= "HBK-5S",
 		speed			= 60,
-		price			= 21000,
+		price			= 13500,
 		heatlimit 		= 20,
 		armor			= {type = "standard", tons = 11},
 		jumpjets		= 4,

@@ -20,7 +20,7 @@ local VLKQD = Valkyrie:New{
 	customparams = {
 		variant         = "VLK-QD",
 		speed			= 80,
-		price			= 17000,
+		price			= 8070,
 		heatlimit 		= 10,
 		armor			= {type = "ferro", tons = 6},
 		jumpjets		= 5,

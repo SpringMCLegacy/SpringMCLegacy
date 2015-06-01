@@ -32,7 +32,7 @@ local LCT3M = Locust:New{
 	customparams = {
 		variant         = "LCT3M",
 		speed			= 120,
-		price			= 9200,
+		price			= 5220,
 		heatlimit 		= 10,
 		armor			= {type = "ferro", tons = 3},
     },
@@ -66,7 +66,7 @@ local LCT5M = Locust:New{
 	customparams = {
 		variant         = "LCT5M",
 		speed			= 180,
-		price			= 12000,
+		price			= 7190,
 		heatlimit 		= 10,
 		armor			= {type = "ferro", tons = 4},
     },
@@ -88,7 +88,7 @@ local LCT3D = Locust:New{
 	customparams = {
 		variant         = "LCT-3D",
 		speed			= 120,
-		price			= 10500,
+		price			= 4360,
 		heatlimit 		= 10,
 		armor			= {type = "ferro", tons = 2.5},
 		maxammo 		= {lrm = 1},
@@ -115,7 +115,7 @@ local LCT3S = Locust:New{
 	customparams = {
 		variant         = "LCT-3S",
 		speed			= 120,
-		price			= 10500,
+		price			= 4830,
 		heatlimit 		= 10,
 		armor			= {type = "ferro", tons = 2.5},
 		maxammo 		= {srm = 1},
@@ -150,7 +150,7 @@ local LCT1L = Locust:New{
 	customparams = {
 		variant         = "LCT-1L",
 		speed			= 120,
-		price			= 8500,
+		price			= 4740,
 		heatlimit 		= 10,
 		armor			= {type = "standard", tons = 4},
 		masc			= true,

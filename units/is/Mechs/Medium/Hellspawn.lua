@@ -29,7 +29,7 @@ local HSN7D = Hellspawn:New{
 	customparams = {
 		variant			= "HSN-7D",
 		speed			= 90,
-		price			= 15000,
+		price			= 12200,
 		heatlimit 		= 20,
 		armor			= {type = "standard", tons = 6.5},
 		jumpjets		= 6,

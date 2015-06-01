@@ -32,7 +32,7 @@ local WHM6D = Warhammer:New{
 	customparams = {
 		variant			= "WHM-6D",
 		speed			= 60,
-		price			= 29500,
+		price			= 14710,
 		heatlimit 		= 20,
 		armor			= {type = "standard", tons = 14},
     },
@@ -67,7 +67,7 @@ local WHM6K = Warhammer:New{
 	customparams = {
 		variant			= "WHM-6K",
 		speed			= 60,
-		price			= 28500,
+		price			= 13050,
 		heatlimit 		= 20,
 		armor			= {type = "standard", tons = 10},
 		maxammo 		= {srm = 1},
@@ -106,7 +106,7 @@ local WHM7S = Warhammer:New{
 	customparams = {
 		variant			= "WHM-7S",
 		speed			= 60,
-		price			= 28500,
+		price			= 14770,
 		heatlimit 		= 36,
 		armor			= {type = "standard", tons = 10},
 		maxammo 		= {srm = 1},
@@ -142,7 +142,7 @@ local WHM7M = Warhammer:New{
 	customparams = {
 		variant			= "WHM-7M",
 		speed			= 60,
-		price			= 30500,
+		price			= 14870,
 		heatlimit 		= 36,
 		armor			= {type = "standard", tons = 10},
 		maxammo 		= {srm = 1},
@@ -178,7 +178,7 @@ local WHM4L = Warhammer:New{
 	customparams = {
 		variant			= "WHM-4L",
 		speed			= 60,
-		price			= 28500,
+		price			= 18200,
 		heatlimit 		= 36,
 		armor			= {type = "stealth", tons = 13.5},
 		maxammo 		= {srm = 1},

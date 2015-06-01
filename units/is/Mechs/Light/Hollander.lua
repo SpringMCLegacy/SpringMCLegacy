@@ -17,7 +17,7 @@ local BZKF3 = Hollander:New{
     customparams = {
 		variant         = "BZK-F3",
 		speed			= 80,
-		price			= 14900,
+		price			= 9530,
 		heatlimit 		= 10,
 		armor			= {type = "ferro", tons = 4},
 		maxammo 		= {gauss = 2},
@@ -43,7 +43,7 @@ local BZKG1 = Hollander:New{
 	customparams = {
 		variant         = "BZK-G1",
 		speed			= 80,
-		price			= 13000,
+		price			= 8730,
 		heatlimit 		= 10,
 		armor			= {type = "ferro", tons = 6},
 		maxammo 		= {ac10 = 2},

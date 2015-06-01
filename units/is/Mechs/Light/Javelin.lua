@@ -22,7 +22,7 @@ local JVN11B = Javelin:New{
 	customparams = {
 		variant         = "JVN-11B",
 		speed			= 90,
-		price			= 15000,
+		price			= 6780,
 		heatlimit 		= 20,
 		armor			= {type = "ferro", tons = 5},
 		bap 			= true,

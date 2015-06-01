@@ -32,7 +32,7 @@ local CPLTC1 = Catapult:New{
 	customparams = {
 		variant			= "CPLT-C1",
 		speed			= 60,
-		price			= 29000,
+		price			= 13990,
 		heatlimit 		= 15,
 		armor			= {type = "standard", tons = 10},
 		maxammo 		= {lrm = 2},
@@ -60,7 +60,7 @@ local CPLTC2 = Catapult:New{
 	customparams = {
 		variant			= "CPLT-C2",
 		speed			= 60,
-		price			= 30000,
+		price			= 13460,
 		heatlimit 		= 15,
 		armor			= {type = "standard", tons = 11.5},
 		maxammo 		= {lrm = 4, ac2 = 1},
@@ -91,7 +91,7 @@ local CPLTC3 = Catapult:New{
 	customparams = {
 		variant			= "CPLT-C3",
 		speed			= 60,
-		price			= 31000,
+		price			= 13680,
 		heatlimit 		= 15,
 		armor			= {type = "standard", tons = 10},
 		maxammo 		= {arrow = 1},
@@ -119,7 +119,7 @@ local CPLTC4 = Catapult:New{
 	customparams = {
 		variant			= "CPLT-C4",
 		speed			= 60,
-		price			= 31000,
+		price			= 13580,
 		heatlimit 		= 10,
 		armor			= {type = "standard", tons = 10},
 		maxammo 		= {lrm = 4},
@@ -153,7 +153,7 @@ local CPLTK2 = Catapult:New{
 	customparams = {
 		variant			= "CPLT-K2",
 		speed			= 60,
-		price			= 31000,
+		price			= 13190,
 		heatlimit 		= 20,
 		armor			= {type = "standard", tons = 11},
     },
@@ -179,7 +179,7 @@ local CPLTK5 = Catapult:New{
 	customparams = {
 		variant			= "CPLT-K5",
 		speed			= 60,
-		price			= 31000,
+		price			= 14570,
 		heatlimit 		= 24,
 		armor			= {type = "standard", tons = 12.5},
 		maxammo 		= {mrm = 4},

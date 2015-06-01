@@ -32,7 +32,7 @@ local RFL5D = Rifleman:New{
     customparams = {
 		variant			= "RFL-5D",
 		speed			= 60,
-		price			= 26000,
+		price			= 13950,
 		heatlimit 		= 34,
 		armor			= {type = "standard", tons = 9},
     },
@@ -64,7 +64,7 @@ local RFL5M = Rifleman:New{
     customparams = {
 		variant			= "RFL-5M",
 		speed			= 60,
-		price			= 26000,
+		price			= 12270,
 		heatlimit 		= 24,
 		armor			= {type = "standard", tons = 8.5},
 		maxammo 		= {ac5 = 1},
@@ -98,7 +98,7 @@ local RFL6X = Rifleman:New{
     customparams = {
 		variant			= "RFL-6X",
 		speed			= 80,
-		price			= 30000,
+		price			= 14640,
 		heatlimit 		= 20,
 		armor			= {type = "standard", tons = 11.5},
 		maxammo 		= {ac10 = 4},
@@ -138,7 +138,7 @@ local RFL7M = Rifleman:New{
     customparams = {
 		variant			= "RFL-7M",
 		speed			= 60,
-		price			= 34000,
+		price			= 15210,
 		heatlimit 		= 22,
 		armor			= {type = "standard", tons = 11.5},
 		maxammo 		= {ltgauss = 2},

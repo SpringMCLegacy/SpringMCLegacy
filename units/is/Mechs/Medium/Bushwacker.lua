@@ -32,7 +32,7 @@ local BSWS2 = Bushwacker:New{
     customparams = {
 		variant			= "BSW-S2",
 		speed			= 80,
-		price			= 20500,
+		price			= 12930,
 		heatlimit 		= 22,
 		armor			= {type = "ferro", tons = 9},
 		maxammo 		= {srm = 4, ac10 = 2},
@@ -65,7 +65,7 @@ local BSWX1 = Bushwacker:New{
     customparams = {
 		variant			= "BSW-X1",
 		speed			= 80,
-		price			= 18500,
+		price			= 12230,
 		heatlimit 		= 22,
 		armor			= {type = "ferro", tons = 9},
 		maxammo 		= {lrm = 1, ac10 = 1},

@@ -27,7 +27,7 @@ local BJ2 = Blackjack:New{
 	customparams = {
 		variant			= "BJ-2",
 		speed			= 60,
-		price			= 16000,
+		price			= 11480,
 		heatlimit 		= 22,
 		jumpjets		= 4,
 		armor			= {type = "standard", tons = 8.5},
@@ -61,7 +61,7 @@ local BJ3 = Blackjack:New{
 	customparams = {
 		variant			= "BJ-3",
 		speed			= 60,
-		price			= 18000,
+		price			= 12710,
 		heatlimit 		= 20,
 		jumpjets		= 4,
 		armor			= {type = "standard", tons = 8.5},
@@ -88,7 +88,7 @@ local BJ4 = Blackjack:New{
 	customparams = {
 		variant			= "BJ-4",
 		speed			= 60,
-		price			= 16000,
+		price			= 10630,
 		heatlimit 		= 22,
 		jumpjets		= 4,
 		armor			= {type = "ferro", tons = 8},--should be light ferro
@@ -97,7 +97,7 @@ local BJ4 = Blackjack:New{
     },
 }
 
-local BJ2O = Blackjack:New{
+local BJ2OP = Blackjack:New{
 	description         = "Medium Striker",
 	weapons	= {	
 		[1] = {
@@ -133,9 +133,9 @@ local BJ2O = Blackjack:New{
 	},
 		
 	customparams = {
-		variant			= "BJ2-O",
+		variant			= "BJ2-O Prime",
 		speed			= 60,
-		price			= 19000,
+		price			= 12010,
 		heatlimit 		= 20,
 		jumpjets		= 4,
 		armor			= {type = "standard", tons = 9.5},--should be light ferro
@@ -149,6 +149,6 @@ return lowerkeys({
 	["FS_Blackjack_BJ2"] = BJ2:New(),
 	["CC_Blackjack_BJ3"] = BJ3:New(),
 	["FS_Blackjack_BJ4"] = BJ4:New(),
-	["DC_Blackjack_BJ2O"] = BJ2O:New(),
-	["FW_Blackjack_BJ2O"] = BJ2O:New(),
+	["DC_Blackjack_BJ2OP"] = BJ2OP:New(),
+	["FW_Blackjack_BJ2OP"] = BJ2OP:New(),
 })
