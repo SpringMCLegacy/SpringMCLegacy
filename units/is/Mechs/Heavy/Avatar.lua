@@ -90,6 +90,6 @@ local AV1OA = Avatar:New{
 }
 
 return lowerkeys({
-	["DC_Avatar_AV1OP"] = AV1OP,
-	["DC_Avatar_AV1OA"] = AV1OA,
+	["DC_Avatar_AV1OP"] = AV1OP:New(),
+	["DC_Avatar_AV1OA"] = AV1OA:New(),
 })

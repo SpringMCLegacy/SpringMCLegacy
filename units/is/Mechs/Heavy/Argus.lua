@@ -40,5 +40,5 @@ local AGS4D = Argus:New{
 }
 
 return lowerkeys({ 
-	["FS_Argus_AGS4D"] = AGS4D,
+	["FS_Argus_AGS4D"] = AGS4D:New(),
 })

@@ -1,20 +1,13 @@
-local IS_Warhammer = Heavy:New{
-	corpse				= "IS_Warhammer_X",
-	maxDamage           = 16000,
-	mass                = 7000,
-	buildCostEnergy     = 70,
-	buildCostMetal        = 24000,
-	maxVelocity		= 3, --60kph/2
+local Warhammer = Heavy:New{
+	name				= "Warhammer",
 	
 	customparams = {
-		torsoturnspeed	= "120",
+		tonnage			= 70,
     },
 }
 
-local WHM6R = IS_Warhammer:New{
-	name              	= "Warhammer WHM-6R",
-	description         = "Heavy-class Mid Range Fire Support",
-	objectName        	= "IS_Warhammer_WHM6R.s3o",
+local WHM6D = Warhammer:New{
+	description         = "Heavy Striker",
 	weapons = {	
 		[1] = {
 			name	= "PPC",
@@ -24,45 +17,65 @@ local WHM6R = IS_Warhammer:New{
 		},
 		[3] = {
 			name	= "MBL",
-			OnlyTargetCategory = "ground",
 		},
 		[4] = {
 			name	= "MBL",
-			OnlyTargetCategory = "ground",
 		},
 		[5] = {
 			name	= "SBL",
-			OnlyTargetCategory = "ground",
 		},
 		[6] = {
 			name	= "SBL",
-			OnlyTargetCategory = "ground",
-		},
-		[7] = {
-			name	= "MG",
-			OnlyTargetCategory = "ground",
-		},
-		[8] = {
-			name	= "MG",
-			OnlyTargetCategory = "ground",
-		},
-		[9] = {
-			name	= "SRM6",
-			OnlyTargetCategory = "ground",
 		},
 	},
 		
 	customparams = {
-		helptext		= "Armament: 2 x PPC, 2 x Medium Beam Laser, 2 x Small Beam Laser, 2 x Machinegun, 1 x SRM-6 - Armor: 10 tons Standard",
-		heatlimit		= "18",
-		maxammo 		= {srm = 120},
+		variant			= "WHM-6D",
+		speed			= 60,
+		price			= 29500,
+		heatlimit 		= 20,
+		armor			= {type = "standard", tons = 14},
     },
 }
 
-local WHM7A = IS_Warhammer:New{
-	name              	= "Warhammer WHM-7A",
-	description         = "Heavy-class Long Range Fire Support",
-	objectName        	= "IS_Warhammer_WHM7A.s3o",
+local WHM6K = Warhammer:New{
+	description         = "Heavy Striker",
+	weapons = {	
+		[1] = {
+			name	= "PPC",
+		},
+		[2] = {
+			name	= "PPC",
+		},
+		[3] = {
+			name	= "MBL",
+		},
+		[4] = {
+			name	= "MBL",
+		},
+		[5] = {
+			name	= "SBL",
+		},
+		[6] = {
+			name	= "SBL",
+		},
+		[7] = {
+			name	= "SRM6",
+		},
+	},
+		
+	customparams = {
+		variant			= "WHM-6K",
+		speed			= 60,
+		price			= 28500,
+		heatlimit 		= 20,
+		armor			= {type = "standard", tons = 10},
+		maxammo 		= {srm = 1},
+    },
+}
+
+local WHM7S = Warhammer:New{
+	description         = "Heavy Striker",
 	weapons = {	
 		[1] = {
 			name	= "ERPPC",
@@ -71,43 +84,111 @@ local WHM7A = IS_Warhammer:New{
 			name	= "ERPPC",
 		},
 		[3] = {
-			name	= "ERMBL",
-			OnlyTargetCategory = "ground",
+			name	= "MBL",
 		},
 		[4] = {
-			name	= "ERMBL",
-			OnlyTargetCategory = "ground",
+			name	= "MBL",
 		},
 		[5] = {
-			name	= "ERMBL",
-			OnlyTargetCategory = "ground",
+			name	= "SBL",
 		},
 		[6] = {
-			name	= "ERMBL",
-			OnlyTargetCategory = "ground",
+			name	= "SBL",
 		},
 		[7] = {
-			name	= "SPL",
-			OnlyTargetCategory = "ground",
+			name	= "SSRM2",
 		},
 		[8] = {
-			name	= "SPL",
-			OnlyTargetCategory = "ground",
-		},
-		[9] = {
-			name	= "SRM6",
-			OnlyTargetCategory = "ground",
+			name	= "SSRM2",
 		},
 	},
 		
 	customparams = {
-		helptext		= "Armament: 2 x ER PPC, 4 x ER Medium Beam Laser, 2 x Small Pulse Laser, 1 x SRM-6 - Armor: 10 tons Standard",
-		heatlimit		= "32",
-		maxammo 		= {srm = 120},
+		variant			= "WHM-7S",
+		speed			= 60,
+		price			= 28500,
+		heatlimit 		= 36,
+		armor			= {type = "standard", tons = 10},
+		maxammo 		= {srm = 1},
     },
 }
 
+local WHM7M = Warhammer:New{
+	description         = "Heavy Striker",
+	weapons = {	
+		[1] = {
+			name	= "ERPPC",
+		},
+		[2] = {
+			name	= "ERPPC",
+		},
+		[3] = {
+			name	= "MBL",
+		},
+		[4] = {
+			name	= "MBL",
+		},
+		[5] = {
+			name	= "MG",
+		},
+		[6] = {
+			name	= "AMS",
+		},
+		[7] = {
+			name	= "SRM6",
+		},
+	},
+		
+	customparams = {
+		variant			= "WHM-7M",
+		speed			= 60,
+		price			= 30500,
+		heatlimit 		= 36,
+		armor			= {type = "standard", tons = 10},
+		maxammo 		= {srm = 1},
+    },
+}
+
+local WHM4L = Warhammer:New{
+	description         = "Heavy Striker",
+	weapons = {	
+		[1] = {
+			name	= "ERPPC",
+		},
+		[2] = {
+			name	= "ERPPC",
+		},
+		[3] = {
+			name	= "MPL",
+		},
+		[4] = {
+			name	= "MPL",
+		},
+		[5] = {
+			name	= "MPL",
+		},
+		[6] = {
+			name	= "MPL",
+		},
+		[7] = {
+			name	= "SSRM6",
+		},
+	},
+		
+	customparams = {
+		variant			= "WHM-4L",
+		speed			= 60,
+		price			= 28500,
+		heatlimit 		= 36,
+		armor			= {type = "stealth", tons = 13.5},
+		maxammo 		= {srm = 1},
+    },
+}
+		
 return lowerkeys({
-	["IS_Warhammer_WHM6R"] = WHM6R,
-	["IS_Warhammer_WHM7A"] = WHM7A,
+	["FS_Warhammer_WHM6D"] = WHM6D:New(),
+	["DC_Warhammer_WHM6K"] = WHM6K:New(),
+	["LA_Warhammer_WHM7S"] = WHM7S:New(),
+	["FW_Warhammer_WHM7M"] = WHM7M:New(),
+	["CC_Warhammer_WHM4L"] = WHM4L:New(),
 })

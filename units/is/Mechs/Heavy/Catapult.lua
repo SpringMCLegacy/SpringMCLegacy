@@ -1,21 +1,13 @@
-local IS_Catapult = Heavy:New{
-	corpse				= "IS_Catapult_X",
-	maxDamage           = 16000,
-	mass                = 6500,
-	buildCostEnergy     = 65,
-	buildCostMetal        = 28820,
-	maxVelocity		= 3, --60kph/20
+local Catapult = Heavy:New{
+	name				= "Catapult",
 
 	customparams = {
-		canjump			= "1",
-		torsoturnspeed	= "125",
+		tonnage			= 65,
     },
 }
 	
-local CPLTC1 = IS_Catapult:New{
-	name              	= "Catapult CPLT-C1",
-	description         = "Heavy-class Long Range Missile Support",
-	objectName        	= "IS_Catapult_CPLTC1.s3o",
+local CPLTC1 = Catapult:New{
+	description         = "Heavy LRM Support",
 	weapons	= {	
 		[1] = {
 			name	= "LRM15",
@@ -25,33 +17,90 @@ local CPLTC1 = IS_Catapult:New{
 		},
 		[3] = {
 			name	= "MBL",
-			OnlyTargetCategory = "ground",
 		},
 		[4] = {
 			name	= "MBL",
-			OnlyTargetCategory = "ground",
 		},
 		[5] = {
 			name	= "MBL",
-			OnlyTargetCategory = "ground",
 		},
 		[6] = {
 			name	= "MBL",
-			OnlyTargetCategory = "ground",
 		},
 	},
 		
 	customparams = {
-		helptext		= "Armament: 2 x LRM-15, 4 x Medium Beam Laser - Armor: 10 tons Standard",
-		heatlimit		= "15",
-		maxammo 		= {lrm = 360},
+		variant			= "CPLT-C1",
+		speed			= 60,
+		price			= 29000,
+		heatlimit 		= 15,
+		armor			= {type = "standard", tons = 10},
+		maxammo 		= {lrm = 2},
+		jumpjets		= 4,
     },
 }
 
-local CPLTC4 = IS_Catapult:New{
-	name              	= "Catapult CPLT-C4",
-	description         = "Heavy-class Long Range Missile Support",
-	objectName        	= "IS_Catapult_CPLTC4.s3o",
+local CPLTC2 = Catapult:New{
+	description         = "Heavy LRM Support",
+	weapons	= {	
+		[1] = {
+			name	= "LRM15",
+		},
+		[2] = {
+			name	= "LRM15",
+		},
+		[3] = {
+			name	= "AC2",
+		},
+		[4] = {
+			name	= "AC2",
+		},
+	},
+		
+	customparams = {
+		variant			= "CPLT-C2",
+		speed			= 60,
+		price			= 30000,
+		heatlimit 		= 15,
+		armor			= {type = "standard", tons = 11.5},
+		maxammo 		= {lrm = 4, ac2 = 1},
+		jumpjets		= 4,
+    },
+}
+
+local CPLTC3 = Catapult:New{
+	description         = "Heavy Artillery Support",
+	weapons	= {	
+		[1] = {
+			name	= "ArrowIV",
+		},
+		[2] = {
+			name	= "MBL",
+		},
+		[3] = {
+			name	= "MBL",
+		},
+		[4] = {
+			name	= "MBL",
+		},
+		[5] = {
+			name	= "MBL",
+		},
+	},
+		
+	customparams = {
+		variant			= "CPLT-C3",
+		speed			= 60,
+		price			= 31000,
+		heatlimit 		= 15,
+		armor			= {type = "standard", tons = 10},
+		maxammo 		= {arrow = 1},
+		jumpjets		= 4,
+    },
+}
+
+local CPLTC4 = Catapult:New{
+	description         = "Heavy LRM Support",
 	weapons 		= {	
 		[1] = {
 			name	= "LRM20",
@@ -61,22 +110,91 @@ local CPLTC4 = IS_Catapult:New{
 		},
 		[3] = {
 			name	= "ERSBL",
-			OnlyTargetCategory = "ground",
 		},
 		[4] = {
 			name	= "ERSBL",
-			OnlyTargetCategory = "ground",
 		},
 	},
 
 	customparams = {
-		helptext		= "Armament: 2 x LRM-20, 2 x Medium Beam Laser - Armor: 10 tons Standard",
-		heatlimit		= "20",
-		maxammo 		= {lrm = 720},
+		variant			= "CPLT-C4",
+		speed			= 60,
+		price			= 31000,
+		heatlimit 		= 10,
+		armor			= {type = "standard", tons = 10},
+		maxammo 		= {lrm = 4},
+		jumpjets		= 4,
     },
 }
 	
+local CPLTK2 = Catapult:New{
+	description         = "Heavy Striker",
+	weapons 		= {	
+		[1] = {
+			name	= "PPC",
+		},
+		[2] = {
+			name	= "PPC",
+		},
+		[3] = {
+			name	= "MBL",
+		},
+		[4] = {
+			name	= "MBL",
+		},
+		[5] = {
+			name	= "MG",
+		},
+		[6] = {
+			name	= "MG",
+		},
+	},
+
+	customparams = {
+		variant			= "CPLT-K2",
+		speed			= 60,
+		price			= 31000,
+		heatlimit 		= 20,
+		armor			= {type = "standard", tons = 11},
+    },
+}
+
+local CPLTK5 = Catapult:New{
+	description         = "Heavy Skirmisher",
+	weapons 		= {	
+		[1] = {
+			name	= "MRM30",
+		},
+		[2] = {
+			name	= "MRM30",
+		},
+		[3] = {
+			name	= "MPL",
+		},
+		[4] = {
+			name	= "MPL",
+		},
+	},
+
+	customparams = {
+		variant			= "CPLT-K5",
+		speed			= 60,
+		price			= 31000,
+		heatlimit 		= 24,
+		armor			= {type = "standard", tons = 12.5},
+		maxammo 		= {mrm = 4},
+		jumpjets		= 4,
+    },
+}
+
+
 return lowerkeys({
-	["IS_Catapult_CPLTC1"] = CPLTC1,
-	["IS_Catapult_CPLTC4"] = CPLTC4,
+	["CC_Catapult_CPLTC1"] = CPLTC1:New(),
+	["DC_Catapult_CPLTC1"] = CPLTC1:New(),
+	["FW_Catapult_CPLTC1"] = CPLTC1:New(),
+	["FS_Catapult_CPLTC2"] = CPLTC2:New(),
+	["CC_Catapult_CPLTC3"] = CPLTC3:New(),
+	["LA_Catapult_CPLTC4"] = CPLTC4:New(),
+	["DC_Catapult_CPLTK2"] = CPLTK2:New(),
+	["DC_Catapult_CPLTK5"] = CPLTK5:New(),
 })

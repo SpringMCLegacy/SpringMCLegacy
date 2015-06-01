@@ -46,7 +46,16 @@ local MRM20 = MRM_Class:New{
     },
 }
 
+local MRM30 = MRM_Class:New{
+	name                    = "MRM-30",
+	burst					= 30,
+	customparams = {
+		heatgenerated		= "80",--4/sec
+    },
+}
+
 return lowerkeys({ 
 	MRM10 = MRM10,
 	MRM20 = MRM20,
+	MRM30 = MRM30,
 })
