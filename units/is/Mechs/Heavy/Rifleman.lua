@@ -141,7 +141,7 @@ local RFL7M = Rifleman:New{
 		price			= 34000,
 		heatlimit 		= 22,
 		armor			= {type = "standard", tons = 11.5},
-		maxammo 		= {gauss = 2},
+		maxammo 		= {ltgauss = 2},
 		barrelrecoildist = {[1] = 5, [2] = 5},
 		ecm				= true,
     },
