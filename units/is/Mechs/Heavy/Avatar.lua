@@ -61,19 +61,15 @@ local AV1OA = Avatar:New{
 		},
 		[3] = {
 			name	= "MBL",
-			OnlyTargetCategory = "ground",
 		},
 		[4] = {
 			name	= "MBL",
-			OnlyTargetCategory = "ground",
 		},
 		[5] = {
 			name	= "SRM6",
-			OnlyTargetCategory = "ground",
 		},
 		[6] = {
 			name	= "SRM6",
-			OnlyTargetCategory = "ground",
 		},
 	},
 
