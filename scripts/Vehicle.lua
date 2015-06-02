@@ -477,7 +477,7 @@ function script.AimWeapon(weaponID, heading, pitch)
 		Turn(turret, y_axis, heading, TURRET_SPEED)
 	end
 	if mantlets[weaponID] then
-		Turn(mantlets[weaponID], x_axis, -pitch, TURRET_SPEED)
+		Turn(mantlets[weaponID], x_axis, -pitch, ELEVATION_SPEED)
 	elseif missileWeaponIDs[weaponID] then
 		if launchers[weaponID] then
 			Turn(launchers[weaponID], x_axis, -pitch, ELEVATION_SPEED)

@@ -95,6 +95,7 @@ if info.jumpjets then
 end
 
 local flares = {}
+local mantlets = {}
 local barrels = {}
 local launchers = {}
 local launchPoints = {}
@@ -115,6 +116,9 @@ for weaponID = 1, info.numWeapons do
 		end	
 	else
 		flares[weaponID] = piece("flare_" .. weaponID)
+		if info.mantletIDs[weaponID] then
+			mantlets[weaponID] = piece("mantlet_" .. weaponID)
+		end
 		if spinSpeeds[weaponID] then
 			spinPieces[weaponID] = piece("barrels_" .. weaponID)
 			spinPiecesState[weaponID] = false
@@ -129,7 +133,9 @@ end
 local function RestoreAfterDelay(unitID)
 	Sleep(RESTORE_DELAY)
 	Turn(torso, y_axis, 0, TORSO_SPEED)
-	
+	for id in pairs(mantlets) do
+		Turn(mantlets[id], x_axis, 0, ELEVATION_SPEED)
+	end
 	if hasArms then
 		Turn(lupperarm, x_axis, 0, ELEVATION_SPEED)
 		Turn(rupperarm, x_axis, 0, ELEVATION_SPEED)
@@ -526,7 +532,11 @@ function script.AimWeapon(weaponID, heading, pitch)
 			end
 		end
 	elseif flares[weaponID] then
-		Turn(flares[weaponID], x_axis, -pitch, ELEVATION_SPEED)
+		if mantlets[weaponID] then
+			Turn(mantlets[weaponID], x_axis, -pitch, ELEVATION_SPEED)
+		else
+			Turn(flares[weaponID], x_axis, -pitch, ELEVATION_SPEED)
+		end
 		if amsIDs[weaponID] then 
 			Turn(flares[weaponID] or flares[1], y_axis, heading, TORSO_SPEED)
 			WaitForTurn(flares[weaponID] or flares[1], y_axis)
