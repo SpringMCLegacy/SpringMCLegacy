@@ -397,7 +397,7 @@ end
 
 function script.Create()
 	-- set engagement range to weapon 1 range
-	Spring.SetUnitMaxRange(unitID, WeaponDefs[unitDef.weapons[1].weaponDef].range)
+	Spring.SetUnitMaxRange(unitID, WeaponDefs[unitDef.weapons[1].weaponDef].range * 0.9)
 	StartThread(SmokeUnit, {body})
 	StartThread(SmokeLimb, "turret", turret)
 	StartThread(CoolOff)
