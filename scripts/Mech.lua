@@ -348,7 +348,7 @@ function hideLimbPieces(limb, hide)
 	end
 	if hide then
 		EmitSfx(rootPiece, SFX.CEG + info.numWeapons + 1)
-		Explode(rootPiece, SFX.FIRE + SFX.SMOKE)
+		Explode(rootPiece, SFX.FIRE + SFX.SMOKE + SFX.RECURSIVE)
 		for id, valid in pairs(limbWeapons) do
 			if valid then
 				local weapDef = WeaponDefs[unitDef.weapons[id].weaponDef]
