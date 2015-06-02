@@ -40,6 +40,7 @@ local AS7D = Atlas:New{
 		heatlimit 		= 20,
 		armor			= {type = "standard", tons = 19},
 		maxammo 		= {ac20 = 2, lrm = 2, srm = 1},
+		barrelrecoildist = {[1] = 5},
     },
 }
 
@@ -78,6 +79,7 @@ local AS7K = Atlas:New{
 		heatlimit 		= 20,
 		armor			= {type = "standard", tons = 19},
 		maxammo 		= {gauss = 2, lrm = 2},
+		barrelrecoildist = {[1] = 5},
     },
 }
 
@@ -119,6 +121,7 @@ local AS7S = Atlas:New{
 		heatlimit 		= 30,
 		armor			= {type = "standard", tons = 19},
 		maxammo 		= {ac20 = 3, lrm = 2, srm = 2},
+		barrelrecoildist = {[1] = 5},
     },
 }
 
@@ -147,6 +150,7 @@ local AS7S2 = Atlas:New{
 		armor			= {type = "standard", tons = 19},
 		maxammo 		= {hvgauss = 4, lrm = 2, srm = 2},
 		ecm				= true,
+		barrelrecoildist = {[1] = 5},
     },
 }
 

@@ -48,6 +48,7 @@ local DVS2 = Devastator:New{
 		heatlimit 		= 28,
 		armor			= {type = "standard", tons = 18.5},
 		maxammo 		= {gauss = 4},
+		barrelrecoildist = {[1] = 5, [2] = 5},
     },
 }
 
