@@ -1,21 +1,12 @@
-local IS_Atlas = Assault:New{
-	corpse				= "IS_Atlas_X",
-	maxDamage           = 30400,
-	mass                = 10000,
-	buildCostEnergy     = 100, -- in tons
-	buildCostMetal        = 38600,
-	maxVelocity		= 2.5, --50kph/20
-		
+local Atlas = Assault:New{
+	name				= "Atlas",
     customparams = {
-		heatlimit		= "20",
-		torsoturnspeed	= "100",
+		tonnage			= 100,
     },
 }
 
-local AS7D = IS_Atlas:New{
-	name              	= "Atlas AS7-D",
-	description         = "Assault-class Close Range Brawler",
-	objectName        	= "IS_Atlas_AS7D.s3o",
+local AS7D = Atlas:New{
+	description         = "Assault Brawler",
 	weapons 		= {	
 		[1] = {
 			name	= "AC20",
@@ -36,25 +27,24 @@ local AS7D = IS_Atlas:New{
 			OnlyTargetCategory = "ground",
 		},
 		[6] = {
-			name	= "LRM10",
+			name	= "LRM20",
 		},
 		[7] = {
-			name	= "LRM10",
-		},
-		[8] = {
 			name	= "SRM6",
 		},
 	},
     customparams = {
-		helptext		= "Armament: 1 x AC/20, 4 x Medium Beam Laser, 2 x LRM-10, 1 x SRM-6 - Armor: 19 tons Standard",
-		maxammo 		= {lrm = 360, srm = 120, ac20 = 15},
+		variant			= "AS7-D",
+		speed			= 50,
+		price			= 18970,
+		heatlimit 		= 20,
+		armor			= {type = "standard", tons = 19},
+		maxammo 		= {ac20 = 2, lrm = 2, srm = 1},
     },
 }
 
-local AS7K = IS_Atlas:New{
-	name              	= "Atlas AS7-K",
-	description         = "Assault-class Long Range Fire Support",
-	objectName        	= "IS_Atlas_AS7K.s3o",
+local AS7K = Atlas:New{
+	description         = "Assault Striker",
 	weapons 		= {	
 		[1] = {
 			name	= "Gauss",
@@ -75,22 +65,96 @@ local AS7K = IS_Atlas:New{
 			OnlyTargetCategory = "ground",
 		},
 		[6] = {
-			name	= "LRM10",
+			name	= "LRM20",
 		},
 		[7] = {
-			name	= "LRM10",s
-		},
-		[8] = {
 			name	= "AMS",
 		},
 	},
     customparams = {
-		helptext		= "Armament: 1 x Gauss, 2 x Large Beam Laser, 2 x Medium Pulse Laser, 2 x LRM-10, AMS - Armor: 19 tons Standard",
-		maxammo 		= {lrm = 360, gauss = 20},
+		variant			= "AS7-K",
+		speed			= 50,
+		price			= 21750,
+		heatlimit 		= 20,
+		armor			= {type = "standard", tons = 19},
+		maxammo 		= {gauss = 2, lrm = 2},
+    },
+}
+
+local AS7S = Atlas:New{
+	description         = "Assault Brawler",
+	weapons 		= {	
+		[1] = {
+			name	= "AC20",
+			OnlyTargetCategory = "ground",
+		},
+		[2] = {
+			name	= "MBL",
+		},
+		[3] = {
+			name	= "MBL",
+		},
+		[4] = {
+			name	= "MBL",
+			OnlyTargetCategory = "ground",
+		},
+		[5] = {
+			name	= "MBL",
+			OnlyTargetCategory = "ground",
+		},
+		[6] = {
+			name	= "LRM20",
+		},
+		[7] = {
+			name	= "SRM6",
+		},
+		[8] = {
+			name	= "SSRM4",
+		},
+	},
+    customparams = {
+		variant			= "AS7-S",
+		speed			= 50,
+		price			= 19290,
+		heatlimit 		= 30,
+		armor			= {type = "standard", tons = 19},
+		maxammo 		= {ac20 = 3, lrm = 2, srm = 2},
+    },
+}
+
+local AS7S2 = Atlas:New{
+	description         = "Assault Striker",
+	weapons 		= {	
+		[1] = {
+			name	= "HeavyGauss",
+			OnlyTargetCategory = "ground",
+		},
+		[2] = {
+			name	= "ERLBL",
+		},
+		[3] = {
+			name	= "ERLBL",
+		},
+		[4] = {
+			name	= "LRM15",
+		},
+	},
+    customparams = {
+		variant			= "AS7-S2",
+		speed			= 50,
+		price			= 19290,
+		heatlimit 		= 30,
+		armor			= {type = "standard", tons = 19},
+		maxammo 		= {hvgauss = 4, lrm = 2, srm = 2},
+		ecm				= true,
     },
 }
 
 return lowerkeys({
-	IS_Atlas_AS7D = AS7D,
-	IS_Atlas_AS7K = AS7K,
+	FS_Atlas_AS7D = AS7D:New(),
+	FW_Atlas_AS7D = AS7D:New(),
+	CC_Atlas_AS7D = AS7D:New(),
+	DC_Atlas_AS7K = AS7K:New(),
+	LA_Atlas_AS7S = AS7S:New(),
+	LA_Atlas_AS7S2 = AS7S2:New(),
 })
