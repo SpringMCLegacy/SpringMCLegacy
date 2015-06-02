@@ -1,21 +1,13 @@
-local IS_Devastator = Assault:New{
-	corpse				= "IS_Devastator_X",
-	maxDamage           = 29600,
-	mass                = 10000,
-	buildCostEnergy     = 100, -- in tons
-	buildCostMetal        = 36100,
-	maxVelocity		= 2.5, --50kph/20
+local Devastator = Assault:New{
+	name				= "Devastator",
 	
 	customparams = {
-		heatlimit		= "28",
-		torsoturnspeed	= "100",
+		tonnage			= 100,
     },
 }
 
-local DVS2 = IS_Devastator:New{
-	name              	= "Devastator DVS2",
-	description         = "Assault-class Long Range Fire Support/Sniper",
-	objectName        	= "IS_Devastator_DVS2.s3o",
+local DVS2 = Devastator:New{
+	description         = "Assault Striker",
 	weapons = {	
 		[1] = {
 			name	= "Gauss",
@@ -50,11 +42,15 @@ local DVS2 = IS_Devastator:New{
 	},
 		
 	customparams = {
-		helptext		= "Armament: 2 x Gauss Rifle, 2 x PPC, 4 x Medium Beam Laser - Armor: 18.5 tons Standard",
-		maxammo 		= {gauss = 60},
+		variant			= "DVS-2",
+		speed			= 50,
+		price			= 24810,
+		heatlimit 		= 28,
+		armor			= {type = "standard", tons = 18.5},
+		maxammo 		= {gauss = 4},
     },
 }
 
 return lowerkeys({
-	["IS_Devastator_DVS2"] = DVS2,
+	["FS_Devastator_DVS2"] = DVS2:New(),
 })
