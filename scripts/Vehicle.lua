@@ -396,6 +396,11 @@ function script.TransportPickup(cargoID)
 end
 
 function script.Create()
+	local closeRange = 5000000
+	for weaponID, weaponInfo in pairs(unitDef.weapons) do
+		closeRange = math.min(WeaponDefs[weaponInfo.weaponDef].range, closeRange)
+	end
+	Spring.SetUnitMaxRange(unitID, closeRange)
 	StartThread(SmokeUnit, {body})
 	StartThread(SmokeLimb, "turret", turret)
 	StartThread(CoolOff)
