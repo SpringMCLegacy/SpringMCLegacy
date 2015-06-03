@@ -1,20 +1,13 @@
-local IS_Mauler = Assault:New{
-	corpse				= "IS_Mauler_X",
-	maxDamage           = 20600,
-	mass                = 9000,
-	buildCostEnergy     = 90,
-	buildCostMetal        = 28200,
-	maxVelocity		= 2.5, --50kph/20
+local Mauler = Assault:New{
+	name				= "Mauler",
 
 	customparams = {
-		torsoturnspeed	= "120",
-    },	
+		tonnage			= "90",
+    },
 }
-		
-local MAL1R = IS_Mauler:New{
-	name              	= "Mauler MAL-1R",
-	description         = "Assault-class Long Range Fire Support",
-	objectName        	= "IS_Mauler_MAL1R.s3o",
+	
+local MAL1R = Mauler:New{
+	description         = "Assault Sniper",
 	weapons	= {	
 		[1] = {
 			name	= "ERLBL",
@@ -24,19 +17,15 @@ local MAL1R = IS_Mauler:New{
 		},
 		[3] = {
 			name	= "AC2",
-			OnlyTargetCategory = "ground",
 		},
 		[4] = {
 			name	= "AC2",
-			OnlyTargetCategory = "ground",
 		},
 		[5] = {
 			name	= "AC2",
-			OnlyTargetCategory = "ground",
 		},
 		[6] = {
 			name	= "AC2",
-			OnlyTargetCategory = "ground",
 		},
 		[7] = {
 			name	= "LRM15",
@@ -46,17 +35,18 @@ local MAL1R = IS_Mauler:New{
 		},
 	},
 		
-	customparams = {
-		helptext		= "Armament: 2 x ER Large Beam Laser, 4 x AC/2, 2 x LRM-15 - Armor: 11.5 tons Ferro-Fibrous",
-		heatlimit		= "22",
-		maxammo 		= {lrm = 720, ac2 = 300},
+    customparams = {
+		variant			= "MAL-1R",
+		speed			= 50,
+		price			= 14600,
+		heatlimit 		= 22,
+		armor			= {type = "ferro", tons = 11.5},
+		maxammo 		= {lrm = 4, ac2 = 2},
     },
 }
 
-local MAL3R = IS_Mauler:New{
-	name              	= "Mauler MAL-3R",
-	description         = "Assault-class Close Range Brawler",
-	objectName        	= "IS_Mauler_MAL3R.s3o",
+local MAL3R = Mauler:New{
+	description         = "Assault Striker",
 	weapons	= {	
 		[1] = {
 			name	= "LBX10",
@@ -65,25 +55,29 @@ local MAL3R = IS_Mauler:New{
 			name	= "LBX10",
 		},
 		[3] = {
-			name	= "SBL",
-			OnlyTargetCategory = "ground",
+			name	= "LRM15",
 		},
 		[4] = {
 			name	= "LRM15",
 		},
 		[5] = {
-			name	= "LRM15",
+			name	= "SBL",
 		},
 	},
 		
-	customparams = {
-		helptext		= "Armament: 2 x LBX/10, 1 x Small Beam Laser, 2 x LRM-15 - Armor: 16 tons Ferro-Fibrous",
-		heatlimit		= "20",
-		maxammo 		= {lrm = 720, ac10 = 60},
+    customparams = {
+		variant			= "MAL-3R",
+		speed			= 50,
+		price			= 18770,
+		heatlimit 		= 20,
+		armor			= {type = "ferro", tons = 16},
+		maxammo 		= {lrm = 4, ac10 = 4},
+		jumpjets		= 3,
+		barrelrecoildist = {[1] = 5, [2] = 5},
     },
 }
 	
-return lowerkeys({
-	["IS_Mauler_MAL1R"] = MAL1R,
-	["IS_Mauler_MAL3R"] = MAL3R,
+return lowerkeys({ 
+	["DC_Mauler_MAL1R"] = MAL1R:New(),
+	["DC_Mauler_MAL3R"] = MAL3R:New(),
 })
