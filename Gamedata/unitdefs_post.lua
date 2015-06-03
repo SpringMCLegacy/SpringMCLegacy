@@ -156,7 +156,7 @@ for name, ud in pairs(UnitDefs) do
 				weapon.onlytargetcategory = "narctag"			
 				ud.description = ud.description .. " \255\255\051\051[TAG]"
 			else
-				if cp.unittype then
+				if cp.unittype == "mech" then
 					-- Give all mechs 179d torso twist
 					--[[if ud.customparams.unittype == "mech" then
 						weapon.maxangledif = 179
@@ -166,12 +166,11 @@ for name, ud in pairs(UnitDefs) do
 							weapon.slaveto = 1
 						end
 					end
-					if cp.unittype == vehicle then
-						if not weapon.onlytargetcategory then
-							weapon.onlytargetcategory = "ground"
-						end
-						cpwheelspeed = ud.maxvelocity * 166
+				elseif cp.unittype == vehicle then
+					if not weapon.onlytargetcategory then
+						weapon.onlytargetcategory = "ground"
 					end
+					cpwheelspeed = ud.maxvelocity * 166
 				end
 				weapon.onlytargetcategory = (weapon.onlytargetcategory or "") .. " notbeacon"
 				weapon.badtargetcategory = (weapon.badtargetcategory or "") .. " dropship structure"
