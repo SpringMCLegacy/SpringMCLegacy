@@ -22,7 +22,7 @@ local GAL102 = Galleon:New{
 		},
 	},
 	
-customparams = {
+	customparams = {
 		variant         = "GAL102",
 		speed			= 90,
 		price			= 1620,
@@ -33,5 +33,5 @@ customparams = {
 }
 
 return lowerkeys({
-	--["FW_Galleon_GAL102"] = GAL102:New(),
+	["FW_Galleon_GAL102"] = GAL102:New(),
 })
