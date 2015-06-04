@@ -536,12 +536,18 @@ end
 function script.FireWeapon(weaponID)
 	local targetType, user, targetID = Spring.GetUnitWeaponTarget(unitID, weaponID)
 	if targetType == 1 then
-		local dist = Spring.GetUnitSeparation(unitID, targetID)
-		--Spring.Echo("Distance to target is", dist)
-		if dist > closeRange then -- we need to get closer
-			--Spring.Echo("Mooooooooove closerrrrrr")
-			local x,y,z = Spring.GetUnitPosition(targetID)
-			Spring.SetUnitMoveGoal(unitID, x, y, z, closeRange)
+		if unitDef.customParams.unittype == "apc" then
+			if not (Spring.GetUnitRulesParam(unitID, "dronesout") == 1) then
+				GG.LaunchDroneAsWeapon(unitID, teamID, targetID, "cl_elemental_prime", 5, turret, 0, 90)
+			end
+		else
+			local dist = Spring.GetUnitSeparation(unitID, targetID)
+			--Spring.Echo("Distance to target is", dist)
+			if dist > closeRange then -- we need to get closer
+				--Spring.Echo("Mooooooooove closerrrrrr")
+				local x,y,z = Spring.GetUnitPosition(targetID)
+				Spring.SetUnitMoveGoal(unitID, x, y, z, closeRange)
+			end
 		end
 	end
 	ChangeHeat(firingHeats[weaponID])
@@ -556,9 +562,6 @@ function script.FireWeapon(weaponID)
 	end]]
 	if not missileWeaponIDs[weaponID] and not flareOnShots[weaponID] then
 		EmitSfx(flares[weaponID], SFX.CEG + weaponID)
-	end
-	if unitDef.customParams.unittype == "apc" and not (Spring.GetUnitRulesParam(unitID, "dronesout") == 1) then
-		GG.LaunchDroneAsWeapon(unitID, teamID, select(3, Spring.GetUnitWeaponTarget(unitID, weaponID)), "cl_elemental_prime", 5, turret, 0, 90)
 	end
 end
 
