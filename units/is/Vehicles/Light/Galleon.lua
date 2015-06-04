@@ -1,15 +1,7 @@
 local Galleon = LightTank:New{
 	name              	= "Galleon",
 	trackWidth			= 20,
-	
-	customparams = {
-		tonnage			= 30,
-    },
-}
-
-local GAL102 = Galleon:New{
-	description         = "Troop Transport",
-	
+		
 	weapons	= {	
 		[1] = {
 			name	= "MPL",
@@ -23,15 +15,16 @@ local GAL102 = Galleon:New{
 	},
 	
 	customparams = {
-		variant         = "GAL102",
+		tonnage			= 30,
+		variant         = "GAL-102",
 		speed			= 90,
 		price			= 1620,
 		heatlimit 		= 10,
 		armor			= {type = "standard", tons = 3.5},
-		squadsize 		= 2,
+		squadsize 		= 4,
     },
 }
 
 return lowerkeys({
-	["FW_Galleon_GAL102"] = GAL102:New(),
+	["FW_Galleon"] = Galleon:New(),
 })
