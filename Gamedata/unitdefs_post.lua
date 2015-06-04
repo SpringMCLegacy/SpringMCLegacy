@@ -89,7 +89,7 @@ for name, ud in pairs(UnitDefs) do
 		if cp.tonnage then
 			ud.mass = (cp.tonnage or 0) * 100
 			if cp.armor then
-				ud.maxDamage = cp.tonnage / 10 + cp.armor.tons * 1000
+				ud.maxdamage = cp.tonnage / 10 + cp.armor.tons * 1000
 			end
 		end
 		if cp.speed then
