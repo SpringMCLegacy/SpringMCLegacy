@@ -51,6 +51,7 @@ local DROPSHIP_COOLDOWN = 30 * 30 -- 30s, time before the dropship has regained 
 local DROPSHIP_DELAY = 2 * 30 -- 2s, time taken to arrive on the map from SPACE!
 local DAMAGE_REWARD_MULT = (modOptions and tonumber(modOptions.income_damage)) or 1
 local KILL_REWARD_MULT = 0.0
+local INSURANCE_MULT = 0.5
 
 -- local NUM_ICONS_PER_PAGE = 3 * 8
 	
@@ -551,7 +552,8 @@ function gadget:UnitDestroyed(unitID, unitDefID, teamID, attackerID, attackerDef
 		C3Status[unitID] = nil
 	end
 	if attackerID and not AreTeamsAllied(teamID, attackerTeam) and unitDefID ~= WALL_ID and unitDefID ~= GATE_ID then
-		AddTeamResource(attackerTeam, "metal", UnitDefs[unitDefID].metalCost * KILL_REWARD_MULT)
+		--AddTeamResource(attackerTeam, "metal", UnitDefs[unitDefID].metalCost * KILL_REWARD_MULT)
+		AddTeamResource(teamID, "metal", UnitDefs[unitDefID].metalCost * INSURANCE_MULT)
 	end
 	if unitTypes[unitDefID] then
 		UpdateTeamSlots(teamID, unitID, unitDefID, false)
