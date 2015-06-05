@@ -308,8 +308,8 @@ function gadget:GamePreload()
 		-- Limb HPs
 		info.limbHPs = {}
 		if cp.unittype == "mech" then
-			info.limbHPs["left_leg"] = unitDef.health * 0.1
-			info.limbHPs["right_leg"] = unitDef.health * 0.1
+			info.limbHPs["left_leg"] = unitDef.health * 0.25
+			info.limbHPs["right_leg"] = unitDef.health * 0.25
 			info.limbHPs["left_arm"] = unitDef.health * 0.15
 			info.limbHPs["right_arm"] = unitDef.health * 0.15
 			-- coolant
