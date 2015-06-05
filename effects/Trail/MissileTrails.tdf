@@ -92,34 +92,6 @@
 
 [MRMTrail]
 {
-	[fire] {
-		class=CSimpleParticleSystem;
-		[properties]{
-			sizeGrowth=0.75;
-			sizeMod=1;
-			pos=0, 0, 0;
-			gravity=0, 1, 0;
-			colorMap=1 1 1 1  1 1 1 0.1  1 1 1 0;
-			Texture=genericsmokecloud;
-			airdrag=0.5;
-			particleLife=1;
-			particleLifeSpread=1;
-			numParticles=1;
-			particleSpeed=20;
-			particleSpeedSpread=20;
-			particleSize=1;
-			particleSizeSpread=2;
-			emitVector=dir;
-			emitRot=180;
-			emitRotSpread=1;
-			directional=1;
-			alwaysVisible=0;
-		}
-		air=1;
-		water=1;
-		ground=1;
-		count=5;
-	}
    [smoke] {
 		class=CSimpleParticleSystem;
 		[properties]{
@@ -132,7 +104,7 @@
 			airdrag=0.5;
 			particleLife=10;
 			particleLifeSpread=10;
-			numParticles=5;
+			numParticles=1;
 			particleSpeed=20;
 			particleSpeedSpread=20;
 			particleSize=0.5;
@@ -152,34 +124,6 @@
 
 [LRMTrail]
 {
-	[fire] {
-		class=CSimpleParticleSystem;
-		[properties]{
-			sizeGrowth=0.75;
-			sizeMod=1;
-			pos=0, 0, 0;
-			gravity=0, 1, 0;
-			colorMap=1 1 1 1  1 1 1 0.1  1 1 1 0;
-			Texture=genericsmokecloud;
-			airdrag=0.5;
-			particleLife=1;
-			particleLifeSpread=1;
-			numParticles=1;
-			particleSpeed=20;
-			particleSpeedSpread=20;
-			particleSize=1;
-			particleSizeSpread=2;
-			emitVector=dir;
-			emitRot=180;
-			emitRotSpread=1;
-			directional=1;
-			alwaysVisible=0;
-		}
-		air=1;
-		water=1;
-		ground=1;
-		count=5;
-	}
    [smoke] {
 		class=CSimpleParticleSystem;
 		[properties]{
@@ -206,32 +150,32 @@
 		air=1;
 		water=1;
 		ground=1;
-		count=5;
+		count=1;
 	}
 }
 
-[SRMTrail]
+[ATMTrail]
 {
-	[fire] {
+   [smoke] {
 		class=CSimpleParticleSystem;
 		[properties]{
-			sizeGrowth=0.75;
+			sizeGrowth=1.5;
 			sizeMod=1;
 			pos=0, 0, 0;
 			gravity=0, 1, 0;
-			colorMap=1 1 1 1  1 1 1 0.1  1 1 1 0;
-			Texture=genericsmokecloud;
+			colorMap=0.9 0.9 0.9 0.7  0.6 0.6 0.6 0.5  0 0 0 0  0 0 0 0;
+			Texture=smokesmall;
 			airdrag=0.5;
-			particleLife=1;
-			particleLifeSpread=1;
-			numParticles=5;
+			particleLife=15;
+			particleLifeSpread=15;
+			numParticles=1;
 			particleSpeed=20;
 			particleSpeedSpread=20;
 			particleSize=1;
 			particleSizeSpread=2;
 			emitVector=dir;
 			emitRot=180;
-			emitRotSpread=1;
+			emitRotSpread=10;
 			directional=1;
 			alwaysVisible=0;
 		}
@@ -240,6 +184,10 @@
 		ground=1;
 		count=1;
 	}
+}
+
+[SRMTrail]
+{
    [smoke] {
 		class=CSimpleParticleSystem;
 		[properties]{
@@ -252,7 +200,7 @@
 			airdrag=0.5;
 			particleLife=5;
 			particleLifeSpread=5;
-			numParticles=8;
+			numParticles=1;
 			particleSpeed=25;
 			particleSpeedSpread=25;
 			particleSize=3;

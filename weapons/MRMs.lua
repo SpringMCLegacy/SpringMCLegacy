@@ -17,13 +17,14 @@ local MRM_Class = Weapon:New{
 	startVelocity			= 900,
 	weaponVelocity          = 900,
 	reloadtime              = 10,
-	burstrate				= 0.1,
+	burstrate				= 0.01,
 	model					= "Missile.s3o",
 	damage = {
 		default = 100,--10 DPS
 	},
 	customparams = {
 		cegflare			= "MISSILE_MUZZLEFLASH",
+		projectilelups		= {"missileEngine"},
 		weaponclass			= "missile",
 		jammable			= false,
 		ammotype			= "mrm",

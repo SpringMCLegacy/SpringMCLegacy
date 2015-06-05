@@ -1,7 +1,7 @@
 local ATM_Class = Weapon:New{
 	weaponType              = "MissileLauncher",
 	explosionGenerator    	= "custom:HE_MEDIUM",
-	cegTag					= "LRMTrail",
+	cegTag					= "ATMTrail",
 	smokeTrail				= false,
 	soundHit              	= "ATM_Hit",
 	soundStart            	= "ATM_Fire",
@@ -30,6 +30,7 @@ local ATM_Class = Weapon:New{
 	},
 	customparams = {
 		cegflare			= "MISSILE_MUZZLEFLASH",
+		projectilelups		= {"missileEngine"},
 		weaponclass			= "missile",
 		ammotype			= "atm",
     },

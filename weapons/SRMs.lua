@@ -28,6 +28,7 @@ local SRM_Class = Weapon:New{
 	},
 	customparams = {
 		cegflare			= "MISSILE_MUZZLEFLASH",
+		projectilelups		= {"missileEngine"},
 		weaponclass			= "missile",
 		jammable			= false,
 		ammotype			= "srm",
