@@ -477,9 +477,11 @@ function script.AimWeapon(weaponID, heading, pitch)
 	end
 	if mantlets[weaponID] then
 		Turn(mantlets[weaponID], x_axis, -pitch, ELEVATION_SPEED)
-	elseif missileWeaponIDs[weaponID] then
+	elseif missileWeaponIDs[weaponID] then -- yeah it happens if, in this case, launchpoint_1_# are attached to launcher_1 but launchpoint_2_# and 3 are attached to launcher_1 as well
 		if launchers[weaponID] then
 			Turn(launchers[weaponID], x_axis, -pitch, ELEVATION_SPEED)
+		elseif weaponID > 1 and launchers[1] then
+			Turn(launchers[1], x_axis, -pitch, ELEVATION_SPEED)
 		else
 			for i = 1, burstLengths[weaponID] do
 				Turn(launchPoints[weaponID][i], x_axis, -pitch, ELEVATION_SPEED)
