@@ -159,7 +159,7 @@ function gadget:UnitDestroyed(unitID, unitDefID, teamID)
 end
 
 local function Wander(unitID, cmd)
-	if Spring.ValidUnitID(unitID) then
+	if Spring.ValidUnitID(unitID) and not Spring.GetUnitIsDead(unitID) then
 		local teamID = Spring.GetUnitTeam(unitID)
 		local spotNum = teamSquadSpots[teamID][unitSquads[unitID]] or math.random(1, #flagSpots)
 		local spot = flagSpots[spotNum]
