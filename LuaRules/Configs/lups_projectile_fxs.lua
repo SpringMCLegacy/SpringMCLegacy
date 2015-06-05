@@ -22,6 +22,10 @@ local fxs = {
 		class = "ribbon", 
 		options = {size = 4, width = 4, color = {0.95, 0.65, 0.4,0.6}, texture = "bitmaps/ProjectileTextures/missiletrail.png"},
 	},
+	srmEngine = {
+		class = "ribbon", 
+		options = {size = 1, width = 2, color = {0.95, 0.65, 0.4,0.6}},
+	},
 	amsTracer = {
 		class = "ribbon",
 		options = {size = 2, width = 1, color = {0.95, 0.65, 0,0.6}},
