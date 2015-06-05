@@ -1,7 +1,7 @@
 local LRM_Class = Weapon:New{
 	weaponType              = "MissileLauncher",
 	explosionGenerator    	= "custom:HE_SMALL",
-	cegTag					= "LRMTrail",
+	--cegTag					= "LRMTrail",
 	soundHit              	= "LRM_Hit",
 	soundStart            	= "LRM_Fire",
 	burnblow				= false, 	--Bullets explode at range limit.
