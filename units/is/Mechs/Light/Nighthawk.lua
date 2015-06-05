@@ -44,7 +44,7 @@ local NTK2S = Nighthawk:New{
 	customparams = {
 		variant         = "NTK-2S",
 		speed			= 90,
-		price			= 1017,
+		price			= 10170,
 		heatlimit 		= 22,
 		armor			= {type = "standard", tons = 7},
 		bap				= true,
