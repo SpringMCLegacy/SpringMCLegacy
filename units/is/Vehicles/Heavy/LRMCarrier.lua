@@ -22,7 +22,6 @@ local LRMCarrier = LightTank:New{
 		heatlimit 		= 20,
 		armor			= {type = "standard", tons = 2},
 		maxammo 		= {lrm = 3},
-		barrelrecoildist = {[1] = 5},
 		squadsize 		= 1,
     },
 }

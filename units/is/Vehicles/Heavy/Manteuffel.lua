@@ -67,6 +67,6 @@ local ManteuffelHG = Manteuffel:New{
 }
 	
 return lowerkeys({
-	["FS_Manteuffel"] = ManteuffelRAC,
-	["LA_Manteuffel"] = ManteuffelHG,
+	["FS_Manteuffel"] = ManteuffelRAC:New(),
+	["LA_Manteuffel"] = ManteuffelHG:New(),
 })

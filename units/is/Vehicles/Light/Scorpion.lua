@@ -13,7 +13,7 @@ local Scorpion = LightTank:New{
 	customparams = {
 		tonnage			= 25,
 		variant         = "",
-		speed			= 150,
+		speed			= 80,
 		price			= 4130,
 		heatlimit 		= 10,
 		armor			= {type = "standard", tons = 4},
