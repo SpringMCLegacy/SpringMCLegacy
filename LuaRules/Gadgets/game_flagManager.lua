@@ -322,6 +322,7 @@ function gadget:GameFrame(n)
 							if (flagTeamID == GAIA_TEAM_ID) then
 								-- Neutral flag being capped
 								Spring.SendMessageToTeam(teamID, flagData.tooltip .. " Captured!")
+								Spring.AddTeamResource(teamID, "metal", 1000)
 								GG.PlaySoundForTeam(teamID, "BB_NavBeacon_Captured", 1)
 								TransferUnit(flagID, teamID, false)
 								UpdateBeacons(teamID, 1)
@@ -329,6 +330,7 @@ function gadget:GameFrame(n)
 							else
 								-- Team flag being neutralised
 								Spring.SendMessageToTeam(teamID, flagData.tooltip .. " Neutralised!")
+								Spring.AddTeamResource(teamID, "metal", 1000)
 								GG.PlaySoundForTeam(flagTeamID, "BB_NavBeacon_Lost", 1)
 								TransferUnit(flagID, GAIA_TEAM_ID, false)
 								UpdateBeacons(flagTeamID, -1)
