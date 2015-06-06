@@ -75,7 +75,7 @@ local options = {
 		min		= 1,
 		max		= 1000,
 		step	= 1,
-		section	= '2gamemode',
+		section	= '2income',
 	},
 	{
 		key		= "income_damage",
@@ -86,7 +86,7 @@ local options = {
 		min		= 0.1,
 		max		= 10.0,
 		step	= 0.1,
-		section	= '2gamemode',
+		section	= '2income',
 	},
 	{
 		key		= "insurance",
@@ -97,7 +97,7 @@ local options = {
 		min		= 0.1,
 		max		= 1.0,
 		step	= 0.1,
-		section	= '2gamemode',
+		section	= '2income',
 	},
 	------------------------------------
 	{
