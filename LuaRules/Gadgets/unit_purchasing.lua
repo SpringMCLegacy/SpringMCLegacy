@@ -542,9 +542,12 @@ local MELTDOWN = WeaponDefNames["meltdown"].id
 
 function gadget:UnitDamaged(unitID, unitDefID, teamID, damage, paralyzer, weaponID,  projectileID, attackerID, attackerDefID, attackerTeam)
 	if attackerID and attackerTeam and not AreTeamsAllied(teamID, attackerTeam) and unitDefID ~= WALL_ID and unitDefID ~= GATE_ID then
-		-- don't allow income from nukes
-		if not (weaponID and weaponID == MELTDOWN) then		
-			AddTeamResource(attackerTeam, "metal", damage * DAMAGE_REWARD_MULT)
+		local attackerDefType = attackerDefID and UnitDefs[attackerDefID].customParams.unittype or ""
+		if attackerDefType == "mech" then -- only mechs generate income
+			-- don't allow income from nukes
+			if not (weaponID and weaponID == MELTDOWN) then		
+				AddTeamResource(attackerTeam, "metal", damage * DAMAGE_REWARD_MULT)
+			end
 		end
 	end
 end

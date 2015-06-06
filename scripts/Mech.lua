@@ -177,7 +177,7 @@ function ChangeHeat(amount)
 		currHeatLevel = 0
 	end
 	SetUnitRulesParam(unitID, "heat", math.floor(100 * currHeatLevel / heatLimit))
-	SetUnitRulesParam(unitID, "excess_heat", math.floor(100 * excessHeat / heatLimit))
+	SetUnitRulesParam(unitID, "excess_heat", math.floor(100 * excessHeat / (2 * heatLimit)))
 end
 
 local function CoolOff()
@@ -638,8 +638,8 @@ function script.Killed(recentDamage, maxHealth)
 		-- This is a really awful hack , built on top of another hack. 
 		-- There's some issue with alwaysVisible not working (http://springrts.com/mantis/view.php?id=4483)
 		-- So instead make the owner the decal unit spawned by the teams starting beacon, as it can never die
-		local ownerID = Spring.GetTeamUnitsByDefs(teamID, UnitDefNames["decal_beacon"].id)[1] or unitID
-		local nukeID = Spring.SpawnProjectile(WeaponDefNames["meltdown"].id, {pos = {x,y,z}, owner = ownerID, team = teamID, ttl = 20})
+		--local ownerID = Spring.GetTeamUnitsByDefs(teamID, UnitDefNames["decal_beacon"].id)[1] or unitID
+		local nukeID = Spring.SpawnProjectile(WeaponDefNames["meltdown"].id, {pos = {x,y,z}, owner = unitID, team = teamID, ttl = 20})
 		Spring.SetProjectileAlwaysVisible(nukeID, true)
 		-- reward the attacker for the HP destroyed
 		local attackerID = Spring.GetUnitLastAttacker(unitID)
