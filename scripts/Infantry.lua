@@ -23,8 +23,8 @@ local IsUnitNARCed = GG.IsUnitNARCed
 local IsUnitTAGed = GG.IsUnitTAGed
 
 -- includes
-include "smokeunit.lua"
-include ("anims/" .. unitDef.name:sub(1, (unitDef.name:find("_", 4) or 0) - 1) .. ".lua")
+--include "smokeunit.lua"
+--include ("anims/" .. unitDef.name:sub(1, (unitDef.name:find("_", 4) or 0) - 1) .. ".lua")
 
 -- Info from lusHelper gadget
 -- non-local so perks can change them (flagrant lack of encapsulation!)
@@ -147,7 +147,7 @@ function ChangeAmmo(ammoType, amount)
 	return false -- Ammo was not changed
 end
 
-function PreJump(delay, turn, lineDist)
+--[[function PreJump(delay, turn, lineDist)
 	StartThread(anim_PreJump)
 end
 
@@ -156,7 +156,7 @@ function StartJump()
 	StartThread(anim_StartJump)
 	local x,y,z = GetUnitPosition(unitID)
 	SpawnCEG("mech_jump_dust", x,y,z)
-end
+end]]
 
 function Jets()
 	for i = 1, info.jumpjets do -- emit JumpJetTrail
@@ -165,7 +165,7 @@ function Jets()
 	end
 end
 
-function HalfJump()
+--[[function HalfJump()
 	StartThread(anim_HalfJump)
 end
 
@@ -193,9 +193,9 @@ end
 function script.StopMoving()
 	StartThread(anim_Reset)
 	moving = false
-end
+end]]
 
-apc = nil
+--apc = nil
 --[[function GetBackIn()
 	Spring.GiveOrderToUnit(unitID, CMD.LOAD_ONTO, {apc}, {})
 	Spring.GiveOrderToUnit(apc, CMD.WAIT, {}, {})
