@@ -50,9 +50,11 @@ local C3_ID = UnitDefNames["upgrade_c3array"].id
 local DROPSHIP_COOLDOWN = 30 * 30 -- 30s, time before the dropship has regained orbit, refuelled etc ready to drop again
 local DROPSHIP_DELAY = 2 * 30 -- 2s, time taken to arrive on the map from SPACE!
 local DAMAGE_REWARD_MULT = (modOptions and tonumber(modOptions.income_damage)) or 1
-local KILL_REWARD_MULT = 0.0
-local INSURANCE_MULT = 0.5
+Spring.SetGameRulesParam("damage_reward_mult", DAMAGE_REWARD_MULT)
+local INSURANCE_MULT = (modOptions and tonumber(modOptions.insurance)) or 0.5
+Spring.SetGameRulesParam("insurance_mult", INSURANCE_MULT)
 
+--local KILL_REWARD_MULT = 0.0
 -- local NUM_ICONS_PER_PAGE = 3 * 8
 	
 local CMD_SEND_ORDER = GG.CustomCommands.GetCmdID("CMD_SEND_ORDER")
@@ -536,10 +538,14 @@ end
 
 local WALL_ID = UnitDefNames["wall"].id
 local GATE_ID = UnitDefNames["wall_gate"].id
+local MELTDOWN = WeaponDefNames["meltdown"].id
 
 function gadget:UnitDamaged(unitID, unitDefID, teamID, damage, paralyzer, weaponID,  projectileID, attackerID, attackerDefID, attackerTeam)
 	if attackerID and attackerTeam and not AreTeamsAllied(teamID, attackerTeam) and unitDefID ~= WALL_ID and unitDefID ~= GATE_ID then
-		AddTeamResource(attackerTeam, "metal", damage * DAMAGE_REWARD_MULT)
+		-- don't allow income from nukes
+		if not (weaponID and weaponID == MELTDOWN) then		
+			AddTeamResource(attackerTeam, "metal", damage * DAMAGE_REWARD_MULT)
+		end
 	end
 end
 

@@ -170,7 +170,7 @@ function ChangeHeat(amount)
 	if currHeatLevel > heatLimit then
 		excessHeat = excessHeat + currHeatLevel - heatLimit
 		currHeatLevel = heatLimit
-		if excessHeat >= heatLimit then
+		if excessHeat >= heatLimit * 2 then
 			Spring.DestroyUnit(unitID, true)
 		end
 	elseif currHeatLevel < 0 then
@@ -343,10 +343,10 @@ function hideLimbPieces(limb, hide)
 		RecursiveHide(rootPiece, hide)
 	else -- legs
 		if hide then
-			Spring.Echo("Lost a leg! halving move speed")
+			--Spring.Echo("Lost a leg! halving move speed")
 			speedMod = speedMod / 2
 		else -- leg is restored
-			Spring.Echo("Regained a leg! doubling move speed")
+			--Spring.Echo("Regained a leg! doubling move speed")
 			speedMod = speedMod * 2
 		end
 		GG.SpeedChange(unitID, unitDefID, speedMod)
@@ -358,7 +358,7 @@ function hideLimbPieces(limb, hide)
 		for id, valid in pairs(limbWeapons) do
 			if valid then
 				local weapDef = WeaponDefs[unitDef.weapons[id].weaponDef]
-				Spring.Echo(unitDef.humanName .. ": " .. weapDef.name .. " destroyed!")
+				--Spring.Echo(unitDef.humanName .. ": " .. weapDef.name .. " destroyed!")
 				ToggleWeapon(id, 1)
 			end
 		end
@@ -632,7 +632,7 @@ function script.QueryWeapon(weaponID)
 end
 
 function script.Killed(recentDamage, maxHealth)
-	if excessHeat >= heatLimit then
+	if excessHeat >= heatLimit * 2 then
 		--Spring.Echo("NUUUUUUUUUUUKKKKKE")
 		local x,y,z = Spring.GetUnitPosition(unitID)
 		-- This is a really awful hack , built on top of another hack. 
@@ -641,6 +641,14 @@ function script.Killed(recentDamage, maxHealth)
 		local ownerID = Spring.GetTeamUnitsByDefs(teamID, UnitDefNames["decal_beacon"].id)[1] or unitID
 		local nukeID = Spring.SpawnProjectile(WeaponDefNames["meltdown"].id, {pos = {x,y,z}, owner = ownerID, team = teamID, ttl = 20})
 		Spring.SetProjectileAlwaysVisible(nukeID, true)
+		-- reward the attacker for the HP destroyed
+		local attackerID = Spring.GetUnitLastAttacker(unitID)
+		if attackerID then
+			local attackerTeam = Spring.GetUnitTeam(attackerID)
+			local hp = Spring.GetUnitHealth(unitID)
+			local payout = hp * Spring.GetGameRulesParam("damage_reward_mult")
+			Spring.AddTeamResource(attackerTeam, "metal", payout)
+		end
 	end
 	GG.PlaySoundForTeam(Spring.GetUnitTeam(unitID), "BB_BattleMech_destroyed", 1)
 	--local severity = recentDamage / maxHealth * 100
