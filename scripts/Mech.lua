@@ -95,6 +95,7 @@ if info.jumpjets then
 end
 
 local flares = {}
+local turrets = {}
 local mantlets = {}
 local barrels = {}
 local launchers = {}
@@ -118,6 +119,9 @@ for weaponID = 1, info.numWeapons do
 		flares[weaponID] = piece("flare_" .. weaponID)
 		if info.mantletIDs[weaponID] then
 			mantlets[weaponID] = piece("mantlet_" .. weaponID)
+		end
+		if info.turretIDs[weaponID] then
+			turrets[weaponID] = piece("turret_" .. weaponID)
 		end
 		if spinSpeeds[weaponID] then
 			spinPieces[weaponID] = piece("barrels_" .. weaponID)
@@ -532,15 +536,15 @@ function script.AimWeapon(weaponID, heading, pitch)
 			end
 		end
 	elseif flares[weaponID] then
-		if mantlets[weaponID] then
+		if amsIDs[weaponID] then 
+			Turn(turrets[weaponID], y_axis, heading, TORSO_SPEED * 10)
+			WaitForTurn(turrets[weaponID], y_axis)
+			Turn(flares[weaponID], x_axis, -pitch, ELEVATION_SPEED * 10)
+			return true 
+		elseif mantlets[weaponID] then
 			Turn(mantlets[weaponID], x_axis, -pitch, ELEVATION_SPEED)
 		else
 			Turn(flares[weaponID], x_axis, -pitch, ELEVATION_SPEED)
-		end
-		if amsIDs[weaponID] then 
-			Turn(flares[weaponID] or flares[1], y_axis, heading, TORSO_SPEED)
-			WaitForTurn(flares[weaponID] or flares[1], y_axis)
-			return true 
 		end
 	end
 

@@ -208,8 +208,6 @@ function gadget:UnitCreated(unitID, unitDefID, teamID, builderID)
 			info.leftArmMasterID = GetArmMasterWeapon(leftArmIDs)
 			info.rightArmIDs = rightArmIDs
 			info.leftArmIDs = leftArmIDs
-		elseif cp.unittype == "vehicle" or cp.unittype == "apc" then
-			info.turretIDs = turretIDs
 		end
 		
 		info.launcherIDs = launcherIDs

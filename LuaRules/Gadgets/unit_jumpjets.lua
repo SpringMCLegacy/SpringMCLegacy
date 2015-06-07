@@ -413,11 +413,11 @@ function gadget:AllowCommand(unitID, unitDefID, teamID,
   return true -- allowed
 end
 
-local function PrintCommands(unitID)
+--[[local function PrintCommands(unitID)
   for pos, command in pairs(Spring.GetUnitCommands(unitID)) do
      Spring.Echo("Command: " .. pos .. " is ID " .. command.id)
    end
-end
+end]]
 
 
 local function TurnOrder(unitID, x, y, z)

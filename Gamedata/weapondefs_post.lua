@@ -38,14 +38,15 @@ for weapName, wd in pairs(WeaponDefs) do
 			damage[unitType] = default * damageMults[unitType]
 		end
 	end
-	if wd.weapontype == "MissileLauncher" or wd.weapontype == "StarburstLauncher" then
+	if (wd.weapontype ~= nil) and (string.lower(wd.weapontype) == "missilelauncher" or string.lower(wd.weapontype) == "starburstlauncher") then
 		wd.targetable = 1
+		Spring.Echo(weapName .. " is a targetable missile")
 		local jammable = cp.jammable
 		if jammable == nil then -- nil check required due to bools
 			wd.customparams.jammable = true
-			--Spring.Echo(weapName .. " is a jammable missile")
+			Spring.Echo(weapName .. " is a jammable missile")
 		end
-	elseif wd.weapontype == "BeamLaser" or cp and cp.ammotype == "gauss" then -- lasers and gauss are impactOnly
+	elseif (wd.weapontype ~= nil) and (string.lower(wd.weapontype) == "beamlaser" or cp and cp.ammotype == "gauss") then -- lasers and gauss are impactOnly
 		wd.impactonly = true
 		wd.minintensity = 1.0
 	end
