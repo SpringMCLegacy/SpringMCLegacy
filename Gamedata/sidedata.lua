@@ -40,7 +40,7 @@ local sidedata = {
 		startUnit = "beacon",
 	},
 	{
-		name = "Clan Hell's Horses",
+		name = "Clan Hells Horses",
 		shortName = "HH",
 		startUnit = "beacon",
 	},
