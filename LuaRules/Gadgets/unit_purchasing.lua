@@ -5,7 +5,7 @@ function gadget:GetInfo()
 		author		= "FLOZi (C. Lawrence)",
 		date		= "31/08/13",
 		license 	= "GNU GPL v2",
-		layer		= 0,
+		layer		= -6,
 		enabled	= true	--	loaded by default?
 	}
 end
@@ -56,6 +56,16 @@ Spring.SetGameRulesParam("insurance_mult", INSURANCE_MULT)
 
 --local KILL_REWARD_MULT = 0.0
 -- local NUM_ICONS_PER_PAGE = 3 * 8
+
+local SELL_DISTANCE = 460 -- TODO: flagCapradius, grab from GG or game rules?
+local CMD_SELL = GG.CustomCommands.GetCmdID("CMD_SELL")
+local sellOrderCmdDesc = {
+	id = CMD_SELL,
+	type   = CMDTYPE.ICON,
+	name   = "Sell \nMech ",
+	action = 'sell_mech',
+	tooltip = "Return to dropzone to sell mech",
+}
 	
 local CMD_SEND_ORDER = GG.CustomCommands.GetCmdID("CMD_SEND_ORDER")
 local sendOrderCmdDesc = {
@@ -420,10 +430,30 @@ local function SendCommandFallback(unitID, unitDefID, teamID, cost)
 end
 
 function gadget:AllowCommand(unitID, unitDefID, teamID, cmdID, cmdParams, cmdOptions)
-	if unitTypes[unitDefID] then -- strictly no commands to lost link units
+	if unitTypes[unitDefID] then
 		local group = unitLances[unitID]
 		local groupSlots = teamSlots[teamID][group]
-		if groupSlots then return groupSlots.active else return true end
+		if groupSlots then
+			if not groupSlots.active then 
+				return false -- strictly no commands to lost link units
+			elseif cmdID == CMD_SELL then
+				local dropZone = teamDropZones[teamID]
+				if dropZone then
+					local dist = Spring.GetUnitSeparation(unitID, dropZone)
+					if dist < SELL_DISTANCE then
+						Spring.SendMessageToTeam(teamID, "Selling mech!")
+						AddTeamResource(teamID, "metal", UnitDefs[unitDefID].customParams.price * 0.75)
+						-- TODO: wait around and get in dropship
+						Spring.DestroyUnit(unitID, false, true)
+					else
+						Spring.SendMessageToTeam(teamID, "Cannot sell mech; not within range of Dropzone!")
+					end
+				else
+					Spring.SendMessageToTeam(teamID, "Cannot sell mech; you have no Dropzone!")
+				end
+			end
+		end
+		return true 
 	end
 	if dropZones[unitID] then
 		local typeString = menuCmdIDs[cmdID]
@@ -532,6 +562,9 @@ function gadget:UnitCreated(unitID, unitDefID, teamID)
 		end
 	elseif unitTypes[unitDefID] then
 		UpdateTeamSlots(teamID, unitID, unitDefID, true)
+		if unitTypes[unitDefID]:find("mech") then
+			InsertUnitCmdDesc(unitID, sellOrderCmdDesc)
+		end
 	end
 end
 
