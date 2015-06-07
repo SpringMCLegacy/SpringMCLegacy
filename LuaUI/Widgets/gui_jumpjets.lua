@@ -208,14 +208,15 @@ local function  DrawMouseArc(unitID, shift, groundPos)
   if (not groundPos or not jumpDefs[unitDefID]) then
     return
   end
-  local queue = spGetCommandQueue(unitID)
+  local queue = spGetCommandQueue(unitID, 0)
   local range = Spring.GetUnitRulesParam(unitID, "jumpRange") or jumpDefs[unitDefID].range
-  if (not queue or #queue == 0 or not shift) then
+  if (not queue or queue == 0 or not shift) then
     local unitPos = {spGetUnitPosition(unitID)}
     local dist = GetDist2(unitPos, groundPos)
     local color = range > dist and green or red
     DrawArc(unitID, unitPos, groundPos, color, nil, range)
   elseif (shift) then
+	queue = spGetCommandQueue(unitID)
     local i = #queue
     while (ignore[queue[i].id] and i > 0) do
       i = i - 1
