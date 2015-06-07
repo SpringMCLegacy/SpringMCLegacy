@@ -4,6 +4,7 @@ local Upgrade_Uplink = Upgrade:New{
 	objectName        	= "Upgrade_Uplink.s3o",
 	maxDamage           = 10000,
 	mass                = 5000,
+	buildCostMetal      = 5000,
 
 	collisionVolumeScales = [[25 25 25]],
 
