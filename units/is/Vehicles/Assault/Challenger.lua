@@ -1,18 +1,7 @@
-local IS_Challenger = Tank:New{
+local Challenger = Tank:New{
 	name              	= "Challenger",
 	description         = "Heavy Strike Tank",
-	objectName        	= "IS_Challenger.s3o",
-	corpse				= "IS_Challenger_X",
-	maxDamage           = 15680,
-	mass                = 9000,
 	trackWidth			= 32,--width to render the decal
-	buildCostEnergy     = 70,
-	buildCostMetal      = 23850,
-	maxVelocity		= 1.8, --54kph/30
-	maxReverseVelocity= 1.3,
-	acceleration    = 0.6,
-	brakeRate       = 0.1,
-	turnRate 		= 425,
 	
 	weapons	= {	
 		[1] = {
@@ -42,17 +31,18 @@ local IS_Challenger = Tank:New{
 	},
 
 	customparams = {
-		helptext		= "Armament: 1 x Gauss Rifle, 1 x LBX/10, 1 x LRM-10, 2 x Medium Pulse Laser, 2 x SSRM-2 - Armor: 14 tons FF",
-		heatlimit		= 20,
-		turretturnspeed = 75,
-		elevationspeed  = 200,
-		wheelspeed      = 200,
+		tonnage			= 90,
+		variant         = "X",
+		speed			= 50,
+		price			= 10170,
+		heatlimit 		= 20,
+		armor			= {type = "ferro", tons = 14},
+		maxammo 		= {ac10 = 2, gauss = 2, lrm = 2, srm = 1},
 		barrelrecoildist = {[1] = 5, [2] = 5},
-		maxammo 		= {lrm = 180, ac10 = 30, gauss = 30, srm = 80},
 		squadsize 		= 2,
 	},
 }
 
 return lowerkeys({
-	["IS_Challenger"] = IS_Challenger,
+	["FS_Challenger"] = Challenger:New(),
 })

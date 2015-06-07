@@ -20,7 +20,7 @@ local Demolisher = Tank:New{
 		price			= 6090,
 		heatlimit 		= 20,
 		armor			= {type = "standard", tons = 12},
-		maxammo 		= {ac10 = 2, lrm = 2, srm = 1},
+		maxammo 		= {ac20 = 2},
 		barrelrecoildist = {[1] = 5, [2] = 5},
 		squadsize 		= 2,
     },
