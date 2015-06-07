@@ -40,11 +40,11 @@ for weapName, wd in pairs(WeaponDefs) do
 	end
 	if (wd.weapontype ~= nil) and (string.lower(wd.weapontype) == "missilelauncher" or string.lower(wd.weapontype) == "starburstlauncher") then
 		wd.targetable = 1
-		Spring.Echo(weapName .. " is a targetable missile")
+		--Spring.Echo(weapName .. " is a targetable missile")
 		local jammable = cp.jammable
 		if jammable == nil then -- nil check required due to bools
 			wd.customparams.jammable = true
-			Spring.Echo(weapName .. " is a jammable missile")
+			--Spring.Echo(weapName .. " is a jammable missile")
 		end
 	elseif (wd.weapontype ~= nil) and (string.lower(wd.weapontype) == "beamlaser" or cp and cp.ammotype == "gauss") then -- lasers and gauss are impactOnly
 		wd.impactonly = true

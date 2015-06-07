@@ -62,9 +62,9 @@ local CMD_SELL = GG.CustomCommands.GetCmdID("CMD_SELL")
 local sellOrderCmdDesc = {
 	id = CMD_SELL,
 	type   = CMDTYPE.ICON,
-	name   = "Sell \nMech ",
+	name   = "  Sell   \n  Unit  ",
 	action = 'sell_mech',
-	tooltip = "Return to dropzone to sell mech",
+	tooltip = "Calls a dropship to sell the unit (75% return)",
 }
 	
 local CMD_SEND_ORDER = GG.CustomCommands.GetCmdID("CMD_SEND_ORDER")
@@ -429,6 +429,13 @@ local function SendCommandFallback(unitID, unitDefID, teamID, cost)
 	end
 end
 
+local function SellUnit(unitID, unitDefID, teamID, unitType)
+	Spring.SendMessageToTeam(teamID, "Selling " .. unitType .. "!")
+	AddTeamResource(teamID, "metal", UnitDefs[unitDefID].metalCost * 0.75)
+	-- TODO: wait around and get in dropship
+	Spring.DestroyUnit(unitID, false, true)
+end
+
 function gadget:AllowCommand(unitID, unitDefID, teamID, cmdID, cmdParams, cmdOptions)
 	if unitTypes[unitDefID] then
 		local group = unitLances[unitID]
@@ -441,10 +448,7 @@ function gadget:AllowCommand(unitID, unitDefID, teamID, cmdID, cmdParams, cmdOpt
 				if dropZone then
 					local dist = Spring.GetUnitSeparation(unitID, dropZone)
 					if dist < SELL_DISTANCE then
-						Spring.SendMessageToTeam(teamID, "Selling mech!")
-						AddTeamResource(teamID, "metal", UnitDefs[unitDefID].customParams.price * 0.75)
-						-- TODO: wait around and get in dropship
-						Spring.DestroyUnit(unitID, false, true)
+						SellUnit(unitID, unitDefID, teamID, "mech")
 					else
 						Spring.SendMessageToTeam(teamID, "Cannot sell mech; not within range of Dropzone!")
 					end
@@ -453,7 +457,13 @@ function gadget:AllowCommand(unitID, unitDefID, teamID, cmdID, cmdParams, cmdOpt
 				end
 			end
 		end
-		return true 
+		return true -- allow all other commands through here
+	elseif GG.outpostDefs[unitDefID] then -- an upgrade
+		if cmdID == CMD_SELL then
+			SellUnit(unitID, unitDefID, teamID, "upgrade")
+		else
+			return true -- allow all other commands through here
+		end
 	end
 	if dropZones[unitID] then
 		local typeString = menuCmdIDs[cmdID]
@@ -565,6 +575,8 @@ function gadget:UnitCreated(unitID, unitDefID, teamID)
 		if unitTypes[unitDefID]:find("mech") then
 			InsertUnitCmdDesc(unitID, sellOrderCmdDesc)
 		end
+	elseif GG.outpostDefs[unitDefID] then -- an upgrade
+		InsertUnitCmdDesc(unitID, sellOrderCmdDesc)
 	end
 end
 

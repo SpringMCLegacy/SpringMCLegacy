@@ -58,6 +58,7 @@ local buildLimits = {} -- buildLimits[unitID] = {turret = 4, sensor = 1}
 local towerOwners = {} -- towerOwners[towerID] = beaconID
 
 local outpostDefs = {} -- outpostDefs[unitDefID] = {cmdDesc = {cmdDescTable}, cost = cost}
+GG.outpostDefs = outpostDefs
 local upgradeIDs = {} -- upgradeIDs[cmdID] = unitDefID
 local beaconIDs = {} -- beaconIDs[outpostID] = beaconID
 local outpostIDs = {} -- outpostIDs[beaconID] = outpostID
