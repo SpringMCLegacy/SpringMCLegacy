@@ -24,6 +24,7 @@ local Prime = Adder:New{
 		speed			= 90,
 		price			= 20830,
 		heatlimit 		= 22,
+		barrelrecoildist = {[1] = 5, [2] = 5},
 		armor			= {type = "ferro", tons = 6},
     },
 }
@@ -32,19 +33,16 @@ local B = Adder:New{
 	description         = "Light Sniper",
 	weapons 		= {	
 		[1] = {
-			name	= "CLPL",
+			name	= "LBX5",
 		},
 		[2] = {
-			name	= "LBX5",
+			name	= "CLPL",
 		},
 		[3] = {
 			name	= "CERMBL",
 		},
 		[4] = {
 			name	= "CERMBL",
-		},
-		[5] = {
-			name	= "Flamer",
 		},
 	},
 	customparams = {
@@ -53,14 +51,19 @@ local B = Adder:New{
 		price			= 14220,
 		heatlimit 		= 20,
 		armor			= {type = "ferro", tons = 6},
+		barrelrecoildist = {[1] = 5},
 		maxammo 		= {ac5 = 1},
     },
 }
 
 return lowerkeys({
+	["WF_Adder_Prime"] = Prime:New(),
 	["HH_Adder_Prime"] = Prime:New(),
 	["GB_Adder_Prime"] = Prime:New(),
-	["JF_Adder_Prime"] = Prime:New(),
 	["SJ_Adder_Prime"] = Prime:New(),
 	["WF_Adder_B"] = B:New(),
+	["HH_Adder_B"] = B:New(),
+	["GB_Adder_B"] = B:New(),
+	["JF_Adder_B"] = B:New(),
+	["SJ_Adder_B"] = B:New(),
 })

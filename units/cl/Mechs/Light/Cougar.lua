@@ -8,6 +8,7 @@ local Cougar = Light:New{
 	
 local Prime = Cougar:New{
 	description         = "Light Brawler",
+	
 	weapons 		= {	
 		[1] = {
 			name	= "CLPL",
@@ -35,6 +36,7 @@ local Prime = Cougar:New{
 
 local A = Cougar:New{
 	description         = "Light Missile Support",
+	
 	weapons 		= {	
 		[1] = {
 			name	= "LRM20",
@@ -46,10 +48,10 @@ local A = Cougar:New{
 			name	= "CERMBL",
 		},
 		[4] = {
-			name	= CERMBL",
+			name	= "CERMBL",
 		},
 		[5] = {
-			name	= CSPL",
+			name	= "CSPL",
 		},
 	},
 	
@@ -63,7 +65,33 @@ local A = Cougar:New{
     },
 }
 
+local B = Cougar:New{
+	description         = "Light Sniper",
+	
+	weapons 		= {	
+		[1] = {
+			name	= "CERPPC",
+		},
+		[2] = {
+			name	= "CERPPC",
+		},
+		[3] = {
+			name	= "CERMBL",
+		},
+	},
+	
+	customparams = {
+		variant         = "B",
+		speed			= 80,
+		price			= 16970,
+		heatlimit 		= 32,
+		armor			= {type = "ferro", tons = 5.5},
+		barrelrecoildist = {[1] = 5, [2] = 5},
+    },
+}
+
 return lowerkeys({
 	["JF_Cougar_Prime"] = Prime:New(),
 	["JF_Cougar_A"] = A:New(),
+	["JF_Cougar_B"] = B:New(),
 })
