@@ -77,7 +77,8 @@ Unit = Def:New{
 }
 
 Feature = Def:New{
-	objectName			= "<NAME>.s3o",
+	object				= "<NAME>.s3o",
+	usepiececollisionvolumes = true,
 }
 
 Weapon = Def:New{

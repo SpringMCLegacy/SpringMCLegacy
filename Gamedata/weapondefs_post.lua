@@ -1,6 +1,8 @@
 VFS.Include("LuaRules/Includes/utilities.lua", nil, VFS.ZIP)
 
 local UnitDefs = DEFS.unitDefs
+local FeatureDefs = DEFS.featureDefs
+
 
 local cegCache = {}
 
@@ -70,6 +72,21 @@ for unitName, ud in pairs(UnitDefs) do
 			table.insert(ud.sfxtypes.explosiongenerators, "custom:HE_Large")
 			table.insert(ud.sfxtypes.explosiongenerators, "custom:BlackSmoke")
 			table.insert(ud.sfxtypes.explosiongenerators, "custom:Sparks")
+			if ud.corpse then
+				--Spring.Echo("[WeaponDefs_post.lua]:" .. unitName .. " has a corpse (" .. ud.corpse .. ")")
+				FeatureDefs[ud.corpse] = Feature:New{
+					damage = ud.maxdamage * 0.5,
+					description = "Wrecked " .. ud.name,
+					mass = ud.mass,
+					metal = (ud.buildcostmetal or 200) * 0.5,
+					featuredead = "wreck_x",
+					footprintx = ud.footprintx,
+					footprintz = ud.footprintz,
+					object = ud.objectname,
+				}
+			else
+				--Spring.Echo("[WeaponDefs_post.lua]:" .. unitName .. " has no corpse!")
+			end
 		end
 		--[[Spring.Echo("UNIT: " .. unitName)
 		for _, i in pairs(ud.sfxtypes.explosiongenerators) do
