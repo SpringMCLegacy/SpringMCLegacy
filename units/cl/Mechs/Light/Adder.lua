@@ -1,24 +1,13 @@
-local CL_Adder = Light:New{
-	corpse				= "CL_Adder_X",
-	maxDamage           = 11500,
-	mass                = 3500,
-	buildCostEnergy     = 30,
-	buildCostMetal      = 13320,
-	maxVelocity		= 4.85, --97kph/30
-	maxReverseVelocity= 2.43,
-	acceleration    = 1.8,
-	brakeRate       = 0.1,
-	turnRate 		= 950,
+local Adder = Light:New{
+	name				= "Adder",
+
     customparams = {
-		heatlimit		= 24,
-		torsoturnspeed	= 180,
+		tonnage			= 35,
     },
 }
 
-local Prime = CL_Adder:New{
-	name              	= "Adder (Puma) Prime",
-	description         = "Light Sniper Mech",
-	objectName        	= "CL_Adder.s3o",
+local Prime = Adder:New{
+	description         = "Light Sniper",
 	weapons 		= {	
 		[1] = {
 			name	= "CERPPC",
@@ -31,10 +20,47 @@ local Prime = CL_Adder:New{
 		},
 	},
 	customparams = {
-		helptext		= "Armament: 2 x ER PPC, 1 x Flamer - Armor: 6 tons Ferro-Fibrous",
+		variant         = "Prime",
+		speed			= 90,
+		price			= 20830,
+		heatlimit 		= 22,
+		armor			= {type = "ferro", tons = 6},
+    },
+}
+
+local B = Adder:New{
+	description         = "Light Sniper",
+	weapons 		= {	
+		[1] = {
+			name	= "CLPL",
+		},
+		[2] = {
+			name	= "LBX5",
+		},
+		[3] = {
+			name	= "CERMBL",
+		},
+		[4] = {
+			name	= "CERMBL",
+		},
+		[5] = {
+			name	= "Flamer",
+		},
+	},
+	customparams = {
+		variant         = "B",
+		speed			= 90,
+		price			= 14220,
+		heatlimit 		= 20,
+		armor			= {type = "ferro", tons = 6},
+		maxammo 		= {ac5 = 1},
     },
 }
 
 return lowerkeys({
-	["CL_Adder_Prime"] = Prime,
+	["HH_Adder_Prime"] = Prime:New(),
+	["GB_Adder_Prime"] = Prime:New(),
+	["JF_Adder_Prime"] = Prime:New(),
+	["SJ_Adder_Prime"] = Prime:New(),
+	["WF_Adder_B"] = B:New(),
 })

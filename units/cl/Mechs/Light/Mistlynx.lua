@@ -1,53 +1,143 @@
-local CL_Mistlynx = Light:New{
-	corpse				= "CL_Mistlynx_X",
-	sightDistance       = 1200,
-	radarDistance      	= 2000,
-	maxDamage           = 6700,
-	mass                = 2000,
-	buildCostEnergy     = 20,
-	buildCostMetal      = 13650,
-	maxVelocity		= 6.5, --130kph/30
-	maxReverseVelocity= 3.25,
-	acceleration    = 2.0,
-	brakeRate       = 0.1,
-	turnRate 		= 900,
+local Mistlynx = Light:New{
+	name				= "Mistlynx",
 	
 	customparams = {
-		hasbap 			= true,
-		heatlimit		= 20,
-		torsoturnspeed	= 200,
-		canjump			= "1",
-		maxammo 		= {narc = 20, lrm = 120, srm = 80},
+		tonnage			= 25,
     },
 }
 
-local Prime = CL_Mistlynx:New{
-	name              	= "Mist Lynx (Koshi) Prime",
-	description         = "Light Missile Support Mech",
-	objectName        	= "CL_Mistlynx.s3o",	
+local Prime = Mistlynx:New{
+	description         = "Light Missile Support",
+	
 	weapons = {	
 		[1] = {
 			name	= "LRM10",
 		},
 		[2] = {
-			name	= "NARC",
+			name	= "MG",
 		},
 		[3] = {
 			name	= "MG",
 		},
 		[4] = {
-			name	= "MG",
-		},
-		[5] = {
 			name	= "SSRM4",
 		},
 	},
 
 	customparams = {
-		helptext		= "Armament: 1 x LRM-10, 1 x SSRM-4, 2 x MG - Armor: 3.5 tons Ferro-Fibrous",
+		variant         = "Prime",
+		speed			= 110,
+		price			= 8710,
+		heatlimit 		= 20,
+		armor			= {type = "ferro", tons = 3.5},
+		maxammo 		= {lrm = 1, srm = 1},
+		jumpjets		= 6,
+		bap				= true,
+    },
+}
+
+local B = Mistlynx:New{
+	description         = "Light Skirmisher",
+	
+	weapons = {	
+		[1] = {
+			name	= "CERMBL",
+		},
+		[2] = {
+			name	= "CERMBL",
+		},
+		[3] = {
+			name	= "SRM6",
+		},
+		[4] = {
+			name	= "SRM6",
+		},
+		[5] = {
+			name	= "CERSBL",
+		},
+	},
+
+	customparams = {
+		variant         = "B",
+		speed			= 110,
+		price			= 12090,
+		heatlimit 		= 20,
+		armor			= {type = "ferro", tons = 3.5},
+		maxammo 		= {srm = 2},
+		jumpjets		= 6,
+		bap				= true,
+    },
+}
+
+local C = Mistlynx:New{
+	description         = "Light EWAR Support",
+	
+	weapons = {	
+		[1] = {
+			name	= "CERLBL",
+		},
+		[2] = {
+			name	= "CERMBL",
+		},
+		[3] = {
+			name	= "AMS",
+		},
+	},
+
+	customparams = {
+		variant         = "C",
+		speed			= 110,
+		price			= 13200,
+		heatlimit 		= 20,
+		armor			= {type = "ferro", tons = 3.5},
+		maxammo 		= {srm = 2},
+		jumpjets		= 6,
+		bap				= true,
+		ecm				= true,
+    },
+}
+
+local E = Mistlynx:New{
+	description         = "Light Skirmisher",
+	
+	weapons = {	
+		[1] = {
+			name	= "ATM6",
+		},
+		[2] = {
+			name	= "CERSBL",
+		},
+		[3] = {
+			name	= "CERSBL",
+		},
+		[4] = {
+			name	= "CERSBL",
+		},
+		[5] = {
+			name	= "CERSBL",
+		},
+	},
+
+	customparams = {
+		variant         = "E",
+		speed			= 110,
+		price			= 9970,
+		heatlimit 		= 20,
+		armor			= {type = "ferro", tons = 3.5},
+		maxammo 		= {atm = 2},
+		jumpjets		= 6,
+		bap				= true,
     },
 }
 
 return lowerkeys({
-	["CL_Mistlynx_Prime"] = Prime,
+	["WF_Mistlynx_Prime"] = Prime:New(),
+	["WF_Mistlynx_B"] = B:New()
+	["HH_Mistlynx_Prime"] = Prime:New(),
+	["GB_Mistlynx_Prime"] = Prime:New(),
+	["JF_Mistlynx_Prime"] = Prime:New(),
+	["SJ_Mistlynx_Prime"] = Prime:New(),
+	["SJ_Mistlynx_B"] = B:New(),
+	["SJ_Mistlynx_C"] = C:New(),
+	["SJ_Mistlynx_E"] = E:New(),
 })

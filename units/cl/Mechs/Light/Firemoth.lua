@@ -1,26 +1,14 @@
-local CL_Firemoth = Light:New{
-	corpse				= "CL_Firemoth_X",
-	maxDamage           = 3800,
-	mass                = 2000,
-	buildCostEnergy     = 20,
-	buildCostMetal      = 10000,
-	maxVelocity		= 8.1, --162kph/30
-	maxReverseVelocity= 4.0,
-	acceleration    = 2.0,
-	brakeRate       = 0.1,
-	turnRate 		= 1000,
+local Firemoth = Light:New{
+	name				= "Firemoth",
 	
 	customparams = {
-		heatlimit		= 20,
-		torsoturnspeed	= 200,
-		canmasc			= true,
+		tonnage			= 20,
     },
 }
 	
-local Prime = CL_Firemoth:New{
-	name              	= "Fire Moth (Dasher) Prime",
-	description         = "Light-class Close Range Harasser",
-	objectName        	= "CL_Firemoth_Prime.s3o",
+local Prime = Firemoth:New{
+	description         = "Light Skirmisher",
+
 	weapons = {	
 		[1] = {
 			name	= "CERMBL",
@@ -37,31 +25,74 @@ local Prime = CL_Firemoth:New{
 	},
 
 	customparams = {
-		helptext		= "Armament: 2 x ER Medium Beam Laser, 1 x SRM-4, 1 x SRM-6 - Armor: 2 tons Ferro-Fibrous",
-		maxammo 		= {srm = 160},
+		variant         = "Prime",
+		speed			= 150,
+		price			= 12510,
+		heatlimit 		= 20,
+		armor			= {type = "ferro", tons = 2},
+		maxammo 		= {srm = 2},
+		masc 			= true,
     },
 }
 
-local A = CL_Firemoth:New{
-	name              	= "Fire Moth (Dasher) A",
-	description         = "Light-class Electronic Warfare Scout",
-	objectName        	= "CL_Firemoth_A.s3o",
-	weapons	= {	
+local A = Firemoth:New{
+	description         = "Light EWAR Support",
+
+	weapons = {	
 		[1] = {
-			name	= "SRM4",
+			name	= "SSRM4",
 		},
 		[2] = {
 			name	= "TAG",
 		},
+		[3] = {
+			name	= "AMS",
+		},
 	},
 
 	customparams = {
-		helptext		= "Armament: 1 x SRM-4, 1 x TAG Laser - Armor: 2 tons Ferro-Fibrous",
-		maxammo 		= {srm = 120},
+		variant         = "A",
+		speed			= 150,
+		price			= 6390,
+		heatlimit 		= 20,
+		armor			= {type = "ferro", tons = 2},
+		maxammo 		= {srm = 1},
+		masc 			= true,
+		bap				= true,
+    },
+}
+
+local C = Firemoth:New{
+	description         = "Light Missile Support",
+
+	weapons = {	
+		[1] = {
+			name	= "LRM5",
+		},
+		[2] = {
+			name	= "LRM5",
+		},
+		[3] = {
+			name	= "AMS",
+		},
+	},
+
+	customparams = {
+		variant         = "Prime",
+		speed			= 150,
+		price			= 7590,
+		heatlimit 		= 20,
+		armor			= {type = "ferro", tons = 2},
+		maxammo 		= {lrm = 2},
+		masc 			= true,
     },
 }
 
 return lowerkeys({
-	["CL_Firemoth_Prime"] = Prime,
-	["CL_Firemoth_A"] = A,
+	["HH_Firemoth_Prime"] = Prime:New(),
+	["HH_Firemoth_A"] = A:New(),
+	["HH_Firemoth_C"] = C:New(),
+	["GB_Firemoth_Prime"] = Prime:New(),
+	["GB_Firemoth_A"] = A:New(),
+	["GB_Firemoth_C"] = C:New(),
 })

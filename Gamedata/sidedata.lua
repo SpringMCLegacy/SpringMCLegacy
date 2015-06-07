@@ -34,5 +34,31 @@ local sidedata = {
 		shortName = "FW",
 		startUnit = "beacon",
 	},
+	{
+		name = "Clan Wolf",
+		shortName = "WF",
+		startUnit = "beacon",
+	},
+	{
+		name = "Clan Hell's Horses",
+		shortName = "HH",
+		startUnit = "beacon",
+	},
+	{
+		name = "Clan Ghost Bear",
+		shortName = "GB",
+		startUnit = "beacon",
+	},
+	{
+		name = "Clan Jade Falcon",
+		shortName = "JF",
+		startUnit = "beacon",
+	},
+	{
+		name = "Clan Smoke Jaguar",
+		shortName = "SJ",
+		startUnit = "beacon",
+	},
+	
 }
 return sidedata
