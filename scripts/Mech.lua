@@ -160,13 +160,19 @@ end
 local function SpinBarrels(weaponID, start)
 	Signal(spinSpeeds)
 	SetSignalMask(spinSpeeds)
-	if start  then
-		Spin(spinPieces[weaponID], z_axis, spinSpeeds[weaponID], spinSpeeds[weaponID] / 5)
+	if start then
+		for weaponID, spinPiece in pairs(spinPieces) do
+			Spin(spinPiece, z_axis, spinSpeeds[weaponID], spinSpeeds[weaponID] / 5)
+		end
 	else
 		Sleep(2500)
-		StopSpin(spinPieces[weaponID], z_axis, spinSpeeds[weaponID]/10)
+		for weaponID, spinPiece in pairs(spinPieces) do
+			StopSpin(spinPiece, z_axis, spinSpeeds[weaponID]/10)
+		end
 	end
-	spinPiecesState[weaponID] = start -- must come after the Sleep
+	for weaponID, spinPiece in pairs(spinPieces) do
+		spinPiecesState[weaponID] = start -- must come after the Sleep
+	end
 end
 
 function ChangeHeat(amount)
