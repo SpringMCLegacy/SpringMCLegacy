@@ -98,6 +98,11 @@ local function TicketText()
 	end
 end
 
+function BeaconCap(allyTeam, change)
+	allyBeaconCounts[allyTeam] = allyBeaconCounts[allyTeam] + change
+end
+
+
 function widget:GamePreload()
 	tempAmbient = "Ambient: " .. GetGameRulesParam("MAP_TEMP_AMBIENT") .. " \'C"
 	tempWater = "Water: " .. GetGameRulesParam("MAP_TEMP_WATER") .. " \'C"
@@ -116,6 +121,7 @@ function widget:Initialize()
 	if Spring.GetGameFrame() > 0 then
 		widget:GamePreload()
 	end
+	widgetHandler:RegisterGlobal("BeaconCap", BeaconCap)
 end
 
 function widget:Shutdown()
@@ -128,24 +134,9 @@ function widget:PlayerChanged()
 	haveArty = Spring.GetTeamUnitsCounts(MY_TEAM_ID)[UPLINK_ID] or 0 
 end
 
-
-function AddBeacon(newTeam)
-	local allyTeam = select(6, Spring.GetTeamInfo(newTeam))
-	allyBeaconCounts[allyTeam] = allyBeaconCounts[allyTeam] + 1
-end
-
 function widget:UnitCreated(unitID, unitDefID, teamID)
 	if teamID == MY_TEAM_ID and unitDefID == UPLINK_ID then
 		haveArty = haveArty + 1
-	end
-	if unitDefID == BEACON_ID then
-		AddBeacon(teamID)
-	end
-end
-
-function widget:UnitGiven(unitID, unitDefID, newTeam, oldTeam)
-	if unitDefID == BEACON_ID then
-		AddBeacon(newTeam)
 	end
 end
 
