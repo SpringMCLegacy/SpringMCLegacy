@@ -21,6 +21,9 @@ local MY_TEAM_ID = Spring.GetMyTeamID()
 local MY_ALLY_ID = select(6, Spring.GetTeamInfo(MY_TEAM_ID))
 
 local UPLINK_ID = UnitDefNames["upgrade_uplink"].id
+local BEACON_ID = UnitDefNames["beacon"].id
+
+local allyBeaconCounts = {}
 
 -- user settings
 local clockConfig
@@ -40,6 +43,7 @@ local GetTeamRulesParam	= Spring.GetTeamRulesParam
 local allyTeams = Spring.GetAllyTeamList()
 for i = 1, #allyTeams do
 	local allyTeam = allyTeams[i]
+	allyBeaconCounts[allyTeam] = 0
 	if allyTeam == GAIA_ALLY_ID then allyTeams[i] = nil; break end
 end
 local xMax, yMax = Spring.GetViewGeometry()
@@ -90,9 +94,14 @@ local function TicketText()
 			tickets = colors.red .. tickets
 		end
 		local textCol = allyTeam == MY_ALLY_ID and colors.teamGreen or colors.teamRed
-		ticketText = ticketText .. textCol .. "\nTeam " .. allyTeam .. colors.white .. ": " .. tickets
+		ticketText = ticketText .. textCol .. "\nTeam " .. allyTeam .. " [".. (allyBeaconCounts[allyTeam] or 0) .. "]" ..colors.white .. ": "  .. tickets
 	end
 end
+
+function BeaconCap(allyTeam, change)
+	allyBeaconCounts[allyTeam] = allyBeaconCounts[allyTeam] + change
+end
+
 
 function widget:GamePreload()
 	tempAmbient = "Ambient: " .. GetGameRulesParam("MAP_TEMP_AMBIENT") .. " \'C"
@@ -106,9 +115,13 @@ function widget:Initialize()
 	btFont = gl.LoadFont("LuaUI/Fonts/bt_oldstyle.ttf", 16, 2, 30)
 	TicketText()
 	haveArty = Spring.GetTeamUnitsCounts(MY_TEAM_ID)[UPLINK_ID] or 0
+	for _, unitID in pairs(Spring.GetAllUnits()) do
+		widget:UnitCreated(unitID, Spring.GetUnitDefID(unitID), Spring.GetUnitTeam(unitID))
+	end
 	if Spring.GetGameFrame() > 0 then
 		widget:GamePreload()
 	end
+	widgetHandler:RegisterGlobal("BeaconCap", BeaconCap)
 end
 
 function widget:Shutdown()
@@ -126,6 +139,7 @@ function widget:UnitCreated(unitID, unitDefID, teamID)
 		haveArty = haveArty + 1
 	end
 end
+
 
 function widget:UnitDestroyed(unitID, unitDefID, teamID)
 	if teamID == MY_TEAM_ID and unitDefID == UPLINK_ID then
@@ -186,7 +200,7 @@ function widget:DrawScreen()
 		if (haveArty or 0) > 0 then
 			btFont:Print(artyTime, xMax * 0.75, yMax - 48, 16, "odr")
 		end
-		btFont:Print(ticketText, xMax - 148, yMax - 32, 16, "od")
+		btFont:Print(ticketText, xMax - 186, yMax - 32, 16, "od")
 		btFont:Print(tempAmbient, xMax - 16, tempHeight, 12, "odr")
 		btFont:Print(tempWater, xMax - 16, tempHeight - 16, 12, "odr")
 

@@ -327,6 +327,7 @@ function gadget:GameFrame(n)
 								TransferUnit(flagID, teamID, false)
 								UpdateBeacons(teamID, 1)
 								SetTeamRulesParam(teamID, flagType .. "s", (GetTeamRulesParam(teamID, flagType .. "s") or 0) + 1, {public = true})
+								SendToUnsynced("BEACONCAP", teamID, 1)
 							else
 								-- Team flag being neutralised
 								Spring.SendMessageToTeam(teamID, flagData.tooltip .. " Neutralised!")
@@ -335,6 +336,7 @@ function gadget:GameFrame(n)
 								TransferUnit(flagID, GAIA_TEAM_ID, false)
 								UpdateBeacons(flagTeamID, -1)
 								SetTeamRulesParam(teamID, flagType .. "s", (GetTeamRulesParam(teamID, flagType .. "s") or 0) - 1, {public = true})
+								SendToUnsynced("BEACONCAP", flagTeamID, -1)
 							end
 							-- Perform any flagType specific behaviours
 							FlagSpecialBehaviour("capped", flagType, flagID, flagTeamID, teamID)
@@ -456,4 +458,16 @@ end
 
 else
 -- UNSYNCED
+
+function PassToUI(eventID, teamID, change)
+	if Script.LuaUI.BeaconCap then
+		local allyTeamID = select(6, Spring.GetTeamInfo(teamID))
+		Script.LuaUI.BeaconCap(allyTeamID, change)
+	end
+end
+
+function gadget:Initialize()
+	gadgetHandler:AddSyncAction("BEACONCAP", PassToUI)
+end
+
 end
