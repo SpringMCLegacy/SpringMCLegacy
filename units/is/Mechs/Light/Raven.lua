@@ -18,15 +18,12 @@ local RVN3L = Raven:New{
 		},
 		[3] = {
 			name	= "NARC",
-			OnlyTargetCategory = "narctag",
 		},
 		[4] = {
 			name	= "SRM6",
-			OnlyTargetCategory = "ground",
 		},
 		[5] = {
 			name	= "TAG",
-			OnlyTargetCategory = "narctag",
 		},
 	},
 		
@@ -57,7 +54,6 @@ local RVN4L = Raven:New{
 		},
 		[4] = {
 			name	= "SRM6",
-			OnlyTargetCategory = "ground",
 		},
 		[5] = {
 			name	= "TAG",
