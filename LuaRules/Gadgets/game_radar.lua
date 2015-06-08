@@ -91,8 +91,11 @@ local function ApplyPPC(unitID)
 		for _, sensorType in pairs(sensorTypes) do
 			-- perks change radii so can't rely on unitdef values
 			unitSensorRadii[sensorType] = Spring.GetUnitSensorRadius(unitID, sensorType)
-			Spring.SetUnitSensorRadius(unitID, sensorType, 0)
+			Spring.SetUnitSensorRadius(unitID, sensorType, 0) -- ECM & BAP are disabled altogether
 		end
+		-- BAP is disabled - return to regular radar (TODO: should really reset the emit height too! Needs engine change)
+		-- FIXME: set these default values in a single place and read them from there
+		Spring.SetUnitSensorRadius(unitID, "radar", 2000) --L138 unitdefs_post
 	end
 	ppcUnits[unitID] = Spring.GetGameFrame()
 	SetUnitRulesParam(unitID, "PPC_HIT", ppcUnits[unitID], {inlos = true})

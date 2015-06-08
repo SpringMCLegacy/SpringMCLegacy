@@ -115,29 +115,24 @@ for name, ud in pairs(UnitDefs) do
 	ud.acceleration = ud.maxvelocity / 4
 	ud.brakerate = ud.maxvelocity / 25
 	ud.turnrate = ud.maxvelocity * 200
-	-- set sightrange/radardistance based on bap customparam
-	if cp.bap or cp.ecm then
-		ud.sightdistance = 1500
-		ud.radardistance = 3000
-		ud.airsightdistance = 3000
-		if cp.ecm then
-			ud.seismicsignature = 20
-			ud.radardistancejam	= 500
-			ud.description = ud.description .. " \255\128\128\128[ECM]"
-		else
-			seismicsignature = 0
-		end
-		if cp.bap then
-			ud.seismicdistance = 3000
-			ud.radaremitheight = 1000
-			ud.description = ud.description .. " \255\001\255\001[BAP]"
-		end
-	elseif not name:find("decal") then
+	if not name:find("decal") then
 		ud.seismicdistance = 0
 		ud.sightdistance = 1000
 		ud.radardistance = 2000
 		ud.airsightdistance = 2000
 		ud.seismicsignature = 0
+	end
+	-- set sightrange/radardistance based on bap customparam
+	if cp.ecm then
+		ud.seismicsignature = 20
+		ud.radardistancejam	= 500
+		ud.description = ud.description .. " \255\128\128\128[ECM]"
+	end
+	if cp.bap then
+		ud.seismicdistance = 3000
+		ud.radaremitheight = 1000
+		ud.radardistance = 3000
+		ud.description = ud.description .. " \255\001\255\001[BAP]"
 	end
 	-- track strength should be 1/1000th of mass
 	if ud.leavetracks then
