@@ -417,6 +417,10 @@ end
 function gadget:AllowCommand(unitID, unitDefID, teamID, cmdID, cmdParams, cmdOptions)
 	if unitDefID == BEACON_ID then
 		if upgradeIDs[cmdID] and not outpostIDs[unitID] then
+			if Spring.GetUnitRulesParam(unitID, "secure") == 0 then 
+				Spring.SendMessageToTeam(teamID, "Cannot upgrade beacon - Under attack!")
+				return false 
+			end
 			local upgradeDefID = upgradeIDs[cmdID]
 			local cost = outpostDefs[upgradeDefID] and outpostDefs[upgradeDefID].cost or WALL_COST
 			if cost <= GetTeamResources(teamID, "metal") then

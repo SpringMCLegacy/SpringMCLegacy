@@ -70,16 +70,6 @@ for name, ud in pairs(UnitDefs) do
 	local speed = (ud.maxvelocity or 0) * 30
 	if speed > 0 or ud.canfly then
 		ud.cantbetransported = false
-		if cp.unittype == "mech" then
-			ud.losemitheight = ud.mass / 100
-			ud.radaremitheight = ud.mass / 100
-			if cp.canjump then
-				ud.description = ud.description .. " \255\001\179\214[JUMP]"
-			end
-			if cp.canmasc then
-				ud.description = ud.description .. " \255\128\026\179[MASC]"
-			end
-		end
 	end
 	if cp and cp.unittype then -- mech, vehicle, apc, vtol, infantry
 		ud.name = ud.name .. " " .. (cp.variant or "") -- concatenate variant code to name
@@ -103,6 +93,16 @@ for name, ud in pairs(UnitDefs) do
 				else
 					Spring.Echo("ERROR: unitdefs_post.lua; unknown ammoType (" .. ammoType .. ") for " .. ud.name)
 				end
+			end
+		end
+		if cp.unittype == "mech" then
+			ud.losemitheight = ud.mass / 100
+			ud.radaremitheight = ud.mass / 100
+			if cp.canjump then
+				ud.description = ud.description .. " \255\001\179\214[JUMP]"
+			end
+			if cp.canmasc then
+				ud.description = ud.description .. " \255\128\026\179[MASC]"
 			end
 		end
 	end

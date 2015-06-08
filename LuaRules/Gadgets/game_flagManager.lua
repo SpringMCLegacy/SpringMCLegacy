@@ -277,6 +277,7 @@ function gadget:GameFrame(n)
 								SetUnitRulesParam(flagID, "cap" .. tostring(teamID), flagCapStatuses[flagID][teamID], {public = true})
 								if flagCapStatuses[flagID][teamID] <= 0 then
 									GG.PlaySoundForTeam(flagTeamID, "BB_NavBeacon_Secured", 1)
+									SetUnitRulesParam(flagID, "secure", 1, {public = true})
 								end
 							end
 						end
@@ -300,6 +301,7 @@ function gadget:GameFrame(n)
 						if capTotal > defendTotal then
 							if (flagCapStatuses[flagID][teamID] or 0) == 0 then -- first cap step
 								GG.PlaySoundForTeam(flagTeamID, "BB_NavBeacon_UnderAttack", 1)
+								SetUnitRulesParam(flagID, "secure", 0, {public = true})
 							end
 							flagCapStatuses[flagID][teamID] = (flagCapStatuses[flagID][teamID] or 0) + capTotal
 						end
@@ -313,6 +315,7 @@ function gadget:GameFrame(n)
 								if flagCapStatuses[flagID][teamID] <= 0 then
 									GG.PlaySoundForTeam(flagTeamID, "BB_NavBeacon_Secured", 1)
 									flagCapStatuses[flagID][teamID] = 0
+									SetUnitRulesParam(flagID, "secure", 1, {public = true})
 								end
 								SetUnitRulesParam(flagID, "cap" .. tostring(teamID), flagCapStatuses[flagID][teamID], {public = true})
 							end
@@ -324,6 +327,7 @@ function gadget:GameFrame(n)
 								Spring.SendMessageToTeam(teamID, flagData.tooltip .. " Captured!")
 								Spring.AddTeamResource(teamID, "metal", 2000)
 								GG.PlaySoundForTeam(teamID, "BB_NavBeacon_Captured", 1)
+								SetUnitRulesParam(flagID, "secure", 1, {public = true})
 								TransferUnit(flagID, teamID, false)
 								UpdateBeacons(teamID, 1)
 								SetTeamRulesParam(teamID, flagType .. "s", (GetTeamRulesParam(teamID, flagType .. "s") or 0) + 1, {public = true})
