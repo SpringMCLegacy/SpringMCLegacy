@@ -425,7 +425,7 @@ local function SendCommandFallback(unitID, unitDefID, teamID, cost)
 		-- clean up (regardless of whether or not order was fulfilled or cancelled)
 		OrderFinished(unitID, teamID)
 	else -- Dropship is ACTIVE or COOLDOWN
-		GG.Delay.DelayCall(SendCommandFallback, {unitID, unitDefID, teamID}, 16)
+		GG.Delay.DelayCall(SendCommandFallback, {unitID, unitDefID, teamID, cost}, 16)
 	end
 end
 
