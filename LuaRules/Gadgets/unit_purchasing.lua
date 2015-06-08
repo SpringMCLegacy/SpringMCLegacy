@@ -458,14 +458,7 @@ function gadget:AllowCommand(unitID, unitDefID, teamID, cmdID, cmdParams, cmdOpt
 			end
 		end
 		return true -- allow all other commands through here
-	elseif GG.outpostDefs[unitDefID] then -- an upgrade
-		if cmdID == CMD_SELL then
-			SellUnit(unitID, unitDefID, teamID, "upgrade")
-		else
-			return true -- allow all other commands through here
-		end
-	end
-	if dropZones[unitID] then
+	elseif dropZones[unitID] then
 		local typeString = menuCmdIDs[cmdID]
 		local rightClick = cmdOptions.right
 		if typeString then
@@ -545,6 +538,12 @@ function gadget:AllowCommand(unitID, unitDefID, teamID, cmdID, cmdParams, cmdOpt
 			UpdateButtons(teamID)
 			GG.Delay.DelayCall(SendCommandFallback, {unitID, unitDefID, teamID, cost}, 16)
 			return true
+		end
+	elseif GG.outpostDefs[unitDefID] then -- an upgrade
+		if cmdID == CMD_SELL then
+			SellUnit(unitID, unitDefID, teamID, "upgrade")
+		else
+			return true -- allow all other commands through here
 		end
 	end
 	return true
