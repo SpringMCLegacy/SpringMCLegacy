@@ -20,9 +20,9 @@ local DRT3S = Dart:New{
 	},
 		
 	customparams = {
-		variant         = "DRT-3S",
+		variant         = "DRT-4S",
 		speed			= 140,
-		price			= 4360,
+		price			= 6560,
 		heatlimit 		= 10,
 		armor			= {type = "standard", tons = 3.5},
     },
