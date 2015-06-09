@@ -96,12 +96,12 @@ for name, ud in pairs(UnitDefs) do
 			end
 		end
 		if cp.unittype == "mech" then
-			ud.losemitheight = ud.mass / 100
-			ud.radaremitheight = ud.mass / 100
-			if cp.canjump then
+			ud.losemitheight = ud.mass / 10
+			ud.radaremitheight = ud.mass / 10
+			if cp.jumpjets then
 				ud.description = ud.description .. " \255\001\179\214[JUMP]"
 			end
-			if cp.canmasc then
+			if cp.masc then
 				ud.description = ud.description .. " \255\128\026\179[MASC]"
 			end
 		end

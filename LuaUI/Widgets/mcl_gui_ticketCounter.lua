@@ -43,7 +43,7 @@ local GetTeamRulesParam	= Spring.GetTeamRulesParam
 local allyTeams = Spring.GetAllyTeamList()
 for i = 1, #allyTeams do
 	local allyTeam = allyTeams[i]
-	allyBeaconCounts[allyTeam] = 0
+	allyBeaconCounts[allyTeam] = 1
 	if allyTeam == GAIA_ALLY_ID then allyTeams[i] = nil; break end
 end
 local xMax, yMax = Spring.GetViewGeometry()
