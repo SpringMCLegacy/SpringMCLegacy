@@ -51,7 +51,7 @@ local DROPSHIP_COOLDOWN = 30 * 30 -- 30s, time before the dropship has regained 
 local DROPSHIP_DELAY = 2 * 30 -- 2s, time taken to arrive on the map from SPACE!
 local DAMAGE_REWARD_MULT = (modOptions and tonumber(modOptions.income_damage)) or 0.5
 Spring.SetGameRulesParam("damage_reward_mult", DAMAGE_REWARD_MULT)
-local INSURANCE_MULT = (modOptions and tonumber(modOptions.insurance)) or 0.5
+local INSURANCE_MULT = (modOptions and tonumber(modOptions.insurance)) or 0.1
 Spring.SetGameRulesParam("insurance_mult", INSURANCE_MULT)
 
 --local KILL_REWARD_MULT = 0.0
