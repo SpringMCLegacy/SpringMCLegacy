@@ -10,11 +10,6 @@ local resources = {
 		feature = nil
 	},
 	{
-		x = 10650,
-		z = 3130,
-		feature = nil
-	},
-	{
 		x = 7150,
 		z = 5150,
 		feature = nil

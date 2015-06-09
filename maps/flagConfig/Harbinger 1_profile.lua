@@ -24,6 +24,16 @@ local resources = {
 		z = 5120,
 		feature = nil
 	},
+	{
+		x = 6930,
+		z = 3250,
+		feature = nil
+	},
+	{
+		x = 3215,
+		z = 7075,
+		feature = nil
+	},
 }
 
 return resources

@@ -24,6 +24,26 @@ local resources = {
 		z = 4100,
 		feature = nil
 	},
+	{
+		x = 1925,
+		z = 1960,
+		feature = nil
+	},
+	{
+		x = 6250,
+		z = 1960,
+		feature = nil
+	},
+	{
+		x = 1940,
+		z = 6205,
+		feature = nil
+	},
+	{
+		x = 6275,
+		z = 6205,
+		feature = nil
+	},
 }
 
 local temps = {

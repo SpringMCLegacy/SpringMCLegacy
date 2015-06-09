@@ -1,0 +1,54 @@
+List of what maps are suitable for what size games.
+
+***1V1***
+Aberdeen6v6
+Bandit_Plains
+Calamity_V1
+CorrosivePits
+DeltaSiegeDry
+Downs_of_Destruction_Fix
+DworldV3
+Dworld_V1
+Eye_of_Horus_v2
+GehennaRisingV2
+Harbinger 1 (needs pre-game start position placement)
+Hard_Charge-v1
+Iceland_v1
+Koom Valley V2
+Melt_V2
+Mercury_v1
+Moor_v4
+OnyxCauldron1.6
+PlateauDivide-v03
+Ravaged_v2
+Resting_Place-v05
+RustyDelta_Final
+Stronghold_beta
+Seths_Ravine_V2
+Tabula-v4 (needs pregame start positions)
+Tau10
+Throne v1
+
+
+***2V2/4-FFA***
+Melt_V2
+Aberdeen6v6
+Calamity_V1
+DeltaSiegeDry
+DworldV3
+Hard_Charge-v1
+PlateauDivide-v03
+RustyDelta_Final
+Stronghold_beta
+Tabula-v4 (needs pregame start positions)
+Tau10 (needs pregame start positions
+
+
+
+***3-FFA***
+Aberdeen_1.1
+Throne v1 (maybe)
+
+
+***NEEDS WORK***
+Grts_Gantelope_005
