@@ -9,13 +9,13 @@ local DRT3S = Dart:New{
 	description         = "Light Skirmisher",
 	weapons = {	
 		[1] = {
-			name	= "SPL",
+			name	= "MBL",
 		},
 		[2] = {
-			name	= "SPL",
+			name	= "MBL",
 		},
 		[3] = {
-			name	= "SPL",
+			name	= "MBL",
 		},
 	},
 		
