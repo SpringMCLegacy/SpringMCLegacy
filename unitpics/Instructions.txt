@@ -1,0 +1,23 @@
+In Upspring:
+
+* Do not resize view windows;
+* Reset camera to Rotating in 3D Window;
+* Rotate Pelvis 130 on Y-axis;
+* Delete flares;
+* Use "Grey.png" Texture 1;
+
+Team Colours:
+
+FedSuns: 1, 0.65, 0.2
+Lyran: 0.2, 0.5, 1
+Draconis: 0.75, 0, 0
+FWL: 0.75, 0.25, 0.85
+Capellan: 0, 0.5, 0
+
+In Paintshop:
+
+* 350x350 Template;
+* Align grid lines;
+* Resize to 96x96, Scale Styles, Resample = Bicubic SHARPER
+* ???
+* Profit
