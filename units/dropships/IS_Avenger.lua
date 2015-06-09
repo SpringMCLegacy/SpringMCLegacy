@@ -19,6 +19,7 @@ local IS_Avenger = {
 	moveState			= 0,
 	levelGround			= false,
 	movementClass		= "LARGEMECH", -- herp
+	power				= 1, -- don't target me!
 	
 	-- Transport tags
 	transportSize		= 8,

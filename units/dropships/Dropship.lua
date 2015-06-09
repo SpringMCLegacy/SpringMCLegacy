@@ -16,6 +16,7 @@ local Dropship = Unit:New{
 	transportCapacity	= 80, -- 10x transportSize
 	transportMass		= 100000,
 	holdSteady 			= true,
+	power				= 1, -- don't target me!
 
 	weapons 		= {	
 		-- LBLs

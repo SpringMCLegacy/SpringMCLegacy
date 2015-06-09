@@ -4,7 +4,7 @@ local Upgrade_Garrison = Upgrade:New{
 	objectName        	= "Upgrade_Bunker.s3o",
 	maxDamage           = 50000,
 	mass                = 10000,
-	collisionVolumeScales = [[25 25 25]],
+	collisionVolumeScales = [[50 50 50]],
 	buildCostMetal      = 2500,
 
 	customparams = {
