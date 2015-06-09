@@ -93,10 +93,10 @@ local options = {
 		name	= "Insurance (Multiplier)",
 		desc	= "How many CBills returned to owner when a mech dies",
 		type	= "number",
-		def		= 0.5,
-		min		= 0.1,
+		def		= 0.1,
+		min		= 0.01,
 		max		= 1.0,
-		step	= 0.1,
+		step	= 0.01,
 		section	= '2income',
 	},
 	------------------------------------
