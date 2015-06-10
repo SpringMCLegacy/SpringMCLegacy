@@ -1,5 +1,5 @@
 local Harasser = Hover:New{
-	name              	= "Harraser",
+	name              	= "Harasser",
 	
 	weapons 		= {	
 		[1] = {

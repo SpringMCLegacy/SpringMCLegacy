@@ -23,7 +23,7 @@ local Marksman = LightTank:New{
 		heatlimit 		= 10,
 		armor			= {type = "ferro", tons = 7.5},
 		maxammo 		= {sniper = 4},
-		barrelrecoildist = {[1] = 5, [2] = 5},
+		barrelrecoildist = {[1] = 5},
 		squadsize 		= 1,
     },
 }

@@ -1,5 +1,6 @@
 local Scorpion = LightTank:New{
 	name              	= "Scorpion",
+	name				= "Light Striker Tank",
 	
 	weapons 		= {	
 		[1] = {
