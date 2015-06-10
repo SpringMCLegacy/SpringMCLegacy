@@ -25,6 +25,7 @@ local Marksman = LightTank:New{
 		maxammo 		= {sniper = 4},
 		barrelrecoildist = {[1] = 5},
 		squadsize 		= 1,
+		artillery 		= true,
     },
 }
 

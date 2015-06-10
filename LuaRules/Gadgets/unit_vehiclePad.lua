@@ -26,13 +26,13 @@ local VPAD_ID = UnitDefNames["upgrade_vehiclepad"].id
 
 local flagSpots = {} --VFS.Include("maps/flagConfig/" .. Game.mapName .. "_profile.lua")
 
-local vehiclesDefCache = {} -- unitDefID = true
+local vehiclesDefCache = {} -- unitDefID = true -- ALL vehicles
 
 local sideVehicleDefs = {} -- sideVehicleDefs[side]["light"][1] = {unitDefID = unitDefID, squadSize = customParams.squadsize}
-local IS_VehicleDefs = {} -- IS_VehicleDefs["light"][1] = {unitDefID = unitDefID, squadSize = customParams.squadsize}
-local C_VehicleDefs = {} -- C_VehicleDefs["light"][1] = {unitDefID = unitDefID, squadSize = customParams.squadsize}
+local sideArtyDefs = {} -- sideArtyDefs[side]["light"][1] = {unitDefID = unitDefID, squadSize = customParams.squadsize}
 
-local teamVehicleDefs = {} -- e.g. vehicleDefs[teamID] = IS_VehicleDefs or C_VehicleDefs
+local teamVehicleDefs = {} -- e.g. teamVehicleDefs[teamID] = SIDE_VehicleDefs
+local teamArtyDefs = {} -- e.g. teamArtyDefs[teamID] = SIDE_ArtyDefs
 
 local vehiclePads = {} -- uvehiclePads[unitID] = unloadFrame
 
@@ -45,8 +45,10 @@ local weights = {"light", "medium", "heavy", "apc", "assault", "vtol"} -- TODO: 
 function gadget:Initialize()
 	for sideName, shortName in pairs(GG.SideNames) do
 		sideVehicleDefs[shortName] = {}
+		sideArtyDefs[shortName] = {}
 		for i, weight in pairs(weights) do
 			sideVehicleDefs[shortName][weight] = {}
+			sideArtyDefs[shortName][weight] = {}
 		end
 	end
 	for unitDefID, unitDef in pairs(UnitDefs) do
@@ -58,7 +60,11 @@ function gadget:Initialize()
 				local weight = (basicType == "apc" and "apc") or (unitDef.canFly and "vtol") or GG.GetWeight(mass)
 				local squadSize = unitDef.customParams.squadsize or 1
 				local side = unitDef.name:sub(1,2)
-				table.insert(sideVehicleDefs[side][weight], {["unitDefID"] = unitDefID, ["squadSize"] = squadSize})
+				if unitDef.customParams.artillery then
+					table.insert(sideArtyDefs[side][weight], {["unitDefID"] = unitDefID, ["squadSize"] = squadSize})
+				else
+					table.insert(sideVehicleDefs[side][weight], {["unitDefID"] = unitDefID, ["squadSize"] = squadSize})
+				end
 				--Spring.Echo("INSERTIN", unitDef.name, side, weight)
 			end
 		end
@@ -67,18 +73,13 @@ function gadget:Initialize()
 		if teamID ~= GAIA_TEAM_ID then
 			local side = GG.teamSide[teamID]
 			teamVehicleDefs[teamID] = sideVehicleDefs[side]
+			teamArtyDefs[teamID] = sideArtyDefs[side]
 			teamSquadSpots[teamID] = {}
 		end
 	end
 end
 
-local function RandomVehicle(teamID, weight)
-	if #teamVehicleDefs[teamID][weight] > 0 then
-		return teamVehicleDefs[teamID][weight][math.random(1, #teamVehicleDefs[teamID][weight])]
-	else
-		return false -- This faction does not have a vehicle in that weight category
-	end
-end
+local weights = {"light", "medium", "heavy", "apc", "assault"}
 
 local MINUTE = 30 * 60
 local LIGHT = 2 * MINUTE
@@ -90,7 +91,24 @@ local L2 = L1 + 15
 local L3 = L2 + 20
 local L4 = L3 + 25
 
-local weights = {"light", "medium", "heavy", "apc", "assault"}
+local ARTY_CHANCE = 0.10 -- 10%
+
+local function RandomElement(flavour, teamID, weight)
+	return flavour[teamID][weight][math.random(1, #flavour[teamID][weight])]
+end
+
+local function RandomVehicle(teamID, weight)
+	if (math.random() <= ARTY_CHANCE) and (#teamArtyDefs[teamID][weight] > 0) then
+		--Spring.Echo("OMG you rolled arty!", weight)
+		return RandomElement(teamArtyDefs, teamID, weight)
+	elseif #teamVehicleDefs[teamID][weight] > 0 then -- return a regular vehicle
+		--Spring.Echo("OMG you rolled ready salted!", weight)
+		return RandomElement(teamVehicleDefs, teamID, weight)
+	else
+		--Spring.Echo("OMG this faction has none of those!", weight)
+		return false -- This faction does not have a vehicle in that weight category
+	end
+end
 
 local function AgeWeight(age)
 	local topLevel = (age < LIGHT and 1) or (age < MEDIUM and 2) or (age < HEAVY and 3) or 4
