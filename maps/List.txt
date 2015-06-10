@@ -28,6 +28,8 @@ Seths_Ravine_V2
 Tabula-v4 (needs pregame start positions)
 Tau10
 Throne v1
+Whakamutunga_Riri-v05
+Cattle and Loveplay NO WORMS 1
 
 
 ***2V2/4-FFA***
@@ -42,6 +44,7 @@ RustyDelta_Final
 Stronghold_beta
 Tabula-v4 (needs pregame start positions)
 Tau10 (needs pregame start positions
+Whakamutunga_Riri-v05
 
 
 
