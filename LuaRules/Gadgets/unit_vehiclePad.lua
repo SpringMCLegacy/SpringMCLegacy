@@ -18,6 +18,7 @@ if gadgetHandler:IsSyncedCode() then
 local modOptions = Spring.GetModOptions()
 local GAIA_TEAM_ID = Spring.GetGaiaTeamID()
 local BASE_DELAY = tonumber((modOptions and modOptions.vehicle_delay) or "30") * 30 -- base line delay, may be +{0,10}s
+local DEATH_DELAY = 60 * 30 -- delay next one by extra 1 minute if the last one died
 local BEACON_ID = UnitDefNames["beacon"].id
 local VPAD_ID = UnitDefNames["upgrade_vehiclepad"].id
 --local DelayCall = GG.Delay.DelayCall
@@ -117,13 +118,15 @@ local function Deliver(unitID, teamID)
 		if vehInfo then
 			--Spring.Echo("New Vehicle:", UnitDefs[vehInfo.unitDefID].name, vehInfo.squadSize, ageWeight)
 			GG.DropshipDelivery(unitID, teamID, "is_markvii", {{[vehInfo.unitDefID] = vehInfo.squadSize}}, 0, nil, 1) 
+		else
+			--Spring.Echo("No vehicle of that weight :(")
 		end
 	end
 end
 
-function LCLeft(unitID, teamID) -- called by LC once it has left, to start countdown
+function LCLeft(unitID, teamID, died) -- called by LC once it has left, to start countdown
 	if Spring.ValidUnitID(unitID) and (not Spring.GetUnitIsDead(unitID)) and (teamID == Spring.GetUnitTeam(unitID)) then
-		GG.Delay.DelayCall(Deliver, {unitID, teamID}, BASE_DELAY + math.random(10) * 30)
+		GG.Delay.DelayCall(Deliver, {unitID, teamID}, (died and DEATH_DELAY or 0) + BASE_DELAY + math.random(10) * 30)
 	end
 end
 GG.LCLeft = LCLeft
@@ -178,6 +181,7 @@ GG.Wander = Wander
 
 local function UnitIdleCheck(unitID, unitDefID, teamID)
 	if Spring.GetUnitIsDead(unitID) then return false end
+	if select(3, Spring.GetTeamInfo(teamID)) then return false end -- team died
 	local cmdQueueSize = Spring.GetCommandQueue(unitID, 0) or 0
 	if cmdQueueSize > 0 then 
 		--Spring.Echo("UnitIdleCheck: I'm so not idle!") 
@@ -197,7 +201,7 @@ function gadget:UnitIdle(unitID, unitDefID, teamID)
 		--for k, v in pairs(commandQueue) do Spring.Echo(k,v) end
 		local cmdQueueSize = Spring.GetCommandQueue(unitID, 0) or 0
 		if cmdQueueSize > 0 then 
-			Spring.Echo("UnitIdle: I'm so not idle!") 
+			--Spring.Echo("UnitIdle: I'm so not idle!") 
 		end
 		GG.Delay.DelayCall(UnitIdleCheck, {unitID, unitDefID, teamID}, 1)
 	end
@@ -225,7 +229,7 @@ end
 function gadget:UnitGiven(unitID, unitDefID, newTeam, oldTeam)
 	-- TODO check if VPad is capped
 	if unitDefID == VPAD_ID then
-		GG.Delay.DelayCall(Deliver, {unitID, newTeam}, BASE_DELAY + math.floor(math.random(1) * 30))
+		GG.Delay.DelayCall(Deliver, {unitID, newTeam}, BASE_DELAY + math.floor(math.random(10) * 30))
 		vehiclePads[unitID] = Spring.GetGameFrame()
 	end
 end
