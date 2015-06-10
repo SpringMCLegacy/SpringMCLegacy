@@ -356,6 +356,7 @@ function Drop()
 	--StopSpin(body, z_axis, math.rad(45))
 	Sleep(2000)
 	-- We're out of the atmosphere, bye bye!
+	Spring.Echo("normal left atmosphere call")
 	GG.LCLeft(beaconID, teamID) -- let the world know
 	Spring.DestroyUnit(unitID, false, true)
 end
@@ -381,8 +382,8 @@ function Crashed()
 	Explode(lwing, SFX.FIRE + SFX.FALL)
 	Explode(rwing, SFX.FIRE + SFX.FALL)
 	Explode(body, SFX.SHATTER)
-	-- delay next dropship by extra 30 seconds
-	GG.Delay.DelayCall(GG.LCLeft, {beaconID, teamID}, 30 * 30)
+	-- delay next dropship by extra 60 seconds
+	GG.LCLeft(beaconID, teamID, true)
 	Spring.DestroyUnit(unitID, true, false)
 end
 

@@ -272,7 +272,7 @@ end
 
 local function DrainMASC()
 	while moving and mascActive do
-		mascLevel = mascLevel - 2
+		mascLevel = mascLevel - 1
 		SetUnitRulesParam(unitID, "masc", mascLevel)
 		ChangeHeat(1)
 		if currHeatLevel > heatLimit or mascLevel == 0 then
