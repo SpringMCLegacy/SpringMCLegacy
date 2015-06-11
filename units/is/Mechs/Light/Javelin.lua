@@ -14,9 +14,6 @@ local JVN11B = Javelin:New{
 		[2] = {
 			name	= "SRM4",
 		},
-		--[3] = {
-		--	name	= "TAG",
-		--},
 	},
 		
 	customparams = {
