@@ -14,6 +14,18 @@ end
 
 if System then System.tobool = tobool end
 
+function table.lowerkeys(input)
+	local output = {}
+	for k, v in pairs(input) do
+		if type(k) == "string" then
+			output[k:lower()] = v
+		else
+			output[k] = v
+		end
+	end
+	return output
+end
+
 function table.echo(def)
 	for k,v in pairs(def) do Spring.Echo(k,v) end
 end

@@ -206,13 +206,15 @@ function Restore(passengerID)
 	end	
 end
 
+local ammoPerTon = table.lowerkeys(VFS.Include("weapons/AmmoTypes.lua", nil, VFS.ZIP))
+
 function Resupply(passengerID)
 	local ammoTypes = passengerInfo.ammoTypes
 	if passengerEnv.ChangeAmmo then -- N.B. currently this runs for all mechs regardless of whether they have any ammo using weapons...
 		while true do
 			local moreToDo = false
 			for weaponNum, ammoType in pairs(ammoTypes) do --... but this loop will finish immediatly in that case
-				local amount = passengerInfo.burstLengths[weaponNum]
+				local amount = ammoPerTon[ammoType] or passengerInfo.burstLengths[weaponNum] -- for coolant
 				local supplied = passengerEnv.ChangeAmmo(ammoType, amount)
 				--if supplied then Spring.Echo("Deduct " .. amount .. " " .. ammoType) end
 				moreToDo = moreToDo or supplied

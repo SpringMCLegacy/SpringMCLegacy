@@ -148,13 +148,14 @@ end
 
 -- non-local function called by gadgets/game_ammo.lua
 function ChangeAmmo(ammoType, amount) 
-	local newAmmoLevel = (currAmmo[ammoType] or 0) + amount -- amount is a -ve to deduct
-	if newAmmoLevel <= maxAmmo[ammoType] then
-		currAmmo[ammoType] = newAmmoLevel
-		SetUnitRulesParam(unitID, "ammo_" .. ammoType, 100 * newAmmoLevel / maxAmmo[ammoType])
-		return true -- Ammo was changed
+	local newAmmoLevel = math.min((currAmmo[ammoType] or 0) + amount, maxAmmo[ammoType]) -- amount is a -ve to deduct
+	currAmmo[ammoType] = newAmmoLevel
+	SetUnitRulesParam(unitID, "ammo_" .. ammoType, 100 * newAmmoLevel / maxAmmo[ammoType])
+	if newAmmoLevel < maxAmmo[ammoType] then
+		return false -- Ammo not yet full
+	else
+		return true -- Ammo fully supplied
 	end
-	return false -- Ammo was not changed
 end
 
 local function SpinBarrels(weaponID, start)
