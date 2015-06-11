@@ -519,6 +519,7 @@ local function WeaponCanFire(weaponID)
 		if spinSpeeds[weaponID] and not spinPiecesState[weaponID] then
 			StartThread(SpinBarrels, weaponID, true)
 		end
+		Spring.Echo(unitID, weaponID, "Weapon is allowed to fire by WeaponCanFire")
 		return true
 	end
 end
@@ -527,19 +528,19 @@ function script.AimWeapon(weaponID, heading, pitch)
 	Signal(2 ^ weaponID) -- 2 'to the power of' weapon ID
 	SetSignalMask(2 ^ weaponID)
 
-	if hasArms and (weaponID == leftArmMasterID or weaponID == rightArmMasterID) then
-		if weaponID == leftArmMasterID then
-			Turn(lupperarm, x_axis, -pitch, ELEVATION_SPEED)
-		elseif weaponID == rightArmMasterID then
-			Turn(rupperarm, x_axis, -pitch, ELEVATION_SPEED)
-		end
-	elseif missileWeaponIDs[weaponID] then
+	if missileWeaponIDs[weaponID] then
 		if launchers[weaponID] then
 			Turn(launchers[weaponID], x_axis, -pitch, ELEVATION_SPEED)
 		else
 			for i = 1, burstLengths[weaponID] do
 				Turn(launchPoints[weaponID][i] or launchPoints[weaponID][1], x_axis, -pitch, ELEVATION_SPEED)
 			end
+		end
+	elseif hasArms and (weaponID == leftArmMasterID or weaponID == rightArmMasterID) then
+		if weaponID == leftArmMasterID then
+			Turn(lupperarm, x_axis, -pitch, ELEVATION_SPEED)
+		elseif weaponID == rightArmMasterID then
+			Turn(rupperarm, x_axis, -pitch, ELEVATION_SPEED)
 		end
 	elseif flares[weaponID] then
 		if amsIDs[weaponID] then 
@@ -592,6 +593,7 @@ function script.BlockShot(weaponID, targetID, userTarget)
 			end
 		end
 	end
+	Spring.Echo(unitID, weaponID, "Weapon is allowed to fire by BlockShot")
 	return false
 end
 
