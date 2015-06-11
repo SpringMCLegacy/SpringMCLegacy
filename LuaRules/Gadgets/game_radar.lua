@@ -212,6 +212,7 @@ function gadget:UnitDestroyed(unitID, unitDefID, teamID)
 end
 
 function gadget:UnitGiven(unitID, unitDefID, newTeam, oldTeam)
+	SetUnitRulesParam(unitID, "FRIENDLY_ECM", 0)
 	--Spring.Echo("Unit Given: " .. unitID)
 	for i = 1, numAllyTeams do
 		local allyTeam = allyTeams[i]
