@@ -212,11 +212,14 @@ function gadget:UnitDestroyed(unitID, unitDefID, teamID)
 end
 
 function gadget:UnitGiven(unitID, unitDefID, newTeam, oldTeam)
-	--Spring.Echo("Unit Given: " .. unitID)
 	for i = 1, numAllyTeams do
 		local allyTeam = allyTeams[i]
-		DelayCall(ResetLosStates, {unitID, allyTeam}, 2)
+		inRadarUnits[allyTeam][unitID] = nil
+		outRadarUnits[allyTeam][unitID] = nil
+		allyJammers[allyTeam][unitID] = nil
 	end
+	SetUnitRulesParam(unitID, "FRIENDLY_ECM", 0)
+	function gadget:UnitCreated(unitID, unitDefID, newTeam)
 end
 
 function gadget:GameFrame(n)
