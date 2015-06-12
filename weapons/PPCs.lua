@@ -31,6 +31,7 @@ local PPC_Class = Weapon:New{
 		heatdamage			= 10,
 		weaponclass			= "energy",
 		projectilelups		= {"ppcTail"},
+		minrange			= 250,
     },
 }
 
@@ -45,11 +46,19 @@ local CERPPC = PPC_Class:New{
 	damage = {
 		default = 750, --150 DPS
 	},
+	customparams = {
+		heatgenerated		= 112,--15/sec
+		minrange			= 150,
+    },
 }
 
 local ERPPC = PPC_Class:New{
 	name                    = "ERPPC",
 	range                   = 2300,
+	customparams = {
+		heatgenerated		= 112,--15/sec
+		minrange			= 150,
+    },
 }
 
 return lowerkeys({ 
