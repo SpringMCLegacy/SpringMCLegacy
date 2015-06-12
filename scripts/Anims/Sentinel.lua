@@ -152,8 +152,8 @@ function anim_Walk()
 		--Spring.Echo("Step THREE")
 		--Arms & Torso--
 		Move(torso, y_axis, -1, LEG_SPEED * 4)
-		Move(rupperarm, y_axis, -2, LEG_SPEED * 4)
-		Move(lupperarm, y_axis, -2, LEG_SPEED * 4)
+		Move(rupperarm, y_axis, -1, LEG_SPEED * 4)
+		Move(lupperarm, y_axis, -1, LEG_SPEED * 4)
 		--Pelvis--
 		Turn(pelvis, z_axis, rad(-2), LEG_SPEED / 4)
 		--Left Leg--
@@ -275,8 +275,8 @@ function anim_Walk()
 		--Spring.Echo("Step SIX")
 		--Arms & Torso--
 		Move(torso, y_axis, -1, LEG_SPEED * 4)
-		Move(rupperarm, y_axis, -2, LEG_SPEED * 4)
-		Move(lupperarm, y_axis, -2, LEG_SPEED * 4)
+		Move(rupperarm, y_axis, -1, LEG_SPEED * 4)
+		Move(lupperarm, y_axis, -1, LEG_SPEED * 4)
 		--Pelvis--
 		Turn(pelvis, z_axis, rad(2), LEG_SPEED / 4)
 		--Left Leg--
