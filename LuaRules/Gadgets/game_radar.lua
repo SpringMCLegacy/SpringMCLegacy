@@ -219,7 +219,7 @@ function gadget:UnitGiven(unitID, unitDefID, newTeam, oldTeam)
 		allyJammers[allyTeam][unitID] = nil
 	end
 	SetUnitRulesParam(unitID, "FRIENDLY_ECM", 0)
-	function gadget:UnitCreated(unitID, unitDefID, newTeam)
+	gadget:UnitCreated(unitID, unitDefID, newTeam)
 end
 
 function gadget:GameFrame(n)
