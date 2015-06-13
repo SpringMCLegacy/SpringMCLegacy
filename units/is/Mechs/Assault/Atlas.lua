@@ -139,7 +139,7 @@ local AS7S2 = Atlas:New{
 			name	= "ERLBL",
 		},
 		[4] = {
-			name	= "LRM15",
+			name	= "ALRM15",
 		},
 	},
     customparams = {

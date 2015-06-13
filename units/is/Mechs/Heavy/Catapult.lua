@@ -44,10 +44,10 @@ local CPLTC2 = Catapult:New{
 	description         = "Heavy LRM Support",
 	weapons	= {	
 		[1] = {
-			name	= "LRM15",
+			name	= "ALRM15",
 		},
 		[2] = {
-			name	= "LRM15",
+			name	= "ALRM15",
 		},
 		[3] = {
 			name	= "AC2",

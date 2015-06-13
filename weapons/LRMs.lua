@@ -61,7 +61,43 @@ local LRM15 = LRM_Class:New{
 }
 
 local LRM20 = LRM_Class:New{
-	name                    = "LRM-20",
+	name                    = "A.LRM-20",
+	burst					= 20,
+	customparams = {
+		heatgenerated		= 90, --6/sec
+    },
+}
+
+local ALRM5 = LRM_Class:New{
+	name                    = "A.LRM-5",
+	turnRate				= 4000,
+	burst					= 5,
+	customparams = {
+		heatgenerated		= 30, --6/sec
+	},
+}
+
+local ALRM10 = LRM_Class:New{
+	name                    = "A.LRM-10",
+	turnRate				= 4000,
+	burst					= 10,
+	customparams = {
+		heatgenerated		= 60, --6/sec
+    },
+}	
+
+local ALRM15 = LRM_Class:New{
+	name                    = "A.LRM-15",
+	turnRate				= 4000,
+	burst					= 15,
+	customparams = {
+		heatgenerated		= 75, --6/sec
+    },
+}
+
+local ALRM20 = LRM_Class:New{
+	name                    = "A.LRM-20",
+	turnRate				= 4000,
 	burst					= 20,
 	customparams = {
 		heatgenerated		= 90, --6/sec
@@ -73,4 +109,8 @@ return lowerkeys({
 	LRM10 = LRM10,
 	LRM15 = LRM15,
 	LRM20 = LRM20,
+	ALRM5 = ALRM5,
+	ALRM10 = ALRM10,
+	ALRM15 = ALRM15,
+	ALRM20 = ALRM20,
 })

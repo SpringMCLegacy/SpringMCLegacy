@@ -25,10 +25,10 @@ local AV1OP = Avatar:New{
 			name	= "MBL",
 		},
 		[6] = {
-			name	= "LRM10",
+			name	= "ALRM10",
 		},
 		[7] = {
-			name	= "LRM10",
+			name	= "ALRM10",
 		},
 		[8] = {
 			name	= "MG",

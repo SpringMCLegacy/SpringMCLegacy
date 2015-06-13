@@ -44,10 +44,10 @@ local DV8D = Dervish:New{
 	description         = "Medium Missile Support",
 	weapons = {	
 		[1] = {
-			name	= "LRM15",
+			name	= "ALRM15",
 		},
 		[2] = {
-			name	= "LRM15",
+			name	= "ALRM15",
 		},
 		[3] = {
 			name	= "ERMBL",

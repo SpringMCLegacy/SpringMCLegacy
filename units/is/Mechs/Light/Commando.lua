@@ -9,7 +9,7 @@ local COM5S = Commando:New{
 	description         = "Light Skirmisher",
 	weapons	= {	
 		[1] = {
-			name	= "SRM6",
+			name	= "ASRM6",
 		},
 		[2] = {
 			name	= "SSRM2",

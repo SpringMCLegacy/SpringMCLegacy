@@ -15,7 +15,7 @@ local SRM_Class = Weapon:New{
 	wobble					= 900,
 	dance					= 65,
 	tracks					= true,
-	turnRate				= 2000,
+	turnRate				= 1500,
 	weaponTimer				= 5,
 	areaOfEffect            = 20,
 	startVelocity			= 1000,
@@ -59,9 +59,72 @@ local SRM6 = SRM_Class:New{
 	}
 }
 
+local SSRM2 = SRM_Class:New{
+	name                    = "Streak SRM-2",
+	sprayangle				= 500,
+	turnRate				= 10000,
+	burst					= 2,
+	customparams = {
+		heatgenerated		= "15",--3/sec
+	}
+}
+
+local SSRM4 = SRM_Class:New{
+	name                    = "Streak SRM-4",
+	sprayangle				= 500,
+	turnRate				= 10000,
+	burst					= 4,
+	customparams = {
+		heatgenerated		= "15",--3/sec
+	}
+}
+
+local SSRM6 = SRM_Class:New{
+	name                    = "Streak SRM-6",
+	sprayangle				= 500,
+	turnRate				= 10000,
+	burst					= 6,
+	customparams = {
+		heatgenerated		= "20",--4/sec
+	}
+}
+
+local ASRM2 = SRM_Class:New{
+	name                    = "A.SRM-2",
+	turnRate				= 4000,
+	burst					= 2,
+	customparams = {
+		heatgenerated		= "15",--3/sec
+	}
+}
+
+local ASRM4 = SRM_Class:New{
+	name                    = "A.SRM-4",
+	turnRate				= 4000,
+	burst					= 4,
+	customparams = {
+		heatgenerated		= "15",--3/sec
+	}
+}
+
+local ASRM6 = SRM_Class:New{
+	name                    = "A.SRM-6",
+	turnRate				= 4000,
+	burst					= 6,
+	customparams = {
+		heatgenerated		= "20",--4/sec
+	}
+}
+
 return lowerkeys({ 
 	SRM2 = SRM2,
 	InfSRM2 = SRM2:New{range = 200},
 	SRM4 = SRM4,
 	SRM6 = SRM6,
+	SSRM2 = SSRM2,
+	SSRM4 = SSRM4,
+	SSRM6 = SSRM6,
+	ASRM2 = ASRM2,
+	ASRM4 = ASRM4,
+	ASRM6 = ASRM6,
 })

@@ -10,7 +10,7 @@ local VLKQD = Valkyrie:New{
 	description         = "Light LRM Support",
 	weapons	= {	
 		[1] = {
-			name	= "LRM10",
+			name	= "ALRM10",
 		},
 		[2] = {
 			name	= "MPL",
