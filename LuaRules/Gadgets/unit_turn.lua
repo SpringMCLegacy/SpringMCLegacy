@@ -50,8 +50,9 @@ local function StartTurn(unitID, unitDefID, tx, tz)
 	if math.abs(deltaHeading) < MINIMUM_TURN then return false end -- turn command was too small
 	
 	-- Make sure we stop first and know we don't want to travel anywhere else
-	SetUnitMoveGoal(unitID, ux, uy, uz)
-	SetUnitVelocity(unitID, 0,0,0)
+	--SetUnitMoveGoal(unitID, ux, uy, uz)
+	--SetUnitVelocity(unitID, 0,0,0)
+	Spring.MoveCtrl.Enable(unitID)
 	
 	--  find the direction for shortest turn
 	if deltaHeading > (180 * COB_ANGULAR) then deltaHeading = deltaHeading - (360 * COB_ANGULAR) end
@@ -84,8 +85,9 @@ local function StopTurn(unitID)
 		if env and env.StopTurn then
 			Spring.UnitScript.CallAsUnit(unitID,env.StopTurn)
 		end
-		GG.turning[unitID] = false
 	end
+	GG.turning[unitID] = false
+	Spring.MoveCtrl.Disable(unitID)
 end
 
 function gadget:GameFrame(n)
