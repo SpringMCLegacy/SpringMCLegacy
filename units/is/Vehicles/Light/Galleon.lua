@@ -21,7 +21,7 @@ local Galleon = LightTank:New{
 		price			= 1620,
 		heatlimit 		= 10,
 		armor			= {type = "standard", tons = 3.5},
-		squadsize 		= 4,
+		squadsize 		= 2,
     },
 }
 

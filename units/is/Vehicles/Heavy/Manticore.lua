@@ -28,7 +28,7 @@ local Manticore = Tank:New{
 		armor			= {type = "standard", tons = 10},
 		maxammo 		= {lrm = 1, srm = 1},
 		barrelrecoildist = {[1] = 5},
-		squadsize 		= 3,
+		squadsize 		= 1,
     },
 }
 
@@ -58,7 +58,7 @@ local ManticoreK = Manticore:New{
 		armor			= {type = "ferro", tons = 10},
 		maxammo 		= {lrm = 1, srm = 1},
 		barrelrecoildist = {[1] = 5},
-		squadsize 		= 3,
+		squadsize 		= 1,
     },
 }
 
@@ -87,7 +87,7 @@ local ManticoreS = Manticore:New{
 		heatlimit 		= 10,
 		armor			= {type = "ferro", tons = 10},
 		maxammo 		= {lrm = 1, srm = 1},
-		squadsize 		= 3,
+		squadsize 		= 1,
     },
 }
 	

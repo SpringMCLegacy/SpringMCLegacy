@@ -24,7 +24,7 @@ local Morningstar = Tank:New{
 		armor			= {type = "standard", tons = 9},
 		maxammo 		= {ac10 = 2},
 		barrelrecoildist = {[1] = 5},
-		squadsize 		= 3,
+		squadsize 		= 2,
     },
 }
 

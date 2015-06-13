@@ -39,7 +39,7 @@ local Challenger = Tank:New{
 		armor			= {type = "ferro", tons = 14},
 		maxammo 		= {ac10 = 2, gauss = 2, lrm = 2, srm = 1},
 		barrelrecoildist = {[1] = 5, [2] = 5},
-		squadsize 		= 2,
+		squadsize 		= 1,
 	},
 }
 

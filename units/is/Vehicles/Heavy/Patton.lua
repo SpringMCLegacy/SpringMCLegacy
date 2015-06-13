@@ -26,7 +26,7 @@ local Patton = Tank:New{
 		armor			= {type = "standard", tons = 12.5},
 		maxammo 		= {ac10 = 4, lrm = 1},
 		barrelrecoildist = {[1] = 5},
-		squadsize 		= 3,
+		squadsize 		= 2,
     },
 }
 

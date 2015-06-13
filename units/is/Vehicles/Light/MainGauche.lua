@@ -24,7 +24,7 @@ local MainGauche = LightTank:New{
 		armor			= {type = "standard", tons = 5},
 		maxammo 		= {ltgauss = 1},
 		barrelrecoildist = {[1] = 5},
-		squadsize 		= 3,
+		squadsize 		= 1,
     },
 }
 

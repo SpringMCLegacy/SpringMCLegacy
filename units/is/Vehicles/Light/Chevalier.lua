@@ -23,7 +23,7 @@ local Chevalier = LightTank:New{
 		heatlimit 		= 10,
 		armor			= {type = "standard", tons = 6.5},
 		maxammo 		= {srm = 1},
-		squadsize 		= 4,
+		squadsize 		= 2,
     },
 }
 

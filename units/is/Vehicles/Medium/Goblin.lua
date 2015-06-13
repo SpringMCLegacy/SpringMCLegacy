@@ -29,7 +29,7 @@ local Goblin = LightTank:New{
 		heatlimit 		= 10,
 		armor			= {type = "standard", tons = 8},
 		maxammo 		= {srm = 1},
-		squadsize 		= 3,
+		squadsize 		= 1,
     },
 }
 

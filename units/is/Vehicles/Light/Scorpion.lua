@@ -19,7 +19,7 @@ local Scorpion = LightTank:New{
 		heatlimit 		= 10,
 		armor			= {type = "standard", tons = 4},
 		maxammo 		= {ac5 = 2},
-		squadsize 		= 4,
+		squadsize 		= 2,
     },
 }
 

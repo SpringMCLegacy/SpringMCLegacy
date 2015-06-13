@@ -22,7 +22,7 @@ local Demolisher = Tank:New{
 		armor			= {type = "standard", tons = 12},
 		maxammo 		= {ac20 = 2},
 		barrelrecoildist = {[1] = 5, [2] = 5},
-		squadsize 		= 2,
+		squadsize 		= 1,
     },
 }
 

@@ -18,7 +18,7 @@ local Predator = LightTank:New{
 		heatlimit 		= 10,
 		armor			= {type = "standard", tons = 4.5},
 		maxammo 		= {ac20 = 1},
-		squadsize 		= 2,
+		squadsize 		= 1,
     },
 }
 

@@ -30,7 +30,7 @@ local VedetteUAC = Vedette:New{
 		armor			= {type = "ferro", tons = 5},
 		maxammo 		= {ac5 = 4},
 		barrelrecoildist = {[1] = 5},
-		squadsize 		= 4,
+		squadsize 		= 2,
     },
 }
 
@@ -57,7 +57,7 @@ local VedetteLBX = Vedette:New{
 		armor			= {type = "ferro", tons = 5},
 		maxammo 		= {ac5 = 4},
 		barrelrecoildist = {[1] = 5},
-		squadsize 		= 4,
+		squadsize 		= 2,
     },
 }
 
@@ -78,7 +78,7 @@ local VedetteLG = Vedette:New{
 		armor			= {type = "ferro", tons = 4},
 		maxammo 		= {ltgauss = 4},
 		barrelrecoildist = {[1] = 7},
-		squadsize 		= 3,
+		squadsize 		= 1,
     },
 }
 	

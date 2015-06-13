@@ -23,7 +23,7 @@ local Rommel = Tank:New{
 		armor			= {type = "standard", tons = 11.5},
 		maxammo 		= {ac20 = 2, lrm = 1},
 		barrelrecoildist = {[1] = 5},
-		squadsize 		= 3,
+		squadsize 		= 1,
     },
 }
 

@@ -33,7 +33,7 @@ local ManteuffelRAC = Manteuffel:New{
 		heatlimit 		= 20,
 		armor			= {type = "ferro", tons = 10},
 		maxammo 		= {ac5 = 4},
-		squadsize 		= 2,
+		squadsize 		= 1,
 		ecm				= true,
     },
 }

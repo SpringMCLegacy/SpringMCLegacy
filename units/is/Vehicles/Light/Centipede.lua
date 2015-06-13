@@ -22,7 +22,7 @@ local Centipede = Hover:New{
 		price			= 1650,
 		heatlimit 		= 10,
 		armor			= {type = "standard", tons = 3},
-		squadsize 		= 4,
+		squadsize 		= 2,
 		bap				= true,
 		ecm				= true,
     },

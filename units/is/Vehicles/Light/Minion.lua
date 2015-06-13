@@ -24,7 +24,7 @@ local MinionScout = Minion:New{
 		price			= 2850,
 		heatlimit 		= 10,
 		armor			= {type = "standard", tons = 4},
-		squadsize 		= 3,
+		squadsize 		= 2,
     },
 }
 
@@ -49,7 +49,7 @@ local MinionTAG = Minion:New{
 		price			= 2850,
 		heatlimit 		= 10,
 		armor			= {type = "standard", tons = 4},
-		squadsize 		= 3,
+		squadsize 		= 2,
     },
 }
 

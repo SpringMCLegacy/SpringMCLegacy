@@ -36,7 +36,7 @@ customparams = {
 		armor			= {type = "standard", tons = 5},
 		maxammo 		= {srm = 1},
 		unittype 		= "apc",
-		squadsize 		= 2,
+		squadsize 		= 1,
     },
 }
 
