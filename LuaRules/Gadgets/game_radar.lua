@@ -78,7 +78,7 @@ local ppcUnits = {} -- ppcUnits[unitID] = gameframe
 local function FinishPPC(unitID)
 	if ppcUnits[unitID] and ppcUnits[unitID] <= (Spring.GetGameFrame() - PPC_DURATION) then
 		for _, sensorType in pairs(sensorTypes) do
-			Spring.SetUnitSensorRadius(unitID, sensorType, unitSensorRadii[sensorType])
+			Spring.SetUnitSensorRadius(unitID, sensorType, unitSensorRadii[unitID][sensorType])
 		end
 		ppcUnits[unitID] = nil
 		SetUnitRulesParam(unitID, "PPC_HIT", -1, {inlos = true})
@@ -90,7 +90,7 @@ local function ApplyPPC(unitID)
 		unitSensorRadii[unitID] = {}
 		for _, sensorType in pairs(sensorTypes) do
 			-- perks change radii so can't rely on unitdef values
-			unitSensorRadii[sensorType] = Spring.GetUnitSensorRadius(unitID, sensorType)
+			unitSensorRadii[unitID][sensorType] = Spring.GetUnitSensorRadius(unitID, sensorType)
 			Spring.SetUnitSensorRadius(unitID, sensorType, 0) -- ECM & BAP are disabled altogether
 		end
 		-- BAP is disabled - return to regular radar (TODO: should really reset the emit height too! Needs engine change)
