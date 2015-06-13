@@ -4,7 +4,7 @@ local Upgrade_C3Array = Upgrade:New{
 	objectName        	= "Upgrade_C3Array.s3o",
 	maxDamage           = 2200,
 	mass                = 10000,
-	buildCostMetal      = 10000,
+	buildCostMetal      = 15000,
 	energyStorage		= 200, -- grants 200 extra Tonnage space, need to lua it arriving with 200 e
 
 	customparams = {

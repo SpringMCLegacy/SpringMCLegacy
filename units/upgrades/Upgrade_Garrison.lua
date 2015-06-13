@@ -5,7 +5,7 @@ local Upgrade_Garrison = Upgrade:New{
 	maxDamage           = 50000,
 	mass                = 10000,
 	collisionVolumeScales = [[50 50 50]],
-	buildCostMetal      = 2500,
+	buildCostMetal      = 5000,
 
 	customparams = {
 		helptext		= "Heavily-fortified structure resilient to all attacks to fortify captured control points.",

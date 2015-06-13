@@ -4,7 +4,7 @@ local Upgrade_VehiclePad = Upgrade:New{
 	objectName        	= "Upgrade_VehiclePad.s3o",
 	maxDamage           = 10000,
 	mass                = 5000,
-	buildCostMetal      = 5000,
+	buildCostMetal      = 10000,
 
 	collisionVolumeOffsets = [[0 2 0]],
 	collisionVolumeScales = [[125 12 125]],
