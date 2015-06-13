@@ -286,19 +286,17 @@ function gadget:GameFrame(n)
 					for i = 1, #unitsAtFlag do
 						local unitID = unitsAtFlag[i]
 						local unitTeamID = GetUnitTeam(unitID)
-						if defenders[unitID] and AreTeamsAllied(unitTeamID, flagTeamID) and flagTeamID ~= GAIA_TEAM_ID then
-							--Spring.Echo("Defender at flag " .. flagID .. " Value is: " .. defenders[unitID])
+						if defenders[unitID] and (AreTeamsAllied(unitTeamID, flagTeamID) or flagTeamID == GAIA_TEAM_ID) then
+							--Spring.Echo("Defender at flag " .. flagID .. " Value is: " .. defenders[unitID], UnitDefs[Spring.GetUnitDefID(unitID)].name)
 							defendTotal = defendTotal + defenders[unitID]
 						end
 						if cappers[unitID] and (not AreTeamsAllied(unitTeamID, flagTeamID)) then
-							if (flagTeamID ~= GAIA_TEAM_ID or GetTeamUnitDefCount(unitTeamID, UnitDefNames[flagType].id) < flagData.limit) then
-								--Spring.Echo("Capper at flag " .. flagID .. " Value is: " .. cappers[unitID])
-								capTotals[unitTeamID] = (capTotals[unitTeamID] or 0) + cappers[unitID]
-							end
+							--Spring.Echo("Capper at flag " .. flagID .. " Value is: " .. cappers[unitID], UnitDefs[Spring.GetUnitDefID(unitID)].name)
+							capTotals[unitTeamID] = (capTotals[unitTeamID] or 0) + cappers[unitID]
 						end
 					end
 					for teamID, capTotal in pairs(capTotals) do
-						if capTotal > defendTotal then
+						if capTotal == defendTotal then -- implies only one set of mechs here
 							if (flagCapStatuses[flagID][teamID] or 0) == 0 then -- first cap step
 								GG.PlaySoundForTeam(flagTeamID, "BB_NavBeacon_UnderAttack", 1)
 								SetUnitRulesParam(flagID, "secure", 0, {public = true})
@@ -309,9 +307,9 @@ function gadget:GameFrame(n)
 					for j = 1, #teams do
 						teamID = teams[j]
 						if teamID ~= flagTeamID then
-							if (flagCapStatuses[flagID][teamID] or 0) > 0 and capTotals[teamID] ~= defendTotal then
+							if (flagCapStatuses[flagID][teamID] or 0) > 0 then -- and capTotals[teamID] ~= defendTotal then
 								--Spring.Echo("Capping: " .. flagCapStatuses[flagID][teamID] .. " Defending: " .. defendTotal)
-								flagCapStatuses[flagID][teamID] = flagCapStatuses[flagID][teamID] - defendTotal
+								flagCapStatuses[flagID][teamID] = flagCapStatuses[flagID][teamID] -- defendTotal
 								if flagCapStatuses[flagID][teamID] <= 0 then
 									GG.PlaySoundForTeam(flagTeamID, "BB_NavBeacon_Secured", 1)
 									flagCapStatuses[flagID][teamID] = 0
