@@ -17,7 +17,7 @@ local Striker = LightTank:New{
 		price			= 4490,
 		heatlimit 		= 10,
 		armor			= {type = "ferro", tons = 3},
-		maxammo 		= {lrm = 2, srm = 1},
+		maxammo 		= {lrm = 1, srm = 1},
 		squadsize 		= 1,
 		artillery 		= true,
     },

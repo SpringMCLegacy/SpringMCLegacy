@@ -22,7 +22,7 @@ local Po = Tank:New{
 		price			= 7190,
 		heatlimit 		= 20,
 		armor			= {type = "standard", tons = 10.5},
-		maxammo 		= {ac10 = 3},
+		maxammo 		= {ac10 = 2},
 		barrelrecoildist = {[1] = 5},
 		squadsize 		= 2,
     },

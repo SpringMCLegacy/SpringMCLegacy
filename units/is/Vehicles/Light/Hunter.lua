@@ -18,7 +18,7 @@ local Hunter = LightTank:New{
 		price			= 6410,
 		heatlimit 		= 10,
 		armor			= {type = "ferro", tons = 4},
-		maxammo 		= {lrm = 2},
+		maxammo 		= {lrm = 1},
 		squadsize 		= 1,
     },
 }

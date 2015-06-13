@@ -21,7 +21,7 @@ local LRMCarrier = LightTank:New{
 		price			= 8330,
 		heatlimit 		= 20,
 		armor			= {type = "standard", tons = 2},
-		maxammo 		= {lrm = 3},
+		maxammo 		= {lrm = 2},
 		squadsize 		= 1,
     },
 }

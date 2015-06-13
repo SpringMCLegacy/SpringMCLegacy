@@ -28,7 +28,7 @@ local Behemoth = Tank:New{
 		price			= 10000,
 		heatlimit 		= 20,
 		armor			= {type = "standard", tons = 18},
-		maxammo 		= {ac10 = 2, lrm = 2, srm = 1},
+		maxammo 		= {ac10 = 2, lrm = 1, srm = 1},
 		barrelrecoildist = {[1] = 5, [2] = 5},
 		squadsize 		= 1,
 	},
