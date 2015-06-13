@@ -519,7 +519,7 @@ local function WeaponCanFire(weaponID)
 		if spinSpeeds[weaponID] and not spinPiecesState[weaponID] then
 			StartThread(SpinBarrels, weaponID, true)
 		end
-		Spring.Echo(unitID, weaponID, "Weapon is allowed to fire by WeaponCanFire")
+		--Spring.Echo(unitID, weaponID, "Weapon is allowed to fire by WeaponCanFire")
 		return true
 	end
 end
@@ -593,7 +593,7 @@ function script.BlockShot(weaponID, targetID, userTarget)
 			end
 		end
 	end
-	Spring.Echo(unitID, weaponID, "Weapon is allowed to fire by BlockShot")
+	--Spring.Echo(unitID, weaponID, "Weapon is allowed to fire by BlockShot")
 	return false
 end
 
