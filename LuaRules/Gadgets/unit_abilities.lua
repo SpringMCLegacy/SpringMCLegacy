@@ -82,6 +82,8 @@ function gadget:Initialize()
 		local unitDefID = Spring.GetUnitDefID(unitID)
 		gadget:UnitCreated(unitID, unitDefID, teamID)
 	end
+	Spring.SendCommands({"bind c flush"})
+	Spring.SendCommands({"bind v masc"})
 end
 	
 
