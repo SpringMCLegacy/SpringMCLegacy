@@ -13,6 +13,7 @@ return {
 		allowUnitCollisionDamage = false, -- default should be false
 		allowUnitCollisionOverlap = false,
 		allowGroundUnitGravity = false,
+		allowDirectionalPathing = true,
 	},
 	--system = {
 		--pathFinderSystem = 1,
