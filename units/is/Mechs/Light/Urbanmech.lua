@@ -22,6 +22,7 @@ local UMR60L = Urbanmech:New{
 		price			= 4700,
 		heatlimit 		= 11,
 		armor			= {type = "standard", tons = 4},
+		jumpjets		= 2,
 		maxammo 		= {ac20 = 1},
 		barrelrecoildist = {[1] = 4},
     },
