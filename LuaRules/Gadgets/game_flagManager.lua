@@ -272,6 +272,7 @@ function gadget:GameFrame(n)
 				if #unitsAtFlag == 0 then -- no combat units
 					for teamID = 0, #teams-1 do
 						if teamID ~= flagTeamID then
+							--Spring.Echo(teamID, flagCapStatuses[flagID][teamID])
 							if (flagCapStatuses[flagID][teamID] or 0) > 0 then
 								flagCapStatuses[flagID][teamID] = flagCapStatuses[flagID][teamID] - flagData.regen
 								SetUnitRulesParam(flagID, "cap" .. tostring(teamID), flagCapStatuses[flagID][teamID], {public = true})
@@ -286,30 +287,31 @@ function gadget:GameFrame(n)
 					for i = 1, #unitsAtFlag do
 						local unitID = unitsAtFlag[i]
 						local unitTeamID = GetUnitTeam(unitID)
-						if defenders[unitID] and (AreTeamsAllied(unitTeamID, flagTeamID) or flagTeamID == GAIA_TEAM_ID) then
+						if defenders[unitID] then -- and (AreTeamsAllied(unitTeamID, flagTeamID) or flagTeamID == GAIA_TEAM_ID) then
 							--Spring.Echo("Defender at flag " .. flagID .. " Value is: " .. defenders[unitID], UnitDefs[Spring.GetUnitDefID(unitID)].name)
 							defendTotal = defendTotal + defenders[unitID]
 						end
-						if cappers[unitID] and (not AreTeamsAllied(unitTeamID, flagTeamID)) then
+						if cappers[unitID] then -- nd (not AreTeamsAllied(unitTeamID, flagTeamID)) then
 							--Spring.Echo("Capper at flag " .. flagID .. " Value is: " .. cappers[unitID], UnitDefs[Spring.GetUnitDefID(unitID)].name)
 							capTotals[unitTeamID] = (capTotals[unitTeamID] or 0) + cappers[unitID]
 						end
 					end
 					for teamID, capTotal in pairs(capTotals) do
-						if capTotal == defendTotal then -- implies only one set of mechs here
-							if (flagCapStatuses[flagID][teamID] or 0) == 0 then -- first cap step
+						if capTotal == defendTotal and teamID ~= flagTeamID then -- implies only one set of mechs here
+							if (flagCapStatuses[flagID][teamID] or 0) == 1 then -- first cap step
 								GG.PlaySoundForTeam(flagTeamID, "BB_NavBeacon_UnderAttack", 1)
 								SetUnitRulesParam(flagID, "secure", 0, {public = true})
 							end
 							flagCapStatuses[flagID][teamID] = (flagCapStatuses[flagID][teamID] or 0) + capTotal
+							SetUnitRulesParam(flagID, "cap" .. tostring(teamID), flagCapStatuses[flagID][teamID], {public = true})
 						end
 					end
 					for j = 1, #teams do
 						teamID = teams[j]
-						if teamID ~= flagTeamID then
-							if (flagCapStatuses[flagID][teamID] or 0) > 0 then -- and capTotals[teamID] ~= defendTotal then
+						if teamID ~= flagTeamID then -- defending
+							if (flagCapStatuses[flagID][teamID] or 0) > 0 and capTotals[teamID] ~= defendTotal and flagTeamID ~= GAIA_TEAM_ID then
 								--Spring.Echo("Capping: " .. flagCapStatuses[flagID][teamID] .. " Defending: " .. defendTotal)
-								flagCapStatuses[flagID][teamID] = flagCapStatuses[flagID][teamID] -- defendTotal
+								flagCapStatuses[flagID][teamID] = flagCapStatuses[flagID][teamID] - flagData.regen
 								if flagCapStatuses[flagID][teamID] <= 0 then
 									GG.PlaySoundForTeam(flagTeamID, "BB_NavBeacon_Secured", 1)
 									flagCapStatuses[flagID][teamID] = 0
