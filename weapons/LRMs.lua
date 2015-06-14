@@ -61,7 +61,7 @@ local LRM15 = LRM_Class:New{
 }
 
 local LRM20 = LRM_Class:New{
-	name                    = "A.LRM-20",
+	name                    = "LRM-20",
 	burst					= 20,
 	customparams = {
 		heatgenerated		= 90, --6/sec

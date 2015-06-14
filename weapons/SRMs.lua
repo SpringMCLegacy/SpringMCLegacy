@@ -66,6 +66,7 @@ local SSRM2 = SRM_Class:New{
 	burst					= 2,
 	customparams = {
 		heatgenerated		= "15",--3/sec
+		jammable			= true,
 	}
 }
 
@@ -76,6 +77,7 @@ local SSRM4 = SRM_Class:New{
 	burst					= 4,
 	customparams = {
 		heatgenerated		= "15",--3/sec
+		jammable			= true,
 	}
 }
 
@@ -86,6 +88,7 @@ local SSRM6 = SRM_Class:New{
 	burst					= 6,
 	customparams = {
 		heatgenerated		= "20",--4/sec
+		jammable			= true,
 	}
 }
 
