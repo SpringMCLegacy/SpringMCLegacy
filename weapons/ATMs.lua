@@ -25,6 +25,9 @@ local ATM_Class = Weapon:New{
 	reloadtime              = 10,
 	burstrate				= 0.1,
 	model					= "Missile.s3o",
+	DynDamageExp			= 1,
+	DynDamageMin			= 100,--100 DPS 
+	--DynDamageRange			= 1200,--Weapon will decrease in damage up to this range
 	damage = {
 		default = 200,--15 DPS
 	},
@@ -34,6 +37,14 @@ local ATM_Class = Weapon:New{
 		weaponclass			= "missile",
 		ammotype			= "atm",
     },
+}
+
+local ATM3 = ATM_Class:New{
+	name                    = "ATM 3",
+	burst					= 3,
+	customparams = {
+		heatgenerated		= "20", --6/sec
+	}
 }
 
 local ATM6 = ATM_Class:New{
@@ -61,6 +72,7 @@ local ATM12 = ATM_Class:New{
 }
 
 return lowerkeys({
+	ATM3 = ATM3,
 	ATM6 = ATM6,
 	ATM9 = ATM9,
 	ATM12 = ATM12,
