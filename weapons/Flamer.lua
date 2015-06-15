@@ -18,14 +18,14 @@ weaponDef = {
     lineOfSight        = true,
     minintensity       = 0.1,
     impulseFactor      = 0,
-    range              = 300,
+    range              = 400,
     reloadtime         = 0.1,
     rgbColor           = "0 0 0",
     rgbColor2          = "0 0 0",
     thickness          = 0,
     tolerance          = 1000,
     turret             = true,
-    weaponVelocity     = 400,
+    weaponVelocity     = 1000,
 	
 	damage = {
 		default = 2, --20 DPS
