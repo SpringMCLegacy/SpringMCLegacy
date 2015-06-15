@@ -164,6 +164,7 @@ local function fx()
 end
 
 function script.Create()
+	Spring.SetUnitAlwaysVisible(unitID, true)
 	Spring.SetUnitNoSelect(unitID, true)
 	StartThread(fx)
 	-- setup fx pieces
