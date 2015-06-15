@@ -441,6 +441,7 @@ for weaponID = 1, info.numWeapons do
 end
 
 function script.Create()
+	Spring.SetUnitAlwaysVisible(unitID, true)
 	-- Put pieces into starting pos
 	Turn(exhaustlarge, x_axis, math.rad(90), 0)
 	--Spin(exhaustlarge, y_axis, math.rad(360))
