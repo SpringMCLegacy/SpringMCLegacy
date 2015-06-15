@@ -19,7 +19,7 @@ local ALM9D = Fireball:New{
 	customparams = {
 		variant         = "ALM-9D",
 		speed			= 170,
-		price			= 5270,
+		price			= 5740,
 		heatlimit 		= 10,
 		armor			= {type = "standard", tons = 4.5},
 		maxammo 		= {srm = 1},
