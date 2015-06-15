@@ -99,6 +99,17 @@ local options = {
 		step	= 0.01,
 		section	= '2income',
 	},
+	{
+		key		= "pricemult",
+		name	= "Price Multiplier",
+		desc	= "Dev tool for balancing costs",
+		type	= "number",
+		def		= 1.0,
+		min		= 0.01,
+		max		= 10.0,
+		step	= 0.01,
+		section	= '2income',
+	},
 	------------------------------------
 	{
 		key    = '2AI',

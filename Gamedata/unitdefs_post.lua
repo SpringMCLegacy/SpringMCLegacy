@@ -75,7 +75,8 @@ for name, ud in pairs(UnitDefs) do
 		ud.name = ud.name .. " " .. (cp.variant or "") -- concatenate variant code to name
 
 		ud.buildCostEnergy = (cp.tonnage or 0)
-		ud.buildCostMetal = (cp.price or 0)
+		-- scale prices by a multiplier from an origin of 4000
+		ud.buildCostMetal = ((cp.price or 0) * (modOptions.pricemult or 1) - (4000 * ((modOption.pricemult or 1) - 1)))
 		if cp.tonnage then
 			ud.mass = (cp.tonnage or 0) * 100
 			if cp.armor then
