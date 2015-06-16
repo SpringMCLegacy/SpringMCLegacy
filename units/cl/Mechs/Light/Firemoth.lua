@@ -78,7 +78,7 @@ local C = Firemoth:New{
 	},
 
 	customparams = {
-		variant         = "Prime",
+		variant         = "C",
 		speed			= 150,
 		price			= 7590,
 		heatlimit 		= 20,

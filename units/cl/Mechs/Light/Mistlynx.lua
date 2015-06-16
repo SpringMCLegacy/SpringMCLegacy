@@ -98,7 +98,7 @@ local C = Mistlynx:New{
 }
 
 local E = Mistlynx:New{
-	description         = "Light Skirmisher",
+	description         = "Light Missile Support",
 	
 	weapons = {	
 		[1] = {

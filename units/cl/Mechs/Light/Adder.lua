@@ -30,7 +30,7 @@ local Prime = Adder:New{
 }
 
 local B = Adder:New{
-	description         = "Light Sniper",
+	description         = "Light Striker",
 	weapons 		= {	
 		[1] = {
 			name	= "LBX5",
