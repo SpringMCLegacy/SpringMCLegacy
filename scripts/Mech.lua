@@ -294,12 +294,12 @@ end
 
 function MASC(activated)
 	if activated and mascLevel == 100 then
-		speedMod = speedMod * 2
+		speedMod = speedMod * 1.3
 		mascActive = true
 		GG.SpeedChange(unitID, unitDefID, speedMod, true)
 		StartThread(DrainMASC)
 	elseif not activated then
-		speedMod = speedMod / 2
+		speedMod = speedMod / 1.3
 		mascActive = false
 		GG.SpeedChange(unitID, unitDefID, speedMod)
 		StartThread(RestoreMASC)
