@@ -94,4 +94,7 @@ return lowerkeys({
 	["JF_Cougar_Prime"] = Prime:New(),
 	["JF_Cougar_A"] = A:New(),
 	["JF_Cougar_B"] = B:New(),
+	["WF_Cougar_Prime"] = Prime:New(),--for testing purposes
+	["WF_Cougar_A"] = A:New(),--for testing purposes
+	["WF_Cougar_B"] = B:New(),--for testing purposes
 })
