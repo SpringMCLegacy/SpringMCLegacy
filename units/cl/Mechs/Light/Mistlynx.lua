@@ -1,5 +1,5 @@
 local Mistlynx = Light:New{
-	name				= "Mistlynx",
+	name				= "Mist Lynx",
 	
 	customparams = {
 		tonnage			= 25,
@@ -14,13 +14,13 @@ local Prime = Mistlynx:New{
 			name	= "LRM10",
 		},
 		[2] = {
-			name	= "MG",
+			name	= "SSRM4",
 		},
 		[3] = {
 			name	= "MG",
 		},
 		[4] = {
-			name	= "SSRM4",
+			name	= "MG",
 		},
 	},
 
@@ -41,16 +41,16 @@ local B = Mistlynx:New{
 	
 	weapons = {	
 		[1] = {
-			name	= "CERMBL",
+			name	= "SRM6",
 		},
 		[2] = {
-			name	= "CERMBL",
+			name	= "SRM6",
 		},
 		[3] = {
-			name	= "SRM6",
+			name	= "CERMBL",
 		},
 		[4] = {
-			name	= "SRM6",
+			name	= "CERMBL",
 		},
 		[5] = {
 			name	= "CERSBL",
@@ -133,9 +133,6 @@ local E = Mistlynx:New{
 return lowerkeys({
 	["WF_Mistlynx_Prime"] = Prime:New(),
 	["WF_Mistlynx_B"] = B:New(),
-	["HH_Mistlynx_Prime"] = Prime:New(),
-	["GB_Mistlynx_Prime"] = Prime:New(),
-	["JF_Mistlynx_Prime"] = Prime:New(),
 	["SJ_Mistlynx_Prime"] = Prime:New(),
 	["SJ_Mistlynx_B"] = B:New(),
 	["SJ_Mistlynx_C"] = C:New(),
