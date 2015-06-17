@@ -36,6 +36,7 @@ local MRM10 = MRM_Class:New{
 	burst					= 10,
 	customparams = {
 		heatgenerated		= 3,
+	}
 }
 
 local MRM20 = MRM_Class:New{
