@@ -29,10 +29,10 @@ local LightGauss = Gauss_Class:New{
 	size					= 1.5,
 	stages					= 200, 		--Number of particles used in one plasma shot.
 	damage = {
-		default = 480, --120 DPS
+		default = 320, --80 dps
 	},
 	customparams = {
-		heatgenerated		= 4,
+		heatgenerated		= 0.4,
 		ammotype			= "ltgauss",
     },
 }
@@ -46,10 +46,10 @@ local Gauss = Gauss_Class:New{
 	reloadtime              = 6,
 
 	damage = {
-		default = 1350, --225 DPS
+		default = 937.5, --150 DPS
 	},
 	customparams = {
-		heatgenerated		= 6,
+		heatgenerated		= 0.6,
     },
 }
 
@@ -58,38 +58,19 @@ local HeavyGauss = Gauss_Class:New{
 	explosionGenerator    	= "custom:HeavyGauss_Hit",
 	soundHit              	= "HeavyGauss_Hit",
 	soundStart            	= "HeavyGauss_Fire",
-	range                   = 1800,
+	range                   = 2000,
 	weaponVelocity          = 2500,
-	reloadtime              = 12,
-	--DynDamageExp			= 1,
-	--DynDamageMin			= 1200,--100 DPS 
-	--DynDamageRange			= 1200,--Weapon will decrease in damage up to this range
+	reloadtime              = 10,
+	DynDamageExp			= 1,
+	DynDamageMin			= 1000,--100 DPS 
+	DynDamageRange			= 1300,--Weapon will decrease in damage up to this range
 	
 	damage = {
-		default = 4500,--375 DPS
+		default = 2500,--250 DPS
 	},
 	customparams = {
-		heatgenerated		= 24,
+		heatgenerated		= 2,
 		ammotype			= "hvgauss",
-    },
-}
-
-local HAG30 = HeavyGauss:New{
-	name                    = "HAG 30",
-	explosionGenerator    	= "custom:MG_Hit",
-	soundHit              	= "GEN_Explode1",
-	accuracy                = 200,
-	areaOfEffect            = 1,
-	reloadtime              = 5,
-	sprayAngle				= 100,
-	projectiles				= 30,
-	size					= 0.5,
-	stages					= 50, 		--Number of particles used in one plasma shot.
-	damage = {
-		default = 100, --600 DPS
-	},
-	customparams = {
-		heatgenerated		= 30,
     },
 }
 
@@ -97,5 +78,4 @@ return lowerkeys({
 	LightGauss = LightGauss,
 	Gauss = Gauss,
 	HeavyGauss = HeavyGauss,
-	HAG30 = HAG30,
 })

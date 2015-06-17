@@ -35,17 +35,17 @@ local AC2 = AC_Class:New{
 	explosionGenerator    	= "custom:HE_XSMALL",
 	soundHit              	= "AC2_Hit",
 	soundStart            	= "AC2_Fire",
-	range                   = 2000,
+	range                   = 2400,
 	accuracy                = 150,
 	impactOnly				= true,
 	weaponVelocity          = 4000,
 	reloadtime              = 0.5,
 	size					= 0.75,
 	damage = {
-		default = 20, --40 DPS
+		default = 10, --20 DPS
 	},
 	customparams = {
-		heatgenerated		= 0.1,--0.5/s
+		heatgenerated		= 0.05,--0.1/second
 		cegflare			= "AC2_MUZZLEFLASH",
 		ammotype			= "ac2",
     },
@@ -60,7 +60,7 @@ local RAC2 = AC2:New{
 	burstrate				= 0.04,
 	reloadtime              = 0.5,
 	customparams = {
-		heatgenerated		= 4,--0.5/s
+		heatgenerated		= 0.3,--0.5/s
 		spinspeed			= 600,
 		flareonshot 		= true,
     },
@@ -68,7 +68,8 @@ local RAC2 = AC2:New{
 
 local UAC2 = AC2:New{
 	name                    = "Ultra AC/2",
-	reloadtime              = 0.375,
+	range					= 2500,
+	reloadtime              = 0.25,
 }
 
 -- AC5 & Variants
@@ -84,10 +85,10 @@ local AC5 = AC_Class:New{
 	reloadtime              = 2,
 	size					= 1,
 	damage = {
-		default = 200, --100 DPS
+		default = 100, --50 DPS
 	},
 	customparams = {
-		heatgenerated		= 0.5,--1/sec
+		heatgenerated		= 0.2,--0.1/sec
 		cegflare			= "AC5_MUZZLEFLASH",
 		ammotype			= "ac5",
     },
@@ -105,8 +106,8 @@ local AC5_AA = AC5:New{
 	edgeEffectiveness		= 25,
 	reloadtime              = 0.5,
 	damage = {
-		default = 50, --50 DPS
-		vtol	= 100, --200% of default
+		default = 20, --50 DPS
+		vtol	= 40,
 	},
 }
 
@@ -117,10 +118,10 @@ local RAC5 = AC5:New{
 	sprayangle				= 250,
 	weaponVelocity          = 1750,
 	burst					= 6,
-	burstrate				= 0.2,
+	burstrate				= 0.1,
 	reloadtime              = 2,
 	customparams = {
-		heatgenerated		= 7,--1/sec
+		heatgenerated		= 1.2,--0.2/sec
 		--cegflare			= "MISSILE_MUZZLEFLASH",
 		spinspeed			= 600,
 		flareonshot 		= true,
@@ -129,27 +130,30 @@ local RAC5 = AC5:New{
 
 local UAC5 = AC5:New{
 	name                    = "Ultra AC/5",
-	range                   = 1800,
+	range                   = 2000,
 	accuracy                = 200,
-	reloadtime              = 1.5,
+	reloadtime              = 1,
 	customparams = {
-		heatgenerated		= 0.56,--1.5/sec
+		heatgenerated		= 0.2,--0.1/sec
     },
 }
 
 local LBX5 = AC5:New(LBX_Class):New{
 	name                    = "LBX/5",
 	soundStart            	= "LBX5_Fire",
-	range                   = 1000,
+	range                   = 1400,
+	sprayAngle				= 700,
 	accuracy                = 100,
 	reloadtime              = 2,
 	projectiles				= 5,
 	dynDamageMin			= 100,
+	
 	damage = {
-		default = 120, --150 DPS
+		default = 20, --50 DPS
 	},
+	
 	customparams = {
-		heatgenerated		= 1,--1/sec
+		heatgenerated		= 0.2,--0.1/sec
     },
 }
 
@@ -167,10 +171,10 @@ local AC10 = AC_Class:New{
 	size					= 1.5,
 	stages					= 50, 		--Number of particles used in one plasma shot.
 	damage = {
-		default = 800, --200 DPS
+		default = 400, --100 DPS
 	},
 	customparams = {
-		heatgenerated		= 2,--3/sec
+		heatgenerated		= 1.2,--3/sec
 		cegflare			= "AC10_MUZZLEFLASH",
 		ammotype			= "ac10",
     },
@@ -178,23 +182,27 @@ local AC10 = AC_Class:New{
 
 local UAC10 = AC10:New{
 	name                    = "Ultra AC/10",
-	reloadtime              = 3,
+	range					= 1800,
+	reloadtime              = 2,
 }
 
 local LBX10 = AC10:New(LBX_Class):New{
 	name                    = "LBX/10",
 	soundStart            	= "LBX10_Fire",
 	impactOnly				= true,
-	range                   = 1000,
+	range                   = 1200,
+	sprayAngle				= 600,
 	accuracy                = 200,
 	reloadtime              = 4,
 	projectiles				= 10,
 	dynDamageMin			= 100,
+
 	damage = {
-		default = 120, --300 DPS
+		default = 40, --50 DPS
 	},
+	
 	customparams = {
-		heatgenerated		= 3,--2/sec
+		heatgenerated		= 1.2,--3/sec
     },
 }
 
@@ -213,10 +221,10 @@ local AC20 = AC_Class:New{
 	stages					= 50, 		--Number of particles used in one plasma shot.
 	intensity				= 0.2,
 	damage = {
-		default = 2000, --400 DPS
+		default = 1000, --200 DPS
 	},
 	customparams = {
-		heatgenerated		= 17.5,--7/sec
+		heatgenerated		= 3.5,--7/sec
 		cegflare			= "AC20_MUZZLEFLASH",
 		ammotype			= "ac20",
 		shockwave			= true,
@@ -225,24 +233,25 @@ local AC20 = AC_Class:New{
 
 local UAC20 = AC20:New{
 	name                    = "Ultra AC/20",
-	range                   = 1050,
-	reloadtime              = 3.75,
+	range                   = 1000,
+	reloadtime              = 2.5,
 }
 
 local LBX20 = AC20:New(LBX_Class):New{
 	name                    = "LBX/20",
 	soundStart            	= "LBX20_Fire",
 	impactOnly				= true,
-	range                   = 600,
+	range                   = 800,
+	sprayangle				= 400,
 	accuracy                = 150,
 	reloadtime              = 5,
 	projectiles				= 20,
 	dynDamageMin			= 100,
 	damage = {
-		default = 150, --600 DPS
+		default = 100, --600 DPS
 	},
 	customparams = {
-		heatgenerated		= 30,--6/sec
+		heatgenerated		= 3,--6/sec
 		shockwave = false,
     },
 }

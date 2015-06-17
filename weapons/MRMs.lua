@@ -16,11 +16,11 @@ local MRM_Class = Weapon:New{
 	areaOfEffect            = 20,
 	startVelocity			= 900,
 	weaponVelocity          = 900,
-	reloadtime              = 10,
+	reloadtime              = 7.5,
 	burstrate				= 0.01,
 	model					= "Missile.s3o",
 	damage = {
-		default = 100,--10 DPS
+		default = 75,--10 DPS
 	},
 	customparams = {
 		cegflare			= "MISSILE_MUZZLEFLASH",
@@ -35,15 +35,14 @@ local MRM10 = MRM_Class:New{
 	name                    = "MRM-10",
 	burst					= 10,
 	customparams = {
-		heatgenerated		= "40",--4/sec
-	}
+		heatgenerated		= 3,
 }
 
 local MRM20 = MRM_Class:New{
 	name                    = "MRM-20",
 	burst					= 20,
 	customparams = {
-		heatgenerated		= "60",--4/sec
+		heatgenerated		= 4.5,
     },
 }
 
@@ -51,7 +50,15 @@ local MRM30 = MRM_Class:New{
 	name                    = "MRM-30",
 	burst					= 30,
 	customparams = {
-		heatgenerated		= "80",--4/sec
+		heatgenerated		= 7.5,
+    },
+}
+
+local MRM40 = MRM_Class:New{
+	name                    = "MRM-40",
+	burst					= 40,
+	customparams = {
+		heatgenerated		= 9,
     },
 }
 
@@ -59,4 +66,5 @@ return lowerkeys({
 	MRM10 = MRM10,
 	MRM20 = MRM20,
 	MRM30 = MRM30,
+	MRM40 = MRM40,
 })

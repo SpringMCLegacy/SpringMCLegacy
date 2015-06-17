@@ -23,7 +23,7 @@ local PulseLaser_Class = Weapon:New{
 local SPL = PulseLaser_Class:New{
 	name                    = "SPulseLaser",
 	soundStart           	= [[SPL_Fire]],
-	range                   = 400,
+	range                   = 300,
 	accuracy                = 10,
 	reloadtime              = 1.65,
 	laserFlareSize			= 0.075,
@@ -32,17 +32,17 @@ local SPL = PulseLaser_Class:New{
 	rgbcolor				= [[1.0 0.4 0.4]],
 	intensity				= 0.5,
 	damage = {
-		default = 9.9, --30 DPS, 49.5 damage per reload
+		default = 10, --x 5 (burst) x 6 shots per 10 seconds = 300 damage
 	},
 	customparams = {
-		heatgenerated		= 0.66,--2/sec
+		heatgenerated		= 0.33,
 		cegflare			= "SMALLLASER_MUZZLEFLASH",
     },
 }
 
 local CSPL = SPL:New{
 	name                    = "CSPulseLaser",
-	range                   = 450,
+	range                   = 600,
 }
 
 local MicroSPL = SPL:New{
@@ -50,14 +50,14 @@ local MicroSPL = SPL:New{
 	range                   = 200,
 	rgbcolor				= [[0.2 0.2 1.0]],
 	damage = {
-		default = 5, --15 DPS, 25 damage per reload
+		default = 5, --x 5 (burst) x 6 shots per 10 seconds = 150 damage
 	},
 }
 
 local MPL = PulseLaser_Class:New{
 	name                    = "MPulseLaser",
 	soundStart           	= [[MPL_Fire]],
-	range                   = 700,
+	range                   = 600,
 	accuracy                = 25,
 	reloadtime              = 3,
 	thickness				= 1.5,
@@ -65,19 +65,19 @@ local MPL = PulseLaser_Class:New{
 	rgbcolor				= [[0.4 0.8 0.4]],
 	intensity				= 0.6,
 	damage = {
-		default = 36, --60 DPS, 180 damage per reload
+		default = 36.7, --x 5 (burst) x 3.3 shots per 10 seconds = 600 damage
 	},
 	customparams = {
-		heatgenerated		= 2.4,--4/sec
+		heatgenerated		= 1.21,
 		cegflare			= "MEDIUMLASER_MUZZLEFLASH",
     },
 }
 
 local CMPL = MPL:New{
 	name                    = "CMPulseLaser",
-	range                   = 750,
+	range                   = 1200,
 	damage = {
-		default = 42, --70 DPS, 210 damage per reload
+		default = 42.4, --x 5 (burst) x 3.3 shots per 10 seconds = 700 damage
 	},
 }
 
@@ -93,19 +93,19 @@ local LPL = PulseLaser_Class:New{
 	rgbcolor				= [[0.4 0.0 0.8]],
 	intensity				= 1,
 	damage = {
-		default = 67.5, --90 DPS, 337.5 damage per reload
+		default = 69, --x 5 (burst) x 2.6 shots per 10 seconds = 900 damage
 	},
 	customparams = {
-		heatgenerated		= 7.5,--10/sec
+		heatgenerated		= 3.84,--10/sec
 		cegflare			= "LARGELASER_MUZZLEFLASH",
     },
 }
 
 local CLPL = LPL:New{
 	name                    = "CLPulseLaser",
-	range                   = 1050,
+	range                   = 2000,
 	damage = {
-		default = 75, --100 DPS, 375 damage per reload
+		default = 77, --x 5 (burst) x 2.6 shots per 10 seconds = 1000 damage
 	},
 }
 

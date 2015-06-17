@@ -9,7 +9,7 @@ local SRM_Class = Weapon:New{
 	collideFriendly			= true,
 	noSelfDamage            = true,
 	turret                  = true,
-	range                   = 700,
+	range                   = 900,
 	accuracy                = 1000,
 	sprayangle				= 1750,
 	wobble					= 900,
@@ -24,7 +24,7 @@ local SRM_Class = Weapon:New{
 	burstrate				= 0.1,
 	model					= "Missile.s3o",
 	damage = {
-		default = 150,--10 DPS
+		default = 100,--20 DPS
 	},
 	customparams = {
 		cegflare			= "MISSILE_MUZZLEFLASH",
@@ -39,7 +39,21 @@ local SRM2 = SRM_Class:New{
 	name                    = "SRM-2",
 	burst					= 2,
 	customparams = {
-		heatgenerated		= "15",--3/sec
+		heatgenerated		= 1,
+	}
+}
+
+local ASRM2 = SRM2:New{
+	name                    = "Artemis SRM-2",
+	turnRate				= 4000,
+}
+
+local SSRM2 = SRM2:New{
+	name                    = "Streak SRM-2",
+	sprayangle				= 500,
+	turnRate				= 10000,
+	customparams = {
+		jammable			= true,
 	}
 }
 
@@ -47,7 +61,21 @@ local SRM4 = SRM_Class:New{
 	name                    = "SRM-4",
 	burst					= 4,
 	customparams = {
-		heatgenerated		= "15",--3/sec
+		heatgenerated		= 15,
+	}
+}
+
+local ASRM4 = SRM4:New{
+	name                    = "Artemis SRM-4",
+	turnRate				= 4000,
+}
+
+local SSRM4 = SRM4:New{
+	name                    = "Streak SRM-4",
+	sprayangle				= 500,
+	turnRate				= 10000,
+	customparams = {
+		jammable			= true,
 	}
 }
 
@@ -55,67 +83,21 @@ local SRM6 = SRM_Class:New{
 	name                    = "SRM-6",
 	burst					= 6,
 	customparams = {
-		heatgenerated		= "20",--4/sec
+		heatgenerated		= 20,
 	}
 }
 
-local SSRM2 = SRM_Class:New{
-	name                    = "Streak SRM-2",
-	sprayangle				= 500,
-	turnRate				= 10000,
-	burst					= 2,
-	customparams = {
-		heatgenerated		= "15",--3/sec
-		jammable			= true,
-	}
+local ASRM6 = SRM6:New{
+	name                    = "Artemis SRM-6",
+	turnRate				= 4000,
 }
 
-local SSRM4 = SRM_Class:New{
-	name                    = "Streak SRM-4",
-	sprayangle				= 500,
-	turnRate				= 10000,
-	burst					= 4,
-	customparams = {
-		heatgenerated		= "15",--3/sec
-		jammable			= true,
-	}
-}
-
-local SSRM6 = SRM_Class:New{
+local SSRM6 = SRM6:New{
 	name                    = "Streak SRM-6",
 	sprayangle				= 500,
 	turnRate				= 10000,
-	burst					= 6,
 	customparams = {
-		heatgenerated		= "20",--4/sec
 		jammable			= true,
-	}
-}
-
-local ASRM2 = SRM_Class:New{
-	name                    = "A.SRM-2",
-	turnRate				= 4000,
-	burst					= 2,
-	customparams = {
-		heatgenerated		= "15",--3/sec
-	}
-}
-
-local ASRM4 = SRM_Class:New{
-	name                    = "A.SRM-4",
-	turnRate				= 4000,
-	burst					= 4,
-	customparams = {
-		heatgenerated		= "15",--3/sec
-	}
-}
-
-local ASRM6 = SRM_Class:New{
-	name                    = "A.SRM-6",
-	turnRate				= 4000,
-	burst					= 6,
-	customparams = {
-		heatgenerated		= "20",--4/sec
 	}
 }
 

@@ -49,7 +49,7 @@ local TAG = BeamLaser_Class:New{
 local SBL = BeamLaser_Class:New{
 	name                    = "SLaser",
 	soundStart           	= [[SBL_Fire]],
-	range                   = 600,
+	range                   = 300,
 	accuracy                = 150,	
 	reloadtime              = 2.5,
 	thickness				= 1,
@@ -59,27 +59,27 @@ local SBL = BeamLaser_Class:New{
 	burst					= 10,
 	rgbcolor				= [[1.0 0.4 0.4]],
 	damage = {
-		default = 12.5, --30 DPS, 125 damage per reload
+		default = 7.5,--x 10 (burst) x 4 times per 10 seconds = 300 damage
 	},
 	customparams = {
-		heatgenerated		= 2.5,--1/sec
+		heatgenerated		= 0.25,--0.1/sec
 		cegflare			= "SMALLLASER_MUZZLEFLASH",
     },
 }
 
 local ERSBL = SBL:New{
 	name                    = "ERSLaser",
-	range                   = 700,
+	range                   = 500,
 	customparams = {
-		heatgenerated		= 5,--2/sec
+		heatgenerated		= 0.5,--0.2/sec
     },
 }
 
 local CERSBL = ERSBL:New{
 	name                    = "CERSLaser",
-	range                   = 800,
+	range                   = 600,
 	damage = {
-		default = 20, --50 DPS
+		default = 12.5--x 10 (burst) x 4 times per 10 seconds = 500 damage
 	},
 }
 
@@ -88,35 +88,35 @@ local MBL = BeamLaser_Class:New{
 	soundStart           	= [[MBL_Fire]],
 	range                   = 900,
 	accuracy                = 150,
-	reloadtime              = 3,
+	reloadtime              = 3.3,
 	thickness				= 1.5,
 	coreThickness			= 0.4,
 	beamTime           		= 0.5,
 	beamTTL           		= 0.5,
-	burst					= 15,
+	burst					= 10,
 	rgbcolor				= [[0.4 1.0 0.4]],
 	damage = {
-		default = 10,--10 DPS, 150 damage per reload
+		default = 16.6,-- x 10 (burst) x 3 shots per 10 seconds = 500 damage
 	},
 	customparams = {
-		heatgenerated		= 9,--3/sec
+		heatgenerated		= 1,--0.3/sec
 		cegflare			= "MEDIUMLASER_MUZZLEFLASH",
     },
 }
 
 local ERMBL = MBL:New{
 	name                    = "ERMLaser",
-	range                   = 1050,
+	range                   = 1200,
 	customparams = {
-		heatgenerated		= 15,--5/sec
+		heatgenerated		= 1,--0.5/sec
     },
 }
 
 local CERMBL = ERMBL:New{
 	name                    = "CERMLaser",
-	range                   = 1150,
+	range                   = 1500,
 	damage = {
-		default = 14, --70 DPS, 210 damage per reload
+		default = 23.3,-- x 10 (burst) x 3 shots per second = 700 damage
 	},
 }
 
@@ -130,30 +130,30 @@ local LBL = BeamLaser_Class:New{
 	coreThickness			= 0.5,
 	beamTime           		= 0.65,
 	beamTTL           		= 0.65,
-	burst					= 20,
+	burst					= 15,
 	rgbcolor				= [[0.5 0.0 1.0]],
 	damage = {
-		default = 20, --80 DPS, 400 damage per reload
+		default = 26.6, --x 15 (burst) x 2 shots per 10 seconds = 800 damage
 	},
 	customparams = {
-		heatgenerated		= 40,--8/sec
+		heatgenerated		= 4,--0.8/sec
 		cegflare			= "LARGELASER_MUZZLEFLASH",
     },
 }
 
 local ERLBL = LBL:New{
 	name                    = "ERLLaser",
-	range                   = 1600,
+	range                   = 1900,
 	customparams = {
-		heatgenerated		= 60,--12/sec
+		heatgenerated		= 6,--1.2/sec
     },
 }
 
 local CERLBL = ERLBL:New{
 	name                    = "CERLLaser",
-	range                   = 1700,
+	range                   = 2500,
 	damage = {
-		default = 25, --200 DPS, 500 damage per reload
+		default = 33.3, --x 15 (burst) x 2 shots per 10 seconds = 1000 damage
 	},
 }
 

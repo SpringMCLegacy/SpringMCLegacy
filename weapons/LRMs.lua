@@ -8,7 +8,7 @@ local LRM_Class = Weapon:New{
 	collideFriendly			= true,
 	noSelfDamage            = true,
 	turret                  = true,
-	range                   = 3000,
+	range                   = 2100,
 	accuracy                = 2000,
 	sprayangle				= 5000,
 	wobble					= 2000,
@@ -21,18 +21,18 @@ local LRM_Class = Weapon:New{
 	areaOfEffect            = 20,
 	startVelocity			= 600,
 	weaponVelocity          = 800,
-	reloadtime              = 15,
+	reloadtime              = 10,
 	burstrate				= 0.1,
 	model					= "Missile.s3o",
 	damage = {
-		default = 150,--10 DPS
+		default = 100,--10 DPS
 	},
 	customparams = {
 		cegflare			= "MISSILE_MUZZLEFLASH",
 		projectilelups		= {"missileEngine"},
 		weaponclass			= "missile",
 		ammotype			= "lrm",
-		minrange			= 500,
+		minrange			= 600,
     },
 }
 
@@ -40,7 +40,7 @@ local LRM5 = LRM_Class:New{
 	name                    = "LRM-5",
 	burst					= 5,
 	customparams = {
-		heatgenerated		= 30, --6/sec
+		heatgenerated		= 3,
 	},
 }
 
@@ -48,7 +48,7 @@ local LRM10 = LRM_Class:New{
 	name                    = "LRM-10",
 	burst					= 10,
 	customparams = {
-		heatgenerated		= 60, --6/sec
+		heatgenerated		= 6,
     },
 }	
 
@@ -56,7 +56,7 @@ local LRM15 = LRM_Class:New{
 	name                    = "LRM-15",
 	burst					= 15,
 	customparams = {
-		heatgenerated		= 75, --6/sec
+		heatgenerated		= 7.5,
     },
 }
 
@@ -64,7 +64,7 @@ local LRM20 = LRM_Class:New{
 	name                    = "LRM-20",
 	burst					= 20,
 	customparams = {
-		heatgenerated		= 90, --6/sec
+		heatgenerated		= 9,
     },
 }
 
@@ -73,7 +73,7 @@ local ALRM5 = LRM_Class:New{
 	turnRate				= 4000,
 	burst					= 5,
 	customparams = {
-		heatgenerated		= 30, --6/sec
+		heatgenerated		= 3,
 	},
 }
 
@@ -82,7 +82,7 @@ local ALRM10 = LRM_Class:New{
 	turnRate				= 4000,
 	burst					= 10,
 	customparams = {
-		heatgenerated		= 60, --6/sec
+		heatgenerated		= 6,
     },
 }	
 
@@ -91,7 +91,7 @@ local ALRM15 = LRM_Class:New{
 	turnRate				= 4000,
 	burst					= 15,
 	customparams = {
-		heatgenerated		= 75, --6/sec
+		heatgenerated		= 7.5,
     },
 }
 
@@ -100,7 +100,7 @@ local ALRM20 = LRM_Class:New{
 	turnRate				= 4000,
 	burst					= 20,
 	customparams = {
-		heatgenerated		= 90, --6/sec
+		heatgenerated		= 9,
     },
 }
 

@@ -9,7 +9,7 @@ local ATM_Class = Weapon:New{
 	collideFriendly			= true,
 	noSelfDamage            = true,
 	turret                  = true,
-	range                   = 3200,
+	range                   = 2700,
 	accuracy                = 500,
 	sprayangle				= 1000,
 	wobble					= 1000,
@@ -29,7 +29,7 @@ local ATM_Class = Weapon:New{
 	DynDamageMin			= 100,--100 DPS 
 	--DynDamageRange			= 1200,--Weapon will decrease in damage up to this range
 	damage = {
-		default = 200,--15 DPS
+		default = 300,--2 DPS per missile, down to 100 at minimum range
 	},
 	customparams = {
 		cegflare			= "MISSILE_MUZZLEFLASH",
@@ -43,7 +43,7 @@ local ATM3 = ATM_Class:New{
 	name                    = "ATM 3",
 	burst					= 3,
 	customparams = {
-		heatgenerated		= "20", --6/sec
+		heatgenerated		= 2,
 	}
 }
 
@@ -51,7 +51,7 @@ local ATM6 = ATM_Class:New{
 	name                    = "ATM 6",
 	burst					= 6,
 	customparams = {
-		heatgenerated		= "40", --6/sec
+		heatgenerated		= 4,
 	}
 }
 
@@ -59,7 +59,7 @@ local ATM9 = ATM_Class:New{
 	name                    = "ATM 9",
 	burst					= 9,
 	customparams = {
-		heatgenerated		= "60", --6/sec
+		heatgenerated		= 6,
 	}
 }
 
@@ -67,7 +67,7 @@ local ATM12 = ATM_Class:New{
 	name                    = "ATM 12",
 	burst					= 12,
 	customparams = {
-		heatgenerated		= "80", --6/sec
+		heatgenerated		= 8,
 	}
 }
 

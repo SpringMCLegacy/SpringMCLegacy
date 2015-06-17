@@ -31,7 +31,7 @@ weaponDef = {
 	model					= "LargeMissile.s3o",
 	interceptedByShieldType	= 32,
 	damage = {
-		default = 3000,--200 DPS
+		default = 1500,--100 DPS
 	},
 	customparams = {
 		heatgenerated		= "200",--10/sec

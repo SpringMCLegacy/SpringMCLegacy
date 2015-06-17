@@ -18,7 +18,7 @@ weaponDef = {
     lineOfSight        = true,
     minintensity       = 0.1,
     impulseFactor      = 0,
-    range              = 400,
+    range              = 300,
     reloadtime         = 0.1,
     rgbColor           = "0 0 0",
     rgbColor2          = "0 0 0",
@@ -28,12 +28,12 @@ weaponDef = {
     weaponVelocity     = 1000,
 	
 	damage = {
-		default = 2, --20 DPS
+		default = 20, --20 DPS
 	},
 	customparams = {
-		heatgenerated		= 0.3,--3/s
+		heatgenerated		= 0.3,--0.3/s
 		cegflare			= "flamethrowerrange500",
-		heatdamage			= 2.5,
+		heatdamage			= 2,
 		weaponclass			= "energy",
 		flareonshot 		= true,
 		projectilelups		= {"flameHeat"},
