@@ -1,28 +1,60 @@
-local CL_Iceferret = Medium:New{
-	corpse				= "CL_Iceferret_X",
-	sightDistance       = 1200,
-	radarDistance      	= 2000,
-	maxDamage           = 11400,
-	mass                = 4500,
-	buildCostEnergy     = 45,
-	buildCostMetal      = 20020,
-	maxVelocity		= 6.5, --130kph/30
-	maxReverseVelocity= 3.25,
-	acceleration    = 1.8,
-	brakeRate       = 0.1,
-	turnRate 		= 850,
+local Iceferret = Medium:New{
+	name				= "Ice Ferret",
 	
 	customparams = {
-		heatlimit		= 24,
-		torsoturnspeed	= 190,
-		maxammo 		= {srm = 120},
+		tonnage			= 45,
     },
 }
 	
-local D = CL_Iceferret:New{
-	name              	= "Ice Ferret (Fenris) D",
-	description         = "Medium Brawler Mech",
-	objectName        	= "CL_Iceferret.s3o",
+local Prime = Iceferret:New{
+	description         = "Medium Scout/Sniper",
+	weapons	= {	
+		[1] = {
+			name	= "CERPPC",
+		},
+		[2] = {
+			name	= "CERSBL",
+		},
+		[3] = {
+			name	= "SSRM2",
+		},
+	},
+	customparams = {
+		variant         = "Prime",
+		speed			= 120,
+		price			= 16780,
+		heatlimit 		= 24,
+		armor			= {type = "ferro", tons = 7.5},
+		maxammo 		= {srm = 1},
+		bap				= true,
+    },
+}
+
+local B = Iceferret:New{
+	description         = "Medium Sttiker",
+	weapons	= {	
+		[1] = {
+			name	= "CERLBL",
+		},
+		[2] = {
+			name	= "SRM4",
+		},
+		[3] = {
+			name	= "SRM6",
+		},
+	},
+	customparams = {
+		variant         = "B",
+		speed			= 120,
+		price			= 14610,
+		heatlimit 		= 24,
+		armor			= {type = "ferro", tons = 7.5},
+		maxammo 		= {srm = 2},
+    },
+}
+
+local D = Iceferret:New{
+	description         = "Medium Brawler",
 	weapons	= {	
 		[1] = {
 			name	= "CMPL",
@@ -37,17 +69,20 @@ local D = CL_Iceferret:New{
 			name	= "CMPL",
 		},
 		[5] = {
-			name	= "SRM6",
-		},
-		[6] = {
 			name	= "AMS",
 		},
 	},
 	customparams = {
-		helptext		= "Armament: 4 x Medium Pulse Laser, 1 x SRM-6 - Armor: 7.5 tons Ferro-Fibrous",
+		variant         = "D",
+		speed			= 120,
+		price			= 16530,
+		heatlimit 		= 24,
+		armor			= {type = "ferro", tons = 7.5},
     },
 }
 
 return lowerkeys({
-	["CL_Iceferret_D"] = D,
+	["WF_Iceferret_Prime"] = Prime:New(),
+	["WF_Iceferret_B"] = B:New(),
+	["WF_Iceferret_D"] = D:New(),
 })
