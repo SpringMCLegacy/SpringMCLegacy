@@ -221,6 +221,7 @@ local function SetDropZone(beaconID, teamID)
 	local dropZoneID = CreateUnit(side .. "_dropzone", x,y,z, "s", teamID)
 	dropZoneIDs[teamID] = dropZoneID
 	dropZoneBeaconIDs[teamID] = beaconID
+	GG.DropshipLeft(teamID) -- reset the timer
 end
 
 -- WALLS & GATES
