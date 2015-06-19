@@ -42,6 +42,7 @@ local function ReplaceStrings(t, name)
 end
 
 local ammoPerTon = lowerkeys(VFS.Include("weapons/AmmoTypes.lua", nil, VFS.ZIP))
+local armorTypes = lowerkeys(VFS.Include("units/ArmorTypes.lua", nil, VFS.ZIP))
 
 -- DROPZONES
 local DROPZONE_UDS = {} --DZ_IDS = {shortSideName = unitDef}
@@ -82,6 +83,7 @@ for name, ud in pairs(UnitDefs) do
 			ud.mass = (cp.tonnage or 0) * 100
 			if cp.armor then
 				ud.maxdamage = cp.tonnage / 10 + cp.armor.tons * 1000
+				ud.maxdamage = ud.maxdamage * (armorTypes[cp.armor.type] or 1)
 			end
 		end
 		if cp.speed then
