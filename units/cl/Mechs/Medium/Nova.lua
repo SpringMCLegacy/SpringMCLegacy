@@ -1,32 +1,25 @@
-local CL_Nova = Medium:New{
-	corpse				= "CL_Nova_X",
-	maxDamage           = 16000,
-	mass                = 5000,
-	buildCostEnergy     = 50,
-	buildCostMetal      = 29280,
-	maxVelocity		= 4.3, --86kph/20
-	maxReverseVelocity= 2.15,
-	acceleration    = 1.8,
-	brakeRate       = 0.1,
-	turnRate 		= 850,
+local Nova = Medium:New{
+	name				= "Nova",
 	
 	customparams = {
-		heatlimit		= 36,
-		torsoturnspeed	= 150,
-		canjump			= "1",
+		tonnage		= 50,
     },
 }
 
-local Prime = CL_Nova:New{
-	name              	= "Nova (Black Hawk) Prime",
-	description         = "Medium Strike Mech",
-	objectName        	= "CL_Nova.s3o",
+local Prime = Nova:New{
+	description         = "Medium Striker",
+	
 	weapons = {	
 		-- put these in via a loop
 	},
 
 	customparams = {
-		helptext		= "Armament: 12 x ER Medium Beam Laser - Armor: 10 tons",
+		variant         = "Prime",
+		speed			= 80,
+		price			= 26630,
+		heatlimit 		= 36,
+		armor			= {type = "standard", tons = 10},
+		jumpjets		= 5,
     },
 }
 for i = 1, 12 do -- yep that's 12 ERMBLs, count 'em!
@@ -34,5 +27,6 @@ for i = 1, 12 do -- yep that's 12 ERMBLs, count 'em!
 end
 
 return lowerkeys({
-	["CL_Nova_Prime"] = Prime
+	["HH_Nova_Prime"] = Prime:New(),
+	["WF_Nova_Prime"] = Prime:New(),
 })
