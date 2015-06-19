@@ -61,7 +61,7 @@ local SRM4 = SRM_Class:New{
 	name                    = "SRM-4",
 	burst					= 4,
 	customparams = {
-		heatgenerated		= 15,
+		heatgenerated		= 1.5,
 	}
 }
 
@@ -83,7 +83,7 @@ local SRM6 = SRM_Class:New{
 	name                    = "SRM-6",
 	burst					= 6,
 	customparams = {
-		heatgenerated		= 20,
+		heatgenerated		= 2,
 	}
 }
 
