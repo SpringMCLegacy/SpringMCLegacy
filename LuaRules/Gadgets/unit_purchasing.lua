@@ -411,7 +411,7 @@ local function SendCommandFallback(unitID, unitDefID, teamID, cost)
 			Spring.SendMessageToTeam(teamID, "Sending purchase order for the following:")
 			for i, order in ipairs(orderQueue) do
 				for orderDefID, count in pairs(order) do
-					Spring.SendMessageToTeam(teamID, UnitDefs[orderDefID].name .. ":\t" .. count)
+					Spring.SendMessageToTeam(teamID, UnitDefs[orderDefID].humanName .. ":\t" .. count)
 				end
 			end
 			-- Dropship can now be considered ACTIVE even though it hasn't arrived yet

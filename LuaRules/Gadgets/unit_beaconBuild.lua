@@ -215,13 +215,13 @@ local function SetDropZone(beaconID, teamID)
 	if currDropZone then
 		AddUpgradeOptions(dropZoneBeaconIDs[teamID])
 		DestroyUnit(currDropZone, false, true)
+		GG.DropshipLeft(teamID) -- reset the timer
 	end
 	local x,y,z = GetUnitPosition(beaconID)
 	local side = GG.teamSide[teamID]
 	local dropZoneID = CreateUnit(side .. "_dropzone", x,y,z, "s", teamID)
 	dropZoneIDs[teamID] = dropZoneID
 	dropZoneBeaconIDs[teamID] = beaconID
-	GG.DropshipLeft(teamID) -- reset the timer
 end
 
 -- WALLS & GATES
