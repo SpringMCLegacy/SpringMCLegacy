@@ -1,29 +1,14 @@
-local CL_Shadowcat = Medium:New{
-	corpse				= "CL_Shadowcat_X",
-	maxDamage           = 13400,
-	mass                = 4500,
-	buildCostEnergy     = 45,
-	buildCostMetal      = 26580,
-	maxVelocity		= 4.85, --97kph/30
-	maxReverseVelocity= 2.43,
-	acceleration    = 1.8,
-	brakeRate       = 0.1,
-	turnRate 		= 950,
+local Shadowcat = Medium:New{
+	name				= "Shadow Cat",
 	
 	customparams = {
-		hasbap			= true,
-		heatlimit		= 20,
-		torsoturnspeed	= 175,
-		canjump			= "1",
-		canmasc			= true,
-		maxammo 		= {gauss = 20},
+		tonnage			= 45,
     },
 }
 	
-local Prime = CL_Shadowcat:New{
-	name              	= "Shadow Cat Prime",
-	description         = "Medium Sniper Mech",
-	objectName        	= "CL_Shadowcat.s3o",
+local Prime = Shadowcat:New{
+	description         = "Medium Sniper",
+
 	weapons = {	
 		[1] = {
 			name	= "Gauss",
@@ -37,10 +22,82 @@ local Prime = CL_Shadowcat:New{
 	},
 
 	customparams = {
-		helptext		= "Armament: 1 x Gauss Rifle, 1 x ER Large Beam Laser, 1 x ER Medium Beam Laser - Armor: 7 tons",
+		variant         = "Prime",
+		speed			= 90,
+		price			= 21560,
+		heatlimit 		= 20,
+		armor			= {type = "ferro", tons = 7},
+		maxammo 		= {gauss = 2},
+		masc			= true,
+		bap				= true,
+		jumpjets		= 6,
+    },
+}
+
+local A = Shadowcat:New{
+	description         = "Medium Sniper",
+
+	weapons = {	
+		[1] = {
+			name	= "CERLBL",
+		},
+		[2] = {
+			name	= "CERLBL",
+		},
+		[3] = {
+			name	= "SSRM6",
+		},
+	},
+
+	customparams = {
+		variant         = "A",
+		speed			= 90,
+		price			= 22200,
+		heatlimit 		= 26,
+		armor			= {type = "ferro", tons = 7},
+		maxammo 		= {srm = 2},
+		masc			= true,
+		bap				= true,
+		jumpjets		= 6,
+    },
+}
+
+local B = Shadowcat:New{
+	description         = "Medium Sniper",
+
+	weapons = {	
+		[1] = {
+			name	= "ALRM15",
+		},
+		[2] = {
+			name	= "ALRM15",
+		},
+		[3] = {
+			name	= "CERMBL",
+		},
+		[4] = {
+			name	= "CERMBL",
+		},
+	},
+
+	customparams = {
+		variant         = "B",
+		speed			= 90,
+		price			= 24200,
+		heatlimit 		= 20,
+		armor			= {type = "ferro", tons = 7},
+		maxammo 		= {lrm = 4},
+		masc			= true,
+		bap				= true,
+		jumpjets		= 6,
     },
 }
 
 return lowerkeys({
-	["CL_Shadowcat_Prime"] = Prime,
+	["SJ_Shadowcat_Prime"] = Prime:New(),
+	["SJ_Shadowcat_A"] = A:New(),
+	["SJ_Shadowcat_B"] = B:New(),
+	["WF_Shadowcat_Prime"] = Prime:New(),--for testing
+	["WF_Shadowcat_A"] = A:New(),--for testing
+	["WF_Shadowcat_B"] = B:New(),--for testing
 })
