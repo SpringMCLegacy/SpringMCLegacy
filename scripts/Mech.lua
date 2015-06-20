@@ -75,7 +75,7 @@ local currHeatLevel = 0
 local excessHeat = 0
 SetUnitRulesParam(unitID, "heat", 0)
 SetUnitRulesParam(unitID, "excess_heat", 0)
-local jumpHeat = 40
+local jumpHeat = 4
 local SlowDownRate = 2
 
 --piece defines
@@ -274,7 +274,7 @@ local function DrainMASC()
 	while moving and mascActive do
 		mascLevel = mascLevel - 1
 		SetUnitRulesParam(unitID, "masc", mascLevel)
-		ChangeHeat(1)
+		ChangeHeat(0.1)
 		if currHeatLevel > heatLimit or mascLevel == 0 then
 			MASC(false)
 			return
@@ -309,7 +309,7 @@ end
 function FlushCoolant()
 	if currAmmo.coolant > 0 then
 		GG.EmitSfxName(unitID, torso, "greengoo")
-		ChangeHeat(-50)
+		ChangeHeat(-10)
 		ChangeAmmo("coolant", -20)
 	end
 end
