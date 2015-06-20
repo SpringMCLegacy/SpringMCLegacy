@@ -31,12 +31,14 @@ local PPC_Class = Weapon:New{
 		heatdamage			= 10,
 		weaponclass			= "energy",
 		projectilelups		= {"ppcTail"},
-		minrange			= 300,
     },
 }
 
 local PPC = PPC_Class:New{
 	name                    = "PPC",
+	customparams = {
+		minrange			= 300,
+    },
 }
 
 local ERPPC = PPC_Class:New{
@@ -52,6 +54,7 @@ local HeavyPPC = PPC_Class:New{
 	name                    = "Heavy PPC",
 	customparams = {
 		heatgenerated		= 7.5,
+		minrange			= 300,
     },
 }
 
@@ -62,6 +65,7 @@ local LightPPC = PPC_Class:New{
 	},
 	customparams = {
 		heatgenerated		= 2.5,
+		minrange			= 300,
     },
 }
 
