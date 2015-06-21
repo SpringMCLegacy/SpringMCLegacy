@@ -66,7 +66,7 @@ function SpeedChange(unitID, unitDefID, mult, masc)
 	if hasMASC and masc then
 		EditUnitCmdDesc(unitID, hasMASC, {disabled = true})
 	end
-	Spring.MoveCtrl.SetGroundMoveTypeData(unitID, ChangeMoveData(unitDefID, mult))
+	Spring.MoveCtrl.SetGroundMoveTypeData(unitID, ChangeMoveData(unitDefID, mult or masc and 2))
 end
 GG.SpeedChange = SpeedChange
 
