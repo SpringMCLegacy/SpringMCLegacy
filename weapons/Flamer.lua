@@ -31,9 +31,9 @@ weaponDef = {
 		default = 20, --20 DPS
 	},
 	customparams = {
-		heatgenerated		= 0.3,--0.3/s
+		heatgenerated		= 0.25,--0.3/s
 		cegflare			= "flamethrowerrange500",
-		heatdamage			= 2,
+		heatdamage			= 0.1,
 		weaponclass			= "energy",
 		flareonshot 		= true,
 		projectilelups		= {"flameHeat"},
