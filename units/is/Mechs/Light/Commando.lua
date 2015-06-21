@@ -57,6 +57,6 @@ local COM7S = Commando:New{
 }
 
 return lowerkeys({
-	["LA_Commando_COM5S"] = COM5S:New(),
+	--["LA_Commando_COM5S"] = COM5S:New(),
 	["LA_Commando_COM7S"] = COM7S:New(),
 })
