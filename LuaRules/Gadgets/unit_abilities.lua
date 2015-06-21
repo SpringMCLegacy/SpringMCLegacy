@@ -82,8 +82,12 @@ function gadget:Initialize()
 		local unitDefID = Spring.GetUnitDefID(unitID)
 		gadget:UnitCreated(unitID, unitDefID, teamID)
 	end
+	-- centralise key bindings
 	Spring.SendCommands({"bind c flush"})
 	Spring.SendCommands({"bind v masc"})
+	Spring.SendCommands({"bind j jump"})
+	Spring.SendCommands({"bind t turn"})
+	Spring.SendCommands({"bind r onoff"})
 end
 	
 
