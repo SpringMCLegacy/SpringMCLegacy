@@ -1,5 +1,6 @@
 VFS.Include('gamedata/VFSUtils.lua') -- for RecursiveFileSearch()
 lowerkeys = VFS.Include('gamedata/system.lua').lowerkeys -- for lowerkeys()
+modOptions = Spring.GetModOptions()
 
 -- Our shared funcs
 local function printTable (input)
@@ -267,6 +268,7 @@ local sharedEnv = {
 	Sides = Sides,
 	printTable = printTable,
 	lowerkeys = lowerkeys,
+	modOptions = modOptions,
 	Def = Def,
 	Feature = Feature,
 	Weapon = Weapon,
