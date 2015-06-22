@@ -215,12 +215,12 @@ end
 function gadget:UnitIdle(unitID, unitDefID, teamID)
 	--Spring.Echo("UnitIdle", UnitDefs[unitDefID].name)
 	if vehiclesDefCache[unitDefID] and not (Spring.GetUnitRulesParam(unitID, "dronesout") == 1) then -- a vehicle
-		local commandQueue = Spring.GetCommandQueue(unitID)
+		--local commandQueue = Spring.GetCommandQueue(unitID)
 		--for k, v in pairs(commandQueue) do Spring.Echo(k,v) end
-		local cmdQueueSize = Spring.GetCommandQueue(unitID, 0) or 0
-		if cmdQueueSize > 0 then 
+		--local cmdQueueSize = Spring.GetCommandQueue(unitID, 0) or 0
+		--if cmdQueueSize > 0 then 
 			--Spring.Echo("UnitIdle: I'm so not idle!") 
-		end
+		--end
 		GG.Delay.DelayCall(UnitIdleCheck, {unitID, unitDefID, teamID}, 1)
 	end
 end
