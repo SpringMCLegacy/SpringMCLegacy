@@ -1,5 +1,5 @@
 weaponDef = {
-	name                    = "Arrow IV",
+	name                    = "Arrow Missile",
 	weaponType              = "MissileLauncher",
 	renderType				= 1,
 	explosionGenerator    	= "custom:HE_XLARGE",
@@ -34,7 +34,7 @@ weaponDef = {
 		default = 1500,--100 DPS
 	},
 	customparams = {
-		heatgenerated		= "200",--10/sec
+		heatgenerated		= 15,--10/sec
 		cegflare			= "ARROW_MUZZLEFLASH",
 		weaponclass			= "missile",
 		ammotype			= "arrow",
