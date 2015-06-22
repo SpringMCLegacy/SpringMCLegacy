@@ -25,7 +25,7 @@ local GetPieceColVol = Spring.GetUnitPieceCollisionVolumeData
 local SetPieceColVol = Spring.SetUnitPieceCollisionVolumeData
 
 -- Constants
-local TORSO_SCALE = 0.75
+local TORSO_SCALE = 0.85
 local LIMB_SCALE = 1.1
 local BODY_SCALE = 1.0
 local TURRET_SCALE = 1.1
