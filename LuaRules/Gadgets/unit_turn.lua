@@ -38,6 +38,7 @@ if (gadgetHandler:IsSyncedCode()) then
 -- SYNCED
 local DelayCall = GG.Delay.DelayCall
 
+
 local function StartTurn(unitID, unitDefID, tx, tz)
 	local ud = UnitDefs[unitDefID]
 	local turnRate = ud.turnRate
@@ -58,7 +59,7 @@ local function StartTurn(unitID, unitDefID, tx, tz)
 	if deltaHeading > (180 * COB_ANGULAR) then deltaHeading = deltaHeading - (360 * COB_ANGULAR) end
 	if deltaHeading < (-180 * COB_ANGULAR) then deltaHeading = deltaHeading + (360 * COB_ANGULAR) end
 	-- how many frames the turn should take
-	local numFrames = deltaHeading / turnRate
+	local numFrames = math.ceil(deltaHeading / turnRate)
 	if numFrames < 0 then
 		numFrames = -numFrames
 		turnRate = - turnRate
@@ -77,8 +78,8 @@ local function StartTurn(unitID, unitDefID, tx, tz)
 	return true -- successful turn command
 end
 
+
 local function StopTurn(unitID)
-	--Spring.Echo("StopTurn")
 	if turning[unitID].numFrames then -- only attempt to stop if we are actually turning
 		turning[unitID] = {} -- not nil here or gets started again by CommandFallback
 		env = Spring.UnitScript.GetScriptEnv(unitID)
@@ -139,6 +140,8 @@ function gadget:CommandFallback(unitID, unitDefID, unitTeam, cmdID, cmdParams, c
 			if turning[unitID].numFrames and turning[unitID].numFrames > 0 then
 				return true, false -- still turning
 			else
+				StopTurn(unitID)
+				--Spring.Echo("Deleting turn data")
 				turning[unitID] = nil
 				GG.turning[unitID] = false
 				return true, true -- turn finished
