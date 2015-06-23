@@ -6,7 +6,7 @@ local Turret_BAP = Tower:New{
 
 	customparams = {
 		towertype 		= "sensor",
-		hasbap			= true,
+		bap			= true,
     },
 }
 

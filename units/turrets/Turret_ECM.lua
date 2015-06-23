@@ -6,7 +6,7 @@ local Turret_ECM = Tower:New{
 
 	customparams = {
 		towertype 		= "sensor",
-		hasecm			= true,
+		ecm			= true,
     },
 }
 
