@@ -76,32 +76,6 @@ local function GetOpts()
 end
 
 
-local function RemoveMove(unitID)
-  local queue = spGetCommandQueue(unitID)
-  local qLast = #queue
-  if (qLast < 1) then
-    return false
-  end
-
-  if (queue[qLast].id == CMD_MOVE) then
-    spGiveOrderToUnit(unitID, CMD_REMOVE, { queue[qLast].tag }, 0)
-    return true
-  elseif (queue[qLast].id == CMD_SET_WANTED_MAX_SPEED) then
-    if (qLast < 2) then
-      return false
-    end
-    local qMove = (qLast - 1)
-    if (queue[qMove].id == CMD_MOVE) then
-      spGiveOrderToUnit(
-        unitID, CMD_REMOVE, { queue[qLast].tag, queue[qMove].tag }, 0
-      )
-      return true
-    end
-  end
-  return false
-end
-
-
 local function MinimapCoords(mx, my)
   local px, py, sx, sy, min, max = Spring.GetMiniMapGeometry()
   if ((not min) and
@@ -139,14 +113,15 @@ function widget:MousePress(x, y, button)
     local coords = GetGroundCoords(x, y)
     if (coords) then
       local now = spGetTimer()
-      if ((spDiffTimers(now, timer) <= tolerance) and
+      if ((spDiffTimers(now, timer) <= tolerance) and -- second click
           mouseX and (math.abs(mouseX - x) <= mouseTolerance) and
           mouseY and (math.abs(mouseY - y) <= mouseTolerance)) then
         return true
-      else
+      else -- first click
         timer = now
         mouseX = x
         mouseY = y
+		spGiveOrder(CMD_MASC, {0}, GetOpts())
       end
     end
   end
@@ -159,25 +134,9 @@ function widget:MouseRelease(x, y, button)
   if (not coords) then
     return
   end
---TODO: due to 96 sucking we need to issue the MOVE after the MASC, remove in 97
-  local units = {}
-  local selUnits = spGetSelectedUnits()
-  for _, unitID in ipairs(selUnits) do
-    if (RemoveMove(unitID)) then
-      units[#units + 1] = unitID
-    end
-  end
 
-  local newSel = (#selUnits ~= #units)
-  if (newSel) then
-    spSelectUnitArray(units)
-  end
   --Spring.Echo("MouseRelease", CMD_MASC)
-  spGiveOrder(CMD_MASC, {}, {"alt"})--GetOpts())
-  spGiveOrder(CMD_MOVE, coords, GetOpts())
-  if (newSel) then
-    spSelectUnitArray(selUnits)
-  end
+  spGiveOrder(CMD_MASC, {1}, GetOpts())
 end
 
 

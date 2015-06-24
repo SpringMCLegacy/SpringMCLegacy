@@ -33,7 +33,6 @@ baseCoolRate = info.coolRate
 local coolRate = baseCoolRate
 local inWater = false
 local activated = true
-local mascLevel = 100
 local mascActive = false
 
 local missileWeaponIDs = info.missileWeaponIDs
@@ -186,8 +185,8 @@ function ChangeHeat(amount)
 	elseif currHeatLevel < 0 then
 		currHeatLevel = 0
 	end
-	SetUnitRulesParam(unitID, "heat", math.floor(100 * currHeatLevel / heatLimit))
-	SetUnitRulesParam(unitID, "excess_heat", math.floor(100 * excessHeat / (2 * heatLimit)))
+	SetUnitRulesParam(unitID, "heat", math.ceil(100 * currHeatLevel / heatLimit))
+	SetUnitRulesParam(unitID, "excess_heat", math.ceil(100 * excessHeat / (2 * heatLimit)))
 end
 
 local function CoolOff()
@@ -270,39 +269,30 @@ function script.setSFXoccupy(terrainType)
 	end
 end
 
-local function DrainMASC()
+local function MASCHeat()
 	while moving and mascActive do
-		mascLevel = mascLevel - 1
-		SetUnitRulesParam(unitID, "masc", mascLevel)
 		ChangeHeat(0.1)
-		if currHeatLevel > heatLimit or mascLevel == 0 then
-			MASC(false)
+		if excessHeat > 0 then
+			--Spring.Echo("Overheating! Terminate MASC!")
+			-- SIG_ANIMATE is just an empty table, don't create a new one just for empty command options
+			Spring.GiveOrderToUnit(unitID, GG.CustomCommands.GetCmdID("CMD_MASC"), {0}, SIG_ANIMATE) 
 			return
 		end
 		Sleep(100)
 	end
 end
 
-local function RestoreMASC()
-	while mascLevel < 100 do
-		mascLevel = mascLevel + 1
-		SetUnitRulesParam(unitID, "masc", mascLevel)
-		Sleep(100)
-	end
-	GG.ReadyMASC(unitID)
-end
-
 function MASC(activated)
-	if activated and mascLevel == 100 then
+	if activated then
 		speedMod = speedMod * 1.3
 		mascActive = true
 		GG.SpeedChange(unitID, unitDefID, speedMod, true)
-		StartThread(DrainMASC)
-	elseif not activated then
+		StartThread(MASCHeat)
+	else
 		speedMod = speedMod / 1.3
 		mascActive = false
 		GG.SpeedChange(unitID, unitDefID, speedMod)
-		StartThread(RestoreMASC)
+		StartThread(MASCHeat)
 	end
 end
 

@@ -14,6 +14,7 @@ if (gadgetHandler:IsSyncedCode()) then
 --SYNCED
 
 -- Localisations
+local activeMASCs = {}
 
 -- Synced Read
 local GetUnitCmdDescs 		= Spring.GetUnitCmdDescs
@@ -31,8 +32,10 @@ local CMD_MASC = GG.CustomCommands.GetCmdID("CMD_MASC")
 local MascCmdDesc = {
 	id = CMD_MASC,
 	action = 'masc',
-	name = '  MASC  ',
+	--name = '  MASC Off  ',
 	tooltip = 'Activate MASC sprinting',
+	type	= CMDTYPE.ICON_MODE,
+	params	= {0, '  MASC Off  ', '  MASC On   '},
 }
 local mascUnitDefs = {}
 
@@ -61,19 +64,9 @@ local function ChangeMoveData(unitDefID, mult)
 end
 
 function SpeedChange(unitID, unitDefID, mult, masc)
-	--Spring.Echo("MASC ACTIVATED!")
-	local hasMASC = FindUnitCmdDesc(unitID, CMD_MASC)
-	if hasMASC and masc then
-		EditUnitCmdDesc(unitID, hasMASC, {disabled = true})
-	end
 	Spring.MoveCtrl.SetGroundMoveTypeData(unitID, ChangeMoveData(unitDefID, mult or masc and 2))
 end
 GG.SpeedChange = SpeedChange
-
-function ReadyMASC(unitID)
-	EditUnitCmdDesc(unitID, FindUnitCmdDesc(unitID, CMD_MASC), {disabled = false})
-end
-GG.ReadyMASC = ReadyMASC
 
 function gadget:Initialize()
 	-- Support /luarules reload
@@ -95,9 +88,22 @@ function gadget:AllowCommand(unitID, unitDefID, teamID, cmdID, cmdParams, cmdOpt
 	if cmdID == CMD_MASC then
 		if mascUnitDefs[unitDefID] then
 			env = Spring.UnitScript.GetScriptEnv(unitID)
-			Spring.UnitScript.CallAsUnit(unitID, env.MASC, true)
+			if cmdParams[1] == 1 and not activeMASCs[unitID] then -- toggle on
+				if (Spring.GetUnitRulesParam(unitID, "excess_heat") or 0) > 0 then
+					return false -- don't allow overheated mechs to toggle on
+				end
+				activeMASCs[unitID] = true
+				Spring.UnitScript.CallAsUnit(unitID, env.MASC, true)
+			elseif activeMASCs[unitID] then -- toggle off
+				activeMASCs[unitID] = false
+				Spring.UnitScript.CallAsUnit(unitID, env.MASC, false)
+			end
+			MascCmdDesc.params[1] = cmdParams[1]
+			EditUnitCmdDesc(unitID, FindUnitCmdDesc(unitID, CMD_MASC), { params = MascCmdDesc.params})
 			return true
-		else return false end
+		else 
+			return false 
+		end
 	elseif cmdID == CMD_FLUSH then 
 		if coolantUnitDefs[unitDefID] then
 			env = Spring.UnitScript.GetScriptEnv(unitID)
