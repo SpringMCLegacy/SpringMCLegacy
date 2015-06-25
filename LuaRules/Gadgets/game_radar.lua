@@ -37,7 +37,7 @@ local FRAME_FUDGE = 16
 local BEACON_ID = UnitDefNames["beacon"].id
 
 local NARC_ID = WeaponDefNames["narc"].id
-local NARC_DURATION = 30 * 60 -- 60 seconds
+local NARC_DURATION = 30 * 30 -- 30 seconds
 Spring.SetGameRulesParam("NARC_DURATION", NARC_DURATION)
 
 local TAG_ID = WeaponDefNames["tag"].id
