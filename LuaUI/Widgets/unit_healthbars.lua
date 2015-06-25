@@ -623,7 +623,6 @@ do
         end
       end
 	  
-      end
 	   --// XP PERK
 	   local xp = GetUnitRulesParam(unitID, "perk_xp")
       if xp then
