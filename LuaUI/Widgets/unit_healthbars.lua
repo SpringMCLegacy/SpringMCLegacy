@@ -141,7 +141,6 @@ local barColors = {
   ammo    = { 0.60,0.60,0.40,barAlpha },
   jump    = { 0.00,0.70,0.84,barAlpha },
   fuel    = { 0.70,0.30,0.00,barAlpha },
-  masc    = { 0.50,0.10,0.70,barAlpha },
   coolant = { 0.45,0.60,0.44,barAlpha },
   shield  = { 0.20,0.60,0.60,barAlpha },
 
@@ -548,7 +547,6 @@ do
       customInfo[unitDefID] = {
         height        = ud.height+14,
         canJump       = (ud.customParams.jumpjets) or (GetUnitRulesParam(unitID,"jump_reload_bar")),
-		canMASC       = ud.customParams.masc,
         maxShield     = ud.shieldPower,
         canStockpile  = ud.canStockpile,
         reloadTime    = ud.reloadTime,
@@ -625,12 +623,6 @@ do
         end
       end
 	  
-	  --// MASC
-      if (ci.canMASC) then
-        local mascPct = GetUnitRulesParam(unitID,"masc")
-        if mascPct then
-          AddBar("MASC",mascPct/100,"masc",'')
-        end
       end
 	   --// XP PERK
 	   local xp = GetUnitRulesParam(unitID, "perk_xp")
