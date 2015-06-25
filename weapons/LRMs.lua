@@ -30,7 +30,7 @@ local LRM_Class = Weapon:New{
 	customparams = {
 		cegflare			= "MISSILE_MUZZLEFLASH",
 		projectilelups		= {"missileEngine"},
-		weaponclass			= "missile",
+		weaponclass			= "lrm",
 		ammotype			= "lrm",
 		minrange			= 600,
     },

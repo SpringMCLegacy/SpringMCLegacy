@@ -11,7 +11,7 @@ local AC_Class = Weapon:New{
 	rgbcolor				= "1 0.8 0",
 	intensity				= 0.1,
 	customparams = {
-		weaponclass			= "projectile",
+		weaponclass			= "autocannon",
     },	
 }
 
@@ -25,7 +25,10 @@ local LBX_Class = Weapon:New{
 	sprayAngle				= 1200,
 	stages					= 5, 		--Number of particles used in one plasma shot.
 	intensity				= 0.5,
-	dynDamageExp			= 1.0,	
+	dynDamageExp			= 1.0,
+	customparams = {
+		weaponclass			= "lbx", -- don't want to increase range on LBX
+    },	
 }
 
 -- AC2 & Variants

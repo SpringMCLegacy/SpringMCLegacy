@@ -30,6 +30,7 @@ include ("anims/" .. unitDef.name:sub(4, (unitDef.name:find("_", 4) or 0) - 1) .
 -- non-local so perks can change them (flagrant lack of encapsulation!)
 heatLimit = info.heatLimit
 baseCoolRate = info.coolRate
+mascHeatRate = 0.1
 local coolRate = baseCoolRate
 local inWater = false
 local activated = true
@@ -271,7 +272,7 @@ end
 
 local function MASCHeat()
 	while moving and mascActive do
-		ChangeHeat(0.1)
+		ChangeHeat(mascHeatRate)
 		if excessHeat > 0 then
 			--Spring.Echo("Overheating! Terminate MASC!")
 			-- SIG_ANIMATE is just an empty table, don't create a new one just for empty command options

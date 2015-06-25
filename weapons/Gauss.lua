@@ -14,7 +14,7 @@ local Gauss_Class = Weapon:New{
 	
 	customparams = {
 		cegflare			= "GAUSS_MUZZLEFLASH",
-		weaponclass			= "projectile",
+		weaponclass			= "gauss",
 		ammotype			= "gauss",
     },
 }
