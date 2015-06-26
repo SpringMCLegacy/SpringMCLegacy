@@ -83,6 +83,9 @@ return {
 			Spring.SetUnitSensorRadius(unitID, "radar", currRadar * 1.5)
 			Spring.SetUnitSensorRadius(unitID, "los", currLos * 1.5)
 			Spring.SetUnitSensorRadius(unitID, "airLos", currAirLos * 1.5)
+			if hasBAP(Spring.GetUnitDefID(unitID)) then
+				GG.allyBAPs[Spring.GetUnitAllyTeam(unitID)][unitID] = currRadar * 1.5
+			end
 		end,
 	},
 	-- Ability modifiers
@@ -162,6 +165,7 @@ return {
 			--Spring.Echo("ECM range selected") 
 			local currECM = Spring.GetUnitSensorRadius(unitID, "radarJammer")
 			Spring.SetUnitSensorRadius(unitID, "radarJammer", currECM * 1.5)
+			GG.allyJammers[Spring.GetUnitAllyTeam(unitID)][unitID] = currECM * 1.5
 		end,
 	},
 	insulation = {

@@ -53,7 +53,10 @@ end
 local modOptions = Spring.GetModOptions()
 local inRadarUnits = {}
 local outRadarUnits = {}
-local allyJammers = {}
+local allyJammers = {} -- allyJammers[unitID] = radius
+GG.allyJammers = allyJammers
+local allyBAPs = {} -- allyBAPs[unitID] = radius
+GG.allyBAPs = allyBAPs
 
 local allyTeams = Spring.GetAllyTeamList()
 local numAllyTeams = #allyTeams
@@ -65,6 +68,7 @@ for i = 1, numAllyTeams do
 	inRadarUnits[allyTeam] = {}
 	outRadarUnits[allyTeam] = {}
 	allyJammers[allyTeam] = {}
+	allyBAPs[allyTeam] = {}
 	teamsInAllyTeams[allyTeam] = Spring.GetTeamList(allyTeam)
 end
 
@@ -74,6 +78,7 @@ local PPC_DURATION = 5 * 30 -- 5 seconds
 local sensorTypes = {"radar", "seismic", "radarJammer"}
 local unitSensorRadii = {} -- unitSensorRadii[unitID] = {radar = a, seismic = b ...}
 local ppcUnits = {} -- ppcUnits[unitID] = gameframe
+local bapUnits = {} -- bapUnits[unitID] = {gameframe, allyTeam}
 
 local function FinishPPC(unitID)
 	if ppcUnits[unitID] and ppcUnits[unitID] <= Spring.GetGameFrame() then
@@ -198,6 +203,10 @@ function gadget:UnitCreated(unitID, unitDefID, teamID)
 		local allyTeam = select(6, GetTeamInfo(teamID))
 		allyJammers[allyTeam][unitID] = jamRadius
 	end
+	if ud.customParams.bap then
+		local allyTeam = select(6, GetTeamInfo(teamID))
+		allyBAPs[allyTeam][unitID] = Spring.GetUnitSensorRadius(unitID, "radar") -- can be perked! TODO: update this via perk side too
+	end
 end
 
 function gadget:UnitDestroyed(unitID, unitDefID, teamID)
@@ -209,6 +218,7 @@ function gadget:UnitDestroyed(unitID, unitDefID, teamID)
 	end
 	narcUnits[unitID] = nil
 	ppcUnits[unitID] = nil
+	bapUnits[unitID] = nil
 	SetUnitRulesParam(unitID, "FRIENDLY_ECM", 0)
 end
 
@@ -246,19 +256,43 @@ function gadget:GameFrame(n)
 		end]]
 		for jammerID, radius in pairs(allyJammers[allyTeam]) do
 			if Spring.ValidUnitID(jammerID) and not Spring.GetUnitIsDead(jammerID) and not ppcUnits[jammerID] and GetUnitIsActive(jammerID) then
-			local x,y,z = Spring.GetUnitPosition(jammerID)
-			for _, teamID in pairs(teamsInAllyTeams[allyTeam]) do
-				if not deadTeams[teamID] then
-					local nearbyUnits = Spring.GetUnitsInCylinder(x, z, radius, teamID)
+				local x,y,z = Spring.GetUnitPosition(jammerID)
+				for _, teamID in pairs(teamsInAllyTeams[allyTeam]) do
+					if not deadTeams[teamID] then
+						local nearbyUnits = Spring.GetUnitsInCylinder(x, z, radius, teamID)
 						--Spring.Echo("Jammer", jammerID, "(", UnitDefs[Spring.GetUnitDefID(jammerID)].name, ")")
-					for i = 1, #nearbyUnits do
-						--Spring.Echo("nearby", UnitDefs[Spring.GetUnitDefID(nearbyUnits[i])].name)
-						SetUnitRulesParam(nearbyUnits[i], "FRIENDLY_ECM", n)
+						for i = 1, #nearbyUnits do
+							--Spring.Echo("nearby", UnitDefs[Spring.GetUnitDefID(nearbyUnits[i])].name)
+							SetUnitRulesParam(nearbyUnits[i], "FRIENDLY_ECM", n)
+						end
 					end
 				end
 			end
 		end
-	end
+		for bapID, radius in pairs(allyBAPs[allyTeam]) do
+			if Spring.ValidUnitID(bapID) and not Spring.GetUnitIsDead(bapID) and not ppcUnits[bapID] and GetUnitIsActive(bapID) then
+				local x,y,z = Spring.GetUnitPosition(bapID)
+				local nearbyUnits = Spring.GetUnitsInCylinder(x, z, radius, Spring.ENEMY_UNITS)
+				for i = 1, #nearbyUnits do
+					local unitID = nearbyUnits[i]
+					if not GetUnitIsActive(unitID) and not GetUnitUnderJammer(unitID) then
+						SetUnitLosState(unitID, allyTeam, {los=true, prevLos=true, radar=true, contRadar=true} ) 
+						SetUnitLosMask(unitID, allyTeam, {los=true, prevLos=false, radar=false, contRadar=false} )	
+						--Spring.Echo("nearby", UnitDefs[Spring.GetUnitDefID(nearbyUnits[i])].name)
+						bapUnits[unitID] = {n, allyTeam}
+					end
+				end
+			end
+		end
+		for bapped, data in pairs(bapUnits) do
+			if Spring.ValidUnitID(bapped) and not Spring.GetUnitIsDead(bapped) then
+				--local x,y,z = Spring.GetUnitPosition(bapped)
+				if data[1] < n - FRAME_FUDGE then
+					ResetLosStates(bapped, data[2])
+					bapUnits[bapped] = nil
+				end
+			end
+		end
 	end
 	if Spring.IsGameOver() then
 		gadgetHandler:RemoveGadget()
