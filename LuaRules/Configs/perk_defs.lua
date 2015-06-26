@@ -147,14 +147,13 @@ return {
 			setWeaponClassAttribute(unitID, "ams", "range", 1.5)
 		end,
 	},
-	-- Faction specific
 	ecmrange = {
 		cmdDesc = {
 			id = GetCmdID('PERK_ECM_RANGE'),
 			action = 'perkecmrange',
 			name = Pad("ECM"),
 			tooltip = '+50% ECM range',
-			texture = 'bitmaps/ui/perkbgfaction.png',	
+			texture = 'bitmaps/ui/perkbgability.png',	
 		},
 		valid = function (unitDefID) return (hasECM(unitDefID) and isFaction(unitDefID, "cc")) end,
 		applyPerk = function (unitID) 
@@ -163,6 +162,7 @@ return {
 			Spring.SetUnitSensorRadius(unitID, "radarJammer", currECM * 1.5)
 		end,
 	},
+	-- Weapon (Faction) specific
 	lrmrange = {
 		cmdDesc = {
 			id = GetCmdID('PERK_LRM_RANGE'),
