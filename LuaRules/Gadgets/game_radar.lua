@@ -76,7 +76,7 @@ local unitSensorRadii = {} -- unitSensorRadii[unitID] = {radar = a, seismic = b 
 local ppcUnits = {} -- ppcUnits[unitID] = gameframe
 
 local function FinishPPC(unitID)
-	if ppcUnits[unitID] and ppcUnits[unitID] <= (Spring.GetGameFrame() - PPC_DURATION) then
+	if ppcUnits[unitID] and ppcUnits[unitID] <= Spring.GetGameFrame() then
 		for _, sensorType in pairs(sensorTypes) do
 			Spring.SetUnitSensorRadius(unitID, sensorType, unitSensorRadii[unitID][sensorType])
 		end
@@ -97,9 +97,10 @@ local function ApplyPPC(unitID)
 		-- FIXME: set these default values in a single place and read them from there
 		Spring.SetUnitSensorRadius(unitID, "radar", 2000) --L138 unitdefs_post
 	end
-	ppcUnits[unitID] = Spring.GetGameFrame()
+	local delay = (GetUnitRulesParam(unitID, "insulation") or 1) * PPC_DURATION
+	ppcUnits[unitID] = Spring.GetGameFrame() + delay
 	SetUnitRulesParam(unitID, "PPC_HIT", ppcUnits[unitID], {inlos = true})
-	GG.Delay.DelayCall(FinishPPC, {unitID}, PPC_DURATION)
+	GG.Delay.DelayCall(FinishPPC, {unitID}, delay)
 end
 
 local function GetUnitUnderJammer(unitID)

@@ -146,8 +146,8 @@ local function LinkText(height)
 	glPopMatrix()
 end
 
-local function PPCText(frame, height) -- hodor, frame calc is reverse of NARC
-	local timeLeft = string.format('%.1f', 5 - (Spring.GetGameFrame() - frame) / 30.0)
+local function PPCText(frame, gameFrame, height) -- hodor, frame calc is reverse of NARC
+	local timeLeft = string.format('%.1f', (frame - gameFrame) / 30.0)
 	glPushMatrix()
 	glBillboard()
 	glText("PPC: " .. timeLeft, 0, height + 40, 20, "c")
@@ -175,6 +175,7 @@ function widget:DrawWorldPreUnit()
 	glDepthTest(false)--true)
 	glPolygonOffset(-50, -2)
  
+	local gameFrame = GetGameFrame()
 	for _,unitID in ipairs(spGetAllUnits()) do
 		if (spIsUnitVisible(unitID)) then
 			-- check if it's NARCed
@@ -213,7 +214,7 @@ function widget:DrawWorldPreUnit()
 			end
 			-- check for TAG
 			local TAGFrame = GetUnitRulesParam(unitID, "TAG") or 0
-			if TAGFrame >= GetGameFrame() - 5 then -- unit is TAGed
+			if TAGFrame >= gameFrame - 5 then -- unit is TAGed
 				local udid = spGetUnitDefID(unitID)
 				local height = heights[udid]
 				if not height then
@@ -239,7 +240,7 @@ function widget:DrawWorldPreUnit()
 			-- check PPC
 			local PPCFrame = GetUnitRulesParam(unitID, "PPC_HIT") or 0
 			--Spring.Echo(NARCFrame, Spring.GetGameFrame())
-			if PPCFrame > 0 then
+			if PPCFrame > gameFrame then
 				local udid = spGetUnitDefID(unitID)
 				local height = heights[udid]
 				if not height then
@@ -247,7 +248,7 @@ function widget:DrawWorldPreUnit()
 					heights[udid] = height
 				end
 				glColor(0.55, 0.65, 1.0, 1)
-				glDrawFuncAtUnit(unitID, true, PPCText, PPCFrame, height)
+				glDrawFuncAtUnit(unitID, true, PPCText, PPCFrame, gameFrame, height)
             end
 		end
 	end

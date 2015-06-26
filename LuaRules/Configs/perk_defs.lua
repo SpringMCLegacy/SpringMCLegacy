@@ -2,10 +2,11 @@
 local GetCmdID = GG.CustomCommands.GetCmdID
 
 local PAD_LENGTH = 12
-local function Pad(input)
+local function Pad(input, input2)
 	while input:len() < PAD_LENGTH do
 		input = " " .. input .. " "
 	end
+	if input2 then return input .. "\n" .. Pad(input2) end
 	return input
 end
 
@@ -15,6 +16,7 @@ local function allMechs(unitDefID) return true end
 local function hasJumpjets(unitDefID) return (UnitDefs[unitDefID].customParams.jumpjets or false) end
 local function hasMASC(unitDefID) return (UnitDefs[unitDefID].customParams.masc or false) end
 local function hasECM(unitDefID) return (UnitDefs[unitDefID].customParams.ecm or false) end
+local function hasBAP(unitDefID) return (UnitDefs[unitDefID].customParams.bap or false) end
 local function isFaction(unitDefID, faction) return UnitDefs[unitDefID].name:sub(1,2) == faction end
 
 local function hasWeaponName(unitDefID, weapName)
@@ -160,6 +162,20 @@ return {
 			--Spring.Echo("ECM range selected") 
 			local currECM = Spring.GetUnitSensorRadius(unitID, "radarJammer")
 			Spring.SetUnitSensorRadius(unitID, "radarJammer", currECM * 1.5)
+		end,
+	},
+	insulation = {
+		cmdDesc = {
+			id = GetCmdID('PERK_INSULATED_ELECTRONICS'),
+			action = 'perkinsulatedelectronics',
+			name = Pad("Insulated", "Electronics"),
+			tooltip = '-50% PPC disruption time',
+			texture = 'bitmaps/ui/perkbgability.png',	
+		},
+		valid = function (unitDefID) return (hasECM(unitDefID) or hasBAP(unitDefID)) end,
+		applyPerk = function (unitID) 
+			--Spring.Echo("Insulated Electronics selected") 
+			Spring.SetUnitRulesParam(unitID, "insulation", 0.5)
 		end,
 	},
 	-- Weapon (Faction) specific
