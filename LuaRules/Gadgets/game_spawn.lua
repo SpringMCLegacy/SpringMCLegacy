@@ -35,7 +35,6 @@ end
 --------------------------------------------------------------------------------
 
 local modOptions = Spring.GetModOptions()
-for k,v in pairs(modOptions) do Spring.Echo(k,v) end
 if not modOptions.startmetal then -- load via file
 	local raw = VFS.Include("modoptions.lua", nil, VFS.ZIP)
 	for i, v in ipairs(raw) do

@@ -26,6 +26,6 @@ end
 function widget:Initialize()
 	local spec = Spring.GetSpectatingState()
 	if not spec then
-		WG.RemoveWidget(self)
+		--WG.RemoveWidget(self)
 	end
 end
