@@ -214,7 +214,7 @@ local function RunAndJump(unitID, unitDefID, cmdID, spotNum, replace)
 	order = {CMD_JUMP, {target.x, Spring.GetGroundHeight(target.x, target.z), target.z}, {"shift"}}
 	table.insert(orderArray, order)
 	--GG.Delay.DelayCall(Spring.GiveOrderToUnit, {unitID, CMD_JUMP, {target.x, Spring.GetGroundHeight(target.x, target.z), target.z}, {"shift"}}, 1)
-	Spring.GiveOrderArrayToUnitArray({unitID}, orderArray)
+	GG.Delay.DelayCall(Spring.GiveOrderArrayToUnitArray, {{unitID}, orderArray}, 1)
 end
 GG.RunAndJump = RunAndJump
 
@@ -338,6 +338,7 @@ function gadget:UnitDestroyed(unitID, unitDefID, teamID, attackerID, attackerDef
 			Upgrade(tonumber(Spring.GetUnitRulesParam(unitID, "beaconID")), teamID)
 		elseif UnitDefs[unitDefID].name:find("dropzone") then -- TODO: "DROPZONE_IDS[unitDefID] then" should work here
 			dropZoneIDs[teamID] = nil
+			-- TODO: why doesn't it get auto-switched like it does for player?
 		end
 	end
 	if attackerTeam and AI_TEAMS[attackerTeam] then
@@ -352,6 +353,7 @@ function gadget:UnitGiven(unitID, unitDefID, newTeam, oldTeam)
 	if AI_TEAMS[newTeam] then
 		if unitDefID == BEACON_ID then
 			Upgrade(unitID, newTeam)
+			Spam(newTeam)
 		end
 		if unitDefID == C3_ID or unitDefID == VPAD_ID then
 			gadget:UnitDestroyed(unitID, unitDefID, oldTeam)
@@ -360,19 +362,19 @@ function gadget:UnitGiven(unitID, unitDefID, newTeam, oldTeam)
 	end
 end
 
-function gadget:AllowCommand(unitID, unitDefID, teamID, cmdID, cmdParams, cmdOptions)
+--[[function gadget:AllowCommand(unitID, unitDefID, teamID, cmdID, cmdParams, cmdOptions)
 	if AI_TEAMS[teamID] then
 		if UnitDefs[unitDefID].customParams.unittype == "mech" 
 		and not (cmdOptions.shift or cmdOptions.alt)
 		and (Spring.GetCommandQueue(unitID, -1, false) or 0) > 0 
-		and not cmdID == CMD.INSERT
+		--and not cmdID == CMD.INSERT
 		then
-			--Spring.Echo(UnitDefs[unitDefID].name, "Tried to replace a queue with ", cmdID, CMD[cmdID])
-			return false -- unit has a queue and this is trying to replace it
+			Spring.Echo(UnitDefs[unitDefID].name, "Tried to replace a queue with ", cmdID, CMD[cmdID])
+			--return false -- unit has a queue and this is trying to replace it
 		end
 	end
 	return true
-end
+end]]
 
 else
 --	UNSYNCED
