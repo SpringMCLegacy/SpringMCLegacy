@@ -20,7 +20,7 @@ local STO4A = Stiletto:New{
 	},
 		
 	customparams = {
-		variant         = "FLE-17",
+		variant         = "STO-4A",
 		speed			= 120,
 		price			= 8590,
 		heatlimit 		= 20,
