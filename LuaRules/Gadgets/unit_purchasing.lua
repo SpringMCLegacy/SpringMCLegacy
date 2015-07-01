@@ -188,6 +188,32 @@ local function AssignGroup(unitID, unitDefID, teamID, slotChange, group)
 	else -- removing a unit from a group
 		groupSlots.units[unitID] = nil
 		unitLances[unitID] = nil
+		-- iterate through existing link lost mechs to see if they will fit into this group (TODO: tonnage also an issue)
+		local candidates = {}
+		local numCandidates = 0
+		for groupNum, currGroupSlots in ipairs(teamSlots[teamID]) do
+			-- lance is higher than the one that lost a unit
+			-- AND it has units assigned to it
+			-- AND the team has inssufficient C3's to support it
+			if groupNum > group and currGroupSlots.used > 0 and (teamC3Counts[teamID] + 1) < groupNum then
+				for groupUnitID, tonnage in pairs(currGroupSlots.units) do
+					local linkLost = (Spring.GetUnitRulesParam(groupUnitID, "LOST_LINK") or 0) == 1
+					if linkLost then
+						numCandidates = numCandidates + 1
+						candidates[groupUnitID] = tonnage
+						if numCandidates == groupSlots.available then
+							break -- no point continuing if we already have enough mechs to fill the lance
+						end
+					end
+				end
+			end
+		end
+		-- we don't want to change the list as we iterate over it so build a list of candidates first then iterate over that making the changes
+		for candidateID, tonnage in pairs(candidates) do
+			unitLances[candidateID] = group
+			ToggleLink(candidateID, teamID, false, tonnage)
+			SendToUnsynced("LANCE", teamID, candidateID, group)
+		end
 	end
 end
 
@@ -196,7 +222,7 @@ function LanceControl(teamID, unitID, add)
 	if add then
 		C3Status[unitID] = true
 		teamC3Counts[teamID] = teamC3Counts[teamID] + 1
-		AddTeamResource(teamID, "energy", 200)
+		AddTeamResource(teamID, "energy", UnitDefs[C3_ID].energyStorage)
 		--Spring.Echo(teamID, "C3 Count INCREASE", teamC3Counts[teamID])
 		if teamC3Counts[teamID] <= 2 then -- only the first 2 C3s give you an extra lance
 			local newLance = teamC3Counts[teamID] + 1
@@ -214,7 +240,7 @@ function LanceControl(teamID, unitID, add)
 		-- When you gain a C3 you get 200 extra e, when you lose one, you lose 200 storage... 
 		-- ..but Spring helpfully fills it with all that extra e, screwing the tonnage system
 		-- So remove the extra tonnage manually
-		UseTeamResource(teamID, "energy", 200)
+		UseTeamResource(teamID, "energy", UnitDefs[C3_ID].energyStorage)
 		-- check if there were any backup C3 towers
 		--Spring.Echo(teamID, "C3 Count DECREASE", teamC3Counts[teamID])
 		if teamC3Counts[teamID] < 2 then -- team lost control of / capacity for a lance

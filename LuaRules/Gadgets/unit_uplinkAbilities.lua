@@ -60,7 +60,7 @@ local artyCmdDesc = {
 }
 
 local getOutCmdDesc = {
-	id 		= GG.CustomCommands.GetCmdID("CMD_MECHBAY_GETOUT", ARTY_COST),
+	id 		= GG.CustomCommands.GetCmdID("CMD_MECHBAY_GETOUT"),
 	type	= CMDTYPE.ICON,
 	name 	= " Get  \n Out  ",
 	action	= "mechbay_out",
@@ -90,12 +90,12 @@ local function ArtyStrike(teamID, x, y, z)
 	local currFrame = GetGameFrame()
 	if lastFrame and lastFrame > currFrame - ARTY_COOLDOWN then -- still cooling
 		local minutes, seconds = FramesToMinutesAndSeconds(ARTY_COOLDOWN - (currFrame - lastFrame))
-		Spring.Echo("Not yet! " .. minutes .. " min " .. seconds .. " seconds left")
+		Spring.SendMessageToTeam(teamID, "Not yet! " .. minutes .. " min " .. seconds .. " seconds left")
 		return false
 	end
 	local money = GetTeamResources(teamID, "metal")
 	if money < ARTY_COST then  -- not enough C-Bills (Should never get this far, button disabled by game_money.lua)
-		Spring.Echo("Not enough C-Bills!")
+		SendMessageToTeam(teamID, "Not enough C-Bills for artillery strike!")
 		return false 
 	end
 	UseTeamResource(teamID, "metal", ARTY_COST)
