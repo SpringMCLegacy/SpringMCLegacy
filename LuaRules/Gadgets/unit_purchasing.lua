@@ -177,6 +177,10 @@ local function ToggleLink(unitID, teamID, lost, tonnage)
 	end
 end
 
+function TonnageSort(a, b)
+	return a.tonnage > b.tonnage
+end
+
 local function AssignGroup(unitID, unitDefID, teamID, slotChange, group)
 	local groupSlots = teamSlots[teamID][group]
 	groupSlots.used = groupSlots.used + slotChange
@@ -200,19 +204,28 @@ local function AssignGroup(unitID, unitDefID, teamID, slotChange, group)
 					local linkLost = (Spring.GetUnitRulesParam(groupUnitID, "LOST_LINK") or 0) == 1
 					if linkLost then
 						numCandidates = numCandidates + 1
-						candidates[groupUnitID] = tonnage
-						if numCandidates == groupSlots.available then
+						candidates[groupUnitID] = {id = groupUnitID, tonnage = tonnage}
+						--[[if numCandidates == groupSlots.available then
 							break -- no point continuing if we already have enough mechs to fill the lance
-						end
+						end]]
 					end
 				end
 			end
 		end
+		-- sort by tonnage (descending)
+		table.sort(candidates, TonnageSort)
 		-- we don't want to change the list as we iterate over it so build a list of candidates first then iterate over that making the changes
-		for candidateID, tonnage in pairs(candidates) do
-			unitLances[candidateID] = group
-			ToggleLink(candidateID, teamID, false, tonnage)
-			SendToUnsynced("LANCE", teamID, candidateID, group)
+		-- use a first-fit decreasing bin packing algorithm
+		local tonnageAvailable = Spring.GetTeamResources(teamID, "energy")
+		local numAssigned = 0
+		for i, candidate in pairs(candidates) do
+			if candidate.tonnage <= tonnageAvailable and numAssigned < groupSlots.available then -- unit will fit
+				unitLances[candidate.id] = group
+				ToggleLink(candidate.id, teamID, false, candidate.tonnage)
+				SendToUnsynced("LANCE", teamID, candidate.id, group)
+				tonnageAvailable = tonnageAvailable - candidate.tonnage
+				numAssigned = numAssigned + 1
+			end
 		end
 	end
 end
@@ -237,10 +250,6 @@ function LanceControl(teamID, unitID, add)
 		end
 	elseif C3Status[unitID] then -- lost a deployed C3
 		teamC3Counts[teamID] = teamC3Counts[teamID] - 1
-		-- When you gain a C3 you get 200 extra e, when you lose one, you lose 200 storage... 
-		-- ..but Spring helpfully fills it with all that extra e, screwing the tonnage system
-		-- So remove the extra tonnage manually
-		UseTeamResource(teamID, "energy", UnitDefs[C3_ID].energyStorage)
 		-- check if there were any backup C3 towers
 		--Spring.Echo(teamID, "C3 Count DECREASE", teamC3Counts[teamID])
 		if teamC3Counts[teamID] < 2 then -- team lost control of / capacity for a lance
@@ -265,6 +274,11 @@ function LanceControl(teamID, unitID, add)
 				end
 			end
 		end
+		C3Status[unitID] = nil
+		-- When you gain a C3 you get 150 extra e, when you lose one, you lose 150 storage... 
+		-- ..but Spring helpfully fills it with all that extra e, screwing the tonnage system
+		-- So remove the extra tonnage manually
+		UseTeamResource(teamID, "energy", UnitDefs[C3_ID].energyStorage)
 	end
 end
 GG.LanceControl = LanceControl
@@ -628,7 +642,6 @@ function gadget:UnitDestroyed(unitID, unitDefID, teamID, attackerID, attackerDef
 		teamDropZones[teamID] = nil
 	elseif unitDefID == C3_ID then
 		LanceControl(teamID, unitID, false)
-		C3Status[unitID] = nil
 	end
 	if attackerID and not AreTeamsAllied(teamID, attackerTeam) and unitDefID ~= WALL_ID and unitDefID ~= GATE_ID then
 		--AddTeamResource(attackerTeam, "metal", UnitDefs[unitDefID].metalCost * KILL_REWARD_MULT)
