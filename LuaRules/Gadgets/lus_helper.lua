@@ -228,7 +228,7 @@ function gadget:UnitCreated(unitID, unitDefID, teamID, builderID)
 		end
 	-- Remove load/unload buttons from all transports
 	elseif UnitDefs[unitDefID].transportCapacity and UnitDefs[unitDefID].name:find("mechbay") then
-		local toRemove = {CMD.LOAD_UNITS, CMD.UNLOAD_UNITS, CMD.STOP, CMD.WAIT, CMD.MOVE_STATE}
+		local toRemove = {CMD.LOAD_UNITS, CMD.UNLOAD_UNITS, CMD.STOP, CMD.WAIT}
 		for _, cmdID in pairs(toRemove) do
 			local cmdDescID = Spring.FindUnitCmdDesc(unitID, cmdID)
 			Spring.RemoveUnitCmdDesc(unitID, cmdDescID)
