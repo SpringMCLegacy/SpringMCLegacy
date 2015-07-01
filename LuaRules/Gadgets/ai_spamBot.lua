@@ -147,6 +147,10 @@ function gadget:UnitCreated(unitID, unitDefID, teamID)
 		if unitDef.name:find("dropzone") then
 			dropZoneIDs[teamID] = unitID	
 			Spam(teamID)
+		elseif unitDef.customParams.unittype == "mech" then
+			local closeRange = WeaponDefs[unitDef.weapons[1].weaponDef].range * 0.9
+			-- set engagement range to weapon 1 range
+			Spring.SetUnitMaxRange(unitID, closeRange)
 		end
 		if difficulty > 1 then -- harder AI tonnage cheats, needs storage to do so
 			Spring.SetTeamResource(teamID, "es", 1000000)
