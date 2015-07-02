@@ -35,7 +35,6 @@ local CMD_REMOVE    = CMD.REMOVE
 local CMD_SET_WANTED_MAX_SPEED = CMD.SET_WANTED_MAX_SPEED
 
 local spDiffTimers           = Spring.DiffTimers
-local spGetCommandQueue      = Spring.GetCommandQueue
 local spGetConfigInt         = Spring.GetConfigInt
 local spGetInvertQueueKey    = Spring.GetInvertQueueKey
 local spGetModKeyState       = Spring.GetModKeyState
