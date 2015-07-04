@@ -176,7 +176,7 @@ local function GetUnitPosition(uID)
 	
 	local x, y, z = spGetUnitPosition(uID)
 	
-	local cmds = spGetCommandQueue(uID) ; if not cmds then return x, y, z end
+	local cmds = spGetCommandQueue(uID, -1) ; if not cmds then return x, y, z end
 	
 	for i = #cmds, 1, -1 do
 		
