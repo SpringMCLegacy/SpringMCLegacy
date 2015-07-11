@@ -62,28 +62,20 @@ local flagTypes = {"beacon"}
 local flags = {} -- flags[flagType][index] == flagUnitID
 local numFlags = {} -- numFlags[flagType] == numberOfFlagsOfType
 local totalFlags = 0
-local flagTypeData = {} -- flagTypeData[flagType] = {radius = radius, etc}
 local flagTypeSpots = {} -- flagTypeSpots[flagType][metalSpotCount] == {x = x_coord, z = z_coord}
-local flagTypeCappers = {} -- cappers[flagType][unitID] = true
-local flagTypeDefenders	= {} -- defenders[flagType][unitID] = true
+
 
 for _, flagType in pairs(flagTypes) do
-	local cp = UnitDefNames[flagType].customParams
-	flagTypeData[flagType] = {
-		radius = tonumber(cp.flagradius) or 460, -- radius of flagTypes capping area
-		capThreshold = tonumber(cp.capthreshold) or 20, -- number of capping points needed for flagType to switch teams
-		regen = tonumber(cp.flagregen) or 1, -- how fast a flagType with no defenders or attackers will reduce capping statuses
-		tooltip = UnitDefNames[flagType].tooltip or "Beacon", -- what to call the flagType when it switches teams
-		limit = cp.flaglimit or Game.maxUnits, -- How many of this flagType a player can hold at once
-	}
 	flags[flagType] = {}
 	numFlags[flagType] = 0
 	flagTypeSpots[flagType] = {}
-	flagTypeCappers[flagType] = {}
-	flagTypeDefenders[flagType] = {}
 end
 
-local flagCapStatuses = {} -- table of flag's capping statuses
+local CAP_THRESHOLD = 20
+local CAP_RADIUS = 460
+local REGEN = 1
+
+local flagCapStatuses = {} 	-- flagCapStatus[flagID] = {allyTeamID = {team = teamID, cap = cap}, ...}
 local teams	= Spring.GetTeamList()
 local teamUnitCounts = {}
 
@@ -95,7 +87,6 @@ local modOptions
 if (Spring.GetModOptions) then
   modOptions = Spring.GetModOptions()
 end
-local metalMake = tonumber(modOptions.map_command_per_player) or -1
 
 -- BEACON TICKET DECLARATIONS
 local START_TICKETS = tonumber(modOptions.start_tickets) or 100
@@ -240,7 +231,7 @@ function gadget:GameStart()
 	end
 end
 
-function StripUnits(unitsAtFlag)
+local function StripUnits(unitsAtFlag)
 	for i = #unitsAtFlag, 1, -1 do -- iterate over list in reverse so removing doesn't screw with index
 		local unitID = unitsAtFlag[i]
 		local unitDefID = Spring.GetUnitDefID(unitID)
@@ -251,116 +242,123 @@ function StripUnits(unitsAtFlag)
 	end
 end
 
+local function TransferFlag(flagID, flagTeamID, teamID)
+	-- Update the old team
+	TransferUnit(flagID, flagTeamID == GAIA_TEAM_ID and teamID or GAIA_TEAM_ID, false)
+	UpdateBeacons(flagTeamID, -1)
+	SetTeamRulesParam(flagTeamID, "beacons", (GetTeamRulesParam(teamID, "beacons") or 0) - 1, {public = true})
+	SendToUnsynced("BEACONCAP", flagTeamID, -1)
+	-- Update the new team
+	Spring.AddTeamResource(teamID, "metal", 2000)
+	UpdateBeacons(teamID, 1)
+	SetTeamRulesParam(teamID, "beacons", (GetTeamRulesParam(teamID, "beacons") or 0) + 1, {public = true})
+	SendToUnsynced("BEACONCAP", teamID, 1)
+	-- Turn flag back on TODO: check if this can be avoided in MCL?
+	GiveOrderToUnit(flagID, CMD.ONOFF, {1}, {})
+	-- Flag has changed team, reset capping statuses
+	flagCapStatuses[flagID] = {}
+	for _, cleanTeamID in pairs(Spring.GetTeamList()) do
+		SetUnitRulesParam(flagID, "cap" .. tostring(cleanTeamID), 0, {public = true})
+	end
+end
+
+local function FlagCapChange(flagID, flagTeamID, allyTeamID, teamID, change)
+	if not flagCapStatuses[flagID][allyTeamID] then
+		flagCapStatuses[flagID][allyTeamID] = {team = teamID, cap = 0}
+	end
+	if (flagCapStatuses[flagID][allyTeamID].cap == 0) and change < 0 then 
+		return -- trying to regen when already 0, quit
+	end
+	if flagCapStatuses[flagID][allyTeamID].team ~= teamID then
+		SetUnitRulesParam(flagID, "cap" .. tostring(flagCapStatuses[flagID][allyTeamID].team), 0, {public = true}) -- reset the old team to 0
+		flagCapStatuses[flagID][allyTeamID].team = teamID -- update teamID, switched to another team in the same alliance
+	end
+	flagCapStatuses[flagID][allyTeamID].cap = flagCapStatuses[flagID][allyTeamID].cap + change -- add the cap increase
+	SetUnitRulesParam(flagID, "cap" .. tostring(teamID), flagCapStatuses[flagID][allyTeamID].cap, {public = true}) -- set the rules param per team for team colour
+	if flagCapStatuses[flagID][allyTeamID].cap <= 0 then
+		-- TODO: Really we need to check that __all__ non-ally statuses are 0
+		GG.PlaySoundForTeam(flagTeamID, "BB_NavBeacon_Secured", 1)
+		SetUnitRulesParam(flagID, "secure", 1, {public = true})
+	elseif flagCapStatuses[flagID][allyTeamID].cap == 1 then -- first cap step
+		GG.PlaySoundForTeam(flagTeamID, "BB_NavBeacon_UnderAttack", 1)
+		SetUnitRulesParam(flagID, "secure", 0, {public = true})
+	elseif flagCapStatuses[flagID][allyTeamID].cap > CAP_THRESHOLD and teamID ~= flagTeamID then -- capped or neutralised
+		TransferFlag(flagID, flagTeamID, teamID)
+		GG.PlaySoundForTeam(flagTeamID, "BB_NavBeacon_Lost", 1)
+		if flagTeamID == GAIA_TEAM_ID then -- flag was capped, not neutralised
+			GG.PlaySoundForTeam(teamID, "BB_NavBeacon_Captured", 1)
+			SetUnitRulesParam(flagID, "secure", 1, {public = true})
+		end
+	end
+end
+
+-- updates caps for all teams
+local function FlagCapRegen(flagID, flagTeamID, change)
+	for _, teamID in pairs(Spring.GetTeamList()) do
+		local isDead, _, _, allyTeamID = select(3, Spring.GetTeamInfo(teamID))
+		if teamID ~= flagTeamID and not isDead then
+			FlagCapChange(flagID, flagTeamID, allyTeamID, teamID, change)
+		end
+	end
+end
+
 function gadget:GameFrame(n)
 	local maxBeacon = 0
 	-- FLAG CONTROL
 	if n % 30 == 5 then -- every second with a 5 frame offset
 		for _, flagType in pairs(flagTypes) do
-			local flagData = flagTypeData[flagType]
 			--for spotNum, flagID in pairs(flags[flagType]) do
 			for spotNum = 1, numFlags[flagType] do -- WARNING: Assumes flags are placed in order they exist in flags[flagType]
 				local flagID = flags[flagType][spotNum]
 				local flagTeamID = GetUnitTeam(flagID)
+				local flagAllyTeam = select(6, Spring.GetTeamInfo(flagTeamID))
 				local spots = flagTypeSpots[flagType]
-				local cappers = flagTypeCappers[flagType]
-				local capTotals = {}
-				local defenders = flagTypeDefenders[flagType]
-				local defendTotal = 0
-				local unitsAtFlag = GetUnitsInCylinder(spots[spotNum].x, spots[spotNum].z, flagData.radius)
+				
+				local flagTeamCounts = {} -- flagTeamCounts[teamID] = number
+				local flagAllyTeamCounts = {} -- flagAllyTeamCounts[teamID] = number
+				-- First check if there are any friendly (ally) units here -> flag is defended
+				local unitsAtFlag = GetUnitsInCylinder(spots[spotNum].x, spots[spotNum].z, CAP_RADIUS)
 				StripUnits(unitsAtFlag) -- strips table (in place) of ignored unitdefs
-				--Spring.Echo ("There are " .. #unitsAtFlag .. " units at flag " .. flagID)
-				if #unitsAtFlag == 0 then -- no combat units
-					for teamID = 0, #teams-1 do
-						if teamID ~= flagTeamID then
-							--Spring.Echo(teamID, flagCapStatuses[flagID][teamID])
-							if (flagCapStatuses[flagID][teamID] or 0) > 0 then
-								flagCapStatuses[flagID][teamID] = flagCapStatuses[flagID][teamID] - flagData.regen
-								SetUnitRulesParam(flagID, "cap" .. tostring(teamID), flagCapStatuses[flagID][teamID], {public = true})
-								if flagCapStatuses[flagID][teamID] <= 0 then
-									GG.PlaySoundForTeam(flagTeamID, "BB_NavBeacon_Secured", 1)
-									SetUnitRulesParam(flagID, "secure", 1, {public = true})
-								end
+				
+				for i, unitID in ipairs(unitsAtFlag) do
+					local teamID = Spring.GetUnitTeam(unitID)
+					flagTeamCounts[teamID] = (flagTeamCounts[teamID] or 0) + 1
+					local allyTeamID = select(6, Spring.GetTeamInfo(teamID))
+					flagAllyTeamCounts[allyTeamID] = (flagAllyTeamCounts[allyTeamID] or 0) + 1
+				end
+				if flagAllyTeamCounts[flagAllyTeam] or 0 > 0 then -- flag is defended, reduce all cap status
+					FlagCapRegen(flagID, flagTeamID, -REGEN)
+				else -- flag is undefended, proceed to check for cappers
+					local numberOfAllyTeamsAtFlag = 0
+					local cappingAllyTeam
+					for allyTeamID, count in pairs(flagAllyTeamCounts) do
+						if count > 0 then 
+							numberOfAllyTeamsAtFlag = numberOfAllyTeamsAtFlag + 1
+							cappingAllyTeam = allyTeamID
+						end
+					end	
+					if numberOfAllyTeamsAtFlag == 1 then -- only one allyteam present, we can cap!
+						-- check for the highest team count and set this as the allyteams cap team
+						local capStatus = flagCapStatuses[flagID][cappingAllyTeam]
+						local cappingTeam = capStatus and capStatus.team or nil
+						local maxCount = flagTeamCounts[cappingTeam] or 0
+						for teamID, count in pairs(flagTeamCounts) do
+							if count > maxCount then 
+								maxCount = count
+								cappingTeam = teamID
 							end
 						end
-					end
-				else -- Attackers or defenders (or both) present
-					for i = 1, #unitsAtFlag do
-						local unitID = unitsAtFlag[i]
-						local unitTeamID = GetUnitTeam(unitID)
-						if defenders[unitID] then -- and (AreTeamsAllied(unitTeamID, flagTeamID) or flagTeamID == GAIA_TEAM_ID) then
-							--Spring.Echo("Defender at flag " .. flagID .. " Value is: " .. defenders[unitID], UnitDefs[Spring.GetUnitDefID(unitID)].name)
-							defendTotal = defendTotal + defenders[unitID]
-						end
-						if cappers[unitID] then -- nd (not AreTeamsAllied(unitTeamID, flagTeamID)) then
-							--Spring.Echo("Capper at flag " .. flagID .. " Value is: " .. cappers[unitID], UnitDefs[Spring.GetUnitDefID(unitID)].name)
-							capTotals[unitTeamID] = (capTotals[unitTeamID] or 0) + cappers[unitID]
-						end
-					end
-					for teamID, capTotal in pairs(capTotals) do
-						if capTotal == defendTotal and teamID ~= flagTeamID then -- implies only one set of mechs here
-							if (flagCapStatuses[flagID][teamID] or 0) == 1 then -- first cap step
-								GG.PlaySoundForTeam(flagTeamID, "BB_NavBeacon_UnderAttack", 1)
-								SetUnitRulesParam(flagID, "secure", 0, {public = true})
-							end
-							flagCapStatuses[flagID][teamID] = (flagCapStatuses[flagID][teamID] or 0) + capTotal
-							SetUnitRulesParam(flagID, "cap" .. tostring(teamID), flagCapStatuses[flagID][teamID], {public = true})
-						end
-					end
-					for j = 1, #teams do
-						teamID = teams[j]
-						if teamID ~= flagTeamID then -- defending
-							if (flagCapStatuses[flagID][teamID] or 0) > 0 and capTotals[teamID] ~= defendTotal and flagTeamID ~= GAIA_TEAM_ID then
-								--Spring.Echo("Capping: " .. flagCapStatuses[flagID][teamID] .. " Defending: " .. defendTotal)
-								flagCapStatuses[flagID][teamID] = flagCapStatuses[flagID][teamID] - flagData.regen
-								if flagCapStatuses[flagID][teamID] <= 0 then
-									GG.PlaySoundForTeam(flagTeamID, "BB_NavBeacon_Secured", 1)
-									flagCapStatuses[flagID][teamID] = 0
-									SetUnitRulesParam(flagID, "secure", 1, {public = true})
-								end
-								SetUnitRulesParam(flagID, "cap" .. tostring(teamID), flagCapStatuses[flagID][teamID], {public = true})
-							end
-						end
-						if (flagCapStatuses[flagID][teamID] or 0) > flagData.capThreshold and teamID ~= flagTeamID then
-							-- Flag is ready to change team
-							if (flagTeamID == GAIA_TEAM_ID) then
-								-- Neutral flag being capped
-								Spring.SendMessageToTeam(teamID, flagData.tooltip .. " Captured!")
-								Spring.AddTeamResource(teamID, "metal", 2000)
-								GG.PlaySoundForTeam(teamID, "BB_NavBeacon_Captured", 1)
-								SetUnitRulesParam(flagID, "secure", 1, {public = true})
-								TransferUnit(flagID, teamID, false)
-								UpdateBeacons(teamID, 1)
-								SetTeamRulesParam(teamID, flagType .. "s", (GetTeamRulesParam(teamID, flagType .. "s") or 0) + 1, {public = true})
-								SendToUnsynced("BEACONCAP", teamID, 1)
-							else
-								-- Team flag being neutralised
-								Spring.SendMessageToTeam(teamID, flagData.tooltip .. " Neutralised!")
-								Spring.AddTeamResource(teamID, "metal", 2000)
-								GG.PlaySoundForTeam(flagTeamID, "BB_NavBeacon_Lost", 1)
-								TransferUnit(flagID, GAIA_TEAM_ID, false)
-								UpdateBeacons(flagTeamID, -1)
-								SetTeamRulesParam(teamID, flagType .. "s", (GetTeamRulesParam(teamID, flagType .. "s") or 0) - 1, {public = true})
-								SendToUnsynced("BEACONCAP", flagTeamID, -1)
-							end
-							-- Perform any flagType specific behaviours
-							FlagSpecialBehaviour("capped", flagType, flagID, flagTeamID, teamID)
-							-- Turn flag back on
-							GiveOrderToUnit(flagID, CMD.ONOFF, {1}, {})
-							-- Flag has changed team, reset capping statuses
-							for cleanTeamID = 0, #teams-1 do
-								flagCapStatuses[flagID][cleanTeamID] = 0
-								SetUnitRulesParam(flagID, "cap" .. tostring(cleanTeamID), 0, {public = true})
-							end
-						end
-						-- cleanup defenders
-						flagCapStatuses[flagID][flagTeamID] = 0
+						FlagCapChange(flagID, flagTeamID, cappingAllyTeam, cappingTeam, 1)
+						-- TODO: if equal then go for team with fewest beacons
+						-- TODO: if equal pick first unit in list
+					elseif numberOfAllyTeamsAtFlag > 1 then -- flag is contested, pause cap status
+						-- probably don't need to actually do anything here
 					end
 				end
 			end
 		end
-		-- manage tickets
-
 		
+		-- manage tickets	
 		for allyTeam, numBeacon in pairs(beaconsPerAllyTeam) do
 			maxBeacon = math.max(numBeacon, maxBeacon)
 		end
@@ -382,17 +380,8 @@ end
 function gadget:UnitCreated(unitID, unitDefID, unitTeam, builderID)
 	local ud = UnitDefs[unitDefID]
 	local cp = ud.customParams
-	if cp.unittype == "mech" or cp.flagdefendrate then -- only mechs & garrision should be in cappers/defenders tables
-		local flagCapRate = cp.flagcaprate or 1
-		local flagDefendRate = cp.flagdefendrate or flagCapRate
-
-		for _, flagCapType in pairs(flagTypes) do
-			flagTypeCappers[flagCapType][unitID] = (CAP_MULT * flagCapRate)
-			flagTypeDefenders[flagCapType][unitID] = (DEF_MULT * flagDefendRate)
-		end
-		if ud.customParams.unittype == "mech" then -- only count mechs
-			teamUnitCounts[unitTeam] = teamUnitCounts[unitTeam] + 1
-		end
+	if cp.unittype == "mech" then
+		teamUnitCounts[unitTeam] = teamUnitCounts[unitTeam] + 1
 	end
 	if unitDefID == BEACON_ID and unitTeam ~= GAIA_TEAM_ID then
 		local x,_, z = Spring.GetUnitPosition(unitID)
@@ -423,12 +412,6 @@ end
 
 function gadget:UnitDestroyed(unitID, unitDefID, unitTeam, attackerID, attackerDefID, attackerTeam)
 	local ud = UnitDefs[unitDefID]
-	if ud.speed > 0 and not ud.canFly then
-		for _, flagCapType in pairs(flagTypes) do
-			flagTypeCappers[flagCapType][unitID] = nil
-			flagTypeDefenders[flagCapType][unitID] = nil
-		end
-	end
 	
 	if ud.customParams.unittype == "mech" then
 		teamUnitCounts[unitTeam] = teamUnitCounts[unitTeam] - 1
@@ -440,7 +423,6 @@ function gadget:UnitDestroyed(unitID, unitDefID, unitTeam, attackerID, attackerD
 end
 
 function gadget:UnitGiven(unitID, unitDefID, newTeam, oldTeam)
-	--Spring.Echo("Unit Given: " .. unitID)
 	local ud = UnitDefs[unitDefID]
 	if ud.customParams.unittype == "mech" then
 		teamUnitCounts[oldTeam] = teamUnitCounts[oldTeam] - 1
