@@ -2,7 +2,6 @@ weaponDef = {
 	name                    = "Laser AMS",
 	
 	weaponType              = "BeamLaser",
-	beamLaser				= true,
 	explosionGenerator		= "custom:burn",
 --	soundHit              	= [[GEN_Pulse_Explode1]],
 	soundStart           	= [[SPL_Fire]],
@@ -12,7 +11,7 @@ weaponDef = {
 	turret                  = true,
 	range                   = 500,
 	accuracy                = 10,
-	tollerance				= 100,
+	tolerance				= 100,
 	areaOfEffect            = 5,
 	weaponVelocity          = 2000,
 	weaponTimer				= 0.8,

@@ -3,6 +3,7 @@ VFS.Include("LuaRules/Includes/utilities.lua", nil, VFS.ZIP)
 local UnitDefs = DEFS.unitDefs
 local FeatureDefs = DEFS.featureDefs
 
+local FUNCTIONS_TO_REMOVE = {"new", "clone"}
 
 local cegCache = {}
 
@@ -49,6 +50,11 @@ for weapName, wd in pairs(WeaponDefs) do
 	elseif (wd.weapontype ~= nil) and (string.lower(wd.weapontype) == "beamlaser" or cp and cp.ammotype == "gauss") then -- lasers and gauss are impactOnly
 		wd.impactonly = true
 		wd.minintensity = 1.0
+	end
+	
+	-- remove the functions so Spring doesn't complain about invalid tags
+	for _, f in pairs(FUNCTIONS_TO_REMOVE) do
+		wd[f] = nil
 	end
 end
 

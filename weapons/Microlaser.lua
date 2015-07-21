@@ -1,10 +1,7 @@
 weaponDef = {
 	name                    = "Microlaer",
 	weaponType              = "BeamLaser",
-	beamLaser				= true,
 	beamBurst				= true,
-	renderType				= 0,
-	lineOfSight				= true,
 	explosionGenerator		= "custom:burn",
 	--soundHit              	= [[GEN_Beam_Explode1]],
 	soundStart           	= [[SBL_Fire]],

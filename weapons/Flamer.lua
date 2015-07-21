@@ -15,7 +15,6 @@ weaponDef = {
 	soundHit           = [[MG_Hit]],
 	soundStart         = [[Flamer_Fire]],
 	soundTrigger	   = 1,
-    lineOfSight        = true,
     minintensity       = 0.1,
     impulseFactor      = 0,
     range              = 300,
