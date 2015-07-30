@@ -152,6 +152,7 @@ local Vehicle = Unit:New{
 	
 	customparams = {
 		unittype		= "vehicle",
+		ignoreatbeacon  = true,
     },
 }
 
@@ -188,11 +189,6 @@ local Aircraft = Vehicle:New{
 	explodeAs          	= "mechexplode",
 	canFly				= true,
 	factoryHeadingTakeoff = false,
-	
-	customparams = {
-		flagcaprate		= "0",
-		flagdefendrate	= "0",
-	}
 }
 	
 local Aero = Aircraft:New{
@@ -234,6 +230,7 @@ local Tower = Unit:New{
 
 	customparams = {
 		towertype = "turret", -- overwritten by ecm & bap
+		ignoreatbeacon = true,
 	}
 }
 
