@@ -79,6 +79,7 @@ for name, ud in pairs(UnitDefs) do
 		-- scale prices by a multiplier from an origin of 4000
 		local priceMult = modOptions and modOptions.pricemult or 1
 		ud.buildCostMetal = ((cp.price or 0) * priceMult - (4000 * (priceMult - 1)))
+		ud.power = ud.buildCostMetal * ud.buildCostEnergy
 		if cp.tonnage then
 			ud.mass = (cp.tonnage or 0) * 100
 			if cp.armor then
