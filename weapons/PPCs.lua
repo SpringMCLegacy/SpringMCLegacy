@@ -46,7 +46,7 @@ local ERPPC = PPC_Class:New{
 	range                   = 2300,
 	customparams = {
 		heatgenerated		= 7.5,
-		minrange			= 150,
+		minrange			= 300,
     },
 }
 
@@ -86,7 +86,7 @@ local CERPPC = PPC_Class:New{
 	},
 	customparams = {
 		heatgenerated		= 7.5,
-		minrange			= 150,
+		minrange			= 300,
     },
 }
 
