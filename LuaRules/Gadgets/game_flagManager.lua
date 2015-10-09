@@ -353,6 +353,9 @@ function gadget:GameFrame(n)
 						-- TODO: if equal pick first unit in list
 					elseif numberOfAllyTeamsAtFlag > 1 then -- flag is contested, pause cap status
 						-- probably don't need to actually do anything here
+					elseif flagAllyTeam == GAIA_ALLY_ID then -- no allyTeam units present, flag is an empty neutral flag
+						--Spring.Echo(flagID, "Ronery, so rorenery")
+						FlagCapRegen(flagID, flagTeamID, -REGEN)
 					end
 				end
 			end
