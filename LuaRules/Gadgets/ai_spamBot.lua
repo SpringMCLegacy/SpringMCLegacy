@@ -243,11 +243,12 @@ local availablePerkCounts = {} -- availablePerkCounts[unitID] = number
 local function Perk(unitID, perkID, firstTime)
 	if firstTime then
 		availablePerks[unitID] = {}
+		availablePerkCounts[unitID] = 0
 		local cmdDescs = Spring.GetUnitCmdDescs(unitID)
 		for id, cmdDesc in pairs(cmdDescs) do
 			if cmdDesc.action:find("perk") then
 				availablePerks[unitID][id] = true
-				availablePerkCounts[unitID] = (availablePerkCounts[unitID] or 0) + 1
+				availablePerkCounts[unitID] = availablePerkCounts[unitID] + 1
 			end
 		end
 	end
@@ -267,7 +268,7 @@ local function Perk(unitID, perkID, firstTime)
 	end
 end
 
-local WAIT_TIME = 35 * 30 -- 35s
+local WAIT_TIME = 45 * 30 -- 45s
 local function UnitIdleCheck(unitID, unitDefID, teamID)
 	if Spring.GetUnitIsDead(unitID) then return false end
 	local cmdQueueSize = Spring.GetCommandQueue(unitID, -1, false) or 0
