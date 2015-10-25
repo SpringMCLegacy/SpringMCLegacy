@@ -105,6 +105,9 @@ function gadget:AllowCommand(unitID, unitDefID, teamID, cmdID, cmdParams, cmdOpt
 					end
 				end
 			end
+		elseif ud.humanName == "Dropzone" then --and perkDef.valid(unitDefID) then
+			perkDef.applyPerk(unitID)
+			return true
 		end
 		-- always return false, even if command was carried out, so that command queue is not altered
 		return false
@@ -138,6 +141,8 @@ function gadget:UnitCreated(unitID, unitDefID, teamID, builderID)
 				currentPerks[unitID][perkDef.name] = true
 			end
 		end
+	elseif ud.humanName == "Dropzone" then -- GG.dropZones[unitID] then
+		InsertUnitCmdDesc(unitID, perkInclude["drop"].cmdDesc)
 	end
 end
 

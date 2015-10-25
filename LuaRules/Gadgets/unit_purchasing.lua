@@ -165,14 +165,12 @@ local function TeamAvailableGroup(teamID, size)
 	return false
 end
 
-local function ToggleLink(unitID, teamID, lost, tonnage)
+local function ToggleLink(unitID, teamID, lost)
 	if lost then
-		--Spring.SetUnitNoSelect(unitID, true) -- can't do this as it makes enemies untargetable (manually)
-		AddTeamResource(teamID, "energy", tonnage)
+		--Spring.SetUnitNoSelect(unitID, true) -- can't do this as it makes enemies untargetable (manually) TODO: needs to be done from unsynced per team
 		Spring.SetUnitRulesParam(unitID, "LOST_LINK", 1, {inlos = true})
 	else
 		--Spring.SetUnitNoSelect(unitID, false)
-		UseTeamResource(teamID, "energy", tonnage)
 		Spring.SetUnitRulesParam(unitID, "LOST_LINK", 0, {inlos = true})
 	end
 end
@@ -212,6 +210,7 @@ local function AssignGroup(unitID, unitDefID, teamID, slotChange, group)
 				end
 			end
 		end
+		-- TODO: Probably a FILO queue is better here?
 		-- sort by tonnage (descending)
 		table.sort(candidates, TonnageSort)
 		-- we don't want to change the list as we iterate over it so build a list of candidates first then iterate over that making the changes
@@ -219,11 +218,10 @@ local function AssignGroup(unitID, unitDefID, teamID, slotChange, group)
 		local tonnageAvailable = Spring.GetTeamResources(teamID, "energy")
 		local numAssigned = 0
 		for i, candidate in pairs(candidates) do
-			if candidate.tonnage <= tonnageAvailable and numAssigned < groupSlots.available then -- unit will fit
+			if numAssigned < groupSlots.available then -- unit will fit
 				unitLances[candidate.id] = group
-				ToggleLink(candidate.id, teamID, false, candidate.tonnage)
+				ToggleLink(candidate.id, teamID, false)
 				SendToUnsynced("LANCE", teamID, candidate.id, group)
-				tonnageAvailable = tonnageAvailable - candidate.tonnage
 				numAssigned = numAssigned + 1
 			end
 		end
@@ -244,8 +242,8 @@ function LanceControl(teamID, unitID, add)
 			local groupSlots = teamSlots[teamID][newLance]
 			groupSlots.active = true
 			-- If there were any mechs in this lance, make them selectable again
-			for unitID, tonnage in pairs(groupSlots.units) do
-				ToggleLink(unitID, teamID, false, tonnage)
+			for unitID in pairs(groupSlots.units) do
+				ToggleLink(unitID, teamID, false)
 			end
 		end
 	elseif C3Status[unitID] then -- lost a deployed C3
@@ -275,10 +273,6 @@ function LanceControl(teamID, unitID, add)
 			end
 		end
 		C3Status[unitID] = nil
-		-- When you gain a C3 you get 150 extra e, when you lose one, you lose 150 storage... 
-		-- ..but Spring helpfully fills it with all that extra e, screwing the tonnage system
-		-- So remove the extra tonnage manually
-		UseTeamResource(teamID, "energy", UnitDefs[C3_ID].energyStorage)
 	end
 end
 GG.LanceControl = LanceControl

@@ -253,4 +253,25 @@ return {
 			setWeaponClassAttribute(unitID, "gauss", "range", 1.5)
 		end,
 	},
+	-- DropShip/Zone upgrades
+	drop = {
+		cmdDesc = {
+			id = GetCmdID('PERK_DROPZONE_TONNAGE'),
+			action = 'perkdroptonnage',
+			name = Pad(Pad("Increase", "Tonnage"), "Limit"),
+			tooltip = 'Increase Tonnage Limit',
+			texture = 'bitmaps/ui/perkbg.png',	
+		},
+		valid = function (unitDefID) return UnitDefs[unitDefID].humanName == "Dropzone" end,
+		applyPerk = function (unitID)
+			local teamID = Spring.GetUnitTeam(unitID)
+			local cBills = Spring.GetTeamResources(teamID, "metal")
+			if cBills > 10000 then
+				local tonnageIncrease = 150 --modOptions and modOptions.startenergy or 150
+				Spring.SetTeamResource(teamID, "es", select(2, Spring.GetTeamResources(teamID, "energy")) + tonnageIncrease)
+				Spring.AddTeamResource(teamID, "e", tonnageIncrease)
+				Spring.UseTeamResource(teamID, "m", 10000)
+			end
+		end,
+	},
 }
