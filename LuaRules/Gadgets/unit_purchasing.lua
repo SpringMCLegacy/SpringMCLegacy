@@ -102,7 +102,7 @@ local typeStringAliases = { -- whitespace is to try and equalise resulting font 
 	["vtol"] 		= "VTOL     ",
 	["aero"]		= "Aero     ",
 }
-local dropShipProgression = {"confederate", "union", "overlord"}
+
 local menuCmdDescs = {}
 local menuCmdIDs = {}
 for i, typeString in ipairs(typeStrings) do
@@ -128,7 +128,7 @@ local orderSizesPending = {} -- orderSizesPending[unitID] = size -- used to trac
 
 local dropZones = {} -- dropZones[unitID] = teamID
 local teamDropZones = {} -- teamDropZone[teamID] = unitID
-local teamDropShipTypes = {} -- teamDropShipTypes[teamID] = unitDefID
+local teamDropShipTypes = {} -- teamDropShipTypes[teamID] = {tier = 1 or 2 or 3, def = unitDefID}
 local C3Status = {} -- C3Status[unitID] = bool deployed
 local teamC3Counts = {} -- teamC3Counts[teamID] = number
 local dropShipStatus = {} -- dropShipStatus[teamID] = number, where 0 = Ready, 1 = Active, 2 = Cooldown
@@ -137,6 +137,18 @@ local orderStatus = {} -- orderStatus[teamID] = number, where 0 = Ready for a ne
 -- teamSlots[teamID] = {[1] = {active = true, used = number_used, available = number_available, units = {unitID1 = tons, unitID2 = tons, ...}}, ...}
 local teamSlots = {}
 local unitLances = {} -- unitLances[unitID] = group_number
+
+local function TeamDropshipUpgrade(teamID)
+	local oldDefID = teamDropShipTypes[teamID].def
+	local newTier = teamDropShipTypes[teamID].tier + 1
+	local newDefID = UnitDefNames[side .. "_dropship_" .. GG.dropShipProgression[newTier]].id
+	teamDropShipTypes[teamID] = {def = newDefID, tier = newTier}
+	local maxTonnage = UnitDefs[newDefID].customParams.maxtonnage
+	local tonnageIncrease = maxTonnage - UnitDefs[oldDefID].customParams.maxtonnage
+	Spring.SetTeamResource(teamID, "es", maxTonnage)
+	Spring.AddTeamResource(teamID, "e", tonnageIncrease)
+end
+GG.TeamDropshipUpgrade = TeamDropshipUpgrade
 
 local function TeamSlotsRemaining(teamID)
 	local slots = 0
@@ -412,7 +424,7 @@ function DropshipLeft(teamID) -- called by Dropship once it has left, to enable 
 	-- Dropship is no longer ACTIVE, it is entering COOLDOWN
 	GG.PlaySoundForTeam(teamID, "BB_Reinforcements_Inbound_ETA_30", 1)
 	dropShipStatus[teamID] = 2
-	local dropShipDef = UnitDefs[teamDropShipTypes[teamID]]
+	local dropShipDef = UnitDefs[teamDropShipTypes[teamID]].def
 	local enableFrame = GetGameFrame() + dropShipDef.customParams.cooldown
 	coolDowns[teamID] = enableFrame
 	Spring.SetTeamRulesParam(teamID, "DROPSHIP_COOLDOWN", enableFrame) -- frame this team can call dropship again
@@ -432,7 +444,7 @@ local function SendCommandFallback(unitID, unitDefID, teamID, cost)
 		if not orderQueue then return end -- dropzone died TODO: Transfer to new DZ if there is one
 		if #orderQueue > 0 then -- proceed with order
 			-- TODO: Sound needs to change?
-			GG.DropshipDelivery(unitID, teamID, teamDropShipTypes[teamID], orderQueue, 0, nil, 0)
+			GG.DropshipDelivery(unitID, teamID, teamDropShipTypes[teamID].def, orderQueue, 0, nil, 0)
 			Spring.SendMessageToTeam(teamID, "Sending purchase order for the following:")
 			for i, order in ipairs(orderQueue) do
 				for orderDefID, count in pairs(order) do
@@ -718,7 +730,7 @@ function gadget:Initialize()
 		teamC3Counts[teamID] = 0
 		local side = GG.teamSide and GG.teamSide[teamID] or select(5, Spring.GetTeamInfo(teamID))
 		if side ~= "" then -- shouldn't be the case but maybe during loading
-			teamDropShipTypes[teamID] = UnitDefNames[side .. "_dropship_" .. dropShipProgression[1]].id
+			teamDropShipTypes[teamID] = {def = UnitDefNames[side .. "_dropship_" .. GG.dropShipProgression[1]].id, tier = 1}
 		end
 		for i = 1, 3 do
 			teamSlots[teamID][i] = {}

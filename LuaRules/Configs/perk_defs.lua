@@ -267,9 +267,7 @@ return {
 			local teamID = Spring.GetUnitTeam(unitID)
 			local cBills = Spring.GetTeamResources(teamID, "metal")
 			if cBills > 10000 then
-				local tonnageIncrease = 150 --modOptions and modOptions.startenergy or 150
-				Spring.SetTeamResource(teamID, "es", select(2, Spring.GetTeamResources(teamID, "energy")) + tonnageIncrease)
-				Spring.AddTeamResource(teamID, "e", tonnageIncrease)
+				GG.TeamDropshipUpgrade(teamID)
 				Spring.UseTeamResource(teamID, "m", 10000)
 			end
 		end,
