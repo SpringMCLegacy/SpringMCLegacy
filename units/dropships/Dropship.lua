@@ -175,7 +175,7 @@ local Union = DropShip:New{
 local Confederate = Union:New{ -- TODO: DropShip:New, custom weapons etc
 	customparams = {
 		maxtonnage		= 150,
-		-- cooldown
+		cooldown		= 20 * 30,
 		-- droptime
 	},	
 }
@@ -183,7 +183,7 @@ local Confederate = Union:New{ -- TODO: DropShip:New, custom weapons etc
 local Overlord = Union:New{ -- TODO: DropShip:New, custom weapons etc
 	customparams = {
 		maxtonnage		= 400,
-		-- cooldown
+		cooldown		= 50 * 30,
 		-- droptime
 	},	
 }

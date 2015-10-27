@@ -425,7 +425,7 @@ function DropshipLeft(teamID) -- called by Dropship once it has left, to enable 
 	-- Dropship is no longer ACTIVE, it is entering COOLDOWN
 	GG.PlaySoundForTeam(teamID, "BB_Reinforcements_Inbound_ETA_30", 1)
 	dropShipStatus[teamID] = 2
-	local dropShipDef = UnitDefs[teamDropShipTypes[teamID]].def
+	local dropShipDef = UnitDefs[teamDropShipTypes[teamID].def]
 	local enableFrame = GetGameFrame() + dropShipDef.customParams.cooldown
 	coolDowns[teamID] = enableFrame
 	Spring.SetTeamRulesParam(teamID, "DROPSHIP_COOLDOWN", enableFrame) -- frame this team can call dropship again
