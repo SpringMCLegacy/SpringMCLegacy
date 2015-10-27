@@ -5,7 +5,7 @@ function gadget:GetInfo()
 		author = "FLOZi (C. Lawrence)",
 		date = "31/03/2013",
 		license = "GNU GPL v2",
-		layer = 2, -- run after game_radar
+		layer = 4, -- run after game_radar & unit_purchasing
 		enabled = true
 	}
 end

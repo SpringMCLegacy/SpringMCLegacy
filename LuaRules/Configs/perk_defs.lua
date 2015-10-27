@@ -256,10 +256,10 @@ return {
 	-- DropShip/Zone upgrades
 	drop = {
 		cmdDesc = {
-			id = GetCmdID('PERK_DROPZONE_TONNAGE'),
-			action = 'perkdroptonnage',
-			name = Pad(Pad("Increase", "Tonnage"), "Limit"),
-			tooltip = 'Increase Tonnage Limit',
+			id = GetCmdID('PERK_DROPSHIP_UPGRADE'),
+			action = 'perkdropshipupgrade',
+			name = Pad("Upgrade", "Dropship"),
+			tooltip = 'Increases Tonnage Limit',
 			texture = 'bitmaps/ui/perkbg.png',	
 		},
 		valid = function (unitDefID) return UnitDefs[unitDefID].humanName == "Dropzone" end,

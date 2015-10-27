@@ -139,6 +139,7 @@ local teamSlots = {}
 local unitLances = {} -- unitLances[unitID] = group_number
 
 local function TeamDropshipUpgrade(teamID)
+	local side = GG.teamSide[teamID]
 	local oldDefID = teamDropShipTypes[teamID].def
 	local newTier = teamDropShipTypes[teamID].tier + 1
 	local newDefID = UnitDefNames[side .. "_dropship_" .. GG.dropShipProgression[newTier]].id
