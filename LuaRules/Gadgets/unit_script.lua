@@ -30,7 +30,7 @@ function gadget:GetInfo()
 		author    = "Tobi Vollebregt",
 		date      = "2 September 2009",
 		license   = "GPL v2",
-		layer     = 0,
+		layer     = 3, -- must be after lus_helper
 		enabled   = true --  loaded by default?
 	}
 end

@@ -1,22 +1,5 @@
-local Dropship = Unit:New{
-	name              	= "Dropship",
-	description         = "Lance Delivery Dropship",
-	objectName        	= "Dropship.s3o",
-	iconType			= "dropship",
-	script				= "Dropship_union.lua",
-	category 			= "dropship structure notbeacon",
-	activateWhenBuilt   = true,
-	maxDamage           = 180000,
-	mass                = 36000,
-	footprintX			= 20,
-	footprintZ 			= 20,
-	collisionVolumeType = "ellipsoid",
-	idleAutoHeal		= 0,
-	transportSize		= 8,
-	transportCapacity	= 80, -- 10x transportSize
-	transportMass		= 100000,
-	holdSteady 			= true,
-	power				= 1, -- don't target me!
+local Union = DropShip:New{
+	name              	= "Union Class Dropship",
 
 	weapons 		= {	
 		-- LBLs
@@ -182,31 +165,34 @@ local Dropship = Unit:New{
 		}
 	},
 	
-	--Gets CEG effects from /gamedata/explosions folder
-	sfxtypes = {
-		explosiongenerators = {
-		"custom:dropship_main_engine_stage2",
-		"custom:dropship_main_engine_stage3",
-		"custom:heavy_jet_trail",
-		"custom:heavy_jet_trail_blue",
-		"custom:dropship_reentry",
-		"custom:mech_jump_dust"
-		},
-	},
 	customparams = {
-		helptext		= "A Dropship",
-		hasbap			= true,
-		dropship		= "union",
-		flagdefendrate = 100,
-    },
-	sounds = {
-		underattack        = "Dropship_Alarm",
+		maxtonnage		= 250,
+		cooldown		= 30 * 30, -- 30s, time before the dropship has regained orbit, refuelled etc ready to drop again
+		-- droptime
 	},
+}
+
+local Confederate = Union:New{ -- TODO: DropShip:New, custom weapons etc
+	customparams = {
+		maxtonnage		= 150,
+		-- cooldown
+		-- droptime
+	},	
+}
+
+local Overlord = Union:New{ -- TODO: DropShip:New, custom weapons etc
+	customparams = {
+		maxtonnage		= 400,
+		-- cooldown
+		-- droptime
+	},	
 }
 
 dropShips = {}
 for i, sideName in pairs(Sides) do
-	dropShips[sideName .. "_dropship"] = Dropship:New{}
+	dropShips[sideName .. "_dropship_union"] = Union:New{}
+	dropShips[sideName .. "_dropship_confederate"] = Confederate:New{}
+	dropShips[sideName .. "_dropship_overlord"] = Overlord:New{}
 	--Spring.Echo("Making Dropship for", sideName)
 end
 return lowerkeys(dropShips)

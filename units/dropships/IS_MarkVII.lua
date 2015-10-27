@@ -80,7 +80,7 @@ local IS_MarkVII = {
 	},
 	customparams = {
 		helptext		= "A Dropship",
-		dropship		= true,
+		dropship		= "vehicle",
     },
 	sounds = {
 		underattack        = "Dropship_Alarm",

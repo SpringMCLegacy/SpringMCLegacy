@@ -5,7 +5,7 @@ function gadget:GetInfo()
 		author		= "FLOZi (C. Lawrence)",
 		date		= "31/08/13",
 		license 	= "GNU GPL v2",
-		layer		= -6,
+		layer		= 3, -- must come after game_spawn
 		enabled	= true	--	loaded by default?
 	}
 end
@@ -47,7 +47,7 @@ local CBILLS_PER_SEC = (modOptions and tonumber(modOptions.income)) or 10
 local BEACON_ID = UnitDefNames["beacon"].id
 local C3_ID = UnitDefNames["upgrade_c3array"].id
 
-local DROPSHIP_COOLDOWN = 30 * 30 -- 30s, time before the dropship has regained orbit, refuelled etc ready to drop again
+--local DROPSHIP_COOLDOWN = 30 * 30 -- 30s, time before the dropship has regained orbit, refuelled etc ready to drop again
 local DROPSHIP_DELAY = 2 * 30 -- 2s, time taken to arrive on the map from SPACE!
 local DAMAGE_REWARD_MULT = (modOptions and tonumber(modOptions.income_damage)) or 0.1
 Spring.SetGameRulesParam("damage_reward_mult", DAMAGE_REWARD_MULT)
@@ -102,6 +102,7 @@ local typeStringAliases = { -- whitespace is to try and equalise resulting font 
 	["vtol"] 		= "VTOL     ",
 	["aero"]		= "Aero     ",
 }
+local dropShipProgression = {"confederate", "union", "overlord"}
 local menuCmdDescs = {}
 local menuCmdIDs = {}
 for i, typeString in ipairs(typeStrings) do
@@ -117,6 +118,7 @@ for i, typeString in ipairs(typeStrings) do
 end
 
 local unitTypes = {} -- unitTypes[unitDefID] = "lightmech" etc from typeStrings
+local dropShipTypes = {} -- dropShipTypes[unitDefID] = "mech", "vehicle" or "upgrade"
 local unitSlotChanges = {} -- unitSlotChanges = 1 or 0.5
 
 local orderCosts = {} -- orderCosts[unitID] = cost
@@ -126,6 +128,7 @@ local orderSizesPending = {} -- orderSizesPending[unitID] = size -- used to trac
 
 local dropZones = {} -- dropZones[unitID] = teamID
 local teamDropZones = {} -- teamDropZone[teamID] = unitID
+local teamDropShipTypes = {} -- teamDropShipTypes[teamID] = unitDefID
 local C3Status = {} -- C3Status[unitID] = bool deployed
 local teamC3Counts = {} -- teamC3Counts[teamID] = number
 local dropShipStatus = {} -- dropShipStatus[teamID] = number, where 0 = Ready, 1 = Active, 2 = Cooldown
@@ -134,18 +137,6 @@ local orderStatus = {} -- orderStatus[teamID] = number, where 0 = Ready for a ne
 -- teamSlots[teamID] = {[1] = {active = true, used = number_used, available = number_available, units = {unitID1 = tons, unitID2 = tons, ...}}, ...}
 local teamSlots = {}
 local unitLances = {} -- unitLances[unitID] = group_number
-
-for _, teamID in pairs(Spring.GetTeamList()) do
-	teamSlots[teamID] = {}
-	teamC3Counts[teamID] = 0
-	for i = 1, 3 do
-		teamSlots[teamID][i] = {}
-		teamSlots[teamID][i].active = i == 1
-		teamSlots[teamID][i].used = 0
-		teamSlots[teamID][i].available = 4
-		teamSlots[teamID][i].units = {}
-	end
-end
 
 local function TeamSlotsRemaining(teamID)
 	local slots = 0
@@ -421,7 +412,8 @@ function DropshipLeft(teamID) -- called by Dropship once it has left, to enable 
 	-- Dropship is no longer ACTIVE, it is entering COOLDOWN
 	GG.PlaySoundForTeam(teamID, "BB_Reinforcements_Inbound_ETA_30", 1)
 	dropShipStatus[teamID] = 2
-	local enableFrame = GetGameFrame() + DROPSHIP_COOLDOWN
+	local dropShipDef = UnitDefs[teamDropShipTypes[teamID]]
+	local enableFrame = GetGameFrame() + dropShipDef.customParams.cooldown
 	coolDowns[teamID] = enableFrame
 	Spring.SetTeamRulesParam(teamID, "DROPSHIP_COOLDOWN", enableFrame) -- frame this team can call dropship again
 end
@@ -439,9 +431,8 @@ local function SendCommandFallback(unitID, unitDefID, teamID, cost)
 		local orderQueue = Spring.GetFullBuildQueue(unitID)
 		if not orderQueue then return end -- dropzone died TODO: Transfer to new DZ if there is one
 		if #orderQueue > 0 then -- proceed with order
-			local side = UnitDefs[unitDefID].name:sub(1,2) -- send dropship of correct side
 			-- TODO: Sound needs to change?
-			GG.DropshipDelivery(unitID, teamID, side .. "_dropship", orderQueue, 0, nil, 0)
+			GG.DropshipDelivery(unitID, teamID, teamDropShipTypes[teamID], orderQueue, 0, nil, 0)
 			Spring.SendMessageToTeam(teamID, "Sending purchase order for the following:")
 			for i, order in ipairs(orderQueue) do
 				for orderDefID, count in pairs(order) do
@@ -599,8 +590,8 @@ function gadget:UnitCreated(unitID, unitDefID, teamID)
 		AddBuildMenu(unitID)
 		dropZones[unitID] = teamID
 		teamDropZones[teamID] = unitID
-	elseif UnitDefs[unitDefID].customParams.dropship == "union" then -- TODO: This is dreadful
-		if Spring.ValidUnitID(teamDropZones[teamID]) then -- even worse
+	elseif dropShipTypes[unitDefID] == "mech" then
+		if Spring.ValidUnitID(teamDropZones[teamID]) then -- TODO: (Why) is this even required?
 			EditUnitCmdDesc(teamDropZones[teamID], FindUnitCmdDesc(teamDropZones[teamID], CMD_SEND_ORDER), {disabled = true, name = "Dropship \nArrived "})
 		end
 	elseif unitTypes[unitDefID] then
@@ -683,6 +674,8 @@ function gadget:GamePreload()
 			local aero = unitDef.canFly and not vtol
 			unitTypes[unitDefID] = vtol and "vtol" or aero and "aero" or "vehicle"
 			unitSlotChanges[unitDefID] = (unitDef.canFly and 1) or 0.5]]
+		elseif cp.dropship then
+			dropShipTypes[unitDefID] = cp.dropship
 		end
 	end
 	for _, teamID in pairs(Spring.GetTeamList()) do
@@ -720,6 +713,21 @@ function gadget:GameFrame(n)
 end
 
 function gadget:Initialize()
+	for _, teamID in pairs(Spring.GetTeamList()) do
+		teamSlots[teamID] = {}
+		teamC3Counts[teamID] = 0
+		local side = GG.teamSide and GG.teamSide[teamID] or select(5, Spring.GetTeamInfo(teamID))
+		if side ~= "" then -- shouldn't be the case but maybe during loading
+			teamDropShipTypes[teamID] = UnitDefNames[side .. "_dropship_" .. dropShipProgression[1]].id
+		end
+		for i = 1, 3 do
+			teamSlots[teamID][i] = {}
+			teamSlots[teamID][i].active = i == 1
+			teamSlots[teamID][i].used = 0
+			teamSlots[teamID][i].available = 4
+			teamSlots[teamID][i].units = {}
+		end
+	end
 	gadget:GamePreload()
 	for _,unitID in ipairs(Spring.GetAllUnits()) do
 		local teamID = Spring.GetUnitTeam(unitID)

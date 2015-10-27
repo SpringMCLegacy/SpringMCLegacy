@@ -210,6 +210,31 @@ local VTOL = Aircraft:New{
     },
 }
 
+-- DropShips ----
+local DropShip = Unit:New{
+	description         = "BattleMech Dropship",
+	objectName        	= "Dropship.s3o",
+	iconType			= "dropship",
+	script				= "Dropship_union.lua", -- TODO: make dropship script generic for all spheroids
+	category 			= "dropship structure notbeacon",
+	activateWhenBuilt   = true,
+	maxDamage           = 180000, -- TODO: Do we want to make lower tier dropships vulnerable?
+	mass                = 36000,
+	footprintX			= 20, -- TODO: Probably safe to leave this as standard?
+	footprintZ 			= 20,
+	idleAutoHeal		= 0,
+	transportSize		= 8,
+	transportCapacity	= 96, -- 12x transportSize
+	transportMass		= 120000,
+	holdSteady 			= true,
+	power				= 1, -- don't target me!
+	
+	customparams = {
+		bap					= true,
+		dropship			= "mech",
+    },
+}
+
 -- Towers ----
 local Tower = Unit:New{
 	name              	= "Weapon Emplacement", -- overwritten by ecm & bap
@@ -254,8 +279,6 @@ local Upgrade = Unit:New{
 	
 	customparams = {
 		upgrade = true,
-		--ignoreatbeacon	= true,
-		flagdefendrate	= 100,
 	},
 }
 
@@ -280,6 +303,7 @@ local sharedEnv = {
 	Hover = Hover,
 	VTOL = VTOL,
 	Aero = Aero,
+	DropShip = DropShip,
 	Tower = Tower,
 	Upgrade = Upgrade,
 }

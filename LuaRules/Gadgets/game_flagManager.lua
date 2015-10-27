@@ -5,7 +5,7 @@ function gadget:GetInfo()
 		author    = "FLOZi",
 		date      = "Adopted from S44 flagManager 10/02/2011",
 		license   = "GNU GPL v2",
-		layer     = -2,
+		layer     = 1, -- must be before game_spawn
 		enabled   = true  --  loaded by default?
 	}
 end

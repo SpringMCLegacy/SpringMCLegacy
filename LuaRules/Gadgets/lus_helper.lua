@@ -5,7 +5,7 @@ function gadget:GetInfo()
 		author = "FLOZi (C. Lawrence)",
 		date = "20/02/2011", -- 25 today ;_;
 		license = "GNU GPL v2",
-		layer = -1,
+		layer = 2, -- must be after flagManager
 		enabled = true
 	}
 end

@@ -18,7 +18,7 @@ function gadget:GetInfo()
 		author    = "Tobi Vollebregt",
 		date      = "January, 2010",
 		license   = "GNU GPL, v2 or later",
-		layer     = 0,
+		layer     = 2, -- must be after flagManager, before unit_purchasing
 		enabled   = true  --  loaded by default?
 	}
 end
