@@ -1,4 +1,5 @@
 local Union = DropShip:New{
+	objectName        	= "Dropship_Union.s3o",
 	name              	= "Union Class Dropship",
 
 	weapons 		= {	
@@ -173,6 +174,7 @@ local Union = DropShip:New{
 }
 
 local Confederate = Union:New{ -- TODO: DropShip:New, custom weapons etc
+	objectName        	= "Dropship_Confederate.s3o",
 	customparams = {
 		maxtonnage		= 150,
 		cooldown		= 20 * 30,
@@ -181,6 +183,7 @@ local Confederate = Union:New{ -- TODO: DropShip:New, custom weapons etc
 }
 
 local Overlord = Union:New{ -- TODO: DropShip:New, custom weapons etc
+	objectName        	= "Dropship_Overlord.s3o",
 	customparams = {
 		maxtonnage		= 400,
 		cooldown		= 50 * 30,

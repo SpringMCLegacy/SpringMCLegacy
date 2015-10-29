@@ -213,7 +213,6 @@ local VTOL = Aircraft:New{
 -- DropShips ----
 local DropShip = Unit:New{
 	description         = "BattleMech Dropship",
-	objectName        	= "Dropship.s3o",
 	iconType			= "dropship",
 	script				= "Dropship_union.lua", -- TODO: make dropship script generic for all spheroids
 	category 			= "dropship structure notbeacon",
