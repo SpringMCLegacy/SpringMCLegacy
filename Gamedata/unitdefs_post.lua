@@ -72,9 +72,13 @@ for name, ud in pairs(UnitDefs) do
 	if speed > 0 or ud.canfly then
 		ud.cantbetransported = false
 	end
+	if cp and cp.baseclass then
+		if not ud.objectname then
+			ud.objectname = cp.baseclass .. "/" .. (cp.unittype == "mech" and (ud.name:gsub(" ", "") .. "/") or "") .. name .. ".s3o"
+		end
+	end
 	if cp and cp.unittype then -- mech, vehicle, apc, vtol, infantry
 		ud.name = ud.name .. " " .. (cp.variant or "") -- concatenate variant code to name
-
 		ud.buildCostEnergy = (cp.tonnage or 0)
 		-- scale prices by a multiplier from an origin of 4000
 		local priceMult = modOptions and modOptions.pricemult or 1

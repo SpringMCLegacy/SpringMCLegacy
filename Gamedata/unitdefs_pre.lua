@@ -71,7 +71,6 @@ function Def:Clone(name) -- name is passed to <NAME> in _post, it is the unitnam
 end
 
 Unit = Def:New{
-	objectName			= "<NAME>.s3o",
 	shownanoframe 		= false,
 	idleautoheal 		= 0,
 	turninplace 		= false,
@@ -107,32 +106,33 @@ local Mech = Unit:New{
 	customparams = {
 		hasturnbutton	= true,
 		unittype		= "mech",
+		baseclass		= "Mech",
     },
 }
 
 local Light = Mech:New{
-	iconType			= "lightmech",
+	iconType			= "light",
 	footprintX			= 1,
 	footprintZ 			= 1,
 	movementClass		= "SMALLMECH",
 }
 
 local Medium = Mech:New{
-	iconType			= "mediummech",
+	iconType			= "medium",
 	footprintX			= 2,
 	footprintZ 			= 2,
 	movementClass		= "SMALLMECH",
 }
 
 local Heavy = Mech:New{
-	iconType			= "heavymech",
+	iconType			= "heavy",
 	footprintX			= 3,
 	footprintZ 			= 3,
 	movementClass		= "LARGEMECH",
 }
 
 local Assault = Mech:New{
-	iconType			= "assaultmech",
+	iconType			= "assault",
 	footprintX			= 3,
 	footprintZ 			= 3,
 	movementClass		= "LARGEMECH",
@@ -153,6 +153,7 @@ local Vehicle = Unit:New{
 	customparams = {
 		unittype		= "vehicle",
 		ignoreatbeacon  = true,
+		baseclass		= "Vehicle",
     },
 }
 
@@ -196,6 +197,10 @@ local Aero = Aircraft:New{
 	noChaseCategory		= "beacon ground",
 	cruiseAlt			= 300,
 	canLoopbackAttack 	= true,
+	
+	customparams = {
+		baseclass			= "Aero",
+	},
 }
 
 local VTOL = Aircraft:New{
@@ -206,7 +211,8 @@ local VTOL = Aircraft:New{
 	airHoverFactor		= -0.0001,
 	
 	customparams = {
-		hasturnbutton	= "1",
+		hasturnbutton		= "1",
+		baseclass			= "VTOL",
     },
 }
 
@@ -231,6 +237,7 @@ local DropShip = Unit:New{
 	customparams = {
 		bap					= true,
 		dropship			= "mech",
+		--baseclass			= "dropship",
     },
 }
 
@@ -255,6 +262,7 @@ local Tower = Unit:New{
 	customparams = {
 		towertype = "turret", -- overwritten by ecm & bap
 		ignoreatbeacon = true,
+		baseclass		= "Turret",
 	}
 }
 
@@ -278,6 +286,7 @@ local Upgrade = Unit:New{
 	
 	customparams = {
 		upgrade = true,
+		baseclass		= "Upgrade",
 	},
 }
 

@@ -52,10 +52,13 @@ end
 -- Need the raw sidedata for short names
 local sideData = VFS.Include("gamedata/sidedata.lua", nil, VFS.ZIP)
 local SideNames = {}
+local ValidSides = {}
 for sideNum, data in pairs(sideData) do
 	SideNames[data.name:lower()] = data.shortName:lower()
+	ValidSides[data.shortName:lower()] = true
 end
 GG.SideNames = SideNames
+GG.ValidSides = ValidSides
 
 local dropShipProgression = {"confederate", "union", "overlord"}
 GG.dropShipProgression = dropShipProgression

@@ -1,7 +1,6 @@
 local Upgrade_Uplink = Upgrade:New{
 	name              	= "Orbital Uplink",
 	description         = "Orbital Asset Upgrade",
-	objectName        	= "Upgrade_Uplink.s3o",
 	maxDamage           = 10000,
 	mass                = 5000,
 	buildCostMetal      = 7500,

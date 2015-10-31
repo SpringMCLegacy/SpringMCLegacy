@@ -1,7 +1,6 @@
 local CL_Sulla = Aero:New{
 	name              	= "Sulla",
 	description         = "Superiority ASF",
-	objectName        	= "CL_Sulla.s3o",
 	sightDistance       = 1200,
 	radarDistance      	= 1500,
 	maxDamage           = 2400,

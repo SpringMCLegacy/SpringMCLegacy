@@ -1,6 +1,5 @@
 local Turret_AC2 = Tower:New{
 	description         = "Quad AC/2",
-	objectName        	= "Turret_AC2.s3o",
 	buildCostMetal      = 2000,
 
 	weapons = {	

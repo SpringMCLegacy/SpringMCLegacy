@@ -1,7 +1,6 @@
 local Upgrade_VehiclePad = Upgrade:New{
 	name              	= "Vehicle Pad",
 	description         = "Vehicle Delivery Upgrade",
-	objectName        	= "Upgrade_VehiclePad.s3o",
 	maxDamage           = 10000,
 	mass                = 5000,
 	buildCostMetal      = 10000,

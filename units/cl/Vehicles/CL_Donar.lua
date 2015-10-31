@@ -1,7 +1,6 @@
 local CL_Donar = VTOL:New{
 	name              	= "Donar",
 	description         = "Attack VTOL",
-	objectName        	= "CL_Donar.s3o",
 	corpse				= "CL_Donar_X",
 	maxDamage           = 3600,
 	mass                = 2500,

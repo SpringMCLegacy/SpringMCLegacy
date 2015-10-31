@@ -5,7 +5,7 @@ function gadget:GetInfo()
 		author		= "FLOZi (C. Lawrence)",
 		date		= "16/08/14",
 		license 	= "GNU GPL v2",
-		layer		= 10,
+		layer		= 10, -- must be after game_spawn
 		enabled	= true,	--	loaded by default?
 	}
 end
@@ -60,12 +60,14 @@ function gadget:Initialize()
 				local weight = (basicType == "apc" and "apc") or (unitDef.canFly and "vtol") or GG.GetWeight(mass)
 				local squadSize = unitDef.customParams.squadsize or 1
 				local side = unitDef.name:sub(1,2)
-				if unitDef.customParams.artillery then
-					table.insert(sideArtyDefs[side][weight], {["unitDefID"] = unitDefID, ["squadSize"] = squadSize})
-				else
-					table.insert(sideVehicleDefs[side][weight], {["unitDefID"] = unitDefID, ["squadSize"] = squadSize})
+				if GG.ValidSides[side] then
+					if unitDef.customParams.artillery then
+						table.insert(sideArtyDefs[side][weight], {["unitDefID"] = unitDefID, ["squadSize"] = squadSize})
+					else
+						table.insert(sideVehicleDefs[side][weight], {["unitDefID"] = unitDefID, ["squadSize"] = squadSize})
+					end
+					--Spring.Echo("INSERTIN", unitDef.name, side, weight)
 				end
-				--Spring.Echo("INSERTIN", unitDef.name, side, weight)
 			end
 		end
 	end

@@ -1,7 +1,6 @@
 local Upgrade_Mechbay = Upgrade:New{
 	name              	= "Mobile Mech-Bay",
 	description         = "Repair & Rearm Upgrade",
-	objectName        	= "Upgrade_Mechbay.s3o",
 	maxDamage           = 10000,
 	mass                = 9000,
 	buildCostMetal      = 5000,

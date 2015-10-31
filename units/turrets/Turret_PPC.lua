@@ -1,7 +1,5 @@
 local Turret_PPC = Tower:New{
 	description         = "Dual PPC",
-	objectName        	= "Turret_PPC.s3o",
-	--buildCostMetal      = 0,
 
 	weapons = {	
 		[1] = {

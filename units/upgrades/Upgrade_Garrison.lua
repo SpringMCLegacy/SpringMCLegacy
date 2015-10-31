@@ -1,7 +1,6 @@
 local Upgrade_Garrison = Upgrade:New{
 	name              	= "Garrison",
 	description         = "Fortified Defensive Upgrade",
-	objectName        	= "Upgrade_Bunker.s3o",
 	maxDamage           = 25000,
 	mass                = 10000,
 	collisionVolumeScales = [[50 50 50]],

@@ -1,7 +1,6 @@
 local CL_Bashkir = Aero:New{
 	name              	= "Bashkir",
 	description         = "Light Interceptor ASF",
-	objectName        	= "CL_Bashkir.s3o",
 	sightDistance       = 1200,
 	radarDistance      	= 1500,
 	maxDamage           = 1200,

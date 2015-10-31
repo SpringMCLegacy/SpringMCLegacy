@@ -3,7 +3,6 @@
 local Upgrade_C3Array = Upgrade:New{
 	name              	= "C3 Network Relay",
 	description         = "Command & Control Capacity Upgrade",
-	objectName        	= "Upgrade_C3Array.s3o",
 	maxDamage           = 2200,
 	mass                = 10000,
 	buildCostMetal      = 15000,

@@ -11,7 +11,7 @@ end
 local Upgrade_Dropzone = Upgrade:New{
 	name              	= "Dropzone",
 	description         = "Landing Demarcation",
-	objectName        	= "Upgrade_Dropzone.s3o",
+	objectName        	= "Upgrade/Upgrade_Dropzone.s3o",
 	iconType			= "Ddropzone",
 	script				= "Upgrade_Dropzone.lua",
 	category 			= "beacon",
