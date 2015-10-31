@@ -19,23 +19,23 @@ local iconTypes = {
 		size			=	3,
 		distance	=	1.0,
 	},
-	lightmech = {
-		bitmap		=	"icons/mediummech.png",
+	light = {
+		bitmap		=	"icons/lightmech.png",
 		size			=	3.5,
 		distance	=	1.0,
 	},
-	mediummech = {
-		bitmap		=	"icons/heavymech.png",
+	medium = {
+		bitmap		=	"icons/mediummech.png",
 		size			=	3.5,
 		distance	=	1.1,
 	},
-	heavymech = {
+	heavy = {
 		bitmap		=	"icons/heavymech.png",
 		size			=	4.2,
 		distance	=	1.2,
 	},
-	assaultmech = {
-		bitmap		=	"icons/assaultmech.png",
+	assault = {
+		bitmap		=	"icons/assault.png",
 		size			=	4.5,
 		distance	=	1.3,
 	},
