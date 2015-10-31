@@ -26,7 +26,7 @@ local black = { 0.0, 0.0, 0.0, 1.0}
 local clear = { 0.0, 0.0, 0.0, 0.0}
 local olive = { 0.25, 0.3, 0.1, 1.0}
 
-local ammoTypesInclude = VFS.Include("weapons/AmmoTypes.lua", nil, VFS.ZIP)
+local ammoTypesInclude = VFS.Include("gamedata/AmmoTypes.lua", nil, VFS.ZIP)
 local ammoTypes = {}
 for ammoType, _ in pairs(ammoTypesInclude) do
 	ammoTypes[ammoType:lower()] = "ammo_" .. ammoType:lower()

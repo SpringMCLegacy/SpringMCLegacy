@@ -41,8 +41,8 @@ local function ReplaceStrings(t, name)
 	RecursiveReplaceStrings(t, name, side, replacedMap)
 end
 
-local ammoPerTon = lowerkeys(VFS.Include("weapons/AmmoTypes.lua", nil, VFS.ZIP))
-local armorTypes = lowerkeys(VFS.Include("units/ArmorTypes.lua", nil, VFS.ZIP))
+local ammoPerTon = lowerkeys(VFS.Include("gamedata/AmmoTypes.lua", nil, VFS.ZIP))
+local armorTypes = lowerkeys(VFS.Include("gamedata/ArmorTypes.lua", nil, VFS.ZIP))
 
 -- DROPZONES
 local DROPZONE_UDS = {} --DZ_IDS = {shortSideName = unitDef}
