@@ -66,8 +66,6 @@ for name, ud in pairs(UnitDefs) do
 	-- override nochasecategories so units don't do anything.
 	--ud.category = (ud.category or "") .. " all"
 	--ud.nochasecategory = (ud.nochasecategory or "") .. " all"
-	-- add buildpics to unitdefs even though engine loads them automatically, so the filenames are available to lua (Chili)
-	ud.buildpic = name .. ".png"
 	local speed = (ud.maxvelocity or 0) * 30
 	if speed > 0 or ud.canfly then
 		ud.cantbetransported = false

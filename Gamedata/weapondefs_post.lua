@@ -3,7 +3,7 @@ VFS.Include("LuaRules/Includes/utilities.lua", nil, VFS.ZIP)
 local UnitDefs = DEFS.unitDefs
 local FeatureDefs = DEFS.featureDefs
 
-local FUNCTIONS_TO_REMOVE = {"new", "clone"}
+local FUNCTIONS_TO_REMOVE = {"new", "clone", "append"}
 
 local cegCache = {}
 
