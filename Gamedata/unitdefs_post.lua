@@ -9,8 +9,10 @@ end
 -- TODO: I still don't quite follow why the SIDES table from _pre (available to all defs) isn't available here
 local sideData = VFS.Include("gamedata/sidedata.lua", VFS.ZIP)
 local SIDES = {}
+local VALID_SIDES = {}
 for sideNum, data in pairs(sideData) do
 	SIDES[sideNum] = data.shortName:lower()
+	VALID_SIDES[data.shortName:lower()] = true
 end
 
 local function RecursiveReplaceStrings(t, name, side, replacedMap)
@@ -184,7 +186,7 @@ for name, ud in pairs(UnitDefs) do
 	local unitType = ud.customparams.unittype
 	local side = name:sub(1, 2)
 	
-	if unitType == "mech" or unitType == "vehicle" then
+	if (unitType == "mech" or unitType == "vehicle") and VALID_SIDES[side] then
 		ud.category = ud.category .. " narctag"
 		if not ud.canfly and not ud.movestate then
 			ud.movestate = 0 -- Set default move state to Hold Position, unless already specified

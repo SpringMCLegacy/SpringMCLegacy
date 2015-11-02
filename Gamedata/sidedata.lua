@@ -1,5 +1,5 @@
 local sidedata = {
-	{
+	--[[{
 		name = "Inner Sphere",
 		shortName = "IS",
 		startUnit = "beacon",
@@ -8,7 +8,7 @@ local sidedata = {
 		name = "Clans",
 		shortName = "CL",
 		startUnit = "beacon",
-	},
+	},]]
 	{
 		name = "Federated Suns",
 		shortName = "FS",
