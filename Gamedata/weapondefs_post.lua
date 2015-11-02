@@ -81,16 +81,32 @@ for unitName, ud in pairs(UnitDefs) do
 			table.insert(ud.sfxtypes.explosiongenerators, "custom:Sparks")
 			if ud.corpse then
 				--Spring.Echo("[WeaponDefs_post.lua]:" .. unitName .. " has a corpse (" .. ud.corpse .. ")")
+				-- First level corpse
 				FeatureDefs[ud.corpse] = Feature:New{
 					damage = ud.maxdamage * 0.5,
 					description = "Wrecked " .. ud.name,
 					mass = ud.mass,
 					metal = (ud.buildcostmetal or 200) * 0.5,
-					featuredead = "wreck_x",
+					featuredead = ud.corpse .. "x",
 					footprintx = ud.footprintx,
 					footprintz = ud.footprintz,
 					object = ud.objectname,
 				}
+				-- Second level corpse
+				local modelPath = ud.objectname:sub(1, -(string.len(unitName .. ".s3o")+1))
+				FeatureDefs[ud.corpse .. "x"] = Feature:New{
+					damage = ud.maxdamage * 0.5,
+					description = "Destroyed " .. ud.name,
+					mass = ud.mass,
+					metal = (ud.buildcostmetal or 200) * 0.25,
+					featuredead = "wreck_x",
+					footprintx = ud.footprintx,
+					footprintz = ud.footprintz,
+					object = modelPath .. "corpse/" .. unitName .. "_x.s3o",
+				}
+				if not VFS.FileExists("objects3d/" .. modelPath .. "corpse/" .. unitName .. "_x.s3o") then
+					Spring.Echo("[WeaponDefs_post.lua]: Missing corpse object; " .. modelPath .. "corpse/" .. unitName .. "_x.s3o")
+				end
 			else
 				--Spring.Echo("[WeaponDefs_post.lua]:" .. unitName .. " has no corpse!")
 			end
