@@ -22,7 +22,7 @@ local MRM_Class = Weapon:New{
 	weaponVelocity          = 900,
 	reloadtime              = 7.5,
 	burstrate				= 0.01,
-	model					= "Missile.s3o",
+	model					= "Weapons/Missile.s3o",
 	damage = {
 		default = 75,--10 DPS
 	},

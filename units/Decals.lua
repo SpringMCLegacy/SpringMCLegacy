@@ -1,5 +1,5 @@
 local Decal = Unit:New{
-	objectName 				= "blank.s3o",
+	objectName 				= "Decal.s3o",
 	script 					= "decal.lua",
 	useBuildingGroundDecal 	= true,
 	hideDamage				= true,

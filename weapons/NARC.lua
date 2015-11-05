@@ -23,7 +23,7 @@ weaponDef = {
 	startVelocity			= 700,
 	weaponVelocity          = 900,
 	reloadtime              = 10,
-	model					= "Missile.s3o",
+	model					= "Weapons/Missile.s3o",
 	damage = {
 		default 			= 0,--NONE!
 	},
