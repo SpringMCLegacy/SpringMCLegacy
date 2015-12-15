@@ -229,7 +229,7 @@ end
 
 function gadget:UnitUnloaded(unitID, unitDefID, teamID, transportID, transportTeam)
 	if vehiclesDefCache[unitDefID] then -- a vehicle
-		SendToUnsynced("VEHICLE_UNLOADED", unitID, teamID)
+		SendToUnsynced("TOGGLE_SELECT", unitID, teamID, false)
 		local ud = UnitDefs[unitDefID]
 		if ud.canFly then
 			--Spring.Echo("VTOL!")
@@ -257,16 +257,5 @@ end
 
 else
 --	UNSYNCED
-
-function VehicleUnloaded(eventID, unitID, teamID)
-	if teamID == Spring.GetMyTeamID() and not (GG.AI_TEAMS and GG.AI_TEAMS[teamID]) then
-		Spring.SetUnitNoSelect(unitID, true)
-	end
-end
-
-function gadget:Initialize()
-	gadgetHandler:AddSyncAction("VEHICLE_UNLOADED", VehicleUnloaded)
-end
-
 
 end

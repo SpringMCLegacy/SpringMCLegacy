@@ -171,10 +171,10 @@ end
 
 local function ToggleLink(unitID, teamID, lost)
 	if lost then
-		--Spring.SetUnitNoSelect(unitID, true) -- can't do this as it makes enemies untargetable (manually) TODO: needs to be done from unsynced per team
+		SendToUnsynced("TOGGLE_SELECT", unitID, teamID, false)
 		Spring.SetUnitRulesParam(unitID, "LOST_LINK", 1, {inlos = true})
 	else
-		--Spring.SetUnitNoSelect(unitID, false)
+		SendToUnsynced("TOGGLE_SELECT", unitID, teamID, true)
 		Spring.SetUnitRulesParam(unitID, "LOST_LINK", 0, {inlos = true})
 	end
 end
@@ -754,6 +754,12 @@ else
 
 local MY_TEAM_ID = Spring.GetMyTeamID()
 
+function ToggleSelectionByTeam(eventID, unitID, teamID, selectable)
+	if teamID == MY_TEAM_ID and not (GG.AI_TEAMS and GG.AI_TEAMS[teamID]) then
+		Spring.SetUnitNoSelect(unitID, not selectable)
+	end
+end
+
 function AddUnitToLance(eventID, teamID, unitID, group)
 	if teamID == MY_TEAM_ID then
 		CallAsTeam(teamID, Spring.SetUnitGroup, unitID, group)
@@ -762,6 +768,7 @@ end
 
 function gadget:Initialize()
 	gadgetHandler:AddSyncAction("LANCE", AddUnitToLance)
+	gadgetHandler:AddSyncAction("TOGGLE_SELECT", ToggleSelectionByTeam)
 end
 
 end
