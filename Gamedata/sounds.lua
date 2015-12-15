@@ -269,7 +269,25 @@ local Sounds = {
 			file = "sounds/betty/Mechbay_Lost.ogg",
 			in3d = false,
 		},
+		BB_Upgrade_Vehiclebay_Deployed = {
+			file = "sounds/betty/Vehiclebay_Deployed.ogg",
+			in3d = false,
+		},
 		
+		BB_Upgrade_Vehiclebay_UnderAttack = {
+			file = "sounds/betty/Vehiclebay_UnderAttack.ogg",
+			in3d = false,
+		},
+		
+		BB_Upgrade_Vehiclebay_Destroyed = {
+			file = "sounds/betty/Vehiclebay_Destroyed.ogg",
+			in3d = false,
+		},
+		
+		BB_Upgrade_Vehiclebay_Lost = {
+			file = "sounds/betty/Vehiclebay_Lost.ogg",
+			in3d = false,
+		},
 		BB_Upgrade_Garrison_Deployed = {
 			file = "sounds/betty/Garrison_Deployed.ogg",
 			in3d = false,
