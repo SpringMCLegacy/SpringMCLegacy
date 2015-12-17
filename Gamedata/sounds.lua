@@ -129,6 +129,7 @@ local bettyPath = "sounds/betty/"
 local bettyFiles = VFS.DirList(bettyPath)
 for _, fileName in pairs(bettyFiles) do
 	local name = "BB_" .. fileName:sub(bettyPath:len() + 1,-5)
+	--Spring.Echo("Adding SoundItem: " .. name)
 	Sounds.SoundItems[name] = {
 		file = fileName,
 		in3d = false,
