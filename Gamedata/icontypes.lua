@@ -35,7 +35,7 @@ local iconTypes = {
 		distance	=	1.2,
 	},
 	assault = {
-		bitmap		=	"icons/assault.png",
+		bitmap		=	"icons/assaultmech.png",
 		size			=	4.5,
 		distance	=	1.3,
 	},
