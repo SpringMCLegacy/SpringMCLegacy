@@ -269,8 +269,6 @@ function anim_StopJump()
 		Move(pelvis, z_axis, -4.3, LEG_SPEED * 18)
 		Sleep (100)
 		--Recover
-		Move(pelvis, y_axis, 0, LEG_SPEED * 8)
-		Move(pelvis, z_axis, 0, LEG_SPEED * 8)
 		anim_Reset()
 --		Spring.Echo("anim_StopJump Completed")
 end
@@ -279,6 +277,7 @@ end
 function anim_Walk()
 	Signal(SIG_ANIMATE)
 	SetSignalMask(SIG_ANIMATE)
+	anim_Reset()
 	while true do
 --		Spring.Echo("anim_Walk")
 		--Spring.Echo("START")
@@ -640,6 +639,8 @@ end
 
 function anim_Reset()
 	Signal(SIG_ANIMATE)
+	Move(pelvis, y_axis, 0, LEG_SPEED * 8)
+	Move(pelvis, z_axis, 0, LEG_SPEED * 8)
 --	Spring.Echo("anim_Reset")
 	Turn(pelvis, z_axis, rad(0), LEG_SPEED)
 	Turn(lupperleg, x_axis, rad(0), LEG_SPEED)
