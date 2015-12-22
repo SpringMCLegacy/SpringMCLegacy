@@ -60,6 +60,8 @@ function Unloaded()
 	StartThread(Unpack)
 end
 
+local BAY_RESTORE = 5000 -- 5 seconds
+local bayReady = false
 
 function MechBayOpen()
 	Move(rampr, x_axis, 10, CRATE_SPEED * 10)
@@ -85,11 +87,11 @@ function MechBayOpen()
 	Turn(ramplfoldrear, x_axis, rad(-179), CRATE_SPEED)
 	Turn(ramprfoldrear, x_axis, rad(-179), CRATE_SPEED)
 	WaitForTurn(ramprfoldrear, x_axis)
+	bayReady = true
 end
 
-local BAY_RESTORE = 5000 -- 5 seconds
-
 function MechBayClose()
+	bayReady = false
 	script.TransportDrop()
 	Signal(BAY_RESTORE)
 	SetSignalMask(BAY_RESTORE)
@@ -272,14 +274,16 @@ function Resupply(passengerID)
 end
 
 function script.TransportPickup (passengerID)
-	passengerDefID = GetUnitDefID(passengerID)
-	passengerInfo = GG.lusHelper[passengerDefID]
-	passengerEnv = Spring.UnitScript.GetScriptEnv(passengerID)
-	-- TODO: pickup animation
-	Spring.UnitScript.AttachUnit(base, passengerID)
-	StartThread(Repair, passengerID)
-	StartThread(Resupply, passengerID)
-	StartThread(Restore, passengerID)
+	if bayReady then
+		passengerDefID = GetUnitDefID(passengerID)
+		passengerInfo = GG.lusHelper[passengerDefID]
+		passengerEnv = Spring.UnitScript.GetScriptEnv(passengerID)
+		-- TODO: pickup animation
+		Spring.UnitScript.AttachUnit(base, passengerID)
+		StartThread(Repair, passengerID)
+		StartThread(Resupply, passengerID)
+		StartThread(Restore, passengerID)
+	end
 end
 
 
