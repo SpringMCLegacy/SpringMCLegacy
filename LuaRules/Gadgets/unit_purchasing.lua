@@ -142,12 +142,16 @@ local function TeamDropshipUpgrade(teamID)
 	local side = GG.teamSide[teamID]
 	local oldDefID = teamDropShipTypes[teamID].def
 	local newTier = teamDropShipTypes[teamID].tier + 1
-	local newDefID = UnitDefNames[side .. "_dropship_" .. GG.dropShipProgression[newTier]].id
-	teamDropShipTypes[teamID] = {def = newDefID, tier = newTier}
-	local maxTonnage = UnitDefs[newDefID].customParams.maxtonnage
-	local tonnageIncrease = maxTonnage - UnitDefs[oldDefID].customParams.maxtonnage
-	Spring.SetTeamResource(teamID, "es", maxTonnage)
-	Spring.AddTeamResource(teamID, "e", tonnageIncrease)
+	if newTier <= #(GG.dropShipProgression) then -- another tier is available beyond what we currently have
+		local newDefID = UnitDefNames[side .. "_dropship_" .. GG.dropShipProgression[newTier]].id
+		teamDropShipTypes[teamID] = {def = newDefID, tier = newTier}
+		local maxTonnage = UnitDefs[newDefID].customParams.maxtonnage
+		local tonnageIncrease = maxTonnage - UnitDefs[oldDefID].customParams.maxtonnage
+		Spring.SetTeamResource(teamID, "es", maxTonnage)
+		Spring.AddTeamResource(teamID, "e", tonnageIncrease)
+	else -- max upgrade reached, disable button
+		Spring.SendMessageToTeam(teamID, "Dropship Fully Upgraded!")
+	end
 end
 GG.TeamDropshipUpgrade = TeamDropshipUpgrade
 
