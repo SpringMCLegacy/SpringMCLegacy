@@ -45,7 +45,7 @@ local AC2 = AC_Class:New{
 	reloadtime              = 0.5,
 	size					= 0.75,
 	damage = {
-		default = 10, --20 DPS
+		default = 20,--10, --20 DPS
 	},
 	customparams = {
 		heatgenerated		= 0.05,--0.1/second
@@ -88,7 +88,7 @@ local AC5 = AC_Class:New{
 	reloadtime              = 2,
 	size					= 1,
 	damage = {
-		default = 100, --50 DPS
+		default = 200,--100, --50 DPS
 	},
 	customparams = {
 		heatgenerated		= 0.2,--0.1/sec
@@ -109,8 +109,8 @@ local AC5_AA = AC5:New{
 	edgeEffectiveness		= 25,
 	reloadtime              = 0.5,
 	damage = {
-		default = 20, --50 DPS
-		vtol	= 40,
+		default = 40,--20, --50 DPS
+		vtol	= 80,--40,
 	},
 }
 
@@ -152,7 +152,7 @@ local LBX5 = AC5:New(LBX_Class):New{
 	dynDamageMin			= 100,
 	
 	damage = {
-		default = 20, --50 DPS
+		default = 30,--20, --50 DPS
 	},
 	
 	customparams = {
@@ -174,7 +174,7 @@ local AC10 = AC_Class:New{
 	size					= 1.5,
 	stages					= 50, 		--Number of particles used in one plasma shot.
 	damage = {
-		default = 400, --100 DPS
+		default = 800,--400, --100 DPS
 	},
 	customparams = {
 		heatgenerated		= 1.2,--3/sec
@@ -201,7 +201,7 @@ local LBX10 = AC10:New(LBX_Class):New{
 	dynDamageMin			= 100,
 
 	damage = {
-		default = 40, --50 DPS
+		default = 60,--40, --50 DPS
 	},
 	
 	customparams = {
@@ -224,7 +224,7 @@ local AC20 = AC_Class:New{
 	stages					= 50, 		--Number of particles used in one plasma shot.
 	intensity				= 0.2,
 	damage = {
-		default = 1000, --200 DPS
+		default = 2000,--1000, --200 DPS
 	},
 	customparams = {
 		heatgenerated		= 3.5,--7/sec
@@ -251,7 +251,7 @@ local LBX20 = AC20:New(LBX_Class):New{
 	projectiles				= 20,
 	dynDamageMin			= 100,
 	damage = {
-		default = 100, --600 DPS
+		default = 150,--100, --600 DPS
 	},
 	customparams = {
 		heatgenerated		= 3,--6/sec
