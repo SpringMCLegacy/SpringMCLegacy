@@ -162,7 +162,7 @@ local GetUnitDefID	= Spring.GetUnitDefID
 local GetUnitHealth	= Spring.GetUnitHealth
 local SetUnitHealth	= Spring.SetUnitHealth
 -- Constants
-local REPAIR_RATE = 0.1
+local REPAIR_RATE = 0.05
 local LIMB_REPAIR_RATE = REPAIR_RATE
 -- Variables
 local passengerDefID
