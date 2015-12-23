@@ -213,8 +213,8 @@ function script.Create()
 		Spring.MoveCtrl.SetRelativeVelocity(unitID, 0, 0, math.max(dist/50, 2))
 		Sleep(30)
 	end
-	-- only proceed if the beacon is still ours
-	if Spring.GetUnitTeam(beaconID) == Spring.GetUnitTeam(unitID) then
+	-- only proceed if the beacon is still ours and is secure
+	if Spring.GetUnitTeam(beaconID) == Spring.GetUnitTeam(unitID) and Spring.GetUnitRulesParam(beaconID, "secure") == 1 then
 		-- We're over the target area, reduce height!
 		stage = 3
 		local DOOR_SPEED = math.rad(60)
@@ -258,6 +258,8 @@ function script.Create()
 		Turn(cargoDoor1, z_axis, 0, DOOR_SPEED)
 		Turn(cargoDoor2, z_axis, 0, DOOR_SPEED)
 		WaitForTurn(cargoDoor2, z_axis)
+	else -- bugging out, refund
+		Spring.AddTeamResource(teamID, "metal", UnitDefs[Spring.GetUnitDefID(cargoID)].metalCost)
 	end
 	-- Take off!
 	stage = 4

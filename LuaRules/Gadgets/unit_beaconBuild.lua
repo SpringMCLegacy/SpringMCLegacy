@@ -163,6 +163,16 @@ local function RemoveUpgradeOptions(unitID)
 	RemoveUnitCmdDesc(unitID, FindUnitCmdDesc(unitID, dropZoneCmdDesc.id))
 end
 
+local function ToggleUpgradeOptions(unitID, on)
+	if not outpostIDs[unitID] then -- beacon not yet upgraded
+		for outpostDefID, outpostInfo in pairs(outpostDefs) do
+			EditUnitCmdDesc(unitID, FindUnitCmdDesc(unitID, outpostInfo.cmdDesc.id), {disabled = not on})
+		end
+		EditUnitCmdDesc(unitID, FindUnitCmdDesc(unitID, dropZoneCmdDesc.id), {disabled = not on})
+	end
+end
+GG.ToggleUpgradeOptions = ToggleUpgradeOptions
+
 function SpawnCargo(beaconID, dropshipID, unitDefID, teamID)
 	env = Spring.UnitScript.GetScriptEnv(dropshipID)
 	local tx, ty, tz = GetUnitPosition(dropshipID)
