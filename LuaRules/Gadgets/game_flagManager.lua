@@ -419,7 +419,7 @@ end
 function gadget:UnitDestroyed(unitID, unitDefID, unitTeam, attackerID, attackerDefID, attackerTeam)
 	local ud = UnitDefs[unitDefID]
 	
-	if ud.customParams.unittype == "mech" then
+	if ud.customParams.unittype == "mech" and Spring.GetUnitRulesParam(unitID, "sold") ~= 1 then
 		teamUnitCounts[unitTeam] = teamUnitCounts[unitTeam] - 1
 		-- Remove 1 ticket for each mech killed
 		local allyTeam = select(6, Spring.GetTeamInfo(unitTeam))

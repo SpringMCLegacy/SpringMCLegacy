@@ -475,6 +475,7 @@ local function SellUnit(unitID, unitDefID, teamID, unitType)
 	Spring.SendMessageToTeam(teamID, "Selling " .. unitType .. "!")
 	AddTeamResource(teamID, "metal", UnitDefs[unitDefID].metalCost * 0.75)
 	-- TODO: wait around and get in dropship
+	Spring.SetUnitRulesParam(unitID, "sold", 1)
 	Spring.DestroyUnit(unitID, false, true)
 end
 
