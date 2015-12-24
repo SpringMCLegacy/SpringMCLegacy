@@ -12,13 +12,13 @@ local Decal = Unit:New{
 }
 
 local Decal_Beacon = Decal:New{
-	buildingGroundDecalType = "Scorch.png",
+	buildingGroundDecalType = "Decals/Scorch.png",
 	buildingGroundDecalSizeX = 8,
 	buildingGroundDecalSizeY = 8,
 }
 
 local Decal_Drop = Decal:New{
-	buildingGroundDecalType = "Scorch2.png",
+	buildingGroundDecalType = "Decals/Scorch2.png",
 	buildingGroundDecalSizeX = 30,
 	buildingGroundDecalSizeY = 30,
 }

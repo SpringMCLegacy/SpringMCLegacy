@@ -78,6 +78,7 @@ for name, ud in pairs(UnitDefs) do
 		end
 	end
 	if cp and cp.unittype then -- mech, vehicle, apc, vtol, infantry
+		cp.normaltex = "unittextures/normals/" .. ud.name .. "_Normals.dds"
 		ud.name = ud.name .. " " .. (cp.variant or "") -- concatenate variant code to name
 		ud.buildCostEnergy = (cp.tonnage or 0)
 		-- scale prices by a multiplier from an origin of 4000
