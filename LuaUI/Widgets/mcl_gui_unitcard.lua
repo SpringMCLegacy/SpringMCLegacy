@@ -68,7 +68,7 @@ local lastUnitId
 
 -- list for mech parts. Used to determine what parts are 
 -- displayed in card and what the image is named
-local partsList	= {	mech	= {	"chest", "arm_left", "arm_right", "leg_left", "leg_right"},
+local partsList	= {	mech	= {	"torso", "arm_left", "arm_right", "leg_left", "leg_right"},
 					tank	= {	"turret", "base"},
 					aero	= {	"body", "left_wing", "right_wing"},
 					vtol	= {	"body", "rotor"},}
