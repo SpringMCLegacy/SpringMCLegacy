@@ -46,6 +46,13 @@ end
 local ammoPerTon = lowerkeys(VFS.Include("gamedata/AmmoTypes.lua", nil, VFS.ZIP))
 local armorTypes = lowerkeys(VFS.Include("gamedata/ArmorTypes.lua", nil, VFS.ZIP))
 
+-- TODO: put this in a file and VFS.Include here and in the widget
+local partsList	= {	mech	= {	"torso", "arm_left", "arm_right", "leg_left", "leg_right"},
+					apc		= {	"turret", "base"},
+					vehicle	= {	"turret", "base"},
+					aero	= {	"body", "left_wing", "right_wing"},
+					vtol	= {	"body", "rotor"},}
+
 -- DROPZONES
 local DROPZONE_UDS = {} --DZ_IDS = {shortSideName = unitDef}
 local DROPZONE_BUILDOPTIONS = {} -- D_B = {shortSideName = {unitname1, ...}}
@@ -80,6 +87,18 @@ for name, ud in pairs(UnitDefs) do
 	if cp and cp.unittype then -- mech, vehicle, apc, vtol, infantry
 		cp.normaltex = "unittextures/normals/" .. ud.name .. "_Normals.dds"
 		ud.name = ud.name .. " " .. (cp.variant or "") -- concatenate variant code to name
+		cp.infocard = {}
+		if partsList[cp.unittype] then -- infantry don't exist but won't show up on unitcard anwyay
+			for _, partName in pairs(partsList[cp.unittype]) do
+				cp.infocard[partName] = "bitmaps/ui/infocard/" .. cp.unittype .. "/" .. ud.name .. "/" .. partName .. ".png"
+				if not VFS.FileExists(cp.infocard[partName]) then
+					--Spring.Echo("WARNING: unitdefs_post.lua; No custom infocard piece (" .. partName .. ") for unit " .. ud.name)
+					cp.infocard[partName] = "bitmaps/ui/infocard/" .. cp.unittype .. "/dummy_" .. partName .. ".png"
+				else
+					--Spring.Echo("SUCCESS: unitdefs_post.lua; Found custom infocard piece (" .. partName .. ") for unit " .. ud.name)
+				end
+			end
+		end
 		ud.buildCostEnergy = (cp.tonnage or 0)
 		-- scale prices by a multiplier from an origin of 4000
 		local priceMult = modOptions and modOptions.pricemult or 1
