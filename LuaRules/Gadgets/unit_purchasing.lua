@@ -365,9 +365,6 @@ local function CheckBuildOptions(unitID, teamID, money, weightLeft, cmdID)
 			if buildDefID < 0 then -- a build order
 				cCost = UnitDefs[-buildDefID].metalCost
 				tCost = UnitDefs[-buildDefID].energyCost
-				if UnitDefs[-buildDefID].customParams.unittype == "vehicle" then
-					tCost = tCost * 2
-				end
 			else
 				cCost = GG.CommandCosts[buildDefID] or 0 -- TODO: the intention was to disable e.g. Orbital Strike if you can't afford it
 				tCost = 0
@@ -509,13 +506,9 @@ function gadget:AllowCommand(unitID, unitDefID, teamID, cmdID, cmdParams, cmdOpt
 			ShowBuildOptionsByType(unitID, typeString)
 			return true
 		elseif cmdID < 0 then
-			-- Don't allow dropzones to consider towers
-			local towerType = UnitDefs[-cmdID].customParams.towertype
-			if towerType then return false end
-			
 			local unitDef = UnitDefs[-cmdID]
 			local cost = unitDef.metalCost
-			local weight = (unitDef.customParams.unittype == "vehicle" and not unitDef.canFly) and 2 * unitDef.energyCost or unitDef.energyCost -- vehicles come in pairs
+			local weight = unitDef.energyCost
 			local runningTotal = orderCosts[unitID] or 0
 			local runningTons = orderTons[unitID] or 0
 			local runningSize = orderSizes[unitID] or 0
@@ -629,7 +622,7 @@ local MELTDOWN = WeaponDefNames["meltdown"].id
 
 function gadget:UnitDamaged(unitID, unitDefID, teamID, damage, paralyzer, weaponID,  projectileID, attackerID, attackerDefID, attackerTeam)
 	if attackerID and attackerTeam and not AreTeamsAllied(teamID, attackerTeam) and unitDefID ~= WALL_ID and unitDefID ~= GATE_ID then
-		local attackerDefType = attackerDefID and UnitDefs[attackerDefID].customParams.unittype or ""
+		local attackerDefType = attackerDefID and UnitDefs[attackerDefID].customParams.baseclass or ""
 		if attackerDefType == "mech" then -- only mechs generate income
 			-- don't allow income from nukes
 			if not (weaponID and weaponID == MELTDOWN) then		
@@ -679,8 +672,7 @@ function gadget:GamePreload()
 	for unitDefID, unitDef in pairs(UnitDefs) do
 		local name = unitDef.name
 		local cp = unitDef.customParams
-		local basicType = cp.unittype
-		if basicType == "mech" then
+		if cp.baseclass == "mech" then
 			-- sort into light, medium, heavy, assault
 			local mass = unitDef.mass
 			local weight = GetWeight(mass)

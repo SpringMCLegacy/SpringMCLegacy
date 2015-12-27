@@ -78,7 +78,7 @@ function gadget:GamePreload()
 			table.insert(sideJumpers[side], unitDefID)
 			--Spring.Echo("Adding jumper mech", unitDef.name, "to", side)
 		end
-		if unitDef.customParams.unittype == "mech" then
+		if unitDef.customParams.baseclass == "mech" then
 			if not sideMechs[side] then sideMechs[side] = {} end
 			table.insert(sideMechs[side], unitDefID)
 			-- identify all assault mechs by faction
@@ -147,7 +147,7 @@ function gadget:UnitCreated(unitID, unitDefID, teamID)
 		if unitDef.name:find("dropzone") then
 			dropZoneIDs[teamID] = unitID	
 			Spam(teamID)
-		elseif unitDef.customParams.unittype == "mech" then
+		elseif unitDef.customParams.baseclass == "mech" then
 			local closeRange = WeaponDefs[unitDef.weapons[1].weaponDef].range * 0.9
 			-- set engagement range to weapon 1 range
 			Spring.SetUnitMaxRange(unitID, closeRange)
@@ -278,7 +278,7 @@ local function UnitIdleCheck(unitID, unitDefID, teamID)
 	end
 	local ud = UnitDefs[unitDefID]
 	local cp = ud.customParams
-	if cp.unittype == "mech" then -- vehicles handled by unit_vehiclePad as they are always 'automated'
+	if cp.baseclass == "mech" then -- vehicles handled by unit_vehiclePad as they are always 'automated'
 		-- random chance a idle unit will wander somewhere else
 		--local chance = math.random(1, 100)
 		--if chance < 75 then
@@ -324,7 +324,7 @@ function gadget:UnitUnloaded(unitID, unitDefID, teamID, transportID, transportTe
 			--Spring.Echo("JUMP MECH!")
 			Perk(unitID, PERK_JUMP_RANGE, true)
 			RunAndJump(unitID, unitDefID)
-		elseif cp.unittype == "mech" then
+		elseif cp.baseclass == "mech" then
 			--Spring.Echo("MECH!")
 			Perk(unitID, nil, true)
 			Wander(unitID)
@@ -348,7 +348,7 @@ function gadget:UnitDestroyed(unitID, unitDefID, teamID, attackerID, attackerDef
 	end
 	if attackerTeam and AI_TEAMS[attackerTeam] then
 		Spam(attackerTeam)
-		if attackerID and (UnitDefs[attackerDefID].customParams.unittype == "mech") then 
+		if attackerID and (UnitDefs[attackerDefID].customParams.baseclass == "mech") then 
 			Perk(attackerID) 
 		end
 	end
@@ -369,7 +369,7 @@ end
 
 --[[function gadget:AllowCommand(unitID, unitDefID, teamID, cmdID, cmdParams, cmdOptions)
 	if AI_TEAMS[teamID] then
-		if UnitDefs[unitDefID].customParams.unittype == "mech" 
+		if UnitDefs[unitDefID].customParams.baseclass == "mech" 
 		and not (cmdOptions.shift or cmdOptions.alt)
 		and (Spring.GetCommandQueue(unitID, -1, false) or 0) > 0 
 		--and not cmdID == CMD.INSERT

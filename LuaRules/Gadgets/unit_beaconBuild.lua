@@ -91,8 +91,8 @@ function gadget:GamePreload()
 	for unitDefID, unitDef in pairs(UnitDefs) do
 		local name = unitDef.name
 		local cp = unitDef.customParams
-		if cp and cp.towertype then -- automatically build table of towers
-			towerDefIDs[unitDefID] = cp.towertype
+		if cp and cp.baseclass == "tower" then -- automatically build table of towers
+			towerDefIDs[unitDefID] = unitDef.weapons[1] and "turret" or "sensor"
 		elseif name:find("upgrade") then -- automatically build beacon upgrade cmdDescs
 			local cBillCost = unitDef.metalCost
 			local upgradeCmdDesc = {
@@ -329,7 +329,7 @@ function gadget:UnitCreated(unitID, unitDefID, teamID, builderID)
 		--InsertUnitCmdDesc(unitID, wallCmdDesc)
 	elseif unitDefID == UPLINK_ID then
 		buildLimits[unitID] = {["turret"] = 4, ["sensor"] = 1}
-	elseif cp and cp.towertype then
+	elseif cp and cp.baseclass == "tower" then
 		-- track creation of turrets and their originating beacons so we can give back slots if a turret dies
 		if builderID then -- ignore /give turrets
 			towerOwners[unitID] = builderID

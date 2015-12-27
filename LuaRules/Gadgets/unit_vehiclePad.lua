@@ -52,22 +52,20 @@ function gadget:Initialize()
 		end
 	end
 	for unitDefID, unitDef in pairs(UnitDefs) do
-		if unitDef.customParams.unittype then
-			local basicType = unitDef.customParams.unittype
-			if basicType == "vehicle" or basicType == "apc" then
-				vehiclesDefCache[unitDefID] = true
-				local mass = unitDef.mass
-				local weight = (basicType == "apc" and "apc") or (unitDef.canFly and "vtol") or GG.GetWeight(mass)
-				local squadSize = unitDef.customParams.squadsize or 1
-				local side = unitDef.name:sub(1,2)
-				if GG.ValidSides[side] then
-					if unitDef.customParams.artillery then
-						table.insert(sideArtyDefs[side][weight], {["unitDefID"] = unitDefID, ["squadSize"] = squadSize})
-					else
-						table.insert(sideVehicleDefs[side][weight], {["unitDefID"] = unitDefID, ["squadSize"] = squadSize})
-					end
-					--Spring.Echo("INSERTIN", unitDef.name, side, weight)
+		local basicType = unitDef.customParams.baseclass
+		if basicType == "vehicle" then
+			vehiclesDefCache[unitDefID] = true
+			local mass = unitDef.mass
+			local weight = unitDef.transportCapacity and "apc" or GG.GetWeight(mass)
+			local squadSize = unitDef.customParams.squadsize or 1
+			local side = unitDef.name:sub(1,2)
+			if GG.ValidSides[side] then
+				if unitDef.customParams.artillery then
+					table.insert(sideArtyDefs[side][weight], {["unitDefID"] = unitDefID, ["squadSize"] = squadSize})
+				else
+					table.insert(sideVehicleDefs[side][weight], {["unitDefID"] = unitDefID, ["squadSize"] = squadSize})
 				end
+				--Spring.Echo("INSERTIN", unitDef.name, side, weight)
 			end
 		end
 	end

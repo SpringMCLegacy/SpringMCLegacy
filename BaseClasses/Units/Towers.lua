@@ -17,9 +17,8 @@ local Tower = Unit:New{
 	idleAutoHeal		= 0,
 
 	customparams = {
-		towertype = "turret", -- overwritten by ecm & bap
 		ignoreatbeacon = true,
-		baseclass		= "Turret",
+		baseclass		= "tower",
 	}
 }
 

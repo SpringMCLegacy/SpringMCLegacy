@@ -13,8 +13,7 @@ local Mech = Unit:New{
 	
 	customparams = {
 		hasturnbutton	= true,
-		unittype		= "mech",
-		baseclass		= "Mech",
+		baseclass		= "mech",
     },
 }
 

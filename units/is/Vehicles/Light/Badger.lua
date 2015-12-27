@@ -35,7 +35,6 @@ customparams = {
 		heatlimit 		= 10,
 		armor			= {type = "standard", tons = 5},
 		maxammo 		= {srm = 1},
-		unittype 		= "apc",
 		squadsize 		= 1,
     },
 }

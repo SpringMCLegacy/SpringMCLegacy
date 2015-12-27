@@ -203,7 +203,7 @@ function gadget:UnitCreated(unitID, unitDefID, teamID, builderID)
 			end
 		end
 		
-		if cp.unittype == "mech" then
+		if cp.baseclass == "mech" then
 			info.rightArmMasterID = GetArmMasterWeapon(rightArmIDs)
 			info.leftArmMasterID = GetArmMasterWeapon(leftArmIDs)
 			info.rightArmIDs = rightArmIDs
@@ -305,7 +305,7 @@ function gadget:GamePreload()
 		info.elevationSpeed = math.rad(tonumber(cp.elevationspeed) or math.deg(info.torsoTurnSpeed))
 		-- Limb HPs
 		info.limbHPs = {}
-		if cp.unittype == "mech" then
+		if cp.baseclass == "mech" then
 			info.limbHPs["left_leg"] = unitDef.health * 0.25
 			info.limbHPs["right_leg"] = unitDef.health * 0.25
 			info.limbHPs["left_arm"] = unitDef.health * 0.15
@@ -314,13 +314,13 @@ function gadget:GamePreload()
 			info.maxAmmo["coolant"] = 100
 			info.ammoTypes[-1] = "coolant"
 			info.burstLengths[-1] = 20	
-		elseif cp.unittype == "vehicle"  or cp.unittype == "apc" then
+		elseif cp.baseclass == "vehicle" then
 			info.limbHPs["turret"] = unitDef.health * 1.0
-			if unitDef.canFly then
-				info.limbHPs["lwing"] =	 unitDef.health * 0.5
-				info.limbHPs["rwing"] = unitDef.health * 0.5
-				info.limbHPs["rotor"] = unitDef.health * 0.1 -- 0.01
-			end
+		elseif cp.baseclass == "vtol" then
+			info.limbHPs["rotor"] = unitDef.health * 0.1 -- 0.01
+		elseif cp.baseclass == "aero" then
+			info.limbHPs["lwing"] =	 unitDef.health * 0.5
+			info.limbHPs["rwing"] = unitDef.health * 0.5
 		end
 		-- Vehicles
 		info.hover = unitDef.moveDef.family == "hover"

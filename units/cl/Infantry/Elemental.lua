@@ -39,8 +39,8 @@ local CL_Elemental = Light:New{
 		heatlimit		= 20,
 		torsoturnspeed	= 380,
 		maxammo 		= {srm = 2},
-		unittype = "infantry",
 		squadsize		= 5,
+		baseclass		= "infantry", -- TODO: hacks
     },
 }
 	

@@ -12,7 +12,6 @@ local Aircraft = Unit:New{
 	usepiececollisionvolumes 	= true,
 	
 	customparams = {
-		unittype		= "vehicle", -- TODO: check where this is used and change to aircraft
 		ignoreatbeacon  = true,
     },
 }
@@ -24,7 +23,7 @@ local Aero = Aircraft:New{
 	canLoopbackAttack 	= true,
 	
 	customparams = {
-		baseclass			= "Aero",
+		baseclass			= "aero",
 	},
 }
 
@@ -37,7 +36,7 @@ local VTOL = Aircraft:New{
 	
 	customparams = {
 		hasturnbutton		= "1",
-		baseclass			= "VTOL",
+		baseclass			= "vtol",
     },
 }
 

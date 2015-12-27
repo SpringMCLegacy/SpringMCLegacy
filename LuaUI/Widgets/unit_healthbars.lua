@@ -601,7 +601,7 @@ do
         end
       end
 	  
-	  if ud.customParams.unittype == "mech" then -- horrible
+	  if ud.customParams.baseclass == "mech" then -- horrible
 	  --// HEAT
 	  local heat = GetUnitRulesParam(unitID,"heat")
 	  --local heatLimit = GetUnitRulesParam(unitID,"heatLimit") or ci.heatLimit

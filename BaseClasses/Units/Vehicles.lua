@@ -10,9 +10,8 @@ local Vehicle = Unit:New{
 	usepiececollisionvolumes = true,
 	
 	customparams = {
-		unittype		= "vehicle",
 		ignoreatbeacon  = true,
-		baseclass		= "Vehicle",
+		baseclass		= "vehicle",
     },
 }
 

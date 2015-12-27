@@ -61,7 +61,7 @@ function gadget:UnitExperience(unitID, unitDefID, teamID, newExp, oldExp)
 	-- enable perks here
 	local ud = UnitDefs[unitDefID]
 	local cp = ud.customParams
-	if cp and cp.unittype == "mech" then
+	if cp and cp.baseclass == "mech" then
 		if newExp > PERK_XP_COST then
 			--Spring.Echo("Unit " .. unitID .. " (" .. UnitDefs[unitDefID].name .. ") ready to perk up! " .."(Exp: " .. newExp ..")")
 			for perkCmdID, perkDef in pairs(perkDefs) do
@@ -86,7 +86,7 @@ function gadget:AllowCommand(unitID, unitDefID, teamID, cmdID, cmdParams, cmdOpt
 		local ud = UnitDefs[unitDefID]
 		local cp = ud.customParams
 		-- check that this unit can receive this perk (can be issued the order due to multiple units selected)
-		if cp and cp.unittype == "mech" and perkDef.valid(unitDefID) then
+		if cp and cp.baseclass == "mech" and perkDef.valid(unitDefID) then
 			perkDef.applyPerk(unitID)
 			EditUnitCmdDesc(unitID, FindUnitCmdDesc(unitID, cmdID), {name = perkDef.cmdDesc.name .."\n  (Trained)", disabled = true})
 			currentPerks[unitID][perkDef.name] = true
@@ -118,7 +118,7 @@ end
 function gadget:UnitCreated(unitID, unitDefID, teamID, builderID)
 	local ud = UnitDefs[unitDefID]
 	local cp = ud.customParams
-	if cp and cp.unittype == "mech" then
+	if cp and cp.baseclass == "mech" then
 		 -- start out with enough XP for one perk
 		Spring.SetUnitRulesParam(unitID, "perk_xp", 100)
 		SetUnitExperience(unitID, PERK_XP_COST)

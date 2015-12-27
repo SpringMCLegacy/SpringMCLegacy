@@ -121,7 +121,7 @@ function gadget:UnitCreated(unitID, unitDefID, teamID, builderID)
 		Spring.SetUnitRulesParam(unitID, "masc", 100)
 		mascUnitDefs[unitDefID] = true
 	end
-	if cp and cp.unittype == "mech" then
+	if cp and cp.baseclass == "mech" then
 		InsertUnitCmdDesc(unitID, CoolantCmdDesc)
 		Spring.SetUnitRulesParam(unitID, "ammo_coolant", 100)
 		coolantUnitDefs[unitDefID] = true

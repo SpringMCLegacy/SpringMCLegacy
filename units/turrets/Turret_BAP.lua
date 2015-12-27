@@ -3,7 +3,6 @@ local Turret_BAP = Tower:New{
 	description         = "Beagle Active Probe",
 
 	customparams = {
-		towertype 		= "sensor",
 		bap			= true,
     },
 }

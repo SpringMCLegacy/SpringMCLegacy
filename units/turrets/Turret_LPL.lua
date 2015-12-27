@@ -21,7 +21,6 @@ local Turret_LPL = Tower:New{
 		},
 	},
 	customparams = {
-		towertype = "turret",
 		turretturnspeed = 175,
 		elevationspeed  = 250,
     },

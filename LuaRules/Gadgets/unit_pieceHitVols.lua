@@ -12,7 +12,9 @@ end
 
 local accept = { 
 		mech = {pelvis = true, torso = true, rupperarm = true, rlowerarm = true, lupperarm = true, llowerarm = true, lupperleg = true, llowerleg = true, rupperleg = true, rlowerleg = true},
-		vehicle = {body = true, turret = true, launcher_1 = true, turret_2 = true, lwing = true, rwing = true, rotor = true},
+		vehicle = {body = true, turret = true, launcher_1 = true, turret_2 = true},
+		aero = {lwing = true, rwing = true},
+		vtol = {rotor = true},
 	}
 
 if gadgetHandler:IsSyncedCode() then
@@ -35,7 +37,7 @@ function gadget:UnitCreated(unitID, unitDefID, teamID, builderID)
 	local cp = ud.customParams
 	if (ud.speed > 0 or ud.canFly) and not cp.dropship then 
 		local pieces = Spring.GetUnitPieceList(unitID)
-		local unitType = cp.unittype
+		local unitType = cp.baseclass
 		if accept[unitType] then
 			for i, pieceName in pairs(pieces) do
 				--Spring.Echo(i, pieceName)

@@ -538,7 +538,7 @@ end
 function script.FireWeapon(weaponID)
 	local targetType, user, targetID = Spring.GetUnitWeaponTarget(unitID, weaponID)
 	if targetType == 1 then
-		if unitDef.customParams.unittype == "apc" then
+		if unitDef.transportCapacity then -- apc
 			if not (Spring.GetUnitRulesParam(unitID, "dronesout") == 1) then
 				GG.LaunchDroneAsWeapon(unitID, teamID, targetID, "cl_elemental_prime", 5, turret, 0, 90)
 			end
@@ -602,8 +602,6 @@ function script.Killed(recentDamage, maxHealth)
 	if excessHeat >= heatLimit then
 		Spring.Echo("NUUUUUUUUUUUKKKKKE")
 	end
-	local unitType = vtol and "VTOL" or aero and "Aerofighter" or "Vehicle"
-	--GG.PlaySoundForTeam(Spring.GetUnitTeam(unitID), "BB_" .. unitType .. "_destroyed", 1)
 	--local severity = recentDamage / maxHealth * 100
 	--if severity <= 25 then
 	--	Explode(body, math.bit_or({SFX.BITMAPONLY, SFX.BITMAP1}))

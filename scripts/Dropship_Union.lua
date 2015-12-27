@@ -326,11 +326,6 @@ function UnloadCargo()
 			local moveSpeed = currUnitDef.speed * 0.5
 			Move(link, z_axis, 73, moveSpeed)
 			WaitForMove(link, z_axis)
-			if currUnitDef.customParams.unittype == "vehicle" then
-				Turn(pad, x_axis, 0, DOOR_SPEED) -- vehicles should follow the slope
-				WaitForTurn(pad, x_axis)
-				Sleep(250)
-			end
 			Move(pad, z_axis, 100, moveSpeed)
 			WaitForMove(pad, z_axis)
 		end

@@ -116,10 +116,7 @@ function CreateUnitButton(unitDefID, className)
 	
 	local cCost = UnitDefs[unitDefID].metalCost;
 	local tCost = UnitDefs[unitDefID].energyCost;
-	if UnitDefs[unitDefID].customParams.unittype == "vehicle" then
-		tCost = tCost * 2
-	end
-	
+
 	
 	local button = Chili.Button:New {
 		name = "btnOrder_"..UnitDefs[unitDefID].name,
@@ -402,13 +399,13 @@ function widget:Initialize()
 	Spring.Echo(tostring(myDropZoneUnitDefID));
 	
 	for unitDefID, unitDef in pairs(UnitDefs) do
-		local unitType = unitDef.customParams.unittype;
+		local unitType = unitDef.customParams.baseclass;
 		local name = unitDef.name;
 		if unitType == "mech" or unitType == "vehicle" then
 			if name:sub(1, 2) == mySidePrefix then
 				local name = unitDef.name
 				local cp = unitDef.customParams
-				local basicType = cp.unittype
+				local basicType = cp.baseclass
 				
 				local class = "special";
 				
@@ -421,11 +418,8 @@ function widget:Initialize()
 					local assault = not light and not medium and not heavy
 					local weight = light and "light" or medium and "medium" or heavy and "heavy" or "assault"
 					class = weight .. "mech"
-				elseif basicType == "vehicle" then
-					-- sort into vehicle, vtol, aero
-					local vtol = unitDef.hoverAttack
-					local aero = unitDef.canFly and not vtol
-					class = vtol and "vtol" or aero and "aero" or "vehicle"
+				else
+					class = basicType
 				end
 				
 				if buildableUnits[class] == nil then buildableUnits[class] = {} end

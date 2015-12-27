@@ -35,7 +35,6 @@ local CL_Tyr = Hover:New{
 		elevationspeed  = 200,
 		maxammo = {srm = 80},
 		squadsize 		= 2,
-		unittype 		= "apc",
     },
 }
 

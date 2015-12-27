@@ -386,7 +386,7 @@ end
 function gadget:UnitCreated(unitID, unitDefID, unitTeam, builderID)
 	local ud = UnitDefs[unitDefID]
 	local cp = ud.customParams
-	if cp.unittype == "mech" then
+	if cp.baseclass == "mech" then
 		teamUnitCounts[unitTeam] = teamUnitCounts[unitTeam] + 1
 	end
 	if unitDefID == BEACON_ID and unitTeam ~= GAIA_TEAM_ID then
@@ -419,7 +419,7 @@ end
 function gadget:UnitDestroyed(unitID, unitDefID, unitTeam, attackerID, attackerDefID, attackerTeam)
 	local ud = UnitDefs[unitDefID]
 	
-	if ud.customParams.unittype == "mech" and Spring.GetUnitRulesParam(unitID, "sold") ~= 1 then
+	if ud.customParams.baseclass == "mech" and Spring.GetUnitRulesParam(unitID, "sold") ~= 1 then
 		teamUnitCounts[unitTeam] = teamUnitCounts[unitTeam] - 1
 		-- Remove 1 ticket for each mech killed
 		local allyTeam = select(6, Spring.GetTeamInfo(unitTeam))
@@ -430,7 +430,7 @@ end
 
 function gadget:UnitGiven(unitID, unitDefID, newTeam, oldTeam)
 	local ud = UnitDefs[unitDefID]
-	if ud.customParams.unittype == "mech" then
+	if ud.customParams.baseclass == "mech" then
 		teamUnitCounts[oldTeam] = teamUnitCounts[oldTeam] - 1
 		teamUnitCounts[newTeam] = teamUnitCounts[newTeam] + 1
 	end

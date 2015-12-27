@@ -3,7 +3,6 @@ local Turret_ECM = Tower:New{
 	description         = "Electronic Counter-Measure",
 
 	customparams = {
-		towertype 		= "sensor",
 		ecm			= true,
     },
 }

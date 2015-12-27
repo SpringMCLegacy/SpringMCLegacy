@@ -18,7 +18,7 @@ local Upgrade = Unit:New{
 	
 	customparams = {
 		upgrade = true,
-		baseclass		= "Upgrade",
+		baseclass		= "upgrade",
 	},
 }
 

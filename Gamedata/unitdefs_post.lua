@@ -81,19 +81,19 @@ for name, ud in pairs(UnitDefs) do
 	end
 	if cp and cp.baseclass then
 		if not ud.objectname then
-			ud.objectname = cp.baseclass .. "/" .. (cp.unittype == "mech" and (ud.name:gsub(" ", "") .. "/") or "") .. name .. ".s3o"
+			ud.objectname = cp.baseclass .. "/" .. (cp.baseclass == "mech" and (ud.name:gsub(" ", "") .. "/") or "") .. name .. ".s3o"
 		end
 	end
-	if cp and cp.unittype then -- mech, vehicle, apc, vtol, infantry
+	if cp and cp.baseclass then -- mech, vehicle, apc, vtol, infantry
 		cp.normaltex = "unittextures/normals/" .. ud.name .. "_Normals.dds"
 		ud.name = ud.name .. " " .. (cp.variant or "") -- concatenate variant code to name
 		cp.infocard = {}
-		if partsList[cp.unittype] then -- infantry don't exist but won't show up on unitcard anwyay
-			for _, partName in pairs(partsList[cp.unittype]) do
-				cp.infocard[partName] = "bitmaps/ui/infocard/" .. cp.unittype .. "/" .. ud.name .. "/" .. partName .. ".png"
+		if partsList[cp.baseclass] then -- infantry don't exist but won't show up on unitcard anwyay
+			for _, partName in pairs(partsList[cp.baseclass]) do
+				cp.infocard[partName] = "bitmaps/ui/infocard/" .. cp.baseclass .. "/" .. ud.name .. "/" .. partName .. ".png"
 				if not VFS.FileExists(cp.infocard[partName]) then
 					--Spring.Echo("WARNING: unitdefs_post.lua; No custom infocard piece (" .. partName .. ") for unit " .. ud.name)
-					cp.infocard[partName] = "bitmaps/ui/infocard/" .. cp.unittype .. "/dummy_" .. partName .. ".png"
+					cp.infocard[partName] = "bitmaps/ui/infocard/" .. cp.baseclass .. "/dummy_" .. partName .. ".png"
 				else
 					--Spring.Echo("SUCCESS: unitdefs_post.lua; Found custom infocard piece (" .. partName .. ") for unit " .. ud.name)
 				end
@@ -112,7 +112,7 @@ for name, ud in pairs(UnitDefs) do
 			end
 		end
 		if cp.speed then
-			ud.maxvelocity = tonumber(cp.speed or 0) / (cp.unittype == "mech" and 20 or 30) -- convert kph to game speed
+			ud.maxvelocity = tonumber(cp.speed or 0) / (cp.baseclass == "mech" and 20 or 30) -- convert kph to game speed
 			cp.torsoturnspeed = cp.speed * 5
 		end
 		if cp.maxammo then
@@ -124,7 +124,7 @@ for name, ud in pairs(UnitDefs) do
 				end
 			end
 		end
-		if cp.unittype == "mech" then
+		if cp.baseclass == "mech" then
 			ud.losemitheight = ud.mass / 10
 			ud.radaremitheight = ud.mass / 10
 			if cp.jumpjets then
@@ -180,17 +180,16 @@ for name, ud in pairs(UnitDefs) do
 				weapon.onlytargetcategory = "narctag"			
 				ud.description = ud.description .. " \255\255\051\051[TAG]"
 			else
-				if cp.unittype == "mech" then
-					-- Give all mechs 179d torso twist
-					--[[if ud.customparams.unittype == "mech" then
-						weapon.maxangledif = 179
+				if cp.baseclass == "mech" then
+					--[[ Give all mechs 179d torso twist
+					weapon.maxangledif = 179
 					end]]
 					if i ~= 1 then
 						if not weapon.slaveto then -- don't overwrite unitdef [sniper slaves 3 to 2]
 							weapon.slaveto = 1
 						end
 					end
-				elseif cp.unittype == vehicle then
+				elseif cp.baseclass == vehicle then
 					if not weapon.onlytargetcategory then
 						weapon.onlytargetcategory = "ground"
 					end
@@ -203,20 +202,19 @@ for name, ud in pairs(UnitDefs) do
 	end
 	
 	-- Automatically build dropship buildmenus
-	local unitType = ud.customparams.unittype
 	local side = name:sub(1, 2)
 	
-	if (unitType == "mech" or unitType == "vehicle") and VALID_SIDES[side] then
+	if (cp.baseclass == "mech" or cp.baseclass == "vehicle") and VALID_SIDES[side] then
 		ud.category = ud.category .. " narctag"
 		if not ud.canfly and not ud.movestate then
 			ud.movestate = 0 -- Set default move state to Hold Position, unless already specified
 		end
-		if unitType == "mech" then -- add only mechs to Dropship buildoptions
+		if cp.baseclass == "mech" then -- add only mechs to Dropship buildoptions
 			table.insert(DROPZONE_BUILDOPTIONS[side], name)
 		else -- a vehicle
 			ud.maxdamage = ud.maxdamage * 0.5
 		end
-	elseif cp.towertype then
+	elseif cp.baseclass == "tower" then
 		table.insert(UPLINK_BUILDOPTIONS, name)
 		ud.levelground = false
 	end

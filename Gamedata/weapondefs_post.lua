@@ -75,7 +75,8 @@ for unitName, ud in pairs(UnitDefs) do
 				--end
 			end
 		end
-		if ud.customparams.unittype then
+		local cp = ud.customparams
+		if cp.baseclass == "Mech" or cp.baseclass == "Vehicle" or cp.baseclass == "VTOL" or cp.baseclass == "Aero" then
 			table.insert(ud.sfxtypes.explosiongenerators, "custom:HE_Large")
 			table.insert(ud.sfxtypes.explosiongenerators, "custom:BlackSmoke")
 			table.insert(ud.sfxtypes.explosiongenerators, "custom:Sparks")
