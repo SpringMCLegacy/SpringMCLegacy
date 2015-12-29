@@ -538,7 +538,7 @@ end
 function script.FireWeapon(weaponID)
 	local targetType, user, targetID = Spring.GetUnitWeaponTarget(unitID, weaponID)
 	if targetType == 1 then
-		if unitDef.transportCapacity then -- apc
+		if unitDef.transportCapacity > 0 then -- apc
 			if not (Spring.GetUnitRulesParam(unitID, "dronesout") == 1) then
 				GG.LaunchDroneAsWeapon(unitID, teamID, targetID, "cl_elemental_prime", 5, turret, 0, 90)
 			end
