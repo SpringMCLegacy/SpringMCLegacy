@@ -69,7 +69,7 @@ local lastUnitId
 -- list for mech parts. Used to determine what parts are 
 -- displayed in card and what the image is named
 local partsList	= {	mech	= {	"torso", "arm_left", "arm_right", "leg_left", "leg_right"},
-					tank	= {	"turret", "base"},
+					vehicle	= {	"turret", "base"},
 					aero	= {	"body", "left_wing", "right_wing"},
 					vtol	= {	"body", "rotor"},}
 					
@@ -91,7 +91,7 @@ local CMD_WEAPON_TOGGLE = Spring.GetGameRulesParam("CMD_WEAPON_TOGGLE")
 
 -- parts for display
 local parts			= { mech 	= {},
-						tank	= {},
+						vehicle	= {},
 						vtol 	= {},
 						aero	= {},}
 						
@@ -575,23 +575,10 @@ function widget:Update(s)
 		lastUnitId			= WG.currentUnitId
 		currentUnitId		= WG.currentUnitId
 		currentUnitDefId	= spGetUnitDefID(currentUnitId)
-		local unitType		= UnitDefs[currentUnitDefId].customParams.unittype
+		local unitType		= UnitDefs[currentUnitDefId].customParams.baseclass
 		local unitDef		= UnitDefs[currentUnitDefId]
 
 		
-		--checking unit type if the thing is a vehicle
-		if unitType == "vehicle" then
-			if	unitDef.hoverAttack then
-				unitType = "vtol"
-			elseif unitDef.canFly and not unitDef.hoverAttack then
-				unitType = "aero"
-			else
-				unitType = "tank"
-			end
-		elseif unitType == "infantry" then -- for now treat as mech
-			unitType = "mech"
-		end
-
 		if unitType then
 			Chili.Screen0:RemoveChild(mechCardWindow)
 			Chili.Screen0:AddChild(mechCardWindow)
@@ -618,7 +605,7 @@ function widget:Update(s)
 			
 			FillCardStats()		
 		--else
-			--Spring.Echo(UnitDefs[currentUnitDefId].customParams.unittype)
+			--Spring.Echo(UnitDefs[currentUnitDefId].customParams.baseclass)
 		end
 	-- not a new unit lets update it's stats.
 	else		
