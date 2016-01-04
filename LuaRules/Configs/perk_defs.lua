@@ -194,7 +194,7 @@ return {
 		valid = function (unitDefID) return (hasWeaponClass(unitDefID, "lrm") and isFaction(unitDefID, "fw")) end,
 		applyPerk = function (unitID) 
 			--Spring.Echo("Missile range selected") 
-			setWeaponClassAttribute(unitID, "missile", "range", 1.5)
+			setWeaponClassAttribute(unitID, "lrm", "range", 1.5)
 		end,
 	},
 	mrmrange = {
@@ -208,7 +208,7 @@ return {
 		valid = function (unitDefID) return (hasWeaponClass(unitDefID, "mrm") and isFaction(unitDefID, "dc")) end,
 		applyPerk = function (unitID) 
 			--Spring.Echo("Missile range selected") 
-			setWeaponClassAttribute(unitID, "missile", "range", 1.5)
+			setWeaponClassAttribute(unitID, "mrm", "range", 1.5)
 		end,
 	},
 	ppcrange = {
