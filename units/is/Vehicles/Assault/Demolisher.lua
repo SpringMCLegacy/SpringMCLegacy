@@ -27,6 +27,9 @@ local Demolisher = Tank:New{
 }
 
 return lowerkeys({
-	["FS_Demolisher"] = Demolisher:New(),
 	["CC_Demolisher"] = Demolisher:New(),
+	["DC_Demolisher"] = Demolisher:New(),
+	["FS_Demolisher"] = Demolisher:New(),
+	["FW_Demolisher"] = Demolisher:New(),
+	["LA_Demolisher"] = Demolisher:New(),
 })

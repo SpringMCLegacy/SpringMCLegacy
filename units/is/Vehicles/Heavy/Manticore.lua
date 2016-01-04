@@ -32,31 +32,28 @@ local Manticore = Tank:New{
     },
 }
 
-local ManticoreK = Manticore:New{
-	description         = "Heavy Striker Tank",
+local ManticoreD = Manticore:New{
+	description         = "Heavy Brawler Tank",
 	
 	weapons	= {	
 		[1] = {
-			name	= "PPC",
+			name	= "LBX10",
 		},
 		[2] = {
-			name	= "SSRM2",
+			name	= "MPL",
 		},
 		[3] = {
-			name	= "LRM10",
-		},
-		[4] = {
-			name	= "SSRM4",
+			name	= "SSRM6",
 		},
 	},
 	
 	customparams = {
-		variant         = "K",
+		variant         = "D",
 		speed			= 60,
 		price			= 8000,
 		heatlimit 		= 10,
 		armor			= {type = "ferro", tons = 10},
-		maxammo 		= {lrm = 1, srm = 1},
+		maxammo 		= {ac10 = 2, srm = 1},
 		barrelrecoildist = {[1] = 5},
 		squadsize 		= 1,
     },
@@ -92,8 +89,11 @@ local ManticoreS = Manticore:New{
 }
 	
 return lowerkeys({
+	["CC_Manticore"] = Manticore:New(),
+	["DC_Manticore"] = Manticore:New(),
 	["FS_Manticore"] = Manticore:New(),
-	["DC_Manticore"] = ManticoreK:New(),
-	["LA_Manticore"] = ManticoreS:New(),
+	["FS_ManticoreD"] = ManticoreD:New(),
 	["FW_Manticore"] = Manticore:New(),
+	["LA_Manticore"] = Manticore:New(),
+	["LA_ManticoreS"] = ManticoreS:New(),
 })

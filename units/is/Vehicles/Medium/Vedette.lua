@@ -14,12 +14,6 @@ local VedetteUAC = Vedette:New{
 		[1] = {
 			name	= "UAC5",
 		},
-		[2] = {
-			name	= "ERMBL",
-		},
-		[3] = {
-			name	= "ERMBL",
-		},
 	},
 	
 	customparams = {
@@ -27,7 +21,7 @@ local VedetteUAC = Vedette:New{
 		speed			= 80,
 		price			= 4080,
 		heatlimit 		= 10,
-		armor			= {type = "ferro", tons = 5},
+		armor			= {type = "ferro", tons = 6},
 		maxammo 		= {ac5 = 4},
 		barrelrecoildist = {[1] = 5},
 		squadsize 		= 2,
@@ -41,12 +35,6 @@ local VedetteLBX = Vedette:New{
 		[1] = {
 			name	= "LBX5",
 		},
-		[2] = {
-			name	= "ERMBL",
-		},
-		[3] = {
-			name	= "ERMBL",
-		},
 	},
 	
 	customparams = {
@@ -54,7 +42,7 @@ local VedetteLBX = Vedette:New{
 		speed			= 80,
 		price			= 4080,
 		heatlimit 		= 10,
-		armor			= {type = "ferro", tons = 5},
+		armor			= {type = "ferro", tons = 6},
 		maxammo 		= {ac5 = 4},
 		barrelrecoildist = {[1] = 5},
 		squadsize 		= 2,
@@ -75,7 +63,7 @@ local VedetteLG = Vedette:New{
 		speed			= 80,
 		price			= 10280,
 		heatlimit 		= 10,
-		armor			= {type = "ferro", tons = 4},
+		armor			= {type = "ferro", tons = 5},
 		maxammo 		= {ltgauss = 4},
 		barrelrecoildist = {[1] = 7},
 		squadsize 		= 1,
@@ -83,8 +71,9 @@ local VedetteLG = Vedette:New{
 }
 	
 return lowerkeys({
+	["DC_Vedette"] = VedetteUAC:New(),
 	["FS_Vedette"] = VedetteUAC:New(),
 	["LA_Vedette"] = VedetteUAC:New(),
-	["CC_Vedette"] = VedetteLBX:New(),
+	["CC_Vedette"] = VedetteUAC:New(),
 	["FW_Vedette"] = VedetteLG:New(),
 })

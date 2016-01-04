@@ -24,7 +24,9 @@ local Scorpion = LightTank:New{
 }
 
 return lowerkeys({
+	["CC_Scorpion"] = Scorpion:New(),
+	["DC_Scorpion"] = Scorpion:New(),
+	["FW_Scorpion"] = Scorpion:New(),
 	["FS_Scorpion"] = Scorpion:New(),
 	["LA_Scorpion"] = Scorpion:New(),
-	["CC_Scorpion"] = Scorpion:New(),
 })
