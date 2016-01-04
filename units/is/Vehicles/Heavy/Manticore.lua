@@ -1,23 +1,8 @@
-local Manticore = Tank:New{
+local ManticoreBase = Tank:New{
 	name              	= "Manticore",
 	description         = "Heavy Striker Tank",
 	
 	trackWidth			= 23,--width to render the decal
-	
-	weapons	= {	
-		[1] = {
-			name	= "PPC",
-		},
-		[2] = {
-			name	= "MBL",
-		},
-		[3] = {
-			name	= "LRM10",
-		},
-		[4] = {
-			name	= "SRM6",
-		},
-	},
 	
 	customparams = {
 		tonnage			= 60,
@@ -32,7 +17,24 @@ local Manticore = Tank:New{
     },
 }
 
-local ManticoreD = Manticore:New{
+local Manticore = ManticoreBase:New{
+	weapons	= {	
+		[1] = {
+			name	= "PPC",
+		},
+		[2] = {
+			name	= "MBL",
+		},
+		[3] = {
+			name	= "LRM10",
+		},
+		[4] = {
+			name	= "SRM6",
+		},
+	},
+}
+
+local ManticoreD = ManticoreBase:New{
 	description         = "Heavy Brawler Tank",
 	
 	weapons	= {	
@@ -59,7 +61,7 @@ local ManticoreD = Manticore:New{
     },
 }
 
-local ManticoreS = Manticore:New{
+local ManticoreS = ManticoreBase:New{
 	description         = "Heavy Brawler Tank",
 	
 	weapons	= {	
