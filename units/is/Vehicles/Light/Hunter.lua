@@ -1,5 +1,6 @@
 local Hunter = LightTank:New{
 	name              	= "Hunter",
+	description			= "LRM Support Tank",
 	trackWidth			= 23,--width to render the decal
 	
 	weapons	= {	
@@ -24,5 +25,9 @@ local Hunter = LightTank:New{
 }
 
 return lowerkeys({
-	["LA_Hunter"] = Hunter,
+	["CC_Hunter"] = Hunter:New(),
+	["DC_Hunter"] = Hunter:New(),
+	["FS_Hunter"] = Hunter:New(),
+	["FW_Hunter"] = Hunter:New(),
+	["LA_Hunter"] = Hunter:New(),
 })
