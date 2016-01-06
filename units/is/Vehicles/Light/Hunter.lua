@@ -1,33 +1,60 @@
-local Hunter = LightTank:New{
+local HunterBase = LightTank:New{
 	name              	= "Hunter",
-	description			= "LRM Support Tank",
-	trackWidth			= 23,--width to render the decal
+	description         = "LRM Support Tank",
 	
-	weapons	= {	
-		[1] = {
-			name	= "LRM15",
-		},
-		[2] = {
-			name	= "LRM15",
-		},
-	},
+	trackWidth			= 23,--width to render the decal
 	
 	customparams = {
 		tonnage			= 35,
-		variant         = "Upgrade",
+		variant         = "",
 		speed			= 60,
-		price			= 6410,
+		price			= 6000,
 		heatlimit 		= 10,
-		armor			= {type = "ferro", tons = 4},
-		maxammo 		= {lrm = 1},
+		armor			= {type = "standard", tons = 6},
+		maxammo 		= {lrm = 2},
 		squadsize 		= 1,
     },
 }
 
+local Hunter = HunterBase:New{
+	weapons	= {	
+		[1] = {
+			name	= "LRM20",
+			maxAngleDif = 25,
+		},
+	},
+}
+
+local HunterUpgrade = HunterBase:New{
+	description         = "Heavy Brawler Tank",
+	
+	weapons	= {	
+		[1] = {
+			name	= "LRM15",
+			maxAngleDif = 25,
+		},
+		[2] = {
+			name	= "LRM15",
+			maxAngleDif = 25,
+		},
+	},
+	
+	customparams = {
+		variant         = "Upgrade",
+		speed			= 60,
+		price			= 7000,
+		heatlimit 		= 10,
+		armor			= {type = "ferro", tons = 4},
+		maxammo 		= {lrm = 2},
+		squadsize 		= 1,
+    },
+}
+	
 return lowerkeys({
 	["CC_Hunter"] = Hunter:New(),
 	["DC_Hunter"] = Hunter:New(),
 	["FS_Hunter"] = Hunter:New(),
 	["FW_Hunter"] = Hunter:New(),
 	["LA_Hunter"] = Hunter:New(),
+	["LA_HunterUpgrade"] = HunterUpgrade:New(),
 })
