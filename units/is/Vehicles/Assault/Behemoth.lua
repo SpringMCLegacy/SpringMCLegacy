@@ -34,40 +34,40 @@ local Behemoth = BehemothBase:New{
 		[5] = {
 			name	= "SRM2",
 			mainDir = [[-1 0 0]],
-			maxAngleDif = 180,
+			maxAngleDif = 120,
 		},
 		[6] = {
 			name	= "SRM2",
 			mainDir = [[1 0 0]],
-			maxAngleDif = 180,
+			maxAngleDif = 120,
 		},
 		[7] = {
 			name	= "LRM20",
-			maxAngleDif = 35,
+			maxAngleDif = 60,
 		},
 		[8] = {
 			name	= "SRM4",
-			maxAngleDif = 35,
+			maxAngleDif = 60,
 		},
 		[9] = {
 			name	= "MG",
 			mainDir = [[-1 0 0]],
-			maxAngleDif = 180,
+			maxAngleDif = 120,
 			SlaveTo = 5,
 		},
 		[10] = {
 			name	= "MG",
 			mainDir = [[1 0 0]],
-			maxAngleDif = 180,
+			maxAngleDif = 120,
 			SlaveTo = 6,
 		},
 		[11] = {
 			name	= "MG",
-			maxAngleDif = 35,
+			maxAngleDif = 60,
 		},
 		[12] = {
 			name	= "MG",
-			maxAngleDif = 35,
+			maxAngleDif = 60,
 		},
 	},
 }
@@ -88,7 +88,7 @@ local BehemothD = BehemothBase:New{
 		},
 		[5] = {
 			name	= "LRM20",
-			maxAngleDif = 35,
+			maxAngleDif = 60,
 		},
 	},
 	
@@ -121,7 +121,7 @@ local BehemothK = BehemothBase:New{
 		},
 		[5] = {
 			name	= "LRM10",
-			maxAngleDif = 35,
+			maxAngleDif = 60,
 		},
 		[6] = {
 			name	= "MRM10",

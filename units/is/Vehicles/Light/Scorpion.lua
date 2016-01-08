@@ -9,7 +9,7 @@ local Scorpion = LightTank:New{
 		},
 		[2] = {
 			name	= "MG",
-			maxAngleDif = 30,
+			maxAngleDif = 60,
 		},
 	},
 	

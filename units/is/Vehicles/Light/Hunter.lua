@@ -20,7 +20,7 @@ local Hunter = HunterBase:New{
 	weapons	= {	
 		[1] = {
 			name	= "LRM20",
-			maxAngleDif = 30,
+			maxAngleDif = 60,
 		},
 	},
 }
@@ -31,11 +31,11 @@ local HunterUpgrade = HunterBase:New{
 	weapons	= {	
 		[1] = {
 			name	= "LRM15",
-			maxAngleDif = 30,
+			maxAngleDif = 60,
 		},
 		[2] = {
 			name	= "LRM15",
-			maxAngleDif = 30,
+			maxAngleDif = 60,
 		},
 	},
 	

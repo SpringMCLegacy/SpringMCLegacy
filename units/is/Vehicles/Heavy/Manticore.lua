@@ -24,7 +24,7 @@ local Manticore = ManticoreBase:New{
 		},
 		[2] = {
 			name	= "MBL",
-			maxAngleDif = 25,
+			maxAngleDif = 60,
 		},
 		[3] = {
 			name	= "SRM6",
@@ -44,7 +44,7 @@ local ManticoreD = ManticoreBase:New{
 		},
 		[2] = {
 			name	= "MPL",
-			maxAngleDif = 25,
+			maxAngleDif = 60,
 		},
 		[3] = {
 			name	= "SSRM6",
@@ -72,7 +72,7 @@ local ManticoreS = ManticoreBase:New{
 		},
 		[2] = {
 			name	= "SSRM2",
-			maxAngleDif = 25,
+			maxAngleDif = 60,
 		},
 		[3] = {
 			name	= "SRM6",

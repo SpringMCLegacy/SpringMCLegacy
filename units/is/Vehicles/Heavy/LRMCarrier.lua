@@ -5,15 +5,15 @@ local LRMCarrier = LightTank:New{
 	weapons	= {	
 		[1] = {
 			name	= "LRM20",
-			maxAngleDif = 35,
+			maxAngleDif = 60,
 		},
 		[2] = {
 			name	= "LRM20",
-			maxAngleDif = 35,
+			maxAngleDif = 60,
 		},
 		[3] = {
 			name	= "LRM20",
-			maxAngleDif = 35,
+			maxAngleDif = 60,
 		},
 	},
 	

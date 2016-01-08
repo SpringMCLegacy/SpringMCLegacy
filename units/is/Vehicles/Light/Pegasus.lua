@@ -11,7 +11,7 @@ local Pegasus = Hover:New{
 		},
 		[3] = {
 			name	= "MBL",
-			maxAngleDif = 30,
+			maxAngleDif = 60,
 		},
 	},
 	

@@ -6,11 +6,11 @@ local HeavyAPC = LightTank:New{
 	weapons 		= {	
 		[1] = {
 			name	= "MG",
-			maxAngleDif = 30,
+			maxAngleDif = 60,
 		},
 		[2] = {
 			name	= "MG",
-			maxAngleDif = 30,
+			maxAngleDif = 60,
 		},
 	},
 	
