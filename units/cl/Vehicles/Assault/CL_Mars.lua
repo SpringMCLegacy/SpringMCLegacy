@@ -66,7 +66,6 @@ local CL_Mars = Tank:New{
 		elevationspeed  = 100,
 		barrelrecoildist = {[1] = 5, [3] = 5},
 		barrelrecoilspeed = 100,
-		turrets = {[3] = 9, [9] = 9, [10] = 10}, -- TODO: use value as turning speed?
 		maxammo = {gauss = 20, ac10 = 40, lrm = 180, srm = 120},
 		squadsize 		= 2,
     },
