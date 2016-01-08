@@ -1,6 +1,7 @@
 local Scorpion = LightTank:New{
 	name              	= "Scorpion",
 	name				= "Light Striker Tank",
+	trackWidth			= 22,--width to render the decal
 	
 	weapons 		= {	
 		[1] = {
@@ -8,6 +9,7 @@ local Scorpion = LightTank:New{
 		},
 		[2] = {
 			name	= "MG",
+			maxAngleDif = 30,
 		},
 	},
 	
@@ -19,6 +21,7 @@ local Scorpion = LightTank:New{
 		heatlimit 		= 10,
 		armor			= {type = "standard", tons = 4},
 		maxammo 		= {ac5 = 2},
+		barrelrecoildist = {[1] = 4},
 		squadsize 		= 2,
     },
 }

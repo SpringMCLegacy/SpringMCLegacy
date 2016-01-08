@@ -5,7 +5,7 @@ local Packrat = LightTank:New{
 	weapons 		= {	
 		[1] = {
 			name	= "SRM6",
-			maxAngleDif = 25,
+			maxAngleDif = 30,
 		},
 	},
 	
