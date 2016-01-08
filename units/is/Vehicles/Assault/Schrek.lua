@@ -29,4 +29,8 @@ local Schrek = Tank:New{
 
 return lowerkeys({
 	["CC_Schrek"] = Schrek:New(),
+	["DC_Schrek"] = Schrek:New(),
+	["FS_Schrek"] = Schrek:New(),
+	["FW_Schrek"] = Schrek:New(),
+	["LA_Schrek"] = Schrek:New(),
 })

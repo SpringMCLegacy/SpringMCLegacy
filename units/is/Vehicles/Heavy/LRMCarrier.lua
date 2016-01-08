@@ -5,12 +5,15 @@ local LRMCarrier = LightTank:New{
 	weapons	= {	
 		[1] = {
 			name	= "LRM20",
+			maxAngleDif = 35,
 		},
 		[2] = {
 			name	= "LRM20",
+			maxAngleDif = 35,
 		},
 		[3] = {
 			name	= "LRM20",
+			maxAngleDif = 35,
 		},
 	},
 	
@@ -21,11 +24,15 @@ local LRMCarrier = LightTank:New{
 		price			= 8330,
 		heatlimit 		= 20,
 		armor			= {type = "standard", tons = 2},
-		maxammo 		= {lrm = 2},
+		maxammo 		= {lrm = 4},
 		squadsize 		= 1,
     },
 }
 
 return lowerkeys({
-	["FW_LRMCarrier"] = LRMCarrier,
+	["CC_LRMCarrier"] = LRMCarrier:New(),
+	["DC_LRMCarrier"] = LRMCarrier:New(),
+	["FS_LRMCarrier"] = LRMCarrier:New(),
+	["FW_LRMCarrier"] = LRMCarrier:New(),
+	["LA_LRMCarrier"] = LRMCarrier:New(),
 })
