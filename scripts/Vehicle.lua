@@ -49,7 +49,8 @@ local amsIDs = info.amsIDs
 local hover = info.hover
 local vtol = info.vtol
 local aero = info.aero
-local turretIDs = info.turretIDs
+local mainTurretIDs = info.mainTurretIDs
+local weaponProgenitors = info.weaponProgenitors
 local limbHPs = {}
 for limb,limbHP in pairs(info.limbHPs) do -- copy table from defaults
 	limbHPs[limb] = limbHP
@@ -90,7 +91,7 @@ else
 end
 
 local flares = {}
-local turrets = info.turrets
+local turrets = {}
 local mantlets = {}
 local barrels = {}
 local launchers = {}
@@ -113,7 +114,7 @@ for weaponID = 1, info.numWeapons do
 	elseif weaponID then
 		flares[weaponID] = piece ("flare_" .. weaponID)
 	end
-	if turrets[weaponID] then
+	if info.turretIDs[weaponID] then
 		turrets[weaponID] = piece("turret_" .. weaponID)
 	end
 	if info.mantletIDs[weaponID] then
@@ -311,7 +312,7 @@ function hideLimbPieces(limb, hide)
 	local limbWeapons
 	if limb == "turret" then
 		rootPiece = turret
-		limbWeapons = turretIDs
+		limbWeapons = mainTurretIDs
 	else  -- asumme limb is a wing or rotor
 		rootPiece = piece(limb)-- asuume pieces are lwing, rwing, rotor
 		limbWeapons = {}
@@ -364,14 +365,12 @@ function script.HitByWeapon(x, z, weaponID, damage)
 	--Spring.Echo(wd.customParams.heatdamage)
 	ChangeHeat(heatDamage)
 	local hitPiece = GetUnitLastAttackedPiece(unitID) or ""
-	if hitPiece == "body" then 
+	local module = info.progenitorMap[hitPiece] or "body"
+	if module == "body" then 
 		return damage
-	elseif hitPiece == "turret" or hitPiece == "launcher_1" or hitPiece == "turret_2" then
-		--deduct Turret HP
-		limbHPControl("turret", damage)
+	else -- turret, wing or rotor
+		limbHPControl(module, damage)
 		return damage * 0.5 -- still apply 50% of the damage to main unit too
-	elseif hitPiece == "lwing" or hitPiece == "rwing" or hitPiece == "rotor" then
-		limbHPControl(hitPiece, damage) -- asumes wings are single pieces
 	end
 	return 0
 end
@@ -401,7 +400,9 @@ function script.Create()
 	-- set engagement range to weapon 1 range
 	Spring.SetUnitMaxRange(unitID, closeRange)
 	StartThread(SmokeUnit, {body})
-	StartThread(SmokeLimb, "turret", turret)
+	for limb in pairs(limbHPs) do
+		StartThread(SmokeLimb, limb, piece(limb) or body)
+	end
 	StartThread(CoolOff)
 	if rotor then
 		Spin(rotor, y_axis, 20 * WHEEL_SPEED, WHEEL_ACCEL)
@@ -436,7 +437,7 @@ local function WeaponCanFire(weaponID)
 	if playerDisabled[weaponID] then
 		return false
 	end
-	if turretIDs[weaponID] and limbHPs["turret"] <= 0 then
+	if mainTurretIDs[weaponID] and limbHPs["turret"] <= 0 then
 		return false
 	end
 	if amsIDs[weaponID] then -- check AMS after limbs
@@ -472,7 +473,7 @@ function script.AimWeapon(weaponID, heading, pitch)
 	-- use a weapon-specific turret if it exists
 	if turrets[weaponID] then
 		Turn(turrets[weaponID], y_axis, heading, TURRET_2_SPEED)
-	elseif turret then -- otherwise use main
+	elseif mainTurretIDs[weaponID] then -- otherwise use main
 		Turn(turret, y_axis, heading, TURRET_SPEED)
 	end
 	if mantlets[weaponID] then
@@ -490,11 +491,7 @@ function script.AimWeapon(weaponID, heading, pitch)
 	elseif flares[weaponID] then -- TODO: 'else' should be sufficient here
 		Turn(flares[weaponID], x_axis, -pitch, ELEVATION_SPEED)
 	end
-	if turrets[weaponID] then
-		WaitForTurn(turrets[weaponID], y_axis)
-	elseif turret then 
-		WaitForTurn(turret, y_axis) -- CL_Mars shouldn't really wait here for missiles
-	end
+	WaitForTurn(piece(weaponProgenitors[weaponID]), y_axis)
 	if mantlets[weaponID] then
 		WaitForTurn(mantlets[weaponID], x_axis)
 	end
@@ -600,7 +597,7 @@ end
 
 function script.Killed(recentDamage, maxHealth)
 	if excessHeat >= heatLimit then
-		Spring.Echo("NUUUUUUUUUUUKKKKKE")
+		--Spring.Echo("NUUUUUUUUUUUKKKKKE")
 	end
 	--local severity = recentDamage / maxHealth * 100
 	--if severity <= 25 then

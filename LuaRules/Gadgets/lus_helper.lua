@@ -139,31 +139,46 @@ local function GetArmMasterWeapon(input)
 	return lowestID
 end
 
-local function IsPieceAncestor(unitID, pieceName, ancestor)
+local function IsPieceAncestor(unitID, pieceName, ancestor, strict)
 	local pieceMap = GetUnitPieceMap(unitID)
 	local parent = GetUnitPieceInfo(unitID, pieceMap[pieceName]).parent
-	if parent:find(ancestor) then 
-		return true
+	if (strict and parent == ancestor) or (not strict and parent:find(ancestor)) then 
+		return true, parent
 	elseif parent == "" or parent == nil then
-		return false
+		return false, parent
 	else
 		return IsPieceAncestor(unitID, parent, ancestor)
 	end
+end
+
+local function FindPieceProgenitor(unitID, pieceName)
+	-- order matters here, we want to return turret even if that turret is then attached to body
+	local progenitors = {"lwing", "rwing", "rotor", "turret", "body"}
+	for _, progenitor in ipairs(progenitors) do
+		if progenitor == pieceName then return pieceName end
+		local found, parent = IsPieceAncestor(unitID, pieceName, progenitor, false)
+		if found then return parent end
+	end
+	return nil
 end
 
 function gadget:UnitCreated(unitID, unitDefID, teamID, builderID)
 	local info = GG.lusHelper[unitDefID]
 	local cp = UnitDefs[unitDefID].customParams
 	info.builderID = builderID
-	if info.arms == nil then
+	if info.arms == nil and UnitDefs[unitDefID].weapons[1] then
 		-- Parse Model Data
 		local pieceMap = GetUnitPieceMap(unitID)
 		info.arms = pieceMap["rupperarm"] ~= nil
+		local progenitorMap = {} -- pieceName => progenitor
+		local weaponProgenitors = {} -- weaponProgenitors[weaponID] = pieceName
+		
 		local leftArmIDs = {}
 		local rightArmIDs = {}
 		
 		local launcherIDs = {}
-		local turretIDs = {}
+		local mainTurretIDs = {} -- weapons housed in main turret
+		local turretIDs = {} -- weapon housed in turret_<weaponnum>
 		local mantletIDs = {}
 		local barrelIDs = {}
 		local numWheels = 0
@@ -173,9 +188,17 @@ function gadget:UnitCreated(unitID, unitDefID, teamID, builderID)
 			local weapNumPos = pieceName:find("_") or 0
 			local weapNumEndPos = pieceName:find("_", weapNumPos+1) or 0
 			local weaponNum = tonumber(pieceName:sub(weapNumPos+1,weapNumEndPos-1))
+			progenitorMap[pieceName] = FindPieceProgenitor(unitID, pieceName)
+			if weaponNum and not weaponProgenitors[weaponNum] then
+				weaponProgenitors[weaponNum] = progenitorMap[pieceName]
+				--Spring.Echo(UnitDefs[unitDefID].name, "weapon num:", weaponNum, "progenitor:", weaponProgenitors[weaponNum])
+			end
 			-- Find launcher pieces
 			if pieceName:find("launcher_") then
 				launcherIDs[weaponNum] = true
+			-- Find turret pieces
+			elseif pieceName:find("turret_") then
+				turretIDs[weaponNum] = true
 			-- Find mantlet pieces
 			elseif pieceName:find("mantlet_") then
 				mantletIDs[weaponNum] = true
@@ -194,12 +217,12 @@ function gadget:UnitCreated(unitID, unitDefID, teamID, builderID)
 			elseif pieceName:find("flare_") then
 				leftArmIDs[weaponNum] = leftArmIDs[weaponNum] or IsPieceAncestor(unitID, pieceName, "lupperarm")
 				rightArmIDs[weaponNum] = rightArmIDs[weaponNum] or IsPieceAncestor(unitID, pieceName, "rupperarm")
-				turretIDs[weaponNum] = turretIDs[weaponNum] or IsPieceAncestor(unitID, pieceName, "turret")
+				mainTurretIDs[weaponNum] = weaponProgenitors[weaponNum] == "turret"
 			-- assign launchpoint weaponIDs to left or right arms
 			elseif pieceName:find("launchpoint_") then
 				leftArmIDs[weaponNum] = leftArmIDs[weaponNum] or IsPieceAncestor(unitID, pieceName, "lupperarm")
 				rightArmIDs[weaponNum] = rightArmIDs[weaponNum] or IsPieceAncestor(unitID, pieceName, "rupperarm")
-				turretIDs[weaponNum] = turretIDs[weaponNum] or IsPieceAncestor(unitID, pieceName, "turret")
+				mainTurretIDs[weaponNum] = weaponProgenitors[weaponNum] == "turret"
 			end
 		end
 		
@@ -210,8 +233,11 @@ function gadget:UnitCreated(unitID, unitDefID, teamID, builderID)
 			info.leftArmIDs = leftArmIDs
 		end
 		
+		info.progenitorMap = progenitorMap
+		info.weaponProgenitors = weaponProgenitors
 		info.launcherIDs = launcherIDs
 		info.turretIDs = turretIDs
+		info.mainTurretIDs = mainTurretIDs
 		info.mantletIDs = mantletIDs
 		info.barrelIDs = barrelIDs
 		info.numWheels = numWheels
@@ -326,7 +352,7 @@ function gadget:GamePreload()
 		info.hover = unitDef.moveDef.family == "hover"
 		info.vtol = unitDef.hoverAttack
 		info.aero = unitDef.canFly and not info.vtol
-		info.turrets = table.unserialize(cp.turrets)
+		--info.turrets = table.unserialize(cp.turrets)
 		info.turretTurnSpeed = math.rad(tonumber(cp.turretturnspeed) or 75)
 		info.turret2TurnSpeed = math.rad(tonumber(cp.turret2turnspeed) or 75)
 		info.barrelRecoilSpeed = (tonumber(cp.barrelrecoilspeed) or 100)
