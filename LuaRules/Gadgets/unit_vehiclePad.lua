@@ -56,7 +56,7 @@ function gadget:Initialize()
 		if basicType == "vehicle" then
 			vehiclesDefCache[unitDefID] = true
 			local mass = unitDef.mass
-			local weight = unitDef.transportCapacity and "apc" or GG.GetWeight(mass)
+			local weight = unitDef.transportCapacity > 0 and "apc" or GG.GetWeight(mass)
 			local squadSize = unitDef.customParams.squadsize or 1
 			local side = unitDef.name:sub(1,2)
 			if GG.ValidSides[side] then
