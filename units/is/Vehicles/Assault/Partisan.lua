@@ -49,5 +49,5 @@ local IS_Partisan = Tank:New{
 }
 
 return lowerkeys({
-	["IS_Partisan"] = IS_Partisan,
+	--["IS_Partisan"] = IS_Partisan,
 })

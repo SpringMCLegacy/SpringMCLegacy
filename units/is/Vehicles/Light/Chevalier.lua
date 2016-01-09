@@ -28,5 +28,5 @@ local Chevalier = LightTank:New{
 }
 
 return lowerkeys({
-	["CS_Chevalier"] = Chevalier:New(),
+	--["CS_Chevalier"] = Chevalier:New(),
 })

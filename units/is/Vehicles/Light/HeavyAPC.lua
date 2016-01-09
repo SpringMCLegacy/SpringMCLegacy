@@ -1,6 +1,9 @@
 local HeavyAPC = LightTank:New{
 	name              	= "Heavy APC",
 	name				= "Troop Transport",
+	
+	transportCapacity		= 5,
+	transportSize = 1,	
 	trackWidth			= 18,--width to render the decal
 	
 	weapons 		= {	

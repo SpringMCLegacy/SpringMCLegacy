@@ -28,5 +28,5 @@ local Rommel = Tank:New{
 }
 
 return lowerkeys({
-	["LA_Rommel"] = Rommel:New(),
+	--["LA_Rommel"] = Rommel:New(),
 })

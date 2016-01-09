@@ -40,5 +40,5 @@ customparams = {
 }
 
 return lowerkeys({
-	["FS_Badger_Prime"] = Prime:New(),
+	--["FS_Badger_Prime"] = Prime:New(),
 })

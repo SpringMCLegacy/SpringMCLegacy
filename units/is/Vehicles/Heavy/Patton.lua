@@ -31,5 +31,5 @@ local Patton = Tank:New{
 }
 
 return lowerkeys({
-	["LA_Patton"] = Patton:New(),
+	--["LA_Patton"] = Patton:New(),
 })

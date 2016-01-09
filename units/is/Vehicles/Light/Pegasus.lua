@@ -23,7 +23,7 @@ local Pegasus = Hover:New{
 		heatlimit 		= 10,
 		armor			= {type = "standard", tons = 5},
 		maxammo 		= {srm = 2},
-		squadsize 		= 1,
+		squadsize 		= 2,
     },
 }
 
@@ -60,7 +60,7 @@ local PegasusK = Pegasus:New{
 return lowerkeys({
 	["CC_Pegasus"] = Pegasus:New(),
 	["DC_Pegasus"] = Pegasus:New(),
-	["DC_PegasusK"] = PegasusK:New(),
+	--["DC_PegasusK"] = PegasusK:New(),
 	["FS_Pegasus"] = Pegasus:New(),
 	["FW_Pegasus"] = Pegasus:New(),
 	["LA_Pegasus"] = Pegasus:New(),

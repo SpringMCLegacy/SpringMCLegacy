@@ -22,7 +22,7 @@ local Scorpion = LightTank:New{
 		armor			= {type = "standard", tons = 4},
 		maxammo 		= {ac5 = 2},
 		barrelrecoildist = {[1] = 4},
-		squadsize 		= 2,
+		squadsize 		= 3,
     },
 }
 

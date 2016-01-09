@@ -29,5 +29,5 @@ local Morningstar = Tank:New{
 }
 
 return lowerkeys({
-	["FS_Morningstar"] = Morningstar,
+	--["FS_Morningstar"] = Morningstar,
 })

@@ -54,6 +54,6 @@ local MinionTAG = Minion:New{
 }
 
 return lowerkeys({
-	["CC_MinionTAG"] = MinionTAG:New(),
-	["FS_Minion"] = MinionScout:New(),
+	--["CC_MinionTAG"] = MinionTAG:New(),
+	--["FS_Minion"] = MinionScout:New(),
 })

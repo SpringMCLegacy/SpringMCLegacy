@@ -23,9 +23,9 @@ local Harasser = Hover:New{
 }
 
 return lowerkeys({
-	["CC_Harasser"] = Harasser:New(),
-	["DC_Harasser"] = Harasser:New(),
-	["FW_Harasser"] = Harasser:New(),
-	["FS_Harasser"] = Harasser:New(),
-	["LA_Harasser"] = Harasser:New(),
+	--["CC_Harasser"] = Harasser:New(),
+	--["DC_Harasser"] = Harasser:New(),
+	--["FW_Harasser"] = Harasser:New(),
+	--["FS_Harasser"] = Harasser:New(),
+	--["LA_Harasser"] = Harasser:New(),
 })

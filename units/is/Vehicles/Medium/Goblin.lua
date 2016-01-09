@@ -34,6 +34,6 @@ local Goblin = LightTank:New{
 }
 
 return lowerkeys({
-	["FS_Goblin"] = Goblin:New(),
-	["FW_Goblin"] = Goblin:New(),
+	--["FS_Goblin"] = Goblin:New(),
+	--["FW_Goblin"] = Goblin:New(),
 })

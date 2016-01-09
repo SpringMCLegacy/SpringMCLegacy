@@ -44,5 +44,5 @@ local Challenger = Tank:New{
 }
 
 return lowerkeys({
-	["FS_Challenger"] = Challenger:New(),
+	--["FS_Challenger"] = Challenger:New(),
 })
