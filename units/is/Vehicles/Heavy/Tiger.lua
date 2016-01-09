@@ -3,7 +3,7 @@ local Tiger = Tank:New{
 	description         = "Heavy Strike Tank",
 	trackWidth			= 23,--width to render the decal
 
-	weaTigerns	= {	
+	weapons	= {	
 		[1] = {
 			name	= "AC10",
 		},
