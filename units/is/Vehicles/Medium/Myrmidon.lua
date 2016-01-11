@@ -25,9 +25,9 @@ local Myrmidon = LightTank:New{
 }
 
 return lowerkeys({
-	["CC_Myrmidon"] = Myrmidon:New(),
-	["DC_Myrmidon"] = Myrmidon:New(),
-	["FS_Myrmidon"] = Myrmidon:New(),
-	["FW_Myrmidon"] = Myrmidon:New(),
-	["LA_Myrmidon"] = Myrmidon:New(),
+	--["CC_Myrmidon"] = Myrmidon:New(),
+	--["DC_Myrmidon"] = Myrmidon:New(),
+	--["FS_Myrmidon"] = Myrmidon:New(),
+	--["FW_Myrmidon"] = Myrmidon:New(),
+	--["LA_Myrmidon"] = Myrmidon:New(),
 })

@@ -29,5 +29,5 @@ local Tiger = Tank:New{
 }
 
 return lowerkeys({
-	["FS_Tiger"] = Tiger:New(),
+	--["FS_Tiger"] = Tiger:New(),
 })

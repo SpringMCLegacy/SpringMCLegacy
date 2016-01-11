@@ -97,8 +97,8 @@ return lowerkeys({
 	["CC_Manticore"] = Manticore:New(),
 	["DC_Manticore"] = Manticore:New(),
 	["FS_Manticore"] = Manticore:New(),
-	--["FS_ManticoreD"] = ManticoreD:New(),
+	["FS_ManticoreD"] = ManticoreD:New(),
 	["FW_Manticore"] = Manticore:New(),
 	["LA_Manticore"] = Manticore:New(),
-	--["LA_ManticoreS"] = ManticoreS:New(),
+	["LA_ManticoreS"] = ManticoreS:New(),
 })

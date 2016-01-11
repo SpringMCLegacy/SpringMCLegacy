@@ -30,9 +30,9 @@ local LRMCarrier = LightTank:New{
 }
 
 return lowerkeys({
-	["CC_LRMCarrier"] = LRMCarrier:New(),
-	["DC_LRMCarrier"] = LRMCarrier:New(),
-	["FS_LRMCarrier"] = LRMCarrier:New(),
-	["FW_LRMCarrier"] = LRMCarrier:New(),
-	["LA_LRMCarrier"] = LRMCarrier:New(),
+	--["CC_LRMCarrier"] = LRMCarrier:New(),
+	--["DC_LRMCarrier"] = LRMCarrier:New(),
+	--["FS_LRMCarrier"] = LRMCarrier:New(),
+	--["FW_LRMCarrier"] = LRMCarrier:New(),
+	--["LA_LRMCarrier"] = LRMCarrier:New(),
 })
