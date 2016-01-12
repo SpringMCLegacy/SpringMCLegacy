@@ -1,6 +1,6 @@
 local Scorpion = LightTank:New{
 	name              	= "Scorpion",
-	name				= "Light Striker Tank",
+	description			= "Light Striker Tank",
 	trackWidth			= 22,--width to render the decal
 	
 	weapons 		= {	
