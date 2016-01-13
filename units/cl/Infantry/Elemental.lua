@@ -50,13 +50,13 @@ local Prime = CL_Elemental:New{
 	objectName        	= "CL_Elemental.s3o",
 	weapons 		= {	
 		[1] = {
-			name	= "MicroSPL",
+			name	= "SPL",
 		},
 		[2] = {
-			name	= "InfSRM2",
+			name	= "SRM2",
 		},
 		[3] = {
-			name	= "Microlaser",
+			name	= "MG",
 		},
 	},
 }
