@@ -1,6 +1,7 @@
 return {
 	LRM			= 200,--100,
 	SRM			= 100,
+	InfSRM		= 1,
 	ATM			= 60,
 	MRM			= 200,
 	Arrow		= 8,

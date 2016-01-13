@@ -48,6 +48,25 @@ local ASRM2 = SRM2:New{
 	turnRate				= 4000,
 }
 
+local InfSRM = SRM_Class:New{
+	name                    = "Infantry SRM",
+	range					= 200,
+--	burst					= 1,
+	turnRate				= 4000,
+	customparams = {
+		ammotype			= "infsrm",
+	}
+}
+
+local InfSRM2 = SRM2:New{
+	name                    = "Infantry SRM-2",
+	range					= 200,
+	turnRate				= 4000,
+	customparams = {
+		ammotype			= "infsrm",
+	}
+}
+
 local SSRM2 = SRM2:New{
 	name                    = "Streak SRM-2",
 	sprayangle				= 500,
@@ -103,7 +122,8 @@ local SSRM6 = SRM6:New{
 
 return lowerkeys({ 
 	SRM2 = SRM2,
-	InfSRM2 = SRM2:New{range = 200},
+	InfSRM = InfSRM,
+	InfSRM2 = InfSRM2,
 	SRM4 = SRM4,
 	SRM6 = SRM6,
 	SSRM2 = SSRM2,

@@ -1,4 +1,4 @@
-weaponDef = {
+local MG = Weapon:New{
 	name                    = "Machinegun",
 	weaponType              = "Cannon",
 	explosionGenerator    	= "custom:MG_Hit",
@@ -33,8 +33,9 @@ weaponDef = {
 		weaponclass			= "projectile",
 		flareonshot 		= true,
     },
-	
-	
 }
 
-return lowerkeys({ MG = weaponDef })
+return lowerkeys({ 
+	MG = MG,
+	InfMG = MG:New{range = 300},
+})
