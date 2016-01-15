@@ -16,12 +16,12 @@ local BattleArmor = Light:New{
 	footprintZ = 1,
 	script = "Infantry.lua",
 
-	cruisealt = 50,
-	canfly = true,
-	hoverattack = true,
-	airhoverfactor = 10,
-	canLoopbackAttack = true,
-	usesmoothmesh = false,
+	--cruisealt = 50,
+	--canfly = true,
+	--hoverattack = true,
+	--airhoverfactor = 10,
+	--canLoopbackAttack = true,
+	--usesmoothmesh = false,
 	
 		maxAcc			= 0.2,
 	maxBank			= 0.07,
@@ -37,6 +37,7 @@ local BattleArmor = Light:New{
 	customparams = {
 		helptext		= "Armament: Small Pulse Laser, SRM-2, Microlaser",
 		heatlimit		= 20,
+		speed			= 120,
 		torsoturnspeed	= 380,
 		maxammo 		= {infsrm = 4},
 		squadsize		= 5,
@@ -94,6 +95,10 @@ local StandardSRM = BattleArmor:New{
 }
 
 return lowerkeys({
+	--Temp
+	["CL_Elemental_Prime"] = Elemental:New(),
+	["IS_Standard_BA"] = Standard:New(),
+
 	["CL_Elemental"] = Elemental:New(),
 	["CC_Standard"] = Standard:New(),
 	["CC_StandardSRM"] = StandardSRM:New(),
