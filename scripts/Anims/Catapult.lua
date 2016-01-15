@@ -3,7 +3,7 @@
 local pelvis, torso, lupperleg, llowerleg, rupperleg, rlowerleg, rfronttoes, rbacktoe, lfronttoes, lbacktoe , lfoot, rfoot = piece ("pelvis", "torso", "lupperleg", "llowerleg", "rupperleg", "rlowerleg", "rfronttoes", "rbacktoe", "lfronttoes", "lbacktoe", "lfoot", "rfoot")
 
 --Turning/Movement Locals
-local LEG_SPEED = rad(250) * speedMod
+local LEG_SPEED = rad(200) * speedMod
 local LEG_TURN_SPEED = rad (200) * speedMod
 
 --Turn script
@@ -201,6 +201,7 @@ function anim_Walk()
 		WaitForTurn(lupperleg, x_axis)
 		WaitForTurn(llowerleg, x_axis)
 		WaitForTurn(lfoot, x_axis)
+		PlaySound("stomp")
 		WaitForTurn(rupperleg, x_axis)
 		WaitForTurn(rlowerleg, x_axis)
 		WaitForTurn(rfoot, x_axis)
@@ -262,6 +263,7 @@ function anim_Walk()
 		WaitForTurn(rupperleg, x_axis)
 		WaitForTurn(rlowerleg, x_axis)
 		WaitForTurn(rfoot, x_axis)
+		PlaySound("stomp")
 		
 		--STEP 5, Left Leg Moves Forward Slowly... - Halfway Point
 		--STEP 5, Right Leg Moves Back Slowly - Halfway Point
