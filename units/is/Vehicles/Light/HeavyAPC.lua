@@ -1,6 +1,6 @@
 local HeavyAPC = LightTank:New{
 	name              	= "Heavy APC",
-	name				= "Troop Transport",
+	description			= "Troop Transport",
 	
 	transportCapacity		= 5,
 	transportSize = 1,	
