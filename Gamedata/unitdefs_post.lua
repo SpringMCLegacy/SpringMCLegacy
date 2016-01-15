@@ -85,7 +85,7 @@ for name, ud in pairs(UnitDefs) do
 		end
 	end
 	if cp and cp.baseclass then -- mech, vehicle, apc, vtol, infantry
-		cp.normaltex = "unittextures/normals/" .. ud.name .. "_Normals.dds"
+		cp.normaltex = "unittextures/normals/" .. ud.name:gsub(" ", "") .. "_Normals.dds"
 		ud.name = ud.name .. " " .. (cp.variant or "") -- concatenate variant code to name
 		cp.infocard = {}
 		if partsList[cp.baseclass] then -- infantry don't exist but won't show up on unitcard anwyay

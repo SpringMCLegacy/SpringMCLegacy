@@ -98,6 +98,7 @@ local function RandomElement(flavour, teamID, weight)
 end
 
 local function RandomVehicle(teamID, weight)
+	if not teamID or select(3, Spring.GetTeamInfo(teamID)) then return false end -- team died
 	if (math.random() <= ARTY_CHANCE) and (#teamArtyDefs[teamID][weight] > 0) then
 		--Spring.Echo("OMG you rolled arty!", weight)
 		return RandomElement(teamArtyDefs, teamID, weight)
@@ -198,7 +199,7 @@ end
 GG.Wander = Wander
 
 local function UnitIdleCheck(unitID, unitDefID, teamID)
-	if Spring.GetUnitIsDead(unitID) then return false end
+	if (not Spring.ValidUnitID(unitID)) or Spring.GetUnitIsDead(unitID) then return false end -- unit died
 	if select(3, Spring.GetTeamInfo(teamID)) then return false end -- team died
 	local cmdQueueSize = Spring.GetCommandQueue(unitID, 0) or 0
 	if cmdQueueSize > 0 then 
