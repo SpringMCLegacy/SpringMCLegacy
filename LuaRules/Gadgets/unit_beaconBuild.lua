@@ -148,6 +148,7 @@ function gadget:GamePreload()
 end
 
 -- REGULAR UPGRADES
+
 local function AddUpgradeOptions(unitID)
 	if not Spring.ValidUnitID(unitID) then return end
 	for outpostDefID, outpostInfo in pairs(outpostDefs) do
@@ -156,20 +157,12 @@ local function AddUpgradeOptions(unitID)
 	InsertUnitCmdDesc(unitID, dropZoneCmdDesc)
 end
 
-local function RemoveUpgradeOptions(unitID)
-	for outpostDefID, outpostInfo in pairs(outpostDefs) do
-		RemoveUnitCmdDesc(unitID, FindUnitCmdDesc(unitID, outpostInfo.cmdDesc.id))
-	end
-	RemoveUnitCmdDesc(unitID, FindUnitCmdDesc(unitID, dropZoneCmdDesc.id))
-end
-
 local function ToggleUpgradeOptions(unitID, on)
-	if not outpostIDs[unitID] then -- beacon not yet upgraded
-		for outpostDefID, outpostInfo in pairs(outpostDefs) do
-			EditUnitCmdDesc(unitID, FindUnitCmdDesc(unitID, outpostInfo.cmdDesc.id), {disabled = not on})
-		end
-		EditUnitCmdDesc(unitID, FindUnitCmdDesc(unitID, dropZoneCmdDesc.id), {disabled = not on})
+	if not Spring.ValidUnitID(unitID) then return end
+	for outpostDefID, outpostInfo in pairs(outpostDefs) do
+		EditUnitCmdDesc(unitID, FindUnitCmdDesc(unitID, outpostInfo.cmdDesc.id), {disabled = not on})
 	end
+	EditUnitCmdDesc(unitID, FindUnitCmdDesc(unitID, dropZoneCmdDesc.id), {disabled = not on})
 end
 GG.ToggleUpgradeOptions = ToggleUpgradeOptions
 
@@ -223,7 +216,7 @@ GG.DropshipDelivery = DropshipDelivery
 local function SetDropZone(beaconID, teamID)
 	local currDropZone = dropZoneIDs[teamID]
 	if currDropZone then
-		AddUpgradeOptions(dropZoneBeaconIDs[teamID])
+		ToggleUpgradeOptions(dropZoneBeaconIDs[teamID], true)
 		DestroyUnit(currDropZone, false, true)
 		GG.DropshipLeft(teamID) -- reset the timer
 	end
@@ -345,19 +338,19 @@ function gadget:UnitDestroyed(unitID, unitDefID, teamID)
 		towerOwners[unitID] = nil
 	end
 	if DROPZONE_IDS[unitDefID] then -- unit was a team's dropzone, reset upgrade options
-		AddUpgradeOptions(dropZoneBeaconIDs[teamID])
+		ToggleUpgradeOptions(dropZoneBeaconIDs[teamID], true)
 		dropZoneIDs[teamID] = nil
 		dropZoneBeaconIDs[teamID] = nil
 	elseif outpostDefs[unitDefID] then
 		local beaconID = beaconIDs[unitID]
 		if beaconID then -- beaconID can be nil if /give testing
-			SetUnitRulesParam(unitID, "beaconID", "")
+			GG.Delay.DelayCall(SetUnitRulesParam, {unitID, "beaconID", ""}, 5) -- delay for safety
 			env = Spring.UnitScript.GetScriptEnv(beaconID)
 			Spring.UnitScript.CallAsUnit(beaconID, env.ChangeType, false)
 			beaconIDs[unitID] = nil
 			outpostIDs[beaconID] = nil
 			-- Re-add upgrade options to beacon
-			AddUpgradeOptions(beaconID)
+			ToggleUpgradeOptions(beaconID, true)
 		end
 	end
 	local wallInfo = wallInfos[unitID]
@@ -440,14 +433,14 @@ function gadget:AllowCommand(unitID, unitDefID, teamID, cmdID, cmdParams, cmdOpt
 					RemoveUnitCmdDesc(unitID, FindUnitCmdDesc(unitID, cmdID))
 				else
 					--Spring.Echo("I'm totally gonna upgrade your beacon bro!")
-					RemoveUpgradeOptions(unitID)
+					ToggleUpgradeOptions(unitID, false)
 					DropshipDelivery(unitID, teamID, "is_avenger", upgradeDefID, cost, "BB_Dropship_Inbound", DROPSHIP_DELAY)
 				end
 			else
 				GG.PlaySoundForTeam(teamID, "BB_Insufficient_Funds", 1)
 			end
 		elseif cmdID == dropZoneCmdDesc.id then
-			RemoveUpgradeOptions(unitID)
+			ToggleUpgradeOptions(unitID, false)
 			SetDropZone(unitID, teamID)
 		elseif cmdID == CMD.SELFD then -- Disallow self-d
 			return false

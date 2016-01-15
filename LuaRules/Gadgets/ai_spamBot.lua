@@ -335,12 +335,12 @@ end
 function gadget:UnitDestroyed(unitID, unitDefID, teamID, attackerID, attackerDefID, attackerTeam)
 	if AI_TEAMS[teamID] then
 		Spam(teamID)
-		if unitDefID == C3_ID then
-			teamUpgradeCounts[teamID][C3_ID] = teamUpgradeCounts[teamID][C3_ID] - 1
-			Upgrade(tonumber(Spring.GetUnitRulesParam(unitID, "beaconID")), teamID)
-		elseif unitDefID == VPAD_ID then
-			teamUpgradeCounts[teamID][VPAD_ID] = teamUpgradeCounts[teamID][VPAD_ID] - 1
-			Upgrade(tonumber(Spring.GetUnitRulesParam(unitID, "beaconID")), teamID)
+		local beaconID = Spring.GetUnitRulesParam(unitID, "beaconID")
+		if (unitDefID == C3_ID or unitDefID == VPAD_ID) and beaconID then
+			teamUpgradeCounts[teamID][unitDefID] = teamUpgradeCounts[teamID][unitDefID] - 1
+			if tonumber(beaconID) then
+				Upgrade(tonumber(beaconID), teamID)
+			end
 		elseif UnitDefs[unitDefID].name:find("dropzone") then -- TODO: "DROPZONE_IDS[unitDefID] then" should work here
 			dropZoneIDs[teamID] = nil
 			-- TODO: why doesn't it get auto-switched like it does for player?

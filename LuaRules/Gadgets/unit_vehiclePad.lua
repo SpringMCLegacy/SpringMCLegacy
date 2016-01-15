@@ -207,6 +207,7 @@ local function UnitIdleCheck(unitID, unitDefID, teamID)
 	end
 	local unitSquad = unitSquads[unitID]
 	if not unitSquad then return end
+	if not teamID then Spring.Echo("yeah its totally teamID") end
 	teamSquadSpots[teamID][unitSquad] = math.random(1, #flagSpots)
 	GG.Delay.DelayCall(Wander, {unitID}, 1)
 end
