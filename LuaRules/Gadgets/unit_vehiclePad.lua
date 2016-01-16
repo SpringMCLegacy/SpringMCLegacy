@@ -99,6 +99,7 @@ end
 
 local function RandomVehicle(teamID, weight)
 	if not teamID or select(3, Spring.GetTeamInfo(teamID)) then return false end -- team died
+	if teamID == GAIA_TEAM_ID then return false end
 	if (math.random() <= ARTY_CHANCE) and (#teamArtyDefs[teamID][weight] > 0) then
 		--Spring.Echo("OMG you rolled arty!", weight)
 		return RandomElement(teamArtyDefs, teamID, weight)
@@ -201,6 +202,7 @@ GG.Wander = Wander
 local function UnitIdleCheck(unitID, unitDefID, teamID)
 	if (not Spring.ValidUnitID(unitID)) or Spring.GetUnitIsDead(unitID) then return false end -- unit died
 	if select(3, Spring.GetTeamInfo(teamID)) then return false end -- team died
+	if teamID == GAIA_TEAM_ID then return false end -- team died and unit transferred to gaia
 	local cmdQueueSize = Spring.GetCommandQueue(unitID, 0) or 0
 	if cmdQueueSize > 0 then 
 		--Spring.Echo("UnitIdleCheck: I'm so not idle!") 
@@ -208,7 +210,6 @@ local function UnitIdleCheck(unitID, unitDefID, teamID)
 	end
 	local unitSquad = unitSquads[unitID]
 	if not unitSquad then return end
-	if not teamID then Spring.Echo("yeah its totally teamID") end
 	teamSquadSpots[teamID][unitSquad] = math.random(1, #flagSpots)
 	GG.Delay.DelayCall(Wander, {unitID}, 1)
 end
