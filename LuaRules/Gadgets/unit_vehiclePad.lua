@@ -30,9 +30,11 @@ local vehiclesDefCache = {} -- unitDefID = true -- ALL vehicles
 
 local sideVehicleDefs = {} -- sideVehicleDefs[side]["light"][1] = {unitDefID = unitDefID, squadSize = customParams.squadsize}
 local sideArtyDefs = {} -- sideArtyDefs[side]["light"][1] = {unitDefID = unitDefID, squadSize = customParams.squadsize}
+local sideAPCDefs = {} -- sideAPCDefs[side]["apc"][1] = {unitDefID = unitDefID, squadSize = customParams.squadsize}
 
 local teamVehicleDefs = {} -- e.g. teamVehicleDefs[teamID] = SIDE_VehicleDefs
 local teamArtyDefs = {} -- e.g. teamArtyDefs[teamID] = SIDE_ArtyDefs
+local teamAPCDefs = {} -- e.g. teamAPCDefs[teamID] = SIDE_ArtyDefs
 
 local vehiclePads = {} -- uvehiclePads[unitID] = unloadFrame
 
@@ -40,16 +42,18 @@ local unitSquads = {} -- unitSquads[unitID] = squadNum
 local teamSquadCounts = {} -- teamSquadCounts[teamID] = numberOfSquads
 local teamSquadSpots = {} -- teamSquadSpots[teamID][squadNum] = spotNum
 local teamSquads = {}
-local weights = {"light", "medium", "heavy", "apc", "assault", "vtol"} -- TODO: this is repeated elsewhere
+local weights = {"light", "medium", "heavy", "assault",} -- TODO: this is repeated elsewhere
 
 function gadget:Initialize()
 	for sideName, shortName in pairs(GG.SideNames) do
 		sideVehicleDefs[shortName] = {}
 		sideArtyDefs[shortName] = {}
+		sideAPCDefs[shortName] = {}
 		for i, weight in pairs(weights) do
 			sideVehicleDefs[shortName][weight] = {}
 			sideArtyDefs[shortName][weight] = {}
 		end
+		sideAPCDefs[shortName]["apc"] = {}
 	end
 	for unitDefID, unitDef in pairs(UnitDefs) do
 		local basicType = unitDef.customParams.baseclass
@@ -60,7 +64,9 @@ function gadget:Initialize()
 			local squadSize = unitDef.customParams.squadsize or 1
 			local side = unitDef.name:sub(1,2)
 			if GG.ValidSides[side] then
-				if unitDef.customParams.artillery then
+				if weight == "apc" then
+					table.insert(sideAPCDefs[side][weight], {["unitDefID"] = unitDefID, ["squadSize"] = squadSize})
+				elseif unitDef.customParams.artillery then
 					table.insert(sideArtyDefs[side][weight], {["unitDefID"] = unitDefID, ["squadSize"] = squadSize})
 				else
 					table.insert(sideVehicleDefs[side][weight], {["unitDefID"] = unitDefID, ["squadSize"] = squadSize})
@@ -74,24 +80,24 @@ function gadget:Initialize()
 			local side = GG.teamSide[teamID]
 			teamVehicleDefs[teamID] = sideVehicleDefs[side]
 			teamArtyDefs[teamID] = sideArtyDefs[side]
+			teamAPCDefs[teamID] = sideAPCDefs[side]
 			teamSquadSpots[teamID] = {}
 		end
 	end
 end
 
-local weights = {"light", "medium", "heavy", "apc", "assault"}
-
 local MINUTE = 30 * 60
-local LIGHT = 2 * MINUTE
-local MEDIUM = 5 * MINUTE
-local HEAVY = 10 * MINUTE
+local LIGHT = 2 * MINUTE -- up to 2 min, only lights
+local MEDIUM = 5 * MINUTE -- from 2-5 min, medium or light
+local HEAVY = 10 * MEDIUM -- 5-10 min, heavy, medium or light
+-- 10min+, assault, heavy, medium or light
 
-local L1 = 10
-local L2 = L1 + 15
-local L3 = L2 + 20
-local L4 = L3 + 25
+local L1 = 25 --10
+local L2 = L1 + 25 -- 15
+local L3 = L2 + 25 -- 20
 
 local ARTY_CHANCE = 0.10 -- 10%
+local APC_CHANCE = 0.10 -- 10%
 
 local function RandomElement(flavour, teamID, weight)
 	return flavour[teamID][weight][math.random(1, #flavour[teamID][weight])]
@@ -100,7 +106,10 @@ end
 local function RandomVehicle(teamID, weight)
 	if not teamID or select(3, Spring.GetTeamInfo(teamID)) then return false end -- team died
 	if teamID == GAIA_TEAM_ID then return false end
-	if (math.random() <= ARTY_CHANCE) and (#teamArtyDefs[teamID][weight] > 0) then
+	if (math.random() <= APC_CHANCE) and (#teamAPCDefs[teamID]["apc"] > 0) then
+		--Spring.Echo("OMG you rolled APC!")
+		return RandomElement(teamAPCDefs, teamID, "apc")
+	elseif (math.random() <= ARTY_CHANCE) and (#teamArtyDefs[teamID][weight] > 0) then
 		--Spring.Echo("OMG you rolled arty!", weight)
 		return RandomElement(teamArtyDefs, teamID, weight)
 	elseif #teamVehicleDefs[teamID][weight] > 0 then -- return a regular vehicle
@@ -113,18 +122,16 @@ local function RandomVehicle(teamID, weight)
 end
 
 local function AgeWeight(age)
-	local topLevel = (age < LIGHT and 1) or (age < MEDIUM and 2) or (age < HEAVY and 3) or 4
+	local topLevel = (age < LIGHT and 1) or (age < MEDIUM and 2) or (age < HEAVY and 3) or 4 -- age >= ASSAULT
 	--Spring.Echo("Best Available: ", weights[topLevel])
 	local chance = math.random(100)
-	if chance < L1 then -- 10% of time return best
+	if chance < L1 then 	-- 10% of time return best
 		return weights[topLevel]
 	elseif chance < L2 then -- 15% of time return 2nd best
 		return weights[math.max(1, topLevel - 1)]
 	elseif chance < L3 then -- 20% of the time return 3rd best
 		return weights[math.max(1, topLevel - 2)]
-	elseif chance < L4 then -- 25% of the time return 3rd best
-		return weights[math.max(1, topLevel - 3)]
-	else                    -- 30% of the time return the worst
+	else                    -- 55% of the time return the worst
 		return weights[1]
 	end
 end
