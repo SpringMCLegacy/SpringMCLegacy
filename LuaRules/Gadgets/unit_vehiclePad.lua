@@ -89,7 +89,7 @@ end
 local MINUTE = 30 * 60
 local LIGHT = 2 * MINUTE -- up to 2 min, only lights
 local MEDIUM = 5 * MINUTE -- from 2-5 min, medium or light
-local HEAVY = 10 * MEDIUM -- 5-10 min, heavy, medium or light
+local HEAVY = 10 * MINUTE -- 5-10 min, heavy, medium or light
 -- 10min+, assault, heavy, medium or light
 
 local L1 = 25 --10
