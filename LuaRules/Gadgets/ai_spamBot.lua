@@ -126,7 +126,7 @@ local function Spam(teamID)
 				Spring.AddTeamResource(teamID, "energy", 100)
 			else
 				--local cmdDesc = cmdDescs[math.random(1, #cmdDescs)]
-				buildID = SimpleReverseSearch(sideMechs[side], Spring.GetTeamResources(teamID, "metal") * 0.65)
+				buildID = SimpleReverseSearch(sideMechs[side], Spring.GetTeamResources(teamID, "metal") * math.random(25, 85)/100)
 			end
 			if not buildID then return end -- couldn't find any affordable mechs
 			GG.Delay.DelayCall(Spring.GiveOrderToUnit, {unitID, -buildID, {}, {}}, 1)
