@@ -136,6 +136,7 @@ end
 function anim_Walk()
 	Signal(SIG_ANIMATE)
 	SetSignalMask(SIG_ANIMATE)
+	anim_Reset()
 	while true do
 --		Spring.Echo("anim_Walk")
 		--Spring.Echo("Step 0.5")
