@@ -52,7 +52,7 @@ local ManticoreD = ManticoreBase:New{
 	},
 	
 	customparams = {
-		variant         = "D",
+		variant         = "(Davion)",
 		speed			= 60,
 		price			= 8000,
 		heatlimit 		= 10,
@@ -83,7 +83,7 @@ local ManticoreS = ManticoreBase:New{
 	},
 	
 	customparams = {
-		variant         = "S",
+		variant         = "(Steiner)",
 		speed			= 80,
 		price			= 8000,
 		heatlimit 		= 10,

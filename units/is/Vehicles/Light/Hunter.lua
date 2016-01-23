@@ -25,7 +25,7 @@ local Hunter = HunterBase:New{
 	},
 }
 
-local HunterUpgrade = HunterBase:New{
+local HunterS = HunterBase:New{
 	description         = "Heavy Brawler Tank",
 	
 	weapons	= {	
@@ -40,7 +40,7 @@ local HunterUpgrade = HunterBase:New{
 	},
 	
 	customparams = {
-		variant         = "Upgrade",
+		variant         = "(Steiner)",
 		speed			= 60,
 		price			= 7000,
 		heatlimit 		= 10,
@@ -56,5 +56,5 @@ return lowerkeys({
 	["FS_Hunter"] = Hunter:New(),
 	["FW_Hunter"] = Hunter:New(),
 	["LA_Hunter"] = Hunter:New(),
-	--["LA_HunterUpgrade"] = HunterUpgrade:New(),
+	["LA_HunterS"] = HunterS:New(),
 })

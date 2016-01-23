@@ -17,7 +17,7 @@ weaponDef = {
 	soundTrigger	   = 1,
     minintensity       = 0.1,
     impulseFactor      = 0,
-    range              = 300,
+    range              = 500,
     reloadtime         = 0.1,
     rgbColor           = "0 0 0",
     rgbColor2          = "0 0 0",
@@ -27,12 +27,12 @@ weaponDef = {
     weaponVelocity     = 1000,
 	
 	damage = {
-		default = 20, --20 DPS
+		default = 2, --20 DPS
 	},
 	customparams = {
-		heatgenerated		= 0.05,--0.1/s
+		heatgenerated		= 0.035,--0.1/s
 		cegflare			= "flamethrowerrange500",
-		heatdamage			= 0.1,
+		heatdamage			= 0.05,
 		weaponclass			= "energy",
 		flareonshot 		= true,
 		projectilelups		= {"flameHeat"},

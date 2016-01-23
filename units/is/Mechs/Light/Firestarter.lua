@@ -9,10 +9,10 @@ local FS9S = Firestarter:New{
 	description         = "Light Skirmisher/Support",
 	weapons = {	
 		[1] = {
-			name	= "Flamer",
+			name	= "MBL",
 		},
 		[2] = {
-			name	= "Flamer",
+			name	= "MBL",
 		},
 		[3] = {
 			name	= "Flamer",
@@ -21,10 +21,10 @@ local FS9S = Firestarter:New{
 			name	= "Flamer",
 		},
 		[5] = {
-			name	= "MBL",
+			name	= "Flamer",
 		},
 		[6] = {
-			name	= "MBL",
+			name	= "Flamer",
 		},
 		[7] = {
 			name	= "SBL",

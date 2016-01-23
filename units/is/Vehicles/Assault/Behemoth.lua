@@ -94,7 +94,7 @@ local BehemothD = BehemothBase:New{
 	
 	customparams = {
 		tonnage			= 100,
-		variant         = "D",
+		variant         = "(Davion)",
 		speed			= 30,
 		price			= 12000,
 		heatlimit 		= 20,
@@ -133,7 +133,7 @@ local BehemothK = BehemothBase:New{
 	
 	customparams = {
 		tonnage			= 100,
-		variant         = "K",
+		variant         = "(Kurita)",
 		speed			= 30,
 		price			= 11700,
 		heatlimit 		= 20,
@@ -144,12 +144,79 @@ local BehemothK = BehemothBase:New{
 	},
 }
 
+local BehemothM = BehemothBase:New{
+	weapons	= {	
+		[1] = {
+			name	= "LightGauss",
+		},
+		[2] = {
+			name	= "LightGauss",
+		},
+		[3] = {
+			name	= "SRM6",
+		},
+		[4] = {
+			name	= "SRM6",
+		},
+		[5] = {
+			name	= "SRM2",
+			mainDir = [[-1 0 0]],
+			maxAngleDif = 120,
+		},
+		[6] = {
+			name	= "SRM2",
+			mainDir = [[1 0 0]],
+			maxAngleDif = 120,
+		},
+		[7] = {
+			name	= "LRM20",
+			maxAngleDif = 60,
+		},
+		[8] = {
+			name	= "SRM4",
+			maxAngleDif = 60,
+		},
+		[9] = {
+			name	= "MG",
+			mainDir = [[-1 0 0]],
+			maxAngleDif = 120,
+			SlaveTo = 5,
+		},
+		[10] = {
+			name	= "MG",
+			mainDir = [[1 0 0]],
+			maxAngleDif = 120,
+			SlaveTo = 6,
+		},
+		[11] = {
+			name	= "MG",
+			maxAngleDif = 60,
+		},
+		[12] = {
+			name	= "MG",
+			maxAngleDif = 60,
+		},
+	},
+	customparams = {
+		tonnage			= 100,
+		variant         = "(Marik)",
+		speed			= 30,
+		price			= 13700,
+		heatlimit 		= 20,
+		armor			= {type = "standard", tons = 21},
+		maxammo 		= {ltgauss = 4, lrm = 1, srm = 2, mrm = 2},
+		barrelrecoildist = {[1] = 5, [2] = 5},
+		squadsize 		= 1,
+	},
+}
+
 return lowerkeys({
 	["CC_Behemoth"] = Behemoth:New(),
 	["DC_Behemoth"] = Behemoth:New(),
-	--["DC_BehemothK"] = BehemothK:New(),
+	["DC_BehemothK"] = BehemothK:New(),
 	["FS_Behemoth"] = Behemoth:New(),
-	--["FS_BehemothD"] = BehemothD:New(),
+	["FS_BehemothD"] = BehemothD:New(),
 	["FW_Behemoth"] = Behemoth:New(),
+	--["FS_BehemothM"] = BehemothM:New(),
 	["LA_Behemoth"] = Behemoth:New(),
 })

@@ -24,10 +24,10 @@ local Tiger = Tank:New{
 		armor			= {type = "standard", tons = 7},
 		maxammo 		= {ac10 = 2, srm = 1},
 		barrelrecoildist = {[1] = 3},
-		squadsize 		= 2,
+		squadsize 		= 1,
     },
 }
 
 return lowerkeys({
-	--["FS_Tiger"] = Tiger:New(),
+	["FS_Tiger"] = Tiger:New(),
 })

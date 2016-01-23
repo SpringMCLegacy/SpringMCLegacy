@@ -20,7 +20,7 @@ local VedetteUAC = Vedette:New{
 	},
 	
 	customparams = {
-		variant         = "UAC",
+		variant         = "",
 		speed			= 80,
 		price			= 4080,
 		heatlimit 		= 10,
@@ -44,7 +44,7 @@ local VedetteLBX = Vedette:New{
 	},
 	
 	customparams = {
-		variant         = "LBX",
+		variant         = "(Liao)",
 		speed			= 80,
 		price			= 4080,
 		heatlimit 		= 10,
@@ -65,7 +65,7 @@ local VedetteLG = Vedette:New{
 	},
 	
 	customparams = {
-		variant         = "LG",
+		variant         = "(Marik)",
 		speed			= 80,
 		price			= 10280,
 		heatlimit 		= 10,

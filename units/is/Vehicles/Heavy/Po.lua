@@ -24,7 +24,7 @@ local Po = Tank:New{
 		armor			= {type = "standard", tons = 10.5},
 		maxammo 		= {ac10 = 2},
 		barrelrecoildist = {[1] = 5},
-		squadsize 		= 2,
+		squadsize 		= 1,
     },
 }
 

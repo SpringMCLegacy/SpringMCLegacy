@@ -47,7 +47,7 @@ local PegasusK = Pegasus:New{
 	
 	customparams = {
 		tonnage			= 35,
-		variant         = "K",
+		variant         = "(Kurita)",
 		speed			= 140,
 		price			= 8060,
 		heatlimit 		= 10,
