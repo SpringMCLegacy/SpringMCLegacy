@@ -93,7 +93,7 @@ function gadget:GamePreload()
 		local cp = unitDef.customParams
 		if cp and cp.baseclass == "tower" then -- automatically build table of towers
 			towerDefIDs[unitDefID] = unitDef.weapons[1] and "turret" or "sensor"
-		elseif name:find("upgrade") then -- automatically build beacon upgrade cmdDescs
+		elseif cp.baseclass == "upgrade" then -- automatically build beacon upgrade cmdDescs
 			local cBillCost = unitDef.metalCost
 			local upgradeCmdDesc = {
 				id     = GG.CustomCommands.GetCmdID("CMD_UPGRADE_" .. name, cBillCost),
@@ -374,10 +374,11 @@ end
 local lastDamaged = {} -- lastDamaged[unitID] = lastDamagedFrame
 local MIN_LAST_DAMAGED = 20 * 30 -- 20s
 function gadget:UnitDamaged(unitID, unitDefID, teamID, damage)
-	local name = UnitDefs[unitDefID].name
-	if name:find("upgrade") then -- unit is an upgrade 
+	local cp = UnitDefs[unitDefID].customParams
+	if cp.baseclass == "upgrade" then -- unit is an upgrade 
 		local lastDamagedFrame = lastDamaged[unitID] or 0
 		local currFrame = GetGameFrame()
+		local name = UnitDefs[unitDefID].name
 		if lastDamagedFrame < currFrame - MIN_LAST_DAMAGED then
 			lastDamaged[unitID] = currFrame
 			GG.PlaySoundForTeam(teamID, "BB_" .. name .. "_UnderAttack", 1)
@@ -511,7 +512,8 @@ local SelectUnitArray			= Spring.SelectUnitArray
 -- variables
 local outpostDefIDs = {}
 for unitDefID, unitDef in pairs(UnitDefs) do
-	if unitDef.name:find("upgrade") then
+	local cp = unitDef.customParams
+	if cp and cp.baseclass == "upgrade" then
 		outpostDefIDs[unitDefID] = true
 	end
 end

@@ -223,7 +223,7 @@ for name, ud in pairs(UnitDefs) do
 		DROPZONE_UDS[side] = ud
 	end
 		
-	if name == "beacon" or name:find("upgrade") or name:find("dropzone") or cp.dropship then 
+	if name == "beacon" or cp.baseclass == "upgrade" or cp.dropship then 
 		if name == "beacon" then
 			BEACON_UD = ud 
 			ud.canselfdestruct = false
