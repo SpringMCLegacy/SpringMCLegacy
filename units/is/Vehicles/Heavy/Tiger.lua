@@ -1,7 +1,7 @@
 local Tiger = Tank:New{
 	name              	= "Tiger",
 	description         = "Heavy Strike Tank",
-	trackWidth			= 23,--width to render the decal
+	trackWidth			= 25,--width to render the decal
 
 	weapons	= {	
 		[1] = {

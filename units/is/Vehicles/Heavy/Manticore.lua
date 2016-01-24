@@ -2,7 +2,7 @@ local ManticoreBase = Tank:New{
 	name              	= "Manticore",
 	description         = "Heavy Striker Tank",
 	
-	trackWidth			= 23,--width to render the decal
+	trackWidth			= 27,--width to render the decal
 	
 	customparams = {
 		tonnage			= 60,
