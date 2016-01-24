@@ -1,6 +1,6 @@
 local Patton = Tank:New{
 	name              	= "Patton",
-	description         = "Heavy Brawler Tank",
+	description         = "Heavy Striker Tank",
 	
 	weapons	= {	
 		[1] = {
@@ -26,7 +26,7 @@ local Patton = Tank:New{
 		armor			= {type = "standard", tons = 12.5},
 		maxammo 		= {ac10 = 3, lrm = 1},
 		barrelrecoildist = {[1] = 5},
-		squadsize 		= 2,
+		squadsize 		= 1,
     },
 }
 
