@@ -421,6 +421,7 @@ end]]
 
 
 local function TurnOrder(unitID, x, y, z)
+	if (not Spring.ValidUnitID(unitID)) or Spring.GetUnitIsDead(unitID) then return false end -- unit died
    --[[Spring.GiveOrderArrayToUnitArray(
      { unitID },
 	 {
