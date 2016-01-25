@@ -327,7 +327,7 @@ function hideLimbPieces(limb, hide)
 		for id, valid in pairs(limbWeapons) do
 			if valid then
 				local weapDef = WeaponDefs[unitDef.weapons[id].weaponDef]
-				Spring.Echo(unitDef.humanName .. ": " .. weapDef.name .. " destroyed!")
+				--Spring.Echo(unitDef.humanName .. ": " .. weapDef.name .. " destroyed!")
 				ToggleWeapon(id, 1)
 			end
 		end
@@ -345,7 +345,6 @@ function limbHPControl(limb, damage)
 	local currHP = limbHPs[limb]
 	if currHP > 0 or damage < 0 then
 		local newHP = math.min(limbHPs[limb] - damage, info.limbHPs[limb]) -- don't allow HP above max
-		--Spring.Echo(unitDef.name, limb, newHP)
 		if newHP < 0 then 
 			hideLimbPieces(limb, true)
 			newHP = 0
@@ -598,6 +597,9 @@ end
 function script.Killed(recentDamage, maxHealth)
 	if excessHeat >= heatLimit then
 		--Spring.Echo("NUUUUUUUUUUUKKKKKE")
+	end
+	if turret and limbHPs["turret"] > 0 then -- still have a turret, blow it off to leave a beautiful corpse
+		limbHPControl("turret", maxHealth * 100)
 	end
 	--local severity = recentDamage / maxHealth * 100
 	--if severity <= 25 then

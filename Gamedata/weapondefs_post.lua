@@ -82,6 +82,7 @@ for unitName, ud in pairs(UnitDefs) do
 			table.insert(ud.sfxtypes.explosiongenerators, "custom:Sparks")
 			if ud.corpse then
 				--Spring.Echo("[WeaponDefs_post.lua]:" .. unitName .. " has a corpse (" .. ud.corpse .. ")")
+				local modelPath = ud.objectname:sub(1, -(string.len(unitName .. ".s3o")+1))
 				-- First level corpse
 				FeatureDefs[ud.corpse] = Feature:New{
 					damage = ud.maxdamage * 0.5,
@@ -91,10 +92,9 @@ for unitName, ud in pairs(UnitDefs) do
 					featuredead = ud.corpse .. "x",
 					footprintx = ud.footprintx,
 					footprintz = ud.footprintz,
-					object = ud.objectname,
+					object = cp.baseclass == "mech" and ud.objectname or modelPath .. "corpse/" .. unitName .. "_x.s3o",
 				}
 				-- Second level corpse
-				local modelPath = ud.objectname:sub(1, -(string.len(unitName .. ".s3o")+1))
 				FeatureDefs[ud.corpse .. "x"] = Feature:New{
 					damage = ud.maxdamage * 0.5,
 					description = "Destroyed " .. ud.name,
