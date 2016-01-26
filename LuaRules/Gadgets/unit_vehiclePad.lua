@@ -218,7 +218,8 @@ local function UnitIdleCheck(unitID, unitDefID, teamID)
 	local unitSquad = unitSquads[unitID]
 	if not unitSquad then return end
 	teamSquadSpots[teamID][unitSquad] = math.random(1, #flagSpots)
-	GG.Delay.DelayCall(Wander, {unitID}, 1)
+	--GG.Delay.DelayCall(Wander, {unitID}, 1)
+	Wander(unitID)
 end
 
 
