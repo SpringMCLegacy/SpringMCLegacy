@@ -1,9 +1,12 @@
 local Striker = LightTank:New{
 	name              	= "Striker",
+	description			= "LRM Support tank",
+	
+	trackWidth			= 18,--width to render the decal
 	
 	weapons 		= {	
 		[1] = {
-			name	= "LRM15",
+			name	= "ALRM15",
 		},
 		[2] = {
 			name	= "SSRM4",
@@ -14,15 +17,14 @@ local Striker = LightTank:New{
 		tonnage			= 35,
 		variant         = "",
 		speed			= 80,
-		price			= 4490,
+		price			= 6910,
 		heatlimit 		= 10,
-		armor			= {type = "ferro", tons = 3},
+		armor			= {type = "ferro", tons = 6.5},
 		maxammo 		= {lrm = 1, srm = 1},
 		squadsize 		= 1,
-		artillery 		= true,
     },
 }
 
 return lowerkeys({
-	--["FS_Striker"] = Striker:New(),
+	["FS_Striker"] = Striker:New(),
 })
