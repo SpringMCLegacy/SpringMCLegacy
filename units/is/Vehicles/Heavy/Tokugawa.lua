@@ -1,17 +1,22 @@
-local Po = Tank:New{
-	name              	= "Po",
+local Tokugawa = Tank:New{
+	name              	= "Tokugawa",
 	description         = "Heavy Strike Tank",
 	trackWidth			= 23,--width to render the decal
 
 	weapons	= {	
 		[1] = {
-			name	= "AC10",
+			name	= "LBX10",
 		},
 		[2] = {
-			name	= "MG",
+			name	= "ASRM6",
 		},
 		[3] = {
-			name	= "MG",
+			name	= "MPL",
+			maxAngleDif = 60,
+		},
+		[4] = {
+			name	= "MPL",
+			maxAngleDif = 60,
 		},
 	},
 	
@@ -22,13 +27,12 @@ local Po = Tank:New{
 		price			= 7190,
 		heatlimit 		= 20,
 		armor			= {type = "standard", tons = 10.5},
-		maxammo 		= {ac10 = 2},
+		maxammo 		= {ac10 = 3, srm = 1},
 		barrelrecoildist = {[1] = 5},
 		squadsize 		= 1,
     },
 }
 
 return lowerkeys({
-	["CC_Po"] = Po:New(),
-	["FW_Po"] = Po:New(),
+	["DC_Tokugawa"] = Tokugawa:New(),
 })
