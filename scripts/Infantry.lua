@@ -24,7 +24,7 @@ local IsUnitTAGed = GG.IsUnitTAGed
 
 -- includes
 --include "smokeunit.lua"
---include ("anims/" .. unitDef.name:sub(1, (unitDef.name:find("_", 4) or 0) - 1) .. ".lua")
+include ("anims/" .. unitDef.name:sub(4, (unitDef.name:find("_", 4) or 0) - 1) .. ".lua")
 
 -- Info from lusHelper gadget
 -- non-local so perks can change them (flagrant lack of encapsulation!)
@@ -174,7 +174,7 @@ function StopJump()
 	local x,y,z = GetUnitPosition(unitID)
 	--SpawnCEG("mech_jump_dust", x,y,z)
 	StartThread(anim_StopJump)
-end
+end]]
 
 function StartTurn(clockwise)
 	StartThread(anim_Turn, clockwise)
@@ -193,7 +193,7 @@ end
 function script.StopMoving()
 	StartThread(anim_Reset)
 	moving = false
-end]]
+end
 
 --apc = nil
 --[[function GetBackIn()
@@ -201,14 +201,14 @@ end]]
 	Spring.GiveOrderToUnit(apc, CMD.WAIT, {}, {})
 end]]
 
-local function bob()
+--[[local function bob()
 	while true do
 		if not Spring.GetUnitIsDead(unitID) then
 			Spring.MoveCtrl.SetGunshipMoveTypeData(unitID, "wantedHeight", 50 + math.random(-50, 50))
 		end
 		Sleep(1000 + math.random(-500, 500))
 	end
-end
+end]]
 
 function script.Create()
 	apc = Spring.GetUnitTransporter(unitID)
@@ -216,7 +216,7 @@ function script.Create()
 		--Spring.SetUnitWeaponState(unitID, i, "range", 500)
 	end
 	--StartThread(bob)
-	Jets()
+	--Jets()
 end
 
 local function WeaponCanFire(weaponID)
