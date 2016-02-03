@@ -191,6 +191,8 @@ end
 local function Wander(unitID, cmd)
 	if Spring.ValidUnitID(unitID) and not Spring.GetUnitIsDead(unitID) then
 		local teamID = Spring.GetUnitTeam(unitID)
+		if select(3, Spring.GetTeamInfo(teamID)) then return false end -- team died
+		if teamID == GAIA_TEAM_ID then return false end -- team died and unit transferred to gaia
 		local spotNum = teamSquadSpots[teamID][unitSquads[unitID]] or math.random(1, #flagSpots)
 		local spot = flagSpots[spotNum]
 		local offsetX = math.random(50, 150)
