@@ -144,7 +144,7 @@ local function Deliver(unitID, teamID)
 		local vehInfo = RandomVehicle(teamID, ageWeight)
 		if vehInfo then
 			--Spring.Echo("New Vehicle:", UnitDefs[vehInfo.unitDefID].name, vehInfo.squadSize, ageWeight)
-			GG.DropshipDelivery(unitID, teamID, "is_markvii", {{[vehInfo.unitDefID] = vehInfo.squadSize}}, 0, nil, 1) 
+			GG.DropshipDelivery(unitID, teamID, "is_drost", {{[vehInfo.unitDefID] = vehInfo.squadSize}}, 0, nil, 1) 
 		else
 			--Spring.Echo("No vehicle of that weight :(")
 		end
@@ -178,7 +178,7 @@ function gadget:UnitCreated(unitID, unitDefID, teamID)
 	elseif unitDefID == VPAD_ID then
 		-- for /give, UnitUnloaded will set it again in 'real' play
 		vehiclePads[unitID] = Spring.GetGameFrame()	
-	elseif unitDefID == UnitDefNames["is_markvii"].id then
+	elseif unitDefID == UnitDefNames["is_drost"].id then
 		NewSquad(unitID, teamID)
 	end
 end
