@@ -28,7 +28,6 @@ local SetUnitExperience		= Spring.SetUnitExperience
 -- Unsynced Ctrl
 
 -- Constants
-local MINIMUM_XP_INCREASE_TO_CHECK = 0.01
 local PERK_XP_COST = 1.5
 
 -- function for toggling weapon status via gui
@@ -39,6 +38,7 @@ local CMD_WEAPON_TOGGLE = GG.CustomCommands.GetCmdID("CMD_WEAPON_TOGGLE")
 local perkDefs = {} -- perkCmdID = PerkDef table
 local validPerks = {} -- unitDefID = {perkCmdID = true, etc}
 local currentPerks = {} -- currentPerks = {unitID = {perk1 = true, perk2 = true}}
+local perkUnits = {} -- unitID = baseclass
 
 local perkInclude = VFS.Include("LuaRules/Configs/perk_defs.lua")
 for perkName, perkDef in pairs(perkInclude) do
@@ -46,32 +46,53 @@ for perkName, perkDef in pairs(perkInclude) do
 	perkDefs[perkDef.cmdDesc.id] = perkDef
 end
 
+
+local function UpdateRemaining(unitID, newLevel, price)
+	-- disable perks here
+	for perkCmdID, perkDef in pairs(perkDefs) do
+		if not currentPerks[unitID][perkDef.name] and validPerks[Spring.GetUnitDefID(unitID)][perkCmdID] then
+			if newLevel < (price or perkDef.price) then
+				EditUnitCmdDesc(unitID, FindUnitCmdDesc(unitID, perkCmdID), {disabled = true})
+			else
+				EditUnitCmdDesc(unitID, FindUnitCmdDesc(unitID, perkCmdID), {disabled = false})
+			end
+		end
+	end
+end
+
 function gadget:Initialize()
-	Spring.SetExperienceGrade(MINIMUM_XP_INCREASE_TO_CHECK)
 	-- Support /luarules reload
 	for _,unitID in ipairs(Spring.GetAllUnits()) do
 		local teamID = Spring.GetUnitTeam(unitID)
 		local unitDefID = Spring.GetUnitDefID(unitID)
 		gadget:UnitCreated(unitID, unitDefID, teamID)
 	end
-end
 	
-function gadget:UnitExperience(unitID, unitDefID, teamID, newExp, oldExp)
-	--Spring.Echo("Unit " .. unitID .. " (" .. UnitDefs[unitDefID].name .. ")", newExp, oldExp, newExp - oldExp, oldExp - newExp)
-	-- enable perks here
-	local ud = UnitDefs[unitDefID]
-	local cp = ud.customParams
-	if cp and cp.baseclass == "mech" then
-		if newExp > PERK_XP_COST then
-			--Spring.Echo("Unit " .. unitID .. " (" .. UnitDefs[unitDefID].name .. ") ready to perk up! " .."(Exp: " .. newExp ..")")
-			for perkCmdID, perkDef in pairs(perkDefs) do
-				--Spring.Echo(perkCmdDesc.name, FindUnitCmdDesc(unitID, perkCmdDesc.id))
-				if currentPerks[unitID] and not currentPerks[unitID][perkDef.name] then
-					EditUnitCmdDesc(unitID, FindUnitCmdDesc(unitID, perkCmdID), {disabled = false})
+	for unitDefID, unitDef in pairs(UnitDefs) do
+		for perkCmdID, perkDef in pairs(perkDefs) do -- using pairs here means perks aren't in order, use Find?
+			local perkCmdDesc = perkDef.cmdDesc
+			-- ...check if the perk is valid and cache the result
+			local valid = perkDef.valid(unitDefID)
+			if valid then
+				if not validPerks[unitDefID] then -- first time
+					validPerks[unitDefID] = {} 
 				end
+				validPerks[unitDefID][perkCmdID] = valid
 			end
 		end
-		Spring.SetUnitRulesParam(unitID, "perk_xp", math.min(100, 100 * newExp / PERK_XP_COST))
+	end
+end
+
+function gadget:GameFrame(n)
+	for unitID, baseclass in pairs(perkUnits) do
+		if baseclass == "mech" then -- only mechs use xp to perk up
+			local newExp = Spring.GetUnitExperience(unitID)
+			UpdateRemaining(unitID, newExp, PERK_XP_COST)
+			Spring.SetUnitRulesParam(unitID, "perk_xp", math.min(100, 100 * newExp / PERK_XP_COST))
+		else -- other units use CBills
+			local cBills = select(1, Spring.GetTeamResources(Spring.GetUnitTeam(unitID), "metal"))
+			UpdateRemaining(unitID, cBills)
+		end
 	end
 end
 
@@ -82,72 +103,49 @@ function gadget:AllowCommand(unitID, unitDefID, teamID, cmdID, cmdParams, cmdOpt
 		return false
 	end
 	local perkDef = perkDefs[cmdID]
-	if perkDef then
+	if perkDef and perkUnits[unitID] then
 		local ud = UnitDefs[unitDefID]
 		local cp = ud.customParams
 		-- check that this unit can receive this perk (can be issued the order due to multiple units selected)
-		if cp and cp.baseclass == "mech" and perkDef.valid(unitDefID) then
+		if validPerks[unitDefID][cmdID] then
 			perkDef.applyPerk(unitID)
 			EditUnitCmdDesc(unitID, FindUnitCmdDesc(unitID, cmdID), {name = perkDef.cmdDesc.name .."\n  (Trained)", disabled = true})
 			currentPerks[unitID][perkDef.name] = true
-			-- deduct xp 'cost' of perk
-			local currExp = GetUnitExperience(unitID)
-			local newExp = currExp - PERK_XP_COST
-			--newExp = newExp >= 0 and newExp or 0 -- clamp >= 0, due to "first-perk-is-free"
-			SetUnitExperience(unitID, newExp)
-			Spring.SetUnitRulesParam(unitID, "perk_xp", math.min(100, 100 * newExp / PERK_XP_COST))
-			-- Check if we have enough xp left to select another perk
-			if newExp < PERK_XP_COST then
-				-- disable perks here
-				for perkCmdID, perkDef in pairs(perkDefs) do
-					if not currentPerks[unitID][perkDef.name] then
-						EditUnitCmdDesc(unitID, FindUnitCmdDesc(unitID, perkCmdID), {disabled = true})
-					end
-				end
-			end
-		elseif ud.humanName == "Dropzone" then --and perkDef.valid(unitDefID) then
-			perkDef.applyPerk(unitID)
-			return true
+			-- deduct 'cost' of perk
+			perkDef.costFunction(unitID, perkDef.price or PERK_XP_COST)
+		else -- perk is not valid, command not accepted
+			return false
 		end
-		-- always return false, even if command was carried out, so that command queue is not altered
-		return false
+		-- return false for mechs (so command queue is not changed), true otherwise (to clear stack for dropzone?)
+		return perkUnits[unitID] ~= "mech"
 	end
+	-- let all other commands run through this gadget unharmed
 	return true
 end
 
 function gadget:UnitCreated(unitID, unitDefID, teamID, builderID)
 	local ud = UnitDefs[unitDefID]
 	local cp = ud.customParams
-	if cp and cp.baseclass == "mech" then
+	if validPerks[unitDefID] then
 		 -- start out with enough XP for one perk
-		Spring.SetUnitRulesParam(unitID, "perk_xp", 100)
-		SetUnitExperience(unitID, PERK_XP_COST)
-		-- Only give perks to mech pilots
+		if cp.baseclass == "mech" then
+			Spring.SetUnitRulesParam(unitID, "perk_xp", 100)
+			SetUnitExperience(unitID, PERK_XP_COST)
+		end
 		currentPerks[unitID] = {}
-		local firstTime = not validPerks[unitDefID]
-		if firstTime then 
-			validPerks[unitDefID] = {} 
-		end
+		perkUnits[unitID] = cp.baseclass
+
 		for perkCmdID, perkDef in pairs(perkDefs) do -- using pairs here means perks aren't in order, use Find?
-			local perkCmdDesc = perkDef.cmdDesc
-			if firstTime then -- first time this kind of unit is produced... 
-				-- ...check if the perk is valid and cache the result
-				validPerks[unitDefID][perkCmdID] = perkDef.valid(unitDefID)
-			end
 			if validPerks[unitDefID][perkCmdID] then -- Only add perks valid for this mech
-				InsertUnitCmdDesc(unitID, perkCmdDesc)
-			else
-				-- treat invalid perks as though they were already trained
-				currentPerks[unitID][perkDef.name] = true
+				InsertUnitCmdDesc(unitID, perkDef.cmdDesc)
 			end
 		end
-	elseif ud.humanName == "Dropzone" then -- GG.dropZones[unitID] then
-		InsertUnitCmdDesc(unitID, perkInclude["drop"].cmdDesc)
 	end
 end
 
 function gadget:UnitDestroyed(unitID, unitDefID, teamID)
 	currentPerks[unitID] = nil
+	perkUnits[unitID] = nil
 end
 
 else

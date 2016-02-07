@@ -12,7 +12,7 @@ end
 
 
 -- Common valid() functions here:
-local function allMechs(unitDefID) return true end
+local function allMechs(unitDefID) return (UnitDefs[unitDefID].customParams.baseclass == "mech") end
 local function hasJumpjets(unitDefID) return (UnitDefs[unitDefID].customParams.jumpjets or false) end
 local function hasMASC(unitDefID) return (UnitDefs[unitDefID].customParams.masc or false) end
 local function hasECM(unitDefID) return (UnitDefs[unitDefID].customParams.ecm or false) end
@@ -47,6 +47,21 @@ local function setWeaponClassAttribute(unitID, className, attrib, multiplier)
 	end
 end
 
+
+-- Common costFunction() functions
+
+local function deductXP(unitID, amount)
+	local currExp = Spring.GetUnitExperience(unitID)
+	local newExp = currExp - amount
+	Spring.SetUnitExperience(unitID, newExp)
+	Spring.SetUnitRulesParam(unitID, "perk_xp", math.min(100, 100 * newExp / amount))
+end
+
+local function deductCBills(unitID, amount)
+	local teamID = Spring.GetUnitTeam(unitID)
+	Spring.UseTeamResource(teamID, "m", amount)
+end
+
 return {
 	-- Generic
 	heatefficiency = {
@@ -65,6 +80,7 @@ return {
 			env.heatLimit = env.heatLimit * 1.5
 			Spring.SetUnitRulesParam(unitID, "heatLimit", env.heatLimit)
 		end,
+		costFunction = deductXP,
 	},
 	sensorrange = {
 		cmdDesc = {
@@ -87,6 +103,7 @@ return {
 				GG.allyBAPs[Spring.GetUnitAllyTeam(unitID)][unitID] = currRadar * 1.5
 			end
 		end,
+		costFunction = deductXP,
 	},
 	-- Ability modifiers
 	narcduration = {
@@ -103,6 +120,7 @@ return {
 			local currDuration = Spring.GetUnitRulesParam(unitID, "NARC_DURATION") or Spring.GetGameRulesParam("NARC_DURATION")
 			Spring.SetUnitRulesParam(unitID, "NARC_DURATION", currDuration * 1.5)
 		end,
+		costFunction = deductXP,
 	},
 	jumpjetefficiency = {
 		cmdDesc = {
@@ -122,6 +140,7 @@ return {
 			Spring.SetUnitRulesParam(unitID, "jumpSpeed", currSpeed * 1.5)
 			Spring.SetUnitRulesParam(unitID, "jumpReload", currReload * 0.5)
 		end,
+		costFunction = deductXP,
 	},
 	mascefficiency = {
 		cmdDesc = {
@@ -137,6 +156,7 @@ return {
 			env = Spring.UnitScript.GetScriptEnv(unitID)
 			env.mascHeatRate = env.mascHeatRate * 0.5
 		end,
+		costFunction = deductXP,
 	},
 	amsrange = {
 		cmdDesc = {
@@ -151,6 +171,7 @@ return {
 			--Spring.Echo("Projectile range selected") 
 			setWeaponClassAttribute(unitID, "ams", "range", 1.5)
 		end,
+		costFunction = deductXP,
 	},
 	ecmrange = {
 		cmdDesc = {
@@ -167,6 +188,7 @@ return {
 			Spring.SetUnitSensorRadius(unitID, "radarJammer", currECM * 1.5)
 			GG.allyJammers[Spring.GetUnitAllyTeam(unitID)][unitID] = currECM * 1.5
 		end,
+		costFunction = deductXP,
 	},
 	insulation = {
 		cmdDesc = {
@@ -181,6 +203,7 @@ return {
 			--Spring.Echo("Insulated Electronics selected") 
 			Spring.SetUnitRulesParam(unitID, "insulation", 0.5)
 		end,
+		costFunction = deductXP,
 	},
 	-- Weapon (Faction) specific
 	lrmrange = {
@@ -196,6 +219,7 @@ return {
 			--Spring.Echo("Missile range selected") 
 			setWeaponClassAttribute(unitID, "lrm", "range", 1.5)
 		end,
+		costFunction = deductXP,
 	},
 	mrmrange = {
 		cmdDesc = {
@@ -210,6 +234,7 @@ return {
 			--Spring.Echo("Missile range selected") 
 			setWeaponClassAttribute(unitID, "mrm", "range", 1.5)
 		end,
+		costFunction = deductXP,
 	},
 	ppcrange = {
 		cmdDesc = {
@@ -224,6 +249,7 @@ return {
 			--Spring.Echo("PPC range selected") 
 			setWeaponClassAttribute(unitID, "ppc", "range", 1.5)
 		end,
+		costFunction = deductXP,
 	},
 	autocannonrange = {
 		cmdDesc = {
@@ -238,6 +264,7 @@ return {
 			--Spring.Echo("Autocannon range selected") 
 			setWeaponClassAttribute(unitID, "autocannon", "range", 1.5)
 		end,
+		costFunction = deductXP,
 	},
 	gaussrange = {
 		cmdDesc = {
@@ -252,6 +279,7 @@ return {
 			--Spring.Echo("Gauss range selected") 
 			setWeaponClassAttribute(unitID, "gauss", "range", 1.5)
 		end,
+		costFunction = deductXP,
 	},
 	-- DropShip/Zone upgrades
 	drop = {
@@ -262,14 +290,12 @@ return {
 			tooltip = 'Increases Tonnage Limit',
 			texture = 'bitmaps/ui/perkbg.png',	
 		},
-		valid = function (unitDefID) return UnitDefs[unitDefID].humanName == "Dropzone" end,
+		valid = function (unitDefID) return UnitDefs[unitDefID].name:find("dropzone") end,
 		applyPerk = function (unitID)
 			local teamID = Spring.GetUnitTeam(unitID)
-			local cBills = Spring.GetTeamResources(teamID, "metal")
-			if cBills > 10000 then
-				GG.TeamDropshipUpgrade(teamID)
-				Spring.UseTeamResource(teamID, "m", 10000)
-			end
+			GG.TeamDropshipUpgrade(teamID)
 		end,
+		costFunction = deductCBills,
+		price = 10000,
 	},
 }
