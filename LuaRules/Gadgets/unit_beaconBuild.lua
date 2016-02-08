@@ -93,6 +93,8 @@ function gadget:GamePreload()
 		local cp = unitDef.customParams
 		if cp and cp.baseclass == "tower" then -- automatically build table of towers
 			towerDefIDs[unitDefID] = unitDef.weapons[1] and "turret" or "sensor"
+		elseif name:find("dropzone") then -- check for dropzones first
+			DROPZONE_IDS[unitDefID] = true
 		elseif cp.baseclass == "upgrade" then -- automatically build beacon upgrade cmdDescs
 			local cBillCost = unitDef.metalCost
 			local upgradeCmdDesc = {
@@ -130,8 +132,6 @@ function gadget:GamePreload()
 				action = 'upgrade',
 				tooltip = "C-Bill cost: " .. cBillCost,
 			}
-		elseif name:find("dropzone") then
-			DROPZONE_IDS[unitDefID] = true
 		end
 	end
 	GG.DROPZONE_IDS = DROPZONE_IDS
