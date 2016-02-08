@@ -60,7 +60,7 @@ end
 GG.SideNames = SideNames
 GG.ValidSides = ValidSides
 
-local dropShipProgression = {"confederate", "union", "overlord"}
+local dropShipProgression = {"leopard", "union", "overlord"}
 GG.dropShipProgression = dropShipProgression
 local sideStartUnits = {}
 

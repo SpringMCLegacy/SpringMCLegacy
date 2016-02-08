@@ -171,10 +171,18 @@ local Union = DropShip:New{
 		cooldown		= 30 * 30, -- 30s, time before the dropship has regained orbit, refuelled etc ready to drop again
 		-- droptime
 	},
+	sfxtypes = {
+		explosiongenerators = {
+			"custom:heavy_jet_trail_blue",
+			"custom:medium_jet_trail_blue",
+			"custom:dropship_main_engine_stage2",
+			"custom:heavy_jet_trail",
+		},
+	},
 }
 
-local Confederate = Union:New{ -- TODO: DropShip:New, custom weapons etc
-	objectName        	= "Dropship_Confederate.s3o",
+local Leopard = Union:New{ -- TODO: DropShip:New, custom weapons etc
+	--objectName        	= "Dropship_Leopard.s3o",
 	customparams = {
 		maxtonnage		= 150,
 		cooldown		= 20 * 30,
@@ -183,7 +191,7 @@ local Confederate = Union:New{ -- TODO: DropShip:New, custom weapons etc
 }
 
 local Overlord = Union:New{ -- TODO: DropShip:New, custom weapons etc
-	objectName        	= "Dropship_Overlord.s3o",
+	--objectName        	= "Dropship_Overlord.s3o",
 	customparams = {
 		maxtonnage		= 400,
 		cooldown		= 50 * 30,
@@ -193,8 +201,8 @@ local Overlord = Union:New{ -- TODO: DropShip:New, custom weapons etc
 
 dropShips = {}
 for i, sideName in pairs(Sides) do
+	dropShips[sideName .. "_dropship_leopard"] = Leopard:New{}
 	dropShips[sideName .. "_dropship_union"] = Union:New{}
-	dropShips[sideName .. "_dropship_confederate"] = Confederate:New{}
 	dropShips[sideName .. "_dropship_overlord"] = Overlord:New{}
 	--Spring.Echo("Making Dropship for", sideName)
 end

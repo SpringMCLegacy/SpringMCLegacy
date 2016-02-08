@@ -1,565 +1,646 @@
--- Test Mech Script
 -- useful global stuff
-local ud = UnitDefs[Spring.GetUnitDefID(unitID)] -- unitID is available automatically to all LUS
-local weapons = ud.weapons
-local deg, rad = math.deg, math.rad
-local currUnitDef
-local BUILD_FACING = Spring.GetUnitBuildFacing(unitID)
+local weapons = unitDef.weapons
+info = GG.lusHelper[unitDefID]
+
+-- Localisations
+local SpawnCEG = Spring.SpawnCEG
+local GetUnitDistanceToPoint = GG.GetUnitDistanceToPoint
+deg, rad = math.deg, math.rad
+
 
 --piece defines
-local hull, link, pad, beam, main_door, hanger_door, vtol_pad = piece ("hull", "link", "pad", "beam", "main_door", "hanger_door", "vtol_pad")
---Weapon 1 and 2, dual lasers
-local turret1_joint, turret1, turret1_flare1, turret1_flare2 = piece ("turret1_joint", "turret1", "turret1_flare1", "turret1_flare2")
---Weapon 3 and 4, dual lasers
-local turret2_joint, turret2, turret2_flare1, turret2_flare2 = piece ("turret2_joint", "turret2", "turret2_flare1", "turret2_flare2")
---Weapon 5 and 6, dual lasers
-local turret3_joint, turret3, turret3_flare1, turret3_flare2 = piece ("turret3_joint", "turret3", "turret3_flare1", "turret3_flare2")
---Weapon 7 and 8, dual lasers
-local turret4_joint, turret4, turret4_flare1, turret4_flare2 = piece ("turret4_joint", "turret4", "turret4_flare1", "turret4_flare2")
---Weapon 9, PPC
-local ppc1_platform, ppc1_turret, ppc1_mantlet, ppc1_barrel, ppc1_flare = piece ("ppc1_platform", "ppc1_turret", "ppc1_mantlet", "ppc1_barrel", "ppc1_flare")
---Weapon 10, PPC
-local ppc2_platform, ppc2_turret, ppc2_mantlet, ppc2_barrel, ppc2_flare = piece ("ppc2_platform", "ppc2_turret", "ppc2_mantlet", "ppc2_barrel", "ppc2_flare")
---Weapon 11, PPC
-local ppc3_platform, ppc3_turret, ppc3_mantlet, ppc3_barrel, ppc3_flare = piece ("ppc3_platform", "ppc3_turret", "ppc3_mantlet", "ppc3_barrel", "ppc3_flare")
---Weapon 12, PPC
-local ppc4_platform, ppc4_turret, ppc4_mantlet, ppc4_barrel, ppc4_flare = piece ("ppc4_platform", "ppc4_turret", "ppc4_mantlet", "ppc4_barrel", "ppc4_flare")
---Weapon 13, LRM
-local launcher1_joint, launcher1 = piece ("launcher1_joint", "launcher1")
---Weapon 14, LRM
-local launcher2_joint, launcher2 = piece ("launcher2_joint", "launcher2")
---Weapon 15, LRM
-local launcher3_joint, launcher3 = piece ("launcher3_joint", "launcher3")
---Weapon 16, LRM
-local launcher4_joint, launcher4 = piece ("launcher4_joint", "launcher4")
---ERMBLs
-local laser1, laser2, laser3, laser4, laser5, laser6, laser7, laser8 = piece ("laser1", "laser2", "laser3", "laser4", "laser5", "laser6", "laser7", "laser8")
---LBLs
-local laser9, laser10, laser11, laser12 = piece ("laser9", "laser10", "laser11", "laser12")
---Anti-Missile System
-local ams = piece ("ams")
 
-local missileWeaponIDs = {[13] = true, [14] = true, [15] = true, [16] = true}
- 
-local launchPoints = {}
-local numPoints = {}
-local currPoints = {}
- 
---Turning/Movement Locals
-local TURRET_SPEED = rad(100)
-local ELEVATION_SPEED = rad(200)
-local TURRET_SPEED_FAST = rad(500)
-local DOOR_SPEED = rad(20)
-
-for weaponID in pairs(missileWeaponIDs) do
-        launchPoints[weaponID] = {}
-        currPoints[weaponID] = 1
-		local weaponDefID = weapons[weaponID].weaponDef
-		local weaponDef = WeaponDefs[weaponDefID]
-        numPoints[weaponID] = weaponDef.salvoSize
-        for i = 1, numPoints[weaponID] do
-                launchPoints[weaponID][i] = piece("launchpoint_" .. weaponID .. "_" .. i)
-        end
+-- Landing Gear Pieces
+gears = {}
+for i = 1, info.numGears do
+	gears[i] = {
+		door  = piece("gear" .. i .. "_door"),
+		joint = piece("gear" .. i .. "_joint"),
+		gear  = piece("gear" .. i)
+	}
 end
-local currLaunchPoint = 1
-
--- constants
-local SIG_AIM = 2
-local RESTORE_DELAY = Spring.UnitScript.GetLongestReloadTime(unitID) * 2
-
--- includes
-include "smokeunit.lua"
-
---SFX defines
-MEDIUM_MUZZLEFLASH = SFX.CEG+0
-PPC_MUZZLEFLASH = SFX.CEG+1
-MG_MUZZLEFLASH = SFX.CEG+2
-
-function GetUnitDef(unitDefID)
-	currUnitDef = UnitDefs[unitDefID]
+-- Exhaust Pieces
+vExhaustLarges = {}
+for i = 1,info.numVExhaustLarges do
+	vExhaustLarges[i] = piece("vexhaustlarge" .. i)
 end
+vExhausts = {}
+for i = 1,info.numVExhausts do
+	vExhausts[i] = piece("vexhaust" .. i)
+end
+hExhaustLarges = {}
+for i = 1,info.numHExhaustLarges do
+	hExhaustLarges[i] = piece("hexhaustlarge" .. i)
+end
+hExhausts = {}
+for i = 1,info.numHExhausts do
+	hExhausts[i] = piece("hexhaust" .. i)
+end
+-- loading booms
+local booms = {}
+for i = 1,info.numBooms do
+	dusts[i] = piece("boom" .. i)
+end
+-- cargo points
+local cargoPieces = {}
+for i = 1,info.numCargoPieces do
+	cargoPieces[i] = piece("cargopiece" .. i) or -1
+end
+
+include ("anims/dropships/" .. unitDef.name:sub(4, (unitDef.name:find("_", 4) or 0) - 1) .. ".lua")
+
+-- Constants
+-- non local for anim access
+GRAVITY = 120 / Game.gravity
+CEG = SFX.CEG + #weapons
+
+local HOVER_HEIGHT = unitDef.customParams.hoverheight or 0
+local DROP_HEIGHT = 10000 + HOVER_HEIGHT
+
+local TX, TY, TZ = Spring.GetUnitPosition(unitID)
+local GY = Spring.GetGroundHeight(TX, TZ)
+local RADIAL_DIST = unitDef.customParams.radialdist or 0
+
+-- Variables
+-- non local for anim access
+stage = 0
+cargo = {}
+
+local touchDown = false
+local up = false
+local beaconID
+local numCargo = 0
+
+function LoadCargo(cargoID, callerID)
+	--Spring.Echo("Loading", outpostID, "of type", UnitDefs[Spring.GetUnitDefID(outpostID)].name)
+	beaconID = callerID
+	numCargo = numCargo + 1
+	cargo[numCargo] = cargoID
+	Spring.UnitScript.AttachUnit(cargoPieces[numCargo], cargoID)
+end
+
 
 function script.Create()
-	Turn(link, x_axis, rad(20), 7)
-	Turn(hanger_door, y_axis, rad(90), DOOR_SPEED)
-	
-	StartThread(SmokeUnit, {hull})
-	--Turning offset turrets to their positions
-	Turn(turret1, y_axis, 0, TURRET_SPEED_FAST)
-	Turn(turret2, y_axis, rad(-90), TURRET_SPEED_FAST)
-	Turn(turret3, y_axis, rad(180), TURRET_SPEED_FAST)
-	Turn(turret4, y_axis, rad(90), TURRET_SPEED_FAST)
-	Turn(ppc1_turret, y_axis, 0, TURRET_SPEED_FAST)
-	Turn(ppc2_turret, y_axis, rad(-90), TURRET_SPEED_FAST)
-	Turn(ppc3_turret, y_axis, rad(180), TURRET_SPEED_FAST)
-	Turn(ppc4_turret, y_axis, rad(90), TURRET_SPEED_FAST)
-	Turn(launcher1, y_axis, rad(-45), TURRET_SPEED_FAST)
-	Turn(launcher2, y_axis, rad(-135), TURRET_SPEED_FAST)
-	Turn(launcher3, y_axis, rad(135), TURRET_SPEED_FAST)
-	Turn(launcher4, y_axis, rad(45), TURRET_SPEED_FAST)
-	Turn(laser1, y_axis, 0, TURRET_SPEED_FAST)
-	Turn(laser2, y_axis, 0, TURRET_SPEED_FAST)
-	Turn(laser3, y_axis, rad(-90), TURRET_SPEED_FAST)
-	Turn(laser4, y_axis, rad(-90), TURRET_SPEED_FAST)
-	Turn(laser5, y_axis, rad(180), TURRET_SPEED_FAST)
-	Turn(laser6, y_axis, rad(180), TURRET_SPEED_FAST)
-	Turn(laser7, y_axis, rad(90), TURRET_SPEED_FAST)
-	Turn(laser8, y_axis, rad(90), TURRET_SPEED_FAST)
-	Turn(laser9, y_axis, rad(-45), TURRET_SPEED_FAST)
-	Turn(laser10, y_axis, rad(-135), TURRET_SPEED_FAST)
-	Turn(laser11, y_axis, rad(135), TURRET_SPEED_FAST)
-	Turn(laser12, y_axis, rad(45), TURRET_SPEED_FAST)
+	Spring.SetUnitAlwaysVisible(unitID, true)
+	Spring.SetUnitNoSelect(unitID, true)
+	Setup()
+	--StartThread(fx)
+	Drop()
 end
+-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+-- UNION
+-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
---[[	
-	--Setups: Quickly do this before the dropship appears)
-	--Legs Setup--
-	Turn(gear1_door, y_axis, rad(-45), SPEED)
-	Turn(gear1_joint, y_axis, rad(-45), SPEED)
-	Turn(gear2_door, y_axis, rad(45), SPEED)
-	Turn(gear2_joint, y_axis, rad(45), SPEED)
-	Turn(gear3_door, y_axis, rad(-45), SPEED)
-	Turn(gear3_joint, y_axis, rad(-45), SPEED)
-	Turn(gear4_door, y_axis, rad(45), SPEED)
-	Turn(gear4_joint, y_axis, rad(45), SPEED)
-	--Launcher Setup--
-	Turn(launcher1, y_axis, rad(-45), SPEED)
-	Turn(launcher1, x_axis, rad(-30), SPEED)
-	Turn(launcher2, y_axis, rad(-135), SPEED)
-	Turn(launcher2, x_axis, rad(-30), SPEED)
-	Turn(launcher3, y_axis, rad(135), SPEED)
-	Turn(launcher3, x_axis, rad(-30), SPEED)
-	Turn(launcher4, y_axis, rad(-45), SPEED)
-	Turn(launcher4, x_axis, rad(-30), SPEED)
-	--Turret setup--
-	Turn(turret1, x_axis, rad(30), SPEED)
-	Turn(turret2, x_axis, rad(30), SPEED)
-	Turn(turret2, y_axis, rad(-90), SPEED)
-	Turn(turret3, x_axis, rad(30), SPEED)
-	Turn(turret3, y_axis, rad(180), SPEED)
-	Turn(turret4, x_axis, rad(30), SPEED)
-	Turn(turret4, y_axis, rad(90), SPEED)
-	-- Landing--
-	--Open Landing Gear Doors--
-	Turn(gear1_door, x_axis, rad(-50), SPEED)
-	Turn(gear1_door, x_axis, rad(50), SPEED)
-	Turn(gear1_door, x_axis, rad(50), SPEED)
-	Turn(gear1_door, x_axis, rad(-50), SPEED)
-	--Legs Come Out--
-	Turn(gear1_joint, x_axis, rad(125), SPEED)
-	Turn(gear1, x_axis, rad(-160), SPEED)
-	Turn(gear2_joint, x_axis, rad(-125), SPEED)
-	Turn(gear2, x_axis, rad(160), SPEED)
-	Turn(gear3_joint, x_axis, rad(-125), SPEED)
-	Turn(gear3, x_axis, rad(160), SPEED)
-	Turn(gear4_joint, x_axis, rad(125), SPEED)
-	Turn(gear4, x_axis, rad(-160), SPEED)
-	--PPCs come out--
-	Turn(ppcdoors, y_axis, 10, SPEED)
-	Move(ppc1_platform, z_axis, 31, SPEED)
-	Move(ppc2_platform, x_axis, -20, SPEED)
-	Turn(ppc2_turret, x_axis, rad(-90), SPEED)
-	Move(ppc3_platform, z_axis, -20, SPEED)
-	Turn(ppc3_turret, x_axis, rad(180), SPEED)
-	Move(ppc4_platform, x_axis, 20, SPEED)
-	Turn(ppc4_turret, x_axis, rad(90), SPEED)
-	--Turrets come out--
-	Turn(laser_doors, y_axis, rad(25), SPEED)
-	Move(turret1_joint, y_axis, 20, SPEED)
-	Move(turret1_joint, z_axis, 10, SPEED)
-	Turn(turret1, x_axis, rad(0), SPEED)
-	Move(turret2_joint, y_axis, 20, SPEED)
-	Move(turret2_joint, x_axis, 10, SPEED)
-	Turn(turret2, x_axis, rad(0), SPEED)
-	Move(turret3_joint, y_axis, 20, SPEED)
-	Move(turret3_joint, z_axis, -10, SPEED)
-	Turn(turret3, x_axis, rad(0), SPEED)
-	Move(turret4_joint, y_axis, 20, SPEED)
-	Move(turret4_joint, x_axis, -10, SPEED)
-	Turn(turret4, x_axis, rad(0), SPEED)
-	--Launcher come out--
-	Turn(missile_doors, y_axis, rad(25), SPEED)
-	Move(launcher1_joint, y_axis, 25, SPEED)
-	Move(launcher1_joint, x_axis, 10, SPEED)
-	Move(launcher1_joint, z_axis, 10, SPEED)
-	Move(launcher2_joint, y_axis, 25, SPEED)
-	Move(launcher2_joint, x_axis, 10, SPEED)
-	Move(launcher2_joint, z_axis, -10, SPEED)
-	Move(launcher3_joint, y_axis, 25, SPEED)
-	Move(launcher3_joint, x_axis, -10, SPEED)
-	Move(launcher3_joint, z_axis, -10, SPEED)
-	Move(launcher4_joint, y_axis, 25, SPEED)
-	Move(launcher4_joint, x_axis, 10, SPEED)
-	Move(launcher4_joint, z_axis, -10, SPEED)
-	Turn(launcher1, x_axis, rad(0), SPEED)
-	Turn(launcher2, x_axis, rad(0), SPEED)
-	Turn(launcher3, x_axis, rad(0), SPEED)
-	Turn(launcher4, x_axis, rad(0), SPEED)]]--
+local currUnitDef
 
-function script.StartBuilding()
-	local buildTime = currUnitDef.buildTime
+local CEG = SFX.CEG + #weapons
 
-	if currUnitDef.canFly then
-		local moveSpeed = 256 / buildTime
-		Move(vtol_pad, z_axis, 256, moveSpeed)
-		WaitForMove(vtol_pad, z_axis)
+local HALF_MAP_X = Game.mapSizeX/2
+local HALF_MAP_Z = Game.mapSizeZ/2
+local facing = math.abs(HALF_MAP_X - X) > math.abs(HALF_MAP_Z - Z)
+			and ((X > HALF_MAP_X) and 3 or 1)
+			or ((Z > HALF_MAP_Z) and 2 or 0)
+			
+local HEADING = facing * 16384 + math.random(-1820, 1820)
+
+-- LANDING CODE
+-- Variables
+
+-- CARGO CODE
+local link, pad, main_door, hanger_door, vtol_pad = piece ("link", "pad", "main_door", "hanger_door", "vtol_pad")
+
+local WAIT_TIME = 10000
+local DOOR_SPEED = math.rad(20)
+local x, _ ,z = Spring.GetUnitPosition(unitID)
+--local dx, _, dz = Spring.GetUnitDirection(unitID)
+local dirAngle = HEADING / 2^16 * 2 * math.pi
+local dx = math.sin(dirAngle)
+local dz = math.cos(dirAngle)
+local UNLOAD_X = x + 300 * dx
+local UNLOAD_Z = z + 300 * dz
 		
-		local velocity = {}
-		velocity[0] = {moveSpeed / 30, 0, 0}
-		velocity[1] = {0, 0, -moveSpeed / 30}
-		velocity[2] = {-moveSpeed / 30, 0, 0}
-		velocity[3] = {0, 0, moveSpeed / 30}
+
+function UnloadCargo()
+	Turn(main_door, x_axis, math.rad(110), DOOR_SPEED)
+	Turn(hanger_door, y_axis, math.rad(90), DOOR_SPEED * 0.5)
+	Turn(link, x_axis, math.rad(35), DOOR_SPEED * 10)
+	Turn(vtol_pad, y_axis, math.rad(90), DOOR_SPEED * 10)
+	WaitForTurn(main_door, x_axis)
 	
-		Spring.SetUnitVelocity(Spring.GetUnitIsBuilding(unitID), unpack(velocity[BUILD_FACING]))
-	else
-		local moveSpeed = 156 / buildTime -- 206
-		Move(link, z_axis, 52, moveSpeed)
+	for i, cargoID in ipairs(cargo) do
+		Move(link, z_axis, 0)
+		Move(pad, z_axis, 0)
+		Turn(pad, x_axis, math.rad(-35))
+		Move(vtol_pad, x_axis, 0)
+
 		WaitForMove(link, z_axis)
-		Move(pad, z_axis, 108, moveSpeed) -- 154
 		WaitForMove(pad, z_axis)
+		
+		-- start cargo moving anim
+		env = Spring.UnitScript.GetScriptEnv(cargoID)
+		if env and env.script and env.script.StartMoving then -- TODO: shouldn't be required, maybe if cargo died?
+			Spring.UnitScript.CallAsUnit(cargoID, env.script.StartMoving, false)
+		end
+		
+		-- attach and move
+		local currUnitDef = UnitDefs[Spring.GetUnitDefID(cargoID)]
+		local buildTime = currUnitDef.buildTime
+
+		if currUnitDef.canFly then
+			Spring.UnitScript.AttachUnit(vtol_pad, cargoID)
+			Move(vtol_pad, x_axis, 128, 64)
+			WaitForMove(vtol_pad, x_axis)
+			Spring.SetUnitVelocity(cargoID, 8, 4, 0)
+		else
+			Spring.UnitScript.AttachUnit(pad, cargoID)
+			local moveSpeed = currUnitDef.speed * 0.5
+			Move(link, z_axis, 73, moveSpeed)
+			WaitForMove(link, z_axis)
+			Move(pad, z_axis, 100, moveSpeed)
+			WaitForMove(pad, z_axis)
+		end
+		Spring.UnitScript.DropUnit(cargoID)
+		Spring.SetUnitBlocking(cargoID, true, true, true, true, true, true, true)
+		if currUnitDef.canFly then
+			Spring.GiveOrderToUnit(cargoID, CMD.MOVE, {X + 256, 0, Z}, {})
+		else
+			Spring.SetUnitMoveGoal(cargoID, UNLOAD_X +  math.random(-100, 100), 0, UNLOAD_Z +  math.random(-100, 100), 25) -- bug out over here
+		end
+		Sleep(2000)
+	end
+	Turn(main_door, x_axis, 0, DOOR_SPEED)
+	Turn(hanger_door, y_axis, 0, DOOR_SPEED)
+	WaitForTurn(hanger_door, y_axis)
+	WaitForTurn(main_door, x_axis)
+	Sleep(WAIT_TIME)
+	stage = 5 --3
+	StartThread(fx)
+	Spring.MoveCtrl.Enable(unitID)
+	Spring.MoveCtrl.SetGravity(unitID, -1 * GRAVITY)
+	Sleep(2500)
+	stage = 2
+	StartThread(fx) -- need to restart here as we're going back up a step
+	StartThread(LandingGearUp)
+	Sleep(10000)
+	-- We're out of the atmosphere, bye bye!
+	GG.DropshipLeft(teamID) -- let the world know
+	Spring.DestroyUnit(unitID, false, true)
+end
+
+-- WEAPON CONTROL
+-- localised API functions
+local GetUnitSeparation 		= Spring.GetUnitSeparation
+local GetUnitCommands   		= Spring.GetUnitCommands
+-- localised GG functions
+local GetUnitDistanceToPoint = GG.GetUnitDistanceToPoint
+local GetUnitUnderJammer = GG.GetUnitUnderJammer
+local IsUnitNARCed = GG.IsUnitNARCed
+local IsUnitTAGed = GG.IsUnitTAGed
+
+-- Info from lusHelper gadget
+local missileWeaponIDs = info.missileWeaponIDs
+local flareOnShots = info.flareOnShots
+local jammableIDs = info.jammableIDs
+local launcherIDs = info.launcherIDs
+local barrelRecoils = info.barrelRecoilDist
+local burstLengths = info.burstLengths
+local minRanges = info.minRanges
+local amsID = info.amsID
+local turretIDs = info.turretIDs
+
+local TURRET_SPEED = math.rad(30)
+
+-- weapons pieces
+local trackEmitters = {}
+for i = 1, 7, 2 do -- TODO: setup a table in lus_helper
+	trackEmitters[i] = piece("laser_emitter_" .. i)
+	trackEmitters[i+1] = trackEmitters[i]
+end
+
+local turrets = {}
+for i, valid in pairs(turretIDs) do
+	if valid then
+		turrets[i] = piece("turret_" .. i)
 	end
 end
 
-function script.StopBuilding()
-	Move(link, z_axis, 0, 50000000)
-	Move(pad, z_axis, 0, 50000000)
-	Move(vtol_pad, z_axis, 0, 50000000)
-end
+local flares = {}
+--local turrets = info.turrets
 
-function Doors(open)
-	Signal(1)
-	SetSignalMask(1)
-	if open == 1 then 
-		Turn(main_door, x_axis, rad(90), DOOR_SPEED)
-		WaitForTurn(main_door, x_axis)
-		-- open yard after doors are done
-		SetUnitValue(COB.YARD_OPEN, open)
-		SetUnitValue(COB.INBUILDSTANCE, open)
-		SetUnitValue(COB.BUGGER_OFF, open)
-	else
-		-- close yard before closing doors
-		SetUnitValue(COB.YARD_OPEN, open)
-		SetUnitValue(COB.INBUILDSTANCE, open)
-		SetUnitValue(COB.BUGGER_OFF, open)
-		Turn(main_door, x_axis, rad(0), DOOR_SPEED)
-		WaitForTurn(main_door, x_axis)
+local mantlets = {}
+local barrels = {}
+local launchers = {}
+local launchPoints = {}
+local currPoints = {}
+local spinPieces = {}
+local spinPiecesState = {}
+
+local missileSignals = {}
+local amsSignal = {}
+
+for weaponID = 1, info.numWeapons do
+	if missileWeaponIDs[weaponID] then
+		if launcherIDs[weaponID] then
+			launchers[weaponID] = piece("launcher_" .. weaponID)
+		end
+		missileSignals[weaponID] = {}
+		--[[launchPoints[weaponID] = {}
+		currPoints[weaponID] = 1
+		for i = 1, burstLengths[weaponID] do
+			launchPoints[weaponID][i] = piece("launchpoint_" .. weaponID .. "_" .. i)
+		end	]]
+	elseif weaponID then
+		flares[weaponID] = piece ("flare_" .. weaponID)
+	end
+	--[[if info.turretIDs[weaponID] then
+		turrets[weaponID] = piece("turret_" .. weaponID)
+	end]]
+	if info.mantletIDs[weaponID] then
+		mantlets[weaponID] = piece("mantlet_" .. weaponID)
+	end
+	if info.barrelIDs[weaponID] then
+		barrels[weaponID] = piece("barrel_" .. weaponID)
 	end
 end
 
-function script.Activate()
-	if not currUnitDef then return end
-	StartThread(Doors, 1)
-end
-
-function script.Deactivate()
-	StartThread(Doors, 0)
-end
-
-function script.QueryBuildInfo() 
-	if currUnitDef.canFly then
-		return vtol_pad
+function Setup()
+	-- Put pieces into starting pos
+	Turn(exhaustlarge, x_axis, math.rad(90), 0)
+	--Spin(exhaustlarge, y_axis, math.rad(360))
+	for i = 1, 4 do
+		Turn(dusts[i], x_axis, math.rad(90), 0)
+		--Spin(dusts[i], y_axis, math.rad(360))
+		Turn(exhausts[i], x_axis, math.rad(90), 0)
+		Spin(exhausts[i], y_axis, math.rad(360))
 	end
-	return pad
+	-- Legs Setup
+	for i = 1,4 do
+		local angle = (i == 2 or i == 3) and rad(45) or rad(225)
+		local angleDir = i % 2 == 0 and angle or -angle
+		local angle2 = rad(80)
+		Turn(gears[i].door, y_axis, angleDir)
+		Turn(gears[i].joint, y_axis, angleDir)
+		Turn(gears[i].joint, x_axis, angle2)
+		Move(gears[i].joint, y_axis, -13)
+	end
+	-- weapon pieces too
+	for id, turret in pairs(turrets) do
+		Turn(dusts[(id - 15)/2], y_axis, math.rad(-45 * id))
+		Turn(turret, y_axis, math.rad(-45 * id))
+	end
+	-- 1, 3, 5, 7 -> 2n - 1, .'. (id + 1)/2
+	for id, trackEmitter in pairs(trackEmitters) do
+		if id % 2 == 1 then -- only the first time for each pair
+			Turn(trackEmitter, y_axis, math.rad(90 * ((id + 1)/2 - 1)))
+		end
+	end
 end
 
-function script.QueryNanopiece() 
-	return beam 
-end
-
-local function RestoreAfterDelay(unitID)
-	Sleep(RESTORE_DELAY)
-	Turn(turret1, y_axis, 0, TURRET_SPEED)
-	Turn(turret1, x_axis, 0, TURRET_SPEED)
-	Turn(turret2, y_axis, rad(-90), TURRET_SPEED)
-	Turn(turret2, x_axis, 0, TURRET_SPEED)
-	Turn(turret3, y_axis, rad(180), TURRET_SPEED)
-	Turn(turret3, x_axis, 0, TURRET_SPEED)
-	Turn(turret4, y_axis, rad(90), TURRET_SPEED)
-	Turn(turret4, x_axis, 0, TURRET_SPEED)
-	Turn(ppc1_turret, y_axis, 0, TURRET_SPEED)
-	Turn(ppc1_mantlet, x_axis, 0, TURRET_SPEED)
-	Turn(ppc2_turret, y_axis, rad(-90), TURRET_SPEED)
-	Turn(ppc2_mantlet, x_axis, 0, TURRET_SPEED)
-	Turn(ppc3_turret, y_axis, rad(180), TURRET_SPEED)
-	Turn(ppc3_mantlet, x_axis, 0, TURRET_SPEED)
-	Turn(ppc4_turret, y_axis, rad(90), TURRET_SPEED)
-	Turn(ppc4_mantlet, x_axis, 0, TURRET_SPEED)
-	Turn(launcher1, y_axis, rad(-45), TURRET_SPEED)
-	Turn(launcher1, x_axis, 0, TURRET_SPEED)
-	Turn(launcher2, y_axis, rad(-135), TURRET_SPEED)
-	Turn(launcher2, x_axis, 0, TURRET_SPEED)
-	Turn(launcher3, y_axis, rad(135), TURRET_SPEED)
-	Turn(launcher3, x_axis, 0, TURRET_SPEED)
-	Turn(launcher4, y_axis, rad(45), TURRET_SPEED)
-	Turn(launcher4, x_axis, 0, TURRET_SPEED)
-	Turn(laser1, y_axis, 0, TURRET_SPEED)
-	Turn(laser2, y_axis, 0, TURRET_SPEED)
-	Turn(laser3, y_axis, rad(-90), TURRET_SPEED)
-	Turn(laser4, y_axis, rad(-90), TURRET_SPEED)
-	Turn(laser5, y_axis, rad(180), TURRET_SPEED)
-	Turn(laser6, y_axis, rad(180), TURRET_SPEED)
-	Turn(laser7, y_axis, rad(90), TURRET_SPEED)
-	Turn(laser8, y_axis, rad(90), TURRET_SPEED)
-	Turn(laser9, y_axis, rad(-45), TURRET_SPEED)
-	Turn(laser10, y_axis, rad(-135), TURRET_SPEED)
-	Turn(laser11, y_axis, rad(135), TURRET_SPEED)
-	Turn(laser12, y_axis, rad(45), TURRET_SPEED)
-end
 
 function script.AimWeapon(weaponID, heading, pitch)
-	Signal(SIG_AIM ^ weaponID) -- 2 'to the power of' weapon ID
-    SetSignalMask(SIG_AIM ^ weaponID)
-		if weaponID == 1 then
-			Turn(turret1, y_axis, heading, TURRET_SPEED)
-			Turn(turret1, x_axis, -pitch, ELEVATION_SPEED)
-			WaitForTurn(turret1, y_axis)
-		elseif weaponID == 2 then	
-			Turn(turret1, y_axis, heading, TURRET_SPEED)
-			Turn(turret1, x_axis, -pitch, ELEVATION_SPEED)
-			WaitForTurn(turret1, y_axis)
-		elseif weaponID == 3 then
-			Turn(turret2, y_axis, heading, TURRET_SPEED)
-			Turn(turret2, x_axis, -pitch, ELEVATION_SPEED)
-			WaitForTurn(turret2, y_axis)
-		elseif weaponID == 4 then
-			Turn(turret2, y_axis, heading, TURRET_SPEED)
-			Turn(turret2, x_axis, -pitch, ELEVATION_SPEED)
-			WaitForTurn(turret2, y_axis)
-		elseif weaponID == 5 then
-			Turn(turret3, y_axis, heading, TURRET_SPEED)
-			Turn(turret3, x_axis, -pitch, ELEVATION_SPEED)
-			WaitForTurn(turret3, y_axis)
-		elseif weaponID == 6 then
-			Turn(turret3, y_axis, heading, TURRET_SPEED)
-			Turn(turret3, x_axis, -pitch, ELEVATION_SPEED)
-			WaitForTurn(turret3, y_axis)
-		elseif weaponID == 7 then
-			Turn(turret4, y_axis, heading, TURRET_SPEED)
-			Turn(turret4, x_axis, -pitch, ELEVATION_SPEED)
-			WaitForTurn(turret4, y_axis)
-		elseif weaponID == 8 then
-			Turn(turret4, y_axis, heading, TURRET_SPEED)
-			Turn(turret4, x_axis, -pitch, ELEVATION_SPEED)
-			WaitForTurn(turret4, y_axis)
-		elseif weaponID == 9 then
-			Turn(ppc1_turret, y_axis, heading, TURRET_SPEED)
-			Turn(ppc1_mantlet, x_axis, -pitch, ELEVATION_SPEED)
-			WaitForTurn(ppc1_turret, y_axis)
-		elseif weaponID == 10 then
-			Turn(ppc2_turret, y_axis, heading, TURRET_SPEED)
-			Turn(ppc2_mantlet, x_axis, -pitch, ELEVATION_SPEED)
-			WaitForTurn(ppc2_turret, y_axis)
-		elseif weaponID == 11 then
-			Turn(ppc3_turret, y_axis, heading, TURRET_SPEED)
-			Turn(ppc3_mantlet, x_axis, -pitch, ELEVATION_SPEED)
-			WaitForTurn(ppc3_turret, y_axis)
-		elseif weaponID == 12 then
-			Turn(ppc4_turret, y_axis, heading, TURRET_SPEED)
-			Turn(ppc4_mantlet, x_axis, -pitch, ELEVATION_SPEED)
-			WaitForTurn(ppc4_turret, y_axis)
-		elseif weaponID == 13 then
-			Turn(launcher1, y_axis, heading, TURRET_SPEED)
-			Turn(launcher1, x_axis, -pitch, ELEVATION_SPEED)
-			WaitForTurn(launcher1, y_axis)
-		elseif weaponID == 14 then
-			Turn(launcher2, y_axis, heading, TURRET_SPEED)
-			Turn(launcher2, x_axis, -pitch, ELEVATION_SPEED)
-			WaitForTurn(launcher2, y_axis)
-		elseif weaponID == 15 then
-			Turn(launcher3, y_axis, heading, TURRET_SPEED)
-			Turn(launcher3, x_axis, -pitch, ELEVATION_SPEED)
-			WaitForTurn(launcher3, y_axis)
-		elseif weaponID == 16 then
-			Turn(launcher4, y_axis, heading, TURRET_SPEED)
-			Turn(launcher4, x_axis, -pitch, ELEVATION_SPEED)
-			WaitForTurn(launcher4, y_axis)	
-		elseif weaponID == 17 then
-			Turn(laser1, y_axis, heading, TURRET_SPEED)
-			Turn(laser1, x_axis, -pitch, ELEVATION_SPEED)
-			WaitForTurn(laser1, y_axis)
-		elseif weaponID == 18 then	
-			Turn(laser2, y_axis, heading, TURRET_SPEED)
-			Turn(laser2, x_axis, -pitch, ELEVATION_SPEED)
-			WaitForTurn(laser2, y_axis)
-		elseif weaponID == 19 then
-			Turn(laser3, y_axis, heading, TURRET_SPEED)
-			Turn(laser3, x_axis, -pitch, ELEVATION_SPEED)
-			WaitForTurn(laser3, y_axis)
-		elseif weaponID == 20 then
-			Turn(laser4, y_axis, heading, TURRET_SPEED)
-			Turn(laser4, x_axis, -pitch, ELEVATION_SPEED)
-			WaitForTurn(laser4, y_axis)
-		elseif weaponID == 21 then
-			Turn(laser5, y_axis, heading, TURRET_SPEED)
-			Turn(laser5, x_axis, -pitch, ELEVATION_SPEED)
-			WaitForTurn(laser5, y_axis)
-		elseif weaponID == 22 then
-			Turn(laser6, y_axis, heading, TURRET_SPEED)
-			Turn(laser6, x_axis, -pitch, ELEVATION_SPEED)
-			WaitForTurn(laser6, y_axis)
-		elseif weaponID == 23 then
-			Turn(laser7, y_axis, heading, TURRET_SPEED)
-			Turn(laser7, x_axis, -pitch, ELEVATION_SPEED)
-			WaitForTurn(laser7, y_axis)
-		elseif weaponID == 24 then
-			Turn(laser8, y_axis, heading, TURRET_SPEED)
-			Turn(laser8, x_axis, -pitch, ELEVATION_SPEED)
-			WaitForTurn(laser8, y_axis)
-		elseif weaponID == 25 then
-			Turn(laser9, y_axis, heading, TURRET_SPEED)
-			Turn(laser9, x_axis, -pitch, ELEVATION_SPEED)
-			WaitForTurn(laser9, y_axis)
-		elseif weaponID == 26 then
-			Turn(laser10, y_axis, heading, TURRET_SPEED)
-			Turn(laser10, x_axis, -pitch, ELEVATION_SPEED)
-			WaitForTurn(laser10, y_axis)
-		elseif weaponID == 27 then
-			Turn(laser11, y_axis, heading, TURRET_SPEED)
-			Turn(laser11, x_axis, -pitch, ELEVATION_SPEED)
-			WaitForTurn(laser11, y_axis)
-		elseif weaponID == 28 then
-			Turn(laser12, y_axis, heading, TURRET_SPEED)
-			Turn(laser12, x_axis, -pitch, ELEVATION_SPEED)
-			WaitForTurn(laser12, y_axis)
+	if weaponID < 25 then
+		Signal(2 ^ (weaponID - 1))
+		SetSignalMask(2 ^ (weaponID - 1))
+	elseif missileWeaponIDs[weaponID] then -- can only use 24 weapons in this way, sor LRM are seperate
+		Signal(missileSignals[weaponID])
+		SetSignalMask(missileSignals[weaponID])
+	else -- LAMS
+		Signal(amsSignal)
+		SetSignalMask(amsSignal)
+	end
+	if trackEmitters[weaponID] then -- LBLs
+		if weaponID % 2 == 1 then -- only first in each pair
+			Turn(trackEmitters[weaponID], y_axis, heading, TURRET_SPEED) -- + math.rad(90 * (weaponID - 1)/2), TURRET_SPEED)
+			WaitForTurn(trackEmitters[weaponID], y_axis)
 		end
-	StartThread(RestoreAfterDelay)
+	elseif turrets[weaponID] then -- PPCs
+		Turn(turrets[weaponID], y_axis, heading, TURRET_SPEED)
+		Turn(turrets[weaponID], x_axis, -pitch, TURRET_SPEED)
+		WaitForTurn(turrets[weaponID], y_axis)
+		WaitForTurn(turrets[weaponID], x_axis)
+		return true
+	elseif missileWeaponIDs[weaponID] then
+		if launchers[weaponID] then
+			Turn(launchers[weaponID], x_axis, -pitch, ELEVATION_SPEED)
+		--[[else
+			for i = 1, burstLengths[weaponID] do
+				Turn(launchPoints[weaponID][i] or launchPoints[weaponID][1], x_axis, -pitch, ELEVATION_SPEED)
+			end]]
+		end
+		return stage == 4 -- only allow when on the ground
+	elseif flares[weaponID] then -- ERMBLs
+		Turn(flares[weaponID], y_axis, heading)
+	end
+	Turn(flares[weaponID], x_axis, -pitch)
+	--Sleep(100 * weaponID) -- desync barrels to fire independently
 	return true
 end
 
-function script.FireWeapon(weaponID)
-		if weaponID == 1 then
-			EmitSfx(turret1_flare1, MEDIUM_MUZZLEFLASH)
-		elseif weaponID == 2 then
-			EmitSfx(turret1_flare2, MEDIUM_MUZZLEFLASH)
-		elseif weaponID == 3 then
-			EmitSfx(turret2_flare1, MEDIUM_MUZZLEFLASH)
-		elseif weaponID == 4 then
-			EmitSfx(turret2_flare2, MEDIUM_MUZZLEFLASH)
-		elseif weaponID == 5 then
-			EmitSfx(turret3_flare1, MEDIUM_MUZZLEFLASH)
-		elseif weaponID == 6 then
-			EmitSfx(turret3_flare2, MEDIUM_MUZZLEFLASH)
-		elseif weaponID == 7 then
-			EmitSfx(turret4_flare1, MEDIUM_MUZZLEFLASH)
-		elseif weaponID == 8 then
-			EmitSfx(turret4_flare2, MEDIUM_MUZZLEFLASH)
-		elseif weaponID == 9 then
-			EmitSfx(ppc1_flare, PPC_MUZZLEFLASH)
-		elseif weaponID == 10 then
-			EmitSfx(ppc2_flare, PPC_MUZZLEFLASH)
-		elseif weaponID == 11 then
-			EmitSfx(ppc3_flare, PPC_MUZZLEFLASH)
-		elseif weaponID == 12 then
-			EmitSfx(ppc4_flare, PPC_MUZZLEFLASH)
-		elseif weaponID == 17 then
-			EmitSfx(laser1, MG_MUZZLEFLASH)
-		elseif weaponID == 18 then
-			EmitSfx(laser2, MG_MUZZLEFLASH)
-		elseif weaponID == 19 then
-			EmitSfx(laser3, MG_MUZZLEFLASH)
-		elseif weaponID == 20 then
-			EmitSfx(laser4, MG_MUZZLEFLASH)
-		elseif weaponID == 21 then
-			EmitSfx(laser5, MG_MUZZLEFLASH)
-		elseif weaponID == 22 then
-			EmitSfx(laser6, MG_MUZZLEFLASH)
-		elseif weaponID == 23 then
-			EmitSfx(laser7, MG_MUZZLEFLASH)
-		elseif weaponID == 24 then
-			EmitSfx(laser8, MG_MUZZLEFLASH)
-		elseif weaponID == 25 then
-			EmitSfx(laser9, MG_MUZZLEFLASH)
-		elseif weaponID == 26 then
-			EmitSfx(laser10, MG_MUZZLEFLASH)
-		elseif weaponID == 27 then
-			EmitSfx(laser11, MG_MUZZLEFLASH)
-		elseif weaponID == 28 then
-			EmitSfx(laser12, MG_MUZZLEFLASH)
+function script.BlockShot(weaponID, targetID, userTarget)
+	if weaponID == amsID then return false end
+	local jammable = jammableIDs[weaponID]
+	if jammable then
+		if targetID then
+			local jammed = GetUnitUnderJammer(targetID) and (not IsUnitNARCed(targetID)) and (not IsUnitTAGed(targetID))
+			if jammed then
+				--Spring.Echo("Can't fire weapon " .. weaponID .. " as target is jammed")
+				return true 
+			end
 		end
+	end
+	local minRange = minRanges[weaponID]
+	if minRange then
+		local distance
+		if targetID then
+			distance = GetUnitSeparation(unitID, targetID, true)
+		elseif userTarget then
+			local cmd = GetUnitCommands(unitID, 1)[1]
+			if cmd.id == CMD.ATTACK then
+				local tx,ty,tz = unpack(cmd.params)
+				distance = GetUnitDistanceToPoint(unitID, tx, ty, tz, false)
+			end
+		end
+		if distance < minRange then return true end
+	end
+	return false
 end
 
 function script.Shot(weaponID)
 	if missileWeaponIDs[weaponID] then
-		EmitSfx(launchPoints[weaponID][currPoints[weaponID]], MEDIUM_MUZZLEFLASH)
-        currPoints[weaponID] = currPoints[weaponID] + 1
-        if currPoints[weaponID] > numPoints[weaponID] then 
-                currPoints[weaponID] = 1
-        end
-	end		
-end
-
-function script.AimFromWeapon(weaponID) 
-	return hull
-end
-
-function script.QueryWeapon(weaponID) 
-	if missileWeaponIDs[weaponID] then
-		return launchPoints[weaponID][currPoints[weaponID]]
-	else
-		if weaponID == 1 then
-			return turret1_flare1
-		elseif weaponID == 2 then
-			return turret1_flare2
-		elseif weaponID == 3 then
-			return turret2_flare1
-		elseif weaponID == 4 then
-			return turret2_flare2
-		elseif weaponID == 5 then
-			return turret3_flare1
-		elseif weaponID == 6 then
-			return turret3_flare2
-		elseif weaponID == 7 then
-			return turret4_flare1
-		elseif weaponID == 8 then
-			return turret4_flare2
-		elseif weaponID == 9 then
-			return ppc1_flare
-		elseif weaponID == 10 then
-			return ppc2_flare
-		elseif weaponID == 11 then
-			return ppc3_flare
-		elseif weaponID == 12 then
-			return ppc4_flare
-		elseif weaponID == 17 then
-			return laser1
-		elseif weaponID == 18 then
-			return laser2
-		elseif weaponID == 19 then
-			return laser3
-		elseif weaponID == 20 then
-			return laser4
-		elseif weaponID == 21 then
-			return laser5
-		elseif weaponID == 22 then
-			return laser6
-		elseif weaponID == 23 then
-			return laser7
-		elseif weaponID == 24 then
-			return laser8
-		elseif weaponID == 25 then
-			return laser9
-		elseif weaponID == 26 then
-			return laser10
-		elseif weaponID == 27 then
-			return laser11
-		elseif weaponID == 28 then
-			return laser12
-		elseif weaponID == 29 then
-			return ams
-		end
+		EmitSfx(launchers[weaponID], SFX.CEG + weaponID)
+		--EmitSfx(launchPoints[weaponID][currPoints[weaponID]] or launchPoints[weaponID][1], SFX.CEG + weaponID)
+        --[[currPoints[weaponID] = currPoints[weaponID] + 1
+        if currPoints[weaponID] > burstLengths[weaponID] then 
+			currPoints[weaponID] = 1
+        end]]
+	elseif flares[weaponID] then
+		EmitSfx(flares[weaponID], SFX.CEG + weaponID)
 	end
 end
 
+function script.AimFromWeapon(weaponID) 
+	return trackEmitters[weaponID] or turrets[weaponID] or launchers[weaponID] or flares[weaponID] or hull
+end
+
+function script.QueryWeapon(weaponID)
+	if missileWeaponIDs[weaponID] then
+		return launchers[weaponID] --launchPoints[weaponID][currPoints[weaponID]] or launchPoints[weaponID][1]
+	else
+		return flares[weaponID]
+	end
+end 
+
+-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+-- AVENGER
+-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+--pieces
+local body = piece ("body")
+local cargo = piece ("cargo")
+local cargoDoor1, cargoDoor2 = piece("cargodoor1", "cargodoor2")
+local attachment = piece("attachment")
+-- FX pieces
+
+
+-- Constants
+local ANGLE = math.floor(unitID / 100)
+local UX = math.cos(ANGLE) * RADIAL_DIST
+local UZ = math.sin(ANGLE) * RADIAL_DIST
+
+
+local function fx()
+	Signal(fx)
+	SetSignalMask(fx)
+
+	if stage == 0 then
+		GG.EmitLupsSfx(unitID, "dropship_hull_heat", body, {repeatEffect = 3})
+		GG.EmitLupsSfx(unitID, "dropship_hull_heat", body, {repeatEffect = 3, delay = 10})
+		GG.EmitLupsSfx(unitID, "dropship_hull_heat", body, {repeatEffect = 2, delay = 20})
+		for _, exhaust in ipairs(hExhausts) do
+			GG.EmitLupsSfx(unitID, "dropship_horizontal_jitter_strong", exhaust)
+			GG.EmitLupsSfx(unitID, "dropship_horizontal_jitter_strong", exhaust, {delay = 20})
+			GG.EmitLupsSfx(unitID, "dropship_horizontal_jitter_strong", exhaust, {delay = 40})
+			GG.EmitLupsSfx(unitID, "dropship_vertical_exhaust",  exhaust, {id = "hExhaustsJets", repeatEffect = true, width = 30, length = 150})
+		end
+		for _, exhaust in ipairs(vExhaustLarges) do
+			GG.EmitLupsSfx(unitID, "dropship_vertical_exhaust", exhaust, {id = "vExhaustsLargesJets", width = 65, length = 115})
+		end
+		for _, exhaust in ipairs(vExhausts) do
+			GG.EmitLupsSfx(unitID, "dropship_vertical_exhaust", exhaust, {id = "vExhaustsJets", width = 50, length = 95})
+		end
+	end
+	while stage == 0 do
+		Sleep(30)
+	end
+	if stage == 1 then
+		GG.RemoveLupsSfx(unitID, "vExhaustsJets")
+		GG.RemoveLupsSfx(unitID, "vExhaustsLargesJets")
+		for _, exhaust in ipairs(hExhausts) do
+			GG.EmitLupsSfx(unitID, "dropship_horizontal_jitter_weak", exhaust)
+			GG.EmitLupsSfx(unitID, "dropship_horizontal_jitter_weak", exhaust, {delay = 20})
+			GG.EmitLupsSfx(unitID, "dropship_horizontal_jitter_weak", exhaust, {delay = 40})
+		end
+		for _, exhaust in ipairs(vExhaustLarges) do
+			GG.EmitLupsSfx(unitID, "dropship_vertical_exhaust", exhaust, {id = "vExhaustsLargesJets", replace = true, width = 40, length = 90})
+		end
+		for _, exhaust in ipairs(vExhausts) do
+			GG.EmitLupsSfx(unitID, "dropship_vertical_exhaust", exhaust, {id = "vExhaustsJets", width = 25, length = 70})
+		end
+	end
+	while stage == 1 do
+		Sleep(30)
+	end
+	if stage == 2 then
+		GG.RemoveLupsSfx(unitID, "hExhaustsJets")
+		for _, exhaust in ipairs(hExhausts) do
+			GG.BlendJet(99, unitID, exhaust, "hExhaustsJets")
+		end
+	end
+	while stage == 2 do
+		Sleep(30)
+	end
+	if stage == 3 then
+		GG.RemoveLupsSfx(unitID, "vExhaustsJets")
+		GG.RemoveLupsSfx(unitID, "vExhaustsLargesJets")
+		for _, exhaust in ipairs(vExhausts) do
+			GG.EmitLupsSfx(unitID, "dropship_vertical_exhaust", exhaust, {id = "vExhaustsJets"})
+		end
+		GG.EmitLupsSfx(unitID, "exhaust_ground_winds", body, {repeatEffect = 4, delay = 125})
+		GG.EmitLupsSfx(unitID, "exhaust_ground_winds", body, {repeatEffect = 4, delay = 125 + 80})
+	end
+	while stage == 3 do
+		--SpawnCEG("dropship_heavy_dust", TX, TY, TZ)
+		Sleep(30)
+	end
+	if stage == 4 then
+		GG.RemoveLupsSfx(unitID, "hExhaustsJets")
+		GG.RemoveLupsSfx(unitID, "vExhaustsJets")
+		GG.RemoveLupsSfx(unitID, "vExhaustsLargeJets")
+		for _, exhaust in ipairs(hExhausts) do
+			GG.EmitLupsSfx(unitID, "dropship_horizontal_jitter_strong", exhaust)
+			GG.EmitLupsSfx(unitID, "dropship_horizontal_jitter_strong", exhaust, {delay = 20})
+			GG.EmitLupsSfx(unitID, "dropship_horizontal_jitter_strong", exhaust, {delay = 40})
+		end
+		local time = 114
+		for t = 0, (time/3) do
+			local i = t / (time/3)
+			for _, exhaust in ipairs(hExhausts) do
+				if (i == 1) then
+					GG.EmitLupsSfx(unitID, "dropship_vertical_exhaust", exhaust, {id = "hExhaustsJets", repeatEffect = true, delay = t*3, width = 110, length = 350})
+				elseif (i > 0.33) then
+					GG.EmitLupsSfx(unitID, "dropship_vertical_exhaust", exhaust, {id = "hExhaustsJets", life = 2, delay = t*3, width = i * 110, length = i * 350})
+					GG.EmitLupsSfx(unitID, "dropship_vertical_exhaust", exhaust, {id = "hExhaustsJets", life = 1, delay = t*3+2, width = i * 100, length = i * 300})
+				else
+					GG.EmitLupsSfx(unitID, "dropship_vertical_exhaust", exhaust, {id = "hExhaustsJets", life = 1, delay = t*3,   width = i * 110, length = i * 350})
+					GG.EmitLupsSfx(unitID, "dropship_vertical_exhaust", exhaust, {id = "hExhaustsJets", life = 2, delay = t*3+1, width = i * 80, length = i * 190})
+				end
+			end
+		end
+		for _, exhaust in ipairs(vExhaustLarges) do
+			GG.EmitLupsSfx(unitID, "dropship_vertical_exhaust", exhaust, {id = "vExhaustsLargesJets", length = 80, width = 45})
+		end
+		for i, exhaust in ipairs(vExhausts) do
+			if (i % 2 == 1) then
+				GG.EmitLupsSfx(unitID, "dropship_vertical_exhaust", exhaust, {id = "vExhaustsJets", length = 85, width = 55})
+			else
+				GG.EmitLupsSfx(unitID, "dropship_vertical_exhaust", exhaust, {id = "vExhaustsJets"})
+			end
+		end
+	end
+	while stage == 4 do
+		Sleep(30)
+	end
+	if stage == 5 then
+		GG.RemoveLupsSfx(unitID, "vExhaustsLargesJets")
+		GG.RemoveLupsSfx(unitID, "vExhaustsJets")
+	end
+	while stage == 5 do
+		for _, exhaust in ipairs(hExhausts) do
+			EmitSfx(exhaust, SFX.CEG + 2)
+			EmitSfx(exhaust, SFX.CEG + 3)
+		end
+		Sleep(30)
+	end
+end
+
+function Setup()
+	-- setup fx pieces
+	for _, exhaust in ipairs(vExhaustLarges) do
+		Turn(exhaust, x_axis, math.rad(89))
+	end	
+	for _, exhaust in ipairs(vExhausts) do
+		Turn(exhaust, x_axis, math.rad(89))
+	end	
+	for _, exhaust in ipairs(hExhausts) do
+		Turn(exhaust, y_axis, math.rad(180))
+	end	
+end
+
+function Drop()
+	-- Move us up to the drop position
+	Spring.MoveCtrl.Enable(unitID)
+	Spring.MoveCtrl.SetPosition(unitID, TX + UX, TY + DROP_HEIGHT, TZ + UZ)
+	local newAngle = math.atan2(UX, UZ)
+	Spring.MoveCtrl.SetRotation(unitID, 0, newAngle + math.pi, 0)
+	Turn(body, x_axis, math.rad(-50))
+	-- Begin the drop
+	GG.PlaySoundForTeam(teamID, "BB_Dropship_Inbound", 1)
+	Turn(body, x_axis, math.rad(-10), math.rad(5))
+	Spring.MoveCtrl.SetVelocity(unitID, 0, -100, 0)
+	Spring.MoveCtrl.SetRelativeVelocity(unitID, 0, 0, 10)
+	Spring.MoveCtrl.SetGravity(unitID, -3.78 * GRAVITY)
+	local x, y, z = Spring.GetUnitPosition(unitID)
+	while y - TY > 150 + HOVER_HEIGHT do
+		x, y, z = Spring.GetUnitPosition(unitID)
+		local newAngle = math.atan2(x - TX, z - TZ)
+		Spring.MoveCtrl.SetRotation(unitID, 0, newAngle + math.pi, 0)
+		if (y - TY) < 4 * HOVER_HEIGHT and stage == 0 then
+			stage = 1
+			StartThread(fx)
+		elseif (y - TY) < 3 * HOVER_HEIGHT and stage == 1 then
+			stage = 2
+		end
+		Sleep(100)
+	end
+	-- Descent complete, move over the target
+	Turn(body, x_axis, 0, math.rad(3.5))
+	Spring.MoveCtrl.SetVelocity(unitID, 0, 0, 0)
+	Spring.MoveCtrl.SetGravity(unitID, 0)
+	local dist = GetUnitDistanceToPoint(unitID, TX, 0, TZ, false)
+	while dist > 1 do
+		dist = GetUnitDistanceToPoint(unitID, TX, 0, TZ, false)
+		--Spring.Echo("dist", dist)
+		Spring.MoveCtrl.SetRelativeVelocity(unitID, 0, 0, math.max(dist/50, 2))
+		Sleep(30)
+	end
+	-- only proceed if the beacon is still ours and is secure
+	if Spring.GetUnitTeam(beaconID) == Spring.GetUnitTeam(unitID) and Spring.GetUnitRulesParam(beaconID, "secure") == 1 then
+		-- We're over the target area, reduce height!
+		stage = 3
+		local DOOR_SPEED = math.rad(60)
+		Turn(cargoDoor1, z_axis, math.rad(-90), DOOR_SPEED)
+		Turn(cargoDoor2, z_axis, math.rad(90), DOOR_SPEED)
+		local vertSpeed = 4
+		local wantedHeight = select(2, Spring.GetUnitPosition(unitID)) - HOVER_HEIGHT
+		local dist = select(2, Spring.GetUnitPosition(unitID)) - wantedHeight
+		while (dist > 0) do
+			Spring.MoveCtrl.SetRelativeVelocity(unitID, 0, -math.max(0.33, vertSpeed * (dist/HOVER_HEIGHT)), 0)
+			Sleep(10)
+			dist = select(2, Spring.GetUnitPosition(unitID)) - wantedHeight
+		end
+		-- We're in place. Halt and lower the cargo!
+		Spring.MoveCtrl.SetRelativeVelocity(unitID, 0, 0, 0)
+		_, y, _ = Spring.GetUnitPosition(unitID)
+		local BOOM_LENGTH = y - TY - 56
+		local BOOM_SPEED = 15
+		Move(attachment, y_axis, -56, BOOM_SPEED)
+		--WaitForMove(attachment, y_axis)
+		for i = 2, 3 do
+			Move(booms[i], y_axis, -BOOM_LENGTH / 2, BOOM_SPEED)
+		end
+		WaitForMove(booms[3], y_axis)
+		Sleep(1500)
+		if Spring.ValidUnitID(cargoID) and not Spring.GetUnitIsDead(cargoID) then -- might be empty on /give testing
+			Spring.UnitScript.DropUnit(cargoID)
+			Spring.SetUnitBlocking(cargoID, true, true, true, true, true, true, true)
+			-- Let the cargo know it is unloaded
+			env = Spring.UnitScript.GetScriptEnv(cargoID)
+			Spring.UnitScript.CallAsUnit(cargoID, env.Unloaded)
+			-- Let the beacon know upgrade is ready
+			env = Spring.UnitScript.GetScriptEnv(beaconID)
+			Spring.UnitScript.CallAsUnit(beaconID, env.ChangeType, true)
+		end
+		-- Cargo is down, close the doors!
+		for i = 2, 3 do
+			Move(booms[i], y_axis, 0, BOOM_SPEED * 2)
+		end
+		WaitForMove(booms[3], y_axis)
+		Turn(cargoDoor1, z_axis, 0, DOOR_SPEED)
+		Turn(cargoDoor2, z_axis, 0, DOOR_SPEED)
+		WaitForTurn(cargoDoor2, z_axis)
+	else -- bugging out, refund
+		Spring.AddTeamResource(teamID, "metal", UnitDefs[Spring.GetUnitDefID(cargoID)].metalCost)
+	end
+	-- Take off!
+	stage = 4
+	--Spring.MoveCtrl.SetRelativeVelocity(unitID, 0, 0, 5)
+	Spring.MoveCtrl.SetRelativeVelocity(unitID, 0, 0, 5)
+	Spring.MoveCtrl.SetGravity(unitID, -0.75 * GRAVITY)
+	Turn(body, x_axis, math.rad(-30), math.rad(10))
+	WaitForTurn(body, x_axis)
+	Turn(body, x_axis, math.rad(-70), math.rad(15))
+	WaitForTurn(body, x_axis)
+	Turn(body, x_axis, math.rad(-80), math.rad(5))
+	WaitForTurn(body, x_axis)
+	Spring.MoveCtrl.SetGravity(unitID, -4 * GRAVITY)
+	stage = 5
+	Sleep(1500)
+	Spin(body, z_axis, math.rad(180), math.rad(45))
+	Sleep(2000)
+	StopSpin(body, z_axis, math.rad(45))
+	Sleep(2000)
+	-- We're out of the atmosphere, bye bye!
+	Spring.DestroyUnit(unitID, false, true)
+end
+
 function script.Killed(recentDamage, maxHealth)
-	--local severity = recentDamage / maxHealth * 100
-	--if severity <= 25 then
-	--	Explode(body, math.bit_or({SFX.BITMAPONLY, SFX.BITMAP1}))
-	--	return 1
-	--elseif severity <= 50 then
-	--	Explode(body, math.bit_or({SFX.FALL, SFX.BITMAP1}))
-	--	return 2
-	--else
-	--	Explode(body, math.bit_or({SFX.FALL, SFX.SMOKE, SFX.FIRE, SFX.EXPLODE_ON_HIT, SFX.BITMAP1}))
-	--	return 3
-	--end
 end

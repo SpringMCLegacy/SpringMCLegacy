@@ -166,23 +166,40 @@ function gadget:UnitCreated(unitID, unitDefID, teamID, builderID)
 	local info = GG.lusHelper[unitDefID]
 	local cp = UnitDefs[unitDefID].customParams
 	info.builderID = builderID
-	if info.arms == nil and UnitDefs[unitDefID].weapons[1] then
+	if info.firstTime == nil and UnitDefs[unitDefID].weapons[1] then
+		info.firstTime = true -- only do this step once
 		-- Parse Model Data
 		local pieceMap = GetUnitPieceMap(unitID)
-		info.arms = pieceMap["rupperarm"] ~= nil
 		local progenitorMap = {} -- pieceName => progenitor
 		local weaponProgenitors = {} -- weaponProgenitors[weaponID] = pieceName
 		
-		local leftArmIDs = {}
-		local rightArmIDs = {}
-		
+		-- mech, vehicle or dropship
 		local launcherIDs = {}
-		local mainTurretIDs = {} -- weapons housed in main turret
+		local barrelIDs = {}
+		
+		-- vehicle or dropship
 		local turretIDs = {} -- weapon housed in turret_<weaponnum>
 		local mantletIDs = {}
-		local barrelIDs = {}
+		
+		-- vehicle only
+		local mainTurretIDs = {} -- weapons housed in main turret
 		local numWheels = 0
+		
+		-- mech only
+		local leftArmIDs = {}
+		local rightArmIDs = {}
 		local numJets = 0
+		
+		-- dropship only
+		local numVExhausts = 0
+		local numVExhaustLarges = 0
+		local numHExhausts = 0
+		local numHExhaustLarges = 0
+		local numGears = 0
+		local numDusts = 0
+		local numBooms = 0
+		local numCargoPieces = 0
+		
 		for pieceName, pieceNum in pairs(pieceMap) do
 			local parent = GetUnitPieceInfo(unitID, pieceNum)["parent"]
 			local weapNumPos = pieceName:find("_") or 0
@@ -207,12 +224,6 @@ function gadget:UnitCreated(unitID, unitDefID, teamID, builderID)
 				barrelIDs[weaponNum] = true
 				leftArmIDs[weaponNum] = leftArmIDs[weaponNum] or IsPieceAncestor(unitID, pieceName, "lupperarm")
 				rightArmIDs[weaponNum] = rightArmIDs[weaponNum] or IsPieceAncestor(unitID, pieceName, "rupperarm")
-			-- Find the number of wheels
-			elseif pieceName:find("wheel") then
-				numWheels = numWheels + 1
-			-- Find the number of jumpjets
-			elseif pieceName:find("jet") then
-				numJets = numJets + 1
 			-- assign flare weaponIDs to left or right arms
 			elseif pieceName:find("flare_") then
 				leftArmIDs[weaponNum] = leftArmIDs[weaponNum] or IsPieceAncestor(unitID, pieceName, "lupperarm")
@@ -223,6 +234,36 @@ function gadget:UnitCreated(unitID, unitDefID, teamID, builderID)
 				leftArmIDs[weaponNum] = leftArmIDs[weaponNum] or IsPieceAncestor(unitID, pieceName, "lupperarm")
 				rightArmIDs[weaponNum] = rightArmIDs[weaponNum] or IsPieceAncestor(unitID, pieceName, "rupperarm")
 				mainTurretIDs[weaponNum] = weaponProgenitors[weaponNum] == "turret"
+			-- Find the number of wheels
+			elseif pieceName:find("wheel") then
+				numWheels = numWheels + 1
+			-- Find the number of jumpjets
+			elseif pieceName:find("jet") then
+				numJets = numJets + 1
+			-- Find the number of large vertical exhausts
+			elseif pieceName:find("vexhaustlarge") then
+				numVExhaustLarges = numVExhaustLarges + 1
+			-- Find the number of vertical exhausts
+			elseif pieceName:find("vexhaust") then
+				numVExhausts = numVExhausts + 1
+			-- Find the number of large horizontal exhausts
+			elseif pieceName:find("hexhaustlarge") then
+				numHExhaustLarges = numHExhaustLarges + 1
+			-- Find the number of horizontal exhausts
+			elseif pieceName:find("hexhaust") then
+				numHExhausts = numHExhausts + 1
+			-- Find the number of dust emitters
+			elseif pieceName:find("dust") then
+				numDusts = numDusts + 1
+			-- Find the number of landing gears
+			elseif pieceName:match("gear%d+.-") then
+				numGears = math.max(numGears, pieceName:match("%d+")) -- just pick the highest number we find, because there's all manner of gear parts
+			-- Find the number of booms
+			elseif pieceName:find("boom") then
+				numBooms = numBooms + 1
+			-- Find the number of Cargo attachments
+			elseif pieceName:find("cargopiece") then
+				numCargoPieces = numCargoPieces + 1
 			end
 		end
 		
@@ -242,6 +283,14 @@ function gadget:UnitCreated(unitID, unitDefID, teamID, builderID)
 		info.barrelIDs = barrelIDs
 		info.numWheels = numWheels
 		info.jumpjets = numJets
+		info.numHExhausts = numHExhausts
+		info.numHExhaustLarges = numHExhaustLarges
+		info.numVExhausts = numVExhausts
+		info.numVExhaustLarges = numVExhaustLarges
+		info.numGears = numGears
+		info.numDusts = numDusts
+		info.numBooms = numBooms
+		info.numCargoPieces = numCargoPieces
 	end
 	
 	-- Remove aircraft land and repairlevel buttons
