@@ -84,6 +84,7 @@ function LoadCargo(cargoID, callerID)
 	numCargo = numCargo + 1
 	cargo[numCargo] = cargoID
 	Spring.UnitScript.AttachUnit(cargoPieces[numCargo] or -1, cargoID)
+	GG.SetSquad(cargoID, teamID) -- will ignore non-vehicles
 end
 
 include ("anims/dropships/" .. unitDef.name:sub(unitDef.name:match("^.*()_") + 1, -1) .. ".lua")
@@ -166,7 +167,7 @@ end
 
 function script.Create()
 	Spring.SetUnitAlwaysVisible(unitID, true)
-	Spring.SetUnitNoSelect(unitID, true)
+	--Spring.SetUnitNoSelect(unitID, true)
 	Setup()
 	StartThread(fx)
 	Drop()
@@ -265,3 +266,21 @@ function script.QueryWeapon(weaponID)
 		return flares[weaponID]
 	end
 end 
+
+local dead = false
+function script.HitByWeapon(x, z, weaponID, damage)
+	if damage > Spring.GetUnitHealth(unitID) then
+		if not dead then
+			dead = true
+			for i, cargoID in ipairs(cargo) do
+				Spring.DestroyUnit(cargoID, false, true)
+			end
+			Signal(1)
+			Signal(fx)
+			Spring.MoveCtrl.SetGravity(unitID, 0.75 * GRAVITY)	
+			Spring.MoveCtrl.SetCollideStop(unitID, true)
+			Spring.MoveCtrl.SetTrackGround(unitID, true)
+		end
+		return 0
+	end
+end

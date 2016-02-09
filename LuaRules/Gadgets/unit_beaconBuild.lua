@@ -167,7 +167,6 @@ end
 GG.ToggleUpgradeOptions = ToggleUpgradeOptions
 
 function SpawnCargo(beaconID, dropshipID, unitDefID, teamID)
-	env = Spring.UnitScript.GetScriptEnv(dropshipID)
 	local tx, ty, tz = GetUnitPosition(dropshipID)
 	local cargoID = CreateUnit(unitDefID, tx, ty, tz, "s", teamID)
 	env = Spring.UnitScript.GetScriptEnv(dropshipID)
@@ -178,6 +177,7 @@ function SpawnCargo(beaconID, dropshipID, unitDefID, teamID)
 		outpostIDs[beaconID] = cargoID
 		-- Let unsynced know about this pairing
 		Spring.SetUnitRulesParam(cargoID, "beaconID", beaconID)
+		Spring.SetUnitRulesParam(beaconID, "upgradeID", cargoID)
 	end
 end
 

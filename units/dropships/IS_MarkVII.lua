@@ -3,7 +3,7 @@ local IS_MarkVII = {
 	description         = "Cargo Landing Craft",
 	objectName        	= "IS_MarkVIIb.s3o",
 	iconType			= "dropship",
-	script				= "Dropship_MarkVII.lua",
+	script				= "Dropship.lua",
 	category 			= "ground notbeacon",
 	activateWhenBuilt   = true,
 	maxDamage           = 13000,
@@ -81,6 +81,8 @@ local IS_MarkVII = {
 	customparams = {
 		helptext		= "A Dropship",
 		dropship		= "vehicle",
+		hoverheight		= 43 + 12,
+		radialdist		= 2500,
     },
 	sounds = {
 		underattack        = "Dropship_Alarm",
