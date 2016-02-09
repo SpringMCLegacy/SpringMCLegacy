@@ -2,7 +2,7 @@
 local DropShip = Unit:New{
 	description         = "BattleMech Dropship",
 	iconType			= "dropship",
-	script				= "Dropship_union.lua", -- TODO: make dropship script generic for all spheroids
+	script				= "Dropship.lua",
 	category 			= "dropship structure notbeacon",
 	activateWhenBuilt   = true,
 	maxDamage           = 180000, -- TODO: Do we want to make lower tier dropships vulnerable?

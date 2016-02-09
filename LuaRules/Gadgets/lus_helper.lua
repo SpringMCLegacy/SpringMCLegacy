@@ -166,7 +166,7 @@ function gadget:UnitCreated(unitID, unitDefID, teamID, builderID)
 	local info = GG.lusHelper[unitDefID]
 	local cp = UnitDefs[unitDefID].customParams
 	info.builderID = builderID
-	if info.firstTime == nil and UnitDefs[unitDefID].weapons[1] then
+	if info.firstTime == nil and UnitDefs[unitDefID].weapons[1] or cp.dropship then -- TODO: stuid hack for Avenger (currently no weapons)
 		info.firstTime = true -- only do this step once
 		-- Parse Model Data
 		local pieceMap = GetUnitPieceMap(unitID)
