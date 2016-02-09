@@ -401,7 +401,7 @@ end
 function gadget:AllowCommand(unitID, unitDefID, teamID,
                              cmdID, cmdParams, cmdOptions)
   -- don't allow jumping if at/above critical heat
-  if (cmdID == CMD_JUMP and (spGetUnitRulesParam(unitID, "heat") or 0) >= 95) then
+  if (cmdID == CMD_JUMP and (spGetUnitRulesParam(unitID, "heat") or 0) >= 50) then
     return false
   end
   if (cmdID == CMD_JUMP and

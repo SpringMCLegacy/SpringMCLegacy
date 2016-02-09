@@ -75,7 +75,7 @@ local currHeatLevel = 0
 local excessHeat = 0
 SetUnitRulesParam(unitID, "heat", 0)
 SetUnitRulesParam(unitID, "excess_heat", 0)
-local jumpHeat = 4
+local jumpHeat = 2
 local SlowDownRate = 2
 
 --piece defines
