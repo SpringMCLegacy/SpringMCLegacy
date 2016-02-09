@@ -14,10 +14,10 @@ end
 -- Common valid() functions here:
 local function allMechs(unitDefID) return (UnitDefs[unitDefID].customParams.baseclass == "mech") end
 local function hasJumpjets(unitDefID) return (UnitDefs[unitDefID].customParams.jumpjets or false) end
-local function hasMASC(unitDefID) return (UnitDefs[unitDefID].customParams.masc or false) end
-local function hasECM(unitDefID) return (UnitDefs[unitDefID].customParams.ecm or false) end
-local function hasBAP(unitDefID) return (UnitDefs[unitDefID].customParams.bap or false) end
-local function isFaction(unitDefID, faction) return UnitDefs[unitDefID].name:sub(1,2) == faction end
+local function hasMASC(unitDefID) return (allMechs(unitDefID) and UnitDefs[unitDefID].customParams.masc or false) end
+local function hasECM(unitDefID) return (allMechs(unitDefID) and UnitDefs[unitDefID].customParams.ecm or false) end
+local function hasBAP(unitDefID) return (allMechs(unitDefID) and UnitDefs[unitDefID].customParams.bap or false) end
+local function isFaction(unitDefID, faction) return (allMechs(unitDefID) and UnitDefs[unitDefID].name:sub(1,2) == faction) end
 
 local function hasWeaponName(unitDefID, weapName)
 	local weapons = UnitDefs[unitDefID].weapons
