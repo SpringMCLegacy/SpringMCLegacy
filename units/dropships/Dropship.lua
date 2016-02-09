@@ -182,8 +182,9 @@ local Union = DropShip:New{
 }
 
 local Leopard = Union:New{ -- TODO: DropShip:New, custom weapons etc
-	--objectName        	= "Dropship_Leopard.s3o",
+	objectName        	= "IS_Leopard.s3o",
 	customparams = {
+		radialdist		= 2500,
 		maxtonnage		= 150,
 		cooldown		= 20 * 30,
 		-- droptime
