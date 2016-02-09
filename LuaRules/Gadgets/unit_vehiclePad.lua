@@ -144,7 +144,7 @@ local function Deliver(unitID, teamID)
 		local vehInfo = RandomVehicle(teamID, ageWeight)
 		if vehInfo then
 			--Spring.Echo("New Vehicle:", UnitDefs[vehInfo.unitDefID].name, vehInfo.squadSize, ageWeight)
-			GG.DropshipDelivery(unitID, teamID, "is_markvii", {{[vehInfo.unitDefID] = vehInfo.squadSize}}, 0, nil, 1) 
+			GG.DropshipDelivery(unitID, teamID, "is_drost", {{[vehInfo.unitDefID] = vehInfo.squadSize}}, 0, nil, 1) 
 		else
 			--Spring.Echo("No vehicle of that weight :(")
 		end

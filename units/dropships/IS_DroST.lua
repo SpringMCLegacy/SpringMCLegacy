@@ -3,7 +3,7 @@ local IS_DroST = {
 	description         = "Cargo Landing Craft",
 	objectName        	= "IS_DroST.s3o",
 	iconType			= "dropship",
-	script				= "Dropship_DroST.lua",
+	script				= "Dropship.lua",
 	category 			= "ground notbeacon",
 	activateWhenBuilt   = true,
 	maxDamage           = 13000,
@@ -93,6 +93,8 @@ local IS_DroST = {
 	customparams = {
 		helptext		= "A Dropship",
 		dropship		= "vehicle",
+		hoverheight		= 43 + 12,
+		radialdist		= 2500,
     },
 	sounds = {
 		underattack        = "Dropship_Alarm",
