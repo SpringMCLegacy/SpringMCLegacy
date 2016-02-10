@@ -101,6 +101,9 @@ local IsUnitNARCed = GG.IsUnitNARCed
 local IsUnitTAGed = GG.IsUnitTAGed
 
 -- Info from lusHelper gadget
+missileWeaponIDs = info.missileWeaponIDs
+local flareOnShots = info.flareOnShots
+local jammableIDs = info.jammableIDs
 local missileWeaponIDs = info.missileWeaponIDs
 local flareOnShots = info.flareOnShots
 local jammableIDs = info.jammableIDs
@@ -108,10 +111,12 @@ local launcherIDs = info.launcherIDs
 local barrelRecoils = info.barrelRecoilDist
 local burstLengths = info.burstLengths
 local minRanges = info.minRanges
-local amsID = info.amsID
-local turretIDs = info.turretIDs
+local amsIDs = info.amsIDs
+local mainTurretIDs = info.mainTurretIDs
+local weaponProgenitors = info.weaponProgenitors
 
 TURRET_SPEED = math.rad(30)
+ELEVATION_SPEED = math.rad(60)
 
 -- weapons pieces
 trackEmitters = {}
@@ -121,12 +126,6 @@ for i = 1, 7, 2 do -- TODO: setup a table in lus_helper
 end
 
 turrets = {}
-for i, valid in pairs(turretIDs) do
-	if valid then
-		turrets[i] = piece("turret_" .. i)
-	end
-end
-
 local flares = {}
 --local turrets = info.turrets
 
@@ -135,9 +134,6 @@ local barrels = {}
 local launchers = {}
 local launchPoints = {}
 local currPoints = {}
-local spinPieces = {}
-local spinPiecesState = {}
-
 local missileSignals = {}
 local amsSignal = {}
 
@@ -147,17 +143,19 @@ for weaponID = 1, info.numWeapons do
 			launchers[weaponID] = piece("launcher_" .. weaponID)
 		end
 		missileSignals[weaponID] = {}
-		--[[launchPoints[weaponID] = {}
-		currPoints[weaponID] = 1
-		for i = 1, burstLengths[weaponID] do
-			launchPoints[weaponID][i] = piece("launchpoint_" .. weaponID .. "_" .. i)
-		end	]]
+		if piece("launchpoint_" .. weaponID .. "_1") then -- launchpoints exist, use them
+			launchPoints[weaponID] = {}
+			currPoints[weaponID] = 1
+			for i = 1, burstLengths[weaponID] do
+				launchPoints[weaponID][i] = piece("launchpoint_" .. weaponID .. "_" .. i)
+			end	
+		end
 	elseif weaponID then
 		flares[weaponID] = piece ("flare_" .. weaponID)
 	end
-	--[[if info.turretIDs[weaponID] then
+	if info.turretIDs[weaponID] then
 		turrets[weaponID] = piece("turret_" .. weaponID)
-	end]]
+	end
 	if info.mantletIDs[weaponID] then
 		mantlets[weaponID] = piece("mantlet_" .. weaponID)
 	end
@@ -187,51 +185,48 @@ function script.AimWeapon(weaponID, heading, pitch)
 		Signal(amsSignal)
 		SetSignalMask(amsSignal)
 	end
+	if amsIDs[weaponID] then 
+		return true
+	end
+	-- use a weapon-specific turret if it exists
 	if trackEmitters[weaponID] then -- LBLs
 		if weaponID % 2 == 1 then -- only first in each pair
 			Turn(trackEmitters[weaponID], y_axis, heading, TURRET_SPEED) -- + math.rad(90 * (weaponID - 1)/2), TURRET_SPEED)
 			WaitForTurn(trackEmitters[weaponID], y_axis)
 		end
-	elseif turrets[weaponID] then -- PPCs
+	elseif turrets[weaponID] then
 		Turn(turrets[weaponID], y_axis, heading, TURRET_SPEED)
-		if mantlets[weaponID] then
-			Turn(mantlets[weaponID], x_axis, -pitch, TURRET_SPEED)
-			WaitForTurn(mantlets[weaponID], x_axis)
-		else
-			Turn(turrets[weaponID], x_axis, -pitch, TURRET_SPEED)
-		end
-		WaitForTurn(turrets[weaponID], y_axis)
-		WaitForTurn(turrets[weaponID], x_axis)
-		return true
-	elseif missileWeaponIDs[weaponID] then
+	elseif mainTurretIDs[weaponID] then -- otherwise use main
+		Turn(turret, y_axis, heading, TURRET_SPEED)
+	elseif flares[weaponID] then
+		Turn(flares[weaponID], y_axis, heading)
+	end
+	if mantlets[weaponID] then
+		Turn(mantlets[weaponID], x_axis, -pitch, ELEVATION_SPEED)
+	elseif missileWeaponIDs[weaponID] then -- yeah it happens if, in this case, launchpoint_1_# are attached to launcher_1 but launchpoint_2_# and 3 are attached to launcher_1 as well
 		if launchers[weaponID] then
 			Turn(launchers[weaponID], x_axis, -pitch, ELEVATION_SPEED)
-		--[[else
+		elseif weaponID > 1 and launchers[1] then
+			Turn(launchers[1], x_axis, -pitch, ELEVATION_SPEED)
+		elseif launchPoints[weaponID] then
 			for i = 1, burstLengths[weaponID] do
-				Turn(launchPoints[weaponID][i] or launchPoints[weaponID][1], x_axis, -pitch, ELEVATION_SPEED)
-			end]]
+				Turn(launchPoints[weaponID][i], x_axis, -pitch, ELEVATION_SPEED)
+			end
 		end
-		return stage == 4 -- only allow when on the ground
-	elseif flares[weaponID] then -- ERMBLs
-		Turn(flares[weaponID], y_axis, heading)
+	elseif flares[weaponID] then
 		Turn(flares[weaponID], x_axis, -pitch)
 	end
-	--Sleep(100 * weaponID) -- desync barrels to fire independently
-	return true
+	if weaponProgenitors[weaponID] then
+		WaitForTurn(piece(weaponProgenitors[weaponID]), y_axis)
+	end
+	if mantlets[weaponID] then
+		WaitForTurn(mantlets[weaponID], x_axis)
+	end
+	return WeaponCanFire(weaponID)
 end
 
 function script.BlockShot(weaponID, targetID, userTarget)
-	if weaponID == amsID then return false end
-	local jammable = jammableIDs[weaponID]
-	if jammable then
-		if targetID then
-			local jammed = GetUnitUnderJammer(targetID) and (not IsUnitNARCed(targetID)) and (not IsUnitTAGed(targetID))
-			if jammed then
-				--Spring.Echo("Can't fire weapon " .. weaponID .. " as target is jammed")
-				return true 
-			end
-		end
-	end
+	if amsIDs[weaponID] then return false end
 	local minRange = minRanges[weaponID]
 	if minRange then
 		local distance
@@ -246,18 +241,44 @@ function script.BlockShot(weaponID, targetID, userTarget)
 		end
 		if distance < minRange then return true end
 	end
+	local jammable = jammableIDs[weaponID]
+	if jammable then
+		if targetID then
+			local jammed = GetUnitUnderJammer(targetID) and (not IsUnitNARCed(targetID)) and (not IsUnitTAGed(targetID))
+			if jammed then
+				--Spring.Echo("Can't fire weapon " .. weaponID .. " as target is jammed")
+				Spring.SetUnitRulesParam(unitID, "MISSILE_TARGET_JAMMED", Spring.GetGameFrame())
+				return true 
+			else
+				Spring.SetUnitRulesParam(targetID, "ENEMY_MISSILE_LOCK", Spring.GetGameFrame())
+			end
+		end
+	end
+	--if #cargo > 0 then StartThread(Unload, targetID) end
 	return false
 end
 
+function script.FireWeapon(weaponID)
+	if barrels[weaponID] and barrelRecoils[weaponID] then
+		Move(barrels[weaponID], z_axis, -barrelRecoils[weaponID], BARREL_SPEED)
+		WaitForMove(barrels[weaponID], z_axis)
+		Move(barrels[weaponID], z_axis, 0, 10)
+	end
+	if not missileWeaponIDs[weaponID] and not flareOnShots[weaponID] then
+		EmitSfx(flares[weaponID], SFX.CEG + weaponID)
+	end
+end
+
 function script.Shot(weaponID)
-	if missileWeaponIDs[weaponID] then
-		EmitSfx(launchers[weaponID], SFX.CEG + weaponID)
-		--EmitSfx(launchPoints[weaponID][currPoints[weaponID]] or launchPoints[weaponID][1], SFX.CEG + weaponID)
-        --[[currPoints[weaponID] = currPoints[weaponID] + 1
+	if missileWeaponIDs[weaponID] and launchPoints[weaponID] then
+		EmitSfx(launchPoints[weaponID][currPoints[weaponID]], SFX.CEG + weaponID)
+        currPoints[weaponID] = currPoints[weaponID] + 1
         if currPoints[weaponID] > burstLengths[weaponID] then 
 			currPoints[weaponID] = 1
-        end]]
-	elseif flares[weaponID] then
+        end
+	elseif 	missileWeaponIDs[weaponID] then
+		EmitSfx(launchers[weaponID], SFX.CEG + weaponID)
+	elseif flareOnShots[weaponID] then
 		EmitSfx(flares[weaponID], SFX.CEG + weaponID)
 	end
 end
@@ -266,13 +287,13 @@ function script.AimFromWeapon(weaponID)
 	return trackEmitters[weaponID] or turrets[weaponID] or launchers[weaponID] or flares[weaponID] or 1
 end
 
-function script.QueryWeapon(weaponID)
+function script.QueryWeapon(weaponID) 
 	if missileWeaponIDs[weaponID] then
-		return launchers[weaponID] --launchPoints[weaponID][currPoints[weaponID]] or launchPoints[weaponID][1]
+		return launchPoints[weaponID] and launchPoints[weaponID][currPoints[weaponID]] or launchers[weaponID]
 	else
 		return flares[weaponID]
 	end
-end 
+end
 
 local dead = false
 function script.HitByWeapon(x, z, weaponID, damage)

@@ -3,6 +3,10 @@ local body = piece ("body")
 local cargoDoor1, cargoDoor2 = piece("cargodoor1", "cargodoor2")
 local attachment = piece("attachment")
 
+function WeaponCanFire(weaponID)
+	return not noFiring
+end
+
 function Setup()
 	-- Put pieces into starting pos
 	for _, exhaust in ipairs(vExhaustLarges) do

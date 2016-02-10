@@ -7,6 +7,11 @@ for i = 1,info.numDusts do
 	dusts[i] = piece("dust" .. i)
 end
 
+function WeaponCanFire(weaponID)
+	return missileWeaponIDs[weaponID] and stage == 4 or true
+end
+
+
 function Setup()
 	-- Put pieces into starting pos
 	Turn(vExhaustLarges[1], x_axis, math.rad(90), 0)

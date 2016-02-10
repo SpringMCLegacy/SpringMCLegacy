@@ -155,7 +155,7 @@ local function FindPieceProgenitor(unitID, pieceName)
 	-- order matters here, we want to return turret even if that turret is then attached to body
 	local progenitors = {"lwing", "rwing", "rotor", "turret", "body"}
 	for _, progenitor in ipairs(progenitors) do
-		if progenitor == pieceName then return pieceName end
+		if pieceName:find(progenitor) then return pieceName end
 		local found, parent = IsPieceAncestor(unitID, pieceName, progenitor, false)
 		if found then return parent end
 	end

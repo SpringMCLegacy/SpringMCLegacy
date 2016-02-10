@@ -52,7 +52,6 @@ for k,v in pairs(maxAmmo) do
 	currAmmo[k] = v 
 	SetUnitRulesParam(unitID, "ammo_" .. k, 100)
 end
-local hasArms = info.arms
 local leftArmIDs = info.leftArmIDs
 local rightArmIDs = info.rightArmIDs
 local leftArmMasterID = info.leftArmMasterID
@@ -81,11 +80,8 @@ local SlowDownRate = 2
 --piece defines
 local pelvis, torso, rlowerleg, llowerleg = piece ("pelvis", "torso", "rlowerleg", "llowerleg")
 
-local rupperarm, lupperarm
-if hasArms then
-	rupperarm = piece("rupperarm")
-	lupperarm = piece("lupperarm")
-end
+rupperarm = piece("rupperarm")
+lupperarm = piece("lupperarm")
 
 local jets = {}
 if info.jumpjets then
