@@ -21,6 +21,15 @@ local DropShip = Unit:New{
 		dropship			= "mech",
 		--baseclass			= "dropship",
     },
+	
+	sfxtypes = {
+		explosiongenerators = {
+			"custom:heavy_jet_trail_blue",
+			"custom:medium_jet_trail_blue",
+			"custom:dropship_main_engine_stage2",
+			"custom:heavy_jet_trail",
+		},
+	},
 }
 
 return {

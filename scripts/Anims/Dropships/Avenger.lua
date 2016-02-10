@@ -137,8 +137,8 @@ function fx()
 	end
 	while stage == 5 do
 		for _, exhaust in ipairs(hExhausts) do
-			EmitSfx(exhaust, SFX.CEG + 2)
-			EmitSfx(exhaust, SFX.CEG + 3)
+			EmitSfx(exhaust, CEG + 2)
+			EmitSfx(exhaust, CEG + 3)
 		end
 		Sleep(30)
 	end

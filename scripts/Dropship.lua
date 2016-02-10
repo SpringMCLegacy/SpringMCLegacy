@@ -1,5 +1,5 @@
 -- useful global stuff
-local weapons = unitDef.weapons
+weapons = unitDef.weapons
 info = GG.lusHelper[unitDefID]
 
 -- Localisations
@@ -66,12 +66,13 @@ HEADING = facing * 16384 + math.random(-1820, 1820)
 
 -- use ANGLE if you want the unit to fly in at a random angle
 RADIAL_DIST = unitDef.customParams.radialdist or 0
-ANGLE = math.floor(unitID / 100)
+ANGLE = math.rad(math.random(360)) --math.floor(unitID / 100)
 UX = math.cos(ANGLE) * RADIAL_DIST
 UZ = math.sin(ANGLE) * RADIAL_DIST
 
 -- Variables
 stage = 0
+noFiring = false
 up = false
 touchDown = false
 beaconID = nil
@@ -110,7 +111,7 @@ local minRanges = info.minRanges
 local amsID = info.amsID
 local turretIDs = info.turretIDs
 
-local TURRET_SPEED = math.rad(30)
+TURRET_SPEED = math.rad(30)
 
 -- weapons pieces
 trackEmitters = {}
@@ -175,6 +176,7 @@ end
 
 
 function script.AimWeapon(weaponID, heading, pitch)
+	if noFiring then return false end
 	if weaponID < 25 then
 		Signal(2 ^ (weaponID - 1))
 		SetSignalMask(2 ^ (weaponID - 1))
@@ -192,7 +194,12 @@ function script.AimWeapon(weaponID, heading, pitch)
 		end
 	elseif turrets[weaponID] then -- PPCs
 		Turn(turrets[weaponID], y_axis, heading, TURRET_SPEED)
-		Turn(turrets[weaponID], x_axis, -pitch, TURRET_SPEED)
+		if mantlets[weaponID] then
+			Turn(mantlets[weaponID], x_axis, -pitch, TURRET_SPEED)
+			WaitForTurn(mantlets[weaponID], x_axis)
+		else
+			Turn(turrets[weaponID], x_axis, -pitch, TURRET_SPEED)
+		end
 		WaitForTurn(turrets[weaponID], y_axis)
 		WaitForTurn(turrets[weaponID], x_axis)
 		return true
@@ -207,8 +214,8 @@ function script.AimWeapon(weaponID, heading, pitch)
 		return stage == 4 -- only allow when on the ground
 	elseif flares[weaponID] then -- ERMBLs
 		Turn(flares[weaponID], y_axis, heading)
+		Turn(flares[weaponID], x_axis, -pitch)
 	end
-	Turn(flares[weaponID], x_axis, -pitch)
 	--Sleep(100 * weaponID) -- desync barrels to fire independently
 	return true
 end

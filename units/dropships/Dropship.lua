@@ -171,18 +171,34 @@ local Union = DropShip:New{
 		cooldown		= 30 * 30, -- 30s, time before the dropship has regained orbit, refuelled etc ready to drop again
 		-- droptime
 	},
-	sfxtypes = {
-		explosiongenerators = {
-			"custom:heavy_jet_trail_blue",
-			"custom:medium_jet_trail_blue",
-			"custom:dropship_main_engine_stage2",
-			"custom:heavy_jet_trail",
-		},
-	},
 }
 
-local Leopard = Union:New{ -- TODO: DropShip:New, custom weapons etc
+local Leopard = DropShip:New{ -- TODO: DropShip:New, custom weapons etc
 	objectName        	= "IS_Leopard.s3o",
+
+	weapons 		= {	
+		[1] = {
+			name	= "PPC",
+			maxAngleDif = 280,
+		},
+		[2] = {
+			name	= "PPC",
+			maxAngleDif = 280,
+		},
+		[3] = {
+			name	= "LBL",
+			maxAngleDif = 280,
+		},
+		[4] = {
+			name	= "LBL",
+			maxAngleDif = 280,
+		},
+		[5] = {
+			name	= "LRM20",
+			maxAngleDif = 60,
+		},
+	},
+		
 	customparams = {
 		radialdist		= 2500,
 		maxtonnage		= 150,
