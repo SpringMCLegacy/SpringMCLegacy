@@ -1,6 +1,10 @@
 -- Unit-specific pieces only declared here, generic dropship pieces in main script
 local body = piece("body")
 
+function WeaponCanFire(weaponID)
+	return not noFiring
+end
+
 function GetAngleFromTarget()
 	if beaconID then
 		ANGLE = select(2, Spring.GetUnitRotation(beaconID)) + math.rad(30) + math.rad(math.random(0, 5) * 60)

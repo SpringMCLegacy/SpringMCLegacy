@@ -67,7 +67,7 @@ return {
 	heatefficiency = {
 		cmdDesc = {
 			id = GetCmdID('PERK_HEAT_EFFICIENCY'),
-			action = 'perkheatsefficiency',
+			action = 'perkheatefficiency',
 			name = Pad("Heatsinks"),
 			tooltip = '+50% Heat dissipation rate & capacity',
 			texture = 'bitmaps/ui/perkbg.png',	

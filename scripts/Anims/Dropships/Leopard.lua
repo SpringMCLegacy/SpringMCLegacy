@@ -34,7 +34,7 @@ function TouchDown()
 	for i = 1, 3 do
 		GG.EmitSfxName(unitID, gears[i].gear, "mech_jump_dust")
 	end
-	Move(turrets[1], y_axis, 7, 2)
+	Move(turrets[1], y_axis, 7, 3.5)
 	WaitForMove(turrets[1], y_axis)
 	noFiring = false
 end
