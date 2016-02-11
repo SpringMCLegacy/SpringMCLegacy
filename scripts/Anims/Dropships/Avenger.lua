@@ -200,6 +200,8 @@ function TakeOff()
 end
 
 function Drop()
+	Signal(Drop)
+	SetSignalMask(Drop)
 	-- Move us up to the drop position
 	Spring.MoveCtrl.Enable(unitID)
 	Spring.MoveCtrl.SetPosition(unitID, TX + UX, TY + DROP_HEIGHT, TZ + UZ)

@@ -180,8 +180,8 @@ function fx()
 end
 
 function Drop()
-	Signal(1)
-	SetSignalMask(1)
+	Signal(Drop)
+	SetSignalMask(Drop)
 	StartThread(fx)
 	-- setup fx pieces
 	for _, exhaust in ipairs(vExhaustLarges) do

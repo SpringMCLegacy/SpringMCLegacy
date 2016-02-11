@@ -215,6 +215,8 @@ function fx()
 end
 
 function Drop()
+	Signal(Drop)
+	SetSignalMask(Drop)
 	Spring.SetTeamRulesParam(Spring.GetUnitTeam(unitID), "DROPSHIP_COOLDOWN", -1)
 	Spring.MoveCtrl.Enable(unitID)
 	Spring.MoveCtrl.SetPosition(unitID, TX, GY + DROP_HEIGHT, TZ)

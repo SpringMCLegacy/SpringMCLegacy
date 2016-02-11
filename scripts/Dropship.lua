@@ -169,7 +169,7 @@ function script.Create()
 	--Spring.SetUnitNoSelect(unitID, true)
 	Setup()
 	StartThread(fx)
-	Drop()
+	StartThread(Drop)
 end
 
 
