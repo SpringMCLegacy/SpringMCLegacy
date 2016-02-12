@@ -147,7 +147,7 @@ local function IsPieceAncestor(unitID, pieceName, ancestor, strict)
 	elseif parent == "" or parent == nil then
 		return false, parent
 	else
-		return IsPieceAncestor(unitID, parent, ancestor)
+		return IsPieceAncestor(unitID, parent, ancestor, strict)
 	end
 end
 
@@ -155,9 +155,9 @@ local function FindPieceProgenitor(unitID, pieceName)
 	-- order matters here, we want to return turret even if that turret is then attached to body
 	local progenitors = {"lwing", "rwing", "rotor", "turret", "body"}
 	for _, progenitor in ipairs(progenitors) do
-		if pieceName:find(progenitor) then return pieceName end
+		if pieceName:find(progenitor) then return pieceName end -- return the piece and if it is an exact match
 		local found, parent = IsPieceAncestor(unitID, pieceName, progenitor, false)
-		if found then return parent end
+		if found then return parent end 
 	end
 	return nil
 end
@@ -183,6 +183,8 @@ function gadget:UnitCreated(unitID, unitDefID, teamID, builderID)
 		
 		-- vehicle only
 		local mainTurretIDs = {} -- weapons housed in main turret
+		local turretOnTurretIDs = {} -- turrets on top of main turret, FU Behemoth!
+		local turretOnTurretSides = {}
 		local numWheels = 0
 		
 		-- mech only
@@ -205,7 +207,7 @@ function gadget:UnitCreated(unitID, unitDefID, teamID, builderID)
 			local weapNumPos = pieceName:find("_") or 0
 			local weapNumEndPos = pieceName:find("_", weapNumPos+1) or 0
 			local weaponNum = tonumber(pieceName:sub(weapNumPos+1,weapNumEndPos-1))
-			progenitorMap[pieceName] = FindPieceProgenitor(unitID, pieceName)
+			progenitorMap[pieceName], exactMatch = FindPieceProgenitor(unitID, pieceName)
 			if weaponNum and not weaponProgenitors[weaponNum] then
 				weaponProgenitors[weaponNum] = progenitorMap[pieceName]
 				--Spring.Echo(UnitDefs[unitDefID].name, "weapon num:", weaponNum, "progenitor:", weaponProgenitors[weaponNum])
@@ -216,6 +218,10 @@ function gadget:UnitCreated(unitID, unitDefID, teamID, builderID)
 			-- Find turret pieces
 			elseif pieceName:find("turret_") then
 				turretIDs[weaponNum] = true
+				turretOnTurretIDs[weaponNum] = IsPieceAncestor(unitID, pieceName, "turret", true) -- strict check
+				if turretOnTurretIDs[weaponNum] then
+					turretOnTurretSides[weaponNum] = (Spring.GetUnitPieceInfo(unitID, pieceNum)["offset"][1] > 0) and -1 or 1
+				end
 			-- Find mantlet pieces
 			elseif pieceName:find("mantlet_") then
 				mantletIDs[weaponNum] = true
@@ -273,12 +279,14 @@ function gadget:UnitCreated(unitID, unitDefID, teamID, builderID)
 			info.rightArmIDs = rightArmIDs
 			info.leftArmIDs = leftArmIDs
 		end
-		
+
 		info.progenitorMap = progenitorMap
 		info.weaponProgenitors = weaponProgenitors
 		info.launcherIDs = launcherIDs
 		info.turretIDs = turretIDs
 		info.mainTurretIDs = mainTurretIDs
+		info.turretOnTurretIDs = turretOnTurretIDs
+		info.turretOnTurretSides = turretOnTurretSides
 		info.mantletIDs = mantletIDs
 		info.barrelIDs = barrelIDs
 		info.numWheels = numWheels

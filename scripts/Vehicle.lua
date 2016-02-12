@@ -50,6 +50,9 @@ local hover = info.hover
 local vtol = info.vtol
 local aero = info.aero
 local mainTurretIDs = info.mainTurretIDs
+local turretOnTurretIDs = info.turretOnTurretIDs
+local turretOnTurretSides = info.turretOnTurretSides
+
 local weaponProgenitors = info.weaponProgenitors
 local limbHPs = {}
 for limb,limbHP in pairs(info.limbHPs) do -- copy table from defaults
@@ -470,7 +473,22 @@ function script.AimWeapon(weaponID, heading, pitch)
 		return WeaponCanFire(weaponID)
 	end
 	-- use a weapon-specific turret if it exists
-	if turrets[weaponID] then
+	if turretOnTurretIDs[weaponID] then
+		WaitForTurn(turret, y_axis)
+		local targetType, user, info = Spring.GetUnitWeaponTarget(unitID, weaponID)
+		local tx, tz
+		if targetType == 1 then -- unit
+			tx, _, tz = Spring.GetUnitPosition(info)
+		elseif targetType == 2 then
+			tx = info[1]
+			tz = info[3]
+		end
+		local x, _, z = Spring.GetUnitPiecePosDir(unitID, turrets[weaponID])
+		local angle = (math.rad(90) - math.atan(math.abs(tx - x), math.abs(tz - z))) * (turretOnTurretSides[weaponID] * 25)
+		--Spring.Echo(weaponID, tx - x, tz - z, math.deg(angle))
+		Turn(turrets[weaponID], y_axis, angle, TURRET_2_SPEED * 5)
+		WaitForTurn(turrets[weaponID], y_axis)
+	elseif turrets[weaponID] then
 		Turn(turrets[weaponID], y_axis, heading, TURRET_2_SPEED)
 	elseif mainTurretIDs[weaponID] then -- otherwise use main
 		Turn(turret, y_axis, heading, TURRET_SPEED)
