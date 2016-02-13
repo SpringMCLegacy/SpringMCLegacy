@@ -51,7 +51,7 @@ local function UpdateRemaining(unitID, newLevel, price)
 	-- disable perks here
 	for perkCmdID, perkDef in pairs(perkDefs) do
 		if not currentPerks[unitID][perkDef.name] and validPerks[Spring.GetUnitDefID(unitID)][perkCmdID] then
-			if newLevel < (price or perkDef.price) then
+			if newLevel < (price or perkDef.price) or (perkDef.requires and not currentPerks[unitID][perkDef.requires]) then
 				EditUnitCmdDesc(unitID, FindUnitCmdDesc(unitID, perkCmdID), {disabled = true})
 			else
 				EditUnitCmdDesc(unitID, FindUnitCmdDesc(unitID, perkCmdID), {disabled = false})

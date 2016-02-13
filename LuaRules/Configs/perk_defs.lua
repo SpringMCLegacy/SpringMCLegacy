@@ -2,12 +2,20 @@
 local GetCmdID = GG.CustomCommands.GetCmdID
 
 local PAD_LENGTH = 12
-local function Pad(input, input2)
+
+local function PadString(input)
 	while input:len() < PAD_LENGTH do
 		input = " " .. input .. " "
 	end
-	if input2 then return input .. "\n" .. Pad(input2) end
 	return input
+end
+local function Pad(...)
+	local arg = {...}
+	local output = ""
+	for i, v in ipairs(arg) do
+		output = output .. PadString(v) .. "\n"
+	end
+	return output
 end
 
 
@@ -282,11 +290,11 @@ return {
 		costFunction = deductXP,
 	},
 	-- DropShip/Zone upgrades
-	drop = {
+	union = {
 		cmdDesc = {
-			id = GetCmdID('PERK_DROPSHIP_UPGRADE'),
-			action = 'perkdropshipupgrade',
-			name = Pad("Upgrade", "Dropship"),
+			id = GetCmdID('PERK_DROPSHIP_UPGRADE_UNION'),
+			action = 'perkdropshipupgradeunion',
+			name = Pad("Union", "Dropship"),
 			tooltip = 'Increases Tonnage Limit',
 			texture = 'bitmaps/ui/perkbg.png',	
 		},
@@ -297,5 +305,22 @@ return {
 		end,
 		costFunction = deductCBills,
 		price = 10000,
+	},
+	overlord = {
+			cmdDesc = {
+			id = GetCmdID('PERK_DROPSHIP_UPGRADE_OVERLORD'),
+			action = 'perkdropshipupgradeoverlord',
+			name = Pad("Overlord", "Dropship"),
+			tooltip = 'Increases Tonnage Limit',
+			texture = 'bitmaps/ui/perkbg.png',
+		},
+		valid = function (unitDefID) return UnitDefs[unitDefID].name:find("dropzone") end,
+		applyPerk = function (unitID)
+			local teamID = Spring.GetUnitTeam(unitID)
+			GG.TeamDropshipUpgrade(teamID)
+		end,
+		costFunction = deductCBills,
+		price = 10000,
+		requires = "union",
 	},
 }
