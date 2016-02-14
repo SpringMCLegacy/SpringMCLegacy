@@ -517,7 +517,7 @@ function script.AimWeapon(weaponID, heading, pitch)
 	Signal(2 ^ weaponID) -- 2 'to the power of' weapon ID
 	SetSignalMask(2 ^ weaponID)
 
-	if hasArms and (weaponID == leftArmMasterID or weaponID == rightArmMasterID) then
+	if weaponID == leftArmMasterID or weaponID == rightArmMasterID then
 		if weaponID == leftArmMasterID then
 			Turn(lupperarm, x_axis, -pitch, ELEVATION_SPEED)
 		elseif weaponID == rightArmMasterID then

@@ -108,6 +108,7 @@ local function SendOrder(teamID)
 end
 
 local function Spam(teamID)
+	--Spring.Echo("Spamming for team", teamID)
 	local unitID = dropZoneIDs[teamID]
 	if Spring.ValidUnitID(unitID) then
 		local cmdDescs = Spring.GetUnitCmdDescs(unitID)
@@ -334,7 +335,6 @@ end
 
 function gadget:UnitDestroyed(unitID, unitDefID, teamID, attackerID, attackerDefID, attackerTeam)
 	if AI_TEAMS[teamID] then
-		Spam(teamID)
 		local beaconID = Spring.GetUnitRulesParam(unitID, "beaconID")
 		if (unitDefID == C3_ID or unitDefID == VPAD_ID) and beaconID then
 			teamUpgradeCounts[teamID][unitDefID] = teamUpgradeCounts[teamID][unitDefID] - 1
@@ -344,10 +344,12 @@ function gadget:UnitDestroyed(unitID, unitDefID, teamID, attackerID, attackerDef
 		elseif UnitDefs[unitDefID].name:find("dropzone") then -- TODO: "DROPZONE_IDS[unitDefID] then" should work here
 			dropZoneIDs[teamID] = nil
 			-- TODO: why doesn't it get auto-switched like it does for player?
+		elseif UnitDefs[unitDefID].customParams.baseclass == "mech" then
+			Spam(teamID)
 		end
 	end
 	if attackerTeam and AI_TEAMS[attackerTeam] then
-		Spam(attackerTeam)
+		--Spam(attackerTeam)
 		if attackerID and (UnitDefs[attackerDefID].customParams.baseclass == "mech") then 
 			Perk(attackerID) 
 		end

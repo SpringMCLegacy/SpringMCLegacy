@@ -221,7 +221,6 @@ function UnloadMech(i)
 	Move(cargoPieces[i], z_axis, (i <= 2 and -1 or 1) and 75, moveSpeed) -- 65
 	WaitForMove(cargoPieces[i], z_axis)
 	Spring.UnitScript.DropUnit(cargo[i])
-	Spring.UnitScript.DropUnit(cargo[i])
 	if env and env.script and env.script.StopMoving then -- TODO: shouldn't be required, maybe if cargo died?
 		Spring.UnitScript.CallAsUnit(cargo[i], env.script.StopMoving)
 	end
@@ -232,7 +231,7 @@ function UnloadMech(i)
 	local UNLOAD_Z = z + 300 * dx * (i <= 2 and -1 or 1)
 	--Spring.SetUnitMoveGoal(cargo[i], UNLOAD_X, 0, UNLOAD_Z, 25) -- bug out over here
 	Spring.GiveOrderToUnit(cargo[i], CMD.MOVE, {UNLOAD_X, 0, UNLOAD_Z}, {"alt"})
-	Spring.MarkerAddPoint(UNLOAD_X, 0, UNLOAD_Z)
+	--Spring.MarkerAddPoint(UNLOAD_X, 0, UNLOAD_Z)
 	cargoLeft = cargoLeft - 1
 	Sleep(1000)
 	Turn(doors[i], z_axis, 0, DOOR_SPEED)
