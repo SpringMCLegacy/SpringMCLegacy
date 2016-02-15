@@ -208,7 +208,7 @@ local cargoLeft
 function UnloadMech(i)
 	Signal(2 ^ (i + #weapons))
 	SetSignalMask(2 ^ (i + #weapons))
-	env = Spring.UnitScript.GetScriptEnv(cargo[i])
+	local env = Spring.UnitScript.GetScriptEnv(cargo[i])
 	if env and env.script and env.script.StartMoving then -- TODO: shouldn't be required, maybe if cargo died?
 		Spring.UnitScript.CallAsUnit(cargo[i], env.script.StartMoving, false)
 	end
