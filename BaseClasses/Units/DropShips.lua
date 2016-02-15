@@ -15,6 +15,7 @@ local DropShip = Unit:New{
 	transportMass		= 120000,
 	holdSteady 			= true,
 	power				= 1, -- don't target me!
+	maxvelocity 		= 0.1,
 	
 	customparams = {
 		bap					= true,
