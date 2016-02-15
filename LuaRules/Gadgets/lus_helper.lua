@@ -144,7 +144,7 @@ local function IsPieceAncestor(unitID, pieceName, ancestor, strict)
 	local parent = GetUnitPieceInfo(unitID, pieceMap[pieceName]).parent
 	if (strict and parent == ancestor) or (not strict and parent:find(ancestor)) then 
 		return true, parent
-	elseif parent == "[null]" then
+	elseif parent == "" or parent == nil then
 		return false, parent
 	else
 		return IsPieceAncestor(unitID, parent, ancestor, strict)
@@ -155,7 +155,7 @@ local function FindPieceProgenitor(unitID, pieceName)
 	-- order matters here, we want to return turret even if that turret is then attached to body
 	local progenitors = {"lwing", "rwing", "rotor", "turret", "body"}
 	for _, progenitor in ipairs(progenitors) do
-		if pieceName:find(progenitor) then return pieceName end -- return the piece
+		if pieceName:find(progenitor) then return pieceName end -- return the piece and if it is an exact match
 		local found, parent = IsPieceAncestor(unitID, pieceName, progenitor, false)
 		if found then return parent end 
 	end
@@ -207,7 +207,7 @@ function gadget:UnitCreated(unitID, unitDefID, teamID, builderID)
 			local weapNumPos = pieceName:find("_") or 0
 			local weapNumEndPos = pieceName:find("_", weapNumPos+1) or 0
 			local weaponNum = tonumber(pieceName:sub(weapNumPos+1,weapNumEndPos-1))
-			progenitorMap[pieceName] = FindPieceProgenitor(unitID, pieceName)
+			progenitorMap[pieceName], exactMatch = FindPieceProgenitor(unitID, pieceName)
 			if weaponNum and not weaponProgenitors[weaponNum] then
 				weaponProgenitors[weaponNum] = progenitorMap[pieceName]
 				--Spring.Echo(UnitDefs[unitDefID].name, "weapon num:", weaponNum, "progenitor:", weaponProgenitors[weaponNum])
