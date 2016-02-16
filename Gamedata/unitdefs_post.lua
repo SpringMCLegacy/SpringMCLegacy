@@ -1,10 +1,21 @@
 -- USEFUL FUNCTIONS & INCLUDES
 VFS.Include("LuaRules/Includes/utilities.lua", nil, VFS.ZIP)
 
+local function GetWeight(mass)
+	mass = tonumber(mass)
+	local light = mass < 40
+	local medium = not light and mass < 60
+	local heavy = not light and not medium and mass < 80
+	local assault = not light and not medium and not heavy
+	local weight = light and "light" or medium and "medium" or heavy and "heavy" or "assault"
+	return weight
+end
+
 local modOptions
 if (Spring.GetModOptions) then
   modOptions = Spring.GetModOptions()
 end
+
 
 -- TODO: I still don't quite follow why the SIDES table from _pre (available to all defs) isn't available here
 local sideData = VFS.Include("gamedata/sidedata.lua", VFS.ZIP)
@@ -53,11 +64,30 @@ local partsList	= {	mech	= {	"torso", "arm_left", "arm_right", "leg_left", "leg_
 					aero	= {	"body", "left_wing", "right_wing"},
 					vtol	= {	"body", "rotor"},}
 
--- DROPZONES
+-- DROPZONES & Vpads
 local DROPZONE_UDS = {} --DZ_IDS = {shortSideName = unitDef}
 local DROPZONE_BUILDOPTIONS = {} -- D_B = {shortSideName = {unitname1, ...}}
+
+local VPAD_UDS = {} --V_IDS = {shortSideName = unitDef}
+local VPAD_SPAWNOPTIONS = {} -- V_S = {shortSideName = {unitname1, ...}}
+local VPAD_REPLACES = {} -- V_R = {shortSideName = {oldUnitName = newUnitName}}
+
 for i, sideName in pairs(SIDES) do
 	DROPZONE_BUILDOPTIONS[sideName] = {}
+	VPAD_REPLACES[sideName] = {}
+	VPAD_SPAWNOPTIONS[sideName] = {
+		light = {},
+		medium = {},
+		heavy = {},
+		assault = {},
+		apc = {},
+		arty = {
+			light = {},
+			medium = {},
+			heavy = {},
+			assault = {},
+		},
+	}
 end
 
 local UPLINK_UD
@@ -105,6 +135,7 @@ for name, ud in pairs(UnitDefs) do
 				ud.maxdamage = cp.tonnage / 10 + cp.armor.tons * 1000
 				ud.maxdamage = ud.maxdamage * (armorTypes[cp.armor.type] or 1)
 			end
+			cp.weightclass = GetWeight(cp.tonnage)
 		end
 		if cp.speed then
 			ud.maxvelocity = tonumber(cp.speed or 0) / (cp.baseclass == "mech" and 20 or 30) -- convert kph to game speed
@@ -212,6 +243,15 @@ for name, ud in pairs(UnitDefs) do
 		if cp.baseclass == "mech" then -- add only mechs to Dropship buildoptions
 			table.insert(DROPZONE_BUILDOPTIONS[side], name)
 		else -- a vehicle
+			if ud.transportcapacity then
+				table.insert(VPAD_SPAWNOPTIONS[side]["apc"], name)
+			elseif cp.artillery then
+				table.insert(VPAD_SPAWNOPTIONS[side]["arty"][cp.weightclass], name)
+			elseif cp.replaces then
+				VPAD_REPLACES[side][cp.replaces] = name
+			else
+				table.insert(VPAD_SPAWNOPTIONS[side][cp.weightclass], name)
+			end
 			ud.maxdamage = ud.maxdamage * 0.5
 		end
 	elseif cp.baseclass == "tower" then
@@ -232,6 +272,8 @@ for name, ud in pairs(UnitDefs) do
 		elseif cp.dropship or name:find("dropzone") then
 			ud.canselfdestruct = false
 			ud.levelground = false
+		elseif name:find("vehiclepad") then
+			VPAD_UDS[side] = ud
 		end
 		ud.canmove = false
 		ud.canrepair = false
@@ -259,6 +301,14 @@ for side, dropZoneOptions in pairs(DROPZONE_BUILDOPTIONS) do
 	DROPZONE_UDS[side]["buildoptions"] = dropZoneOptions
 end
 
+for side, vPadSpawnOptions in pairs(VPAD_SPAWNOPTIONS) do
+	VPAD_UDS[side].customparams.spawn = vPadSpawnOptions
+	VPAD_UDS[side].customparams.house = VPAD_REPLACES[side]
+	Spring.Echo("PRINT SPAWNTABLE FOR " .. side)
+	table.echo(vPadSpawnOptions)
+	Spring.Echo("PRINT REPLACE TABLE FOR " .. side)
+	table.echo(VPAD_REPLACES[side])
+end
+
 table.sort(UPLINK_BUILDOPTIONS)
 UPLINK_UD["buildoptions"] = UPLINK_BUILDOPTIONS
-

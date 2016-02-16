@@ -60,6 +60,7 @@ local ManticoreD = ManticoreBase:New{
 		maxammo 		= {ac10 = 2, srm = 1},
 		barrelrecoildist = {[1] = 5},
 		squadsize 		= 1,
+		replaces		= "fs_manticore",
     },
 }
 
@@ -90,6 +91,7 @@ local ManticoreS = ManticoreBase:New{
 		armor			= {type = "ferro", tons = 10},
 		maxammo 		= {lrm = 1, srm = 1},
 		squadsize 		= 1,
+		replaces		= "la_manticore",
     },
 }
 	

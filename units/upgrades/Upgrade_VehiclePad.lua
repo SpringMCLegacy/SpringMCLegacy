@@ -4,6 +4,7 @@ local Upgrade_VehiclePad = Upgrade:New{
 	maxDamage           = 10000,
 	mass                = 5000,
 	buildCostMetal      = 10000,
+	objectname			= "upgrade/upgrade_vehiclepad.s3o",
 
 	collisionVolumeOffsets = [[0 2 0]],
 	collisionVolumeScales = [[125 12 125]],
@@ -14,4 +15,9 @@ local Upgrade_VehiclePad = Upgrade:New{
     },
 }
 
-return lowerkeys({ ["Upgrade_VehiclePad"] = Upgrade_VehiclePad })
+vPads = {}
+for i, sideName in pairs(Sides) do
+	vPads[sideName .. "_vehiclepad"] = Upgrade_VehiclePad:New{}
+	--Spring.Echo("Making Dropzone for", sideName)
+end
+return lowerkeys(vPads)

@@ -18,7 +18,6 @@ local Packrat = LightTank:New{
 		armor			= {type = "std", tons = 3},
 		maxammo 		= {srm = 1},
 		squadsize 		= 3,
-		artillery 		= true,
     },
 }
 
