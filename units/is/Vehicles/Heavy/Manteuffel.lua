@@ -35,6 +35,7 @@ local ManteuffelRAC = Manteuffel:New{
 		maxammo 		= {ac5 = 4},
 		squadsize 		= 1,
 		ecm				= true,
+		replaces		= "fs_bulldog",
     },
 }
 
@@ -63,6 +64,7 @@ local ManteuffelHG = Manteuffel:New{
 		maxammo 		= {hvgauss = 4},
 		barrelrecoildist = {[1] = 7},
 		squadsize 		= 1,
+		replaces		= "la_bulldog",
     },
 }
 	

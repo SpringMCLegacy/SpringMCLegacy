@@ -25,6 +25,7 @@ local Tiger = Tank:New{
 		maxammo 		= {ac10 = 2, srm = 1},
 		barrelrecoildist = {[1] = 3},
 		squadsize 		= 1,
+		replaces		= "fs_manticore",
     },
 }
 

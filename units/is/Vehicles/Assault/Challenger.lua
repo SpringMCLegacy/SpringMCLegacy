@@ -21,9 +21,11 @@ local Challenger = Tank:New{
 		},
 		[6] = {
 			name	= "SSRM2",
+			maxAngleDif = 60,
 		},
 		[7] = {
 			name	= "SSRM2",
+			maxAngleDif = 60,
 		},
 		[8] = {
 			name	= "AMS",
@@ -40,9 +42,10 @@ local Challenger = Tank:New{
 		maxammo 		= {ac10 = 1, gauss = 2, lrm = 1, srm = 1},
 		barrelrecoildist = {[1] = 5, [2] = 5},
 		squadsize 		= 1,
+		replaces		= "fs_behemoth",
 	},
 }
 
 return lowerkeys({
-	--["FS_Challenger"] = Challenger:New(),
+	["FS_Challenger"] = Challenger:New(),
 })

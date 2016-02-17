@@ -47,6 +47,7 @@ local HunterS = HunterBase:New{
 		armor			= {type = "ferro", tons = 4},
 		maxammo 		= {lrm = 2},
 		squadsize 		= 1,
+		replaces		= "la_hunter",
     },
 }
 	

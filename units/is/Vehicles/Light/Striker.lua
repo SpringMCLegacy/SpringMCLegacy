@@ -22,6 +22,7 @@ local Striker = LightTank:New{
 		armor			= {type = "ferro", tons = 6.5},
 		maxammo 		= {lrm = 1, srm = 1},
 		squadsize 		= 1,
+		replaces		= "fs_hunter",
     },
 }
 

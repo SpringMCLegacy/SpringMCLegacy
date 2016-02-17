@@ -24,6 +24,7 @@ local Rommel = Tank:New{
 		maxammo 		= {ac20 = 2, lrm = 1},
 		barrelrecoildist = {[1] = 5},
 		squadsize 		= 1,
+		replaces		= "la_manticore",
     },
 }
 

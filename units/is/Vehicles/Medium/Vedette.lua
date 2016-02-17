@@ -52,6 +52,7 @@ local VedetteLBX = Vedette:New{
 		maxammo 		= {ac5 = 4},
 		barrelrecoildist = {[1] = 5},
 		squadsize 		= 2,
+		replaces		= "cc_vedette",
     },
 }
 
@@ -73,6 +74,7 @@ local VedetteLG = Vedette:New{
 		maxammo 		= {ltgauss = 4},
 		barrelrecoildist = {[1] = 7},
 		squadsize 		= 1,
+		replaces		= "fw_vedette",
     },
 }
 	

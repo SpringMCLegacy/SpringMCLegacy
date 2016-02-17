@@ -25,6 +25,6 @@ local Plainsman = Hover:New{
 }
 
 return lowerkeys({
-	--["LA_Plainsman"] = Plainsman:New(),
-	--["CC_Plainsman"] = Plainsman:New(),
+	["LA_Plainsman"] = Plainsman:New{customParams = { replaces = "la_pegasus" }},
+	["CC_Plainsman"] = Plainsman:New{customParams = { replaces = "cc_pegasus" }},
 })

@@ -54,6 +54,7 @@ local PegasusK = Pegasus:New{
 		armor			= {type = "standard", tons = 5},
 		maxammo 		= {srm = 2},
 		squadsize 		= 1,
+		replaces		= "dc_pegasus",
     },
 }
 

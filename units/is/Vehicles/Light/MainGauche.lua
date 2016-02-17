@@ -25,9 +25,10 @@ local MainGauche = LightTank:New{
 		maxammo 		= {ltgauss = 1},
 		barrelrecoildist = {[1] = 5},
 		squadsize 		= 1,
+		replaces		= "fw_myrmidon",
     },
 }
 
 return lowerkeys({
-	--["FW_MainGauche"] = MainGauche:New(),
+	["FW_MainGauche"] = MainGauche:New(),
 })

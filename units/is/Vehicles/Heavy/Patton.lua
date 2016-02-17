@@ -27,6 +27,7 @@ local Patton = Tank:New{
 		maxammo 		= {ac10 = 3, lrm = 1},
 		barrelrecoildist = {[1] = 5},
 		squadsize 		= 1,
+		replaces		= "la_manticore",
     },
 }
 

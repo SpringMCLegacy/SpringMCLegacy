@@ -22,9 +22,10 @@ local Galleon = LightTank:New{
 		heatlimit 		= 10,
 		armor			= {type = "standard", tons = 3.5},
 		squadsize 		= 2,
+		replaces		= "fw_scorpion",
     },
 }
 
 return lowerkeys({
-	--["FW_Galleon"] = Galleon:New(),
+	["FW_Galleon"] = Galleon:New(),
 })
