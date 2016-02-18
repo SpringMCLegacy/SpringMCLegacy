@@ -37,13 +37,20 @@ function table.copy(input, output)
 	end
 end
 
-function table.contains(table, element)
-  for _, value in pairs(table) do
-    if value == element then
-      return true
-    end
-  end
-  return false
+function table.contains(input, element)
+	for key, value in pairs(input) do
+		if value == element then
+			return key
+		end
+	end
+	return false
+end
+
+function table.removeElement(input, element)
+	local key = table.contains(input, element)
+	if key then
+		table.remove(input, key)
+	end
 end
 
 function table.unserialize(input)

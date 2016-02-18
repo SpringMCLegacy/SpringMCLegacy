@@ -64,30 +64,40 @@ local partsList	= {	mech	= {	"torso", "arm_left", "arm_right", "leg_left", "leg_
 					aero	= {	"body", "left_wing", "right_wing"},
 					vtol	= {	"body", "rotor"},}
 
+local spawnTable = {
+	light = {},
+	medium = {},
+	heavy = {},
+	assault = {},
+	apc = {},
+	arty = {
+		light = {},
+		medium = {},
+		heavy = {},
+		assault = {},
+	},
+}
+					
 -- DROPZONES & Vpads
 local DROPZONE_UDS = {} --DZ_IDS = {shortSideName = unitDef}
 local DROPZONE_BUILDOPTIONS = {} -- D_B = {shortSideName = {unitname1, ...}}
 
 local VPAD_UDS = {} --V_IDS = {shortSideName = unitDef}
 local VPAD_SPAWNOPTIONS = {} -- V_S = {shortSideName = {unitname1, ...}}
-local VPAD_REPLACES = {} -- V_R = {shortSideName = {oldUnitName = newUnitName}}
+local VPAD_HOUSE_REMOVE = {} -- V_R = {shortSideName = {oldUnitName = newUnitName}}
 
 for i, sideName in pairs(SIDES) do
 	DROPZONE_BUILDOPTIONS[sideName] = {}
-	VPAD_REPLACES[sideName] = {}
+	VPAD_HOUSE_REMOVE[sideName] = {}
+	table.copy(spawnTable, VPAD_HOUSE_REMOVE[sideName])
 	VPAD_SPAWNOPTIONS[sideName] = {
-		light = {},
-		medium = {},
-		heavy = {},
-		assault = {},
-		apc = {},
-		arty = {
-			light = {},
-			medium = {},
-			heavy = {},
-			assault = {},
-		},
+		{}, -- default lvl 1
+		{}, -- heavy upgrade lvl 2
+		{}, -- House upgrade lvl 3
 	}
+	for i = 1, 3 do 
+		table.copy(spawnTable, VPAD_SPAWNOPTIONS[sideName][i])
+	end
 end
 
 local UPLINK_UD
@@ -243,14 +253,24 @@ for name, ud in pairs(UnitDefs) do
 		if cp.baseclass == "mech" then -- add only mechs to Dropship buildoptions
 			table.insert(DROPZONE_BUILDOPTIONS[side], name)
 		else -- a vehicle
-			if ud.transportcapacity then
-				table.insert(VPAD_SPAWNOPTIONS[side]["apc"], name)
-			elseif cp.artillery then
-				table.insert(VPAD_SPAWNOPTIONS[side]["arty"][cp.weightclass], name)
-			elseif cp.replaces then
-				VPAD_REPLACES[side][cp.replaces] = name
+			local startTier = (cp.weightclass == "light" or cp.weightclass == "medium") and 1 or 2
+			local class = (ud.transportcapacity and "apc") or (cp.artillery and "arty") or cp.weightclass
+			if cp.replaces then
+				if class == "arty" then
+					VPAD_HOUSE_REMOVE[side][class][cp.weightclass][cp.replaces] = true
+					table.insert(VPAD_SPAWNOPTIONS[side][3][class][cp.weightclass], name)
+				else
+					VPAD_HOUSE_REMOVE[side][class][cp.replaces] = true
+					table.insert(VPAD_SPAWNOPTIONS[side][3][class], name)
+				end
+			elseif class == "arty" then
+				for i = startTier, 3 do
+					table.insert(VPAD_SPAWNOPTIONS[side][i][class][cp.weightclass], name)
+				end
 			else
-				table.insert(VPAD_SPAWNOPTIONS[side][cp.weightclass], name)
+				for i = startTier, 3 do
+					table.insert(VPAD_SPAWNOPTIONS[side][i][class], name)
+				end
 			end
 			ud.maxdamage = ud.maxdamage * 0.5
 		end
@@ -301,13 +321,29 @@ for side, dropZoneOptions in pairs(DROPZONE_BUILDOPTIONS) do
 	DROPZONE_UDS[side]["buildoptions"] = dropZoneOptions
 end
 
+-- remove replaced versions in tier 3
+-- VPAD_HOUSE_REMOVE[side][cp.weightclass][cp.replaces] = true
+-- VPAD_HOUSE_REMOVE sideName = {light = {unitName = true, unitName2 = true , ... }, medium = {...}, ...}
+for side, sideTable in pairs(VPAD_HOUSE_REMOVE) do
+	for weightClass, weightTable in pairs(sideTable) do
+		if weightClass == "arty" then
+			for artyWeight, artyWeightTable in pairs(weightTable) do
+				for removed in pairs(artyWeightTable) do
+					table.removeElement(VPAD_SPAWNOPTIONS[side][3][weightClass][artyWeight], removed)
+				end			
+			end
+		else
+			for removed in pairs(weightTable) do
+				table.removeElement(VPAD_SPAWNOPTIONS[side][3][weightClass], removed)
+			end
+		end
+	end
+end
+
 for side, vPadSpawnOptions in pairs(VPAD_SPAWNOPTIONS) do
 	VPAD_UDS[side].customparams.spawn = vPadSpawnOptions
-	VPAD_UDS[side].customparams.house = VPAD_REPLACES[side]
 	Spring.Echo("PRINT SPAWNTABLE FOR " .. side)
 	table.echo(vPadSpawnOptions)
-	Spring.Echo("PRINT REPLACE TABLE FOR " .. side)
-	table.echo(VPAD_REPLACES[side])
 end
 
 table.sort(UPLINK_BUILDOPTIONS)
