@@ -221,9 +221,6 @@ function UnloadMech(i)
 	Move(cargoPieces[i], z_axis, (i <= 2 and -1 or 1) and 75, moveSpeed) -- 65
 	WaitForMove(cargoPieces[i], z_axis)
 	Spring.UnitScript.DropUnit(cargo[i])
-	if env and env.script and env.script.StopMoving then -- TODO: shouldn't be required, maybe if cargo died?
-		Spring.UnitScript.CallAsUnit(cargo[i], env.script.StopMoving)
-	end
 	Spring.SetUnitBlocking(cargo[i], true, true, true, true, true, true, true)
 	-- TODO: change bugout depending on side of leopard
 	local dx, _, dz = Spring.GetUnitDirection(unitID)
