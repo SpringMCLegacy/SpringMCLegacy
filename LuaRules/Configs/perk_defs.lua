@@ -296,7 +296,7 @@ return {
 			action = 'perkdropshipupgradeunion',
 			name = Pad("Union", "Dropship"),
 			tooltip = 'Increases Tonnage Limit',
-			texture = 'bitmaps/ui/perkbg.png',	
+			texture = 'bitmaps/ui/upgrade.png',	
 		},
 		valid = function (unitDefID) return UnitDefs[unitDefID].name:find("dropzone") end,
 		applyPerk = function (unitID)
@@ -312,7 +312,7 @@ return {
 			action = 'perkdropshipupgradeoverlord',
 			name = Pad("Overlord", "Dropship"),
 			tooltip = 'Increases Tonnage Limit',
-			texture = 'bitmaps/ui/perkbg.png',
+			texture = 'bitmaps/ui/upgrade.png',
 		},
 		valid = function (unitDefID) return UnitDefs[unitDefID].name:find("dropzone") end,
 		applyPerk = function (unitID)
@@ -329,7 +329,7 @@ return {
 			action = 'perkvpadheavy',
 			name = Pad("Heavy", "Units"),
 			tooltip = 'Adds heavy and assault units to the militia',
-			texture = 'bitmaps/ui/perkbg.png',	
+			texture = 'bitmaps/ui/upgrade.png',	
 		},
 		valid = function (unitDefID) return UnitDefs[unitDefID].name:find("vehiclepad") end,
 		applyPerk = function (unitID)
@@ -344,7 +344,7 @@ return {
 			action = 'perkvpadhouse',
 			name = Pad("House", "Forces"),
 			tooltip = 'Adds elite House forces to the militia',
-			texture = 'bitmaps/ui/perkbg.png',	
+			texture = 'bitmaps/ui/upgrade.png',	
 		},
 		valid = function (unitDefID) return UnitDefs[unitDefID].name:find("vehiclepad") end,
 		applyPerk = function (unitID)
