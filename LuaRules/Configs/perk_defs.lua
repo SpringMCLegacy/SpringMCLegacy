@@ -15,7 +15,7 @@ local function Pad(...)
 	for i, v in ipairs(arg) do
 		output = output .. PadString(v) .. "\n"
 	end
-	return output
+	return output:sub(1,-2) -- remove trailing newline
 end
 
 
@@ -289,7 +289,7 @@ return {
 		end,
 		costFunction = deductXP,
 	},
-	-- DropShip/Zone upgrades
+	-- Upgrades
 	union = {
 		cmdDesc = {
 			id = GetCmdID('PERK_DROPSHIP_UPGRADE_UNION'),
@@ -322,5 +322,36 @@ return {
 		costFunction = deductCBills,
 		price = 10000,
 		requires = "union",
+	},
+	vpadheavy = {
+		cmdDesc = {
+			id = GetCmdID('PERK_VPAD_HEAVY'),
+			action = 'perkvpadheavy',
+			name = Pad("Heavy", "Units"),
+			tooltip = 'Adds heavy and assault units to the militia',
+			texture = 'bitmaps/ui/perkbg.png',	
+		},
+		valid = function (unitDefID) return UnitDefs[unitDefID].name:find("vehiclepad") end,
+		applyPerk = function (unitID)
+			GG.VPadUpgrade(unitID, 2)
+		end,
+		costFunction = deductCBills,
+		price = 10000,
+	},
+	vpadhouse = {
+		cmdDesc = {
+			id = GetCmdID('PERK_VPAD_HOUSE'),
+			action = 'perkvpadhouse',
+			name = Pad("House", "Forces"),
+			tooltip = 'Adds elite House forces to the militia',
+			texture = 'bitmaps/ui/perkbg.png',	
+		},
+		valid = function (unitDefID) return UnitDefs[unitDefID].name:find("vehiclepad") end,
+		applyPerk = function (unitID)
+			GG.VPadUpgrade(unitID, 3)
+		end,
+		costFunction = deductCBills,
+		price = 10000,
+		requires = "vpadheavy",
 	},
 }

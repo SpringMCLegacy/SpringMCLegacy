@@ -82,7 +82,7 @@ local spawnTable = {
 local DROPZONE_UDS = {} --DZ_IDS = {shortSideName = unitDef}
 local DROPZONE_BUILDOPTIONS = {} -- D_B = {shortSideName = {unitname1, ...}}
 
-local VPAD_UDS = {} --V_IDS = {shortSideName = unitDef}
+local VPAD_UD
 local VPAD_SPAWNOPTIONS = {} -- V_S = {shortSideName = {unitname1, ...}}
 local VPAD_HOUSE_REMOVE = {} -- V_R = {shortSideName = {oldUnitName = newUnitName}}
 
@@ -293,7 +293,7 @@ for name, ud in pairs(UnitDefs) do
 			ud.canselfdestruct = false
 			ud.levelground = false
 		elseif name:find("vehiclepad") then
-			VPAD_UDS[side] = ud
+			VPAD_UD = ud
 		end
 		ud.canmove = false
 		ud.canrepair = false
@@ -304,15 +304,6 @@ for name, ud in pairs(UnitDefs) do
 		ud.canfight = false
 		ud.canassist = false
 		ud.canrepeat = false
-	end
-	
-	-- convert all customparams subtables back into strings for Spring
-	if cp then
-		for k, v in pairs (cp) do
-			if type(v) == "table" or type(v) == "boolean" then
-				cp[k] = table.serialize(v)
-			end
-		end
 	end
 end
 
@@ -340,11 +331,19 @@ for side, sideTable in pairs(VPAD_HOUSE_REMOVE) do
 	end
 end
 
-for side, vPadSpawnOptions in pairs(VPAD_SPAWNOPTIONS) do
-	VPAD_UDS[side].customparams.spawn = vPadSpawnOptions
-	Spring.Echo("PRINT SPAWNTABLE FOR " .. side)
-	table.echo(vPadSpawnOptions)
-end
-
 table.sort(UPLINK_BUILDOPTIONS)
 UPLINK_UD["buildoptions"] = UPLINK_BUILDOPTIONS
+VPAD_UD.customparams.spawn = VPAD_SPAWNOPTIONS
+--table.echo(VPAD_UD.customparams.spawn)
+
+for name, ud in pairs(UnitDefs) do
+	local cp = ud.customparams
+	-- convert all customparams subtables back into strings for Spring
+	if cp then
+		for k, v in pairs (cp) do
+			if type(v) == "table" or type(v) == "boolean" then
+				cp[k] = table.serialize(v)
+			end
+		end
+	end
+end
