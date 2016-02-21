@@ -253,6 +253,7 @@ for name, ud in pairs(UnitDefs) do
 		if cp.baseclass == "mech" then -- add only mechs to Dropship buildoptions
 			table.insert(DROPZONE_BUILDOPTIONS[side], name)
 		else -- a vehicle
+			ud.icontype = "vehicle" .. cp.weightclass
 			local startTier = (cp.weightclass == "light" or cp.weightclass == "medium") and 1 or 2
 			local class = (ud.transportcapacity and "apc") or (cp.artillery and "arty") or cp.weightclass
 			if cp.replaces then

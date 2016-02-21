@@ -12,7 +12,7 @@ local iconTypes = {
 	beacon = {
 		bitmap		=	"icons/beacon.png",
 		size			=	5,
-		distance	=	3.0,
+		distance	=	4.0,
 	},
 	infantry = {
 		bitmap		=	"icons/infantry.png",
@@ -20,18 +20,18 @@ local iconTypes = {
 		distance	=	1.0,
 	},
 	light = {
-		bitmap		=	"icons/lightmech.png",
-		size			=	3.5,
+		bitmap		=	"icons/heavymech.png",
+		size			=	3,
 		distance	=	1.0,
 	},
 	medium = {
-		bitmap		=	"icons/mediummech.png",
+		bitmap		=	"icons/heavymech.png",
 		size			=	3.5,
 		distance	=	1.1,
 	},
 	heavy = {
-		bitmap		=	"icons/heavymech.png",
-		size			=	4.2,
+		bitmap		=	"icons/assaultmech.png",
+		size			=	4,
 		distance	=	1.2,
 	},
 	assault = {
@@ -39,9 +39,24 @@ local iconTypes = {
 		size			=	4.5,
 		distance	=	1.3,
 	},
-	vehicle = {
+	vehiclelight = {
+		bitmap		=	"icons/vehicle.png",
+		size			=	1.75,
+		distance	=	1.0,
+	},
+	vehiclemedium = {
 		bitmap		=	"icons/vehicle.png",
 		size			=	2,
+		distance	=	1.0,
+	},
+	vehicleheavy = {
+		bitmap		=	"icons/vehicle.png",
+		size			=	2.5,
+		distance	=	1.0,
+	},
+	vehicleassault = {
+		bitmap		=	"icons/vehicle.png",
+		size			=	2.5,
 		distance	=	1.0,
 	},
 	aero = {
