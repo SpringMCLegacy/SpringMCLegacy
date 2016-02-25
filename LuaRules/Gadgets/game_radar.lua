@@ -263,7 +263,7 @@ function gadget:GameFrame(n)
 						--Spring.Echo("Jammer", jammerID, "(", UnitDefs[Spring.GetUnitDefID(jammerID)].name, ")")
 						for i = 1, #nearbyUnits do
 							--Spring.Echo("nearby", UnitDefs[Spring.GetUnitDefID(nearbyUnits[i])].name)
-							SetUnitRulesParam(nearbyUnits[i], "FRIENDLY_ECM", n)
+							SetUnitRulesParam(nearbyUnits[i], "FRIENDLY_ECM", n, {inlos = true})
 						end
 					end
 				end

@@ -147,6 +147,9 @@ end
 -- non-local function called by gadgets/game_ammo.lua
 function ChangeAmmo(ammoType, amount) 
 	local newAmmoLevel = (currAmmo[ammoType] or 0) + amount -- amount is a -ve to deduct
+	if amount > 0 then -- restocking, reset the indicator
+		SetUnitRulesParam(unitID, "outofammo", 0)
+	end
 	if newAmmoLevel <= maxAmmo[ammoType] then
 		currAmmo[ammoType] = newAmmoLevel
 		SetUnitRulesParam(unitID, "ammo_" .. ammoType, 100 * newAmmoLevel / maxAmmo[ammoType])
@@ -503,6 +506,7 @@ local function WeaponCanFire(weaponID)
 		if spinSpeeds[weaponID] then
 			StartThread(SpinBarrels, weaponID, false)
 		end
+		SetUnitRulesParam(unitID, "outofammo", 1)
 		return false
 	else
 		if spinSpeeds[weaponID] and not spinPiecesState[weaponID] then

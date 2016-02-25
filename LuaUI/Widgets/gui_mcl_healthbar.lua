@@ -286,34 +286,47 @@ local function GenerateUnitGraphics(uid, udid, getAuras)
 	-- AURAS
 
 	if getAuras then
-		local auraoutofammo = (GetUnitRulesParam(uid, "ammo") or 100) <= 0
-		local auranarc = GetUnitRulesParam(uid, "NARC") or 0
-		local auratag = GetUnitRulesParam(uid, "TAG") or 0
-		local aurappc = GetUnitRulesParam(uid, "PPC_HIT") or 0
-		local auramissilelock = GetUnitRulesParam(uid, "ENEMY_MISSILE_LOCK") or 0
-		local auranolock = GetUnitRulesParam(uid, "MISSILE_TARGET_JAMMED") or 0
-		if ((auranarc + auratag + aurappc + auramissilelock + auranolock) > 0 or auraoutofammo) then
-			local n = Spring.GetGameFrame()
+		local n = Spring.GetGameFrame()
+		local friendlyUnit = Spring.AreTeamsAllied(Spring.GetUnitTeam(uid), Spring.GetMyTeamID())
+		local outofammo = GetUnitRulesParam(uid, "outofammo") or 0
+		local narc = GetUnitRulesParam(uid, "NARC") or 0
+		local tag = GetUnitRulesParam(uid, "TAG") or 0
+		local ppc = GetUnitRulesParam(uid, "PPC_HIT") or 0
+		local missilelock = GetUnitRulesParam(uid, "ENEMY_MISSILE_LOCK") or 0
+		local nolock = GetUnitRulesParam(uid, "MISSILE_TARGET_JAMMED") or 0
+		local ecm = (GetUnitRulesParam(uid, "FRIENDLY_ECM") or 0) - n + 5
+		local friendlyecm = ecm > 0 and friendlyUnit
+		local enemyecm = ecm > 0 and not friendlyUnit
+		local perk = (GetUnitRulesParam(uid, "perk_xp") or 0) == 100
+		if ((narc + tag + ppc + missilelock + nolock) > 0 or outofammo or perk or friendlyecm or enemyecm) then
 			unitAuras[uid] =
 			{
-				["ammo"] = {
-					value = auraoutofammo and 4 or nil,
-					scale = 1.75,
+				["noammo"] = {
+					value = outofammo,
 				},
 				["narc"] = {
-					value = auranarc,
+					value = narc,
 				},
 				["tag"] = {
-					value = auratag - n + 5,
+					value = tag - n + 5,
 				},
 				["ppc"] = {
-					value = aurappc,
+					value = ppc,
 				},
 				["missilelock"] = {
-					value = auramissilelock - n + 30 * 3,
+					value = missilelock - n + 30 * 3,
 				},
 				["nolock"] = {
-					value = auranolock - n + 5,
+					value = nolock - n + 5,
+				},
+				["ecmprotection"] = {
+					value = friendlyecm and 1 or nil,
+				},
+				["ecmprotectionenemy"] = {
+					value = enemyecm and 1 or nil,
+				},
+				["xp"] = {
+					value = perk and 1 or nil,
 				},
 			}
 		else
