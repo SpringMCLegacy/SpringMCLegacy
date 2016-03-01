@@ -44,6 +44,7 @@ local orderSizes = {}
 local flagSpots = {} --VFS.Include("maps/flagConfig/" .. Game.mapName .. "_profile.lua")
 
 local teamUpgradeCounts = {} -- teamUpgradeCounts[teamID] = {c3 = 1, vpad = 1} etc
+local teamUpgradeIDs = {} -- teamUpgradeIDs[teamID] = {unitID1 = 1, unitID2 = 2 etc}
 
 local function CostSort(unitDefID1, unitDefID2)
 	return UnitDefs[unitDefID1].metalCost < UnitDefs[unitDefID2].metalCost
@@ -57,6 +58,12 @@ local function SimpleReverseSearch(sideTable, cost)
 	end
 	return false -- no affordable mech!
 end
+
+local function TeamResourceChange(team, resource, change)
+	
+end
+GG.AI = {}
+GG.AI.TeamResourceChange = TeamResourceChange
 
 function gadget:GamePreload()
 	-- Initialise unit limit for all AI teams.
@@ -118,13 +125,18 @@ local function Spam(teamID)
 			--Spring.Echo("COMPARING:", orderSizes[teamID], GG.TeamSlotsRemaining(teamID))
 			local buildID
 			if difficulty > 1 then
-				Spring.AddTeamResource(teamID, "metal", 10000000)
-				if difficulty == 3 then -- Assaults only
-					buildID = -sideAssaults[side][math.random(1, #sideAssaults[side])]
-				elseif difficulty == 2 then -- jumpers only
-					buildID = -sideJumpers[side][math.random(1, #sideJumpers[side])]
+				Spring.AddTeamResource(teamID, "metal", 10000)
+				if difficulty > 2 then
+					Spring.AddTeamResource(teamID, "metal", 100000)
+					if difficulty == 4 then -- Assaults only
+						buildID = -sideAssaults[side][math.random(1, #sideAssaults[side])]
+					elseif difficulty == 3 then -- jumpers only
+						buildID = -sideJumpers[side][math.random(1, #sideJumpers[side])]
+					end
+					Spring.AddTeamResource(teamID, "energy", 100)
+				else
+					buildID = SimpleReverseSearch(sideMechs[side], Spring.GetTeamResources(teamID, "metal") * math.random(55, 95)/100)
 				end
-				Spring.AddTeamResource(teamID, "energy", 100)
 			else
 				--local cmdDesc = cmdDescs[math.random(1, #cmdDescs)]
 				buildID = SimpleReverseSearch(sideMechs[side], Spring.GetTeamResources(teamID, "metal") * math.random(55, 95)/100)
@@ -138,6 +150,41 @@ local function Spam(teamID)
 	end
 end
 
+local availablePerks = {} -- availablePerks[unitID] = {cmdDescID = true, ...}
+local availablePerkCounts = {} -- availablePerkCounts[unitID] = number
+
+local function Perk(unitID, unitDefID, perkID, firstTime)
+	local ud = UnitDefs[unitDefID]
+	local cp = ud.customParams
+	if firstTime then
+		availablePerks[unitID] = {}
+		availablePerkCounts[unitID] = 0
+		local cmdDescs = Spring.GetUnitCmdDescs(unitID)
+		for id, cmdDesc in pairs(cmdDescs) do
+			if cmdDesc.action:find("perk") then
+				availablePerks[unitID][id] = true
+				availablePerkCounts[unitID] = availablePerkCounts[unitID] + 1
+			end
+		end
+	end
+	if cp.baseclass == "mech" and Spring.GetUnitExperience(unitID) < 1.5 then 
+		return 
+	end -- TODO: check for cost of c-bill upgrades
+	if not perkID and availablePerkCounts[unitID] > 0 then
+		local cmdDescs = Spring.GetUnitCmdDescs(unitID)
+		local ID = math.random(1, #cmdDescs)
+		while not (availablePerks[unitID][ID]) do
+			ID = math.random(1, #cmdDescs)
+		end
+		perkID = cmdDescs[ID].id
+		availablePerks[unitID][ID] = false
+		availablePerkCounts[unitID] = availablePerkCounts[unitID] - 1
+	end
+	if perkID then
+		GG.Delay.DelayCall(Spring.GiveOrderToUnit, {unitID, perkID, {}, {}}, 1)
+	end
+end
+
 function gadget:UnitCreated(unitID, unitDefID, teamID)
 	if unitDefID == BEACON_ID then
 		local x,_,z = Spring.GetUnitPosition(unitID)
@@ -148,12 +195,17 @@ function gadget:UnitCreated(unitID, unitDefID, teamID)
 		if unitDef.name:find("dropzone") then
 			dropZoneIDs[teamID] = unitID	
 			Spam(teamID)
+			Perk(unitID, unitDefID, nil, true)
+			--table.insert(teamUpgradeIDs[teamID], unitID)
 		elseif unitDef.customParams.baseclass == "mech" then
 			local closeRange = WeaponDefs[unitDef.weapons[1].weaponDef].range * 0.9
 			-- set engagement range to weapon 1 range
 			Spring.SetUnitMaxRange(unitID, closeRange)
+		elseif unitDef.customParams.baseclass == "upgrade" then
+			--table.insert(teamUpgradeIDs[teamID], unitID)
+			Perk(unitID, unitDefID, nil, true)
 		end
-		if difficulty > 1 then -- harder AI tonnage cheats, needs storage to do so
+		if difficulty > 2 then -- harder AI tonnage cheats, needs storage to do so
 			Spring.SetTeamResource(teamID, "es", 1000000)
 			Spring.AddTeamResource(teamID, "energy", 1000000)
 		end
@@ -238,37 +290,6 @@ local function Wander(unitID, cmd)
 	end
 end
 
-local availablePerks = {} -- availablePerks[unitID] = {cmdDescID = true, ...}
-local availablePerkCounts = {} -- availablePerkCounts[unitID] = number
-
-local function Perk(unitID, perkID, firstTime)
-	if firstTime then
-		availablePerks[unitID] = {}
-		availablePerkCounts[unitID] = 0
-		local cmdDescs = Spring.GetUnitCmdDescs(unitID)
-		for id, cmdDesc in pairs(cmdDescs) do
-			if cmdDesc.action:find("perk") then
-				availablePerks[unitID][id] = true
-				availablePerkCounts[unitID] = availablePerkCounts[unitID] + 1
-			end
-		end
-	end
-	if Spring.GetUnitExperience(unitID) < 1.5 then return end
-	if not perkID and availablePerkCounts[unitID] > 0 then
-		local cmdDescs = Spring.GetUnitCmdDescs(unitID)
-		local ID = math.random(1, #cmdDescs)
-		while not (availablePerks[unitID][ID]) do
-			ID = math.random(1, #cmdDescs)
-		end
-		perkID = cmdDescs[ID].id
-		availablePerks[unitID][ID] = false
-		availablePerkCounts[unitID] = availablePerkCounts[unitID] - 1
-	end
-	if perkID then
-		GG.Delay.DelayCall(Spring.GiveOrderToUnit, {unitID, perkID, {}, {}}, 1)
-	end
-end
-
 local WAIT_TIME = 45 * 30 -- 45s
 local function UnitIdleCheck(unitID, unitDefID, teamID)
 	if Spring.GetUnitIsDead(unitID) then return false end
@@ -323,11 +344,11 @@ function gadget:UnitUnloaded(unitID, unitDefID, teamID, transportID, transportTe
 			end
 		elseif cp.jumpjets then
 			--Spring.Echo("JUMP MECH!")
-			Perk(unitID, PERK_JUMP_RANGE, true)
+			Perk(unitID, unitDefID, PERK_JUMP_RANGE, true)
 			RunAndJump(unitID, unitDefID)
 		elseif cp.baseclass == "mech" then
 			--Spring.Echo("MECH!")
-			Perk(unitID, nil, true)
+			Perk(unitID, unitDefID, nil, true)
 			Wander(unitID)
 		end
 	end
@@ -351,7 +372,7 @@ function gadget:UnitDestroyed(unitID, unitDefID, teamID, attackerID, attackerDef
 	if attackerTeam and AI_TEAMS[attackerTeam] then
 		--Spam(attackerTeam)
 		if attackerID and (UnitDefs[attackerDefID].customParams.baseclass == "mech") then 
-			Perk(attackerID) 
+			Perk(attackerID, attackerDefID) 
 		end
 	end
 end

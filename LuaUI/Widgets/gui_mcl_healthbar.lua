@@ -85,7 +85,7 @@ for defID, defs in ipairs(UnitDefs) do
 	if defs.iconType ~= "default" then
 		ICON_TYPE[defID] = iconTypes[defs.iconType].bitmap
 	end
-	if (defs.modCategories["beacon"] == nil) then
+	if (not defs.customParams.ignoreatbeacon) then
 		SHOW_ICON[defID] = true
 	end
 end
@@ -197,8 +197,8 @@ local function GenerateUnitGraphics(uid, udid, getAuras)
     unitData[uid].frame = currentFrame
 
 	-- Don't show transported
-	if not Spring.ValidUnitID(uid) or Spring.GetUnitTransporter(uid) then
-        return
+	if not Spring.ValidUnitID(uid) or Spring.GetUnitTransporter(uid) or ud.customParams.ignoreatbeacon then
+        return false
 	end
 
 	local bars = unitBars[uid]
@@ -335,6 +335,7 @@ local function GenerateUnitGraphics(uid, udid, getAuras)
 	end
 
 	unitData[uid].display = unitAuras[uid] or display
+	return true
 end
 
 function DrawBar(barNum, heightscale, width, height, max, cur, pct, color, paralyze)
@@ -370,11 +371,13 @@ function widget:DrawWorld()
 			--Verify we can really access information about this unit.
 			--This should solve issues when switching spectated team
 			if udid then
+				local success
 				if not unitData[uid] or unitData[uid].frame < currentFrame then
-					GenerateUnitGraphics(uid, udid, getAuras)
+					success = GenerateUnitGraphics(uid, udid, getAuras)
 				end
 	
-				local display = unitData[uid].display or IsUnitSelected(uid)
+				local display = (unitData[uid].display or IsUnitSelected(uid)) and success
+				
 				unitData[uid].display = display
 	
 				local radius,r,g,b,x,y,z,heightscale

@@ -128,15 +128,20 @@ local options = {
 			{
 				key = "1",
 				name = "Regular",
-				desc = "Random unit selection. C-Bill cheating."
+				desc = "Random unit selection. No resource cheating."
 			},
 			{
 				key = "2",
+				name = "Banker",
+				desc = "Random unit selection. C-Bill cheating."
+			},
+			{
+				key = "3",
 				name = "Athlete",
 				desc = "Only jump mechs. C-Bill & Tonnage cheating."
 			},
 			{
-				key = "3",
+				key = "4",
 				name = "Direbolical",
 				desc = "Only assault mechs. C-Bill & Tonnage cheating."
 			},
