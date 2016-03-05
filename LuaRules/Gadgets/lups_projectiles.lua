@@ -97,7 +97,7 @@ local function AddProjectile(_, proID, proOwnerID, weaponID)
     local fx = def[i]
     local options = {}
 	table.copy(fx.options, options)
-    --options.unit = proOwnerID
+    options.unit = proOwnerID
     options.projectile = proID
     options.weapon = weaponID
     --options.worldspace = true

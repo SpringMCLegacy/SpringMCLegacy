@@ -8,6 +8,9 @@ local modinfo = {
 		url						= "http://springrts.com/phpbb/viewforum.php?f=70",
 		modtype					= "1",
 		version					= "$VERSION",
+		depend = {
+			'rapid://lups:stable',
+		},
 }
 
 return modinfo

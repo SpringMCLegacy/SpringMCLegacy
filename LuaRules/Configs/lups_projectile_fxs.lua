@@ -20,7 +20,7 @@ local fxs = {
 	},
 	missileEngine = {
 		class = "ribbon", 
-		options = {size = 4, width = 4, color = {0.95, 0.65, 0.4,0.6}, texture = "bitmaps/ProjectileTextures/missiletrail.png"},
+		options = {size = 4, width = 4, color = {0.95, 0.65, 0.4,0.6}, texture1 = ":c:bitmaps/ProjectileTextures/missiletrail.png"},
 	},
 	srmEngine = {
 		class = "ribbon", 
@@ -32,7 +32,7 @@ local fxs = {
 	},
 	ppcTail = {
 		class = "ribbon",
-		options = {size = 24, width = 6, color = {0.55, 0.65, 1,0.6}, texture = "bitmaps/ProjectileTextures/ppctrail.png"},
+		options = {size = 24, width = 6, color = {0.55, 0.65, 1,0.6}, texture1 = ":c:bitmaps/ProjectileTextures/ppctrail.png"},
 	},
 }
 
