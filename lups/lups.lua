@@ -28,10 +28,6 @@ local function GetInfo()
 end
 
 
---// FIXME
--- 1. add los handling (inRadar,alwaysVisible, etc.)
-
-
 --------------------------------------------------------------------------------
 --------------------------------------------------------------------------------
 
@@ -53,6 +49,43 @@ function print(priority,...)
   if (priority<=printErrorsAbove) then
     Spring.Echo(...)
   end
+end
+
+
+--------------------------------------------------------------------------------
+--------------------------------------------------------------------------------
+
+if not Script.IsEngineMinVersion(101, 1) then
+    local origGetUnitLosState     = Spring.GetUnitLosState
+    local origGetPositionLosState = Spring.GetPositionLosState
+    local origIsPosInLos          = Spring.IsPosInLos
+    local origIsPosInRadar        = Spring.IsPosInRadar
+    local origIsPosInAirLos       = Spring.IsPosInAirLos
+    
+    local function CreateUnitWrapper(origFunc)
+        return function(unitID,allyTeam,raw)
+            if ((allyTeam or 0) < 0) then
+                if (raw) then
+                    return 0xFFFFFF
+                else
+                    return { los = true, radar = true, typed = true }
+                end
+            end
+            return origFunc(unitID,allyTeam,raw)
+        end
+    end
+    local function CreatePosWrapper(origFunc)
+        return function(x,y,z,allyTeam)
+            if ((allyTeam or 0) < 0) then return true, true, true, true end
+            return origFunc(x,y,z)
+        end
+    end
+
+    Spring.GetUnitLosState     = CreateUnitWrapper(origGetUnitLosState);
+    Spring.GetPositionLosState = CreatePosWrapper(origGetPositionLosState);
+    Spring.IsPosInLos          = CreatePosWrapper(origIsPosInLos);
+    Spring.IsPosInRadar        = CreatePosWrapper(origIsPosInRadar);
+    Spring.IsPosInAirLos       = CreatePosWrapper(origIsPosInAirLos);
 end
 
 --------------------------------------------------------------------------------
@@ -181,13 +214,16 @@ thisGameFrame   = 0
 frameOffset     = 0
 LupsConfig      = {}
 
+local spActivateMaterial   = (Spring.UnitRendering and Spring.UnitRendering.ActivateMaterial) or function() end
+local spDeactivateMaterial = (Spring.UnitRendering and Spring.UnitRendering.DeactivateMaterial) or function() end
+
 local noDrawUnits = {}
 function SetUnitLuaDraw(unitID,nodraw)
   if (nodraw) then
     noDrawUnits[unitID] = (noDrawUnits[unitID] or 0) + 1
     if (noDrawUnits[unitID]==1) then
       --if (Game.version=="0.76b1") then
-        Spring.UnitRendering.ActivateMaterial(unitID,1)
+        spActivateMaterial(unitID,1)
         --Spring.UnitRendering.SetLODLength(unitID,1,-1000)
         for pieceID in ipairs(Spring.GetUnitPieceList(unitID) or {}) do
           Spring.UnitRendering.SetPieceList(unitID,1,pieceID,nilDispList)
@@ -200,7 +236,7 @@ function SetUnitLuaDraw(unitID,nodraw)
     noDrawUnits[unitID] = (noDrawUnits[unitID] or 0) - 1
     if (noDrawUnits[unitID]==0) then
       --if (Game.version=="0.76b1") then
-        Spring.UnitRendering.DeactivateMaterial(unitID,1)
+        spDeactivateMaterial(unitID,1)
       --else
       --  Spring.UnitRendering.SetUnitLuaDraw(unitID,false)
       --end
@@ -1044,5 +1080,5 @@ this.ViewResize = ViewResize
 this.Update     = Update
 if gadget then
   this.DrawUnit = DrawUnit
-  --this.GameFrame  = GameFrame; // doesn't work for unsynced parts >yet<
+  this.GameFrame  = GameFrame -- doesn't work for unsynced parts >yet<
 end
