@@ -32,6 +32,11 @@ local LIMB_SCALE = 1.1
 local BODY_SCALE = 1.0
 local TURRET_SCALE = 1.1
 
+local adjust = 0
+if not Script.IsEngineMinVersion(101, 0) then
+	adjust = 1
+end
+
 function gadget:UnitCreated(unitID, unitDefID, teamID, builderID)
 	local ud = UnitDefs[unitDefID]
 	local cp = ud.customParams
@@ -43,9 +48,9 @@ function gadget:UnitCreated(unitID, unitDefID, teamID, builderID)
 				--Spring.Echo(i, pieceName)
 				if not accept[unitType][pieceName] and i ~= "n" then
 					--Spring.Echo("piece " .. i .. " called " .. pieceName .. " to be disabled")
-					SetPieceColVol (unitID, i, false, 0,0,0, 0,0,0, -1, 0)
+					SetPieceColVol (unitID, i - adjust, false, 0,0,0, 0,0,0, -1, 0)
 				else 
-					local scaleX, scaleY, scaleZ, offsetX, offsetY, offsetZ, volumeType, _, primaryAxis = GetPieceColVol (unitID, i)
+					local scaleX, scaleY, scaleZ, offsetX, offsetY, offsetZ, volumeType, _, primaryAxis = GetPieceColVol (unitID, i - adjust)
 					local scaleMult = (cp.limbscale or LIMB_SCALE)
 					if pieceName == "torso" or pieceName == "pelvis" then 
 						scaleMult = (cp.torsoscale or TORSO_SCALE) 
@@ -54,11 +59,11 @@ function gadget:UnitCreated(unitID, unitDefID, teamID, builderID)
 					elseif pieceName == "turret" or pieceName == "launcher_1" or pieceName == "turret_2" then
 						scaleMult = (cp.turretscale or TURRET_SCALE)
 					end
-					SetPieceColVol(unitID, i, true, 
+					SetPieceColVol(unitID, i - adjust, true, 
 									scaleMult*scaleX, scaleMult*scaleY, scaleMult*scaleZ, 
 									offsetX, offsetY, offsetZ, volumeType, primaryAxis)
 					if pieceName == "rotor" then -- replace with y-cylinder
-						SetPieceColVol(unitID, i, true, 
+						SetPieceColVol(unitID, i - adjust, true, 
 										scaleMult*70, scaleMult*1, scaleMult*70,  -- use a constant radius
 										0, offsetY, 0, 1, 1)
 					end

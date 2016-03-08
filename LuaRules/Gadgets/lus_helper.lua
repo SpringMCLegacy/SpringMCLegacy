@@ -322,6 +322,7 @@ end
 function gadget:GamePreload()
 	-- Parse UnitDef Data
 	for unitDefID, unitDef in pairs(UnitDefs) do
+		local preload = unitDef.model.midx -- access model to force preloading
 		local info = {}
 		local cp = unitDef.customParams
 		local weapons = unitDef.weapons

@@ -195,7 +195,9 @@ function gadget:UnitCreated(unitID, unitDefID, teamID)
 		if unitDef.name:find("dropzone") then
 			dropZoneIDs[teamID] = unitID	
 			Spam(teamID)
-			Perk(unitID, unitDefID, nil, true)
+			if difficulty > 1 then -- loadsa money!
+				Perk(unitID, unitDefID, nil, true)
+			end
 			--table.insert(teamUpgradeIDs[teamID], unitID)
 		elseif unitDef.customParams.baseclass == "mech" then
 			local closeRange = WeaponDefs[unitDef.weapons[1].weaponDef].range * 0.9
@@ -203,7 +205,9 @@ function gadget:UnitCreated(unitID, unitDefID, teamID)
 			Spring.SetUnitMaxRange(unitID, closeRange)
 		elseif unitDef.customParams.baseclass == "upgrade" then
 			--table.insert(teamUpgradeIDs[teamID], unitID)
-			Perk(unitID, unitDefID, nil, true)
+			if difficulty > 1 then -- loadsa money!
+				Perk(unitID, unitDefID, nil, true)
+			end
 		end
 		if difficulty > 2 then -- harder AI tonnage cheats, needs storage to do so
 			Spring.SetTeamResource(teamID, "es", 1000000)
