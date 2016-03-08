@@ -712,7 +712,7 @@ function gadget:GameFrame(n)
 		for teamID, enableFrame in pairs(coolDowns) do
 			local framesRemaining = enableFrame - n
 			local unitID = teamDropZones[teamID]
-			if unitID and not Spring.ValidUnitID(unitID) or Spring.GetUnitIsDead(unitID) then -- check valid first (lazy evaluation means non-valid unitID is then not passed)
+			if unitID and type(unitID) == type(1) and not Spring.ValidUnitID(unitID) or Spring.GetUnitIsDead(unitID) then -- check valid first (lazy evaluation means non-valid unitID is then not passed)
 				coolDowns[teamID] = -1
 			else
 				if framesRemaining <= 0 and dropShipStatus[teamID] > 0 then

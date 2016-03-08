@@ -271,7 +271,7 @@ end
 
 
 function Ribbon:Visible()
-  local unit = self.unit ~= 0 and not spGetUnitIsDead(self.unit)
+  local unit = self.unit ~= 0 and not spGetUnitIsDead(self.unit) and Spring.ValidUnitID(self.unit)
   local unitpos = unit and {Spring.GetUnitPosition(self.unit)}
   self.isvalid = unit or (self.projectile and Spring.GetProjectileDefID(self.projectile))
   local pos = self.oldPos[self.posIdx]
