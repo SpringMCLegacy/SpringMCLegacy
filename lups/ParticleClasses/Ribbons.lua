@@ -129,10 +129,10 @@ function Ribbon:Draw()
   if (self.isvalid) then
     --local x,y,z = GetPiecePos(self.unit,self.piecenum)
     local x,y,z
-	if self.projectile then
-	  x,y,z = Spring.GetProjectilePosition(self.projectile)
-	elseif self.unit ~= 0 then
+	if self.unit ~= 0 then
 	  x,y,z = spGetUnitPiecePosDir(self.unit,self.piecenum)
+	elseif self.projectile then
+	  x,y,z = Spring.GetProjectilePosition(self.projectile)
 	end
 	if x and y and z then 
 		glUniform( oldPosUniform[quads0+1] , x,y,z )
@@ -245,20 +245,20 @@ function Ribbon:Update(n)
 
   if (self.isvalid) then
     local x,y,z
-	if self.projectile then
-	  x,y,z = Spring.GetProjectilePosition(self.projectile)
-    elseif self.unit ~= 0 then
+    if self.unit ~= 0 then
       x,y,z = spGetUnitPiecePosDir(self.unit,self.piecenum)
+	elseif self.projectile then
+	  x,y,z = Spring.GetProjectilePosition(self.projectile)
 	end
     if x and y and z then
       self.posIdx = (self.posIdx % self.size)+1
       self.oldPos[self.posIdx] = {x,y,z}
 
       local vx,vy,vz
-	  if self.projectile then
-	    vx,vy,vz = Spring.GetProjectileVelocity(self.projectile)
-	  elseif self.unit ~= 0 then
+	  if self.unit ~= 0 then
 	    vx,vy,vz = spGetUnitVelocity(self.unit)
+	  elseif self.projectile then
+	    vx,vy,vz = Spring.GetProjectileVelocity(self.projectile)
 	  end
 	  if vx and vy and vz then
 	    self.blendfactor = (vx*vx+vz*vz+vy*vy)/30
@@ -271,12 +271,9 @@ end
 
 
 function Ribbon:Visible()
-  local unit = self.unit ~= 0 and not spGetUnitIsDead(self.unit) and Spring.ValidUnitID(self.unit)
-  local unitpos = unit and {Spring.GetUnitPosition(self.unit)}
-  self.isvalid = unit or (self.projectile and Spring.GetProjectileDefID(self.projectile))
+  self.isvalid = (self.unit ~= 0 and not spGetUnitIsDead(self.unit)) or (self.projectile and Spring.GetProjectileDefID(self.projectile))
   local pos = self.oldPos[self.posIdx]
-  local inView = spIsSphereInView(pos[1],pos[2],pos[3], self.radius) or (unit and spIsSphereInView(unitpos[1],unitpos[2],unitpos[3], self.radius))
-  return (self.blendfactor>0) and inView
+  return (self.blendfactor>0) and (spIsSphereInView(pos[1],pos[2],pos[3], self.radius))
 end
 
 
@@ -319,10 +316,10 @@ function Ribbon:CreateParticle()
   self.blendfactor = 1
 
   local x,y,z 
-  if self.projectile then
-	x,y,z = Spring.GetProjectilePosition(self.projectile)
-  elseif self.unit ~= 0 then
+  if self.unit ~= 0 then
     x,y,z = spGetUnitPiecePosDir(self.unit,self.piecenum)
+  elseif self.projectile then
+	x,y,z = Spring.GetProjectilePosition(self.projectile)
   end
   local curpos = {x,y,z}
 
@@ -331,12 +328,11 @@ function Ribbon:CreateParticle()
     self.oldPos[i] = curpos
   end
 
-
-  if self.projectile then
-    self.radius = self.size -- TODO
-  elseif self.unit ~= 0 then
+  if self.unit ~= 0 then
     local udid  = spGetUnitDefID(self.unit)
     self.radius = (UnitDefs[udid].speed/30.0)*self.size
+  else
+    self.radius = self.size * 10 -- TODO
   end
 
   if (not DLists[self.quads0]) then
