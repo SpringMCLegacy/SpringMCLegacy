@@ -122,7 +122,7 @@ return {
 			tooltip = '+50% NARC duration',
 			texture = 'bitmaps/ui/perkbgability.png',	
 		},
-		valid = function (unitDefID) return hasWeaponName(unitDefID, "NARC") end,
+		valid = function (unitDefID) return allMechs(unitDefID) and hasWeaponName(unitDefID, "NARC") end,
 		applyPerk = function (unitID) 
 			--Spring.Echo("Sensor range selected") 
 			local currDuration = Spring.GetUnitRulesParam(unitID, "NARC_DURATION") or Spring.GetGameRulesParam("NARC_DURATION")
@@ -174,7 +174,7 @@ return {
 			tooltip = '+50% AMS Weapon Range',
 			texture = 'bitmaps/ui/perkbgability.png',	
 		},
-		valid = function (unitDefID) return hasWeaponClass(unitDefID, "ams") end,
+		valid = function (unitDefID) return allMechs(unitDefID) and hasWeaponClass(unitDefID, "ams") end,
 		applyPerk = function (unitID) 
 			--Spring.Echo("Projectile range selected") 
 			setWeaponClassAttribute(unitID, "ams", "range", 1.5)
@@ -189,7 +189,7 @@ return {
 			tooltip = '+50% ECM range',
 			texture = 'bitmaps/ui/perkbgability.png',	
 		},
-		valid = function (unitDefID) return (hasECM(unitDefID) and isFaction(unitDefID, "cc")) end,
+		valid = function (unitDefID) return (allMechs(unitDefID) and hasECM(unitDefID) and isFaction(unitDefID, "cc")) end,
 		applyPerk = function (unitID) 
 			--Spring.Echo("ECM range selected") 
 			local currECM = Spring.GetUnitSensorRadius(unitID, "radarJammer")
@@ -206,7 +206,7 @@ return {
 			tooltip = '-50% PPC disruption time',
 			texture = 'bitmaps/ui/perkbgability.png',	
 		},
-		valid = function (unitDefID) return (hasECM(unitDefID) or hasBAP(unitDefID)) end,
+		valid = function (unitDefID) return (allMechs(unitDefID) and hasECM(unitDefID) or hasBAP(unitDefID)) end,
 		applyPerk = function (unitID) 
 			--Spring.Echo("Insulated Electronics selected") 
 			Spring.SetUnitRulesParam(unitID, "insulation", 0.5)
@@ -222,7 +222,7 @@ return {
 			tooltip = '+50% LRM Range',
 			texture = 'bitmaps/ui/perkbgfaction.png',	
 		},
-		valid = function (unitDefID) return (hasWeaponClass(unitDefID, "lrm") and isFaction(unitDefID, "fw")) end,
+		valid = function (unitDefID) return (allMechs(unitDefID) and hasWeaponClass(unitDefID, "lrm") and isFaction(unitDefID, "fw")) end,
 		applyPerk = function (unitID) 
 			--Spring.Echo("Missile range selected") 
 			setWeaponClassAttribute(unitID, "lrm", "range", 1.5)
@@ -237,7 +237,7 @@ return {
 			tooltip = '+50% MRM Range',
 			texture = 'bitmaps/ui/perkbgfaction.png',	
 		},
-		valid = function (unitDefID) return (hasWeaponClass(unitDefID, "mrm") and isFaction(unitDefID, "dc")) end,
+		valid = function (unitDefID) return (allMechs(unitDefID) and hasWeaponClass(unitDefID, "mrm") and isFaction(unitDefID, "dc")) end,
 		applyPerk = function (unitID) 
 			--Spring.Echo("Missile range selected") 
 			setWeaponClassAttribute(unitID, "mrm", "range", 1.5)
@@ -252,7 +252,7 @@ return {
 			tooltip = '+50% PPC Weapon Range',
 			texture = 'bitmaps/ui/perkbgfaction.png',	
 		},
-		valid = function (unitDefID) return (hasWeaponClass(unitDefID, "ppc") and isFaction(unitDefID, "dc")) end,
+		valid = function (unitDefID) return (allMechs(unitDefID) and hasWeaponClass(unitDefID, "ppc") and isFaction(unitDefID, "dc")) end,
 		applyPerk = function (unitID) 
 			--Spring.Echo("PPC range selected") 
 			setWeaponClassAttribute(unitID, "ppc", "range", 1.5)
@@ -267,7 +267,7 @@ return {
 			tooltip = '+50% Autocannon Weapon Range',
 			texture = 'bitmaps/ui/perkbgfaction.png',	
 		},
-		valid = function (unitDefID) return (hasWeaponClass(unitDefID, "autocannon") and isFaction(unitDefID, "fs")) end,
+		valid = function (unitDefID) return (allMechs(unitDefID) and hasWeaponClass(unitDefID, "autocannon") and isFaction(unitDefID, "fs")) end,
 		applyPerk = function (unitID) 
 			--Spring.Echo("Autocannon range selected") 
 			setWeaponClassAttribute(unitID, "autocannon", "range", 1.5)
@@ -282,7 +282,7 @@ return {
 			tooltip = '+50% Gauss Weapon Range',
 			texture = 'bitmaps/ui/perkbgfaction.png',	
 		},
-		valid = function (unitDefID) return (hasWeaponClass(unitDefID, "gauss") and isFaction(unitDefID, "la")) end,
+		valid = function (unitDefID) return (allMechs(unitDefID) and hasWeaponClass(unitDefID, "gauss") and isFaction(unitDefID, "la")) end,
 		applyPerk = function (unitID) 
 			--Spring.Echo("Gauss range selected") 
 			setWeaponClassAttribute(unitID, "gauss", "range", 1.5)
