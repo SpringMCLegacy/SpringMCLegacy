@@ -117,7 +117,7 @@ end
 local function Spam(teamID)
 	--Spring.Echo("Spamming for team", teamID)
 	local unitID = dropZoneIDs[teamID]
-	if Spring.ValidUnitID(unitID) then
+	if unitID and Spring.ValidUnitID(unitID) then
 		local cmdDescs = Spring.GetUnitCmdDescs(unitID)
 		local side = GG.teamSide[teamID]
 		orderSizes[teamID] = 0
