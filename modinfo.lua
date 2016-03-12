@@ -9,7 +9,8 @@ local modinfo = {
 		modtype					= "1",
 		version					= "$VERSION",
 		depend = {
-			'rapid://lups:stable',
+			--'rapid://lups:stable',
+			"LUPS v2016.4",
 		},
 }
 
