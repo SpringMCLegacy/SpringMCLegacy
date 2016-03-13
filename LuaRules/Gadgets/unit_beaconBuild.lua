@@ -225,6 +225,7 @@ local function SetDropZone(beaconID, teamID)
 	local dropZoneID = CreateUnit(side .. "_dropzone", x,y,z, "s", teamID)
 	dropZoneIDs[teamID] = dropZoneID
 	dropZoneBeaconIDs[teamID] = beaconID
+	Spring.SetUnitRulesParam(beaconID, "secure", 1)
 end
 
 -- WALLS & GATES
@@ -441,6 +442,10 @@ function gadget:AllowCommand(unitID, unitDefID, teamID, cmdID, cmdParams, cmdOpt
 				GG.PlaySoundForTeam(teamID, "BB_Insufficient_Funds", 1)
 			end
 		elseif cmdID == dropZoneCmdDesc.id then
+			if Spring.GetUnitRulesParam(unitID, "secure") == 0 then 
+				Spring.SendMessageToTeam(teamID, "Cannot upgrade beacon - Under attack!")
+				return false 
+			end
 			ToggleUpgradeOptions(unitID, false)
 			SetDropZone(unitID, teamID)
 		elseif cmdID == CMD.SELFD then -- Disallow self-d
