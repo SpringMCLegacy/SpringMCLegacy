@@ -92,7 +92,8 @@ function gadget:GameFrame(n)
 			local newExp = Spring.GetUnitExperience(unitID)
 			UpdateRemaining(unitID, newExp, PERK_XP_COST)
 			Spring.SetUnitRulesParam(unitID, "perk_xp", math.min(100, 100 * newExp / PERK_XP_COST))
-		else -- other units use CBills
+		elseif not select(3, Spring.GetUnitTeam(unitID)) then -- team isn't dead
+			-- other units use CBills
 			local cBills = select(1, Spring.GetTeamResources(Spring.GetUnitTeam(unitID), "metal"))
 			UpdateRemaining(unitID, cBills)
 		end

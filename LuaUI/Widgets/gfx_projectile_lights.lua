@@ -106,8 +106,8 @@ options = {
 	light_brightness = {
 		name = 'Light Brightness',
 		type = 'number',
-		value = 3,
-		min = 0.05, max = 5, step = 0.05,
+		value = 30, -- 3
+		min = 5, max = 50, step = 5,
 		OnChange = function (self) 
 			colorBrightness = self.value
 			ApplySetting()
@@ -179,9 +179,9 @@ local function GetLightsFromUnitDefs()
 		local weaponDef = WeaponDefs[weaponDefID]
 		local customParams = weaponDef.customParams or {}
 		
-		local r = weaponDef.visuals.colorR + 0.2
-		local g = weaponDef.visuals.colorG + 0.2
-		local b = weaponDef.visuals.colorB + 0.2
+		local r = weaponDef.visuals.colorR /2--+ 0.2
+		local g = weaponDef.visuals.colorG /2--+ 0.2
+		local b = weaponDef.visuals.colorB /2--+ 0.2
 		
 		local weaponData = {r = r, g = g, b = b, radius = 100}
 		
