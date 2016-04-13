@@ -5,7 +5,7 @@ function gadget:GetInfo()
 		author = "FLOZi (C. Lawrence)",
 		date = "02/02/2011",
 		license = "GNU GPL v2",
-		layer = 1,
+		layer = 3, -- must be after lus_helper
 		enabled = true
 	}
 end
@@ -41,11 +41,24 @@ local NARC_DURATION = 30 * 30 -- 30 seconds
 Spring.SetGameRulesParam("NARC_DURATION", NARC_DURATION)
 
 local TAG_ID = WeaponDefNames["tag"].id
-
 local PPC_IDS = {}
 for weaponDefID, weaponDef in pairs(WeaponDefs) do
 	if weaponDef.name:find("ppc") then
 		PPC_IDS[weaponDefID] = true
+	end
+end
+
+local visionCache = {} -- visionCache[unitDefID] = {x = sectorVectorX, z = sectorVectorZ, sight = lastWeaponNum}
+for unitDefID, unitDef in pairs(UnitDefs) do
+	local cp = unitDef.customParams
+	if cp.baseclass == "mech" then
+		local angle = tonumber(cp.sectorangle or 30) -- default to 30deg
+		local s1x, s1z = GG.Vector.SectorVectorsFromAngle(math.rad(angle), unitDef.losRadius)
+		visionCache[unitDefID] = {
+			x = s1x,
+			z = s1z,
+			sight = 1, --#unitDef.weapons, -- always make the sight weapon the last one
+		}
 	end
 end
 
@@ -62,7 +75,9 @@ local allyTeams = Spring.GetAllyTeamList()
 local numAllyTeams = #allyTeams
 local teamsInAllyTeams = {}
 local deadTeams = {}
+local allyTeamMechs = {}
 
+local SectorUnits = {}
 for i = 1, numAllyTeams do
 	local allyTeam = allyTeams[i]
 	inRadarUnits[allyTeam] = {}
@@ -70,6 +85,8 @@ for i = 1, numAllyTeams do
 	allyJammers[allyTeam] = {}
 	allyBAPs[allyTeam] = {}
 	teamsInAllyTeams[allyTeam] = Spring.GetTeamList(allyTeam)
+	SectorUnits[allyTeam] = {}
+	allyTeamMechs[allyTeam] = {}
 end
 
 local narcUnits = {}
@@ -196,6 +213,7 @@ function gadget:UnitPreDamaged(unitID, unitDefID, unitTeam, damage, paralyzer, w
 	return damage, 1
 end
 
+
 function gadget:UnitCreated(unitID, unitDefID, teamID)
 	local ud = UnitDefs[unitDefID]
 	local jamRadius = ud.jammerRadius
@@ -207,7 +225,18 @@ function gadget:UnitCreated(unitID, unitDefID, teamID)
 		local allyTeam = select(6, GetTeamInfo(teamID))
 		allyBAPs[allyTeam][unitID] = Spring.GetUnitSensorRadius(unitID, "radar") -- can be perked! TODO: update this via perk side too
 	end
+	if visionCache[unitDefID] then -- a mech!
+		visionCache[unitDefID].torso = GG.lusHelper[unitDefID].torso
+		allyTeamMechs[Spring.GetUnitAllyTeam(unitID)][unitID] = visionCache[unitDefID]
+		--[[local v1x, v1z, v2x, v2z = GG.Vector.SectorVectorsFromUnitID(unitID, visionCache[unitDefID].x, visionCache[unitDefID].z)
+		local x, y, z = Spring.GetUnitPosition(unitID)
+		Spring.MarkerAddPoint(x + v1x, y, z + v1z, "V1")
+		Spring.MarkerAddPoint(x + v2x, y, z + v2z, "V2")
+		Spring.MarkerAddPoint(x - visionCache[unitDefID].x, y, z + visionCache[unitDefID].z, "S1")
+		Spring.MarkerAddPoint(x + visionCache[unitDefID].x, y, z + visionCache[unitDefID].z, "S2")]]
+	end
 end
+
 
 function gadget:UnitDestroyed(unitID, unitDefID, teamID)
 	for i = 1, numAllyTeams do
@@ -219,6 +248,7 @@ function gadget:UnitDestroyed(unitID, unitDefID, teamID)
 	narcUnits[unitID] = nil
 	ppcUnits[unitID] = nil
 	bapUnits[unitID] = nil
+	allyTeamMechs[Spring.GetUnitAllyTeam(unitID)][unitID] = nil
 	SetUnitRulesParam(unitID, "FRIENDLY_ECM", 0)
 end
 
@@ -233,19 +263,48 @@ function gadget:UnitGiven(unitID, unitDefID, newTeam, oldTeam)
 	gadget:UnitCreated(unitID, unitDefID, newTeam)
 end
 
+
 function gadget:GameFrame(n)
 	for i = 1, numAllyTeams do
 		local allyTeam = allyTeams[i]
+		
+		for unitID, info in pairs(allyTeamMechs[allyTeam]) do
+			local x, _, z = Spring.GetUnitPosition(unitID)
+			local inRadius = Spring.GetUnitsInCylinder(x, z, Spring.GetUnitSensorRadius(unitID, "los")) -- use current sensor radius here as perks can change it
+			--local v1x, v1z, v2x, v2z = GG.Vector.SectorVectorsFromUnit(unitID, info.x, info.z)
+			local v1x, v1z, v2x, v2z = GG.Vector.SectorVectorsFromUnitPiece(unitID, info.torso, info.x, info.z)
+			--Spring.MarkerAddPoint(x + v1x, 0, z + v1z, "V1")
+			--Spring.MarkerAddPoint(x + v2x, 0, z + v2z, "V2")
+			for _, enemyID in pairs(inRadius) do
+				local unitAllyTeam = Spring.GetUnitAllyTeam(enemyID)
+				if enemyID ~= unitID and unitAllyTeam ~= allyTeam then
+					local ex, _, ez = Spring.GetUnitPosition(enemyID)
+					local inSector = GG.Vector.IsInsideSectorVector(ex, ez, x, z, v1x, v1z, v2x, v2z)
+					if inSector then
+						-- check it is really my sector giving them los
+						local rayTrace = Spring.GetUnitWeaponHaveFreeLineOfFire(unitID, info.sight, enemyID)
+						if rayTrace then
+							SetUnitLosMask(enemyID, allyTeam, {los=false, prevLos=false, radar=false, contRadar=false} )
+							SectorUnits[allyTeam][enemyID] = true
+						end
+					elseif not SectorUnits[allyTeam][enemyID] then -- in another sector
+						SetUnitLosState(enemyID, allyTeam, {los=false, prevLos=false, radar=true, contRadar=true} ) 
+						SetUnitLosMask(enemyID, allyTeam, {los=true, prevLos=false, radar=false, contRadar=false} )	
+					end
+				end
+			end
+		end
+		SectorUnits[allyTeam] = {}
 		for unitID in pairs(inRadarUnits[allyTeam]) do
 			if not narcUnits[unitID] then
-				SetUnitLosState(unitID, allyTeam, {los=true, prevLos=true, radar=true, contRadar=true} ) 
-				SetUnitLosMask(unitID, allyTeam, {los=true, prevLos=false, radar=false, contRadar=false} )	
+				--SetUnitLosState(unitID, allyTeam, {los=true, prevLos=true, radar=true, contRadar=true} ) 
+				--SetUnitLosMask(unitID, allyTeam, {los=true, prevLos=false, radar=false, contRadar=false} )	
 				inRadarUnits[allyTeam][unitID] = nil
 			end
 		end
 		for unitID in pairs(outRadarUnits[allyTeam]) do
 			if not narcUnits[unitID] then
-				SetUnitLosMask(unitID, allyTeam, {los=false, prevLos=false, radar=false, contRadar=false} )
+				--SetUnitLosMask(unitID, allyTeam, {los=false, prevLos=false, radar=false, contRadar=false} )
 				outRadarUnits[allyTeam][unitID] = nil
 			end
 		end

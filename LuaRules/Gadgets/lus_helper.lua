@@ -278,6 +278,7 @@ function gadget:UnitCreated(unitID, unitDefID, teamID, builderID)
 			info.leftArmMasterID = GetArmMasterWeapon(leftArmIDs)
 			info.rightArmIDs = rightArmIDs
 			info.leftArmIDs = leftArmIDs
+			info.torso = pieceMap["flare_1"] -- TODO: special 'cockpit' piece, can't use torso as vertex dir is unpredictable
 		end
 
 		info.progenitorMap = progenitorMap
