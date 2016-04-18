@@ -193,6 +193,7 @@ local function FillCardStats()
 		local health, maxHealth	= spGetUnitHealth(currentUnitId)
 		local currentDef		= UnitDefs[currentUnitDefId]
 		local weapons			= currentDef.weapons
+		weapons[#weapons] = nil -- remove special 'Sight' weapon
 		colortable				= green
 		
 		-- Spring.Echo(currentUnitDefId, UnitDefs[currentUnitDefId].humanName)

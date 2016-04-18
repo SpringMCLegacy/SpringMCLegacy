@@ -78,7 +78,7 @@ local jumpHeat = 2
 local SlowDownRate = 2
 
 --piece defines
-local pelvis, torso, rlowerleg, llowerleg = piece ("pelvis", "torso", "rlowerleg", "llowerleg")
+local pelvis, torso, cockpit, rlowerleg, llowerleg = piece ("pelvis", "torso", "cockpit", "rlowerleg", "llowerleg")
 
 rupperarm = piece("rupperarm")
 lupperarm = piece("lupperarm")
@@ -490,7 +490,7 @@ function script.Deactivate()
 end
 
 local function WeaponCanFire(weaponID)
-	if playerDisabled[weaponID] then
+	if playerDisabled[weaponID] or weaponID == info.numWeapons then
 		return false
 	end
 	if leftArmIDs[weaponID] and limbHPs["left_arm"] <= 0 then
@@ -631,6 +631,8 @@ end
 function script.QueryWeapon(weaponID) 
 	if missileWeaponIDs[weaponID] then
 		return launchPoints[weaponID][currPoints[weaponID]] or launchPoints[weaponID][1]
+	elseif weaponID == info.numWeapons then -- Sight
+		return cockpit
 	else
 		return flares[weaponID] or torso
 	end

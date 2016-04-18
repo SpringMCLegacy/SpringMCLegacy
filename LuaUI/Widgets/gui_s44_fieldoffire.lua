@@ -128,18 +128,15 @@ local function DrawFieldOfFire(unitID, list, range)
 	--local x, y, z = GetUnitPosition(unitID)
 	--local rotation = vHeadingToDegrees(GetUnitHeading(unitID))
 	local map = Spring.GetUnitPieceMap(unitID)
-	local x, y, z, dx, dy, dz = Spring.GetUnitPiecePosDir(unitID, map["flare_1"])
+	local x, y, z, dx, dy, dz = Spring.GetUnitPiecePosDir(unitID, map["cockpit"])
+	--Spring.Echo(y, Spring.GetGroundHeight(x,z), y - Spring.GetGroundHeight(x,z))
 	local rotation = math.deg(math.atan2(dx, dz))
 
 	return DrawFieldOfFire2(x, y, z, list, range, rotation)
 end
 
 local function GetUnitDefMaxAngleDif(unitDef)
-	local weapons = unitDef.weapons
-	if not weapons then return -1 end
-	local weapon1 = weapons[1]
-	if not weapon1 then return -1 end
-	return weapon1.maxAngleDif
+	return math.cos(math.rad(45/2))--(unitDef.customParams.sectorangle)/2))
 end
 
 local function GetBasename(name)
@@ -162,7 +159,7 @@ function widget:Initialize()
 	local inUse = false
 	--outer loop: stationaries
 	for stationaryUnitDefID, stationaryUnitDef in ipairs(UnitDefs) do
-		local maxAngleDif = math.cos(math.rad(15)) -- GetUnitDefMaxAngleDif(stationaryUnitDef)
+		local maxAngleDif = GetUnitDefMaxAngleDif(stationaryUnitDef)
 		if maxAngleDif > 0 then -- and stationaryUnitDef.speed == 0 then
 			--create stationary list
 			local list = stationaryLists[maxAngleDif]

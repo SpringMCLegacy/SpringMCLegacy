@@ -20,6 +20,14 @@ local BeamLaser_Class = Weapon:New{
     },
 }
 
+local Sight = BeamLaser_Class:New{
+	range = 5000, -- should be more than enough
+	customparams = {
+		weaponclass = "sight",
+		ignoreingui	= true,
+	},
+}
+
 local TAG = BeamLaser_Class:New{
 	name                    = "TAG Laser",
 	explosionGenerator    	= "custom:Nothing",
@@ -158,6 +166,7 @@ local CERLBL = ERLBL:New{
 }
 
 return lowerkeys({ 
+	Sight = Sight,
 	TAG = TAG,
 	SBL = SBL,
 	ERSBL = ERSBL,

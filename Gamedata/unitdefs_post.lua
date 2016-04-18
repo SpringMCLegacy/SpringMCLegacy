@@ -166,14 +166,16 @@ for name, ud in pairs(UnitDefs) do
 			local priceMult = modOptions and modOptions.pricemult or 1
 			ud.buildCostMetal = ((cp.price or 0) * priceMult - (4000 * (priceMult - 1)))
 			ud.power = ud.buildCostMetal * ud.buildCostEnergy
-			ud.losemitheight = ud.mass / 10
-			ud.radaremitheight = ud.mass / 10
+			ud.losemitheight = ud.losemitheight or ud.mass / 10
+			ud.radaremitheight = ud.losemitheight
 			if cp.jumpjets then
 				ud.description = ud.description .. " \255\001\179\214[JUMP]"
 			end
 			if cp.masc then
 				ud.description = ud.description .. " \255\128\026\179[MASC]"
 			end
+			table.insert(ud.weapons, {name = "sight"})
+			cp.sectorangle = cp.sectorangle or 45
 		end
 	end
 	-- set maxvelocity by modoption

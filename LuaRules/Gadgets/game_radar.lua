@@ -52,12 +52,12 @@ local visionCache = {} -- visionCache[unitDefID] = {x = sectorVectorX, z = secto
 for unitDefID, unitDef in pairs(UnitDefs) do
 	local cp = unitDef.customParams
 	if cp.baseclass == "mech" then
-		local angle = tonumber(cp.sectorangle or 30) -- default to 30deg
+		local angle = tonumber(cp.sectorangle) -- defaults in unitdefs_post
 		local s1x, s1z = GG.Vector.SectorVectorsFromAngle(math.rad(angle), unitDef.losRadius)
 		visionCache[unitDefID] = {
 			x = s1x,
 			z = s1z,
-			sight = 1, --#unitDef.weapons, -- always make the sight weapon the last one
+			sight = #unitDef.weapons, -- always make the sight weapon the last one
 		}
 	end
 end
