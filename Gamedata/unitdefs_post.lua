@@ -166,7 +166,7 @@ for name, ud in pairs(UnitDefs) do
 			local priceMult = modOptions and modOptions.pricemult or 1
 			ud.buildCostMetal = ((cp.price or 0) * priceMult - (4000 * (priceMult - 1)))
 			ud.power = ud.buildCostMetal * ud.buildCostEnergy
-			ud.losemitheight = ud.losemitheight or ud.mass / 10
+			ud.losemitheight = cp.cockpitheight or ud.mass / 10
 			ud.radaremitheight = ud.losemitheight
 			if cp.jumpjets then
 				ud.description = ud.description .. " \255\001\179\214[JUMP]"

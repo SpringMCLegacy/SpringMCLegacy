@@ -163,7 +163,7 @@ function widget:Initialize()
 		if maxAngleDif > 0 then -- and stationaryUnitDef.speed == 0 then
 			--create stationary list
 			local list = stationaryLists[maxAngleDif]
-			local range = stationaryUnitDef.maxWeaponRange
+			local range = stationaryUnitDef.losRadius
 			if not list then
 				list = glCreateList(DrawStationary, maxAngleDif)
 				stationaryLists[maxAngleDif] = list
