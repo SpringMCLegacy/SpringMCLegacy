@@ -2,6 +2,7 @@ local Jagermech = Heavy:New{
 	name				= "Jagermech",
 		
     customparams = {
+		cockpitheight	= 53,
 		tonnage			= 65,
     },
 }
