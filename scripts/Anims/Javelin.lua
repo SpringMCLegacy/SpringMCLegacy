@@ -4,7 +4,7 @@ local pelvis, torso, lupperleg, llowerleg, rupperleg, rlowerleg, lfoot, rfoot = 
 local rupperarm, lupperarm = piece ("rupperarm", "lupperarm")
 
 --Turning/Movement Locals
-local LEG_SPEED = rad(250) * speedMod
+local LEG_SPEED = rad(300) * speedMod
 local LEG_TURN_SPEED = rad (300) * speedMod
 
 function anim_Turn(clockwise)
@@ -170,6 +170,8 @@ function anim_Walk()
 		Turn(rupperarm, x_axis, rad(45), LEG_SPEED)
 		Turn(lupperarm, x_axis, rad(-20), LEG_SPEED)
 		
+		PlaySound("stomp")
+		
 		WaitForTurn(rupperleg, x_axis)
 		WaitForTurn(rlowerleg, x_axis)
 		WaitForTurn(lupperleg, x_axis)
@@ -200,6 +202,8 @@ function anim_Walk()
 		Turn(rupperarm, x_axis, rad(-20), LEG_SPEED)
 		Turn(lupperarm, x_axis, rad(45), LEG_SPEED)
 
+		PlaySound("stomp")
+		
 		WaitForTurn(rupperleg, x_axis)
 		WaitForTurn(rlowerleg, x_axis)
 		WaitForTurn(lupperleg, x_axis)
