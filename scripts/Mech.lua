@@ -36,6 +36,7 @@ local inWater = false
 local activated = true
 local mascActive = false
 
+local numWeapons = info.numWeapons - 1 -- remove sight
 local missileWeaponIDs = info.missileWeaponIDs
 local flareOnShots = info.flareOnShots
 local jammableIDs = info.jammableIDs
@@ -101,7 +102,7 @@ local spinPieces = {}
 local spinPiecesState = {}
 
 local playerDisabled = {}
-for weaponID = 1, info.numWeapons do
+for weaponID = 1, info.numWeapons - 1 do
 	if missileWeaponIDs[weaponID] then
 		if launcherIDs[weaponID] then
 			launchers[weaponID] = piece("launcher_" .. weaponID)
@@ -201,7 +202,6 @@ local function CoolOff()
 	local SetUnitWeaponState = Spring.SetUnitWeaponState
 	-- lusHelper info
 	local reloadTimes = info.reloadTimes
-	local numWeapons = info.numWeapons
 	local waterCoolRate = info.waterCoolRate
 	local hasEcm = info.hasEcm
 	-- variables	
@@ -324,8 +324,8 @@ function SmokeLimb(limb, piece)
 	while true do
 		local health = limbHPs[limb]/maxHealth
 		if (health <= 66) then -- only smoke if less then 2/3rd limb maxhealth left
-			EmitSfx(piece, SFX.CEG + info.numWeapons + 2)
-			EmitSfx(piece, SFX.CEG + info.numWeapons + 3)
+			EmitSfx(piece, SFX.CEG + numWeapons + 2)
+			EmitSfx(piece, SFX.CEG + numWeapons + 3)
 		end
 		Sleep(20*health + 150)
 	end
@@ -355,7 +355,7 @@ function hideLimbPieces(limb, hide)
 		return
 	end
 	if hide then
-		EmitSfx(rootPiece, SFX.CEG + info.numWeapons + 1)
+		EmitSfx(rootPiece, SFX.CEG + numWeapons + 1)
 		Explode(rootPiece, SFX.FIRE + SFX.SMOKE + SFX.RECURSIVE)
 		for id, valid in pairs(limbWeapons) do
 			if valid then
@@ -490,7 +490,7 @@ function script.Deactivate()
 end
 
 local function WeaponCanFire(weaponID)
-	if playerDisabled[weaponID] or weaponID == info.numWeapons then
+	if playerDisabled[weaponID] or weaponID == numWeapons + 1 then
 		return false
 	end
 	if leftArmIDs[weaponID] and limbHPs["left_arm"] <= 0 then
@@ -631,7 +631,7 @@ end
 function script.QueryWeapon(weaponID) 
 	if missileWeaponIDs[weaponID] then
 		return launchPoints[weaponID][currPoints[weaponID]] or launchPoints[weaponID][1]
-	elseif weaponID == info.numWeapons then -- Sight
+	elseif weaponID == numWeapons + 1 then -- Sight
 		return cockpit
 	else
 		return flares[weaponID] or torso

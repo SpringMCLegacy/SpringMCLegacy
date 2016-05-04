@@ -1,9 +1,7 @@
-local versionNumber = "v1.4"
-
 function widget:GetInfo()
 	return {
-		name = "1944 Field of Fire",
-		desc = versionNumber .. " Indicates field of fire for deployable weapons.",
+		name = "MC:L - View Sectors",
+		desc = "Indicates cockpit view sector",
 		author = "Evil4Zerggin",
 		date = "5 January 2009",
 		license = "GNU LGPL, v2.1 or later",
@@ -85,24 +83,6 @@ local RAD1 = rad(1)
 ------------------------------------------------
 
 
-local function DrawMobile(maxAngleDif)
-	local vertices = {
-		{v = {0, 0, 0}},
-	}
-
-	local angle = acos(maxAngleDif)
-	local divs = ceil(2 * angle * divsPerRadian)
-	local angleIncrement = 2 * angle / divs
-	local i = 2
-	for j = 0, divs do
-		vertices[i] = {v = {sin(angle), 0, cos(angle)}}
-		angle = angle - angleIncrement
-		i = i + 1
-	end
-
-	glShape(GL_LINE_LOOP, vertices)
-end
-
 local function DrawStationary(maxAngleDif)
 	local length = maxAngleDif
 	local width = sqrt(1 - maxAngleDif * maxAngleDif)
@@ -125,18 +105,19 @@ local function DrawFieldOfFire2(x, y, z, list, range, rotation)
 end
 
 local function DrawFieldOfFire(unitID, list, range)
-	--local x, y, z = GetUnitPosition(unitID)
-	--local rotation = vHeadingToDegrees(GetUnitHeading(unitID))
 	local map = Spring.GetUnitPieceMap(unitID)
 	local x, y, z, dx, dy, dz = Spring.GetUnitPiecePosDir(unitID, map["cockpit"])
-	--Spring.Echo(y, Spring.GetGroundHeight(x,z), y - Spring.GetGroundHeight(x,z))
 	local rotation = math.deg(math.atan2(dx, dz))
 
 	return DrawFieldOfFire2(x, y, z, list, range, rotation)
 end
 
 local function GetUnitDefMaxAngleDif(unitDef)
-	return math.cos(math.rad(45/2))--(unitDef.customParams.sectorangle)/2))
+	if unitDef.customParams.baseclass == "mech" then
+		return math.cos(math.rad(unitDef.customParams.sectorangle)/2)
+	else
+		return 0
+	end
 end
 
 local function GetBasename(name)
@@ -171,23 +152,6 @@ function widget:Initialize()
 			unitDefInfos[stationaryUnitDefID] = {list, range}
 
 			inUse = true
-
-			--look for mobiles
-			--[[local staticBasename = GetBasename(stationaryUnitDef.name)
-
-			for mobileUnitDefID, mobileUnitDef in ipairs(UnitDefs) do
-				if mobileUnitDef.speed > 0 then
-					local mobileBasename = GetBasename(mobileUnitDef.name)
-					if mobileBasename == staticBasename then
-						local list = mobileLists[maxAngleDif]
-						if not list then
-							list = glCreateList(DrawMobile, maxAngleDif)
-							mobileLists[maxAngleDif] = list
-						end
-						unitDefInfos[mobileUnitDefID] = {list, range}
-					end
-				end
-			end]]
 		end
 	end
 
@@ -216,18 +180,6 @@ function widget:DrawWorld()
 
 	local tx, tz
 	local cmdID, cmdDescID, cmdDescType, cmdDescName = GetActiveCommand()
-	--[[local inDeployCmd = (cmdDescName == "Deploy")
-
-	if inDeployCmd then
-		--Spring.Echo(cmdID .. "/" .. cmdDescID .. "/" .. cmdDescName)
-		local mx, my = GetMouseState()
-		local what, coors = TraceScreenRay(mx, my, true)
-		if (what == "ground") then
-			tx, tz = coors[1], coors[3]
-		else
-			inDeployCmd = false
-		end
-	end]]
 
 	for unitDefID, info in pairs(unitDefInfos) do
 		local units = selectedUnitsSorted[unitDefID]
@@ -235,15 +187,7 @@ function widget:DrawWorld()
 			for i=1,#units do
 				local unitID = units[i]
 				if GetUnitDefID(unitID) then
-					--[[if inDeployCmd and FindUnitCmdDesc(unitID, cmdDescID) then
-						local unitID = units[i]
-						local ux, uy, uz = GetUnitActiveCommandPosition(unitID)
-						local dx, dz = tx - ux, tz - uz
-						local rotation = math.atan2(dx, dz) * (180 / 3.1415)
-						DrawFieldOfFire2(ux, uy, uz, info[1], info[2], rotation)
-					else]]
-						DrawFieldOfFire(unitID, info[1], info[2])
-					--end
+					DrawFieldOfFire(unitID, info[1], info[2])
 				end
 			end
 		end

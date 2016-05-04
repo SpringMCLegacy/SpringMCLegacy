@@ -66,7 +66,7 @@ for unitName, ud in pairs(UnitDefs) do
 		end
 		-- for now all untis have jumpjet CEG as 1 (SFX.CEG)
 		table.insert(ud.sfxtypes.explosiongenerators, 1, "custom:heavy_jumpjet_trail_blue")
-		for weaponID = 1, #weapons do -- SFX.CEG + weaponID
+		for weaponID = 1, #weapons - 1 do -- SFX.CEG + weaponID
 			local cegFlare = cegCache[string.lower(weapons[weaponID].name)]
 			if cegFlare then
 				--Spring.Echo("cegFlare: " .. cegFlare)
