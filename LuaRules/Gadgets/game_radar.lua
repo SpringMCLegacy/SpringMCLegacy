@@ -6,7 +6,7 @@ function gadget:GetInfo()
 		date = "02/02/2011",
 		license = "GNU GPL v2",
 		layer = 3, -- must be after lus_helper
-		enabled = true
+		enabled = true,
 	}
 end
 
@@ -167,7 +167,7 @@ local function DeNARC(unitID, allyTeam, force)
 	end
 end
 
-function gadget:UnitEnteredRadar(unitID, unitTeam, allyTeam, unitDefID)
+--[[function gadget:UnitEnteredRadar(unitID, unitTeam, allyTeam, unitDefID)
 	--Spring.Echo(UnitDefs[unitDefID].name .. " entered radar " .. allyTeam)
 	inRadarUnits[allyTeam][unitID] = true
 	if UnitDefs[unitDefID].speed > 0 then
@@ -181,7 +181,7 @@ function gadget:UnitLeftRadar(unitID, unitTeam, allyTeam, unitDefID)
 		outRadarUnits[allyTeam][unitID] = true
 		inRadarUnits[allyTeam][unitID] = nil
 	end
-end
+end--]]
 
 function gadget:UnitPreDamaged(unitID, unitDefID, unitTeam, damage, paralyzer, weaponID, projectileID, attackerID, attackerDefID, attackerTeam)
 	-- Don't allow any damage to beacons or dropzones
@@ -214,6 +214,9 @@ function gadget:UnitPreDamaged(unitID, unitDefID, unitTeam, damage, paralyzer, w
 end
 
 
+-- cache table (table creation is expensive!)
+local prevLosTrue = {prevLos = true, contRadar=true}
+
 function gadget:UnitCreated(unitID, unitDefID, teamID)
 	local ud = UnitDefs[unitDefID]
 	local jamRadius = ud.jammerRadius
@@ -228,12 +231,12 @@ function gadget:UnitCreated(unitID, unitDefID, teamID)
 	if visionCache[unitDefID] then -- a mech!
 		visionCache[unitDefID].torso = GG.lusHelper[unitDefID].torso
 		allyTeamMechs[Spring.GetUnitAllyTeam(unitID)][unitID] = visionCache[unitDefID]
-		--[[local v1x, v1z, v2x, v2z = GG.Vector.SectorVectorsFromUnitID(unitID, visionCache[unitDefID].x, visionCache[unitDefID].z)
-		local x, y, z = Spring.GetUnitPosition(unitID)
-		Spring.MarkerAddPoint(x + v1x, y, z + v1z, "V1")
-		Spring.MarkerAddPoint(x + v2x, y, z + v2z, "V2")
-		Spring.MarkerAddPoint(x - visionCache[unitDefID].x, y, z + visionCache[unitDefID].z, "S1")
-		Spring.MarkerAddPoint(x + visionCache[unitDefID].x, y, z + visionCache[unitDefID].z, "S2")]]
+		-- force Spring to think this unit has previously been in LOS, so that the correct radar icon is shown
+		for i = 1, numAllyTeams do
+			local allyTeam = allyTeams[i]
+			SetUnitLosState(unitID, allyTeam, prevLosTrue)
+			SetUnitLosMask(unitID, allyTeam, prevLosTrue)
+		end
 	end
 end
 
@@ -241,8 +244,8 @@ end
 function gadget:UnitDestroyed(unitID, unitDefID, teamID)
 	for i = 1, numAllyTeams do
 		local allyTeam = allyTeams[i]
-		inRadarUnits[allyTeam][unitID] = nil
-		outRadarUnits[allyTeam][unitID] = nil
+		--inRadarUnits[allyTeam][unitID] = nil
+		--outRadarUnits[allyTeam][unitID] = nil
 		allyJammers[allyTeam][unitID] = nil
 	end
 	narcUnits[unitID] = nil
@@ -255,8 +258,8 @@ end
 function gadget:UnitGiven(unitID, unitDefID, newTeam, oldTeam)
 	for i = 1, numAllyTeams do
 		local allyTeam = allyTeams[i]
-		inRadarUnits[allyTeam][unitID] = nil
-		outRadarUnits[allyTeam][unitID] = nil
+		--inRadarUnits[allyTeam][unitID] = nil
+		--outRadarUnits[allyTeam][unitID] = nil
 		allyJammers[allyTeam][unitID] = nil
 	end
 	SetUnitRulesParam(unitID, "FRIENDLY_ECM", 0)
@@ -284,18 +287,18 @@ function gadget:GameFrame(n)
 						-- check it is really my sector giving them los
 						local rayTrace = Spring.GetUnitWeaponHaveFreeLineOfFire(unitID, info.sight, enemyID)
 						if rayTrace then
-							SetUnitLosMask(enemyID, allyTeam, {los=false, prevLos=false, radar=false, contRadar=false} )
+							SetUnitLosMask(enemyID, allyTeam, {los=false, prevLos=true, radar=false, contRadar=false} )
 							SectorUnits[allyTeam][enemyID] = true
 						end
 					elseif not SectorUnits[allyTeam][enemyID] then -- in another sector
-						SetUnitLosState(enemyID, allyTeam, {los=false, prevLos=false, radar=true, contRadar=true} ) 
-						SetUnitLosMask(enemyID, allyTeam, {los=true, prevLos=false, radar=false, contRadar=false} )	
+						SetUnitLosState(enemyID, allyTeam, {los=false, prevLos=true, radar=true, contRadar=true} ) 
+						SetUnitLosMask(enemyID, allyTeam, {los=true, prevLos=true, radar=false, contRadar=false} )	
 					end
 				end
 			end
 		end
 		SectorUnits[allyTeam] = {}
-		for unitID in pairs(inRadarUnits[allyTeam]) do
+		--[[for unitID in pairs(inRadarUnits[allyTeam]) do
 			if not narcUnits[unitID] then
 				--SetUnitLosState(unitID, allyTeam, {los=true, prevLos=true, radar=true, contRadar=true} ) 
 				--SetUnitLosMask(unitID, allyTeam, {los=true, prevLos=false, radar=false, contRadar=false} )	
@@ -307,12 +310,12 @@ function gadget:GameFrame(n)
 				--SetUnitLosMask(unitID, allyTeam, {los=false, prevLos=false, radar=false, contRadar=false} )
 				outRadarUnits[allyTeam][unitID] = nil
 			end
-		end
+		end]]
 		-- We no longer want to remove NARCS under ECM, only prevent them
 		--[[for unitID, data in pairs(narcUnits) do
 			local teamID = GetUnitTeam(unitID)
 			if GetUnitUnderJammer(unitID, teamID) then DeNARC(unitID, data.allyTeam, true) end
-		end]]
+		end--]]
 		for jammerID, radius in pairs(allyJammers[allyTeam]) do
 			if Spring.ValidUnitID(jammerID) and not Spring.GetUnitIsDead(jammerID) and not ppcUnits[jammerID] and GetUnitIsActive(jammerID) then
 				local x,y,z = Spring.GetUnitPosition(jammerID)
