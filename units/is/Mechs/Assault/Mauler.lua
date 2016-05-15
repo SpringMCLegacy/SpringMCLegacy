@@ -2,6 +2,7 @@ local Mauler = Assault:New{
 	name				= "Mauler",
 
 	customparams = {
+		cockpitheight	= 70,
 		tonnage			= "90",
     },
 }

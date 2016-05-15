@@ -2,6 +2,7 @@ local Warhammer = Heavy:New{
 	name				= "Warhammer",
 	
 	customparams = {
+		cockpitheight	= 58,
 		tonnage			= 70,
     },
 }
