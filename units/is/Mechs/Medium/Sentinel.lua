@@ -2,6 +2,7 @@ local Sentinel = Medium:New{
 	name				= "Sentinel",
 	
 	customparams = {
+		cockpitheight	= 45,
 		tonnage			= 40,
     },
 }

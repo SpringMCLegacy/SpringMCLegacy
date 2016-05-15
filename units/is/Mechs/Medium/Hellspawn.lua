@@ -2,6 +2,7 @@ local Hellspawn = Medium:New{
 	name				= "Hellspawn",
 
 	customparams = {
+		cockpitheight	= 51,
 		tonnage			= 45,
     },
 }
