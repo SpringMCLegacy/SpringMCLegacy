@@ -1,6 +1,7 @@
 local Firestarter = Light:New{
 	name              	= "Firestarter",
 	customparams = {
+		cockpitheight	= 46,
 		tonnage			= 35,
     },
 }

@@ -1,6 +1,7 @@
 local Javelin = Light:New{
 	name              	= "Javelin",
 	customparams = {
+		cockpitheight	= 46,
 		tonnage 		= 30,
     },
 }

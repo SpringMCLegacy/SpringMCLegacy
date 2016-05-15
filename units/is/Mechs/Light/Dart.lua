@@ -1,6 +1,8 @@
 local Dart = Light:New{
 	name              	= "Dart",
+	
 	customparams = {
+		cockpitheight	= 43,
 		tonnage			= 25,
     },
 }

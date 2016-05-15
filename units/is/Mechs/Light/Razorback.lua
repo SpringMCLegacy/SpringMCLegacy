@@ -1,6 +1,8 @@
 local Razorback = Light:New{
 	name              	= "Razorback",
+	
 	customparams = {
+		cockpitheight	= 47,
 		tonnage			= 30,
     },
 }

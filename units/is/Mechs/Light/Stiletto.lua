@@ -1,6 +1,8 @@
 local Stiletto = Light:New{
 	name				= "Stiletto",
+	
 	customparams = {
+		cockpitheight	= 36,
 		tonnage			= 35,
     },
 }

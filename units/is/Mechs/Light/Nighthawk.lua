@@ -2,6 +2,7 @@ local Nighthawk = Light:New{
 	name				= "Nighthawk",
 	
 	customparams = {
+		cockpitheight	= 43,
 		tonnage			= 35,
     },
 }

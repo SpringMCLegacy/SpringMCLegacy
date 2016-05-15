@@ -1,6 +1,7 @@
 local Locust = Light:New{
 	name			= "Locust",
 	customparams = {
+		cockpitheight	= 36,
 		tonnage 		= 20,
     },
 }

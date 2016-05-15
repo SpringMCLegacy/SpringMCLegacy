@@ -1,6 +1,7 @@
 local Jenner = Light:New{
 	name              	= "Jenner",
 	customparams = {
+		cockpitheight	= 35,
 		tonnage 		= 35,
     },
 }

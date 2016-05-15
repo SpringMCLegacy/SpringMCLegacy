@@ -2,6 +2,7 @@ local Talon = Light:New{
 	name				= "Talon",
 
 	customparams = {
+		cockpitheight	= 38,
 		tonnage			= 35,
     },
 }
