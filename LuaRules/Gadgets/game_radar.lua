@@ -48,6 +48,8 @@ for weaponDefID, weaponDef in pairs(WeaponDefs) do
 	end
 end
 
+local mobileUnitDefs = {}
+local mobileUnits = {}
 local visionCache = {} -- visionCache[unitDefID] = {x = sectorVectorX, z = sectorVectorZ, sight = lastWeaponNum}
 for unitDefID, unitDef in pairs(UnitDefs) do
 	local cp = unitDef.customParams
@@ -59,6 +61,9 @@ for unitDefID, unitDef in pairs(UnitDefs) do
 			z = s1z,
 			sight = #unitDef.weapons, -- always make the sight weapon the last one
 		}
+		mobileUnitDefs[unitDefID] = true
+	elseif cp.baseclass == "vehicle" then
+		mobileUnitDefs[unitDefID] = true
 	end
 end
 
@@ -149,7 +154,8 @@ end
 GG.IsUnitTAGed = IsUnitTAGed
 
 local function ResetLosStates(unitID, allyTeam)
-	if Spring.ValidUnitID(unitID) and not Spring.GetUnitIsDead(unitID) then
+	-- don't reset for turrets or upgrades etc, they remain always visible once detected by whatever means
+	if Spring.ValidUnitID(unitID) and not Spring.GetUnitIsDead(unitID) and mobileUnits[unitID] then
 		--Spring.Echo("Reset los states for", unitID)
 		SetUnitLosMask(unitID, allyTeam, prevLosOnly)
 		if SectorUnits[allyTeam][unitID] then
@@ -222,6 +228,9 @@ function gadget:UnitCreated(unitID, unitDefID, teamID)
 		local allyTeam = select(6, GetTeamInfo(teamID))
 		allyBAPs[allyTeam][unitID] = Spring.GetUnitSensorRadius(unitID, "radar") -- can be perked! TODO: update this via perk side too
 	end
+	if mobileUnitDefs[unitDefID] then
+		mobileUnits[unitID] = true
+	end
 	if visionCache[unitDefID] then -- a mech!
 		visionCache[unitDefID].torso = GG.lusHelper[unitDefID].torso
 		allyTeamMechs[Spring.GetUnitAllyTeam(unitID)][unitID] = visionCache[unitDefID]
@@ -234,6 +243,14 @@ function gadget:UnitCreated(unitID, unitDefID, teamID)
 	end
 end
 
+function gadget:UnitEnteredRadar(unitID, unitTeam, allyTeam, unitDefID)
+	-- TODO: What if a static is in a radar-off LOS sector when it is discovered?
+	if not mobileUnitDefs[unitDefID] then
+		-- statics are perma-visible
+		GG.Delay.DelayCall(SetUnitLosState, {unitID, allyTeam, fullLOS}, 1)
+		GG.Delay.DelayCall(SetUnitLosMask, {unitID, allyTeam, fullLOS}, 1) -- don't let engine update any los status
+	end
+end
 
 function gadget:UnitDestroyed(unitID, unitDefID, teamID)
 	for i = 1, numAllyTeams do
@@ -242,6 +259,7 @@ function gadget:UnitDestroyed(unitID, unitDefID, teamID)
 		--outRadarUnits[allyTeam][unitID] = nil
 		allyJammers[allyTeam][unitID] = nil
 	end
+	mobileUnits[unitID] = nil
 	narcUnits[unitID] = nil
 	ppcUnits[unitID] = nil
 	bapUnits[unitID] = nil
@@ -316,7 +334,7 @@ function gadget:GameFrame(n)
 				--Spring.MarkerAddPoint(x + v2x, 0, z + v2z, "V2")
 				for _, enemyID in pairs(inRadius) do
 					local unitAllyTeam = Spring.GetUnitAllyTeam(enemyID)
-					if enemyID ~= unitID and unitAllyTeam ~= allyTeam and not bapUnits[enemyID] then
+					if mobileUnits[enemyID] and enemyID ~= unitID and unitAllyTeam ~= allyTeam and not bapUnits[enemyID] then
 						local ex, _, ez = Spring.GetUnitPosition(enemyID)
 						local inSector = GG.Vector.IsInsideSectorVector(ex, ez, x, z, v1x, v1z, v2x, v2z)
 						if inSector then

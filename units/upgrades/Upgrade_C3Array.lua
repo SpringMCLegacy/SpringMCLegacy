@@ -6,6 +6,7 @@ local Upgrade_C3Array = Upgrade:New{
 	maxDamage           = 2200,
 	mass                = 10000,
 	buildCostMetal      = 15000,
+	istargetingupgrade 	= true,
 	--energyStorage		= modOptions and modOptions.startenergy or 150, -- grants 150 extra Tonnage space, need to lua it arriving with 150 e
 
 	customparams = {
