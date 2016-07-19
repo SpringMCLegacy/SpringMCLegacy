@@ -66,7 +66,8 @@ for unitName, ud in pairs(UnitDefs) do
 		end
 		-- for now all untis have jumpjet CEG as 1 (SFX.CEG)
 		table.insert(ud.sfxtypes.explosiongenerators, 1, "custom:heavy_jumpjet_trail_blue")
-		for weaponID = 1, #weapons - 1 do -- SFX.CEG + weaponID
+		local cp = ud.customparams
+		for weaponID = 1, #weapons - (cp.baseclass == "mech" and 1 or 0) do -- SFX.CEG + weaponID
 			local cegFlare = cegCache[string.lower(weapons[weaponID].name)]
 			if cegFlare then
 				--Spring.Echo("cegFlare: " .. cegFlare)
@@ -75,7 +76,6 @@ for unitName, ud in pairs(UnitDefs) do
 				--end
 			end
 		end
-		local cp = ud.customparams
 		if cp.baseclass == "mech" or cp.baseclass == "vehicle" or cp.baseclass == "vtol" or cp.baseclass == "aero" then
 			table.insert(ud.sfxtypes.explosiongenerators, "custom:HE_Large")
 			table.insert(ud.sfxtypes.explosiongenerators, "custom:BlackSmoke")

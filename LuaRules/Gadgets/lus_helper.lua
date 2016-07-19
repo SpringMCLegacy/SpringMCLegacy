@@ -386,7 +386,7 @@ function gadget:GamePreload()
 		end
 		-- Mechs
 		--info.jumpjets = GG.jumpDefs[unitDefID] ~= nil
-		info.torsoTurnSpeed = math.rad(tonumber(cp.torsoturnspeed) or 100)
+		info.torsoTurnSpeed = math.rad(tonumber(cp.torsoturnspeed) or 100) --* (modOptions and tonumber(modOptions.torso) or 1)
 		info.elevationSpeed = math.rad(tonumber(cp.elevationspeed) or math.deg(info.torsoTurnSpeed))
 		-- Limb HPs
 		info.limbHPs = {}

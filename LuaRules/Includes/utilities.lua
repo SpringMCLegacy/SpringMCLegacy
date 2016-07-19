@@ -92,3 +92,19 @@ function table.serialize(val, name, skipnewlines, depth)
     end
     return tmp
 end
+
+	-- TODO: figure out if this hack is really required (Euler Angles, Handedness, etc)
+	Spring.MoveCtrl = Spring.MoveCtrl or {}
+	local origMcSetUnitRotation = Spring.MoveCtrl.SetRotation
+	local origMcSetUnitRotationVelocity = Spring.MoveCtrl.SetRotationVelocity
+
+	local function newMcSetUnitRotation(unitID, x, y, z)
+		return origMcSetUnitRotation(unitID, -x, -y, -z)
+	end
+
+	local function newMcSetUnitRotationVelocity(unitID, x, y, z)
+		return origMcSetUnitRotationVelocity(unitID, -x, -y, -z)
+	end
+	
+	Spring.MoveCtrl.SetRotation = newMcSetUnitRotation
+	Spring.MoveCtrl.SetRotationVelocity = newMcSetUnitRotationVelocity

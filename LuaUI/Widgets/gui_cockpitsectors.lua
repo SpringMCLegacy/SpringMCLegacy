@@ -187,7 +187,7 @@ function widget:DrawWorld()
 			for i=1,#units do
 				local unitID = units[i]
 				if GetUnitDefID(unitID) then
-					DrawFieldOfFire(unitID, info[1], info[2])
+					DrawFieldOfFire(unitID, info[1], Spring.GetUnitSensorRadius(unitID, "los"))
 				end
 			end
 		end
@@ -196,3 +196,15 @@ function widget:DrawWorld()
 	glLineWidth(1)
 	glColor(1, 1, 1, 1)
 end
+
+--[[function widget:GameFrame(n)
+	local units = Spring.GetSelectedUnits()
+	for i, unitID in pairs(units) do
+		Spring.Echo("HEP HEP", i, unitID)
+		local path, stuff = Spring.GetUnitEstimatedPath(unitID)
+		for j = 1, #path do
+			local point = path[j]
+			Spring.MarkerAddPoint(point[1], point[2], point[3])
+		end
+	end
+end]]

@@ -263,6 +263,7 @@ function Drop()
 	Spring.MoveCtrl.SetPosition(unitID, TX + UX, TY + DROP_HEIGHT, TZ + UZ)
 	local newAngle = math.atan2(UX, UZ)
 	Spring.MoveCtrl.SetRotation(unitID, 0, newAngle + math.pi, 0)
+	--Spring.Echo(math.deg(newAngle), math.deg(newAngle + math.pi))
 	Turn(body, x_axis, math.rad(-50))
 	-- Begin the drop
 	GG.PlaySoundForTeam(teamID, "BB_Dropship_Inbound", 1)
@@ -276,6 +277,7 @@ function Drop()
 		x, y, z = Spring.GetUnitPosition(unitID)
 		local newAngle = math.atan2(x - TX, z - TZ)
 		Spring.MoveCtrl.SetRotation(unitID, 0, newAngle + math.pi, 0)
+		--Spring.Echo(math.deg(newAngle), math.deg(newAngle + math.pi))
 		if (y - TY) < 4 * HOVER_HEIGHT and stage == 0 then
 			stage = 1
 			StartThread(fx)
