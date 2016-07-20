@@ -329,7 +329,7 @@ function gadget:GameFrame(n)
 				end
 				local inRadius = Spring.GetUnitsInCylinder(x, z, Spring.GetUnitSensorRadius(unitID, "los")) -- use current sensor radius here as perks can change it
 				--local v1x, v1z, v2x, v2z = GG.Vector.SectorVectorsFromUnit(unitID, info.x, info.z)
-				if not info.torso do Spring.Echo("Oh shit, ", UnitDefs[Spring.GetUnitDefID(unitID)].name, "seems to have no cockpit") end
+				if not info.torso then Spring.Echo("Oh shit, ", UnitDefs[Spring.GetUnitDefID(unitID)].name, "seems to have no cockpit") end
 				local v1x, v1z, v2x, v2z = GG.Vector.SectorVectorsFromUnitPiece(unitID, info.torso, info.x, info.z)
 				--Spring.MarkerAddPoint(x + v1x, 0, z + v1z, "V1")
 				--Spring.MarkerAddPoint(x + v2x, 0, z + v2z, "V2")
