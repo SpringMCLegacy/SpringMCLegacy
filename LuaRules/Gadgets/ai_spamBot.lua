@@ -408,6 +408,14 @@ end
 	return true
 end]]
 
+function gadget:GameFrame(n)
+	if n % (30 * 60) == 0 then -- once a minute
+		for teamID in pairs(AI_TEAMS) do
+			Spam(teamID)
+		end
+	end
+end
+
 else
 --	UNSYNCED
 end

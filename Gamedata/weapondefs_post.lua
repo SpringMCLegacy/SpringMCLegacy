@@ -103,7 +103,7 @@ for unitName, ud in pairs(UnitDefs) do
 					featuredead = "wreck_x",
 					footprintx = ud.footprintx,
 					footprintz = ud.footprintz,
-					object = modelPath .. "corpse/" .. unitName .. "_x.s3o",
+					object = cp.baseclass == "mech" and ud.objectname or modelPath .. "corpse/" .. unitName .. "_x.s3o",
 				}
 				if not VFS.FileExists("objects3d/" .. modelPath .. "corpse/" .. unitName .. "_x.s3o") then
 					Spring.Echo("[WeaponDefs_post.lua]: Missing corpse object; " .. modelPath .. "corpse/" .. unitName .. "_x.s3o")
