@@ -321,7 +321,7 @@ function gadget:GameFrame(n)
 						local nearbyUnits = Spring.GetUnitsInCylinder(x, z, bapRadius)
 						for _, enemyID in pairs(nearbyUnits) do
 							local unitAllyTeam = Spring.GetUnitAllyTeam(enemyID)
-							if enemyID ~= unitID and unitAllyTeam ~= allyTeam and not SectorUnits[allyTeam][enemyID] then -- not in another sector
+							if enemyID ~= unitID and unitAllyTeam ~= allyTeam then -- and not SectorUnits[allyTeam][enemyID] then -- not in another sector
 								SetUnitLosState(enemyID, allyTeam, fullLOS) 
 								SetUnitLosMask(enemyID, allyTeam, losTrue)	-- let lua handle los state for this unit
 								bapUnits[enemyID] = {n, allyTeam}
@@ -337,7 +337,7 @@ function gadget:GameFrame(n)
 				--Spring.MarkerAddPoint(x + v2x, 0, z + v2z, "V2")
 				for _, enemyID in pairs(inRadius) do
 					local unitAllyTeam = Spring.GetUnitAllyTeam(enemyID)
-					if mobileUnits[enemyID] and enemyID ~= unitID and unitAllyTeam ~= allyTeam and not bapUnits[enemyID] then
+					if mobileUnits[enemyID] and enemyID ~= unitID and unitAllyTeam ~= allyTeam and not (bapUnits[enemyID] and bapUnits[enemyID][2] == allyTeam) then
 						local ex, _, ez = Spring.GetUnitPosition(enemyID)
 						local inSector = GG.Vector.IsInsideSectorVector(ex, ez, x, z, v1x, v1z, v2x, v2z)
 						if inSector then
@@ -358,7 +358,8 @@ function gadget:GameFrame(n)
 			end
 		end
 		for enemyID in pairs(PrevSectorUnits[allyTeam]) do
-			if not SectorUnits[allyTeam][enemyID] then -- unit was previously in a sector but is now not inside any radius, reset states
+			if not SectorUnits[allyTeam][enemyID] and not (bapUnits[enemyID] and bapUnits[enemyID][2] == allyTeam) then 
+			-- unit was previously in a sector but is now not inside any radius, reset states
 				SetUnitLosState(enemyID, allyTeam, losFalseRestTrue) 
 				SetUnitLosMask(enemyID, allyTeam, losTrue) -- let lua handle los state for this unit	
 			end
