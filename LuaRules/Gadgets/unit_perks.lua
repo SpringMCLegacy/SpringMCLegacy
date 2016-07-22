@@ -86,17 +86,21 @@ function gadget:Initialize()
 	end
 end
 
+local function UpdateUnitPerks(unitID, baseclass)
+	if baseclass == "mech" then -- only mechs use xp to perk up
+		local newExp = Spring.GetUnitExperience(unitID)
+		UpdateRemaining(unitID, newExp, PERK_XP_COST)
+		Spring.SetUnitRulesParam(unitID, "perk_xp", math.min(100, 100 * newExp / PERK_XP_COST))
+	elseif not select(3, Spring.GetUnitTeam(unitID)) then -- team isn't dead
+		-- other units use CBills
+		local cBills = select(1, Spring.GetTeamResources(Spring.GetUnitTeam(unitID), "metal"))
+		UpdateRemaining(unitID, cBills)
+	end
+end
+
 function gadget:GameFrame(n)
 	for unitID, baseclass in pairs(perkUnits) do
-		if baseclass == "mech" then -- only mechs use xp to perk up
-			local newExp = Spring.GetUnitExperience(unitID)
-			UpdateRemaining(unitID, newExp, PERK_XP_COST)
-			Spring.SetUnitRulesParam(unitID, "perk_xp", math.min(100, 100 * newExp / PERK_XP_COST))
-		elseif not select(3, Spring.GetUnitTeam(unitID)) then -- team isn't dead
-			-- other units use CBills
-			local cBills = select(1, Spring.GetTeamResources(Spring.GetUnitTeam(unitID), "metal"))
-			UpdateRemaining(unitID, cBills)
-		end
+		UpdateUnitPerks(unitID, baseclass)
 	end
 end
 
@@ -118,6 +122,7 @@ function gadget:AllowCommand(unitID, unitDefID, teamID, cmdID, cmdParams, cmdOpt
 			currentPerks[unitID][perkDef.name] = true
 			-- deduct 'cost' of perk
 			perkDef.costFunction(unitID, perkDef.price or PERK_XP_COST)
+			UpdateUnitPerks(unitID, perkUnits[unitID]) -- update perks here too to prevent pause cheating
 		else -- perk is not valid, command not accepted
 			return false
 		end
