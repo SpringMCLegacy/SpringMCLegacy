@@ -83,6 +83,7 @@ local deadTeams = {}
 local allyTeamMechs = {}
 
 local SectorUnits = {}
+local PrevSectorUnits = {}
 for i = 1, numAllyTeams do
 	local allyTeam = allyTeams[i]
 	inRadarUnits[allyTeam] = {}
@@ -91,6 +92,7 @@ for i = 1, numAllyTeams do
 	allyBAPs[allyTeam] = {}
 	teamsInAllyTeams[allyTeam] = Spring.GetTeamList(allyTeam)
 	SectorUnits[allyTeam] = {}
+	PrevSectorUnits[allyTeam] = {}
 	allyTeamMechs[allyTeam] = {}
 end
 
@@ -329,7 +331,7 @@ function gadget:GameFrame(n)
 				end
 				local inRadius = Spring.GetUnitsInCylinder(x, z, Spring.GetUnitSensorRadius(unitID, "los")) -- use current sensor radius here as perks can change it
 				--local v1x, v1z, v2x, v2z = GG.Vector.SectorVectorsFromUnit(unitID, info.x, info.z)
-				if not info.torso then Spring.Echo("Oh shit, ", UnitDefs[Spring.GetUnitDefID(unitID)].name, "seems to have no cockpit") end
+				if not info.torso then Spring.Echo("Oh shit, ", UnitDefs[Spring.GetUnitDefID(unitID)].name, "seems to have no cockpit") else
 				local v1x, v1z, v2x, v2z = GG.Vector.SectorVectorsFromUnitPiece(unitID, info.torso, info.x, info.z)
 				--Spring.MarkerAddPoint(x + v1x, 0, z + v1z, "V1")
 				--Spring.MarkerAddPoint(x + v2x, 0, z + v2z, "V2")
@@ -352,8 +354,16 @@ function gadget:GameFrame(n)
 						end
 					end
 				end
+				end
 			end
 		end
+		for enemyID in pairs(PrevSectorUnits[allyTeam]) do
+			if not SectorUnits[allyTeam][enemyID] then -- unit was previously in a sector but is now not inside any radius, reset states
+				SetUnitLosState(enemyID, allyTeam, losFalseRestTrue) 
+				SetUnitLosMask(enemyID, allyTeam, losTrue) -- let lua handle los state for this unit	
+			end
+		end
+		table.copy(SectorUnits[allyTeam], PrevSectorUnits[allyTeam])
 		SectorUnits[allyTeam] = {}
 	end
 	if Spring.IsGameOver() then

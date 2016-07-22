@@ -601,7 +601,8 @@ function widget:Update(s)
 					mechWindow:AddChild(currentParts[partNumber])
 				end
 			else
-				Spring.Echo("it appears we have encountered an uncovered unitType", unitType)
+				--Spring.Echo("it appears we have encountered an uncovered unitType", unitType)
+				-- TODO: Mute this for now
 			end
 			
 			FillCardStats()		
