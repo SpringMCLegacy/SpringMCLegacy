@@ -46,6 +46,7 @@ local CoolantCmdDesc = {
 	action = 'flush',
 	name = ' Flush\n Coolant ',
 	tooltip = 'Rapidly cool the mech heatsinks.',
+	queueing = false,
 }
 local coolantUnitDefs = {}
 
