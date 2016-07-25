@@ -208,7 +208,7 @@ local Leopard = DropShip:New{ -- TODO: DropShip:New, custom weapons etc
 }
 
 local Overlord = Union:New{ -- TODO: DropShip:New, custom weapons etc
-	--objectName        	= "Dropship_Overlord.s3o",
+	objectName        	= "Dropship_Overlord.s3o",
 	customparams = {
 		maxtonnage		= 400,
 		cooldown		= 50 * 30,
