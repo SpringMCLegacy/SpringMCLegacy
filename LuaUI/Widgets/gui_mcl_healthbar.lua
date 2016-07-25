@@ -1,12 +1,12 @@
 function widget:GetInfo()
 	return {
-		name	  = "S44 Healthbars",
+		name	  = "MC:L - HealthBars & Icons",
 		desc	  = "Custom healthbars",
 		author	  = "TheFatController/Gnome, adapted from IW Healthbars", --Updated by FLOZi and ashdnazg 2014-2015
 		date	  = "November 2009",
 		license	  = "PD",
 		layer	  = 0,
-		enabled	  = false
+		enabled	  = true
 	}
 end
 

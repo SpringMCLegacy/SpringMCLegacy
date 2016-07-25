@@ -12,13 +12,13 @@
 
 function widget:GetInfo()
   return {
-    name      = "MC:L - HealthBars",
+    name      = "MC:L - HealthBars (Old)",
     desc      = "Gives various informations about units in form of bars.",
     author    = "jK", -- BTL mods by FLOZi
     date      = "2009",
     license   = "GNU GPL, v2 or later",
     layer     = -10,
-    enabled   = true  --  loaded by default?
+    enabled   = false  --  loaded by default?
   }
 end
 
