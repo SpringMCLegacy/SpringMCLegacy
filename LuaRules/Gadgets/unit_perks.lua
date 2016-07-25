@@ -115,7 +115,8 @@ function gadget:AllowCommand(unitID, unitDefID, teamID, cmdID, cmdParams, cmdOpt
 		local ud = UnitDefs[unitDefID]
 		local cp = ud.customParams
 		-- check that this unit can receive this perk (can be issued the order due to multiple units selected)
-		if validPerks[unitDefID][cmdID] then
+		-- ... and that it doesn't already have it
+		if validPerks[unitDefID][cmdID] and not currentPerks[unitID][cmdID] then
 			if perkDef.requires and not currentPerks[unitID][perkDef.requires] then return false end
 			perkDef.applyPerk(unitID)
 			EditUnitCmdDesc(unitID, FindUnitCmdDesc(unitID, cmdID), {name = perkDef.cmdDesc.name .."\n  (Trained)", disabled = true})

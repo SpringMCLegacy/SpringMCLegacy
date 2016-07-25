@@ -37,6 +37,8 @@ local PERK_JUMP_RANGE = GG.CustomCommands.GetCmdID("PERK_JUMP_EFFICIENCY")
 local CMD_DROPZONE = GG.CustomCommands.GetCmdID("CMD_DROPZONE")
 local CMD_C3 = GG.CustomCommands.GetCmdID("CMD_UPGRADE_upgrade_c3array")
 local CMD_VPAD = GG.CustomCommands.GetCmdID("CMD_UPGRADE_upgrade_vehiclepad")
+local CMD_UNION, UNION_COST = GG.CustomCommands.GetCmdID('PERK_DROPSHIP_UPGRADE_UNION')
+local CMD_OVERLORD, OVERLORD_COST = GG.CustomCommands.GetCmdID('PERK_DROPSHIP_UPGRADE_OVERLORD')
 
 local dropZoneIDs = {}
 local orderSizes = {}
@@ -45,16 +47,18 @@ local flagSpots = {} --VFS.Include("maps/flagConfig/" .. Game.mapName .. "_profi
 
 local teamUpgradeCounts = {} -- teamUpgradeCounts[teamID] = {c3 = 1, vpad = 1} etc
 local teamUpgradeIDs = {} -- teamUpgradeIDs[teamID] = {unitID1 = 1, unitID2 = 2 etc}
+local teamDropshipUpgrades = {} -- teamDropshipUpgrades[teamID] = 1
 
 local function CostSort(unitDefID1, unitDefID2)
 	return UnitDefs[unitDefID1].metalCost < UnitDefs[unitDefID2].metalCost
 end
 
-local function SimpleReverseSearch(sideTable, cost)
+local function SimpleReverseSearch(sideTable, mCost, tCost)
 	for i = #sideTable, 1, -1 do
 		local unitDefID = sideTable[i]
-		local foundCost = UnitDefs[unitDefID].metalCost
-		if foundCost < cost then return unitDefID end
+		local foundMCost = UnitDefs[unitDefID].metalCost
+		local foundTCost = UnitDefs[unitDefID].energyCost
+		if foundMCost < mCost and foundTCost < tCost then return unitDefID end
 	end
 	return false -- no affordable mech!
 end
@@ -135,16 +139,26 @@ local function Spam(teamID)
 					end
 					Spring.AddTeamResource(teamID, "energy", 100)
 				else
-					buildID = SimpleReverseSearch(sideMechs[side], Spring.GetTeamResources(teamID, "metal") * math.random(55, 95)/100)
+					buildID = SimpleReverseSearch(sideMechs[side], Spring.GetTeamResources(teamID, "metal") * math.random(55, 95)/100, Spring.GetTeamResources(teamID, "energy"))
 				end
 			else
 				--local cmdDesc = cmdDescs[math.random(1, #cmdDescs)]
-				buildID = SimpleReverseSearch(sideMechs[side], Spring.GetTeamResources(teamID, "metal") * math.random(55, 95)/100)
+				buildID = SimpleReverseSearch(sideMechs[side], Spring.GetTeamResources(teamID, "metal") * math.random(55, 95)/100, Spring.GetTeamResources(teamID, "energy"))
 			end
-			if not buildID then return end -- couldn't find any affordable mechs
-			GG.Delay.DelayCall(Spring.GiveOrderToUnit, {unitID, -buildID, {}, {}}, 1)
-			orderSizes[teamID] = orderSizes[teamID] + 1
+			if buildID then
+				GG.Delay.DelayCall(Spring.GiveOrderToUnit, {unitID, -buildID, {}, {}}, 1)
+				orderSizes[teamID] = orderSizes[teamID] + 1
 			--Spring.Echo("Adding to order;", orderSizes[teamID], UnitDefs[-buildID].name, GG.TeamSlotsRemaining(teamID))
+			elseif orderSizes[teamID] == 0 then 
+				-- couldn't find any affordable mechs, try upgrading dropship
+				if not teamDropshipUpgrades[teamID] and Spring.GetTeamResources(teamID, "metal") > UNION_COST then
+					Spring.GiveOrderToUnit(unitID, CMD_UNION, {}, {})
+					teamDropshipUpgrades[teamID] = 1
+				elseif teamDropshipUpgrades[teamID] == 1 and Spring.GetTeamResources(teamID, "metal") > OVERLORD_COST then
+					Spring.GiveOrderToUnit(unitID, CMD_OVERLORD, {}, {})
+				end
+				return 
+			end
 		end
 		GG.Delay.DelayCall(SendOrder, {teamID}, 2) -- frame after orders
 	end

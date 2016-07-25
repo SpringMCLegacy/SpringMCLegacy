@@ -349,7 +349,7 @@ function UnloadCargo()
 		-- off the tray, raise it up for the next one
 		Move(attachment, y_axis, 0, BOOM_SPEED * 1.5)
 		-- only rollers need to deal with the ramp
-		if not UnitDefs[Spring.GetUnitDefID(cargoID)].canFly then
+		if cargoID and not UnitDefs[Spring.GetUnitDefID(cargoID)].canFly then
 			Turn(cargoPieces[1], x_axis, math.rad(20), math.rad(20))
 			WaitForTurn(cargoPieces[1], x_axis)
 			Move(pad, z_axis, 35, UnitDefs[Spring.GetUnitDefID(cargoID)].speed / 2)
