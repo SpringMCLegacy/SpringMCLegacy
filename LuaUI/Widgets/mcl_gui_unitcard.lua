@@ -559,12 +559,14 @@ function widget:Update(s)
 		local weapons		= UnitDefs[spGetUnitDefID(currentUnitId)].weapons
 		
 		for weaponNum, weaponUnitDef in pairs(weapons) do
-			--Spring.Echo( WeaponDefs[weaponUnitDef.weaponDef].description)
-			local currentWeapon		= weaponButton[weaponNum-1]
-			local status			= spGetUnitRulesParam(currentUnitId, weapon_Lookup[weaponNum])
+			if weaponNum <= maxWeaponCount then
+				--Spring.Echo( WeaponDefs[weaponUnitDef.weaponDef].description)
+				local currentWeapon		= weaponButton[weaponNum-1]
+				local status			= spGetUnitRulesParam(currentUnitId, weapon_Lookup[weaponNum])
 			
-			currentWeapon.backgroundColor	= weaponStatus[status]
-			currentWeapon:Invalidate()		
+				currentWeapon.backgroundColor	= weaponStatus[status]
+				currentWeapon:Invalidate()
+			end
 		end
 	end
 	--end flozi needs to add a proper sendtounsynced but for now..	

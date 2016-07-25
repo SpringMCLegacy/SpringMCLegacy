@@ -170,6 +170,7 @@ local function TeamAvailableGroup(teamID, size)
 	if select(3, Spring.GetTeamInfo(teamID)) then return false end -- team died
 	if teamID == GAIA_TEAM_ID then return false end
 	for i = 1, 3 do
+		if teamSlots[teamID][i].available == nil or size == nil then Spring.Echo("FLOZi Logic Fail", teamSlots[teamID][i].available, size) return false end
 		if teamSlots[teamID][i].available >= size then return i, teamSlots[teamID][i].active end
 	end
 	return false
