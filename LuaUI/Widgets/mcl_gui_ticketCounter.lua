@@ -43,7 +43,7 @@ local GetTeamRulesParam	= Spring.GetTeamRulesParam
 local allyTeams = Spring.GetAllyTeamList()
 for i = 1, #allyTeams do
 	local allyTeam = allyTeams[i]
-	allyBeaconCounts[allyTeam] = 1
+	allyBeaconCounts[allyTeam] = 0
 	if allyTeam == GAIA_ALLY_ID then allyTeams[i] = nil; break end
 end
 local xMax, yMax = Spring.GetViewGeometry()
@@ -98,8 +98,8 @@ local function TicketText()
 	end
 end
 
-function BeaconCap(allyTeam, change)
-	allyBeaconCounts[allyTeam] = allyBeaconCounts[allyTeam] + change
+function BeaconUpdate(allyTeam, new)
+	allyBeaconCounts[allyTeam] = new
 end
 
 
@@ -121,7 +121,7 @@ function widget:Initialize()
 	if Spring.GetGameFrame() > 0 then
 		widget:GamePreload()
 	end
-	widgetHandler:RegisterGlobal("BeaconCap", BeaconCap)
+	widgetHandler:RegisterGlobal("BEACONUPDATE", BeaconUpdate)
 end
 
 function widget:Shutdown()

@@ -118,13 +118,15 @@ function UpdateBeacons(teamID, num)
 	if teamID == GAIA_TEAM_ID then return end -- Gaia does not have tickets
 	local allyTeam = select(6, GetTeamInfo(teamID))
 	beaconsPerAllyTeam[allyTeam] = beaconsPerAllyTeam[allyTeam] + num
+	SetTeamRulesParam(teamID, "beacons", (GetTeamRulesParam(teamID, "beacons") or 0) + num, {public = true})
+	SendToUnsynced("BEACONUPDATE", allyTeam, beaconsPerAllyTeam[allyTeam])
 end
 
 function DecrementTickets(allyTeam)
 	if allyTeam == GAIA_ALLY_ID then return end -- Gaia does not have tickets
 	if tickets[allyTeam] > 0 then
 		tickets[allyTeam] = tickets[allyTeam] - 1
-		--Spring.Echo("AllyTeam " .. allyTeam .. ": " .. tickets[allyTeam])
+		--Spring.Echo("AllyTeam " .. allyTeam .. "[".. beaconsPerAllyTeam[allyTeam] .. "] lost 1 ticket (" .. tickets[allyTeam] .. ")")
 		SetGameRulesParam("tickets" .. allyTeam, tickets[allyTeam], {public = true})
 	elseif tickets[allyTeam] == 0 then
 		if allyTeamAlive[allyTeam] then
@@ -243,16 +245,16 @@ local function StripUnits(unitsAtFlag)
 end
 
 local function TransferFlag(flagID, flagTeamID, teamID)
-	-- Update the old team
-	TransferUnit(flagID, flagTeamID == GAIA_TEAM_ID and teamID or GAIA_TEAM_ID, false)
-	UpdateBeacons(flagTeamID, -1)
-	SetTeamRulesParam(flagTeamID, "beacons", (GetTeamRulesParam(teamID, "beacons") or 0) - 1, {public = true})
-	SendToUnsynced("BEACONCAP", flagTeamID, -1)
-	-- Update the new team
-	Spring.AddTeamResource(teamID, "metal", 2000)
-	UpdateBeacons(teamID, 1)
-	SetTeamRulesParam(teamID, "beacons", (GetTeamRulesParam(teamID, "beacons") or 0) + 1, {public = true})
-	SendToUnsynced("BEACONCAP", teamID, 1)
+	local capped = flagTeamID == GAIA_TEAM_ID
+	TransferUnit(flagID, capped and teamID or GAIA_TEAM_ID, false)
+	Spring.AddTeamResource(teamID, "metal", 2000) -- 2k CBills for neut or cap
+	if capped then -- new team is gaining a beacon
+		-- Update the new team
+		UpdateBeacons(teamID, 1)
+	else -- neutralised, so old team is losing a beacon
+		-- Update the old team
+		UpdateBeacons(flagTeamID, -1)
+	end
 	-- Turn flag back on TODO: check if this can be avoided in MCL?
 	GiveOrderToUnit(flagID, CMD.ONOFF, {1}, {})
 	-- Flag has changed team, reset capping statuses
@@ -306,7 +308,6 @@ local function FlagCapRegen(flagID, flagTeamID, change)
 end
 
 function gadget:GameFrame(n)
-	local maxBeacon = 0
 	-- FLAG CONTROL
 	if n % 30 == 5 then -- every second with a 5 frame offset
 		for _, flagType in pairs(flagTypes) do
@@ -363,21 +364,21 @@ function gadget:GameFrame(n)
 				end
 			end
 		end
-		
+		local maxBeacon = 0
 		-- manage tickets	
 		for allyTeam, numBeacon in pairs(beaconsPerAllyTeam) do
 			maxBeacon = math.max(numBeacon, maxBeacon)
 		end
 		for allyTeam, numBeacon in pairs(beaconsPerAllyTeam) do
 			if numBeacon < maxBeacon then
-				bleedTimes[allyTeam] = totalFlags / (maxBeacon - numBeacon)
+				bleedTimes[allyTeam] = math.floor(totalFlags / (maxBeacon - numBeacon) * 30) -- 7/1 = 7, 
 			else
 				bleedTimes[allyTeam] = 0
 			end
 		end
 	end
-	for allyTeam, i in pairs(bleedTimes) do
-		if i > 0 and n % (30 * i) == 0 then
+	for allyTeam, bleed in pairs(bleedTimes) do
+		if bleed > 0 and n % bleed == 0 then
 			DecrementTickets(allyTeam)
 		end
 	end
@@ -394,6 +395,7 @@ function gadget:UnitCreated(unitID, unitDefID, unitTeam, builderID)
 		local newSpot = {["x"] = x, ["z"] = z}
 		table.insert(flagTypeSpots["beacon"], newSpot)
 		PlaceFlag(newSpot, "beacon", unitID)
+		UpdateBeacons(unitTeam, 1)
 	end
 end
 
@@ -451,15 +453,14 @@ end
 else
 -- UNSYNCED
 
-function PassToUI(eventID, teamID, change)
-	if Script.LuaUI.BeaconCap then
-		local allyTeamID = select(6, Spring.GetTeamInfo(teamID))
-		Script.LuaUI.BeaconCap(allyTeamID, change)
+function PassToUI(eventID, allyTeamID, new)
+	if Script.LuaUI.BEACONUPDATE then
+		Script.LuaUI.BEACONUPDATE(allyTeamID, new)
 	end
 end
 
 function gadget:Initialize()
-	gadgetHandler:AddSyncAction("BEACONCAP", PassToUI)
+	gadgetHandler:AddSyncAction("BEACONUPDATE", PassToUI)
 end
 
 end
