@@ -1,9 +1,6 @@
 local CL_Timberwolf = Heavy:New{
 	corpse				= "CL_Timberwolf_X",
 	maxDamage           = 23000,
-	mass                = 7500,
-	buildCostEnergy     = 75,
-	buildCostMetal      = 37200,
 	maxVelocity		= 4.3, --86kph/20
 	maxReverseVelocity= 2.15,
 	acceleration    = 1,
@@ -12,6 +9,7 @@ local CL_Timberwolf = Heavy:New{
 	
 	customparams = {
 		heatlimit		= 34,
+		tonnage			= 75,
 		torsoturnspeed	= 130,
 		maxammo 		= {lrm = 180},
     },
@@ -54,6 +52,7 @@ local E = CL_Timberwolf:New{
 		},
 	},
 	customparams = {
+		price      = 37200,
 		helptext		= "Armament: 2 x ER Large Beam Laser, 2x ER Medium Beam Laser, 2x Small Pulse Laser, 2x MG, 2 x ATM-9 - Armor: ?? tons Ferro-Fibrous",
     },
 }

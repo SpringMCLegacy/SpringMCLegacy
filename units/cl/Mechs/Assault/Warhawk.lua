@@ -1,9 +1,6 @@
 local CL_Warhawk = Assault:New{
 	corpse				= "CL_Warhawk_X",
 	maxDamage           = 25900,
-	mass                = 8500,
-	buildCostEnergy     = 85,
-	buildCostMetal      = 39900,
 	maxVelocity		= 3.2, --64kph/10/2
 	maxReverseVelocity= 1.6,
 	acceleration    = 1.0,
@@ -12,6 +9,7 @@ local CL_Warhawk = Assault:New{
 	
 	customparams = {
 		heatlimit		= 50,
+		tonnage			= 85,
 		torsoturnspeed	= 100,
 		bap				= true,
 		maxammo 		= {lrm = 120},
@@ -41,6 +39,7 @@ local Prime = CL_Warhawk:New{
 	},
 
 	customparams = {
+		price	      = 39900,
 		helptext		= "Armament: 4 x ER Particle Cannon, 1 x ATM-9 - Armor: 13.5 tons Ferro-Fibrous",
     },
 }

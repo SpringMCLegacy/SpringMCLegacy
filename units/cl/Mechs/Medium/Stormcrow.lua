@@ -1,9 +1,6 @@
 local CL_Stormcrow = Medium:New{
 	corpse				= "CL_Stormcrow_X",
 	maxDamage           = 18200,
-	mass                = 5500,
-	buildCostEnergy     = 55,
-	buildCostMetal      = 27040,
 	maxVelocity		= 4.85, --97kph/30
 	maxReverseVelocity= 2.43,
 	acceleration    = 1.5,
@@ -12,6 +9,7 @@ local CL_Stormcrow = Medium:New{
 	
 	customparams = {
 		heatlimit		= 20,
+		tonnage			= 55,
 		torsoturnspeed	= 160,
 		maxammo 		= {lrm = 180, srm = 80},
     },
@@ -46,6 +44,7 @@ local A = CL_Stormcrow:New{
 	},
 
 	customparams = {
+		price      = 27040,
 		helptext		= "Armament: 1 x LRM-20, 4 x Medium Pulse Laser, 2 x SRM-4 - Armor: 9.5 tons",
     },
 }

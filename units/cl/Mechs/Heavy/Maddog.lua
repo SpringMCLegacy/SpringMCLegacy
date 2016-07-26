@@ -1,9 +1,6 @@
 local CL_Maddog = Heavy:New{
 	corpse				= "CL_Maddog_X",
 	maxDamage           = 16300,
-	mass                = 6000,
-	buildCostEnergy     = 60,
-	buildCostMetal      = 30810,
 	maxVelocity		= 4.3, --86kph/20
 	maxReverseVelocity= 2.15,
 	acceleration    = 1,
@@ -12,6 +9,7 @@ local CL_Maddog = Heavy:New{
 
 	customparams = {
 		heatlimit		= 24,
+		tonnage			= 60,
 		torsoturnspeed	= 135,
 		maxammo 		= {lrm = 180},
     },
@@ -46,6 +44,7 @@ local Prime = CL_Maddog:New{
 	},
 	
 	customparams = {
+		price      = 30810,
 		helptext		= "Armament: 2 x LRM-20, 2 x Large Pulse Laser, 2 x Medium Pulse Laser - Armor: 8.5 tons Ferro-Fibrous",
     },
 }

@@ -1,9 +1,6 @@
 local CL_Hellbringer = Heavy:New{
 	corpse				= "CL_Hellbringer_X",
 	maxDamage           = 12800,
-	mass                = 6500,
-	buildCostEnergy     = 65,
-	buildCostMetal      = 26700,
 	maxVelocity		= 4.3, --86kph/20
 	maxReverseVelocity= 2.15,
 	acceleration    = 1,
@@ -12,6 +9,7 @@ local CL_Hellbringer = Heavy:New{
 
 	customparams = {
 		heatlimit		= 26,
+		tonnage			= 65,
 		torsoturnspeed	= 130,
 		maxammo 		= {gauss = 20, ac10 = 20, lrm = 120},
 		hasecm			= true,
@@ -40,6 +38,7 @@ local B = CL_Hellbringer:New{
 		},
 	},
 	customparams = {
+		price      = 26700,
 		helptext		= "Armament: 1 x Gauss Rifle, 1 x UAC/10, 1 x ER Small Beam Laser, 1 x LRM-10 - Armor: 8 tons Ferro-Fibrous",
     },
 }

@@ -1,9 +1,6 @@
 local CL_Direwolf = Assault:New{
 	corpse				= "CL_Direwolf_X",
 	maxDamage           = 30400,
-	mass                = 10000,
-	buildCostEnergy     = 100,
-	buildCostMetal      = 48660,
 	maxVelocity		= 2.7, --54kph/30
 	maxReverseVelocity= 1.35,
 	acceleration    = .80,
@@ -13,6 +10,7 @@ local CL_Direwolf = Assault:New{
 	customparams = {
 		heatlimit		= 44,
 		torsoturnspeed	= 100,
+		tonnage			= 100,
 		maxammo 		= {ac5 = 100, lrm = 120},
     },
 }
@@ -58,6 +56,7 @@ local Prime = CL_Direwolf:New{
 	},
 
 	customparams = {
+		price			= 48660,
 		helptext		= "Armament: 4 x ER Large Beam Laser, 4 x ER Medium Beam Laser, 2 x UAC/5, 1 x ATM-9 - Armor: 19 tons",
     },
 }
