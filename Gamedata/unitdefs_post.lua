@@ -11,9 +11,20 @@ local function GetWeight(mass)
 	return weight
 end
 
-local modOptions
-if (Spring.GetModOptions) then
-  modOptions = Spring.GetModOptions()
+local modOptions = Spring.GetModOptions()
+if not modOptions.startmetal then -- load via file
+	local raw = VFS.Include("modoptions.lua", nil, VFS.ZIP)
+	for i, v in ipairs(raw) do
+		if v.type ~= "section" then
+			modOptions[v.key] = v.def
+		end
+	end
+	raw = VFS.Include("engineoptions.lua", nil, VFS.ZIP)
+	for i, v in ipairs(raw) do
+		if v.type ~= "section" then
+			modOptions[v.key:lower()] = v.def
+		end
+	end
 end
 
 
