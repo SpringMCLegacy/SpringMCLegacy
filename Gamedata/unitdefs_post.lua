@@ -149,7 +149,7 @@ for name, ud in pairs(UnitDefs) do
 		end
 		if cp.speed then
 			ud.maxvelocity = tonumber(cp.speed or 0) / (cp.baseclass == "mech" and 20 or 30) -- convert kph to game speed
-			cp.torsoturnspeed = cp.speed * 5
+			--cp.torsoturnspeed = cp.speed * 5
 		end
 		if cp.maxammo then
 			for ammoType, tons in pairs(cp.maxammo) do
@@ -187,7 +187,7 @@ for name, ud in pairs(UnitDefs) do
 	ud.acceleration = ud.maxvelocity / 4
 	ud.brakerate = ud.maxvelocity / 25
 	ud.turnrate = ud.maxvelocity * 200 * (modOptions.turn or 1)
-	cp.torsoturnspeed = ud.maxvelocity * 50 * (modOptions.torso or 1) -- for now keep this independent of turnrate so we can tweak them separately
+	cp.torsoturnspeed = cp.torsoturnspeed or (ud.maxvelocity * 50 * (modOptions.torso or 1)) -- for now keep this independent of turnrate so we can tweak them separately
 	if not name:find("decal") then
 		ud.seismicdistance = 0
 		ud.sightdistance = 500 -- 1000

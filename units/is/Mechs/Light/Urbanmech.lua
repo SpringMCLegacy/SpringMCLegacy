@@ -4,6 +4,7 @@ local Urbanmech = Light:New{
 	customparams = {
 		cockpitheight	= 52,
 		tonnage			= 30,
+		torsoturnspeed	= 210,
     },
 }
 
