@@ -9,6 +9,36 @@ local iconTypes = {
 		size			=	5,
 		distance	=	5.0,
 	},
+	leopard = {
+		bitmap		=	"icons/leopard.png",
+		size			=	5,
+		distance	=	5.0,
+	},
+	union = {
+		bitmap		=	"icons/union.png",
+		size			=	5,
+		distance	=	5.0,
+	},
+	overlord = {
+		bitmap		=	"icons/overlord.png",
+		size			=	5,
+		distance	=	5.0,
+	},
+	avenger = {
+		bitmap		=	"icons/avenger.png",
+		size			=	5,
+		distance	=	5.0,
+	},
+	markvii = {
+		bitmap		=	"icons/markvii.png",
+		size			=	5,
+		distance	=	5.0,
+	},
+	drost = {
+		bitmap		=	"icons/drost.png",
+		size			=	5,
+		distance	=	5.0,
+	},
 	beacon = {
 		bitmap		=	"icons/beacon.png",
 		size			=	5,
