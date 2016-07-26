@@ -190,7 +190,7 @@ for name, ud in pairs(UnitDefs) do
 	cp.torsoturnspeed = ud.maxvelocity * 50 * (modOptions.torso or 1) -- for now keep this independent of turnrate so we can tweak them separately
 	if not name:find("decal") then
 		ud.seismicdistance = 0
-		ud.sightdistance = 1000
+		ud.sightdistance = 500 -- 1000
 		ud.radardistance = 2000
 		ud.airsightdistance = 2000
 		ud.seismicsignature = 0

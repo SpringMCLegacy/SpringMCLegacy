@@ -82,8 +82,8 @@ local teamsInAllyTeams = {}
 local deadTeams = {}
 local allyTeamMechs = {}
 
-local SectorUnits = {}
-local PrevSectorUnits = {}
+local sectorUnits = {}
+local prevSectorUnits = {}
 for i = 1, numAllyTeams do
 	local allyTeam = allyTeams[i]
 	inRadarUnits[allyTeam] = {}
@@ -91,8 +91,8 @@ for i = 1, numAllyTeams do
 	allyJammers[allyTeam] = {}
 	allyBAPs[allyTeam] = {}
 	teamsInAllyTeams[allyTeam] = Spring.GetTeamList(allyTeam)
-	SectorUnits[allyTeam] = {}
-	PrevSectorUnits[allyTeam] = {}
+	sectorUnits[allyTeam] = {}
+	prevSectorUnits[allyTeam] = {}
 	allyTeamMechs[allyTeam] = {}
 end
 
@@ -160,7 +160,7 @@ local function ResetLosStates(unitID, allyTeam)
 	if Spring.ValidUnitID(unitID) and not Spring.GetUnitIsDead(unitID) and mobileUnits[unitID] then
 		--Spring.Echo("Reset los states for", unitID)
 		SetUnitLosMask(unitID, allyTeam, prevLosOnly)
-		if SectorUnits[allyTeam][unitID] then
+		if sectorUnits[allyTeam][unitID] then
 			SetUnitLosState(unitID, allyTeam, fullLOS)
 		else
 			local states = GetUnitLosState(unitID, allyTeam)
@@ -246,18 +246,41 @@ function gadget:UnitCreated(unitID, unitDefID, teamID)
 end
 
 function gadget:UnitEnteredRadar(unitID, unitTeam, allyTeam, unitDefID)
-	-- TODO: What if a static is in a radar-off LOS sector when it is discovered?
-	if not mobileUnitDefs[unitDefID] then
+	if mobileUnitDefs[unitDefID] then
+		inRadarUnits[allyTeam][unitID] = true
+		--Spring.Echo("UER:", unitID, unitTeam, UnitDefs[unitDefID].name)
+	else
 		-- statics are perma-visible
 		GG.Delay.DelayCall(SetUnitLosState, {unitID, allyTeam, fullLOS}, 1)
 		GG.Delay.DelayCall(SetUnitLosMask, {unitID, allyTeam, fullLOS}, 1) -- don't let engine update any los status
 	end
 end
 
+function gadget:UnitLeftRadar(unitID, unitTeam, allyTeam, unitDefID)
+	if mobileUnitDefs[unitDefID] then
+		--outRadarUnits[allyTeam][unitID] = true
+		inRadarUnits[allyTeam][unitID] = nil
+	end
+end
+
+function gadget:UnitEnteredLOS(unitID, unitTeam, allyTeam, unitDefID)
+	if mobileUnitDefs[unitDefID] then
+		inRadarUnits[allyTeam][unitID] = nil
+		--Spring.Echo("UER:", unitID, unitTeam, UnitDefs[unitDefID].name)
+	end
+end
+
+function gadget:UnitLeftLOS(unitID, unitTeam, allyTeam, unitDefID)
+	if mobileUnitDefs[unitDefID] then
+		--outRadarUnits[allyTeam][unitID] = true
+		inRadarUnits[allyTeam][unitID] = Spring.IsUnitInRadar(unitID, allyTeam)
+	end
+end
+
 function gadget:UnitDestroyed(unitID, unitDefID, teamID)
 	for i = 1, numAllyTeams do
 		local allyTeam = allyTeams[i]
-		--inRadarUnits[allyTeam][unitID] = nil
+		inRadarUnits[allyTeam][unitID] = nil
 		--outRadarUnits[allyTeam][unitID] = nil
 		allyJammers[allyTeam][unitID] = nil
 	end
@@ -272,7 +295,7 @@ end
 function gadget:UnitGiven(unitID, unitDefID, newTeam, oldTeam)
 	for i = 1, numAllyTeams do
 		local allyTeam = allyTeams[i]
-		--inRadarUnits[allyTeam][unitID] = nil
+		inRadarUnits[allyTeam][unitID] = nil
 		--outRadarUnits[allyTeam][unitID] = nil
 		allyJammers[allyTeam][unitID] = nil
 	end
@@ -294,7 +317,6 @@ function gadget:GameFrame(n)
 	
 	for i = 1, numAllyTeams do
 		local allyTeam = allyTeams[i]
-		
 		for unitID, info in pairs(allyTeamMechs[allyTeam]) do
 			if Spring.ValidUnitID(unitID) and not Spring.GetUnitIsDead(unitID) then
 				local x, _, z = Spring.GetUnitPosition(unitID)
@@ -321,7 +343,7 @@ function gadget:GameFrame(n)
 						local nearbyUnits = Spring.GetUnitsInCylinder(x, z, bapRadius)
 						for _, enemyID in pairs(nearbyUnits) do
 							local unitAllyTeam = Spring.GetUnitAllyTeam(enemyID)
-							if enemyID ~= unitID and unitAllyTeam ~= allyTeam then -- and not SectorUnits[allyTeam][enemyID] then -- not in another sector
+							if enemyID ~= unitID and unitAllyTeam ~= allyTeam then -- and not sectorUnits[allyTeam][enemyID] then -- not in another sector
 								SetUnitLosState(enemyID, allyTeam, fullLOS) 
 								SetUnitLosMask(enemyID, allyTeam, losTrue)	-- let lua handle los state for this unit
 								bapUnits[enemyID] = {n, allyTeam}
@@ -329,15 +351,14 @@ function gadget:GameFrame(n)
 						end
 					end
 				end
-				local inRadius = Spring.GetUnitsInCylinder(x, z, Spring.GetUnitSensorRadius(unitID, "los")) -- use current sensor radius here as perks can change it
-				--local v1x, v1z, v2x, v2z = GG.Vector.SectorVectorsFromUnit(unitID, info.x, info.z)
+				local inRadius = Spring.GetUnitsInCylinder(x, z, Spring.GetUnitSensorRadius(unitID, "radar")) -- use current sensor radius here as perks can change it
 				if not info.torso then Spring.Echo("Oh shit, ", UnitDefs[Spring.GetUnitDefID(unitID)].name, "seems to have no cockpit") else
 				local v1x, v1z, v2x, v2z = GG.Vector.SectorVectorsFromUnitPiece(unitID, info.torso, info.x, info.z)
 				--Spring.MarkerAddPoint(x + v1x, 0, z + v1z, "V1")
 				--Spring.MarkerAddPoint(x + v2x, 0, z + v2z, "V2")
 				for _, enemyID in pairs(inRadius) do
-					local unitAllyTeam = Spring.GetUnitAllyTeam(enemyID)
-					if mobileUnits[enemyID] and enemyID ~= unitID and unitAllyTeam ~= allyTeam and not (bapUnits[enemyID] and bapUnits[enemyID][2] == allyTeam) then
+					--local unitAllyTeam = Spring.GetUnitAllyTeam(enemyID)
+					if mobileUnits[enemyID] and inRadarUnits[allyTeam][enemyID] and not (bapUnits[enemyID] and bapUnits[enemyID][2] == allyTeam) then
 						local ex, _, ez = Spring.GetUnitPosition(enemyID)
 						local inSector = GG.Vector.IsInsideSectorVector(ex, ez, x, z, v1x, v1z, v2x, v2z)
 						if inSector then
@@ -346,26 +367,28 @@ function gadget:GameFrame(n)
 							if rayTrace then
 								SetUnitLosState(enemyID, allyTeam, fullLOS)
 								SetUnitLosMask(enemyID, allyTeam, prevLosTrue)
-								SectorUnits[allyTeam][enemyID] = true
+								sectorUnits[allyTeam][enemyID] = true
 							end
-						elseif not SectorUnits[allyTeam][enemyID] then -- not in another sector
-							SetUnitLosState(enemyID, allyTeam, losFalseRestTrue) 
-							SetUnitLosMask(enemyID, allyTeam, losTrue) -- let lua handle los state for this unit	
+						elseif not sectorUnits[allyTeam][enemyID] then -- not in another sector
+							SetUnitLosState(enemyID, allyTeam, {los = Spring.IsUnitInLos(enemyID, allyTeam), prevLos = true, radar = true, contRadar = true}) 
+							SetUnitLosMask(enemyID, allyTeam, losTrue) -- let engine handle los state for this unit	
+						else
+
 						end
 					end
 				end
 				end
 			end
 		end
-		for enemyID in pairs(PrevSectorUnits[allyTeam]) do
-			if not SectorUnits[allyTeam][enemyID] and not (bapUnits[enemyID] and bapUnits[enemyID][2] == allyTeam) then 
+		for enemyID in pairs(prevSectorUnits[allyTeam]) do
+			if not sectorUnits[allyTeam][enemyID] and not (bapUnits[enemyID] and bapUnits[enemyID][2] == allyTeam) then 
 			-- unit was previously in a sector but is now not inside any radius, reset states
-				SetUnitLosState(enemyID, allyTeam, losFalseRestTrue) 
-				SetUnitLosMask(enemyID, allyTeam, losTrue) -- let lua handle los state for this unit	
+				SetUnitLosState(enemyID, allyTeam, {los = Spring.IsUnitInLos(enemyID, allyTeam), prevLos = true, radar = Spring.IsUnitInRadar(enemyID, allyTeam), contRadar = true}) 
+				SetUnitLosMask(enemyID, allyTeam, losTrue) -- let engine handle los state for this unit	
 			end
 		end
-		table.copy(SectorUnits[allyTeam], PrevSectorUnits[allyTeam])
-		SectorUnits[allyTeam] = {}
+		table.copy(sectorUnits[allyTeam], prevSectorUnits[allyTeam])
+		sectorUnits[allyTeam] = {}
 	end
 	if Spring.IsGameOver() then
 		gadgetHandler:RemoveGadget()

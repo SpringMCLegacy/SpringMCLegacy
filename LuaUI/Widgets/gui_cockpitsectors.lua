@@ -187,7 +187,7 @@ function widget:DrawWorld()
 			for i=1,#units do
 				local unitID = units[i]
 				if GetUnitDefID(unitID) then
-					DrawFieldOfFire(unitID, info[1], Spring.GetUnitSensorRadius(unitID, "los"))
+					DrawFieldOfFire(unitID, info[1], Spring.GetUnitSensorRadius(unitID, "radar"))
 				end
 			end
 		end
