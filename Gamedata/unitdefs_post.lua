@@ -202,6 +202,9 @@ for name, ud in pairs(UnitDefs) do
 	if not name:find("decal") then
 		ud.seismicdistance = 0
 		ud.sightdistance = 500 -- 1000
+		if cp.baseclass == "mech" then
+			ud.sightdistance = modOptions.mechsight
+		end
 		ud.radardistance = 2000
 		ud.airsightdistance = 2000
 		ud.seismicsignature = 0
