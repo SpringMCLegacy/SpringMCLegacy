@@ -50,6 +50,12 @@ local options = {
 		section = '2gamemode',
 		step   	= 5,
 	},
+		{
+		key    = 'devtools',
+		name   = 'Developer Tools',
+		desc   = 'Sets options for tweaking balance',
+		type   = 'section',
+	},
 	{
 		key = "speed",
 		name = "Test Speed Multipliers",
@@ -58,7 +64,7 @@ local options = {
 		def = 0.75,
 		min = 0.1,
 		max = 100,
-		section = "2gamemode",
+		section = "devtools",
 	},
 	{
 		key = "torso",
@@ -69,7 +75,7 @@ local options = {
 		min = 0.1,
 		max = 5.0,
 		step = 0.1,
-		section = "2gamemode",
+		section = "devtools",
 	},
 	{
 		key = "turn",
@@ -80,7 +86,7 @@ local options = {
 		min = 0.1,
 		max = 5.0,
 		step = 0.1,
-		section = "2gamemode",
+		section = "devtools",
 	},
 		{
 		key = "mechsight",
@@ -91,7 +97,7 @@ local options = {
 		min = 10,
 		max = 500,
 		step = 50,
-		section = "2gamemode",
+		section = "devtools",
 	},
 	{
 		key    = '2income',
