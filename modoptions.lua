@@ -82,6 +82,17 @@ local options = {
 		step = 0.1,
 		section = "2gamemode",
 	},
+		{
+		key = "mechsight",
+		name = "Test Mech LOS Radius",
+		desc = "Developer tool",
+		type = "number",
+		def = 250,
+		min = 10,
+		max = 500,
+		step = 50,
+		section = "2gamemode",
+	},
 	{
 		key    = '2income',
 		name   = 'Income Settings',
