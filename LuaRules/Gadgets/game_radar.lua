@@ -103,6 +103,7 @@ local sensorTypes = {"radar", "seismic", "radarJammer"}
 local unitSensorRadii = {} -- unitSensorRadii[unitID] = {radar = a, seismic = b ...}
 local ppcUnits = {} -- ppcUnits[unitID] = gameframe
 local bapUnits = {} -- bapUnits[unitID] = {gameframe, allyTeam}
+local ecmUnits = {} -- ecmUnits[unitID] = {gameframe, allyTeam}
 
 -- cache los tables (table creation is expensive!)
 local prevLosTrue = {prevLos = true, contRadar=true}
@@ -288,6 +289,7 @@ function gadget:UnitDestroyed(unitID, unitDefID, teamID)
 	narcUnits[unitID] = nil
 	ppcUnits[unitID] = nil
 	bapUnits[unitID] = nil
+	ecmUnits[unitID] = nil
 	allyTeamMechs[Spring.GetUnitAllyTeam(unitID)][unitID] = nil
 	SetUnitRulesParam(unitID, "FRIENDLY_ECM", 0)
 end
@@ -314,6 +316,15 @@ function gadget:GameFrame(n)
 			bapUnits[bapped] = nil
 		end
 	end
+	-- TODO: needed?
+	for ecmed, data in pairs(ecmUnits) do
+		if data[1] < n - FRAME_FUDGE then
+			if Spring.ValidUnitID(ecmed) and not Spring.GetUnitIsDead(ecmed) then
+				ResetLosStates(bapped, data[2])
+			end
+			ecmUnits[ecmed] = nil
+		end
+	end
 	
 	for i = 1, numAllyTeams do
 		local allyTeam = allyTeams[i]
@@ -329,9 +340,10 @@ function gadget:GameFrame(n)
 							if not deadTeams[teamID] then
 								local nearbyUnits = Spring.GetUnitsInCylinder(x, z, ecmRadius, teamID)
 								--Spring.Echo("Jammer", jammerID, "(", UnitDefs[Spring.GetUnitDefID(jammerID)].name, ")")
-								for i = 1, #nearbyUnits do
+								for _, enemyID in pairs(nearbyUnits) do
 									--Spring.Echo("nearby", UnitDefs[Spring.GetUnitDefID(nearbyUnits[i])].name)
-									SetUnitRulesParam(nearbyUnits[i], "FRIENDLY_ECM", n, {inlos = true})
+									SetUnitRulesParam(enemyID, "FRIENDLY_ECM", n, {inlos = true})
+									ecmUnits[enemyID] = {n, allyTeam}
 								end
 							end
 						end
@@ -358,7 +370,9 @@ function gadget:GameFrame(n)
 				--Spring.MarkerAddPoint(x + v2x, 0, z + v2z, "V2")
 				for _, enemyID in pairs(inRadius) do
 					--local unitAllyTeam = Spring.GetUnitAllyTeam(enemyID)
-					if mobileUnits[enemyID] and inRadarUnits[allyTeam][enemyID] and not (bapUnits[enemyID] and bapUnits[enemyID][2] == allyTeam) then
+					if mobileUnits[enemyID] 
+					and (inRadarUnits[allyTeam][enemyID] or ecmUnits[enemyID])
+					and not (bapUnits[enemyID] and bapUnits[enemyID][2] == allyTeam) then
 						local ex, _, ez = Spring.GetUnitPosition(enemyID)
 						local inSector = GG.Vector.IsInsideSectorVector(ex, ez, x, z, v1x, v1z, v2x, v2z)
 						if inSector then
