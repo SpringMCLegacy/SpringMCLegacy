@@ -220,6 +220,6 @@ return lowerkeys({
 	["FS_Behemoth"] = Behemoth:New(),
 	["FS_BehemothD"] = BehemothD:New(),
 	["FW_Behemoth"] = Behemoth:New(),
-	["FS_BehemothM"] = BehemothM:New(),
+	["FW_BehemothM"] = BehemothM:New(),
 	["LA_Behemoth"] = Behemoth:New(),
 })
