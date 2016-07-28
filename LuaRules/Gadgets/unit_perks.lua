@@ -49,8 +49,10 @@ end
 
 local function UpdateRemaining(unitID, newLevel, price)
 	-- disable perks here
+	local perkRemaining = false
 	for perkCmdID, perkDef in pairs(perkDefs) do
 		if not currentPerks[unitID][perkDef.name] and validPerks[Spring.GetUnitDefID(unitID)][perkCmdID] then
+			perkRemaining = true
 			if (not newLevel) or not (price or perkDef.price) then
 				Spring.Echo("ERROR: unit_perks:", newLevel, price, perkDef.price, UnitDefs[Spring.GetUnitDefID(unitID)].name)
 			end
@@ -60,6 +62,9 @@ local function UpdateRemaining(unitID, newLevel, price)
 				EditUnitCmdDesc(unitID, FindUnitCmdDesc(unitID, perkCmdID), {disabled = false})
 			end
 		end
+	end
+	if not perkRemaining then
+		Spring.SetUnitRulesParam(unitID, "perk_fully", 1)
 	end
 end
 

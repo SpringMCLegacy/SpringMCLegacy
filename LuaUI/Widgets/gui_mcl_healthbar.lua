@@ -197,7 +197,9 @@ local function GenerateUnitGraphics(uid, udid, getAuras)
     unitData[uid].frame = currentFrame
 
 	-- Don't show transported
-	if not Spring.ValidUnitID(uid) or Spring.GetUnitTransporter(uid) or ud.customParams.ignoreatbeacon then
+	if not Spring.ValidUnitID(uid) 
+	or Spring.GetUnitTransporter(uid) 
+	or (ud.customParams.ignoreatbeacon and ud.customParams.baseclass ~= "vehicle") then
         return false
 	end
 
@@ -297,7 +299,7 @@ local function GenerateUnitGraphics(uid, udid, getAuras)
 		local ecm = (GetUnitRulesParam(uid, "FRIENDLY_ECM") or 0) - n + 5
 		local friendlyecm = ecm > 0 and friendlyUnit
 		local enemyecm = ecm > 0 and not friendlyUnit
-		local perk = (GetUnitRulesParam(uid, "perk_xp") or 0) == 100
+		local perk = (GetUnitRulesParam(uid, "perk_xp") or 0) == 100 and not GetUnitRulesParam(uid, "perk_fully")
 		if ((narc + tag + ppc + missilelock + nolock) > 0 or outofammo or perk or friendlyecm or enemyecm) then
 			unitAuras[uid] =
 			{

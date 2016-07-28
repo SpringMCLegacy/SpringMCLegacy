@@ -453,6 +453,7 @@ local function WeaponCanFire(weaponID)
 		if spinSpeeds[weaponID] then
 			StartThread(SpinBarrels, weaponID, false)
 		end
+		SetUnitRulesParam(unitID, "outofammo", 1)
 		return false
 	else
 		if spinSpeeds[weaponID] and not spinPiecesState[weaponID] then
