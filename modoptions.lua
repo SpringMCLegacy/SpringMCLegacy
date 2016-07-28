@@ -88,7 +88,7 @@ local options = {
 		step = 0.1,
 		section = "devtools",
 	},
-		{
+	{
 		key = "mechsight",
 		name = "Test Mech LOS Radius",
 		desc = "Developer tool",
@@ -97,6 +97,17 @@ local options = {
 		min = 10,
 		max = 500,
 		step = 50,
+		section = "devtools",
+	},
+	{
+		key = "radar",
+		name = "Test Radar Radius Multiplier",
+		desc = "Developer tool",
+		type = "number",
+		def = 0.75,
+		min = 0.1,
+		max = 1.5,
+		step = 0.1,
 		section = "devtools",
 	},
 	{

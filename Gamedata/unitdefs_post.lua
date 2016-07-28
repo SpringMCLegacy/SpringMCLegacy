@@ -199,14 +199,15 @@ for name, ud in pairs(UnitDefs) do
 	ud.brakerate = ud.maxvelocity / 25
 	ud.turnrate = ud.maxvelocity * 200 * (modOptions.turn or 1)
 	cp.torsoturnspeed = cp.torsoturnspeed or (ud.maxvelocity * 50 * (modOptions.torso or 1)) -- for now keep this independent of turnrate so we can tweak them separately
+
 	if not name:find("decal") then
 		ud.seismicdistance = 0
 		ud.sightdistance = 500 -- 1000
 		if cp.baseclass == "mech" then
 			ud.sightdistance = modOptions.mechsight
 		end
-		ud.radardistance = 2000
-		ud.airsightdistance = 2000
+		ud.radardistance = 2000 * modOptions.radar
+		ud.airsightdistance = 2000 * modOptions.radar
 		ud.seismicsignature = 0
 	end
 	-- set sightrange/radardistance based on bap customparam
@@ -216,9 +217,9 @@ for name, ud in pairs(UnitDefs) do
 		ud.description = ud.description .. " \255\128\128\128[ECM]"
 	end
 	if cp.bap then
-		ud.seismicdistance = 3000
+		ud.seismicdistance = 3000 * modOptions.radar
 		ud.radaremitheight = 1000
-		ud.radardistance = 3000
+		ud.radardistance = 3000 * modOptions.radar
 		ud.description = ud.description .. " \255\001\255\001[BAP]"
 	end
 	-- track strength should be 1/1000th of mass
