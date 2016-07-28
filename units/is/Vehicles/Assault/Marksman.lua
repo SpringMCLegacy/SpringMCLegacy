@@ -30,9 +30,9 @@ local Marksman = LightTank:New{
 }
 
 return lowerkeys({
-	["CC_Marksman"] = Marksman:New(),
-	["DC_Marksman"] = Marksman:New(),
-	["FS_Marksman"] = Marksman:New(),
-	["FW_Marksman"] = Marksman:New(),
-	["LA_Marksman"] = Marksman:New(),
+	--["CC_Marksman"] = Marksman:New(),
+	--["DC_Marksman"] = Marksman:New(),
+	--["FS_Marksman"] = Marksman:New(),
+	--["FW_Marksman"] = Marksman:New(),
+	--["LA_Marksman"] = Marksman:New(),
 })

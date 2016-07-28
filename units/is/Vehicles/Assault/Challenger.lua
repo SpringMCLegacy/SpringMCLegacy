@@ -1,7 +1,7 @@
 local Challenger = Tank:New{
 	name              	= "Challenger",
 	description         = "Heavy Strike Tank",
-	trackWidth			= 32,--width to render the decal
+	trackWidth			= 34,--width to render the decal
 	
 	weapons	= {	
 		[1] = {
@@ -15,16 +15,20 @@ local Challenger = Tank:New{
 		},
 		[4] = {
 			name	= "MPL",
+			maxAngleDif = 60,
 		},
 		[5] = {
 			name	= "MPL",
+			maxAngleDif = 60,
 		},
 		[6] = {
 			name	= "SSRM2",
+			mainDir = [[0.5 0 1]],
 			maxAngleDif = 60,
 		},
 		[7] = {
 			name	= "SSRM2",
+			mainDir = [[-0.5 0 1]],
 			maxAngleDif = 60,
 		},
 		[8] = {
