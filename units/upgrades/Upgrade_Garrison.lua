@@ -6,6 +6,13 @@ local Upgrade_Garrison = Upgrade:New{
 	collisionVolumeScales = [[50 50 50]],
 	buildCostMetal      = 8000,
 
+	-- Constructor stuff
+	builder				= true,
+	builddistance 		= 460, -- beacon cap radius
+	workerTime			= 10, -- ?	
+	terraformSpeed		= 10000,
+	showNanoSpray		= false,
+	
 	customparams = {
 		helptext		= "Heavily-fortified structure resilient to all attacks to fortify captured control points.",
 		flagdefendrate = 100,

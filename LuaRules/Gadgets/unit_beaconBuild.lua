@@ -39,17 +39,14 @@ local DelayCall				 = GG.Delay.DelayCall
 local GAIA_TEAM_ID = Spring.GetGaiaTeamID()
 local BEACON_ID = UnitDefNames["beacon"].id
 local UPLINK_ID = UnitDefNames["upgrade_uplink"].id
+local GARRISON_ID = UnitDefNames["upgrade_garrison"].id
 local DROPZONE_IDS = {}
-local WALL_ID = UnitDefNames["wall"].id
-local GATE_ID = UnitDefNames["wall_gate"].id
-local MIN_BUILD_RANGE = tonumber(UnitDefNames["beacon"].customParams.minbuildrange) or 230
-local MAX_BUILD_RANGE = UnitDefNames["beacon"].buildDistance
-local RADIUS = 230
-local NUM_SEGMENTS = 12
-local DROPSHIP_DELAY = 10 * 30 -- 10s
-local WALL_COST = UnitDefs[WALL_ID].metalCost * NUM_SEGMENTS -- FIXME: ugly!
 
-local CMD_GATE = GG.CustomCommands.GetCmdID("CMD_GATE")
+--local MIN_BUILD_RANGE = tonumber(UnitDefNames["beacon"].customParams.minbuildrange) or 230
+local MAX_BUILD_RANGE = UnitDefs[GARRISON_ID].buildDistance
+local RADIUS = 230
+
+local DROPSHIP_DELAY = 10 * 30 -- 10s
 local CMD_UPGRADE = GG.CustomCommands.GetCmdID("CMD_UPGRADE")
 
 -- Variables
@@ -65,13 +62,6 @@ local outpostIDs = {} -- outpostIDs[beaconID] = outpostID
 local dropZoneIDs = {} -- dropZoneIDs[teamID] = dropZoneID
 local dropZoneBeaconIDs = {} -- dropZoneBeaconIDs[teamID] = beaconID
 local dropZoneCmdDesc
-
-local wallIDs = {} -- wallIDs[beaconID] = {wall1, wall2 ... wall12}
-local wallInfos = {} -- wallInfos[wallID] = {beaconID = beaconID, angle = angle, px = px, pz = pz}
-local beaconGateIDs = {} -- beaconGateIDs[beaconID] = gateID
-local wallCmdDesc
-local gateCmdDesc
-local wallRepairCmdDesc
 
 local hotSwapIDs = {} -- hotSwapIDs[unitID] = true
 local function HotSwap(unitID, unitDefID, teamID)
@@ -106,32 +96,6 @@ function gadget:GamePreload()
 			}
 			outpostDefs[unitDefID] = {cmdDesc = upgradeCmdDesc, cost = cBillCost}
 			upgradeIDs[upgradeCmdDesc.id] = unitDefID
-		elseif unitDefID == WALL_ID then -- handle walls separately
-			local cBillCost = unitDef.metalCost * NUM_SEGMENTS
-			wallCmdDesc = {
-				id     = GG.CustomCommands.GetCmdID("CMD_UPGRADE_" .. name, cBillCost),
-				type   = CMDTYPE.ICON,
-				name   = "Defensive\nWalls",
-				action = 'upgrade',
-				tooltip = "C-Bill cost: " .. cBillCost,
-			}
-			upgradeIDs[wallCmdDesc.id] = unitDefID
-			wallRepairCmdDesc = {
-				id     = GG.CustomCommands.GetCmdID("CMD_WALLREPAIR", cBillCost * 0.5),
-				type   = CMDTYPE.ICON,
-				name   = "Repair\n Walls",
-				action = 'upgrade',
-				tooltip = "C-Bill cost: " .. cBillCost * 0.5,
-			}
-		elseif unitDefID == GATE_ID then -- and gates too
-			local cBillCost = unitDef.metalCost
-			gateCmdDesc = {
-				id     = CMD_GATE,
-				type   = CMDTYPE.ICON,
-				name   = "Install\n Gate",
-				action = 'upgrade',
-				tooltip = "C-Bill cost: " .. cBillCost,
-			}
 		end
 	end
 	GG.DROPZONE_IDS = DROPZONE_IDS
@@ -228,63 +192,6 @@ local function SetDropZone(beaconID, teamID)
 	Spring.SetUnitRulesParam(beaconID, "secure", 1)
 end
 
--- WALLS & GATES
-local function BuildWalls(beaconID, teamID)
-	UseTeamResource(teamID, "metal", WALL_COST)
-	wallIDs[beaconID] = {}
-	local x,_,z = GetUnitPosition(beaconID)
-	for i = 0, NUM_SEGMENTS - 1 do
-		local angle = math.rad(i * (360 / NUM_SEGMENTS))
-		local px = x + math.sin(angle) * RADIUS
-		local pz = z + math.cos(angle) * RADIUS
-		local wallID = CreateUnit("wall", px, 0, pz, "s", teamID)
-		InsertUnitCmdDesc(wallID, gateCmdDesc)
-		SetUnitNeutral(wallID, true)
-		SetUnitRotation(wallID, 0, -angle, 0)
-		wallIDs[beaconID][i+1] = wallID
-		wallInfos[wallID] = {beaconID = beaconID, angle = angle, px = px, pz = pz}
-	end
-	GG.PlaySoundForTeam(teamID, "BB_wall_deployed", 1)
-end
-
-local function BuildGate(wallID, teamID)
-	HotSwap(wallID, "wall_gate", teamID)
-	--[[local x,y,z = GetUnitPosition(wallID)
-	DestroyUnit(wallID)
-	local gateID = CreateUnit("wall_gate", x,y,z, "s", teamID)
-	SetUnitRotation(gateID, 0, -wallInfos[wallID].angle, 0)
-	SetUnitNeutral(gateID, true)]]
-	DelayCall(SetUnitRotation, {wallID, 0, -wallInfos[wallID].angle, 0}, 3)
-	DelayCall(SetUnitNeutral, {wallID, true}, 3)
-	beaconGateIDs[wallInfos[wallID].beaconID] = wallID
-end
-
-local function RepairWalls(beaconID, teamID)
-	UseTeamResource(teamID, "metal", UnitDefs[WALL_ID].metalCost * NUM_SEGMENTS * 0.5) -- FIXME: ugly!
-	for i, wallID in pairs(wallIDs[beaconID]) do
-		local unitDefID = Spring.GetUnitDefID(wallID)
-		if not Spring.GetUnitIsDead(wallID) and (unitDefID == WALL_ID or unitDefID == GATE_ID) then
-			Spring.SetUnitHealth(wallID, UnitDefs[WALL_ID].health)
-			local wallRepairCmdPos = FindUnitCmdDesc(wallID, wallRepairCmdDesc.id)
-			if wallRepairCmdPos then
-				RemoveUnitCmdDesc(wallID, wallRepairCmdPos)
-			end
-		else -- unit needs replacing
-			local info = wallInfos[wallID]
-			local newWallID = CreateUnit("wall", info.px, 0, info.pz, "s", teamID) -- can't rely on creating with old ID here incase it was reused
-			SetUnitNeutral(newWallID, true)
-			SetUnitRotation(newWallID, 0, -info.angle, 0)
-			-- sub the new ID back into everything in place of old ID
-			wallInfos[newWallID] = {beaconID = beaconID, angle = info.angle, px = info.px, pz = info.pz}
-			wallInfos[wallID] = nil
-			wallIDs[beaconID][i] = newWallID
-			if not beaconGateIDs[beaconID] then
-				InsertUnitCmdDesc(newWallID, gateCmdDesc)
-			end
-		end	
-	end
-end
-
 -- TOWERS
 function LimitTowerType(unitID, teamID, towerType, increase)	
 	local towersRemaining = buildLimits[unitID][towerType]
@@ -320,9 +227,10 @@ function gadget:UnitCreated(unitID, unitDefID, teamID, builderID)
 	local cp = unitDef.customParams
 	if unitDefID == BEACON_ID then
 		AddUpgradeOptions(unitID)
-		--InsertUnitCmdDesc(unitID, wallCmdDesc)
 	elseif unitDefID == UPLINK_ID then
-		buildLimits[unitID] = {["turret"] = 4, ["sensor"] = 1}
+		buildLimits[unitID] = {["sensor"] = 4}
+	elseif unitDefID == GARRISON_ID then
+		buildLimits[unitID] = {["turret"] = 4}
 	elseif cp and cp.baseclass == "tower" then
 		-- track creation of turrets and their originating beacons so we can give back slots if a turret dies
 		if builderID then -- ignore /give turrets
@@ -354,21 +262,6 @@ function gadget:UnitDestroyed(unitID, unitDefID, teamID)
 			ToggleUpgradeOptions(beaconID, true)
 		end
 	end
-	local wallInfo = wallInfos[unitID]
-	if wallInfo and not hotSwapIDs[unitID] then -- unit was a wall or gate piece, not being hotswapped
-		for _, wallID in pairs(wallIDs[wallInfo.beaconID]) do
-			local wallRepairCmdPos = FindUnitCmdDesc(wallID, wallRepairCmdDesc.id)
-			if not wallRepairCmdPos then
-				InsertUnitCmdDesc(wallID, wallRepairCmdDesc)
-			end
-		end
-		if unitDefID == GATE_ID then
-			beaconGateIDs[wallInfo.beaconID] = nil
-			for _, wallID in pairs(wallIDs[wallInfo.beaconID]) do
-				InsertUnitCmdDesc(wallID, gateCmdDesc)
-			end
-		end
-	end
 end
 
 
@@ -394,11 +287,6 @@ function gadget:UnitGiven(unitID, unitDefID, newTeam, oldTeam)
 				DelayCall(TransferUnit, {outpostID, newTeam}, 1)
 				DelayCall(SetUnitNeutral,{outpostID, newTeam == GAIA_TEAM_ID}, 2)
 			end
-		end
-		local walls = wallIDs[unitID] or {}
-		for _, wallID in pairs(walls) do
-			DelayCall(TransferUnit, {wallID, newTeam}, 1)
-			DelayCall(SetUnitNeutral,{wallID, newTeam == GAIA_TEAM_ID}, 2)
 		end
 		if dropZoneBeaconIDs[oldTeam] == unitID and oldTeam ~= GAIA_TEAM_ID then
 			local dropZoneID = dropZoneIDs[oldTeam]
@@ -428,16 +316,11 @@ function gadget:AllowCommand(unitID, unitDefID, teamID, cmdID, cmdParams, cmdOpt
 				return false 
 			end
 			local upgradeDefID = upgradeIDs[cmdID]
-			local cost = outpostDefs[upgradeDefID] and outpostDefs[upgradeDefID].cost or WALL_COST
+			local cost = outpostDefs[upgradeDefID] and outpostDefs[upgradeDefID].cost or 1000
 			if cost <= GetTeamResources(teamID, "metal") then
-				if upgradeDefID == WALL_ID then
-					BuildWalls(unitID, teamID)
-					RemoveUnitCmdDesc(unitID, FindUnitCmdDesc(unitID, cmdID))
-				else
-					--Spring.Echo("I'm totally gonna upgrade your beacon bro!")
-					ToggleUpgradeOptions(unitID, false)
-					DropshipDelivery(unitID, teamID, "is_avenger", upgradeDefID, cost, "BB_Dropship_Inbound", DROPSHIP_DELAY)
-				end
+				--Spring.Echo("I'm totally gonna upgrade your beacon bro!")
+				ToggleUpgradeOptions(unitID, false)
+				DropshipDelivery(unitID, teamID, "is_avenger", upgradeDefID, cost, "BB_Dropship_Inbound", DROPSHIP_DELAY)
 			else
 				GG.PlaySoundForTeam(teamID, "BB_Insufficient_Funds", 1)
 			end
@@ -451,38 +334,23 @@ function gadget:AllowCommand(unitID, unitDefID, teamID, cmdID, cmdParams, cmdOpt
 		elseif cmdID == CMD.SELFD then -- Disallow self-d
 			return false
 		end
-	elseif unitDefID == UPLINK_ID then
+	elseif unitDefID == UPLINK_ID or unitDefID == GARRISON_ID then
 		if cmdID < 0 then
 			local towerType = towerDefIDs[-cmdID]
 			if not towerType then return false end
-			--[[local tx, ty, tz = unpack(cmdParams)
-			local dist = GetUnitDistanceToPoint(unitID, tx, ty, tz, false)
-			if dist < MIN_BUILD_RANGE then
-				Spring.SendMessageToTeam(teamID, "Too close to beacon")
-				return false
-			elseif dist > MAX_BUILD_RANGE then
-				Spring.SendMessageToTeam(teamID, "Too far from beacon")
-				return false
-			end]]
+			if unitDefID == GARRISON_ID then -- Garrison has limited build radius
+				local tx, ty, tz = unpack(cmdParams)
+				local dist = GetUnitDistanceToPoint(unitID, tx, ty, tz, false)
+				--[[if dist < MIN_BUILD_RANGE then
+					Spring.SendMessageToTeam(teamID, "Too close to beacon")
+					return false
+				else]]
+				if dist > MAX_BUILD_RANGE then
+					Spring.SendMessageToTeam(teamID, "Too far from garrison!")
+					return false
+				end
+			end
 			return LimitTowerType(unitID, teamID, towerType)
-		end
-	elseif unitDefID == WALL_ID or unitDefID == GATE_ID then
-		if unitDefID == WALL_ID and cmdID == CMD_GATE then
-			local beaconID = wallInfos[unitID].beaconID
-			if beaconGateIDs[beaconID] then return false end -- gate already exists
-			BuildGate(unitID, teamID)
-			-- Disable gates for all other wall segments in the ring
-			for _, wallID in ipairs(wallIDs[beaconID]) do
-				RemoveUnitCmdDesc(wallID, FindUnitCmdDesc(wallID, cmdID))
-			end
-		elseif cmdID == wallRepairCmdDesc.id then
-			local _, cost = GG.CustomCommands.GetCmdID("CMD_WALLREPAIR")
-			if cost <= GetTeamResources(teamID, "metal") then
-				local beaconID = wallInfos[unitID].beaconID
-				RepairWalls(beaconID, teamID)
-			else 
-				return false 
-			end
 		end
 	elseif UnitDefs[unitDefID].customParams.decal then
 		return false -- disallow all commands to decals

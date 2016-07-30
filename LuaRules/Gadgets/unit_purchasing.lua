@@ -480,7 +480,7 @@ local function SellUnit(unitID, unitDefID, teamID, unitType)
 	Spring.DestroyUnit(unitID, false, true)
 end
 
-function gadget:AllowCommand(unitID, unitDefID, teamID, cmdID, cmdParams, cmdOptions)
+function gadget:AllowCommand(unitID, unitDefID, teamID, cmdID, cmdParams, cmdOptions, cmdTag, synced)
 	if unitTypes[unitDefID] then
 		local group = unitLances[unitID]
 		local groupSlots = teamSlots[teamID][group]

@@ -112,9 +112,10 @@ for i, sideName in pairs(SIDES) do
 end
 
 local UPLINK_UD
+local GARRISON_UD
 local BEACON_UD
 local UPLINK_BUILDOPTIONS = {}
-
+local GARRISON_BUILDOPTIONS = {}
 
 for name, ud in pairs(UnitDefs) do
 	-- Replace all occurences of <SIDE> and <NAME> with the respective values
@@ -294,7 +295,11 @@ for name, ud in pairs(UnitDefs) do
 			ud.maxdamage = ud.maxdamage * 0.5
 		end
 	elseif cp.baseclass == "tower" then
-		table.insert(UPLINK_BUILDOPTIONS, name)
+		if ud.weapons then -- turret
+			table.insert(GARRISON_BUILDOPTIONS, name)
+		else -- sensor
+			table.insert(UPLINK_BUILDOPTIONS, name)
+		end
 		ud.levelground = false
 	end
 	
@@ -308,6 +313,8 @@ for name, ud in pairs(UnitDefs) do
 			ud.canselfdestruct = false
 		elseif name == "upgrade_uplink" then
 			UPLINK_UD = ud
+		elseif name == "upgrade_garrison" then
+			GARRISON_UD = ud
 		elseif cp.dropship or name:find("dropzone") then
 			ud.canselfdestruct = false
 			ud.levelground = false
@@ -352,6 +359,8 @@ end
 
 table.sort(UPLINK_BUILDOPTIONS)
 UPLINK_UD["buildoptions"] = UPLINK_BUILDOPTIONS
+table.sort(GARRISON_BUILDOPTIONS)
+GARRISON_UD["buildoptions"] = GARRISON_BUILDOPTIONS
 VPAD_UD.customparams.spawn = VPAD_SPAWNOPTIONS
 --table.echo(VPAD_UD.customparams.spawn)
 
