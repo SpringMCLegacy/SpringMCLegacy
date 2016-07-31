@@ -192,6 +192,8 @@ function Unpack()
 		WaitForTurn(ramps[6], x_axis)
 		StartThread(Blinks)
 		GG.LCLeft(unitID, teamID)
+	elseif name == "upgrade_garrison" then
+		SetUnitValue(COB.INBUILDSTANCE, 1)
 	end
 	-- Let the sands of time cover the crate
 	Sleep(10000)

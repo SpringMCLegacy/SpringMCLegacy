@@ -296,7 +296,7 @@ function gadget:UnitGiven(unitID, unitDefID, newTeam, oldTeam)
 				dropZoneBeaconIDs[newTeam] = unitID
 			end
 		end
-	elseif unitDefID == UPLINK_ID then
+	elseif unitDefID == UPLINK_ID or unitDefID == GARRISON_ID then
 		for towerID, beaconID in pairs(towerOwners) do
 			if beaconID == unitID then
 				DelayCall(TransferUnit, {towerID, newTeam}, 1)
