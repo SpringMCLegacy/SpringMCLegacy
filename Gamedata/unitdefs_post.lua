@@ -228,15 +228,19 @@ for name, ud in pairs(UnitDefs) do
 		ud.trackstrength = ud.mass / 1000
 	end
 	local weapons = ud.weapons
+	local weaponCounts = {}
 	if weapons then
 		for i, weapon in pairs(weapons) do
-			if weapon.name:lower() == "ams" or weapon.name:lower() == "lams" then
+			local weapName = weapon.name
+			local weapNameL = weapName:lower()
+			weaponCounts[weapName] = (weaponCounts[weapName] or 0) + 1
+			if weapNameL == "ams" or weapNameL == "lams" then
 				weapon.maxangledif = 360
 				ud.description = ud.description .. " \255\230\160\016[AMS]"
-			elseif weapon.name:lower() == "narc" then
+			elseif weapNameL == "narc" then
 				weapon.onlytargetcategory = "narctag"			
 				ud.description = ud.description .. " \255\255\255\001[NARC]"
-			elseif weapon.name:lower() == "tag" then
+			elseif weapNameL == "tag" then
 				weapon.onlytargetcategory = "narctag"			
 				ud.description = ud.description .. " \255\255\051\051[TAG]"
 			else
@@ -259,6 +263,14 @@ for name, ud in pairs(UnitDefs) do
 				weapon.badtargetcategory = (weapon.badtargetcategory or "") .. " dropship structure"
 			end
 		end
+		
+		local weapString = "\n\255\255\255\255"
+		for weapName, count in pairs(weaponCounts) do
+			if weapName:lower() ~= "sight" then
+				weapString = weapString .. weapName .. " x" .. count .. ", "
+			end
+		end
+		ud.description = (ud.description or "") .. weapString
 	end
 	
 	-- Automatically build dropship buildmenus

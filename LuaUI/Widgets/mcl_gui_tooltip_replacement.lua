@@ -54,7 +54,7 @@ local glTexture               = gl.Texture
 
 include("colors.h.lua")
 
-local fontSize = 12
+local fontSize = 14
 local ySpace   = 4
 local yStep    = fontSize + ySpace
 local gap      = 4
