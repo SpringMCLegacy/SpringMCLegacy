@@ -559,12 +559,14 @@ function gadget:AllowCommand(unitID, unitDefID, teamID, cmdID, cmdParams, cmdOpt
 		elseif cmdID == CMD_SEND_ORDER then
 			local money = GetTeamResources(teamID, "metal")
 			local cost = orderCosts[unitID] or 0
-			if rightClick and orderStatus[teamID] == 1 then
-				-- cancelling the order, refund the cost and update the buttons
-				orderStatus[teamID] = 0
-				AddTeamResource(teamID, "metal", cost)
-				UpdateButtons(teamID)
-				return true
+			if rightClick then
+				if orderStatus[teamID] == 1 then
+					-- cancelling the order, refund the cost and update the buttons
+					orderStatus[teamID] = 0
+					AddTeamResource(teamID, "metal", cost)
+					UpdateButtons(teamID)
+					return true
+				else return false end
 			elseif orderStatus[teamID] == 1 then
 				return false -- we already have submitted an order and not cancelled it
 			end
@@ -638,6 +640,12 @@ end
 
 function gadget:UnitDestroyed(unitID, unitDefID, teamID, attackerID, attackerDefID, attackerTeam)
 	if dropZones[unitID] then -- dropZone switched
+		-- clear the order
+		if dropShipStatus[teamID] == 2 then
+			orderStatus[teamID] = 0
+		end
+		AddTeamResource(teamID, "metal", orderCosts[unitID])
+		orderCosts[unitID] = 0
 		dropZones[unitID] = nil
 		teamDropZones[teamID] = nil
 	elseif unitDefID == C3_ID then
