@@ -41,6 +41,7 @@ local BEACON_ID = UnitDefNames["beacon"].id
 local UPLINK_ID = UnitDefNames["upgrade_uplink"].id
 local GARRISON_ID = UnitDefNames["upgrade_garrison"].id
 local DROPZONE_IDS = {}
+GG.DROPZONE_IDS = DROPZONE_IDS
 
 --local MIN_BUILD_RANGE = tonumber(UnitDefNames["beacon"].customParams.minbuildrange) or 230
 local MAX_BUILD_RANGE = UnitDefs[GARRISON_ID].buildDistance

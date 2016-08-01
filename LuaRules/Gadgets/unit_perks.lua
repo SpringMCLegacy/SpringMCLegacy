@@ -37,8 +37,11 @@ local CMD_WEAPON_TOGGLE = GG.CustomCommands.GetCmdID("CMD_WEAPON_TOGGLE")
 -- Variables
 local perkDefs = {} -- perkCmdID = PerkDef table
 local validPerks = {} -- unitDefID = {perkCmdID = true, etc}
-local currentPerks = {} -- currentPerks = {unitID = {perk1 = true, perk2 = true}}
+local currentPerks = {} -- currentPerks = {unitID = {perk1 = true, perk2 = true, ...}}
 local perkUnits = {} -- unitID = baseclass
+
+-- dropzone perks need to be persistent
+local dropZonePerks = {} -- dropZonePerks[teamID] = {perk1 = true, perk2 = true, ...}
 
 local perkInclude = VFS.Include("LuaRules/Configs/perk_defs.lua")
 for perkName, perkDef in pairs(perkInclude) do
@@ -156,10 +159,22 @@ function gadget:UnitCreated(unitID, unitDefID, teamID, builderID)
 				InsertUnitCmdDesc(unitID, perkDef.cmdDesc)
 			end
 		end
+		-- check if unit is a DZ and team DZ has previously been perked
+		if GG.DROPZONE_IDS[unitDefID] and dropZonePerks[teamID] then
+			table.copy(dropZonePerks[teamID], currentPerks[unitID])
+			for perkName in pairs(currentPerks[unitID]) do
+				local perkDef = perkInclude[perkName]
+				EditUnitCmdDesc(unitID, FindUnitCmdDesc(unitID, perkDef.cmdDesc.id), {name = perkDef.cmdDesc.name .."\n  (Trained)", disabled = true})
+			end
+		end
 	end
 end
 
 function gadget:UnitDestroyed(unitID, unitDefID, teamID)
+	if GG.DROPZONE_IDS[unitDefID] then
+		dropZonePerks[teamID] = {}
+		table.copy(currentPerks[unitID], dropZonePerks[teamID])
+	end
 	currentPerks[unitID] = nil
 	perkUnits[unitID] = nil
 end
