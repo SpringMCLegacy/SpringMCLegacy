@@ -66,8 +66,11 @@ function BuildMaskCircle(cx, cz, r, mask)
 	for z = 0, 2 * r, step do -- top to bottom diameter
 		local lineLength = math.sqrt(r2 - (r - z) ^ 2)
 		for x = -lineLength, lineLength, step do
-			Spring.SetSquareBuildingMask((cx + x)/step, (cz + z - r)/step, mask)
-			Spring.MarkerAddPoint((cx + x), 0, (cz + z - r))
+			local squareX, squareZ = (cx + x)/step, (cz + z - r)/step
+			if squareX > 0 and squareZ > 0 and squareX < Game.mapSizeX/step and squareZ < Game.mapSizeZ/step then
+				Spring.SetSquareBuildingMask(squareX, squareZ, mask)
+				--Spring.MarkerAddPoint((cx + x), 0, (cz + z - r))
+			end
 		end
 	end	
 end
