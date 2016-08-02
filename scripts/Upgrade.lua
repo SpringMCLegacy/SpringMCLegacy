@@ -184,6 +184,8 @@ function Unpack()
 		end
 		Turn(antennabase, y_axis, rad(RANDOM_ROT), CRATE_SPEED)
 		WaitForTurn(antennabase, y_axis)
+		local x, y, z = Spring.GetUnitPosition(unitID)
+		GG.BuildMaskCircle(x, z, 460, 2)
 		SetUnitValue(COB.INBUILDSTANCE, 1)
 	elseif name == "upgrade_vehiclepad" then
 		for i = 1, 6 do
@@ -194,6 +196,8 @@ function Unpack()
 		GG.LCLeft(unitID, teamID)
 	elseif name == "upgrade_garrison" then
 		SetUnitValue(COB.INBUILDSTANCE, 1)
+		local x, y, z = Spring.GetUnitPosition(unitID)
+		GG.BuildMaskCircle(x, z, 460, 2)
 	end
 	-- Let the sands of time cover the crate
 	Sleep(10000)

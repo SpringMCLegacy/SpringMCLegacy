@@ -15,6 +15,7 @@ local Tower = Unit:New{
 	canMove				= false,
 	maxVelocity			= 0,
 	idleAutoHeal		= 0,
+	buildingMask		= 2,
 
 	customparams = {
 		ignoreatbeacon = true,

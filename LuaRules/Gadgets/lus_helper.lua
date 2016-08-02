@@ -50,14 +50,28 @@ GG.RemoveGrassSquare = RemoveGrassSquare
 
 function RemoveGrassCircle(cx, cz, r)
 	local r2 = r * r
-	for z = 0, 2 * r, Game.squareSize * 4 do -- top to bottom diameter
+	local step = Game.squareSize * 4
+	for z = 0, 2 * r, step do -- top to bottom diameter
 		local lineLength = math.sqrt(r2 - (r - z) ^ 2)
-		for x = -lineLength, lineLength, Game.squareSize * 4 do
-			Spring.RemoveGrass((cx + x)/Game.squareSize, (cz + z - r)/Game.squareSize)
+		for x = -lineLength, lineLength, step do
+			Spring.RemoveGrass((cx + x)/step, (cz + z - r)/step)
 		end
 	end
 end
 GG.RemoveGrassCircle = RemoveGrassCircle
+
+function BuildMaskCircle(cx, cz, r, mask)
+	local r2 = r * r
+	local step = Game.squareSize * 2
+	for z = 0, 2 * r, step do -- top to bottom diameter
+		local lineLength = math.sqrt(r2 - (r - z) ^ 2)
+		for x = -lineLength, lineLength, step do
+			Spring.SetSquareBuildingMask((cx + x)/step, (cz + z - r)/step, mask)
+			Spring.MarkerAddPoint((cx + x), 0, (cz + z - r))
+		end
+	end	
+end
+GG.BuildMaskCircle = BuildMaskCircle
 
 function SpawnDecal(decalType, x, y, z, teamID, alwaysVisible, delay, duration)
 	if delay then
