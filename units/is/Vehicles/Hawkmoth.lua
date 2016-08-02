@@ -1,7 +1,7 @@
 local Hawkmoth = VTOL:New{
 	name              	= "Hawk Moth",
 	description         = "Light Sniper VTOL",
-	verticalSpeed	= 1,
+	verticalSpeed	= 2,
 
 	weapons	= {	
 		[1] = {
@@ -13,7 +13,7 @@ local Hawkmoth = VTOL:New{
 	customparams = {
 		tonnage			= 25,
 		variant         = "",
-		speed			= 130,
+		speed			= 230,
 		price			= 3340,
 		heatlimit 		= 10,
 		armor			= {type = "ferro", tons = 1.5},
@@ -23,5 +23,9 @@ local Hawkmoth = VTOL:New{
 }
 
 return lowerkeys({
+	["CC_Hawkmoth"] = Hawkmoth,
+	["DC_Hawkmoth"] = Hawkmoth,
+	["FS_Hawkmoth"] = Hawkmoth,
 	["FW_Hawkmoth"] = Hawkmoth,
+	["LA_Hawkmoth"] = Hawkmoth,
 })
