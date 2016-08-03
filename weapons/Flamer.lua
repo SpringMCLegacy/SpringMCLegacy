@@ -27,12 +27,12 @@ weaponDef = {
     weaponVelocity     = 1000,
 	
 	damage = {
-		default = 2, --20 DPS
+		default = 0, --20 DPS
 	},
 	customparams = {
 		heatgenerated		= 0.035,--0.1/s
 		cegflare			= "flamethrowerrange500",
-		heatdamage			= 0.05,
+		heatdamage			= 0.075,
 		weaponclass			= "energy",
 		flareonshot 		= true,
 		projectilelups		= {"flameHeat"},
