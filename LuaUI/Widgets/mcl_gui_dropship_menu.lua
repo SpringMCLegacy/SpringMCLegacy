@@ -47,10 +47,6 @@ local format			= string.format;
 local emptyTable = {};
 local GetTeamRulesParam = Spring.GetTeamRulesParam;
 
-local sidePrefixes = {};
-sidePrefixes[0] = "is";
-sidePrefixes[1] = "cl";
-
 local myDropZoneUnitDefID;
 
 local classHasEnabled = {};
@@ -123,9 +119,10 @@ function CreateUnitButton(unitDefID, className)
 		parent = rightColumn,
 		padding = {10, 10, 10, 10},
 		margin = {0, 0, 0, 0},
-		minWidth = 60,
-		minHeight = 60,
+		minWidth = 96,
+		minHeight = 96,
 		width = "100%",
+		--height = "100%",
 		caption = "",
 		isDisabled = false,
 		unitDefID = unitDefID,
@@ -143,7 +140,7 @@ function CreateUnitButton(unitDefID, className)
 		right=0,
 		padding = {0, 0, 0, 0},
 		margin = {0, 0, 0, 0},
-		keepAspect = false,	--isState;
+		keepAspect = true, --false,	--isState;
 		file = texture,
 		parent = button,
 		opacity = 0.5,
@@ -390,7 +387,7 @@ function widget:Initialize()
 	
 	myTeamID = Spring.GetLocalTeamID();
 	mySide = Spring.GetTeamInfo(myTeamID);
-	mySidePrefix = sidePrefixes[mySide]; 
+	mySidePrefix = Spring.GetTeamRulesParam(myTeamID, "side"); 
 
 	local myDropZoneUnitName = mySidePrefix..'_dropzone';
 	Spring.Echo(myDropZoneUnitName);
@@ -401,7 +398,7 @@ function widget:Initialize()
 	for unitDefID, unitDef in pairs(UnitDefs) do
 		local unitType = unitDef.customParams.baseclass;
 		local name = unitDef.name;
-		if unitType == "mech" or unitType == "vehicle" then
+		if unitType == "mech" then -- or unitType == "vehicle" then
 			if name:sub(1, 2) == mySidePrefix then
 				local name = unitDef.name
 				local cp = unitDef.customParams
