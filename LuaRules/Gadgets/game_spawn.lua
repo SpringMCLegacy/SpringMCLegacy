@@ -64,6 +64,10 @@ local dropShipProgression = {"leopard", "union", "overlord"}
 GG.dropShipProgression = dropShipProgression
 local sideStartUnits = {}
 
+function gadget:GameID(id)
+	math.randomseed(tonumber(id,16))
+end
+
 local function GetStartUnit(teamID)
 	-- get the team startup info
 	local side = select(5, Spring.GetTeamInfo(teamID))
@@ -137,15 +141,6 @@ end
 
 function gadget:Initialize()
 	GG.teamSide = {}
-	local gaiaTeamID = Spring.GetGaiaTeamID()
-	local teams = Spring.GetTeamList()
-	for i = 1,#teams do
-		local teamID = teams[i]
-		-- don't spawn a start unit for the Gaia team
-		if (teamID ~= gaiaTeamID) then
-			sideStartUnits[teamID] = GetStartUnit(teamID)
-		end
-	end
 end
 
 function gadget:GameStart()
@@ -157,6 +152,7 @@ function gadget:GameStart()
 		local teamID = teams[i]
 		-- don't spawn a start unit for the Gaia team
 		if (teamID ~= gaiaTeamID) then
+			sideStartUnits[teamID] = GetStartUnit(teamID)
 			SpawnStartUnit(teamID)
 		end
 	end
