@@ -734,14 +734,20 @@ function gadget:GameFrame(n)
 	end
 end
 
-function gadget:Initialize()
+function gadget:GameStart()
+	-- math.randomseed is only seeded at game start, so sides are determined then
 	for _, teamID in pairs(Spring.GetTeamList()) do
-		teamSlots[teamID] = {}
-		teamC3Counts[teamID] = 0
 		local side = GG.teamSide and GG.teamSide[teamID] or select(5, Spring.GetTeamInfo(teamID))
 		if side ~= "" then -- shouldn't be the case but maybe during loading
 			teamDropShipTypes[teamID] = {def = UnitDefNames[side .. "_dropship_" .. GG.dropShipProgression[1]].id, tier = 1}
 		end
+	end
+end
+
+function gadget:Initialize()
+	for _, teamID in pairs(Spring.GetTeamList()) do
+		teamSlots[teamID] = {}
+		teamC3Counts[teamID] = 0
 		for i = 1, 3 do
 			teamSlots[teamID][i] = {}
 			teamSlots[teamID][i].active = i == 1
