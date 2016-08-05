@@ -14,7 +14,7 @@ local accept = {
 		mech = {pelvis = true, torso = true, rupperarm = true, rlowerarm = true, lupperarm = true, llowerarm = true, lupperleg = true, llowerleg = true, rupperleg = true, rlowerleg = true},
 		vehicle = {body = true, turret = true, launcher_1 = true, turret_2 = true},
 		aero = {lwing = true, rwing = true},
-		vtol = {rotor = true},
+		vtol = {body = true, rotor = true},
 	}
 
 if gadgetHandler:IsSyncedCode() then
