@@ -213,6 +213,226 @@ local Overlord = Union:New{ -- TODO: DropShip:New, custom weapons etc
 	objectName        	= "Dropship_Overlord.s3o",
 	iconType			= "overlord",
 	
+		weapons 		= {	
+		[1] = {
+			name	= "Sniper",
+		},
+		[2] = {
+			name	= "UAC10",
+			mainDir = "1 0 1",
+			maxAngleDif = 90,
+		},
+		[3] = {
+			name	= "UAC10",
+			mainDir = "1 0 1",
+			maxAngleDif = 90,
+			slaveTo = 2,
+		},
+		[4] = {
+			name	= "UAC10",
+			mainDir = "-1 0 -1",
+			maxAngleDif = 90,
+		},
+		[5] = {
+			name	= "UAC10",
+			mainDir = "-1 0 -1",
+			maxAngleDif = 90,
+			slaveTo = 4,
+		},
+		[6] = {
+			name	= "LBL",
+			mainDir = "0 0 1",
+			maxAngleDif = 90,
+		},
+		[7] = {
+			name	= "LBL",
+			mainDir = "0 0 1",
+			maxAngleDif = 90,
+			slaveTo =7,
+		},
+		[8] = {
+			name	= "LBL",
+			mainDir = "0 0 1",
+			maxAngleDif = 90,
+			slaveTo =7,
+		},
+		[9] = {
+			name	= "LBL",
+			mainDir = "0 0 1",
+			maxAngleDif = 90,
+			slaveTo =7,
+		},
+		[10] = {
+			name	= "LBL",
+			mainDir = "1 0 0",
+			maxAngleDif = 90,
+		},
+		[11] = {
+			name	= "LBL",
+			mainDir = "1 0 0",
+			maxAngleDif = 90,
+			slaveTo =10,
+		},
+		[12] = {
+			name	= "LBL",
+			mainDir = "1 0 0",
+			maxAngleDif = 90,
+			slaveTo =10,
+		},
+		[13] = {
+			name	= "LBL",
+			mainDir = "1 0 0",
+			maxAngleDif = 90,
+			slaveTo =10,
+		},
+		[14] = {
+			name	= "LBL",
+			mainDir = "0 0 -1",
+			maxAngleDif = 90,
+		},
+		[15] = {
+			name	= "LBL",
+			mainDir = "0 0 -1",
+			maxAngleDif = 90,
+			slaveTo =14,
+		},
+		[16] = {
+			name	= "LBL",
+			mainDir = "0 0 -1",
+			maxAngleDif = 90,
+			slaveTo =14,
+		},
+		[17] = {
+			name	= "LBL",
+			mainDir = "0 0 -1",
+			maxAngleDif = 90,
+			slaveTo =14,
+		},
+		[18] = {
+			name	= "LBL",
+			mainDir = "-1 0 0",
+			maxAngleDif = 90,
+		},
+		[19] = {
+			name	= "LBL",
+			mainDir = "-1 0 0",
+			maxAngleDif = 90,
+			slaveTo =18,
+		},
+		[20] = {
+			name	= "LBL",
+			mainDir = "-1 0 0",
+			maxAngleDif = 90,
+			slaveTo =18,
+		},
+		[21] = {
+			name	= "LBL",
+			mainDir = "-1 0 0",
+			maxAngleDif = 90,
+			slaveTo =18,
+		},
+		[22] = {
+			name	= "LRM20",
+			mainDir = "0 0 1",
+			maxAngleDif = 120,
+		},
+		[23] = {
+			name	= "LRM20",
+			mainDir = "1 0 0",
+			maxAngleDif = 120,
+		},
+		[24] = {
+			name	= "LRM20",
+			mainDir = "0 0 -1",
+			maxAngleDif = 120,
+		},
+		[25] = {
+			name	= "LRM20",
+			mainDir = "-1 0 0",
+			maxAngleDif = 120,
+		},
+		[26] = {
+			name	= "MPL",
+			mainDir = "0 1 1",
+			maxAngleDif = 120,
+		},
+		[27] = {
+			name	= "MPL",
+			mainDir = "1 0 1",
+			maxAngleDif = 120,
+		},
+		[28] = {
+			name	= "MPL",
+			mainDir = "0 -1 1",
+			maxAngleDif = 120,
+		},
+		[29] = {
+			name	= "MPL",
+			mainDir = "-1 0 1",
+			maxAngleDif = 120,
+		},
+		[30] = {
+			name	= "MPL",
+			mainDir = "1 1 0",
+			maxAngleDif = 120,
+		},
+		[31] = {
+			name	= "MPL",
+			mainDir = "1 0 -1",
+			maxAngleDif = 120,
+		},
+		[32] = {
+			name	= "MPL",
+			mainDir = "1 -1 0",
+			maxAngleDif = 120,
+		},
+		[33] = {
+			name	= "MPL",
+			mainDir = "1 0 1",
+			maxAngleDif = 120,
+		},
+		[34] = {
+			name	= "MPL",
+			mainDir = "0 1 -1",
+			maxAngleDif = 120,
+		},
+		[35] = {
+			name	= "MPL",
+			mainDir = "1 0 -1",
+			maxAngleDif = 120,
+		},
+		[36] = {
+			name	= "MPL",
+			mainDir = "0 -1 -1",
+			maxAngleDif = 120,
+		},
+		[37] = {
+			name	= "MPL",
+			mainDir = "-1 0 -1",
+			maxAngleDif = 120,
+		},
+		[38] = {
+			name	= "MPL",
+			mainDir = "-1 1 0",
+			maxAngleDif = 120,
+		},
+		[39] = {
+			name	= "MPL",
+			mainDir = "-1 0 -1",
+			maxAngleDif = 120,
+		},
+		[40] = {
+			name	= "MPL",
+			mainDir = "-1 -1 0",
+			maxAngleDif = 120,
+		},
+		[41] = {
+			name	= "MPL",
+			mainDir = "-1 0 1",
+			maxAngleDif = 120,
+		},
+	},
+	
 	customparams = {
 		maxtonnage		= 400,
 		cooldown		= 50 * 30,
