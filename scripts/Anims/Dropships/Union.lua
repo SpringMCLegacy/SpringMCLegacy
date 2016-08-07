@@ -8,7 +8,9 @@ for i = 1,info.numDusts do
 end
 
 function WeaponCanFire(weaponID)
-	return missileWeaponIDs[weaponID] and stage == 4 or true
+	if missileWeaponIDs[weaponID] then return stage == 4
+	else return true
+	end
 end
 
 

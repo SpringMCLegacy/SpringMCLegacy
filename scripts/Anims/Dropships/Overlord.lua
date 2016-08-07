@@ -7,13 +7,18 @@ for i = 1,info.numDusts do
 	dusts[i] = piece("dust" .. i)
 end
 
+local sniperCanFire = false
 function WeaponCanFire(weaponID)
-	return missileWeaponIDs[weaponID] and stage == 4 or true
+	if missileWeaponIDs[weaponID] then return stage == 4
+	elseif weaponID == 1 then return sniperCanFire
+	else return true
+	end
 end
 
 
 function Setup()
 	-- Put pieces into starting pos
+	Move(piece("barrel_1"), z_axis, -58, 20)
 	Turn(vExhaustLarges[1], x_axis, math.rad(90), 0)
 	for i = 1, info.numVExhausts do
 		Turn(vExhausts[i], x_axis, math.rad(90), 0)
@@ -60,8 +65,16 @@ function LandingGearDown()
 	end
 	WaitForMove(gears[7].joint, y_axis)
 	Turn(piece("missile_doors"), y_axis, math.rad(16), math.rad(4))
-	Move(piece("mantlet_1"), z_axis, 40, 20)
-	Move(piece("barrel_1"), z_axis, 40, 20)
+end
+
+local function SniperOut(out)
+	local mantlet = piece("mantlet_1")
+	local barrel = piece("barrel_1")
+	Move(mantlet, z_axis, out and 40 or 0, 20)
+	Move(barrel, z_axis, out and 0 or -58, 20)
+	WaitForMove(mantlet, z_axis)
+	WaitForMove(barrel, z_axis)
+	sniperCanFire = out
 end
 
 function TouchDown()
@@ -69,12 +82,13 @@ function TouchDown()
 	for i = 1, 4 do
 		GG.EmitSfxName(unitID, dusts[i], "mech_jump_dust")
 	end
+	StartThread(SniperOut, true)
 end
 
 function LandingGearUp()
 	Turn(piece("missile_doors"), y_axis, 0, math.rad(4))
 	Move(piece("mantlet_1"), z_axis, 0, 20)
-	Move(piece("barrel_1"), z_axis, 0, 20)
+	Move(piece("barrel_1"), z_axis, -58, 20)
 	SPEED = math.rad(40)
 
 	for i = 1, 7 do -- joint lowers and unlocks
@@ -310,6 +324,7 @@ function UnloadCargo()
 		end
 		Sleep(2000)
 	end
+	StartThread(SniperOut, false)
 	Turn(main_door, x_axis, 0, DOOR_SPEED)
 	WaitForTurn(main_door, x_axis)
 	Move(door_struts, z_axis, 0, 25)

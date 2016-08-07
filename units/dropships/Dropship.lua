@@ -440,6 +440,7 @@ local Overlord = DropShip:New{ -- TODO: DropShip:New, custom weapons etc
 	customparams = {
 		maxtonnage		= 400,
 		cooldown		= 50 * 30,
+		barrelrecoildist = {[1] = 50,},
 		-- droptime
 	},	
 }
