@@ -19,14 +19,24 @@ function Setup()
 		Turn(vExhausts[i], x_axis, math.rad(90), 0)
 	end
 	-- Legs Setup
+	
+	--1: -45 -- 45 * -1
+	--2: -90 -- 45 * -1 * 2
+	--3: -135 -- 45 * -1 * 3
+	--4: 180 -- 45 * 4
+	--5: 135 -- 45 * 3
+	--6: 90 -- 45 * 2
+	--7: 45 -- 45 * 1
+
 	for i = 1,info.numGears do
-		local angle = (i == 2 or i == 3) and rad(45) or rad(225)
-		local angleDir = i % 2 == 0 and angle or -angle
+		local angle = i < 5 and i * rad(45) or (8 - i) * rad(45)
+		local angleDir = i < 4 and -angle or angle
 		local angle2 = rad(80)
 		Turn(gears[i].door, y_axis, angleDir)
+		Turn(gears[i].door, x_axis, angle2)
 		Turn(gears[i].joint, y_axis, angleDir)
-		Turn(gears[i].joint, x_axis, angle2)
-		Move(gears[i].joint, y_axis, -13)
+		--Turn(gears[i].joint, x_axis, angle2)
+		--Move(gears[i].joint, y_axis, -13)
 	end
 	-- weapon pieces too
 	for id, turret in pairs(turrets) do
@@ -43,26 +53,27 @@ end
 function LandingGearDown()
 	SPEED = math.rad(40)
 	for i = 1, 7 do -- Doors open
-		Turn(gears[i].door, x_axis, math.rad(60), SPEED * 5)
+		Turn(gears[i].door, x_axis, math.rad(1), SPEED * 5)
 	end
 	WaitForTurn(gears[7].door, x_axis)
-	Spring.MoveCtrl.SetGravity(unitID, -4 * GRAVITY) -- -3.72
-	Sleep(2500)
+	Spring.MoveCtrl.SetGravity(unitID, -4.2 * GRAVITY) -- -3.72
+	Sleep(2000)
 	for i = 1, 7 do -- feet into deploy position
 		Turn(gears[i].joint, x_axis, math.rad(5), SPEED)
 	end
 	WaitForTurn(gears[7].joint, x_axis)
 	for i = 1, 7 do -- joint and feet rotate out
-		Turn(gears[i].joint, x_axis, math.rad(-80), SPEED)
-		Turn(gears[i].gear, x_axis, math.rad(50), SPEED)
+		Turn(gears[i].joint, x_axis, math.rad(90), SPEED)
+		Turn(gears[i].gear, x_axis, math.rad(-110), SPEED)
 	end
 	WaitForTurn(gears[7].joint, x_axis)
 	for i = 1, 7 do -- joint raises and locks into position
-		Move(gears[i].joint, y_axis, 0, 15)
-		Turn(gears[i].joint, x_axis, math.rad(-115), SPEED)
-		Turn(gears[i].gear, x_axis, math.rad(85), SPEED)
+		Move(gears[i].joint, y_axis, -5, 15)
+		--Turn(gears[i].joint, x_axis, math.rad(-115), SPEED)
+		--Turn(gears[i].gear, x_axis, math.rad(85), SPEED)
 	end
-	WaitForTurn(gears[7].gear, x_axis)
+	--WaitForTurn(gears[7].gear, x_axis)
+	WaitForMove(gears[7].joint, y_axis)
 	Turn(piece("missile_doors"), y_axis, math.rad(16), math.rad(4))
 end
 
@@ -78,21 +89,22 @@ function LandingGearUp()
 	SPEED = math.rad(40)
 
 	for i = 1, 7 do -- joint lowers and unlocks
-		Move(gears[i].joint, y_axis, -13, 15)
-		Turn(gears[i].joint, x_axis, math.rad(-80), SPEED)
-		Turn(gears[i].gear, x_axis, math.rad(50), SPEED)
+		Move(gears[i].joint, y_axis, 0, 15)
+		--Turn(gears[i].joint, x_axis, math.rad(-80), SPEED)
+		--Turn(gears[i].gear, x_axis, math.rad(50), SPEED)
 	end
-	WaitForTurn(gears[7].gear, x_axis)
+	--WaitForTurn(gears[7].gear, x_axis)
+	WaitForMove(gears[7].joint, y_axis)
 	for i = 1, 7 do -- joint and feet rotate in
 		Turn(gears[i].joint, x_axis, math.rad(5), SPEED)
 		Turn(gears[i].gear, x_axis, 0, SPEED)
 	end
 	WaitForTurn(gears[7].joint, x_axis)
 	for i = 1, 7 do -- feet into stowed position
-		Turn(gears[i].joint, x_axis, math.rad(80), SPEED)
+		Turn(gears[i].joint, x_axis, 0, SPEED)
 	end	
 	for i = 1, 7 do -- Doors close
-		Turn(gears[i].door, x_axis, 0, SPEED)
+		Turn(gears[i].door, x_axis, math.rad(80), SPEED)
 	end
 	WaitForTurn(gears[7].door, x_axis)
 	
@@ -186,15 +198,15 @@ function fx()
 		local REST = 10
 		local RETURN = 6
 		Move(hull, y_axis, -REST, 2 * REST)
-		for i = 1, 4 do
-			Move(gears[i].joint, y_axis, REST, 2 * REST)
+		for i = 1, 7 do
+			Move(gears[i].joint, y_axis, -5 + REST, 2 * REST)
 		end
-		WaitForMove(gears[4].joint, y_axis)
+		WaitForMove(gears[7].joint, y_axis)
 		Move(hull, y_axis, -RETURN, RETURN)
-		for i = 1, 4 do
-			Move(gears[i].joint, y_axis, RETURN, RETURN)
+		for i = 1, 7 do
+			Move(gears[i].joint, y_axis, -5 + RETURN, RETURN)
 		end
-		WaitForMove(gears[4].joint, y_axis)
+		WaitForMove(gears[7].joint, y_axis)
 		StartThread(UnloadCargo)
 	end
 	if stage == 5 then -- blast off
