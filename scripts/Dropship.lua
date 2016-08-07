@@ -198,6 +198,8 @@ function script.AimWeapon(weaponID, heading, pitch)
 		Turn(turrets[weaponID], y_axis, heading, TURRET_SPEED)
 	elseif mainTurretIDs[weaponID] then -- otherwise use main
 		Turn(turret, y_axis, heading, TURRET_SPEED)
+	elseif weaponProgenitors[weaponID] then
+		-- no-op, we let the progenitor do heading aiming
 	elseif flares[weaponID] then
 		Turn(flares[weaponID], y_axis, heading)
 	end
