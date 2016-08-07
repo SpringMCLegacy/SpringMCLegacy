@@ -193,7 +193,6 @@ function script.AimWeapon(weaponID, heading, pitch)
 	-- use a weapon-specific turret if it exists
 	if trackEmitters[weaponID] then -- LBLs
 		Turn(trackEmitters[weaponID], y_axis, heading, TURRET_SPEED)
-		Spring.Echo("Turning emitter", weaponID)
 		WaitForTurn(trackEmitters[weaponID], y_axis)
 	elseif turrets[weaponID] then
 		Turn(turrets[weaponID], y_axis, heading, TURRET_SPEED)

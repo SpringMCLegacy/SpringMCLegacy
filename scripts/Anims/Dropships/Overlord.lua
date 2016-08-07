@@ -19,14 +19,6 @@ function Setup()
 		Turn(vExhausts[i], x_axis, math.rad(90), 0)
 	end
 	-- Legs Setup
-	
-	--1: -45 -- 45 * -1
-	--2: -90 -- 45 * -1 * 2
-	--3: -135 -- 45 * -1 * 3
-	--4: 180 -- 45 * 4
-	--5: 135 -- 45 * 3
-	--6: 90 -- 45 * 2
-	--7: 45 -- 45 * 1
 
 	for i = 1,info.numGears do
 		local angle = i < 5 and i * rad(45) or (8 - i) * rad(45)
@@ -35,8 +27,6 @@ function Setup()
 		Turn(gears[i].door, y_axis, angleDir)
 		Turn(gears[i].door, x_axis, angle2)
 		Turn(gears[i].joint, y_axis, angleDir)
-		--Turn(gears[i].joint, x_axis, angle2)
-		--Move(gears[i].joint, y_axis, -13)
 	end
 	-- weapon pieces too
 	for id, turret in pairs(turrets) do
@@ -44,7 +34,6 @@ function Setup()
 	end
 	-- 6, 10, 14, 18 -> 4n + 2, .'. (id - 2)/4
 	for id, trackEmitter in pairs(trackEmitters) do
-		Spring.Echo("PARP", id, 90 * ((id - 2)/4 - 1))
 		Turn(trackEmitter, y_axis, math.rad(90 * ((id - 2)/4 - 1)))
 	end
 end
@@ -68,10 +57,7 @@ function LandingGearDown()
 	WaitForTurn(gears[7].joint, x_axis)
 	for i = 1, 7 do -- joint raises and locks into position
 		Move(gears[i].joint, y_axis, -5, 15)
-		--Turn(gears[i].joint, x_axis, math.rad(-115), SPEED)
-		--Turn(gears[i].gear, x_axis, math.rad(85), SPEED)
 	end
-	--WaitForTurn(gears[7].gear, x_axis)
 	WaitForMove(gears[7].joint, y_axis)
 	Turn(piece("missile_doors"), y_axis, math.rad(16), math.rad(4))
 end
