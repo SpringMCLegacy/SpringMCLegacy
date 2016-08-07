@@ -170,7 +170,7 @@ end
 
 local function FindPieceProgenitor(unitID, pieceName)
 	-- order matters here, we want to return turret even if that turret is then attached to body
-	local progenitors = {"lwing", "rwing", "rotor", "turret", "body"}
+	local progenitors = {"lwing", "rwing", "rotor", "turret", "emitter", "body"}
 	for _, progenitor in ipairs(progenitors) do
 		if pieceName:find(progenitor) then return pieceName end -- return the piece
 		local found, parent = IsPieceAncestor(unitID, pieceName, progenitor, false)
@@ -218,6 +218,7 @@ function gadget:UnitCreated(unitID, unitDefID, teamID, builderID)
 		local numDusts = 0
 		local numBooms = 0
 		local numCargoPieces = 0
+		local trackEmitterIDs = {}
 		
 		for pieceName, pieceNum in pairs(pieceMap) do
 			local parent = GetUnitPieceInfo(unitID, pieceNum)["parent"]
@@ -242,6 +243,9 @@ function gadget:UnitCreated(unitID, unitDefID, teamID, builderID)
 			-- Find mantlet pieces
 			elseif pieceName:find("mantlet_") then
 				mantletIDs[weaponNum] = true
+			-- Find track emitter pieces
+			elseif pieceName:find("emitter_") then
+				trackEmitterIDs[weaponNum] = true
 			-- Find barrel pieces
 			elseif pieceName:find("barrel_") then
 				barrelIDs[weaponNum] = true
@@ -297,6 +301,17 @@ function gadget:UnitCreated(unitID, unitDefID, teamID, builderID)
 			info.leftArmIDs = leftArmIDs
 			info.torso = pieceMap["cockpit"]--flare_1"] -- TODO: special 'cockpit' piece, can't use torso as vertex dir is unpredictable
 		end
+		--elseif cp.baseclass == "dropship" then
+			info.trackEmitterIDs = trackEmitterIDs
+			info.numHExhausts = numHExhausts
+			info.numHExhaustLarges = numHExhaustLarges
+			info.numVExhausts = numVExhausts
+			info.numVExhaustLarges = numVExhaustLarges
+			info.numGears = numGears
+			info.numDusts = numDusts
+			info.numBooms = numBooms
+			info.numCargoPieces = numCargoPieces
+		--end
 
 		info.progenitorMap = progenitorMap
 		info.weaponProgenitors = weaponProgenitors
@@ -309,14 +324,6 @@ function gadget:UnitCreated(unitID, unitDefID, teamID, builderID)
 		info.barrelIDs = barrelIDs
 		info.numWheels = numWheels
 		info.jumpjets = numJets
-		info.numHExhausts = numHExhausts
-		info.numHExhaustLarges = numHExhaustLarges
-		info.numVExhausts = numVExhausts
-		info.numVExhaustLarges = numVExhaustLarges
-		info.numGears = numGears
-		info.numDusts = numDusts
-		info.numBooms = numBooms
-		info.numCargoPieces = numCargoPieces
 	end
 	
 	-- Remove aircraft land and repairlevel buttons

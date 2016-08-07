@@ -34,9 +34,7 @@ function Setup()
 	end
 	-- 1, 3, 5, 7 -> 2n - 1, .'. (id + 1)/2
 	for id, trackEmitter in pairs(trackEmitters) do
-		if id % 2 == 1 then -- only the first time for each pair
-			Turn(trackEmitter, y_axis, math.rad(90 * ((id + 1)/2 - 1)))
-		end
+		Turn(trackEmitter, y_axis, math.rad(90 * ((id + 1)/2 - 1)))
 	end
 end
 

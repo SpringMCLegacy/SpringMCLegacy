@@ -42,11 +42,10 @@ function Setup()
 	for id, turret in pairs(turrets) do
 		Turn(turret, y_axis, math.rad(-45 * id))
 	end
-	-- 1, 3, 5, 7 -> 2n - 1, .'. (id + 1)/2
+	-- 6, 10, 14, 18 -> 4n + 2, .'. (id - 2)/4
 	for id, trackEmitter in pairs(trackEmitters) do
-		if id % 2 == 1 then -- only the first time for each pair
-			Turn(trackEmitter, y_axis, math.rad(90 * ((id + 1)/2 - 1)))
-		end
+		Spring.Echo("PARP", id, 90 * ((id - 2)/4 - 1))
+		Turn(trackEmitter, y_axis, math.rad(90 * ((id - 2)/4 - 1)))
 	end
 end
 

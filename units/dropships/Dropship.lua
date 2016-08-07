@@ -239,6 +239,7 @@ local Overlord = DropShip:New{ -- TODO: DropShip:New, custom weapons etc
 			maxAngleDif = 90,
 			slaveTo = 4,
 		},
+		-- emitter 6
 		[6] = {
 			name	= "LBL",
 			mainDir = "0 0 1",
@@ -262,29 +263,31 @@ local Overlord = DropShip:New{ -- TODO: DropShip:New, custom weapons etc
 			maxAngleDif = 90,
 			slaveTo =7,
 		},
+		-- emitter 10
 		[10] = {
 			name	= "LBL",
-			mainDir = "1 0 0",
+			mainDir = "-1 0 0",
 			maxAngleDif = 90,
 		},
 		[11] = {
 			name	= "LBL",
-			mainDir = "1 0 0",
+			mainDir = "-1 0 0",
 			maxAngleDif = 90,
 			slaveTo =10,
 		},
 		[12] = {
 			name	= "LBL",
-			mainDir = "1 0 0",
+			mainDir = "-1 0 0",
 			maxAngleDif = 90,
 			slaveTo =10,
 		},
 		[13] = {
 			name	= "LBL",
-			mainDir = "1 0 0",
+			mainDir = "-1 0 0",
 			maxAngleDif = 90,
 			slaveTo =10,
 		},
+		-- emitter 14
 		[14] = {
 			name	= "LBL",
 			mainDir = "0 0 -1",
@@ -308,26 +311,27 @@ local Overlord = DropShip:New{ -- TODO: DropShip:New, custom weapons etc
 			maxAngleDif = 90,
 			slaveTo =14,
 		},
+		-- emitter 18
 		[18] = {
 			name	= "LBL",
-			mainDir = "-1 0 0",
+			mainDir = "1 0 0",
 			maxAngleDif = 90,
 		},
 		[19] = {
 			name	= "LBL",
-			mainDir = "-1 0 0",
+			mainDir = "1 0 0",
 			maxAngleDif = 90,
 			slaveTo =18,
 		},
 		[20] = {
 			name	= "LBL",
-			mainDir = "-1 0 0",
+			mainDir = "1 0 0",
 			maxAngleDif = 90,
 			slaveTo =18,
 		},
 		[21] = {
 			name	= "LBL",
-			mainDir = "-1 0 0",
+			mainDir = "1 0 0",
 			maxAngleDif = 90,
 			slaveTo =18,
 		},

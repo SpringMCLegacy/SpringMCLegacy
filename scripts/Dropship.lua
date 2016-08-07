@@ -119,15 +119,11 @@ TURRET_SPEED = math.rad(30)
 ELEVATION_SPEED = math.rad(60)
 
 -- weapons pieces
-trackEmitters = {}
-for i = 1, 7, 2 do -- TODO: setup a table in lus_helper
-	trackEmitters[i] = piece("laser_emitter_" .. i)
-	trackEmitters[i+1] = trackEmitters[i]
-end
 
+-- non local as moved in Setup()
 turrets = {}
+trackEmitters = {} 
 local flares = {}
---local turrets = info.turrets
 
 local mantlets = {}
 local barrels = {}
@@ -135,7 +131,7 @@ local launchers = {}
 local launchPoints = {}
 local currPoints = {}
 local missileSignals = {}
-local amsSignal = {}
+local extraSignals = {}
 
 for weaponID = 1, info.numWeapons do
 	if missileWeaponIDs[weaponID] then
@@ -150,8 +146,11 @@ for weaponID = 1, info.numWeapons do
 				launchPoints[weaponID][i] = piece("launchpoint_" .. weaponID .. "_" .. i)
 			end	
 		end
-	elseif weaponID then
+	elseif weaponID then -- TODO: should just be else?
 		flares[weaponID] = piece ("flare_" .. weaponID)
+		if weaponID > 25 then
+			extraSignals[weaponID] = {}
+		end
 	end
 	if info.turretIDs[weaponID] then
 		turrets[weaponID] = piece("turret_" .. weaponID)
@@ -161,6 +160,9 @@ for weaponID = 1, info.numWeapons do
 	end
 	if info.barrelIDs[weaponID] then
 		barrels[weaponID] = piece("barrel_" .. weaponID)
+	end
+	if info.trackEmitterIDs[weaponID] then
+		trackEmitters[weaponID] = piece("emitter_" .. weaponID)
 	end
 end
 
@@ -182,18 +184,17 @@ function script.AimWeapon(weaponID, heading, pitch)
 		Signal(missileSignals[weaponID])
 		SetSignalMask(missileSignals[weaponID])
 	else -- LAMS
-		Signal(amsSignal)
-		SetSignalMask(amsSignal)
+		Signal(extraSignals[weaponID])
+		SetSignalMask(extraSignals[weaponID])
 	end
 	if amsIDs[weaponID] then 
 		return true
 	end
 	-- use a weapon-specific turret if it exists
 	if trackEmitters[weaponID] then -- LBLs
-		if weaponID % 2 == 1 then -- only first in each pair
-			Turn(trackEmitters[weaponID], y_axis, heading, TURRET_SPEED) -- + math.rad(90 * (weaponID - 1)/2), TURRET_SPEED)
-			WaitForTurn(trackEmitters[weaponID], y_axis)
-		end
+		Turn(trackEmitters[weaponID], y_axis, heading, TURRET_SPEED)
+		Spring.Echo("Turning emitter", weaponID)
+		WaitForTurn(trackEmitters[weaponID], y_axis)
 	elseif turrets[weaponID] then
 		Turn(turrets[weaponID], y_axis, heading, TURRET_SPEED)
 	elseif mainTurretIDs[weaponID] then -- otherwise use main
