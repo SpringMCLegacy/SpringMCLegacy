@@ -42,27 +42,27 @@ end
 
 function LandingGearDown()
 	SPEED = math.rad(40)
-	for i = 1, 4 do -- Doors open
+	for i = 1, 7 do -- Doors open
 		Turn(gears[i].door, x_axis, math.rad(60), SPEED * 5)
 	end
-	WaitForTurn(gears[4].door, x_axis)
+	WaitForTurn(gears[7].door, x_axis)
 	Spring.MoveCtrl.SetGravity(unitID, -4 * GRAVITY) -- -3.72
 	Sleep(2500)
-	for i = 1, 4 do -- feet into deploy position
+	for i = 1, 7 do -- feet into deploy position
 		Turn(gears[i].joint, x_axis, math.rad(5), SPEED)
 	end
-	WaitForTurn(gears[4].joint, x_axis)
-	for i = 1, 4 do -- joint and feet rotate out
+	WaitForTurn(gears[7].joint, x_axis)
+	for i = 1, 7 do -- joint and feet rotate out
 		Turn(gears[i].joint, x_axis, math.rad(-80), SPEED)
 		Turn(gears[i].gear, x_axis, math.rad(50), SPEED)
 	end
-	WaitForTurn(gears[4].joint, x_axis)
-	for i = 1, 4 do -- joint raises and locks into position
+	WaitForTurn(gears[7].joint, x_axis)
+	for i = 1, 7 do -- joint raises and locks into position
 		Move(gears[i].joint, y_axis, 0, 15)
 		Turn(gears[i].joint, x_axis, math.rad(-115), SPEED)
 		Turn(gears[i].gear, x_axis, math.rad(85), SPEED)
 	end
-	WaitForTurn(gears[4].gear, x_axis)
+	WaitForTurn(gears[7].gear, x_axis)
 	Turn(piece("missile_doors"), y_axis, math.rad(16), math.rad(4))
 end
 
@@ -77,24 +77,24 @@ function LandingGearUp()
 	Turn(piece("missile_doors"), y_axis, 0, math.rad(4))
 	SPEED = math.rad(40)
 
-	for i = 1, 4 do -- joint lowers and unlocks
+	for i = 1, 7 do -- joint lowers and unlocks
 		Move(gears[i].joint, y_axis, -13, 15)
 		Turn(gears[i].joint, x_axis, math.rad(-80), SPEED)
 		Turn(gears[i].gear, x_axis, math.rad(50), SPEED)
 	end
-	WaitForTurn(gears[4].gear, x_axis)
-	for i = 1, 4 do -- joint and feet rotate in
+	WaitForTurn(gears[7].gear, x_axis)
+	for i = 1, 7 do -- joint and feet rotate in
 		Turn(gears[i].joint, x_axis, math.rad(5), SPEED)
 		Turn(gears[i].gear, x_axis, 0, SPEED)
 	end
-	WaitForTurn(gears[4].joint, x_axis)
-	for i = 1, 4 do -- feet into stowed position
+	WaitForTurn(gears[7].joint, x_axis)
+	for i = 1, 7 do -- feet into stowed position
 		Turn(gears[i].joint, x_axis, math.rad(80), SPEED)
 	end	
-	for i = 1, 4 do -- Doors close
+	for i = 1, 7 do -- Doors close
 		Turn(gears[i].door, x_axis, 0, SPEED)
 	end
-	WaitForTurn(gears[4].door, x_axis)
+	WaitForTurn(gears[7].door, x_axis)
 	
 	Spring.MoveCtrl.SetGravity(unitID, -4 * GRAVITY)
 end
@@ -264,16 +264,16 @@ local UNLOAD_Z = z + 300 * dz
 
 function UnloadCargo()
 	Turn(main_door, x_axis, math.rad(110), DOOR_SPEED)
-	Turn(hanger_door, y_axis, math.rad(90), DOOR_SPEED * 0.5)
+	--Turn(hanger_door, y_axis, math.rad(90), DOOR_SPEED * 0.5)
 	Turn(link, x_axis, math.rad(35), DOOR_SPEED * 10)
-	Turn(vtol_pad, y_axis, math.rad(90), DOOR_SPEED * 10)
+	--Turn(vtol_pad, y_axis, math.rad(90), DOOR_SPEED * 10)
 	WaitForTurn(main_door, x_axis)
 	
 	for i, cargoID in ipairs(cargo) do
 		Move(link, z_axis, 0)
 		Move(pad, z_axis, 0)
 		Turn(pad, x_axis, math.rad(-35))
-		Move(vtol_pad, x_axis, 0)
+		--Move(vtol_pad, x_axis, 0)
 
 		WaitForMove(link, z_axis)
 		WaitForMove(pad, z_axis)
@@ -289,10 +289,10 @@ function UnloadCargo()
 		local buildTime = currUnitDef.buildTime
 
 		if currUnitDef.canFly then
-			Spring.UnitScript.AttachUnit(vtol_pad, cargoID)
+			--[[Spring.UnitScript.AttachUnit(vtol_pad, cargoID)
 			Move(vtol_pad, x_axis, 128, 64)
 			WaitForMove(vtol_pad, x_axis)
-			Spring.SetUnitVelocity(cargoID, 8, 4, 0)
+			Spring.SetUnitVelocity(cargoID, 8, 4, 0)]]
 		else
 			Spring.UnitScript.AttachUnit(pad, cargoID)
 			local moveSpeed = currUnitDef.speed * 0.5
@@ -311,8 +311,8 @@ function UnloadCargo()
 		Sleep(2000)
 	end
 	Turn(main_door, x_axis, 0, DOOR_SPEED)
-	Turn(hanger_door, y_axis, 0, DOOR_SPEED)
-	WaitForTurn(hanger_door, y_axis)
+	--Turn(hanger_door, y_axis, 0, DOOR_SPEED)
+	--WaitForTurn(hanger_door, y_axis)
 	WaitForTurn(main_door, x_axis)
 	Sleep(WAIT_TIME)
 	stage = 5 --3

@@ -174,7 +174,7 @@ local Union = DropShip:New{
 	},
 }
 
-local Leopard = DropShip:New{ -- TODO: DropShip:New, custom weapons etc
+local Leopard = DropShip:New{
 	objectName        	= "IS_Leopard.s3o",
 	iconType			= "leopard",
 
@@ -209,7 +209,7 @@ local Leopard = DropShip:New{ -- TODO: DropShip:New, custom weapons etc
 	},	
 }
 
-local Overlord = Union:New{ -- TODO: DropShip:New, custom weapons etc
+local Overlord = DropShip:New{ -- TODO: DropShip:New, custom weapons etc
 	objectName        	= "Dropship_Overlord.s3o",
 	iconType			= "overlord",
 	
