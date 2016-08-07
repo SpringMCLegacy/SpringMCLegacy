@@ -38,6 +38,7 @@ local DelayCall				 = GG.Delay.DelayCall
 -- Constants
 local GAIA_TEAM_ID = Spring.GetGaiaTeamID()
 local BEACON_ID = UnitDefNames["beacon"].id
+local BEACON_POINT_ID = UnitDefNames["beacon_point"].id
 local UPLINK_ID = UnitDefNames["upgrade_uplink"].id
 local GARRISON_ID = UnitDefNames["upgrade_garrison"].id
 local DROPZONE_IDS = {}
@@ -55,13 +56,20 @@ local towerDefIDs = {} -- towerDefIDs[unitDefID] = "turret" or "sensor"
 local buildLimits = {} -- buildLimits[unitID] = {turret = 4, sensor = 1}
 local towerOwners = {} -- towerOwners[towerID] = beaconID
 
-local outpostDefs = {} -- outpostDefs[unitDefID] = {cmdDesc = {cmdDescTable}, cost = cost}
-GG.outpostDefs = outpostDefs
-local upgradeIDs = {} -- upgradeIDs[cmdID] = unitDefID
-local beaconIDs = {} -- beaconIDs[outpostID] = beaconID
-local outpostIDs = {} -- outpostIDs[beaconID] = outpostID
+local upgradeDefs = {} -- upgradeDefs[unitDefID] = {cmdDesc = {cmdDescTable}, cost = cost}
+GG.outpostDefs = upgradeDefs -- TODO: check why this is in GG
+local dropZoneDefs = {}
+
+local upgradeCMDs = {} -- upgradeCMDs[cmdID] = unitDefID
+local upgradePointIDs = {} -- upgradePointIDs[upgradeID] = upgradePointID
+local upgradeIDs = {} -- upgradeIDs[beaconID] = upgradeID
+
+local upgradePointBeaconIDs = {} -- upgradePointBeaconIDs[upgradePointID] = beaconID
+local beaconUpgradePointIDs = {} -- beaconUpgradePointIDs[beaconID] = {upgradePointID1, upgradePointID2, upgradePointID3}
+
 local dropZoneIDs = {} -- dropZoneIDs[teamID] = dropZoneID
 local dropZoneBeaconIDs = {} -- dropZoneBeaconIDs[teamID] = beaconID
+GG.dropZoneBeaconIDs = dropZoneBeaconIDs
 local dropZoneCmdDesc
 
 local hotSwapIDs = {} -- hotSwapIDs[unitID] = true
@@ -77,6 +85,19 @@ local function HotSwap(unitID, unitDefID, teamID)
 	end
 	DelayCall(Spring.CreateUnit,{unitDefID, x,y,z, "s", teamID, false, false, unitID, nil}, 3) -- 3 frame delay appears to be minimum
 end
+
+local BEACON_POINT_DIST = 400
+local function BeaconPoints(beaconID, teamID, x, y, z)
+	beaconUpgradePointIDs[beaconID] = {}
+	for i = 0, 2 do
+		local angle = i * 2 * math.pi / 3
+		local dx, dz = math.sin(angle) * BEACON_POINT_DIST, math.cos(angle) * BEACON_POINT_DIST
+		local upgradePointID = CreateUnit(BEACON_POINT_ID, x + dx, y, z + dz, "s", teamID)
+		upgradePointBeaconIDs[upgradePointID] = beaconID
+		beaconUpgradePointIDs[beaconID][i+1] = upgradePointID
+	end
+end
+GG.BeaconPoints = BeaconPoints
 
 function gadget:GamePreload()
 	for unitDefID, unitDef in pairs(UnitDefs) do
@@ -95,8 +116,8 @@ function gadget:GamePreload()
 				action = 'upgrade',
 				tooltip = "C-Bill cost: " .. cBillCost,
 			}
-			outpostDefs[unitDefID] = {cmdDesc = upgradeCmdDesc, cost = cBillCost}
-			upgradeIDs[upgradeCmdDesc.id] = unitDefID
+			upgradeDefs[unitDefID] = {cmdDesc = upgradeCmdDesc, cost = cBillCost}
+			upgradeCMDs[upgradeCmdDesc.id] = unitDefID
 		end
 	end
 	GG.DROPZONE_IDS = DROPZONE_IDS
@@ -108,7 +129,7 @@ function gadget:GamePreload()
 		tooltip = "Set as primary dropzone",
 	}
 	for dropZoneDefID in pairs(DROPZONE_IDS) do
-		outpostDefs[dropZoneDefID] = {cmdDesc = dropZoneCmdDesc, cost = 0}
+		dropZoneDefs[dropZoneDefID] = {cmdDesc = dropZoneCmdDesc, cost = 0}
 	end
 end
 
@@ -116,38 +137,38 @@ end
 
 local function AddUpgradeOptions(unitID)
 	if not Spring.ValidUnitID(unitID) then return end
-	for outpostDefID, outpostInfo in pairs(outpostDefs) do
-		InsertUnitCmdDesc(unitID, outpostInfo.cmdDesc)
+	for upgradeDefID, upgradeInfo in pairs(upgradeDefs) do
+		InsertUnitCmdDesc(unitID, upgradeInfo.cmdDesc)
 	end
-	InsertUnitCmdDesc(unitID, dropZoneCmdDesc)
 end
 
 local function ToggleUpgradeOptions(unitID, on)
 	if not Spring.ValidUnitID(unitID) then return end
-	for outpostDefID, outpostInfo in pairs(outpostDefs) do
-		EditUnitCmdDesc(unitID, FindUnitCmdDesc(unitID, outpostInfo.cmdDesc.id), {disabled = not on})
+	for upgradeDefID, upgradeInfo in pairs(upgradeDefs) do
+		EditUnitCmdDesc(unitID, FindUnitCmdDesc(unitID, upgradeInfo.cmdDesc.id), {disabled = not on})
 	end
-	EditUnitCmdDesc(unitID, FindUnitCmdDesc(unitID, dropZoneCmdDesc.id), {disabled = not on})
+	--EditUnitCmdDesc(unitID, FindUnitCmdDesc(unitID, dropZoneCmdDesc.id), {disabled = not on}) -- REMOVE
 end
 GG.ToggleUpgradeOptions = ToggleUpgradeOptions
 
-function SpawnCargo(beaconID, dropshipID, unitDefID, teamID)
+function SpawnCargo(beaconID, targetID, dropshipID, unitDefID, teamID)
 	local tx, ty, tz = GetUnitPosition(dropshipID)
 	local cargoID = CreateUnit(unitDefID, tx, ty, tz, "s", teamID)
 	env = Spring.UnitScript.GetScriptEnv(dropshipID)
-	Spring.UnitScript.CallAsUnit(dropshipID, env.LoadCargo, cargoID, beaconID)
+	Spring.UnitScript.CallAsUnit(dropshipID, env.LoadCargo, cargoID, targetID, beaconID)
 	-- extra behaviour to link outposts with beacons
-	if outpostDefs[unitDefID] then
-		beaconIDs[cargoID] = beaconID 
-		outpostIDs[beaconID] = cargoID
+	if upgradeDefs[unitDefID] then
+		upgradePointIDs[cargoID] = targetID 
+		upgradeIDs[targetID] = cargoID
 		-- Let unsynced know about this pairing
 		Spring.SetUnitRulesParam(cargoID, "beaconID", beaconID)
-		Spring.SetUnitRulesParam(beaconID, "upgradeID", cargoID)
+		Spring.SetUnitRulesParam(targetID, "upgradeID", cargoID)
 	end
 end
 
-function SpawnDropship(unitID, teamID, dropshipType, cargo, cost)
-	if Spring.ValidUnitID(unitID) and not Spring.GetUnitIsDead(unitID) and not outpostIDs[unitID] and Spring.GetUnitTeam(unitID) == teamID then
+function SpawnDropship(beaconID, unitID, teamID, dropshipType, cargo, cost)
+	--Spring.Echo("Spawn a dropship!", beaconID, unitID, teamID, dropshipType, cargo, cost)
+	if Spring.ValidUnitID(unitID) and not Spring.GetUnitIsDead(unitID) and not upgradeIDs[unitID] and Spring.GetUnitTeam(unitID) == teamID then
 		local tx,ty,tz = GetUnitPosition(unitID)
 		local dropshipID = CreateUnit(dropshipType, tx, ty, tz, "s", teamID)
 		--SendToUnsynced("VEHICLE_UNLOADED", dropshipID, teamID)
@@ -155,12 +176,12 @@ function SpawnDropship(unitID, teamID, dropshipType, cargo, cost)
 			for i, order in ipairs(cargo) do -- preserve order here
 				for orderDefID, count in pairs(order) do
 					for i = 1, count do
-						DelayCall(SpawnCargo, {unitID, dropshipID, orderDefID, teamID}, 1)
+						DelayCall(SpawnCargo, {beaconID, unitID, dropshipID, orderDefID, teamID}, 1)
 					end
 				end
 			end
 		else
-			DelayCall(SpawnCargo, {unitID, dropshipID, cargo, teamID}, 1)
+			DelayCall(SpawnCargo, {beaconID, unitID, dropshipID, cargo, teamID}, 1)
 		end
 	else -- dropzone moved or beacon was capped
 		-- Refund
@@ -168,12 +189,50 @@ function SpawnDropship(unitID, teamID, dropshipType, cargo, cost)
 	end
 end
 
-function DropshipDelivery(unitID, teamID, dropshipType, cargo, cost, sound, delay)
-	UseTeamResource(teamID, "metal", cost)
-	if sound then
-		GG.PlaySoundForTeam(teamID, sound, 1)
+local beaconDropshipQueue = {} -- beaconDropshipQueue[beaconID] = {info1 = {}, info2 = {}, ...}
+
+function EnqueueDropship(beaconID, beaconPointID, teamID, info)
+	if not beaconDropshipQueue[beaconID] then beaconDropshipQueue[beaconID] = {} end -- TODO: move to unitcreated?
+	table.insert(beaconDropshipQueue[beaconID], info)
+	--Spring.Echo("Adding dropship ", info.dropshipType, " to beacon ", beaconID, beaconPointID, "(queue length " , (#beaconDropshipQueue[beaconID]), ")")
+	-- If it's the first item in queue, start emptying
+	if #beaconDropshipQueue[beaconID] == 1 then
+		NextDropshipQueueItem(beaconID, teamID)
 	end
-	DelayCall(SpawnDropship, {unitID, teamID, dropshipType, cargo, cost}, delay)
+end
+
+function NextDropshipQueueItem(beaconID, teamID)
+	if #beaconDropshipQueue[beaconID] > 0 then
+		local item = beaconDropshipQueue[beaconID][1]
+		if item.sound then
+			GG.PlaySoundForTeam(teamID, item.sound, 1)
+		end
+		SpawnDropship(beaconID, item.target, teamID, item.dropshipType, item.cargo, item.cost)
+	end
+end
+
+function DropzoneFree(beaconID, teamID)
+	--Spring.Echo("DropzoneFree", beaconID, teamID)
+	table.remove(beaconDropshipQueue[beaconID], 1)
+	NextDropshipQueueItem(beaconID, teamID)
+end
+GG.DropzoneFree = DropzoneFree
+
+function DropshipDelivery(beaconID, beaconPointID, teamID, dropshipType, cargo, cost, sound, delay)
+	local info = {
+		["target"] = beaconPointID, 
+		["dropshipType"] = dropshipType, 
+		["cargo"] = cargo, 
+		["cost"] = cost, 
+		["sound"] = sound
+	}
+	-- TODO: check dropshipType for mech deliveries and add to front of queue?
+	DelayCall(EnqueueDropship, {beaconID, beaconPointID, teamID, info}, delay)
+	if cost then -- deduct cost immediately to give feedback to player that order was accepted
+	-- will be refunded later if it fails (e.g. beacon capped)
+		--Spring.Echo("COST!?", cost)
+		UseTeamResource(teamID, "metal", cost)
+	end
 end
 GG.DropshipDelivery = DropshipDelivery
 
@@ -181,7 +240,7 @@ GG.DropshipDelivery = DropshipDelivery
 local function SetDropZone(beaconID, teamID)
 	local currDropZone = dropZoneIDs[teamID]
 	if currDropZone then
-		ToggleUpgradeOptions(dropZoneBeaconIDs[teamID], true)
+		--ToggleUpgradeOptions(dropZoneBeaconIDs[teamID], true) -- REMOVE
 		DestroyUnit(currDropZone, false, true)
 		GG.DropshipLeft(teamID) -- reset the timer
 	end
@@ -227,6 +286,8 @@ function gadget:UnitCreated(unitID, unitDefID, teamID, builderID)
 	local unitDef = UnitDefs[unitDefID]
 	local cp = unitDef.customParams
 	if unitDefID == BEACON_ID then
+		InsertUnitCmdDesc(unitID, dropZoneCmdDesc)
+	elseif unitDefID == BEACON_POINT_ID then
 		AddUpgradeOptions(unitID)
 	elseif unitDefID == UPLINK_ID then
 		buildLimits[unitID] = {["sensor"] = 4}
@@ -248,19 +309,19 @@ function gadget:UnitDestroyed(unitID, unitDefID, teamID)
 		towerOwners[unitID] = nil
 	end
 	if DROPZONE_IDS[unitDefID] then -- unit was a team's dropzone, reset upgrade options
-		ToggleUpgradeOptions(dropZoneBeaconIDs[teamID], true)
+		--ToggleUpgradeOptions(dropZoneBeaconIDs[teamID], true) -- REMOVE
 		dropZoneIDs[teamID] = nil
 		dropZoneBeaconIDs[teamID] = nil
-	elseif outpostDefs[unitDefID] then
-		local beaconID = beaconIDs[unitID]
-		if beaconID then -- beaconID can be nil if /give testing
+	elseif upgradeDefs[unitDefID] then
+		local upgradePointID = upgradePointIDs[unitID]
+		if upgradePointID then -- beaconID can be nil if /give testing
 			GG.Delay.DelayCall(SetUnitRulesParam, {unitID, "beaconID", ""}, 5) -- delay for safety
-			env = Spring.UnitScript.GetScriptEnv(beaconID)
-			Spring.UnitScript.CallAsUnit(beaconID, env.ChangeType, false)
-			beaconIDs[unitID] = nil
-			outpostIDs[beaconID] = nil
+			env = Spring.UnitScript.GetScriptEnv(upgradePointID)
+			Spring.UnitScript.CallAsUnit(upgradePointID, env.ChangeType, false)
+			upgradePointIDs[unitID] = nil
+			upgradeIDs[upgradePointID] = nil
 			-- Re-add upgrade options to beacon
-			ToggleUpgradeOptions(beaconID, true)
+			ToggleUpgradeOptions(upgradePointID, true)
 		end
 	end
 end
@@ -283,11 +344,9 @@ end
 
 function gadget:UnitGiven(unitID, unitDefID, newTeam, oldTeam)
 	if unitDefID == BEACON_ID then
-		for outpostID, beaconID in pairs(beaconIDs) do			
-			if beaconID == unitID then
-				DelayCall(TransferUnit, {outpostID, newTeam}, 1)
-				DelayCall(SetUnitNeutral,{outpostID, newTeam == GAIA_TEAM_ID}, 2)
-			end
+		for i, upgradePointID in pairs(beaconUpgradePointIDs[unitID]) do			
+			DelayCall(TransferUnit, {upgradePointID, newTeam}, 1)
+			--DelayCall(SetUnitNeutral,{upgradePoint, newTeam == GAIA_TEAM_ID}, 2) -- REMOVE
 		end
 		if dropZoneBeaconIDs[oldTeam] == unitID and oldTeam ~= GAIA_TEAM_ID then
 			local dropZoneID = dropZoneIDs[oldTeam]
@@ -311,30 +370,32 @@ end
 
 function gadget:AllowCommand(unitID, unitDefID, teamID, cmdID, cmdParams, cmdOptions)
 	if unitDefID == BEACON_ID then
-		if upgradeIDs[cmdID] and not outpostIDs[unitID] then
+		if cmdID == dropZoneCmdDesc.id then
+			if Spring.GetUnitRulesParam(unitID, "secure") == 0 then 
+				Spring.SendMessageToTeam(teamID, "Cannot establish dropzone - Under attack!")
+				return false 
+			end
+			--ToggleUpgradeOptions(unitID, false) -- REMOVE
+			SetDropZone(unitID, teamID)
+		end
+	elseif unitDefID == BEACON_POINT_ID then
+		if upgradeCMDs[cmdID] and not upgradeIDs[unitID] then
 			if Spring.GetUnitRulesParam(unitID, "secure") == 0 then 
 				Spring.SendMessageToTeam(teamID, "Cannot upgrade beacon - Under attack!")
 				return false 
 			end
-			local upgradeDefID = upgradeIDs[cmdID]
-			local cost = outpostDefs[upgradeDefID] and outpostDefs[upgradeDefID].cost or 1000
+			local upgradeDefID = upgradeCMDs[cmdID]
+			local cost = upgradeDefs[upgradeDefID] and upgradeDefs[upgradeDefID].cost or 1000
 			if cost <= GetTeamResources(teamID, "metal") then
 				--Spring.Echo("I'm totally gonna upgrade your beacon bro!")
 				ToggleUpgradeOptions(unitID, false)
-				DropshipDelivery(unitID, teamID, "is_avenger", upgradeDefID, cost, "BB_Dropship_Inbound", DROPSHIP_DELAY)
+				DropshipDelivery(upgradePointBeaconIDs[unitID], unitID, teamID, "is_avenger", upgradeDefID, cost, "BB_Dropship_Inbound", DROPSHIP_DELAY)
 			else
 				GG.PlaySoundForTeam(teamID, "BB_Insufficient_Funds", 1)
 			end
-		elseif cmdID == dropZoneCmdDesc.id then
-			if Spring.GetUnitRulesParam(unitID, "secure") == 0 then 
-				Spring.SendMessageToTeam(teamID, "Cannot upgrade beacon - Under attack!")
-				return false 
-			end
-			ToggleUpgradeOptions(unitID, false)
-			SetDropZone(unitID, teamID)
 		elseif cmdID == CMD.SELFD then -- Disallow self-d
 			return false
-		end
+		end	
 	elseif unitDefID == UPLINK_ID or unitDefID == GARRISON_ID then
 		if cmdID < 0 then
 			local towerType = towerDefIDs[-cmdID]

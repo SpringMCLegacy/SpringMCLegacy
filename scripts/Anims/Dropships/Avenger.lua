@@ -164,8 +164,8 @@ function UnloadCargo()
 		env = Spring.UnitScript.GetScriptEnv(cargoID)
 		Spring.UnitScript.CallAsUnit(cargoID, env.Unloaded)
 		-- Let the beacon know upgrade is ready
-		env = Spring.UnitScript.GetScriptEnv(beaconID)
-		Spring.UnitScript.CallAsUnit(beaconID, env.ChangeType, true)
+		env = Spring.UnitScript.GetScriptEnv(callerID)
+		Spring.UnitScript.CallAsUnit(callerID, env.ChangeType, true)
 	end
 	-- Cargo is down, close the doors!
 	for i = 2, 3 do
@@ -197,6 +197,7 @@ function TakeOff()
 	Sleep(2000)
 	-- We're out of the atmosphere, bye bye!
 	Spring.DestroyUnit(unitID, false, true)
+	GG.DropzoneFree(beaconID, teamID)
 end
 
 function Drop()
@@ -239,7 +240,7 @@ function Drop()
 		Sleep(30)
 	end
 	-- only proceed if the beacon is still ours and is secure
-	if Spring.GetUnitTeam(beaconID) == Spring.GetUnitTeam(unitID) and Spring.GetUnitRulesParam(beaconID, "secure") == 1 then
+	if Spring.GetUnitTeam(beaconID) == teamID and Spring.GetUnitRulesParam(beaconID, "secure") == 1 then
 		-- We're over the target area, reduce height!
 		stage = 3
 		local DOOR_SPEED = math.rad(60)

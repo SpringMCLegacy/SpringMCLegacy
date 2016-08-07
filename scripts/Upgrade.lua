@@ -193,7 +193,7 @@ function Unpack()
 		end
 		WaitForTurn(ramps[6], x_axis)
 		StartThread(Blinks)
-		GG.LCLeft(unitID, teamID)
+		GG.LCLeft(nil, unitID, teamID) -- fake call, no dropship really left
 	elseif name == "upgrade_garrison" then
 		SetUnitValue(COB.INBUILDSTANCE, 1)
 		local x, y, z = Spring.GetUnitPosition(unitID)

@@ -114,6 +114,7 @@ end
 local UPLINK_UD
 local GARRISON_UD
 local BEACON_UD
+local BEACON_POINT_UD
 local UPLINK_BUILDOPTIONS = {}
 local GARRISON_BUILDOPTIONS = {}
 
@@ -319,11 +320,8 @@ for name, ud in pairs(UnitDefs) do
 		DROPZONE_UDS[side] = ud
 	end
 		
-	if name == "beacon" or cp.baseclass == "upgrade" or cp.dropship then 
-		if name == "beacon" then
-			BEACON_UD = ud 
-			ud.canselfdestruct = false
-		elseif name == "upgrade_uplink" then
+	if name:find("beacon") or cp.baseclass == "upgrade" or cp.dropship then 
+		if name == "upgrade_uplink" then
 			UPLINK_UD = ud
 		elseif name == "upgrade_garrison" then
 			GARRISON_UD = ud

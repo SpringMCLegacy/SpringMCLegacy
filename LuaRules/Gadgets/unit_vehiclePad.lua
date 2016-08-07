@@ -157,16 +157,19 @@ local function Deliver(unitID, teamID)
 		local vehName = RandomVehicle(unitID, weight, currLevel)
 		if vehName then
 			--Spring.Echo("New Vehicle:", vehName, vehiclesDefCache[UnitDefNames[vehName].id], weight)
-			GG.DropshipDelivery(unitID, teamID, levelDropships[currLevel], {{[vehName] = vehiclesDefCache[UnitDefNames[vehName].id]}}, 0, nil, 1) 
+			GG.DropshipDelivery(Spring.GetUnitRulesParam(unitID, "beaconID"), unitID, teamID, levelDropships[currLevel], {{[vehName] = vehiclesDefCache[UnitDefNames[vehName].id]}}, 0, nil, 1) 
 		else
 			--Spring.Echo("No vehicle of that weight :(")
 		end
 	end
 end
 
-function LCLeft(unitID, teamID, died) -- called by LC once it has left, to start countdown
-	if Spring.ValidUnitID(unitID) and (not Spring.GetUnitIsDead(unitID)) and (teamID == Spring.GetUnitTeam(unitID)) then
-		GG.Delay.DelayCall(Deliver, {unitID, teamID}, (died and DEATH_DELAY or 0) + delays[vehiclePadLevels[unitID]] + math.random(10) * 30)
+function LCLeft(beaconID, vPadID, teamID, died) -- called by LC once it has left, to start countdown
+	if Spring.ValidUnitID(vPadID) and (not Spring.GetUnitIsDead(vPadID)) and (teamID == Spring.GetUnitTeam(vPadID)) then
+		GG.Delay.DelayCall(Deliver, {vPadID, teamID}, (died and DEATH_DELAY or 0) + delays[vehiclePadLevels[vPadID]] + math.random(10) * 30)
+	end
+	if beaconID then -- first time is called by vpad deploying, when no dropship has actually left
+		GG.DropzoneFree(beaconID, teamID)
 	end
 end
 GG.LCLeft = LCLeft

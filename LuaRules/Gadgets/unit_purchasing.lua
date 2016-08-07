@@ -422,6 +422,7 @@ end
 -- TODO: Issues if dropzone is 'flipped' to another beacon
 function DropshipLeft(teamID) -- called by Dropship once it has left, to enable "Submit Order"
 	local unitID = teamDropZones[teamID]
+	local beaconID = GG.dropZoneBeaconIDs[teamID]
 	orderStatus[teamID] = 0
 	if unitID then -- dropzone might have died in the meantime
 		UpdateButtons(teamID)
@@ -433,6 +434,7 @@ function DropshipLeft(teamID) -- called by Dropship once it has left, to enable 
 	local enableFrame = GetGameFrame() + dropShipDef.customParams.cooldown
 	coolDowns[teamID] = enableFrame
 	Spring.SetTeamRulesParam(teamID, "DROPSHIP_COOLDOWN", enableFrame) -- frame this team can call dropship again
+	GG.DropzoneFree(beaconID, teamID)
 end
 GG.DropshipLeft = DropshipLeft
 
@@ -450,7 +452,8 @@ local function SendCommandFallback(unitID, unitDefID, teamID, cost)
 		if not orderQueue then return end -- dropzone died TODO: Transfer to new DZ if there is one
 		if #orderQueue > 0 then -- proceed with order
 			-- TODO: Sound needs to change?
-			GG.DropshipDelivery(unitID, teamID, teamDropShipTypes[teamID].def, orderQueue, 0, nil, 0)
+			local beaconID = GG.dropZoneBeaconIDs[teamID]
+			GG.DropshipDelivery(beaconID, beaconID, teamID, teamDropShipTypes[teamID].def, orderQueue, 0, nil, 0)
 			Spring.SendMessageToTeam(teamID, "Sending purchase order for the following:")
 			for i, order in ipairs(orderQueue) do
 				for orderDefID, count in pairs(order) do
