@@ -15,6 +15,7 @@ local Turret_AC10 = Tower:New{
 		barrelrecoildist = {5, 5},
 		turretturnspeed = 150,
 		elevationspeed  = 200,
+		chainfiredelays = {[2] = 200},
     },
 }
 
