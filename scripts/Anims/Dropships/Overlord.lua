@@ -60,6 +60,8 @@ function LandingGearDown()
 	end
 	WaitForMove(gears[7].joint, y_axis)
 	Turn(piece("missile_doors"), y_axis, math.rad(16), math.rad(4))
+	Move(piece("mantlet_1"), z_axis, 40, 20)
+	Move(piece("barrel_1"), z_axis, 40, 20)
 end
 
 function TouchDown()
@@ -71,6 +73,8 @@ end
 
 function LandingGearUp()
 	Turn(piece("missile_doors"), y_axis, 0, math.rad(4))
+	Move(piece("mantlet_1"), z_axis, 0, 20)
+	Move(piece("barrel_1"), z_axis, 0, 20)
 	SPEED = math.rad(40)
 
 	for i = 1, 7 do -- joint lowers and unlocks
@@ -247,7 +251,7 @@ function Drop()
 end
 
 -- CARGO CODE
-local link, pad, main_door, hanger_door, vtol_pad = piece ("link", "pad", "main_door", "hanger_door", "vtol_pad")
+local link, pad, main_door, door_struts, vtol_pad = piece ("link", "pad", "main_door", "door_struts", "vtol_pad")
 
 local WAIT_TIME = 10000
 local DOOR_SPEED = math.rad(20)
@@ -260,10 +264,9 @@ local UNLOAD_X = x + 300 * dx
 local UNLOAD_Z = z + 300 * dz
 
 function UnloadCargo()
-	Turn(main_door, x_axis, math.rad(110), DOOR_SPEED)
-	--Turn(hanger_door, y_axis, math.rad(90), DOOR_SPEED * 0.5)
+	Move(door_struts, z_axis, 25, 25)
+	Turn(main_door, x_axis, math.rad(105), DOOR_SPEED)
 	Turn(link, x_axis, math.rad(35), DOOR_SPEED * 10)
-	--Turn(vtol_pad, y_axis, math.rad(90), DOOR_SPEED * 10)
 	WaitForTurn(main_door, x_axis)
 	
 	for i, cargoID in ipairs(cargo) do
@@ -308,9 +311,9 @@ function UnloadCargo()
 		Sleep(2000)
 	end
 	Turn(main_door, x_axis, 0, DOOR_SPEED)
-	--Turn(hanger_door, y_axis, 0, DOOR_SPEED)
-	--WaitForTurn(hanger_door, y_axis)
 	WaitForTurn(main_door, x_axis)
+	Move(door_struts, z_axis, 0, 25)
+	WaitForMove(door_struts, z_axis)
 	Sleep(WAIT_TIME)
 	stage = 5 --3
 	StartThread(fx)
