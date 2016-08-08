@@ -53,6 +53,8 @@ local DAMAGE_REWARD_MULT = (modOptions and tonumber(modOptions.income_damage)) o
 Spring.SetGameRulesParam("damage_reward_mult", DAMAGE_REWARD_MULT)
 local INSURANCE_MULT = (modOptions and tonumber(modOptions.insurance)) or 0.1
 Spring.SetGameRulesParam("insurance_mult", INSURANCE_MULT)
+local SELL_MULT = (modOptions and tonumber(modOptions.sell)) or 0.75
+Spring.SetGameRulesParam("sell_mult", SELL_MULT)
 
 --local KILL_REWARD_MULT = 0.0
 -- local NUM_ICONS_PER_PAGE = 3 * 8
@@ -474,7 +476,7 @@ end
 
 local function SellUnit(unitID, unitDefID, teamID, unitType)
 	Spring.SendMessageToTeam(teamID, "Selling " .. unitType .. "!")
-	AddTeamResource(teamID, "metal", UnitDefs[unitDefID].metalCost * 0.75)
+	AddTeamResource(teamID, "metal", UnitDefs[unitDefID].metalCost * SELL_MULT)
 	-- TODO: wait around and get in dropship
 	Spring.SetUnitRulesParam(unitID, "sold", 1)
 	Spring.DestroyUnit(unitID, false, true)

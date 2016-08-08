@@ -187,7 +187,7 @@ for name, ud in pairs(UnitDefs) do
 				ud.description = ud.description .. " \255\128\026\179[MASC]"
 			end
 			table.insert(ud.weapons, {name = "sight"})
-			cp.sectorangle = cp.sectorangle or 45
+			cp.sectorangle = cp.sectorangle or modOptions.sectorangle or 45
 		end
 	end
 	-- set maxvelocity by modoption
