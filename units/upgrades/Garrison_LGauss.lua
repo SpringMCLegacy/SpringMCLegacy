@@ -27,9 +27,10 @@ local Garrison_LGauss = Tower:New{
 		barrelrecoildist = {5, 5, 5, 5},
 		turretturnspeed = 100,
 		elevationspeed  = 150,
+		chainfiredelays = {250, 0, 250, 0}
     },
 }
 
 return lowerkeys({
-	["Garrison_LGauss"] = Garrison_LGauss,
+	["Garrison_FW"] = Garrison_LGauss,
 })

@@ -26,5 +26,5 @@ local Garrison_PPCMRM = Tower:New{
 }
 
 return lowerkeys({
-	["Garrison_PPCMRM"] = Garrison_PPCMRM,
+	["Garrison_DC"] = Garrison_PPCMRM,
 })

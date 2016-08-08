@@ -31,5 +31,5 @@ local Garrison_LRM = Tower:New{
 }
 
 return lowerkeys({
-	["Garrison_LRM"] = Garrison_LRM,
+	["Garrison_CC"] = Garrison_LRM,
 })

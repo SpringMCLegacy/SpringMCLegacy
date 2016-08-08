@@ -18,7 +18,6 @@ local function Pad(...)
 	return output:sub(1,-2) -- remove trailing newline
 end
 
-
 -- Common valid() functions here:
 local function allMechs(unitDefID) return (UnitDefs[unitDefID].customParams.baseclass == "mech") end
 local function hasJumpjets(unitDefID) return (UnitDefs[unitDefID].customParams.jumpjets or false) end
@@ -323,6 +322,7 @@ return {
 		price = 10000,
 		requires = "union",
 	},
+	-- vehicle pad
 	vpadheavy = {
 		cmdDesc = {
 			id = GetCmdID('PERK_VPAD_HEAVY'),
@@ -353,5 +353,41 @@ return {
 		costFunction = deductCBills,
 		price = 10000,
 		requires = "vpadheavy",
+	},
+	-- Garrison turrets
+	garrisonsniper = {
+		cmdDesc = {
+			id = GetCmdID('PERK_GARRISON_SNIPER'),
+			action = 'perkgarrisonsniper',
+			name = Pad("Sniper", "Turret"),
+			tooltip = 'Adds a Sniper artillery cannon',
+			texture = 'bitmaps/ui/upgrade.png',	
+		},
+		valid = function (unitDefID) return UnitDefs[unitDefID].name:find("garrison") end,
+		applyPerk = function (unitID)
+			local x,y,z = Spring.GetUnitPosition(unitID)
+			local turretID = Spring.CreateUnit("garrison_sniper", x,y,z, 0, Spring.GetUnitTeam(unitID))
+			Spring.UnitAttach(unitID, turretID, 8)
+		end,
+		costFunction = deductCBills,
+		price = 10000,
+	},
+	garrisonfaction = {
+		cmdDesc = {
+			id = GetCmdID('PERK_GARRISON_FACTION'),
+			action = 'perkgarrisonfaction',
+			name = Pad("Faction", "Turret"),
+			tooltip = 'Adds a powerful faction special weapon turret',
+			texture = 'bitmaps/ui/upgrade.png',	
+		},
+		valid = function (unitDefID) return UnitDefs[unitDefID].name:find("garrison") end,
+		applyPerk = function (unitID)
+			local x,y,z = Spring.GetUnitPosition(unitID)
+			local faction = GG.teamSide[Spring.GetUnitTeam(unitID)]
+			local turretID = Spring.CreateUnit("garrison_" .. faction, x,y,z, 0, Spring.GetUnitTeam(unitID))
+			Spring.UnitAttach(unitID, turretID, 8)
+		end,
+		costFunction = deductCBills,
+		price = 10000,
 	},
 }

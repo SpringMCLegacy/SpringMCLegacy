@@ -31,5 +31,5 @@ local Garrison_RAC = Tower:New{
 }
 
 return lowerkeys({
-	["Garrison_RAC"] = Garrison_RAC,
+	["Garrison_FS"] = Garrison_RAC,
 })

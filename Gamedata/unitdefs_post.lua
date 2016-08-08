@@ -307,7 +307,7 @@ for name, ud in pairs(UnitDefs) do
 			ud.maxdamage = ud.maxdamage * 0.5
 		end
 	elseif cp.baseclass == "tower" then
-		if ud.weapons then -- turret
+		if ud.weapons and not name:find("garrison") then -- turret
 			table.insert(GARRISON_BUILDOPTIONS, name)
 		else -- sensor
 			table.insert(UPLINK_BUILDOPTIONS, name)
