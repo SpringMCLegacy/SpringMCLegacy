@@ -8,10 +8,11 @@ local Ku = LightTank:New{
 			name	= "UAC10",
 		},
 		[2] = {
-			name	= "CERLBL",
+			name	= "SSRM4",
+			maxAngleDif = 60,
 		},
 		[3] = {
-			name	= "SSRM4",
+			name	= "CERLBL",
 		},
 	},
 	
