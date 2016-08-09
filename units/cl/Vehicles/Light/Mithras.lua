@@ -8,7 +8,7 @@ local Mithras = LightTank:New{
 		},
 		[2] = {
 			name	= "CERMBL",
-			SlaveTo = 1,
+			maxAngleDif = 60,
 		},
 		[3] = {
 			name	= "UAC2",

@@ -8,6 +8,7 @@ local Zorya = LightTank:New{
 		},
 		[2] = {
 			name	= "LRM10",
+			SlaveTo = 1,
 		},
 	},
 	
@@ -19,7 +20,7 @@ local Zorya = LightTank:New{
 		heatlimit 		= 10,
 		armor			= {type = "standard", tons = 3.5},
 		maxammo 		= {ac5 = 3, lrm = 2},
-		squadsize 		= 3,
+		squadsize 		= 2,
     },
 }
 
