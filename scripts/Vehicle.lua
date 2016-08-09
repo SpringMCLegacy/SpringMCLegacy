@@ -396,7 +396,7 @@ function script.TransportPickup(cargoID)
 	Spring.UnitScript.AttachUnit(-1, cargoID)
 end
 
-local closeRange = WeaponDefs[unitDef.weapons[1].weaponDef].range * 0.9
+local closeRange = unitDef.losRadius --WeaponDefs[unitDef.weapons[1].weaponDef].range * 0.9
 	
 function script.Create()
 	-- set engagement range to weapon 1 range
