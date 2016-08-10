@@ -56,6 +56,7 @@
    [POOF02]
    {
    class=CSimpleParticleSystem;
+   alwaysVisible=1;
 
       [properties]
       {
@@ -94,7 +95,7 @@
    [POOF01]
    {
    class=CSimpleParticleSystem;
-
+alwaysVisible=1;
       [properties]
       {
 	  useairlos=1;
@@ -132,7 +133,7 @@
    [POOF03]
    {
    class=CSimpleParticleSystem;
-
+alwaysVisible=1;
       [properties]
       {
 	  useairlos=1;
@@ -170,7 +171,7 @@
 	[POOF04]
    {
    class=CSimpleParticleSystem;
-
+alwaysVisible=1;
       [properties]
       {
 	  useairlos=1;
@@ -207,6 +208,7 @@
 
    [dirt]
    {
+   alwaysVisible=1;
       [properties]
       {
 	  useairlos=1;
@@ -241,7 +243,7 @@
    [glow]
    {
    class=heatcloud;
-
+alwaysVisible=1;
       [properties]
             {
 			useairlos=1;
@@ -266,6 +268,7 @@
    [sphere] 
 	{
 		class=CSpherePartSpawner;
+		alwaysVisible=1;
 		[properties] 
 		{
 		useairlos=1;

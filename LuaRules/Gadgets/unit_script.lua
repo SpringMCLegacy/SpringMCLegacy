@@ -421,7 +421,7 @@ function Spring.UnitScript.Signal(mask)
 		end
 	else
 		for _,thread in pairs(activeUnit.threads) do
-			if (thread.signal_mask == mask and thread.container) then
+			if ((thread.signal_mask == mask or not mask) and thread.container) then
 				RemoveTableElement(thread.container, thread)
 			end
 		end

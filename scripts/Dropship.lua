@@ -297,20 +297,49 @@ function script.QueryWeapon(weaponID)
 	end
 end
 
-local dead = false
+crashing = false
 function script.HitByWeapon(x, z, weaponID, damage)
 	if damage > Spring.GetUnitHealth(unitID) then
-		if not dead then
-			dead = true
+		if not crashing then
+			crashing = true
 			for i, cargoID in ipairs(cargo) do
 				Spring.DestroyUnit(cargoID, false, true)
 			end
-			Signal(1)
-			Signal(fx)
-			Spring.MoveCtrl.SetGravity(unitID, 0.75 * GRAVITY)	
+			Signal() -- should kill ALL threads
+			--Signal(1)
+			--Signal(fx)
+			Spring.MoveCtrl.SetGravity(unitID, 1.4 * GRAVITY)	
 			Spring.MoveCtrl.SetCollideStop(unitID, true)
 			Spring.MoveCtrl.SetTrackGround(unitID, true)
 		end
 		return 0
 	end
+end
+
+function script.Killed()
+	local x,y,z = Spring.GetUnitPosition(unitID)
+	y = Spring.GetGroundHeight(x,z) + 5
+	for i = 1, 5 do
+		Spring.SpawnCEG("dropship_heavy_dust", x,y,z)
+	end
+	Spring.SpawnCEG("mech_jump_dust", x,y,z)
+	Sleep(900) -- needed for some reason?
+	-- This is a really awful hack , built on top of another hack. 
+	-- There's some issue with alwaysVisible not working (http://springrts.com/mantis/view.php?id=4483)
+	-- So instead make the owner the decal unit spawned by the teams starting beacon, as it can never die
+	local ownerID = Spring.GetTeamUnitsByDefs(teamID, UnitDefNames["decal_beacon"].id)[1] --or unitID
+	local nukeID = Spring.SpawnProjectile(WeaponDefNames["meltdown"].id, {pos = {x,y,z}, owner = ownerID, team = teamID, ttl = 20})
+	Explode(piece("hull"), SFX.SHATTER)
+	for _, turret in pairs(turrets) do
+		Explode(turret, SFX.FIRE + SFX.FALL + SFX.RECURSIVE)	
+	end
+	for _, gear in pairs(gears) do
+		Explode(gear.gear, SFX.FIRE + SFX.FALL + SFX.RECURSIVE)
+		if gear.joint then
+			Explode(gear.joint, SFX.FIRE + SFX.FALL + SFX.RECURSIVE)	
+			Explode(gear.door, SFX.FIRE + SFX.FALL + SFX.RECURSIVE)	
+		end
+	end
+	GG.SetTickets(select(6, Spring.GetTeamInfo(teamID)), 1) -- TODO: do this in flag manager instead?
+	return 0
 end

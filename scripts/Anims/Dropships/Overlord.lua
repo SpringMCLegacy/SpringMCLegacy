@@ -77,11 +77,15 @@ local function SniperOut(out)
 end
 
 function TouchDown()
-	stage = 4
-	for i = 1, 4 do
-		GG.EmitSfxName(unitID, dusts[i], "mech_jump_dust")
+	if crashing then
+		Spring.DestroyUnit(unitID, true)
+	else
+		stage = 4
+		for i = 1, 4 do
+			GG.EmitSfxName(unitID, dusts[i], "mech_jump_dust")
+		end
+		StartThread(SniperOut, true)
 	end
-	StartThread(SniperOut, true)
 end
 
 function LandingGearUp()

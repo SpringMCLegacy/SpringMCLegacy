@@ -1,5 +1,5 @@
 -- Unit-specific pieces only declared here, generic dropship pieces in main script
-local body = piece ("body")
+local body = piece ("hull")
 local cargoDoor1, cargoDoor2 = piece("cargodoor1", "cargodoor2")
 local attachment = piece("attachment")
 
@@ -30,13 +30,18 @@ function LandingGearDown()
 	WaitForMove(gears[1].gear, y_axis)
 end
 
+
 function TouchDown()
-	for i = 1, 3 do
-		GG.EmitSfxName(unitID, gears[i].gear, "mech_jump_dust")
+	if crashing then
+		Spring.DestroyUnit(unitID, true)
+	else
+		for i = 1, 3 do
+			GG.EmitSfxName(unitID, gears[i].gear, "mech_jump_dust")
+		end
+		Move(turrets[1], y_axis, 7, 3.5)
+		WaitForMove(turrets[1], y_axis)
+		noFiring = false
 	end
-	Move(turrets[1], y_axis, 7, 3.5)
-	WaitForMove(turrets[1], y_axis)
-	noFiring = false
 end
 
 function LandingGearUp()
