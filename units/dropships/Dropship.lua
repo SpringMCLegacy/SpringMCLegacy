@@ -2,6 +2,7 @@ local Union = DropShip:New{
 	objectName        	= "Dropship_Union.s3o",
 	name              	= "Union Class Dropship",
 	iconType			= "union",
+	maxDamage			= 40000,
 
 	weapons 		= {	
 		-- LBLs
@@ -177,6 +178,7 @@ local Union = DropShip:New{
 local Leopard = DropShip:New{
 	objectName        	= "IS_Leopard.s3o",
 	iconType			= "leopard",
+	maxDamage			= 20000,
 
 	weapons 		= {	
 		[1] = {
@@ -212,6 +214,7 @@ local Leopard = DropShip:New{
 local Overlord = DropShip:New{ -- TODO: DropShip:New, custom weapons etc
 	objectName        	= "Dropship_Overlord.s3o",
 	iconType			= "overlord",
+	maxDamage			= 60000,
 	
 		weapons 		= {	
 		[1] = {
