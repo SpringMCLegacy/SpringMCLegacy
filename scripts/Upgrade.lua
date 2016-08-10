@@ -25,6 +25,15 @@ local base2 = piece("base2")
 local flags = piece("flags")
 -- Seismic Sensor pieces
 local foot1, foot2, foot3, lifter, hammer, spike = piece ("foot1", "foot2", "foot3", "lifter", "hammer", "spike")
+-- Turret Control pieces
+local hatch = {}
+for i = 1, 4 do
+	hatch[i] = piece("hatch" .. i)
+end
+local pole = {}
+for i = 1, 4 do
+	pole[i] = piece("pole" .. i)
+end
 
 -- Constants
 local unitDefID = Spring.GetUnitDefID(unitID)
@@ -224,29 +233,32 @@ function Unpack()
 		Turn(foot2, x_axis, rad(90), CRATE_SPEED * 10)
 		Turn(foot3, x_axis, rad(90), CRATE_SPEED * 10)
 		Move(lifter, y_axis, 10, CRATE_SPEED * 5)
-		Move(hammer, y_axis, 7, CRATE_SPEED * 5)
 		WaitForMove(lifter, y_axis)
-		Move(hammer, y_axis, 0, CRATE_SPEED * 50)
-		WaitForMove(hammer, y_axis)
-		PlaySound("stomp")
-		GG.EmitSfxName(unitID, spike, "mech_jump_dust")
-		Move(hammer, y_axis, 7, CRATE_SPEED * 5)
-		WaitForMove(hammer, y_axis)
-		Move(hammer, y_axis, 0, CRATE_SPEED * 50)
-		WaitForMove(hammer, y_axis)
-		PlaySound("stomp")
-		GG.EmitSfxName(unitID, spike, "mech_jump_dust")
-		Move(hammer, y_axis, 7, CRATE_SPEED * 5)
-		WaitForMove(hammer, y_axis)
-		Move(hammer, y_axis, 0, CRATE_SPEED * 50)
-		WaitForMove(hammer, y_axis)
-		PlaySound("stomp")
-		GG.EmitSfxName(unitID, spike, "mech_jump_dust")
+		for i = 1,3 do
+			Move(hammer, y_axis, 7, CRATE_SPEED * 5)
+			WaitForMove(hammer, y_axis)
+			Move(hammer, y_axis, 0, CRATE_SPEED * 50)
+			WaitForMove(hammer, y_axis)
+			PlaySound("stomp")
+			GG.EmitSfxName(unitID, spike, "mech_jump_dust")
+		end
 		local x, y, z = Spring.GetUnitPosition(unitID)
 		GG.BuildMaskCircle(x, z, 460, 2)
+	elseif name == "upgrade_turretcontrol" then
+		 for i = 1,4 do
+			local signX = i <= 2 and 1 or -1
+			local signZ = (i > 1 and i < 4) and -1 or 1
+			Move(hatch[i], x_axis, 6 * signX, CRATE_SPEED * 4)
+			Move(hatch[i], z_axis, 6 * signZ, CRATE_SPEED * 4)
+			WaitForMove(hatch[4], z_axis)
+		end
+		local poleHeights = {4, 3.25, 10.5, 15.5}
+		 for i = 1, #pole do
+			Move(pole[i], y_axis, poleHeights[i], CRATE_SPEED * 5)
+		end
 	end
 	-- Let the sands of time cover the crate
-	Sleep(10000)
+	Sleep(2500)
 	Move(crate_base, y_axis, -5, CRATE_SPEED)
 	Sleep (5000)
 	RecursiveHide(crate_base, true)
