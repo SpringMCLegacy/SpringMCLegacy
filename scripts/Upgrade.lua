@@ -21,8 +21,8 @@ for i = 1, 6 do
 	ramps[i] = piece("ramp" .. i)
 	blinks[i] = piece("blink" .. i)
 end
-
-
+-- Seismic Sensor pieces
+local foot1, foot2, foot3, lifter, hammer, spike = piece ("foot1", "foot2", "foot3", "lifter", "hammer", "spike")
 
 -- Constants
 local unitDefID = Spring.GetUnitDefID(unitID)
@@ -49,6 +49,9 @@ function script.Create()
 		for i = 1, 6 do
 			Turn(ramps[i], y_axis, rad((i-1) * -60))
 		end
+	elseif foot1 then
+		Turn(foot2, y_axis, rad(-60), CRATE_SPEED * 10)
+		Turn(foot3, y_axis, rad(60), CRATE_SPEED * 10)
 	end
 	Sleep(100) -- wait a few frames
 	if not Spring.GetUnitTransporter(unitID) then
@@ -196,6 +199,31 @@ function Unpack()
 		GG.LCLeft(unitID, teamID)
 	elseif name == "upgrade_garrison" then
 		SetUnitValue(COB.INBUILDSTANCE, 1)
+		local x, y, z = Spring.GetUnitPosition(unitID)
+		GG.BuildMaskCircle(x, z, 460, 2)
+	elseif name == "upgrade_seismic" then
+		Turn(foot1, x_axis, rad(-90), CRATE_SPEED * 10)
+		Turn(foot2, x_axis, rad(90), CRATE_SPEED * 10)
+		Turn(foot3, x_axis, rad(90), CRATE_SPEED * 10)
+		Move(lifter, y_axis, 10, CRATE_SPEED * 5)
+		Move(hammer, y_axis, 7, CRATE_SPEED * 5)
+		WaitForMove(lifter, y_axis)
+		Move(hammer, y_axis, 0, CRATE_SPEED * 50)
+		WaitForMove(hammer, y_axis)
+		PlaySound("stomp")
+		GG.EmitSfxName(unitID, spike, "mech_jump_dust")
+		Move(hammer, y_axis, 7, CRATE_SPEED * 5)
+		WaitForMove(hammer, y_axis)
+		Move(hammer, y_axis, 0, CRATE_SPEED * 50)
+		WaitForMove(hammer, y_axis)
+		PlaySound("stomp")
+		GG.EmitSfxName(unitID, spike, "mech_jump_dust")
+		Move(hammer, y_axis, 7, CRATE_SPEED * 5)
+		WaitForMove(hammer, y_axis)
+		Move(hammer, y_axis, 0, CRATE_SPEED * 50)
+		WaitForMove(hammer, y_axis)
+		PlaySound("stomp")
+		GG.EmitSfxName(unitID, spike, "mech_jump_dust")
 		local x, y, z = Spring.GetUnitPosition(unitID)
 		GG.BuildMaskCircle(x, z, 460, 2)
 	end
