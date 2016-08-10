@@ -21,6 +21,8 @@ for i = 1, 6 do
 	ramps[i] = piece("ramp" .. i)
 	blinks[i] = piece("blink" .. i)
 end
+local base2 = piece("base2")
+local flags = piece("flags")
 -- Seismic Sensor pieces
 local foot1, foot2, foot3, lifter, hammer, spike = piece ("foot1", "foot2", "foot3", "lifter", "hammer", "spike")
 
@@ -44,11 +46,27 @@ local function Blinks()
 	end
 end
 
+function Upgrade(level)
+	if name == "upgrade_vehiclepad" then
+		if level == 2 then
+			Show(base2)
+			Hide(base)
+			for i = 1,6 do
+				Hide(ramps[i])
+			end
+		elseif level == 3 then
+			Show(flags)
+		end
+	end
+end
+
 function script.Create()
 	if ramps[1] then 
 		for i = 1, 6 do
 			Turn(ramps[i], y_axis, rad((i-1) * -60))
 		end
+		Hide(base2)
+		Hide(flags)
 	elseif foot1 then
 		Turn(foot2, y_axis, rad(-60), CRATE_SPEED * 10)
 		Turn(foot3, y_axis, rad(60), CRATE_SPEED * 10)

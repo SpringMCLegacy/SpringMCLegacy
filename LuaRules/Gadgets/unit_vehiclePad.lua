@@ -105,6 +105,8 @@ local function VPadUpgrade(unitID, level)
 	-- level 3 -> Repalce Heavy & Assault with House units
 	vehiclePadLevels[unitID] = level
 	--Spring.Echo("Upgrade vehiclepad (" .. unitID .. ") to level " .. level)
+	env = Spring.UnitScript.GetScriptEnv(unitID)
+	Spring.UnitScript.CallAsUnit(unitID, env.Upgrade, level)
 end
 GG.VPadUpgrade = VPadUpgrade
 
