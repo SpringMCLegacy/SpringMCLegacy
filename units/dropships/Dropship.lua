@@ -2,6 +2,7 @@ local Union = DropShip:New{
 	objectName        	= "Dropship_Union.s3o",
 	name              	= "Union Class Dropship",
 	iconType			= "union",
+	maxDamage			= 40000,
 
 	weapons 		= {	
 		-- LBLs
@@ -174,9 +175,10 @@ local Union = DropShip:New{
 	},
 }
 
-local Leopard = DropShip:New{ -- TODO: DropShip:New, custom weapons etc
+local Leopard = DropShip:New{
 	objectName        	= "IS_Leopard.s3o",
 	iconType			= "leopard",
+	maxDamage			= 20000,
 
 	weapons 		= {	
 		[1] = {
@@ -209,9 +211,10 @@ local Leopard = DropShip:New{ -- TODO: DropShip:New, custom weapons etc
 	},	
 }
 
-local Overlord = Union:New{ -- TODO: DropShip:New, custom weapons etc
+local Overlord = DropShip:New{ -- TODO: DropShip:New, custom weapons etc
 	objectName        	= "Dropship_Overlord.s3o",
 	iconType			= "overlord",
+	maxDamage			= 60000,
 	
 		weapons 		= {	
 		[1] = {
@@ -239,6 +242,7 @@ local Overlord = Union:New{ -- TODO: DropShip:New, custom weapons etc
 			maxAngleDif = 90,
 			slaveTo = 4,
 		},
+		-- emitter 6
 		[6] = {
 			name	= "LBL",
 			mainDir = "0 0 1",
@@ -262,29 +266,31 @@ local Overlord = Union:New{ -- TODO: DropShip:New, custom weapons etc
 			maxAngleDif = 90,
 			slaveTo =7,
 		},
+		-- emitter 10
 		[10] = {
 			name	= "LBL",
-			mainDir = "1 0 0",
+			mainDir = "-1 0 0",
 			maxAngleDif = 90,
 		},
 		[11] = {
 			name	= "LBL",
-			mainDir = "1 0 0",
+			mainDir = "-1 0 0",
 			maxAngleDif = 90,
 			slaveTo =10,
 		},
 		[12] = {
 			name	= "LBL",
-			mainDir = "1 0 0",
+			mainDir = "-1 0 0",
 			maxAngleDif = 90,
 			slaveTo =10,
 		},
 		[13] = {
 			name	= "LBL",
-			mainDir = "1 0 0",
+			mainDir = "-1 0 0",
 			maxAngleDif = 90,
 			slaveTo =10,
 		},
+		-- emitter 14
 		[14] = {
 			name	= "LBL",
 			mainDir = "0 0 -1",
@@ -308,26 +314,27 @@ local Overlord = Union:New{ -- TODO: DropShip:New, custom weapons etc
 			maxAngleDif = 90,
 			slaveTo =14,
 		},
+		-- emitter 18
 		[18] = {
 			name	= "LBL",
-			mainDir = "-1 0 0",
+			mainDir = "1 0 0",
 			maxAngleDif = 90,
 		},
 		[19] = {
 			name	= "LBL",
-			mainDir = "-1 0 0",
+			mainDir = "1 0 0",
 			maxAngleDif = 90,
 			slaveTo =18,
 		},
 		[20] = {
 			name	= "LBL",
-			mainDir = "-1 0 0",
+			mainDir = "1 0 0",
 			maxAngleDif = 90,
 			slaveTo =18,
 		},
 		[21] = {
 			name	= "LBL",
-			mainDir = "-1 0 0",
+			mainDir = "1 0 0",
 			maxAngleDif = 90,
 			slaveTo =18,
 		},
@@ -351,84 +358,90 @@ local Overlord = Union:New{ -- TODO: DropShip:New, custom weapons etc
 			mainDir = "-1 0 0",
 			maxAngleDif = 120,
 		},
-		[26] = {
+		-- front blister [[x y 1]] WORKING
+		[26] = { -- top
 			name	= "MPL",
 			mainDir = "0 1 1",
 			maxAngleDif = 120,
 		},
-		[27] = {
+		[27] = { -- left
 			name	= "MPL",
-			mainDir = "1 0 1",
+			mainDir = "-1 0 1",
 			maxAngleDif = 120,
 		},
-		[28] = {
+		[28] = { -- bottom
 			name	= "MPL",
 			mainDir = "0 -1 1",
 			maxAngleDif = 120,
 		},
-		[29] = {
-			name	= "MPL",
-			mainDir = "-1 0 1",
-			maxAngleDif = 120,
-		},
-		[30] = {
-			name	= "MPL",
-			mainDir = "1 1 0",
-			maxAngleDif = 120,
-		},
-		[31] = {
-			name	= "MPL",
-			mainDir = "1 0 -1",
-			maxAngleDif = 120,
-		},
-		[32] = {
-			name	= "MPL",
-			mainDir = "1 -1 0",
-			maxAngleDif = 120,
-		},
-		[33] = {
+		[29] = { -- right
 			name	= "MPL",
 			mainDir = "1 0 1",
 			maxAngleDif = 120,
 		},
-		[34] = {
-			name	= "MPL",
-			mainDir = "0 1 -1",
-			maxAngleDif = 120,
-		},
-		[35] = {
-			name	= "MPL",
-			mainDir = "1 0 -1",
-			maxAngleDif = 120,
-		},
-		[36] = {
-			name	= "MPL",
-			mainDir = "0 -1 -1",
-			maxAngleDif = 120,
-		},
-		[37] = {
-			name	= "MPL",
-			mainDir = "-1 0 -1",
-			maxAngleDif = 120,
-		},
-		[38] = {
+		-- left blister [[-1 y z]] WORKING
+		[30] = { -- top
 			name	= "MPL",
 			mainDir = "-1 1 0",
 			maxAngleDif = 120,
 		},
-		[39] = {
+		[31] = { -- rear
 			name	= "MPL",
 			mainDir = "-1 0 -1",
 			maxAngleDif = 120,
 		},
-		[40] = {
+		[32] = { -- bottom
 			name	= "MPL",
 			mainDir = "-1 -1 0",
 			maxAngleDif = 120,
 		},
-		[41] = {
+		-- Limit is currently 32 weapons so SOL for now :(
+		-- Could comment them out here but would still need to rename model pieces, not worth it
+		[33] = { -- front
 			name	= "MPL",
 			mainDir = "-1 0 1",
+			maxAngleDif = 120,
+		},
+		-- rear blister [[x y -1]]
+		[34] = { -- top
+			name	= "MPL",
+			mainDir = "0 1 -1",
+			maxAngleDif = 120,
+		},
+		[35] = { -- left
+			name	= "MPL",
+			mainDir = "1 0 -1",
+			maxAngleDif = 120,
+		},
+		[36] = { -- bottom
+			name	= "MPL",
+			mainDir = "0 -1 -1",
+			maxAngleDif = 120,
+		},
+		[37] = { -- right
+			name	= "MPL",
+			mainDir = "-1 0 -1",
+			maxAngleDif = 120,
+		},
+		-- right blister [[1 y z]]
+		[38] = { -- top
+			name	= "MPL",
+			mainDir = "1 1 0",
+			maxAngleDif = 120,
+		},
+		[39] = { -- rear
+			name	= "MPL",
+			mainDir = "1 0 -1",
+			maxAngleDif = 120,
+		},
+		[40] = { -- bottom
+			name	= "MPL",
+			mainDir = "1 -1 0",
+			maxAngleDif = 120,
+		},
+		[41] = { -- front
+			name	= "MPL",
+			mainDir = "1 0 1",
 			maxAngleDif = 120,
 		},
 	},
@@ -436,6 +449,12 @@ local Overlord = Union:New{ -- TODO: DropShip:New, custom weapons etc
 	customparams = {
 		maxtonnage		= 400,
 		cooldown		= 50 * 30,
+		barrelrecoildist = 	{[1] = 50, -- Sniper
+							 [2] = 5, -- AC10
+							 [3] = 5, -- AC10
+							 [4] = 5, -- AC10
+							 [5] = 5, -- AC10
+							},
 		-- droptime
 	},	
 }

@@ -47,6 +47,10 @@ local barrels = {}
 local launchers = {}
 local launchPoints = {}
 local currPoints = {}
+local spinPieces = {}
+local spinPiecesState = {}
+
+local playerDisabled = {}
 for weaponID = 1, info.numWeapons do
 	if missileWeaponIDs[weaponID] then
 		if launcherIDs[weaponID] then
@@ -57,16 +61,22 @@ for weaponID = 1, info.numWeapons do
 		for i = 1, burstLengths[weaponID] do
 			launchPoints[weaponID][i] = piece("launchpoint_" .. weaponID .. "_" .. i)
 		end	
-	else
+	elseif weaponID then
 		flares[weaponID] = piece ("flare_" .. weaponID)
 	end
 	if info.mantletIDs[weaponID] then
 		mantlets[weaponID] = piece("mantlet_" .. weaponID)
 	end
-	if info.barrelIDs[weaponID] then
+	if spinSpeeds[weaponID] then
+		spinPieces[weaponID] = piece("barrels_" .. weaponID)
+		spinPiecesState[weaponID] = false
+	elseif info.barrelIDs[weaponID] then
 		barrels[weaponID] = piece("barrel_" .. weaponID)
 	end
+	playerDisabled[weaponID] = false
+	SetUnitRulesParam(unitID, "weapon_" .. weaponID, "active")
 end
+
 
 -- Constants
 local DROP_HEIGHT = 10000
@@ -101,6 +111,16 @@ local SPEED = math.rad(150)
 function TouchDown()
 	stage = 3
 	FACING = select(2, Spring.UnitScript.GetPieceRotation(base)) or 0 -- TODO: Discover how this can be nil?
+end
+
+function RealBoy()
+	StartThread(SmokeUnit, {base, turret})
+	noFiring = false
+	Spring.SetUnitNeutral(unitID, false)
+	Spring.SetUnitStealth(unitID, false)
+	Spring.SetUnitSensorRadius(unitID, "los", unitDef.losRadius)
+	Spring.SetUnitSensorRadius(unitID, "los", unitDef.airLosRadius)
+	Spring.SetUnitSensorRadius(unitID, "radar", unitDef.radarRadius)
 end
 
 function fx()
@@ -148,17 +168,15 @@ function fx()
 			WaitForTurn(mantlets[1], x_axis)
 		end
 		-- Start acting like a real boy
-		StartThread(SmokeUnit, {base, turret})
-		noFiring = false
-		Spring.SetUnitNeutral(unitID, false)
-		Spring.SetUnitStealth(unitID, false)
-		Spring.SetUnitSensorRadius(unitID, "los", unitDef.losRadius)
-		Spring.SetUnitSensorRadius(unitID, "los", unitDef.airLosRadius)
-		Spring.SetUnitSensorRadius(unitID, "radar", unitDef.radarRadius)
+		RealBoy()
 	end
 end
 
 function script.Create()
+	if unitDef.name:find("garrison") then
+		TouchDown()
+		RealBoy()
+	else
 	-- Pre-setup
 	if mantlets[1] then 
 		Turn(mantlets[1], x_axis, math.rad(-90))
@@ -212,34 +230,87 @@ function script.Create()
 		Spring.MoveCtrl.SetVelocity(unitID, 0, sy * 0.8, 0)
 	end	
 	Spring.MoveCtrl.SetGravity(unitID, -0.01 * GRAVITY)
+	end
 end
 
+local function SpinBarrels(weaponID, start)
+	Signal(spinSpeeds)
+	SetSignalMask(spinSpeeds)
+	if start then
+		for weaponID, spinPiece in pairs(spinPieces) do
+			Spin(spinPiece, z_axis, spinSpeeds[weaponID], spinSpeeds[weaponID] / 5)
+		end
+	else
+		Sleep(2500)
+		for weaponID, spinPiece in pairs(spinPieces) do
+			StopSpin(spinPiece, z_axis, spinSpeeds[weaponID]/10)
+		end
+	end
+	for weaponID, spinPiece in pairs(spinPieces) do
+		spinPiecesState[weaponID] = start -- must come after the Sleep
+	end
+end
 
+local function WeaponCanFire(weaponID)
+	if playerDisabled[weaponID] then
+		return false
+	end
+	--[[if mainTurretIDs[weaponID] and limbHPs["turret"] <= 0 then
+		return false
+	end]]
+	if amsIDs[weaponID] then -- check AMS after limbs
+		return true
+	end
+	--[[if jammableIDs[weaponID] and not activated then
+		return false
+	end]]
+	--local ammoType = ammoTypes[weaponID]
+	--[[if ammoType and (currAmmo[ammoType] or 0) < (burstLengths[weaponID] or 0) then
+		if spinSpeeds[weaponID] then
+			StartThread(SpinBarrels, weaponID, false)
+		end
+		SetUnitRulesParam(unitID, "outofammo", 1)
+		return false
+	else]]
+		if spinSpeeds[weaponID] and not spinPiecesState[weaponID] then
+			StartThread(SpinBarrels, weaponID, true)
+		end
+		Sleep(info.chainFireDelays[weaponID])
+		return true
+	--end
+end
+		
 function script.AimWeapon(weaponID, heading, pitch)
 	if noFiring then return false end
 	Signal(2 ^ weaponID) -- 2 'to the power of' weapon ID
 	SetSignalMask(2 ^ weaponID)
-	
+
 	Turn(turret, y_axis, heading - FACING, TURRET_SPEED)
+	
 	if mantlets[weaponID] then
-		Turn(mantlets[weaponID], x_axis, -pitch, TURRET_SPEED)
-	elseif missileWeaponIDs[weaponID] then
+		Turn(mantlets[weaponID], x_axis, -pitch, ELEVATION_SPEED)
+	elseif missileWeaponIDs[weaponID] then -- yeah it happens if, in this case, launchpoint_1_# are attached to launcher_1 but launchpoint_2_# and 3 are attached to launcher_1 as well
 		if launchers[weaponID] then
 			Turn(launchers[weaponID], x_axis, -pitch, ELEVATION_SPEED)
+		elseif weaponID > 1 and launchers[1] then
+			Turn(launchers[1], x_axis, -pitch, ELEVATION_SPEED)
 		else
 			for i = 1, burstLengths[weaponID] do
 				Turn(launchPoints[weaponID][i], x_axis, -pitch, ELEVATION_SPEED)
 			end
 		end
-	else
+	elseif flares[weaponID] then -- TODO: 'else' should be sufficient here
 		Turn(flares[weaponID], x_axis, -pitch, ELEVATION_SPEED)
 	end
 	WaitForTurn(turret, y_axis)
 	if mantlets[weaponID] then
 		WaitForTurn(mantlets[weaponID], x_axis)
 	end
-	Sleep(100 * weaponID) -- desync barrels to fire independently
-	return true
+	if launchers[weaponID] then
+		WaitForTurn(launchers[weaponID], x_axis)
+	end
+	--StartThread(RestoreAfterDelay)
+	return WeaponCanFire(weaponID)
 end
 
 function script.BlockShot(weaponID, targetID, userTarget)
@@ -256,7 +327,10 @@ function script.BlockShot(weaponID, targetID, userTarget)
 				distance = GetUnitDistanceToPoint(unitID, tx, ty, tz, false)
 			end
 		end
-		if distance < minRange then return true end
+		if distance < minRange then 
+			--Spring.Echo("Can't fire weapon " .. weaponID .. " as target is within minimum range")
+			return true 
+		end
 	end
 	local jammable = jammableIDs[weaponID]
 	if jammable then
@@ -271,6 +345,7 @@ function script.BlockShot(weaponID, targetID, userTarget)
 			end
 		end
 	end
+	--Spring.Echo(unitID, weaponID, "Weapon is allowed to fire by BlockShot")
 	return false
 end
 
@@ -280,6 +355,10 @@ function script.FireWeapon(weaponID)
 		WaitForMove(barrels[weaponID], z_axis)
 		Move(barrels[weaponID], z_axis, 0, 10)
 	end
+	--[[local ammoType = ammoTypes[weaponID]
+	if ammoType then
+		ChangeAmmo(ammoType, -burstLengths[weaponID])
+	end]]
 	if not missileWeaponIDs[weaponID] and not flareOnShots[weaponID] then
 		EmitSfx(flares[weaponID], SFX.CEG + weaponID)
 	end
@@ -287,13 +366,19 @@ end
 
 function script.Shot(weaponID)
 	if missileWeaponIDs[weaponID] then
-		EmitSfx(launchPoints[weaponID][currPoints[weaponID]], SFX.CEG + weaponID)
+		EmitSfx(launchPoints[weaponID][currPoints[weaponID]] or launchPoints[weaponID][1], SFX.CEG + weaponID)
         currPoints[weaponID] = currPoints[weaponID] + 1
         if currPoints[weaponID] > burstLengths[weaponID] then 
 			currPoints[weaponID] = 1
         end
-	elseif flareOnShots[weaponID] then
+	elseif flareOnShots[weaponID] and flares[weaponID] then
 		EmitSfx(flares[weaponID], SFX.CEG + weaponID)
+	end
+end
+
+function script.EndBurst(weaponID)
+	if spinSpeeds[weaponID] then
+		StartThread(SpinBarrels, weaponID, false)
 	end
 end
 
@@ -303,9 +388,11 @@ end
 
 function script.QueryWeapon(weaponID) 
 	if missileWeaponIDs[weaponID] then
-		return launchPoints[weaponID][currPoints[weaponID]]
+		return launchPoints[weaponID][currPoints[weaponID]] or launchPoints[weaponID][1]
+	elseif weaponID == info.numWeapons + 1 then -- Sight
+		return cockpit
 	else
-		return flares[weaponID]
+		return flares[weaponID] or torso
 	end
 end
 

@@ -1,5 +1,5 @@
 -- Unit-specific pieces only declared here, generic dropship pieces in main script
-local body = piece ("body")
+local body = piece ("hull")
 local cargoDoor1, cargoDoor2 = piece("cargodoor1", "cargodoor2")
 local attachment = piece("attachment")
 
@@ -21,6 +21,15 @@ function Setup()
 	noFiring = true
 end
 
+function TurretOut(out)
+	Signal(1)
+	Turn(turrets[1], y_axis, 0, TURRET_SPEED)
+	WaitForTurn(turrets[1], y_axis)
+	Move(turrets[1], y_axis, out and 7 or 0, 5)
+	WaitForMove(turrets[1], y_axis)
+	noFiring = not out
+end
+
 function LandingGearDown()
 	Move(gears[1].gear, y_axis, -20, 3)
 	for i = 2, 3 do
@@ -28,22 +37,21 @@ function LandingGearDown()
 	end
 	Turn(gears[1].gear, x_axis, math.rad(9), math.rad(3))
 	WaitForMove(gears[1].gear, y_axis)
+	StartThread(TurretOut, true)
 end
 
 function TouchDown()
-	for i = 1, 3 do
-		GG.EmitSfxName(unitID, gears[i].gear, "mech_jump_dust")
+	if crashing then
+		Spring.DestroyUnit(unitID, true)
+	else
+		for i = 1, 3 do
+			GG.EmitSfxName(unitID, gears[i].gear, "mech_jump_dust")
+		end
 	end
-	Move(turrets[1], y_axis, 7, 3.5)
-	WaitForMove(turrets[1], y_axis)
-	noFiring = false
 end
 
 function LandingGearUp()
-	noFiring = true
-	Turn(turrets[1], y_axis, 0, TURRET_SPEED)
-	WaitForTurn(turrets[1], y_axis)
-	Move(turrets[1], y_axis, 0, 2)
+	StartThread(TurretOut, false)
 	Move(gears[1].gear, y_axis, 0, 5)
 	Turn(gears[1].gear, x_axis, 0, math.rad(3))
 	for i = 2, 3 do
@@ -200,7 +208,7 @@ function TakeOff()
 end
 
 local WAIT_TIME = 10000
-local DOOR_SPEED = math.rad(20)
+local DOOR_SPEED = math.rad(90)
 local x, _ ,z = Spring.GetUnitPosition(unitID)
 
 local cargoLeft
@@ -213,7 +221,7 @@ function UnloadMech(i)
 		Spring.UnitScript.CallAsUnit(cargo[i], env.script.StartMoving, false)
 	end
 	local currUnitDef = UnitDefs[Spring.GetUnitDefID(cargo[i])]
-	local moveSpeed = currUnitDef.speed * 0.5
+	local moveSpeed = currUnitDef.speed * 1.2
 	-- Move to the ramp
 	Move(links[i], x_axis, (i <= 2 and 1 or -1) * 50, moveSpeed)
 	WaitForMove(links[i], x_axis)
@@ -231,7 +239,7 @@ function UnloadMech(i)
 	--Spring.MarkerAddPoint(UNLOAD_X, 0, UNLOAD_Z)
 	cargoLeft = cargoLeft - 1
 	Sleep(1000)
-	Turn(doors[i], z_axis, 0, DOOR_SPEED)
+	Turn(doors[i], z_axis, 0, DOOR_SPEED/3)
 	WaitForTurn(doors[i], z_axis)
 	if cargoLeft == 0 then -- This was the last mech out
 		Sleep(2000)
@@ -295,7 +303,7 @@ function Drop()
 	while dist > 1 do
 		dist = GetUnitDistanceToPoint(unitID, TX, 0, TZ, false)
 		--Spring.Echo("dist", dist)
-		Spring.MoveCtrl.SetRelativeVelocity(unitID, 0, 0, math.max(dist/50, 2))
+		Spring.MoveCtrl.SetRelativeVelocity(unitID, 0, 0, math.max(dist/50, 4))
 		Sleep(30)
 	end
 	-- only proceed if the beacon is still ours and is secure
@@ -306,7 +314,7 @@ function Drop()
 		local wantedHeight = GY
 		local dist = select(2, Spring.GetUnitPosition(unitID)) - GY
 		while (dist > 0) do
-			Spring.MoveCtrl.SetRelativeVelocity(unitID, 0, -math.max(0.33, vertSpeed * dist/300), 0)
+			Spring.MoveCtrl.SetRelativeVelocity(unitID, 0, -math.max(2, vertSpeed * dist/300), 0)
 			Sleep(10)
 			dist = select(2, Spring.GetUnitPosition(unitID)) - wantedHeight
 		end

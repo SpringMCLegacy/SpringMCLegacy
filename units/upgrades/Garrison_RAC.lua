@@ -1,35 +1,35 @@
-local Garrison_LGauss = Tower:New{
-	description         = "Quad Light Gauss",
-	buildCostMetal      = 18000,
+local Garrison_RAC = Tower:New{
+	description         = "Quad RAC/5",
+	buildCostMetal      = 19000,
 
 	weapons	= {	
 		[1] = {
-			name	= "LightGauss",
+			name	= "RAC5",
 			OnlyTargetCategory = "notbeacon",
 		},
 		[2] = {
-			name	= "LightGauss",
+			name	= "RAC5",
 			OnlyTargetCategory = "notbeacon",
 			SlaveTo = 1,
 		},
 		[3] = {
-			name	= "LightGauss",
+			name	= "RAC5",
 			OnlyTargetCategory = "notbeacon",
 			SlaveTo = 1,
 		},
 		[4] = {
-			name	= "LightGauss",
+			name	= "RAC5",
 			OnlyTargetCategory = "notbeacon",
 			SlaveTo = 1,
 		},
 	},
 	customparams = {
-		barrelrecoildist = {5, 5, 5, 5},
+		--barrelrecoildist = {[1] = 5},
 		turretturnspeed = 100,
 		elevationspeed  = 150,
     },
 }
 
 return lowerkeys({
-	["Garrison_LGauss"] = Garrison_LGauss,
+	["Garrison_FS"] = Garrison_RAC,
 })

@@ -8,7 +8,9 @@ for i = 1,info.numDusts do
 end
 
 function WeaponCanFire(weaponID)
-	return missileWeaponIDs[weaponID] and stage == 4 or true
+	if missileWeaponIDs[weaponID] then return stage == 4
+	else return true
+	end
 end
 
 
@@ -34,9 +36,7 @@ function Setup()
 	end
 	-- 1, 3, 5, 7 -> 2n - 1, .'. (id + 1)/2
 	for id, trackEmitter in pairs(trackEmitters) do
-		if id % 2 == 1 then -- only the first time for each pair
-			Turn(trackEmitter, y_axis, math.rad(90 * ((id + 1)/2 - 1)))
-		end
+		Turn(trackEmitter, y_axis, math.rad(90 * ((id + 1)/2 - 1)))
 	end
 end
 
@@ -67,9 +67,13 @@ function LandingGearDown()
 end
 
 function TouchDown()
-	stage = 4
-	for i = 1, 4 do
-		GG.EmitSfxName(unitID, dusts[i], "mech_jump_dust")
+	if crashing then
+		Spring.DestroyUnit(unitID, true)
+	else
+		stage = 4
+		for i = 1, 4 do
+			GG.EmitSfxName(unitID, dusts[i], "mech_jump_dust")
+		end
 	end
 end
 

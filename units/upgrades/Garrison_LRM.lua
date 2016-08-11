@@ -1,24 +1,24 @@
-local Garrison_RAC = Tower:New{
-	description         = "Quad RAC/5",
-	buildCostMetal      = 19000,
+local Garrison_LRM = Tower:New{
+	description         = "Quad LRM-20",
+	buildCostMetal      = 20000,
 
 	weapons	= {	
 		[1] = {
-			name	= "RAC5",
+			name	= "LRM20",
 			OnlyTargetCategory = "notbeacon",
 		},
 		[2] = {
-			name	= "RAC5",
+			name	= "LRM20",
 			OnlyTargetCategory = "notbeacon",
 			SlaveTo = 1,
 		},
 		[3] = {
-			name	= "RAC5",
+			name	= "LRM20",
 			OnlyTargetCategory = "notbeacon",
 			SlaveTo = 1,
 		},
 		[4] = {
-			name	= "RAC5",
+			name	= "LRM20",
 			OnlyTargetCategory = "notbeacon",
 			SlaveTo = 1,
 		},
@@ -31,5 +31,5 @@ local Garrison_RAC = Tower:New{
 }
 
 return lowerkeys({
-	["Garrison_RAC"] = Garrison_RAC,
+	["Garrison_CC"] = Garrison_LRM,
 })

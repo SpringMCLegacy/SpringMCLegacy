@@ -21,8 +21,19 @@ for i = 1, 6 do
 	ramps[i] = piece("ramp" .. i)
 	blinks[i] = piece("blink" .. i)
 end
-
-
+local base2 = piece("base2")
+local flags = piece("flags")
+-- Seismic Sensor pieces
+local foot1, foot2, foot3, lifter, hammer, spike = piece ("foot1", "foot2", "foot3", "lifter", "hammer", "spike")
+-- Turret Control pieces
+local hatch = {}
+for i = 1, 4 do
+	hatch[i] = piece("hatch" .. i)
+end
+local pole = {}
+for i = 1, 4 do
+	pole[i] = piece("pole" .. i)
+end
 
 -- Constants
 local unitDefID = Spring.GetUnitDefID(unitID)
@@ -44,11 +55,30 @@ local function Blinks()
 	end
 end
 
+function Upgrade(level)
+	if name == "upgrade_vehiclepad" then
+		if level == 2 then
+			Show(base2)
+			Hide(base)
+			for i = 1,6 do
+				Hide(ramps[i])
+			end
+		elseif level == 3 then
+			Show(flags)
+		end
+	end
+end
+
 function script.Create()
 	if ramps[1] then 
 		for i = 1, 6 do
 			Turn(ramps[i], y_axis, rad((i-1) * -60))
 		end
+		Hide(base2)
+		Hide(flags)
+	elseif foot1 then
+		Turn(foot2, y_axis, rad(-60), CRATE_SPEED * 10)
+		Turn(foot3, y_axis, rad(60), CRATE_SPEED * 10)
 	end
 	Sleep(100) -- wait a few frames
 	if not Spring.GetUnitTransporter(unitID) then
@@ -184,9 +214,6 @@ function Unpack()
 		end
 		Turn(antennabase, y_axis, rad(RANDOM_ROT), CRATE_SPEED)
 		WaitForTurn(antennabase, y_axis)
-		SetUnitValue(COB.INBUILDSTANCE, 1)
-		local x, y, z = Spring.GetUnitPosition(unitID)
-		GG.BuildMaskCircle(x, z, 460, 2)
 	elseif name == "upgrade_vehiclepad" then
 		for i = 1, 6 do
 			Turn(ramps[i], x_axis, rad(-115), CRATE_SPEED)
@@ -195,12 +222,44 @@ function Unpack()
 		StartThread(Blinks)
 		GG.LCLeft(nil, unitID, teamID) -- fake call, no dropship really left
 	elseif name == "upgrade_garrison" then
+		-- nothing special
+	elseif name == "upgrade_seismic" then
+		Turn(foot1, x_axis, rad(-90), CRATE_SPEED * 10)
+		Turn(foot2, x_axis, rad(90), CRATE_SPEED * 10)
+		Turn(foot3, x_axis, rad(90), CRATE_SPEED * 10)
+		Move(lifter, y_axis, 10, CRATE_SPEED * 5)
+		WaitForMove(lifter, y_axis)
+		for i = 1,3 do
+			Move(hammer, y_axis, 7, CRATE_SPEED * 5)
+			WaitForMove(hammer, y_axis)
+			Move(hammer, y_axis, 0, CRATE_SPEED * 50)
+			WaitForMove(hammer, y_axis)
+			PlaySound("stomp")
+			GG.EmitSfxName(unitID, spike, "mech_jump_dust")
+		end
+		local x, y, z = Spring.GetUnitPosition(unitID)
+		GG.BuildMaskCircle(x, z, 460, 2)
+	elseif name == "upgrade_turretcontrol" then
+		 for i = 1,4 do
+			local signX = i <= 2 and 1 or -1
+			local signZ = (i > 1 and i < 4) and -1 or 1
+			Move(hatch[i], x_axis, 6 * signX, CRATE_SPEED * 4)
+			Move(hatch[i], z_axis, 6 * signZ, CRATE_SPEED * 4)
+			WaitForMove(hatch[4], z_axis)
+		end
+		local poleHeights = {4, 3.25, 10.5, 15.5}
+		 for i = 1, #pole do
+			Move(pole[i], y_axis, poleHeights[i], CRATE_SPEED * 5)
+		end
+		WaitForMove(pole[#pole], y_axis)
+		Spin(pole[1], y_axis, math.rad(20), math.rad(5))
 		SetUnitValue(COB.INBUILDSTANCE, 1)
+		-- TODO: This should be parent beacon location not our own
 		local x, y, z = Spring.GetUnitPosition(unitID)
 		GG.BuildMaskCircle(x, z, 460, 2)
 	end
 	-- Let the sands of time cover the crate
-	Sleep(10000)
+	Sleep(2500)
 	Move(crate_base, y_axis, -5, CRATE_SPEED)
 	Sleep (5000)
 	RecursiveHide(crate_base, true)

@@ -121,15 +121,11 @@ TURRET_SPEED = math.rad(30)
 ELEVATION_SPEED = math.rad(60)
 
 -- weapons pieces
-trackEmitters = {}
-for i = 1, 7, 2 do -- TODO: setup a table in lus_helper
-	trackEmitters[i] = piece("laser_emitter_" .. i)
-	trackEmitters[i+1] = trackEmitters[i]
-end
 
+-- non local as moved in Setup()
 turrets = {}
+trackEmitters = {} 
 local flares = {}
---local turrets = info.turrets
 
 local mantlets = {}
 local barrels = {}
@@ -137,7 +133,7 @@ local launchers = {}
 local launchPoints = {}
 local currPoints = {}
 local missileSignals = {}
-local amsSignal = {}
+local extraSignals = {}
 
 for weaponID = 1, info.numWeapons do
 	if missileWeaponIDs[weaponID] then
@@ -152,8 +148,11 @@ for weaponID = 1, info.numWeapons do
 				launchPoints[weaponID][i] = piece("launchpoint_" .. weaponID .. "_" .. i)
 			end	
 		end
-	elseif weaponID then
+	elseif weaponID then -- TODO: should just be else?
 		flares[weaponID] = piece ("flare_" .. weaponID)
+		if weaponID > 25 then
+			extraSignals[weaponID] = {}
+		end
 	end
 	if info.turretIDs[weaponID] then
 		turrets[weaponID] = piece("turret_" .. weaponID)
@@ -163,6 +162,9 @@ for weaponID = 1, info.numWeapons do
 	end
 	if info.barrelIDs[weaponID] then
 		barrels[weaponID] = piece("barrel_" .. weaponID)
+	end
+	if info.trackEmitterIDs[weaponID] then
+		trackEmitters[weaponID] = piece("emitter_" .. weaponID)
 	end
 end
 
@@ -184,22 +186,22 @@ function script.AimWeapon(weaponID, heading, pitch)
 		Signal(missileSignals[weaponID])
 		SetSignalMask(missileSignals[weaponID])
 	else -- LAMS
-		Signal(amsSignal)
-		SetSignalMask(amsSignal)
+		Signal(extraSignals[weaponID])
+		SetSignalMask(extraSignals[weaponID])
 	end
 	if amsIDs[weaponID] then 
 		return true
 	end
 	-- use a weapon-specific turret if it exists
 	if trackEmitters[weaponID] then -- LBLs
-		if weaponID % 2 == 1 then -- only first in each pair
-			Turn(trackEmitters[weaponID], y_axis, heading, TURRET_SPEED) -- + math.rad(90 * (weaponID - 1)/2), TURRET_SPEED)
-			WaitForTurn(trackEmitters[weaponID], y_axis)
-		end
+		Turn(trackEmitters[weaponID], y_axis, heading, TURRET_SPEED)
+		WaitForTurn(trackEmitters[weaponID], y_axis)
 	elseif turrets[weaponID] then
 		Turn(turrets[weaponID], y_axis, heading, TURRET_SPEED)
 	elseif mainTurretIDs[weaponID] then -- otherwise use main
 		Turn(turret, y_axis, heading, TURRET_SPEED)
+	elseif weaponProgenitors[weaponID] then
+		-- no-op, we let the progenitor do heading aiming
 	elseif flares[weaponID] then
 		Turn(flares[weaponID], y_axis, heading)
 	end
@@ -297,20 +299,49 @@ function script.QueryWeapon(weaponID)
 	end
 end
 
-local dead = false
+crashing = false
 function script.HitByWeapon(x, z, weaponID, damage)
 	if damage > Spring.GetUnitHealth(unitID) then
-		if not dead then
-			dead = true
+		if not crashing then
+			crashing = true
 			for i, cargoID in ipairs(cargo) do
 				Spring.DestroyUnit(cargoID, false, true)
 			end
-			Signal(1)
-			Signal(fx)
-			Spring.MoveCtrl.SetGravity(unitID, 0.75 * GRAVITY)	
+			Signal() -- should kill ALL threads
+			--Signal(1)
+			--Signal(fx)
+			Spring.MoveCtrl.SetGravity(unitID, 1.4 * GRAVITY)	
 			Spring.MoveCtrl.SetCollideStop(unitID, true)
 			Spring.MoveCtrl.SetTrackGround(unitID, true)
 		end
 		return 0
 	end
+end
+
+function script.Killed()
+	local x,y,z = Spring.GetUnitPosition(unitID)
+	y = Spring.GetGroundHeight(x,z) + 5
+	for i = 1, 5 do
+		Spring.SpawnCEG("dropship_heavy_dust", x,y,z)
+	end
+	Spring.SpawnCEG("mech_jump_dust", x,y,z)
+	Sleep(900) -- needed for some reason?
+	-- This is a really awful hack , built on top of another hack. 
+	-- There's some issue with alwaysVisible not working (http://springrts.com/mantis/view.php?id=4483)
+	-- So instead make the owner the decal unit spawned by the teams starting beacon, as it can never die
+	local ownerID = Spring.GetTeamUnitsByDefs(teamID, UnitDefNames["decal_beacon"].id)[1] --or unitID
+	local nukeID = Spring.SpawnProjectile(WeaponDefNames["meltdown"].id, {pos = {x,y,z}, owner = ownerID, team = teamID, ttl = 20})
+	Explode(piece("hull"), SFX.SHATTER)
+	for _, turret in pairs(turrets) do
+		Explode(turret, SFX.FIRE + SFX.FALL + SFX.RECURSIVE)	
+	end
+	for _, gear in pairs(gears) do
+		Explode(gear.gear, SFX.FIRE + SFX.FALL + SFX.RECURSIVE)
+		if gear.joint then
+			Explode(gear.joint, SFX.FIRE + SFX.FALL + SFX.RECURSIVE)	
+			Explode(gear.door, SFX.FIRE + SFX.FALL + SFX.RECURSIVE)	
+		end
+	end
+	GG.SetTickets(select(6, Spring.GetTeamInfo(teamID)), 1) -- TODO: do this in flag manager instead?
+	return 0
 end

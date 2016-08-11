@@ -71,6 +71,7 @@ local function UpdateRemaining(unitID, newLevel, price)
 	end
 end
 
+
 function gadget:Initialize()
 	-- Support /luarules reload
 	for _,unitID in ipairs(Spring.GetAllUnits()) do

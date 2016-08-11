@@ -39,7 +39,7 @@ local sidedata = {
 		shortName = "WF",
 		startUnit = "beacon",
 	},
-	{
+--[[	{
 		name = "Clan Hells Horses",
 		shortName = "HH",
 		startUnit = "beacon",
@@ -58,7 +58,7 @@ local sidedata = {
 		name = "Clan Smoke Jaguar",
 		shortName = "SJ",
 		startUnit = "beacon",
-	},
+	},]]
 	
 }
 return sidedata

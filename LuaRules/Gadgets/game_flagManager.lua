@@ -128,7 +128,8 @@ function DecrementTickets(allyTeam)
 		tickets[allyTeam] = tickets[allyTeam] - 1
 		--Spring.Echo("AllyTeam " .. allyTeam .. "[".. beaconsPerAllyTeam[allyTeam] .. "] lost 1 ticket (" .. tickets[allyTeam] .. ")")
 		SetGameRulesParam("tickets" .. allyTeam, tickets[allyTeam], {public = true})
-	elseif tickets[allyTeam] == 0 then
+	end
+	if tickets[allyTeam] == 0 then
 		if allyTeamAlive[allyTeam] then
 			local teams = Spring.GetTeamList(allyTeam)
 			for i = 1, #teams do
@@ -399,6 +400,11 @@ function gadget:UnitCreated(unitID, unitDefID, unitTeam, builderID)
 	end
 end
 
+function SetTickets(allyTeam, amount)
+	tickets[allyTeam] = math.min(amount, tickets[allyTeam])
+	DecrementTickets(allyTeam)
+end
+GG.SetTickets = SetTickets
 
 function CheckAllyTeamUnits(unitTeam)
 	if unitTeam == GAIA_TEAM_ID then return end -- Gaia does not have tickets
@@ -412,8 +418,7 @@ function CheckAllyTeamUnits(unitTeam)
 		-- If it was, this implies they lost all beacons and DZ so can't get any more
 		if allyTeamUnitCount == 0 then
 			-- Therefore deduct (nearly) all their remaining tickets
-			tickets[allyTeam] = math.min(5, tickets[allyTeam])
-			DecrementTickets(allyTeam)
+			SetTickets(allyTeam, 5)
 		end
 	end
 end
