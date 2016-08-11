@@ -649,6 +649,7 @@ function gadget:UnitDamaged(unitID, unitDefID, teamID, damage, paralyzer, weapon
 end
 
 function gadget:UnitDestroyed(unitID, unitDefID, teamID, attackerID, attackerDefID, attackerTeam)
+	Spring.Echo("HERPA", UnitDefs[unitDefID].name)
 	if dropZones[unitID] then -- dropZone switched
 		-- clear the order
 		if dropShipStatus[teamID] == 2 then
@@ -673,7 +674,10 @@ function gadget:UnitDestroyed(unitID, unitDefID, teamID, attackerID, attackerDef
 end
 
 function gadget:UnitGiven(unitID, unitDefID, newTeam, oldTeam)
-	gadget:UnitDestroyed(unitID, unitDefID, oldTeam)
+	--gadget:UnitDestroyed(unitID, unitDefID, oldTeam)
+	if unitTypes[unitDefID] then
+		UpdateTeamSlots(oldTeam, unitID, unitDefID, false)
+	end
 	if newTeam ~= GAIA_TEAM_ID then
 		gadget:UnitCreated(unitID, unitDefID, newTeam)
 		if unitDefID == C3_ID then

@@ -241,7 +241,7 @@ local function SetDropZone(beaconID, teamID)
 	if currDropZone then
 		--ToggleUpgradeOptions(dropZoneBeaconIDs[teamID], true) -- REMOVE
 		DestroyUnit(currDropZone, false, true)
-		GG.DropshipLeft(teamID) -- reset the timer
+		--GG.DropshipLeft(teamID) -- reset the timer
 	end
 	local x,y,z = GetUnitPosition(beaconID)
 	local side = GG.teamSide[teamID]
