@@ -2,7 +2,7 @@ return {
 	["ecm_ping"] = {
 		groundflash = {
 			air                = true,
-			alwaysvisible      = true,
+			--alwaysvisible      = true,
 			circlealpha        = 0.6,
 			circlegrowth       = 6,
 			flashalpha         = 0.9,
@@ -31,5 +31,23 @@ return {
 				texture = "seismic",
 			},
 		}
+	},
+	["bap_ping"] = {
+		groundflash = {
+			air                = true,
+			alwaysvisible      = true,
+			circlealpha        = 0.4,
+			circlegrowth       = 2,
+			flashalpha         = 0.8,
+			flashsize          = 180,
+			ground             = true,
+			ttl                = 24,
+			water              = true,
+			color = {
+				[1]  = 1,
+				[2]  = 0.1,
+				[3]  = 0,
+			},
+		},
 	},
 }

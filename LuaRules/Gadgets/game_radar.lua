@@ -366,6 +366,10 @@ function gadget:GameFrame(n)
 							bapUnits[enemyID] = {n, allyTeam}
 							SetUnitLosState(enemyID, allyTeam, fullLOS) 
 							SetUnitLosMask(enemyID, allyTeam, losTrue)	-- let lua handle los state for this unit
+							--[[if n % 30 == 0 then -- every second
+								local ex, ey, ez = Spring.GetUnitPosition(enemyID)
+								Spring.SpawnCEG("bap_ping", ex,ey,ez)
+							end]]
 						end
 					end
 				end
@@ -383,7 +387,8 @@ function gadget:GameFrame(n)
 				for _, enemyID in pairs(inRadius) do
 					--local unitAllyTeam = Spring.GetUnitAllyTeam(enemyID)
 					if mobileUnits[enemyID] 
-					and (inRadarUnits[allyTeam][enemyID] or ecmUnits[enemyID])
+					and (inRadarUnits[allyTeam][enemyID] or ecmUnits[enemyID] 
+					or not Spring.GetUnitIsActive(enemyID) or not Spring.GetUnitIsActive(unitID))
 					and not (bapUnits[enemyID] and bapUnits[enemyID][2] == allyTeam) then
 						local ex, _, ez = GetUnitPosition(enemyID)
 						local inSector = GG.Vector.IsInsideSectorVector(ex, ez, x, z, v1x, v1z, v2x, v2z)
