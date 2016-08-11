@@ -81,7 +81,7 @@ function gadget:GamePreload()
 	for unitDefID, unitDef in pairs(UnitDefs) do
 		local name = unitDef.name
 		local cp = unitDef.customParams
-		if cp and cp.baseclass == "tower" then -- automatically build table of towers
+		if cp and cp.baseclass == "tower" and not name:find("garrison") then -- automatically build table of towers
 			towerDefIDs[unitDefID] = unitDef.weapons[1] and "turret" or "sensor"
 		elseif name:find("dropzone") then -- check for dropzones first
 			DROPZONE_IDS[unitDefID] = true
