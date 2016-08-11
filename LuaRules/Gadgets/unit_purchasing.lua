@@ -131,6 +131,7 @@ local orderSizesPending = {} -- orderSizesPending[unitID] = size -- used to trac
 local dropZones = {} -- dropZones[unitID] = teamID
 local teamDropZones = {} -- teamDropZone[teamID] = unitID
 local teamDropShipTypes = {} -- teamDropShipTypes[teamID] = {tier = 1 or 2 or 3, def = unitDefID}
+local teamDropShipHPs = {} -- teamDropShipHPs[teamID] = number
 local C3Status = {} -- C3Status[unitID] = bool deployed
 local teamC3Counts = {} -- teamC3Counts[teamID] = number
 local dropShipStatus = {} -- dropShipStatus[teamID] = number, where 0 = Ready, 1 = Active, 2 = Cooldown
@@ -151,6 +152,7 @@ local function TeamDropshipUpgrade(teamID)
 		local tonnageIncrease = maxTonnage - UnitDefs[oldDefID].customParams.maxtonnage
 		Spring.SetTeamResource(teamID, "es", maxTonnage)
 		Spring.AddTeamResource(teamID, "e", tonnageIncrease)
+		teamDropShipHPs[teamID] = nil -- reset HP
 	else -- max upgrade reached, disable button
 		Spring.SendMessageToTeam(teamID, "Dropship Fully Upgraded!")
 	end
@@ -616,6 +618,9 @@ function gadget:UnitCreated(unitID, unitDefID, teamID)
 		if Spring.ValidUnitID(teamDropZones[teamID]) then -- TODO: (Why) is this even required?
 			EditUnitCmdDesc(teamDropZones[teamID], FindUnitCmdDesc(teamDropZones[teamID], CMD_SEND_ORDER), {disabled = true, name = "Dropship \nArrived "})
 		end
+		if unitDefID == teamDropShipTypes[teamID].def and teamDropShipHPs[teamID] then -- check it is current def incase we upgraded before it left
+			Spring.SetUnitHealth(unitID, teamDropShipHPs[teamID])
+		end
 	elseif unitTypes[unitDefID] then
 		UpdateTeamSlots(teamID, unitID, unitDefID, true)
 		if unitTypes[unitDefID]:find("mech") then
@@ -655,6 +660,8 @@ function gadget:UnitDestroyed(unitID, unitDefID, teamID, attackerID, attackerDef
 		teamDropZones[teamID] = nil
 	elseif unitDefID == C3_ID then
 		LanceControl(teamID, unitID, false)
+	elseif unitDefID == teamDropShipTypes[teamID].def then -- main dropship, save it's HP -- TODO: move this to DropshipDelivery gadget and track e.g. avenger
+		teamDropShipHPs[teamID] = Spring.GetUnitHealth(unitID)
 	end
 	if attackerID and not AreTeamsAllied(teamID, attackerTeam) and unitDefID ~= WALL_ID and unitDefID ~= GATE_ID then
 		--AddTeamResource(attackerTeam, "metal", UnitDefs[unitDefID].metalCost * KILL_REWARD_MULT)
