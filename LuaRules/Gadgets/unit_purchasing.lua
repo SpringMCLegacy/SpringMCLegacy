@@ -672,7 +672,7 @@ end
 function gadget:UnitGiven(unitID, unitDefID, newTeam, oldTeam)
 	--gadget:UnitDestroyed(unitID, unitDefID, oldTeam)
 	if unitTypes[unitDefID] then
-		UpdateTeamSlots(teamID, unitID, unitDefID, false)
+		UpdateTeamSlots(oldTeam, unitID, unitDefID, false)
 	end
 	if newTeam ~= GAIA_TEAM_ID then
 		gadget:UnitCreated(unitID, unitDefID, newTeam)
