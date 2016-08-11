@@ -38,13 +38,12 @@ local DelayCall				 = GG.Delay.DelayCall
 -- Constants
 local GAIA_TEAM_ID = Spring.GetGaiaTeamID()
 local BEACON_ID = UnitDefNames["beacon"].id
-local UPLINK_ID = UnitDefNames["upgrade_uplink"].id
-local GARRISON_ID = UnitDefNames["upgrade_garrison"].id
+local TURRETCONTROL_ID = UnitDefNames["upgrade_turretcontrol"].id
 local DROPZONE_IDS = {}
 GG.DROPZONE_IDS = DROPZONE_IDS
 
 --local MIN_BUILD_RANGE = tonumber(UnitDefNames["beacon"].customParams.minbuildrange) or 230
-local MAX_BUILD_RANGE = UnitDefs[GARRISON_ID].buildDistance
+local MAX_BUILD_RANGE = UnitDefs[TURRETCONTROL_ID].buildDistance
 local RADIUS = 230
 
 local DROPSHIP_DELAY = 10 * 30 -- 10s
@@ -228,10 +227,8 @@ function gadget:UnitCreated(unitID, unitDefID, teamID, builderID)
 	local cp = unitDef.customParams
 	if unitDefID == BEACON_ID then
 		AddUpgradeOptions(unitID)
-	elseif unitDefID == UPLINK_ID then
-		buildLimits[unitID] = {["sensor"] = 4}
-	elseif unitDefID == GARRISON_ID then
-		buildLimits[unitID] = {["turret"] = 4}
+	elseif unitDefID == TURRETCONTROL_ID then
+		buildLimits[unitID] = {["turret"] = 4, ["sensor"] = 2}
 	elseif cp and cp.baseclass == "tower" then
 		-- track creation of turrets and their originating beacons so we can give back slots if a turret dies
 		if builderID then -- ignore /give turrets
@@ -291,13 +288,13 @@ function gadget:UnitGiven(unitID, unitDefID, newTeam, oldTeam)
 		end
 		if dropZoneBeaconIDs[oldTeam] == unitID and oldTeam ~= GAIA_TEAM_ID then
 			local dropZoneID = dropZoneIDs[oldTeam]
-			Spring.DestroyUnit(dropZoneID, false, true)
+			--DelayCall(Spring.DestroyUnit, {dropZoneID, false, true}, 1)
 			if newTeam == GAIA_TEAM_ID then -- dropzone given on team death, 
 				-- will be destroyed next frame but needs beaconID in UnitDestroyed
 				dropZoneBeaconIDs[newTeam] = unitID
 			end
 		end
-	elseif unitDefID == UPLINK_ID or unitDefID == GARRISON_ID then
+	elseif unitDefID == TURRETCONTROL_ID then
 		for towerID, beaconID in pairs(towerOwners) do
 			if beaconID == unitID then
 				DelayCall(TransferUnit, {towerID, newTeam}, 1)
@@ -335,11 +332,11 @@ function gadget:AllowCommand(unitID, unitDefID, teamID, cmdID, cmdParams, cmdOpt
 		elseif cmdID == CMD.SELFD then -- Disallow self-d
 			return false
 		end
-	elseif unitDefID == UPLINK_ID or unitDefID == GARRISON_ID then
+	elseif unitDefID == TURRETCONTROL_ID then
 		if cmdID < 0 then
 			local towerType = towerDefIDs[-cmdID]
 			if not towerType then return false end
-			if unitDefID == GARRISON_ID then -- Garrison has limited build radius
+			if unitDefID == TURRETCONTROL_ID then -- TurretControl has limited build radius -- TODO: within the beacon
 				local tx, ty, tz = unpack(cmdParams)
 				local dist = GetUnitDistanceToPoint(unitID, tx, ty, tz, false)
 				--[[if dist < MIN_BUILD_RANGE then
@@ -347,7 +344,7 @@ function gadget:AllowCommand(unitID, unitDefID, teamID, cmdID, cmdParams, cmdOpt
 					return false
 				else]]
 				if dist > MAX_BUILD_RANGE then
-					Spring.SendMessageToTeam(teamID, "Too far from garrison!")
+					Spring.SendMessageToTeam(teamID, "Too far from Turret Control!")
 					return false
 				end
 			end
