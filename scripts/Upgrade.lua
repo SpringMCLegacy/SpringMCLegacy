@@ -158,6 +158,20 @@ function script.HitByWeapon()
 	end
 end
 	
+function SeismicPings()
+	while true do
+		Move(hammer, y_axis, 0, CRATE_SPEED * 50)
+		WaitForMove(hammer, y_axis)
+		PlaySound("stomp")
+		GG.EmitSfxName(unitID, spike, "mech_jump_dust")
+		Spring.SetUnitSensorRadius(unitID, "seismic", unitDef.seismicRadius)
+		Sleep(500)
+		Move(hammer, y_axis, 7, CRATE_SPEED * 5)
+		WaitForMove(hammer, y_axis)
+		Spring.SetUnitSensorRadius(unitID, "seismic", 0)
+		Sleep(5000)
+	end
+end
 function Unpack()
 	-- Wait for delivery van to bug out
 	Sleep(2000)
@@ -224,9 +238,9 @@ function Unpack()
 	elseif name == "upgrade_garrison" then
 		-- nothing special
 	elseif name == "upgrade_seismic" then
-		Turn(foot1, x_axis, rad(-90), CRATE_SPEED * 10)
-		Turn(foot2, x_axis, rad(90), CRATE_SPEED * 10)
-		Turn(foot3, x_axis, rad(90), CRATE_SPEED * 10)
+		Turn(foot1, x_axis, rad(-90), CRATE_SPEED * 5)
+		Turn(foot2, x_axis, rad(90), CRATE_SPEED * 5)
+		Turn(foot3, x_axis, rad(90), CRATE_SPEED * 5)
 		Move(lifter, y_axis, 10, CRATE_SPEED * 5)
 		WaitForMove(lifter, y_axis)
 		for i = 1,3 do
@@ -237,8 +251,7 @@ function Unpack()
 			PlaySound("stomp")
 			GG.EmitSfxName(unitID, spike, "mech_jump_dust")
 		end
-		local x, y, z = Spring.GetUnitPosition(unitID)
-		GG.BuildMaskCircle(x, z, 460, 2)
+		StartThread(SeismicPings)
 	elseif name == "upgrade_turretcontrol" then
 		 for i = 1,4 do
 			local signX = i <= 2 and 1 or -1
