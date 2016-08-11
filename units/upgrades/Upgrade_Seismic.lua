@@ -7,12 +7,7 @@ local Upgrade_Seismic = Upgrade:New{
 
 	collisionVolumeScales = [[25 25 25]],
 
-	-- Constructor stuff
-	builder				= true,
-	builddistance 		= 1000000,
-	workerTime			= 10, -- ?	
-	terraformSpeed		= 10000,
-	showNanoSpray		= false,
+	seismicdistance 	= 9000,
 	
 	customparams = {
 		helptext		= "Ping Pong Potato",

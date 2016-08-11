@@ -199,23 +199,21 @@ for name, ud in pairs(UnitDefs) do
 	cp.torsoturnspeed = cp.torsoturnspeed or (ud.maxvelocity * 50 * (modOptions.torso or 1)) -- for now keep this independent of turnrate so we can tweak them separately
 
 	if not name:find("decal") then
-		ud.seismicdistance = 0
 		ud.sightdistance = 500 -- 1000
-		if cp.baseclass == "mech" then
+		ud.seismicsignature = 0
+		if cp.baseclass == "mech" then -- override
 			ud.sightdistance = modOptions.mechsight
+			ud.seismicsignature = cp.tonnage / 10
 		end
 		ud.radardistance = 2000 * modOptions.radar
 		ud.airsightdistance = 2000 * modOptions.radar
-		ud.seismicsignature = 0
 	end
 	-- set sightrange/radardistance based on bap customparam
 	if cp.ecm then
-		ud.seismicsignature = 20
 		ud.radardistancejam	= 500
 		ud.description = ud.description .. " \255\128\128\128[ECM]"
 	end
 	if cp.bap then
-		ud.seismicdistance = 3000 * modOptions.radar
 		ud.radaremitheight = 1000
 		ud.radardistance = 3000 * modOptions.radar
 		ud.airsightdistance = 3000 * modOptions.radar
