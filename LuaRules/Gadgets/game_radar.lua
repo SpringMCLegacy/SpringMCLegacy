@@ -319,9 +319,9 @@ function gadget:GameFrame(n)
 	-- TODO: needed?
 	for ecmed, data in pairs(ecmUnits) do
 		if data[1] < n - FRAME_FUDGE then
-			if Spring.ValidUnitID(ecmed) and not Spring.GetUnitIsDead(ecmed) then
-				ResetLosStates(bapped, data[2])
-			end
+			--if Spring.ValidUnitID(ecmed) and not Spring.GetUnitIsDead(ecmed) then
+			--	ResetLosStates(bapped, data[2])
+			--end
 			ecmUnits[ecmed] = nil
 		end
 	end
@@ -329,24 +329,7 @@ function gadget:GameFrame(n)
 	local GetUnitPosition 	= Spring.GetUnitPosition
 	for i = 1, numAllyTeams do
 		local allyTeam = allyTeams[i]
-		-- First BAP units
-		for unitID, bapRadius in pairs(allyBAPs[allyTeam]) do
-			-- only active non-PPC'd units can utilise BAP and ECM
-			-- TODO: probably we want BAP passive/active toggle to be seperate from main radar activation state?
-			if not ppcUnits[unitID] and GetUnitIsActive(unitID) then
-				local x, _, z = GetUnitPosition(unitID)
-				local nearbyUnits = Spring.GetUnitsInCylinder(x, z, bapRadius)
-				for _, enemyID in pairs(nearbyUnits) do
-					local unitAllyTeam = Spring.GetUnitAllyTeam(enemyID)
-					if enemyID ~= unitID and unitAllyTeam ~= allyTeam then -- and not sectorUnits[allyTeam][enemyID] then -- not in another sector
-						SetUnitLosState(enemyID, allyTeam, fullLOS) 
-						SetUnitLosMask(enemyID, allyTeam, losTrue)	-- let lua handle los state for this unit
-						bapUnits[enemyID] = {n, allyTeam}
-					end
-				end
-			end
-		end
-		-- Secondly ECM units
+		-- Firstly ECM units
 		for unitID, ecmRadius in pairs(allyJammers[allyTeam]) do
 			-- only active non-PPC'd units can utilise BAP and ECM
 			if not ppcUnits[unitID] and GetUnitIsActive(unitID) then
@@ -359,6 +342,30 @@ function gadget:GameFrame(n)
 							--Spring.Echo("nearby", UnitDefs[Spring.GetUnitDefID(nearbyUnits[i])].name)
 							SetUnitRulesParam(enemyID, "FRIENDLY_ECM", n, {inlos = true})
 							ecmUnits[enemyID] = {n, allyTeam}
+						end
+					end
+				end
+			end
+		end
+		-- Secondly BAP units
+		for unitID, bapRadius in pairs(allyBAPs[allyTeam]) do
+			-- only active non-PPC'd units can utilise BAP and ECM
+			-- TODO: probably we want BAP passive/active toggle to be seperate from main radar activation state?
+			if not ppcUnits[unitID] and GetUnitIsActive(unitID) then
+				local x, _, z = GetUnitPosition(unitID)
+				local nearbyUnits = Spring.GetUnitsInCylinder(x, z, bapRadius)
+				for _, enemyID in pairs(nearbyUnits) do
+					local unitAllyTeam = Spring.GetUnitAllyTeam(enemyID)
+					if enemyID ~= unitID and unitAllyTeam ~= allyTeam then -- and not sectorUnits[allyTeam][enemyID] then -- not in another sector
+						if ecmUnits[enemyID] then --allyJammers[unitAllyTeam][enemyID] then
+							if n % 30 == 0 then -- every second
+								local ex, ey, ez = Spring.GetUnitPosition(enemyID)
+								Spring.SpawnCEG("ecm_ping", ex,ey,ez)
+							end
+						else
+							bapUnits[enemyID] = {n, allyTeam}
+							SetUnitLosState(enemyID, allyTeam, fullLOS) 
+							SetUnitLosMask(enemyID, allyTeam, losTrue)	-- let lua handle los state for this unit
 						end
 					end
 				end

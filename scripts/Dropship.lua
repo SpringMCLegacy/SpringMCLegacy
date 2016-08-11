@@ -323,12 +323,13 @@ function script.Killed()
 		Spring.SpawnCEG("dropship_heavy_dust", x,y,z)
 	end
 	Spring.SpawnCEG("mech_jump_dust", x,y,z)
-	Sleep(900) -- needed for some reason?
+	--Sleep(900) -- needed for some reason?
 	-- This is a really awful hack , built on top of another hack. 
 	-- There's some issue with alwaysVisible not working (http://springrts.com/mantis/view.php?id=4483)
 	-- So instead make the owner the decal unit spawned by the teams starting beacon, as it can never die
 	local ownerID = Spring.GetTeamUnitsByDefs(teamID, UnitDefNames["decal_beacon"].id)[1] --or unitID
 	local nukeID = Spring.SpawnProjectile(WeaponDefNames["meltdown"].id, {pos = {x,y,z}, owner = ownerID, team = teamID, ttl = 20})
+	Spring.SetProjectileAlwaysVisible(nukeID, true)
 	Explode(piece("hull"), SFX.SHATTER)
 	for _, turret in pairs(turrets) do
 		Explode(turret, SFX.FIRE + SFX.FALL + SFX.RECURSIVE)	

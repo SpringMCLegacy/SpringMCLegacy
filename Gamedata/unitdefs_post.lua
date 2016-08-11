@@ -218,6 +218,7 @@ for name, ud in pairs(UnitDefs) do
 		ud.seismicdistance = 3000 * modOptions.radar
 		ud.radaremitheight = 1000
 		ud.radardistance = 3000 * modOptions.radar
+		ud.airsightdistance = 3000 * modOptions.radar
 		ud.description = ud.description .. " \255\001\255\001[BAP]"
 	end
 	-- track strength should be 1/1000th of mass
