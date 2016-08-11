@@ -102,7 +102,6 @@ local chances = {
 local function VPadUpgrade(unitID, level)
 	-- level 1 -> Add Heavy & Assault units
 	-- level 2 -> Replace units with House improvements
-	-- level 3 -> Repalce Heavy & Assault with House units
 	vehiclePadLevels[unitID] = level
 	--Spring.Echo("Upgrade vehiclepad (" .. unitID .. ") to level " .. level)
 	env = Spring.UnitScript.GetScriptEnv(unitID)
@@ -131,7 +130,8 @@ local function RandomVehicle(unitID, weight, level)
 		return RandomElement(sideSpawnLists[vehiclePadSides[unitID]][vehiclePadLevels[unitID]][class])
 	else
 		--Spring.Echo("OMG this faction has none of those!", weight)
-		return false -- This faction does not have a vehicle in that weight category
+		return RandomElement(sideSpawnLists[vehiclePadSides[unitID]][vehiclePadLevels[unitID]]["light"])
+		--return false -- This faction does not have a vehicle in that weight category
 	end
 end
 
