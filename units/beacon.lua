@@ -1,38 +1,27 @@
-local beacon = {
+local beacon = Unit:New{
 	name              	= "Beacon",
 	description         = "Strategic Marker",
 	objectName        	= "beacon.s3o",
 	iconType			= "beacon",
 	script				= "beacon.lua",
 	category 			= "beacon",
-	sightDistance       = 0,
-	radarDistance      	= 0,
-	activateWhenBuilt   = true,
 	maxDamage           = 50000,
 	mass                = 1000,
 	footprintX			= 2,
 	footprintZ 			= 2,
 	collisionVolumeType = "box",
-	collisionVolumeScales = "4 25 4",
-	collisionVolumeOffsets = "0 0 0",
-	collisionVolumeTest = 1,
-	buildCostEnergy     = 0,
-	buildCostMetal      = 0,
-	buildTime           = 0,
+	collisionVolumeScales = [[4 25 4]],
+	buildCostMetal      = 0, -- default is 1
 	--canMove				= false,
-	energyStorage		= 0,
-	metalMake			= 0,
-	metalStorage		= 0,
-	idleAutoHeal		= 0,
-	maxSlope			= 50,
-		movementClass   = "LARGEMECH",
+	movementClass   = "LARGEMECH",
+	canselfdestruct		= false,
 		
 	-- Constructor stuff
-	builder				= true,
+	--[[builder				= true,
 	builddistance 		= 460,
 	workerTime			= 10, -- ?	
 	terraformSpeed		= 10000,
-	showNanoSpray		= false,
+	showNanoSpray		= false,]]
 	--[[sfxtypes = {
 		explosiongenerators = {"custom:reentry_fx", "custom:JumpJetTrail"},
 	},]]
@@ -42,10 +31,21 @@ local beacon = {
 		minbuildrange	= 230,
 		ignoreatbeacon	= true,
     },
-	
-	sounds = {
-    underattack        = "Dropship_Alarm",
-	},
 }
 
-return lowerkeys({ ["beacon"] = beacon })
+local beacon_point = beacon:New{
+	name              	= "Upgrade Point",
+	description         = "Beacon Upgrade Marker",
+	objectName        	= "beacon_point.s3o",
+	script				= "wall.lua",
+	
+	sightdistance 		= 0,
+	airsightdistance 	= 0,
+	radardistance 		= 0,
+	iconType			= "beaconpoint",
+}
+
+return lowerkeys({ 
+	["beacon"] = beacon,
+	["beacon_point"] = beacon_point,
+})

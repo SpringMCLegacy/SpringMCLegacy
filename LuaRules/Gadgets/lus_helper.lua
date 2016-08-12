@@ -181,9 +181,10 @@ end
 
 function gadget:UnitCreated(unitID, unitDefID, teamID, builderID)
 	local info = GG.lusHelper[unitDefID]
-	local cp = UnitDefs[unitDefID].customParams
+	local ud = UnitDefs[unitDefID]
+	local cp = ud.customParams
 	info.builderID = builderID
-	if info.firstTime == nil and UnitDefs[unitDefID].weapons[1] or cp.dropship then -- TODO: stuid hack for Avenger (currently no weapons)
+	if info.firstTime == nil and ud.weapons[1] or cp.dropship then -- TODO: stuid hack for Avenger (currently no weapons)
 		info.firstTime = true -- only do this step once
 		-- Parse Model Data
 		local pieceMap = GetUnitPieceMap(unitID)
@@ -326,21 +327,39 @@ function gadget:UnitCreated(unitID, unitDefID, teamID, builderID)
 		info.jumpjets = numJets
 	end
 	
+	
 	-- Remove aircraft land and repairlevel buttons
-	if UnitDefs[unitDefID].canFly then
+	if ud.canFly then
 		Spring.GiveOrderToUnit(unitID, CMD.IDLEMODE, {0}, {})
 		local toRemove = {CMD.IDLEMODE, CMD.AUTOREPAIRLEVEL}
 		for _, cmdID in pairs(toRemove) do
 			local cmdDescID = Spring.FindUnitCmdDesc(unitID, cmdID)
-			Spring.RemoveUnitCmdDesc(unitID, cmdDescID)
+			if cmdDescID then
+				Spring.RemoveUnitCmdDesc(unitID, cmdDescID)
+			end
 		end
 	-- Remove load/unload buttons from all transports
-	elseif UnitDefs[unitDefID].transportCapacity and UnitDefs[unitDefID].name:find("mechbay") then
-		local toRemove = {CMD.LOAD_UNITS, CMD.UNLOAD_UNITS, CMD.STOP, CMD.WAIT}
+	elseif ud.transportCapacity and ud.name:find("mechbay") then
+		local toRemove = {CMD.LOAD_UNITS, CMD.UNLOAD_UNITS}
 		for _, cmdID in pairs(toRemove) do
 			local cmdDescID = Spring.FindUnitCmdDesc(unitID, cmdID)
-			Spring.RemoveUnitCmdDesc(unitID, cmdDescID)
+			if cmdDescID then
+				Spring.RemoveUnitCmdDesc(unitID, cmdDescID)
+			end
 		end
+	end
+	-- remove Wait / Firestate / Movestate / Repeat / Stop from everything other than mechs
+	if cp.baseclass ~= "mech" then
+		local toRemove = {CMD.MOVE_STATE, CMD.STOP, CMD.WAIT, CMD.REPEAT}
+		if not ud.weapons[1] then 
+			table.insert(toRemove, CMD.FIRE_STATE)
+		end
+		for _, cmdID in pairs(toRemove) do
+			local cmdDescID = Spring.FindUnitCmdDesc(unitID, cmdID)
+			if cmdDescID then
+				Spring.RemoveUnitCmdDesc(unitID, cmdDescID)
+			end
+		end		
 	end
 end
 

@@ -54,6 +54,7 @@ function TouchDown()
 	Spring.SetUnitNoSelect(unitID, false)
 	GG.RemoveGrassSquare(X, Z, 64)
 	GG.SpawnDecal("decal_beacon", X, GY + 1, Z, teamID, true)
+	GG.BeaconPoints(unitID, teamID, X, GY+1, Z)
 end
 
 function ChangeType(upgrade)

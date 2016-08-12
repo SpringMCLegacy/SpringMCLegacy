@@ -76,16 +76,22 @@ noFiring = false
 up = false
 touchDown = false
 beaconID = nil
+callerID = nil
 cargo = {}
 numCargo = 0
 
-function LoadCargo(cargoID, callerID)
+function LoadCargo(cargoID, callerUnitID, callerBeaconID)
 	--Spring.Echo("Loading", cargoID, "of type", UnitDefs[Spring.GetUnitDefID(outpostID)].name)
-	beaconID = callerID
+	beaconID = callerBeaconID
+	callerID = callerUnitID
 	numCargo = numCargo + 1
 	cargo[numCargo] = cargoID
 	Spring.UnitScript.AttachUnit(cargoPieces[numCargo] or -1, cargoID)
 	GG.SetSquad(cargoID, teamID) -- will ignore non-vehicles
+	env = Spring.UnitScript.GetScriptEnv(cargoID)
+	if env.ParentBeacon then
+		Spring.UnitScript.CallAsUnit(cargoID, env.ParentBeacon, targetID, beaconID)
+	end
 end
 
 include ("anims/dropships/" .. unitDef.name:sub(unitDef.name:match("^.*()_") + 1, -1) .. ".lua")
