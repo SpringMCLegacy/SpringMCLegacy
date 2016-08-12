@@ -33,11 +33,11 @@ local IS_MarkVII = {
 	--Makes unit use weapon from /weapons folder
 	weapons	= {	
 		[1] = {
-			name	= "ERSBL",
+			name	= "ERMBL",
 			maxAngleDif = 100,
 		},
 		[2] = {
-			name	= "ERSBL",
+			name	= "ERMBL",
 			maxAngleDif = 100,
 		},
 		[3] = {
