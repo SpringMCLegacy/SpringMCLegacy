@@ -55,6 +55,13 @@ local function Blinks()
 	end
 end
 
+pointID = nil
+beaconID = nil
+function ParentBeacon(callingPointID, parentBeaconID)
+	pointID = callingPointID
+	beaconID = parentBeaconID
+end
+
 function Upgrade(level)
 	if name == "upgrade_vehiclepad" then
 		if level == 2 then
@@ -267,8 +274,8 @@ function Unpack()
 		WaitForMove(pole[#pole], y_axis)
 		Spin(pole[1], y_axis, math.rad(20), math.rad(5))
 		SetUnitValue(COB.INBUILDSTANCE, 1)
-		-- TODO: This should be parent beacon location not our own
-		local x, y, z = Spring.GetUnitPosition(unitID)
+		-- parent beacon location not our own, if it exists
+		local x, y, z = Spring.GetUnitPosition(beaconID or unitID)
 		GG.BuildMaskCircle(x, z, 460, 2)
 	end
 	-- Let the sands of time cover the crate
