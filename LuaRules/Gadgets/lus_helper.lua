@@ -350,9 +350,9 @@ function gadget:UnitCreated(unitID, unitDefID, teamID, builderID)
 	end
 	-- remove Wait / Firestate / Movestate / Repeat / Stop from everything other than mechs
 	if cp.baseclass ~= "mech" then
-		local toRemove = {CMD.MOVE_STATE, CMD.STOP, CMD.WAIT, CMD.REPEAT}
+		local toRemove = {CMD.MOVE_STATE, CMD.WAIT, CMD.REPEAT}
 		if not ud.weapons[1] then 
-			table.insert(toRemove, CMD.FIRE_STATE)
+			table.insert(toRemove, CMD.FIRE_STATE, CMD.STOP)
 		end
 		for _, cmdID in pairs(toRemove) do
 			local cmdDescID = Spring.FindUnitCmdDesc(unitID, cmdID)
