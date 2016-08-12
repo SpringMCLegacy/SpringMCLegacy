@@ -1,25 +1,15 @@
-local CL_Timberwolf = Heavy:New{
-	corpse				= "CL_Timberwolf_X",
-	maxDamage           = 23000,
-	maxVelocity		= 4.3, --86kph/20
-	maxReverseVelocity= 2.15,
-	acceleration    = 1,
-	brakeRate       = 0.2,
-	turnRate 		= 700,
-	
-	customparams = {
-		heatlimit		= 34,
+local Timberwolf = Heavy:New{
+	name				= "Timber Wolf",
+		
+    customparams = {
+		cockpitheight	= 55,
 		tonnage			= 75,
-		torsoturnspeed	= 130,
-		maxammo 		= {lrm = 180},
     },
 }
-	
-local E = CL_Timberwolf:New{
-	name              	= "Timber Wolf (Mad Cat) E",
-	description         = "Heavy Strike Mech",
-	objectName        	= "CL_Timberwolf.s3o",
-	weapons	= {	
+
+local Prime = Timberwolf:New{
+	description         = "Heavy Skirmisher",
+	weapons = {	
 		[1] = {
 			name	= "CERLBL",
 		},
@@ -33,30 +23,33 @@ local E = CL_Timberwolf:New{
 			name	= "CERMBL",
 		},
 		[5] = {
-			name	= "CSPL",
+			name	= "CMPL",
 		},
 		[6] = {
-			name	= "CSPL",
+			name	= "MG",
 		},
 		[7] = {
 			name	= "MG",
 		},
 		[8] = {
-			name	= "MG",
+			name	= "LRM20",
 		},
 		[9] = {
 			name	= "LRM20",
 		},
-		[10] = {
-			name	= "LRM20",
-		},
 	},
-	customparams = {
-		price      = 37200,
-		helptext		= "Armament: 2 x ER Large Beam Laser, 2x ER Medium Beam Laser, 2x Small Pulse Laser, 2x MG, 2 x ATM-9 - Armor: ?? tons Ferro-Fibrous",
+		
+    customparams = {
+		variant			= "Prime",
+		speed			= 80,
+		price			= 27370,
+		heatlimit 		= 34,
+		armor			= {type = "ferro", tons = 12},
+		maxammo 		= {ac5 = 2, lrm = 2},
+		barrelrecoildist = {[1] = 4},
     },
 }
 
-return lowerkeys({
-	["CL_Timberwolf_E"] = E,
+return lowerkeys({ 
+	["WF_Timberwolf_Prime"] = Prime:New(),
 })
