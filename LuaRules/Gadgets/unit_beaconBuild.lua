@@ -189,17 +189,8 @@ function SpawnDropship(beaconID, unitID, teamID, dropshipType, cargo, cost)
 	end
 end
 
+local beaconActive = {} -- beaconActive[beaconID] = true
 local beaconDropshipQueue = {} -- beaconDropshipQueue[beaconID] = {info1 = {}, info2 = {}, ...}
-
-function EnqueueDropship(beaconID, beaconPointID, teamID, info)
-	if not beaconDropshipQueue[beaconID] then beaconDropshipQueue[beaconID] = {} end -- TODO: move to unitcreated?
-	table.insert(beaconDropshipQueue[beaconID], info)
-	--Spring.Echo("Adding dropship ", info.dropshipType, " to beacon ", beaconID, beaconPointID, "(queue length " , (#beaconDropshipQueue[beaconID]), ")")
-	-- If it's the first item in queue, start emptying
-	if #beaconDropshipQueue[beaconID] == 1 then
-		NextDropshipQueueItem(beaconID, teamID)
-	end
-end
 
 function NextDropshipQueueItem(beaconID, teamID)
 	if #beaconDropshipQueue[beaconID] > 0 then
@@ -208,11 +199,27 @@ function NextDropshipQueueItem(beaconID, teamID)
 			GG.PlaySoundForTeam(teamID, item.sound, 1)
 		end
 		SpawnDropship(beaconID, item.target, teamID, item.dropshipType, item.cargo, item.cost)
+		beaconActive[beaconID] = true
+	end
+end
+
+function EnqueueDropship(beaconID, beaconPointID, teamID, info, priority)
+	if not beaconDropshipQueue[beaconID] then beaconDropshipQueue[beaconID] = {} end -- TODO: move to unitcreated?
+	if priority then
+		table.insert(beaconDropshipQueue[beaconID], beaconActive[beaconID] and 2 or 1, info)
+	else
+		table.insert(beaconDropshipQueue[beaconID], info)
+	end
+	--Spring.Echo("Adding dropship ", info.dropshipType, " to beacon ", beaconID, beaconPointID, "(queue length " , (#beaconDropshipQueue[beaconID]), ")")
+	-- If it's the first item in queue, start emptying
+	if #beaconDropshipQueue[beaconID] == 1 then
+		NextDropshipQueueItem(beaconID, teamID)
 	end
 end
 
 function DropzoneFree(beaconID, teamID)
 	--Spring.Echo("DropzoneFree", beaconID, teamID)
+	beaconActive[beaconID] = false
 	table.remove(beaconDropshipQueue[beaconID], 1)
 	NextDropshipQueueItem(beaconID, teamID)
 end
@@ -226,8 +233,9 @@ function DropshipDelivery(beaconID, beaconPointID, teamID, dropshipType, cargo, 
 		["cost"] = cost, 
 		["sound"] = sound
 	}
-	-- TODO: check dropshipType for mech deliveries and add to front of queue?
-	DelayCall(EnqueueDropship, {beaconID, beaconPointID, teamID, info}, delay)
+	-- check dropshipType for mech deliveries and add to front of queue
+	local priority = delay == 0
+	DelayCall(EnqueueDropship, {beaconID, beaconPointID, teamID, info, priority}, delay)
 	if cost then -- deduct cost immediately to give feedback to player that order was accepted
 	-- will be refunded later if it fails (e.g. beacon capped)
 		--Spring.Echo("COST!?", cost)
