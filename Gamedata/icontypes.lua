@@ -44,6 +44,16 @@ local iconTypes = {
 		size			=	5,
 		distance	=	4.0,
 	},
+	beaconpoint = {
+		bitmap		=	"icons/beaconpoint.png",
+		size			=	1.5,
+		distance	=	4.0,
+	},
+	upgrade = {
+		bitmap		=	"icons/beaconpoint.png",
+		size			=	3.5,
+		distance	=	4.0,	
+	},
 	infantry = {
 		bitmap		=	"icons/infantry.png",
 		size			=	3,

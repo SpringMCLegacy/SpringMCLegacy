@@ -38,6 +38,11 @@ local beacon_point = beacon:New{
 	description         = "Beacon Upgrade Marker",
 	objectName        	= "beacon_point.s3o",
 	script				= "wall.lua",
+	
+	sightdistance 		= 0,
+	airsightdistance 	= 0,
+	radardistance 		= 0,
+	iconType			= "beaconpoint",
 }
 
 return lowerkeys({ 

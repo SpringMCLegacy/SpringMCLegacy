@@ -1,7 +1,7 @@
 -- Upgrades ----
 local Upgrade = Unit:New{
 	script				= "Upgrade.lua",
-	iconType			= "beacon",
+	iconType			= "upgrade",
 	category 			= "structure ground notbeacon",
 	activateWhenBuilt   = true,
 	footprintX			= 4,
