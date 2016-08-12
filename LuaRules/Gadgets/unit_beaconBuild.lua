@@ -358,7 +358,7 @@ function gadget:UnitGiven(unitID, unitDefID, newTeam, oldTeam)
 		end
 		if dropZoneBeaconIDs[oldTeam] == unitID and oldTeam ~= GAIA_TEAM_ID then
 			local dropZoneID = dropZoneIDs[oldTeam]
-			--DelayCall(Spring.DestroyUnit, {dropZoneID, false, true}, 1)
+			DelayCall(Spring.DestroyUnit, {dropZoneID, false, true}, 1)
 			if newTeam == GAIA_TEAM_ID then -- dropzone given on team death, 
 				-- will be destroyed next frame but needs beaconID in UnitDestroyed
 				dropZoneBeaconIDs[newTeam] = unitID
