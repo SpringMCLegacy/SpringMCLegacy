@@ -1,5 +1,5 @@
-local Hephaestus = Hover:New{
-	name              	= "Hephaestus",
+local Epona = Hover:New{
+	name              	= "Epona",
 	description			= "Light Skirmisher",
 	
 	weapons 		= {	
@@ -11,23 +11,31 @@ local Hephaestus = Hover:New{
 			SlaveTo = 1,
 		},
 		[3] = {
-			name	= "TAG",
+			name	= "CMPL",
+			SlaveTo = 1,
+		},
+		[4] = {
+			name	= "CMPL",
+			SlaveTo = 1,
+		},
+		[5] = {
+			name	= "SSRM4",
 			SlaveTo = 1,
 		},
 	},
 	
 	customparams = {
-		tonnage			= 30,
+		tonnage			= 55,
 		variant         = "Prime",
-		speed			= 130,
-		price			= 7770,
-		heatlimit 		= 10,
+		speed			= 150,
+		price			= 14770,
+		heatlimit 		= 20,
 		armor			= {type = "ferro", tons = 5},
-		ecm				= true,
+		maxammo 		= {srm = 2},
 		squadsize 		= 1,
     },
 }
 
 return lowerkeys({
-	["WF_Hephaestus"] = Hephaestus:New(),
+	["WF_Epona"] = Epona:New(),
 })

@@ -1,6 +1,7 @@
 local Oro = Tank:New{
 	name              	= "Oro",
 	description         = "Heavy Brawler Tank",
+	trackWidth			= 27,--width to render the decal
 	
 	weapons	= {	
 		[1] = {
