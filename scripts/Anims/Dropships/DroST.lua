@@ -318,7 +318,7 @@ function Drop()
 	--StopSpin(body, z_axis, math.rad(45))
 	Sleep(2000)
 	-- We're out of the atmosphere, bye bye!
-	GG.LCLeft(beaconID, teamID) -- let the world know
+	GG.LCLeft(beaconID, callerID, teamID, true) -- let the world know
 	Spring.DestroyUnit(unitID, false, true)
 end
 

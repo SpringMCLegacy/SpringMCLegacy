@@ -336,7 +336,7 @@ function script.Killed()
 	local ownerID = Spring.GetTeamUnitsByDefs(teamID, UnitDefNames["decal_beacon"].id)[1] --or unitID
 	local nukeID = Spring.SpawnProjectile(WeaponDefNames["meltdown"].id, {pos = {x,y,z}, owner = ownerID, team = teamID, ttl = 20})
 	Spring.SetProjectileAlwaysVisible(nukeID, true)
-	Explode(piece("hull"), SFX.SHATTER)
+	Explode(piece("hull") or piece("body"), SFX.SHATTER)
 	for _, turret in pairs(turrets) do
 		Explode(turret, SFX.FIRE + SFX.FALL + SFX.RECURSIVE)	
 	end

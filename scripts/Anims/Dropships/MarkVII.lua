@@ -44,7 +44,7 @@ function Crashed()
 	Explode(rwing, SFX.FIRE + SFX.FALL)
 	Explode(body, SFX.SHATTER)
 	-- delay next dropship by extra 60 seconds
-	GG.LCLeft(beaconID, teamID, true)
+	GG.LCLeft(beaconID, callerID, teamID, true)
 	Spring.DestroyUnit(unitID, true, false)
 end
 
