@@ -28,17 +28,22 @@ local DROPZONE_IDS = GG.DROPZONE_IDS
 local C3_ID = UnitDefNames["upgrade_c3array"].id
 local VPAD_ID = UnitDefNames["upgrade_vehiclepad"].id
 --local DelayCall = GG.Delay.DelayCall
-local CMD_SEND_ORDER = GG.CustomCommands.GetCmdID("CMD_SEND_ORDER")
 local CMD_JUMP = GG.CustomCommands.GetCmdID("CMD_JUMP")
-local CMD_MASC = GG.CustomCommands.GetCmdID("CMD_MASC")
 
 local PERK_JUMP_RANGE = GG.CustomCommands.GetCmdID("PERK_JUMP_EFFICIENCY")
 
-local CMD_DROPZONE = GG.CustomCommands.GetCmdID("CMD_DROPZONE")
-local CMD_C3 = GG.CustomCommands.GetCmdID("CMD_UPGRADE_upgrade_c3array")
-local CMD_VPAD = GG.CustomCommands.GetCmdID("CMD_UPGRADE_upgrade_vehiclepad")
-local CMD_UNION, UNION_COST = GG.CustomCommands.GetCmdID('PERK_DROPSHIP_UPGRADE_UNION')
-local CMD_OVERLORD, OVERLORD_COST = GG.CustomCommands.GetCmdID('PERK_DROPSHIP_UPGRADE_OVERLORD')
+local desired = {"CMD_SEND_ORDER", "CMD_DROPZONE", -- mech purchasing
+				"CMD_UNION", "CMD_OVERLORD", -- dropship upgrading
+				"CMD_JUMP", "CMD_MASC", -- mech behaviour
+				 "CMD_UPGRADE_upgrade_c3array", "CMD_UPGRADE_upgrade_vehiclepad", -- outposts (can already use)
+				 "CMD_UPGRADE_upgrade_mechbay", "CMD_UPGRADE_upgrade_garrison", "CMD_UPGRADE_upgrade_uplink", -- outposts (maybe soon)
+				 "CMD_UPGRADE_upgrade_seismic", "CMD_UPGRADE_upgrade_turretcontrol", -- outposts (not a priority)
+				 }
+local AI_CMDS = {}
+for _, cmd in pairs(desired) do
+	local cmdID, cost = GG.CustomCommands.GetCmdID(cmd)
+	AI_CMDS[cmd] = {["id"] = cmdID, ["cost"] = cost}
+end
 
 local dropZoneIDs = {}
 local orderSizes = {}
@@ -111,7 +116,7 @@ local function SendOrder(teamID)
 	local frameDelay = math.max(readyFrame - Spring.GetGameFrame(), 0)
 	if frameDelay == 0 and Spring.ValidUnitID(unitID) then
 		orderSizes[teamID] = 0
-		Spring.GiveOrderToUnit(unitID, CMD_SEND_ORDER, {}, {})
+		Spring.GiveOrderToUnit(unitID, AI_CMDS["CMD_SEND_ORDER"].id, {}, {})
 	else
 		--Spring.Echo("Can't SEND_ORDER until", readyFrame, "(", frameDelay, ")")
 		GG.Delay.DelayCall(SendOrder, {teamID}, frameDelay + 30)
@@ -151,11 +156,11 @@ local function Spam(teamID)
 			--Spring.Echo("Adding to order;", orderSizes[teamID], UnitDefs[-buildID].name, GG.TeamSlotsRemaining(teamID))
 			elseif orderSizes[teamID] == 0 then 
 				-- couldn't find any affordable mechs, try upgrading dropship
-				if not teamDropshipUpgrades[teamID] and Spring.GetTeamResources(teamID, "metal") > UNION_COST then
-					GG.Delay.DelayCall(Spring.GiveOrderToUnit, {unitID, CMD_UNION, {}, {}}, 1)
+				if not teamDropshipUpgrades[teamID] and Spring.GetTeamResources(teamID, "metal") >  AI_CMDS["CMD_UNION"].cost then
+					GG.Delay.DelayCall(Spring.GiveOrderToUnit, {unitID, AI_CMDS["CMD_UNION"].id, {}, {}}, 1)
 					teamDropshipUpgrades[teamID] = 1
-				elseif teamDropshipUpgrades[teamID] == 1 and Spring.GetTeamResources(teamID, "metal") > OVERLORD_COST then
-					GG.Delay.DelayCall(Spring.GiveOrderToUnit, {unitID, CMD_OVERLORD, {}, {}}, 1)
+				elseif teamDropshipUpgrades[teamID] == 1 and Spring.GetTeamResources(teamID, "metal") >  AI_CMDS["CMD_OVERLORD"].cost then
+					GG.Delay.DelayCall(Spring.GiveOrderToUnit, {unitID, AI_CMDS["CMD_OVERLORD"].id, {}, {}}, 1)
 					teamDropshipUpgrades[teamID] = 2
 				end
 				return 
@@ -200,6 +205,27 @@ local function Perk(unitID, unitDefID, perkID, firstTime)
 	end
 end
 
+local function Upgrade(unitID, teamID)
+	if not unitID then -- set as starting beacon if not given
+		unitID = GG.dropZoneBeaconIDs[teamID]
+	end
+	if difficulty > 1 then
+		Spring.AddTeamResource(teamID, "metal", 100000)
+	end
+	if not dropZoneIDs[teamID] then -- no dropzone left!
+		GG.Delay.DelayCall(Spring.GiveOrderToUnit, {unitID, AI_CMDS["CMD_DROPZONE"].id, {}, {}}, 1)
+	else -- gonna upgrade a point
+		-- TODO: Truly horrible, just randomnly pick?
+		local cmd = ((teamUpgradeCounts[teamID][C3_ID] + teamUpgradeCounts[teamID][VPAD_ID]) % 2 == 0) and "CMD_UPGRADE_upgrade_c3array" or "CMD_UPGRADE_upgrade_vehiclepad"
+		if Spring.GetTeamResources(teamID, "metal") > AI_CMDS[cmd].cost then
+			local slot = cmd == "CMD_UPGRADE_upgrade_c3array" and 1 or 2 -- TODO: horrible, keep track of this internally? or in beaconBuild
+			local pointID = GG.beaconUpgradePointIDs[unitID][slot]
+			GG.Delay.DelayCall(Spring.GiveOrderToUnit, {pointID, AI_CMDS[cmd].id, {}, {}}, 1)
+		end
+	end
+end
+
+
 function gadget:UnitCreated(unitID, unitDefID, teamID)
 	if unitDefID == BEACON_ID then
 		local x,_,z = Spring.GetUnitPosition(unitID)
@@ -210,6 +236,7 @@ function gadget:UnitCreated(unitID, unitDefID, teamID)
 		if unitDef.name:find("dropzone") then
 			dropZoneIDs[teamID] = unitID	
 			Spam(teamID)
+			GG.Delay.DelayCall(Upgrade, {nil, teamID}, 1)
 			if difficulty > 1 then -- loadsa money!
 				Perk(unitID, unitDefID, nil, true)
 			end
@@ -228,16 +255,6 @@ function gadget:UnitCreated(unitID, unitDefID, teamID)
 			Spring.SetTeamResource(teamID, "es", 1000000)
 			Spring.AddTeamResource(teamID, "energy", 1000000)
 		end
-	end
-end
-
-local function Upgrade(unitID, newTeam)
-	if not dropZoneIDs[newTeam] then -- no dropzone left!
-		GG.Delay.DelayCall(Spring.GiveOrderToUnit, {unitID, CMD_DROPZONE, {}, {}}, 1)
-	elseif (teamUpgradeCounts[newTeam][C3_ID] + teamUpgradeCounts[newTeam][VPAD_ID]) % 2 == 0 then -- even number of upgrades get another C3
-		GG.Delay.DelayCall(Spring.GiveOrderToUnit, {unitID, CMD_C3, {}, {}}, 1)
-	else
-		GG.Delay.DelayCall(Spring.GiveOrderToUnit, {unitID, CMD_VPAD, {}, {}}, 1)
 	end
 end
 
@@ -283,13 +300,13 @@ local function RunAndJump(unitID, unitDefID, cmdID, spotNum, replace)
 		z = z + targetVector.z*jumpLength
 		y = Spring.GetGroundHeight(x,z)
 		--Spring.Echo("Adding CMD_JUMP")
-		order = {y > 0 and CMD_JUMP or cmdID, {x, y, z}, {"shift"}}
+		order = {y > 0 and AI_CMDS["CMD_JUMP"].id or cmdID, {x, y, z}, {"shift"}}
 		table.insert(orderArray, order)
 	end
 	-- make sure last command is a jump onto beacon
-	order = {CMD_JUMP, {target.x, Spring.GetGroundHeight(target.x, target.z), target.z}, {"shift"}}
+	order = {AI_CMDS["CMD_JUMP"].id, {target.x, Spring.GetGroundHeight(target.x, target.z), target.z}, {"shift"}}
 	table.insert(orderArray, order)
-	--GG.Delay.DelayCall(Spring.GiveOrderToUnit, {unitID, CMD_JUMP, {target.x, Spring.GetGroundHeight(target.x, target.z), target.z}, {"shift"}}, 1)
+	--GG.Delay.DelayCall(Spring.GiveOrderToUnit, {unitID, AI_CMDS["CMD_JUMP"].id, {target.x, Spring.GetGroundHeight(target.x, target.z), target.z}, {"shift"}}, 1)
 	GG.Delay.DelayCall(Spring.GiveOrderArrayToUnitArray, {{unitID}, orderArray}, 1)
 end
 GG.RunAndJump = RunAndJump

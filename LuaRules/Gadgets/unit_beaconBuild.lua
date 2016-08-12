@@ -65,6 +65,7 @@ local upgradeIDs = {} -- upgradeIDs[beaconID] = upgradeID
 
 local upgradePointBeaconIDs = {} -- upgradePointBeaconIDs[upgradePointID] = beaconID
 local beaconUpgradePointIDs = {} -- beaconUpgradePointIDs[beaconID] = {upgradePointID1, upgradePointID2, upgradePointID3}
+GG.beaconUpgradePointIDs = beaconUpgradePointIDs -- for AI
 
 local dropZoneIDs = {} -- dropZoneIDs[teamID] = dropZoneID
 local dropZoneBeaconIDs = {} -- dropZoneBeaconIDs[teamID] = beaconID

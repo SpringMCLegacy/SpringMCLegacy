@@ -291,7 +291,7 @@ return {
 	-- Upgrades
 	union = {
 		cmdDesc = {
-			id = GetCmdID('PERK_DROPSHIP_UPGRADE_UNION'),
+			id = GetCmdID('CMD_UNION'),
 			action = 'perkdropshipupgradeunion',
 			name = Pad("Union", "Dropship"),
 			tooltip = 'Increases Tonnage Limit',
@@ -307,7 +307,7 @@ return {
 	},
 	overlord = {
 			cmdDesc = {
-			id = GetCmdID('PERK_DROPSHIP_UPGRADE_OVERLORD'),
+			id = GetCmdID('CMD_OVERLORD'),
 			action = 'perkdropshipupgradeoverlord',
 			name = Pad("Overlord", "Dropship"),
 			tooltip = 'Increases Tonnage Limit',
