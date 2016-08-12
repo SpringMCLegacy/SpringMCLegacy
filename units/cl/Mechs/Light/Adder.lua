@@ -29,6 +29,35 @@ local Prime = Adder:New{
     },
 }
 
+local A = Adder:New{
+	description         = "Light LRM Support",
+	weapons 		= {	
+		[1] = {
+			name	= "LRM20",
+		},
+		[2] = {
+			name	= "LRM20",
+		},
+		[3] = {
+			name	= "Flamer",
+		},
+		[4] = {
+			name	= "CSPL",
+		},
+		[5] = {
+			name	= "CSPL",
+		},
+	},
+	customparams = {
+		variant         = "A",
+		speed			= 90,
+		price			= 14370,
+		heatlimit 		= 20,
+		armor			= {type = "ferro", tons = 6},
+		maxammo 		= {lrm = 4},
+    },
+}
+
 local B = Adder:New{
 	description         = "Light Striker",
 	weapons 		= {	
@@ -61,6 +90,7 @@ return lowerkeys({
 	["HH_Adder_Prime"] = Prime:New(),
 	["GB_Adder_Prime"] = Prime:New(),
 	["SJ_Adder_Prime"] = Prime:New(),
+	["WF_Adder_A"] = A:New(),
 	["WF_Adder_B"] = B:New(),
 	["HH_Adder_B"] = B:New(),
 	["GB_Adder_B"] = B:New(),
