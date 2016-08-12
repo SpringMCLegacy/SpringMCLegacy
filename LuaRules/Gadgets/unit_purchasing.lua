@@ -135,8 +135,9 @@ local teamDropShipHPs = {} -- teamDropShipHPs[teamID] = number
 local C3Status = {} -- C3Status[unitID] = bool deployed
 local teamC3Counts = {} -- teamC3Counts[teamID] = number
 local dropShipStatus = {} -- dropShipStatus[teamID] = number, where 0 = Ready, 1 = Active, 2 = Cooldown
+GG.dropShipStatus = dropShipStatus
 local orderStatus = {} -- orderStatus[teamID] = number, where 0 = Ready for a new order, 1 = order submitted, 2 = can't submit atm?
-
+GG.orderStatus = orderStatus
 -- teamSlots[teamID] = {[1] = {active = true, used = number_used, available = number_available, units = {unitID1 = tons, unitID2 = tons, ...}}, ...}
 local teamSlots = {}
 local unitLances = {} -- unitLances[unitID] = group_number
@@ -424,7 +425,7 @@ function OrderFinished(unitID, teamID)
 end
 
 -- TODO: Issues if dropzone is 'flipped' to another beacon
-function DropshipLeft(teamID) -- called by Dropship once it has left, to enable "Submit Order"
+function DropshipLeft(teamID, switch) -- called by Dropship once it has left, to enable "Submit Order"
 	local unitID = teamDropZones[teamID]
 	local beaconID = GG.dropZoneBeaconIDs[teamID]
 	orderStatus[teamID] = 0
@@ -438,7 +439,9 @@ function DropshipLeft(teamID) -- called by Dropship once it has left, to enable 
 	local enableFrame = GetGameFrame() + dropShipDef.customParams.cooldown
 	coolDowns[teamID] = enableFrame
 	Spring.SetTeamRulesParam(teamID, "DROPSHIP_COOLDOWN", enableFrame) -- frame this team can call dropship again
-	GG.DropzoneFree(beaconID, teamID)
+	if not switch then -- only free up the beacon if a dropship is really leaving
+		GG.DropzoneFree(beaconID, teamID)
+	end
 end
 GG.DropshipLeft = DropshipLeft
 
@@ -649,13 +652,12 @@ function gadget:UnitDamaged(unitID, unitDefID, teamID, damage, paralyzer, weapon
 end
 
 function gadget:UnitDestroyed(unitID, unitDefID, teamID, attackerID, attackerDefID, attackerTeam)
-	Spring.Echo("HERPA", UnitDefs[unitDefID].name)
 	if dropZones[unitID] then -- dropZone switched
 		-- clear the order
 		if dropShipStatus[teamID] == 2 then
 			orderStatus[teamID] = 0
 		end
-		AddTeamResource(teamID, "metal", orderCosts[unitID])
+		AddTeamResource(teamID, "metal", orderCosts[unitID] or 0)
 		orderCosts[unitID] = 0
 		dropZones[unitID] = nil
 		teamDropZones[teamID] = nil
@@ -740,7 +742,7 @@ function gadget:GameFrame(n)
 			if unitID and ((not Spring.ValidUnitID(unitID)) or Spring.GetUnitIsDead(unitID)) then -- check valid first (lazy evaluation means non-valid unitID is then not passed)
 				coolDowns[teamID] = -1
 			else
-				if framesRemaining <= 0 and dropShipStatus[teamID] > 0 then
+				if framesRemaining <= 0 and dropShipStatus[teamID] == 2 then
 					coolDowns[teamID] = -2
 					-- dropship is now READY
 					dropShipStatus[teamID] = 0

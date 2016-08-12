@@ -8,7 +8,7 @@ function ChangeType(upgrade)
 	else
 		Spring.SetUnitNoDraw(unitID, false)
 		stage = 0
-		StartThread(fx)
+		--StartThread(fx)
 	end
 end
 

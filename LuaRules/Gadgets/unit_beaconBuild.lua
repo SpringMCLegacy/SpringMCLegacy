@@ -92,6 +92,7 @@ local function BeaconPoints(beaconID, teamID, x, y, z)
 		local angle = i * 2 * math.pi / 3
 		local dx, dz = math.sin(angle) * BEACON_POINT_DIST, math.cos(angle) * BEACON_POINT_DIST
 		local upgradePointID = CreateUnit(BEACON_POINT_ID, x + dx, y, z + dz, "s", teamID)
+		Spring.SetUnitAlwaysVisible(upgradePointID, true)
 		upgradePointBeaconIDs[upgradePointID] = beaconID
 		beaconUpgradePointIDs[beaconID][i+1] = upgradePointID
 	end
@@ -314,7 +315,9 @@ function gadget:UnitDestroyed(unitID, unitDefID, teamID)
 		if upgradePointID then -- beaconID can be nil if /give testing
 			GG.Delay.DelayCall(SetUnitRulesParam, {unitID, "beaconID", ""}, 5) -- delay for safety
 			env = Spring.UnitScript.GetScriptEnv(upgradePointID)
-			Spring.UnitScript.CallAsUnit(upgradePointID, env.ChangeType, false)
+			if env and env.ChangeType then
+				Spring.UnitScript.CallAsUnit(upgradePointID, env.ChangeType, false)
+			end
 			upgradePointIDs[unitID] = nil
 			upgradeIDs[upgradePointID] = nil
 			-- Re-add upgrade options to beacon
@@ -370,6 +373,12 @@ function gadget:AllowCommand(unitID, unitDefID, teamID, cmdID, cmdParams, cmdOpt
 		if cmdID == dropZoneCmdDesc.id then
 			if Spring.GetUnitRulesParam(unitID, "secure") == 0 then 
 				Spring.SendMessageToTeam(teamID, "Cannot establish dropzone - Under attack!")
+				return false 
+			elseif GG.dropShipStatus[teamID] == 1 then
+				Spring.SendMessageToTeam(teamID, "Cannot establish dropzone - Dropship is active!")
+				return false 				
+			elseif GG.orderStatus[teamID] > 0 then
+				Spring.SendMessageToTeam(teamID, "Cannot establish dropzone - Order pending!")
 				return false 
 			end
 			--ToggleUpgradeOptions(unitID, false) -- REMOVE
@@ -432,7 +441,7 @@ end
 
 else
 --	UNSYNCED
-
+--[[
 -- localisations
 local GetUnitRulesParam			= Spring.GetUnitRulesParam
 -- SyncedRead
@@ -466,6 +475,6 @@ function gadget:Update()
 			end
 		end
 	end
-end
+end]]
 
 end
