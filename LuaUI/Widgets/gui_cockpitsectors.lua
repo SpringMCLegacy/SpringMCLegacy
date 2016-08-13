@@ -113,7 +113,7 @@ local function DrawFieldOfFire(unitID, list, range)
 end
 
 local function GetUnitDefMaxAngleDif(unitDef)
-	if unitDef.customParams.baseclass == "mech" then
+	if unitDef.customParams.sectorangle then
 		return math.cos(math.rad(unitDef.customParams.sectorangle)/2)
 	else
 		return 0

@@ -11,6 +11,27 @@ local function GetWeight(mass)
 	return weight
 end
 
+
+local roleSensors = {
+	["scout"] 		= {radar = 1600,	sector = 85},
+	["ewar"] 		= {radar = 1600,	sector = 85}, -- effectively synonym for scout, though most have BAP
+	["brawler"] 	= {radar = 1100,	sector = 75},
+	["skirmisher"] 	= {radar = 1300,	sector = 60},
+	["striker"] 	= {radar = 1500,	sector = 45},
+	["sniper"] 		= {radar = 1700,	sector = 30},
+	["missile"]		= {radar = 1500,	sector = 35},
+	["lrm"]			= {radar = 1500,	sector = 35}, -- synonym for missile
+	["artillery"]	= {radar = 1500,	sector = 35}, -- synonum for missile
+}
+local function GetRole(roleString)
+	for role, info in pairs(roleSensors) do
+		if roleString:lower():find(role) then
+			return role
+		end
+	end
+	return 
+end
+
 local modOptions = Spring.GetModOptions()
 if not modOptions.startmetal then -- load via file
 	local raw = VFS.Include("modoptions.lua", nil, VFS.ZIP)
@@ -177,6 +198,10 @@ for name, ud in pairs(UnitDefs) do
 			ud.power = ud.buildCostMetal * ud.buildCostEnergy
 			ud.losemitheight = cp.cockpitheight or ud.mass / 10
 			ud.radaremitheight = ud.losemitheight
+			cp.role = GetRole(ud.description)
+			if not cp.role then
+				Spring.Echo("Warning [unitdefs_post.lua]: Unit (" .. name .. ") has no known role (" .. ud.description .. ")")
+			end
 			if cp.jumpjets then
 				ud.description = ud.description .. " \255\001\179\214[JUMP]"
 			end
@@ -184,7 +209,10 @@ for name, ud in pairs(UnitDefs) do
 				ud.description = ud.description .. " \255\128\026\179[MASC]"
 			end
 			table.insert(ud.weapons, {name = "sight"})
-			cp.sectorangle = cp.sectorangle or modOptions.sectorangle or 45
+			if not cp.bap then
+				ud.radardistance = roleSensors[cp.role].radar
+			end
+			cp.sectorangle = cp.sectorangle or (cp.role and roleSensors[cp.role].sector) or modOptions.sectorangle or 45
 		end
 	end
 	-- set maxvelocity by modoption
@@ -218,6 +246,7 @@ for name, ud in pairs(UnitDefs) do
 		ud.radardistance = 3000 * modOptions.radar
 		ud.airsightdistance = 3000 * modOptions.radar
 		ud.description = ud.description .. " \255\001\255\001[BAP]"
+		cp.sectorangle  = nil
 	end
 	-- track strength should be 1/1000th of mass
 	if ud.leavetracks then

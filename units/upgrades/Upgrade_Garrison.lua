@@ -30,7 +30,7 @@ for i = 1, 6 do
 	local x = math.sin(math.rad((i-1) * 60))
 	local z = math.cos(math.rad((i-1) * 60))
 	Upgrade_Garrison.weapons[i]["mainDir"] = "" .. x .. " 0 " .. z
-	Spring.Echo("YOYO", i, Upgrade_Garrison.weapons[i]["mainDir"])
+	--Spring.Echo("YOYO", i, Upgrade_Garrison.weapons[i]["mainDir"])
 end		
 
 return lowerkeys({ ["Upgrade_Garrison"] = Upgrade_Garrison })
