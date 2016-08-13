@@ -355,29 +355,29 @@ return {
 		requires = "vpadheavy",
 	},
 	-- Garrison turrets
-	garrisonsniper = {
+	garrisonlaser = {
 		cmdDesc = {
-			id = GetCmdID('PERK_GARRISON_SNIPER'),
-			action = 'perkgarrisonsniper',
-			name = Pad("Sniper", "Turret"),
-			tooltip = 'Adds a Sniper artillery cannon',
+			id = GetCmdID('PERK_GARRISON_LASER'),
+			action = 'perkgarrisonlaser',
+			name = Pad("Defensive", "Lasers"),
+			tooltip = 'Opens firing ports for lasers (-20% damage resistance)',
 			texture = 'bitmaps/ui/upgrade.png',	
 		},
-		valid = function (unitDefID) return UnitDefs[unitDefID].name:find("garrison") end,
+		valid = function (unitDefID) return UnitDefs[unitDefID].name == "upgrade_garrison" end,
 		applyPerk = function (unitID)
-			local x,y,z = Spring.GetUnitPosition(unitID)
-			local turretID = Spring.CreateUnit("garrison_sniper", x,y,z, 0, Spring.GetUnitTeam(unitID))
-			Spring.UnitAttach(unitID, turretID, 8)
+			env = Spring.UnitScript.GetScriptEnv(unitID)
+			env.noFiring = false
+			Spring.SetUnitArmored(unitID, true, 0.8)
 		end,
 		costFunction = deductCBills,
-		price = 10000,
+		price = 8000,
 	},
 	garrisonfaction = {
 		cmdDesc = {
 			id = GetCmdID('PERK_GARRISON_FACTION'),
 			action = 'perkgarrisonfaction',
 			name = Pad("Faction", "Turret"),
-			tooltip = 'Adds a powerful faction special weapon turret',
+			tooltip = 'Adds a powerful faction special weapon turret (-30% damage resistance)',
 			texture = 'bitmaps/ui/upgrade.png',	
 		},
 		valid = function (unitDefID) return UnitDefs[unitDefID].name:find("garrison") end,
@@ -386,8 +386,10 @@ return {
 			local faction = GG.teamSide[Spring.GetUnitTeam(unitID)]
 			local turretID = Spring.CreateUnit("garrison_" .. faction, x,y,z, 0, Spring.GetUnitTeam(unitID))
 			Spring.UnitAttach(unitID, turretID, 8)
+			Spring.SetUnitArmored(unitID, true, 0.7)
 		end,
 		costFunction = deductCBills,
 		price = 10000,
+		requires = "garrisonlaser",
 	},
 }

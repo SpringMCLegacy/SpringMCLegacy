@@ -34,6 +34,11 @@ local pole = {}
 for i = 1, 4 do
 	pole[i] = piece("pole" .. i)
 end
+-- Garrison pieces
+local flares = {}
+for i = 1, 6 do
+	flares[i] = piece("flare_" .. i)
+end
 
 -- Constants
 local unitDefID = Spring.GetUnitDefID(unitID)
@@ -44,6 +49,12 @@ local CRATE_SPEED = math.rad(50)
 local RANDOM_ROT = math.random(-180, 180)
 local UNLOAD_X, UNLOAD_Z
 
+pointID = nil
+beaconID = nil
+function ParentBeacon(callingPointID, parentBeaconID)
+	pointID = callingPointID
+	beaconID = parentBeaconID
+end
 
 local function Blinks()
 	local i = 1
@@ -53,13 +64,6 @@ local function Blinks()
 		i = i + 1
 		if i == 7 then i = 1 end
 	end
-end
-
-pointID = nil
-beaconID = nil
-function ParentBeacon(callingPointID, parentBeaconID)
-	pointID = callingPointID
-	beaconID = parentBeaconID
 end
 
 function Upgrade(level)
@@ -179,6 +183,7 @@ function SeismicPings()
 		Sleep(5000)
 	end
 end
+
 function Unpack()
 	-- Wait for delivery van to bug out
 	Sleep(2000)
@@ -388,6 +393,31 @@ function script.TransportDrop (passengerID, x, y, z)
 		Sleep(1000)
 		Spring.SetUnitBlocking(unitID, true, true)
 	end
+end
+
+-- Garrison weapons
+noFiring = true
+function script.AimWeapon(weaponID, heading, pitch)
+	if noFiring then return false end
+	Signal(2 ^ weaponID) -- 2 'to the power of' weapon ID
+	SetSignalMask(2 ^ weaponID)
+
+	Turn(flares[weaponID], y_axis, heading)
+	Turn(flares[weaponID], x_axis, -pitch)
+
+	return true
+end
+
+function script.Shot(weaponID)
+	EmitSfx(flares[weaponID], SFX.CEG + weaponID)
+end
+
+function script.AimFromWeapon(weaponID) 
+	return 1
+end
+
+function script.QueryWeapon(weaponID) 
+	return flares[weaponID] or 1
 end
 
 function script.Killed(recentDamage, maxRepairth)
