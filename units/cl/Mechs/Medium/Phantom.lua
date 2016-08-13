@@ -7,7 +7,7 @@ local Phantom = Medium:New{
 }
 	
 local Prime = Phantom:New{
-	description         = "Medium ECM Support",
+	description         = "Medium EWAR Support",
 	weapons	= {	
 		[1] = {
 			name	= "CERMBL",

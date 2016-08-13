@@ -131,12 +131,8 @@ local E = Mistlynx:New{
 }
 
 return lowerkeys({
-	["WF_Mistlynx_Prime"] = Prime:New(),
-	["WF_Mistlynx_B"] = B:New(),
 	["SJ_Mistlynx_Prime"] = Prime:New(),
 	["SJ_Mistlynx_B"] = B:New(),
 	["SJ_Mistlynx_C"] = C:New(),
 	["SJ_Mistlynx_E"] = E:New(),
-	["WF_Mistlynx_C"] = C:New(),--for testing purposes
-	["WF_Mistlynx_E"] = E:New(),--for testing purposes
 })

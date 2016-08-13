@@ -80,6 +80,4 @@ return lowerkeys({
 	["JF_LocustIIC_Mk2"] = Mk2:New(),
 	["SJ_LocustIIC_Mk3"] = Mk3:New(),
 	["WF_LocustIIC_Mk5"] = Mk5:New(),
-	["WF_LocustIIC_Mk2"] = Mk2:New(),--for testing purposes
-	["WF_LocustIIC_Mk3"] = Mk3:New(),--for testing purposes
 })

@@ -30,7 +30,7 @@ local Prime = Adder:New{
 }
 
 local A = Adder:New{
-	description         = "Light LRM Support",
+	description         = "Light Missile Support",
 	weapons 		= {	
 		[1] = {
 			name	= "LRM20",
@@ -91,6 +91,9 @@ return lowerkeys({
 	["GB_Adder_Prime"] = Prime:New(),
 	["SJ_Adder_Prime"] = Prime:New(),
 	["WF_Adder_A"] = A:New(),
+	["HH_Adder_A"] = A:New(),
+	["GB_Adder_A"] = A:New(),
+	["SJ_Adder_A"] = A:New(),
 	["WF_Adder_B"] = B:New(),
 	["HH_Adder_B"] = B:New(),
 	["GB_Adder_B"] = B:New(),

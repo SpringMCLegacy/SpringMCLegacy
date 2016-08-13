@@ -35,7 +35,7 @@ local Prime = Shadowcat:New{
 }
 
 local A = Shadowcat:New{
-	description         = "Medium Sniper",
+	description         = "Medium Striker",
 
 	weapons = {	
 		[1] = {
@@ -63,7 +63,7 @@ local A = Shadowcat:New{
 }
 
 local B = Shadowcat:New{
-	description         = "Medium Sniper",
+	description         = "Medium Missile Support",
 
 	weapons = {	
 		[1] = {
@@ -97,7 +97,4 @@ return lowerkeys({
 	["SJ_Shadowcat_Prime"] = Prime:New(),
 	["SJ_Shadowcat_A"] = A:New(),
 	["SJ_Shadowcat_B"] = B:New(),
-	["WF_Shadowcat_Prime"] = Prime:New(),--for testing
-	["WF_Shadowcat_A"] = A:New(),--for testing
-	["WF_Shadowcat_B"] = B:New(),--for testing
 })

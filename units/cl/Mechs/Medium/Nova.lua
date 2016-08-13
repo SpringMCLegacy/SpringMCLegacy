@@ -28,5 +28,4 @@ end
 
 return lowerkeys({
 	["HH_Nova_Prime"] = Prime:New(),
-	["WF_Nova_Prime"] = Prime:New(),
 })
