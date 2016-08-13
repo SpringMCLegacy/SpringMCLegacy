@@ -33,11 +33,11 @@ local CMD_JUMP = GG.CustomCommands.GetCmdID("CMD_JUMP")
 local PERK_JUMP_RANGE = GG.CustomCommands.GetCmdID("PERK_JUMP_EFFICIENCY")
 
 local desired = {"CMD_SEND_ORDER", "CMD_DROPZONE", -- mech purchasing
-				"CMD_UNION", "CMD_OVERLORD", -- dropship upgrading
+				"CMD_DROPZONE_2", "CMD_DROPZONE_3", -- dropship upgrading
 				"CMD_JUMP", "CMD_MASC", -- mech behaviour
-				 "CMD_UPGRADE_upgrade_c3array", "CMD_UPGRADE_upgrade_vehiclepad", -- outposts (can already use)
-				 "CMD_UPGRADE_upgrade_mechbay", "CMD_UPGRADE_upgrade_garrison", "CMD_UPGRADE_upgrade_uplink", -- outposts (maybe soon)
-				 "CMD_UPGRADE_upgrade_seismic", "CMD_UPGRADE_upgrade_turretcontrol", -- outposts (not a priority)
+				 "CMD_UPGRADE_C3ARRAY", "CMD_UPGRADE_VEHICLEPAD", -- outposts (can already use)
+				 "CMD_UPGRADE_MECHBAY", "CMD_UPGRADE_GARRISON", "CMD_UPGRADE_UPLINK", -- outposts (maybe soon)
+				 "CMD_UPGRADE_SEISMIC", "CMD_UPGRADE_TURRETCONTROL", -- outposts (not a priority)
 				 }
 local AI_CMDS = {}
 for _, cmd in pairs(desired) do
@@ -156,12 +156,10 @@ local function Spam(teamID)
 			--Spring.Echo("Adding to order;", orderSizes[teamID], UnitDefs[-buildID].name, GG.TeamSlotsRemaining(teamID))
 			elseif orderSizes[teamID] == 0 then 
 				-- couldn't find any affordable mechs, try upgrading dropship
-				if not teamDropshipUpgrades[teamID] and Spring.GetTeamResources(teamID, "metal") >  AI_CMDS["CMD_UNION"].cost then
-					GG.Delay.DelayCall(Spring.GiveOrderToUnit, {unitID, AI_CMDS["CMD_UNION"].id, {}, {}}, 1)
-					teamDropshipUpgrades[teamID] = 1
-				elseif teamDropshipUpgrades[teamID] == 1 and Spring.GetTeamResources(teamID, "metal") >  AI_CMDS["CMD_OVERLORD"].cost then
-					GG.Delay.DelayCall(Spring.GiveOrderToUnit, {unitID, AI_CMDS["CMD_OVERLORD"].id, {}, {}}, 1)
-					teamDropshipUpgrades[teamID] = 2
+				local nextLevel = teamDropshipUpgrades[teamID] + 1
+				if Spring.GetTeamResources(teamID, "metal") >  AI_CMDS["CMD_DROPZONE_" .. nextLevel].cost then
+					GG.Delay.DelayCall(Spring.GiveOrderToUnit, {unitID, AI_CMDS["CMD_DROPZONE_" .. nextLevel].id, {}, {}}, 1)
+					teamDropshipUpgrades[teamID] = nextLevel
 				end
 				return 
 			end
@@ -216,9 +214,9 @@ local function Upgrade(unitID, teamID)
 		GG.Delay.DelayCall(Spring.GiveOrderToUnit, {unitID, AI_CMDS["CMD_DROPZONE"].id, {}, {}}, 1)
 	else -- gonna upgrade a point
 		-- TODO: Truly horrible, just randomnly pick?
-		local cmd = ((teamUpgradeCounts[teamID][C3_ID] + teamUpgradeCounts[teamID][VPAD_ID]) % 2 == 0) and "CMD_UPGRADE_upgrade_c3array" or "CMD_UPGRADE_upgrade_vehiclepad"
+		local cmd = ((teamUpgradeCounts[teamID][C3_ID] + teamUpgradeCounts[teamID][VPAD_ID]) % 2 == 0) and "CMD_UPGRADE_C3ARRAY" or "CMD_UPGRADE_VEHICLEPAD"
 		if Spring.GetTeamResources(teamID, "metal") > AI_CMDS[cmd].cost then
-			local slot = cmd == "CMD_UPGRADE_upgrade_c3array" and 1 or 2 -- TODO: horrible, keep track of this internally? or in beaconBuild
+			local slot = cmd == "CMD_UPGRADE_C3ARRAY" and 1 or 2 -- TODO: horrible, keep track of this internally? or in beaconBuild
 			local pointID = GG.beaconUpgradePointIDs[unitID][slot]
 			GG.Delay.DelayCall(Spring.GiveOrderToUnit, {pointID, AI_CMDS[cmd].id, {}, {}}, 1)
 		end
@@ -236,6 +234,7 @@ function gadget:UnitCreated(unitID, unitDefID, teamID)
 		if unitDef.name:find("dropzone") then
 			dropZoneIDs[teamID] = unitID	
 			Spam(teamID)
+			teamDropshipUpgrades[teamID] = 1
 			GG.Delay.DelayCall(Upgrade, {nil, teamID}, 1)
 			if difficulty > 1 then -- loadsa money!
 				Perk(unitID, unitDefID, nil, true)

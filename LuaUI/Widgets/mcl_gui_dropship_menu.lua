@@ -194,6 +194,10 @@ function ShowUnitButtons(class)
 end
 
 function UpdateUI()
+	if (Spring.GetSpectatingState()) then
+		--widgetHandler:RemoveWidget()
+		return
+	end
 		local cBills = floor(Spring.GetTeamResources(myTeamID, "metal"));
 		local tonnage = floor(Spring.GetTeamResources(myTeamID,"energy"));
 		local coolDownFrame = tonumber(GetTeamRulesParam(myTeamID, "DROPSHIP_COOLDOWN") or 0);
@@ -377,7 +381,8 @@ end
 
 function widget:Initialize()
 	if (Spring.GetSpectatingState()) then
-		widgetHandler:RemoveWidget()
+		--widgetHandler:RemoveWidget()
+		return
 	end
 	
 	if (not WG.Chili) then

@@ -291,7 +291,7 @@ return {
 	-- Upgrades
 	union = {
 		cmdDesc = {
-			id = GetCmdID('CMD_UNION'),
+			id = GetCmdID('CMD_DROPZONE_2'),
 			action = 'perkdropshipupgradeunion',
 			name = Pad("Union", "Dropship"),
 			tooltip = 'Increases Tonnage Limit',
@@ -307,7 +307,7 @@ return {
 	},
 	overlord = {
 			cmdDesc = {
-			id = GetCmdID('CMD_OVERLORD'),
+			id = GetCmdID('CMD_DROPZONE_3'),
 			action = 'perkdropshipupgradeoverlord',
 			name = Pad("Overlord", "Dropship"),
 			tooltip = 'Increases Tonnage Limit',
@@ -325,7 +325,7 @@ return {
 	-- vehicle pad
 	vpadheavy = {
 		cmdDesc = {
-			id = GetCmdID('PERK_VPAD_HEAVY'),
+			id = GetCmdID('PERK_VPAD_2'),
 			action = 'perkvpadheavy',
 			name = Pad("Heavy", "Units"),
 			tooltip = 'Adds heavy and assault units to the militia',
@@ -340,7 +340,7 @@ return {
 	},
 	vpadhouse = {
 		cmdDesc = {
-			id = GetCmdID('PERK_VPAD_HOUSE'),
+			id = GetCmdID('PERK_VPAD_3'),
 			action = 'perkvpadhouse',
 			name = Pad("House", "Forces"),
 			tooltip = 'Adds elite House forces to the militia',
@@ -357,7 +357,7 @@ return {
 	-- Garrison turrets
 	garrisonlaser = {
 		cmdDesc = {
-			id = GetCmdID('PERK_GARRISON_LASER'),
+			id = GetCmdID('PERK_GARRISON_2'),
 			action = 'perkgarrisonlaser',
 			name = Pad("Defensive", "Lasers"),
 			tooltip = 'Opens firing ports for lasers (-20% damage resistance)',
@@ -374,7 +374,7 @@ return {
 	},
 	garrisonfaction = {
 		cmdDesc = {
-			id = GetCmdID('PERK_GARRISON_FACTION'),
+			id = GetCmdID('PERK_GARRISON_3'),
 			action = 'perkgarrisonfaction',
 			name = Pad("Faction", "Turret"),
 			tooltip = 'Adds a powerful faction special weapon turret (-30% damage resistance)',

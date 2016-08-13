@@ -111,7 +111,7 @@ function gadget:GamePreload()
 		elseif cp.baseclass == "upgrade" then -- automatically build beacon upgrade cmdDescs
 			local cBillCost = unitDef.metalCost
 			local upgradeCmdDesc = {
-				id     = GG.CustomCommands.GetCmdID("CMD_UPGRADE_" .. name, cBillCost),
+				id     = GG.CustomCommands.GetCmdID("CMD_" .. name:upper(), cBillCost),
 				type   = CMDTYPE.ICON,
 				name   = unitDef.humanName:gsub(" ", "  \n"),
 				action = 'upgrade',
