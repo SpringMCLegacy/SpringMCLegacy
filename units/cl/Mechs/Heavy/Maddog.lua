@@ -40,6 +40,85 @@ local Prime = Maddog:New{
     },
 }
 
+local A = Maddog:New{
+	description         = "Heavy Brawler",
+	weapons = {	
+		[1] = {
+			name	= "CERPPC",
+		},
+		[2] = {
+			name	= "LBX5",
+		},
+		[3] = {
+			name	= "SRM6",
+		},
+		[4] = {
+			name	= "SRM6",
+		},
+		[5] = {
+			name	= "SRM6",
+		},
+		[6] = {
+			name	= "SRM6",
+		},
+		[7] = {
+			name	= "SRM6",
+		},
+		[8] = {
+			name	= "SRM6",
+		},
+	},
+		
+    customparams = {
+		variant			= "A",
+		speed			= 80,
+		price			= 19230,
+		heatlimit 		= 24,
+		armor			= {type = "ferro", tons = 8.5},
+		maxammo 		= {srm = 4, ac5 = 2},
+    },
+}
+
+local D = Maddog:New{
+	description         = "Heavy LRM Support",
+	weapons = {	
+		[1] = {
+			name	= "ATM12",
+		},
+		[2] = {
+			name	= "ATM12",
+		},
+		[3] = {
+			name	= "CERMBL",
+		},
+		[4] = {
+			name	= "CERMBL",
+		},
+		[5] = {
+			name	= "CERSBL",
+		},
+		[6] = {
+			name	= "CERSBL",
+		},
+		[7] = {
+			name	= "CMPL",
+		},
+		[8] = {
+			name	= "CMPL",
+		},
+	},
+		
+    customparams = {
+		variant			= "D",
+		speed			= 80,
+		price			= 24470,
+		heatlimit 		= 24,
+		armor			= {type = "ferro", tons = 8.5},
+		maxammo 		= {atm = 6},
+    },
+}
 return lowerkeys({ 
 	["WF_Maddog_Prime"] = Prime:New(),
+	["WF_Maddog_A"] = A:New(),
+	["WF_Maddog_D"] = D:New(),
 })
