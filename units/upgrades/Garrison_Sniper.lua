@@ -16,5 +16,5 @@ local Garrison_Sniper = Tower:New{
 }
 
 return lowerkeys({
-	["Garrison_Sniper"] = Garrison_Sniper,
+	--["Garrison_Sniper"] = Garrison_Sniper,
 })
