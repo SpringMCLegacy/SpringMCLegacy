@@ -8,7 +8,7 @@ local Longbow = Assault:New{
 }
 	
 local LGB12C = Longbow:New{
-	description         = "Assault LRM Support",
+	description         = "Assault Missile Support",
 	weapons	= {	
 		[1] = {
 			name	= "LRM20",

@@ -8,7 +8,7 @@ local Uziel = Medium:New{
 }
 
 local UZL2S = Uziel:New{
-	description         = "Medium Sniper",
+	description         = "Medium Striker",
 	weapons	= {	
 		[1] = {
 			name	= "PPC",

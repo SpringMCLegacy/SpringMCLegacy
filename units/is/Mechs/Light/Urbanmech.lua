@@ -9,7 +9,7 @@ local Urbanmech = Light:New{
 }
 
 local UMR63 = Urbanmech:New{
-	description         = "Light Striker",
+	description         = "Light Brawler",
 	weapons = {	
 		[1] = {
 			name	= "LBX10",

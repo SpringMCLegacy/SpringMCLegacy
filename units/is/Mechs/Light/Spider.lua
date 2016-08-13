@@ -8,7 +8,7 @@ local Spider = Light:New{
 }
 
 local SDR7K = Spider:New{
-	description         = "Light Skirmisher",
+	description         = "Light Scout",
 	weapons = {	
 		[1] = {
 			name	= "MPL",
@@ -29,7 +29,7 @@ local SDR7K = Spider:New{
 }
 
 local SDR7M = Spider:New{
-	description         = "Light Skirmisher",
+	description         = "Light Scout",
 	weapons = {	
 		[1] = {
 			name	= "MPL",

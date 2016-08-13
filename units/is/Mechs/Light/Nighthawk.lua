@@ -32,7 +32,7 @@ local NTK2Q = Nighthawk:New{
 }
 
 local NTK2S = Nighthawk:New{
-	description         = "Light EWAR Support",
+	description         = "Light Striker",
 	weapons	= {	
 		[1] = {
 			name	= "ERLBL",

@@ -7,7 +7,7 @@ local Fireball = Light:New{
 }
 
 local ALM9D = Fireball:New{
-	description         = "Light Skirmisher",
+	description         = "Light Scout",
 	weapons = {	
 		[1] = {
 			name	= "MBL",

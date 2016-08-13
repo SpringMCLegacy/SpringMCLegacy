@@ -8,7 +8,7 @@ local Dart = Light:New{
 }
 
 local DRT3S = Dart:New{
-	description         = "Light Skirmisher",
+	description         = "Light Scout",
 	weapons = {	
 		[1] = {
 			name	= "MBL",

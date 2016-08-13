@@ -8,7 +8,7 @@ local Catapult = Heavy:New{
 }
 	
 local CPLTC1 = Catapult:New{
-	description         = "Heavy LRM Support",
+	description         = "Heavy Missile Support",
 	weapons	= {	
 		[1] = {
 			name	= "LRM15",
@@ -42,7 +42,7 @@ local CPLTC1 = Catapult:New{
 }
 
 local CPLTC2 = Catapult:New{
-	description         = "Heavy LRM Support",
+	description         = "Heavy Missile Support",
 	weapons	= {	
 		[1] = {
 			name	= "ALRM15",
@@ -101,7 +101,7 @@ local CPLTC3 = Catapult:New{
 }
 
 local CPLTC4 = Catapult:New{
-	description         = "Heavy LRM Support",
+	description         = "Heavy Missile Support",
 	weapons 		= {	
 		[1] = {
 			name	= "LRM20",

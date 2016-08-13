@@ -8,7 +8,7 @@ local Scarabus = Light:New{
 }
 
 local SCB9A = Scarabus:New{
-	description         = "Light EWAR",
+	description         = "Light EWAR Support",
 	weapons	= {	
 		[1] = {
 			name	= "MBL",
@@ -28,7 +28,7 @@ local SCB9A = Scarabus:New{
 	},
 		
 	customparams = {
-		variant         = "STO-4A",
+		variant         = "SCB-9A",
 		speed			= 150,
 		price			= 8460,
 		heatlimit 		= 10,
