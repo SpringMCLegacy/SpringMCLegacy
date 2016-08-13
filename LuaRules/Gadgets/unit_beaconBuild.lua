@@ -220,9 +220,13 @@ end
 
 function DropzoneFree(beaconID, teamID)
 	--Spring.Echo("DropzoneFree", beaconID, teamID)
-	beaconActive[beaconID] = false
-	table.remove(beaconDropshipQueue[beaconID], 1)
-	NextDropshipQueueItem(beaconID, teamID)
+	if beaconID then
+		beaconActive[beaconID] = false
+		table.remove(beaconDropshipQueue[beaconID], 1)
+		NextDropshipQueueItem(beaconID, teamID)
+	else
+		Spring.Echo("Uhoh, FLOZi logic fail. DropzoneFree was called with a nil beaconID. Team was", teamID)
+	end
 end
 GG.DropzoneFree = DropzoneFree
 
@@ -251,7 +255,7 @@ local function SetDropZone(beaconID, teamID)
 	if currDropZone then
 		--ToggleUpgradeOptions(dropZoneBeaconIDs[teamID], true) -- REMOVE
 		DestroyUnit(currDropZone, false, true)
-		--GG.DropshipLeft(teamID) -- reset the timer
+		GG.DropshipLeft(teamID, true) -- reset the timer
 	end
 	local x,y,z = GetUnitPosition(beaconID)
 	local side = GG.teamSide[teamID]

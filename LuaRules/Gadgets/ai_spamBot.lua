@@ -157,9 +157,11 @@ local function Spam(teamID)
 			elseif orderSizes[teamID] == 0 then 
 				-- couldn't find any affordable mechs, try upgrading dropship
 				local nextLevel = teamDropshipUpgrades[teamID] + 1
-				if Spring.GetTeamResources(teamID, "metal") >  AI_CMDS["CMD_DROPZONE_" .. nextLevel].cost then
-					GG.Delay.DelayCall(Spring.GiveOrderToUnit, {unitID, AI_CMDS["CMD_DROPZONE_" .. nextLevel].id, {}, {}}, 1)
-					teamDropshipUpgrades[teamID] = nextLevel
+				if nextLevel <= 3 then
+					if Spring.GetTeamResources(teamID, "metal") >  AI_CMDS["CMD_DROPZONE_" .. nextLevel].cost then
+						GG.Delay.DelayCall(Spring.GiveOrderToUnit, {unitID, AI_CMDS["CMD_DROPZONE_" .. nextLevel].id, {}, {}}, 1)
+						teamDropshipUpgrades[teamID] = nextLevel
+					end
 				end
 				return 
 			end
