@@ -40,14 +40,35 @@ local BEACON_ID = UnitDefNames["beacon"].id
 local UPLINK_ID = UnitDefNames["upgrade_uplink"].id
 local MECHBAY_ID = UnitDefNames["upgrade_mechbay"].id
 
-local ARTY_WEAPON_ID = WeaponDefNames["sniper"].id
+local artyWeaponInfo = {
+	[1] = { -- NAC/10
+		id 			= WeaponDefNames["sniper"].id,
+		salvo 		= 40,
+		cooldown	= 50 * 30,
+		delay		= 10 * 30,
+		spread		= 500,
+	},
+	[2] = { -- NPPC
+		id 			= WeaponDefNames["sniper"].id,
+		salvo 		= 10,
+		cooldown	= 75 * 30,
+		delay		= 10 * 30,
+		spread 		= 400,
+	},
+	[3] = { -- NAC/40
+		id 			= WeaponDefNames["sniper"].id,
+		salvo 		= 3,
+		cooldown	= 90 * 30,
+		delay		= 15 * 30,
+		spread		= 200,
+	}
+}
+local uplinkLevels = {} -- uplinkLevels[uplinkID] = 1, 2 or 3
+
 local ARTY_HEIGHT = 10000
-local ARTY_SALVO = 10
-local ARTY_RADIAL_SPREAD = 500
 local ARTY_COST = 10000
-local ARTY_COOLDOWN = 75 * 30 -- 75s
-local ARTY_DELAY = 10 * 30 -- 10s
 local artyLastFired = {} -- artyLastFired[teamID] = gameFrame
+local artyCanFire = {} -- artyCanFire[teamID] = gameFrame
 
 -- Variables
 local artyCmdDesc = {
@@ -67,51 +88,58 @@ local getOutCmdDesc = {
 	tooltip = "Emergency unload",
 }
 
+local function UplinkUpgrade(unitID, level)
+	uplinkLevels[unitID] = level
+end
+GG.UplinkUpgrade = UplinkUpgrade
 
 function gadget:UnitCreated(unitID, unitDefID, teamID, builderID)
 	local unitDef = UnitDefs[unitDefID]
 	local cp = unitDef.customParams
 	if unitDefID == UPLINK_ID then
 		InsertUnitCmdDesc(unitID, artyCmdDesc)
+		uplinkLevels[unitID] = 1
 	elseif unitDefID == MECHBAY_ID then
 		InsertUnitCmdDesc(unitID, getOutCmdDesc)
 	end
 end
 
-local function ArtyShot(x,y,z)
+local function ArtyShot(level, x,y,z)
 	local projParams = {}
 	projParams.gravity = -3 + math.random()
 	projParams.pos = {x, y, z}
-	SpawnProjectile(ARTY_WEAPON_ID, projParams)
+	SpawnProjectile(artyWeaponInfo[level].id, projParams)
 end
 
-local function ArtyStrike(teamID, x, y, z)
-	local lastFrame = artyLastFired[teamID]
+local function ArtyStrike(unitID, teamID, x, y, z)
+	local canFireFrame = artyCanFire[teamID]
 	local currFrame = GetGameFrame()
-	if lastFrame and lastFrame > currFrame - ARTY_COOLDOWN then -- still cooling
-		local minutes, seconds = FramesToMinutesAndSeconds(ARTY_COOLDOWN - (currFrame - lastFrame))
+	local weapInfo = artyWeaponInfo[uplinkLevels[unitID]]
+	if canFireFrame and canFireFrame > currFrame then -- still cooling
+		local minutes, seconds = FramesToMinutesAndSeconds(canFireFrame - currFrame)
 		Spring.SendMessageToTeam(teamID, "Not yet! " .. minutes .. " min " .. seconds .. " seconds left")
 		return false
 	end
 	local money = GetTeamResources(teamID, "metal")
-	if money < ARTY_COST then  -- not enough C-Bills (Should never get this far, button disabled by game_money.lua)
-		SendMessageToTeam(teamID, "Not enough C-Bills for artillery strike!")
+	if money < ARTY_COST then  -- not enough C-Bills (TODO: Should never get this far, button disabled by unit_purchasing.lua?)
+		GG.PlaySoundForTeam(teamID, "BB_Insufficient_Funds", 1)
+		Spring.SendMessageToTeam(teamID, "Not enough C-Bills for artillery strike!")
 		return false 
 	end
 	UseTeamResource(teamID, "metal", ARTY_COST)
-	artyLastFired[teamID] = currFrame
-	SetTeamRulesParam(teamID, "UPLINK_ARTILLERY", currFrame + ARTY_COOLDOWN) -- frame this team can fire arty again
+	artyCanFire[teamID] = currFrame + weapInfo.cooldown
+	SetTeamRulesParam(teamID, "UPLINK_ARTILLERY", currFrame + weapInfo.cooldown) -- frame this team can fire arty again
 	local dx, dz
-	for i = 1, ARTY_SALVO do
+	for i = 1, weapInfo.salvo do
 		local angle = math.random(360)
-		local length = math.random(ARTY_RADIAL_SPREAD)
+		local length = math.random(weapInfo.spread)
 		dx = math.sin(angle) * length
 		dz = math.cos(angle) * length
-		DelayCall(ArtyShot, {x + dx, y + ARTY_HEIGHT, z + dz}, ARTY_DELAY + math.random(150))
+		DelayCall(ArtyShot, {uplinkLevels[unitID], x + dx, y + ARTY_HEIGHT, z + dz}, weapInfo.delay + math.random(150))
 	end
 	GG.PlaySoundForTeam(teamID, "BB_OrbitalStrike_Inbound", 1)
-	DelayCall(GG.PlaySoundForTeam, {teamID, "BB_OrbitalStrike_Available_In_60", 1}, ARTY_COOLDOWN - 62 * 30) -- fudge
-	DelayCall(GG.PlaySoundForTeam, {teamID, "BB_OrbitalStrike_Available", 1}, ARTY_COOLDOWN)
+	--DelayCall(GG.PlaySoundForTeam, {teamID, "BB_OrbitalStrike_Available_In_60", 1}, weapInfo.cooldown - 62 * 30) -- fudge
+	DelayCall(GG.PlaySoundForTeam, {teamID, "BB_OrbitalStrike_Available", 1}, weapInfo.cooldown)
 	return true
 end
 
@@ -119,7 +147,7 @@ function gadget:AllowCommand(unitID, unitDefID, teamID, cmdID, cmdParams, cmdOpt
 	if unitDefID == UPLINK_ID then
 		if cmdID == artyCmdDesc.id then
 			local x,y,z = unpack(cmdParams)
-			return ArtyStrike(teamID, x, y, z)
+			return ArtyStrike(unitID, teamID, x, y, z)
 		end
 	elseif unitDefID == MECHBAY_ID then
 		if cmdID == getOutCmdDesc.id then

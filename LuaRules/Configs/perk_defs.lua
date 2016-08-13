@@ -354,7 +354,7 @@ return {
 		price = 10000,
 		requires = "vpadheavy",
 	},
-	-- Garrison turrets
+	-- Garrison 
 	garrisonlaser = {
 		cmdDesc = {
 			id = GetCmdID('PERK_GARRISON_2'),
@@ -391,5 +391,37 @@ return {
 		costFunction = deductCBills,
 		price = 10000,
 		requires = "garrisonlaser",
+	},
+	-- Uplink
+	uplink_2 = {
+		cmdDesc = {
+			id = GetCmdID('PERK_UPLINK_2'),
+			action = 'perkuplink_2',
+			name = Pad("Naval", "PPC"),
+			tooltip = 'Upgrade to Naval PPC weapon (+25s cooldown)',
+			texture = 'bitmaps/ui/upgrade.png',	
+		},
+		valid = function (unitDefID) return UnitDefs[unitDefID].name == "upgrade_uplink" end,
+		applyPerk = function (unitID)
+			GG.UplinkUpgrade(unitID, 2)
+		end,
+		costFunction = deductCBills,
+		price = 8000,
+	},
+	uplink_3 = {
+		cmdDesc = {
+			id = GetCmdID('PERK_UPLINK_3'),
+			action = 'perkuplink_3',
+			name = Pad("Naval", "AC/40"),
+			tooltip = 'Upgrade to Naval Autocannon 40 weapon (+15s cooldown)',
+			texture = 'bitmaps/ui/upgrade.png',	
+		},
+		valid = function (unitDefID) return UnitDefs[unitDefID].name == "upgrade_uplink" end,
+		applyPerk = function (unitID)
+			GG.UplinkUpgrade(unitID, 3)
+		end,
+		costFunction = deductCBills,
+		price = 8000,
+		requires = "uplink_2",
 	},
 }
