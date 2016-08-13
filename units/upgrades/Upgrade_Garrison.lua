@@ -1,10 +1,10 @@
 local Upgrade_Garrison = Upgrade:New{
 	name              	= "Garrison",
 	description         = "Fortified Defensive Upgrade",
-	maxDamage           = 25000,
+	maxDamage           = 20000,
 	mass                = 10000,
 	collisionVolumeScales = [[50 50 50]],
-	buildCostMetal      = 8000,
+	buildCostMetal      = 12000,
 
 	-- Constructor stuff
 	builder				= true,
