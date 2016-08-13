@@ -8,7 +8,7 @@ local Timberwolf = Heavy:New{
 }
 
 local Prime = Timberwolf:New{
-	description         = "Heavy Skirmisher",
+	description         = "Heavy Striker",
 	weapons = {	
 		[1] = {
 			name	= "CERLBL",
@@ -45,8 +45,7 @@ local Prime = Timberwolf:New{
 		price			= 27370,
 		heatlimit 		= 34,
 		armor			= {type = "ferro", tons = 12},
-		maxammo 		= {ac5 = 2, lrm = 2},
-		barrelrecoildist = {[1] = 4},
+		maxammo 		= {lrm = 2},
     },
 }
 
