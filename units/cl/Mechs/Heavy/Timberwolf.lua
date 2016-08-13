@@ -49,6 +49,72 @@ local Prime = Timberwolf:New{
     },
 }
 
+local A = Timberwolf:New{
+	description         = "Heavy Striker",
+	weapons = {	
+		[1] = {
+			name	= "CERPPC",
+		},
+		[2] = {
+			name	= "CERPPC",
+		},
+		[3] = {
+			name	= "CMPL",
+		},
+		[4] = {
+			name	= "CMPL",
+		},
+		[5] = {
+			name	= "CMPL",
+			SlaveTo = 4,
+		},
+		[6] = {
+			name	= "SSRM6",
+		},
+	},
+		
+    customparams = {
+		variant			= "A",
+		speed			= 80,
+		price			= 28540,
+		heatlimit 		= 40,
+		armor			= {type = "ferro", tons = 12},
+		maxammo 		= {srm = 1},
+    },
+}
+
+local E = Timberwolf:New{
+	description         = "Heavy Striker",
+	weapons = {	
+		[1] = {
+			name	= "CERLBL",
+		},
+		[2] = {
+			name	= "CERLBL",
+		},
+		[3] = {
+			name	= "TAG",
+		},
+		[4] = {
+			name	= "ATM9",
+		},
+		[5] = {
+			name	= "ATM9",
+		},
+	},
+		
+    customparams = {
+		variant			= "E",
+		speed			= 80,
+		price			= 24440,
+		heatlimit 		= 36,
+		armor			= {type = "ferro", tons = 12},
+		maxammo 		= {atm = 6},
+    },
+}
+
 return lowerkeys({ 
 	["WF_Timberwolf_Prime"] = Prime:New(),
+	["WF_Timberwolf_A"] = A:New(),
+	["WF_Timberwolf_E"] = E:New(),
 })
