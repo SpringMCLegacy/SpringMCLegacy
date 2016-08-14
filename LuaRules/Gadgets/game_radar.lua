@@ -53,7 +53,7 @@ local mobileUnits = {}
 local visionCache = {} -- visionCache[unitDefID] = {x = sectorVectorX, z = sectorVectorZ, sight = lastWeaponNum}
 for unitDefID, unitDef in pairs(UnitDefs) do
 	local cp = unitDef.customParams
-	if cp.baseclass == "mech" then
+	if cp.baseclass == "mech" and cp.sectorangle then
 		local angle = tonumber(cp.sectorangle) -- defaults in unitdefs_post
 		local s1x, s1z = GG.Vector.SectorVectorsFromAngle(math.rad(angle), unitDef.losRadius)
 		visionCache[unitDefID] = {
