@@ -3,7 +3,7 @@ local Upgrade_Seismic = Upgrade:New{
 	description         = "Long-Range Seismic Sensor",
 	maxDamage           = 10000,
 	mass                = 5000,
-	buildCostMetal      = 15000,
+	buildCostMetal      = 10000,
 
 	collisionVolumeScales = [[25 25 25]],
 

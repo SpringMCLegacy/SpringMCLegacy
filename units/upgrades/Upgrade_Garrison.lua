@@ -4,7 +4,7 @@ local Upgrade_Garrison = Upgrade:New{
 	maxDamage           = 20000,
 	mass                = 10000,
 	collisionVolumeScales = [[50 50 50]],
-	buildCostMetal      = 12000,
+	buildCostMetal      = 10000,
 
 	-- Constructor stuff
 	builder				= true,

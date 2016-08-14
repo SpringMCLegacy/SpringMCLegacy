@@ -1,13 +1,14 @@
 local Turret_PPC = Tower:New{
 	description         = "Dual PPC",
+	buildCostMetal      = 3000,
 
 	weapons = {	
 		[1] = {
-			name	= "PPC",
+			name	= "ERPPC",
 			OnlyTargetCategory = "notbeacon",
 		},
 		[2] = {
-			name	= "PPC",
+			name	= "ERPPC",
 			OnlyTargetCategory = "notbeacon",
 		},
 	},

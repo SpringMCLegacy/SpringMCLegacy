@@ -5,7 +5,7 @@ local Upgrade_C3Array = Upgrade:New{
 	description         = "Command & Control Capacity Upgrade",
 	maxDamage           = 2200,
 	mass                = 10000,
-	buildCostMetal      = 15000,
+	buildCostMetal      = 13000,
 	istargetingupgrade 	= true,
 	--energyStorage		= modOptions and modOptions.startenergy or 150, -- grants 150 extra Tonnage space, need to lua it arriving with 150 e
 

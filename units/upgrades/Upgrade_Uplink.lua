@@ -3,7 +3,7 @@ local Upgrade_Uplink = Upgrade:New{
 	description         = "Orbital Asset Upgrade",
 	maxDamage           = 10000,
 	mass                = 5000,
-	buildCostMetal      = 7500,
+	buildCostMetal      = 8000,
 
 	collisionVolumeScales = [[25 25 25]],
 

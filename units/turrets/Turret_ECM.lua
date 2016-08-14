@@ -1,6 +1,7 @@
 local Turret_ECM = Tower:New{
 	name              	= "ECM Emplacement",
 	description         = "Electronic Counter-Measure",
+	buildCostMetal      = 5000,
 
 	customparams = {
 		ecm			= true,

@@ -3,7 +3,7 @@ local Upgrade_Mechbay = Upgrade:New{
 	description         = "Repair & Rearm Upgrade",
 	maxDamage           = 10000,
 	mass                = 9000,
-	buildCostMetal      = 5000,
+	buildCostMetal      = 8000,
 		
 	transportSize		= 3,
 	transportCapacity	= 3, -- 1x transportSize

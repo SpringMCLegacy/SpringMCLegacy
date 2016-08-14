@@ -3,7 +3,7 @@ local Upgrade_TurretControl = Upgrade:New{
 	description         = "Automated Turret Control Station",
 	maxDamage           = 10000,
 	mass                = 5000,
-	buildCostMetal      = 7000,
+	buildCostMetal      = 8000,
 
 	collisionVolumeScales = [[25 25 25]],
 
