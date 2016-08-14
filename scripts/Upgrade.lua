@@ -49,6 +49,8 @@ local CRATE_SPEED = math.rad(50)
 local RANDOM_ROT = math.random(-180, 180)
 local UNLOAD_X, UNLOAD_Z
 
+local ROT = 0
+
 pointID = nil
 beaconID = nil
 function ParentBeacon(callingPointID, parentBeaconID)
@@ -249,6 +251,8 @@ function Unpack()
 		GG.LCLeft(nil, unitID, teamID) -- fake call, no dropship really left
 	elseif name == "upgrade_garrison" then
 		-- nothing special
+		rx, ROT, rz = Spring.GetUnitRotation(unitID)
+		Spring.Echo(rx, ROT, rz, Spring.GetUnitHeading(unitID))
 	elseif name == "upgrade_seismic" then
 		Turn(foot1, x_axis, rad(-90), CRATE_SPEED * 5)
 		Turn(foot2, x_axis, rad(90), CRATE_SPEED * 5)
@@ -402,7 +406,7 @@ function script.AimWeapon(weaponID, heading, pitch)
 	Signal(2 ^ weaponID) -- 2 'to the power of' weapon ID
 	SetSignalMask(2 ^ weaponID)
 
-	Turn(flares[weaponID], y_axis, heading)
+	Turn(flares[weaponID], y_axis, ROT - heading)
 	Turn(flares[weaponID], x_axis, -pitch)
 
 	return true

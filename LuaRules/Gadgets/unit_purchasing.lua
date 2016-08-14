@@ -663,7 +663,8 @@ function gadget:UnitDestroyed(unitID, unitDefID, teamID, attackerID, attackerDef
 		teamDropZones[teamID] = nil
 	elseif unitDefID == C3_ID then
 		LanceControl(teamID, unitID, false)
-	elseif unitDefID == teamDropShipTypes[teamID].def then -- main dropship, save it's HP -- TODO: move this to DropshipDelivery gadget and track e.g. avenger
+	elseif teamDropShipTypes[teamID] and unitDefID == teamDropShipTypes[teamID].def then
+		-- main dropship, save it's HP -- TODO: move this to DropshipDelivery gadget and track e.g. avenger
 		teamDropShipHPs[teamID] = Spring.GetUnitHealth(unitID)
 	end
 	if attackerID and not AreTeamsAllied(teamID, attackerTeam) and unitDefID ~= WALL_ID and unitDefID ~= GATE_ID then

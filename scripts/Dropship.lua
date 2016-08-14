@@ -347,6 +347,8 @@ function script.Killed()
 			Explode(gear.door, SFX.FIRE + SFX.FALL + SFX.RECURSIVE)	
 		end
 	end
-	GG.SetTickets(select(6, Spring.GetTeamInfo(teamID)), 1) -- TODO: do this in flag manager instead?
+	if unitDef.customParams.dropship == "mech" then
+		GG.SetTickets(select(6, Spring.GetTeamInfo(teamID)), 1) -- TODO: do this in flag manager instead?
+	end
 	return 0
 end
