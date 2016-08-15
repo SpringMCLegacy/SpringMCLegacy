@@ -8,6 +8,12 @@ local rampr, rampl, ramprfoldrear, ramprfoldfront, ramplfoldrear, ramplfoldfront
 local supportrlower, supportllower, supportrupper, supportlupper = piece ("supportrlower", "supportllower", "supportrupper", "supportlupper")
 local ramprtoolupper, ramprtoolmid, ramprtoollower, ramprtoolfinger1, ramprtoolfinger2 = piece ("ramprtoolupper", "ramprtoolmid", "ramprtoollower", "ramprtoolfinger1", "ramprtoolfinger2")
 local rampltoolupper, rampltoolmid, rampltoollower, rampltoolfinger1, rampltoolfinger2 = piece ("rampltoolupper", "rampltoolmid", "rampltoollower", "rampltoolfinger1", "rampltoolfinger2")
+local supportrtorchattach, supportrtorchupper, supportrtorchmid, supportrtorchlower = piece ("supportrtorchattach", "supportrtorchupper", "supportrtorchmid", "supportrtorchlower")
+local supportrhandattach, supportrhandupper, supportrhandmid, supportrhandlower, supportrhandjoint, supportrhandfingers1, supportrhandfingers2 = piece ("supportrhandattach", "supportrhandupper", "supportrhandmid", "supportrhandlower", "supportrhandjoint", "supportrhandfingers1", "supportrhandfingers2")
+local supportltorchattach, supportltorchupper, supportltorchmid, supportltorchlower = piece ("supportltorchattach", "supportltorchupper", "supportltorchmid", "supportltorchlower")
+local supportlhandattach, supportlhandupper, supportlhandmid, supportlhandlower, supportlhandjoint, supportlhandfingers1, supportlhandfingers2 = piece ("supportlhandattach", "supportlhandupper", "supportlhandmid", "supportlhandlower", "supportlhandjoint", "supportlhandfingers1", "supportlhandfingers2")
+local supportltorchspark, supportrtorchspark = piece ("supportltorchspark", "supportrtorchspark")
+local ramprtoolspark, rampltoolspark = piece ("ramprtoolspark", "rampltoolspark")
 -- Orbital Uplink pieces
 local antennabase, antennamast, antennareceiver, antennapole = piece ("antennabase", "antennamast", "antennareceiver", "antennapole")
 local dishs = {}
@@ -129,6 +135,121 @@ function MechBayOpen()
 	Turn(ramprfoldrear, x_axis, rad(-179), CRATE_SPEED)
 	WaitForTurn(ramprfoldrear, x_axis)
 	bayReady = true
+end
+
+function MechBayRepair()
+	while true do
+		--ramptools
+		Turn(ramprtoolmid, z_axis, rad(-70), CRATE_SPEED * 5)
+		Turn(rampltoolmid, z_axis, rad(70), CRATE_SPEED * 5)
+		--r torch
+		Move(supportrtorchattach, z_axis, 5, CRATE_SPEED * 5)
+		Move(supportrtorchupper, z_axis, 0, CRATE_SPEED* 5)
+		Move(supportrtorchmid, y_axis, 0, CRATE_SPEED* 5)
+		Turn(supportrtorchattach, z_axis, rad(45), CRATE_SPEED * 5)
+		Turn(supportrtorchupper, y_axis, rad(-10), CRATE_SPEED * 5)
+		Turn(supportrtorchlower, z_axis, rad(-90), CRATE_SPEED * 5)
+		--l torch
+		Move(supportltorchattach, z_axis, 5, CRATE_SPEED * 5)
+		Move(supportltorchupper, z_axis, 0, CRATE_SPEED* 5)
+		Move(supportltorchmid, y_axis, 0, CRATE_SPEED* 5)
+		Turn(supportltorchattach, z_axis, rad(-45), CRATE_SPEED * 5)
+		Turn(supportltorchupper, y_axis, rad(10), CRATE_SPEED * 5)
+		Turn(supportltorchlower, z_axis, rad(90), CRATE_SPEED * 5)
+		--r hand
+		Move(supportrhandattach, z_axis, -3, CRATE_SPEED * 5)
+		Turn(supportrhandupper, z_axis, rad(35), CRATE_SPEED * 5)
+		Turn(supportrhandlower, z_axis, rad(-90), CRATE_SPEED * 5)
+		Move(supportrhandfingers1, z_axis, -1, CRATE_SPEED * 5)
+		Move(supportrhandfingers2, z_axis, 1, CRATE_SPEED * 5)
+		--l hand
+		Move(supportlhandattach, z_axis, -3, CRATE_SPEED * 5)
+		Turn(supportlhandupper, z_axis, rad(-35), CRATE_SPEED * 5)
+		Turn(supportlhandlower, z_axis, rad(90), CRATE_SPEED * 5)
+		Move(supportlhandfingers1, z_axis, -1, CRATE_SPEED * 5)
+		Move(supportlhandfingers2, z_axis, 1, CRATE_SPEED * 5)
+		WaitForMove(supportlhandattach, z_axis)
+		for i = 1, 10 do
+			GG.EmitSfxName(unitID, supportltorchspark, "sparks")
+			GG.EmitSfxName(unitID, supportrtorchspark, "sparks")
+			GG.EmitSfxName(unitID, ramprtoolspark, "sparks")
+			GG.EmitSfxName(unitID, rampltoolspark, "sparks")
+			Sleep(100)
+		end
+		Turn(ramprtoolmid, z_axis, rad(-50), CRATE_SPEED * 5)
+		Turn(rampltoolmid, z_axis, rad(30), CRATE_SPEED * 5)
+		--r torch
+		Move(supportrtorchattach, z_axis, 0, CRATE_SPEED* 5)
+		Move(supportrtorchupper, z_axis, 3, CRATE_SPEED* 5)
+		Turn(supportrtorchupper, y_axis, rad(20), CRATE_SPEED * 5)
+		Turn(supportrtorchlower, z_axis, rad(-120), CRATE_SPEED * 5)
+		--l torch
+		Move(supportltorchattach, z_axis, 0, CRATE_SPEED* 5)
+		Move(supportltorchupper, z_axis, 3, CRATE_SPEED* 5)
+		Turn(supportltorchupper, y_axis, rad(20), CRATE_SPEED * 5)
+		Turn(supportltorchlower, z_axis, rad(120), CRATE_SPEED * 5)
+		--r hand
+		Move(supportrhandattach, z_axis, 7, CRATE_SPEED * 5)
+		Turn(supportrhandupper, z_axis, rad(50), CRATE_SPEED * 5)
+		Turn(supportrhandlower, z_axis, rad(-120), CRATE_SPEED * 5)
+		Turn(supportrhandjoint, y_axis, rad(0), CRATE_SPEED * 5)
+		Move(supportrhandfingers1, z_axis, 0, CRATE_SPEED * 5)
+		Move(supportrhandfingers2, z_axis, 0, CRATE_SPEED * 5)
+		-- l hand
+		Move(supportlhandattach, z_axis, 7, CRATE_SPEED * 5)
+		Turn(supportlhandupper, z_axis, rad(-50), CRATE_SPEED * 5)
+		Turn(supportlhandlower, z_axis, rad(120), CRATE_SPEED * 5)
+		Turn(supportlhandjoint, y_axis, rad(0), CRATE_SPEED * 5)
+		Move(supportlhandfingers1, z_axis, 0, CRATE_SPEED * 5)
+		Move(supportlhandfingers2, z_axis, 0, CRATE_SPEED * 5)
+		WaitForMove(supportlhandattach, z_axis)
+		for i = 1, 10 do
+			GG.EmitSfxName(unitID, supportltorchspark, "sparks")
+			GG.EmitSfxName(unitID, supportrtorchspark, "sparks")
+			GG.EmitSfxName(unitID, ramprtoolspark, "sparks")
+			GG.EmitSfxName(unitID, rampltoolspark, "sparks")
+			Sleep(100)
+		end
+		Turn(ramprtoolmid, z_axis, rad(-90), CRATE_SPEED * 5)
+		Turn(rampltoolmid, z_axis, rad(10), CRATE_SPEED * 5)
+		--r torch
+		Move(supportrtorchattach, z_axis, -4, CRATE_SPEED * 5)
+		Move(supportrtorchupper, z_axis, 2, CRATE_SPEED* 5)
+		Move(supportrtorchmid, y_axis, -5, CRATE_SPEED* 5)
+		Turn(supportrtorchattach, z_axis, rad(30), CRATE_SPEED * 5)
+		Turn(supportrtorchupper, y_axis, rad(20), CRATE_SPEED * 5)
+		Turn(supportrtorchlower, z_axis, rad(-110), CRATE_SPEED * 5)
+		WaitForMove(supportrtorchattach, z_axis)
+		--l torch
+		Move(supportltorchattach, z_axis, -4, CRATE_SPEED * 5)
+		Move(supportltorchupper, z_axis, 2, CRATE_SPEED* 5)
+		Move(supportltorchmid, y_axis, -5, CRATE_SPEED* 5)
+		Turn(supportltorchattach, z_axis, rad(-30), CRATE_SPEED * 5)
+		Turn(supportltorchupper, y_axis, rad(10), CRATE_SPEED * 5)
+		Turn(supportltorchlower, z_axis, rad(110), CRATE_SPEED * 5)
+		--r hand
+		Move(supportrhandattach, z_axis, 0, CRATE_SPEED * 5)
+		Turn(supportrhandupper, z_axis, rad(50), CRATE_SPEED * 5)
+		Turn(supportrhandlower, z_axis, rad(-40), CRATE_SPEED * 5)
+		Turn(supportrhandjoint, y_axis, rad(90), CRATE_SPEED * 5)
+		Move(supportrhandfingers1, z_axis, 1, CRATE_SPEED * 5)
+		Move(supportrhandfingers2, z_axis, -1, CRATE_SPEED * 5)
+		--l hand
+		Move(supportlhandattach, z_axis, 0, CRATE_SPEED * 5)
+		Turn(supportlhandupper, z_axis, rad(-50), CRATE_SPEED * 5)
+		Turn(supportlhandlower, z_axis, rad(40), CRATE_SPEED * 5)
+		Turn(supportlhandjoint, y_axis, rad(-90), CRATE_SPEED * 5)
+		Move(supportlhandfingers1, z_axis, 1, CRATE_SPEED * 5)
+		Move(supportlhandfingers2, z_axis, -1, CRATE_SPEED * 5)
+		WaitForMove(supportlhandattach, z_axis)
+		for i = 1, 10 do
+			GG.EmitSfxName(unitID, supportltorchspark, "sparks")
+			GG.EmitSfxName(unitID, supportrtorchspark, "sparks")
+			GG.EmitSfxName(unitID, ramprtoolspark, "sparks")
+			GG.EmitSfxName(unitID, rampltoolspark, "sparks")
+			Sleep(100)
+		end
+	end
 end
 
 function MechBayClose()
