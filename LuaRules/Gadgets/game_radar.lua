@@ -383,33 +383,33 @@ function gadget:GameFrame(n)
 				local x, _, z = GetUnitPosition(unitID)
 				local inRadius = Spring.GetUnitsInCylinder(x, z, Spring.GetUnitSensorRadius(unitID, "radar")) -- use current sensor radius here as perks can change it
 				if not info.torso then Spring.Echo("Oh shit, ", UnitDefs[Spring.GetUnitDefID(unitID)].name, "seems to have no cockpit") else
-				local v1x, v1z, v2x, v2z = GG.Vector.SectorVectorsFromUnitPiece(unitID, info.torso, info.x, info.z)
-				--Spring.MarkerAddPoint(x + v1x, 0, z + v1z, "V1")
-				--Spring.MarkerAddPoint(x + v2x, 0, z + v2z, "V2")
-				for _, enemyID in pairs(inRadius) do
-					--local unitAllyTeam = Spring.GetUnitAllyTeam(enemyID)
-					if mobileUnits[enemyID] 
-					and (inRadarUnits[allyTeam][enemyID] or ecmUnits[enemyID] 
-					or not Spring.GetUnitIsActive(enemyID) or not Spring.GetUnitIsActive(unitID))
-					and not (bapUnits[enemyID] and bapUnits[enemyID][2] == allyTeam) then
-						local ex, _, ez = GetUnitPosition(enemyID)
-						local inSector = GG.Vector.IsInsideSectorVector(ex, ez, x, z, v1x, v1z, v2x, v2z)
-						if inSector then
-							-- check it is really my sector giving them los
-							local rayTrace = Spring.GetUnitWeaponHaveFreeLineOfFire(unitID, info.sight, enemyID)
-							if rayTrace then
-								SetUnitLosState(enemyID, allyTeam, fullLOS)
-								SetUnitLosMask(enemyID, allyTeam, prevLosTrue)
-								sectorUnits[allyTeam][enemyID] = true
+					local v1x, v1z, v2x, v2z = GG.Vector.SectorVectorsFromUnitPiece(unitID, info.torso, info.x, info.z)
+					--Spring.MarkerAddPoint(x + v1x, 0, z + v1z, "V1")
+					--Spring.MarkerAddPoint(x + v2x, 0, z + v2z, "V2")
+					for _, enemyID in pairs(inRadius) do
+						local unitAllyTeam = Spring.GetUnitAllyTeam(enemyID)
+						if mobileUnits[enemyID] 
+						and (inRadarUnits[allyTeam][enemyID] or ecmUnits[enemyID]
+						or (not Spring.GetUnitIsActive(enemyID) or not Spring.GetUnitIsActive(unitID))
+						and not (bapUnits[enemyID] and bapUnits[enemyID][2] == allyTeam)) then
+							local ex, _, ez = GetUnitPosition(enemyID)
+							local inSector = GG.Vector.IsInsideSectorVector(ex, ez, x, z, v1x, v1z, v2x, v2z)
+							if inSector then
+								-- check it is really my sector giving them los
+								local rayTrace = Spring.GetUnitWeaponHaveFreeLineOfFire(unitID, info.sight, enemyID)
+								if rayTrace then
+									SetUnitLosState(enemyID, allyTeam, fullLOS)
+									SetUnitLosMask(enemyID, allyTeam, prevLosTrue)
+									sectorUnits[allyTeam][enemyID] = true
+								end
+							elseif not sectorUnits[allyTeam][enemyID] then -- not in another sector
+								SetUnitLosState(enemyID, allyTeam, {los = Spring.IsUnitInLos(enemyID, allyTeam), prevLos = true, radar = true, contRadar = true}) 
+								SetUnitLosMask(enemyID, allyTeam, losTrue) -- let engine handle los state for this unit	
+							else
+								-- Not in any sector
 							end
-						elseif not sectorUnits[allyTeam][enemyID] then -- not in another sector
-							SetUnitLosState(enemyID, allyTeam, {los = Spring.IsUnitInLos(enemyID, allyTeam), prevLos = true, radar = true, contRadar = true}) 
-							SetUnitLosMask(enemyID, allyTeam, losTrue) -- let engine handle los state for this unit	
-						else
-
 						end
 					end
-				end
 				end
 			end
 		end

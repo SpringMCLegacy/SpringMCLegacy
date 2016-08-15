@@ -14,7 +14,7 @@ end
 
 local roleSensors = {
 	["scout"] 		= {radar = 1600,	sector = 85},
-	["ewar"] 		= {radar = 1600,	sector = 85}, -- effectively synonym for scout, though most have BAP
+	["ewar"] 		= {radar = 1600,	sector = 45}, -- effectively synonym for scout, though most have BAP which needs smaller sector
 	["brawler"] 	= {radar = 1100,	sector = 75},
 	["skirmisher"] 	= {radar = 1300,	sector = 60},
 	["striker"] 	= {radar = 1500,	sector = 45},
@@ -243,10 +243,9 @@ for name, ud in pairs(UnitDefs) do
 	end
 	if cp.bap then
 		ud.radaremitheight = 1000
-		ud.radardistance = 3000 * modOptions.radar
-		ud.airsightdistance = 3000 * modOptions.radar
+		ud.radardistance = 1875 --3000 * modOptions.radar
+		ud.airsightdistance = ud.radardistance
 		ud.description = ud.description .. " \255\001\255\001[BAP]"
-		cp.sectorangle  = nil
 	end
 	-- track strength should be 1/1000th of mass
 	if ud.leavetracks then
