@@ -135,4 +135,8 @@ return lowerkeys({
 	["SJ_Mistlynx_B"] = B:New(),
 	["SJ_Mistlynx_C"] = C:New(),
 	["SJ_Mistlynx_E"] = E:New(),
+	["WF_Mistlynx_Prime"] = Prime:New(),
+	["WF_Mistlynx_B"] = B:New(),
+	["WF_Mistlynx_C"] = C:New(),
+	["WF_Mistlynx_E"] = E:New(),
 })
