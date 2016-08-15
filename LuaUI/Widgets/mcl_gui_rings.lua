@@ -28,6 +28,7 @@ local AttackRed = {1.0, 0.2, 0.2, 0.7}
 local BuildGreen = {0.3, 1.0, 0.3, 0.5} -- doesn't match engine for some reason so make less opaque
 
 local minRanges = {} -- minRange[unitDefID] = {weapName = range, ...}
+local maxRanges = {}
 local buildRanges = {} -- buildRange[unitDefID] = minRange
 
 function widget:Initialize()
@@ -40,8 +41,10 @@ function widget:Initialize()
 	-- Cache ranges
 	for unitDefID, unitDef in pairs(UnitDefs) do
 		local weapons = unitDef.weapons
+		local weaponTypes = {}
 		for i = 1, #weapons do 
 			local weaponDef = WeaponDefs[weapons[i].weaponDef]
+			weaponTypes[weaponDef.name] = weaponDef.range
 			local minRange = tonumber(weaponDef.customParams.minrange) or nil
 			if minRange then
 				if not minRanges[unitDefID] then
@@ -50,6 +53,7 @@ function widget:Initialize()
 				minRanges[unitDefID][weaponDef.name] = minRange
 			end
 		end
+		maxRanges[unitDefID] = weaponTypes
 		local buildRange = unitDef.customParams.minbuildrange or nil
 		if buildRange then
 			buildRanges[unitDefID] = buildRange
@@ -67,15 +71,29 @@ function widget:DrawWorldPreUnit()
 		local unitDefID = GetUnitDefID(unitID)
 		if select(4, GetActiveCommand()) == "Attack" then
 			glColor(AttackRed)
-			local rangesToDraw = minRanges[unitDefID]
-			if rangesToDraw then
+			local minRangesToDraw = minRanges[unitDefID]
+			local maxRangesToDraw = maxRanges[unitDefID]
+			if maxRangesToDraw then
 				local x, y, z = GetUnitPosition(unitID)
-				for weapName, radius in pairs(rangesToDraw) do
+				local i = 0
+				for weapName, radius in pairs(maxRangesToDraw) do
+					i = i + 1
+					local minRange = minRangesToDraw[weapName]
 					gl.PushMatrix()
-					glDrawGroundCircle(x,y,z, radius,24)
-					glTranslate(x, y + 40, z + radius - 40)
-					glBillboard()
-					btFont:Print("Min Range: " .. weapName, 0, 0, 24, "c")
+						gl.LineStipple(false)
+						glDrawGroundCircle(x,y,z, radius,24)
+						gl.PushMatrix()
+							glTranslate(x, y + 40, z + radius + i * 40)
+							glBillboard()
+							btFont:Print("Max Range: " .. weapName, 0, 0, 24, "c")
+						gl.PopMatrix()
+						if minRange then
+							gl.LineStipple(4, 15)
+							glDrawGroundCircle(x,y,z, minRange,24)
+							glTranslate(x, y + -i * 40, z + minRange - i * 40)
+							glBillboard()
+							btFont:Print("Min Range: " .. weapName, 0, 0, 24, "c")
+						end
 					gl.PopMatrix()
 				end
 			end
