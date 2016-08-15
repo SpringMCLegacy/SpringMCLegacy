@@ -357,11 +357,13 @@ function gadget:GameFrame(n)
 				for _, enemyID in pairs(nearbyUnits) do
 					local unitAllyTeam = Spring.GetUnitAllyTeam(enemyID)
 					if enemyID ~= unitID and unitAllyTeam ~= allyTeam then -- and not sectorUnits[allyTeam][enemyID] then -- not in another sector
-						if ecmUnits[enemyID] then --allyJammers[unitAllyTeam][enemyID] then
+						if allyJammers[unitAllyTeam][enemyID] then -- jammers only vs ecmUnits[enemyID] for all ecm'd mechs
 							if n % 30 == 0 then -- every second
 								local ex, ey, ez = Spring.GetUnitPosition(enemyID)
 								Spring.SpawnCEG("ecm_ping", ex,ey,ez)
 							end
+						elseif ecmUnits[enemyID] then 
+							-- nothing, should still be invisible to bap
 						else
 							bapUnits[enemyID] = {n, allyTeam}
 							SetUnitLosState(enemyID, allyTeam, fullLOS) 
