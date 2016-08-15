@@ -49,14 +49,14 @@ local artyWeaponInfo = {
 		spread		= 500,
 	},
 	[2] = { -- NPPC
-		id 			= WeaponDefNames["sniper"].id,
+		id 			= WeaponDefNames["nppc"].id,
 		salvo 		= 10,
 		cooldown	= 75 * 30,
 		delay		= 10 * 30,
 		spread 		= 400,
 	},
 	[3] = { -- NAC/40
-		id 			= WeaponDefNames["sniper"].id,
+		id 			= WeaponDefNames["nac40"].id,
 		salvo 		= 3,
 		cooldown	= 90 * 30,
 		delay		= 15 * 30,

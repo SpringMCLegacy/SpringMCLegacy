@@ -259,6 +259,22 @@ local LBX20 = AC20:New(LBX_Class):New{
     },
 }
 
+local NAC40 = AC_Class:New{
+	explosionGenerator    	= "custom:HE_LARGE",
+	soundHit             	= "AC20_Hit",
+	soundStart           	= "AC20_Fire",
+	areaOfEffect            = 1000,
+	size					= 40,
+	stages					= 50, 		--Number of particles used in one plasma shot.
+	intensity				= 0.2,
+	damage = {
+		default = 40000,
+	},
+	customparams = {
+		shockwave			= true,
+    },
+}
+
 -- Return the weapons
 return lowerkeys({ 
 	-- AC2 & Variants
@@ -279,4 +295,5 @@ return lowerkeys({
 	AC20 = AC20,
 	UAC20 = UAC20,
 	LBX20 = LBX20,
+	NAC40 = NAC40,
 })

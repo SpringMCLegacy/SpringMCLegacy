@@ -90,6 +90,18 @@ local CERPPC = PPC_Class:New{
     },
 }
 
+local NPPC = PPC_Class:New{
+	areaOfEffect            = 750,
+	size					= 75,
+	damage = {
+		default = 7500,
+	},
+	customparams = {
+		heatdamage			= 22.5,
+		projectilelups		= {"nppcTail"},
+	}
+}
+
 return lowerkeys({ 
 	PPC = PPC,
 	ERPPC = ERPPC,
@@ -97,4 +109,5 @@ return lowerkeys({
 	LightPPC = LightPPC,
 	SnubNosePPC = SnubNosePPC,
 	CERPPC = CERPPC,
+	NPPC = NPPC,
 })
