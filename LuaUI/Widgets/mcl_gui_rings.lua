@@ -31,6 +31,9 @@ local minRanges = {} -- minRange[unitDefID] = {weapName = range, ...}
 local maxRanges = {}
 local buildRanges = {} -- buildRange[unitDefID] = minRange
 
+local maxRangesToDraw = {} -- maxRangesToDraw[unitDefID] = {range = string}
+local minRangesToDraw = {} -- minRangesToDraw[unitDefID] = {range = string}
+
 function widget:Initialize()
 	-- Change default command menu font
 	local currentFont = Spring.GetConfigString("FontFile")
@@ -58,6 +61,26 @@ function widget:Initialize()
 		if buildRange then
 			buildRanges[unitDefID] = buildRange
 		end
+		-- now loop over min and max and build the strings
+		maxRangesToDraw[unitDefID] = {}
+		minRangesToDraw[unitDefID] = {}
+		for name, range in pairs(maxRanges[unitDefID]) do
+			if not maxRangesToDraw[unitDefID][range] then
+				maxRangesToDraw[unitDefID][range] = "Max Range: " .. name
+			else
+				maxRangesToDraw[unitDefID][range] = maxRangesToDraw[unitDefID][range] .. ", " .. name
+			end
+			local minRangeDef = minRanges[unitDefID]
+			local minRange = minRangeDef and minRangeDef[name] or nil
+				
+			if minRange then
+				if not minRangesToDraw[unitDefID][minRange] then
+					minRangesToDraw[unitDefID][minRange] = "Min Range: " .. name
+				else
+					minRangesToDraw[unitDefID][minRange] = minRangesToDraw[unitDefID][minRange] .. ", " .. name
+				end				
+			end
+		end
 	end
 	-- Setup fonts for drawing
 	btFont = gl.LoadFont("LuaUI/Fonts/bt_oldstyle.ttf", 24, 2, 30)
@@ -71,29 +94,28 @@ function widget:DrawWorldPreUnit()
 		local unitDefID = GetUnitDefID(unitID)
 		if select(4, GetActiveCommand()) == "Attack" then
 			glColor(AttackRed)
-			local minRangesToDraw = minRanges[unitDefID]
-			local maxRangesToDraw = maxRanges[unitDefID]
-			if maxRangesToDraw then
-				local x, y, z = GetUnitPosition(unitID)
-				local i = 0
-				for weapName, radius in pairs(maxRangesToDraw) do
-					i = i + 1
-					local minRange = minRangesToDraw[weapName]
+			local minRangesU = minRangesToDraw[unitDefID]
+			local maxRangesU = maxRangesToDraw[unitDefID]
+			local x, y, z = GetUnitPosition(unitID)
+			if maxRangesU then
+				for radius, info in pairs(maxRangesU) do
 					gl.PushMatrix()
-						gl.LineStipple(false)
 						glDrawGroundCircle(x,y,z, radius,24)
-						gl.PushMatrix()
-							glTranslate(x, y + 40, z + radius + i * 40)
-							glBillboard()
-							btFont:Print("Max Range: " .. weapName, 0, 0, 24, "c")
-						gl.PopMatrix()
-						if minRange then
-							gl.LineStipple(4, 15)
-							glDrawGroundCircle(x,y,z, minRange,24)
-							glTranslate(x, y + -i * 40, z + minRange - i * 40)
-							glBillboard()
-							btFont:Print("Min Range: " .. weapName, 0, 0, 24, "c")
-						end
+						glTranslate(x, y + 40, z + radius + 40)
+						glBillboard()
+						btFont:Print(info, 0, 0, 24, "c")
+					gl.PopMatrix()
+				end
+			end
+			if minRangesU then
+				for radius, info in pairs(minRangesU) do
+					gl.PushMatrix()
+						gl.LineStipple(4, 15)
+						glDrawGroundCircle(x,y,z, radius,24)
+						glTranslate(x, y + 40, z + radius - 40)
+						glBillboard()
+						btFont:Print(info, 0, 0, 24, "c")
+						gl.LineStipple(false)
 					gl.PopMatrix()
 				end
 			end
