@@ -21,7 +21,7 @@ effectUnitDefs = {
 		{class='Ribbon',	options={width=2, size=8, piece="fin4"}},
 		{class='Ribbon',	options={width=6, size=6, piece="root1"}},
 		{class='Ribbon',	options={width=6, size=6, piece="root2"}},
-	}
+	},
  }
 
 effectUnitDefsXmas = {
