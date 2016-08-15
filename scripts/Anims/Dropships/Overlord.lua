@@ -271,7 +271,7 @@ end
 local link, pad, main_door, door_struts, vtol_pad = piece ("link", "pad", "main_door", "door_struts", "vtol_pad")
 
 local WAIT_TIME = 10000
-local DOOR_SPEED = math.rad(20)
+local DOOR_SPEED = math.rad(60)
 local x, _ ,z = Spring.GetUnitPosition(unitID)
 --local dx, _, dz = Spring.GetUnitDirection(unitID)
 local dirAngle = HEADING / 2^16 * 2 * math.pi
@@ -312,7 +312,7 @@ function UnloadCargo()
 			Spring.SetUnitVelocity(cargoID, 8, 4, 0)]]
 		else
 			Spring.UnitScript.AttachUnit(pad, cargoID)
-			local moveSpeed = currUnitDef.speed * 0.5
+			local moveSpeed = currUnitDef.speed * 1.2
 			Move(link, z_axis, 73, moveSpeed)
 			WaitForMove(link, z_axis)
 			Move(pad, z_axis, 100, moveSpeed)
@@ -328,7 +328,7 @@ function UnloadCargo()
 		Sleep(2000)
 	end
 	StartThread(SniperOut, false)
-	Turn(main_door, x_axis, 0, DOOR_SPEED)
+	Turn(main_door, x_axis, 0, DOOR_SPEED/2)
 	WaitForTurn(main_door, x_axis)
 	Move(door_struts, z_axis, 0, 25)
 	WaitForMove(door_struts, z_axis)
