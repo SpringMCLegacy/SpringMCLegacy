@@ -138,6 +138,7 @@ function MechBayOpen()
 end
 
 function MechBayRepair()
+	SetSignalMask(1)
 	while true do
 		--ramptools
 		Turn(ramprtoolmid, z_axis, rad(-70), CRATE_SPEED * 5)
@@ -432,6 +433,7 @@ local restored = false
 
 
 function Repair(passengerID)
+	StartThread(MechBayRepair)
 	local curHP, maxHP = GetUnitHealth(passengerID)
 	while curHP ~= maxHP do
 		local newHP = math.min(curHP + maxHP * REPAIR_RATE, maxHP)
@@ -441,6 +443,7 @@ function Repair(passengerID)
 		Sleep(1000)
 	end
 	repaired = true
+	Signal(1) -- kill repair anim
 	if resupplied and restored then -- I'm the last task to finish, move out!
 		script.TransportDrop(passengerID)
 	end
