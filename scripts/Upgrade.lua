@@ -443,7 +443,6 @@ function Repair(passengerID)
 		Sleep(1000)
 	end
 	repaired = true
-	Signal(1) -- kill repair anim
 	if resupplied and restored then -- I'm the last task to finish, move out!
 		script.TransportDrop(passengerID)
 	end
@@ -505,6 +504,7 @@ end
 function script.TransportDrop (passengerID, x, y, z)
 	local isTransporting = Spring.GetUnitIsTransporting(unitID)
 	if isTransporting and #isTransporting > 0 then
+		Signal(1) -- kill repair anim
 		passengerID = passengerID or isTransporting[1]
 		Spring.SetUnitBlocking(unitID, false, false) -- make it easy to get out
 		Spring.UnitScript.DropUnit(passengerID)
