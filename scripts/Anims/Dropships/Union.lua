@@ -41,12 +41,12 @@ function Setup()
 end
 
 function LandingGearDown()
-	SPEED = math.rad(40)
+	SPEED = math.rad(60) -- 40
 	for i = 1, 4 do -- Doors open
 		Turn(gears[i].door, x_axis, math.rad(60), SPEED * 5)
 	end
 	WaitForTurn(gears[4].door, x_axis)
-	Spring.MoveCtrl.SetGravity(unitID, -4 * GRAVITY) -- -3.72
+	Spring.MoveCtrl.SetGravity(unitID, -6 * GRAVITY) -- -3.72, -4
 	Sleep(2500)
 	for i = 1, 4 do -- feet into deploy position
 		Turn(gears[i].joint, x_axis, math.rad(5), SPEED)
@@ -219,14 +219,18 @@ function fx()
 end
 
 function Drop()
+	local s = DROP_HEIGHT - 925
+	local u = -60
+	local v = -50
+	local a = (u^2 -v^2) / (2*s)
 	Signal(Drop)
 	SetSignalMask(Drop)
 	Spring.SetTeamRulesParam(Spring.GetUnitTeam(unitID), "DROPSHIP_COOLDOWN", -1)
 	Spring.MoveCtrl.Enable(unitID)
 	Spring.MoveCtrl.SetPosition(unitID, TX, GY + DROP_HEIGHT, TZ)
 	Spring.MoveCtrl.SetHeading(unitID, HEADING)
-	Spring.MoveCtrl.SetVelocity(unitID, 0, -55, 0)
-	Spring.MoveCtrl.SetGravity(unitID, -0.4 * GRAVITY)
+	Spring.MoveCtrl.SetVelocity(unitID, 0, u, 0) -- -55
+	Spring.MoveCtrl.SetGravity(unitID, -a)---1.8 * GRAVITY) -- -0.4
 	
 	local SPEED = 0
 
@@ -248,7 +252,7 @@ function Drop()
 		_, y, _ = Spring.GetUnitPosition(unitID)
 	end
 	stage = 3
-	Spring.MoveCtrl.SetGravity(unitID, -0.02 * GRAVITY)
+	Spring.MoveCtrl.SetGravity(unitID, -0.02 * GRAVITY) -- -0.02
 	Spring.MoveCtrl.SetCollideStop(unitID, true)
 	Spring.MoveCtrl.SetTrackGround(unitID, true)
 end
@@ -257,7 +261,7 @@ end
 local link, pad, main_door, hanger_door, vtol_pad = piece ("link", "pad", "main_door", "hanger_door", "vtol_pad")
 
 local WAIT_TIME = 10000
-local DOOR_SPEED = math.rad(20)
+local DOOR_SPEED = math.rad(90)
 local x, _ ,z = Spring.GetUnitPosition(unitID)
 --local dx, _, dz = Spring.GetUnitDirection(unitID)
 local dirAngle = HEADING / 2^16 * 2 * math.pi
@@ -299,7 +303,7 @@ function UnloadCargo()
 			Spring.SetUnitVelocity(cargoID, 8, 4, 0)
 		else
 			Spring.UnitScript.AttachUnit(pad, cargoID)
-			local moveSpeed = currUnitDef.speed * 0.5
+			local moveSpeed = currUnitDef.speed * 1.2
 			Move(link, z_axis, 73, moveSpeed)
 			WaitForMove(link, z_axis)
 			Move(pad, z_axis, 100, moveSpeed)
@@ -314,8 +318,8 @@ function UnloadCargo()
 		end
 		Sleep(2000)
 	end
-	Turn(main_door, x_axis, 0, DOOR_SPEED)
-	Turn(hanger_door, y_axis, 0, DOOR_SPEED)
+	Turn(main_door, x_axis, 0, DOOR_SPEED/2)
+	Turn(hanger_door, y_axis, 0, DOOR_SPEED/2)
 	WaitForTurn(hanger_door, y_axis)
 	WaitForTurn(main_door, x_axis)
 	Sleep(WAIT_TIME)
