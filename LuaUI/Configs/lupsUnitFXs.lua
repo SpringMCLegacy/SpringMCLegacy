@@ -22,7 +22,13 @@ effectUnitDefs = {
 		{class='Ribbon',	options={width=6, size=6, piece="root1"}},
 		{class='Ribbon',	options={width=6, size=6, piece="root2"}},
 	},
-
+	cc_raven_rvn4l =  {
+	
+	{class='ShieldSphere', options={life=math.huge, pos={0,0,0}, size=500, onActive=true, colormap1 = {{0.9, 0.2, 0.2, 0.25}}, repeatEffect=true}},
+	{class='ShieldJitter', options={delay=0,life=math.huge, pos={0,0,0}, size=512,onActive=true, precision=222, strength   = 0.002,  repeatEffect=true}},
+	--{class='ShieldJitter', options={delay=0,life=math.huge, pos={0,0,0}, size=5, precision=22, strength   = 0.15,  repeatEffect=true}},
+	--{class='ShieldJitter', options={delay=0,life=math.huge, pos={0,0,0}, size=100, precision=22, strength   = 0.005,  repeatEffect=true}},
+  },
  }
 
 leopard = {
