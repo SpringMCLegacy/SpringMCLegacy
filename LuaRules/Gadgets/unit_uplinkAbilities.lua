@@ -47,6 +47,7 @@ local artyWeaponInfo = {
 		cooldown	= 50 * 30,
 		delay		= 10 * 30,
 		spread		= 500,
+		sound 		= "sounds/" .. WeaponDefNames["sniper"].fireSound[1].name:lower() .. ".wav",
 	},
 	[2] = { -- NPPC
 		id 			= WeaponDefNames["nppc"].id,
@@ -54,6 +55,7 @@ local artyWeaponInfo = {
 		cooldown	= 75 * 30,
 		delay		= 10 * 30,
 		spread 		= 400,
+		sound		= "sounds/" .. WeaponDefNames["nppc"].fireSound[1].name:lower() .. ".wav",
 	},
 	[3] = { -- NAC/40
 		id 			= WeaponDefNames["nac40"].id,
@@ -61,8 +63,10 @@ local artyWeaponInfo = {
 		cooldown	= 90 * 30,
 		delay		= 15 * 30,
 		spread		= 200,
+		sound		= "sounds/" .. WeaponDefNames["nac40"].fireSound[1].name:lower() .. ".wav",
 	}
 }
+
 local uplinkLevels = {} -- uplinkLevels[uplinkID] = 1, 2 or 3
 
 local ARTY_HEIGHT = 10000
@@ -104,11 +108,12 @@ function gadget:UnitCreated(unitID, unitDefID, teamID, builderID)
 	end
 end
 
-local function ArtyShot(level, x,y,z)
+local function ArtyShot(level, teamID, x,y,z)
 	local projParams = {}
 	projParams.gravity = -3 + math.random()
 	projParams.pos = {x, y, z}
 	SpawnProjectile(artyWeaponInfo[level].id, projParams)
+	GG.PlaySoundForTeam(teamID, artyWeaponInfo[level].sound, 1)
 end
 
 local function ArtyStrike(unitID, teamID, x, y, z)
@@ -135,7 +140,7 @@ local function ArtyStrike(unitID, teamID, x, y, z)
 		local length = math.random(weapInfo.spread)
 		dx = math.sin(angle) * length
 		dz = math.cos(angle) * length
-		DelayCall(ArtyShot, {uplinkLevels[unitID], x + dx, y + ARTY_HEIGHT, z + dz}, weapInfo.delay + math.random(150))
+		DelayCall(ArtyShot, {uplinkLevels[unitID], teamID, x + dx, y + ARTY_HEIGHT, z + dz}, weapInfo.delay + math.random(150))
 	end
 	GG.PlaySoundForTeam(teamID, "BB_OrbitalStrike_Inbound", 1)
 	--DelayCall(GG.PlaySoundForTeam, {teamID, "BB_OrbitalStrike_Available_In_60", 1}, weapInfo.cooldown - 62 * 30) -- fudge
