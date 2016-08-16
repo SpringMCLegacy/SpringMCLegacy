@@ -255,9 +255,9 @@ local function CoolOff()
 			excessHeat = 0 -- if we managed to return to normal heat, remove all excess
 		end
 		ChangeHeat(-coolRate)
-		if hasEcm and not moving then
+		--[[if hasEcm and not moving then
 			AddUnitSeismicPing(unitID, 20)
-		end
+		end]]
 		Sleep(1000) -- cools once per second
 	end
 end
@@ -383,6 +383,7 @@ function limbHPControl(limb, damage)
 		if newHP < 0 then 
 			hideLimbPieces(limb, true)
 			newHP = 0
+			SetUnitRulesParam(unitID, "limblost", 1)
 		elseif currHP == 0 then -- can only get here if damage < 0 i.e. repairing
 			hideLimbPieces(limb, false)
 		end

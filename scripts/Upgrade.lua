@@ -460,6 +460,7 @@ function Restore(passengerID)
 		end
 	end
 	restored = true
+	Spring.SetUnitRulesParam(passengerID, "limblost", 0)
 	if repaired and resupplied then -- I'm the last task to finish, move out!
 		script.TransportDrop(passengerID)
 	end	
