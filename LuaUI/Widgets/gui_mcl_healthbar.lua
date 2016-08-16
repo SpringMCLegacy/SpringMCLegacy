@@ -290,8 +290,8 @@ local function GenerateUnitGraphics(uid, udid, getAuras)
 	if getAuras then
 		local n = Spring.GetGameFrame()
 		local friendlyUnit = Spring.AreTeamsAllied(Spring.GetUnitTeam(uid), Spring.GetMyTeamID())
-		local heat = GetUnitRulesParam(uid, "heat") or 0 > 50
-		local damage = GetUnitRulesParam(uid, "limblost") or 0 > 0
+		local heat = (GetUnitRulesParam(uid, "heat") or 0) > 50
+		local damage = (GetUnitRulesParam(uid, "limblost") or 0) > 0
 		local outofammo = GetUnitRulesParam(uid, "outofammo") or 0
 		local narc = GetUnitRulesParam(uid, "NARC") or 0
 		local tag = GetUnitRulesParam(uid, "TAG") or 0
