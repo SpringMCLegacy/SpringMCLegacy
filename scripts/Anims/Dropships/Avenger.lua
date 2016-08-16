@@ -156,6 +156,7 @@ function UnloadCargo()
 		Move(booms[i], y_axis, -BOOM_LENGTH / 2, BOOM_SPEED)
 	end
 	WaitForMove(booms[3], y_axis)
+	PlaySound("stomp")
 	Sleep(1500)
 	if Spring.ValidUnitID(cargoID) and not Spring.GetUnitIsDead(cargoID) then -- might be empty on /give testing
 		Spring.UnitScript.DropUnit(cargoID)
@@ -168,6 +169,7 @@ function UnloadCargo()
 		Spring.UnitScript.CallAsUnit(callerID, env.ChangeType, true)
 	end
 	-- Cargo is down, close the doors!
+	PlaySound("dropship_doorclose")
 	for i = 2, 3 do
 		Move(booms[i], y_axis, 0, BOOM_SPEED * 2)
 	end
@@ -179,6 +181,7 @@ end
 
 function TakeOff()
 	stage = 4
+	PlaySound("dropship_liftoff")
 	--Spring.MoveCtrl.SetRelativeVelocity(unitID, 0, 0, 5)
 	Spring.MoveCtrl.SetRelativeVelocity(unitID, 0, 0, 5)
 	Spring.MoveCtrl.SetGravity(unitID, -0.75 * GRAVITY)
@@ -210,6 +213,7 @@ function Drop()
 	Spring.MoveCtrl.SetRotation(unitID, 0, newAngle + math.pi, 0)
 	Turn(body, x_axis, math.rad(-50))
 	-- Begin the drop
+	PlaySound("dropship_entry")
 	GG.PlaySoundForTeam(teamID, "BB_Dropship_Inbound", 1)
 	Turn(body, x_axis, math.rad(-10), math.rad(5))
 	Spring.MoveCtrl.SetVelocity(unitID, 0, -100, 0)
@@ -244,6 +248,7 @@ function Drop()
 		-- We're over the target area, reduce height!
 		stage = 3
 		local DOOR_SPEED = math.rad(60)
+		PlaySound("dropship_dooropen")
 		Turn(cargoDoor1, z_axis, math.rad(-90), DOOR_SPEED)
 		Turn(cargoDoor2, z_axis, math.rad(90), DOOR_SPEED)
 		local vertSpeed = 4

@@ -49,6 +49,7 @@ function Crashed()
 end
 
 function TouchDown()
+	PlaySound("dropship_stomp")
 	StartThread(Crashed)
 end
 
@@ -215,6 +216,7 @@ function Drop()
 	Spring.MoveCtrl.SetRotation(unitID, 0, newAngle + math.pi, 0)
 	Turn(body, x_axis, math.rad(-50))
 	-- Begin the drop
+	PlaySound("dropship_entry")
 	Turn(body, x_axis, math.rad(-10), math.rad(5))
 	Spring.MoveCtrl.SetVelocity(unitID, 0, -100, 0)
 	Spring.MoveCtrl.SetRelativeVelocity(unitID, 0, 0, 10)
@@ -300,6 +302,7 @@ function Drop()
 		WaitForTurn(cargoDoor2, z_axis)
 	end
 	-- Take off!
+	PlaySound("dropship_liftoff")
 	stage = 4
 	--Spring.MoveCtrl.SetRelativeVelocity(unitID, 0, 0, 5)
 	Spring.MoveCtrl.SetRelativeVelocity(unitID, 0, 0, 5)
@@ -328,6 +331,7 @@ function UnloadCargo()
 	local BOOM_SPEED = 15
 	for i, cargoID in ipairs(cargo) do
 		-- reset
+		PlaySound("dropship_doorclose")
 		Move(cargoPieces[1], z_axis, 0)
 		Move(cargoPieces[1], y_axis, 0)
 		Move(pad, z_axis, 0)
@@ -336,6 +340,7 @@ function UnloadCargo()
 		if Spring.GetUnitIsDead(beaconID) or Spring.GetUnitTeam(beaconID) ~= teamID then return end
 		if not (cargoID and Spring.GetUnitDefID(cargoID)) then return end
 		-- lower the tray
+		PlaySound("dropship_dooropen")
 		Spring.UnitScript.AttachUnit(pad, cargo[i])
 		Move(cargoPieces[1], y_axis, -(cargoDoor1 and 56 or 30), BOOM_SPEED)
 		Move(attachment, y_axis, -(cargoDoor1 and 56 or 30), BOOM_SPEED)

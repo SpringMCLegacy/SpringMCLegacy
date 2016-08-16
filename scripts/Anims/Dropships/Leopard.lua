@@ -41,6 +41,7 @@ function LandingGearDown()
 end
 
 function TouchDown()
+	PlaySound("dropship_stomp")
 	if crashing then
 		Spring.DestroyUnit(unitID, true)
 	else
@@ -176,6 +177,7 @@ end
 
 function TakeOff()
 	StartThread(LandingGearUp)
+	PlaySound("dropship_liftoff")
 	stage = 3
 	local vertSpeed = 4
 	local wantedHeight = 400
@@ -239,6 +241,7 @@ function UnloadMech(i)
 	--Spring.MarkerAddPoint(UNLOAD_X, 0, UNLOAD_Z)
 	cargoLeft = cargoLeft - 1
 	Sleep(1000)
+	PlaySound("dropship_doorclose")
 	Turn(doors[i], z_axis, 0, DOOR_SPEED/3)
 	WaitForTurn(doors[i], z_axis)
 	if cargoLeft == 0 then -- This was the last mech out
@@ -249,6 +252,7 @@ end
 
 function UnloadCargo()
 	cargoLeft = numCargo
+	PlaySound("dropship_dooropen")
 	for i = 1, numCargo do
 		Turn(links[i], y_axis, (i <= 2 and 1 or -1) * math.rad(90))
 		Turn(doors[i], z_axis, (i <= 2 and -1 or 1) * math.rad(140), DOOR_SPEED)
@@ -274,6 +278,7 @@ function Drop()
 	--Spring.Echo(math.deg(newAngle), math.deg(newAngle + math.pi))
 	Turn(body, x_axis, math.rad(-50))
 	-- Begin the drop
+	PlaySound("dropship_entry")
 	GG.PlaySoundForTeam(teamID, "BB_Dropship_Inbound", 1)
 	Turn(body, x_axis, math.rad(-10), math.rad(5))
 	Spring.MoveCtrl.SetVelocity(unitID, 0, -100, 0)

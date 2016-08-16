@@ -67,6 +67,7 @@ function LandingGearDown()
 end
 
 function TouchDown()
+	PlaySound("dropship_stomp")
 	if crashing then
 		Spring.DestroyUnit(unitID, true)
 	else
@@ -142,6 +143,7 @@ local fxStages = {
 
 function fx()
 	-- Free fall
+	PlaySound("dropship_entry")
 	if stage == 1 then
 		GG.EmitLupsSfxArray(unitID, fxStages[stage])
 	end
@@ -202,6 +204,7 @@ function fx()
 		StartThread(UnloadCargo)
 	end
 	if stage == 5 then -- blast off
+		PlaySound("dropship_liftoff")
 		GG.EmitLupsSfxArray(unitID, fxStages[stage])
 		for _, exhaust in ipairs(vExhausts) do
 			GG.BlendJet(33, unitID, exhaust, "smallExhaustJets", 20, 30)
@@ -271,6 +274,7 @@ local UNLOAD_X = x + 300 * dx
 local UNLOAD_Z = z + 300 * dz
 
 function UnloadCargo()
+	PlaySound("dropship_dooropen")
 	Turn(main_door, x_axis, math.rad(110), DOOR_SPEED)
 	Turn(hanger_door, y_axis, math.rad(90), DOOR_SPEED * 0.5)
 	Turn(link, x_axis, math.rad(35), DOOR_SPEED * 10)
@@ -318,6 +322,7 @@ function UnloadCargo()
 		end
 		Sleep(2000)
 	end
+	PlaySound("dropship_doorclose")
 	Turn(main_door, x_axis, 0, DOOR_SPEED/2)
 	Turn(hanger_door, y_axis, 0, DOOR_SPEED/2)
 	WaitForTurn(hanger_door, y_axis)
