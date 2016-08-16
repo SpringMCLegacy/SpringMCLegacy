@@ -111,6 +111,8 @@ local SPEED = math.rad(150)
 function TouchDown()
 	stage = 3
 	FACING = select(2, Spring.UnitScript.GetPieceRotation(base)) or 0 -- TODO: Discover how this can be nil?
+	GG.EmitSfxName(unitID, turret, "mech_jump_dust")
+	PlaySound("stomp")
 end
 
 function RealBoy()
