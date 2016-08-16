@@ -76,6 +76,17 @@ local Sounds = {
 			maxdist = 8000,
 			rolloff = 0.2,
 		},
+		dropship_rumble = {
+			file = "sounds/unit/dropship_rumble.wav",
+			maxconcurrent = 12,
+			gainmod = 1.0,
+			pitchmod = 0.1,
+			priority = 1,
+			maxdist = 8000,
+			rolloff = 0.2,
+			looptime = 10000,
+			gain = 0.7,
+		},
 		dropship_entry = {
 			file = "sounds/unit/dropship_entry.wav",
 			maxconcurrent = 12,
@@ -84,6 +95,7 @@ local Sounds = {
 			priority = 1,
 			maxdist = 10000,
 			rolloff = 0.2,
+			gain = 1.5,
 		},
 		dropship_stomp = {
 			file = "sounds/unit/dropship_stomp.wav",

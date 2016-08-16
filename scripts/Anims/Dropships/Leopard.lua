@@ -188,6 +188,7 @@ function TakeOff()
 		dist = wantedHeight - select(2, Spring.GetUnitPosition(unitID))
 	end
 	stage = 4
+	PlaySound("dropship_liftoff")
 	--Spring.MoveCtrl.SetRelativeVelocity(unitID, 0, 0, 5)
 	Spring.MoveCtrl.SetRelativeVelocity(unitID, 0, 0, 5)
 	Spring.MoveCtrl.SetGravity(unitID, -0.75 * GRAVITY)
@@ -199,6 +200,7 @@ function TakeOff()
 	WaitForTurn(body, x_axis)
 	Spring.MoveCtrl.SetGravity(unitID, -4 * GRAVITY)
 	stage = 5
+	PlaySound("dropship_burn")
 	Sleep(1500)
 	Spin(body, z_axis, math.rad(180), math.rad(45))
 	Sleep(2000)
@@ -278,7 +280,7 @@ function Drop()
 	--Spring.Echo(math.deg(newAngle), math.deg(newAngle + math.pi))
 	Turn(body, x_axis, math.rad(-50))
 	-- Begin the drop
-	PlaySound("dropship_entry")
+	PlaySound("dropship_entry", 5)
 	GG.PlaySoundForTeam(teamID, "BB_Dropship_Inbound", 1)
 	Turn(body, x_axis, math.rad(-10), math.rad(5))
 	Spring.MoveCtrl.SetVelocity(unitID, 0, -100, 0)
@@ -299,6 +301,7 @@ function Drop()
 		end
 		Sleep(100)
 	end
+	PlaySound("dropship_rumble")
 	-- Descent complete, move over the target
 	StartThread(LandingGearDown)
 	Turn(body, x_axis, 0, math.rad(3.5))
@@ -314,6 +317,7 @@ function Drop()
 	-- only proceed if the beacon is still ours and is secure
 	--if Spring.GetUnitTeam(beaconID) == Spring.GetUnitTeam(unitID) and Spring.GetUnitRulesParam(beaconID, "secure") == 1 then
 		-- We're over the target area, reduce height!
+		PlaySound("dropship_rumble")
 		stage = 3
 		local vertSpeed = 4
 		local wantedHeight = GY
@@ -325,6 +329,7 @@ function Drop()
 		end
 		-- We're in place. Halt and lower the cargo!
 		Spring.MoveCtrl.SetRelativeVelocity(unitID, 0, 0, 0)
+		PlaySound("dropship_rumble")
 		TouchDown() -- not called by engine as not falling under gravity
 		UnloadCargo()
 	--else -- bugging out, refund
