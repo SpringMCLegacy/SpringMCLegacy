@@ -42,12 +42,12 @@ local MECHBAY_ID = UnitDefNames["upgrade_mechbay"].id
 
 local artyWeaponInfo = {
 	[1] = { -- NAC/10
-		id 			= WeaponDefNames["sniper"].id,
+		id 			= WeaponDefNames["nac10"].id,
 		salvo 		= 40,
 		cooldown	= 50 * 30,
 		delay		= 10 * 30,
 		spread		= 500,
-		sound 		= "sounds/" .. WeaponDefNames["sniper"].fireSound[1].name:lower() .. ".wav",
+		sound 		= "sounds/" .. WeaponDefNames["nac10"].fireSound[1].name:lower() .. ".wav",
 	},
 	[2] = { -- NPPC
 		id 			= WeaponDefNames["nppc"].id,

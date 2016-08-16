@@ -259,16 +259,32 @@ local LBX20 = AC20:New(LBX_Class):New{
     },
 }
 
+local NAC10 = AC_Class:New{
+	explosionGenerator    	= "custom:HE_LARGE",
+	soundHit             	= "NAC10_Hit",
+	soundStart           	= "NAC10_Fire",
+	areaOfEffect            = 1000,
+	size					= 5,
+	stages					= 50, 		--Number of particles used in one plasma shot.
+	intensity				= 0.2,
+	damage = {
+		default = 5000,
+	},
+	customparams = {
+		shockwave			= true,
+    },
+}
+
 local NAC40 = AC_Class:New{
 	explosionGenerator    	= "custom:HE_LARGE",
 	soundHit             	= "NAC40_Hit",
 	soundStart           	= "NAC40_Fire",
 	areaOfEffect            = 1000,
-	size					= 40,
+	size					= 8,
 	stages					= 50, 		--Number of particles used in one plasma shot.
 	intensity				= 0.2,
 	damage = {
-		default = 40000,
+		default = 10000,
 	},
 	customparams = {
 		shockwave			= true,
@@ -295,5 +311,7 @@ return lowerkeys({
 	AC20 = AC20,
 	UAC20 = UAC20,
 	LBX20 = LBX20,
+	--Naval Autocannons
+	NAC10 = NAC10,
 	NAC40 = NAC40,
 })
