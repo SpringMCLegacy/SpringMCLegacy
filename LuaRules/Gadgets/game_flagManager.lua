@@ -361,6 +361,9 @@ function gadget:GameFrame(n)
 					elseif flagAllyTeam == GAIA_ALLY_ID then -- no allyTeam units present, flag is an empty neutral flag
 						--Spring.Echo(flagID, "Ronery, so rorenery")
 						FlagCapRegen(flagID, flagTeamID, -REGEN)
+					else -- no allyTeam units present, flag is empty
+						--Spring.Echo("Nothing at flag, regen")
+						FlagCapRegen(flagID, flagTeamID, -REGEN)
 					end
 				end
 			end
