@@ -43,7 +43,7 @@ local MECHBAY_ID = UnitDefNames["upgrade_mechbay"].id
 local artyWeaponInfo = {
 	[1] = { -- NAC/10
 		id 			= WeaponDefNames["nac10"].id,
-		salvo 		= 40,
+		salvo 		= 8,
 		cooldown	= 50 * 30,
 		delay		= 10 * 30,
 		spread		= 500,
@@ -51,7 +51,7 @@ local artyWeaponInfo = {
 	},
 	[2] = { -- NPPC
 		id 			= WeaponDefNames["nppc"].id,
-		salvo 		= 10,
+		salvo 		= 8,
 		cooldown	= 75 * 30,
 		delay		= 10 * 30,
 		spread 		= 400,
@@ -59,10 +59,10 @@ local artyWeaponInfo = {
 	},
 	[3] = { -- NAC/40
 		id 			= WeaponDefNames["nac40"].id,
-		salvo 		= 3,
+		salvo 		= 5,
 		cooldown	= 90 * 30,
 		delay		= 15 * 30,
-		spread		= 200,
+		spread		= 400,
 		sound		= "sounds/" .. WeaponDefNames["nac40"].fireSound[1].name:lower() .. ".wav",
 	}
 }
