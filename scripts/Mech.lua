@@ -399,7 +399,7 @@ function script.HitByWeapon(x, z, weaponID, damage)
 	local heatDamage = wd and wd.customParams.heatdamage or 0
 	ChangeHeat(heatDamage)
 	local hitPiece = GetUnitLastAttackedPiece(unitID) or ""
-	if hitPiece == "torso" or hitPiece == "pelvis" then 
+	if hitPiece == "torso" or hitPiece == "pelvis" or hitPiece == "" then 
 		return damage
 	elseif hitPiece == "lupperleg" or hitPiece == "llowerleg" then
 		--deduct Left Leg HP
