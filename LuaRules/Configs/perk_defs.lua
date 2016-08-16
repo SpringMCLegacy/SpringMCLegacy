@@ -424,4 +424,36 @@ return {
 		price = 8000,
 		requires = "uplink_2",
 	},
+	-- Turret Control
+	turretcontrol_2 = {
+		cmdDesc = {
+			id = GetCmdID('PERK_TURRETCONTROL_2'),
+			action = 'perkturretcontrol_2',
+			name = Pad("Increase", "Limit"),
+			tooltip = 'Increases the number of turrets suppported',
+			texture = 'bitmaps/ui/upgrade.png',	
+		},
+		valid = function (unitDefID) return UnitDefs[unitDefID].name == "upgrade_turretcontrol" end,
+		applyPerk = function (unitID)
+			GG.LimitTowerType(unitID, Spring.GetUnitTeam(unitID), "turret", 4)
+		end,
+		costFunction = deductCBills,
+		price = 8000,
+	},
+	turretcontrol_3 = {
+		cmdDesc = {
+			id = GetCmdID('PERK_TURRETCONTROL_3'),
+			action = 'perkturretcontrol_3',
+			name = Pad("Sensor", "Towers"),
+			tooltip = 'Unlocks sensor towers',
+			texture = 'bitmaps/ui/upgrade.png',	
+		},
+		valid = function (unitDefID) return UnitDefs[unitDefID].name == "upgrade_turretcontrol" end,
+		applyPerk = function (unitID)
+			GG.LimitTowerType(unitID, Spring.GetUnitTeam(unitID), "sensor", 2)
+		end,
+		costFunction = deductCBills,
+		price = 8000,
+		requires = "turretcontrol_2",
+	},
 }

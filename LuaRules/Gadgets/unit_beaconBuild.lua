@@ -269,7 +269,7 @@ end
 function LimitTowerType(unitID, teamID, towerType, increase)	
 	local towersRemaining = buildLimits[unitID][towerType]
 	if increase then
-		buildLimits[unitID][towerType] = towersRemaining + 1
+		buildLimits[unitID][towerType] = towersRemaining + increase
 		for tDefID, tType in pairs(towerDefIDs) do
 			if tType == towerType then
 				local cmdDescID = FindUnitCmdDesc(unitID, -tDefID)
@@ -293,6 +293,7 @@ function LimitTowerType(unitID, teamID, towerType, increase)
 		return true
 	end
 end
+GG.LimitTowerType = LimitTowerType -- for upgrade_turretcontrol perk
 
 function gadget:UnitCreated(unitID, unitDefID, teamID, builderID)
 	hotSwapIDs[unitID] = nil
@@ -303,7 +304,8 @@ function gadget:UnitCreated(unitID, unitDefID, teamID, builderID)
 	elseif unitDefID == BEACON_POINT_ID then
 		AddUpgradeOptions(unitID)
 	elseif unitDefID == TURRETCONTROL_ID then
-		buildLimits[unitID] = {["turret"] = 4, ["sensor"] = 2}
+		buildLimits[unitID] = {["turret"] = 4, ["sensor"] = 1}
+		LimitTowerType(unitID, teamID, "sensor") -- reduce to 0 so we get the BP greyed out
 	elseif cp and cp.baseclass == "tower" then
 		-- track creation of turrets and their originating beacons so we can give back slots if a turret dies
 		if builderID then -- ignore /give turrets
@@ -316,7 +318,7 @@ function gadget:UnitDestroyed(unitID, unitDefID, teamID)
 	local towerOwnerID = towerOwners[unitID]
 	if towerOwnerID then -- unit was a turret with owning beacon, open the slot back up
 		local towerType = towerDefIDs[unitDefID]
-		LimitTowerType(towerOwnerID, teamID, towerType, true) -- increase limit
+		LimitTowerType(towerOwnerID, teamID, towerType, 1) -- increase limit
 		towerOwners[unitID] = nil
 	end
 	if DROPZONE_IDS[unitDefID] then -- unit was a team's dropzone, reset upgrade options
