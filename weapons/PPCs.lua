@@ -92,6 +92,7 @@ local CERPPC = PPC_Class:New{
 
 local NPPC = PPC_Class:New{
 	soundStart            	= "NPPC_Fire",
+	soundHit				= "NPPC_Hit",
 	areaOfEffect            = 750,
 	size					= 25,
 	damage = {

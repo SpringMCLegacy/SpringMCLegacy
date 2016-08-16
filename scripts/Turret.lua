@@ -145,6 +145,7 @@ function fx()
 			GG.PlaySoundForTeam(Spring.GetUnitTeam(unitID), "BB_turret_deployed", 1)
 		end
 		Sleep(1000)
+		PlaySound("turret_deploy")
 		for i = 1,4 do
 			local axis = (i % 2 == 0 and z_axis) or x_axis -- even use z, odd use x
 			local dir = (i == 1 or i == 4) and -1 or 1

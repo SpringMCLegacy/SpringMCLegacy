@@ -261,8 +261,8 @@ local LBX20 = AC20:New(LBX_Class):New{
 
 local NAC40 = AC_Class:New{
 	explosionGenerator    	= "custom:HE_LARGE",
-	soundHit             	= "AC20_Hit",
-	soundStart           	= "AC20_Fire",
+	soundHit             	= "NAC40_Hit",
+	soundStart           	= "NAC40_Fire",
 	areaOfEffect            = 1000,
 	size					= 40,
 	stages					= 50, 		--Number of particles used in one plasma shot.

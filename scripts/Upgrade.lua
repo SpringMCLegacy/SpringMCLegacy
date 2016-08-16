@@ -310,6 +310,7 @@ function Unpack()
 	-- Wait for delivery van to bug out
 	Sleep(2000)
 	-- Unpack the crate
+	PlaySound("outpost_unbox")
 	Turn(crate_front, x_axis, rad(45), CRATE_SPEED)
 	Turn(crate_back, x_axis, rad(-45), CRATE_SPEED)
 	Turn(crate_left, z_axis, rad(45), CRATE_SPEED)
