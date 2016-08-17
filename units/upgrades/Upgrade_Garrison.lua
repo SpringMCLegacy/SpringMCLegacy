@@ -21,6 +21,9 @@ local Upgrade_Garrison = Upgrade:New{
 		flagdefendrate = 100,
 		ignoreatbeacon	= false,
     },
+	sounds = {
+	select = "Garrison",
+	}
 }
 
 for i = 1, 6 do

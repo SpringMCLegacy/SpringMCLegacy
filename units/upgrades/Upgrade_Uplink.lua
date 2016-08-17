@@ -18,6 +18,9 @@ local Upgrade_Uplink = Upgrade:New{
 		helptext		= "Grants access to various abilities and upgrades.",
 		hasbap			= true,
     },
+	sounds = {
+	select = "Uplink",
+	}
 }
 
 return lowerkeys({ ["Upgrade_Uplink"] = Upgrade_Uplink })

@@ -13,6 +13,9 @@ local Garrison_Sniper = Tower:New{
 		turretturnspeed = 100,
 		elevationspeed  = 150,
     },
+	sounds = {
+	select = "TurretHeavy",
+	}
 }
 
 return lowerkeys({

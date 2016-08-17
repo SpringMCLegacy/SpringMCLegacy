@@ -15,6 +15,9 @@ local Turret_PPC = Tower:New{
 	customparams = {
 		barrelrecoildist = {[1] = 5},
     },
+	sounds = {
+	select = "Turret",
+	}
 }
 
 return lowerkeys({

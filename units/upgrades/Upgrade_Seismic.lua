@@ -12,6 +12,9 @@ local Upgrade_Seismic = Upgrade:New{
 	customparams = {
 		helptext		= "Ping Pong Potato",
     },
+	sounds = {
+	select = "Seismic",
+	}
 }
 
 return lowerkeys({ ["Upgrade_Seismic"] = Upgrade_Seismic })

@@ -6,6 +6,9 @@ local Turret_ECM = Tower:New{
 	customparams = {
 		ecm			= true,
     },
+	sounds = {
+	select = "Turret",
+	}
 }
 
 return lowerkeys({

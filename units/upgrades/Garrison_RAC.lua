@@ -28,6 +28,9 @@ local Garrison_RAC = Tower:New{
 		turretturnspeed = 100,
 		elevationspeed  = 150,
     },
+	sounds = {
+	select = "TurretHeavy",
+	}
 }
 
 return lowerkeys({

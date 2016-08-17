@@ -6,6 +6,9 @@ local Turret_BAP = Tower:New{
 	customparams = {
 		bap			= true,
     },
+	sounds = {
+	select = "Turret",
+	}
 }
 
 return lowerkeys({

@@ -12,6 +12,9 @@ local Upgrade_VehiclePad = Upgrade:New{
 	customparams = {
 		helptext		= "Grants access to friendly vehicle support.",
     },
+	sounds = {
+	select = "VehiclePad",
+	}
 }
 
 return lowerkeys({ ["Upgrade_VehiclePad"] = Upgrade_VehiclePad })

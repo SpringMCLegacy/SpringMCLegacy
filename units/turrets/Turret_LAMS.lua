@@ -11,6 +11,9 @@ local Turret_LAMS = Tower:New{
 		turretturnspeed = 300,
 		elevationspeed  = 300,
     },
+	sounds = {
+	select = "Turret",
+	}
 }
 
 return lowerkeys({

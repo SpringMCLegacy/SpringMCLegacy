@@ -161,6 +161,54 @@ local Sounds = {
 			maxdist = 5000,
 			rolloff = 10.0,
 		},
+		--UNIT SOUNDS
+		--TURRETS
+		Turret = {
+			file = "sounds/turret/Turret.wav",
+			in3d = "false",
+		},
+		TurretHeavy = {
+			file = "sounds/turret/TurretHeavy.wav",
+			in3d = "false",
+		},
+		--OUTPOSTS
+		C3Array = {
+			file = "sounds/outpost/C3Array.wav",
+			in3d = "false",
+		},
+		Garrison = {
+			file = "sounds/outpost/Garrison.wav",
+			in3d = "false",
+		},
+		Mechbay = {
+			file = "sounds/outpost/Mechbay.wav",
+			in3d = "false",
+		},
+		Seismic = {
+			file = "sounds/outpost/Seismic.wav",
+			in3d = "false",
+		},
+		TurretControl = {
+			file = "sounds/outpost/TurretControl.wav",
+			in3d = "false",
+		},
+		Uplink = {
+			file = "sounds/outpost/Uplink.wav",
+			in3d = "false",
+		},
+		VehiclePad = {
+			file = "sounds/outpost/VehiclePad.wav",
+			in3d = "false",
+		},
+		SeismicStomp = {
+			file = "sounds/outpost/SeismicStomp.wav",
+			maxconcurrent = 12,
+			gainmod = 0.75,
+			pitchmod = 0.1,
+			priority = -0.1,
+			maxdist = 10000,
+			rolloff = 5.0,
+		},
 	},
 }
 

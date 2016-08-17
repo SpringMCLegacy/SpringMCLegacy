@@ -17,6 +17,9 @@ local Upgrade_TurretControl = Upgrade:New{
 	customparams = {
 		helptext		= "Ping Pong Potato",
     },
+	sounds = {
+	select = "TurretControl",
+	}
 }
 
 return lowerkeys({ ["Upgrade_TurretControl"] = Upgrade_TurretControl })

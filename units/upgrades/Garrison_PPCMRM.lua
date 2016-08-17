@@ -23,6 +23,9 @@ local Garrison_PPCMRM = Tower:New{
 		turretturnspeed = 100,
 		elevationspeed  = 150,
     },
+	sounds = {
+	select = "TurretHeavy",
+	}
 }
 
 return lowerkeys({

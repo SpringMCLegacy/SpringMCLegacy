@@ -12,6 +12,9 @@ local Upgrade_C3Array = Upgrade:New{
 	customparams = {
 		helptext		= "Adds additional control slots for your forces",
     },
+	sounds = {
+	select = "C3Array",
+	}
 }
 
 return lowerkeys({ ["Upgrade_C3Array"] = Upgrade_C3Array })

@@ -29,6 +29,9 @@ local Garrison_LGauss = Tower:New{
 		elevationspeed  = 150,
 		chainfiredelays = {250, 0, 250, 0}
     },
+	sounds = {
+	select = "TurretHeavy",
+	}
 }
 
 return lowerkeys({

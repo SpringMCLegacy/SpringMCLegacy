@@ -13,6 +13,9 @@ local Upgrade_Mechbay = Upgrade:New{
 	customparams = {
 		helptext		= "Repairs and re-arms Mechs and Vehicles.",
     },
+	sounds = {
+	select = "Mechbay",
+	}
 }
 
 return lowerkeys({ ["Upgrade_Mechbay"] = Upgrade_Mechbay })
