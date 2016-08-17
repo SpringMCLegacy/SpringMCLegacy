@@ -23,6 +23,21 @@ local roleSensors = {
 	["lrm"]			= {radar = 1500,	sector = 35}, -- synonym for missile
 	["artillery"]	= {radar = 1500,	sector = 35}, -- synonum for missile
 }
+
+local function GetSpeedColoured(speed)
+	local speedString = "\tSpeed: "
+	if speed < 60 then -- red
+		speedString = speedString .. "\255\255\001\001"
+	elseif speed < 80 then -- orange
+		speedString = speedString .. "\255\255\128\001"
+	elseif speed < 110 then -- yellow
+		speedString = speedString .. "\255\255\255\001"
+	else -- green
+		speedString = speedString .. "\255\001\255\001"
+	end
+	return speedString .. speed .. "\255\255\255\255 km/h"
+end
+
 local function GetRole(roleString)
 	for role, info in pairs(roleSensors) do
 		if roleString:lower():find(role) then
@@ -288,13 +303,16 @@ for name, ud in pairs(UnitDefs) do
 			end
 		end
 		
-		local weapString = "\n\255\255\255\255"
+		local weapString = "\n\255\255\255\255Weapons: "
 		for weapName, count in pairs(weaponCounts) do
 			if weapName:lower() ~= "sight" then
 				weapString = weapString .. weapName .. " x" .. count .. ", "
 			end
 		end
 		ud.description = (ud.description or "") .. weapString
+		if cp.speed then
+			ud.description = (ud.description or "") .. GetSpeedColoured(cp.speed)
+		end
 	end
 	
 	-- Automatically build dropship buildmenus
