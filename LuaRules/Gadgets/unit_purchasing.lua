@@ -100,9 +100,9 @@ local typeStringAliases = { -- whitespace is to try and equalise resulting font 
 	["mediummech"] 	= "Medium  \nMechs", 
 	["heavymech"] 	= "Heavy    \nMechs", 
 	["assaultmech"] = "Assault  \nMechs", 
-	["vehicle"] 	= "Vehicles ", 
-	["vtol"] 		= "VTOL     ",
-	["aero"]		= "Aero     ",
+	--["vehicle"] 	= "Vehicles ", 
+	--["vtol"] 		= "VTOL     ",
+	--["aero"]		= "Aero     ",
 }
 
 local menuCmdDescs = {}
@@ -114,7 +114,8 @@ for i, typeString in ipairs(typeStrings) do
 		type   = CMDTYPE.ICON,
 		name   = typeStringAliases[typeString], -- TODO: texture?
 		action = 'menu' .. typeString,
-		tooltip = "Purchase " .. typeString,
+		tooltip = "Purchase " .. typeStringAliases[typeString]:gsub("%s+\n", " ") .. (i > 2 and " (Requires Union-class dropship or better)" or ""),
+		disabled = i > 2,
 	}
 	menuCmdIDs[cmdID] = typeString
 end
@@ -142,6 +143,11 @@ GG.orderStatus = orderStatus
 local teamSlots = {}
 local unitLances = {} -- unitLances[unitID] = group_number
 
+local function 	UnlockHeavy(dropZone)
+	EditUnitCmdDesc(dropZone, FindUnitCmdDesc(dropZone, menuCmdDescs[3].id), {disabled = false})
+	EditUnitCmdDesc(dropZone, FindUnitCmdDesc(dropZone, menuCmdDescs[4].id), {disabled = false})
+end
+
 local function TeamDropshipUpgrade(teamID)
 	local side = GG.teamSide[teamID]
 	local oldDefID = teamDropShipTypes[teamID].def
@@ -154,6 +160,8 @@ local function TeamDropshipUpgrade(teamID)
 		Spring.SetTeamResource(teamID, "es", maxTonnage)
 		Spring.AddTeamResource(teamID, "e", tonnageIncrease)
 		teamDropShipHPs[teamID] = nil -- reset HP
+		-- first upgrade unlocks heavy and assault mechs
+		UnlockHeavy(teamDropZones[teamID])
 	else -- max upgrade reached, disable button
 		Spring.SendMessageToTeam(teamID, "Dropship Fully Upgraded!")
 	end
@@ -617,6 +625,9 @@ function gadget:UnitCreated(unitID, unitDefID, teamID)
 		AddBuildMenu(unitID)
 		dropZones[unitID] = teamID
 		teamDropZones[teamID] = unitID
+		if teamDropShipTypes[teamID].tier > 1 then
+			UnlockHeavy(unitID)
+		end
 	elseif dropShipTypes[unitDefID] == "mech" then
 		if Spring.ValidUnitID(teamDropZones[teamID]) then -- TODO: (Why) is this even required?
 			EditUnitCmdDesc(teamDropZones[teamID], FindUnitCmdDesc(teamDropZones[teamID], CMD_SEND_ORDER), {disabled = true, name = "Dropship \nArrived "})
