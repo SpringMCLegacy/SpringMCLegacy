@@ -3,8 +3,8 @@
 local pelvis, torso, lupperleg, llowerleg, rupperleg, rlowerleg, rfronttoes, rbacktoe, lfronttoes, lbacktoe , lfoot, rfoot = piece ("pelvis", "torso", "lupperleg", "llowerleg", "rupperleg", "rlowerleg", "rfronttoes", "rbacktoe", "lfronttoes", "lbacktoe", "lfoot", "rfoot")
 
 --Turning/Movement Locals
-local LEG_SPEED = rad(200) * speedMod
-local LEG_TURN_SPEED = rad (200) * speedMod
+local LEG_SPEED = rad(300) * speedMod
+local LEG_TURN_SPEED = rad (300) * speedMod
 
 --Turn script
 function anim_Turn(clockwise)
@@ -190,9 +190,9 @@ function anim_Walk()
 		Move(pelvis, y_axis, 0, LEG_SPEED * 10)
 		Turn(pelvis, z_axis, rad(0), LEG_SPEED / 5)
 		
-		Turn(lupperleg, x_axis, rad(-45), LEG_SPEED)
-		Turn(llowerleg, x_axis, rad(35), LEG_SPEED)
-		Turn(lfoot, x_axis, rad(10), LEG_SPEED)
+		Turn(lupperleg, x_axis, rad(-35), LEG_SPEED)
+		Turn(llowerleg, x_axis, rad(25), LEG_SPEED)
+		Turn(lfoot, x_axis, rad(20), LEG_SPEED)
 		
 		Turn(rupperleg, x_axis, rad(45), LEG_SPEED)
 		Turn(rlowerleg, x_axis, rad(25), LEG_SPEED)
@@ -253,9 +253,9 @@ function anim_Walk()
 		Turn(llowerleg, x_axis, rad(25), LEG_SPEED)
 		Turn(lfoot, x_axis, rad(-5), LEG_SPEED)
 		
-		Turn(rupperleg, x_axis, rad(-45), LEG_SPEED)
-		Turn(rlowerleg, x_axis, rad(35), LEG_SPEED)
-		Turn(rfoot, x_axis, rad(10), LEG_SPEED)
+		Turn(rupperleg, x_axis, rad(-35), LEG_SPEED)
+		Turn(rlowerleg, x_axis, rad(25), LEG_SPEED)
+		Turn(rfoot, x_axis, rad(20), LEG_SPEED)
 		
 		WaitForTurn(lupperleg, x_axis)
 		WaitForTurn(llowerleg, x_axis)
