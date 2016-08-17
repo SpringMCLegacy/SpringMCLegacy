@@ -36,7 +36,7 @@ local fxs = {
 	},
 	nppcTail = {
 		class = "ribbon",
-		options = {size = 360, width = 90, color = {0.55, 0.65, 1,0.6}, texture1 = ":c:bitmaps/ProjectileTextures/ppctrail.png"},
+		options = {size = 72, width = 10, color = {0.55, 0.65, 1,0.6}, texture1 = ":c:bitmaps/ProjectileTextures/ppctrail.png"},
 	},
 }
 

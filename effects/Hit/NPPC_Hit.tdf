@@ -1,0 +1,196 @@
+[NPPC]
+{
+	[ELECTRIC1]
+	{
+	class=heatcloud;
+   	
+		[properties]
+      		{
+		alwaysVisible=1;
+		texture=electricalarc;
+      		heat = 1;
+      		maxheat = 3;
+      		heatFalloff = 1.1;
+
+      		size = 15.5;
+      		sizeGrowth = 5;
+
+			//numParticles		= 5;
+         	pos = r-2 r2, 5, r-2 r2;
+         	speed=0, 1 0, 0;
+      		}
+	air=1;
+      	water=1;
+      	ground=1;
+      	count=2;
+	} 
+
+	[ELECTRIC2]
+	{
+	class=heatcloud;
+   	
+		[properties]
+      		{
+		alwaysVisible=1;
+		texture=lightbw;
+      		heat = 10;
+      		maxheat = 15;
+      		heatFalloff = 1.3;
+
+      		size = 16;
+      		sizeGrowth = 10;
+
+         	pos = r-2 r2, 5, r-2 r2;
+         	speed=0, 0, 0;
+      		}
+	air=1;
+      	water=1;
+      	ground=1;
+      	count=1;
+	} 
+
+	[whiteglow]
+	{
+	class=heatcloud;
+   	
+		[properties]
+      		{
+		alwaysVisible=1;
+		texture=laserend;
+      		heat = 10;
+      		maxheat = 15;
+      		heatFalloff = 1.1;
+
+      		size = 6;
+      		sizeGrowth = 10;
+
+         	pos = 0, 5, 0;
+         	speed=0, 1 0, 0;
+      		}
+	air=1;
+      	water=1;
+      	ground=1;
+      	count=2;
+	} 
+
+	[ELECTRICARCS1]
+	{
+	class=CSimpleParticleSystem;
+
+		[properties]
+		{
+		alwaysVisible=1;
+		Texture=electricalarc;
+
+		colorMap	= 1.0 1.0 1.0 0.04	0.2 0.5 0.9 0.01	0.1 0.5 0.7 0.01;
+
+      		pos 		= 0, 2, 0;
+		gravity		= 0, -0.05, 0;
+	       	emitVector	= 0, 1, 0;
+		emitRot		= 45;
+		emitRotSpread	= 32;
+
+		//size = 5;
+		sizeGrowth	= 0.95;
+		sizeMod		= 0.95;
+
+		airdrag			= 0.8;
+		particleLife		= 10;
+		particleLifeSpread	= 5;
+		numParticles		= 14;
+		particleSpeed		= 5;
+		particleSpeedSpread	= 5;
+		particleSize		= 20;
+		particleSizeSpread	= 0;
+
+		directional		= 1;
+		useAirLos		= 0;
+		}
+	air=1;
+	ground=1;
+	count=1;
+	}
+
+	[MOREDOTS]
+	{
+	class=CSimpleParticleSystem;
+
+		[properties]
+		{		
+		alwaysVisible=1;
+		Texture=randdots;
+
+		colorMap	= 1.0 1.0 1.0 0.05	0.2 0.5 0.9 0.01	0.1 0.1 0.8 0.00;
+
+      		pos 		= 0, 2, 0;
+		gravity		= 0, -0.1, 0;
+	       	emitVector	= 0, 1, 0;
+		emitRot		= 45;
+		emitRotSpread	= 32;
+
+		sizeGrowth	= 0.2;
+		sizeMod		= 0.75;
+
+		airdrag			= 0.8;
+		particleLife		= 5;
+		particleLifeSpread	= 16;
+		numParticles		= 16;
+		particleSpeed		= 10;
+		particleSpeedSpread	= 3;
+		particleSize		= 10;
+		particleSizeSpread	= 0;
+
+		directional		= 1;
+		useAirLos		= 0;
+		}
+	air=1;
+	ground=1;
+	count=1;
+	}
+
+	[dirt]
+	{
+		[properties]
+		{
+		alwaysVisible=1;
+		size=5;
+		color=0.2, 0.1, 0.05;
+		alphaFalloff=1;
+		speed= r1.5 r-1.5, 2, r1.5 r-1.5;
+		pos=r-10 r10, 0, r-10 r10;
+		}
+		ground=1;
+		count=3;
+	}
+
+	[groundflash]
+   	{
+	alwaysVisible=1;
+      	ttl = 9;
+      	flashSize = 200;
+      	flashAlpha = 0.6;
+
+      	circleGrowth = 6;
+      	circleAlpha = 0.6;
+
+      	color = 0.0, 0.5, 1.0;
+
+	air=1;
+     	ground=1;
+      	water=1;
+	}
+	[electricstorm]  // residual electricity effect
+	{
+		class=CExpGenSpawner;
+		[properties]
+		{
+		pos=-100 r200, 1, -100 r200; 
+		delay=10 r200;    
+		explosionGenerator=custom:LIGHTNINGPLOSION_STORMBOLT; 
+		}
+	air=1;
+	water=1;
+	ground=1;
+	count=10;
+	}
+}

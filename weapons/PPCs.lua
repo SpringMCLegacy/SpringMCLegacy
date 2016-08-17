@@ -91,16 +91,17 @@ local CERPPC = PPC_Class:New{
 }
 
 local NPPC = PPC_Class:New{
+	explosionGenerator    	= "custom:NPPC",
 	soundStart            	= "NPPC_Fire",
 	soundHit				= "NPPC_Hit",
-	areaOfEffect            = 200,
-	edgeEffectiveness		= 0.5,
-	size					= 25,
+	areaOfEffect            = 350,
+	edgeEffectiveness		= 0.8,
+	size					= 15,
 	damage = {
-		default = 2500,
+		default = 5000,
 	},
 	customparams = {
-		heatdamage			= 5,
+		heatdamage			= 7,
 		projectilelups		= {"nppcTail"},
 	}
 }
