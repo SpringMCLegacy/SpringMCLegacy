@@ -134,9 +134,9 @@ local function Spam(teamID)
 			--Spring.Echo("COMPARING:", orderSizes[teamID], GG.TeamSlotsRemaining(teamID))
 			local buildID
 			if difficulty > 1 then
-				Spring.AddTeamResource(teamID, "metal", 10000)
+				Spring.AddTeamResource(teamID, "metal", 1000)
 				if difficulty > 2 then
-					Spring.AddTeamResource(teamID, "metal", 10000)
+					Spring.AddTeamResource(teamID, "metal", 2000)
 					if difficulty == 4 then -- Assaults only
 						buildID = -sideAssaults[side][math.random(1, #sideAssaults[side])]
 					elseif difficulty == 3 then -- jumpers only
@@ -210,7 +210,7 @@ local function Upgrade(unitID, teamID)
 		unitID = GG.dropZoneBeaconIDs[teamID]
 	end
 	if difficulty > 1 then
-		Spring.AddTeamResource(teamID, "metal", 15000)
+		Spring.AddTeamResource(teamID, "metal", 1000)
 	end
 	if not dropZoneIDs[teamID] then -- no dropzone left!
 		GG.Delay.DelayCall(Spring.GiveOrderToUnit, {unitID, AI_CMDS["CMD_DROPZONE"].id, {}, {}}, 1)
