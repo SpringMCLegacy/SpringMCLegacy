@@ -134,9 +134,9 @@ local function Spam(teamID)
 			--Spring.Echo("COMPARING:", orderSizes[teamID], GG.TeamSlotsRemaining(teamID))
 			local buildID
 			if difficulty > 1 then
-				Spring.AddTeamResource(teamID, "metal", 10000)
+				Spring.AddTeamResource(teamID, "metal", 20000)
 				if difficulty > 2 then
-					Spring.AddTeamResource(teamID, "metal", 100000)
+					Spring.AddTeamResource(teamID, "metal", 50000)
 					if difficulty == 4 then -- Assaults only
 						buildID = -sideAssaults[side][math.random(1, #sideAssaults[side])]
 					elseif difficulty == 3 then -- jumpers only
