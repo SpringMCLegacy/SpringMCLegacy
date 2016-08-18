@@ -140,6 +140,7 @@ end
 function MechBayRepair()
 	SetSignalMask(1)
 	while true do
+		PlaySound("MechbayWorking")
 		--ramptools
 		Turn(ramprtoolmid, z_axis, rad(-70), CRATE_SPEED * 5)
 		Turn(rampltoolmid, z_axis, rad(70), CRATE_SPEED * 5)
@@ -170,6 +171,7 @@ function MechBayRepair()
 		Move(supportlhandfingers1, z_axis, -1, CRATE_SPEED * 5)
 		Move(supportlhandfingers2, z_axis, 1, CRATE_SPEED * 5)
 		WaitForMove(supportlhandattach, z_axis)
+		PlaySound("MechbayWelding")
 		for i = 1, 10 do
 			GG.EmitSfxName(unitID, supportltorchspark, "sparks")
 			GG.EmitSfxName(unitID, supportrtorchspark, "sparks")
@@ -177,6 +179,7 @@ function MechBayRepair()
 			GG.EmitSfxName(unitID, rampltoolspark, "sparks")
 			Sleep(100)
 		end
+		PlaySound("MechbayWorking")
 		Turn(ramprtoolmid, z_axis, rad(-50), CRATE_SPEED * 5)
 		Turn(rampltoolmid, z_axis, rad(30), CRATE_SPEED * 5)
 		--r torch
@@ -204,6 +207,7 @@ function MechBayRepair()
 		Move(supportlhandfingers1, z_axis, 0, CRATE_SPEED * 5)
 		Move(supportlhandfingers2, z_axis, 0, CRATE_SPEED * 5)
 		WaitForMove(supportlhandattach, z_axis)
+		PlaySound("MechbayWelding")
 		for i = 1, 10 do
 			GG.EmitSfxName(unitID, supportltorchspark, "sparks")
 			GG.EmitSfxName(unitID, supportrtorchspark, "sparks")
@@ -211,6 +215,7 @@ function MechBayRepair()
 			GG.EmitSfxName(unitID, rampltoolspark, "sparks")
 			Sleep(100)
 		end
+		PlaySound("MechbayWorking")
 		Turn(ramprtoolmid, z_axis, rad(-90), CRATE_SPEED * 5)
 		Turn(rampltoolmid, z_axis, rad(10), CRATE_SPEED * 5)
 		--r torch
@@ -243,6 +248,7 @@ function MechBayRepair()
 		Move(supportlhandfingers1, z_axis, 1, CRATE_SPEED * 5)
 		Move(supportlhandfingers2, z_axis, -1, CRATE_SPEED * 5)
 		WaitForMove(supportlhandattach, z_axis)
+		PlaySound("MechbayWelding")
 		for i = 1, 10 do
 			GG.EmitSfxName(unitID, supportltorchspark, "sparks")
 			GG.EmitSfxName(unitID, supportrtorchspark, "sparks")
