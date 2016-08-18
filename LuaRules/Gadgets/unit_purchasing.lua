@@ -433,7 +433,7 @@ function OrderFinished(unitID, teamID)
 end
 
 -- TODO: Issues if dropzone is 'flipped' to another beacon
-function DropshipLeft(teamID, switch) -- called by Dropship once it has left, to enable "Submit Order"
+function DropshipLeft(teamID) -- called by Dropship once it has left, to enable "Submit Order"
 	local unitID = teamDropZones[teamID]
 	local beaconID = GG.dropZoneBeaconIDs[teamID]
 	orderStatus[teamID] = 0
@@ -447,11 +447,7 @@ function DropshipLeft(teamID, switch) -- called by Dropship once it has left, to
 	local enableFrame = GetGameFrame() + dropShipDef.customParams.cooldown
 	coolDowns[teamID] = enableFrame
 	Spring.SetTeamRulesParam(teamID, "DROPSHIP_COOLDOWN", enableFrame) -- frame this team can call dropship again
-	if not switch then -- only free up the beacon if a dropship is really leaving
-		GG.DropzoneFree(beaconID, teamID)
-	end
 end
-GG.DropshipLeft = DropshipLeft
 
 -- Factories can't implement gadget:CommandFallback, so fake it ourselves
 local function SendCommandFallback(unitID, unitDefID, teamID, cost)
@@ -677,6 +673,7 @@ function gadget:UnitDestroyed(unitID, unitDefID, teamID, attackerID, attackerDef
 	elseif teamDropShipTypes[teamID] and unitDefID == teamDropShipTypes[teamID].def then
 		-- main dropship, save it's HP -- TODO: move this to DropshipDelivery gadget and track e.g. avenger
 		teamDropShipHPs[teamID] = Spring.GetUnitHealth(unitID)
+		DropshipLeft(teamID)
 	end
 	if attackerID and not AreTeamsAllied(teamID, attackerTeam) and unitDefID ~= WALL_ID and unitDefID ~= GATE_ID then
 		--AddTeamResource(attackerTeam, "metal", UnitDefs[unitDefID].metalCost * KILL_REWARD_MULT)

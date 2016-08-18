@@ -170,9 +170,6 @@ function LCLeft(beaconID, vPadID, teamID, died) -- called by LC once it has left
 	if Spring.ValidUnitID(vPadID) and (not Spring.GetUnitIsDead(vPadID)) and (teamID == Spring.GetUnitTeam(vPadID)) then
 		GG.Delay.DelayCall(Deliver, {vPadID, teamID}, (died and DEATH_DELAY or 0) + delays[vehiclePadLevels[vPadID]] + math.random(10) * 30)
 	end
-	if beaconID then -- first time is called by vpad deploying, when no dropship has actually left
-		GG.DropzoneFree(beaconID, teamID)
-	end
 end
 GG.LCLeft = LCLeft
 

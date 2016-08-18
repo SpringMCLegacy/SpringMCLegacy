@@ -72,6 +72,8 @@ local dropZoneBeaconIDs = {} -- dropZoneBeaconIDs[teamID] = beaconID
 GG.dropZoneBeaconIDs = dropZoneBeaconIDs
 local dropZoneCmdDesc
 
+local activeDropships = {} -- activeDropships[dropshipID] = beaconID
+
 local hotSwapIDs = {} -- hotSwapIDs[unitID] = true
 local function HotSwap(unitID, unitDefID, teamID)
 	hotSwapIDs[unitID] = true
@@ -184,6 +186,7 @@ function SpawnDropship(beaconID, unitID, teamID, dropshipType, cargo, cost)
 		else
 			DelayCall(SpawnCargo, {beaconID, unitID, dropshipID, cargo, teamID}, 1)
 		end
+		return dropshipID
 	else -- dropzone moved or beacon was capped
 		-- Refund
 		Spring.AddTeamResource(teamID, "metal", cost)
@@ -199,8 +202,9 @@ function NextDropshipQueueItem(beaconID, teamID)
 		if item.sound then
 			GG.PlaySoundForTeam(teamID, item.sound, 1)
 		end
-		SpawnDropship(beaconID, item.target, teamID, item.dropshipType, item.cargo, item.cost)
+		local dropshipID = SpawnDropship(beaconID, item.target, teamID, item.dropshipType, item.cargo, item.cost)
 		beaconActive[beaconID] = true
+		activeDropships[dropshipID] = beaconID
 	end
 end
 
@@ -314,7 +318,7 @@ function gadget:UnitCreated(unitID, unitDefID, teamID, builderID)
 	end
 end
 
-function gadget:UnitDestroyed(unitID, unitDefID, teamID)
+function gadget:UnitDestroyed(unitID, unitDefID, teamID, attackerID, attackerDefID, attackerTeam)
 	local towerOwnerID = towerOwners[unitID]
 	if towerOwnerID then -- unit was a turret with owning beacon, open the slot back up
 		local towerType = towerDefIDs[unitDefID]
@@ -338,6 +342,10 @@ function gadget:UnitDestroyed(unitID, unitDefID, teamID)
 			-- Re-add upgrade options to beacon
 			ToggleUpgradeOptions(upgradePointID, true)
 		end
+	elseif activeDropships[unitID] then
+		--Spring.Echo("Oh noes, my dropship! Send the next one", attackerID, attackerDefID, attackerTeam)
+		DropzoneFree(activeDropships[unitID], teamID)
+		activeDropships[unitID] = nil
 	end
 end
 

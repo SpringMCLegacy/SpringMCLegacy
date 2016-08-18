@@ -207,7 +207,6 @@ function TakeOff()
 	StopSpin(body, z_axis, math.rad(45))
 	Sleep(2000)
 	-- We're out of the atmosphere, bye bye!
-	GG.DropshipLeft(teamID) -- let the world know
 	Spring.DestroyUnit(unitID, false, true)
 end
 
