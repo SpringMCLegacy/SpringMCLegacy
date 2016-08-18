@@ -45,7 +45,8 @@ function widget:Initialize()
 	for unitDefID, unitDef in pairs(UnitDefs) do
 		local weapons = unitDef.weapons
 		local weaponTypes = {}
-		for i = 1, #weapons do 
+		local mech = unitDef.customParams.baseclass == "mech"
+		for i = 1, #weapons - (mech and 1 or 0) do -- cut off sight weapon for mechs
 			local weaponDef = WeaponDefs[weapons[i].weaponDef]
 			weaponTypes[weaponDef.name] = weaponDef.range
 			local minRange = tonumber(weaponDef.customParams.minrange) or nil
