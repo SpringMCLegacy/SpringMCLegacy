@@ -209,6 +209,24 @@ local Sounds = {
 			maxdist = 10000,
 			rolloff = 5.0,
 		},
+		MechbayWorking = {
+			file = "sounds/outpost/MechbayWorking.wav",
+			maxconcurrent = 12,
+			gainmod = 0.5,
+			pitchmod = 0.1,
+			priority = -0.1,
+			maxdist = 6000,
+			rolloff = 2.0,
+		},
+		MechbayWelding = {
+			file = "sounds/outpost/MechbayWelding.wav",
+			maxconcurrent = 12,
+			gainmod = 0.5,
+			pitchmod = 0.1,
+			priority = -0.1,
+			maxdist = 6000,
+			rolloff = 2.0,
+		},
 	},
 }
 
