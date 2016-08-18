@@ -25,7 +25,7 @@ local roleSensors = {
 }
 
 local function GetSpeedColoured(speed)
-	local speedString = "\tSpeed: "
+	local speedString = "\nSpeed: "
 	if speed < 60 then -- red
 		speedString = speedString .. "\255\255\001\001"
 	elseif speed < 80 then -- orange
@@ -302,14 +302,7 @@ for name, ud in pairs(UnitDefs) do
 				weapon.badtargetcategory = (weapon.badtargetcategory or "") .. " dropship structure"
 			end
 		end
-		
-		local weapString = "\n\255\255\255\255Weapons: "
-		for weapName, count in pairs(weaponCounts) do
-			if weapName:lower() ~= "sight" then
-				weapString = weapString .. weapName .. " x" .. count .. ", "
-			end
-		end
-		ud.description = (ud.description or "") .. weapString
+		cp.weaponCounts = weaponCounts -- stick this in here for weapondefs_post
 		if cp.speed then
 			ud.description = (ud.description or "") .. GetSpeedColoured(cp.speed)
 		end

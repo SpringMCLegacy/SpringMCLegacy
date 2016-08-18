@@ -18,6 +18,39 @@ local damageMults = {
 	walls		= 0.8, -- 80% default
 }
 
+local function FloatTo128(num)
+	return string.char(string.format("%03d",math.max(num * 255, 1)))
+end
+
+local function RGBtoString(rgbstring)
+	local rgb = {}
+	for i in string.gmatch(rgbstring, "%S+") do
+		table.insert(rgb, i)
+	end
+	return '\255' .. FloatTo128(rgb[1]) .. FloatTo128(rgb[2]) .. FloatTo128(rgb[3])
+end
+
+local function WeaponColour(weapName)
+	weapName = weapName:lower()
+	local colour = WeaponDefs[weapName].rgbcolor
+	if not colour then 
+		if weapName:find("arrow") then -- black
+			colour = "\255\001\001\001"
+		elseif weapName:find("srm") then -- dark grey
+			colour = "\255\064\064\064"
+		elseif weapName:find("mrm") then -- mid grey
+			colour = "\255\128\128\128"
+		elseif weapName:find("lrm") then -- light grey
+			colour = "\255\192\192\192"
+		else
+			colour = "\255\255\255\255"
+		end
+	else
+		colour = RGBtoString(colour)
+	end
+	return colour
+end
+
 for weapName, wd in pairs(WeaponDefs) do 
 	local cp = wd.customparams
 	if cp then
@@ -111,6 +144,13 @@ for unitName, ud in pairs(UnitDefs) do
 			else
 				--Spring.Echo("[WeaponDefs_post.lua]:" .. unitName .. " has no corpse!")
 			end
+			local weapString = "\t\t\255\255\255\255Weapons: "
+			for weapName, count in pairs(table.unserialize(cp.weaponCounts)) do
+				if weapName:lower() ~= "sight" then
+					weapString = weapString .. WeaponColour(weapName) .. weapName .. " \255\255\255\255x" .. count .. ", "
+				end
+			end
+			ud.description = (ud.description or "") .. weapString
 		end
 		--[[Spring.Echo("UNIT: " .. unitName)
 		for _, i in pairs(ud.sfxtypes.explosiongenerators) do
