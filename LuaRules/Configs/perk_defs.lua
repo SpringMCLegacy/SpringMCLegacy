@@ -71,7 +71,8 @@ end
 
 return {
 	-- Generic
-	heatefficiency = {
+	{
+		name = "heatefficiency",
 		cmdDesc = {
 			id = GetCmdID('PERK_HEAT_EFFICIENCY'),
 			action = 'perkheatefficiency',
@@ -89,7 +90,8 @@ return {
 		end,
 		costFunction = deductXP,
 	},
-	sensorrange = {
+	{
+		name = "sensorrange",
 		cmdDesc = {
 			id = GetCmdID('PERK_SENSORS_RANGE'),
 			action = 'perksensorsrange',
@@ -113,7 +115,8 @@ return {
 		costFunction = deductXP,
 	},
 	-- Ability modifiers
-	narcduration = {
+	{
+		name = "narcduration",
 		cmdDesc = {
 			id = GetCmdID('PERK_NARC_DURATION'),
 			action = 'perknarkduration',
@@ -129,7 +132,8 @@ return {
 		end,
 		costFunction = deductXP,
 	},
-	jumpjetefficiency = {
+	{
+		name = "jumpjetefficiency",
 		cmdDesc = {
 			id = GetCmdID('PERK_JUMP_EFFICIENCY'),
 			action = 'perkjumpjetefficiency',
@@ -149,7 +153,8 @@ return {
 		end,
 		costFunction = deductXP,
 	},
-	mascefficiency = {
+	{
+		name = "mascefficiency",
 		cmdDesc = {
 			id = GetCmdID('PERK_MASC_EFFICIENCY'),
 			action = 'perkmascefficiency',
@@ -165,7 +170,8 @@ return {
 		end,
 		costFunction = deductXP,
 	},
-	amsrange = {
+	{
+		name = "amsrange",
 		cmdDesc = {
 			id = GetCmdID('PERK_AMS_RANGE'),
 			action = 'perkamsrange',
@@ -180,7 +186,8 @@ return {
 		end,
 		costFunction = deductXP,
 	},
-	ecmrange = {
+	{
+		name = "ecmrange",
 		cmdDesc = {
 			id = GetCmdID('PERK_ECM_RANGE'),
 			action = 'perkecmrange',
@@ -197,7 +204,8 @@ return {
 		end,
 		costFunction = deductXP,
 	},
-	insulation = {
+	{
+		name = "insulation",
 		cmdDesc = {
 			id = GetCmdID('PERK_INSULATED_ELECTRONICS'),
 			action = 'perkinsulatedelectronics',
@@ -213,7 +221,8 @@ return {
 		costFunction = deductXP,
 	},
 	-- Weapon (Faction) specific
-	lrmrange = {
+	{
+		name = "lrmrange",
 		cmdDesc = {
 			id = GetCmdID('PERK_LRM_RANGE'),
 			action = 'perklrmrange',
@@ -228,7 +237,8 @@ return {
 		end,
 		costFunction = deductXP,
 	},
-	mrmrange = {
+	{
+		name = "mrmrange",
 		cmdDesc = {
 			id = GetCmdID('PERK_MRM_RANGE'),
 			action = 'perkmrmrange',
@@ -243,7 +253,8 @@ return {
 		end,
 		costFunction = deductXP,
 	},
-	ppcrange = {
+	{
+		name = "ppcrange",
 		cmdDesc = {
 			id = GetCmdID('PERK_PPC_RANGE'),
 			action = 'perkppcrange',
@@ -258,7 +269,8 @@ return {
 		end,
 		costFunction = deductXP,
 	},
-	autocannonrange = {
+	{
+		name = "autocannonrange",
 		cmdDesc = {
 			id = GetCmdID('PERK_AUTOCANNON_RANGE'),
 			action = 'perkautocannonrange',
@@ -273,7 +285,8 @@ return {
 		end,
 		costFunction = deductXP,
 	},
-	gaussrange = {
+	{
+		name = "gaussrange",
 		cmdDesc = {
 			id = GetCmdID('PERK_GAUSS_RANGE'),
 			action = 'perkgaussrange',
@@ -289,7 +302,8 @@ return {
 		costFunction = deductXP,
 	},
 	-- Upgrades
-	union = {
+	{
+		name = "union",
 		cmdDesc = {
 			id = GetCmdID('CMD_DROPZONE_2'),
 			action = 'perkdropshipupgradeunion',
@@ -305,7 +319,8 @@ return {
 		costFunction = deductCBills,
 		price = 10000,
 	},
-	overlord = {
+	{
+		name = "overlord",
 			cmdDesc = {
 			id = GetCmdID('CMD_DROPZONE_3'),
 			action = 'perkdropshipupgradeoverlord',
@@ -323,7 +338,8 @@ return {
 		requires = "union",
 	},
 	-- vehicle pad
-	vpadheavy = {
+	{
+		name = "vpadheavy",
 		cmdDesc = {
 			id = GetCmdID('PERK_VPAD_2'),
 			action = 'perkvpadheavy',
@@ -338,7 +354,8 @@ return {
 		costFunction = deductCBills,
 		price = 10000,
 	},
-	vpadhouse = {
+	{
+		name = "vpadhouse",
 		cmdDesc = {
 			id = GetCmdID('PERK_VPAD_3'),
 			action = 'perkvpadhouse',
@@ -355,7 +372,8 @@ return {
 		requires = "vpadheavy",
 	},
 	-- Garrison 
-	garrisonlaser = {
+	{
+		name = "garrisonlaser",
 		cmdDesc = {
 			id = GetCmdID('PERK_GARRISON_2'),
 			action = 'perkgarrisonlaser',
@@ -372,7 +390,8 @@ return {
 		costFunction = deductCBills,
 		price = 8000,
 	},
-	garrisonfaction = {
+	{
+		name = "garrisonfaction",
 		cmdDesc = {
 			id = GetCmdID('PERK_GARRISON_3'),
 			action = 'perkgarrisonfaction',
@@ -393,7 +412,8 @@ return {
 		requires = "garrisonlaser",
 	},
 	-- Uplink
-	uplink_2 = {
+	{
+		name = "uplink_2",
 		cmdDesc = {
 			id = GetCmdID('PERK_UPLINK_2'),
 			action = 'perkuplink_2',
@@ -408,7 +428,8 @@ return {
 		costFunction = deductCBills,
 		price = 8000,
 	},
-	uplink_3 = {
+	{
+		name = "uplink_3",
 		cmdDesc = {
 			id = GetCmdID('PERK_UPLINK_3'),
 			action = 'perkuplink_3',
@@ -425,7 +446,8 @@ return {
 		requires = "uplink_2",
 	},
 	-- Turret Control
-	turretcontrol_2 = {
+	{
+		name = "turretcontrol_2",
 		cmdDesc = {
 			id = GetCmdID('PERK_TURRETCONTROL_2'),
 			action = 'perkturretcontrol_2',
@@ -440,7 +462,8 @@ return {
 		costFunction = deductCBills,
 		price = 8000,
 	},
-	turretcontrol_3 = {
+	{
+		name = "turretcontrol_3",
 		cmdDesc = {
 			id = GetCmdID('PERK_TURRETCONTROL_3'),
 			action = 'perkturretcontrol_3',

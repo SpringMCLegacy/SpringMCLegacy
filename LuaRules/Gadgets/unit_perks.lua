@@ -37,6 +37,7 @@ local CMD_WEAPON_TOGGLE = GG.CustomCommands.GetCmdID("CMD_WEAPON_TOGGLE")
 -- Variables
 local perkDefs = {} -- perkCmdID = PerkDef table
 local validPerks = {} -- unitDefID = {perkCmdID = true, etc}
+local orderedPerks = {} -- unitDefID = {cmdDesc1, cmdDesc2, ...}
 local currentPerks = {} -- currentPerks = {unitID = {perk1 = true, perk2 = true, ...}}
 local perkUnits = {} -- unitID = baseclass
 
@@ -44,8 +45,10 @@ local perkUnits = {} -- unitID = baseclass
 local dropZonePerks = {} -- dropZonePerks[teamID] = {perk1 = true, perk2 = true, ...}
 
 local perkInclude = VFS.Include("LuaRules/Configs/perk_defs.lua")
-for perkName, perkDef in pairs(perkInclude) do
-	perkDef.name = perkName
+for i, perkDef in pairs(perkInclude) do
+	if perkDef.price then
+		perkDef.cmdDesc.tooltip = perkDef.cmdDesc.tooltip .. " (C-Bills cost: " .. perkDef.price .. ")"
+	end
 	perkDefs[perkDef.cmdDesc.id] = perkDef
 end
 
@@ -81,15 +84,18 @@ function gadget:Initialize()
 	end
 	
 	for unitDefID, unitDef in pairs(UnitDefs) do
-		for perkCmdID, perkDef in pairs(perkDefs) do -- using pairs here means perks aren't in order, use Find?
-			local perkCmdDesc = perkDef.cmdDesc
+		for i, perkDef in ipairs(perkInclude) do
 			-- ...check if the perk is valid and cache the result
 			local valid = perkDef.valid(unitDefID)
 			if valid then
 				if not validPerks[unitDefID] then -- first time
 					validPerks[unitDefID] = {} 
 				end
-				validPerks[unitDefID][perkCmdID] = valid
+				validPerks[unitDefID][perkDef.cmdDesc.id] = valid
+				if not orderedPerks[unitDefID] then
+					orderedPerks[unitDefID] = {}
+				end
+				table.insert(orderedPerks[unitDefID], perkDef.cmdDesc)
 			end
 		end
 	end
@@ -155,11 +161,16 @@ function gadget:UnitCreated(unitID, unitDefID, teamID, builderID)
 		currentPerks[unitID] = {}
 		perkUnits[unitID] = cp.baseclass
 
-		for perkCmdID, perkDef in pairs(perkDefs) do -- using pairs here means perks aren't in order, use Find?
+		--[[for perkCmdID, perkDef in pairs(perkDefs) do -- using pairs here means perks aren't in order, use Find?
 			if validPerks[unitDefID][perkCmdID] then -- Only add perks valid for this mech
 				InsertUnitCmdDesc(unitID, perkDef.cmdDesc)
 			end
+		end]]
+		
+		for i, cmdDesc in ipairs(orderedPerks[unitDefID]) do -- enforce order
+			InsertUnitCmdDesc(unitID, cmdDesc)
 		end
+		
 		-- check if unit is a DZ and team DZ has previously been perked
 		if GG.DROPZONE_IDS[unitDefID] and dropZonePerks[teamID] then
 			table.copy(dropZonePerks[teamID], currentPerks[unitID])

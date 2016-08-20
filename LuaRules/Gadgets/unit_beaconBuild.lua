@@ -117,7 +117,7 @@ function gadget:GamePreload()
 				type   = CMDTYPE.ICON,
 				name   = unitDef.humanName:gsub(" ", "  \n"),
 				action = 'upgrade',
-				tooltip = "C-Bill cost: " .. cBillCost,
+				tooltip = unitDef.tooltip .. " (C-Bills cost: " .. cBillCost .. ")",
 			}
 			upgradeDefs[unitDefID] = {cmdDesc = upgradeCmdDesc, cost = cBillCost}
 			upgradeCMDs[upgradeCmdDesc.id] = unitDefID
