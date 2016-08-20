@@ -619,6 +619,9 @@ function script.Shot(weaponID)
 	elseif flareOnShots[weaponID] and flares[weaponID] then
 		EmitSfx(flares[weaponID], SFX.CEG + weaponID)
 	end
+	if spinSpeeds[weaponID] then
+		ChangeHeat(firingHeats[weaponID])
+	end
 end
 
 function script.EndBurst(weaponID)

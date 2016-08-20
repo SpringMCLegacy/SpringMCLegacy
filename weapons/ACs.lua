@@ -63,7 +63,7 @@ local RAC2 = AC2:New{
 	burstrate				= 0.04,
 	reloadtime              = 0.5,
 	customparams = {
-		heatgenerated		= 0.3,--0.5/s
+		--heatgenerated		= 0.3,--0.5/s
 		spinspeed			= 600,
 		flareonshot 		= true,
     },
@@ -124,7 +124,7 @@ local RAC5 = AC5:New{
 	burstrate				= 0.1,
 	reloadtime              = 2,
 	customparams = {
-		heatgenerated		= 1.2,--0.2/sec
+		--heatgenerated		= 1.2,--0.2/sec
 		--cegflare			= "MISSILE_MUZZLEFLASH",
 		spinspeed			= 600,
 		flareonshot 		= true,

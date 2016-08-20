@@ -593,6 +593,9 @@ function script.Shot(weaponID)
 		if not flares[weaponID] then Spring.Echo(unitDef.name, "sonofabitch") end
 		EmitSfx(flares[weaponID], SFX.CEG + weaponID)
 	end
+	if spinSpeeds[weaponID] then
+		ChangeHeat(firingHeats[weaponID])
+	end
 end
 
 function script.EndBurst(weaponID)
