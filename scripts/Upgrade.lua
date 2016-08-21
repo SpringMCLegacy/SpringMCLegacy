@@ -20,6 +20,20 @@ local dishs = {}
 for i = 1, 15 do
 	dishs[i] = piece("dish" .. i)
 end
+-- Salvage Yard pieces
+local foundation, recoveryrail, armature1, armature2 = piece ("foundation", "recoveryrail", "armature1", "armature2")
+local supporttorchattach, supporttorchupper, supporttorchmid, supporttorchlower = piece ("supporttorchattach", "supporttorchupper", "supporttorchmid", "supporttorchlower")
+local supporthandattach, supporthandupper, supporthandmid, supporthandlower, supporthandjoint, supporthandfingers1, supporthandfingers2 = piece ("supporthandattach", "supporthandupper", "supporthandmid", "supporthandlower", "supporthandjoint", "supporthandfingers1", "supporthandfingers2")
+local doora1, doora2, doorb1, doorb2, doorc1, doorc2 = piece ("doora1", "doora2", "doorb1", "doorb2", "doorc1", "doorc2")
+local arms = {}
+for i = 1, 6 do
+	armattachs[i] = piece("armattach" .. i)
+	armjointas[i] = piece("armjointa" .. i)
+	armextenders[i] = piece("armextender" .. i)
+	armjointbs[i] = piece("armjointb" .. i)
+	armsaws[i] = piece("saw" .. i)
+end
+
 -- Vehicle Pad pieces
 local ramps = {}
 local blinks = {}
@@ -83,6 +97,20 @@ function Upgrade(level)
 		elseif level == 3 then
 			Show(flags)
 		end
+	elseif name == "upgrade_salvageyard" and level == 2 then
+		Show(foundation)
+		Show(recoveryrail)
+		Show(supporttorchattach)
+		Show(supporttorchupper)
+		Show(supporttorchmid)
+		Show(supporttorchlower)
+		Show(supporthandattach)
+		Show(supporthandupper)
+		Show(supporthandmid)
+		Show(supporthandlower)
+		Show(supporthandjoint)
+		Show(supporthandfingers1)
+		Show(supporthandfingers2)
 	end
 end
 
@@ -96,6 +124,22 @@ function script.Create()
 	elseif foot1 then
 		Turn(foot2, y_axis, rad(-60), CRATE_SPEED * 10)
 		Turn(foot3, y_axis, rad(60), CRATE_SPEED * 10)
+	elseif recoveryrail then
+		Hide(foundation)
+		Hide(recoveryrail)
+		Hide(supporttorchattach)
+		Hide(supporttorchupper)
+		Hide(supporttorchmid)
+		Hide(supporttorchlower)
+		Hide(supporthandattach)
+		Hide(supporthandupper)
+		Hide(supporthandmid)
+		Hide(supporthandlower)
+		Hide(supporthandjoint)
+		Hide(supporthandfingers1)
+		Hide(supporthandfingers2)
+		Move(armature1, z_axis, 10, CRATE_SPEED * 10)
+		Move(armature2, z_axis, -10, CRATE_SPEED * 10)
 	end
 	Sleep(100) -- wait a few frames
 	if not Spring.GetUnitTransporter(unitID) then
@@ -357,6 +401,39 @@ function Unpack()
 		local dx, _, dz = Spring.GetUnitDirection(unitID)
 		UNLOAD_X = x + 150 * dx
 		UNLOAD_Z = z + 150 * dz
+	elseif name == "upgrade_salvageyard" then
+		Show(foundation)
+		Move(armature1, z_axis, 0, CRATE_SPEED)
+		Move(armature2, z_axis, 0, CRATE_SPEED)
+		Move(doora1, z_axis, 1, CRATE_SPEED * 2)
+		Move(doora2, z_axis, -1, CRATE_SPEED * 2)
+		Move(doorb1, z_axis, 1, CRATE_SPEED * 2)
+		Move(doorb2, z_axis, -1, CRATE_SPEED * 2)
+		Move(doorc1, z_axis, 1, CRATE_SPEED * 2)
+		Move(doorc2, z_axis, -1, CRATE_SPEED * 2)
+		Turn(armjointa1, z_axis, -45, CRATE_SPEED * 2)
+		Turn(armjointb1, z_axis, 220, CRATE_SPEED * 2)
+		Turn(armjointa2, z_axis, -45, CRATE_SPEED * 2)
+		Turn(armjointb2, z_axis, 220, CRATE_SPEED * 2)
+		Turn(armjointa3, z_axis, -45, CRATE_SPEED * 2)
+		Turn(armjointb3, z_axis, 220, CRATE_SPEED * 2)
+		Turn(armjointa4, z_axis, -45, CRATE_SPEED * 2)
+		Turn(armjointb4, z_axis, 220, CRATE_SPEED * 2)
+		Turn(armjointa5, z_axis, -45, CRATE_SPEED * 2)
+		Turn(armjointb5, z_axis, 220, CRATE_SPEED * 2)
+		Turn(armjointa6, z_axis, -45, CRATE_SPEED * 2)
+		Turn(armjointb6, z_axis, 220, CRATE_SPEED * 2)
+		Turn(supporthandupper, z_axis, 45, CRATE_SPEED * 2)
+		Turn(supporthandlower, z_axis, -45, CRATE_SPEED * 2)
+		Turn(supporttorchupper, z_axis, -45, CRATE_SPEED * 2)
+		Turn(supporttorchlower, z_axis, 45, CRATE_SPEED * 2)
+		WaitForTurn(armjointa1, z_axis)
+		Turn(armattach1, x_axis, -30, CRATE_SPEED * 2)
+		Turn(armattach2, x_axis, 10, CRATE_SPEED * 2)
+		Move(armextender2, y_axis, 2, CRATE_SPEED * 2)
+		Turn(armattach4, x_axis, 10, CRATE_SPEED * 2)
+		Move(armextender4, y_axis, 2, CRATE_SPEED * 2)
+		Turn(armattach5, x_axis, -20, CRATE_SPEED * 2)		
 	elseif name == "upgrade_uplink" then
 		Move(antennabase, z_axis, -15, CRATE_SPEED * 5)
 		Turn(antennamast, x_axis, rad(90), CRATE_SPEED)
