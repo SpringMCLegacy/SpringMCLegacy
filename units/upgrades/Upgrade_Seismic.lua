@@ -7,7 +7,7 @@ local Upgrade_Seismic = Upgrade:New{
 
 	collisionVolumeScales = [[25 25 25]],
 
-	seismicdistance 	= 9000,
+	seismicdistance 	= 5000,
 	
 	customparams = {
 		helptext		= "Ping Pong Potato",

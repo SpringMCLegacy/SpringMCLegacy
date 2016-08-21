@@ -479,4 +479,41 @@ return {
 		price = 8000,
 		requires = "turretcontrol_2",
 	},
+	-- Seismic Sensor
+	{
+		name = "seismic_2",
+		cmdDesc = {
+			id = GetCmdID('PERK_SEISMIC_2'),
+			action = 'perkseismic_2',
+			name = Pad("Increase", "Range"),
+			tooltip = 'Increases the range of the seismic sensor +50% (+10% time between pings)',
+			texture = 'bitmaps/ui/upgrade.png',	
+		},
+		valid = function (unitDefID) return UnitDefs[unitDefID].name == "upgrade_seismic" end,
+		applyPerk = function (unitID)
+			env = Spring.UnitScript.GetScriptEnv(unitID)
+			env.seismicRange = env.seismicRange * 1.5
+			env.seismicDelay = env.seismicDelay * 1.1
+		end,
+		costFunction = deductCBills,
+		price = 8000,
+	},
+	{
+		name = "seismic_3",
+		cmdDesc = {
+			id = GetCmdID('PERK_SEISMIC_3'),
+			action = 'perkseismic_3',
+			name = Pad("Increase", "Duration"),
+			tooltip = 'Increases the duration of each ping +250% (+20% time between pings)',
+			texture = 'bitmaps/ui/upgrade.png',	
+		},
+		valid = function (unitDefID) return UnitDefs[unitDefID].name == "upgrade_seismic" end,
+		applyPerk = function (unitID)
+			env = Spring.UnitScript.GetScriptEnv(unitID)
+			env.seismicDuration = env.seismicDuration * 2.5
+			env.seismicDelay = env.seismicDelay * 1.2
+		end,
+		costFunction = deductCBills,
+		price = 8000,
+	},
 }

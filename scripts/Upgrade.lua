@@ -37,7 +37,6 @@ end
 for i = 1, 6 do
 	for j, pieceType in ipairs(armPieces) do
 		arms[pieceType][i] = piece(pieceType .. i)
-		Spring.Echo("Piece:", pieceType .. i, arms[pieceType][i])
 	end
 end
 
@@ -326,18 +325,21 @@ function script.HitByWeapon()
 	end
 end
 	
+seismicRange = unitDef.seismicRadius
+seismicDelay = 5000
+seismicDuration = 500
 function SeismicPings()
 	while true do
 		Move(hammer, y_axis, 0, CRATE_SPEED * 50)
 		WaitForMove(hammer, y_axis)
 		PlaySound("seismicstomp")
 		GG.EmitSfxName(unitID, spike, "mech_jump_dust")
-		Spring.SetUnitSensorRadius(unitID, "seismic", unitDef.seismicRadius)
-		Sleep(500)
+		Spring.SetUnitSensorRadius(unitID, "seismic", seismicRange)
+		Sleep(seismicDuration)
 		Move(hammer, y_axis, 7, CRATE_SPEED * 5)
 		WaitForMove(hammer, y_axis)
 		Spring.SetUnitSensorRadius(unitID, "seismic", 0)
-		Sleep(5000)
+		Sleep(seismicDelay)
 	end
 end
 
