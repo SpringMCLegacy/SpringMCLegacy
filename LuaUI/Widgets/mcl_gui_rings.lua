@@ -67,27 +67,24 @@ function widget:Initialize()
 		minRangesToDraw[unitDefID] = {}
 		for name, range in pairs(maxRanges[unitDefID]) do
 			if not maxRangesToDraw[unitDefID][range] then
-				maxRangesToDraw[unitDefID][range] = "Max Range: " .. name
+				maxRangesToDraw[unitDefID][range] = "Max Range: " .. WeaponDefNames[name].customParams.textcolour .. name
 			else
-				maxRangesToDraw[unitDefID][range] = maxRangesToDraw[unitDefID][range] .. ", " .. name
+				maxRangesToDraw[unitDefID][range] = maxRangesToDraw[unitDefID][range] .. ", " .. WeaponDefNames[name].customParams.textcolour.. name
 			end
 			local minRangeDef = minRanges[unitDefID]
 			local minRange = minRangeDef and minRangeDef[name] or nil
 				
 			if minRange then
 				if not minRangesToDraw[unitDefID][minRange] then
-					minRangesToDraw[unitDefID][minRange] = "Min Range: " .. name
+					minRangesToDraw[unitDefID][minRange] = "Min Range: " .. WeaponDefNames[name].customParams.textcolour .. name
 				else
-					minRangesToDraw[unitDefID][minRange] = minRangesToDraw[unitDefID][minRange] .. ", " .. name
+					minRangesToDraw[unitDefID][minRange] = minRangesToDraw[unitDefID][minRange] .. ", " .. WeaponDefNames[name].customParams.textcolour .. name
 				end				
 			end
 		end
 	end
 	-- Setup fonts for drawing
 	btFont = gl.LoadFont("LuaUI/Fonts/bt_oldstyle.ttf", 24, 2, 30)
-	btFont:SetTextColor(AttackRed)
-	--btFont:SetAutoOutlineColor(false)
-	--btFont:SetOutlineColor(0,1,0)
 end
 
 function widget:DrawWorldPreUnit()
@@ -104,7 +101,7 @@ function widget:DrawWorldPreUnit()
 						glDrawGroundCircle(x,y,z, radius,24)
 						glTranslate(x, y + 40, z + radius + 40)
 						glBillboard()
-						btFont:Print(info, 0, 0, 24, "c")
+						btFont:Print(info, 0, 0, 24, "oc")
 					gl.PopMatrix()
 				end
 			end
@@ -115,7 +112,7 @@ function widget:DrawWorldPreUnit()
 						glDrawGroundCircle(x,y,z, radius,24)
 						glTranslate(x, y + 40, z + radius - 40)
 						glBillboard()
-						btFont:Print(info, 0, 0, 24, "c")
+						btFont:Print(info, 0, 0, 24, "oc")
 						gl.LineStipple(false)
 					gl.PopMatrix()
 				end

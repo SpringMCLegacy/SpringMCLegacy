@@ -62,6 +62,8 @@ for weapName, wd in pairs(WeaponDefs) do
 				wd.customparams[k] = table.serialize(v)
 			end
 		end
+	else
+		cp = {}
 	end
 	
 	-- Apply damage multipliers
@@ -84,7 +86,7 @@ for weapName, wd in pairs(WeaponDefs) do
 		wd.impactonly = true
 		wd.minintensity = 1.0
 	end
-	
+	cp.textcolour = WeaponColour(weapName)
 	-- remove the functions so Spring doesn't complain about invalid tags
 	for _, f in pairs(FUNCTIONS_TO_REMOVE) do
 		wd[f] = nil
