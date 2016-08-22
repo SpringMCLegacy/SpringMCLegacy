@@ -47,7 +47,8 @@ for i = 1, #allyTeams do
 	if allyTeam == GAIA_ALLY_ID then allyTeams[i] = nil; break end
 end
 local xMax, yMax = Spring.GetViewGeometry()
-
+local playerAllyTeams = {} -- allyTeamID = {name1, name2 ...}
+local allyTeamColours = {}
 local colors = {}
 colors.red = "\255\255\101\101"
 colors.yellow = "\255\255\255\001"
@@ -61,7 +62,8 @@ colors.teamRed = "\255\172\089\089"
 
 local btFont
 
-local ticketText
+local allyTicketTexts = {}
+local ticketWidth = 0
 local cBillsText = "C-Bills: " .. colors.grey .. 0
 local tonnageText= "Tonnage: " .. colors.yellow .. 0
 local gameTime = "Time: 0:00:00"
@@ -80,10 +82,11 @@ local function FramesToMinutesAndSeconds(frames)
 end
 
 local function TicketText()
-	ticketText = "Tickets\n"
 	for i = 1, #allyTeams do
 		local allyTeam = allyTeams[i]
 		local tickets = GetGameRulesParam("tickets" .. allyTeam) or START_TICKETS
+		local playerName = playerAllyTeams[allyTeam] and playerAllyTeams[allyTeam][1] or "EnemyTeam"
+		ticketWidth = math.max(ticketWidth, playerName:len() + 64)
 		if tickets > START_TICKETS * 0.75 then
 			tickets = colors.green .. tickets
 		elseif tickets > START_TICKETS * 0.25 then
@@ -93,10 +96,12 @@ local function TicketText()
 		else
 			tickets = colors.red .. tickets
 		end
-		local textCol = allyTeam == MY_ALLY_ID and colors.teamGreen or colors.teamRed
-		ticketText = ticketText .. textCol .. "\nTeam " .. allyTeam .. " [".. (allyBeaconCounts[allyTeam] or 0) .. "]" ..colors.white .. ": "  .. tickets
+		local textCol = allyTeamColours[allyTeam] or allyTeam == MY_ALLY_ID and colors.teamGreen or colors.teamRed
+		local ticketText = textCol .. playerName .. " [".. (allyBeaconCounts[allyTeam] or 0) .. "]" ..colors.white .. ": "  .. tickets
+		allyTicketTexts[allyTeam] = ticketText
 	end
 end
+
 
 function BeaconUpdate(allyTeam, new)
 	allyBeaconCounts[allyTeam] = new
@@ -108,7 +113,29 @@ function widget:GamePreload()
 	tempWater = "Water: " .. GetGameRulesParam("MAP_TEMP_WATER") .. " \'C"
 end
 
+local function FloatTo128(num)
+	return string.char(string.format("%03d",math.max(num * 255, 1)))
+end
+
+local function RGBtoString(r, g, b)
+	local rgb = {r, g, b}
+	return '\255' .. FloatTo128(rgb[1]) .. FloatTo128(rgb[2]) .. FloatTo128(rgb[3])
+end
+
 function widget:Initialize()
+	local playerList = Spring.GetPlayerList()
+	for i, playerID in ipairs(playerList) do
+		local name, active, spectator, teamID, allyTeamID = Spring.GetPlayerInfo(playerID)
+		if not spectator then
+			if not playerAllyTeams[allyTeamID] then
+				playerAllyTeams[allyTeamID] = {}
+			end
+			table.insert(playerAllyTeams[allyTeamID], name)
+			if not allyTeamColours[allyTeamID] then
+				allyTeamColours[allyTeamID] = RGBtoString(Spring.GetTeamColor(playerID))
+			end
+		end
+	end
 	clockConfig = Spring.GetConfigInt('ShowClock')
 	fpsConfig = Spring.GetConfigInt('ShowFPS')
 	Spring.SendCommands("resbar 0", "clock 0", "fps 0", "togglelos 1")
@@ -184,7 +211,7 @@ function widget:GameFrame(n)
 	end
 end
 
-local tempHeight = yMax - 80 - (16 * #allyTeams)
+local tempHeight = yMax - 80 - (18 * #allyTeams)
 local timeHeight = tempHeight - 48
 
 
@@ -200,7 +227,10 @@ function widget:DrawScreen()
 		if (haveArty or 0) > 0 then
 			btFont:Print(artyTime, xMax * 0.75, yMax - 48, 16, "odr")
 		end
-		btFont:Print(ticketText, xMax - 186, yMax - 32, 16, "od")
+		btFont:Print("Tickets:", xMax - 58, yMax - 32, 16, "odr")
+		for allyTeam, ticketText in pairs(allyTicketTexts) do
+			btFont:Print(ticketText, xMax - 16, yMax - 18 * (allyTeam + 4), 16, "odr")
+		end
 		btFont:Print(tempAmbient, xMax - 16, tempHeight, 12, "odr")
 		btFont:Print(tempWater, xMax - 16, tempHeight - 16, 12, "odr")
 
