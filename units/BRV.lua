@@ -1,7 +1,7 @@
 local BRV = Tank:New{
 	name              	= "BRV",
 	description         = "Support Vehicle",
-	trackWidth			= 32,--width to render the decal
+	trackWidth			=25,--width to render the decal
 	
 	--weapons	= {	
 	--},

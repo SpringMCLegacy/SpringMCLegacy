@@ -1,7 +1,8 @@
 local HeavyBRV = Tank:New{
 	name              	= "Heavy BRV",
 	description         = "Support Vehicle",
-	trackWidth			= 38,--width to render the decal
+	trackType			= "Mars",--hueg like xbox
+	trackWidth			= 48,--width to render the decal
 	
 	--weapons	= {	
 	--},
