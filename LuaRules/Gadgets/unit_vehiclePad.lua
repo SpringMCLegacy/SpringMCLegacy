@@ -46,7 +46,7 @@ function gadget:Initialize()
 	end
 	for unitDefID, unitDef in pairs(UnitDefs) do
 		local basicType = unitDef.customParams.baseclass
-		if basicType == "vehicle" then
+		if basicType == "vehicle" or basicType == "vtol" then -- apc's are still vehicle but *identified* (not changed) in _post
 			vehiclesDefCache[unitDefID] = unitDef.customParams.squadsize or 1
 		end
 	end
@@ -69,9 +69,15 @@ local delays = {
 	[3] = BASE_DELAY * 1.5, -- 50% increase
 }
 
+-- N.B. strictly speaking the probabilities for arty, vtol, apc are as follows (e.g. with level 3);
+-- apc = 0.2, vtol = (1 - apc) * 0.2, arty = (1 - vtol) * 0.2
+-- so 0.2, 0.16, 0.168. This could be corrected for but it would obfuscate the code,
+-- and they are all 0.2 to 1sf anyway.
+
 local chances = {
 	[1] = { -- default
 		arty = 0.1,
+		vtol = 0.1,
 		apc = 0.1,
 		-- following sum to 1
 		light = 0.7,
@@ -81,6 +87,7 @@ local chances = {
 	},
 	[2] = { -- heavy
 		arty = 0.15,
+		vtol = 0.15,
 		apc = 0.15,
 		-- following sum to 1
 		light = 0.2,
@@ -90,6 +97,7 @@ local chances = {
 	},
 	[3] = { -- house
 		arty = 0.2,
+		vtol = 0.2,
 		apc = 0.2,
 		-- following sum to 1
 		light = 0.1,
@@ -120,6 +128,11 @@ local function RandomVehicle(unitID, weight, level)
 	if (math.random() <= chances[level].apc) then
 		--Spring.Echo("OMG you rolled APC!")
 		class = "apc"
+	elseif (math.random() <= chances[level].vtol) then
+		--Spring.Echo("OMG you rolled vtol!", weight)
+		if #sideSpawnLists[vehiclePadSides[unitID]][vehiclePadLevels[unitID]]["vtol"][weight] > 0 then
+			return RandomElement(sideSpawnLists[vehiclePadSides[unitID]][vehiclePadLevels[unitID]]["vtol"][weight])
+		end
 	elseif (math.random() <= chances[level].arty) then
 		--Spring.Echo("OMG you rolled arty!", weight)
 		if #sideSpawnLists[vehiclePadSides[unitID]][vehiclePadLevels[unitID]]["arty"][weight] > 0 then

@@ -81,7 +81,7 @@ cargo = {}
 numCargo = 0
 
 function LoadCargo(cargoID, callerUnitID, callerBeaconID)
-	--Spring.Echo("Loading", cargoID, "of type", UnitDefs[Spring.GetUnitDefID(outpostID)].name)
+	--Spring.Echo("Loading", cargoID, "of type", UnitDefs[Spring.GetUnitDefID(cargoID)].name)
 	beaconID = callerBeaconID
 	callerID = callerUnitID
 	numCargo = numCargo + 1
