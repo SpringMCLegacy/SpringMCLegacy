@@ -36,6 +36,7 @@ local CMD_WEAPON_TOGGLE = GG.CustomCommands.GetCmdID("CMD_WEAPON_TOGGLE")
 
 -- Variables
 local perkDefs = {} -- perkCmdID = PerkDef table
+local perkDefNames = {} -- perkName = PerkDef table
 local validPerks = {} -- unitDefID = {perkCmdID = true, etc}
 local orderedPerks = {} -- unitDefID = {cmdDesc1, cmdDesc2, ...}
 local currentPerks = {} -- currentPerks = {unitID = {perk1 = true, perk2 = true, ...}}
@@ -50,6 +51,7 @@ for i, perkDef in pairs(perkInclude) do
 		perkDef.cmdDesc.tooltip = perkDef.cmdDesc.tooltip .. " (C-Bills cost: " .. perkDef.price .. ")"
 	end
 	perkDefs[perkDef.cmdDesc.id] = perkDef
+	perkDefNames[perkDef.name] = perkDef
 end
 
 
@@ -175,7 +177,7 @@ function gadget:UnitCreated(unitID, unitDefID, teamID, builderID)
 		if GG.DROPZONE_IDS[unitDefID] and dropZonePerks[teamID] then
 			table.copy(dropZonePerks[teamID], currentPerks[unitID])
 			for perkName in pairs(currentPerks[unitID]) do
-				local perkDef = perkInclude[perkName]
+				local perkDef = perkDefNames[perkName]
 				EditUnitCmdDesc(unitID, FindUnitCmdDesc(unitID, perkDef.cmdDesc.id), {name = perkDef.cmdDesc.name .."\n  (Trained)", disabled = true})
 			end
 		end

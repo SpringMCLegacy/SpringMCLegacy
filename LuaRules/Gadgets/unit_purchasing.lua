@@ -448,6 +448,7 @@ function DropshipLeft(teamID) -- called by Dropship once it has left, to enable 
 	coolDowns[teamID] = enableFrame
 	Spring.SetTeamRulesParam(teamID, "DROPSHIP_COOLDOWN", enableFrame) -- frame this team can call dropship again
 end
+GG.DropshipLeft = DropshipLeft
 
 -- Factories can't implement gadget:CommandFallback, so fake it ourselves
 local function SendCommandFallback(unitID, unitDefID, teamID, cost)
