@@ -256,7 +256,6 @@ function gadget:UnitCreated(unitID, unitDefID, teamID)
 		table.insert(flagSpots, {x = x, z = z})
 		table.insert(teamBeacons[teamID], unitID)
 		beaconUpgradeCounts[unitID] = 0
-		GG.Delay.DelayCall(Upgrade, {unitID, teamID}, 30 * 30) -- wait for it to fall, and then some
 	end
 	if AI_TEAMS[teamID] then
 		local unitDef = UnitDefs[unitDefID]
@@ -402,11 +401,6 @@ function gadget:UnitUnloaded(unitID, unitDefID, teamID, transportID, transportTe
 			end]]
 		elseif unitDefID == VPAD_ID then
 			teamUpgradeCounts[teamID][VPAD_ID] = teamUpgradeCounts[teamID][VPAD_ID] + 1
-		elseif ud.canFly then
-			--Spring.Echo("VTOL!")
-			for _, spot in pairs(flagSpots) do
-				GG.Delay.DelayCall(Spring.GiveOrderToUnit, {unitID, CMD.PATROL, {spot.x, 0, spot.z}, {"shift"}}, 30)
-			end
 		elseif cp.jumpjets then
 			--Spring.Echo("JUMP MECH!")
 			Perk(unitID, unitDefID, PERK_JUMP_RANGE, true)
