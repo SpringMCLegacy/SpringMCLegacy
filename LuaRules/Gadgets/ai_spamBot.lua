@@ -53,6 +53,8 @@ local flagSpots = {} --VFS.Include("maps/flagConfig/" .. Game.mapName .. "_profi
 local teamUpgradeCounts = {} -- teamUpgradeCounts[teamID] = {c3 = 1, vpad = 1} etc
 local teamUpgradeIDs = {} -- teamUpgradeIDs[teamID] = {unitID1 = 1, unitID2 = 2 etc}
 local teamDropshipUpgrades = {} -- teamDropshipUpgrades[teamID] = 1
+local teamBeacons = {} -- teamBeacons[teamID] = {beaconID1, beaconID2, ...}
+local beaconUpgradeCounts = {} -- beaconUpgradeCounts[beaconID] = 3
 
 local function CostSort(unitDefID1, unitDefID2)
 	return UnitDefs[unitDefID1].metalCost < UnitDefs[unitDefID2].metalCost
@@ -63,7 +65,8 @@ local function SimpleReverseSearch(sideTable, mCost, tCost)
 		local unitDefID = sideTable[i]
 		local foundMCost = UnitDefs[unitDefID].metalCost
 		local foundTCost = UnitDefs[unitDefID].energyCost
-		if foundMCost < mCost and foundTCost < tCost then return unitDefID end
+		--Spring.Echo("I have " .. mCost .. "cbills and " .. tCost .. "tonnage.", UnitDefs[unitDefID].name .. " costs ", foundMCost, foundTCost)
+		if foundMCost <= mCost and foundTCost <= tCost then return unitDefID end
 	end
 	return false -- no affordable mech!
 end
@@ -84,6 +87,7 @@ function gadget:GamePreload()
 		if Spring.GetTeamLuaAI(t) ==  name then
 			AI_TEAMS[t] = true
 		end
+		teamBeacons[t] = {}
 	end
 	GG.AI_TEAMS = AI_TEAMS
 	for unitDefID, unitDef in pairs(UnitDefs) do
@@ -107,6 +111,32 @@ function gadget:GamePreload()
 	end
 	for side, mechTable in pairs(sideMechs) do
 		table.sort(mechTable, CostSort)
+		--Spring.Echo("Cheapest mech for " .. side .. " is " .. mechTable[1] .. " at " .. UnitDefs[mechTable[1]].metalCost)
+	end
+end
+
+local function Upgrade(unitID, teamID)
+	if not unitID then -- set as starting beacon if not given
+		unitID = GG.dropZoneBeaconIDs[teamID]
+	end
+	if beaconUpgradeCounts[unitID] == 2 then return false end -- fully outposted TODO: change to 3
+	if not dropZoneIDs[teamID] then -- no dropzone left!
+		GG.Delay.DelayCall(Spring.GiveOrderToUnit, {unitID, AI_CMDS["CMD_DROPZONE"].id, {}, {}}, 1)
+		return true
+	elseif unitID then -- gonna upgrade a point, could still be nil if dropZoneBeaconIDs is behind the times
+		-- TODO: Truly horrible, just randomnly pick?
+		local cmd = ((teamUpgradeCounts[teamID][C3_ID] + teamUpgradeCounts[teamID][VPAD_ID]) % 2 == 1) and "CMD_UPGRADE_C3ARRAY" or "CMD_UPGRADE_VEHICLEPAD"
+		if difficulty > 1 then
+			Spring.AddTeamResource(teamID, "metal", AI_CMDS[cmd].cost)
+		end
+		if Spring.GetTeamResources(teamID, "metal") > AI_CMDS[cmd].cost then
+			local slot = cmd == "CMD_UPGRADE_C3ARRAY" and 1 or 2 -- TODO: horrible, keep track of this internally? or in beaconBuild
+			local pointID = GG.beaconUpgradePointIDs[unitID][slot]
+			GG.Delay.DelayCall(Spring.GiveOrderToUnit, {pointID, AI_CMDS[cmd].id, {}, {}}, 1)
+			beaconUpgradeCounts[unitID] = (beaconUpgradeCounts[unitID] or 0) + 1
+			return true
+		end
+		return false
 	end
 end
 
@@ -144,26 +174,40 @@ local function Spam(teamID)
 					end
 					Spring.AddTeamResource(teamID, "energy", 100)
 				else
-					buildID = SimpleReverseSearch(sideMechs[side], Spring.GetTeamResources(teamID, "metal") * math.random(55, 95)/100, Spring.GetTeamResources(teamID, "energy"))
+					buildID = SimpleReverseSearch(sideMechs[side], 
+							math.max(UnitDefs[sideMechs[side][1]].metalCost, 
+							Spring.GetTeamResources(teamID, "metal") * math.random(55, 95)/100), 
+							Spring.GetTeamResources(teamID, "energy"))
 				end
 			else
 				--local cmdDesc = cmdDescs[math.random(1, #cmdDescs)]
-				buildID = SimpleReverseSearch(sideMechs[side], Spring.GetTeamResources(teamID, "metal") * math.random(55, 95)/100, Spring.GetTeamResources(teamID, "energy"))
+				buildID = SimpleReverseSearch(sideMechs[side], 
+						math.max(UnitDefs[sideMechs[side][1]].metalCost, 
+						Spring.GetTeamResources(teamID, "metal") * math.random(55, 95)/100), 
+						Spring.GetTeamResources(teamID, "energy"))
 			end
 			if buildID then
 				GG.Delay.DelayCall(Spring.GiveOrderToUnit, {unitID, -buildID, {}, {}}, 1)
 				orderSizes[teamID] = orderSizes[teamID] + 1
 			--Spring.Echo("Adding to order;", orderSizes[teamID], UnitDefs[-buildID].name, GG.TeamSlotsRemaining(teamID))
 			elseif orderSizes[teamID] == 0 then 
-				-- couldn't find any affordable mechs, try upgrading dropship
-				local nextLevel = teamDropshipUpgrades[teamID] + 1
-				if nextLevel <= 3 then
-					if Spring.GetTeamResources(teamID, "metal") >  AI_CMDS["CMD_DROPZONE_" .. nextLevel].cost then
-						GG.Delay.DelayCall(Spring.GiveOrderToUnit, {unitID, AI_CMDS["CMD_DROPZONE_" .. nextLevel].id, {}, {}}, 1)
-						teamDropshipUpgrades[teamID] = nextLevel
+				-- couldn't find any affordable mechs, try upgrading 
+				local beaconID = teamBeacons[teamID][math.random(#teamBeacons[teamID])]
+				if not Upgrade(beaconID, teamID) then
+					-- upgrade failed, try upgrading dropship
+					local nextLevel = teamDropshipUpgrades[teamID] + 1
+					if nextLevel <= 3 then
+						local cost = AI_CMDS["CMD_DROPZONE_" .. nextLevel].cost
+						if difficulty > 1 then
+							Spring.AddTeamResource(teamID, "metal", cost)
+						end
+						if Spring.GetTeamResources(teamID, "metal") > cost then
+							GG.Delay.DelayCall(Spring.GiveOrderToUnit, {unitID, AI_CMDS["CMD_DROPZONE_" .. nextLevel].id, {}, {}}, 1)
+							teamDropshipUpgrades[teamID] = nextLevel
+						end
 					end
 				end
-				return 
+				return
 			end
 		end
 		GG.Delay.DelayCall(SendOrder, {teamID}, 2) -- frame after orders
@@ -205,37 +249,21 @@ local function Perk(unitID, unitDefID, perkID, firstTime)
 	end
 end
 
-local function Upgrade(unitID, teamID)
-	if not unitID then -- set as starting beacon if not given
-		unitID = GG.dropZoneBeaconIDs[teamID]
-	end
-	if difficulty > 1 then
-		Spring.AddTeamResource(teamID, "metal", 1000)
-	end
-	if not dropZoneIDs[teamID] then -- no dropzone left!
-		GG.Delay.DelayCall(Spring.GiveOrderToUnit, {unitID, AI_CMDS["CMD_DROPZONE"].id, {}, {}}, 1)
-	else -- gonna upgrade a point
-		-- TODO: Truly horrible, just randomnly pick?
-		local cmd = ((teamUpgradeCounts[teamID][C3_ID] + teamUpgradeCounts[teamID][VPAD_ID]) % 2 == 0) and "CMD_UPGRADE_C3ARRAY" or "CMD_UPGRADE_VEHICLEPAD"
-		if Spring.GetTeamResources(teamID, "metal") > AI_CMDS[cmd].cost then
-			local slot = cmd == "CMD_UPGRADE_C3ARRAY" and 1 or 2 -- TODO: horrible, keep track of this internally? or in beaconBuild
-			local pointID = GG.beaconUpgradePointIDs[unitID][slot]
-			GG.Delay.DelayCall(Spring.GiveOrderToUnit, {pointID, AI_CMDS[cmd].id, {}, {}}, 1)
-		end
-	end
-end
-
 
 function gadget:UnitCreated(unitID, unitDefID, teamID)
 	if unitDefID == BEACON_ID then
 		local x,_,z = Spring.GetUnitPosition(unitID)
 		table.insert(flagSpots, {x = x, z = z})
+		table.insert(teamBeacons[teamID], unitID)
+		beaconUpgradeCounts[unitID] = 0
+		GG.Delay.DelayCall(Upgrade, {unitID, teamID}, 30 * 30) -- wait for it to fall, and then some
 	end
 	if AI_TEAMS[teamID] then
 		local unitDef = UnitDefs[unitDefID]
 		if unitDef.name:find("dropzone") then
 			dropZoneIDs[teamID] = unitID	
 			Spam(teamID)
+			Upgrade(nil, teamID)
 			teamDropshipUpgrades[teamID] = 1
 			GG.Delay.DelayCall(Upgrade, {nil, teamID}, 1)
 			if difficulty > 1 then -- loadsa money!
@@ -399,6 +427,7 @@ function gadget:UnitDestroyed(unitID, unitDefID, teamID, attackerID, attackerDef
 			if tonumber(beaconID) then
 				Upgrade(tonumber(beaconID), teamID)
 			end
+			beaconUpgradeCounts[beaconID] = beaconUpgradeCounts[beaconID] - 1
 		elseif UnitDefs[unitDefID].name:find("dropzone") then -- TODO: "DROPZONE_IDS[unitDefID] then" should work here
 			dropZoneIDs[teamID] = nil
 			-- TODO: why doesn't it get auto-switched like it does for player?
@@ -417,6 +446,18 @@ end
 function gadget:UnitGiven(unitID, unitDefID, newTeam, oldTeam)
 	if AI_TEAMS[newTeam] then
 		if unitDefID == BEACON_ID then
+			table.insert(teamBeacons[newTeam], unitID)
+			beaconUpgradeCounts[unitID] = 0
+			-- TODO: not sure if I need to be so careful here or can remove during the loop?
+			local toRemove = 0
+			for i, beaconID in ipairs(teamBeacons[oldTeam]) do
+				if beaconID == unitID then
+					toRemove = i
+				end
+			end
+			if toRemove > 0 then
+				table.remove(teamBeacons[oldTeam], i)
+			end
 			Upgrade(unitID, newTeam)
 			Spam(newTeam)
 		end
