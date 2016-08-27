@@ -43,5 +43,5 @@ local Sparrowhawk = Aero:New{
 }
 
 return lowerkeys({ 
-	["FS_Sparrowhawk"] = Sparrowhawk,
+	["FS_Sparrowhawk"] = Sparrowhawk:New{},
 })

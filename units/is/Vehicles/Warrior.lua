@@ -31,9 +31,9 @@ local Warrior = VTOL:New{
 }
 
 return lowerkeys({
-	["CC_Warrior"] = Warrior,
-	["DC_Warrior"] = Warrior,
-	["FS_Warrior"] = Warrior,
-	["FW_Warrior"] = Warrior,
-	["LA_Warrior"] = Warrior,
+	["CC_Warrior"] = Warrior:New{},
+	["DC_Warrior"] = Warrior:New{},
+	["FS_Warrior"] = Warrior:New{},
+	["FW_Warrior"] = Warrior:New{},
+	["LA_Warrior"] = Warrior:New{},
 })

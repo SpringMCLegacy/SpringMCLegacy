@@ -83,9 +83,9 @@ local trackr, trackl, wakepoint, rotor
 if hover then
 	wakepoint = piece ("wakepoint")
 elseif vtol then
-	rotor = piece ("rotor")
+	-- no op
 elseif aero then
-	--what?!?!
+	-- no op
 else
 	trackr, trackl = piece ("trackr", "trackl")
 	for i = 1, info.numWheels do
@@ -317,7 +317,7 @@ function hideLimbPieces(limb, hide)
 		rootPiece = turret
 		limbWeapons = mainTurretIDs
 	else  -- asumme limb is a wing or rotor
-		rootPiece = piece(limb)-- asuume pieces are lwing, rwing, rotor
+		rootPiece = piece(limb)-- assume pieces are lwing, rwing, rotory1
 		limbWeapons = {}
 		if hide then
 			SetUnitValue(COB.CRASHING, 1)
@@ -406,8 +406,19 @@ function script.Create()
 		StartThread(SmokeLimb, limb, piece(limb) or body)
 	end
 	StartThread(CoolOff)
-	if rotor then
-		Spin(rotor, y_axis, 20 * WHEEL_SPEED, WHEEL_ACCEL)
+	if vtol then
+		for i = 1, info.numRotors.x do
+			local dir = i % 2 == 1 and 1 or -1
+			Spin(piece("rotorx" .. i), x_axis, 20 * dir * WHEEL_SPEED, WHEEL_ACCEL)
+		end
+		for i = 1, info.numRotors.y do
+			local dir = i % 2 == 1 and 1 or -1
+			Spin(piece("rotory" .. i), y_axis, 20 * dir * WHEEL_SPEED, WHEEL_ACCEL)
+		end
+		for i = 1, info.numRotors.z do
+			local dir = i % 2 == 1 and 1 or -1
+			Spin(piece("rotorz" .. i), z_axis, 20 * dir * WHEEL_SPEED, WHEEL_ACCEL)
+		end
 	end
 end
 

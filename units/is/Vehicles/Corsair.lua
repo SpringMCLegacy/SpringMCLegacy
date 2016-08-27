@@ -59,5 +59,5 @@ local Corsair = Aero:New{
 }
 
 return lowerkeys({ 
-	["FS_Corsair"] = IS_Corsair,
+	["FS_Corsair"] = Corsair:New{},
 })

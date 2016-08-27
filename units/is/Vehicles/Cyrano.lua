@@ -22,9 +22,9 @@ local Cyrano = VTOL:New{
 }
 
 return lowerkeys({
-	["CC_Cyrano"] = Cyrano,
-	["DC_Cyrano"] = Cyrano,
-	["FS_Cyrano"] = Cyrano,
-	["FW_Cyrano"] = Cyrano,
-	["LA_Cyrano"] = Cyrano,
+	["CC_Cyrano"] = Cyrano:New{},
+	["DC_Cyrano"] = Cyrano:New{},
+	["FS_Cyrano"] = Cyrano:New{},
+	["FW_Cyrano"] = Cyrano:New{},
+	["LA_Cyrano"] = Cyrano:New{},
 })

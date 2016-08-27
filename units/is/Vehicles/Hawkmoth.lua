@@ -23,9 +23,9 @@ local Hawkmoth = VTOL:New{
 }
 
 return lowerkeys({
-	["CC_Hawkmoth"] = Hawkmoth,
-	["DC_Hawkmoth"] = Hawkmoth,
-	["FS_Hawkmoth"] = Hawkmoth,
-	["FW_Hawkmoth"] = Hawkmoth,
-	["LA_Hawkmoth"] = Hawkmoth,
+	["CC_Hawkmoth"] = Hawkmoth:New{},
+	["DC_Hawkmoth"] = Hawkmoth:New{},
+	["FS_Hawkmoth"] = Hawkmoth:New{},
+	["FW_Hawkmoth"] = Hawkmoth:New{},
+	["LA_Hawkmoth"] = Hawkmoth:New{},
 })

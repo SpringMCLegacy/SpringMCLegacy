@@ -170,7 +170,7 @@ end
 
 local function FindPieceProgenitor(unitID, pieceName)
 	-- order matters here, we want to return turret even if that turret is then attached to body
-	local progenitors = {"lwing", "rwing", "rotor", "turret", "emitter", "body"}
+	local progenitors = {"lwing", "rwing", "rotory", "turret", "emitter", "body"}
 	for _, progenitor in ipairs(progenitors) do
 		if pieceName:find(progenitor) then return pieceName end -- return the piece
 		local found, parent = IsPieceAncestor(unitID, pieceName, progenitor, false)
@@ -204,6 +204,8 @@ function gadget:UnitCreated(unitID, unitDefID, teamID, builderID)
 		local turretOnTurretIDs = {} -- turrets on top of main turret, FU Behemoth!
 		local turretOnTurretSides = {}
 		local numWheels = 0
+		-- vtol vehicle only
+		local numRotors = {x = 0, y = 0, z = 0}
 		
 		-- mech only
 		local leftArmIDs = {}
@@ -265,6 +267,15 @@ function gadget:UnitCreated(unitID, unitDefID, teamID, builderID)
 			-- Find the number of wheels
 			elseif pieceName:find("wheel") then
 				numWheels = numWheels + 1
+			-- Find the number of rotors
+			elseif pieceName:find("rotor") then
+				if pieceName:find("x") then
+					numRotors.x = numRotors.x + 1
+				elseif pieceName:find("y") then
+					numRotors.y = numRotors.y + 1
+				elseif pieceName:find("z") then
+					numRotors.z = numRotors.z + 1
+				end
 			-- Find the number of jumpjets
 			elseif pieceName:find("jet") then
 				numJets = numJets + 1
@@ -324,6 +335,7 @@ function gadget:UnitCreated(unitID, unitDefID, teamID, builderID)
 		info.mantletIDs = mantletIDs
 		info.barrelIDs = barrelIDs
 		info.numWheels = numWheels
+		info.numRotors = numRotors
 		info.jumpjets = numJets
 	end
 	
@@ -445,14 +457,15 @@ function gadget:GamePreload()
 		elseif cp.baseclass == "vehicle" then
 			info.limbHPs["turret"] = unitDef.health * 1.0
 		elseif cp.baseclass == "vtol" then
-			info.limbHPs["rotor"] = unitDef.health * 0.1 -- 0.01
+			info.limbHPs["rotory1"] = unitDef.health * 0.1 -- 0.01
+			info.limbHPs["rotory2"] = unitDef.health * 0.1 -- 0.01
 		elseif cp.baseclass == "aero" then
 			info.limbHPs["lwing"] =	 unitDef.health * 0.5
 			info.limbHPs["rwing"] = unitDef.health * 0.5
 		end
 		-- Vehicles
 		info.hover = unitDef.moveDef.family == "hover"
-		info.vtol = unitDef.hoverAttack
+		info.vtol = cp.baseclass == "vtol"
 		info.aero = unitDef.canFly and not info.vtol
 		--info.turrets = table.unserialize(cp.turrets)
 		info.turretTurnSpeed = math.rad(tonumber(cp.turretturnspeed) or 75)

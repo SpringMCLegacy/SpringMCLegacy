@@ -14,7 +14,7 @@ local accept = {
 		mech = {pelvis = true, torso = true, rupperarm = true, rlowerarm = true, lupperarm = true, llowerarm = true, lupperleg = true, llowerleg = true, rupperleg = true, rlowerleg = true},
 		vehicle = {body = true, turret = true, launcher_1 = true, turret_2 = true},
 		aero = {lwing = true, rwing = true},
-		vtol = {body = true, rotor = true},
+		vtol = {body = true, rotory1 = true, rotory2 = true},
 	}
 
 if gadgetHandler:IsSyncedCode() then
@@ -62,7 +62,7 @@ function gadget:UnitCreated(unitID, unitDefID, teamID, builderID)
 					SetPieceColVol(unitID, i - adjust, true, 
 									scaleMult*scaleX, scaleMult*scaleY, scaleMult*scaleZ, 
 									offsetX, offsetY, offsetZ, volumeType, primaryAxis)
-					if pieceName == "rotor" then -- replace with y-cylinder
+					if pieceName:find("rotory") then -- replace with y-cylinder
 						SetPieceColVol(unitID, i - adjust, true, 
 										scaleMult*70, scaleMult*1, scaleMult*70,  -- use a constant radius
 										0, offsetY, 0, 1, 1)
