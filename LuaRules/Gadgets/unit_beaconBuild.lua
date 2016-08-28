@@ -197,14 +197,16 @@ local beaconActive = {} -- beaconActive[beaconID] = true
 local beaconDropshipQueue = {} -- beaconDropshipQueue[beaconID] = {info1 = {}, info2 = {}, ...}
 
 function NextDropshipQueueItem(beaconID, teamID)
-	if #beaconDropshipQueue[beaconID] > 0 then
+	if beaconID and #beaconDropshipQueue[beaconID] > 0 then
 		local item = beaconDropshipQueue[beaconID][1]
 		if item.sound then
 			GG.PlaySoundForTeam(teamID, item.sound, 1)
 		end
 		local dropshipID = SpawnDropship(beaconID, item.target, teamID, item.dropshipType, item.cargo, item.cost)
-		beaconActive[beaconID] = true
-		activeDropships[dropshipID] = beaconID
+		if dropshipID then -- can fail if beacon was lost or dropzone moved
+			beaconActive[beaconID] = true
+			activeDropships[dropshipID] = beaconID
+		end
 	end
 end
 
