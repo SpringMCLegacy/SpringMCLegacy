@@ -127,6 +127,7 @@ function script.Create()
 	end
 	Sleep(100) -- wait a few frames
 	if not Spring.GetUnitTransporter(unitID) then
+		Spring.SetUnitRulesParam(unitID, "beaconID", unitID)
 		Unloaded()
 	end
 end
