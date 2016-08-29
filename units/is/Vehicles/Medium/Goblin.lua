@@ -15,12 +15,12 @@ local Goblin = LightTank:New{
 		},
 		[3] = {
 			name	= "MG",
-			mainDir = [[1 0 1]],
+			mainDir = [[-1 0 1]],
 			maxAngleDif = 90,
 		},
 		[4] = {
 			name	= "MG",
-			mainDir = [[-1 0 1]],
+			mainDir = [[1 0 1]],
 			maxAngleDif = 90,
 		},
 		[5] = {
