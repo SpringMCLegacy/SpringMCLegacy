@@ -1,6 +1,7 @@
 local Rommel = Tank:New{
 	name              	= "Rommel",
 	description         = "Heavy Brawler Tank",
+	trackWidth			= 25,--width to render the decal
 	
 	weapons	= {	
 		[1] = {

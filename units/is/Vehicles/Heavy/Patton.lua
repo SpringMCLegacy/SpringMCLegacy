@@ -1,6 +1,7 @@
 local Patton = Tank:New{
 	name              	= "Patton",
 	description         = "Heavy Striker Tank",
+	trackWidth			= 25,--width to render the decal
 	
 	weapons	= {	
 		[1] = {
@@ -14,6 +15,7 @@ local Patton = Tank:New{
 		},
 		[4] = {
 			name	= "Flamer",
+			maxAngleDif = 60,
 		},
 	},
 	
