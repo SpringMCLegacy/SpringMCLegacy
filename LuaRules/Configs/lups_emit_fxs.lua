@@ -244,6 +244,42 @@ local effects = {
 			file = "sounds/beacon/descend.wav",
 		},
 	},
+	hovercraft = {
+		class = "JitterParticles2",
+		options = {
+			pos            = {0,-1,0}, --// start pos
+			partpos        = "0,0,0", --// particle relative start pos (can contain lua code!)
+			layer          = 0,
+
+			count          = 200,
+
+			life           = 3, --15,
+			lifeSpread     = 0,
+			delaySpread    = 80,
+
+			emitVector     = {0,1,0},
+			emitRot        = 85,
+			emitRotSpread  = 10,
+
+			force          = {0,-0.1,0}, --// global effect force
+			forceExp       = 1,
+			
+			repeatEffect   = true,
+			speed          = 1,--3,--15,
+			speedSpread    = 1,--2, --10,
+			speedExp       = 3.2, --// >1 : first decrease slow, then fast;  <1 : decrease fast, then slow
+
+			size           = 20,
+			sizeSpread     = 20,
+			sizeGrowth     = 10,
+			sizeExp        = 1, --// >1 : first decrease slow, then fast;  <1 : decrease fast, then slow;  <0 : invert x-axis (start large become smaller)
+
+			strength       = 0.4, --// distortion strength
+			scale          = 2, --// scales the distortion texture
+			animSpeed      = 0.1, --// speed of the distortion
+			heat           = -5, --// brighten distorted regions by "length(distortionVec)*heat"
+		},
+	},
 }
 
 return effects

@@ -262,6 +262,7 @@ local SIG_WAKE = 2 ^ (info.numWeapons + 1)
 local function HoverWake(water)
 	Signal(SIG_WAKE)
 	SetSignalMask(SIG_WAKE)
+
 	while true do
 		if water then
 			EmitSfx(SFX.WAKE, wakepoint)
@@ -397,8 +398,31 @@ function script.TransportPickup(cargoID)
 end
 
 local closeRange = unitDef.losRadius --WeaponDefs[unitDef.weapons[1].weaponDef].range * 0.9
+local function Wobble()
+	local angleX, angleZ
+	local ROCK_ANGLE = 2
+	local ROCK_SPEED = math.rad(0.5)
+	while true do
+		angleX = math.rad(math.random(-ROCK_ANGLE, ROCK_ANGLE))
+		angleZ = math.rad(math.random(-ROCK_ANGLE, ROCK_ANGLE))
+		
+    	Turn(body, x_axis, angleX, ROCK_SPEED)
+    	Turn(body, z_axis, angleZ, ROCK_SPEED)
+    	WaitForTurn(body, x_axis)
+    	WaitForTurn(body, z_axis)
+    	Turn(body, x_axis, 0, ROCK_SPEED / 2)
+    	Turn(body, z_axis, 0, ROCK_SPEED / 2)
+		
+    	Sleep(50)
+	end
+end
 	
 function script.Create()
+	if hover then
+		local fxStages = { {1, "hovercraft", {}}, }
+		GG.EmitLupsSfxArray(unitID, fxStages)
+		StartThread(Wobble)
+	end
 	-- set engagement range to weapon 1 range
 	Spring.SetUnitMaxRange(unitID, closeRange)
 	StartThread(SmokeUnit, {body})
