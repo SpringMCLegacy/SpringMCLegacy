@@ -13,7 +13,7 @@ local Cyrano = VTOL:New{
 	customparams = {
 		tonnage			= 30,
 		variant         = "",
-		speed			= 300,
+		speed			= 190,
 		price			= 4590,
 		heatlimit 		= 10,
 		armor			= {type = "ferro", tons = 1},

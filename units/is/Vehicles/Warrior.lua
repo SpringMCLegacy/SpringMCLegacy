@@ -21,7 +21,7 @@ local Warrior = VTOL:New{
 	customparams = {
 		tonnage			= 25,
 		variant         = "",
-		speed			= 230,
+		speed			= 160,
 		price			= 3340,
 		heatlimit 		= 10,
 		armor			= {type = "standard", tons = 3},
