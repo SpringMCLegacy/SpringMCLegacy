@@ -265,11 +265,12 @@ local function HoverWake(water)
 
 	while true do
 		if water then
+			GG.EmitSfxName(unitID, wakepoint, "hover_water")
 			EmitSfx(SFX.WAKE, wakepoint)
 		else
 			GG.EmitSfxName(unitID, wakepoint, "hover_dust")
 		end
-		Sleep(50)
+		Sleep(100)
 	end
 end
 
@@ -400,8 +401,8 @@ end
 local closeRange = unitDef.losRadius --WeaponDefs[unitDef.weapons[1].weaponDef].range * 0.9
 local function Wobble()
 	local angleX, angleZ
-	local ROCK_ANGLE = 2
-	local ROCK_SPEED = math.rad(0.5)
+	local ROCK_ANGLE = 4
+	local ROCK_SPEED = math.rad(1.0)
 	while true do
 		angleX = math.rad(math.random(-ROCK_ANGLE, ROCK_ANGLE))
 		angleZ = math.rad(math.random(-ROCK_ANGLE, ROCK_ANGLE))
@@ -443,6 +444,7 @@ function script.Create()
 			local dir = i % 2 == 1 and 1 or -1
 			Spin(piece("rotorz" .. i), z_axis, 20 * dir * WHEEL_SPEED, WHEEL_ACCEL)
 		end
+		StartThread(Wobble)
 	end
 end
 

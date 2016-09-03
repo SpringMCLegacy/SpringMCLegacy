@@ -1,13 +1,18 @@
 local Plainsman = Hover:New{
 	name              	= "Plainsman",
-	description			= "Light Scout Hover",
+	description			= "Light Harasser",
 	
 	weapons 		= {	
 		[1] = {
-			name	= "SRM6",
+			name	= "SSRM4",
 		},
 		[2] = {
-			name	= "SRM6",
+			name	= "SSRM4",
+			SlaveTo = 1,
+		},
+		[3] = {
+			name	= "SRM2",
+			maxAngleDif = 60,
 		},
 	},
 	
@@ -18,9 +23,8 @@ local Plainsman = Hover:New{
 		price			= 4130,
 		heatlimit 		= 10,
 		armor			= {type = "standard", tons = 3.5},
-		maxammo 		= {srm = 1},
+		maxammo 		= {srm = 2},
 		squadsize 		= 2,
-		bap				= true,
     },
 }
 
