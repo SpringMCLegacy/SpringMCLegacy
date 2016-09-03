@@ -267,9 +267,9 @@ local function HoverWake(water)
 		if water then
 			EmitSfx(SFX.WAKE, wakepoint)
 		else
-			--GG.EmitSfxName(unitID, wakepoint, "mech_jump_dust")
+			GG.EmitSfxName(unitID, wakepoint, "hover_dust")
 		end
-		Sleep(500)
+		Sleep(50)
 	end
 end
 

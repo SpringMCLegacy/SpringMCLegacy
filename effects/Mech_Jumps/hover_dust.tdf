@@ -1,0 +1,79 @@
+[hover_dust]
+{
+	usedefaultexplosions=0;	
+[el_dirte]
+	{
+		class=CSimpleParticleSystem;
+		[properties]
+		{
+		sizeGrowth=0.40;
+		sizeMod=0.2;
+		pos=0, 1, 0; 
+		gravity=0, 0.05, 0;
+		
+
+		Texture=smoke;
+		airdrag=0.87;
+		colorMap=0.25 0.20 0.10 0.5	0 0 0 0.0;
+
+		particleLifeSpread=5; 
+		particleSpeedSpread=1;  
+		particleSizeSpread=0.5;   
+		
+		particleLife=10;
+		numParticles=20; 
+		particleSpeed=5; 
+		particleSize=4;
+		
+		
+		emitVector=0, 1, 0; 
+		emitRot=80;
+		emitRotSpread=5; 
+		directional=0; 
+		
+
+		}
+	air=1;
+	water=1;
+	ground=1;
+	count=1;
+	}
+
+[el_dirte2]
+	{
+		class=CSimpleParticleSystem;
+		[properties]
+		{
+		sizeGrowth=1;
+		sizeMod=1.0;
+		pos=0, 1, 0; 
+		gravity=0, 0.05, 0;
+		
+
+		Texture=smoke;
+		airdrag=0.87;
+		colorMap=0.25 0.20 0.10 0.5	0 0 0 0.0;
+
+		particleLifeSpread=5; 
+		particleSpeedSpread=2;  
+		particleSizeSpread=1;   
+		
+		particleLife=10;
+		numParticles=10; 
+		particleSpeed=3; 
+		particleSize=5;
+		
+		
+		emitVector=0, 1, 0; 
+		emitRot=80;
+		emitRotSpread=5; 
+		directional=0; 
+		
+
+		}
+	air=1;
+	water=1;
+	ground=1;
+	count=1;
+	}
+}
