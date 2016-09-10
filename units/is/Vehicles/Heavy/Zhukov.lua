@@ -24,7 +24,7 @@ local Zhukov = Tank:New{
 		heatlimit 		= 10,
 		armor			= {type = "standard", tons = 11},
 		maxammo 		= {ac10 = 3, srm = 1},
-		barrelrecoildist = {[1] = 5},
+		barrelrecoildist = {[1] = 5, [2] = 5},
 		squadsize 		= 1,
 		replaces		= "cc_manticore",
     },
