@@ -27,12 +27,12 @@ local rotate = 0
 
 --local DZ_TEX = "icons/beacon.png"
 
-local DZ_TEX_PATH = ":a:anims/cursormove_"--attack_"
+local DZ_TEX_PATH = ":a:luaui/images/dz/frame"--attack_"
 local DZ_TEX_FRAMES = 8--5
 local DZ_ANIM_WAIT = 40
 local DZ_TEXS = {}
 
-for i = 0, DZ_TEX_FRAMES do
+for i = 1, DZ_TEX_FRAMES do
 	DZ_TEXS[i] = DZ_TEX_PATH .. i .. ".png"
 end
 
@@ -122,7 +122,7 @@ function widget:DrawWorldPreUnit()
 			if DZDefs[unitDefID] then
 				local radius = 4.75 * UnitDefs[unitDefID].xsize
 				glColor(1.0, 1.0, 1.0, 0.5)
-				glTexture(DZ_TEXS[math.floor(Spring.GetGameFrame() % DZ_ANIM_WAIT / (DZ_ANIM_WAIT / #DZ_TEXS))])
+				glTexture(DZ_TEXS[math.floor(Spring.GetGameFrame() % DZ_ANIM_WAIT / (DZ_ANIM_WAIT / #DZ_TEXS))+1])
 				glDrawListAtUnit(unitID, DZ_LIST, false, radius, 1.0, radius, rotate, 0, 1.0, 0)
 			elseif unitDefID == BEACON_POINT_DEFID then
 				local radius = 20 * UnitDefs[unitDefID].xsize
