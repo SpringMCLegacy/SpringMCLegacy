@@ -140,6 +140,7 @@ vertex = [[
 	}
 	
 	void main(void){
+		vec2 tex1c = gl_TexCoord[0].st;
 		%%FRAGMENT_PRE_SHADING%%
 
 		#ifdef use_normalmapping
@@ -155,9 +156,9 @@ vertex = [[
 		#endif
 		vec3 light = max(dot(normal, sunPos), 0.0) * sunDiffuse + sunAmbient;
 
-		vec4 diffuseIn  = texture2D(textureS3o1, gl_TexCoord[0].st);
+		vec4 diffuseIn  = texture2D(textureS3o1, tex1c); //gl_TexCoord[0].st);
 		vec4 outColor   = diffuseIn;
-		vec4 extraColor = texture2D(textureS3o2, gl_TexCoord[0].st);
+		vec4 extraColor = texture2D(textureS3o2, tex1c); //gl_TexCoord[0].st);
 		vec3 reflectDir = reflect(cameraDir, normal);
 		
 		//#if (deferred_mode == 0)
