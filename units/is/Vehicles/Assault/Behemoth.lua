@@ -14,6 +14,7 @@ local BehemothBase = Tank:New{
 		maxammo 		= {ac10 = 2, lrm = 1, srm = 3},
 		barrelrecoildist = {[1] = 5, [2] = 5},
 		squadsize 		= 1,
+		trackwidth		= 56,
 	},
 }
 	

@@ -13,9 +13,9 @@ local trackWidths = {} -- unitID = proportionOfTexture
 
 local function UnitCreated(unitID)
 	local unitDef = UnitDefs[Spring.GetUnitDefID(unitID)]
-	if unitDef.customParams.baseclass == "vehicle" then
-		trackWidths[unitID] = unitDef.customParams.trackwidth or (1 - 56/512)
-		--Spring.Echo("MY WIDTH IS", trackWidths[unitID])
+	if unitDef.leaveTracks then
+		trackWidths[unitID] = unitDef.customParams.trackwidth
+		Spring.Echo("MY WIDTH IS", trackWidths[unitID])
 	end
 end
 
@@ -85,7 +85,7 @@ local unitMaterials = {}
 for i=1,#UnitDefs do
   local udef = UnitDefs[i]
 
-  if udef.customParams.baseclass == "vehicle" then
+  if udef.leaveTracks then
     unitMaterials[udef.name] = {
 	  "trackShader", 
 	  NORMALTEX = udef.customParams.normaltex,

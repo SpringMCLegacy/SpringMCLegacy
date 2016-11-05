@@ -23,6 +23,7 @@ local Demolisher = Tank:New{
 		maxammo 		= {ac20 = 2},
 		barrelrecoildist = {[1] = 5, [2] = 5},
 		squadsize 		= 1,
+		trackwidth		= 56,
     },
 }
 

@@ -272,6 +272,7 @@ for name, ud in pairs(UnitDefs) do
 	-- track strength should be 1/1000th of mass
 	if ud.leavetracks then
 		ud.trackstrength = ud.mass / 1000
+		cp.trackwidth = 1 - ((cp.trackwidth or 46)/512)
 	end
 	local weapons = ud.weapons
 	local weaponCounts = {}
