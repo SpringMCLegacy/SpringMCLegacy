@@ -75,6 +75,7 @@ local function StartTurn(unitID, unitDefID, tx, tz)
 	turnTable["currHeading"] = currHeading
 	turning[unitID] = turnTable
 	GG.turning[unitID] = true
+	Spring.SetUnitRulesParam(unitID, "turning", turnRate)
 	return true -- successful turn command
 end
 
@@ -88,6 +89,7 @@ local function StopTurn(unitID)
 		end
 	end
 	GG.turning[unitID] = false
+	Spring.SetUnitRulesParam(unitID, "turning", 0)
 	Spring.MoveCtrl.Disable(unitID)
 end
 
