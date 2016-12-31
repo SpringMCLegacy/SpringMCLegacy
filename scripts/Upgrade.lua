@@ -141,9 +141,9 @@ local bayReady = false
 
 function MechBayOpen()
 	Move(rampr, x_axis, 10, CRATE_SPEED * 10)
-	Move(ramprtoolupper, x_axis, 10, CRATE_SPEED * 5)
+	Move(ramprtoolupper, x_axis, 5, CRATE_SPEED * 5)
 	Move(rampl, x_axis, -10, CRATE_SPEED * 10)
-	Move(rampltoolupper, x_axis, -10, CRATE_SPEED * 5)
+	Move(rampltoolupper, x_axis, -5, CRATE_SPEED * 5)
 	Sleep(100)
 	Turn(ramprtoolupper, x_axis, rad(90), CRATE_SPEED)
 	Turn(rampltoolupper, x_axis, rad(-90), CRATE_SPEED)
