@@ -146,7 +146,7 @@ local function RestoreAfterDelay()
 		Turn(launchers[id], x_axis, 0, ELEVATION_SPEED)
 	end
 	Spring.SetUnitRulesParam(unitID, "fighting", 0)
-	GG.ComeHome(unitID)
+	--GG.ComeHome(unitID)
 end
 
 -- non-local function called by gadgets/game_ammo.lua
@@ -417,7 +417,31 @@ local function Wobble()
     	Sleep(50)
 	end
 end
+
+local deployed = false
 	
+function Load(passengerID)
+	Spring.UnitAttach(unitID, passengerID, -1)
+	--cargo[#cargo + 1] = passengerID
+	cargo[passengerID] = true
+	deployed = false
+end
+
+local function UnLoad(targetID)
+	deployed = true
+	-- TODO: Animation
+	local count = 0
+	Spring.Echo("Target ID is", targetID)
+	for passengerID in pairs(cargo) do
+		Spring.SetUnitLoadingTransport(passengerID, unitID)
+		Spring.UnitDetach(passengerID)
+		count = count + 1
+		Sleep(500)
+	end
+	GG.DisEmbark(unitID, cargo, targetID, count)
+	--cargo = nil -- reset cargo container, so we get a clean roster when they re-embark (perhaps some died :()
+end
+
 function script.Create()
 	if hover then
 		local fxStages = { {1, "hovercraft", {}}, }
@@ -591,9 +615,12 @@ function script.FireWeapon(weaponID)
 	local targetType, user, targetID = Spring.GetUnitWeaponTarget(unitID, weaponID)
 	if targetType == 1 then
 		if unitDef.transportCapacity > 0 then -- apc
-			if not (Spring.GetUnitRulesParam(unitID, "dronesout") == 1) then
-				GG.LaunchDroneAsWeapon(unitID, teamID, targetID, "cl_elemental_prime", 5, body, 0, 90)
+			if not deployed then
+				StartThread(UnLoad, targetID)
 			end
+			--[[if not (Spring.GetUnitRulesParam(unitID, "dronesout") == 1) then
+				GG.LaunchDroneAsWeapon(unitID, teamID, targetID, "cl_elemental_prime", 5, body, 0, 90)
+			end]]
 		else
 			local dist = Spring.GetUnitSeparation(unitID, targetID)
 			--Spring.Echo("Distance to target is", dist)

@@ -1,22 +1,4 @@
-local CMD_ATTACK             = CMD.ATTACK
-local CMD_MOVE               = CMD.MOVE
-local CMD_GUARD				 = CMD.GUARD
-local spCreateUnit           = Spring.CreateUnit
-local spGetHeadingFromVector = Spring.GetHeadingFromVector
-local spGetUnitDefID		 = Spring.GetUnitDefID
-local spGetUnitIsDead        = Spring.GetUnitIsDead
-local spGetUnitPiecePosDir   = Spring.GetUnitPiecePosDir
-local spGetUnitScriptPiece   = Spring.GetUnitScriptPiece
-local spGiveOrderToUnit      = Spring.GiveOrderToUnit
-
-local pairs					 = pairs
-local table	       			 = table
-
-local alt = {"alt"}
-local shift = {"shift"}
-local empty = {}
---------------------------------------------------------------------------------
---------------------------------------------------------------------------------
+if (gadgetHandler:IsSyncedCode()) then
 
 function gadget:GetInfo()
 	return {
@@ -30,130 +12,183 @@ function gadget:GetInfo()
 	}
 end
 
-if (gadgetHandler:IsSyncedCode()) then
+local CMD_SUPPORT = GG.CustomCommands.GetCmdID("CMD_SUPPORT")
+local CMD_WAITFORSQUAD = GG.CustomCommands.GetCmdID("CMD_WAITFORSQUAD")
+local CMD_EMBARK = GG.CustomCommands.GetCmdID("CMD_EMBARK")
 
---SYNCED
-local spawnList={}
-local droneTypes = {
-	["cl_elemental_prime"] = true,
-	["is_standard_ba"] = true,
-}
-local droneOwners = {} -- droneOwners[ownerID] = {drone_1_ID, ...}
-local ownerStatus = {} -- ownerStatus[ownerID] = true -- implies drones out
+local apcGroups = {} -- apcID = group
+local apcDefIDs = {} -- unitDefID = squad
+local apcDeployed = {} -- apcID = number deployed
+local apcTargets = {} -- targetID = apcID
+local baAPCs = {} -- baID = apcID
 
-local function LaunchDroneAsWeapon(u, team, target, drone, number, piece, rotation, pitch)
-	if ownerStatus[u] then return end -- drones are already out, ignore
-	local x,y,z,dx,dy,dz
-	local lus = Spring.UnitScript.GetScriptEnv(u)
-	if lus then
-		x,y,z,dx,dy,dz=spGetUnitPiecePosDir(u,piece)
-	else
-		x,y,z,dx,dy,dz=spGetUnitPiecePosDir(u,spGetUnitScriptPiece(u,piece))
-		--x,y,z,dx,dy,dz=spGetUnitPiecePosDir(u,piece)
-	end
-	if (target > 0 and not spGetUnitIsDead(target)) or target == -1 then
-		for i = 1, number do
-			table.insert(spawnList, {
-				drone=drone, parent=u, target = target, rotation = math.pi*.5*rotation, pitch = pitch or 0, team = team,
-				x=x,y=y,z=z,dx=dx,dy=dy,dz=dz,
-			})
+
+local function GroupCentre(group)
+	local x, z, n = 0, 0, 0
+	for unitID in pairs(group) do
+		n = n + 1
+		if Spring.ValidUnitID(unitID) and not Spring.GetUnitIsDead(unitID) then
+			local ux, _, uz = Spring.GetUnitPosition(unitID)
+			x = x + ux
+			z = z + uz
 		end
 	end
-	Spring.SetUnitRulesParam(u, "dronesout", 1)
-	Spring.GiveOrderToUnit(u, CMD.STOP, {}, empty)
+	x = x / n
+	z = z / n
+	return x, z
 end
 
-function gadget:GameFrame(f)
-	for i,d in pairs(spawnList) do
-		local nu = spCreateUnit(d.drone,d.x,d.y,d.z,0,d.team)
-		if nu then
-			local h = spGetHeadingFromVector(d.dx,d.dz)
-			SendToUnsynced("TOGGLE_SELECT", nu, d.team) -- caught by unit_purchasing.lua
-			Spring.MoveCtrl.Enable(nu)
-			Spring.MoveCtrl.SetPosition(nu, d.x, d.y, d.z)
-			Spring.MoveCtrl.SetRotation(nu,d.pitch/32768 * math.pi, h /32768 * math.pi,d.rotation)
-			Spring.MoveCtrl.SetRelativeVelocity(nu,0,0,4)
-			local x,y,z = Spring.GetUnitPosition(d.target)
-			if d.target > 0 then
-				--spGiveOrderToUnit(nu, CMD.FIGHT, {x,y,z},{})
-				GG.Delay.DelayCall(spGiveOrderToUnit, {nu, CMD_ATTACK, {d.target}, shift}, 5)
-			elseif d.target == -1 then
-				spGiveOrderToUnit(nu, CMD_GUARD, {d.parent},empty)
-			else
-				spGiveOrderToUnit(nu, CMD_MOVE, {d.x-45+math.random(90),d.y,d.z-45+math.random(90)},empty)
-			end
-			--Spring.Echo(x,y,z, d.target)
-			--Spring.SetUnitMoveGoal(nu, x,y,z, 150)
-			Spring.MoveCtrl.Disable(nu)
-			ownerStatus[d.parent] = true
-			if not droneOwners[d.parent] then
-				droneOwners[d.parent] = {}
-			end
-			table.insert(droneOwners[d.parent], nu)
-		end
-		spawnList[i]=nil
+
+
+-- maybe in the following don't pass group as a table but rather have a table lookup apcGroup[apcID] = {groupMember1ID, ...}
+-- function to periodically update APC to follow group and support at weapon range
+-- this is probably called via CommandFallback?
+local function SupportGroup(apcID, group)
+	-- TODO: use APC primary weapon range
+	local x, z = GroupCentre(group)
+	Spring.SetUnitMoveGoal(apcID, x, 0, z, 800 * 0.7)
+	--Spring.MarkerAddPoint(x, 0, z)
+end
+
+local function APCCountChange(apcID, change)
+	apcDeployed[apcID] = apcDeployed[apcID] + change
+	Spring.Echo("APC", apcID, "has now got ", apcDeployed[apcID], "deployed")
+	if apcDeployed[apcID] == 0 then
+		-- everyone is home, be on your way
+		GG.Delay.DelayCall(GG.Wander, {apcID}, 30)
 	end
 end
 
-function ComeHome(unitID)
-	local drones = droneOwners[unitID]
-	if drones and ownerStatus[unitID] then
-		-- check if APC is targetting anything
-		local target, userTarget, params = Spring.GetUnitWeaponTarget(unitID, 1)
-		--Spring.Echo("Idle", drones, ownerStatus[unitID], target)
-		if target and target > 0 then -- there is a target, redirect drones
-			if target == 1 then -- a unit
-				Spring.GiveOrderToUnitArray(drones, CMD.ATTACK, {params}, empty)	
-			end
-		elseif Spring.GetUnitRulesParam(unitID, "fighting") == 0 then -- no target, come home
-			--Spring.Echo("COME HOME")
-			local x,y,z = Spring.GetUnitPosition(unitID)
-			Spring.GiveOrderToUnitArray(drones, CMD.LOAD_ONTO, {unitID}, empty)
+-- function for group to return to APC
+-- TODO: APC behaviour here? Halt in current position, move to midpoint, close to loading range.
+local function Embark(apcID, group)
+	-- TODO: ...
+	-- TODO: Call APC LUS function to handle the loading, though really this needs to be done on a 'as unit returns' basis...
+	-- Spring.SetUnitLoadingTransport(passengerID, apcID)
+	-- 
+end
+
+-- function for APC to halt and group to leave APC
+local function DisEmbark(apcID, group, targetID, count)
+	Spring.Echo("CONFIRM Target ID is", targetID)
+	-- TODO: ...
+	Spring.GiveOrderToUnitMap(group, CMD.ATTACK, {targetID}, {})
+	APCCountChange(apcID, count)
+	Spring.Echo("APC", apcID, "has now got ", apcDeployed[apcID], "deployed")
+	apcGroups[apcID] = group
+	apcTargets[targetID] = apcID
+	Spring.GiveOrderToUnit(apcID, CMD_SUPPORT, {}, {})
+	--SupportGroup(apcID, group)
+end
+GG.DisEmbark = DisEmbark
+
+-- TODO: this would be a custom param of the apc
+local basicSquad = {}
+for i = 1, 5 do
+	basicSquad[i] = "cl_elemental_prime"
+end
+
+function gadget:Initialize()
+	for unitDefID, unitDef in pairs(UnitDefs) do
+		if unitDef.transportCapacity > 0 and unitDef.trackWidth then -- TODO: replace this with cp.squad
+			apcDefIDs[unitDefID] = basicSquad -- table.unserialize(unitDef.customparams.squad)
 		end
 	end
 end
-GG.ComeHome = ComeHome
 
-function gadget:UnitLoaded(unitID, unitDefID, teamID, transportID)
-	local unitDef = UnitDefs[unitDefID]
-	if droneTypes[unitDef.name] then
-		Spring.DestroyUnit(unitID, false, true) --not selfd, reclaimed
-		-- FIXME: the following loop is really terrible
-		-- instead need a table where we can remove drones when they have died or returned
-		-- but that can't be passed to GiveOrderArrayToUnitArray
-		-- is there GiveOrderArrayToUnitMap?
-		local allDead = true
-		for i, droneID in pairs(droneOwners[transportID]) do
-			local droneDead = Spring.GetUnitIsDead(droneID)
-			if droneDead == nil then droneDead = true end -- horrible
-			allDead = allDead and droneDead
-			--Spring.Echo(allDead, droneID, Spring.GetUnitIsDead(droneID))
+local function CreateSquad(apcID, squad, teamID)
+	apcDeployed[apcID] = 0
+	env = Spring.UnitScript.GetScriptEnv(apcID)
+	if env.Load then
+		-- spawn and load the squad
+		for i, unitName in ipairs(squad) do
+			--Spring.Echo("SPAWN ME A ", unitName)
+			local squaddieID = Spring.CreateUnit(unitName, 0,0,0, 0, teamID)
+			baAPCs[squaddieID] = apcID
+			Spring.UnitScript.CallAsUnit(apcID, env.Load, squaddieID)
 		end
-		if allDead then
-			--Spring.Echo("All my boys are back in!")
-			ownerStatus[transportID] = false
-			droneOwners[transportID] = {}
-			Spring.SetUnitRulesParam(transportID, "dronesout", 0)
-			GG.Delay.DelayCall(GG.Wander, {transportID}, 1)
-		end
+	end
+end
+
+function gadget:UnitCreated(unitID, unitDefID, teamID)
+	local squad = apcDefIDs[unitDefID]
+	if squad then
+		GG.Delay.DelayCall(CreateSquad, {unitID, squad, teamID}, 1) -- avoid recursion BS
 	end
 end
 
 function gadget:UnitDestroyed(unitID, unitDefID, teamID)
-	droneOwners[unitID] = nil
-	ownerStatus[unitID] = nil
+	local apcID = apcTargets[unitID]
+	if apcID and not Spring.GetUnitIsDead(apcID) then -- a APC target died, RTB if idle
+		Spring.Echo("TANGO DOWN!", apcID)
+		-- check if APC is now idle
+		local hasTarget = false
+		for i = 1, 2 do -- TODO: check all APC weapons?
+			local targetType, _, targetID = Spring.GetUnitWeaponTarget(apcID, i)
+			hasTarget = hasTarget or (targetType == 1 and targetID ~= unitID and targetID)
+		end
+		if hasTarget then
+			Spring.Echo("APC ", apcID, "has target", hasTarget)
+			Spring.GiveOrderToUnitMap(apcGroups[apcID], CMD.ATTACK, {hasTarget}, {})
+			apcTargets[hasTarget] = apcID	
+		else -- idle, rtb
+			Spring.GiveOrderToUnitMap(apcGroups[apcID], CMD_EMBARK, {}, {})
+			Spring.Echo("No more targets, RTB!")
+		end
+		apcTargets[unitID] = nil
+	elseif baAPCs[unitID] then
+		local apcID = baAPCs[unitID]
+		if apcID and not Spring.GetUnitIsDead(apcID) then
+			APCCountChange(apcID, -1)
+			apcGroups[apcID][unitID] = nil
+		end
+		baAPCs[unitID] = nil
+	end
 end
 
-function gadget:Initialize()
-	gadgetHandler:RegisterGlobal("LaunchDroneWeapon", LaunchDroneAsWeapon)
-	GG.LaunchDroneAsWeapon = LaunchDroneAsWeapon
-	_G.LaunchDroneAsWeapon = LaunchDroneAsWeapon
+function gadget:AllowCommand(unitID, unitDefID, unitTeam, cmdID, cmdParams, cmdOptions, cmdTag)
+	if apcDefIDs[unitDefID] then
+		if (apcDeployed[unitID] or 0) > 0 then
+			return cmdID == CMD_SUPPORT
+		end
+	end
+	return true
 end
 
-else
-
---UNSYNCED
-
-return false
+local LOAD_RADIUS = 100
+function gadget:CommandFallback(unitID, unitDefID, unitTeam, cmdID, cmdParams, cmdOptions, cmdTag)
+	if apcDefIDs[unitDefID] then
+		if cmdID == CMD_SUPPORT then
+			--Spring.Echo("GET YO ASS OVER HERE AN HELP ME!")
+			SupportGroup(unitID, apcGroups[unitID])
+			return true, false
+			-- TODO: handle the command ending on embark
+		end
+	elseif unitDefID == UnitDefNames["cl_elemental_prime"].id then -- TODO: dehack this, cache BA defs
+		if cmdID == CMD_EMBARK then
+			local apcID = baAPCs[unitID]
+			if apcID and not Spring.GetUnitIsDead(apcID) then
+				local x,y,z = Spring.GetUnitPosition(apcID)
+				local dist = Spring.GetUnitSeparation(unitID, apcID)
+				if dist > LOAD_RADIUS then
+					Spring.SetUnitMoveGoal(unitID, x, y, z, LOAD_RADIUS * 0.5)
+					Spring.SetUnitLoadingTransport(unitID, apcID)
+					--Spring.Echo("RTB mate!")
+					return true, false
+				else
+					env = Spring.UnitScript.GetScriptEnv(apcID)
+					if env.Load then
+						Spring.UnitScript.CallAsUnit(apcID, env.Load, unitID)
+						APCCountChange(apcID, -1)
+						return true, true
+					end
+				end
+			else -- APC is dead
+				return true, true
+			end
+		end
+	end
+	return false, false
+end
 
 end
