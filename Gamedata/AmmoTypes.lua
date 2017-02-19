@@ -6,6 +6,7 @@ return {
 	MRM			= 200,
 	Arrow		= 8,
 	Narc		= 6,
+	MML			= 70,
 
 	AC2			= 450,--225,
 	AC5			= 100,--50,

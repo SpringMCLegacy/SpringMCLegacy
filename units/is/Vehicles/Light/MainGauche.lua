@@ -30,5 +30,5 @@ local MainGauche = LightTank:New{
 }
 
 return lowerkeys({
-	["FW_MainGauche"] = MainGauche:New(),
+	--["FW_MainGauche"] = MainGauche:New(),
 })
