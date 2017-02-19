@@ -35,7 +35,7 @@ local MML_Class = Weapon:New{
 		cegflare			= "MISSILE_MUZZLEFLASH",
 		projectilelups		= {"missileEngine"},
 		weaponclass			= "missile",
-		ammotype			= "MML",
+		ammotype			= "mml",
     },
 }
 
