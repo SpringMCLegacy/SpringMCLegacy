@@ -47,7 +47,7 @@ function gadget:Initialize()
 	for unitDefID, unitDef in pairs(UnitDefs) do
 		local basicType = unitDef.customParams.baseclass
 		if basicType == "vehicle" or basicType == "vtol" then -- apc's are still vehicle but *identified* (not changed) in _post
-			vehiclesDefCache[unitDefID] = unitDef.customParams.squadsize or 1
+			vehiclesDefCache[unitDefID] = 1 --unitDef.customParams.squadsize or 1
 		end
 	end
 	for _, teamID in pairs(Spring.GetTeamList()) do
