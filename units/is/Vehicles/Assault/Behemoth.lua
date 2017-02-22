@@ -73,7 +73,7 @@ local Behemoth = BehemothBase:New{
 	},
 }
 
-local BehemothD = BehemothBase:New{
+local BehemothArmor = BehemothBase:New{
 	weapons	= {	
 		[1] = {
 			name	= "AC10",
@@ -95,7 +95,7 @@ local BehemothD = BehemothBase:New{
 	
 	customparams = {
 		tonnage			= 100,
-		variant         = "(Davion)",
+		variant         = "(Armor)",
 		speed			= 30,
 		price			= 12000,
 		heatlimit 		= 20,
@@ -103,7 +103,7 @@ local BehemothD = BehemothBase:New{
 		maxammo 		= {ac10 = 3, lrm = 1, srm = 3},
 		barrelrecoildist = {[1] = 5, [2] = 5},
 		squadsize 		= 1,
-		replaces		= "fs_behemoth",
+		replaces		= "cc_behemoth",
 	},
 }
 
@@ -216,10 +216,10 @@ local BehemothM = BehemothBase:New{
 
 return lowerkeys({
 	["CC_Behemoth"] = Behemoth:New(),
+	["CC_BehemothArmor"] = BehemothArmor:New(),
 	["DC_Behemoth"] = Behemoth:New(),
 	--["DC_BehemothK"] = BehemothK:New(),
 	["FS_Behemoth"] = Behemoth:New(),
-	--["FS_BehemothD"] = BehemothD:New(),
 	["FW_Behemoth"] = Behemoth:New(),
 	--["FW_BehemothM"] = BehemothM:New(),
 	["LA_Behemoth"] = Behemoth:New(),
