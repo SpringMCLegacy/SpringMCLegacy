@@ -29,10 +29,17 @@ local LRMCarrier = LightTank:New{
     },
 }
 
+local LRMCarrierM = LRMCarrier:New{
+	customparams = {
+		replaces		= "fw_lrmcarrier",
+    },
+}
+
 return lowerkeys({
 	["CC_LRMCarrier"] = LRMCarrier:New(),
 	["DC_LRMCarrier"] = LRMCarrier:New(),
 	["FS_LRMCarrier"] = LRMCarrier:New(),
 	["FW_LRMCarrier"] = LRMCarrier:New(),
+	["FW_LRMCarrierM"] = LRMCarrierM:New(),
 	["LA_LRMCarrier"] = LRMCarrier:New(),
 })
