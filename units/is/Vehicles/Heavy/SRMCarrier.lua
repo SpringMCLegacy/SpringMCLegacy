@@ -65,9 +65,9 @@ local SRMCarrier = LightTank:New{
 }
 
 return lowerkeys({
-	["CC_SRMCarrier"] = SRMCarrier:New(),
-	["DC_SRMCarrier"] = SRMCarrier:New(),
-	["FS_SRMCarrier"] = SRMCarrier:New(),
-	["FW_SRMCarrier"] = SRMCarrier:New(),
-	["LA_SRMCarrier"] = SRMCarrier:New(),
+	--["CC_SRMCarrier"] = SRMCarrier:New(),
+	--["DC_SRMCarrier"] = SRMCarrier:New(),
+	--["FS_SRMCarrier"] = SRMCarrier:New(),
+	--["FW_SRMCarrier"] = SRMCarrier:New(),
+	--["LA_SRMCarrier"] = SRMCarrier:New(),
 })
