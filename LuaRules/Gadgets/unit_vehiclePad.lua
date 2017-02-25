@@ -80,20 +80,20 @@ local chances = {
 		vtol = 0.1,
 		apc = 0.1,
 		-- following sum to 1
-		light = 0.9,
-		medium = 0.1,
+		light = 0.5,
+		medium = 0.5,
 		heavy = 0,
 		assault = 0,
 	},
-	[2] = { -- heavy
+	[2] = { -- heavium
 		arty = 0.1,
 		vtol = 0.15,
 		apc = 0.15,
 		-- following sum to 1
 		light = 0.0,
-		medium = 0.5,
+		medium = 0.0,
 		heavy = 0.5,
-		assault = 0.0,
+		assault = 0.5,
 	},
 	[3] = { -- house
 		arty = 0.1,
@@ -102,8 +102,8 @@ local chances = {
 		-- following sum to 1
 		light = 0.0,
 		medium = 0.0,
-		heavy = 0.2,
-		assault = 0.8,
+		heavy = 0.5,
+		assault = 0.5,
 	},
 }
 
