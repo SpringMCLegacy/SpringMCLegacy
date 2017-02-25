@@ -75,7 +75,7 @@ local delays = {
 -- and they are all 0.2 to 1sf anyway.
 
 local chances = {
-	[1] = { -- default
+	[1] = { -- default light/med
 		arty = 0.1,
 		vtol = 0.1,
 		apc = 0.1,
@@ -85,7 +85,7 @@ local chances = {
 		heavy = 0,
 		assault = 0,
 	},
-	[2] = { -- heavium
+	[2] = { -- heavy/superheavy
 		arty = 0.1,
 		vtol = 0.15,
 		apc = 0.15,
