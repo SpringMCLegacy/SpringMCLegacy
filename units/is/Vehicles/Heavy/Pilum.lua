@@ -37,6 +37,7 @@ local Pilum = LightTank:New{
 		maxammo 		= {lrm = 3, srm = 1},
 		squadsize 		= 1,
 		replaces		= "fs_lrmcarrier",
+		wheels			= true,
     },
 }
 
@@ -73,6 +74,7 @@ local PilumArrow = Pilum:New{
 		price			= 11020,
 		maxammo 		= {arrow = 3, srm = 1},
 		replaces		= "fs_marksman",
+		wheels			= true,
     },
 }
 

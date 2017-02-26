@@ -40,6 +40,7 @@ local Typhoon = Tank:New{
 		barrelrecoildist = {[1] = 5},
 		squadsize 		= 1,
 		replaces		= "fs_demolisher",
+		wheels			= true,
     },
 }
 

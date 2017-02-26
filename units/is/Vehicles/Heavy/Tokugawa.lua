@@ -31,6 +31,7 @@ local Tokugawa = Tank:New{
 		barrelrecoildist = {[1] = 5},
 		squadsize 		= 1,
 		replaces		= "dc_manticore",
+		wheels			= true,
     },
 }
 

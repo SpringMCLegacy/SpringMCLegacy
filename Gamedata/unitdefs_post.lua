@@ -243,7 +243,7 @@ for name, ud in pairs(UnitDefs) do
 	ud.turninplacespeedlimit = (tonumber(ud.maxvelocity) or 0) * (cp.wheels and 0.5 or 1 )
 	
 	-- calculate reverse, acceleration, brake and turning speed based on maxvelocity
-	ud.maxreversevelocity = ud.maxvelocity / (cp.wheels and 1.2 or 1.5)
+	ud.maxreversevelocity = ud.maxvelocity / (cp.wheels and 1.5 or 1.5)
 	ud.acceleration = ud.maxvelocity / (cp.wheels and 8 or 4)
 	ud.brakerate = ud.maxvelocity / (cp.wheels and 50 or 25)
 	ud.turnrate = ud.maxvelocity * (cp.wheels and 100 or 200) * (modOptions.turn or 1)
