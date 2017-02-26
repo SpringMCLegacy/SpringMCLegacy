@@ -155,7 +155,7 @@ function gadget:AllowCommand(unitID, unitDefID, unitTeam, cmdID, cmdParams, cmdO
 	return true
 end
 
-local LOAD_RADIUS = 100
+local LOAD_RADIUS = 45
 function gadget:CommandFallback(unitID, unitDefID, unitTeam, cmdID, cmdParams, cmdOptions, cmdTag)
 	if apcDefIDs[unitDefID] then
 		if cmdID == CMD_SUPPORT then
@@ -169,15 +169,19 @@ function gadget:CommandFallback(unitID, unitDefID, unitTeam, cmdID, cmdParams, c
 			local apcID = baAPCs[unitID]
 			if apcID and not Spring.GetUnitIsDead(apcID) then
 				local x,y,z = Spring.GetUnitPosition(apcID)
-				local dist = Spring.GetUnitSeparation(unitID, apcID)
+				-- UnitSeparation is no good for getting in at the back... 
+				--local dist = Spring.GetUnitSeparation(unitID, apcID)
+				local dx, dy, dz = Spring.GetUnitDirection(apcID)
+				local tx, tz = x - LOAD_RADIUS * dx, z - LOAD_RADIUS * dz
+				local dist = GG.GetUnitDistanceToPoint(unitID, tx, y, tz)
 				if dist > LOAD_RADIUS then
-					Spring.SetUnitMoveGoal(unitID, x, y, z, LOAD_RADIUS * 0.5)
-					Spring.SetUnitLoadingTransport(unitID, apcID)
+					Spring.SetUnitMoveGoal(unitID, tx, y, tz, LOAD_RADIUS * 0.5)
 					--Spring.Echo("RTB mate!")
 					return true, false
 				else
 					env = Spring.UnitScript.GetScriptEnv(apcID)
 					if env.Load then
+						--Spring.SetUnitLoadingTransport(unitID, apcID)
 						Spring.UnitScript.CallAsUnit(apcID, env.Load, unitID)
 						APCCountChange(apcID, -1)
 						return true, true
