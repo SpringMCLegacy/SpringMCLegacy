@@ -239,13 +239,14 @@ for name, ud in pairs(UnitDefs) do
 	end
 	-- set maxvelocity by modoption
 	ud.maxvelocity = (ud.maxvelocity or 0) * (modOptions.speed or 0.65)
-	ud.turninplacespeedlimit = (tonumber(ud.maxvelocity) or 0) * 1 
+	ud.turninplace = not cp.wheels
+	ud.turninplacespeedlimit = (tonumber(ud.maxvelocity) or 0) * (cp.wheels and 0.5 or 1 )
 	
 	-- calculate reverse, acceleration, brake and turning speed based on maxvelocity
-	ud.maxreversevelocity = ud.maxvelocity / 1.5
-	ud.acceleration = ud.maxvelocity / 4
-	ud.brakerate = ud.maxvelocity / 25
-	ud.turnrate = ud.maxvelocity * 200 * (modOptions.turn or 1)
+	ud.maxreversevelocity = ud.maxvelocity / (cp.wheels and 1.2 or 1.5)
+	ud.acceleration = ud.maxvelocity / (cp.wheels and 8 or 4)
+	ud.brakerate = ud.maxvelocity / (cp.wheels and 50 or 25)
+	ud.turnrate = ud.maxvelocity * (cp.wheels and 100 or 200) * (modOptions.turn or 1)
 	cp.torsoturnspeed = cp.torsoturnspeed or (ud.maxvelocity * 50 * (modOptions.torso or 1)) -- for now keep this independent of turnrate so we can tweak them separately
 
 	if not name:find("decal") then
