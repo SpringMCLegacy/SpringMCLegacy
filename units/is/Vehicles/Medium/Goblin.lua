@@ -1,6 +1,8 @@
 local Goblin = LightTank:New{
 	name              	= "Goblin",
 	trackWidth			= 23,--width to render the decal
+	transportCapacity		= 5,
+	transportSize = 1,	
 	
 	customparams = {
 		tonnage			= 45,
