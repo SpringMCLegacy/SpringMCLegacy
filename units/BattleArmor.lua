@@ -42,6 +42,7 @@ local BattleArmor = Light:New{
 		maxammo 		= {infsrm = 4},
 		squadsize		= 5,
 		baseclass		= "infantry", -- TODO: hacks
+		ignoreatbeacon	= true,
     },
 }
 	
