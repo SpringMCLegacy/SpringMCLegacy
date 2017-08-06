@@ -60,9 +60,9 @@ function gadget:ProjectileCreated(proID, proOwnerID, weaponID)
 		if targetType == string.byte('u') then -- unit target, info is ID
 			tx,ty,tz = Spring.GetUnitPosition(info)
 		else -- TODO: assuming ground, but engine gives all 0s for the pos table :(
-			Spring.Echo(targetType, string.byte("g"), info, more)
+			--Spring.Echo(targetType, string.byte("g"), info, more)
 			tx,ty,tz = unpack(info)
-			for k,v in pairs(info) do Spring.Echo(k,v) end
+			--for k,v in pairs(info) do Spring.Echo(k,v) end
 		end
 		if GG.GetUnitDistanceToPoint(proOwnerID, tx, ty, tz) < 500 then
 			--Spring.Echo("Close range, switch to cluster!")
