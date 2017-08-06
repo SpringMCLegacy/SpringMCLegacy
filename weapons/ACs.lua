@@ -22,12 +22,15 @@ local LBX_Class = Weapon:New{
 	collisionSize			= 100,
 	weaponVelocity          = 2000,
 	size					= 0.8,
-	sprayAngle				= 800,
+	range					= 500,
+	rgbcolor				= "1.0 0.6 0", -- slightly more orange for visual differentiation
+	soundHit              	= "AC2_Hit", -- TODO: Need a distinct sound really
+	sprayAngle				= 400, -- 800
 	stages					= 5, 		--Number of particles used in one plasma shot.
 	intensity				= 0.5,
 	dynDamageExp			= 1.0,
 	customparams = {
-		weaponclass			= "lbx", -- don't want to increase range on LBX
+		weaponclass			= "lbx_cluster", -- needs to differ from base lbx as used to detect firing lbx weapons
     },	
 }
 
@@ -43,7 +46,7 @@ local AC2 = AC_Class:New{
 	impactOnly				= true,
 	weaponVelocity          = 4000,
 	reloadtime              = 0.5,
-	size					= 0.75,
+	size					= 1,
 	damage = {
 		default = 20,--10, --20 DPS
 	},
@@ -86,7 +89,7 @@ local AC5 = AC_Class:New{
 	impactOnly				= true,
 	weaponVelocity          = 2000,
 	reloadtime              = 2,
-	size					= 1,
+	size					= 1.2,
 	damage = {
 		default = 200,--100, --50 DPS
 	},
@@ -141,23 +144,27 @@ local UAC5 = AC5:New{
     },
 }
 
-local LBX5 = AC5:New(LBX_Class):New{
+local LBX5 = AC5:New{
 	name                    = "LBX/5",
 	soundStart            	= "LBX5_Fire",
 	range                   = 1400,
-	sprayAngle				= 700,
 	accuracy                = 100,
 	reloadtime              = 2,
+	
+	customparams = {
+		weaponclass			= "lbx",
+		heatgenerated		= 0.2,--0.1/sec
+    },
+}
+
+local LBX5_Cluster = LBX5:New(LBX_Class):New{
+	sprayAngle				= 700,
 	projectiles				= 5,
 	dynDamageMin			= 100,
 	
 	damage = {
 		default = 30,--20, --50 DPS
 	},
-	
-	customparams = {
-		heatgenerated		= 0.2,--0.1/sec
-    },
 }
 
 -- AC10 & Variants
@@ -171,7 +178,7 @@ local AC10 = AC_Class:New{
 	areaOfEffect            = 25,
 	weaponVelocity          = 2000,
 	reloadtime              = 4,
-	size					= 1.5,
+	size					= 1.8,
 	stages					= 50, 		--Number of particles used in one plasma shot.
 	damage = {
 		default = 800,--400, --100 DPS
@@ -189,24 +196,27 @@ local UAC10 = AC10:New{
 	reloadtime              = 2,
 }
 
-local LBX10 = AC10:New(LBX_Class):New{
+local LBX10 = AC10:New{
 	name                    = "LBX/10",
 	soundStart            	= "LBX10_Fire",
-	impactOnly				= true,
 	range                   = 1200,
-	sprayAngle				= 600,
 	accuracy                = 200,
 	reloadtime              = 4,
+
+	customparams = {
+		weaponclass			= "lbx",
+		heatgenerated		= 1.2,--3/sec
+    },
+}
+
+local LBX10_Cluster = LBX10:New(LBX_Class):New{
+	sprayAngle				= 600,
 	projectiles				= 10,
 	dynDamageMin			= 100,
-
+	
 	damage = {
 		default = 60,--40, --50 DPS
 	},
-	
-	customparams = {
-		heatgenerated		= 1.2,--3/sec
-    },
 }
 
 -- AC20 & Variants
@@ -220,7 +230,7 @@ local AC20 = AC_Class:New{
 	areaOfEffect            = 50,
 	weaponVelocity          = 2000,
 	reloadtime              = 5,
-	size					= 2,
+	size					= 2.4,
 	stages					= 50, 		--Number of particles used in one plasma shot.
 	intensity				= 0.2,
 	damage = {
@@ -240,25 +250,32 @@ local UAC20 = AC20:New{
 	reloadtime              = 2.5,
 }
 
-local LBX20 = AC20:New(LBX_Class):New{
+local LBX20 = AC20:New{
 	name                    = "LBX/20",
 	soundStart            	= "LBX20_Fire",
-	impactOnly				= true,
 	range                   = 800,
-	sprayangle				= 400,
 	accuracy                = 150,
 	reloadtime              = 5,
+	customparams = {
+		weaponclass			= "lbx",
+		heatgenerated		= 3,--6/sec
+    },
+}
+
+local LBX20_Cluster = LBX20:New(LBX_Class):New{
+	sprayAngle				= 400,
 	projectiles				= 20,
 	dynDamageMin			= 100,
+	
 	damage = {
 		default = 150,--100, --600 DPS
 	},
 	customparams = {
-		heatgenerated		= 3,--6/sec
 		shockwave = false,
-    },
+	},
 }
 
+-- Naval AC's for Orbital Strike
 local NAC10 = AC_Class:New{
 	explosionGenerator    	= "custom:HE_LARGE",
 	soundHit             	= "NAC10_Hit",
@@ -305,14 +322,17 @@ return lowerkeys({
 	RAC5 = RAC5,
 	UAC5 = UAC5,
 	LBX5 = LBX5,
+	LBX5_Cluster = LBX5_Cluster,
 	-- AC10 & Variants
 	AC10 = AC10,
 	UAC10 = UAC10,
 	LBX10 = LBX10,
+	LBX10_Cluster = LBX10_Cluster,
 	-- AC20 & Variants
 	AC20 = AC20,
 	UAC20 = UAC20,
 	LBX20 = LBX20,
+	LBX20_Cluster = LBX20_Cluster,
 	--Naval Autocannons
 	NAC10 = NAC10,
 	NAC40 = NAC40,

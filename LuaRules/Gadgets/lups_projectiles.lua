@@ -43,8 +43,43 @@ if (gadgetHandler:IsSyncedCode()) then
 -- SYNCED
 --------------------------------------------------------------------------------
 local projectiles = {}
+local tracking = {}
+local lbx = {}
 
 function gadget:ProjectileCreated(proID, proOwnerID, weaponID)
+	--Spring.Echo("PC", proID, proOwnerID, weaponID)
+	if WeaponDefs[weaponID] and WeaponDefs[weaponID].name == "arrowiv" then
+		for i = 1, 5 do
+			--Spring.Echo("Arrow IV launched!")
+		end
+		--tracking[proID] = true
+	elseif lbx[weaponID] then
+		--Spring.Echo("LBX Fired!")
+		local targetType, info, more = Spring.GetProjectileTarget(proID)
+		local tx,ty,tz
+		if targetType == string.byte('u') then -- unit target, info is ID
+			tx,ty,tz = Spring.GetUnitPosition(info)
+		else -- TODO: assuming ground, but engine gives all 0s for the pos table :(
+			Spring.Echo(targetType, string.byte("g"), info, more)
+			tx,ty,tz = unpack(info)
+			for k,v in pairs(info) do Spring.Echo(k,v) end
+		end
+		if GG.GetUnitDistanceToPoint(proOwnerID, tx, ty, tz) < 500 then
+			--Spring.Echo("Close range, switch to cluster!")
+			-- delete old projectile and fire cluster instead
+			local clusterWD = WeaponDefNames[lbx[weaponID]]
+			local x,y,z = Spring.GetProjectilePosition(proID)
+			local vx, vy, vz = Spring.GetProjectileVelocity(proID)
+			local spray = math.asin(clusterWD.sprayAngle) * 140 -- a rough reproduction of engine spray TODO: cache this or find a nicer calculation
+			for i = 1, clusterWD.projectiles do
+				Spring.SpawnProjectile(clusterWD.id, {
+						pos = {x,y,z},
+						speed = {(vx+math.random(-spray,spray))/2, (vy-math.random(spray))/2, (vz+math.random(-spray,spray))/2}, -- TODO: remove halving?
+					})
+			end
+			Spring.DeleteProjectile(proID)
+		end
+	end
 	if weapons[weaponID] then
 		projectiles[proID] = true
 		SendToUnsynced("lupsProjectiles_AddProjectile", proID, proOwnerID, weaponID)
@@ -52,6 +87,7 @@ function gadget:ProjectileCreated(proID, proOwnerID, weaponID)
 end	
 
 function gadget:ProjectileDestroyed(proID)
+	tracking[proID] = nil
 	if projectiles[proID] then
 		SendToUnsynced("lupsProjectiles_RemoveProjectile", proID)
 		projectiles[proID] = nil
@@ -63,11 +99,33 @@ function gadget:Initialize()
 		Script.SetWatchWeapon(weaponID, true)
 	end
 	for id, wd in pairs(WeaponDefs) do
-		if wd.customParams and wd.customParams.projectilelups then
+		if wd.customParams and (wd.customParams.projectilelups or wd.customParams.weaponclass == "lbx") then
 			Script.SetWatchWeapon(id, true) -- we can't call SWW outside of synced so do it here
+			if wd.customParams.weaponclass == "lbx" then -- don't include the cluster munuitions themselves or we end up with circular bs
+				lbx[id] = wd.name .. "_cluster"
+			end
 		end
 	end
 end
+--[[function gadget:GameFrame()
+	for id in pairs(tracking) do
+		local ydir = select(2,Spring.GetProjectileDirection(id))
+		Spring.Echo(id, "TTL:", Spring.GetProjectileTimeToLive(id), "DIR Y:",ydir)
+		if ydir < 0 then
+			local x,y,z = Spring.GetProjectilePosition(id)
+			local vx, vy, vz = Spring.GetProjectileVelocity(id)
+			Spring.DeleteProjectile(id)
+			for i = 1, 5 do
+				Spring.SpawnProjectile(WeaponDefNames["nac10"].id, {
+					pos = {x, y,z},
+					spread = {math.random(500), math.random(500), math.random(500)},
+					speed = {vx + math.random(50), 0, vz + math.random(50)},
+					gravity = -1,
+				})
+			end
+		end
+	end
+end]]
 
 function gadget:Shutdown()
 	for weaponID in pairs(weapons) do
