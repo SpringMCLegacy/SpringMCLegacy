@@ -47,6 +47,7 @@ for k,v in pairs(maxAmmo) do
 end
 local amsIDs = info.amsIDs
 local hover = info.hover
+local wheeled = unitDef.customParams.wheels
 local vtol = info.vtol
 local aero = info.aero
 local mainTurretIDs = info.mainTurretIDs
@@ -55,6 +56,9 @@ local turretOnTurretSides = info.turretOnTurretSides
 
 local weaponProgenitors = info.weaponProgenitors
 local limbHPs = {}
+local wheelsRemaining = {}
+wheelsRemaining["left"] = info.numWheels / 2
+wheelsRemaining["right"] = info.numWheels / 2
 for limb,limbHP in pairs(info.limbHPs) do -- copy table from defaults
 	limbHPs[limb] = limbHP
 	SetUnitRulesParam(unitID, "limb_hp_" .. limb, 100)
@@ -302,7 +306,7 @@ end
 
 function SmokeLimb(limb, piece)
 	local maxHealth = info.limbHPs[limb] / 100
-	while true do
+	while not limb:find("wheel") do -- only smoke if it is not a wheel
 		local health = limbHPs[limb]/maxHealth
 		if (health <= 66) then -- only smoke if less then 2/3rd limb maxhealth left
 			EmitSfx(piece, SFX.CEG + info.numWeapons + 2)
@@ -312,12 +316,34 @@ function SmokeLimb(limb, piece)
 	end
 end
 
+function FallOver(dir)
+	local dir = (dir == left) and -1 or 1
+	Turn(body, z_axis, dir * math.rad(30))
+end
+
+local function CheckWheels(side)
+	wheelsRemaining[side] = wheelsRemaining[side] - 1
+	if wheelsRemaining[side] == 0 then
+		Spring.MoveCtrl.Enable(unitID)
+		StartThread(FallOver, side)
+	end
+end
+
 function hideLimbPieces(limb, hide)
 	local rootPiece
 	local limbWeapons
 	if limb == "turret" then
 		rootPiece = turret
 		limbWeapons = mainTurretIDs
+	elseif limb:find("wheel") then -- slow?
+		rootPiece = piece(limb)
+		limbWeapons = {}
+		local wheelNum = limb:sub(6,-1)
+		local side = "right"
+		if tonumber(wheelNum) > (info.numWheels/2) then -- left
+			side = "left"
+		end
+		CheckWheels(side)
 	else  -- asumme limb is a wing or rotor
 		rootPiece = piece(limb)-- assume pieces are lwing, rwing, rotory1
 		limbWeapons = {}
@@ -348,6 +374,7 @@ end
 
 function limbHPControl(limb, damage)
 	local currHP = limbHPs[limb]
+	--Spring.Echo(limb, currHP, damage)
 	if currHP > 0 or damage < 0 then
 		local newHP = math.min(limbHPs[limb] - damage, info.limbHPs[limb]) -- don't allow HP above max
 		if newHP < 0 then 
@@ -370,7 +397,10 @@ function script.HitByWeapon(x, z, weaponID, damage)
 	ChangeHeat(heatDamage)
 	local hitPiece = GetUnitLastAttackedPiece(unitID) or ""
 	local module = info.progenitorMap[hitPiece] or "body"
-	if module == "body" then 
+	if wheeled and hitPiece:find("wheel") then
+		limbHPControl(hitPiece, damage)
+		return damage * 0.1 -- apply only 10% damage
+	elseif module == "body" then 
 		return damage
 	else -- turret, wing or rotor
 		limbHPControl(module, damage)

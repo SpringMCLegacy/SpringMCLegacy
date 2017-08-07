@@ -335,6 +335,9 @@ function gadget:UnitCreated(unitID, unitDefID, teamID, builderID)
 		info.mantletIDs = mantletIDs
 		info.barrelIDs = barrelIDs
 		info.numWheels = numWheels
+		for i = 1, numWheels do -- now that we know how many wheels there are we can setup limbHPs
+			info.limbHPs["wheel" .. i] = ud.health * 0.01
+		end
 		info.numRotors = numRotors
 		info.jumpjets = numJets
 	end
@@ -456,6 +459,8 @@ function gadget:GamePreload()
 			info.burstLengths[-1] = 20	
 		elseif cp.baseclass == "vehicle" then
 			info.limbHPs["turret"] = unitDef.health * 1.0
+			info.limbHPs["trackl"] = unitDef.health * 0.1
+			info.limbHPs["trackr"] = unitDef.health * 0.1
 		elseif cp.baseclass == "vtol" then
 			info.limbHPs["rotory1"] = unitDef.health * 0.1 -- 0.01
 			info.limbHPs["rotory2"] = unitDef.health * 0.1 -- 0.01
