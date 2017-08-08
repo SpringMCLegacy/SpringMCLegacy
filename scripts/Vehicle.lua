@@ -316,41 +316,40 @@ function SmokeLimb(limb, piece)
 	end
 end
 
-function FallOver(dir)
-	local dir = (dir == left) and -1 or 1
-	Turn(body, z_axis, dir * math.rad(30))
+function FallOver(dir, angle)
+	Spring.MoveCtrl.Enable(unitID)
+	local dir = (dir == "l") and -1 or 1
+	Turn(body, z_axis, dir * math.rad(angle))
 end
 
 local function CheckWheels(side)
 	wheelsRemaining[side] = wheelsRemaining[side] - 1
 	if wheelsRemaining[side] == 0 then
-		Spring.MoveCtrl.Enable(unitID)
-		StartThread(FallOver, side)
+		StartThread(FallOver, side, 30)
 	end
 end
 
 function hideLimbPieces(limb, hide)
-	local rootPiece
 	local limbWeapons
 	if limb == "turret" then
-		rootPiece = turret
 		limbWeapons = mainTurretIDs
 	elseif limb:find("wheel") then -- slow?
-		rootPiece = piece(limb)
-		limbWeapons = {}
 		local wheelNum = limb:sub(6,-1)
-		local side = "right"
+		local side = "r"
 		if tonumber(wheelNum) > (info.numWheels/2) then -- left
-			side = "left"
+			side = "l"
 		end
 		CheckWheels(side)
-	else  -- asumme limb is a wing or rotor
-		rootPiece = piece(limb)-- assume pieces are lwing, rwing, rotory1
-		limbWeapons = {}
+	elseif limb:find("track") then
+		local side = limb:sub(6,-1)
+		StartThread(FallOver, side, 10)
+	else  -- asume limb is a wing or rotor
 		if hide then
 			SetUnitValue(COB.CRASHING, 1)
 		end
 	end
+	local rootPiece = piece(limb)
+	if not limbWeapons then	limbWeapons = EMPTY end
 	RecursiveHide(rootPiece, hide)
 	if hide then
 		EmitSfx(rootPiece, SFX.CEG + info.numWeapons + 1)
@@ -397,16 +396,18 @@ function script.HitByWeapon(x, z, weaponID, damage)
 	ChangeHeat(heatDamage)
 	local hitPiece = GetUnitLastAttackedPiece(unitID) or ""
 	local module = info.progenitorMap[hitPiece] or "body"
-	if wheeled and hitPiece:find("wheel") then
-		limbHPControl(hitPiece, damage)
-		return damage * 0.1 -- apply only 10% damage
-	elseif module == "body" then 
+	local mult = 1
+	if module == "body" then 
 		return damage
+	elseif wheeled and hitPiece:find("wheel") then
+		mult = 0.1 -- apply only 10% damage
+	elseif hitPiece:find("track") then
+		mult = 0.1 -- apply only 10% damage
 	else -- turret, wing or rotor
-		limbHPControl(module, damage)
-		return damage * 0.5 -- still apply 50% of the damage to main unit too
+		mult = 0.5 -- still apply 50% of the damage to main unit too
 	end
-	return 0
+	limbHPControl(module, damage)
+	return damage * mult
 end
 
 local cargo = {}
@@ -474,7 +475,7 @@ end
 
 function script.Create()
 	if hover then
-		local fxStages = { {1, "hovercraft", {}}, }
+		local fxStages = { {1, "hovercraft", EMPTY}, }
 		GG.EmitLupsSfxArray(unitID, fxStages)
 		StartThread(Wobble)
 	end

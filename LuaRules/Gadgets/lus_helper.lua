@@ -100,6 +100,7 @@ end
 GG.EmitSfxName = EmitSfxName
 
 local function RecursiveHide(unitID, pieceNum, hide)
+	if not pieceNum then return end
 	-- Hide this piece
 	local func = (hide and Spring.UnitScript.Hide) or Spring.UnitScript.Show
 	CallAsUnit(unitID, func, pieceNum)
@@ -168,9 +169,12 @@ local function IsPieceAncestor(unitID, pieceName, ancestor, strict)
 	end
 end
 
-local function FindPieceProgenitor(unitID, pieceName)
+local function FindPieceProgenitor(unitID, pieceName, extra)
 	-- order matters here, we want to return turret even if that turret is then attached to body
-	local progenitors = {"lwing", "rwing", "rotory", "turret", "emitter", "body"}
+	local progenitors = {"lwing", "rwing", "rotory", "turret", "emitter", "trackr", "trackl", "body"}
+	if extra then
+		table.insert(progenitors, 1, extra) -- put any extra pieces at the start (highest priority)
+	end
 	for _, progenitor in ipairs(progenitors) do
 		if pieceName:find(progenitor) then return pieceName end -- return the piece
 		local found, parent = IsPieceAncestor(unitID, pieceName, progenitor, false)
@@ -184,7 +188,7 @@ function gadget:UnitCreated(unitID, unitDefID, teamID, builderID)
 	local ud = UnitDefs[unitDefID]
 	local cp = ud.customParams
 	info.builderID = builderID
-	if info.firstTime == nil and ud.weapons[1] or cp.dropship then -- TODO: stuid hack for Avenger (currently no weapons)
+	if info.firstTime == nil and ud.weapons[1] or cp.dropship then -- TODO: stupid hack for Avenger (currently no weapons)
 		info.firstTime = true -- only do this step once
 		-- Parse Model Data
 		local pieceMap = GetUnitPieceMap(unitID)
@@ -228,7 +232,7 @@ function gadget:UnitCreated(unitID, unitDefID, teamID, builderID)
 			local weapNumPos = pieceName:find("_") or 0
 			local weapNumEndPos = pieceName:find("_", weapNumPos+1) or 0
 			local weaponNum = tonumber(pieceName:sub(weapNumPos+1,weapNumEndPos-1))
-			progenitorMap[pieceName] = FindPieceProgenitor(unitID, pieceName)
+			progenitorMap[pieceName] = FindPieceProgenitor(unitID, pieceName, cp.wheels and "wheel")
 			if weaponNum and not weaponProgenitors[weaponNum] then
 				weaponProgenitors[weaponNum] = progenitorMap[pieceName]
 				--Spring.Echo(UnitDefs[unitDefID].name, "weapon num:", weaponNum, "progenitor:", weaponProgenitors[weaponNum])

@@ -36,6 +36,8 @@ local x_axis = 1
 local y_axis = 2
 local z_axis = 3
 
+local EMPTY = {}
+
 local function PlaySound(sound, volume, channel)
 	GG.PlaySoundAtUnit(unitID, sound, volume, channel)
 end
