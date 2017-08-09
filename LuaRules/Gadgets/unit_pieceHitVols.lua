@@ -83,7 +83,7 @@ function gadget:UnitCreated(unitID, unitDefID, teamID, builderID)
 					elseif pieceName:find("rotory") then -- replace with y-cylinder
 						SetPieceColVol(unitID, i - adjust, true, 
 										scaleMult*70, scaleMult*1, scaleMult*70,  -- use a constant radius
-										0, offsetY, 0, 1, 1)				
+										0, 0, 0, 1, 1)				
 					end
 				end
 			end
