@@ -36,6 +36,8 @@ local unitSquads = {} -- unitSquads[unitID] = squadNum
 local teamSquadCounts = {} -- teamSquadCounts[teamID] = numberOfSquads
 local teamSquadSpots = {} -- teamSquadSpots[teamID][squadNum] = spotNum
 local teamSquads = {}
+
+local classes = {"vtol", "apc", "arty", "regular"}
 local weights = {"light", "medium", "heavy", "assault",} -- TODO: this is repeated elsewhere
 
 function gadget:Initialize()
@@ -75,41 +77,56 @@ local delays = {
 -- and they are all 0.2 to 1sf anyway.
 
 local chances = {
-	[1] = { -- default light/med
-		arty = 0.1,
-		vtol = 0.1,
-		apc = 0.1,
+	[1] = { -- Tier 1: light/med
 		-- following sum to 1
-		light = 0.5,
-		medium = 0.5,
-		heavy = 0,
-		assault = 0,
+		class = {
+			arty = 0.1,
+			vtol = 0.1,
+			apc = 0.1,
+			regular = 0.7,
+		},
+		weights = {
+			light = 0.5,
+			medium = 0.5,
+			heavy = 0,
+			assault = 0,
+		},
 	},
-	[2] = { -- heavy/superheavy
-		arty = 0.1,
-		vtol = 0.15,
-		apc = 0.15,
+	[2] = { -- Tier 2: heavy
 		-- following sum to 1
-		light = 0.0,
-		medium = 0.0,
-		heavy = 0.5,
-		assault = 0.5,
+		class = {
+			arty = 0.1,
+			vtol = 0.15,
+			apc = 0.15,
+			regular = 0.6
+		},
+		weights = {
+			light = 0.0,
+			medium = 0.5,
+			heavy = 0.5,
+			assault = 0.0,
+		},
 	},
-	[3] = { -- house
-		arty = 0.1,
-		vtol = 0.2,
-		apc = 0.2,
+	[3] = { -- Tier 3: assault
 		-- following sum to 1
-		light = 0.0,
-		medium = 0.0,
-		heavy = 0.5,
-		assault = 0.5,
+		class = {
+			arty = 0.1,
+			vtol = 0.2,
+			apc = 0.2,
+			regular = 0.5
+		},
+		weights = {
+			light = 0.0,
+			medium = 0.0,
+			heavy = 0.5,
+			assault = 0.5,
+		},
 	},
 }
 
 local function VPadUpgrade(unitID, level)
-	-- level 1 -> Add Heavy & Assault units
-	-- level 2 -> Replace units with House improvements
+	-- level 1 -> Add Heavy units
+	-- level 2 -> Add Assault units
 	vehiclePadLevels[unitID] = level
 	--Spring.Echo("Upgrade vehiclepad (" .. unitID .. ") to level " .. level)
 	env = Spring.UnitScript.GetScriptEnv(unitID)
@@ -121,57 +138,55 @@ local function RandomElement(input)
 	return input[math.random(1, #input)]
 end
 
-local function RandomVehicle(unitID, weight, level)
+local function RandomVehicle(unitID, level, class, weight, weightIndex)
 	if not unitID then return false end 
 	if Spring.GetUnitTeam(unitID) == GAIA_TEAM_ID then return false end -- team died
-	local class = weight
-	if (math.random() <= chances[level].apc) then
-		--Spring.Echo("OMG you rolled APC!")
-		class = "apc"
-	elseif (math.random() <= chances[level].vtol) then
-		--Spring.Echo("OMG you rolled vtol!", weight)
-		if #sideSpawnLists[vehiclePadSides[unitID]][vehiclePadLevels[unitID]]["vtol"][weight] > 0 then
-			return RandomElement(sideSpawnLists[vehiclePadSides[unitID]][vehiclePadLevels[unitID]]["vtol"][weight])
-		end
-	elseif (math.random() <= chances[level].arty) then
-		--Spring.Echo("OMG you rolled arty!", weight)
-		if #sideSpawnLists[vehiclePadSides[unitID]][vehiclePadLevels[unitID]]["arty"][weight] > 0 then
-			return RandomElement(sideSpawnLists[vehiclePadSides[unitID]][vehiclePadLevels[unitID]]["arty"][weight])
-		end
+	
+	local originalWeight = weight
+	-- sideSpawnLists[side][level][class][weight]
+	--Spring.Echo("Random Vehicle DESIRED", level, class, weight)
+	while weightIndex > 0 and #sideSpawnLists[vehiclePadSides[unitID]][vehiclePadLevels[unitID]][class][weight] == 0 do
+		weightIndex = weightIndex - 1
+		weight = weights[weightIndex]
 	end
-	if #sideSpawnLists[vehiclePadSides[unitID]][vehiclePadLevels[unitID]][class] > 0 then
-		return RandomElement(sideSpawnLists[vehiclePadSides[unitID]][vehiclePadLevels[unitID]][class])
-	else
-		--Spring.Echo("OMG this faction has none of those!", weight)
-		return RandomElement(sideSpawnLists[vehiclePadSides[unitID]][vehiclePadLevels[unitID]]["light"])
-		--return false -- This faction does not have a vehicle in that weight category
+	if weightIndex > 0 then -- we found a valid vehicle of this class in _some_ weight
+		--Spring.Echo("Random Vehicle ACTUAL", level, class, weight)
+		return RandomElement(sideSpawnLists[vehiclePadSides[unitID]][vehiclePadLevels[unitID]][class][weight])
+	else -- can't find any vehicles of this class, try for a regular of the chosen weight
+		if #sideSpawnLists[vehiclePadSides[unitID]][vehiclePadLevels[unitID]]["regular"][originalWeight] > 0 then
+			--Spring.Echo("Random Vehicle ACTUAL", level, "regular (forced)", originalWeight)
+			return RandomElement(sideSpawnLists[vehiclePadSides[unitID]][vehiclePadLevels[unitID]]["regular"][originalWeight])
+		else -- no regular at this weight, give up and just send a light regular
+			--Spring.Echo("Random Vehicle ACTUAL", level, "regular (forced)", "light (forced)")
+			return RandomElement(sideSpawnLists[vehiclePadSides[unitID]][vehiclePadLevels[unitID]]["regular"]["light"])
+		end
 	end
 end
 
-
-local function ChooseWeight(level)
-	local topLevel = level == 1 and 2 or 4
-	--Spring.Echo("Best Available: ", weights[topLevel])
+local function ChooseElement(level, elementType, elementList)
 	local chance = math.random()
 	local cumulativeChance = 0
 	
-	for i = #weights, 1, -1 do
-		cumulativeChance = cumulativeChance + chances[level][weights[i]]
+	for i, element in ipairs(elementList) do
+		cumulativeChance = cumulativeChance + chances[level][elementType][element]
 		if chance < cumulativeChance then
-			return weights[i]
+			return element, i
 		end
 	end
 end
+	
+
 
 local function Deliver(unitID, teamID)
 	-- check VP didn't die or switch teams during delay
 	if Spring.ValidUnitID(unitID) and (not Spring.GetUnitIsDead(unitID)) and (teamID == Spring.GetUnitTeam(unitID)) then
 		local age = Spring.GetGameFrame() - vehiclePads[unitID]
 		local currLevel = vehiclePadLevels[unitID]
-		local weight = ChooseWeight(currLevel)
-		local vehName = RandomVehicle(unitID, weight, currLevel)
+		local class = ChooseElement(currLevel, "class", classes)
+		local weight, weightIndex = ChooseElement(currLevel, "weights", weights)
+		local vehName = RandomVehicle(unitID, currLevel, class, weight, weightIndex)
 		if vehName then
-			--Spring.Echo("New Vehicle:", vehName, vehiclesDefCache[UnitDefNames[vehName].id], weight)
+			--Spring.Echo("New Vehicle:", vehName, vehiclesDefCache[UnitDefNames[vehName].id], class, weight)
 			GG.DropshipDelivery(Spring.GetUnitRulesParam(unitID, "beaconID"), unitID, teamID, levelDropships[currLevel], {{[vehName] = vehiclesDefCache[UnitDefNames[vehName].id]}}, 0, nil, 1) 
 		else
 			--Spring.Echo("No vehicle of that weight :(")

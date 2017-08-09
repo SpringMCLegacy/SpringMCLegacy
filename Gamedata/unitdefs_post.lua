@@ -112,11 +112,18 @@ local partsList	= {	mech	= {	"torso", "arm_left", "arm_right", "leg_left", "leg_
 					vtol	= {	"body", "rotor"},}
 
 local spawnTable = {
-	light = {},
-	medium = {},
-	heavy = {},
-	assault = {},
-	apc = {},
+	regular = {
+		light = {},
+		medium = {},
+		heavy = {},
+		assault = {},
+	},
+	apc = {
+		light = {},
+		medium = {},
+		heavy = {},
+		assault = {},
+	},
 	arty = {
 		light = {},
 		medium = {},
@@ -139,14 +146,19 @@ local VPAD_UD
 local VPAD_SPAWNOPTIONS = {} -- V_S = {shortSideName = {unitname1, ...}}
 local VPAD_HOUSE_REMOVE = {} -- V_R = {shortSideName = {oldUnitName = newUnitName}}
 
+local HPAD_UD
+local HPAD_SPAWNOPTIONS = {} -- H_S = {shortSideName = {unitname1, ...}}
+local HPAD_HOUSE_REMOVE = {} -- H_R = {shortSideName = {oldUnitName = newUnitName}}
+
 for i, sideName in pairs(SIDES) do
 	DROPZONE_BUILDOPTIONS[sideName] = {}
 	VPAD_HOUSE_REMOVE[sideName] = {}
+
 	table.copy(spawnTable, VPAD_HOUSE_REMOVE[sideName])
 	VPAD_SPAWNOPTIONS[sideName] = {
-		{}, -- default lvl 1
+		{}, -- light & medium lvl 1
 		{}, -- heavy upgrade lvl 2
-		{}, -- House upgrade lvl 3
+		{}, -- assault upgrade lvl 3
 	}
 	for i = 1, 3 do 
 		table.copy(spawnTable, VPAD_SPAWNOPTIONS[sideName][i])
@@ -329,27 +341,13 @@ for name, ud in pairs(UnitDefs) do
 			table.insert(DROPZONE_BUILDOPTIONS[side], name)
 		else -- a vehicle
 			ud.icontype = "vehicle" .. cp.weightclass
-			local startTier = (cp.weightclass == "light" or cp.weightclass == "medium") and 1 or 2
-			local class = (ud.transportcapacity and "apc") or (cp.artillery and "arty") or (cp.baseclass == "vtol" and "vtol") or cp.weightclass
+			local startTier = ((cp.weightclass == "light" or cp.weightclass == "medium") and 1) or (cp.weightclass == "heavy" and 2) or 3
+			local class = (ud.transportcapacity and "apc") or (cp.artillery and "arty") or (cp.baseclass == "vtol" and "vtol") or "regular"
 			if cp.replaces then
-				if class == "arty" then
-					VPAD_HOUSE_REMOVE[side][class][cp.weightclass][cp.replaces] = true
-					table.insert(VPAD_SPAWNOPTIONS[side][3][class][cp.weightclass], name)
-				elseif class == "vtol" then
-					VPAD_HOUSE_REMOVE[side][class][cp.weightclass][cp.replaces] = true
-					table.insert(VPAD_SPAWNOPTIONS[side][3][class][cp.weightclass], name)
-				else
-					VPAD_HOUSE_REMOVE[side][class][cp.replaces] = true
-					table.insert(VPAD_SPAWNOPTIONS[side][3][class], name)
-				end
-			elseif class == "arty" or class =="vtol" then
-				for i = startTier, 3 do
-					table.insert(VPAD_SPAWNOPTIONS[side][i][class][cp.weightclass], name)
-				end
-			else
-				for i = startTier, 3 do
-					table.insert(VPAD_SPAWNOPTIONS[side][i][class], name)
-				end
+				VPAD_HOUSE_REMOVE[side][class][cp.weightclass][cp.replaces] = true
+			end
+			for i = startTier, 3 do
+				table.insert(VPAD_SPAWNOPTIONS[side][i][class][cp.weightclass], name)
 			end
 			ud.maxdamage = ud.maxdamage * 0.5
 		end
@@ -391,26 +389,17 @@ for side, dropZoneOptions in pairs(DROPZONE_BUILDOPTIONS) do
 	DROPZONE_UDS[side]["buildoptions"] = dropZoneOptions
 end
 
--- remove replaced versions in tier 3
+-- remove replaced versions in all tiers
 -- VPAD_HOUSE_REMOVE[side][cp.weightclass][cp.replaces] = true
 -- VPAD_HOUSE_REMOVE sideName = {light = {unitName = true, unitName2 = true , ... }, medium = {...}, ...}
+
 for side, sideTable in pairs(VPAD_HOUSE_REMOVE) do
-	for weightClass, weightTable in pairs(sideTable) do
-		if weightClass == "arty" then
-			for artyWeight, artyWeightTable in pairs(weightTable) do
-				for removed in pairs(artyWeightTable) do
-					table.removeElement(VPAD_SPAWNOPTIONS[side][3][weightClass][artyWeight], removed)
+	for tier = 1, 3 do
+		for class, weightTable in pairs(sideTable) do
+			for weightClass, weightTable in pairs(weightTable) do
+				for removed in pairs(weightTable) do
+					table.removeElement(VPAD_SPAWNOPTIONS[side][tier][class][weightClass], removed)
 				end			
-			end
-		elseif weightClass == "vtol" then
-			for vtolWeight, vtolWeightTable in pairs(weightTable) do
-				for removed in pairs(vtolWeightTable) do
-					table.removeElement(VPAD_SPAWNOPTIONS[side][3][weightClass][vtolWeight], removed)
-				end			
-			end
-		else
-			for removed in pairs(weightTable) do
-				table.removeElement(VPAD_SPAWNOPTIONS[side][3][weightClass], removed)
 			end
 		end
 	end

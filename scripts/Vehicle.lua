@@ -330,7 +330,7 @@ local function CheckWheels(side)
 end
 
 function hideLimbPieces(limb, hide)
-	local limbWeapons
+	local limbWeapons = EMPTY -- can safely use EMPTY here as will be replaced, not modified
 	if limb == "turret" then
 		limbWeapons = mainTurretIDs
 	elseif limb:find("wheel") then -- slow?
@@ -343,13 +343,12 @@ function hideLimbPieces(limb, hide)
 	elseif limb:find("track") then
 		local side = limb:sub(6,-1)
 		StartThread(FallOver, side, 10)
-	else  -- asume limb is a wing or rotor
+	else  -- assume limb is a wing or rotor
 		if hide then
 			SetUnitValue(COB.CRASHING, 1)
 		end
 	end
 	local rootPiece = piece(limb)
-	if not limbWeapons then	limbWeapons = EMPTY end
 	RecursiveHide(rootPiece, hide)
 	if hide then
 		EmitSfx(rootPiece, SFX.CEG + info.numWeapons + 1)
