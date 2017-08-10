@@ -57,8 +57,8 @@ local turretOnTurretSides = info.turretOnTurretSides
 local weaponProgenitors = info.weaponProgenitors
 local limbHPs = {}
 local wheelsRemaining = {}
-wheelsRemaining["left"] = info.numWheels / 2
-wheelsRemaining["right"] = info.numWheels / 2
+wheelsRemaining["l"] = info.numWheels / 2
+wheelsRemaining["r"] = info.numWheels / 2
 for limb,limbHP in pairs(info.limbHPs) do -- copy table from defaults
 	limbHPs[limb] = limbHP
 	SetUnitRulesParam(unitID, "limb_hp_" .. limb, 100)
@@ -333,6 +333,7 @@ function hideLimbPieces(limb, hide)
 	local limbWeapons = EMPTY -- can safely use EMPTY here as will be replaced, not modified
 	if limb == "turret" then
 		limbWeapons = mainTurretIDs
+		Spring.SetUnitMidAndAimPos(unitID, 0, 0, 0, 0, -1, 0, true)
 	elseif limb:find("wheel") then -- slow?
 		local wheelNum = limb:sub(6,-1)
 		local side = "r"
@@ -372,7 +373,7 @@ end
 
 function limbHPControl(limb, damage)
 	local currHP = limbHPs[limb]
-	--Spring.Echo(limb, currHP, damage)
+	Spring.Echo(limb, currHP, damage)
 	if currHP > 0 or damage < 0 then
 		local newHP = math.min(limbHPs[limb] - damage, info.limbHPs[limb]) -- don't allow HP above max
 		if newHP < 0 then 
