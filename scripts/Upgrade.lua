@@ -93,7 +93,7 @@ local function Blinks()
 end
 
 function Upgrade(level)
-	if name == "upgrade_vehiclepad" then
+	if name == "upgrade_vehiclepad" or name == "upgrade_hoverpad" then
 		if level == 2 then
 			Show(base2)
 			Hide(base)
@@ -427,7 +427,7 @@ function Unpack()
 		end
 		Turn(antennabase, y_axis, rad(RANDOM_ROT), CRATE_SPEED)
 		WaitForTurn(antennabase, y_axis)
-	elseif name == "upgrade_vehiclepad" then
+	elseif name == "upgrade_vehiclepad" or name == "upgrade_hoverpad" then
 		for i = 1, 6 do
 			Turn(ramps[i], x_axis, rad(-115), CRATE_SPEED)
 		end

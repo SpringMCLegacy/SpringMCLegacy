@@ -17,4 +17,12 @@ local Upgrade_VehiclePad = Upgrade:New{
 	}
 }
 
-return lowerkeys({ ["Upgrade_VehiclePad"] = Upgrade_VehiclePad })
+local Upgrade_HoverPad = Upgrade_VehiclePad:New{
+	name				= "Hover Pad",
+	objectName			= "upgrade/upgrade_vehiclepad.s3o",
+}
+
+return lowerkeys({ 
+	["Upgrade_VehiclePad"] = Upgrade_VehiclePad,
+	["Upgrade_HoverPad"] = Upgrade_HoverPad,
+})

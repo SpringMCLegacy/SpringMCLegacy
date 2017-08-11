@@ -373,7 +373,7 @@ end
 
 function limbHPControl(limb, damage)
 	local currHP = limbHPs[limb]
-	Spring.Echo(limb, currHP, damage)
+	--Spring.Echo(limb, currHP, damage)
 	if currHP > 0 or damage < 0 then
 		local newHP = math.min(limbHPs[limb] - damage, info.limbHPs[limb]) -- don't allow HP above max
 		if newHP < 0 then 

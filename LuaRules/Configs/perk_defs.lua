@@ -349,7 +349,7 @@ return {
 		},
 		valid = function (unitDefID) return UnitDefs[unitDefID].name:find("vehiclepad") end,
 		applyPerk = function (unitID)
-			GG.VPadUpgrade(unitID, 2)
+			GG.PadUpgrade(unitID, 2)
 		end,
 		costFunction = deductCBills,
 		price = 10000,
@@ -365,11 +365,45 @@ return {
 		},
 		valid = function (unitDefID) return UnitDefs[unitDefID].name:find("vehiclepad") end,
 		applyPerk = function (unitID)
-			GG.VPadUpgrade(unitID, 3)
+			GG.PadUpgrade(unitID, 3)
 		end,
 		costFunction = deductCBills,
 		price = 10000,
 		requires = "vpadheavy",
+	},
+	-- hover pad
+	{
+		name = "hpad2",
+		cmdDesc = {
+			id = GetCmdID('PERK_HPAD_2'),
+			action = 'perkhpad2',
+			name = Pad("Medium", "Units"),
+			tooltip = 'Adds medium units to the militia, increases chance of APC units',
+			texture = 'bitmaps/ui/upgrade.png',	
+		},
+		valid = function (unitDefID) return UnitDefs[unitDefID].name:find("hoverpad") end,
+		applyPerk = function (unitID)
+			GG.PadUpgrade(unitID, 2)
+		end,
+		costFunction = deductCBills,
+		price = 10000,
+	},
+	{
+		name = "hpad3",
+		cmdDesc = {
+			id = GetCmdID('PERK_HPAD_3'),
+			action = 'perkhpad3',
+			name = Pad("VTOL", "Units"),
+			tooltip = 'Adds VTOL units to the militia, increases chance of medium units',
+			texture = 'bitmaps/ui/upgrade.png',	
+		},
+		valid = function (unitDefID) return UnitDefs[unitDefID].name:find("hoverpad") end,
+		applyPerk = function (unitID)
+			GG.PadUpgrade(unitID, 3)
+		end,
+		costFunction = deductCBills,
+		price = 10000,
+		requires = "hpad2",
 	},
 	-- Garrison 
 	{

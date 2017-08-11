@@ -138,7 +138,7 @@ local spawnTable = {
 	},
 }
 					
--- DROPZONES & Vpads
+-- DROPZONES & spawn pads
 local DROPZONE_UDS = {} --DZ_IDS = {shortSideName = unitDef}
 local DROPZONE_BUILDOPTIONS = {} -- D_B = {shortSideName = {unitname1, ...}}
 
@@ -153,15 +153,23 @@ local HPAD_HOUSE_REMOVE = {} -- H_R = {shortSideName = {oldUnitName = newUnitNam
 for i, sideName in pairs(SIDES) do
 	DROPZONE_BUILDOPTIONS[sideName] = {}
 	VPAD_HOUSE_REMOVE[sideName] = {}
+	HPAD_HOUSE_REMOVE[sideName] = {}
 
 	table.copy(spawnTable, VPAD_HOUSE_REMOVE[sideName])
+	table.copy(spawnTable, HPAD_HOUSE_REMOVE[sideName])
 	VPAD_SPAWNOPTIONS[sideName] = {
 		{}, -- light & medium lvl 1
 		{}, -- heavy upgrade lvl 2
 		{}, -- assault upgrade lvl 3
 	}
+	HPAD_SPAWNOPTIONS[sideName] = {
+		{}, -- light hover lvl 1
+		{}, -- medium hover lvl 2
+		{}, -- vtols lvl 3
+	}
 	for i = 1, 3 do 
 		table.copy(spawnTable, VPAD_SPAWNOPTIONS[sideName][i])
+		table.copy(spawnTable, HPAD_SPAWNOPTIONS[sideName][i])
 	end
 end
 
@@ -342,12 +350,22 @@ for name, ud in pairs(UnitDefs) do
 		else -- a vehicle
 			ud.icontype = "vehicle" .. cp.weightclass
 			local startTier = ((cp.weightclass == "light" or cp.weightclass == "medium") and 1) or (cp.weightclass == "heavy" and 2) or 3
-			local class = (ud.transportcapacity and "apc") or (cp.artillery and "arty") or (cp.baseclass == "vtol" and "vtol") or "regular"
+			local hover = ud.movementclass == "HOVER" -- TODO: make hover a baseclass? (used in armordefs.lua, unitcard widget, game_radar, lus_helper, unitPieceHitVols, unit_vehiclePad, ...)
+			local vtol = cp.baseclass == "vtol"
+			local class = (ud.transportcapacity and "apc") or (cp.artillery and "arty") or (vtol and "vtol") or "regular"
 			if cp.replaces then
-				VPAD_HOUSE_REMOVE[side][class][cp.weightclass][cp.replaces] = true
+				if hover or vtol then
+					HPAD_HOUSE_REMOVE[side][class][cp.weightclass][cp.replaces] = true
+				else
+					VPAD_HOUSE_REMOVE[side][class][cp.weightclass][cp.replaces] = true
+				end
 			end
 			for i = startTier, 3 do
-				table.insert(VPAD_SPAWNOPTIONS[side][i][class][cp.weightclass], name)
+				if hover or vtol then
+					table.insert(HPAD_SPAWNOPTIONS[side][i][class][cp.weightclass], name)
+				else
+					table.insert(VPAD_SPAWNOPTIONS[side][i][class][cp.weightclass], name)
+				end
 			end
 			ud.maxdamage = ud.maxdamage * 0.5
 		end
@@ -371,6 +389,8 @@ for name, ud in pairs(UnitDefs) do
 			ud.levelground = false
 		elseif name:find("vehiclepad") then
 			VPAD_UD = ud
+		elseif name:find("hoverpad") then
+			HPAD_UD = ud
 		end
 		ud.canmove = false
 		ud.canrepair = false
@@ -393,6 +413,7 @@ end
 -- VPAD_HOUSE_REMOVE[side][cp.weightclass][cp.replaces] = true
 -- VPAD_HOUSE_REMOVE sideName = {light = {unitName = true, unitName2 = true , ... }, medium = {...}, ...}
 
+-- TODO: function?
 for side, sideTable in pairs(VPAD_HOUSE_REMOVE) do
 	for tier = 1, 3 do
 		for class, weightTable in pairs(sideTable) do
@@ -404,11 +425,24 @@ for side, sideTable in pairs(VPAD_HOUSE_REMOVE) do
 		end
 	end
 end
+for side, sideTable in pairs(HPAD_HOUSE_REMOVE) do
+	for tier = 1, 3 do
+		for class, weightTable in pairs(sideTable) do
+			for weightClass, weightTable in pairs(weightTable) do
+				for removed in pairs(weightTable) do
+					table.removeElement(HPAD_SPAWNOPTIONS[side][tier][class][weightClass], removed)
+				end			
+			end
+		end
+	end
+end
 
 table.sort(TCONTROL_BUILDOPTIONS)
 TCONTROL_UD["buildoptions"] = TCONTROL_BUILDOPTIONS
 VPAD_UD.customparams.spawn = VPAD_SPAWNOPTIONS
+HPAD_UD.customparams.spawn = HPAD_SPAWNOPTIONS
 --table.echo(VPAD_UD.customparams.spawn)
+--table.echo(HPAD_UD.customparams.spawn)
 
 for name, ud in pairs(UnitDefs) do
 	local cp = ud.customparams

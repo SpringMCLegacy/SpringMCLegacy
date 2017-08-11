@@ -29,5 +29,5 @@ local Centipede = Hover:New{
 }
 
 return lowerkeys({
-	--["LA_Centipede"] = Centipede:New(),
+	["LA_Centipede"] = Centipede:New(),
 })
