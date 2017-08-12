@@ -32,8 +32,8 @@ local LIMB_SCALE = 1.1
 local BODY_SCALE = 1.0
 local HULL_SCALE = 0.8
 local TURRET_SCALE = 1.1
-local TRACK_SCALE = 1.1
-local WHEEL_SCALE = 1.3
+local TRACK_SCALE = 1.0
+local WHEEL_SCALE = 1.1
 
 local adjust = 0
 if not Script.IsEngineMinVersion(101, 0) then
@@ -62,7 +62,7 @@ function gadget:UnitCreated(unitID, unitDefID, teamID, builderID)
 				--Spring.Echo(i, pieceName)
 				if cp.wheels and pieceName:find("wheel") then
 					scaleMult = (cp.wheelscale or WHEEL_SCALE)
-					SetUnitPieceColVol(unitID, i, scaleMult * 1.5, scaleMult, scaleMult, 1, 0)
+					SetUnitPieceColVol(unitID, i, scaleMult, scaleMult, scaleMult, 1, 0)
 				elseif not accept[unitType][pieceName] and i ~= "n" then
 					--Spring.Echo("piece " .. i .. " called " .. pieceName .. " to be disabled")
 					SetPieceColVol (unitID, i - adjust, false, 0,0,0, 0,0,0, -1, 0)
@@ -79,7 +79,7 @@ function gadget:UnitCreated(unitID, unitDefID, teamID, builderID)
 					-- special cases
 					if pieceName == "trackr" or pieceName == "trackl" then
 						scaleMult = (cp.trackscale or TRACK_SCALE)
-						SetUnitPieceColVol(unitID, i, scaleMult * 2, scaleMult, scaleMult) -- double width
+						SetUnitPieceColVol(unitID, i, scaleMult * 1.2, scaleMult, scaleMult) -- extra width
 					elseif pieceName:find("rotory") then -- replace with y-cylinder
 						SetPieceColVol(unitID, i - adjust, true, 
 										scaleMult*70, scaleMult*1, scaleMult*70,  -- use a constant radius
