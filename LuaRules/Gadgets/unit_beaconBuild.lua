@@ -190,10 +190,12 @@ function SpawnDropship(beaconID, unitID, teamID, dropshipType, cargo, cost)
 	else -- dropzone moved or beacon was capped
 		-- Refund
 		Spring.AddTeamResource(teamID, "metal", cost)
+		-- Delete the entire drop queue
+		beaconDropshipQueue[beaconID] = {}
 	end
 end
 
-local beaconActive = {} -- beaconActive[beaconID] = true
+local beaconActive = {} -- beaconActive[beaconID] = dropshipID
 local beaconDropshipQueue = {} -- beaconDropshipQueue[beaconID] = {info1 = {}, info2 = {}, ...}
 
 function NextDropshipQueueItem(beaconID, teamID)
@@ -203,8 +205,8 @@ function NextDropshipQueueItem(beaconID, teamID)
 			GG.PlaySoundForTeam(teamID, item.sound, 1)
 		end
 		local dropshipID = SpawnDropship(beaconID, item.target, teamID, item.dropshipType, item.cargo, item.cost)
-		if dropshipID then -- can fail if beacon was lost or dropzone moved
-			beaconActive[beaconID] = true
+		if dropshipID then -- can fail if beacon was lost or dropzone moved TODO: so reset queue here?
+			beaconActive[beaconID] = dropshipID
 			activeDropships[dropshipID] = beaconID
 		end
 	end
@@ -212,9 +214,9 @@ end
 
 function EnqueueDropship(beaconID, beaconPointID, teamID, info, priority)
 	if not beaconDropshipQueue[beaconID] then beaconDropshipQueue[beaconID] = {} end -- TODO: move to unitcreated?
-	if priority then
+	if priority then -- go to the top of the list, or just after currently active drop
 		table.insert(beaconDropshipQueue[beaconID], beaconActive[beaconID] and 2 or 1, info)
-	else
+	else -- add to the end of the list
 		table.insert(beaconDropshipQueue[beaconID], info)
 	end
 	--Spring.Echo("Adding dropship ", info.dropshipType, " to beacon ", beaconID, beaconPointID, "(queue length " , (#beaconDropshipQueue[beaconID]), ")")
@@ -235,6 +237,34 @@ function DropzoneFree(beaconID, teamID)
 	end
 end
 GG.DropzoneFree = DropzoneFree
+
+function DropshipBugOut(beaconID, teamID, upgradeID)
+	if beaconID then
+		local dropshipID = beaconActive[beaconID]
+		local bugOut = false
+		if dropshipID then -- there is a dropship in game
+			-- first check if this dropship is trying to land at a given point or the main beacon
+			if upgradeID then
+				-- check if the currently active dropship is trying to land at that point
+				local item = beaconDropshipQueue[beaconID][1]
+				if item.target == upgradeID then
+					bugOut = true
+				end
+			else -- assume main beacon was lost, all dropships must abort
+				bugOut = true
+			end
+			if bugOut then
+				env = Spring.UnitScript.GetScriptEnv(dropshipID)
+				if env and env.BugOut then
+					Spring.UnitScript.CallAsUnit(dropshipID, env.BugOut)
+				end
+				DropzoneFree(beaconID, teamID) -- mark the zone as free and continue with the queue
+			end
+		end
+	else
+		Spring.Echo("Uhoh, FLOZi logic fail. DropshipBugOut was called with a nil beaconID. Team was", teamID)
+	end
+end	
 
 function DropshipDelivery(beaconID, beaconPointID, teamID, dropshipType, cargo, cost, sound, delay)
 	local info = {
@@ -343,6 +373,7 @@ function gadget:UnitDestroyed(unitID, unitDefID, teamID, attackerID, attackerDef
 			upgradeIDs[upgradePointID] = nil
 			-- Re-add upgrade options to beacon
 			ToggleUpgradeOptions(upgradePointID, true)
+			DropshipBugOut(upgradePointBeaconIDs[upgradePointID], teamID, unitID) -- /give testing won't bug out
 		end
 	elseif activeDropships[unitID] then
 		--Spring.Echo("Oh noes, my dropship! Send the next one", attackerID, attackerDefID, attackerTeam)
@@ -381,6 +412,7 @@ function gadget:UnitGiven(unitID, unitDefID, newTeam, oldTeam)
 				dropZoneBeaconIDs[newTeam] = unitID
 			end
 		end
+		DropshipBugOut(unitID, teamID)
 	elseif unitDefID == TURRETCONTROL_ID then
 		for towerID, beaconID in pairs(towerOwners) do
 			if beaconID == unitID then

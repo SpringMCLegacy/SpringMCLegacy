@@ -180,6 +180,13 @@ function script.Create()
 	StartThread(Drop)
 end
 
+function BugOut()
+	--Spring.Echo("Oh shit, buggin' out!")
+	Signal(0) -- kill anything with a numerical signal mask
+	Signal() -- kill everything else
+	StartThread(TakeOff)
+end
+
 
 function script.AimWeapon(weaponID, heading, pitch)
 	if noFiring then return false end

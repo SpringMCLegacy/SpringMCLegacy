@@ -1,5 +1,7 @@
 -- Unit-specific pieces only declared here, generic dropship pieces in main script
 local body = piece("body")
+local DOOR_SPEED = math.rad(60)
+local BOOM_SPEED = 15
 
 function WeaponCanFire(weaponID)
 	return not noFiring
@@ -180,6 +182,48 @@ function fx()
 	end	
 end
 
+function TakeOff()
+	if stage > 3 then return end -- in case we are told to BugOut, ignore it if already exiting
+	if booms[2] then
+		for i = 2, 3 do
+			Move(booms[i], y_axis, 0, BOOM_SPEED * 2)
+		end
+		WaitForMove(booms[3], y_axis)
+	else
+		local lwing, rwing = piece("lwing", "rwing")
+		Turn(lwing, x_axis, math.rad(0), DOOR_SPEED/3)
+		Turn(rwing, x_axis, math.rad(0), DOOR_SPEED/3)
+		WaitForTurn(rwing, z_axis)
+	end
+	if cargoDoor1 then
+		Turn(cargoDoor1, z_axis, 0, DOOR_SPEED)
+		Turn(cargoDoor2, z_axis, 0, DOOR_SPEED)
+		WaitForTurn(cargoDoor2, z_axis)
+	end
+	-- Take off!
+	PlaySound("dropship_liftoff")
+	stage = 4
+	Spring.MoveCtrl.SetVelocity(unitID, 0, 0, 0)
+	Spring.MoveCtrl.SetRelativeVelocity(unitID, 0, 0, 5)
+	Spring.MoveCtrl.SetGravity(unitID, -0.75 * GRAVITY)
+	Turn(body, x_axis, math.rad(-30), math.rad(10))
+	WaitForTurn(body, x_axis)
+	Turn(body, x_axis, math.rad(-70), math.rad(15))
+	WaitForTurn(body, x_axis)
+	Turn(body, x_axis, math.rad(-80), math.rad(5))
+	WaitForTurn(body, x_axis)
+	Spring.MoveCtrl.SetGravity(unitID, -4 * GRAVITY)
+	stage = 5
+	Sleep(1500)
+	--Spin(body, z_axis, math.rad(180), math.rad(45))
+	Sleep(2000)
+	--StopSpin(body, z_axis, math.rad(45))
+	Sleep(2000)
+	-- We're out of the atmosphere, bye bye!
+	GG.LCLeft(beaconID, callerID, teamID, true) -- let the world know
+	Spring.DestroyUnit(unitID, false, true)
+end
+
 function Drop()
 	Signal(Drop)
 	SetSignalMask(Drop)
@@ -256,7 +300,6 @@ function Drop()
 	end
 	-- We're over the target area, reduce height!
 	stage = 3
-	local DOOR_SPEED = math.rad(60)
 	if cargoDoor1 then
 		Turn(cargoDoor1, z_axis, math.rad(-90), DOOR_SPEED)
 		Turn(cargoDoor2, z_axis, math.rad(90), DOOR_SPEED)
@@ -273,7 +316,6 @@ function Drop()
 	Spring.MoveCtrl.SetRelativeVelocity(unitID, 0, 0, 0)
 	_, y, _ = Spring.GetUnitPosition(unitID)
 	local BOOM_LENGTH = y - TY - 56
-	local BOOM_SPEED = 15
 	if #cargo > 0 then -- might be empty on /give testing
 		UnloadCargo()
 	else
@@ -285,44 +327,7 @@ function Drop()
 		Sleep(10)
 		dist = select(2, Spring.GetUnitPosition(unitID)) - wantedHeight
 	end
-	if booms[2] then
-		for i = 2, 3 do
-			Move(booms[i], y_axis, 0, BOOM_SPEED * 2)
-		end
-		WaitForMove(booms[3], y_axis)
-	else
-		local lwing, rwing = piece("lwing", "rwing")
-		Turn(lwing, x_axis, math.rad(0), DOOR_SPEED/3)
-		Turn(rwing, x_axis, math.rad(0), DOOR_SPEED/3)
-		WaitForTurn(rwing, z_axis)
-	end
-	if cargoDoor1 then
-		Turn(cargoDoor1, z_axis, 0, DOOR_SPEED)
-		Turn(cargoDoor2, z_axis, 0, DOOR_SPEED)
-		WaitForTurn(cargoDoor2, z_axis)
-	end
-	-- Take off!
-	PlaySound("dropship_liftoff")
-	stage = 4
-	--Spring.MoveCtrl.SetRelativeVelocity(unitID, 0, 0, 5)
-	Spring.MoveCtrl.SetRelativeVelocity(unitID, 0, 0, 5)
-	Spring.MoveCtrl.SetGravity(unitID, -0.75 * GRAVITY)
-	Turn(body, x_axis, math.rad(-30), math.rad(10))
-	WaitForTurn(body, x_axis)
-	Turn(body, x_axis, math.rad(-70), math.rad(15))
-	WaitForTurn(body, x_axis)
-	Turn(body, x_axis, math.rad(-80), math.rad(5))
-	WaitForTurn(body, x_axis)
-	Spring.MoveCtrl.SetGravity(unitID, -4 * GRAVITY)
-	stage = 5
-	Sleep(1500)
-	--Spin(body, z_axis, math.rad(180), math.rad(45))
-	Sleep(2000)
-	--StopSpin(body, z_axis, math.rad(45))
-	Sleep(2000)
-	-- We're out of the atmosphere, bye bye!
-	GG.LCLeft(beaconID, callerID, teamID, true) -- let the world know
-	Spring.DestroyUnit(unitID, false, true)
+	TakeOff()
 end
 
 function UnloadCargo()
