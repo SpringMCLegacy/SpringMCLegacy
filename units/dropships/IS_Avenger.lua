@@ -47,6 +47,7 @@ local IS_Avenger = {
 		flagdefendrate  = 100,
 		hoverheight		= 300,
 		radialdist		= 2500,
+		ignoreatbeacon	= true,
     },
 	sounds = {
 		underattack        = "Dropship_Alarm",

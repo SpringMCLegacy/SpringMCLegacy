@@ -95,6 +95,7 @@ local IS_DroST = {
 		dropship		= "vehicle",
 		hoverheight		= 43 + 12,
 		radialdist		= 2500,
+		ignoreatbeacon	= true,
     },
 	sounds = {
 		underattack        = "Dropship_Alarm",
