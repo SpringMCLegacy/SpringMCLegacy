@@ -143,7 +143,7 @@ local BehemothK = BehemothBase:New{
 		maxammo 		= {ac10 = 4, lrm = 1, srm = 2, mrm = 2},
 		barrelrecoildist = {[1] = 5, [2] = 5},
 		squadsize 		= 1,
-		replaces		= "dc_behemoth",
+		--replaces		= "dc_behemoth",
 	},
 }
 
@@ -215,10 +215,10 @@ local BehemothM = BehemothBase:New{
 }
 
 return lowerkeys({
-	["CC_Behemoth"] = Behemoth:New(),
+	--["CC_Behemoth"] = Behemoth:New(),
 	["CC_BehemothArmor"] = BehemothArmor:New(),
-	["DC_Behemoth"] = Behemoth:New(),
-	--["DC_BehemothK"] = BehemothK:New(),
+	--["DC_Behemoth"] = Behemoth:New(),
+	["DC_BehemothK"] = BehemothK:New(),
 	["FS_Behemoth"] = Behemoth:New(),
 	["FW_Behemoth"] = Behemoth:New(),
 	--["FW_BehemothM"] = BehemothM:New(),

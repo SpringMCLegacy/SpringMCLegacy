@@ -52,5 +52,9 @@ local Maxim = Hover:New{
 }
 
 return lowerkeys({
+	["CC_Maxim"] = Maxim:New(),
+	["DC_Maxim"] = Maxim:New(),
+	["FS_Maxim"] = Maxim:New(),
+	["FW_Maxim"] = Maxim:New(),
 	["LA_Maxim"] = Maxim:New(),
 })

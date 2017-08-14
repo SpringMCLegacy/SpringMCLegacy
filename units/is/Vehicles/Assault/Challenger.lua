@@ -46,7 +46,7 @@ local Challenger = Tank:New{
 		maxammo 		= {ac10 = 1, gauss = 2, lrm = 1, srm = 1},
 		barrelrecoildist = {[1] = 5, [2] = 5},
 		squadsize 		= 1,
-		replaces		= "fs_behemoth",
+		--replaces		= "fs_behemoth",
 	},
 }
 

@@ -65,16 +65,16 @@ local GoblinIFV = Goblin:New{
 		armor			= {type = "standard", tons = 8},
 		maxammo 		= {srm = 2},
 		squadsize 		= 1,
-		replaces		= "fs_goblintransport",
+		--replaces		= "fs_goblintransport",
     },
 }
 
 	
 return lowerkeys({
-	["DC_GoblinTransport"] = GoblinTransport:New(),
-	["FS_GoblinTransport"] = GoblinTransport:New(),
+	--["DC_GoblinTransport"] = GoblinTransport:New(),
+	--["FS_GoblinTransport"] = GoblinTransport:New(),
 	["FS_GoblinIFV"] = GoblinIFV:New(),
-	["LA_GoblinTransport"] = GoblinTransport:New(),
-	["CC_GoblinTransport"] = GoblinTransport:New(),
-	["FW_GoblinTransport"] = GoblinTransport:New(),
+	--["LA_GoblinTransport"] = GoblinTransport:New(),
+	--["CC_GoblinTransport"] = GoblinTransport:New(),
+	--["FW_GoblinTransport"] = GoblinTransport:New(),
 })

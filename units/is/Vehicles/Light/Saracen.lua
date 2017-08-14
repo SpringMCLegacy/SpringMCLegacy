@@ -53,6 +53,10 @@ local SaracenMRM = Saracen:New{
 }
 
 return lowerkeys({
+	["CC_SaracenLRM"] = SaracenLRM:New(),
 	["DC_SaracenLRM"] = SaracenLRM:New(),
 	["DC_SaracenMRM"] = SaracenMRM:New(),
+	["FS_SaracenLRM"] = SaracenLRM:New(),
+	["FW_SaracenLRM"] = SaracenLRM:New(),
+	["LA_SaracenLRM"] = SaracenLRM:New(),
 })

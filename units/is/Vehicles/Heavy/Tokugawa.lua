@@ -30,7 +30,7 @@ local Tokugawa = Tank:New{
 		maxammo 		= {ac10 = 3, srm = 1},
 		barrelrecoildist = {[1] = 5},
 		squadsize 		= 1,
-		replaces		= "dc_manticore",
+		--replaces		= "dc_manticore",
 		wheels			= true,
     },
 }

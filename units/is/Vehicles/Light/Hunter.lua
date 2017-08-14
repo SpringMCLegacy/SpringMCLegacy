@@ -57,5 +57,4 @@ return lowerkeys({
 	["FS_Hunter"] = Hunter:New(),
 	["FW_Hunter"] = Hunter:New(),
 	["LA_Hunter"] = Hunter:New(),
-	["LA_HunterS"] = HunterS:New(),
 })

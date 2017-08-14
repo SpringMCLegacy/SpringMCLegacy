@@ -35,7 +35,7 @@ local DIMorgan = Tank:New{
 		armor			= {type = "ferro", tons = 10.5},
 		barrelrecoildist = {[1] = 5, [2] = 5, [3] = 5},
 		squadsize 		= 1,
-		replaces		= "la_schrek",
+		--replaces		= "la_schrek",
 	},
 }
 

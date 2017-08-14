@@ -31,7 +31,7 @@ local DemolisherII = Tank:New{
 		barrelrecoildist = {[1] = 4, [2] = 3},
 		maxammo 		= {ac20 = 5},
 		squadsize 		= 1,
-		replaces		= "la_demolisher",
+		--replaces		= "la_demolisher",
 	},
 }
 

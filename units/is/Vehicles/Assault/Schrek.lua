@@ -90,11 +90,11 @@ local SchrekC3M = SchrekBase:New{
 }
 
 return lowerkeys({
-	["CC_Schrek"] = Schrek:New(),
+	--["CC_Schrek"] = Schrek:New(),
 	["CC_SchrekArmor"] = SchrekArmor:New(),
-	["DC_Schrek"] = Schrek:New(),
+	--["DC_Schrek"] = Schrek:New(),
 	["DC_SchrekC3M"] = SchrekC3M:New(),
 	["FS_Schrek"] = Schrek:New(),
 	["FW_Schrek"] = Schrek:New(),
-	["LA_Schrek"] = Schrek:New(),
+	--["LA_Schrek"] = Schrek:New(),
 })

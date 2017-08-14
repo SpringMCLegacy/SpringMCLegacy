@@ -38,7 +38,7 @@ local Mamono = Tank:New{
 		armor			= {type = "standard", tons = 10},
 		maxammo 		= {mrm = 4},
 		squadsize 		= 1,
-		replaces		= "dc_heavyapc",
+		--replaces		= "dc_heavyapc",
     },
 }
 

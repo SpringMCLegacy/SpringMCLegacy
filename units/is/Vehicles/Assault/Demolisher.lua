@@ -27,12 +27,6 @@ local Demolisher = Tank:New{
     },
 }
 
-local DemolisherM = Demolisher:New{
-	customparams = {
-		replaces		= "fw_demolisher",
-    },
-}
-
 local Devastator = Demolisher:New{
 	name              	= "Devastator",
 	description         = "Heavy Brawler Tank",
@@ -117,6 +111,5 @@ return lowerkeys({
 	--["DC_DemolisherK"] = DemolisherK:New(),
 	["FS_Demolisher"] = Demolisher:New(),
 	["FW_Demolisher"] = Demolisher:New(),
-	["FW_DemolisherM"] = DemolisherM:New(),
-	["LA_Demolisher"] = Demolisher:New(),
+	--["LA_Demolisher"] = Demolisher:New(),
 })

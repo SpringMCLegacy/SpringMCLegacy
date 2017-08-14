@@ -26,7 +26,7 @@ local Zhukov = Tank:New{
 		maxammo 		= {ac10 = 3, srm = 1},
 		barrelrecoildist = {[1] = 5, [2] = 5},
 		squadsize 		= 1,
-		replaces		= "cc_manticore",
+		--replaces		= "cc_manticore",
     },
 }
 

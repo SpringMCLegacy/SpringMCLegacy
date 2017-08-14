@@ -32,7 +32,7 @@ local Prowler = LightTank:New{
 		armor			= {type = "standard", tons = 7},
 		maxammo 		= {lrm = 2, srm = 1},
 		squadsize 		= 1,
-		replaces		= "la_goblintransport",
+		--replaces		= "la_goblintransport",
     },
 }
 

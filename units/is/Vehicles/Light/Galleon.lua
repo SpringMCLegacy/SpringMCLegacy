@@ -31,9 +31,5 @@ local Galleon = LightTank:New{
 }
 
 return lowerkeys({
-	--["CC_Galleon"] = Galleon:New(),
-	--["DC_Galleon"] = Galleon:New(),
-	--["FS_Galleon"] = Galleon:New(),
-	--["FW_Galleon"] = Galleon:New(),
-	--["LA_Galleon"] = Galleon:New(),
+	["FW_Galleon"] = Galleon:New(),
 })

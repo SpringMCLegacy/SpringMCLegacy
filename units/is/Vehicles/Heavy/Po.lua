@@ -29,6 +29,6 @@ local Po = Tank:New{
 }
 
 return lowerkeys({
-	["CC_Po"] = Po:New{customParams = { replaces = "cc_manticore" }},
-	["FW_Po"] = Po:New{customParams = { replaces = "fw_manticore" }},
+	["CC_Po"] = Po:New(),
+	["FW_Po"] = Po:New(),
 })

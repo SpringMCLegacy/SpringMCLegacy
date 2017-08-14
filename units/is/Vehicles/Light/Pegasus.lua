@@ -61,7 +61,7 @@ local PegasusK = Pegasus:New{
 return lowerkeys({
 	["CC_Pegasus"] = Pegasus:New(),
 	["DC_Pegasus"] = Pegasus:New(),
-	["DC_PegasusK"] = PegasusK:New(),
+	--["DC_PegasusK"] = PegasusK:New(),
 	["FS_Pegasus"] = Pegasus:New(),
 	["FW_Pegasus"] = Pegasus:New(),
 	["LA_Pegasus"] = Pegasus:New(),

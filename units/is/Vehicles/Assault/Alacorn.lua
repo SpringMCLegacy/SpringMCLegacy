@@ -27,7 +27,7 @@ local Alacorn = Tank:New{
 		barrelrecoildist = {[1] = 5, [2] = 5, [3] = 5},
 		maxammo 		= {gauss = 5},
 		squadsize 		= 1,
-		replaces		= "fs_schrek",
+		--replaces		= "fs_schrek",
 	},
 }
 

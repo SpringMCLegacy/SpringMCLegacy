@@ -12,9 +12,11 @@ local MinionScout = Minion:New{
 	weapons 		= {	
 		[1] = {
 			name	= "MPL",
+			maxAngleDif = 60,
 		},
 		[2] = {
 			name	= "MPL",
+			maxAngleDif = 60,
 		},
 	},
 	
@@ -28,32 +30,6 @@ local MinionScout = Minion:New{
     },
 }
 
-local MinionTAG = Minion:New{
-	description         = "Light Scout Hover",
-	
-	weapons 		= {	
-		[1] = {
-			name	= "MPL",
-		},
-		[2] = {
-			name	= "MPL",
-		},
-		[3] = {
-			name	= "TAG",
-		},
-	},
-	
-	customparams = {
-		variant         = "TAG",
-		speed			= 150,
-		price			= 2850,
-		heatlimit 		= 10,
-		armor			= {type = "standard", tons = 4},
-		squadsize 		= 2,
-    },
-}
-
 return lowerkeys({
-	["CC_MinionTAG"] = MinionTAG:New(),
 	["FS_Minion"] = MinionScout:New(),
 })

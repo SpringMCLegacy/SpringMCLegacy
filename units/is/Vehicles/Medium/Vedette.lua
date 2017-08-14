@@ -83,7 +83,7 @@ return lowerkeys({
 	["FS_Vedette"] = VedetteUAC:New(),
 	["LA_Vedette"] = VedetteUAC:New(),
 	["CC_Vedette"] = VedetteUAC:New(),
-	--["CC_VedetteLBX"] = VedetteLBX:New(),
+	["CC_VedetteLBX"] = VedetteLBX:New(),
 	["FW_Vedette"] = VedetteUAC:New(),
 	--["FW_VedetteLG"] = VedetteLG:New(),
 })

@@ -6,12 +6,11 @@ local Centipede = Hover:New{
 	weapons 		= {	
 		[1] = {
 			name	= "MBL",
+			maxAngleDif = 60,
 		},
 		[2] = {
 			name	= "Flamer",
-		},
-		[3] = {
-			name	= "TAG",
+			maxAngleDif = 60,
 		},
 	},
 	
@@ -24,7 +23,6 @@ local Centipede = Hover:New{
 		armor			= {type = "standard", tons = 3},
 		squadsize 		= 2,
 		bap				= true,
-		ecm				= true,
     },
 }
 

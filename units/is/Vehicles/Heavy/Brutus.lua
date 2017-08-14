@@ -37,7 +37,7 @@ local Brutus = Tank:New{
 		armor			= {type = "standard", tons = 8.5},
 		maxammo 		= {srm = 2, lrm = 2},
 		squadsize 		= 1,
-		replaces		= "cc_manticore",
+		--replaces		= "cc_manticore",
     },
 }
 

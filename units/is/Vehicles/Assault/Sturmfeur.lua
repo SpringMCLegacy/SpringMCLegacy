@@ -31,7 +31,7 @@ local Sturmfeur = Tank:New{
 		armor			= {type = "standard", tons = 19.5},
 		maxammo 		= {lrm = 3},
 		squadsize 		= 1,
-		replaces		= "la_lrmcarrier",
+		--replaces		= "la_lrmcarrier",
     },
 }
 

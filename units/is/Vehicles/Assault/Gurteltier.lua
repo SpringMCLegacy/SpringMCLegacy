@@ -35,7 +35,7 @@ local Gurteltier = Tank:New{
 		maxammo 		= {gauss = 2, mml = 2},
 		barrelrecoildist = {[1] = 5},
 		squadsize 		= 1,
-		replaces		= "la_behemoth",
+		--replaces		= "la_behemoth",
 	},
 }
 
