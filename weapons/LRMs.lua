@@ -23,7 +23,7 @@ local LRM_Class = Weapon:New{
 	weaponVelocity          = 800,
 	reloadtime              = 10,
 	burstrate				= 0.1,
-	model					= "Weapons/Missile.s3o",
+	model					= "Weapons/LargeMissile.s3o",
 	damage = {
 		default = 100,--10 DPS
 	},
