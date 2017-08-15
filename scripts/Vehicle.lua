@@ -331,6 +331,7 @@ end
 
 function hideLimbPieces(limb, hide)
 	local limbWeapons = EMPTY -- can safely use EMPTY here as will be replaced, not modified
+	local rootPiece = piece(limb)
 	if limb == "turret" then
 		limbWeapons = mainTurretIDs
 		Spring.SetUnitMidAndAimPos(unitID, 0, 0, 0, 0, -1, 0, true)
@@ -343,13 +344,15 @@ function hideLimbPieces(limb, hide)
 		CheckWheels(side)
 	elseif limb:find("track") then
 		local side = limb:sub(6,-1)
-		StartThread(FallOver, side, 10)
+		StartThread(FallOver, side, 2.5)
+		RecursiveHide(rootPiece, hide) -- hide track first
+		local wheelNum = math.random(info.numWheels/2 + ((side == "l" and info.numWheels/2) or 0))
+		rootPiece = wheels[wheelNum]
 	else  -- assume limb is a wing or rotor
 		if hide then
 			SetUnitValue(COB.CRASHING, 1)
 		end
 	end
-	local rootPiece = piece(limb)
 	RecursiveHide(rootPiece, hide)
 	if hide then
 		EmitSfx(rootPiece, SFX.CEG + info.numWeapons + 1)
