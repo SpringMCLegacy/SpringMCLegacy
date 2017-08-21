@@ -96,6 +96,7 @@ local function BeaconPoints(beaconID, teamID, x, y, z)
 		local dx, dz = math.sin(angle) * BEACON_POINT_DIST, math.cos(angle) * BEACON_POINT_DIST
 		local upgradePointID = CreateUnit(BEACON_POINT_ID, x + dx, y, z + dz, "s", teamID)
 		Spring.SetUnitAlwaysVisible(upgradePointID, true)
+		Spring.SetUnitBlocking(upgradePointID, false, false, false) -- blocking, solid objects, projectiles
 		upgradePointBeaconIDs[upgradePointID] = beaconID
 		beaconUpgradePointIDs[beaconID][i+1] = upgradePointID
 	end
