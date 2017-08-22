@@ -173,3 +173,10 @@ for unitName, ud in pairs(UnitDefs) do
 		table.insert(ud.sfxtypes.explosiongenerators, "custom:beacon")
 	end
 end
+
+for featureName, fd in pairs(FeatureDefs) do
+	local cp = fd.customparams
+	if not (cp and cp.was) then
+		fd.reclaimable = false -- force all non corpses to be non salvageable
+	end
+end
