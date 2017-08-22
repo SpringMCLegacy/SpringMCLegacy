@@ -714,6 +714,30 @@ function script.QueryWeapon(weaponID)
 	end
 end
 
+if unitDef.isBuilder then -- BRVS
+	Spring.SetUnitNanoPieces(unitID, {piece("cranewrist3")})
+
+	local CRANE_Y = math.rad(30)
+	
+	function script.StartBuilding(heading, pitch)
+		--Spring.Echo("StartBuilding!")
+		-- TODO: unfold anim and waits
+		Turn(piece("craneturret"), y_axis, heading - math.rad(90), CRANE_Y)
+		Turn(piece("cranemid"), z_axis, math.rad(180), CRANE_Y)
+		Turn(piece("cranearm"), z_axis, math.rad(180), CRANE_Y)
+		WaitForTurn(piece("craneturret"), y_axis)
+		WaitForTurn(piece("cranemid"), z_axis)
+		WaitForTurn(piece("cranearm"), z_axis)
+		SetUnitValue(COB.INBUILDSTANCE, 1)
+	end
+	
+	function script.StopBuilding()
+		SetUnitValue(COB.INBUILDSTANCE, 0)
+		-- TODO: fold up anim
+	end
+end
+
+
 function script.Killed(recentDamage, maxHealth)
 	if excessHeat >= heatLimit then
 		--Spring.Echo("NUUUUUUUUUUUKKKKKE")

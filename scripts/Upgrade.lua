@@ -390,10 +390,13 @@ function Unpack()
 		UNLOAD_X = x + 150 * dx
 		UNLOAD_Z = z + 150 * dz
 	elseif name == "upgrade_salvageyard" then
+		GG.SpawnBRV(unitID, teamID)
 		Show(foundation)
-		Move(armature1, z_axis, 0, CRATE_SPEED)
-		Move(armature2, z_axis, 0, CRATE_SPEED)
+		Move(armature1, z_axis, 0, CRATE_SPEED * 2)
+		Move(armature2, z_axis, 0, CRATE_SPEED * 2)
 		WaitForMove(armature2, z_axis)
+		--GG.PopulateQueue(unitID) -- initialise the queue with any existing corpses
+		Spring.SetUnitBlocking(unitID, false, false) -- make it easy to get out
 		for i = 1, 6 do
 			local sign = i % 2 == 0 and -1 or 1
 			Move(doors[i], z_axis, sign, CRATE_SPEED * 2)

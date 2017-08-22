@@ -1,7 +1,13 @@
 local BRV = Tank:New{
 	name              	= "BRV",
 	description         = "Support Vehicle",
-	trackWidth			=25,--width to render the decal
+	trackWidth			= 25,--width to render the decal
+	
+	builder 			= true,
+	canReclaim 			= true,
+	harvestStorage		= 1000,
+	workerTime			= 100,
+	buildDistance 		= 50,
 	
 	--weapons	= {	
 	--},
