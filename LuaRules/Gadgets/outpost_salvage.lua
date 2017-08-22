@@ -151,9 +151,15 @@ function gadget:FeatureCreated(featureID, allyTeamID)
 end
 
 function gadget:UnitIdle(unitID, unitDefID, teamID)
-	if salvagerYards[unitID] then -- is a BRV
+	local yardID = salvagerYards[unitID]
+	if yardID then -- is a BRV
 		--Spring.Echo("Yawn! Nought to do here boss")
-		idleSalvagers[unitID] = true
+		local dist = Spring.GetUnitSeparation(unitID, yardID)
+		if dist > 50 then -- nothing else to salvage, force RTB
+			gadget:UnitHarvestStorageFull(unitID, unitDefID, teamID)
+		else
+			idleSalvagers[unitID] = true
+		end
 	end
 end
 
