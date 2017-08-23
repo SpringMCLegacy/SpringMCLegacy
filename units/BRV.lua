@@ -6,7 +6,7 @@ local BRV = Tank:New{
 	builder 			= true,
 	canReclaim 			= true,
 	harvestStorage		= 1000,
-	workerTime			= 100,
+	workerTime			= 200,
 	buildDistance 		= 50,
 	
 	--weapons	= {	
