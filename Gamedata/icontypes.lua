@@ -49,7 +49,7 @@ local iconTypes = {
 		size			=	1.5,
 		distance	=	4.0,
 	},
-	upgrade = {
+	outpost = {
 		bitmap		=	"icons/beaconpoint.png",
 		size			=	3.5,
 		distance	=	4.0,	

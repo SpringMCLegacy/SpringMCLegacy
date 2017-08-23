@@ -1,6 +1,6 @@
-local Upgrade_SalvageYard = Upgrade:New{
+local Outpost_SalvageYard = Outpost:New{
 	name              	= "Salvage Yard",
-	description         = "Salvage & Recovery Upgrade",
+	description         = "Salvage & Recovery outpost",
 	maxDamage           = 10000,
 	mass                = 9000,
 	buildCostMetal      = 8000,
@@ -15,4 +15,4 @@ local Upgrade_SalvageYard = Upgrade:New{
 	}
 }
 
-return lowerkeys({ ["Upgrade_SalvageYard"] = Upgrade_SalvageYard })
+return lowerkeys({ ["outpost_SalvageYard"] = Outpost_SalvageYard })

@@ -168,7 +168,7 @@ function UnloadCargo()
 		-- Let the cargo know it is unloaded
 		env = Spring.UnitScript.GetScriptEnv(cargoID)
 		Spring.UnitScript.CallAsUnit(cargoID, env.Unloaded)
-		-- Let the beacon know upgrade is ready
+		-- Let the beacon know outpost is ready
 		env = Spring.UnitScript.GetScriptEnv(callerID)
 		Spring.UnitScript.CallAsUnit(callerID, env.ChangeType, true)
 	end

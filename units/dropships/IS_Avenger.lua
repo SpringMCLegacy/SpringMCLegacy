@@ -43,7 +43,7 @@ local IS_Avenger = {
 	},
 	customparams = {
 		helptext		= "A Dropship",
-		dropship		= "upgrade",
+		dropship		= "outpost",
 		flagdefendrate  = 100,
 		hoverheight		= 300,
 		radialdist		= 2500,

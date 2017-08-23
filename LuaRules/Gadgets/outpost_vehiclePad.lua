@@ -20,8 +20,8 @@ local GAIA_TEAM_ID = Spring.GetGaiaTeamID()
 local BASE_DELAY = tonumber((modOptions and modOptions.vehicle_delay) or "30") * 30 -- base line delay, may be +{0,10}s
 local DEATH_DELAY = 60 * 30 -- delay next one by extra 1 minute if the last one died
 local BEACON_ID = UnitDefNames["beacon"].id
-local VPAD_ID = UnitDefNames["upgrade_vehiclepad"].id
-local HPAD_ID = UnitDefNames["upgrade_hoverpad"].id
+local VPAD_ID = UnitDefNames["outpost_vehiclepad"].id
+local HPAD_ID = UnitDefNames["outpost_hoverpad"].id
 
 local SPAWN_DEF_IDS = {
 	[VPAD_ID] = true,

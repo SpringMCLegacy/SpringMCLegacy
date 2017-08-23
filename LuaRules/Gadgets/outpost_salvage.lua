@@ -37,7 +37,7 @@ local DelayCall				 = GG.Delay.DelayCall
 local GAIA_TEAM_ID = Spring.GetGaiaTeamID()
 local BEACON_ID = UnitDefNames["beacon"].id
 local BRV_ID = UnitDefNames["brv"].id -- TODO: support multiple brv types
-local SALVAGEYARD_ID = UnitDefNames["upgrade_salvageyard"].id
+local SALVAGEYARD_ID = UnitDefNames["outpost_salvageyard"].id
 
 local SALVAGE_RANGE = 1000
 local CMD_DEPOSIT = GG.CustomCommands.GetCmdID("CMD_DEPOSIT")
@@ -102,10 +102,10 @@ local function PopulateQueue(yardID)
 end
 GG.PopulateQueue = PopulateQueue]]
 
-local function SYardUpgrade(unitID, level)
+local function SYardoutpost(unitID, level)
 	yardLevels[unitID] = level
 end
-GG.SYardUpgrade = SYardUpgrade
+GG.SYardoutpost = SYardoutpost
 
 local function SpawnBRV(yardID, teamID)
 	-- TODO: change depending on level? or via buildmenu
@@ -170,7 +170,7 @@ function gadget:AllowCommand(unitID, unitDefID, teamID, cmdID, cmdParams, cmdOpt
 			idleSalvagers[unitID] = false
 			local pos = yardPos[cmdParams[1]]
 			Spring.SetUnitMoveGoal(unitID, pos.x, pos.y, pos.z)
-			Spring.Echo("Haulin' ass back to base!")
+			--Spring.Echo("Haulin' ass back to base!")
 			return true
 		else
 			return false
@@ -186,7 +186,7 @@ function gadget:CommandFallback(unitID, unitDefID, teamID, cmdID, cmdParams, cmd
 		local yardID = salvagerYards[unitID]
 		local dist = Spring.GetUnitSeparation(unitID, yardID)
 		if dist < 50 then
-			Spring.Echo("Made it back, have " .. Spring.GetUnitHarvestStorage(unitID) .. " CBills!")
+			--Spring.Echo("Made it back, have " .. Spring.GetUnitHarvestStorage(unitID) .. " CBills!")
 			Spring.AddTeamResource(teamID, "metal", Spring.GetUnitHarvestStorage(unitID))
 			Spring.SetUnitHarvestStorage(unitID, 0)
 			local pos = yardPos[yardID]
@@ -200,7 +200,7 @@ function gadget:CommandFallback(unitID, unitDefID, teamID, cmdID, cmdParams, cmd
 end
 
 function gadget:UnitHarvestStorageFull(unitID, unitDefID, teamID)
-	Spring.Echo("Oi vey! I'm full")
+	--Spring.Echo("Oi vey! I'm full")
 	Spring.GiveOrderToUnit(unitID, CMD_DEPOSIT, {salvagerYards[unitID]}, {})
 end
 

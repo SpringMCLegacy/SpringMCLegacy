@@ -37,8 +37,8 @@ local DelayCall				 = GG.Delay.DelayCall
 -- Constants
 local GAIA_TEAM_ID = Spring.GetGaiaTeamID()
 local BEACON_ID = UnitDefNames["beacon"].id
-local UPLINK_ID = UnitDefNames["upgrade_uplink"].id
-local MECHBAY_ID = UnitDefNames["upgrade_mechbay"].id
+local UPLINK_ID = UnitDefNames["outpost_uplink"].id
+local MECHBAY_ID = UnitDefNames["outpost_mechbay"].id
 
 local artyWeaponInfo = {
 	[1] = { -- NAC/10
@@ -92,10 +92,10 @@ local getOutCmdDesc = {
 	tooltip = "Emergency unload",
 }
 
-local function UplinkUpgrade(unitID, level)
+local function Uplinkoutpost(unitID, level)
 	uplinkLevels[unitID] = level
 end
-GG.UplinkUpgrade = UplinkUpgrade
+GG.Uplinkoutpost = Uplinkoutpost
 
 function gadget:UnitCreated(unitID, unitDefID, teamID, builderID)
 	local unitDef = UnitDefs[unitDefID]

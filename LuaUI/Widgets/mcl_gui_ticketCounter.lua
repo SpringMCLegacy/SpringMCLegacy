@@ -20,7 +20,7 @@ local GAIA_ALLY_ID = select(6, Spring.GetTeamInfo(GAIA_TEAM_ID))
 local MY_TEAM_ID = Spring.GetMyTeamID()
 local MY_ALLY_ID = select(6, Spring.GetTeamInfo(MY_TEAM_ID))
 
-local UPLINK_ID = UnitDefNames["upgrade_uplink"].id
+local UPLINK_ID = UnitDefNames["outpost_uplink"].id
 local BEACON_ID = UnitDefNames["beacon"].id
 
 local allyBeaconCounts = {}

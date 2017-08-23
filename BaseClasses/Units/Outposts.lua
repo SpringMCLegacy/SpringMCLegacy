@@ -1,7 +1,7 @@
--- Upgrades ----
-local Upgrade = Unit:New{
-	script				= "Upgrade.lua",
-	iconType			= "upgrade",
+-- Outposts ----
+local Outpost = Unit:New{
+	script				= "Outpost.lua",
+	iconType			= "outpost",
 	category 			= "structure ground notbeacon",
 	activateWhenBuilt   = true,
 	footprintX			= 4,
@@ -17,11 +17,11 @@ local Upgrade = Unit:New{
 	cantbetransported	= false,
 	
 	customparams = {
-		upgrade = true,
-		baseclass		= "upgrade",
+		outpost = true,
+		baseclass		= "outpost",
 	},
 }
 
 return {
-	Upgrade = Upgrade,
+	Outpost = Outpost,
 }

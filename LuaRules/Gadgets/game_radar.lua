@@ -157,7 +157,7 @@ end
 GG.IsUnitTAGed = IsUnitTAGed
 
 local function ResetLosStates(unitID, allyTeam)
-	-- don't reset for turrets or upgrades etc, they remain always visible once detected by whatever means
+	-- don't reset for turrets or outposts etc, they remain always visible once detected by whatever means
 	if Spring.ValidUnitID(unitID) and not Spring.GetUnitIsDead(unitID) and mobileUnits[unitID] then
 		--Spring.Echo("Reset los states for", unitID)
 		SetUnitLosMask(unitID, allyTeam, prevLosOnly)

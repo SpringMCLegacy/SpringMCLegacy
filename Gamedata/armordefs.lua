@@ -14,7 +14,7 @@ local armorDefs = {
 	vtol = {},
 	tower = {},
 	walls = {},
-	upgrade = {},
+	outpost = {},
 }
 
 local DEFS = _G.DEFS

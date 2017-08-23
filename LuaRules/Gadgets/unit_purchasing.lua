@@ -45,7 +45,7 @@ local EMPTY_TABLE = {} -- keep as empty
 local GAIA_TEAM_ID = Spring.GetGaiaTeamID()
 local CBILLS_PER_SEC = (modOptions and tonumber(modOptions.income)) or 10
 local BEACON_ID = UnitDefNames["beacon"].id
-local C3_ID = UnitDefNames["upgrade_c3array"].id
+local C3_ID = UnitDefNames["outpost_c3array"].id
 
 --local DROPSHIP_COOLDOWN = 30 * 30 -- 30s, time before the dropship has regained orbit, refuelled etc ready to drop again
 local DROPSHIP_DELAY = 2 * 30 -- 2s, time taken to arrive on the map from SPACE!
@@ -121,7 +121,7 @@ for i, typeString in ipairs(typeStrings) do
 end
 
 local unitTypes = {} -- unitTypes[unitDefID] = "lightmech" etc from typeStrings
-local dropShipTypes = {} -- dropShipTypes[unitDefID] = "mech", "vehicle" or "upgrade"
+local dropShipTypes = {} -- dropShipTypes[unitDefID] = "mech", "vehicle" or "outpost"
 local unitSlotChanges = {} -- unitSlotChanges = 1 or 0.5
 
 local orderCosts = {} -- orderCosts[unitID] = cost
@@ -596,9 +596,9 @@ function gadget:AllowCommand(unitID, unitDefID, teamID, cmdID, cmdParams, cmdOpt
 			GG.Delay.DelayCall(SendCommandFallback, {unitID, unitDefID, teamID, cost}, 16)
 			return true
 		end
-	elseif GG.outpostDefs[unitDefID] then -- an upgrade
+	elseif GG.outpostDefs[unitDefID] then -- an outpost
 		if cmdID == CMD_SELL then
-			SellUnit(unitID, unitDefID, teamID, "upgrade")
+			SellUnit(unitID, unitDefID, teamID, "outpost")
 		else
 			return true -- allow all other commands through here
 		end
@@ -637,7 +637,7 @@ function gadget:UnitCreated(unitID, unitDefID, teamID)
 		if unitTypes[unitDefID]:find("mech") then
 			InsertUnitCmdDesc(unitID, sellOrderCmdDesc)
 		end
-	elseif GG.outpostDefs[unitDefID] then -- an upgrade
+	elseif GG.outpostDefs[unitDefID] then -- an outpost
 		InsertUnitCmdDesc(unitID, sellOrderCmdDesc)
 	end
 end

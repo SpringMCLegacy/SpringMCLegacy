@@ -1,4 +1,4 @@
-local Upgrade_TurretControl = Upgrade:New{
+local Outpost_TurretControl = Outpost:New{
 	name              	= "A.I. Turret Control",
 	description         = "Automated Turret Control Station",
 	maxDamage           = 10000,
@@ -22,4 +22,4 @@ local Upgrade_TurretControl = Upgrade:New{
 	}
 }
 
-return lowerkeys({ ["Upgrade_TurretControl"] = Upgrade_TurretControl })
+return lowerkeys({ ["outpost_TurretControl"] = Outpost_TurretControl })

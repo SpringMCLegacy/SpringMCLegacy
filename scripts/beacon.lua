@@ -57,8 +57,8 @@ function TouchDown()
 	GG.BeaconPoints(unitID, teamID, X, GY+1, Z)
 end
 
-function ChangeType(upgrade)
-	if upgrade then
+function ChangeType(outpost)
+	if outpost then
 		stage = -1
 		Spring.SetUnitNoDraw(unitID, true)
 	else

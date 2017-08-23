@@ -129,7 +129,7 @@ function widget:DrawWorldPreUnit()
 				glColor(r, g, b, selected and 0.9 or 0.4)
 				glTexture(BEACON_POINT_TEX)
 				glDrawListAtUnit(unitID, DZ_LIST, false, radius, 1.0, radius, 0, 0, 1.0, 0)				
-			elseif UnitDefs[unitDefID].customParams.baseclass == "upgrade" then -- TODO: cache
+			elseif UnitDefs[unitDefID].customParams.baseclass == "outpost" then -- TODO: cache
 				local radius = 15 * UnitDefs[unitDefID].xsize
 				glTexture(OUTPOST_TEX)
 				glColor(r, g, b, selected and 0.9 or 0.65)

@@ -301,7 +301,7 @@ return {
 		end,
 		costFunction = deductXP,
 	},
-	-- Upgrades
+	-- Outpost Upgrades
 	{
 		name = "union",
 		cmdDesc = {
@@ -415,7 +415,7 @@ return {
 			tooltip = 'Opens firing ports for lasers (-20% damage resistance)',
 			texture = 'bitmaps/ui/upgrade.png',	
 		},
-		valid = function (unitDefID) return UnitDefs[unitDefID].name == "upgrade_garrison" end,
+		valid = function (unitDefID) return UnitDefs[unitDefID].name == "outpost_garrison" end,
 		applyPerk = function (unitID)
 			env = Spring.UnitScript.GetScriptEnv(unitID)
 			env.noFiring = false
@@ -455,7 +455,7 @@ return {
 			tooltip = 'Upgrade to Naval PPC weapon (+25s cooldown)',
 			texture = 'bitmaps/ui/upgrade.png',	
 		},
-		valid = function (unitDefID) return UnitDefs[unitDefID].name == "upgrade_uplink" end,
+		valid = function (unitDefID) return UnitDefs[unitDefID].name == "outpost_uplink" end,
 		applyPerk = function (unitID)
 			GG.UplinkUpgrade(unitID, 2)
 		end,
@@ -471,7 +471,7 @@ return {
 			tooltip = 'Upgrade to Naval Autocannon 40 weapon (+15s cooldown)',
 			texture = 'bitmaps/ui/upgrade.png',	
 		},
-		valid = function (unitDefID) return UnitDefs[unitDefID].name == "upgrade_uplink" end,
+		valid = function (unitDefID) return UnitDefs[unitDefID].name == "outpost_uplink" end,
 		applyPerk = function (unitID)
 			GG.UplinkUpgrade(unitID, 3)
 		end,
@@ -489,7 +489,7 @@ return {
 			tooltip = 'Increases the number of turrets suppported',
 			texture = 'bitmaps/ui/upgrade.png',	
 		},
-		valid = function (unitDefID) return UnitDefs[unitDefID].name == "upgrade_turretcontrol" end,
+		valid = function (unitDefID) return UnitDefs[unitDefID].name == "outpost_turretcontrol" end,
 		applyPerk = function (unitID)
 			GG.LimitTowerType(unitID, Spring.GetUnitTeam(unitID), "turret", 4)
 		end,
@@ -505,7 +505,7 @@ return {
 			tooltip = 'Unlocks sensor towers',
 			texture = 'bitmaps/ui/upgrade.png',	
 		},
-		valid = function (unitDefID) return UnitDefs[unitDefID].name == "upgrade_turretcontrol" end,
+		valid = function (unitDefID) return UnitDefs[unitDefID].name == "outpost_turretcontrol" end,
 		applyPerk = function (unitID)
 			GG.LimitTowerType(unitID, Spring.GetUnitTeam(unitID), "sensor", 2)
 		end,
@@ -523,7 +523,7 @@ return {
 			tooltip = 'Increases the range of the seismic sensor +50% (+10% time between pings)',
 			texture = 'bitmaps/ui/upgrade.png',	
 		},
-		valid = function (unitDefID) return UnitDefs[unitDefID].name == "upgrade_seismic" end,
+		valid = function (unitDefID) return UnitDefs[unitDefID].name == "outpost_seismic" end,
 		applyPerk = function (unitID)
 			env = Spring.UnitScript.GetScriptEnv(unitID)
 			env.seismicRange = env.seismicRange * 1.5
@@ -541,7 +541,7 @@ return {
 			tooltip = 'Increases the duration of each ping +250% (+20% time between pings)',
 			texture = 'bitmaps/ui/upgrade.png',	
 		},
-		valid = function (unitDefID) return UnitDefs[unitDefID].name == "upgrade_seismic" end,
+		valid = function (unitDefID) return UnitDefs[unitDefID].name == "outpost_seismic" end,
 		applyPerk = function (unitID)
 			env = Spring.UnitScript.GetScriptEnv(unitID)
 			env.seismicDuration = env.seismicDuration * 2.5

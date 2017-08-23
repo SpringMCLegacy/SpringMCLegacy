@@ -1,4 +1,4 @@
-local Upgrade_Seismic = Upgrade:New{
+local Outpost_Seismic = Outpost:New{
 	name              	= "Seismic Listening Post",
 	description         = "Long-Range Seismic Sensor",
 	maxDamage           = 10000,
@@ -17,4 +17,4 @@ local Upgrade_Seismic = Upgrade:New{
 	}
 }
 
-return lowerkeys({ ["Upgrade_Seismic"] = Upgrade_Seismic })
+return lowerkeys({ ["outpost_Seismic"] = Outpost_Seismic })

@@ -1,8 +1,8 @@
 -- Common pieces
 local base = piece ("base")
 
-function ChangeType(upgrade)
-	if upgrade then
+function ChangeType(outpost)
+	if outpost then
 		stage = -1
 		Spring.SetUnitNoDraw(unitID, true)
 	else

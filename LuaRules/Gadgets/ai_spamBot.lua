@@ -25,8 +25,8 @@ local sideAssaults = {} -- sideAssaults[sideShortName] = {assaultDefID1, assault
 local AI_TEAMS = {}
 local BEACON_ID = UnitDefNames["beacon"].id
 local DROPZONE_IDS = GG.DROPZONE_IDS
-local C3_ID = UnitDefNames["upgrade_c3array"].id
-local VPAD_ID = UnitDefNames["upgrade_vehiclepad"].id
+local C3_ID = UnitDefNames["outpost_c3array"].id
+local VPAD_ID = UnitDefNames["outpost_vehiclepad"].id
 --local DelayCall = GG.Delay.DelayCall
 local CMD_JUMP = GG.CustomCommands.GetCmdID("CMD_JUMP")
 
@@ -35,9 +35,9 @@ local PERK_JUMP_RANGE = GG.CustomCommands.GetCmdID("PERK_JUMP_EFFICIENCY")
 local desired = {"CMD_SEND_ORDER", "CMD_DROPZONE", -- mech purchasing
 				"CMD_DROPZONE_2", "CMD_DROPZONE_3", -- dropship upgrading
 				"CMD_JUMP", "CMD_MASC", -- mech behaviour
-				 "CMD_UPGRADE_C3ARRAY", "CMD_UPGRADE_VEHICLEPAD", -- outposts (can already use)
-				 "CMD_UPGRADE_MECHBAY", "CMD_UPGRADE_GARRISON", "CMD_UPGRADE_UPLINK", -- outposts (maybe soon)
-				 "CMD_UPGRADE_SEISMIC", "CMD_UPGRADE_TURRETCONTROL", -- outposts (not a priority)
+				 "CMD_OUTPOST_C3ARRAY", "CMD_OUTPOST_VEHICLEPAD", -- outposts (can already use)
+				 "CMD_OUTPOST_MECHBAY", "CMD_OUTPOST_GARRISON", "CMD_OUTPOST_UPLINK", -- outposts (maybe soon)
+				 "CMD_OUTPOST_SEISMIC", "CMD_OUTPOST_TURRETCONTROL", -- outposts (not a priority)
 				 }
 local AI_CMDS = {}
 for _, cmd in pairs(desired) do
@@ -50,11 +50,11 @@ local orderSizes = {}
 
 local flagSpots = {} --VFS.Include("maps/flagConfig/" .. Game.mapName .. "_profile.lua")
 
-local teamUpgradeCounts = {} -- teamUpgradeCounts[teamID] = {c3 = 1, vpad = 1} etc
-local teamUpgradeIDs = {} -- teamUpgradeIDs[teamID] = {unitID1 = 1, unitID2 = 2 etc}
-local teamDropshipUpgrades = {} -- teamDropshipUpgrades[teamID] = 1
+local teamOutpostCounts = {} -- teamOutpostCounts[teamID] = {c3 = 1, vpad = 1} etc
+local teamOutpostIDs = {} -- teamOutpostIDs[teamID] = {unitID1 = 1, unitID2 = 2 etc}
+local teamDropshipOutposts = {} -- teamDropshipOutposts[teamID] = 1
 local teamBeacons = {} -- teamBeacons[teamID] = {beaconID1, beaconID2, ...}
-local beaconUpgradeCounts = {} -- beaconUpgradeCounts[beaconID] = 3
+local beaconOutpostCounts = {} -- beaconOutpostCounts[beaconID] = 3
 
 local function CostSort(unitDefID1, unitDefID2)
 	return UnitDefs[unitDefID1].metalCost < UnitDefs[unitDefID2].metalCost
@@ -81,9 +81,9 @@ function gadget:GamePreload()
 	-- Initialise unit limit for all AI teams.
 	local name = gadget:GetInfo().name
 	for _,t in ipairs(Spring.GetTeamList()) do
-		teamUpgradeCounts[t] = {}
-		teamUpgradeCounts[t][C3_ID] = 0
-		teamUpgradeCounts[t][VPAD_ID] = 0
+		teamOutpostCounts[t] = {}
+		teamOutpostCounts[t][C3_ID] = 0
+		teamOutpostCounts[t][VPAD_ID] = 0
 		if Spring.GetTeamLuaAI(t) ==  name then
 			AI_TEAMS[t] = true
 		end
@@ -115,25 +115,25 @@ function gadget:GamePreload()
 	end
 end
 
-local function Upgrade(unitID, teamID)
+local function Outpost(unitID, teamID)
 	if not unitID then -- set as starting beacon if not given
 		unitID = GG.dropZoneBeaconIDs[teamID]
 	end
-	if beaconUpgradeCounts[unitID] == 2 then return false end -- fully outposted TODO: change to 3
+	if beaconOutpostCounts[unitID] == 2 then return false end -- fully outposted TODO: change to 3
 	if not dropZoneIDs[teamID] then -- no dropzone left!
 		GG.Delay.DelayCall(Spring.GiveOrderToUnit, {unitID, AI_CMDS["CMD_DROPZONE"].id, {}, {}}, 1)
 		return true
-	elseif unitID then -- gonna upgrade a point, could still be nil if dropZoneBeaconIDs is behind the times
+	elseif unitID then -- gonna outpost a point, could still be nil if dropZoneBeaconIDs is behind the times
 		-- TODO: Truly horrible, just randomnly pick?
-		local cmd = ((teamUpgradeCounts[teamID][C3_ID] + teamUpgradeCounts[teamID][VPAD_ID]) % 2 == 1) and "CMD_UPGRADE_C3ARRAY" or "CMD_UPGRADE_VEHICLEPAD"
+		local cmd = ((teamOutpostCounts[teamID][C3_ID] + teamOutpostCounts[teamID][VPAD_ID]) % 2 == 1) and "CMD_OUTPOST_C3ARRAY" or "CMD_OUTPOST_VEHICLEPAD"
 		if difficulty > 1 then
 			Spring.AddTeamResource(teamID, "metal", AI_CMDS[cmd].cost)
 		end
 		if Spring.GetTeamResources(teamID, "metal") > AI_CMDS[cmd].cost then
-			local slot = cmd == "CMD_UPGRADE_C3ARRAY" and 1 or 2 -- TODO: horrible, keep track of this internally? or in beaconBuild
-			local pointID = GG.beaconUpgradePointIDs[unitID][slot]
+			local slot = cmd == "CMD_OUTPOST_C3ARRAY" and 1 or 2 -- TODO: horrible, keep track of this internally? or in beaconBuild
+			local pointID = GG.beaconOutpostPointIDs[unitID][slot]
 			GG.Delay.DelayCall(Spring.GiveOrderToUnit, {pointID, AI_CMDS[cmd].id, {}, {}}, 1)
-			beaconUpgradeCounts[unitID] = (beaconUpgradeCounts[unitID] or 0) + 1
+			beaconOutpostCounts[unitID] = (beaconOutpostCounts[unitID] or 0) + 1
 			return true
 		end
 		return false
@@ -193,9 +193,9 @@ local function Spam(teamID)
 			elseif orderSizes[teamID] == 0 then 
 				-- couldn't find any affordable mechs, try upgrading 
 				local beaconID = teamBeacons[teamID][math.random(#teamBeacons[teamID])]
-				if not Upgrade(beaconID, teamID) then
-					-- upgrade failed, try upgrading dropship
-					local nextLevel = teamDropshipUpgrades[teamID] + 1
+				if not Outpost(beaconID, teamID) then
+					-- outpost failed, try upgrading dropship
+					local nextLevel = teamDropshipOutposts[teamID] + 1
 					if nextLevel <= 3 then
 						local cost = AI_CMDS["CMD_DROPZONE_" .. nextLevel].cost
 						if difficulty > 1 then
@@ -203,7 +203,7 @@ local function Spam(teamID)
 						end
 						if Spring.GetTeamResources(teamID, "metal") > cost then
 							GG.Delay.DelayCall(Spring.GiveOrderToUnit, {unitID, AI_CMDS["CMD_DROPZONE_" .. nextLevel].id, {}, {}}, 1)
-							teamDropshipUpgrades[teamID] = nextLevel
+							teamDropshipOutposts[teamID] = nextLevel
 						end
 					end
 				end
@@ -233,7 +233,7 @@ local function Perk(unitID, unitDefID, perkID, firstTime)
 	end
 	if cp.baseclass == "mech" and Spring.GetUnitExperience(unitID) < 1.5 then 
 		return 
-	end -- TODO: check for cost of c-bill upgrades
+	end -- TODO: check for cost of c-bill outposts
 	if not perkID and availablePerkCounts[unitID] > 0 then
 		local cmdDescs = Spring.GetUnitCmdDescs(unitID)
 		local ID = math.random(1, #cmdDescs)
@@ -255,26 +255,26 @@ function gadget:UnitCreated(unitID, unitDefID, teamID)
 		local x,_,z = Spring.GetUnitPosition(unitID)
 		table.insert(flagSpots, {x = x, z = z})
 		table.insert(teamBeacons[teamID], unitID)
-		beaconUpgradeCounts[unitID] = 0
+		beaconOutpostCounts[unitID] = 0
 	end
 	if AI_TEAMS[teamID] then
 		local unitDef = UnitDefs[unitDefID]
 		if unitDef.name:find("dropzone") then
 			dropZoneIDs[teamID] = unitID	
 			Spam(teamID)
-			Upgrade(nil, teamID)
-			teamDropshipUpgrades[teamID] = 1
-			GG.Delay.DelayCall(Upgrade, {nil, teamID}, 1)
+			Outpost(nil, teamID)
+			teamDropshipOutposts[teamID] = 1
+			GG.Delay.DelayCall(Outpost, {nil, teamID}, 1)
 			if difficulty > 1 then -- loadsa money!
 				Perk(unitID, unitDefID, nil, true)
 			end
-			--table.insert(teamUpgradeIDs[teamID], unitID)
+			--table.insert(teamOutpostIDs[teamID], unitID)
 		elseif unitDef.customParams.baseclass == "mech" then
 			local closeRange = WeaponDefs[unitDef.weapons[1].weaponDef].range * 0.9
 			-- set engagement range to weapon 1 range
 			Spring.SetUnitMaxRange(unitID, closeRange)
-		elseif unitDef.customParams.baseclass == "upgrade" then
-			--table.insert(teamUpgradeIDs[teamID], unitID)
+		elseif unitDef.customParams.baseclass == "outpost" then
+			--table.insert(teamOutpostIDs[teamID], unitID)
 			if difficulty > 1 then -- loadsa money!
 				Perk(unitID, unitDefID, nil, true)
 			end
@@ -392,7 +392,7 @@ function gadget:UnitUnloaded(unitID, unitDefID, teamID, transportID, transportTe
 		local ud = UnitDefs[unitDefID]
 		local cp = ud.customParams
 		if unitDefID == C3_ID then
-			teamUpgradeCounts[teamID][C3_ID] = teamUpgradeCounts[teamID][C3_ID] + 1
+			teamOutpostCounts[teamID][C3_ID] = teamOutpostCounts[teamID][C3_ID] + 1
 			--Spring.Echo("C3!")
 			-- C3's take a little time to deploy and grant the extra tonnage & slots, so delay 10s
 			GG.Delay.DelayCall(Spam, {teamID}, 10 * 30)
@@ -400,7 +400,7 @@ function gadget:UnitUnloaded(unitID, unitDefID, teamID, transportID, transportTe
 				GG.Delay.DelayCall(UnitIdleCheck, {unitID, unitDefID, teamID}, 10 * 30)
 			end]]
 		elseif unitDefID == VPAD_ID then
-			teamUpgradeCounts[teamID][VPAD_ID] = teamUpgradeCounts[teamID][VPAD_ID] + 1
+			teamOutpostCounts[teamID][VPAD_ID] = teamOutpostCounts[teamID][VPAD_ID] + 1
 		elseif cp.jumpjets then
 			--Spring.Echo("JUMP MECH!")
 			Perk(unitID, unitDefID, PERK_JUMP_RANGE, true)
@@ -417,11 +417,11 @@ function gadget:UnitDestroyed(unitID, unitDefID, teamID, attackerID, attackerDef
 	if AI_TEAMS[teamID] then
 		local beaconID = Spring.GetUnitRulesParam(unitID, "beaconID")
 		if (unitDefID == C3_ID or unitDefID == VPAD_ID) and beaconID then
-			teamUpgradeCounts[teamID][unitDefID] = teamUpgradeCounts[teamID][unitDefID] - 1
+			teamOutpostCounts[teamID][unitDefID] = teamOutpostCounts[teamID][unitDefID] - 1
 			if tonumber(beaconID) then
-				Upgrade(tonumber(beaconID), teamID)
+				Outpost(tonumber(beaconID), teamID)
 			end
-			beaconUpgradeCounts[beaconID] = beaconUpgradeCounts[beaconID] - 1
+			beaconOutpostCounts[beaconID] = beaconOutpostCounts[beaconID] - 1
 		elseif UnitDefs[unitDefID].name:find("dropzone") then -- TODO: "DROPZONE_IDS[unitDefID] then" should work here
 			dropZoneIDs[teamID] = nil
 			-- TODO: why doesn't it get auto-switched like it does for player?
@@ -441,7 +441,7 @@ function gadget:UnitGiven(unitID, unitDefID, newTeam, oldTeam)
 	if AI_TEAMS[newTeam] then
 		if unitDefID == BEACON_ID then
 			table.insert(teamBeacons[newTeam], unitID)
-			beaconUpgradeCounts[unitID] = 0
+			beaconOutpostCounts[unitID] = 0
 			-- TODO: not sure if I need to be so careful here or can remove during the loop?
 			local toRemove = 0
 			for i, beaconID in ipairs(teamBeacons[oldTeam]) do
@@ -452,7 +452,7 @@ function gadget:UnitGiven(unitID, unitDefID, newTeam, oldTeam)
 			if toRemove > 0 then
 				table.remove(teamBeacons[oldTeam], i)
 			end
-			Upgrade(unitID, newTeam)
+			Outpost(unitID, newTeam)
 			Spam(newTeam)
 		end
 		if unitDefID == C3_ID or unitDefID == VPAD_ID then

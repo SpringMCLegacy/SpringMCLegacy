@@ -34,8 +34,8 @@ local beacon = Unit:New{
 }
 
 local beacon_point = beacon:New{
-	name              	= "Upgrade Point",
-	description         = "Beacon Upgrade Marker",
+	name              	= "Outpost Point",
+	description         = "Beacon Outpost Marker",
 	objectName        	= "beacon_point.s3o",
 	script				= "wall.lua",
 	

@@ -159,8 +159,8 @@ for i, sideName in pairs(SIDES) do
 	table.copy(spawnTable, HPAD_HOUSE_REMOVE[sideName])
 	VPAD_SPAWNOPTIONS[sideName] = {
 		{}, -- light & medium lvl 1
-		{}, -- heavy upgrade lvl 2
-		{}, -- assault upgrade lvl 3
+		{}, -- heavy outpost lvl 2
+		{}, -- assault outpost lvl 3
 	}
 	HPAD_SPAWNOPTIONS[sideName] = {
 		{}, -- light hover lvl 1
@@ -196,7 +196,7 @@ for name, ud in pairs(UnitDefs) do
 		end
 	end
 	if cp and cp.baseclass then -- mech, vehicle, apc, vtol, infantry
-		local normalname = cp.baseclass == "upgrade" and name or ud.name:gsub(" ", "")
+		local normalname = cp.baseclass == "outpost" and name or ud.name:gsub(" ", "")
 		cp.normaltex = "unittextures/normals/" .. normalname .. "_Normals.dds"
 		ud.name = ud.name .. " " .. (cp.variant or "") -- concatenate variant code to name
 		cp.infocard = {}
@@ -378,11 +378,11 @@ for name, ud in pairs(UnitDefs) do
 		DROPZONE_UDS[side] = ud
 	end
 		
-	if name == "beacon" or cp.baseclass == "upgrade" or cp.dropship then 
+	if name == "beacon" or cp.baseclass == "outpost" or cp.dropship then 
 		if name == "beacon" then
 			BEACON_UD = ud 
 			ud.canselfdestruct = false
-		elseif name == "upgrade_turretcontrol" then
+		elseif name == "outpost_turretcontrol" then
 			TCONTROL_UD = ud
 		elseif cp.dropship or name:find("dropzone") then
 			ud.canselfdestruct = false
