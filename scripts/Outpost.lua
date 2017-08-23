@@ -92,7 +92,7 @@ local function Blinks()
 	end
 end
 
-function outpost(level)
+function Upgrade(level)
 	if name == "outpost_vehiclepad" or name == "outpost_hoverpad" then
 		if level == 2 then
 			Show(base2)
