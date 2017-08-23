@@ -130,6 +130,14 @@ function gadget:UnitCreated(unitID, unitDefID, teamID, builderID)
 	end
 end
 
+function gadget:UnitDestroyed(unitID, unitDefID, teamID)
+	yardLevels[unitID] = nil
+	yardQueues[unitID] = nil
+	salvagerYards[unitID] = nil
+	yardSalvagers[unitID] = nil
+	idleSalvagers[unitID] = nil
+end
+
 function gadget:FeatureCreated(featureID, allyTeamID)
 	local fd = FeatureDefs[Spring.GetFeatureDefID(featureID)]
 	local cp = fd.customParams
@@ -137,7 +145,7 @@ function gadget:FeatureCreated(featureID, allyTeamID)
 		--for yardID, yardQueue in pairs(yardQueues) do
 		for yardID, level in pairs(yardLevels) do
 			local dist = Spring.GetUnitFeatureSeparation(yardID, featureID, true)
-			if dist <= SALVAGE_RANGE then -- TODO: allow for upgrading range
+			if dist and dist <= SALVAGE_RANGE then -- TODO: allow for upgrading range
 				--OrderedPush(yardID, dist, featureID)
 				local salvagerID = yardSalvagers[yardID]
 				--Spring.Echo("New corpse!", salvagerID, idleSalvagers[salvagerID])
