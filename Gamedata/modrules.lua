@@ -16,6 +16,12 @@ return {
 		allowDirectionalPathing = true,
 		allowHoverUnitStrafing = true,
 	},
+	reclaim = {
+		multiReclaim = 1,
+		reclaimMethod = 0,
+		allowEnemies = false,
+		allowAlies = false,
+	},
 	system = {
 		pathFinderSystem = 1,
 	},

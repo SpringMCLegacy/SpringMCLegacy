@@ -180,7 +180,7 @@ local function RandomVehicle(unitID, spawnDefID, level, class, weight, weightInd
 	
 	local originalWeight = weight
 	-- sideSpawnLists[side][level][class][weight]
-	--Spring.Echo("Random Vehicle DESIRED", level, class, weight)
+	Spring.Echo("Random Vehicle DESIRED", level, class, weight, weightIndex)
 	while weightIndex > 0 and #sideSpawnLists[vehiclePadSides[unitID]][spawnDefID][padLevels[unitID]][class][weight] == 0 do
 		weightIndex = weightIndex - 1
 		weight = weights[weightIndex]

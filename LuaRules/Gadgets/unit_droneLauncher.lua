@@ -70,11 +70,11 @@ end
 
 -- function for APC to halt and group to leave APC
 local function DisEmbark(apcID, group, targetID, count)
-	Spring.Echo("CONFIRM Target ID is", targetID)
+	--Spring.Echo("CONFIRM Target ID is", targetID)
 	-- TODO: ...
 	Spring.GiveOrderToUnitMap(group, CMD.ATTACK, {targetID}, {})
 	APCCountChange(apcID, count)
-	Spring.Echo("APC", apcID, "has now got ", apcDeployed[apcID], "deployed")
+	--Spring.Echo("APC", apcID, "has now got ", apcDeployed[apcID], "deployed")
 	apcGroups[apcID] = group
 	apcTargets[targetID] = apcID
 	Spring.GiveOrderToUnit(apcID, CMD_SUPPORT, {}, {})
@@ -120,7 +120,7 @@ end
 function gadget:UnitDestroyed(unitID, unitDefID, teamID)
 	local apcID = apcTargets[unitID]
 	if apcID and not Spring.GetUnitIsDead(apcID) then -- a APC target died, RTB if idle
-		Spring.Echo("TANGO DOWN!", apcID)
+		--Spring.Echo("TANGO DOWN!", apcID)
 		-- check if APC is now idle
 		local hasTarget = false
 		for i = 1, 2 do -- TODO: check all APC weapons?
@@ -128,12 +128,12 @@ function gadget:UnitDestroyed(unitID, unitDefID, teamID)
 			hasTarget = hasTarget or (targetType == 1 and targetID ~= unitID and targetID)
 		end
 		if hasTarget then
-			Spring.Echo("APC ", apcID, "has target", hasTarget)
+			--Spring.Echo("APC ", apcID, "has target", hasTarget)
 			Spring.GiveOrderToUnitMap(apcGroups[apcID], CMD.ATTACK, {hasTarget}, {})
 			apcTargets[hasTarget] = apcID	
 		else -- idle, rtb
 			Spring.GiveOrderToUnitMap(apcGroups[apcID], CMD_EMBARK, {}, {})
-			Spring.Echo("No more targets, RTB!")
+			--Spring.Echo("No more targets, RTB!")
 		end
 		apcTargets[unitID] = nil
 	elseif baAPCs[unitID] then

@@ -72,6 +72,8 @@ GG.dropZoneBeaconIDs = dropZoneBeaconIDs
 local dropZoneCmdDesc
 
 local activeDropships = {} -- activeDropships[dropshipID] = beaconID
+local beaconActive = {} -- beaconActive[beaconID] = dropshipID
+local beaconDropshipQueue = {} -- beaconDropshipQueue[beaconID] = {info1 = {}, info2 = {}, ...}
 
 local hotSwapIDs = {} -- hotSwapIDs[unitID] = true
 local function HotSwap(unitID, unitDefID, teamID)
@@ -194,9 +196,6 @@ function SpawnDropship(beaconID, unitID, teamID, dropshipType, cargo, cost)
 		beaconDropshipQueue[beaconID] = {}
 	end
 end
-
-local beaconActive = {} -- beaconActive[beaconID] = dropshipID
-local beaconDropshipQueue = {} -- beaconDropshipQueue[beaconID] = {info1 = {}, info2 = {}, ...}
 
 function NextDropshipQueueItem(beaconID, teamID)
 	if beaconID and #beaconDropshipQueue[beaconID] > 0 then
