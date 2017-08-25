@@ -125,7 +125,7 @@ function gadget:UnitCreated(unitID, unitDefID, teamID, builderID)
 	if unitDefID == SALVAGEYARD_ID then
 		yardLevels[unitID] = 1
 		yardQueues[unitID] = {}
-	elseif unitDefID == BRV then-- TODO: support multiple types of brv
+	elseif unitDefID == BRV_ID then-- TODO: support multiple types of brv
 		InsertUnitCmdDesc(unitID, depositCmdDesc)
 	end
 end

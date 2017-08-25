@@ -213,6 +213,11 @@ local function GenerateUnitGraphics(uid, udid, getAuras)
 			bars.health = {}
 			bars.health.color = {0,0,0,0.8}
 		end
+		local currSalvage, maxSalvage = Spring.GetUnitHarvestStorage(uid) -- TODO: cache BRVs
+		if currSalvage then
+			bars.salvage = {}
+			bars.salvage.color = {0.9, 0.9, 0.0, 0.8}
+		end
 		if Spring.IsUnitAllied(uid) then
             if ud.customParams.maxammo then
                 bars.ammo = {}
@@ -285,6 +290,18 @@ local function GenerateUnitGraphics(uid, udid, getAuras)
 		end
 	end
 
+	-- SALVAGE
+	if bars.salvage then
+		local currSalvage, maxSalvage = Spring.GetUnitHarvestStorage(uid)
+		if currSalvage > 0 then
+			local percentage = math.min(1, currSalvage/maxSalvage)
+			bars.salvage.cur = percentage
+			bars.salvage.pct = percentage
+			display = true
+		else
+			bars.salvage.pct = nil
+		end
+	end
 	-- AURAS
 
 	if getAuras then
