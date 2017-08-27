@@ -27,7 +27,6 @@ local SR1OP = Strider:New{
 		price			= 8670,
 		heatlimit 		= 10,
 		armor			= {type = "standard", tons = 7.5},
-		jumpjets		= 6,
 		maxammo 		= {srm = 2},
     },
 }
@@ -49,7 +48,6 @@ local SR1OB = Strider:New{
 		price			= 9100,
 		heatlimit 		= 10,
 		armor			= {type = "standard", tons = 7.5},
-		jumpjets		= 6,
 		maxammo 		= {lrm = 2},
     },
 }
