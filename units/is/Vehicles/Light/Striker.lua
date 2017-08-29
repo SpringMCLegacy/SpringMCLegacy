@@ -23,6 +23,7 @@ local Striker = LightTank:New{
 		maxammo 		= {lrm = 1, srm = 1},
 		squadsize 		= 1,
 		replaces		= "fs_hunter",
+		wheels			= true,
     },
 }
 

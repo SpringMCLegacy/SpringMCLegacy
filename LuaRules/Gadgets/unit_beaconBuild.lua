@@ -189,7 +189,7 @@ function SpawnDropship(beaconID, unitID, teamID, dropshipType, cargo, cost)
 			DelayCall(SpawnCargo, {beaconID, unitID, dropshipID, cargo, teamID}, 1)
 		end
 		return dropshipID
-	else -- dropzone moved or beacon was capped
+	elseif not select(3, Spring.GetTeamInfo(teamID)) then -- dropzone moved or beacon was capped, but team lives
 		-- Refund
 		Spring.AddTeamResource(teamID, "metal", cost)
 		-- Delete the entire drop queue

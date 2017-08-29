@@ -163,7 +163,7 @@ function gadget:UnitIdle(unitID, unitDefID, teamID)
 	if yardID then -- is a BRV
 		--Spring.Echo("Yawn! Nought to do here boss")
 		local dist = Spring.GetUnitSeparation(unitID, yardID)
-		if dist > 50 then -- nothing else to salvage, force RTB
+		if dist and dist > 50 then -- nothing else to salvage, force RTB
 			gadget:UnitHarvestStorageFull(unitID, unitDefID, teamID)
 		else
 			idleSalvagers[unitID] = true
@@ -193,7 +193,7 @@ function gadget:CommandFallback(unitID, unitDefID, teamID, cmdID, cmdParams, cmd
 	if cmdID == CMD_DEPOSIT then
 		local yardID = salvagerYards[unitID]
 		local dist = Spring.GetUnitSeparation(unitID, yardID)
-		if dist < 50 then
+		if dist and dist < 50 then
 			--Spring.Echo("Made it back, have " .. Spring.GetUnitHarvestStorage(unitID) .. " CBills!")
 			Spring.AddTeamResource(teamID, "metal", Spring.GetUnitHarvestStorage(unitID))
 			Spring.SetUnitHarvestStorage(unitID, 0)

@@ -377,7 +377,7 @@ end
 function limbHPControl(limb, damage)
 	local currHP = limbHPs[limb]
 	--Spring.Echo(limb, currHP, damage)
-	if currHP > 0 or damage < 0 then
+	if currHP and currHP > 0 or damage < 0 then
 		local newHP = math.min(limbHPs[limb] - damage, info.limbHPs[limb]) -- don't allow HP above max
 		if newHP < 0 then 
 			hideLimbPieces(limb, true)
@@ -465,7 +465,7 @@ local function UnLoad(targetID)
 	deployed = true
 	-- TODO: Animation
 	local count = 0
-	Spring.Echo("Target ID is", targetID)
+	--Spring.Echo("Target ID is", targetID)
 	for passengerID in pairs(cargo) do
 		Spring.SetUnitLoadingTransport(passengerID, unitID)
 		Spring.UnitDetach(passengerID)

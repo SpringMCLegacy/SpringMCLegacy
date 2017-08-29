@@ -98,7 +98,7 @@ local chances = {
 		[2] = { -- Tier 2: heavy
 			-- following sum to 1
 			class = {
-				arty = 0.1,
+				arty = 0.15,
 				apc = 0.15,
 				regular = 0.7,
 			},
@@ -180,7 +180,8 @@ local function RandomVehicle(unitID, spawnDefID, level, class, weight, weightInd
 	
 	local originalWeight = weight
 	-- sideSpawnLists[side][level][class][weight]
-	Spring.Echo("Random Vehicle DESIRED", level, class, weight, weightIndex)
+	-- [f=0032028] Random Vehicle DESIRED, 2, nil, medium, 2
+	--Spring.Echo("Random Vehicle DESIRED", level, class, weight, weightIndex)
 	while weightIndex > 0 and #sideSpawnLists[vehiclePadSides[unitID]][spawnDefID][padLevels[unitID]][class][weight] == 0 do
 		weightIndex = weightIndex - 1
 		weight = weights[weightIndex]

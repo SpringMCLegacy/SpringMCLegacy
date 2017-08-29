@@ -52,7 +52,7 @@ end
 
 local function APCCountChange(apcID, change)
 	apcDeployed[apcID] = apcDeployed[apcID] + change
-	Spring.Echo("APC", apcID, "has now got ", apcDeployed[apcID], "deployed")
+	--Spring.Echo("APC", apcID, "has now got ", apcDeployed[apcID], "deployed")
 	if apcDeployed[apcID] == 0 then
 		-- everyone is home, be on your way
 		GG.Delay.DelayCall(GG.Wander, {apcID}, 30)
@@ -136,7 +136,8 @@ function gadget:UnitDestroyed(unitID, unitDefID, teamID)
 			--Spring.Echo("No more targets, RTB!")
 		end
 		apcTargets[unitID] = nil
-	elseif baAPCs[unitID] then
+	end
+	if baAPCs[unitID] then
 		local apcID = baAPCs[unitID]
 		if apcID and not Spring.GetUnitIsDead(apcID) then
 			APCCountChange(apcID, -1)
@@ -172,7 +173,10 @@ function gadget:CommandFallback(unitID, unitDefID, unitTeam, cmdID, cmdParams, c
 				-- UnitSeparation is no good for getting in at the back... 
 				--local dist = Spring.GetUnitSeparation(unitID, apcID)
 				local dx, dy, dz = Spring.GetUnitDirection(apcID)
-				local tx, tz = x - LOAD_RADIUS * dx, z - LOAD_RADIUS * dz
+				if not dx then
+					Spring.Echo("WTF mate", apcID, UnitDefs[Spring.GetUnitDefID(apcID)].name)
+				end
+				local tx, tz = x - LOAD_RADIUS * dx, z - LOAD_RADIUS * dz -- crash here due to dx being nil... wtf?
 				local dist = GG.GetUnitDistanceToPoint(unitID, tx, y, tz)
 				if dist > LOAD_RADIUS then
 					Spring.SetUnitMoveGoal(unitID, tx, y, tz, LOAD_RADIUS * 0.5)

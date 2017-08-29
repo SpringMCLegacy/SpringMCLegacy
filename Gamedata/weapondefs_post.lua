@@ -95,20 +95,22 @@ end
 
 for unitName, ud in pairs(UnitDefs) do
 	local weapons = ud.weapons
-	if weapons then
+	if weapons or ud.canreclaim then -- TODO: remove stupid hack for BRVs
 		if not ud.sfxtypes then
 			ud.sfxtypes = { explosiongenerators = {} }
 		end
 		-- for now all untis have jumpjet CEG as 1 (SFX.CEG)
 		table.insert(ud.sfxtypes.explosiongenerators, 1, "custom:heavy_jumpjet_trail_blue")
 		local cp = ud.customparams
-		for weaponID = 1, #weapons - (cp.baseclass == "mech" and 1 or 0) do -- SFX.CEG + weaponID
-			local cegFlare = cegCache[string.lower(weapons[weaponID].name)]
-			if cegFlare then
-				--Spring.Echo("cegFlare: " .. cegFlare)
-				--if not table.contains(ud.sfxtypes.explosiongenerators, "custom:" .. cegFlare) then
-					table.insert(ud.sfxtypes.explosiongenerators, weaponID + 1, "custom:" .. cegFlare)
-				--end
+		if weapons then
+			for weaponID = 1, #weapons - (cp.baseclass == "mech" and 1 or 0) do -- SFX.CEG + weaponID
+				local cegFlare = cegCache[string.lower(weapons[weaponID].name)]
+				if cegFlare then
+					--Spring.Echo("cegFlare: " .. cegFlare)
+					--if not table.contains(ud.sfxtypes.explosiongenerators, "custom:" .. cegFlare) then
+						table.insert(ud.sfxtypes.explosiongenerators, weaponID + 1, "custom:" .. cegFlare)
+					--end
+				end
 			end
 		end
 		if cp.baseclass == "mech" or cp.baseclass == "vehicle" or cp.baseclass == "vtol" or cp.baseclass == "aero" then
@@ -130,6 +132,7 @@ for unitName, ud in pairs(UnitDefs) do
 					object = cp.baseclass == "mech" and ud.objectname or modelPath .. "corpse/" .. unitName .. "_x.s3o",
 					customparams = {["was"] = ud.name},
 					reclaimable = true,
+					upright = cp.baseclass == "mech",
 				}
 				-- Second level corpse
 				FeatureDefs[ud.corpse .. "x"] = Feature:New{
@@ -143,6 +146,7 @@ for unitName, ud in pairs(UnitDefs) do
 					object = cp.baseclass == "mech" and ud.objectname or modelPath .. "corpse/" .. unitName .. "_x.s3o",
 					customparams = {["was"] = ud.name},
 					reclaimable = true,
+					upright = cp.baseclass == "mech",
 				}
 				if not VFS.FileExists("objects3d/" .. modelPath .. "corpse/" .. unitName .. "_x.s3o") then
 					--Spring.Echo("[WeaponDefs_post.lua]: Missing corpse object; " .. modelPath .. "corpse/" .. unitName .. "_x.s3o")
