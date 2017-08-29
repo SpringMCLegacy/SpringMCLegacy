@@ -17,6 +17,7 @@ if (gadgetHandler:IsSyncedCode()) then
 local modOptions = Spring.GetModOptions()
 GG.modOptions = modOptions
 GG.lusHelper = {}
+GG.Sounds = VFS.Include("gamedata/sounds.lua")
 sqrt = math.sqrt
 
 -- Synced Read
@@ -126,7 +127,10 @@ GG.PlaySoundAtUnit = PlaySoundAtUnit
 
 local unsyncedBuffer = {}
 local function PlaySoundForTeam(teamID, sound, volume)
-	table.insert(unsyncedBuffer, {teamID, sound, volume})
+	local exists = GG.Sounds.SoundItems[sound]
+	if exists then -- To check for missing sounds, remove this
+		table.insert(unsyncedBuffer, {teamID, sound, volume})
+	end
 end
 GG.PlaySoundForTeam = PlaySoundForTeam
 
