@@ -15,12 +15,15 @@ local AWS8Q = Awesome:New{
 		},
 		[2] = {
 			name	= "PPC",
+			OnlyTargetCategory = "ground",
 		},
 		[3] = {
 			name	= "PPC",
+			OnlyTargetCategory = "ground",
 		},
 		[4] = {
 			name	= "SBL",
+			OnlyTargetCategory = "ground",
 		},
 	},
 		
@@ -41,21 +44,26 @@ local AWS9M = Awesome:New{
 		},
 		[2] = {
 			name	= "ERPPC",
+			OnlyTargetCategory = "ground",
 		},
 		[3] = {
 			name	= "ERPPC",
+			OnlyTargetCategory = "ground",
 		},
 		[4] = {
 			name	= "SBL",
+			OnlyTargetCategory = "ground",
 		},
 		[5] = {
 			name	= "MPL",
+			OnlyTargetCategory = "ground",
 		},
 		[6] = {
 			name	= "SSRM2",
 		},
 		[7] = {
 			name	= "SSRM2",
+			OnlyTargetCategory = "ground",
 		},
 	},
 		
