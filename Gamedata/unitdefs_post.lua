@@ -255,6 +255,9 @@ for name, ud in pairs(UnitDefs) do
 				ud.radardistance = roleSensors[cp.role].radar
 			end
 			cp.sectorangle = cp.sectorangle or (cp.role and roleSensors[cp.role].sector) or modOptions.sectorangle or 45
+		elseif cp.baseclass == "infantry" then
+			ud.radardistance = 1000 -- no sensors
+			cp.sectorangle = 180
 		end
 	end
 	-- set maxvelocity by modoption

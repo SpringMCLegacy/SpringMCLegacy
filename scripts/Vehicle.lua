@@ -150,7 +150,8 @@ local function RestoreAfterDelay()
 		Turn(launchers[id], x_axis, 0, ELEVATION_SPEED)
 	end
 	Spring.SetUnitRulesParam(unitID, "fighting", 0)
-	--GG.ComeHome(unitID)
+	GG.Embark(unitID)
+	--Spring.Echo(unitID, "RestoreAfterDelay called GG.Embark")
 end
 
 -- non-local function called by gadgets/game_ammo.lua
@@ -467,6 +468,7 @@ local function UnLoad(targetID)
 	local count = 0
 	--Spring.Echo("Target ID is", targetID)
 	for passengerID in pairs(cargo) do
+		Spring.SetUnitRulesParam(passengerID, "APC", unitID, {["public"] = true})
 		Spring.SetUnitLoadingTransport(passengerID, unitID)
 		Spring.UnitDetach(passengerID)
 		count = count + 1

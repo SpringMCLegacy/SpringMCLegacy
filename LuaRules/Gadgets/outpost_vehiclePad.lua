@@ -283,6 +283,7 @@ end
 
 local function Wander(unitID, cmd)
 	if Spring.ValidUnitID(unitID) and not Spring.GetUnitIsDead(unitID) then
+		--Spring.Echo("Wander!", unitID, cmd)
 		local teamID = Spring.GetUnitTeam(unitID)
 		if select(3, Spring.GetTeamInfo(teamID)) then return false end -- team died
 		if teamID == GAIA_TEAM_ID then return false end -- team died and unit transferred to gaia
@@ -292,10 +293,12 @@ local function Wander(unitID, cmd)
 		local offsetZ = math.random(50, 150)
 		offsetX = offsetX * -1 ^ (offsetX % 2)
 		offsetZ = offsetZ * -1 ^ (offsetZ % 2)
-		if cmd then
-			GG.Delay.DelayCall(Spring.GiveOrderToUnit, {unitID, cmd, {spot.x + offsetX, 0, spot.z + offsetZ}, {}}, 1)
-		end
-		GG.Delay.DelayCall(Spring.GiveOrderToUnit, {unitID, CMD.FIGHT, {spot.x + offsetX, 0, spot.z + offsetZ}, {"shift"}}, 1)
+		local y = Spring.GetGroundHeight(spot.x, spot.z)
+		--if cmd then
+		cmd = CMD.FIGHT
+			GG.Delay.DelayCall(Spring.GiveOrderToUnit, {unitID, cmd, {spot.x + offsetX, y, spot.z + offsetZ}, {}}, 1)
+		--end
+		--GG.Delay.DelayCall(Spring.GiveOrderToUnit, {unitID, CMD.FIGHT, {spot.x + offsetX, y, spot.z + offsetZ}, {"shift"}}, 1)
 	end
 end
 
@@ -319,7 +322,7 @@ end
 
 function gadget:UnitIdle(unitID, unitDefID, teamID)
 	--Spring.Echo("UnitIdle", UnitDefs[unitDefID].name)
-	if vehiclesDefCache[unitDefID] and not (Spring.GetUnitRulesParam(unitID, "dronesout") == 1) then -- a vehicle
+	if vehiclesDefCache[unitDefID] and not ((Spring.GetUnitRulesParam(unitID, "deployed") or 0) > 0) then -- a vehicle
 		--local commandQueue = Spring.GetCommandQueue(unitID)
 		--for k, v in pairs(commandQueue) do Spring.Echo(k,v) end
 		--local cmdQueueSize = Spring.GetCommandQueue(unitID, 0) or 0

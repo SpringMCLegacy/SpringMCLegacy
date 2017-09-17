@@ -19,6 +19,7 @@ GG.CommandCosts = {} -- CommandCosts[cmdID] = cBillCost
 GG.CustomCommands = {}
 GG.CustomCommands.numCmds = 0
 GG.CustomCommands.IDs = {}
+GG.CustomCommands.names = {}
 
 _G.CustomCommandIDs = {}
 
@@ -40,6 +41,7 @@ local function GetCmdID(name, cost)
 		GG.CommandCosts[cmdID] = cost or 0
 		customCommands.numCmds = customCommands.numCmds + 1
 		customCommands.IDs[name] = cmdID
+		customCommands.names[cmdID] = name
 		_G.CustomCommandIDs[name] = cmdID
 		gadgetHandler:RegisterCMDID(cmdID)
 		--Spring.Echo(name, cmdID)

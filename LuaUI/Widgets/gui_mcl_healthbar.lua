@@ -213,23 +213,28 @@ local function GenerateUnitGraphics(uid, udid, getAuras)
 			bars.health = {}
 			bars.health.color = {0,0,0,0.8}
 		end
-		local currSalvage, maxSalvage = Spring.GetUnitHarvestStorage(uid) -- TODO: cache BRVs
-		if currSalvage then
-			bars.salvage = {}
-			bars.salvage.color = {0.625, 0.625, 0.625, 0.8}
-		end
+			if ud.transportCapacity > 0 and ud.customParams.baseclass == "vehicle" then -- APC
+				bars.apc = {}
+				bars.apc.max = 5 -- TODO: read squad size
+				bars.apc.color = {0, 0, 1, 0.8}
+			end
 		if Spring.IsUnitAllied(uid) then
             if ud.customParams.maxammo then
                 bars.ammo = {}
                 bars.ammo.max = ud.customParams.maxammo
                 bars.ammo.color = {1.0, 1.0, 0, 0.8}
             end
-
             if reloadDataList[udid] then
                 bars.reload = {}
                 bars.reload.max = 1
                 bars.reload.color = {0, 0.5, 0.9, 0.8}
             end
+			local currSalvage, maxSalvage = Spring.GetUnitHarvestStorage(uid) -- TODO: cache BRVs
+			if currSalvage then
+				bars.salvage = {}
+				bars.salvage.color = {0.625, 0.625, 0.625, 0.8}
+			end	
+
         end
 	end
 
@@ -302,6 +307,16 @@ local function GenerateUnitGraphics(uid, udid, getAuras)
 			bars.salvage.pct = nil
 		end
 	end
+	
+	-- APC
+	if bars.apc then
+		local passengers = Spring.GetUnitIsTransporting(uid)
+		local percentage = math.min(1, (passengers and #passengers or 0)/bars.apc.max)
+		bars.apc.cur = percentage
+		bars.apc.pct = percentage
+		display = true
+	end
+	
 	-- AURAS
 
 	if getAuras then

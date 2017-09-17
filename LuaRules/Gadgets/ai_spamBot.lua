@@ -325,15 +325,19 @@ local function RunAndJump(unitID, unitDefID, cmdID, spotNum, replace)
 		x = x + targetVector.x*distCovered
 		z = z + targetVector.z*distCovered
 		y = Spring.GetGroundHeight(x,z)
-		local order = {cmdID, {x, y, z}, {replace and "" or "shift"}}
-		--Spring.Echo("Adding CMD_MOVE")
-		table.insert(orderArray, order)
+		if y > 0 then
+			local order = {cmdID, {x, y, z}, {replace and "" or "shift"}}
+			--Spring.Echo("Adding CMD_MOVE")
+			table.insert(orderArray, order)
+		end
 		x = x + targetVector.x*jumpLength
 		z = z + targetVector.z*jumpLength
 		y = Spring.GetGroundHeight(x,z)
-		--Spring.Echo("Adding CMD_JUMP")
-		order = {y > 0 and AI_CMDS["CMD_JUMP"].id or cmdID, {x, y, z}, {"shift"}}
-		table.insert(orderArray, order)
+		if y > 0 then
+			--Spring.Echo("Adding CMD_JUMP")
+			order = {y > 0 and AI_CMDS["CMD_JUMP"].id or cmdID, {x, y, z}, {"shift"}}
+			table.insert(orderArray, order)
+		end
 	end
 	-- make sure last command is a jump onto beacon
 	order = {AI_CMDS["CMD_JUMP"].id, {target.x, Spring.GetGroundHeight(target.x, target.z), target.z}, {"shift"}}
