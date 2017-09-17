@@ -81,7 +81,7 @@ local function Embark(apcID)
 	-- TODO: Call APC LUS function to handle the loading, though really this needs to be done on a 'as unit returns' basis...
 	-- Spring.SetUnitLoadingTransport(passengerID, apcID)
 	-- 
-	if apcDeployed[apcID] > 0 and apcGroups[apcID] then -- troops left to embark
+	if (apcDeployed[apcID] or 0) > 0 and apcGroups[apcID] then -- troops left to embark
 		Spring.GiveOrderToUnitMap(apcGroups[apcID], CMD_EMBARK, {}, {})
 	else
 		--Spring.Echo(apcID, "Asked to embark but already full, so Wander")
