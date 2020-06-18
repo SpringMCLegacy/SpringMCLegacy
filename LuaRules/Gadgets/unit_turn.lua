@@ -95,14 +95,18 @@ end
 
 function gadget:GameFrame(n)
 	for unitID, turnTable in pairs(turning) do
-		if turnTable.numFrames and turnTable.numFrames > 0 then
-			turnTable.currHeading = turnTable.currHeading + turnTable.turnRate
-			if turnTable.currHeading < -180 * COB_ANGULAR then turnTable.currHeading = turnTable.currHeading + 360 * COB_ANGULAR end
-			if turnTable.currHeading > 180 * COB_ANGULAR then turnTable.currHeading = turnTable.currHeading - 360 * COB_ANGULAR end
-			turnTable.numFrames = turnTable.numFrames - 1
-			SetUnitCOBValue(unitID, COB.HEADING, turnTable.currHeading)
-		elseif turnTable.numFrames then -- only stop the first time, not when turnTable has become {}
-			StopTurn(unitID)
+		if Spring.ValidUnitID(unitID) and not Spring.GetUnitIsDead(unitID) then
+			if turnTable.numFrames and turnTable.numFrames > 0 then
+				turnTable.currHeading = turnTable.currHeading + turnTable.turnRate
+				if turnTable.currHeading < -180 * COB_ANGULAR then turnTable.currHeading = turnTable.currHeading + 360 * COB_ANGULAR end
+				if turnTable.currHeading > 180 * COB_ANGULAR then turnTable.currHeading = turnTable.currHeading - 360 * COB_ANGULAR end
+				turnTable.numFrames = turnTable.numFrames - 1
+				SetUnitCOBValue(unitID, COB.HEADING, turnTable.currHeading)
+			elseif turnTable.numFrames then -- only stop the first time, not when turnTable has become {}
+				StopTurn(unitID)
+			end
+		else
+			turning[unitID] = nil
 		end
 	end
 end
@@ -112,6 +116,10 @@ function gadget:UnitCreated(unitID, unitDefID, unitTeam, builderID)
 	if ud.customParams.hasturnbutton then
 		Spring.InsertUnitCmdDesc(unitID, 500, turnCmdDesc)
 	end
+end
+
+function gadget:UnitDestroyed(unitID)
+	turning[unitID] = nil
 end
 
 local CMD_JUMP = GG.CustomCommands.GetCmdID("CMD_JUMP")
