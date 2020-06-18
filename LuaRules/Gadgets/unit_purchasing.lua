@@ -66,7 +66,7 @@ local sellOrderCmdDesc = {
 	type   = CMDTYPE.ICON,
 	name   = "  Sell   \n  Unit  ",
 	action = 'sell_mech',
-	tooltip = "Calls a dropship to sell the unit (75% return)",
+	tooltip = "Calls a dropship to sell the unit (75% return)", -- TODO: read modoption for % return
 }
 	
 local CMD_SEND_ORDER = GG.CustomCommands.GetCmdID("CMD_SEND_ORDER")
@@ -359,7 +359,7 @@ local function ShowBuildOptionsByType(unitID, unitType)
 end
 
 local function ResetBuildQueue(unitID)
-	local orderQueue = Spring.GetFactoryCommands(unitID)
+	local orderQueue = Spring.GetFactoryCommands(unitID, -1)
 	for i, order in ipairs(orderQueue) do
 		GG.Delay.DelayCall(Spring.GiveOrderToUnit,{unitID, CMD.REMOVE, {order.tag}, {"ctrl"}},1)
 	end
