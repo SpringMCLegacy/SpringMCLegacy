@@ -69,6 +69,7 @@ local TORSO_SPEED = info.torsoTurnSpeed
 local ELEVATION_SPEED = info.elevationSpeed
 local BARREL_SPEED = info.barrelRecoilSpeed
 local RESTORE_DELAY = Spring.UnitScript.GetLongestReloadTime(unitID) * 2
+local CMD_JUMP = GG.CustomCommands.GetCmdID("CMD_JUMP")
 
 local currLaunchPoint = 1
 local currHeatLevel = 0
@@ -284,16 +285,23 @@ local function MASCHeat()
 	end
 end
 
+function SpeedChangeCheck()
+	while jumping do -- don't trigger speed change until jump is finished
+		Sleep(500)
+	end
+	GG.SpeedChange(unitID, unitDefID, speedMod)
+end
+
 function MASC(activated)
 	if activated then
 		speedMod = speedMod * 1.3
 		mascActive = true
-		GG.SpeedChange(unitID, unitDefID, speedMod, true)
+		StartThread(SpeedChangeCheck)
 		StartThread(MASCHeat)
 	else
 		speedMod = speedMod / 1.3
 		mascActive = false
-		GG.SpeedChange(unitID, unitDefID, speedMod)
+		StartThread(SpeedChangeCheck)
 		StartThread(MASCHeat)
 	end
 end
@@ -331,6 +339,7 @@ function SmokeLimb(limb, piece)
 	end
 end
 
+local lostLegs = 0
 function hideLimbPieces(limb, hide)
 	local rootPiece
 	local limbWeapons
@@ -345,13 +354,21 @@ function hideLimbPieces(limb, hide)
 		RecursiveHide(rootPiece, hide)
 	else -- legs
 		if hide then
+			lostLegs = lostLegs + 1
 			--Spring.Echo("Lost a leg! halving move speed")
 			speedMod = speedMod / 2
+			-- disable jumpjets
+			Spring.EditUnitCmdDesc(unitID, Spring.FindUnitCmdDesc(unitID, CMD_JUMP), {disabled = true})
 		else -- leg is restored
+			lostLegs = lostLegs - 1
 			--Spring.Echo("Regained a leg! doubling move speed")
 			speedMod = speedMod * 2
+			if lostLegs == 0 then -- enable jumpjets
+				Spring.EditUnitCmdDesc(unitID, Spring.FindUnitCmdDesc(unitID, CMD_JUMP), {disabled = false})
+			end
 		end
-		GG.SpeedChange(unitID, unitDefID, speedMod)
+		SetUnitRulesParam(unitID, "lostlegs", lostLegs)
+		StartThread(SpeedChangeCheck)
 		return
 	end
 	if hide then

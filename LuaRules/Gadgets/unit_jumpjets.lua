@@ -275,14 +275,6 @@ local function Jump(unitID, goal, cmdTag)
 	    mcSetRotation(unitID, 0, (startHeading - 2^15)/rotUnit, 0) -- keep current heading
         mcSetRotationVelocity(unitID, 0, turn/rotUnit*step, 0)
 	  end
-	  
-	  --[[fakeUnitID = spCreateUnit(
-	  "fakeunit_aatarget", start[1], start[2], start[3], "n", teamID)
-	  mcEnable(fakeUnitID)
-	  spSetUnitNoSelect(fakeUnitID, true)
-	  spSetUnitBlocking(fakeUnitID, false)
-	  spSetUnitNoDraw(fakeUnitID, true)
-	  spSetUnitNoMinimap(fakeUnitID, true)]]
 	end
   
     local halfJump
@@ -325,7 +317,7 @@ local function Jump(unitID, goal, cmdTag)
 	mcDisable(unitID)
 	
 		--mcSetPosition(unitID, start[1] + vector[1],start[2] + vector[2]-6,start[3] + vector[3])
-    local oldQueue = spGetCommandQueue(unitID)
+    local oldQueue = spGetCommandQueue(unitID, -1)
 	
     ReloadQueue(unitID, oldQueue, cmdTag)
 	
@@ -398,19 +390,18 @@ function gadget:UnitDestroyed(unitID, unitDefID)
 end
 
 
-function gadget:AllowCommand(unitID, unitDefID, teamID,
-                             cmdID, cmdParams, cmdOptions)
+function gadget:AllowCommand(unitID, unitDefID, teamID, cmdID, cmdParams, cmdOptions)
   -- don't allow jumping if at/above critical heat
-  if (cmdID == CMD_JUMP and (spGetUnitRulesParam(unitID, "heat") or 0) >= 50) then
-    return false
+  if (cmdID == CMD_JUMP) then
+    if (spGetUnitRulesParam(unitID, "heat") or 0) >= 50 then return false end -- can't jump if too hot
+	if (spGetUnitRulesParam(unitID, "lostlegs") or 0) > 0 then return false end -- can't jump if a leg is disabled
+	
+    local test = spTestBuildOrder(unitDefID, cmdParams[1], cmdParams[2], cmdParams[3], 1)
+    if not cmdOptions.shift then goalSet[unitID] = false end
+    return test == 2
+  else
+    return true
   end
-  if (cmdID == CMD_JUMP and
-      spTestBuildOrder(
-          unitDefID, cmdParams[1], cmdParams[2], cmdParams[3], 1) == 0) then
-      return true --false FIX ME!
-  end
-  if not cmdOptions.shift then goalSet[unitID] = false end
-  return true -- allowed
 end
 
 --[[local function PrintCommands(unitID)
