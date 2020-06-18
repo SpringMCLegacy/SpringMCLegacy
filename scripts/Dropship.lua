@@ -81,16 +81,18 @@ cargo = {}
 numCargo = 0
 
 function LoadCargo(cargoID, callerUnitID, callerBeaconID)
-	--Spring.Echo("Loading", cargoID, "of type", UnitDefs[Spring.GetUnitDefID(cargoID)].name)
-	beaconID = callerBeaconID
-	callerID = callerUnitID
-	numCargo = numCargo + 1
-	cargo[numCargo] = cargoID
-	Spring.UnitScript.AttachUnit(cargoPieces[numCargo] or -1, cargoID)
-	GG.SetSquad(cargoID, teamID) -- will ignore non-vehicles
-	env = Spring.UnitScript.GetScriptEnv(cargoID)
-	if env.ParentBeacon then
-		Spring.UnitScript.CallAsUnit(cargoID, env.ParentBeacon, targetID, beaconID)
+	if cargoID and Spring.ValidUnitID(cargoID) and not Spring.GetUnitIsDead(cargoID) then
+		--Spring.Echo("Loading", cargoID, "of type", UnitDefs[Spring.GetUnitDefID(cargoID)].name)
+		beaconID = callerBeaconID
+		callerID = callerUnitID
+		numCargo = numCargo + 1
+		cargo[numCargo] = cargoID
+		Spring.UnitScript.AttachUnit(cargoPieces[numCargo] or -1, cargoID)
+		GG.SetSquad(cargoID, teamID) -- will ignore non-vehicles
+		env = Spring.UnitScript.GetScriptEnv(cargoID)
+		if env.ParentBeacon then
+			Spring.UnitScript.CallAsUnit(cargoID, env.ParentBeacon, targetID, beaconID)
+		end
 	end
 end
 

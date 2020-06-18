@@ -112,10 +112,12 @@ local function SpawnBRV(yardID, teamID)
 	local x, y, z = Spring.GetUnitPosition(yardID)
 	yardPos[yardID] = {["x"] = x, ["y"] = y, ["z"] = z}
 	local brvID = Spring.CreateUnit("brv", x,y,z, 0, teamID)
-	salvagerYards[brvID] = yardID
-	yardSalvagers[yardID] = brvID
-	--local item = Pop(yardID)
-	Spring.GiveOrderToUnit(brvID, CMD.RECLAIM, {x, y, z, SALVAGE_RANGE}, {}) -- item.id + game.maxUnits
+	if brvID then
+		salvagerYards[brvID] = yardID
+		yardSalvagers[yardID] = brvID
+		--local item = Pop(yardID)
+		Spring.GiveOrderToUnit(brvID, CMD.RECLAIM, {x, y, z, SALVAGE_RANGE}, {}) -- item.id + game.maxUnits
+	end
 end
 GG.SpawnBRV = SpawnBRV
 
