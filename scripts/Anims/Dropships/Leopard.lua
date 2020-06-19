@@ -175,17 +175,19 @@ for i = 1,4 do
 	links[i] = piece("link" .. i)
 end
 
-function TakeOff()
+function TakeOff(skip)
 	StartThread(LandingGearUp)
 	PlaySound("dropship_liftoff")
-	stage = 3
-	local vertSpeed = 4
-	local wantedHeight = 400
-	local dist = wantedHeight - select(2, Spring.GetUnitPosition(unitID))
-	while (dist > 0) do
-		Spring.MoveCtrl.SetRelativeVelocity(unitID, 0, math.max(0.275, vertSpeed / (dist/20 + 1)), 0)
-		Sleep(10)
-		dist = wantedHeight - select(2, Spring.GetUnitPosition(unitID))
+	if not skip then
+		stage = 3
+		local vertSpeed = 4
+		local wantedHeight = 400
+		local dist = wantedHeight - select(2, Spring.GetUnitPosition(unitID))
+		while (dist > 0) do
+			Spring.MoveCtrl.SetRelativeVelocity(unitID, 0, math.max(0.275, vertSpeed / (dist/20 + 1)), 0)
+			Sleep(10)
+			dist = wantedHeight - select(2, Spring.GetUnitPosition(unitID))
+		end
 	end
 	stage = 4
 	PlaySound("dropship_liftoff")
@@ -306,15 +308,15 @@ function Drop()
 	Turn(body, x_axis, 0, math.rad(3.5))
 	Spring.MoveCtrl.SetVelocity(unitID, 0, 0, 0)
 	Spring.MoveCtrl.SetGravity(unitID, 0)
-	local dist = GetUnitDistanceToPoint(unitID, TX, 0, TZ, false)
+	local dist = GetUnitDistanceToPoint(unitID, TX, 0, TZ, false) -- 2D distance
 	while dist > 1 do
 		dist = GetUnitDistanceToPoint(unitID, TX, 0, TZ, false)
 		--Spring.Echo("dist", dist)
 		Spring.MoveCtrl.SetRelativeVelocity(unitID, 0, 0, math.max(dist/50, 4))
 		Sleep(30)
 	end
-	-- only proceed if the beacon is still ours and is secure
-	--if Spring.GetUnitTeam(beaconID) == Spring.GetUnitTeam(unitID) and Spring.GetUnitRulesParam(beaconID, "secure") == 1 then
+	-- only proceed if the beacon is still ours --and is secure
+	if Spring.GetUnitTeam(beaconID) == Spring.GetUnitTeam(unitID) then --and Spring.GetUnitRulesParam(beaconID, "secure") == 1 then
 		-- We're over the target area, reduce height!
 		PlaySound("dropship_rumble")
 		stage = 3
@@ -331,7 +333,8 @@ function Drop()
 		PlaySound("dropship_rumble")
 		TouchDown() -- not called by engine as not falling under gravity
 		UnloadCargo()
-	--else -- bugging out, refund
-		--Spring.AddTeamResource(teamID, "metal", UnitDefs[Spring.GetUnitDefID(cargo[1])].metalCost)
-	--end
+	else -- bugging out
+		TakeOff(true) -- skip checks and get right to booster
+		--Spring.AddTeamResource(teamID, "metal", UnitDefs[Spring.GetUnitDefID(cargo[1])].metalCost) -- refund?
+	end
 end

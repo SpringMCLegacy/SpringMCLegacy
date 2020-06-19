@@ -183,7 +183,7 @@ function script.Create()
 end
 
 function BugOut()
-	--Spring.Echo("Oh shit, buggin' out!")
+	Spring.Echo("Oh shit, buggin' out!")
 	Signal(0) -- kill anything with a numerical signal mask
 	Signal() -- kill everything else
 	StartThread(TakeOff)

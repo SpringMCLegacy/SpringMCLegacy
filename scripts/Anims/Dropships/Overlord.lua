@@ -235,6 +235,20 @@ function fx()
 	end
 end
 
+function TakeOff()
+	stage = 5 --3
+	StartThread(fx)
+	Spring.MoveCtrl.Enable(unitID)
+	Spring.MoveCtrl.SetGravity(unitID, -1 * GRAVITY)
+	Sleep(2500)
+	stage = 2
+	StartThread(fx) -- need to restart here as we're going back up a step
+	StartThread(LandingGearUp)
+	Sleep(10000)
+	-- We're out of the atmosphere, bye bye!
+	Spring.DestroyUnit(unitID, false, true)
+end
+
 function Drop()
 	Signal(Drop)
 	SetSignalMask(Drop)
@@ -255,19 +269,24 @@ function Drop()
 		Sleep(30)
 		_, y, _ = Spring.GetUnitPosition(unitID)
 	end
-	stage = 2
-	--Spring.Echo("ROCKET FULL BURN NOW!")
+	-- only proceed if the beacon is still ours --and is secure
+	if Spring.GetUnitTeam(beaconID) == Spring.GetUnitTeam(unitID) then 
+		stage = 2
+		--Spring.Echo("ROCKET FULL BURN NOW!")
 
 
-	StartThread(LandingGearDown)
-	while y - GY > 925 do
-		Sleep(30)
-		_, y, _ = Spring.GetUnitPosition(unitID)
+		StartThread(LandingGearDown)
+		while y - GY > 925 do
+			Sleep(30)
+			_, y, _ = Spring.GetUnitPosition(unitID)
+		end
+		stage = 3
+		Spring.MoveCtrl.SetGravity(unitID, -0.02 * GRAVITY)
+		Spring.MoveCtrl.SetCollideStop(unitID, true)
+		Spring.MoveCtrl.SetTrackGround(unitID, true)
+	else
+		TakeOff()
 	end
-	stage = 3
-	Spring.MoveCtrl.SetGravity(unitID, -0.02 * GRAVITY)
-	Spring.MoveCtrl.SetCollideStop(unitID, true)
-	Spring.MoveCtrl.SetTrackGround(unitID, true)
 end
 
 -- CARGO CODE
@@ -338,15 +357,5 @@ function UnloadCargo()
 	Move(door_struts, z_axis, 0, 25)
 	WaitForMove(door_struts, z_axis)
 	Sleep(WAIT_TIME)
-	stage = 5 --3
-	StartThread(fx)
-	Spring.MoveCtrl.Enable(unitID)
-	Spring.MoveCtrl.SetGravity(unitID, -1 * GRAVITY)
-	Sleep(2500)
-	stage = 2
-	StartThread(fx) -- need to restart here as we're going back up a step
-	StartThread(LandingGearUp)
-	Sleep(10000)
-	-- We're out of the atmosphere, bye bye!
-	Spring.DestroyUnit(unitID, false, true)
+	TakeOff()
 end
