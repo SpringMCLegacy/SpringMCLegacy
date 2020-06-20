@@ -332,6 +332,7 @@ function script.HitByWeapon(x, z, weaponID, damage)
 end
 
 function script.Killed()
+	Signal() -- kill all threads
 	local x,y,z = Spring.GetUnitPosition(unitID)
 	y = Spring.GetGroundHeight(x,z) + 5
 	for i = 1, 5 do

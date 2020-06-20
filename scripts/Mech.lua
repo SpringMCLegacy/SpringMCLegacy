@@ -148,7 +148,7 @@ end
 
 -- non-local function called by gadgets/game_ammo.lua
 function ChangeAmmo(ammoType, amount) 
-	local newAmmoLevel = (currAmmo[ammoType] or 0) + amount -- amount is a -ve to deduct
+	local newAmmoLevel = (currAmmo[ammoType] or 0) + (amount or 0) -- amount is a -ve to deduct
 	if amount > 0 then -- restocking, reset the indicator
 		SetUnitRulesParam(unitID, "outofammo", 0)
 	end
@@ -358,12 +358,14 @@ function hideLimbPieces(limb, hide)
 			--Spring.Echo("Lost a leg! halving move speed")
 			speedMod = speedMod / 2
 			-- disable jumpjets
-			Spring.EditUnitCmdDesc(unitID, Spring.FindUnitCmdDesc(unitID, CMD_JUMP), {disabled = true})
+			if info.jumpjets > 0 then
+				Spring.EditUnitCmdDesc(unitID, Spring.FindUnitCmdDesc(unitID, CMD_JUMP), {disabled = true})
+			end
 		else -- leg is restored
 			lostLegs = lostLegs - 1
 			--Spring.Echo("Regained a leg! doubling move speed")
 			speedMod = speedMod * 2
-			if lostLegs == 0 then -- enable jumpjets
+			if lostLegs == 0 and info.jumpjets > 0 then -- enable jumpjets
 				Spring.EditUnitCmdDesc(unitID, Spring.FindUnitCmdDesc(unitID, CMD_JUMP), {disabled = false})
 			end
 		end

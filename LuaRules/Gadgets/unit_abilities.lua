@@ -65,7 +65,10 @@ local function ChangeMoveData(unitDefID, mult)
 end
 
 function SpeedChange(unitID, unitDefID, mult, masc)
-	Spring.MoveCtrl.SetGroundMoveTypeData(unitID, ChangeMoveData(unitDefID, mult or masc and 2))
+	env = Spring.UnitScript.GetScriptEnv(unitID)
+	if not env.jumping then
+		Spring.MoveCtrl.SetGroundMoveTypeData(unitID, ChangeMoveData(unitDefID, mult or masc and 2))
+	end
 end
 GG.SpeedChange = SpeedChange
 
