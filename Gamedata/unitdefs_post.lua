@@ -254,7 +254,8 @@ for name, ud in pairs(UnitDefs) do
 			if not cp.bap then
 				ud.radardistance = roleSensors[cp.role].radar
 			end
-			cp.sectorangle = cp.sectorangle or (cp.role and roleSensors[cp.role].sector) or modOptions.sectorangle or 45
+			local mult = modOptions.sectorangle or 1
+			cp.sectorangle = (cp.sectorangle or (cp.role and roleSensors[cp.role].sector)) * mult
 		elseif cp.baseclass == "infantry" then
 			ud.radardistance = 1000 -- no sensors
 			cp.sectorangle = 180
