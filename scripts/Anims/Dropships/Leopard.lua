@@ -41,6 +41,7 @@ function LandingGearDown()
 end
 
 function TouchDown()
+	landed = true
 	PlaySound("dropship_stomp")
 	if crashing then
 		Spring.DestroyUnit(unitID, true)

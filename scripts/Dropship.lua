@@ -313,8 +313,9 @@ function script.QueryWeapon(weaponID)
 end
 
 crashing = false
+landed = false
 function script.HitByWeapon(x, z, weaponID, damage)
-	if damage > Spring.GetUnitHealth(unitID) then
+	if damage > Spring.GetUnitHealth(unitID) and not landed then
 		if not crashing then
 			crashing = true
 			for i, cargoID in ipairs(cargo) do
@@ -326,13 +327,13 @@ function script.HitByWeapon(x, z, weaponID, damage)
 			Spring.MoveCtrl.SetGravity(unitID, 1.4 * GRAVITY)	
 			Spring.MoveCtrl.SetCollideStop(unitID, true)
 			Spring.MoveCtrl.SetTrackGround(unitID, true)
+			return 1
 		end
-		return 0
+		return 0 -- do no further damage until we are landed
 	end
 end
 
 function script.Killed()
-	Signal() -- kill all threads
 	local x,y,z = Spring.GetUnitPosition(unitID)
 	y = Spring.GetGroundHeight(x,z) + 5
 	for i = 1, 5 do

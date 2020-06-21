@@ -77,6 +77,7 @@ local function SniperOut(out)
 end
 
 function TouchDown()
+	landed = true
 	PlaySound("dropship_stomp")
 	if crashing then
 		Spring.DestroyUnit(unitID, true)

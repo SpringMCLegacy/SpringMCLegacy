@@ -67,8 +67,11 @@ function LandingGearDown()
 end
 
 function TouchDown()
+	landed = true
 	PlaySound("dropship_stomp")
 	if crashing then
+		--Spring.Echo("crashing in touchdown")
+		crashing = false
 		Spring.DestroyUnit(unitID, true)
 	else
 		stage = 4
