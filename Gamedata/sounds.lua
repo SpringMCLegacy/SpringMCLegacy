@@ -242,6 +242,18 @@ for _, fileName in pairs(bettyFiles) do
 		in3d = false,
 	}
 end
+
+----MECH VOICES----
+local voicePath = "sounds/voice/"
+local voiceFiles = VFS.DirList(voicePath)
+for _, fileName in pairs(voiceFiles) do
+	local name = "Voice_" .. fileName:sub(voicePath:len() + 1,-5)
+	--Spring.Echo("Adding SoundItem: " .. name)
+	Sounds.SoundItems[name] = {
+		file = fileName,
+		in3d = false,
+	}
+end
 	
 
 return Sounds
