@@ -5,23 +5,6 @@ local Dart = Light:New{
 		cockpitheight	= 43,
 		tonnage			= 25,
     },
-	
-	sounds = {
-		select = {
-			'Voice_SelectA_1',
-			'Voice_SelectA_2',
-			'Voice_SelectA_3',
-		},
-		ok = {
-			'Voice_OKA_1',
-			'Voice_OKA_2',
-			'Voice_OKA_3',
-		},
-		arrived = {
-			'Voice_ArrivedA_1',
-			'Voice_ArrivedA_2',
-		},
-	},
 }
 
 local DRT3S = Dart:New{

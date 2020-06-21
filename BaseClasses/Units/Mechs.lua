@@ -11,6 +11,31 @@ local Mech = Unit:New{
 	upright				= true,
 	usepiececollisionvolumes = true,
 	
+	sounds = {
+		select = {
+			'Voice_SelectA_1',
+			'Voice_SelectA_2',
+			'Voice_SelectA_3',
+		},
+		ok = {
+			'Voice_OKA_1',
+			'Voice_OKA_2',
+			'Voice_OKA_3',
+		},
+		arrived = {
+			'Voice_ArrivedA_1',
+			'Voice_ArrivedA_2',
+		},
+		cant = {
+			'Voice_CantA_1',
+			'Voice_CantA_2',
+		},
+		underattack = {
+			'Voice_UnderAttackA_1',
+			'Voice_UnderAttackA_2',
+		},
+	},	
+	
 	customparams = {
 		hasturnbutton	= true,
 		baseclass		= "mech",
