@@ -428,18 +428,18 @@ return {
 		name = "garrisonfaction",
 		cmdDesc = {
 			id = GetCmdID('PERK_GARRISON_3'),
-			action = 'perkgarrisonfaction',
-			name = Pad("Faction", "Turret"),
-			tooltip = 'Adds a powerful faction special weapon turret (-30% damage resistance)',
+			action = 'perkgarrisonphat',
+			name = Pad("Extra", "Armour"),
+			tooltip = 'Adds additional armour (+100% damage resistance)',
 			texture = 'bitmaps/ui/upgrade.png',	
 		},
 		valid = function (unitDefID) return UnitDefs[unitDefID].name:find("garrison") end,
 		applyPerk = function (unitID)
-			local x,y,z = Spring.GetUnitPosition(unitID)
-			local faction = GG.teamSide[Spring.GetUnitTeam(unitID)]
-			local turretID = Spring.CreateUnit("garrison_" .. faction, x,y,z, 0, Spring.GetUnitTeam(unitID))
-			Spring.UnitAttach(unitID, turretID, 8)
-			Spring.SetUnitArmored(unitID, true, 0.7)
+			--local x,y,z = Spring.GetUnitPosition(unitID)
+			--local faction = GG.teamSide[Spring.GetUnitTeam(unitID)]
+			--local turretID = Spring.CreateUnit("garrison_" .. faction, x,y,z, 0, Spring.GetUnitTeam(unitID))
+			--Spring.UnitAttach(unitID, turretID, 8)
+			Spring.SetUnitArmored(unitID, true, 2)
 		end,
 		costFunction = deductCBills,
 		price = 10000,
