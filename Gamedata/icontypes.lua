@@ -61,37 +61,37 @@ local iconTypes = {
 	},
 	light = {
 		bitmap		=	"icons/lightmech.png",
-		size			=	4,
+		size			=	2.2,
 		distance	=	1.0,
 	},
 	medium = {
 		bitmap		=	"icons/mediummech.png",
-		size			=	4,
+		size			=	2.2,
 		distance	=	1.1,
 	},
 	heavy = {
 		bitmap		=	"icons/heavymech.png",
-		size			=	4,
+		size			=	2.2,
 		distance	=	1.2,
 	},
 	assault = {
 		bitmap		=	"icons/assaultmech.png",
-		size			=	4,
+		size			=	2.2,
 		distance	=	1.3,
 	},
 	vehiclelight = {
 		bitmap		=	"icons/vehicle.png",
-		size			=	1.75,
+		size			=	1.5,
 		distance	=	1.0,
 	},
 	vehiclemedium = {
 		bitmap		=	"icons/vehicle.png",
-		size			=	2,
+		size			=	1.75,
 		distance	=	1.0,
 	},
 	vehicleheavy = {
 		bitmap		=	"icons/vehicle.png",
-		size			=	2.5,
+		size			=	2.25,
 		distance	=	1.0,
 	},
 	vehicleassault = {
@@ -101,7 +101,7 @@ local iconTypes = {
 	},
 	aero = {
 		bitmap		=	"icons/aero.png",
-		size			=	3,
+		size			=	2.5,
 		distance	=	1.0,
 	},
 	
