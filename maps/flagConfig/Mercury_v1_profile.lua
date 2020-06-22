@@ -10,30 +10,20 @@ local resources = {
 		feature = nil
 	},
 	{
-		x = 3955,--mid top
-		z = 2395,
+		x = 3200,--mid top
+		z = 3260,
 		feature = nil
 	},
 	{
-		x = 6053,--mid-top
-		z = 4433,
-		feature = nil
-	},
-	{
-		x = 4282,--mid bottom
-		z = 5923,
-		feature = nil
-	},
-	{
-		x = 2394,-- mid left
-		z = 3902,
+		x = 5015,--mid-top
+		z = 4800,
 		feature = nil
 	},
 }
 
 local temps = {
 	ambient = 98,
-	water = 110, -- lava!
+	water = 98,
 }
 
 return resources, temps

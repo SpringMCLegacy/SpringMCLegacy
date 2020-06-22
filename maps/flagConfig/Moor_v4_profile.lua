@@ -5,8 +5,8 @@ local resources = {
 		feature = nil
 	},
 	{
-		x = 2377,
-		z = 5971,
+		x = 2750,
+		z = 5790,
 		feature = nil
 	},
 	{
@@ -25,10 +25,15 @@ local resources = {
 		feature = nil
 	},
 	{
-		x = 5881,
-		z = 9472,
+		x = 5820,
+		z = 9470,
 		feature = nil
 	},
 }
 
-return resources
+local temps = {
+	ambient = 25,
+	water = 20,
+}
+
+return resources, temps

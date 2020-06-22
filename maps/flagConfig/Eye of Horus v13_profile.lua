@@ -1,44 +1,44 @@
 local resources = {
 	{
-		x =1870,
-		z =2250,
+		x = 2165,
+		z = 3415,
 		feature = nil
 	},
 	{
-		x =8400,
-		z =2100,
+		x = 3940,
+		z = 3730,
 		feature = nil
 	},
 	{
-		x =2750,
-		z =5580,
+		x = 580,
+		z = 1070,
 		feature = nil
 	},
 	{
-		x =7625,
-		z =5500,
+		x = 580,
+		z = 1065,
 		feature = nil
 	},
 	{
-		x =5220,
-		z =4500,
+		x = 5150,
+		z = 970,
 		feature = nil
 	},
 	{
-		x =5200,
-		z =630,
+		x = 5550,
+		z = 6100,
 		feature = nil
 	},
 	{
-		x =5200,
-		z =2830,
+		x = 970,
+		z = 6210,
 		feature = nil
 	},
 }
 
 local temps = {
-	ambient = 50,
-	water = 35,
+	ambient = 40,
+	water = 30,
 }
 
 return resources, temps

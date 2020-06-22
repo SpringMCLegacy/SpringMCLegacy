@@ -1,7 +1,7 @@
 local resources = {
 	{
-		x = 4095,
-		z = 3677,
+		x = 4130,
+		z = 3660,
 		feature = nil
 	},
 	{
@@ -21,7 +21,7 @@ local resources = {
 	},
 	{
 		x = 4254,
-		z = 6430,
+		z = 6360,
 		feature = nil
 	},
 }
