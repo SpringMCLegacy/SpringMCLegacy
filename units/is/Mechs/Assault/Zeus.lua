@@ -89,7 +89,7 @@ local ZEU9S2 = Zeus:New{
 		},
 	},
     customparams = {
-		variant			= "ZEU-9S",
+		variant			= "ZEU-9S2",
 		speed			= 60,
 		price			= 18580,
 		heatlimit 		= 24,
