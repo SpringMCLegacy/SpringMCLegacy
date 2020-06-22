@@ -181,7 +181,7 @@ function TakeOff(skip)
 	PlaySound("dropship_liftoff")
 	if not skip then
 		stage = 3
-		local vertSpeed = 4
+		local vertSpeed = 8 --4
 		local wantedHeight = 400
 		local dist = wantedHeight - select(2, Spring.GetUnitPosition(unitID))
 		while (dist > 0) do
@@ -194,14 +194,14 @@ function TakeOff(skip)
 	PlaySound("dropship_liftoff")
 	--Spring.MoveCtrl.SetRelativeVelocity(unitID, 0, 0, 5)
 	Spring.MoveCtrl.SetRelativeVelocity(unitID, 0, 0, 5)
-	Spring.MoveCtrl.SetGravity(unitID, -0.75 * GRAVITY)
+	Spring.MoveCtrl.SetGravity(unitID, -1 * GRAVITY)
 	Turn(body, x_axis, math.rad(-30), math.rad(10))
 	WaitForTurn(body, x_axis)
 	Turn(body, x_axis, math.rad(-70), math.rad(15))
 	WaitForTurn(body, x_axis)
 	Turn(body, x_axis, math.rad(-80), math.rad(5))
 	WaitForTurn(body, x_axis)
-	Spring.MoveCtrl.SetGravity(unitID, -4 * GRAVITY)
+	Spring.MoveCtrl.SetGravity(unitID, -6 * GRAVITY)
 	stage = 5
 	PlaySound("dropship_burn")
 	Sleep(1500)
