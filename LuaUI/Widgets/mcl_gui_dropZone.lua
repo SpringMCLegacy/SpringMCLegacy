@@ -1,7 +1,7 @@
 function widget:GetInfo()
 	return {
-		name = "MC: L Dropzone Indicator",
-		desc = "Dropzone indicator",
+		name = "MC: L Unit Platters",
+		desc = "Dropzone indicator & unit selection platters",
 		author = "FLOZi (C. Lawrence)",
 		date = "25/10/2016",
 		license = "GPL v2",
