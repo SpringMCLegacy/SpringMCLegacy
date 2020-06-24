@@ -7,6 +7,22 @@ local FUNCTIONS_TO_REMOVE = {"new", "clone", "append"}
 
 local cegCache = {}
 
+local modOptions = Spring.GetModOptions()
+if not modOptions.startmetal then -- load via file
+	local raw = VFS.Include("modoptions.lua", nil, VFS.ZIP)
+	for i, v in ipairs(raw) do
+		if v.type ~= "section" then
+			modOptions[v.key] = v.def
+		end
+	end
+	raw = VFS.Include("engineoptions.lua", nil, VFS.ZIP)
+	for i, v in ipairs(raw) do
+		if v.type ~= "section" then
+			modOptions[v.key:lower()] = v.def
+		end
+	end
+end
+
 local damageMults = {
 	beacons		= 0,
 	light		= 1,   --100% default
@@ -71,7 +87,7 @@ for weapName, wd in pairs(WeaponDefs) do
 	local default = damage.default or 0
 	for unitType, multiplier in pairs(damageMults) do
 		if not damage[unitType] then -- don't override weaponDefs
-			damage[unitType] = default * damageMults[unitType]
+			damage[unitType] = default * damageMults[unitType] * (modOptions.damagemult or 1)
 		end
 	end
 	if (wd.weapontype ~= nil) and (string.lower(wd.weapontype) == "missilelauncher" or string.lower(wd.weapontype) == "starburstlauncher") then

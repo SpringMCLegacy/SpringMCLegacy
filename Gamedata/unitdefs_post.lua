@@ -259,6 +259,8 @@ for name, ud in pairs(UnitDefs) do
 		elseif cp.baseclass == "infantry" then
 			ud.radardistance = 1000 -- no sensors
 			cp.sectorangle = 180
+		elseif cp.baseclass == "outpost" then
+			ud.buildcostmetal = ud.buildcostmetal * (modOptions.outpostmult or 1)
 		end
 	end
 	-- set maxvelocity by modoption
