@@ -556,6 +556,7 @@ function Resupply(passengerID)
 end
 
 function script.TransportPickup (passengerID)
+	Spring.SendMessageToTeam(Spring.GetUnitTeam(unitID), "I'm sorry Godde I can't do that")
 	if bayReady then
 		passengerDefID = GetUnitDefID(passengerID)
 		passengerInfo = GG.lusHelper[passengerDefID]
