@@ -238,7 +238,7 @@ for name, ud in pairs(UnitDefs) do
 			local priceMult = modOptions and modOptions.pricemult or 1
 			ud.buildCostMetal = ((cp.price or 0) * priceMult - (4000 * (priceMult - 1)))
 			ud.power = ud.buildCostMetal * ud.buildCostEnergy
-			ud.losemitheight = cp.cockpitheight or ud.mass / 10
+			ud.losemitheight = (cp.cockpitheight or ud.mass / 10) / 1
 			ud.radaremitheight = ud.losemitheight
 			cp.role = GetRole(ud.description)
 			if not cp.role then
@@ -283,7 +283,7 @@ for name, ud in pairs(UnitDefs) do
 			ud.seismicsignature = cp.tonnage / 10
 		end
 		ud.radardistance = ud.radardistance or 2000 * modOptions.radar
-		ud.airsightdistance = ud.airsightdistance or 2000 * modOptions.radar
+		ud.airsightdistance = ud.sightdistance * 1.05 --ud.airsightdistance or 2000 * modOptions.radar
 	end
 	-- set sightrange/radardistance based on bap customparam
 	if cp.ecm then

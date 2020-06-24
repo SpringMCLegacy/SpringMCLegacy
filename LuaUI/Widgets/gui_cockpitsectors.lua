@@ -133,6 +133,8 @@ end
 --callins
 ------------------------------------------------
 function widget:Initialize()
+	-- 							always 		/ 		LOS 	/ 	radar 		/ 	jam 	/ 	radar2
+	Spring.SetLosViewColors({0.25,0.25,0.25}, {0.3,0.3,0.3}, {0.1,0.9,0.1}, {0.8,0.1,0.4}, {0.07,0.07,0.07})
 	vHeadingToDegrees = WG.Vector.HeadingToDegrees
 	GetUnitActiveCommandPosition = WG.CmdQueue.GetUnitActiveCommandPosition
 	GetUnitPositionAtEndOfQueue = WG.CmdQueue.GetUnitPositionAtEndOfQueue
