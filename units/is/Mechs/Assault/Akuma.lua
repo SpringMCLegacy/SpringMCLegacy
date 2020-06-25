@@ -2,7 +2,7 @@ local Akuma = Assault:New{
 	name				= "Akuma",
 	
 	customparams = {
-		cockpitheight	= 68,
+		cockpitheight	= 22,
 		tonnage			= 90,
     },
 }

@@ -1,7 +1,7 @@
 local Atlas = Assault:New{
 	name				= "Atlas",
     customparams = {
-		cockpitheight	= 71,
+		cockpitheight	= 23,
 		tonnage			= 100,
     },
 }

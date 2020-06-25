@@ -1,7 +1,7 @@
 local Victor = Assault:New{
 	name				= "Victor",
     customparams = {
-		cockpitheight	= 67,
+		cockpitheight	= 12.3,
 		tonnage			= 80,
     },
 }

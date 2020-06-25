@@ -2,7 +2,7 @@ local Catapult = Heavy:New{
 	name				= "Catapult",
 	
 	customparams = {
-		cockpitheight	= 54,
+		cockpitheight	= 13,
 		tonnage			= 65,
     },
 }

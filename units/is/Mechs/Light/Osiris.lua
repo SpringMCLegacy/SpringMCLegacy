@@ -2,7 +2,7 @@ local Osiris = Light:New{
 	name				= "Osiris",
 
 	customparams = {
-		cockpitheight	= 34,
+		cockpitheight	= 9.75604,
 		tonnage			= 30,
     },	
 }

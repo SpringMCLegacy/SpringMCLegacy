@@ -2,7 +2,7 @@ local Awesome = Assault:New{
 	name				= "Awesome",
 
 	customparams = {
-		cockpitheight	= 64,
+		cockpitheight	= 23,
 		tonnage			= "80",
     },
 }

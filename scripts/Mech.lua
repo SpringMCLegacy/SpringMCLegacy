@@ -492,6 +492,8 @@ function script.StopMoving()
 end
 
 function script.Create()
+	local x,y,z = Spring.GetUnitPiecePosition(unitID, torso)
+	Spring.SetUnitMidAndAimPos(unitID, x,y,z, x,y,z, true)
 	if info.builderID then script.StartMoving() end -- walk down ramp
 	--StartThread(SmokeUnit, {pelvis, torso})
 	StartThread(SmokeLimb, "left_arm", lupperarm)
