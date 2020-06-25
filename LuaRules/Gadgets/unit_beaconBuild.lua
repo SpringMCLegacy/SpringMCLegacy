@@ -431,8 +431,13 @@ function gadget:AllowCommand(unitID, unitDefID, teamID, cmdID, cmdParams, cmdOpt
 				Spring.SendMessageToTeam(teamID, "Cannot establish dropzone - Under attack!")
 				return false 
 			elseif GG.dropShipStatus[teamID] == 1 then
-				Spring.SendMessageToTeam(teamID, "Cannot establish dropzone - Dropship is active!")
-				return false 				
+				-- double check if dropship is not in action
+				if Spring.GetTeamUnitDefCount(teamID, GG.teamDropShipTypes[teamID].def) ~= 0 then 
+					Spring.SendMessageToTeam(teamID, "Cannot establish dropzone - Dropship is active!")
+					return false
+				end
+				-- TODO: this will allow the command otherwise which is also dangerous, as dropship can be 'ACTIVE' without being in play
+				-- TODO: Solution is probably to make a new dropship state and have ACTIVE only the case when it is on map
 			elseif GG.orderStatus[teamID] > 0 then
 				Spring.SendMessageToTeam(teamID, "Cannot establish dropzone - Order pending!")
 				return false 
