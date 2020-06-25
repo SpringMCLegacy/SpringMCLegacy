@@ -1,7 +1,7 @@
 local Flea = Light:New{
 	name				= "Flea",
 	customparams = {
-		cockpitheight	= 29,
+		cockpitheight	= 9,
 		tonnage			= 20,
     },
 }

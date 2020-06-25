@@ -1,7 +1,7 @@
 local Battlehawk = Light:New{
 	name              	= "Battle Hawk",
 	customparams = {
-		cockpitheight	= 46,
+		cockpitheight	= 14.7,
 		tonnage			= 30,
     },
 }

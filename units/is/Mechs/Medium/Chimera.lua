@@ -2,7 +2,7 @@ local Chimera = Medium:New{
 	name				= "Chimera",
 	
 	customparams = {
-		cockpitheight	= 47,
+		cockpitheight	= 15,
 		tonnage			= 40,
     },
 }

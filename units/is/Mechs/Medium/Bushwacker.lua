@@ -2,7 +2,7 @@ local Bushwacker = Medium:New{
 	name				= "Bushwacker",
 	
 	customparams = {
-		cockpitheight	= 47,
+		cockpitheight	= 13,
 		tonnage			= 55,
     },
 }

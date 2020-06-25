@@ -2,7 +2,7 @@ local Scarabus = Light:New{
 	name				= "Scarabus",
 	
 	customparams = {
-		cockpitheight	= 36,
+		cockpitheight	= 15,
 		tonnage			= 30,
     },
 }

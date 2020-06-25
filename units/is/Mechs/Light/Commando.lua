@@ -2,7 +2,7 @@ local Commando = Light:New{
 	name              	= "Commando",
 	
 	customparams = {
-		cockpitheight	= 43,
+		cockpitheight	= 14,
 		tonnage 		= 25,
     },
 }

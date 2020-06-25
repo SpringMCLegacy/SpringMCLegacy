@@ -2,7 +2,7 @@ local Starslayer = Medium:New{
 	name				= "Starslayer",
 	
 	customparams = {
-		cockpitheight	= 47,
+		cockpitheight	= 18,
 		tonnage			= 40,
     },
 }

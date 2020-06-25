@@ -2,7 +2,7 @@ local Urbanmech = Light:New{
 	name              	= "Urbanmech",
 	
 	customparams = {
-		cockpitheight	= 52,
+		cockpitheight	= 8,
 		tonnage			= 30,
 		torsoturnspeed	= 210,
     },

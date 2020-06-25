@@ -2,7 +2,7 @@ local Wolfhound = Light:New{
 	name              	= "Wolfhound",
 	
 	customparams = {
-		cockpitheight	= 46,
+		cockpitheight	= 16,
 		tonnage 		= 35,
     },
 }

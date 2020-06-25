@@ -2,7 +2,7 @@ local Raven = Light:New{
 	name				= "Raven",
 
 	customparams = {
-		cockpitheight	= 43,
+		cockpitheight	= 6,
 		tonnage		= 35,
     },
 }

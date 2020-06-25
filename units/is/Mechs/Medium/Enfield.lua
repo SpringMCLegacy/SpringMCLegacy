@@ -2,7 +2,7 @@ local Enfield = Medium:New{
 	name				= "Enfield",
 	
 	customparams = {
-		cockpitheight	= 47,
+		cockpitheight	= 17,
 		tonnage			= 50,
     },
 }

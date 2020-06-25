@@ -1,7 +1,7 @@
 local Hollander = Light:New{
 	name				= "Hollander",
 	customparams = {
-		cockpitheight	= 45,
+		cockpitheight	= 15,
 		tonnage			= 35,
     },
 }

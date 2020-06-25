@@ -2,7 +2,7 @@ local Spider = Light:New{
 	name              	= "Spider",
 	
 	customparams = {
-		cockpitheight	= 40,
+		cockpitheight	= 12,
 		tonnage			= 25,
     },
 }
