@@ -35,7 +35,7 @@ local sidedata = {
 		startUnit = "beacon",
 	},
 	{
-		name = "Clan Wolf",
+		name = "Clan Wolf - TEST ONLY",
 		shortName = "WF",
 		startUnit = "beacon",
 	},
