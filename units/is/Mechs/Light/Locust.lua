@@ -151,7 +151,7 @@ local LCT1L = Locust:New{
 	customparams = {
 		variant         = "LCT-1L",
 		speed			= 120,
-		price			= 4740,
+		price			= 4320,
 		heatlimit 		= 10,
 		armor			= {type = "standard", tons = 4},
 		masc			= true,
