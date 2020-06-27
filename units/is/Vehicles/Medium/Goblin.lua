@@ -73,7 +73,7 @@ local GoblinIFV = Goblin:New{
 return lowerkeys({
 	--["DC_GoblinTransport"] = GoblinTransport:New(),
 	--["FS_GoblinTransport"] = GoblinTransport:New(),
-	["FS_GoblinIFV"] = GoblinIFV:New(),
+	--["FS_GoblinIFV"] = GoblinIFV:New(),
 	--["LA_GoblinTransport"] = GoblinTransport:New(),
 	--["CC_GoblinTransport"] = GoblinTransport:New(),
 	--["FW_GoblinTransport"] = GoblinTransport:New(),

@@ -24,9 +24,9 @@ local Ballista = LightTank:New{
 }
 
 return lowerkeys({
-	["CC_Ballista"] = Ballista:New(),
-	["DC_Ballista"] = Ballista:New(),
-	["FS_Ballista"] = Ballista:New(),
-	["FW_Ballista"] = Ballista:New(),
-	["LA_Ballista"] = Ballista:New(),
+	--["CC_Ballista"] = Ballista:New(),
+	--["DC_Ballista"] = Ballista:New(),
+	--["FS_Ballista"] = Ballista:New(),
+	--["FW_Ballista"] = Ballista:New(),
+	--["LA_Ballista"] = Ballista:New(),
 })

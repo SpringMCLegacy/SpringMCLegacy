@@ -79,6 +79,6 @@ local PilumArrow = Pilum:New{
 }
 
 return lowerkeys({
-	["FS_Pilum"] = Pilum:New(),
-	["FS_PilumArrow"] = PilumArrow:New(),
+	--["FS_Pilum"] = Pilum:New(),
+	--["FS_PilumArrow"] = PilumArrow:New(),
 })

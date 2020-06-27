@@ -23,5 +23,5 @@ local Harasser = Hover:New{
 }
 
 return lowerkeys({
-	["FW_Harasser"] = Harasser:New(),
+	--["FW_Harasser"] = Harasser:New(),
 })

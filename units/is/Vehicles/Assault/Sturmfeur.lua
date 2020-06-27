@@ -36,5 +36,5 @@ local Sturmfeur = Tank:New{
 }
 
 return lowerkeys({
-	["LA_Sturmfeur"] = Sturmfeur:New(),
+	--["LA_Sturmfeur"] = Sturmfeur:New(),
 })

@@ -36,5 +36,5 @@ local DemolisherII = Tank:New{
 }
 
 return lowerkeys({
-	["LA_DemolisherII"] = DemolisherII:New(),
+	--["LA_DemolisherII"] = DemolisherII:New(),
 })

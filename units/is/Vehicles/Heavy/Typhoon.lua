@@ -45,5 +45,5 @@ local Typhoon = Tank:New{
 }
 
 return lowerkeys({
-	["FS_Typhoon"] = Typhoon:New(),
+	--["FS_Typhoon"] = Typhoon:New(),
 })

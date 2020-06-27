@@ -32,5 +32,5 @@ local Alacorn = Tank:New{
 }
 
 return lowerkeys({
-	["FS_Alacorn"] = Alacorn:New(),
+	--["FS_Alacorn"] = Alacorn:New(),
 })

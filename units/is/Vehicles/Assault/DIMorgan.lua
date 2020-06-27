@@ -40,5 +40,5 @@ local DIMorgan = Tank:New{
 }
 
 return lowerkeys({
-	["LA_DIMorgan"] = DIMorgan:New(),
+	--["LA_DIMorgan"] = DIMorgan:New(),
 })

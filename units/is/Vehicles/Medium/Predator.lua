@@ -23,5 +23,5 @@ local Predator = LightTank:New{
 }
 
 return lowerkeys({
-	["CC_Predator"] = Predator:New(),
+	--["CC_Predator"] = Predator:New(),
 })

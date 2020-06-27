@@ -43,5 +43,5 @@ local Mamono = Tank:New{
 }
 
 return lowerkeys({
-	["DC_Mamono"] = Mamono:New(),
+	--["DC_Mamono"] = Mamono:New(),
 })

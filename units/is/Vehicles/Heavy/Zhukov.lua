@@ -31,5 +31,5 @@ local Zhukov = Tank:New{
 }
 
 return lowerkeys({
-	["CC_Zhukov"] = Zhukov:New(),
+	--["CC_Zhukov"] = Zhukov:New(),
 })

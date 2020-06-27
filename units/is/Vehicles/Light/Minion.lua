@@ -31,5 +31,5 @@ local MinionScout = Minion:New{
 }
 
 return lowerkeys({
-	["FS_Minion"] = MinionScout:New(),
+	--["FS_Minion"] = MinionScout:New(),
 })

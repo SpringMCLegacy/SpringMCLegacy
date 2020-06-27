@@ -42,5 +42,5 @@ local Brutus = Tank:New{
 }
 
 return lowerkeys({
-	["CC_Brutus"] = Brutus:New(),
+	--["CC_Brutus"] = Brutus:New(),
 })

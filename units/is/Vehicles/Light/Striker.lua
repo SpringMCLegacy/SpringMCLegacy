@@ -28,5 +28,5 @@ local Striker = LightTank:New{
 }
 
 return lowerkeys({
-	["FS_Striker"] = Striker:New(),
+	--["FS_Striker"] = Striker:New(),
 })

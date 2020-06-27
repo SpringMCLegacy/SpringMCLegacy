@@ -32,9 +32,9 @@ local Partisan = Tank:New{
 }
 
 return lowerkeys({
-	["CC_Partisan"] = Partisan:New(),
-	["DC_Partisan"] = Partisan:New(),
-	["FS_Partisan"] = Partisan:New(),
-	["FW_Partisan"] = Partisan:New(),
-	["LA_Partisan"] = Partisan:New(),
+	--["CC_Partisan"] = Partisan:New(),
+	--["DC_Partisan"] = Partisan:New(),
+	--["FS_Partisan"] = Partisan:New(),
+	--["FW_Partisan"] = Partisan:New(),
+	--["LA_Partisan"] = Partisan:New(),
 })

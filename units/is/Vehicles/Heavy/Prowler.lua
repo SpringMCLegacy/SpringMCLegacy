@@ -37,5 +37,5 @@ local Prowler = LightTank:New{
 }
 
 return lowerkeys({
-	["LA_Prowler"] = Prowler:New(),
+	--["LA_Prowler"] = Prowler:New(),
 })
