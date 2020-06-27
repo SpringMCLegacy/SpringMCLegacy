@@ -124,7 +124,7 @@ local chances = {
 			},
 		},
 	},
-	--
+	--[[
 	[HPAD_ID] = {
 		[1] = { -- light hovers
 			class = {
