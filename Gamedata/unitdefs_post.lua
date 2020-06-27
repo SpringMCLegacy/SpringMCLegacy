@@ -13,15 +13,15 @@ end
 
 
 local roleSensors = {
-	["scout"] 		= {radar = 1600,	sector = 85},
-	["ewar"] 		= {radar = 1600,	sector = 45}, -- effectively synonym for scout, though most have BAP which needs smaller sector
-	["brawler"] 	= {radar = 1100,	sector = 75},
-	["skirmisher"] 	= {radar = 1300,	sector = 60},
-	["striker"] 	= {radar = 1500,	sector = 45},
-	["sniper"] 		= {radar = 1700,	sector = 30},
-	["missile"]		= {radar = 1500,	sector = 35},
-	["lrm"]			= {radar = 1500,	sector = 35}, -- synonym for missile
-	["artillery"]	= {radar = 1500,	sector = 35}, -- synonum for missile
+	["scout"] 		= {radar = 1500,	sector = 80},
+	["ewar"] 		= {radar = 1500,	sector = 65}, -- effectively synonym for scout, though most have BAP which needs smaller sector
+	["brawler"] 	= {radar = 1500,	sector = 65},
+	["skirmisher"] 	= {radar = 1500,	sector = 65},
+	["striker"] 	= {radar = 1500,	sector = 55},
+	["sniper"] 		= {radar = 1500,	sector = 45},
+	["missile"]		= {radar = 1500,	sector = 55},
+	["lrm"]			= {radar = 1500,	sector = 55}, -- synonym for missile
+	["artillery"]	= {radar = 1500,	sector = 55}, -- synonum for missile
 }
 
 local function GetSpeedColoured(speed)
