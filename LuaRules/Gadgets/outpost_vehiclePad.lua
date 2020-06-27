@@ -21,11 +21,11 @@ local BASE_DELAY = tonumber((modOptions and modOptions.vehicle_delay) or "30") *
 local DEATH_DELAY = 60 * 30 -- delay next one by extra 1 minute if the last one died
 local BEACON_ID = UnitDefNames["beacon"].id
 local VPAD_ID = UnitDefNames["outpost_vehiclepad"].id
-local HPAD_ID = UnitDefNames["outpost_hoverpad"].id
+--local HPAD_ID = UnitDefNames["outpost_hoverpad"].id
 
 local SPAWN_DEF_IDS = {
 	[VPAD_ID] = true,
-	[HPAD_ID] = true,
+	--[HPAD_ID] = true,
 }
 
 local flagSpots = {} --VFS.Include("maps/flagConfig/" .. Game.mapName .. "_profile.lua")
