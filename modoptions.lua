@@ -50,11 +50,22 @@ local options = {
 		section = '2gamemode',
 		step   	= 5,
 	},
-		{
+	{
 		key    = 'devtools',
 		name   = 'Developer Tools',
 		desc   = 'Sets options for tweaking balance',
 		type   = 'section',
+	},
+	{
+		key		= "perkeffect",
+		name	= "Perk Effect %",
+		desc	= "% To increase/decrease by when perking attributes",
+		type	= "number",
+		def		= 50,
+		min		= 1,
+		max		= 100,
+		step	= 5,
+		section	= "devtools",
 	},
 	{
 		key		= "damagemult",

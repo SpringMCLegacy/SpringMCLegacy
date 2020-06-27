@@ -2,6 +2,10 @@
 local GetCmdID = GG.CustomCommands.GetCmdID
 
 local PAD_LENGTH = 12
+local modOptions = Spring.GetModOptions()
+local EFFECT = modOptions and modOptions.perkeffect or 50
+local PCENT_INC = (100+EFFECT)/100
+local PCENT_DEC = (100-EFFECT)/100
 
 local function PadString(input)
 	while input:len() < PAD_LENGTH do
@@ -77,15 +81,15 @@ return {
 			id = GetCmdID('PERK_HEAT_EFFICIENCY'),
 			action = 'perkheatefficiency',
 			name = Pad("Heatsinks"),
-			tooltip = '+50% Heat dissipation rate & capacity',
+			tooltip = '+' .. EFFECT .. '% Heat dissipation rate & capacity',
 			texture = 'bitmaps/ui/perkbg.png',	
 		},
 		valid = allMechs,
 		applyPerk = function (unitID) 
 			--Spring.Echo("Heatsink Dissipation selected") 
 			env = Spring.UnitScript.GetScriptEnv(unitID)
-			env.baseCoolRate = env.baseCoolRate * 1.5
-			env.heatLimit = env.heatLimit * 1.5
+			env.baseCoolRate = env.baseCoolRate * PCENT_INC
+			env.heatLimit = env.heatLimit * PCENT_INC
 			Spring.SetUnitRulesParam(unitID, "heatLimit", env.heatLimit)
 		end,
 		costFunction = deductXP,
@@ -96,7 +100,7 @@ return {
 			id = GetCmdID('PERK_SENSORS_RANGE'),
 			action = 'perksensorsrange',
 			name = Pad("Sensors"),
-			tooltip = '+50% Radar and LOS range',
+			tooltip = '+' .. EFFECT .. '% Radar and LOS range',
 			texture = 'bitmaps/ui/perkbg.png',	
 		},
 		valid = allMechs,
@@ -105,11 +109,11 @@ return {
 			local currRadar = Spring.GetUnitSensorRadius(unitID, "radar")
 			local currLos = Spring.GetUnitSensorRadius(unitID, "los")
 			local currAirLos = Spring.GetUnitSensorRadius(unitID, "airLos")
-			Spring.SetUnitSensorRadius(unitID, "radar", currRadar * 1.5)
-			Spring.SetUnitSensorRadius(unitID, "los", currLos * 1.5)
-			Spring.SetUnitSensorRadius(unitID, "airLos", currAirLos * 1.5)
+			Spring.SetUnitSensorRadius(unitID, "radar", currRadar * PCENT_INC)
+			Spring.SetUnitSensorRadius(unitID, "los", currLos * PCENT_INC)
+			Spring.SetUnitSensorRadius(unitID, "airLos", currAirLos * PCENT_INC)
 			if hasBAP(Spring.GetUnitDefID(unitID)) then
-				GG.allyBAPs[Spring.GetUnitAllyTeam(unitID)][unitID] = currRadar * 1.5
+				GG.allyBAPs[Spring.GetUnitAllyTeam(unitID)][unitID] = currRadar * PCENT_INC
 			end
 		end,
 		costFunction = deductXP,
@@ -121,14 +125,14 @@ return {
 			id = GetCmdID('PERK_NARC_DURATION'),
 			action = 'perknarkduration',
 			name = Pad("NARC"),
-			tooltip = '+50% NARC duration',
+			tooltip = '+' .. EFFECT .. '% NARC duration',
 			texture = 'bitmaps/ui/perkbgability.png',	
 		},
 		valid = function (unitDefID) return allMechs(unitDefID) and hasWeaponName(unitDefID, "NARC") end,
 		applyPerk = function (unitID) 
 			--Spring.Echo("Sensor range selected") 
 			local currDuration = Spring.GetUnitRulesParam(unitID, "NARC_DURATION") or Spring.GetGameRulesParam("NARC_DURATION")
-			Spring.SetUnitRulesParam(unitID, "NARC_DURATION", currDuration * 1.5)
+			Spring.SetUnitRulesParam(unitID, "NARC_DURATION", currDuration * PCENT_INC)
 		end,
 		costFunction = deductXP,
 	},
@@ -138,7 +142,7 @@ return {
 			id = GetCmdID('PERK_JUMP_EFFICIENCY'),
 			action = 'perkjumpjetefficiency',
 			name = Pad("Jumpjets"),
-			tooltip = '+50% Jump range, speed & reload',
+			tooltip = '+' .. EFFECT .. '% Jump range, speed & reload',
 			texture = 'bitmaps/ui/perkbgability.png',	
 		},
 		valid = hasJumpjets,
@@ -147,9 +151,9 @@ return {
 			local currRange = Spring.GetUnitRulesParam(unitID, "jumpRange")
 			local currSpeed = Spring.GetUnitRulesParam(unitID, "jumpSpeed")
 			local currReload = Spring.GetUnitRulesParam(unitID, "jumpReload")
-			Spring.SetUnitRulesParam(unitID, "jumpRange", currRange * 1.5)
-			Spring.SetUnitRulesParam(unitID, "jumpSpeed", currSpeed * 1.5)
-			Spring.SetUnitRulesParam(unitID, "jumpReload", currReload * 0.5)
+			Spring.SetUnitRulesParam(unitID, "jumpRange", currRange * PCENT_INC)
+			Spring.SetUnitRulesParam(unitID, "jumpSpeed", currSpeed * PCENT_INC)
+			Spring.SetUnitRulesParam(unitID, "jumpReload", currReload * PCENT_DEC)
 		end,
 		costFunction = deductXP,
 	},
@@ -159,14 +163,14 @@ return {
 			id = GetCmdID('PERK_MASC_EFFICIENCY'),
 			action = 'perkmascefficiency',
 			name = Pad("MASC"),
-			tooltip = '-50% MASC heat generation',
+			tooltip = '-' .. EFFECT .. '% MASC heat generation',
 			texture = 'bitmaps/ui/perkbgability.png',	
 		},
 		valid = hasMASC,
 		applyPerk = function (unitID) 
 			--Spring.Echo("MASC heat reduction selected") 
 			env = Spring.UnitScript.GetScriptEnv(unitID)
-			env.mascHeatRate = env.mascHeatRate * 0.5
+			env.mascHeatRate = env.mascHeatRate * PCENT_DEC
 		end,
 		costFunction = deductXP,
 	},
@@ -176,13 +180,13 @@ return {
 			id = GetCmdID('PERK_AMS_RANGE'),
 			action = 'perkamsrange',
 			name = Pad("AMS"),
-			tooltip = '+50% AMS Weapon Range',
+			tooltip = '+' .. EFFECT .. '% AMS Weapon Range',
 			texture = 'bitmaps/ui/perkbgability.png',	
 		},
 		valid = function (unitDefID) return allMechs(unitDefID) and hasWeaponClass(unitDefID, "ams") end,
 		applyPerk = function (unitID) 
 			--Spring.Echo("Projectile range selected") 
-			setWeaponClassAttribute(unitID, "ams", "range", 1.5)
+			setWeaponClassAttribute(unitID, "ams", "range", PCENT_INC)
 		end,
 		costFunction = deductXP,
 	},
@@ -192,15 +196,15 @@ return {
 			id = GetCmdID('PERK_ECM_RANGE'),
 			action = 'perkecmrange',
 			name = Pad("ECM"),
-			tooltip = '+50% ECM range',
+			tooltip = '+' .. EFFECT .. '% ECM range',
 			texture = 'bitmaps/ui/perkbgability.png',	
 		},
 		valid = function (unitDefID) return (allMechs(unitDefID) and hasECM(unitDefID) and isFaction(unitDefID, "cc")) end,
 		applyPerk = function (unitID) 
 			--Spring.Echo("ECM range selected") 
 			local currECM = Spring.GetUnitSensorRadius(unitID, "radarJammer")
-			Spring.SetUnitSensorRadius(unitID, "radarJammer", currECM * 1.5)
-			GG.allyJammers[Spring.GetUnitAllyTeam(unitID)][unitID] = currECM * 1.5
+			Spring.SetUnitSensorRadius(unitID, "radarJammer", currECM * PCENT_INC)
+			GG.allyJammers[Spring.GetUnitAllyTeam(unitID)][unitID] = currECM * PCENT_INC
 		end,
 		costFunction = deductXP,
 	},
@@ -210,13 +214,13 @@ return {
 			id = GetCmdID('PERK_INSULATED_ELECTRONICS'),
 			action = 'perkinsulatedelectronics',
 			name = Pad("Insulated", "Electronics"),
-			tooltip = '-50% PPC disruption time',
+			tooltip = '-' .. EFFECT .. '% PPC disruption time',
 			texture = 'bitmaps/ui/perkbgability.png',	
 		},
 		valid = function (unitDefID) return (allMechs(unitDefID) and hasECM(unitDefID) or hasBAP(unitDefID)) end,
 		applyPerk = function (unitID) 
 			--Spring.Echo("Insulated Electronics selected") 
-			Spring.SetUnitRulesParam(unitID, "insulation", 0.5)
+			Spring.SetUnitRulesParam(unitID, "insulation", PCENT_DEC)
 		end,
 		costFunction = deductXP,
 	},
@@ -227,13 +231,13 @@ return {
 			id = GetCmdID('PERK_LRM_RANGE'),
 			action = 'perklrmrange',
 			name = Pad("LRM"),
-			tooltip = '+50% LRM Range',
+			tooltip = '+' .. EFFECT .. '% LRM Range',
 			texture = 'bitmaps/ui/perkbgfaction.png',	
 		},
 		valid = function (unitDefID) return (allMechs(unitDefID) and hasWeaponClass(unitDefID, "lrm") and isFaction(unitDefID, "fw")) end,
 		applyPerk = function (unitID) 
 			--Spring.Echo("Missile range selected") 
-			setWeaponClassAttribute(unitID, "lrm", "range", 1.5)
+			setWeaponClassAttribute(unitID, "lrm", "range", PCENT_INC)
 		end,
 		costFunction = deductXP,
 	},
@@ -243,13 +247,13 @@ return {
 			id = GetCmdID('PERK_MRM_RANGE'),
 			action = 'perkmrmrange',
 			name = Pad("MRM"),
-			tooltip = '+50% MRM Range',
+			tooltip = '+' .. EFFECT .. '% MRM Range',
 			texture = 'bitmaps/ui/perkbgfaction.png',	
 		},
 		valid = function (unitDefID) return (allMechs(unitDefID) and hasWeaponClass(unitDefID, "mrm") and isFaction(unitDefID, "dc")) end,
 		applyPerk = function (unitID) 
 			--Spring.Echo("Missile range selected") 
-			setWeaponClassAttribute(unitID, "mrm", "range", 1.5)
+			setWeaponClassAttribute(unitID, "mrm", "range", PCENT_INC)
 		end,
 		costFunction = deductXP,
 	},
@@ -259,13 +263,13 @@ return {
 			id = GetCmdID('PERK_PPC_RANGE'),
 			action = 'perkppcrange',
 			name = Pad("PPC"),
-			tooltip = '+50% PPC Weapon Range',
+			tooltip = '+' .. EFFECT .. '% PPC Weapon Range',
 			texture = 'bitmaps/ui/perkbgfaction.png',	
 		},
 		valid = function (unitDefID) return (allMechs(unitDefID) and hasWeaponClass(unitDefID, "ppc") and isFaction(unitDefID, "dc")) end,
 		applyPerk = function (unitID) 
 			--Spring.Echo("PPC range selected") 
-			setWeaponClassAttribute(unitID, "ppc", "range", 1.5)
+			setWeaponClassAttribute(unitID, "ppc", "range", PCENT_INC)
 		end,
 		costFunction = deductXP,
 	},
@@ -275,13 +279,13 @@ return {
 			id = GetCmdID('PERK_AUTOCANNON_RANGE'),
 			action = 'perkautocannonrange',
 			name = Pad("Autocannon"),
-			tooltip = '+50% Autocannon Weapon Range',
+			tooltip = '+' .. EFFECT .. '% Autocannon Weapon Range',
 			texture = 'bitmaps/ui/perkbgfaction.png',	
 		},
 		valid = function (unitDefID) return (allMechs(unitDefID) and hasWeaponClass(unitDefID, "autocannon") and isFaction(unitDefID, "fs")) end,
 		applyPerk = function (unitID) 
 			--Spring.Echo("Autocannon range selected") 
-			setWeaponClassAttribute(unitID, "autocannon", "range", 1.5)
+			setWeaponClassAttribute(unitID, "autocannon", "range", PCENT_INC)
 		end,
 		costFunction = deductXP,
 	},
@@ -291,13 +295,13 @@ return {
 			id = GetCmdID('PERK_GAUSS_RANGE'),
 			action = 'perkgaussrange',
 			name = Pad("Gauss"),
-			tooltip = '+50% Gauss Weapon Range',
+			tooltip = '+' .. EFFECT .. '% Gauss Weapon Range',
 			texture = 'bitmaps/ui/perkbgfaction.png',	
 		},
 		valid = function (unitDefID) return (allMechs(unitDefID) and hasWeaponClass(unitDefID, "gauss") and isFaction(unitDefID, "la")) end,
 		applyPerk = function (unitID) 
 			--Spring.Echo("Gauss range selected") 
-			setWeaponClassAttribute(unitID, "gauss", "range", 1.5)
+			setWeaponClassAttribute(unitID, "gauss", "range", PCENT_INC)
 		end,
 		costFunction = deductXP,
 	},
