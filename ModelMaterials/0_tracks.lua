@@ -88,7 +88,7 @@ local unitMaterials = {}
 for i=1,#UnitDefs do
   local udef = UnitDefs[i]
 
-  if udef.leaveTracks and not udef.customParams.wheels then
+  if udef.leaveTracks and not udef.customParams.wheels and udef.customParams.normaltex then
     unitMaterials[udef.name] = {
 	  "trackShader", 
 	  NORMALTEX = udef.customParams.normaltex,
