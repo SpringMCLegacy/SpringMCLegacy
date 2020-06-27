@@ -99,7 +99,7 @@ end
 local narcUnits = {}
 
 local PPC_DURATION = 5 * 30 -- 5 seconds
-local sensorTypes = {"radar", "seismic", "radarJammer"}
+local sensorTypes = {"radarJammer"} -- "radar", "seismic", 
 local unitSensorRadii = {} -- unitSensorRadii[unitID] = {radar = a, seismic = b ...}
 local ppcUnits = {} -- ppcUnits[unitID] = gameframe
 local bapUnits = {} -- bapUnits[unitID] = {gameframe, allyTeam}
@@ -128,11 +128,8 @@ local function ApplyPPC(unitID)
 		for _, sensorType in pairs(sensorTypes) do
 			-- perks change radii so can't rely on unitdef values
 			unitSensorRadii[unitID][sensorType] = Spring.GetUnitSensorRadius(unitID, sensorType)
-			Spring.SetUnitSensorRadius(unitID, sensorType, 0) -- ECM & BAP are disabled altogether
+			Spring.SetUnitSensorRadius(unitID, sensorType, 0) -- ECM disabled altogether
 		end
-		-- BAP is disabled - return to regular radar (TODO: should really reset the emit height too! Needs engine change)
-		-- FIXME: set these default values in a single place and read them from there
-		Spring.SetUnitSensorRadius(unitID, "radar", 2000) --L138 unitdefs_post
 	end
 	local delay = (GetUnitRulesParam(unitID, "insulation") or 1) * PPC_DURATION
 	ppcUnits[unitID] = Spring.GetGameFrame() + delay
