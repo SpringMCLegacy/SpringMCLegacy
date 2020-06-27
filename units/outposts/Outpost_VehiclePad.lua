@@ -24,5 +24,5 @@ local Outpost_HoverPad = Outpost_VehiclePad:New{
 
 return lowerkeys({ 
 	["outpost_VehiclePad"] = Outpost_VehiclePad,
-	--["outpost_HoverPad"] = Outpost_HoverPad,
+	["outpost_HoverPad"] = Outpost_HoverPad,
 })
