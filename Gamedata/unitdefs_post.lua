@@ -448,7 +448,7 @@ end
 table.sort(TCONTROL_BUILDOPTIONS)
 TCONTROL_UD["buildoptions"] = TCONTROL_BUILDOPTIONS
 VPAD_UD.customparams.spawn = VPAD_SPAWNOPTIONS
-HPAD_UD.customparams.spawn = HPAD_SPAWNOPTIONS
+--HPAD_UD.customparams.spawn = HPAD_SPAWNOPTIONS
 --table.echo(VPAD_UD.customparams.spawn)
 --table.echo(HPAD_UD.customparams.spawn)
 
