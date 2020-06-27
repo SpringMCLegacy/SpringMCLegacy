@@ -738,7 +738,7 @@ end
 function gadget:GameFrame(n)
 	if n > 0 and n % 30 == 0 then -- once a second
 		for _, teamID in pairs(Spring.GetTeamList()) do
-			AddTeamResource(teamID, "metal", CBILLS_PER_SEC)
+			AddTeamResource(teamID, "metal", CBILLS_PER_SEC * Spring.GetTeamUnitDefCount(teamID, BEACON_ID))
 		end
 		-- check if orders are still too expensive
 		for unitID, teamID in pairs(dropZones) do

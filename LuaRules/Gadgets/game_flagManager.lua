@@ -91,6 +91,7 @@ end
 -- BEACON TICKET DECLARATIONS
 local START_TICKETS = tonumber(modOptions.start_tickets) or 100
 local TICKET_LOSS_PER_BEACON = 1
+local CAP_BONUS = tonumber(modOptions.capincome) or 2000
 local beaconsPerAllyTeam = {}
 local tickets = {}
 local bleedTimes = {}
@@ -248,7 +249,7 @@ end
 local function TransferFlag(flagID, flagTeamID, teamID)
 	local capped = flagTeamID == GAIA_TEAM_ID
 	TransferUnit(flagID, capped and teamID or GAIA_TEAM_ID, false)
-	Spring.AddTeamResource(teamID, "metal", 2000) -- 2k CBills for neut or cap
+	Spring.AddTeamResource(teamID, "metal", CAP_BONUS) -- 2k CBills for neut or cap
 	if capped then -- new team is gaining a beacon
 		-- Update the new team
 		UpdateBeacons(teamID, 1)
