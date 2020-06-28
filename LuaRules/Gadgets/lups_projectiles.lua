@@ -95,7 +95,7 @@ function gadget:ProjectileDestroyed(proID)
 end
 
 function gadget:Initialize()
-	for weaponID in pairs(weapons) do
+	for weaponID in pairs(weapons) do -- all cached defs with projectilelups
 		Script.SetWatchWeapon(weaponID, true)
 	end
 	for id, wd in pairs(WeaponDefs) do

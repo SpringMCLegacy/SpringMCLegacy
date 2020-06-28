@@ -27,7 +27,6 @@ local FindUnitCmdDesc		= Spring.FindUnitCmdDesc
 local RemoveUnitCmdDesc		= Spring.RemoveUnitCmdDesc
 local SetUnitRulesParam		= Spring.SetUnitRulesParam
 local SetTeamRulesParam		= Spring.SetTeamRulesParam
-local SpawnProjectile		= Spring.SpawnProjectile
 local UseTeamResource 		= Spring.UseTeamResource
 
 -- GG

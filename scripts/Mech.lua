@@ -123,7 +123,7 @@ for weaponID = 1, info.numWeapons - 1 do
 		end
 		if spinSpeeds[weaponID] then
 			spinPieces[weaponID] = piece("barrels_" .. weaponID)
-			spinPiecesState[weaponID] = false
+			spinPiecesState[weaponID] = 0
 		elseif info.barrelIDs[weaponID] then
 			barrels[weaponID] = piece("barrel_" .. weaponID)
 		end
@@ -164,17 +164,18 @@ local function SpinBarrels(weaponID, start)
 	Signal(spinSpeeds)
 	SetSignalMask(spinSpeeds)
 	if start then
+		spinPiecesState[weaponID] = 1
 		for weaponID, spinPiece in pairs(spinPieces) do
 			Spin(spinPiece, z_axis, spinSpeeds[weaponID], spinSpeeds[weaponID] / 5)
 		end
+		Sleep(2500) -- spin up wait
+		spinPiecesState[weaponID] = 2
 	else
-		Sleep(2500)
+		Sleep(2500) -- spin down wait
 		for weaponID, spinPiece in pairs(spinPieces) do
 			StopSpin(spinPiece, z_axis, spinSpeeds[weaponID]/10)
 		end
-	end
-	for weaponID, spinPiece in pairs(spinPieces) do
-		spinPiecesState[weaponID] = start -- must come after the Sleep
+		spinPiecesState[weaponID] = 0
 	end
 end
 
@@ -532,10 +533,14 @@ local function WeaponCanFire(weaponID)
 		end
 		SetUnitRulesParam(unitID, "outofammo", 1)
 		return false
-	else
-		if spinSpeeds[weaponID] and not spinPiecesState[weaponID] then
+	elseif spinSpeeds[weaponID] then 
+		if spinPiecesState[weaponID] < 1 then
 			StartThread(SpinBarrels, weaponID, true)
+			return false -- can't fire until spun up
+		else
+			return spinPiecesState[weaponID] == 2
 		end
+	else
 		--Spring.Echo(unitID, weaponID, "Weapon is allowed to fire by WeaponCanFire")
 		return true
 	end
