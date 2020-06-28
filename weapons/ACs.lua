@@ -63,8 +63,8 @@ local RAC2 = AC2:New{
 	sprayangle				= 25,
 	weaponVelocity          = 2000,
 	burst					= 6,
-	burstrate				= 0.04,
-	reloadtime              = 0.5,
+	burstrate				= 0.02,
+	reloadtime              = 1,
 	customparams = {
 		--heatgenerated		= 0.3,--0.5/s
 		spinspeed			= 600,
@@ -94,7 +94,7 @@ local AC5 = AC_Class:New{
 		default = 200,--100, --50 DPS
 	},
 	customparams = {
-		heatgenerated		= 0.2,--0.1/sec
+		heatgenerated		= 0.4,--0.1/sec --up from 0.2
 		cegflare			= "AC5_MUZZLEFLASH",
 		ammotype			= "ac5",
     },
@@ -124,8 +124,8 @@ local RAC5 = AC5:New{
 	sprayangle				= 600,
 	weaponVelocity          = 1750,
 	burst					= 6,
-	burstrate				= 0.1,
-	reloadtime              = 2,
+	burstrate				= 0.05,
+	reloadtime              = 3,
 	customparams = {
 		--heatgenerated		= 1.2,--0.2/sec
 		--cegflare			= "MISSILE_MUZZLEFLASH",
@@ -140,7 +140,7 @@ local UAC5 = AC5:New{
 	--accuracy                = 100,
 	reloadtime              = 1,
 	customparams = {
-		heatgenerated		= 0.2,--0.1/sec
+		heatgenerated		= 0.4,--0.1/sec
     },
 }
 
@@ -153,7 +153,7 @@ local LBX5 = AC5:New{
 	
 	customparams = {
 		weaponclass			= "lbx",
-		heatgenerated		= 0.2,--0.1/sec
+		heatgenerated		= 0.4,--0.1/sec
     },
 }
 
