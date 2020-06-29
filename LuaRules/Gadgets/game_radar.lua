@@ -234,11 +234,10 @@ function gadget:UnitCreated(unitID, unitDefID, teamID)
 	if visionCache[unitDefID] then -- a mech!
 		visionCache[unitDefID].torso = GG.lusHelper[unitDefID].torso
 		allyTeamMechs[Spring.GetUnitAllyTeam(unitID)][unitID] = visionCache[unitDefID]
-		-- force Spring to think this unit has previously been in LOS, so that the correct radar icon is shown
+		-- force Spring to recognise units spawned within sectors should be full LOS
 		for i = 1, numAllyTeams do
 			local allyTeam = allyTeams[i]
-			SetUnitLosState(unitID, allyTeam, prevLosTrue)
-			SetUnitLosMask(unitID, allyTeam, prevLosTrue)
+			SetUnitLosMask(unitID, allyTeam, losTrue)
 		end
 	end
 end
@@ -264,7 +263,7 @@ end
 function gadget:UnitEnteredLOS(unitID, unitTeam, allyTeam, unitDefID)
 	if mobileUnitDefs[unitDefID] then
 		inRadarUnits[allyTeam][unitID] = nil
-		--Spring.Echo("UER:", unitID, unitTeam, UnitDefs[unitDefID].name)
+		--Spring.Echo("UELOS:", unitID, unitTeam, UnitDefs[unitDefID].name)
 	end
 end
 
@@ -328,7 +327,7 @@ function gadget:GameFrame(n)
 		local allyTeam = allyTeams[i]
 		-- Firstly ECM units
 		for unitID, ecmRadius in pairs(allyJammers[allyTeam]) do
-			-- only active non-PPC'd units can utilise BAP and ECM
+			-- only active non-PPC'd units can utilise ECM
 			if not ppcUnits[unitID] and GetUnitIsActive(unitID) then
 				for _, teamID in pairs(teamsInAllyTeams[allyTeam]) do
 					if not deadTeams[teamID] then
@@ -346,9 +345,9 @@ function gadget:GameFrame(n)
 		end
 		-- Secondly BAP units
 		for unitID, bapRadius in pairs(allyBAPs[allyTeam]) do
-			-- only active non-PPC'd units can utilise BAP and ECM
+			-- only active units can utilise BAP and ECM -- non-PPC'd
 			-- TODO: probably we want BAP passive/active toggle to be seperate from main radar activation state?
-			if not ppcUnits[unitID] and GetUnitIsActive(unitID) then
+			if GetUnitIsActive(unitID) then -- not ppcUnits[unitID] and 
 				local x, _, z = GetUnitPosition(unitID)
 				local nearbyUnits = Spring.GetUnitsInCylinder(x, z, bapRadius)
 				for _, enemyID in pairs(nearbyUnits) do
@@ -388,7 +387,8 @@ function gadget:GameFrame(n)
 						if mobileUnits[enemyID] 
 						and (inRadarUnits[allyTeam][enemyID] or ecmUnits[enemyID]
 						or (not Spring.GetUnitIsActive(enemyID) or not Spring.GetUnitIsActive(unitID))
-						and not (bapUnits[enemyID] and bapUnits[enemyID][2] == allyTeam)) then
+						and not (bapUnits[enemyID] and bapUnits[enemyID][2] == allyTeam) 
+						and not (narcUnits[enemyID] and narcUnits[enemyID].allyTeam == allyTeam)) then
 							local ex, _, ez = GetUnitPosition(enemyID)
 							local inSector = GG.Vector.IsInsideSectorVector(ex, ez, x, z, v1x, v1z, v2x, v2z)
 							if inSector then
@@ -419,6 +419,12 @@ function gadget:GameFrame(n)
 		end
 		table.copy(sectorUnits[allyTeam], prevSectorUnits[allyTeam])
 		sectorUnits[allyTeam] = {}
+	end
+	-- really finally, check NARC as it should override anything else
+	for unitID, info in pairs(narcUnits) do
+		if Spring.ValidUnitID(unitID) and not Spring.GetUnitIsDead(unitID) then
+			SetUnitLosState(unitID, info.allyTeam, {los=true, prevLos=true, radar=true, contRadar=true} ) 
+		end
 	end
 	if Spring.IsGameOver() then
 		gadgetHandler:RemoveGadget()
