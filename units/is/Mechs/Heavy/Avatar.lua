@@ -2,7 +2,7 @@ local Avatar = Heavy:New{
 	name				= "Avatar",
 	
 	customparams = {
-		cockpitheight	= 25,
+		cockpitheight	= 9.4,
 		tonnage			= 70,
 	},
 }

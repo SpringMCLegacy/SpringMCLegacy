@@ -1,7 +1,7 @@
 local Kabuto = Light:New{
 	name              	= "Kabuto",
 	customparams = {
-		cockpitheight	= 11,
+		cockpitheight	= 5.95,
 		tonnage 		= 20,
     },
 }

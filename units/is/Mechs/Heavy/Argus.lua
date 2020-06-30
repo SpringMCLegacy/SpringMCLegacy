@@ -2,7 +2,7 @@ local Argus = Heavy:New{
 	name				= "Argus",
 		
     customparams = {
-		cockpitheight	= 19.8,
+		cockpitheight	= 9.7,
 		tonnage			= 60,
     },
 }

@@ -2,7 +2,7 @@ local Strider = Medium:New{
 	name				= "Strider",
 	
 	customparams = {
-		cockpitheight	= 9.5,
+		cockpitheight	= 3.1,
 		tonnage			= 40,
     },
 }

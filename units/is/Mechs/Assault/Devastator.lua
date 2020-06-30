@@ -2,7 +2,7 @@ local Devastator = Assault:New{
 	name				= "Devastator",
 	
 	customparams = {
-		cockpitheight	= 19.55,
+		cockpitheight	= 9.4,
 		tonnage			= 100,
     },
 }

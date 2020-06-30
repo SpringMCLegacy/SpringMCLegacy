@@ -2,7 +2,7 @@ local Uziel = Medium:New{
 	name				= "Uziel",
 	
 	customparams = {
-		cockpitheight	= 5,
+		cockpitheight	= 1,
 		tonnage			= 50,
     },
 }

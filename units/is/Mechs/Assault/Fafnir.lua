@@ -2,7 +2,7 @@ local Fafnir = Assault:New{
 	name				= "Fafnir",
 	
 	customparams = {
-		cockpitheight	= 18.5,
+		cockpitheight	= 7,
 		tonnage			= 100,
     },
 }

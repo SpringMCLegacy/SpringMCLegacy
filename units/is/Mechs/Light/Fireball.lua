@@ -1,7 +1,7 @@
 local Fireball = Light:New{
 	name              	= "Fireball",
 	customparams = {
-		cockpitheight	= 13.5,
+		cockpitheight	= 5.95,
 		tonnage			= 20,
     },
 }

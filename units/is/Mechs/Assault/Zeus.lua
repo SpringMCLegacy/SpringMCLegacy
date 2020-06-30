@@ -1,7 +1,7 @@
 local Zeus = Assault:New{
 	name				= "Zeus",
     customparams = {
-		cockpitheight	= 17.9,
+		cockpitheight	= 4.85,
 		tonnage			= 80,
     },
 }

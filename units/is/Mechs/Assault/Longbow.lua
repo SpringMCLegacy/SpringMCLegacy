@@ -2,7 +2,7 @@ local Longbow = Assault:New{
 	name				= "Longbow",
 
 	customparams = {
-		cockpitheight	= 21.1,
+		cockpitheight	= 11.3,
 		tonnage			= "85",
     },
 }

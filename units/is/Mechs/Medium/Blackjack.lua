@@ -2,7 +2,7 @@ local Blackjack = Medium:New{
 	name				= "Blackjack",
 
 	customparams = {
-		cockpitheight	= 14,
+		cockpitheight	= 10,
 		tonnage			= 45,
 		torsoscale		= 1.0,
     },	

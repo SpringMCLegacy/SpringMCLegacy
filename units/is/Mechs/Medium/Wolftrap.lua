@@ -2,7 +2,7 @@ local Wolftrap = Medium:New{
 	name				= "Wolf Trap",
 	
 	customparams = {
-		cockpitheight	= 18.5,
+		cockpitheight	= 9.5,
 		tonnage			= 45,
     },
 }

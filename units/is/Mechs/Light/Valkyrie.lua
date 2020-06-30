@@ -2,7 +2,7 @@ local Valkyrie = Light:New{
 	name				= "Valkyrie",
 
 	customparams = {
-		cockpitheight	= 17,
+		cockpitheight	= 9,
 		tonnage			= 35,
     },
 }

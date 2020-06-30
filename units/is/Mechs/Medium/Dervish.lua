@@ -2,7 +2,7 @@ local Dervish = Medium:New{
 	name				= "Dervish",
 
 	customparams = {
-		cockpitheight	= 14,
+		cockpitheight	= 9.9,
 		tonnage			= 55,
     },
 }

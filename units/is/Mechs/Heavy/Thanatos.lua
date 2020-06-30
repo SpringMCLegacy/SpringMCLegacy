@@ -2,7 +2,7 @@ local Thanatos = Heavy:New{
 	name				= "Thanatos",
 		
     customparams = {
-		cockpitheight	= 16.2,
+		cockpitheight	= 7.7,
 		tonnage			= 75,
     },
 }

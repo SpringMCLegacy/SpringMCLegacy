@@ -2,7 +2,7 @@ local EnforcerIII = Medium:New{
 	name				= "Enforcer III",
 	
 	customparams = {
-		cockpitheight	= 21,
+		cockpitheight	= 11.8,
 		tonnage			= 50,
     },
 }

@@ -2,7 +2,7 @@ local Archer = Heavy:New{
 	name				= "Archer",
 	
 	customparams = {
-		cockpitheight	= 20.3,
+		cockpitheight	= 11,
 		tonnage			= 70,
     },
 }

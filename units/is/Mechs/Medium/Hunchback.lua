@@ -2,7 +2,7 @@ local Hunchback = Medium:New{
 	name				= "Hunchback",
 
 	customparams = {
-		cockpitheight	= 19,
+		cockpitheight	= 10.4,
 		tonnage			= 50,
     },	
 }
