@@ -153,16 +153,19 @@ local function IsUnitTAGed(unitID)
 end
 GG.IsUnitTAGed = IsUnitTAGed
 
-local function ResetLosStates(unitID, allyTeam)
+local function ResetLosStates(unitID, allyTeam) -- TODO:need to check los/radar status properly here rather than hard reset
 	-- don't reset for turrets or outposts etc, they remain always visible once detected by whatever means
 	if Spring.ValidUnitID(unitID) and not Spring.GetUnitIsDead(unitID) and mobileUnits[unitID] then
 		--Spring.Echo("Reset los states for", unitID)
-		SetUnitLosMask(unitID, allyTeam, prevLosOnly)
-		if sectorUnits[allyTeam][unitID] then
+		--SetUnitLosMask(unitID, allyTeam, prevLosOnly)
+		if sectorUnits[allyTeam][unitID] then -- TODO: But we already do!?
+			Spring.Echo("Its still in a sector, jim") -- TODO: not echoed!
 			SetUnitLosState(unitID, allyTeam, fullLOS)
+			SetUnitLosMask(unitID, allyTeam, prevLosTrue)
 		else
 			local states = GetUnitLosState(unitID, allyTeam)
 			SetUnitLosState(unitID, allyTeam, {radar = states.radar, los = false})
+			--SetUnitLosMask(unitID, allyTeam, prevLosOnly)
 		end
 	end
 end
@@ -307,7 +310,7 @@ function gadget:GameFrame(n)
 	for bapped, data in pairs(bapUnits) do
 		if data[1] < n - FRAME_FUDGE then
 			if Spring.ValidUnitID(bapped) and not Spring.GetUnitIsDead(bapped) then
-				ResetLosStates(bapped, data[2])
+				ResetLosStates(bapped, data[2]) -- unit is no longer under BAP, need to reset to use rest of checks
 			end
 			bapUnits[bapped] = nil
 		end
@@ -315,9 +318,6 @@ function gadget:GameFrame(n)
 	-- TODO: needed?
 	for ecmed, data in pairs(ecmUnits) do
 		if data[1] < n - FRAME_FUDGE then
-			--if Spring.ValidUnitID(ecmed) and not Spring.GetUnitIsDead(ecmed) then
-			--	ResetLosStates(bapped, data[2])
-			--end
 			ecmUnits[ecmed] = nil
 		end
 	end
