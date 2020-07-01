@@ -162,19 +162,6 @@ local function ResetLosStates(unitID, allyTeam) -- TODO:need to check los/radar 
 		SetUnitLosMask(unitID, allyTeam, fullLOS) -- let engine handle los state for this unit	
 	end
 end	
---[[		
-		--SetUnitLosMask(unitID, allyTeam, prevLosOnly)
-		if sectorUnits[allyTeam][unitID] then -- TODO: But we already do!?
-			Spring.Echo("Its still in a sector, jim") -- TODO: not echoed!
-			SetUnitLosState(unitID, allyTeam, fullLOS)
-			SetUnitLosMask(unitID, allyTeam, prevLosTrue)
-		else
-			local states = GetUnitLosState(unitID, allyTeam)
-			SetUnitLosState(unitID, allyTeam, {radar = states.radar, los = false})
-			--SetUnitLosMask(unitID, allyTeam, prevLosOnly)
-		end
-	end
-end]]
 
 local function NARC(unitID, allyTeam, duration)
 	local narcFrame = GetGameFrame() + duration
@@ -355,9 +342,9 @@ function gadget:GameFrame(n)
 									SetUnitLosState(enemyID, allyTeam, fullLOS)
 									SetUnitLosMask(enemyID, allyTeam, prevLosTrue)
 									sectorUnits[allyTeam][enemyID] = true
-									Spring.Echo("rayTrace yes", enemyID, UnitDefs[Spring.GetUnitDefID(enemyID)].name)
+									--Spring.Echo("rayTrace yes", enemyID, UnitDefs[Spring.GetUnitDefID(enemyID)].name)
 								else
-									Spring.Echo("rayTrace no", enemyID, UnitDefs[Spring.GetUnitDefID(enemyID)].name)
+									--Spring.Echo("rayTrace no", enemyID, UnitDefs[Spring.GetUnitDefID(enemyID)].name)
 								end
 							elseif not sectorUnits[allyTeam][enemyID] then -- not in another sector FOUND SO FAR?
 								ResetLosStates(enemyID, allyTeam) -- TODO: see if we can't avoid calling this. Probably requires a second loop though.
