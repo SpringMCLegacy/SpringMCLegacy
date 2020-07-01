@@ -112,6 +112,7 @@ local losTrue = {los = true}
 local losFalseRestTrue = {los = false, prevLos = true, radar = true, contRadar = true}
 local fullLOS = {los = true, prevLos = true, radar = true, contRadar = true}
 
+
 local function FinishPPC(unitID)
 	if ppcUnits[unitID] and ppcUnits[unitID] <= Spring.GetGameFrame() then
 		for _, sensorType in pairs(sensorTypes) do
@@ -157,6 +158,11 @@ local function ResetLosStates(unitID, allyTeam) -- TODO:need to check los/radar 
 	-- don't reset for turrets or outposts etc, they remain always visible once detected by whatever means
 	if Spring.ValidUnitID(unitID) and not Spring.GetUnitIsDead(unitID) and mobileUnits[unitID] then
 		--Spring.Echo("Reset los states for", unitID)
+		SetUnitLosState(unitID, allyTeam, {los = Spring.IsUnitInLos(unitID, allyTeam), prevLos = true, radar = Spring.IsUnitInRadar(unitID, allyTeam), contRadar = true}) 
+		SetUnitLosMask(unitID, allyTeam, fullLOS) -- let engine handle los state for this unit	
+	end
+end	
+--[[		
 		--SetUnitLosMask(unitID, allyTeam, prevLosOnly)
 		if sectorUnits[allyTeam][unitID] then -- TODO: But we already do!?
 			Spring.Echo("Its still in a sector, jim") -- TODO: not echoed!
@@ -168,7 +174,7 @@ local function ResetLosStates(unitID, allyTeam) -- TODO:need to check los/radar 
 			--SetUnitLosMask(unitID, allyTeam, prevLosOnly)
 		end
 	end
-end
+end]]
 
 local function NARC(unitID, allyTeam, duration)
 	local narcFrame = GetGameFrame() + duration
@@ -257,6 +263,7 @@ function gadget:UnitEnteredRadar(unitID, unitTeam, allyTeam, unitDefID)
 end
 
 function gadget:UnitLeftRadar(unitID, unitTeam, allyTeam, unitDefID)
+	--Spring.Echo("ULR:", unitID, unitTeam, UnitDefs[unitDefID].name)
 	if mobileUnitDefs[unitDefID] then
 		--outRadarUnits[allyTeam][unitID] = true
 		inRadarUnits[allyTeam][unitID] = nil
@@ -325,55 +332,7 @@ function gadget:GameFrame(n)
 	local GetUnitPosition 	= Spring.GetUnitPosition
 	for i = 1, numAllyTeams do
 		local allyTeam = allyTeams[i]
-		-- Firstly ECM units
-		for unitID, ecmRadius in pairs(allyJammers[allyTeam]) do
-			-- only active non-PPC'd units can utilise ECM
-			if not ppcUnits[unitID] and GetUnitIsActive(unitID) then
-				for _, teamID in pairs(teamsInAllyTeams[allyTeam]) do
-					if not deadTeams[teamID] then
-						local x, _, z = GetUnitPosition(unitID)
-						local nearbyUnits = Spring.GetUnitsInCylinder(x, z, ecmRadius, teamID)
-						--Spring.Echo("Jammer", jammerID, "(", UnitDefs[Spring.GetUnitDefID(jammerID)].name, ")")
-						for _, enemyID in pairs(nearbyUnits) do
-							--Spring.Echo("nearby", UnitDefs[Spring.GetUnitDefID(nearbyUnits[i])].name)
-							SetUnitRulesParam(enemyID, "FRIENDLY_ECM", n, {inlos = true})
-							ecmUnits[enemyID] = {n, allyTeam}
-						end
-					end
-				end
-			end
-		end
-		-- Secondly BAP units
-		for unitID, bapRadius in pairs(allyBAPs[allyTeam]) do
-			-- only active units can utilise BAP and ECM -- non-PPC'd
-			-- TODO: probably we want BAP passive/active toggle to be seperate from main radar activation state?
-			if GetUnitIsActive(unitID) then -- not ppcUnits[unitID] and 
-				local x, _, z = GetUnitPosition(unitID)
-				local nearbyUnits = Spring.GetUnitsInCylinder(x, z, bapRadius)
-				for _, enemyID in pairs(nearbyUnits) do
-					local unitAllyTeam = Spring.GetUnitAllyTeam(enemyID)
-					if enemyID ~= unitID and unitAllyTeam ~= allyTeam then -- and not sectorUnits[allyTeam][enemyID] then -- not in another sector
-						if allyJammers[unitAllyTeam][enemyID] then -- jammers only vs ecmUnits[enemyID] for all ecm'd mechs
-							if n % 30 == 0 then -- every second
-								local ex, ey, ez = Spring.GetUnitPosition(enemyID)
-								Spring.SpawnCEG("ecm_ping", ex,ey,ez)
-							end
-						elseif ecmUnits[enemyID] then 
-							-- nothing, should still be invisible to bap
-						else
-							bapUnits[enemyID] = {n, allyTeam}
-							SetUnitLosState(enemyID, allyTeam, fullLOS) 
-							SetUnitLosMask(enemyID, allyTeam, losTrue)	-- let lua handle los state for this unit
-							--[[if n % 30 == 0 then -- every second
-								local ex, ey, ez = Spring.GetUnitPosition(enemyID)
-								Spring.SpawnCEG("bap_ping", ex,ey,ez)
-							end]]
-						end
-					end
-				end
-			end
-		end
-		-- Finally all sector mechs
+		-- Firstly all sector mechs
 		for unitID, info in pairs(allyTeamMechs[allyTeam]) do
 			if Spring.ValidUnitID(unitID) and not Spring.GetUnitIsDead(unitID) then
 				local x, _, z = GetUnitPosition(unitID)
@@ -382,26 +341,26 @@ function gadget:GameFrame(n)
 					local v1x, v1z, v2x, v2z = GG.Vector.SectorVectorsFromUnitPiece(unitID, info.torso, info.x, info.z)
 					--Spring.MarkerAddPoint(x + v1x, 0, z + v1z, "V1")
 					--Spring.MarkerAddPoint(x + v2x, 0, z + v2z, "V2")
-					for _, enemyID in pairs(inRadius) do
+					for _, enemyID in pairs(inRadius) do -- may not actually be enemy? should check allyteam prior to this?
 						local unitAllyTeam = Spring.GetUnitAllyTeam(enemyID)
-						if mobileUnits[enemyID] 
-						and (inRadarUnits[allyTeam][enemyID] or ecmUnits[enemyID]
-						or (not Spring.GetUnitIsActive(enemyID) or not Spring.GetUnitIsActive(unitID))
-						and not (bapUnits[enemyID] and bapUnits[enemyID][2] == allyTeam) 
-						and not (narcUnits[enemyID] and narcUnits[enemyID].allyTeam == allyTeam)) then
+						if enemyID ~= unitID and unitAllyTeam ~= allyTeam -- not an allied unit
+						and mobileUnits[enemyID] -- is mobile
+						then
 							local ex, _, ez = GetUnitPosition(enemyID)
 							local inSector = GG.Vector.IsInsideSectorVector(ex, ez, x, z, v1x, v1z, v2x, v2z)
 							if inSector then
-								-- check it is really my sector giving them los
+								-- check it is really this unit sector giving them los
 								local rayTrace = Spring.GetUnitWeaponHaveFreeLineOfFire(unitID, info.sight, enemyID)
 								if rayTrace then
 									SetUnitLosState(enemyID, allyTeam, fullLOS)
 									SetUnitLosMask(enemyID, allyTeam, prevLosTrue)
 									sectorUnits[allyTeam][enemyID] = true
+									Spring.Echo("rayTrace yes", enemyID, UnitDefs[Spring.GetUnitDefID(enemyID)].name)
+								else
+									Spring.Echo("rayTrace no", enemyID, UnitDefs[Spring.GetUnitDefID(enemyID)].name)
 								end
-							elseif not sectorUnits[allyTeam][enemyID] then -- not in another sector
-								SetUnitLosState(enemyID, allyTeam, {los = Spring.IsUnitInLos(enemyID, allyTeam), prevLos = true, radar = true, contRadar = true}) 
-								SetUnitLosMask(enemyID, allyTeam, losTrue) -- let engine handle los state for this unit	
+							elseif not sectorUnits[allyTeam][enemyID] then -- not in another sector FOUND SO FAR?
+								ResetLosStates(enemyID, allyTeam) -- TODO: see if we can't avoid calling this. Probably requires a second loop though.
 							else
 								-- Not in any sector
 							end
@@ -411,12 +370,59 @@ function gadget:GameFrame(n)
 			end
 		end
 		for enemyID in pairs(prevSectorUnits[allyTeam]) do
-			if not sectorUnits[allyTeam][enemyID] and not (bapUnits[enemyID] and bapUnits[enemyID][2] == allyTeam) then 
-			-- unit was previously in a sector but is now not inside any radius, reset states
-				SetUnitLosState(enemyID, allyTeam, {los = Spring.IsUnitInLos(enemyID, allyTeam), prevLos = true, radar = Spring.IsUnitInRadar(enemyID, allyTeam), contRadar = true}) 
-				SetUnitLosMask(enemyID, allyTeam, losTrue) -- let engine handle los state for this unit	
+			if not sectorUnits[allyTeam][enemyID] then
+				-- unit was previously in a sector but is now not inside a sector, reset
+				ResetLosStates(enemyID, allyTeam)
 			end
 		end
+		-- Now deal with ECM units
+		for unitID, ecmRadius in pairs(allyJammers[allyTeam]) do
+			-- only active non-PPC'd units can utilise ECM
+			if not ppcUnits[unitID] and GetUnitIsActive(unitID) then
+				for _, teamID in pairs(teamsInAllyTeams[allyTeam]) do
+					if not deadTeams[teamID] then
+						local x, _, z = GetUnitPosition(unitID)
+						local nearbyUnits = Spring.GetUnitsInCylinder(x, z, ecmRadius, teamID)
+						--Spring.Echo("Jammer", jammerID, "(", UnitDefs[Spring.GetUnitDefID(jammerID)].name, ")")
+						for _, allyID in pairs(nearbyUnits) do
+							local unitAllyTeam = Spring.GetUnitAllyTeam(allyID)
+							if unitAllyTeam == allyTeam then -- is an allied unit, including the ECM source itself
+								--Spring.Echo("nearby", UnitDefs[Spring.GetUnitDefID(nearbyUnits[i])].name)
+								SetUnitRulesParam(allyID, "FRIENDLY_ECM", n, {inlos = true})
+								ecmUnits[allyID] = {n, allyTeam}
+							end
+						end
+					end
+				end
+			end
+		end
+		-- Then BAP units
+		for unitID, bapRadius in pairs(allyBAPs[allyTeam]) do
+			-- only active units can utilise BAP
+			if GetUnitIsActive(unitID) then
+				local x, _, z = GetUnitPosition(unitID)
+				local nearbyUnits = Spring.GetUnitsInCylinder(x, z, bapRadius)
+				for _, enemyID in pairs(nearbyUnits) do
+					local unitAllyTeam = Spring.GetUnitAllyTeam(enemyID)
+					if enemyID ~= unitID and unitAllyTeam ~= allyTeam -- not an allied unit
+					and not sectorUnits[allyTeam][enemyID] then -- not already visible in sector
+						if allyJammers[unitAllyTeam][enemyID] then -- it is an enemy ECM emitter
+							if n % 30 == 0 then -- every second emit a ping
+								local ex, ey, ez = Spring.GetUnitPosition(enemyID)
+								Spring.SpawnCEG("ecm_ping", ex,ey,ez)
+							end
+						elseif ecmUnits[enemyID] then -- under enemy ECM (we already checked it is not allied unit)
+							-- nothing, should still be invisible to bap
+						else -- not in a sector, but may be in radar
+							bapUnits[enemyID] = {n, allyTeam}
+							SetUnitLosState(enemyID, allyTeam, losFalseRestTrue) 
+							SetUnitLosMask(enemyID, allyTeam, losFalseRestTrue)	-- let lua handle radar state for this unit
+						end
+					end
+				end
+			end
+		end
+		-- cleanup for next frame
 		table.copy(sectorUnits[allyTeam], prevSectorUnits[allyTeam])
 		sectorUnits[allyTeam] = {}
 	end

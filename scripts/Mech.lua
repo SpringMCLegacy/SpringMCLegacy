@@ -657,7 +657,7 @@ function script.EndBurst(weaponID)
 end
 
 function script.AimFromWeapon(weaponID) 
-	return torso
+	return weaponID == numWeapons + 1 and cockpit or torso
 end
 
 function script.QueryWeapon(weaponID) 

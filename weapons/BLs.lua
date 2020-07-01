@@ -28,6 +28,11 @@ local Sight = BeamLaser_Class:New{
 	avoidNeutral = false,
 	collideNeutral = false,
 	collideEnemy = false,
+	avoidFeature = false,
+	collideFeature = false,
+	
+	areaOfEffect = 500,
+	accuracy     = 5,
 	
 	customparams = {
 		weaponclass = "sight",
