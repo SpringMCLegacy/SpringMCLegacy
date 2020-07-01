@@ -96,7 +96,7 @@ local JM7D = Jagermech:New{
 		variant			= "JM7-D",
 		tonnage			= 70,
 		speed			= 60,
-		price			= 15000,
+		price			= 19000, --15000
 		heatlimit 		= 26,
 		armor			= {type = "ferro", tons = 11},
 		maxammo 		= {ac5 = 2},
