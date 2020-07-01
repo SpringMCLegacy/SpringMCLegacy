@@ -241,7 +241,7 @@ for name, ud in pairs(UnitDefs) do
 			ud.buildCostMetal = ((cp.price or 0) * priceMult - (4000 * (priceMult - 1)))
 			ud.power = ud.buildCostMetal * ud.buildCostEnergy
 			ud.losemitheight = (cp.cockpitheight or ud.mass / 10) / 1
-			ud.radaremitheight = ud.losemitheight
+			ud.radaremitheight = 100 --ud.losemitheight
 			cp.role = GetRole(ud.description)
 			if not cp.role then
 				Spring.Echo("Warning [unitdefs_post.lua]: Unit (" .. name .. ") has no known role (" .. ud.description .. ")")

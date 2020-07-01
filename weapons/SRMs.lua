@@ -69,6 +69,7 @@ local InfSRM2 = SRM2:New{
 
 local SSRM2 = SRM2:New{
 	name                    = "Streak SRM-2",
+	reloadtime              = 7.5,
 	sprayangle				= 500,
 	turnRate				= 10000,
 	customparams = {
@@ -91,6 +92,7 @@ local ASRM4 = SRM4:New{
 
 local SSRM4 = SRM4:New{
 	name                    = "Streak SRM-4",
+	reloadtime              = 7.5,
 	sprayangle				= 500,
 	turnRate				= 10000,
 	customparams = {
@@ -113,6 +115,7 @@ local ASRM6 = SRM6:New{
 
 local SSRM6 = SRM6:New{
 	name                    = "Streak SRM-6",
+	reloadtime              = 7.5,
 	sprayangle				= 500,
 	turnRate				= 10000,
 	customparams = {

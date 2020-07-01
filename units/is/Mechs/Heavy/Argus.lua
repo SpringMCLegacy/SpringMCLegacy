@@ -35,6 +35,7 @@ local AGS4D = Argus:New{
 		price			= 16380,
 		heatlimit 		= 24,
 		armor			= {type = "standard", tons = 12},
+		bap				= true,
 		maxammo 		= {ac5 = 2, lrm = 2},
 		barrelrecoildist = {[1] = 4},
     },
