@@ -131,6 +131,7 @@ local orderSizesPending = {} -- orderSizesPending[unitID] = size -- used to trac
 
 local dropZones = {} -- dropZones[unitID] = teamID
 local teamDropZones = {} -- teamDropZone[teamID] = unitID
+GG.teamDropZones = teamDropZones
 local teamDropShipTypes = {} -- teamDropShipTypes[teamID] = {tier = 1 or 2 or 3, def = unitDefID}
 GG.teamDropShipTypes = teamDropShipTypes
 local teamDropShipHPs = {} -- teamDropShipHPs[teamID] = number
