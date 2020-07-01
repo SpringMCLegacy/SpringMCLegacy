@@ -444,6 +444,7 @@ function DropshipLeft(teamID) -- called by Dropship once it has left, to enable 
 	-- Dropship is no longer ACTIVE, it is entering COOLDOWN
 	GG.PlaySoundForTeam(teamID, "BB_Reinforcements_Inbound_ETA_30", 1)
 	dropShipStatus[teamID] = 2
+	SetUnitRulesParam(unitID, "STATUS", 2, {inlos = true})
 	local dropShipDef = UnitDefs[teamDropShipTypes[teamID].def]
 	local enableFrame = GetGameFrame() + dropShipDef.customParams.cooldown
 	coolDowns[teamID] = enableFrame
@@ -475,9 +476,11 @@ local function SendCommandFallback(unitID, unitDefID, teamID, cost)
 			end
 			-- Dropship can now be considered ACTIVE even though it hasn't arrived yet
 			dropShipStatus[teamID] = 1
+			SetUnitRulesParam(unitID, "STATUS", 1, {inlos = true})
 		else -- cancelled
 			AddTeamResource(teamID, "metal", cost)
 			dropShipStatus[teamID] = 0
+			SetUnitRulesParam(unitID, "STATUS", 0, {inlos = true})
 			orderStatus[teamID] = 0
 			UpdateButtons(teamID)
 		end
@@ -623,6 +626,7 @@ function gadget:UnitCreated(unitID, unitDefID, teamID)
 		AddBuildMenu(unitID)
 		dropZones[unitID] = teamID
 		teamDropZones[teamID] = unitID
+		SetUnitRulesParam(unitID, "STATUS", 0, {inlos = true})
 		if teamDropShipTypes[teamID].tier > 1 then
 			UnlockHeavy(unitID)
 		end
@@ -757,6 +761,7 @@ function gadget:GameFrame(n)
 					coolDowns[teamID] = -2
 					-- dropship is now READY
 					dropShipStatus[teamID] = 0
+					SetUnitRulesParam(unitID, "STATUS", 0, {inlos = true})
 				end
 			end
 		end
