@@ -99,8 +99,9 @@ Feature = Def:New{
 }
 
 Weapon = Def:New{
-	avoidFeature	= false,
-	collideFeature	= true,
+	avoidFeature		= false,
+	collideFeature		= true,
+	proximityPriority	= 5,
 }
 
 ---------------------------------------------------------------------------------------------
