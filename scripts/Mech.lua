@@ -394,7 +394,7 @@ function hideLimbPieces(limb, hide)
 	end
 end
 
-
+local limbsLost = 0
 function limbHPControl(limb, damage)
 	local currHP = limbHPs[limb]
 	if currHP > 0 or (damage or 0) < 0 then
@@ -403,9 +403,12 @@ function limbHPControl(limb, damage)
 		if newHP < 0 then 
 			hideLimbPieces(limb, true)
 			newHP = 0
-			SetUnitRulesParam(unitID, "limblost", 1)
+			limbsLost = limbsLost + 1
+			SetUnitRulesParam(unitID, "limblost", limbsLost)
 		elseif currHP == 0 then -- can only get here if damage < 0 i.e. repairing
 			hideLimbPieces(limb, false)
+			limbsLost = limbsLost - 1
+			SetUnitRulesParam(unitID, "limblost", limbsLost)
 		end
 		limbHPs[limb] = newHP
 		SetUnitRulesParam(unitID, "limb_hp_" .. limb, newHP/info.limbHPs[limb]*100)
