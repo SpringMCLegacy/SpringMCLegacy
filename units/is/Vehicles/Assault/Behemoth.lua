@@ -216,11 +216,11 @@ local BehemothM = BehemothBase:New{
 
 return lowerkeys({
 	--["CC_Behemoth"] = Behemoth:New(),
-	["CC_BehemothArmor"] = BehemothArmor:New(),
+	--["CC_BehemothArmor"] = BehemothArmor:New(),
 	--["DC_Behemoth"] = Behemoth:New(),
-	["DC_BehemothK"] = BehemothK:New(),
-	["FS_Behemoth"] = Behemoth:New(),
+	--["DC_BehemothK"] = BehemothK:New(),
+	--["FS_Behemoth"] = Behemoth:New(),
 	["FW_Behemoth"] = Behemoth:New(),
 	--["FW_BehemothM"] = BehemothM:New(),
-	["LA_Behemoth"] = Behemoth:New(),
+	--["LA_Behemoth"] = Behemoth:New(),
 })

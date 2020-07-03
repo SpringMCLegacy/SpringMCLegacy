@@ -106,10 +106,10 @@ local DemolisherK = Demolisher:New{
 
 return lowerkeys({
 	["CC_Demolisher"] = Demolisher:New(),
-	["CC_Devastator"] = Devastator:New(),
+	--["CC_Devastator"] = Devastator:New(),
 	["DC_Demolisher"] = Demolisher:New(),
 	--["DC_DemolisherK"] = DemolisherK:New(),
 	["FS_Demolisher"] = Demolisher:New(),
 	["FW_Demolisher"] = Demolisher:New(),
-	--["LA_Demolisher"] = Demolisher:New(),
+	["LA_Demolisher"] = Demolisher:New(),
 })
