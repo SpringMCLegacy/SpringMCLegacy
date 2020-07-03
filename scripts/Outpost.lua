@@ -94,7 +94,7 @@ end
 
 function Upgrade(level)
 	if name == "outpost_vehiclepad" or name == "outpost_hoverpad" then
-		if level == 2 then
+		--[[if level == 2 then
 			Show(base2)
 			Hide(base)
 			for i = 1,6 do
@@ -102,7 +102,7 @@ function Upgrade(level)
 			end
 		elseif level == 3 then
 			Show(flags)
-		end
+		end]]
 	elseif name == "outpost_salvageyard" and level == 2 then
 		Show(foundation)
 		RecursiveHide(recoveryrail, false)
