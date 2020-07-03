@@ -29,7 +29,7 @@ local LightGauss = Gauss_Class:New{
 	size					= 1.5,
 	stages					= 200, 		--Number of particles used in one plasma shot.
 	damage = {
-		default = 320, --80 dps
+		default = 380,--320, --80 dps
 	},
 	customparams = {
 		heatgenerated		= 0.4,
@@ -46,7 +46,7 @@ local Gauss = Gauss_Class:New{
 	reloadtime              = 6,
 
 	damage = {
-		default = 937.5, --150 DPS
+		default = 1100,--937.5, --150 DPS
 	},
 	customparams = {
 		heatgenerated		= 0.6,
@@ -66,7 +66,7 @@ local HeavyGauss = Gauss_Class:New{
 	DynDamageRange			= 1300,--Weapon will decrease in damage up to this range
 	
 	damage = {
-		default = 2500,--250 DPS
+		default = 2700,--2500,--250 DPS
 	},
 	customparams = {
 		heatgenerated		= 2,
