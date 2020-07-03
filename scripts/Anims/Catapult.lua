@@ -3,8 +3,8 @@
 local pelvis, torso, lupperleg, llowerleg, rupperleg, rlowerleg, rfronttoes, rbacktoe, lfronttoes, lbacktoe , lfoot, rfoot = piece ("pelvis", "torso", "lupperleg", "llowerleg", "rupperleg", "rlowerleg", "rfronttoes", "rbacktoe", "lfronttoes", "lbacktoe", "lfoot", "rfoot")
 
 --Turning/Movement Locals
-local LEG_SPEED = rad(200) * speedMod
-local LEG_TURN_SPEED = rad (200) * speedMod
+local LEG_SPEED = rad(200) 
+local LEG_TURN_SPEED = rad (200) 
 
 --Turn script
 function anim_Turn(clockwise)
@@ -75,8 +75,8 @@ function anim_PreJump()
 		Turn(rlowerleg, x_axis, rad(-30), LEG_SPEED)
 		Turn(lupperleg, x_axis, rad(30), LEG_SPEED)
 		Turn(llowerleg, x_axis, rad(-30), LEG_SPEED)
-		Move(pelvis, y_axis, -7.6, LEG_SPEED * 8)
-		Move(pelvis, z_axis, -4.3, LEG_SPEED * 8)
+		Move(pelvis, y_axis, -7.6, LEG_SPEED * speedMod* 8)
+		Move(pelvis, z_axis, -4.3, LEG_SPEED * speedMod* 8)
 		--Hold a bit...
 		Sleep(100)
 		--Wait for turns...
@@ -92,16 +92,16 @@ function anim_StartJump()
 	SetSignalMask(SIG_ANIMATE)
 --	Spring.Echo("anim_StartJump")
 		--Jump!
-		Turn(rupperleg, x_axis, rad(5), LEG_SPEED * 4)
-		Turn(rlowerleg, x_axis, rad(20), LEG_SPEED * 4)
-		Turn(rbacktoe, x_axis, rad(-15), LEG_SPEED * 4)
-		Turn(rfronttoes, x_axis, rad(15), LEG_SPEED * 4)
-		Turn(lupperleg, x_axis, rad(5), LEG_SPEED * 4)
-		Turn(llowerleg, x_axis, rad(20), LEG_SPEED * 4)
-		Turn(lbacktoe, x_axis, rad(-15), LEG_SPEED * 4)
-		Turn(lfronttoes, x_axis, rad(15), LEG_SPEED * 4)
-		Move(pelvis, y_axis, 0, LEG_SPEED * 4)
-		Move(pelvis, z_axis, 0, LEG_SPEED * 4)
+		Turn(rupperleg, x_axis, rad(5), LEG_SPEED * speedMod* 4)
+		Turn(rlowerleg, x_axis, rad(20), LEG_SPEED * speedMod* 4)
+		Turn(rbacktoe, x_axis, rad(-15), LEG_SPEED * speedMod* 4)
+		Turn(rfronttoes, x_axis, rad(15), LEG_SPEED * speedMod* 4)
+		Turn(lupperleg, x_axis, rad(5), LEG_SPEED * speedMod* 4)
+		Turn(llowerleg, x_axis, rad(20), LEG_SPEED * speedMod* 4)
+		Turn(lbacktoe, x_axis, rad(-15), LEG_SPEED * speedMod* 4)
+		Turn(lfronttoes, x_axis, rad(15), LEG_SPEED * speedMod* 4)
+		Move(pelvis, y_axis, 0, LEG_SPEED * speedMod* 4)
+		Move(pelvis, z_axis, 0, LEG_SPEED * speedMod* 4)
 		--Wait for turns...
 		WaitForTurn(rupperleg, x_axis)
 		WaitForTurn(rlowerleg, x_axis)
@@ -119,16 +119,16 @@ function anim_HalfJump()
 	SetSignalMask(SIG_ANIMATE)
 --	Spring.Echo("anim_HalfJump")
 		--Brace for impact...
-		Turn(rupperleg, x_axis, rad(-30), LEG_SPEED / 4)
-		Turn(rlowerleg, x_axis, rad(20), LEG_SPEED / 4)
-		Turn(rfoot, x_axis, rad(-10), LEG_SPEED / 4)
-		Turn(rbacktoe, x_axis, rad(-15), LEG_SPEED / 4)
-		Turn(rfronttoes, x_axis, rad(15), LEG_SPEED / 4)
-		Turn(lupperleg, x_axis, rad(-30), LEG_SPEED / 4)
-		Turn(llowerleg, x_axis, rad(20), LEG_SPEED / 4)
-		Turn(lfoot, x_axis, rad(-10), LEG_SPEED / 4)
-		Turn(lbacktoe, x_axis, rad(-15), LEG_SPEED / 4)
-		Turn(lfronttoes, x_axis, rad(15), LEG_SPEED / 4)
+		Turn(rupperleg, x_axis, rad(-30), LEG_SPEED * speedMod/ 4)
+		Turn(rlowerleg, x_axis, rad(20), LEG_SPEED * speedMod/ 4)
+		Turn(rfoot, x_axis, rad(-10), LEG_SPEED * speedMod/ 4)
+		Turn(rbacktoe, x_axis, rad(-15), LEG_SPEED * speedMod/ 4)
+		Turn(rfronttoes, x_axis, rad(15), LEG_SPEED * speedMod/ 4)
+		Turn(lupperleg, x_axis, rad(-30), LEG_SPEED * speedMod/ 4)
+		Turn(llowerleg, x_axis, rad(20), LEG_SPEED * speedMod/ 4)
+		Turn(lfoot, x_axis, rad(-10), LEG_SPEED * speedMod/ 4)
+		Turn(lbacktoe, x_axis, rad(-15), LEG_SPEED * speedMod/ 4)
+		Turn(lfronttoes, x_axis, rad(15), LEG_SPEED * speedMod/ 4)
 		--WaitForTurns...
 		WaitForTurn(rupperleg, x_axis)
 		WaitForTurn(rlowerleg, x_axis)
@@ -148,18 +148,18 @@ function anim_StopJump()
 	SetSignalMask(SIG_ANIMATE)
 --	Spring.Echo("anim_StopJump")
 		--Touchdown!
-		Turn(rupperleg, x_axis, rad(20), LEG_SPEED * 4)
-		Turn(rlowerleg, x_axis, rad(-25), LEG_SPEED * 4)
-		Turn(rfoot, x_axis, rad(5), LEG_SPEED * 4)
-		Turn(rbacktoe, x_axis, rad(0), LEG_SPEED * 4)
-		Turn(rfronttoes, x_axis, rad(0), LEG_SPEED * 4)
-		Turn(lupperleg, x_axis, rad(20), LEG_SPEED * 4)
-		Turn(llowerleg, x_axis, rad(-25), LEG_SPEED * 4)
-		Turn(lfoot, x_axis, rad(5), LEG_SPEED * 4)
-		Turn(lbacktoe, x_axis, rad(0), LEG_SPEED * 4)
-		Turn(lfronttoes, x_axis, rad(0), LEG_SPEED * 4)
-		Move(pelvis, y_axis, -7.6, LEG_SPEED * 18)
-		Move(pelvis, z_axis, -4.3, LEG_SPEED * 18)
+		Turn(rupperleg, x_axis, rad(20), LEG_SPEED * speedMod* 4)
+		Turn(rlowerleg, x_axis, rad(-25), LEG_SPEED * speedMod* 4)
+		Turn(rfoot, x_axis, rad(5), LEG_SPEED * speedMod* 4)
+		Turn(rbacktoe, x_axis, rad(0), LEG_SPEED * speedMod* 4)
+		Turn(rfronttoes, x_axis, rad(0), LEG_SPEED * speedMod* 4)
+		Turn(lupperleg, x_axis, rad(20), LEG_SPEED * speedMod* 4)
+		Turn(llowerleg, x_axis, rad(-25), LEG_SPEED * speedMod* 4)
+		Turn(lfoot, x_axis, rad(5), LEG_SPEED * speedMod* 4)
+		Turn(lbacktoe, x_axis, rad(0), LEG_SPEED * speedMod* 4)
+		Turn(lfronttoes, x_axis, rad(0), LEG_SPEED * speedMod* 4)
+		Move(pelvis, y_axis, -7.6, LEG_SPEED * speedMod* 18)
+		Move(pelvis, z_axis, -4.3, LEG_SPEED * speedMod* 18)
 		PlaySound("stomp", 25)
 		Sleep (100)
 		--Recover
@@ -187,8 +187,8 @@ function anim_Walk()
 		--Spring.Echo("START")
 		--STEP 1, Left Foot Comes Down...
 		--STEP 1, Right Leg Comes Up...
-		Move(pelvis, y_axis, 0, LEG_SPEED * 10)
-		Turn(pelvis, z_axis, rad(0), LEG_SPEED / 5)
+		Move(pelvis, y_axis, 0, LEG_SPEED * speedMod* 10)
+		Turn(pelvis, z_axis, rad(0), LEG_SPEED * speedMod/ 5)
 		
 		Turn(lupperleg, x_axis, rad(-45), LEG_SPEED)
 		Turn(llowerleg, x_axis, rad(35), LEG_SPEED)
@@ -209,15 +209,15 @@ function anim_Walk()
 		--STEP 2, Left Leg Moves Back Slowly - Halfway point
 		--STEP 2, Right Leg Moves Forward Slowly - Halfway Point
 		Move(pelvis, y_axis, 5, LEG_SPEED)
-		Turn(pelvis, z_axis, rad(-2), LEG_SPEED / 5)
+		Turn(pelvis, z_axis, rad(-2), LEG_SPEED * speedMod/ 5)
 		
 		Turn(lupperleg, x_axis, rad(20), LEG_SPEED)
 		Turn(llowerleg, x_axis, rad(-5), LEG_SPEED)
-		Turn(lfoot, x_axis, rad(-15), LEG_SPEED / 2)
+		Turn(lfoot, x_axis, rad(-15), LEG_SPEED * speedMod/ 2)
 		
 		Turn(rupperleg, x_axis, rad(15), LEG_SPEED)
 		Turn(rlowerleg, x_axis, rad(-25), LEG_SPEED)
-		Turn(rfoot, x_axis, rad(30), LEG_SPEED * 2)
+		Turn(rfoot, x_axis, rad(30), LEG_SPEED * speedMod* 2)
 		
 		WaitForTurn(lupperleg, x_axis)
 		WaitForTurn(llowerleg, x_axis)
@@ -233,7 +233,7 @@ function anim_Walk()
 		Turn(llowerleg, x_axis, rad(40), LEG_SPEED)
 		Turn(lfoot, x_axis, rad(-60), LEG_SPEED)
 		
-		Turn(rupperleg, x_axis, rad(-20), LEG_SPEED * 2)
+		Turn(rupperleg, x_axis, rad(-20), LEG_SPEED * speedMod* 2)
 		Turn(rlowerleg, x_axis, rad(-10), LEG_SPEED)
 		Turn(rfoot, x_axis, rad(10), LEG_SPEED)
 		
@@ -246,8 +246,8 @@ function anim_Walk()
 		
 		--STEP 4, Left Leg Lifts Up...
 		--STEP 4, Right Foot Comes Down..
-		Move(pelvis, y_axis, 0, LEG_SPEED * 10)
-		Turn(pelvis, z_axis, rad(0), LEG_SPEED / 5)
+		Move(pelvis, y_axis, 0, LEG_SPEED * speedMod* 10)
+		Turn(pelvis, z_axis, rad(0), LEG_SPEED * speedMod/ 5)
 		
 		Turn(lupperleg, x_axis, rad(45), LEG_SPEED)
 		Turn(llowerleg, x_axis, rad(25), LEG_SPEED)
@@ -268,15 +268,15 @@ function anim_Walk()
 		--STEP 5, Left Leg Moves Forward Slowly... - Halfway Point
 		--STEP 5, Right Leg Moves Back Slowly - Halfway Point
 		Move(pelvis, y_axis, 5, LEG_SPEED)
-		Turn(pelvis, z_axis, rad(2), LEG_SPEED / 5)
+		Turn(pelvis, z_axis, rad(2), LEG_SPEED * speedMod/ 5)
 		
 		Turn(lupperleg, x_axis, rad(15), LEG_SPEED)
 		Turn(llowerleg, x_axis, rad(-25), LEG_SPEED)
-		Turn(lfoot, x_axis, rad(30), LEG_SPEED * 2)
+		Turn(lfoot, x_axis, rad(30), LEG_SPEED * speedMod* 2)
 		
 		Turn(rupperleg, x_axis, rad(20), LEG_SPEED)
 		Turn(rlowerleg, x_axis, rad(-5), LEG_SPEED)
-		Turn(rfoot, x_axis, rad(-15), LEG_SPEED / 2)
+		Turn(rfoot, x_axis, rad(-15), LEG_SPEED * speedMod/ 2)
 		
 		WaitForTurn(lupperleg, x_axis)
 		WaitForTurn(llowerleg, x_axis)
@@ -288,7 +288,7 @@ function anim_Walk()
 		--STEP 6, Left Leg Moves Forward Slowly... Fully forward and RESET
 		--STEP 6, Right Leg Moves Back Slowly... All the way back and RESET
 		
-		Turn(lupperleg, x_axis, rad(-20), LEG_SPEED * 2)
+		Turn(lupperleg, x_axis, rad(-20), LEG_SPEED * speedMod* 2)
 		Turn(llowerleg, x_axis, rad(-10), LEG_SPEED)
 		Turn(lfoot, x_axis, rad(10), LEG_SPEED)
 		
@@ -325,8 +325,8 @@ end
 function anim_Reset()
 	Signal(SIG_ANIMATE)
 --	Spring.Echo("anim_Reset")
-	Move(pelvis, y_axis, 0, LEG_SPEED * 8)
-	Move(pelvis, z_axis, 0, LEG_SPEED * 8)
+	Move(pelvis, y_axis, 0, LEG_SPEED * speedMod* 8)
+	Move(pelvis, z_axis, 0, LEG_SPEED * speedMod* 8)
 	Turn(pelvis, z_axis, rad(0), LEG_SPEED)
 	Turn(lupperleg, x_axis, rad(0), LEG_SPEED)
 	Turn(llowerleg, x_axis, rad(0), LEG_SPEED)

@@ -3,8 +3,8 @@
 local pelvis, lfoot, rfoot, lupperleg, llowerleg, rupperleg, rlowerleg, rfronttoe, lfronttoe = piece ("pelvis", "lfoot", "rfoot", "lupperleg", "llowerleg", "rupperleg", "rlowerleg", "rfronttoe", "lfronttoe")
 
 --Turning/Movement Locals
-local LEG_SPEED = rad(400) * speedMod
-local LEG_TURN_SPEED = rad (200) * speedMod
+local LEG_SPEED = rad(400) 
+local LEG_TURN_SPEED = rad (200) 
 
 --Turn script
 function anim_Turn(clockwise)

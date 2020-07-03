@@ -3,8 +3,8 @@
 local pelvis, lupperleg, llowerleg, rupperleg, rlowerleg, rfoot, lfoot = piece ("pelvis", "lupperleg", "llowerleg", "rupperleg", "rlowerleg", "rfoot", "lfoot")
 
 --Turning/Movement Locals
-local LEG_SPEED = rad(400) * speedMod
-local LEG_TURN_SPEED = rad (300) * speedMod
+local LEG_SPEED = rad(400) 
+local LEG_TURN_SPEED = rad (300) 
 
 function anim_Turn(clockwise)
 	Signal(SIG_ANIMATE)
@@ -12,8 +12,8 @@ function anim_Turn(clockwise)
 	while true do
 --		Spring.Echo("anim_Turn")
 		--Left Leg Up...
-		Turn(pelvis, z_axis, rad(-5), LEG_TURN_SPEED / 2)
-		Turn(lupperleg, x_axis, rad(-40), LEG_TURN_SPEED / 1.5)
+		Turn(pelvis, z_axis, rad(-5), LEG_TURN_SPEED * speedMod/ 2)
+		Turn(lupperleg, x_axis, rad(-40), LEG_TURN_SPEED * speedMod/ 1.5)
 		Turn(llowerleg, x_axis, rad(60), LEG_TURN_SPEED)
 		--Wait for turns...
 		WaitForTurn(pelvis, z_axis)
@@ -21,7 +21,7 @@ function anim_Turn(clockwise)
 		WaitForTurn(llowerleg, x_axis)
 		--Left Leg Down...
 		Turn(pelvis, z_axis, rad(0), LEG_TURN_SPEED)
-		Turn(lupperleg, x_axis, rad(0), LEG_TURN_SPEED / 1.5)
+		Turn(lupperleg, x_axis, rad(0), LEG_TURN_SPEED * speedMod/ 1.5)
 		Turn(llowerleg, x_axis, rad(0), LEG_TURN_SPEED)
 		--Wait for turns...
 		WaitForTurn(pelvis, z_axis)
@@ -29,16 +29,16 @@ function anim_Turn(clockwise)
 		WaitForTurn(llowerleg, x_axis)
 		PlaySound("stomp")
 		--Right Leg Up...
-		Turn(pelvis, z_axis, rad(5), LEG_TURN_SPEED / 2)
-		Turn(rupperleg, x_axis, rad(-40), LEG_TURN_SPEED / 1.5)
+		Turn(pelvis, z_axis, rad(5), LEG_TURN_SPEED * speedMod/ 2)
+		Turn(rupperleg, x_axis, rad(-40), LEG_TURN_SPEED * speedMod/ 1.5)
 		Turn(rlowerleg, x_axis, rad(60), LEG_TURN_SPEED)
 		--Wait for turns...
 		WaitForTurn(pelvis, z_axis)
 		WaitForTurn(rupperleg, x_axis)
 		WaitForTurn(rlowerleg, x_axis)
 		--Right Leg Down...
-		Turn(pelvis, z_axis, rad(0), LEG_TURN_SPEED / 2)
-		Turn(rupperleg, x_axis, rad(0), LEG_TURN_SPEED / 1.5)
+		Turn(pelvis, z_axis, rad(0), LEG_TURN_SPEED * speedMod/ 2)
+		Turn(rupperleg, x_axis, rad(0), LEG_TURN_SPEED * speedMod/ 1.5)
 		Turn(rlowerleg, x_axis, rad(0), LEG_TURN_SPEED)
 		--Wait for turns
 		WaitForTurn(pelvis, z_axis)
