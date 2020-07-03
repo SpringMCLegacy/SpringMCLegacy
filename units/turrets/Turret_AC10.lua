@@ -14,9 +14,11 @@ local Turret_AC10 = Tower:New{
 	},
 	customparams = {
 		barrelrecoildist = {5, 5},
+		maxammo 		= {ac10 = 2},
 		turretturnspeed = 150,
 		elevationspeed  = 200,
 		chainfiredelays = {[2] = 200},
+		turrettype = "turret",
     },
 	sounds = {
 	select = "Turret",

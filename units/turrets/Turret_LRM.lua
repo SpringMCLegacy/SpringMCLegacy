@@ -9,8 +9,10 @@ local Turret_LRM = Tower:New{
 		},
 	},
 	customparams = {
+		maxammo 		= {lrm = 2},
 		turretturnspeed = 100,
 		elevationspeed  = 200,
+		turrettype = "missile",
     },
 	sounds = {
 	select = "Turret",

@@ -517,7 +517,7 @@ function script.Deactivate()
 	activated = false
 end
 
-local function WeaponCanFire(weaponID)
+function WeaponCanFire(weaponID)
 	if playerDisabled[weaponID] or weaponID == numWeapons + 1 then
 		return false
 	end
@@ -548,6 +548,7 @@ local function WeaponCanFire(weaponID)
 		return true
 	end
 end
+GG.WeaponCanFire = WeaponCanFire
 
 function script.AimWeapon(weaponID, heading, pitch)
 	Signal(2 ^ weaponID) -- 2 'to the power of' weapon ID

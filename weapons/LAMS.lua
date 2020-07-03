@@ -9,9 +9,9 @@ weaponDef = {
 	collideFriendly			= true,
 	noSelfDamage            = true,
 	turret                  = true,
-	range                   = 500,
-	accuracy                = 10,
-	tolerance				= 100,
+	range                   = 1500,
+	accuracy                = 5,
+	tolerance				= 50000,
 	areaOfEffect            = 5,
 	weaponVelocity          = 2000,
 	weaponTimer				= 0.8,
@@ -26,20 +26,28 @@ weaponDef = {
 	minIntensity			= 1,
 	rgbcolor				= "1.0 0.4 0.4",
 	intensity				= 0.5,
+	airSightDistance 		= 1500,
 	
 	collisionsize = 5,
 	interceptor = 1,
-	coverage = 3000,
+	coverage = 1500,
 	interceptsolo = false,
-	proximitypriority = 2000,
-	predictboost = 50000,
+	proximitypriority = -1,
+	predictboost = 500,
+	
+	--beamBurst				= true,
+	--burst 					= 5,
+	--burstRate				= 0.015,
+	cylinderTargeting		= 5,
 	
 	damage = {
-		default = 10,--1 DPS
+		default = 1000,--1 DPS
 	},
 	customparams = {
 		cegflare			= "SMALLLASER_MUZZLEFLASH",
 		flareonshot			= true,
+		turretturnspeed		= 3000,
+		elevationspeed		= 5000,
 	},
 
 }
