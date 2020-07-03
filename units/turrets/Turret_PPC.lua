@@ -14,6 +14,7 @@ local Turret_PPC = Tower:New{
 	},
 	customparams = {
 		barrelrecoildist = {[1] = 5},
+		turrettype = "energy",
     },
 	sounds = {
 	select = "Turret",

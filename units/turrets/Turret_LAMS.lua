@@ -10,6 +10,7 @@ local Turret_LAMS = Tower:New{
 	customparams = {
 		turretturnspeed = 300,
 		elevationspeed  = 300,
+		turrettype = "missile",
     },
 	sounds = {
 	select = "Turret",

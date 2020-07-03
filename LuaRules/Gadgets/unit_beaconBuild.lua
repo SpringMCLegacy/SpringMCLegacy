@@ -50,8 +50,8 @@ local RADIUS = 230
 local DROPSHIP_DELAY = 10 * 30 -- 10s
 
 -- Variables
-local towerDefIDs = {} -- towerDefIDs[unitDefID] = "turret" or "sensor"
-local buildLimits = {} -- buildLimits[unitID] = {turret = 4, sensor = 1}
+local towerDefIDs = {} -- towerDefIDs[unitDefID] = "turret" or "energy" or "missile"
+local buildLimits = {} -- buildLimits[unitID] = {turret = 4, ...}
 local towerOwners = {} -- towerOwners[towerID] = beaconID
 
 local outpostDefs = {} -- outpostDefs[unitDefID] = {cmdDesc = {cmdDescTable}, cost = cost}
@@ -109,7 +109,7 @@ function gadget:GamePreload()
 		local name = unitDef.name
 		local cp = unitDef.customParams
 		if cp and cp.baseclass == "tower" and not name:find("garrison") then -- automatically build table of towers
-			towerDefIDs[unitDefID] = unitDef.weapons[1] and "turret" or "sensor"
+			towerDefIDs[unitDefID] = cp.turrettype or "turret"
 		elseif name:find("dropzone") then -- check for dropzones first
 			DROPZONE_IDS[unitDefID] = true
 		elseif cp.baseclass == "outpost" then -- automatically build beacon outpost cmdDescs
@@ -339,8 +339,9 @@ function gadget:UnitCreated(unitID, unitDefID, teamID, builderID)
 	elseif unitDefID == BEACON_POINT_ID then
 		AddOutpostOptions(unitID)
 	elseif unitDefID == TURRETCONTROL_ID then
-		buildLimits[unitID] = {["turret"] = 4, ["sensor"] = 1}
-		LimitTowerType(unitID, teamID, "sensor") -- reduce to 0 so we get the BP greyed out
+		buildLimits[unitID] = {["turret"] = 4, ["energy"] = 1, ["missile"] = 1}
+		LimitTowerType(unitID, teamID, "energy") -- reduce to 0 so we get the BP greyed out
+		LimitTowerType(unitID, teamID, "missile") -- reduce to 0 so we get the BP greyed out
 	elseif cp and cp.baseclass == "tower" then
 		-- track creation of turrets and their originating beacons so we can give back slots if a turret dies
 		if builderID then -- ignore /give turrets

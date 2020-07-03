@@ -27,6 +27,13 @@ local burstLengths = info.burstLengths
 local firingHeats = info.firingHeats
 local minRanges = info.minRanges
 local spinSpeeds = info.spinSpeeds
+local ammoTypes = info.ammoTypes
+local maxAmmo = info.maxAmmo
+local currAmmo = {} -- copy maxAmmo table into currAmmo
+for k,v in pairs(maxAmmo) do 
+	currAmmo[k] = v 
+	SetUnitRulesParam(unitID, "ammo_" .. k, 100)
+end
 
 --Turning/Movement Locals
 local TURRET_SPEED = info.turretTurnSpeed
@@ -75,6 +82,10 @@ for weaponID = 1, info.numWeapons do
 	end
 	playerDisabled[weaponID] = false
 	SetUnitRulesParam(unitID, "weapon_" .. weaponID, "active")
+	if amsIDs[weaponID] then
+		--Spring.SetUnitWeaponState(unitID, weaponID, "reaimtime", 1)
+		--Spring.SetUnitWeaponState(unitID, weaponID, "autoTargetRangeBoost", 100)
+	end
 end
 
 
@@ -254,6 +265,19 @@ local function SpinBarrels(weaponID, start)
 	end
 end
 
+function ChangeAmmo(ammoType, amount) 
+	local newAmmoLevel = (currAmmo[ammoType] or 0) + (amount or 0) -- amount is a -ve to deduct
+	if amount > 0 then -- restocking, reset the indicator
+		SetUnitRulesParam(unitID, "outofammo", 0)
+	end
+	if newAmmoLevel <= maxAmmo[ammoType] then -- TODO: somehow one of these can be wrong type / nil?
+		currAmmo[ammoType] = newAmmoLevel
+		SetUnitRulesParam(unitID, "ammo_" .. ammoType, 100 * newAmmoLevel / maxAmmo[ammoType])
+		return true -- Ammo was changed
+	end
+	return false -- Ammo was not changed
+end
+
 local function WeaponCanFire(weaponID)
 	if playerDisabled[weaponID] then
 		return false
@@ -267,20 +291,20 @@ local function WeaponCanFire(weaponID)
 	--[[if jammableIDs[weaponID] and not activated then
 		return false
 	end]]
-	--local ammoType = ammoTypes[weaponID]
-	--[[if ammoType and (currAmmo[ammoType] or 0) < (burstLengths[weaponID] or 0) then
+	local ammoType = ammoTypes[weaponID]
+	if ammoType and (currAmmo[ammoType] or 0) < (burstLengths[weaponID] or 0) then
 		if spinSpeeds[weaponID] then
 			StartThread(SpinBarrels, weaponID, false)
 		end
 		SetUnitRulesParam(unitID, "outofammo", 1)
 		return false
-	else]]
+	else
 		if spinSpeeds[weaponID] and not spinPiecesState[weaponID] then
 			StartThread(SpinBarrels, weaponID, true)
 		end
 		Sleep(info.chainFireDelays[weaponID])
 		return true
-	--end
+	end
 end
 		
 function script.AimWeapon(weaponID, heading, pitch)
@@ -358,10 +382,10 @@ function script.FireWeapon(weaponID)
 		WaitForMove(barrels[weaponID], z_axis)
 		Move(barrels[weaponID], z_axis, 0, 10)
 	end
-	--[[local ammoType = ammoTypes[weaponID]
+	local ammoType = ammoTypes[weaponID]
 	if ammoType then
 		ChangeAmmo(ammoType, -burstLengths[weaponID])
-	end]]
+	end
 	if not missileWeaponIDs[weaponID] and not flareOnShots[weaponID] then
 		EmitSfx(flares[weaponID], SFX.CEG + weaponID)
 	end

@@ -23,6 +23,7 @@ local Turret_LPL = Tower:New{
 	customparams = {
 		turretturnspeed = 175,
 		elevationspeed  = 250,
+		turrettype = "energy",
     },
 	sounds = {
 	select = "Turret",

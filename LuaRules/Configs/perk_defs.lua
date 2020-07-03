@@ -489,13 +489,13 @@ return {
 		cmdDesc = {
 			id = GetCmdID('PERK_TURRETCONTROL_2'),
 			action = 'perkturretcontrol_2',
-			name = Pad("Increase", "Limit"),
-			tooltip = 'Increases the number of turrets suppported',
+			name = Pad("Energy", "Weapon", "Towers"),
+			tooltip = 'Unlocks towers with energy weapons (no ammo limits)',
 			texture = 'bitmaps/ui/upgrade.png',	
 		},
 		valid = function (unitDefID) return UnitDefs[unitDefID].name == "outpost_turretcontrol" end,
 		applyPerk = function (unitID)
-			GG.LimitTowerType(unitID, Spring.GetUnitTeam(unitID), "turret", 4)
+			GG.LimitTowerType(unitID, Spring.GetUnitTeam(unitID), "energy", 4)
 		end,
 		costFunction = deductCBills,
 		price = 8000,
@@ -505,13 +505,13 @@ return {
 		cmdDesc = {
 			id = GetCmdID('PERK_TURRETCONTROL_3'),
 			action = 'perkturretcontrol_3',
-			name = Pad("Sensor", "Towers"),
-			tooltip = 'Unlocks sensor towers',
+			name = Pad("Missile","& LAMS", "Towers"),
+			tooltip = 'Unlocks LRM and LAMS towers',
 			texture = 'bitmaps/ui/upgrade.png',	
 		},
 		valid = function (unitDefID) return UnitDefs[unitDefID].name == "outpost_turretcontrol" end,
 		applyPerk = function (unitID)
-			GG.LimitTowerType(unitID, Spring.GetUnitTeam(unitID), "sensor", 2)
+			GG.LimitTowerType(unitID, Spring.GetUnitTeam(unitID), "missile", 2)
 		end,
 		costFunction = deductCBills,
 		price = 8000,
