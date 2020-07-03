@@ -153,7 +153,7 @@ local LBL = BeamLaser_Class:New{
 	burst					= 15,
 	rgbcolor				= [[0.5 0.0 1.0]],
 	damage = {
-		default = 26.6, --x 15 (burst) x 2 shots per 10 seconds = 800 damage
+		default = 30,--26.6, --x 15 (burst) x 2 shots per 10 seconds = 800 damage
 	},
 	customparams = {
 		heatgenerated		= 4,--0.8/sec
@@ -173,7 +173,7 @@ local CERLBL = ERLBL:New{
 	name                    = "CERLLaser",
 	range                   = 2500,
 	damage = {
-		default = 33.3, --x 15 (burst) x 2 shots per 10 seconds = 1000 damage
+		default = 37,--33.3, --x 15 (burst) x 2 shots per 10 seconds = 1000 damage
 	},
 }
 

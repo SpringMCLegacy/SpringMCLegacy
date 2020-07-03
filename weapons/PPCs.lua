@@ -23,7 +23,7 @@ local PPC_Class = Weapon:New{
 	rgbcolor				= "0.55 0.65 1.0",
 	intensity				= 0.5,
 	damage = {
-		default = 500, --100 DPS
+		default = 600,--500, --100 DPS
 	},
 	customparams = {
 		heatgenerated		= 5,
@@ -61,7 +61,7 @@ local HeavyPPC = PPC_Class:New{
 local LightPPC = PPC_Class:New{
 	name                    = "Light PPC",
 	damage = {
-		default = 250, --50 DPS
+		default = 300,--250, --50 DPS
 	},
 	customparams = {
 		heatgenerated		= 2.5,
@@ -82,7 +82,7 @@ local CERPPC = PPC_Class:New{
 	heightBoostFactor		= 0,
 	range                   = 2300,
 	damage = {
-		default = 750, --150 DPS
+		default = 900,--750, --150 DPS
 	},
 	customparams = {
 		heatgenerated		= 7.5,

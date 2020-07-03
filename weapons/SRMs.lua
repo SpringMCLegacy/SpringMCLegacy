@@ -15,7 +15,7 @@ local SRM_Class = Weapon:New{
 	wobble					= 900,
 	dance					= 65,
 	tracks					= true,
-	turnRate				= 1500,
+	turnRate				= 1200,
 	weaponTimer				= 5,
 	areaOfEffect            = 20,
 	startVelocity			= 1000,
@@ -24,7 +24,7 @@ local SRM_Class = Weapon:New{
 	burstrate				= 0.1,
 	model					= "Weapons/Missile.s3o",
 	damage = {
-		default = 100,--20 DPS
+		default = 110,--100,--20 DPS
 	},
 	customparams = {
 		cegflare			= "MISSILE_MUZZLEFLASH",

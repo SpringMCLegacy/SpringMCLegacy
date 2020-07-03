@@ -48,7 +48,7 @@ local AC2 = AC_Class:New{
 	reloadtime              = 0.5,
 	size					= 1,
 	damage = {
-		default = 20,--10, --20 DPS
+		default = 25,--20,--10, --20 DPS
 	},
 	customparams = {
 		heatgenerated		= 0.05,--0.1/second

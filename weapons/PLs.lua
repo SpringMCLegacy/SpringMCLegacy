@@ -33,7 +33,7 @@ local SPL = PulseLaser_Class:New{
 	rgbcolor				= [[1.0 0.4 0.4]],
 	intensity				= 0.5,
 	damage = {
-		default = 10, --x 5 (burst) x 6 shots per 10 seconds = 300 damage
+		default = 15,--10, --x 5 (burst) x 6 shots per 10 seconds = 300 damage
 	},
 	customparams = {
 		heatgenerated		= 0.33,
@@ -66,7 +66,7 @@ local MPL = PulseLaser_Class:New{
 	rgbcolor				= [[0.4 0.8 0.4]],
 	intensity				= 0.6,
 	damage = {
-		default = 36.7, --x 5 (burst) x 3.3 shots per 10 seconds = 600 damage
+		default = 40,--36.7, --x 5 (burst) x 3.3 shots per 10 seconds = 600 damage
 	},
 	customparams = {
 		heatgenerated		= 1.21,
@@ -78,7 +78,7 @@ local CMPL = MPL:New{
 	name                    = "CMPulseLaser",
 	range                   = 1200,
 	damage = {
-		default = 42.4, --x 5 (burst) x 3.3 shots per 10 seconds = 700 damage
+		default = 50,--42.4, --x 5 (burst) x 3.3 shots per 10 seconds = 700 damage
 	},
 }
 
@@ -94,7 +94,7 @@ local LPL = PulseLaser_Class:New{
 	rgbcolor				= [[0.4 0.0 0.8]],
 	intensity				= 1,
 	damage = {
-		default = 69, --x 5 (burst) x 2.6 shots per 10 seconds = 900 damage
+		default = 75,--69, --x 5 (burst) x 2.6 shots per 10 seconds = 900 damage
 	},
 	customparams = {
 		heatgenerated		= 3.84,--10/sec
@@ -106,7 +106,7 @@ local CLPL = LPL:New{
 	name                    = "CLPulseLaser",
 	range                   = 2000,
 	damage = {
-		default = 77, --x 5 (burst) x 2.6 shots per 10 seconds = 1000 damage
+		default = 83,--77, --x 5 (burst) x 2.6 shots per 10 seconds = 1000 damage
 	},
 }
 
