@@ -5,6 +5,7 @@ local BRV = Tank:New{
 	
 	builder 			= true,
 	canReclaim 			= true,
+	canRepair			= false,
 	harvestStorage		= 1000,
 	workerTime			= 200,
 	buildDistance 		= 50,
