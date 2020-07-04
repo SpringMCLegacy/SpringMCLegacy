@@ -67,10 +67,12 @@ function widget:GameFrame(n)
 --    for _,unitID in ipairs(Spring.GetTeamUnitsByDefs(Spring.ALL_UNITS, flagDefID)i)  do
       for _,unitID in ipairs(Spring.GetAllUnits()) do
          local unitDefID = GetUnitDefID(unitID)
-		 local dropzone = UnitDefs[unitDefID].name:find("dropzone")
-         if dropzone then
-            local str = "Not known yet"
-            flagUnitIDtoProdString[unitID] = str
+		 if unitDefID then
+			local dropzone = UnitDefs[unitDefID].name:find("dropzone")
+			if dropzone then
+				local str = "Not known yet"
+				flagUnitIDtoProdString[unitID] = str
+			end
          end
       end
 
