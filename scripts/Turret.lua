@@ -419,7 +419,7 @@ function script.QueryWeapon(weaponID)
 	elseif weaponID == info.numWeapons + 1 then -- Sight
 		return cockpit
 	else
-		return flares[weaponID] or torso
+		return flares[weaponID] or flares[1]
 	end
 end
 

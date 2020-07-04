@@ -26,22 +26,23 @@ weaponDef = {
 	minIntensity			= 1,
 	rgbcolor				= "1.0 0.4 0.4",
 	intensity				= 0.5,
-	airSightDistance 		= 1500,
 	
 	collisionsize = 5,
 	interceptor = 1,
-	coverage = 1500,
+	coverage = 2500,
 	interceptsolo = false,
 	proximitypriority = -1,
 	predictboost = 500,
 	
 	--beamBurst				= true,
-	--burst 					= 5,
+	--burst 					= 50,
 	--burstRate				= 0.015,
 	cylinderTargeting		= 5,
+	allowNonBlockingAim 	= true,
+	collideFriendly			= false,
 	
 	damage = {
-		default = 1000,--1 DPS
+		default = 100,--1 DPS
 	},
 	customparams = {
 		cegflare			= "SMALLLASER_MUZZLEFLASH",
