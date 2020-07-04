@@ -176,7 +176,7 @@ local Union = DropShip:New{
 }
 
 local Leopard = DropShip:New{
-	objectName        	= "IS_Leopard.s3o",
+	name				= "Leopard",
 	iconType			= "leopard",
 	maxDamage			= 20000,
 

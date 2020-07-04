@@ -190,9 +190,14 @@ for name, ud in pairs(UnitDefs) do
 	if speed > 0 or ud.canfly then
 		ud.cantbetransported = false
 	end
-	if cp and cp.baseclass then
+	if cp then
 		if not ud.objectname then
-			ud.objectname = cp.baseclass .. "/" .. (cp.baseclass == "mech" and (ud.name:gsub(" ", "") .. "/") or "") .. name .. ".s3o"
+			if cp.baseclass then
+				ud.objectname = cp.baseclass .. "/" .. (cp.baseclass == "mech" and (ud.name:gsub(" ", "") .. "/") or "") .. name .. ".s3o"
+			else -- dropship, for now
+				ud.objectname = "dropship/" .. name .. ".s3o"
+				--cp.normaltex = "unittextures/normals/" .. ud.name .. "_Normals.dds"
+			end
 		end
 	end
 	if cp and cp.baseclass then -- mech, vehicle, apc, vtol, infantry
