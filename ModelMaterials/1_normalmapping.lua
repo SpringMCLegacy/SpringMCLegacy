@@ -31,43 +31,6 @@ local materials = {
 
 local unitMaterials = {}
 
-local function FindNormalmap(tex1, tex2)
-  local normaltex
-
-  --// check if there is a corresponding _normals.dds file
-  if (VFS.FileExists(tex1)) then
-    local basefilename = tex1:gsub("%....","")
-    if (tonumber(basefilename:sub(-1,-1))) then
-      basefilename = basefilename:sub(1,-2)
-    end
-    if (basefilename:sub(-1,-1) == "_") then
-       basefilename = basefilename:sub(1,-2)
-    end
-    normaltex = basefilename .. "_normals.dds"
-    if (not VFS.FileExists(normaltex)) then
-      normaltex = nil
-    end
-  end --if FileExists
-
-  if (not normaltex) and tex2 and (VFS.FileExists(tex2)) then
-    local basefilename = tex2:gsub("%....","")
-    if (tonumber(basefilename:sub(-1,-1))) then
-      basefilename = basefilename:sub(1,-2)
-    end
-    if (basefilename:sub(-1,-1) == "_") then
-      basefilename = basefilename:sub(1,-2)
-    end
-    normaltex = basefilename .. "_normals.dds"
-    if (not VFS.FileExists(normaltex)) then
-      normaltex = nil
-    end
-  end
-
-  return normaltex
-end
-
-
-
 for i=1,#UnitDefs do
   local udef = UnitDefs[i]
 
