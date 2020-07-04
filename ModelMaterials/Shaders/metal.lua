@@ -129,14 +129,14 @@ return {
        float a    = max( dot(normal, sunPos), 0.0);
        vec3 light = a * sunDiffuse + sunAmbient;
 
-       float detail = texture2D(detailMap, (vPos.xz + vPos.y * 0.1) / 45.0).r * 0.35;
-       detail      += texture2D(detailMap, (vPos.xz + vPos.y * 0.1) / 300.0).r * 0.25;
+       float detail = texture2D(detailMap, (vPos.xz + vPos.y * 0.1) / 45.0).r * 0.50;
+       detail      += texture2D(detailMap, (vPos.xz + vPos.y * 0.1) / 300.0).r * 0.30;
        vec4 extraColor = texture2D(textureS3o2, gl_TexCoord[0].st);
        extraColor.g += detail;
        extraColor.g = clamp(extraColor.g, 0.0, 1.0);
 
        vec3 reflectDir = reflect(cameraDir, normal);
-       vec3 specular   = textureCube(specularTex, reflectDir).rgb * extraColor.g * 12.0;
+       vec3 specular   = textureCube(specularTex, reflectDir).rgb * extraColor.g * 0.75;
        vec3 reflection = textureCube(reflectTex,  reflectDir).rgb;
 
     #ifdef use_shadows
