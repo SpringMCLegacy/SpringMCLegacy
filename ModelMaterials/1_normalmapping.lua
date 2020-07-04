@@ -73,58 +73,7 @@ for i=1,#UnitDefs do
 
   if (udef.customParams.baseclass and udef.customParams.normaltex and VFS.FileExists(udef.customParams.normaltex)) then
     unitMaterials[udef.name] = {"normalMappedS3o", NORMALTEX = udef.customParams.normaltex}
-
-  elseif (udef.model.type == "s3o") then
-    local modelpath = udef.model.path
-    if (modelpath) then
-      --// udef.model.textures is empty at gamestart, so read the texture filenames from the s3o directly
-
-      local rawstr = VFS.LoadFile(modelpath)
-      local header = rawstr:sub(1,60)
-      local texPtrs = VFS.UnpackU32(header, 45, 2)
-      local tex1,tex2
-      if (texPtrs[2] > 0)
-        then tex2 = "unittextures/" .. rawstr:sub(texPtrs[2]+1, rawstr:len()-1)
-        else texPtrs[2] = rawstr:len() end
-      if (texPtrs[1] > 0)
-        then tex1 = "unittextures/" .. rawstr:sub(texPtrs[1]+1, texPtrs[2]-1) end
-
-      -- output units without tex2
-      if not tex2 then
-        --Spring.Log(gadget:GetInfo().name, LOG.WARNING, "CustomUnitShaders: " .. udef.name .. " no tex2")
-      end
-
-      local normaltex = FindNormalmap(tex1,tex2)
-      if (normaltex and not unitMaterials[udef.name]) then
-        unitMaterials[udef.name] = {"normalMappedS3o", NORMALTEX = normaltex}
-      end
-    end --if model
-
-  elseif (udef.model.type == "obj") then
-    local modelinfopath = udef.model.path
-    if (modelinfopath) then
-      modelinfopath = modelinfopath .. ".lua"
-
-      if (VFS.FileExists(modelinfopath)) then
-        local infoTbl = Include(modelinfopath)
-        if (infoTbl) then
-          local tex1 = "unittextures/" .. (infoTbl.tex1 or "")
-          local tex2 = "unittextures/" .. (infoTbl.tex2 or "")
-
-          -- output units without tex2
-          if not tex2 then
-            Spring.Log(gadget:GetInfo().name, LOG.WARNING, "CustomUnitShaders: " .. udef.name .. " no tex2")
-          end
-
-          local normaltex = FindNormalmap(tex1,tex2)
-          if (normaltex and not unitMaterials[udef.name]) then
-            unitMaterials[udef.name] = {"normalMappedS3o", NORMALTEX = normaltex}
-          end
-        end
-      end
-    end
-
-  end --elseif
+  end
 end --for
 
 --------------------------------------------------------------------------------
