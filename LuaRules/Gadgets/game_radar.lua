@@ -352,7 +352,7 @@ function gadget:GameFrame(n)
 		-- Now deal with ECM units
 		for unitID, ecmRadius in pairs(allyJammers[allyTeam]) do
 			-- only active non-PPC'd units can utilise ECM
-			if not ppcUnits[unitID] and GetUnitIsActive(unitID) then
+			if not ppcUnits[unitID] and GetUnitIsActive(unitID) and not Spring.GetUnitTransporter(unitID) then
 				for _, teamID in pairs(teamsInAllyTeams[allyTeam]) do
 					if not deadTeams[teamID] then
 						local x, _, z = GetUnitPosition(unitID)
@@ -373,7 +373,7 @@ function gadget:GameFrame(n)
 		-- Then BAP units
 		for unitID, bapRadius in pairs(allyBAPs[allyTeam]) do
 			-- only active units can utilise BAP
-			if GetUnitIsActive(unitID) then
+			if GetUnitIsActive(unitID) and not Spring.GetUnitTransporter(unitID) then
 				local x, _, z = GetUnitPosition(unitID)
 				local nearbyUnits = Spring.GetUnitsInCylinder(x, z, bapRadius)
 				for _, enemyID in pairs(nearbyUnits) do

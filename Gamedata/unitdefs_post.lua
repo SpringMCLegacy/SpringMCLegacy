@@ -244,24 +244,12 @@ for name, ud in pairs(UnitDefs) do
 			local priceMult = modOptions and modOptions.pricemult or 1
 			ud.buildCostMetal = ((cp.price or 0) * priceMult - (4000 * (priceMult - 1)))
 			ud.power = ud.buildCostMetal * ud.buildCostEnergy
-			ud.losemitheight = (cp.cockpitheight or ud.mass / 10) / 1
-			ud.radaremitheight = 100 --ud.losemitheight
-			cp.role = GetRole(ud.description)
-			if not cp.role then
-				Spring.Echo("Warning [unitdefs_post.lua]: Unit (" .. name .. ") has no known role (" .. ud.description .. ")")
-			end
 			if cp.jumpjets then
 				ud.description = ud.description .. " \255\001\179\214[JUMP]"
 			end
 			if cp.masc then
 				ud.description = ud.description .. " \255\128\026\179[MASC]"
 			end
-			table.insert(ud.weapons, {name = "sight"})
-			if not cp.bap then
-				ud.radardistance = roleSensors[cp.role].radar
-			end
-			local mult = modOptions.sectorangle or 1
-			cp.sectorangle = (cp.sectorangle or (cp.role and roleSensors[cp.role].sector)) * mult
 		elseif cp.baseclass == "infantry" then
 			ud.radardistance = 1000 -- no sensors
 			cp.sectorangle = 180
@@ -281,26 +269,38 @@ for name, ud in pairs(UnitDefs) do
 	ud.turnrate = ud.maxvelocity * (cp.wheels and 100 or 200) * (modOptions.turn or 1)
 	cp.torsoturnspeed = cp.torsoturnspeed or (ud.maxvelocity * 50 * (modOptions.torso or 1)) -- for now keep this independent of turnrate so we can tweak them separately
 
-	if not name:find("decal") then
-		ud.sightdistance = ud.sightdistance or 500 -- 1000
-		ud.seismicsignature = 0
-		if cp.baseclass == "mech" then -- override
-			ud.sightdistance = modOptions.mechsight
-			ud.seismicsignature = cp.tonnage / 10
+	-- Deal with sensors
+	if not name:find("decal") then -- everything
+		if cp.dropship then
+			ud.radardistance = 1500
+			ud.sightdistance = 0
 		end
-		ud.radardistance = ud.radardistance or 2000 * modOptions.radar
-		ud.airsightdistance = ud.sightdistance * 1.05 --ud.airsightdistance or 2000 * modOptions.radar
-	end
-	-- set sightrange/radardistance based on bap customparam
-	if cp.ecm then
-		ud.radardistancejam	= 500
-		ud.description = ud.description .. " \255\128\128\128[ECM]"
-	end
-	if cp.bap then
-		ud.radaremitheight = 1000
-		ud.radardistance = 1875 --3000 * modOptions.radar
-		ud.airsightdistance = ud.radardistance
-		ud.description = ud.description .. " \255\001\255\001[BAP]"
+		ud.sightdistance = ud.sightdistance or modOptions.mechsight
+		ud.airsightdistance = ud.sightdistance * 1.05
+		if cp.baseclass == "mech" then -- mechs only
+			table.insert(ud.weapons, {name = "sight"})
+			cp.role = GetRole(ud.description)
+			if not cp.role then
+				Spring.Echo("Warning [unitdefs_post.lua]: Unit (" .. name .. ") has no known role (" .. ud.description .. ")")
+			end
+			cp.sectorangle = (cp.sectorangle or (cp.role and roleSensors[cp.role].sector)) * modOptions.sectorangle
+			ud.radardistance = roleSensors[cp.role].radar * modOptions.radar
+			ud.losemitheight = cp.cockpitheight or (ud.mass / 10)
+			ud.radaremitheight = 100
+			ud.seismicsignature = cp.tonnage / 10
+		else -- everything but mechs
+			ud.seismicsignature = 0
+			ud.radardistance = ud.radardistance or 0
+		end
+		if cp.ecm then
+			ud.radardistancejam	= 500
+			ud.description = ud.description .. " \255\128\128\128[ECM]"
+		end
+		if cp.bap then
+			ud.radaremitheight = 1000
+			ud.airsightdistance = ud.radardistance
+			ud.description = ud.description .. " \255\001\255\001[BAP]"
+		end
 	end
 	-- track strength should be 1/1000th of mass
 	if ud.leavetracks then
@@ -328,8 +328,8 @@ for name, ud in pairs(UnitDefs) do
 					--[[ Give all mechs 179d torso twist
 					weapon.maxangledif = 179
 					end]]
-					if i ~= 1 then
-						if not weapon.slaveto then -- don't overwrite unitdef [sniper slaves 3 to 2]
+					if i ~= 1 and i ~= #weapons then -- don't slave primary or sight weapon
+						if not weapon.slaveto then -- don't overwrite unitdef
 							weapon.slaveto = 1
 						end
 					end
