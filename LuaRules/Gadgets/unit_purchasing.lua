@@ -119,6 +119,7 @@ for i, typeString in ipairs(typeStrings) do
 		disabled = i > 2,
 	}
 	menuCmdIDs[cmdID] = typeString
+	ignoredCmdDescs[cmdID] = true
 end
 
 local unitTypes = {} -- unitTypes[unitDefID] = "lightmech" etc from typeStrings

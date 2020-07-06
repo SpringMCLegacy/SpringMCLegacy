@@ -21,7 +21,6 @@ local GetTeamResources		= Spring.GetTeamResources
 --SyncedCtrl
 local CreateUnit			= Spring.CreateUnit
 local DestroyUnit			= Spring.DestroyUnit
-local EditUnitCmdDesc		= Spring.EditUnitCmdDesc
 local InsertUnitCmdDesc		= Spring.InsertUnitCmdDesc
 local FindUnitCmdDesc		= Spring.FindUnitCmdDesc
 local RemoveUnitCmdDesc		= Spring.RemoveUnitCmdDesc
