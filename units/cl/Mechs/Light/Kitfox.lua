@@ -102,7 +102,7 @@ local C = Kitfox:New{
 }
 
 return lowerkeys({
-	["JF_Kitfox_Prime"] = Prime:New(),
-	["JF_Kitfox_A"] = A:New(),
-	["JF_Kitfox_C"] = C:New(),
+	--["JF_Kitfox_Prime"] = Prime:New(),
+	--["JF_Kitfox_A"] = A:New(),
+	--["JF_Kitfox_C"] = C:New(),
 })

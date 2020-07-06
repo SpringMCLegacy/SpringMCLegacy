@@ -27,5 +27,5 @@ for i = 1, 12 do -- yep that's 12 ERMBLs, count 'em!
 end
 
 return lowerkeys({
-	["HH_Nova_Prime"] = Prime:New(),
+	--["HH_Nova_Prime"] = Prime:New(),
 })

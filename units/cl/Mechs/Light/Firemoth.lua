@@ -89,10 +89,10 @@ local C = Firemoth:New{
 }
 
 return lowerkeys({
-	["HH_Firemoth_Prime"] = Prime:New(),
-	["HH_Firemoth_A"] = A:New(),
-	["HH_Firemoth_C"] = C:New(),
-	["GB_Firemoth_Prime"] = Prime:New(),
-	["GB_Firemoth_A"] = A:New(),
-	["GB_Firemoth_C"] = C:New(),
+	--["HH_Firemoth_Prime"] = Prime:New(),
+	--["HH_Firemoth_A"] = A:New(),
+	--["HH_Firemoth_C"] = C:New(),
+	--["GB_Firemoth_Prime"] = Prime:New(),
+	--["GB_Firemoth_A"] = A:New(),
+	--["GB_Firemoth_C"] = C:New(),
 })

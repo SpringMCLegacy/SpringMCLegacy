@@ -37,8 +37,8 @@ local Mk1 = HunchbackIIC:New{
 
 return lowerkeys({
 	["WF_HunchbackIIC_Mk1"] = Mk1:New(),
-	["HH_HunchbackIIC_Mk1"] = Mk1:New(),
-	["GB_HunchbackIIC_Mk1"] = Mk1:New(),
-	["JF_HunchbackIIC_Mk1"] = Mk1:New(),
-	["SJ_HunchbackIIC_Mk1"] = Mk1:New(),
+	--["HH_HunchbackIIC_Mk1"] = Mk1:New(),
+	--["GB_HunchbackIIC_Mk1"] = Mk1:New(),
+	--["JF_HunchbackIIC_Mk1"] = Mk1:New(),
+	--["SJ_HunchbackIIC_Mk1"] = Mk1:New(),
 })
