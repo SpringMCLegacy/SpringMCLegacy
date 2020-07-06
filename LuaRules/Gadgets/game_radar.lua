@@ -71,6 +71,8 @@ end
 local modOptions = Spring.GetModOptions()
 local inRadarUnits = {}
 local outRadarUnits = {}
+
+local inAutoLos = {}
 local allyJammers = {} -- allyJammers[unitID] = radius
 GG.allyJammers = allyJammers
 local allyBAPs = {} -- allyBAPs[unitID] = radius
@@ -86,6 +88,7 @@ local sectorUnits = {}
 local prevSectorUnits = {}
 for i = 1, numAllyTeams do
 	local allyTeam = allyTeams[i]
+	inAutoLos[allyTeam] = {}
 	inRadarUnits[allyTeam] = {}
 	outRadarUnits[allyTeam] = {}
 	allyJammers[allyTeam] = {}
@@ -233,49 +236,48 @@ function gadget:UnitCreated(unitID, unitDefID, teamID)
 		-- force Spring to recognise units spawned within sectors should be full LOS
 		for i = 1, numAllyTeams do
 			local allyTeam = allyTeams[i]
-			SetUnitLosMask(unitID, allyTeam, losTrue)
+			--SetUnitLosMask(unitID, allyTeam, losTrue)
 		end
 	end
 end
 
 function gadget:UnitEnteredRadar(unitID, unitTeam, allyTeam, unitDefID)
-	if mobileUnitDefs[unitDefID] then
-		inRadarUnits[allyTeam][unitID] = true
-		--Spring.Echo("UER:", unitID, unitTeam, UnitDefs[unitDefID].name)
-	else
+	if not mobileUnitDefs[unitDefID] then
+	--	inRadarUnits[allyTeam][unitID] = true
+	--	Spring.Echo("UER:", unitID, unitTeam, UnitDefs[unitDefID].name)
+	--else
 		-- statics are perma-visible
 		GG.Delay.DelayCall(SetUnitLosState, {unitID, allyTeam, fullLOS}, 1)
 		GG.Delay.DelayCall(SetUnitLosMask, {unitID, allyTeam, fullLOS}, 1) -- don't let engine update any los status
 	end
 end
 
-function gadget:UnitLeftRadar(unitID, unitTeam, allyTeam, unitDefID)
-	--Spring.Echo("ULR:", unitID, unitTeam, UnitDefs[unitDefID].name)
+--[[function gadget:UnitLeftRadar(unitID, unitTeam, allyTeam, unitDefID)
+	Spring.Echo("ULR:", unitID, unitTeam, UnitDefs[unitDefID].name)
 	if mobileUnitDefs[unitDefID] then
 		--outRadarUnits[allyTeam][unitID] = true
 		inRadarUnits[allyTeam][unitID] = nil
 	end
-end
+end]]
 
-function gadget:UnitEnteredLOS(unitID, unitTeam, allyTeam, unitDefID)
-	if mobileUnitDefs[unitDefID] then
-		inRadarUnits[allyTeam][unitID] = nil
-		--Spring.Echo("UELOS:", unitID, unitTeam, UnitDefs[unitDefID].name)
+function gadget:UnitEnteredLos(unitID, unitTeam, allyTeam, unitDefID)
+	--Spring.Echo("UELOS:", unitID, unitTeam, UnitDefs[unitDefID].name)
+	if mobileUnitDefs[unitDefID] and not sectorUnits[allyTeam][unitID] then
+		inAutoLos[allyTeam][unitID] = true
 	end
 end
 
-function gadget:UnitLeftLOS(unitID, unitTeam, allyTeam, unitDefID)
-	if mobileUnitDefs[unitDefID] then
-		--outRadarUnits[allyTeam][unitID] = true
-		inRadarUnits[allyTeam][unitID] = Spring.IsUnitInRadar(unitID, allyTeam)
+function gadget:UnitLeftLos(unitID, unitTeam, allyTeam, unitDefID)
+	--Spring.Echo("ULLOS:", unitID, unitTeam, UnitDefs[unitDefID].name)
+	if mobileUnitDefs[unitDefID] then -- and not sectorUnits[allyTeam][unitID] then
+		inAutoLos[allyTeam][unitID] = nil
 	end
 end
 
 function gadget:UnitDestroyed(unitID, unitDefID, teamID)
 	for i = 1, numAllyTeams do
 		local allyTeam = allyTeams[i]
-		inRadarUnits[allyTeam][unitID] = nil
-		--outRadarUnits[allyTeam][unitID] = nil
+		ResetLosStates(unitID, allyTeam)
 		allyJammers[allyTeam][unitID] = nil
 	end
 	mobileUnits[unitID] = nil
@@ -288,14 +290,8 @@ function gadget:UnitDestroyed(unitID, unitDefID, teamID)
 end
 
 function gadget:UnitGiven(unitID, unitDefID, newTeam, oldTeam)
-	for i = 1, numAllyTeams do
-		local allyTeam = allyTeams[i]
-		inRadarUnits[allyTeam][unitID] = nil
-		--outRadarUnits[allyTeam][unitID] = nil
-		allyJammers[allyTeam][unitID] = nil
-	end
-	SetUnitRulesParam(unitID, "FRIENDLY_ECM", 0)
 	gadget:UnitCreated(unitID, unitDefID, newTeam)
+	gadget:UnitDestroyed(unitID, unitDefID, oldTeam)
 end
 
 
@@ -321,7 +317,7 @@ function gadget:GameFrame(n)
 		local allyTeam = allyTeams[i]
 		-- Firstly all sector mechs
 		for unitID, info in pairs(allyTeamMechs[allyTeam]) do
-			if Spring.ValidUnitID(unitID) and not Spring.GetUnitIsDead(unitID) then
+			if not inAutoLos[allyTeam][unitID] and Spring.ValidUnitID(unitID) and not Spring.GetUnitIsDead(unitID) then
 				local x, _, z = GetUnitPosition(unitID)
 				local inRadius = Spring.GetUnitsInCylinder(x, z, Spring.GetUnitSensorRadius(unitID, "radar")) -- use current sensor radius here as perks can change it
 				if not info.torso then Spring.Echo("Oh shit, ", UnitDefs[Spring.GetUnitDefID(unitID)].name, "seems to have no cockpit") else
@@ -340,7 +336,7 @@ function gadget:GameFrame(n)
 								local rayTrace = Spring.GetUnitWeaponHaveFreeLineOfFire(unitID, info.sight, enemyID)
 								if rayTrace then
 									SetUnitLosState(enemyID, allyTeam, fullLOS)
-									SetUnitLosMask(enemyID, allyTeam, prevLosTrue)
+									--SetUnitLosMask(enemyID, allyTeam, prevLosTrue)
 									sectorUnits[allyTeam][enemyID] = true
 									--Spring.Echo("rayTrace yes", enemyID, UnitDefs[Spring.GetUnitDefID(enemyID)].name)
 								else
