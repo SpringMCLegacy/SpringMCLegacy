@@ -87,7 +87,7 @@ function LoadCargo(cargoID, callerUnitID, callerBeaconID)
 		callerID = callerUnitID
 		numCargo = numCargo + 1
 		cargo[numCargo] = cargoID
-		Spring.UnitScript.AttachUnit(cargoPieces[numCargo] or -1, cargoID)
+		Spring.UnitScript.AttachUnit(--[[cargoPieces[numCargo] or]] -1, cargoID)
 		GG.SetSquad(cargoID, teamID) -- will ignore non-vehicles
 		env = Spring.UnitScript.GetScriptEnv(cargoID)
 		if env.ParentBeacon then

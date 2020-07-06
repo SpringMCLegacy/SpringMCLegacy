@@ -229,6 +229,7 @@ function UnloadMech(i)
 	local currUnitDef = UnitDefs[Spring.GetUnitDefID(cargo[i])]
 	local moveSpeed = currUnitDef.speed * 1.2
 	-- Move to the ramp
+	Spring.UnitScript.AttachUnit(cargoPieces[i], cargo[i])
 	Move(links[i], x_axis, (i <= 2 and 1 or -1) * 50, moveSpeed)
 	WaitForMove(links[i], x_axis)
 	-- We already moved to the edge, proceed down the ramp
