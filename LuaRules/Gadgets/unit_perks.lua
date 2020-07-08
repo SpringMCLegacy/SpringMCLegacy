@@ -116,8 +116,10 @@ local function UpdateUnitPerks(unitID, baseclass)
 end
 
 function gadget:GameFrame(n)
-	for unitID, baseclass in pairs(perkUnits) do
-		UpdateUnitPerks(unitID, baseclass)
+	if n % 15 == 0 then
+		for unitID, baseclass in pairs(perkUnits) do
+			UpdateUnitPerks(unitID, baseclass)
+		end
 	end
 end
 
