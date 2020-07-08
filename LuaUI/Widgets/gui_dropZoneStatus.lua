@@ -38,7 +38,9 @@ end
 
 -- generate a new production string (to be drawn on map) for every flag
 local function GenNewFlagProdString(flagID)
+  if flagID then
    flagUnitIDtoProdString[flagID] = Spring.GetTeamRulesParam(Spring.GetUnitTeam(flagID), "STATUS")
+   end
 end
 
 
