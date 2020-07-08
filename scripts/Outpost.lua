@@ -110,16 +110,16 @@ function Upgrade(level)
 end
 
 function script.Create()
-	if ramps[1] then 
+	if ramps[1] then -- vapd
 		for i = 1, 6 do
 			Turn(ramps[i], y_axis, rad((i-1) * -60))
 		end
-		Hide(base2)
-		Hide(flags)
-	elseif foot1 then
+		--Hide(base2)
+		--Hide(flags)
+	elseif foot1 then -- seismic sensor
 		Turn(foot2, y_axis, rad(-60), CRATE_SPEED * 10)
 		Turn(foot3, y_axis, rad(60), CRATE_SPEED * 10)
-	elseif recoveryrail then
+	elseif recoveryrail then -- salvage yard
 		Hide(foundation)
 		--RecursiveHide(recoveryrail, true)
 		Move(armature1, z_axis, 10)
