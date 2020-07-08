@@ -227,7 +227,7 @@ local function Deliver(unitID, teamID)
 		local class = ChooseElement(spawnDefID, currLevel, "class", classes)
 		local weight, weightIndex = ChooseElement(spawnDefID, currLevel, "weights", weights)
 		local vehName = RandomVehicle(unitID, spawnDefID, currLevel, class, weight, weightIndex)
-		if vehName then
+		if vehName and UnitDefNames[vehName] then -- double check def was actually loaded
 			--Spring.Echo("New Vehicle:", vehName, vehiclesDefCache[UnitDefNames[vehName].id], class, weight)
 			GG.DropshipDelivery(Spring.GetUnitRulesParam(unitID, "beaconID"), unitID, teamID, levelDropships[currLevel], {{[vehName] = vehiclesDefCache[UnitDefNames[vehName].id]}}, 0, nil, 1) 
 		else
