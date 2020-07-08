@@ -379,7 +379,7 @@ local function CheckBuildOptions(unitID, teamID, money, weightLeft, cmdID)
 	for cmdDescID = 1, #cmdDescs do
 		local buildDefID = cmdDescs[cmdDescID].id
 		local cmdDesc = cmdDescs[cmdDescID]
-		if cmdDesc.id ~= cmdID and not ignoredCmdDescs[cmdID] then
+		if cmdDesc.id ~= cmdID and not ignoredCmdDescs[cmdDescs[cmdDescID].id] then
 			local currParam = cmdDesc.params[1] or ""
 			local cCost, tCost
 			if buildDefID < 0 then -- a build order
