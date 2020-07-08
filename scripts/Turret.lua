@@ -202,6 +202,7 @@ function script.Create()
 	-- Orbital insertion anim
 	Spring.MoveCtrl.Enable(unitID)
 	Spring.MoveCtrl.SetPosition(unitID, X, GY + DROP_HEIGHT, Z)
+	Spring.SetUnitAlwaysVisible(unitID, true)
 	Spring.SetUnitNeutral(unitID, true)
 	Spring.SetUnitStealth(unitID, true)
 	Spring.SetUnitSensorRadius(unitID, "los", 0)
