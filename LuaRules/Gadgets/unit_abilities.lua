@@ -60,7 +60,7 @@ local function ChangeMoveData(unitDefID, mult)
 		decRate = ud.maxDec * mult,
 		maxSpeed = ud.speed * mult,
 		maxReverseSpeed = ud.speed * mult / 1.5, -- 98.0 no ud.rSpeed
-		maxWantedSpeed = ud.speed * mult,
+		--maxWantedSpeed = ud.speed * mult,
 	}
 end
 
