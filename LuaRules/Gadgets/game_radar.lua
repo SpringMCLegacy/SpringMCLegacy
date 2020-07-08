@@ -408,7 +408,8 @@ function gadget:GameFrame(n)
 	-- really finally, check NARC as it should override anything else
 	for unitID, info in pairs(narcUnits) do
 		if Spring.ValidUnitID(unitID) and not Spring.GetUnitIsDead(unitID) then
-			SetUnitLosState(unitID, info.allyTeam, {los=true, prevLos=true, radar=true, contRadar=true} ) 
+			SetUnitLosState(unitID, info.allyTeam, fullLOS) 
+			SetUnitLosMask(unitID, info.allyTeam, fullLOS)
 		end
 	end
 	if Spring.IsGameOver() then
