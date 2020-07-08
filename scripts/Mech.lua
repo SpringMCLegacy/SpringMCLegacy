@@ -149,6 +149,10 @@ end
 -- non-local function called by gadgets/game_ammo.lua
 function ChangeAmmo(ammoType, amount) 
 	local newAmmoLevel = (currAmmo[ammoType] or 0) + (amount or 0) -- amount is a -ve to deduct
+	if not amount then -- whut?
+		Spring.Echo("ChangeAmmo amount was nil", ammoType, unitDef.name)
+		amount = 0
+	end
 	if amount > 0 then -- restocking, reset the indicator
 		SetUnitRulesParam(unitID, "outofammo", 0)
 	end
