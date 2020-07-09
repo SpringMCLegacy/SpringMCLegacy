@@ -191,6 +191,7 @@ function SpawnDropship(beaconID, unitID, teamID, dropshipType, cargo, cost)
 		return dropshipID
 	elseif teamID and not select(3, Spring.GetTeamInfo(teamID)) then -- dropzone moved or beacon was capped, but team lives
 		-- Refund
+		Spring.SendMessageToTeam(teamID, "No dropzone, order refunded: " .. cost)
 		Spring.AddTeamResource(teamID, "metal", cost)
 		-- Delete the entire drop queue
 		beaconDropshipQueue[beaconID] = {}
