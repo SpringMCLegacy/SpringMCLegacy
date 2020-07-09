@@ -1,4 +1,4 @@
-weaponDef = {
+local ArrowIV = Weapon:New{
 	name                    = "Arrow Missile",
 	weaponType              = "MissileLauncher",
 	explosionGenerator    	= "custom:HE_XLARGE",
@@ -12,24 +12,28 @@ weaponDef = {
 	noSelfDamage            = true,
 	turret                  = true,
 	range                   = 4000,
-	accuracy                = 1000,
-	wobble					= 200,
-	trajectoryHeight		= 1,
+	accuracy                = 2000,
+	tolerance				= 1000,
+	wobble					= 6000,
+	--dance					= 50,
+	trajectoryHeight		= 0.75,
 	tracks					= false,
-	turnRate				= 500,
-	weaponTimer				= 50,
-	flightTime				= 50,
-	areaOfEffect            = 200,
-	startVelocity			= 1000,
+	turnRate				= 2000,
+	weaponTimer				= 10,
+	flightTime				= 10,
+	areaOfEffect            = 500,
+	edgeEffectiveness		= 0.5,
+	startVelocity			= 10,
+	weaponAcceleration 		= 500,
 	weaponVelocity          = 1000,
-	reloadtime              = 15,
+	reloadtime              = 10,
 	model					= "Weapons/ArrowIV.s3o",
 	interceptedByShieldType	= 32,
 	damage = {
-		default = 3000,--200 DPS
+		default = 2000,--200 DPS
 	},
 	customparams = {
-		heatgenerated		= 15,--10/sec
+		heatgenerated		= 10,--10/sec
 		cegflare			= "ARROW_MUZZLEFLASH",
 		projectilelups		= {"missileEngineLarge"},
 		weaponclass			= "missile",
@@ -38,4 +42,18 @@ weaponDef = {
     },
 }
 
-return lowerkeys({ ArrowIV = weaponDef })
+local ArrowIV_Guided = ArrowIV:New{
+	name                    = "Homing Arrow Missile",
+	wobble					= 100,
+	trajectoryHeight		= 1,
+	tracks					= false,
+	turnRate				= 500,	
+	customparams = {
+		minrange			= 300,
+    },
+}
+
+return lowerkeys({ 
+	ArrowIV = ArrowIV,
+	ArrowIV_Guided = ArrowIV_Guided,
+	})
