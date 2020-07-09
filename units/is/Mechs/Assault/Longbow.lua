@@ -53,7 +53,13 @@ local LGB8V = Longbow:New{
 			name	= "ArrowIV",
 		},
 		[3] = {
-			name	= "SPL",
+			name	= "ERLBL",
+		},
+		[4] = {
+			name	= "MPL",
+		},
+		[5] = {
+			name	= "MPL",
 		},
 	},
 		
@@ -63,7 +69,7 @@ local LGB8V = Longbow:New{
 		price			= 18080,
 		heatlimit 		= 32,
 		armor			= {type = "standard", tons = 12.5},
-		maxammo 		= {arrow = 8},
+		maxammo 		= {arrow = 4},
     },
 }
 	
