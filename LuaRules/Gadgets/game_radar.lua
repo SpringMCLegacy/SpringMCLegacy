@@ -217,6 +217,35 @@ function gadget:UnitPreDamaged(unitID, unitDefID, unitTeam, damage, paralyzer, w
 	return damage, 1
 end
 
+function gadget:UnitEnteredRadar(unitID, unitTeam, allyTeam, unitDefID)
+	--Spring.Echo("UERadar:", unitID, unitTeam, UnitDefs[unitDefID].name)
+	if mobileUnitDefs[unitDefID] then -- force spring to recognise units spawned inside radar
+		for i = 1, numAllyTeams do
+			local aTeam = allyTeams[i]
+			ResetLosStates(unitID, aTeam)
+			SetUnitLosState(unitID, aTeam, {los = Spring.IsUnitInLos(unitID, aTeam), prevLos = true, radar = Spring.IsUnitInRadar(unitID, aTeam), contRadar = true}) 
+		end
+	else
+		-- statics are perma-visible
+		GG.Delay.DelayCall(SetUnitLosState, {unitID, allyTeam, fullLOS}, 1)
+		GG.Delay.DelayCall(SetUnitLosMask, {unitID, allyTeam, fullLOS}, 1) -- don't let engine update any los status
+	end
+end
+
+
+function gadget:UnitEnteredLos(unitID, unitTeam, allyTeam, unitDefID)
+	--Spring.Echo("UELOS:", unitID, unitTeam, UnitDefs[unitDefID].name)
+	if mobileUnitDefs[unitDefID] and not sectorUnits[allyTeam][unitID] then
+		inAutoLos[allyTeam][unitID] = true
+	end
+end
+
+function gadget:UnitLeftLos(unitID, unitTeam, allyTeam, unitDefID)
+	--Spring.Echo("ULLOS:", unitID, unitTeam, UnitDefs[unitDefID].name)
+	if mobileUnitDefs[unitDefID] then
+		inAutoLos[allyTeam][unitID] = nil
+	end
+end
 
 function gadget:UnitCreated(unitID, unitDefID, teamID)
 	local ud = UnitDefs[unitDefID]
@@ -241,29 +270,6 @@ function gadget:UnitCreated(unitID, unitDefID, teamID)
 			local allyTeam = allyTeams[i]
 			--SetUnitLosMask(unitID, allyTeam, losTrue)
 		end
-	end
-end
-
-function gadget:UnitEnteredRadar(unitID, unitTeam, allyTeam, unitDefID)
-	if not mobileUnitDefs[unitDefID] then
-		-- statics are perma-visible
-		GG.Delay.DelayCall(SetUnitLosState, {unitID, allyTeam, fullLOS}, 1)
-		GG.Delay.DelayCall(SetUnitLosMask, {unitID, allyTeam, fullLOS}, 1) -- don't let engine update any los status
-	end
-end
-
-
-function gadget:UnitEnteredLos(unitID, unitTeam, allyTeam, unitDefID)
-	--Spring.Echo("UELOS:", unitID, unitTeam, UnitDefs[unitDefID].name)
-	if mobileUnitDefs[unitDefID] and not sectorUnits[allyTeam][unitID] then
-		inAutoLos[allyTeam][unitID] = true
-	end
-end
-
-function gadget:UnitLeftLos(unitID, unitTeam, allyTeam, unitDefID)
-	--Spring.Echo("ULLOS:", unitID, unitTeam, UnitDefs[unitDefID].name)
-	if mobileUnitDefs[unitDefID] then
-		inAutoLos[allyTeam][unitID] = nil
 	end
 end
 
