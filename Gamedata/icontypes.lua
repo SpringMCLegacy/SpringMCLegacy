@@ -1,8 +1,8 @@
 local iconTypes = {
 	default = {
-		bitmap		=	"icons/blank.png",
-		size			=	0,
-		distance	=	5000,
+		bitmap		=	"icons/dropship.png",
+		size			=	5,
+		distance	=	5.0,
 	},
 	dropship = {
 		bitmap		=	"icons/dropship.png",

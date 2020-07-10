@@ -114,7 +114,7 @@ local prevLosOnly = {los = false, prevLos = true, radar = false, contRadar = tru
 local losTrue = {los = true}
 local losFalseRestTrue = {los = false, prevLos = true, radar = true, contRadar = true}
 local fullLOS = {los = true, prevLos = true, radar = true, contRadar = true}
-local engineControl = {los = false, prevLos = false, radar = false, contRadar = false}
+local engineControl = {los = false, prevLos = true, radar = false, contRadar = true}
 
 
 local function FinishPPC(unitID)
@@ -165,6 +165,7 @@ local function ResetLosStates(unitID, allyTeam) -- TODO:need to check los/radar 
 		--SetUnitLosState(unitID, allyTeam, {los = Spring.IsUnitInLos(unitID, allyTeam), prevLos = true, radar = Spring.IsUnitInRadar(unitID, allyTeam), contRadar = true}) 
 		--SetUnitLosMask(unitID, allyTeam, fullLOS) -- let engine handle los state for this unit	
 		SetUnitLosMask(unitID, allyTeam, engineControl)
+		SetUnitLosState(unitID, allyTeam, prevLosTrue)
 	end
 end	
 
@@ -220,11 +221,11 @@ end
 function gadget:UnitEnteredRadar(unitID, unitTeam, allyTeam, unitDefID)
 	--Spring.Echo("UERadar:", unitID, unitTeam, UnitDefs[unitDefID].name)
 	if mobileUnitDefs[unitDefID] then -- force spring to recognise units spawned inside radar
-		for i = 1, numAllyTeams do
+		--[[for i = 1, numAllyTeams do
 			local aTeam = allyTeams[i]
 			ResetLosStates(unitID, aTeam)
 			SetUnitLosState(unitID, aTeam, {los = Spring.IsUnitInLos(unitID, aTeam), prevLos = true, radar = Spring.IsUnitInRadar(unitID, aTeam), contRadar = true}) 
-		end
+		end]]
 	else
 		-- statics are perma-visible
 		GG.Delay.DelayCall(SetUnitLosState, {unitID, allyTeam, fullLOS}, 1)
@@ -270,6 +271,12 @@ function gadget:UnitCreated(unitID, unitDefID, teamID)
 			local allyTeam = allyTeams[i]
 			--SetUnitLosMask(unitID, allyTeam, losTrue)
 		end
+	end
+	for i = 1, numAllyTeams do
+		local allyTeam = allyTeams[i]
+		SetUnitLosMask(unitID, allyTeam, prevLosTrue)
+		SetUnitLosState(unitID, allyTeam, prevLosTrue)
+		--ResetLosStates(unitID, allyTeam)
 	end
 end
 
