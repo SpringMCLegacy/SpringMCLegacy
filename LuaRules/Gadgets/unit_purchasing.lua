@@ -582,9 +582,10 @@ function gadget:AllowCommand(unitID, unitDefID, teamID, cmdID, cmdParams, cmdOpt
 			local money = GetTeamResources(teamID, "metal")
 			local cost = orderCosts[unitID] or 0
 			if rightClick then
-				if orderStatus[teamID] == 1 then
+				if orderStatus[teamID] > 0 then
 					-- cancelling the order, refund the cost and update the buttons
 					orderStatus[teamID] = 0
+					Spring.SendMessageToTeam(teamID, "Refunding C-Bills: " .. cost)
 					AddTeamResource(teamID, "metal", cost)
 					UpdateButtons(teamID)
 					return true
