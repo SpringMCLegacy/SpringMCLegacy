@@ -416,8 +416,18 @@ for name, ud in pairs(UnitDefs) do
 	end
 end
 
+local function sorter(a, b)
+	local tonnageA = tonumber(UnitDefs[a].customparams.tonnage)
+	local tonnageB = tonumber(UnitDefs[b].customparams.tonnage)
+	if tonnageA == tonnageB then-- if they are the same, alphabetize
+		return a < b
+	else -- order by tonnage
+		return  tonnageA < tonnageB
+	end		
+end
+
 for side, dropZoneOptions in pairs(DROPZONE_BUILDOPTIONS) do
-	table.sort(dropZoneOptions)
+	table.sort(dropZoneOptions, sorter)
 	DROPZONE_UDS[side]["buildoptions"] = dropZoneOptions
 end
 

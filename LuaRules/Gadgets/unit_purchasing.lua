@@ -95,7 +95,7 @@ local runningTonsCmdDesc = {
 local ignoredCmdDescs = {CMD_SEND_ORDER = true, CMD_RUNNING_TOTAL = true, CMD_RUNNING_TONS = true}
 
 -- Variables
-local typeStrings = {"lightmech", "mediummech", "heavymech", "assaultmech"}--, "vehicle", "vtol", "aero"}
+--[[local typeStrings = {"lightmech", "mediummech", "heavymech", "assaultmech"}--, "vehicle", "vtol", "aero"}
 local typeStringAliases = { -- whitespace is to try and equalise resulting font size
 	["lightmech"] 	= "Light     \nMechs", 
 	["mediummech"] 	= "Medium  \nMechs", 
@@ -104,6 +104,13 @@ local typeStringAliases = { -- whitespace is to try and equalise resulting font 
 	--["vehicle"] 	= "Vehicles ", 
 	--["vtol"] 		= "VTOL     ",
 	--["aero"]		= "Aero     ",
+}]]
+local typeStrings = {"scoutmech", "brawlermech", "multirolemech", "rangedmech"}
+local typeStringAliases = { -- whitespace is to try and equalise resulting font size
+	["scoutmech"] 		= "Scout     \nMechs", 
+	["brawlermech"] 	= "Brawler   \nMechs", 
+	["multirolemech"] 	= "Multirole \nMechs", 
+	["rangedmech"] 		= "Ranged    \nMechs", 
 }
 
 local menuCmdDescs = {}
@@ -709,7 +716,7 @@ function gadget:UnitGiven(unitID, unitDefID, newTeam, oldTeam)
 	end
 end
 
-local function GetWeight(mass)
+local function GetWeight(mass) -- still used by spamBot fore 'DireBolical' difficulty
 	local light = mass < 40 * 100
 	local medium = not light and mass < 60 * 100
 	local heavy = not light and not medium and mass < 80 * 100
@@ -719,15 +726,16 @@ local function GetWeight(mass)
 end
 GG.GetWeight = GetWeight
 
+
 function gadget:GamePreload()
 	for unitDefID, unitDef in pairs(UnitDefs) do
 		local name = unitDef.name
 		local cp = unitDef.customParams
 		if cp.baseclass == "mech" then
 			-- sort into light, medium, heavy, assault
-			local mass = unitDef.mass
-			local weight = GetWeight(mass)
-			unitTypes[unitDefID] = weight .. "mech"
+			--local mass = unitDef.mass
+			--local weight = GetWeight(mass)
+			unitTypes[unitDefID] = cp.role .. "mech"
 			unitSlotChanges[unitDefID] = 1
 		--[[elseif basicType == "vehicle" then
 			-- sort into vehicle, vtol, aero
