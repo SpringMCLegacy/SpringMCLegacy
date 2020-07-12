@@ -134,7 +134,7 @@ local BJ2OP = Blackjack:New{
 	},
 		
 	customparams = {
-		variant			= "BJ2-O cfg Prime",
+		variant			= "BJ2-O (Prime)",
 		speed			= 60,
 		price			= 12010,
 		heatlimit 		= 20,

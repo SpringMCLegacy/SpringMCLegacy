@@ -8,7 +8,7 @@ local Gargoyle = Heavy:New{
 }
 
 local Prime = Gargoyle:New{
-	description         = "Assault Skirmisher",
+	description         = "Assault Brawler",
 	weapons = {	
 		[1] = {
 			name	= "LBX5",
@@ -36,7 +36,7 @@ local Prime = Gargoyle:New{
 }
 
 local A = Gargoyle:New{
-	description         = "Assault Sniper",
+	description         = "Assault Ranged",
 	weapons = {	
 		[1] = {
 			name	= "CERPPC",

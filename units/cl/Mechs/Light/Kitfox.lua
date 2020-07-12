@@ -8,7 +8,7 @@ local Kitfox = Light:New{
 }
 
 local Prime = Kitfox:New{
-	description         = "Light Striker",
+	description         = "Light Multirole",
 	
 	weapons = {	
 		[1] = {
@@ -36,7 +36,7 @@ local Prime = Kitfox:New{
 }
 
 local A = Kitfox:New{
-	description         = "Light Sniper",
+	description         = "Light Multirole",
 	
 	weapons = {	
 		[1] = {
@@ -61,7 +61,7 @@ local A = Kitfox:New{
 }
 
 local C = Kitfox:New{
-	description         = "Light EWAR Support",
+	description         = "Light Scout",
 	
 	weapons = {	
 		[1] = {

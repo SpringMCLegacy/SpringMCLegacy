@@ -6,7 +6,7 @@ local LocustIIC = Light:New{
 }
 
 local Mk2 = LocustIIC:New{
-	description         = "Light Skirmisher",
+	description         = "Light Brawler",
 	weapons = {	
 		[1] = {
 			name	= "SSRM4",
@@ -30,7 +30,7 @@ local Mk2 = LocustIIC:New{
 }
 
 local Mk3 = LocustIIC:New{
-	description         = "Light Sniper",
+	description         = "Light Ranged",
 	weapons = {	
 		[1] = {
 			name	= "CERLBL",
@@ -53,7 +53,7 @@ local Mk3 = LocustIIC:New{
 }
 
 local Mk5 = LocustIIC:New{
-	description         = "Light Missile Support",
+	description         = "Light Ranged",
 	weapons = {	
 		[1] = {
 			name	= "ATM3",

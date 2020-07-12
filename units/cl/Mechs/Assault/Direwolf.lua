@@ -7,7 +7,7 @@ local Direwolf = Medium:New{
 }
 
 local Prime = Direwolf:New{
-	description         = "Assault Striker",
+	description         = "Assault Multirole",
 	weapons	= {	
 		[1] = {
 			name	= "UAC5",

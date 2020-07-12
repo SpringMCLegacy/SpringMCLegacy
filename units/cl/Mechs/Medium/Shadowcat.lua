@@ -7,7 +7,7 @@ local Shadowcat = Medium:New{
 }
 	
 local Prime = Shadowcat:New{
-	description         = "Medium Sniper",
+	description         = "Medium Ranged",
 
 	weapons = {	
 		[1] = {
@@ -35,7 +35,7 @@ local Prime = Shadowcat:New{
 }
 
 local A = Shadowcat:New{
-	description         = "Medium Striker",
+	description         = "Medium Multirole",
 
 	weapons = {	
 		[1] = {
@@ -63,7 +63,7 @@ local A = Shadowcat:New{
 }
 
 local B = Shadowcat:New{
-	description         = "Medium Missile Support",
+	description         = "Medium Ranged",
 
 	weapons = {	
 		[1] = {

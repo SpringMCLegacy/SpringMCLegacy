@@ -8,7 +8,7 @@ local Maddog = Heavy:New{
 }
 
 local Prime = Maddog:New{
-	description         = "Heavy Missile Support",
+	description         = "Heavy Ranged",
 	weapons = {	
 		[1] = {
 			name	= "LRM20",
@@ -80,7 +80,7 @@ local A = Maddog:New{
 }
 
 local D = Maddog:New{
-	description         = "Heavy Missile Support",
+	description         = "Heavy Ranged",
 	weapons = {	
 		[1] = {
 			name	= "ATM12",

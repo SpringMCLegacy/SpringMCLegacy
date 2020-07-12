@@ -7,7 +7,7 @@ local Nova = Medium:New{
 }
 
 local Prime = Nova:New{
-	description         = "Medium Striker",
+	description         = "Medium Multirole",
 	
 	weapons = {	
 		-- put these in via a loop

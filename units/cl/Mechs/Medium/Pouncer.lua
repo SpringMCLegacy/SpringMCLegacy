@@ -7,7 +7,7 @@ local Pouncer = Medium:New{
 }
 
 local Prime = Pouncer:New{
-	description         = "Medium Sniper",
+	description         = "Medium Ranged",
 	
 	weapons = {	
 		[1] = {
@@ -32,7 +32,7 @@ local Prime = Pouncer:New{
 }
 
 local B = Pouncer:New{
-	description         = "Medium Striker",
+	description         = "Medium Multirole",
 	
 	weapons = {	
 		[1] = {
@@ -64,7 +64,7 @@ local B = Pouncer:New{
 }
 
 local C = Pouncer:New{
-	description         = "Medium Striker",
+	description         = "Medium Multirole",
 	
 	weapons = {	
 		[1] = {

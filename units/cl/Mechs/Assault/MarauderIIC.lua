@@ -7,7 +7,7 @@ local MarauderIIC = Medium:New{
 }
 
 local Mk1 = MarauderIIC:New{
-	description         = "Assault Sniper",
+	description         = "Assault Ranged",
 	weapons	= {	
 		[1] = {
 			name	= "CERPPC",

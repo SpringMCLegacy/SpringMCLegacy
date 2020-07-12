@@ -7,7 +7,7 @@ local Adder = Light:New{
 }
 
 local Prime = Adder:New{
-	description         = "Light Sniper",
+	description         = "Light Ranged",
 	weapons 		= {	
 		[1] = {
 			name	= "CERPPC",
@@ -30,7 +30,7 @@ local Prime = Adder:New{
 }
 
 local A = Adder:New{
-	description         = "Light Missile Support",
+	description         = "Light Ranged",
 	weapons 		= {	
 		[1] = {
 			name	= "LRM20",
@@ -59,7 +59,7 @@ local A = Adder:New{
 }
 
 local B = Adder:New{
-	description         = "Light Striker",
+	description         = "Light Multirole",
 	weapons 		= {	
 		[1] = {
 			name	= "LBX5",

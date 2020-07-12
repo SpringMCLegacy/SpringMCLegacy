@@ -33,7 +33,7 @@ local RTX1OP = Raptor:New{
 	},
 		
 	customparams = {
-		variant         = "RTX1-O Prime",
+		variant         = "RTX1-O (Prime)",
 		speed			= 110,
 		price			= 7210,
 		heatlimit 		= 20,
@@ -62,7 +62,7 @@ local RTX1OA = Raptor:New{
 	},
 		
 	customparams = {
-		variant         = "RTX1-O A",
+		variant         = "RTX1-O (Cfg A)",
 		speed			= 110,
 		price			= 7830,
 		heatlimit 		= 20,
@@ -86,7 +86,7 @@ local RTX1OB = Raptor:New{
 	},
 		
 	customparams = {
-		variant         = "RTX1-O B",
+		variant         = "RTX1-O (Cfg B)",
 		speed			= 110,
 		price			= 6130,
 		heatlimit 		= 20,

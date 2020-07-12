@@ -37,7 +37,7 @@ local SD1OP = Sunder:New{
 		},
 	},
     customparams = {
-		variant			= "SD1-O Prime",
+		variant			= "SD1-O (Prime)",
 		speed			= 60,
 		price			= 17470,
 		heatlimit 		= 30,
@@ -75,8 +75,8 @@ local SD1OA = Sunder:New{
 		},
 	},
     customparams = {
-		variant			= "SD1-O cfg A",
-		speed			= 50,
+		variant			= "SD1-O (Cfg A)",
+		speed			= 60,
 		price			= 20030,
 		heatlimit 		= 30,
 		armor			= {type = "standard", tons = 16.5},
@@ -108,7 +108,7 @@ local SD1OC = Sunder:New{
 		},
 	},
     customparams = {
-		variant			= "SD1-O cfg C",
+		variant			= "SD1-O (Cfg C)",
 		speed			= 60,
 		price			= 17350,
 		heatlimit 		= 30,

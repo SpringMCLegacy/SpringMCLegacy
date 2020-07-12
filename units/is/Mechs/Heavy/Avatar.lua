@@ -40,7 +40,7 @@ local AV1OP = Avatar:New{
 	},
 
     customparams = {
-		variant			= "AV1-O Prime",
+		variant			= "AV1-O (Prime)",
 		speed			= 60,
 		price			= 13950,
 		heatlimit 		= 20,
@@ -75,7 +75,7 @@ local AV1OA = Avatar:New{
 	},
 
     customparams = {
-		variant			= "AV1-O cfg A",
+		variant			= "AV1-O (Cfg A)",
 		speed			= 60,
 		price			= 14810,
 		heatlimit 		= 20,
