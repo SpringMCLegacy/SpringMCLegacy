@@ -12,7 +12,7 @@ local Artillery_Class = Weapon:New{
 	tolerance				= 1000,
 	areaOfEffect            = 200,
 	weaponVelocity          = 1500,
-	reloadtime              = 20,
+	reloadtime              = 10,
 	size					= 3,
 	sizeDecay				= 0,
 	separation				= 2, 		--Distance between each plasma particle.
@@ -21,7 +21,7 @@ local Artillery_Class = Weapon:New{
 	rgbcolor				= "1 0.8 0",
 	intensity				= 0.5,
 	damage = {
-		default = 4000, --100 dps
+		default = 2000, --100 dps
 	},
 	customparams = {
 		heatgenerated		= 20,
