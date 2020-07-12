@@ -35,7 +35,7 @@ local function SetupCtrlPanel(iconSizeX, iconSizeY, iconsY, xSelectPos, ySelectP
 		f:write("textBorder 0.003\n")			--you can also edit these settings or add any other ctrlpanel tags
 		f:write("iconBorder 0\n")
 		f:write("frameBorder 0\n")
-		f:write("frameAlpha 0.0\n")
+		f:write("frameAlpha 0.25\n")
 
 		f:write("outlinefont 1\n")
 		f:write("textureAlpha 1\n")
