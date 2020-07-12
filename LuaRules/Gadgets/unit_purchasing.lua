@@ -122,8 +122,8 @@ for i, typeString in ipairs(typeStrings) do
 		type   = CMDTYPE.ICON,
 		name   = typeStringAliases[typeString], -- TODO: texture?
 		action = 'menu' .. typeString,
-		tooltip = "Purchase " .. typeStringAliases[typeString]:gsub("%s+\n", " ") .. (i > 2 and " (Requires Union-class dropship or better)" or ""),
-		disabled = i > 2,
+		tooltip = "Purchase " .. typeStringAliases[typeString]:gsub("%s+\n", " "),-- .. (i > 2 and " (Requires Union-class dropship or better)" or ""),
+		--disabled = i > 2,
 	}
 	menuCmdIDs[cmdID] = typeString
 	ignoredCmdDescs[cmdID] = true
@@ -154,9 +154,32 @@ GG.orderStatus = orderStatus
 local teamSlots = {}
 local unitLances = {} -- unitLances[unitID] = group_number
 
-local function 	UnlockHeavy(dropZone)
-	EditUnitCmdDesc(dropZone, FindUnitCmdDesc(dropZone, menuCmdDescs[3].id), {disabled = false})
-	EditUnitCmdDesc(dropZone, FindUnitCmdDesc(dropZone, menuCmdDescs[4].id), {disabled = false})
+local function GetWeight(mass) -- still used by spamBot fore 'DireBolical' difficulty
+	local light = mass < 40 * 100
+	local medium = not light and mass < 60 * 100
+	local heavy = not light and not medium and mass < 80 * 100
+	local assault = not light and not medium and not heavy
+	local weight = light and "light" or medium and "medium" or heavy and "heavy" or "assault"
+	return weight
+end
+GG.GetWeight = GetWeight
+
+local locked = {} -- unitDefID = true
+local function 	LockHeavy(dropZone, lock) 
+	--EditUnitCmdDesc(dropZone, FindUnitCmdDesc(dropZone, menuCmdDescs[3].id), {disabled = false})
+	--EditUnitCmdDesc(dropZone, FindUnitCmdDesc(dropZone, menuCmdDescs[4].id), {disabled = false})
+	local cmdDescs = GetUnitCmdDescs(dropZone)
+	for i = 1, #cmdDescs do
+		local defID = cmdDescs[i].id
+		if defID < 0 then
+			local class = GetWeight(UnitDefs[-defID].mass)
+			if class == "heavy" or class == "assault" then
+				--Spring.Echo("Hiding", UnitDefs[-defID].name, class)
+				locked[-defID] = lock
+				EditUnitCmdDesc(dropZone, i, {hidden = lock})		
+			end
+		end
+	end
 end
 
 local function TeamDropshipUpgrade(teamID)
@@ -172,7 +195,7 @@ local function TeamDropshipUpgrade(teamID)
 		Spring.AddTeamResource(teamID, "e", tonnageIncrease)
 		teamDropShipHPs[teamID] = nil -- reset HP
 		-- first upgrade unlocks heavy and assault mechs
-		UnlockHeavy(teamDropZones[teamID])
+		LockHeavy(teamDropZones[teamID], false)
 	else -- max upgrade reached, disable button
 		Spring.SendMessageToTeam(teamID, "Dropship Fully Upgraded!")
 	end
@@ -364,7 +387,7 @@ end
 local function ShowBuildOptionsByType(unitID, unitType)
 	for i, cmdDesc in ipairs(Spring.GetUnitCmdDescs(unitID)) do
 		if cmdDesc.id < 0 and unitTypes[-cmdDesc.id] == unitType then
-			EditUnitCmdDesc(unitID, i, {hidden = false})
+			EditUnitCmdDesc(unitID, i, {hidden = locked[-cmdDesc.id] and true or false})
 		end
 	end
 end
@@ -638,8 +661,8 @@ function gadget:UnitCreated(unitID, unitDefID, teamID)
 		dropZones[unitID] = teamID
 		teamDropZones[teamID] = unitID
 		SetTeamRulesParam(teamID, "STATUS", 0)
-		if teamDropShipTypes[teamID].tier > 1 then
-			UnlockHeavy(unitID)
+		if teamDropShipTypes[teamID].tier == 1 then
+			LockHeavy(unitID, true)
 		end
 	elseif dropShipTypes[unitDefID] == "mech" then
 		if Spring.ValidUnitID(teamDropZones[teamID]) then -- TODO: (Why) is this even required?
@@ -715,16 +738,6 @@ function gadget:UnitGiven(unitID, unitDefID, newTeam, oldTeam)
 		end
 	end
 end
-
-local function GetWeight(mass) -- still used by spamBot fore 'DireBolical' difficulty
-	local light = mass < 40 * 100
-	local medium = not light and mass < 60 * 100
-	local heavy = not light and not medium and mass < 80 * 100
-	local assault = not light and not medium and not heavy
-	local weight = light and "light" or medium and "medium" or heavy and "heavy" or "assault"
-	return weight
-end
-GG.GetWeight = GetWeight
 
 
 function gadget:GamePreload()

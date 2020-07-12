@@ -16,7 +16,7 @@ local iconsY = 5						--number of buildpics per row
 local tooltipheightpercentage = 0.1 	--if you are using the default tooltip box, use 0.1
 local xPos = 0							--bar x position
 local yPos = 0							--bar y position
-local select  = { x = 50,   y = 5 }		--the position of the "Selected Units" text
+local select  = { x = 500,   y = 5 }		--the position of the "Selected Units" text
 local runOnce = 0
 --------------------
 
