@@ -9,7 +9,7 @@ local Blackjack = Medium:New{
 }
 
 local BJ2 = Blackjack:New{
-	description         = "Medium Striker",
+	description         = "Medium Multirole",
 	weapons	= {	
 		[1] = {
 			name	= "ERLBL",
@@ -37,7 +37,7 @@ local BJ2 = Blackjack:New{
 }
 
 local BJ3 = Blackjack:New{
-	description         = "Medium Striker",
+	description         = "Medium Multirole",
 	weapons	= {	
 		[1] = {
 			name	= "PPC",
@@ -70,7 +70,7 @@ local BJ3 = Blackjack:New{
 }
 
 local BJ4 = Blackjack:New{
-	description         = "Medium Striker",
+	description         = "Medium Multirole",
 	weapons	= {	
 		[1] = {
 			name	= "AC5",
@@ -99,7 +99,7 @@ local BJ4 = Blackjack:New{
 }
 
 local BJ2OP = Blackjack:New{
-	description         = "Medium Striker",
+	description         = "Medium Multirole",
 	weapons	= {	
 		[1] = {
 			name	= "UAC5",
@@ -134,7 +134,7 @@ local BJ2OP = Blackjack:New{
 	},
 		
 	customparams = {
-		variant			= "BJ2-O Prime",
+		variant			= "BJ2-O cfg Prime",
 		speed			= 60,
 		price			= 12010,
 		heatlimit 		= 20,
@@ -150,6 +150,6 @@ return lowerkeys({
 	["FS_Blackjack_BJ2"] = BJ2:New(),
 	["CC_Blackjack_BJ3"] = BJ3:New(),
 	["FS_Blackjack_BJ4"] = BJ4:New(),
-	["DC_Blackjack_BJ2OP"] = BJ2OP:New(),
-	["FW_Blackjack_BJ2OP"] = BJ2OP:New(),
+	--["DC_Blackjack_BJ2OP"] = BJ2OP:New(),
+	--["FW_Blackjack_BJ2OP"] = BJ2OP:New(),
 })

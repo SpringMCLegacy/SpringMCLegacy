@@ -8,7 +8,7 @@ local Commando = Light:New{
 }
 
 local COM5S = Commando:New{
-	description         = "Light Skirmisher",
+	description         = "Light Brawler",
 	weapons	= {	
 		[1] = {
 			name	= "ASRM6",
@@ -32,7 +32,7 @@ local COM5S = Commando:New{
 }
 
 local COM7S = Commando:New{
-	description         = "Light Skirmisher",
+	description         = "Light Brawler",
 	weapons	= {	
 		[1] = {
 			name	= "ASRM4",

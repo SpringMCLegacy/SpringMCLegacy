@@ -7,7 +7,7 @@ local Hollander = Light:New{
 }
 
 local BZKF3 = Hollander:New{
-	description         = "Light Sniper",
+	description         = "Light Ranged",
 	weapons	= {	
 		[1] = {
 			name	= "Gauss",
@@ -27,7 +27,7 @@ local BZKF3 = Hollander:New{
 }
 
 local BZKG1 = Hollander:New{
-	description         = "Light Brawler",
+	description         = "Light Multirole",
 	weapons = {	
 		[1] = {
 			name	= "LBX10",

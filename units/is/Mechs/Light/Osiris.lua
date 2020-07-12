@@ -8,7 +8,7 @@ local Osiris = Light:New{
 }
 
 local OSR3D = Osiris:New{
-	description         = "Light Skirmisher",
+	description         = "Light Brawler",
 	weapons = {	
 		[1] = {
 			name	= "ERMBL",
@@ -45,7 +45,7 @@ local OSR3D = Osiris:New{
 }
 
 local OSR4D = Osiris:New{
-	description         = "Light Skirmisher",
+	description         = "Light Brawler",
 	weapons = {	
 		[1] = {
 			name	= "MPL",

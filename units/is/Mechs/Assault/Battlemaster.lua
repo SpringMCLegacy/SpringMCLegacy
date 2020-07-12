@@ -7,7 +7,7 @@ local Battlemaster = Assault:New{
 }
 
 local BLRK3 = Battlemaster:New{
-	description         = "Assault Striker",
+	description         = "Assault Multirole",
 	weapons 		= {	
 		[1] = {
 			name	= "ERPPC",
@@ -51,7 +51,7 @@ local BLRK3 = Battlemaster:New{
 }
 
 local BLR1G = Battlemaster:New{
-	description         = "Assault Striker",
+	description         = "Assault Multirole",
 	weapons 		= {	
 		[1] = {
 			name	= "PPC",
@@ -101,7 +101,7 @@ local BLR1G = Battlemaster:New{
 }
 
 local BLR3M = Battlemaster:New{
-	description         = "Assault Striker",
+	description         = "Assault Multirole",
 	weapons 		= {	
 		[1] = {
 			name	= "ERPPC",
@@ -148,7 +148,7 @@ local BLR3M = Battlemaster:New{
 }
 
 local BLR5M = Battlemaster:New{
-	description         = "Assault Striker",
+	description         = "Assault Multirole",
 	weapons 		= {	
 		[1] = {
 			name	= "LightGauss",
@@ -193,7 +193,7 @@ local BLR5M = Battlemaster:New{
 }
 
 local BLR4S = Battlemaster:New{
-	description         = "Assault Striker",
+	description         = "Assault Multirole",
 	weapons 		= {	
 		[1] = {
 			name	= "Gauss",

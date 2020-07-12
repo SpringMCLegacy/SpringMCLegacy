@@ -8,7 +8,7 @@ local Archer = Heavy:New{
 }
 	
 local ARC2R = Archer:New{
-	description         = "Heavy Missile Support",
+	description         = "Heavy Ranged",
 	weapons	= {	
 		[1] = {
 			name	= "LRM20",
@@ -41,7 +41,7 @@ local ARC2R = Archer:New{
 }
 
 local ARC5S = Archer:New{
-	description         = "Heavy Missile Support",
+	description         = "Heavy Ranged",
 	weapons	= {	
 		[1] = {
 			name	= "LRM15",
@@ -85,7 +85,7 @@ local ARC5S = Archer:New{
 }
 
 local ARC4M = Archer:New{
-	description         = "Heavy Missile Support",
+	description         = "Heavy Ranged",
 	weapons	= {	
 		[1] = {
 			name	= "ALRM20",

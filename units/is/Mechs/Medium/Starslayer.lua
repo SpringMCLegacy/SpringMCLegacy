@@ -8,7 +8,7 @@ local Starslayer = Medium:New{
 }
 
 local STY3C = Starslayer:New{
-	description         = "Medium Striker",
+	description         = "Medium Multirole",
 	weapons	= {	
 		[1] = {
 			name	= "LBL",
@@ -42,7 +42,7 @@ local STY3C = Starslayer:New{
 }
 
 local STY3D = Starslayer:New{
-	description         = "Medium Sniper",
+	description         = "Medium Ranged",
 	weapons	= {	
 		[1] = {
 			name	= "ERPPC",

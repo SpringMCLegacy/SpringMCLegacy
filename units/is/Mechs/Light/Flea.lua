@@ -7,7 +7,7 @@ local Flea = Light:New{
 }
 
 local FLE17 = Flea:New{
-	description         = "Light Skirmisher",
+	description         = "Light Scout",
 	weapons	= {	
 		[1] = {
 			name	= "MPL",

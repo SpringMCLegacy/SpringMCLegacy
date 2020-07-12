@@ -8,7 +8,7 @@ local Bushwacker = Medium:New{
 }
 
 local BSWS2 = Bushwacker:New{
-	description         = "Medium Striker",
+	description         = "Medium Multirole",
 	weapons = {	
 		[1] = {
 			name	= "LBX10",
@@ -41,7 +41,7 @@ local BSWS2 = Bushwacker:New{
 }
 
 local BSWX1 = Bushwacker:New{
-	description         = "Medium Striker",
+	description         = "Medium Multirole",
 	weapons = {	
 		[1] = {
 			name	= "AC10",

@@ -36,7 +36,7 @@ local HBK4G = Hunchback:New{
 }
 
 local HBK4P = Hunchback:New{
-	description         = "Medium Striker",
+	description         = "Medium Multirole",
 	weapons = {	
 		[1] = {
 			name	= "MBL",

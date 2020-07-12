@@ -8,7 +8,7 @@ local Rifleman = Heavy:New{
 }
 
 local RFL5D = Rifleman:New{
-	description         = "Heavy Sniper",
+	description         = "Heavy Ranged",
 	weapons = {	
 		[1] = {
 			name	= "ERPPC",
@@ -40,7 +40,7 @@ local RFL5D = Rifleman:New{
 }
 
 local RFL5M = Rifleman:New{
-	description         = "Heavy Striker",
+	description         = "Heavy Multirole",
 	weapons = {	
 		[1] = {
 			name	= "UAC5",
@@ -74,7 +74,7 @@ local RFL5M = Rifleman:New{
 }
 
 local RFL6X = Rifleman:New{
-	description         = "Heavy Striker",
+	description         = "Heavy Multirole",
 	weapons = {	
 		[1] = {
 			name	= "LBX10",
@@ -108,7 +108,7 @@ local RFL6X = Rifleman:New{
 }
 
 local RFL7M = Rifleman:New{
-	description         = "Heavy Sniper",
+	description         = "Heavy Ranged",
 	weapons = {	
 		[1] = {
 			name	= "LightGauss",

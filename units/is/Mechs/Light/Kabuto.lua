@@ -7,7 +7,7 @@ local Kabuto = Light:New{
 }
 
 local KBO7A = Kabuto:New{
-	description         = "Light Skirmisher",
+	description         = "Light Brawler",
 	weapons	= {	
 		[1] = {
 			name	= "SSRM4",

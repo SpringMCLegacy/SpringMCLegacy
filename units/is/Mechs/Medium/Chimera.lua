@@ -8,7 +8,7 @@ local Chimera = Medium:New{
 }
 
 local CMA1S = Chimera:New{
-	description         = "Medium Skirmisher",
+	description         = "Medium Brawler",
 	weapons	= {	
 		[1] = {
 			name	= "ERLBL",

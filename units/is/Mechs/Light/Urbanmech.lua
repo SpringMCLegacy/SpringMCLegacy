@@ -58,7 +58,7 @@ local UMR60L = Urbanmech:New{
 }
 
 local UMR70 = Urbanmech:New{
-	description         = "Light Striker",
+	description         = "Light Multirole",
 	weapons = {	
 		[1] = {
 			name	= "RAC5",
@@ -83,7 +83,7 @@ local UMR70 = Urbanmech:New{
 }
 
 local UMR69 = Urbanmech:New{
-	description         = "Light Striker",
+	description         = "Light Multirole",
 	weapons = {	
 		[1] = {
 			name	= "UAC10",
@@ -108,7 +108,7 @@ local UMR69 = Urbanmech:New{
 }
 
 local UMR68 = Urbanmech:New{
-	description         = "Light Striker",
+	description         = "Light Multirole",
 	weapons = {	
 		[1] = {
 			name	= "MRM30",

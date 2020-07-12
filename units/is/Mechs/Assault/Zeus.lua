@@ -7,7 +7,7 @@ local Zeus = Assault:New{
 }
 
 local ZEU5S = Zeus:New{
-	description         = "Assault Striker",
+	description         = "Assault Multirole",
 	weapons 		= {	
 		[1] = {
 			name	= "UAC5",
@@ -40,7 +40,7 @@ local ZEU5S = Zeus:New{
 }
 
 local ZEU9S = Zeus:New{
-	description         = "Assault Striker",
+	description         = "Assault Multirole",
 	weapons 		= {	
 		[1] = {
 			name	= "ERPPC",
@@ -72,7 +72,7 @@ local ZEU9S = Zeus:New{
 }
 
 local ZEU9S2 = Zeus:New{
-	description         = "Assault Sniper",
+	description         = "Assault Ranged",
 	weapons 		= {	
 		[1] = {
 			name	= "Gauss",

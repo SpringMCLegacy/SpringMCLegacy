@@ -8,7 +8,7 @@ local DuanGung = Light:New{
 }
 
 local D9G9 = DuanGung:New{
-	description         = "Light LRM Support",
+	description         = "Light Ranged",
 	weapons	= {	
 		[1] = {
 			name	= "LRM10",

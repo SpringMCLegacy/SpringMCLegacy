@@ -7,7 +7,7 @@ local Raptor = Light:New{
 }
 
 local RTX1OP = Raptor:New{
-	description         = "Light Missile Support",
+	description         = "Light Ranged",
 	weapons = {	
 		[1] = {
 			name	= "LRM5",
@@ -43,7 +43,7 @@ local RTX1OP = Raptor:New{
 }
 
 local RTX1OA = Raptor:New{
-	description         = "Light Striker",
+	description         = "Light Multirole",
 	weapons = {	
 		[1] = {
 			name	= "LBL",
@@ -71,7 +71,7 @@ local RTX1OA = Raptor:New{
 }
 
 local RTX1OB = Raptor:New{
-	description         = "Light Skirmisher",
+	description         = "Light Brawler",
 	weapons = {	
 		[1] = {
 			name	= "SRM6",

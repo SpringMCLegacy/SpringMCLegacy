@@ -8,7 +8,7 @@ local Sentinel = Medium:New{
 }
 
 local STN3L = Sentinel:New{
-	description         = "Medium Striker",
+	description         = "Medium Multirole",
 	weapons = {	
 		[1] = {
 			name	= "UAC5",
@@ -35,7 +35,7 @@ local STN3L = Sentinel:New{
 }
 
 local STN3M = Sentinel:New{
-	description         = "Medium Striker",
+	description         = "Medium Multirole",
 	weapons = {	
 		[1] = {
 			name	= "UAC5",
@@ -60,7 +60,7 @@ local STN3M = Sentinel:New{
 }
 
 local STN4D = Sentinel:New{
-	description         = "Medium Striker",
+	description         = "Medium Multirole",
 	weapons = {	
 		[1] = {
 			name	= "RAC5",

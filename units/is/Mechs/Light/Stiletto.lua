@@ -8,7 +8,7 @@ local Stiletto = Light:New{
 }
 
 local STO4A = Stiletto:New{
-	description         = "Light Missile Support",
+	description         = "Light Scout",
 	weapons	= {	
 		[1] = {
 			name	= "SSRM2",

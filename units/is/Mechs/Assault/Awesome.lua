@@ -8,7 +8,7 @@ local Awesome = Assault:New{
 }
 	
 local AWS8Q = Awesome:New{
-	description         = "Assault Striker",
+	description         = "Assault Ranged",
 	weapons	= {	
 		[1] = {
 			name	= "PPC",
@@ -37,7 +37,7 @@ local AWS8Q = Awesome:New{
 }
 
 local AWS9M = Awesome:New{
-	description         = "Assault Striker",
+	description         = "Assault Multirole",
 	weapons	= {	
 		[1] = {
 			name	= "ERPPC",

@@ -8,7 +8,7 @@ local Thanatos = Heavy:New{
 }
 
 local TNS4S = Thanatos:New{
-	description         = "Heavy Skirmisher",
+	description         = "Heavy Brawler",
 	weapons = {	
 		[1] = {
 			name	= "ERLBL",

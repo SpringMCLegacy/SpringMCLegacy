@@ -8,7 +8,7 @@ local Avatar = Heavy:New{
 }
 
 local AV1OP = Avatar:New{
-	description         = "Heavy Striker",
+	description         = "Heavy Multirole",
 	weapons	= {	
 		[1] = {
 			name	= "LBX10",
@@ -75,7 +75,7 @@ local AV1OA = Avatar:New{
 	},
 
     customparams = {
-		variant			= "AV1-O A",
+		variant			= "AV1-O cfg A",
 		speed			= 60,
 		price			= 14810,
 		heatlimit 		= 20,

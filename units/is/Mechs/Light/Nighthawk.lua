@@ -8,7 +8,7 @@ local Nighthawk = Light:New{
 }
 
 local NTK2Q = Nighthawk:New{
-	description         = "Light Striker",
+	description         = "Light Multirole",
 	weapons	= {	
 		[1] = {
 			name	= "ERLBL",
@@ -32,7 +32,7 @@ local NTK2Q = Nighthawk:New{
 }
 
 local NTK2S = Nighthawk:New{
-	description         = "Light Striker",
+	description         = "Light Ranged",
 	weapons	= {	
 		[1] = {
 			name	= "ERLBL",
