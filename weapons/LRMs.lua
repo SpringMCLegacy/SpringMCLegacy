@@ -15,7 +15,7 @@ local LRM_Class = Weapon:New{
 	dance 					= 100,
 	trajectoryHeight		= 1,
 	tracks					= true,
-	turnRate				= 2500,
+	turnRate				= 3000,
 	flightTime				= 10,
 	weaponTimer				= 20,
 	areaOfEffect            = 20,
@@ -70,7 +70,7 @@ local LRM20 = LRM_Class:New{
 
 local ALRM5 = LRM_Class:New{
 	name                    = "A.LRM-5",
-	turnRate				= 3000,
+	turnRate				= 4000,
 	burst					= 5,
 	customparams = {
 		heatgenerated		= 3,
@@ -79,7 +79,7 @@ local ALRM5 = LRM_Class:New{
 
 local ALRM10 = LRM_Class:New{
 	name                    = "A.LRM-10",
-	turnRate				= 3000,
+	turnRate				= 4000,
 	burst					= 10,
 	customparams = {
 		heatgenerated		= 6,
@@ -88,7 +88,7 @@ local ALRM10 = LRM_Class:New{
 
 local ALRM15 = LRM_Class:New{
 	name                    = "A.LRM-15",
-	turnRate				= 3500,
+	turnRate				= 4000,
 	burst					= 15,
 	customparams = {
 		heatgenerated		= 7.5,
@@ -97,7 +97,7 @@ local ALRM15 = LRM_Class:New{
 
 local ALRM20 = LRM_Class:New{
 	name                    = "A.LRM-20",
-	turnRate				= 3500,
+	turnRate				= 4000,
 	burst					= 20,
 	customparams = {
 		heatgenerated		= 9,
