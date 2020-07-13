@@ -8,7 +8,7 @@ local ShaYu = Medium:New{
 }
 
 local SYU2B = ShaYu:New{
-	description         = "Medium Multirole",
+	description         = "Medium Ranged",
 	weapons	= {	
 		[1] = {
 			name	= "ERLBL",

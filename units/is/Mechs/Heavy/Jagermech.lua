@@ -8,7 +8,7 @@ local Jagermech = Heavy:New{
 }
 
 local JM6DD = Jagermech:New{
-	description         = "Heavy Multirole",
+	description         = "Heavy Ranged",
 	weapons = {	
 		[1] = {
 			name	= "UAC5",

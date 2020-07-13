@@ -36,7 +36,7 @@ local VTR9B = Victor:New{
 }
 
 local VTR9D = Victor:New{
-	description         = "Assault Multirole",
+	description         = "Assault Brawler",
 	weapons 		= {	
 		[1] = {
 			name	= "Gauss",
@@ -65,7 +65,7 @@ local VTR9D = Victor:New{
 }
 
 local VTR9K = Victor:New{
-	description         = "Assault Multirole",
+	description         = "Assault Brawler",
 	weapons 		= {	
 		[1] = {
 			name	= "Gauss",

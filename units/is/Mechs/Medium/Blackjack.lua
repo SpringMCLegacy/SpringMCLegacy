@@ -9,7 +9,7 @@ local Blackjack = Medium:New{
 }
 
 local BJ2 = Blackjack:New{
-	description         = "Medium Multirole",
+	description         = "Medium Ranged",
 	weapons	= {	
 		[1] = {
 			name	= "ERLBL",
@@ -70,7 +70,7 @@ local BJ3 = Blackjack:New{
 }
 
 local BJ4 = Blackjack:New{
-	description         = "Medium Multirole",
+	description         = "Medium Ranged",
 	weapons	= {	
 		[1] = {
 			name	= "AC5",

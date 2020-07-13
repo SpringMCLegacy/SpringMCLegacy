@@ -40,7 +40,7 @@ local RFL5D = Rifleman:New{
 }
 
 local RFL5M = Rifleman:New{
-	description         = "Heavy Multirole",
+	description         = "Heavy Ranged",
 	weapons = {	
 		[1] = {
 			name	= "UAC5",

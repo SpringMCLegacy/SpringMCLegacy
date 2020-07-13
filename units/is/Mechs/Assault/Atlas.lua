@@ -46,7 +46,7 @@ local AS7D = Atlas:New{
 }
 
 local AS7K = Atlas:New{
-	description         = "Assault Multirole",
+	description         = "Assault Ranged",
 	weapons 		= {	
 		[1] = {
 			name	= "Gauss",
@@ -127,7 +127,7 @@ local AS7S = Atlas:New{
 }
 
 local AS7S2 = Atlas:New{
-	description         = "Assault Multirole",
+	description         = "Assault Ranged",
 	weapons 		= {	
 		[1] = {
 			name	= "HeavyGauss",

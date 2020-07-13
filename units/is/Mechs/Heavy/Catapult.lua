@@ -129,7 +129,7 @@ local CPLTC4 = Catapult:New{
 }
 	
 local CPLTK2 = Catapult:New{
-	description         = "Heavy Multirole",
+	description         = "Heavy Ranged",
 	weapons 		= {	
 		[1] = {
 			name	= "PPC",
