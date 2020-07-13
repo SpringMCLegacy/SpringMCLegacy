@@ -16,7 +16,7 @@ function widget:UnitCreated(unitID, unitDefID)
 	if unitDef.name:find("dropzone") then
 		local x,y,z = Spring.GetUnitPosition(unitID)
 		Spring.SelectUnitArray({unitID})
-		Spring.GiveOrderToUnit(unitID, Spring.GetGameRulesParam("CMD_MENU_LIGHTMECH"), {}, {})
+		Spring.GiveOrderToUnit(unitID, Spring.GetGameRulesParam("CMD_MENU_SCOUTMECH"), {}, {})
 		Spring.SetCameraTarget(x,y,z)
 		widgetHandler:RemoveWidget()
 	end
