@@ -120,9 +120,9 @@ local HBK5M = Hunchback:New{
 	},
 		
 	customparams = {
-		variant			= "HBK-5M",
+		variant			= "HBK-5N",
 		speed			= 60,
-		price			= 20000,
+		price			= 10410,
 		heatlimit 		= 26,
 		armor			= {type = "standard", tons = 11},
 		maxammo 		= {ac20 = 2},

@@ -71,7 +71,7 @@ local RTX1OA = Raptor:New{
 }
 
 local RTX1OB = Raptor:New{
-	description         = "Light Brawler",
+	description         = "Light Scout",
 	weapons = {	
 		[1] = {
 			name	= "SRM6",
