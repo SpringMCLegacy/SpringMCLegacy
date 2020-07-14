@@ -582,7 +582,7 @@ function script.TransportDrop (passengerID, x, y, z)
 		resupplied = false
 		restored = false
 		-- wait for current passenger to get out
-		Sleep(1000)
+		Sleep(2000)
 		Spring.SetUnitBlocking(unitID, true, true)
 	end
 end
