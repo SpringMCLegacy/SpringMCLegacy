@@ -91,10 +91,10 @@ local getOutCmdDesc = {
 	tooltip = "Emergency unload",
 }
 
-local function Uplinkoutpost(unitID, level)
+local function UplinkUpgrade(unitID, level)
 	uplinkLevels[unitID] = level
 end
-GG.Uplinkoutpost = Uplinkoutpost
+GG.UplinkUpgrade = UplinkUpgrade
 
 function gadget:UnitCreated(unitID, unitDefID, teamID, builderID)
 	local unitDef = UnitDefs[unitDefID]
