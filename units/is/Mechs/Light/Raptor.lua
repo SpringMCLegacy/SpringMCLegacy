@@ -43,7 +43,7 @@ local RTX1OP = Raptor:New{
 }
 
 local RTX1OA = Raptor:New{
-	description         = "Light Multirole",
+	description         = "Light Ranged",
 	weapons = {	
 		[1] = {
 			name	= "LBL",

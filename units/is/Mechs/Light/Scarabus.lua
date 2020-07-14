@@ -8,7 +8,7 @@ local Scarabus = Light:New{
 }
 
 local SCB9A = Scarabus:New{
-	description         = "Light Brawler",
+	description         = "Light Scout",
 	weapons	= {	
 		[1] = {
 			name	= "MBL",
