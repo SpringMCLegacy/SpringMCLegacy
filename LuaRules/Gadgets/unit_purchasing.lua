@@ -468,20 +468,23 @@ end
 
 -- TODO: Issues if dropzone is 'flipped' to another beacon
 function DropshipLeft(teamID) -- called by Dropship once it has left, to enable "Submit Order"
-	local unitID = teamDropZones[teamID]
-	local beaconID = GG.dropZoneBeaconIDs[teamID]
-	orderStatus[teamID] = 0
-	if unitID then -- dropzone might have died in the meantime
-		UpdateButtons(teamID)
+	local dead = select(3, Spring.GetTeamInfo(teamID))
+	if not dead then
+		local unitID = teamDropZones[teamID]
+		local beaconID = GG.dropZoneBeaconIDs[teamID]
+		orderStatus[teamID] = 0
+		if unitID then -- dropzone might have died in the meantime
+			UpdateButtons(teamID)
+		end
+		-- Dropship is no longer ACTIVE, it is entering COOLDOWN
+		GG.PlaySoundForTeam(teamID, "BB_Reinforcements_Inbound_ETA_30", 1)
+		dropShipStatus[teamID] = 2
+		SetTeamRulesParam(teamID, "STATUS", 2)
+		local dropShipDef = UnitDefs[teamDropShipTypes[teamID].def]
+		local enableFrame = GetGameFrame() + dropShipDef.customParams.cooldown
+		coolDowns[teamID] = enableFrame
+		Spring.SetTeamRulesParam(teamID, "DROPSHIP_COOLDOWN", enableFrame) -- frame this team can call dropship again
 	end
-	-- Dropship is no longer ACTIVE, it is entering COOLDOWN
-	GG.PlaySoundForTeam(teamID, "BB_Reinforcements_Inbound_ETA_30", 1)
-	dropShipStatus[teamID] = 2
-	SetTeamRulesParam(teamID, "STATUS", 2)
-	local dropShipDef = UnitDefs[teamDropShipTypes[teamID].def]
-	local enableFrame = GetGameFrame() + dropShipDef.customParams.cooldown
-	coolDowns[teamID] = enableFrame
-	Spring.SetTeamRulesParam(teamID, "DROPSHIP_COOLDOWN", enableFrame) -- frame this team can call dropship again
 end
 GG.DropshipLeft = DropshipLeft
 
