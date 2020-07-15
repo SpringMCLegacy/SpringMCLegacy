@@ -11,6 +11,7 @@ function widget:GetInfo()
 end
 
 local MechDefs = {}
+local TowerDefs = {}
 local MECH_TEX_SELECT = ":a:luaui/images/mech_select.png"
 local MECH_TEX = ":a:luaui/images/mech.png"
 
@@ -75,6 +76,8 @@ function widget:Initialize()
 			DZDefs[unitDefID] = true
 		elseif unitDef.customParams.baseclass == "mech" then
 			MechDefs[unitDefID] = true
+		elseif unitDef.customParams.baseclass == "tower" then
+			TowerDefs[unitDefID] = true
 		end
 	end	
 
@@ -131,6 +134,11 @@ function widget:DrawWorldPreUnit()
 				glDrawListAtUnit(unitID, DZ_LIST, false, radius, 1.0, radius, 0, 0, 1.0, 0)				
 			elseif UnitDefs[unitDefID].customParams.baseclass == "outpost" then -- TODO: cache
 				local radius = 15 * UnitDefs[unitDefID].xsize
+				glTexture(OUTPOST_TEX)
+				glColor(r, g, b, selected and 0.9 or 0.65)
+				glDrawListAtUnit(unitID, DZ_LIST, false, radius, 1.0, radius, 0, 0, 1.0, 0)								
+			elseif TowerDefs[unitDefID] and not Spring.GetUnitNeutral(unitID) then -- ewww
+				local radius = 5 * UnitDefs[unitDefID].xsize
 				glTexture(OUTPOST_TEX)
 				glColor(r, g, b, selected and 0.9 or 0.65)
 				glDrawListAtUnit(unitID, DZ_LIST, false, radius, 1.0, radius, 0, 0, 1.0, 0)								

@@ -340,7 +340,7 @@ function gadget:UnitCreated(unitID, unitDefID, teamID, builderID)
 	elseif unitDefID == BEACON_POINT_ID then
 		AddOutpostOptions(unitID)
 	elseif unitDefID == TURRETCONTROL_ID then
-		buildLimits[unitID] = {["turret"] = 4, ["energy"] = 1, ["missile"] = 1}
+		buildLimits[unitID] = {["turret"] = 2, ["energy"] = 1, ["missile"] = 1}
 		LimitTowerType(unitID, teamID, "energy") -- reduce to 0 so we get the BP greyed out
 		LimitTowerType(unitID, teamID, "missile") -- reduce to 0 so we get the BP greyed out
 	elseif cp and cp.baseclass == "tower" then

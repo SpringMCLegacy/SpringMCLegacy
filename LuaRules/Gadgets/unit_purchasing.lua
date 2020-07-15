@@ -130,6 +130,8 @@ for i, typeString in ipairs(typeStrings) do
 end
 
 local unitTypes = {} -- unitTypes[unitDefID] = "lightmech" etc from typeStrings
+local currMenu = {} -- [dropzoneID] = unitType
+local locked = {} -- unitDefID = true
 local dropShipTypes = {} -- dropShipTypes[unitDefID] = "mech", "vehicle" or "outpost"
 local unitSlotChanges = {} -- unitSlotChanges = 1 or 0.5
 
@@ -163,44 +165,6 @@ local function GetWeight(mass) -- still used by spamBot fore 'DireBolical' diffi
 	return weight
 end
 GG.GetWeight = GetWeight
-
-local locked = {} -- unitDefID = true
-local function 	LockHeavy(dropZone, lock) 
-	--EditUnitCmdDesc(dropZone, FindUnitCmdDesc(dropZone, menuCmdDescs[3].id), {disabled = false})
-	--EditUnitCmdDesc(dropZone, FindUnitCmdDesc(dropZone, menuCmdDescs[4].id), {disabled = false})
-	local cmdDescs = GetUnitCmdDescs(dropZone)
-	for i = 1, #cmdDescs do
-		local defID = cmdDescs[i].id
-		if defID < 0 then
-			local class = GetWeight(UnitDefs[-defID].mass)
-			if class == "heavy" or class == "assault" then
-				--Spring.Echo("Hiding", UnitDefs[-defID].name, class)
-				locked[-defID] = lock
-				EditUnitCmdDesc(dropZone, i, {hidden = lock})		
-			end
-		end
-	end
-end
-
-local function TeamDropshipUpgrade(teamID)
-	local side = GG.teamSide[teamID]
-	local oldDefID = teamDropShipTypes[teamID].def
-	local newTier = teamDropShipTypes[teamID].tier + 1
-	if newTier <= #(GG.dropShipProgression) then -- another tier is available beyond what we currently have
-		local newDefID = UnitDefNames[side .. "_dropship_" .. GG.dropShipProgression[newTier]].id
-		teamDropShipTypes[teamID] = {def = newDefID, tier = newTier}
-		local maxTonnage = UnitDefs[newDefID].customParams.maxtonnage
-		local tonnageIncrease = maxTonnage - UnitDefs[oldDefID].customParams.maxtonnage
-		Spring.SetTeamResource(teamID, "es", maxTonnage)
-		Spring.AddTeamResource(teamID, "e", tonnageIncrease)
-		teamDropShipHPs[teamID] = nil -- reset HP
-		-- first upgrade unlocks heavy and assault mechs
-		LockHeavy(teamDropZones[teamID], false)
-	else -- max upgrade reached, disable button
-		Spring.SendMessageToTeam(teamID, "Dropship Fully Upgraded!")
-	end
-end
-GG.TeamDropshipUpgrade = TeamDropshipUpgrade
 
 local function TeamSlotsRemaining(teamID)
 	local slots = 0
@@ -385,9 +349,12 @@ local function ClearBuildOptions(unitID, everything)
 end
 
 local function ShowBuildOptionsByType(unitID, unitType)
+	Spring.Echo(unitType)
+	currMenu[unitID] = unitType
 	for i, cmdDesc in ipairs(Spring.GetUnitCmdDescs(unitID)) do
-		if cmdDesc.id < 0 and unitTypes[-cmdDesc.id] == unitType then
-			EditUnitCmdDesc(unitID, i, {hidden = locked[-cmdDesc.id] and true or false})
+		if cmdDesc.id < 0 then
+			local hide = locked[-cmdDesc.id] or unitTypes[-cmdDesc.id] ~= unitType -- nil or false = false, false or nil = nil, thanks lua
+			EditUnitCmdDesc(unitID, i, {hidden = hide})
 		end
 	end
 end
@@ -398,6 +365,45 @@ local function ResetBuildQueue(unitID)
 		GG.Delay.DelayCall(Spring.GiveOrderToUnit,{unitID, CMD.REMOVE, {order.tag}, {"ctrl"}},1)
 	end
 end
+
+local function 	LockHeavy(dropZone, lock) 
+	--EditUnitCmdDesc(dropZone, FindUnitCmdDesc(dropZone, menuCmdDescs[3].id), {disabled = false})
+	--EditUnitCmdDesc(dropZone, FindUnitCmdDesc(dropZone, menuCmdDescs[4].id), {disabled = false})
+	local cmdDescs = GetUnitCmdDescs(dropZone)
+	for i = 1, #cmdDescs do
+		local defID = cmdDescs[i].id
+		if defID < 0 then
+			local class = GetWeight(UnitDefs[-defID].mass)
+			if class == "heavy" or class == "assault" then
+				--Spring.Echo("Hiding", UnitDefs[-defID].name, class)
+				locked[-defID] = lock
+				EditUnitCmdDesc(dropZone, i, {hidden = lock})		
+			end
+		end
+	end
+	-- show only the currently selected menu
+	ShowBuildOptionsByType(dropZone, currMenu[dropZone])
+end
+
+local function TeamDropshipUpgrade(teamID)
+	local side = GG.teamSide[teamID]
+	local oldDefID = teamDropShipTypes[teamID].def
+	local newTier = teamDropShipTypes[teamID].tier + 1
+	if newTier <= #(GG.dropShipProgression) then -- another tier is available beyond what we currently have
+		local newDefID = UnitDefNames[side .. "_dropship_" .. GG.dropShipProgression[newTier]].id
+		teamDropShipTypes[teamID] = {def = newDefID, tier = newTier}
+		local maxTonnage = UnitDefs[newDefID].customParams.maxtonnage
+		local tonnageIncrease = maxTonnage - UnitDefs[oldDefID].customParams.maxtonnage
+		Spring.SetTeamResource(teamID, "es", maxTonnage)
+		Spring.AddTeamResource(teamID, "e", tonnageIncrease)
+		teamDropShipHPs[teamID] = nil -- reset HP
+		-- first upgrade unlocks heavy and assault mechs
+		LockHeavy(teamDropZones[teamID], false)
+	else -- max upgrade reached, disable button
+		Spring.SendMessageToTeam(teamID, "Dropship Fully Upgraded!")
+	end
+end
+GG.TeamDropshipUpgrade = TeamDropshipUpgrade
 
 local L = {"L"}
 local C = {"C"}
