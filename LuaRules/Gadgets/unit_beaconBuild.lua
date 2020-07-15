@@ -360,7 +360,9 @@ function gadget:UnitDestroyed(unitID, unitDefID, teamID, attackerID, attackerDef
 		local towerType = towerDefIDs[unitDefID]
 		LimitTowerType(towerOwnerID, teamID, towerType, 1) -- increase limit
 		towerOwners[unitID] = nil
-		ownedTowers[towerOwnerID][unitID] = nil
+		if ownedTowers[towerOwnerID] then -- can be nil if control died, as this does not delete towerOwners
+			ownedTowers[towerOwnerID][unitID] = nil
+		end
 	end
 	if DROPZONE_IDS[unitDefID] then -- unit was a team's dropzone, reset outpost options
 		--ToggleOutpostOptions(dropZoneBeaconIDs[teamID], true) -- REMOVE
