@@ -219,7 +219,7 @@ function EnqueueDropship(beaconID, beaconPointID, teamID, info, priority)
 	else -- add to the end of the list
 		table.insert(beaconDropshipQueue[beaconID], info)
 	end
-	--Spring.Echo("Adding dropship ", info.dropshipType, " to beacon ", beaconID, beaconPointID, "(queue length " , (#beaconDropshipQueue[beaconID]), ")")
+	Spring.SendMessageToTeam(teamID, "Adding dropship " .. info.dropshipType .. " to beacon " .. beaconID .. " (queue length " .. (#beaconDropshipQueue[beaconID]) .. ")")
 	-- If it's the first item in queue, start emptying
 	if #beaconDropshipQueue[beaconID] == 1 then
 		NextDropshipQueueItem(beaconID, teamID)
