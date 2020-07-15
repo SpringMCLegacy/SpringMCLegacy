@@ -6,7 +6,7 @@ local Outpost_VehiclePad = Outpost:New{
 	buildCostMetal      = 10000,
 
 	collisionVolumeOffsets = [[0 2 0]],
-	collisionVolumeScales = [[125 12 125]],
+	collisionVolumeScales = [[70 12 70]],
 	collisionVolumeType = "cylY",
 
 	customparams = {
