@@ -149,9 +149,9 @@ local RFL7M = Rifleman:New{
 }
 
 return lowerkeys({ 
-	["FS_Rifleman_RFL5D"] = RFL5D:New(),
-	["FS_Rifleman_RFL6X"] = RFL6X:New(),
-	["LA_Rifleman_RFL5M"] = RFL5M:New(),
-	["FW_Rifleman_RFL5M"] = RFL5M:New(),
+	--["FS_Rifleman_RFL5D"] = RFL5D:New(),
+	--["FS_Rifleman_RFL6X"] = RFL6X:New(),
+	--["LA_Rifleman_RFL5M"] = RFL5M:New(),
+	--["FW_Rifleman_RFL5M"] = RFL5M:New(),
 	["FW_Rifleman_RFL7M"] = RFL7M:New(),
 })

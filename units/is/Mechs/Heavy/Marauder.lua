@@ -240,12 +240,12 @@ local MAD9M = Marauder:New{
 
 
 return lowerkeys({
-	["FS_Marauder_MAD5D"] = MAD5D:New(),
-	["FS_Marauder_MAD7D"] = MAD7D:New(),
-	["DC_Marauder_MAD5D"] = MAD5D:New(),
+	--["FS_Marauder_MAD5D"] = MAD5D:New(),
+	--["FS_Marauder_MAD7D"] = MAD7D:New(),
+	--["DC_Marauder_MAD5D"] = MAD5D:New(),
 	["LA_Marauder_MAD5S"] = MAD5S:New(),
-	["LA_Marauder_MAD9S"] = MAD9S:New(),
-	["FW_Marauder_MAD5M"] = MAD5M:New(),
-	["FW_Marauder_MAD9M"] = MAD9M:New(),
-	["CC_Marauder_MAD5L"] = MAD5L:New(),
+	--["LA_Marauder_MAD9S"] = MAD9S:New(),
+	--["FW_Marauder_MAD5M"] = MAD5M:New(),
+	--["FW_Marauder_MAD9M"] = MAD9M:New(),
+	--["CC_Marauder_MAD5L"] = MAD5L:New(),
 })

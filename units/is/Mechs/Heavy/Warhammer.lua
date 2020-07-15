@@ -188,7 +188,7 @@ local WHM4L = Warhammer:New{
 		
 return lowerkeys({
 	["FS_Warhammer_WHM6D"] = WHM6D:New(),
-	["DC_Warhammer_WHM6K"] = WHM6K:New(),
+	--["DC_Warhammer_WHM6K"] = WHM6K:New(),
 	["LA_Warhammer_WHM7S"] = WHM7S:New(),
 	["FW_Warhammer_WHM7M"] = WHM7M:New(),
 	["CC_Warhammer_WHM4L"] = WHM4L:New(),

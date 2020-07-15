@@ -133,9 +133,9 @@ local UMR68 = Urbanmech:New{
 }
 
 return lowerkeys({
-	["CC_Urbanmech_UMR63"] = UMR63:New(),
+	--["CC_Urbanmech_UMR63"] = UMR63:New(),
 	["CC_Urbanmech_UMR60L"] = UMR60L:New(),
-	["FS_Urbanmech_UMR70"] = UMR70:New(),
-	["FW_Urbanmech_UMR69"] = UMR69:New(),
-	["DC_Urbanmech_UMR68"] = UMR68:New(),
+	--["FS_Urbanmech_UMR70"] = UMR70:New(),
+	--["FW_Urbanmech_UMR69"] = UMR69:New(),
+	--["DC_Urbanmech_UMR68"] = UMR68:New(),
 })

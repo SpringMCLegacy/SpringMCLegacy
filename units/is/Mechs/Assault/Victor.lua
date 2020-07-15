@@ -213,11 +213,11 @@ local VTR11D = Victor:New{
 return lowerkeys({
 	CC_Victor_VTR9B = VTR9B:New(),
 	CC_Victor_VTR10L = VTR10L:New(),
-	DC_Victor_VTR9B = VTR9B:New(),
-	DC_Victor_VTR9K = VTR9K:New(),
+	--DC_Victor_VTR9B = VTR9B:New(),
+	--DC_Victor_VTR9K = VTR9K:New(),
 	FS_Victor_VTR9B = VTR9B:New(),
-	FS_Victor_VTR9D = VTR9D:New(),
-	FS_Victor_VTR10D = VTR10D:New(),
+	--FS_Victor_VTR9D = VTR9D:New(),
+	--FS_Victor_VTR10D = VTR10D:New(),
 	FS_Victor_VTR11D = VTR11D:New(),
 	LA_Victor_VTR9S = VTR9S:New(),
 })

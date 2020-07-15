@@ -76,5 +76,5 @@ local UZL3S = Uziel:New{
 
 return lowerkeys({ 
 	["LA_Uziel_UZL2S"] = UZL2S:New(),
-	["LA_Uziel_UZL3S"] = UZL3S:New(),
+	--["LA_Uziel_UZL3S"] = UZL3S:New(),
 })

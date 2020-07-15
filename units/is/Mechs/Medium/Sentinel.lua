@@ -81,8 +81,8 @@ local STN4D = Sentinel:New{
 }
 
 return lowerkeys({
-	["LA_Sentinel_STN3L"] = STN3L:New(),
-	["DC_Sentinel_STN3M"] = STN3M:New(),
-	["FW_Sentinel_STN3M"] = STN3M:New(),
-	["FS_Sentinel_STN4D"] = STN4D:New(),
+	--["LA_Sentinel_STN3L"] = STN3L:New(),
+	--["DC_Sentinel_STN3M"] = STN3M:New(),
+	--["FW_Sentinel_STN3M"] = STN3M:New(),
+	--["FS_Sentinel_STN4D"] = STN4D:New(),
 })

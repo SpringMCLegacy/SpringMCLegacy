@@ -132,10 +132,10 @@ local HBK5M = Hunchback:New{
 
 return lowerkeys({
 	["FS_Hunchback_HBK4G"] = HBK4G:New(),
-	["FS_Hunchback_HBK4P"] = HBK4P:New(),
+	--["FS_Hunchback_HBK4P"] = HBK4P:New(),
 	["DC_Hunchback_HBK4G"] = HBK4G:New(),
 	["CC_Hunchback_HBK4G"] = HBK4G:New(),
-	["CC_Hunchback_HBK4P"] = HBK4P:New(),
+	--["CC_Hunchback_HBK4P"] = HBK4P:New(),
 	["LA_Hunchback_HBK5S"] = HBK5S:New(),
 	["FW_Hunchback_HBK5M"] = HBK5M:New(),
 	["FW_Hunchback_HBK4P"] = HBK4P:New(),

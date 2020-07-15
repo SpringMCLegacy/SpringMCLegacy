@@ -157,9 +157,9 @@ local AS7S2 = Atlas:New{
 
 return lowerkeys({
 	FS_Atlas_AS7D = AS7D:New(),
-	FW_Atlas_AS7D = AS7D:New(),
-	CC_Atlas_AS7D = AS7D:New(),
-	DC_Atlas_AS7K = AS7K:New(),
-	LA_Atlas_AS7S = AS7S:New(),
+	--FW_Atlas_AS7D = AS7D:New(),
+	--CC_Atlas_AS7D = AS7D:New(),
+	--DC_Atlas_AS7K = AS7K:New(),
+	--LA_Atlas_AS7S = AS7S:New(),
 	LA_Atlas_AS7S2 = AS7S2:New(),
 })

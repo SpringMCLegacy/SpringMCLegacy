@@ -79,5 +79,5 @@ local OSR4D = Osiris:New{
 
 return lowerkeys({
 	["FS_Osiris_OSR3D"] = OSR3D:New(),
-	["FS_Osiris_OSR4D"] = OSR4D:New(),
+	--["FS_Osiris_OSR4D"] = OSR4D:New(),
 })

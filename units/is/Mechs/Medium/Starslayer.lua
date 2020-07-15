@@ -72,6 +72,6 @@ local STY3D = Starslayer:New{
 }
 
 return lowerkeys({ 
-	["FS_Starslayer_STY3D"] = STY3D:New(),
+	--["FS_Starslayer_STY3D"] = STY3D:New(),
 	["LA_Starslayer_STY3C"] = STY3C:New(),
 })

@@ -47,5 +47,5 @@ local FS9S = Firestarter:New{
 }
 
 return lowerkeys({
-	["LA_Firestarter_FS9S"] = FS9S:New(),
+	--["LA_Firestarter_FS9S"] = FS9S:New(),
 })

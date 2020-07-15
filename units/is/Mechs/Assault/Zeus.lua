@@ -100,7 +100,7 @@ local ZEU9S2 = Zeus:New{
 }
 
 return lowerkeys({
-	LA_Zeus_ZEU5S = ZEU5S:New(),
-	LA_Zeus_ZEU9S = ZEU9S:New(),
+	--LA_Zeus_ZEU5S = ZEU5S:New(),
+	--LA_Zeus_ZEU9S = ZEU9S:New(),
 	LA_Zeus_ZEU9S2 = ZEU9S2:New(),
 })

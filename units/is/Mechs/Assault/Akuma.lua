@@ -45,5 +45,5 @@ local AKUX1 = Akuma:New{
 }
 
 return lowerkeys({
-	["DC_Akuma_AKUX1"] = AKUX1:New(),
+	--["DC_Akuma_AKUX1"] = AKUX1:New(),
 })

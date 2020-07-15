@@ -79,7 +79,7 @@ local AWS9M = Awesome:New{
 	
 return lowerkeys({ 
 	["CC_Awesome_AWS8Q"] = AWS8Q:New(),
-	["DC_Awesome_AWS8Q"] = AWS8Q:New(),
+	--["DC_Awesome_AWS8Q"] = AWS8Q:New(),
 	["FS_Awesome_AWS8Q"] = AWS8Q:New(),
 	["LA_Awesome_AWS8Q"] = AWS8Q:New(),
 	["FW_Awesome_AWS9M"] = AWS9M:New(),

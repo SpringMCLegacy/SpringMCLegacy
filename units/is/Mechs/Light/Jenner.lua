@@ -38,5 +38,5 @@ local JR7K = Jenner:New{
 }
 
 return lowerkeys({
-	["DC_Jenner_JR7K"] = JR7K:New(),
+	--["DC_Jenner_JR7K"] = JR7K:New(),
 })

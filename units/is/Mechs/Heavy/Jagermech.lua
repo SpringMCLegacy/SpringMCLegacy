@@ -134,12 +134,12 @@ local JM7F = Jagermech:New{
 }
 
 return lowerkeys({ 
-	["DC_Jagermech_JM7D"] = JM7D:New(),
+	--["DC_Jagermech_JM7D"] = JM7D:New(),
 	["FS_Jagermech_JM6DD"] = JM6DD:New(),
-	["FS_Jagermech_JM7D"] = JM7D:New(),
+	--["FS_Jagermech_JM7D"] = JM7D:New(),
 	["FS_Jagermech_JM7F"] = JM7F:New(),
-	["FW_Jagermech_JM6DD"] = JM6DD:New(),
+	--["FW_Jagermech_JM6DD"] = JM6DD:New(),
 	["LA_Jagermech_JM6DG"] = JM6DG:New(),
 	["LA_Jagermech_JM7D"] = JM7D:New(),
-	["CC_Jagermech_JM6DD"] = JM6DD:New(),
+	--["CC_Jagermech_JM6DD"] = JM6DD:New(),
 })

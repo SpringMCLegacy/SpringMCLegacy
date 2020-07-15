@@ -51,7 +51,7 @@ local TLN5Z = Talon:New{
 }
 
 return lowerkeys({
-	["LA_Talon_TLN5W"] = TLN5W:New(),
-	["FS_Talon_TLN5Z"] = TLN5Z:New(),
-	["DC_Talon_TLN5Z"] = TLN5Z:New(),
+	--["LA_Talon_TLN5W"] = TLN5W:New(),
+	--["FS_Talon_TLN5Z"] = TLN5Z:New(),
+	--["DC_Talon_TLN5Z"] = TLN5Z:New(),
 })

@@ -244,8 +244,8 @@ local BLR4S = Battlemaster:New{
 }
 
 return lowerkeys({
-	CC_Battlemaster_BLR1G = BLR1G:New(),
-	DC_Battlemaster_BLRK3 = BLRK3:New(),
+	--CC_Battlemaster_BLR1G = BLR1G:New(),
+	--DC_Battlemaster_BLRK3 = BLRK3:New(),
 	FW_Battlemaster_BLR3M = BLR3M:New(),
 	FW_Battlemaster_BLR5M = BLR5M:New(),
 	LA_Battlemaster_BLR4S = BLR4S:New(),

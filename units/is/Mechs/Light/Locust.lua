@@ -160,8 +160,8 @@ local LCT1L = Locust:New{
 
 return lowerkeys({
 	["FW_Locust_LCT3M"] = LCT3M:New(),
-	["FW_Locust_LCT5M"] = LCT5M:New(),
+	--["FW_Locust_LCT5M"] = LCT5M:New(),
 	["FS_Locust_LCT3D"] = LCT3D:New(),
 	["LA_Locust_LCT3S"] = LCT3S:New(),
-	["CC_Locust_LCT1L"] = LCT1L:New(),
+	--["CC_Locust_LCT1L"] = LCT1L:New(),
 })
