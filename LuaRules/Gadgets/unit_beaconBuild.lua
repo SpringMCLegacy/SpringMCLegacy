@@ -52,7 +52,8 @@ local DROPSHIP_DELAY = 10 * 30 -- 10s
 -- Variables
 local towerDefIDs = {} -- towerDefIDs[unitDefID] = "turret" or "energy" or "missile"
 local buildLimits = {} -- buildLimits[unitID] = {turret = 4, ...}
-local towerOwners = {} -- towerOwners[towerID] = beaconID
+local towerOwners = {} -- towerOwners[towerID] = outpostID
+local ownedTowers = {} -- ownedTowers[outpostID] = {towerID = true, ...}
 
 local outpostDefs = {} -- outpostDefs[unitDefID] = {cmdDesc = {cmdDescTable}, cost = cost}
 GG.outpostDefs = outpostDefs -- TODO: check why this is in GG
@@ -341,12 +342,14 @@ function gadget:UnitCreated(unitID, unitDefID, teamID, builderID)
 		AddOutpostOptions(unitID)
 	elseif unitDefID == TURRETCONTROL_ID then
 		buildLimits[unitID] = {["turret"] = 2, ["energy"] = 1, ["missile"] = 1}
+		ownedTowers[unitID] = {}
 		LimitTowerType(unitID, teamID, "energy") -- reduce to 0 so we get the BP greyed out
 		LimitTowerType(unitID, teamID, "missile") -- reduce to 0 so we get the BP greyed out
 	elseif cp and cp.baseclass == "tower" then
 		-- track creation of turrets and their originating beacons so we can give back slots if a turret dies
 		if builderID then -- ignore /give turrets
 			towerOwners[unitID] = builderID
+			ownedTowers[builderID][unitID] = true
 		end
 	end
 end
@@ -357,6 +360,7 @@ function gadget:UnitDestroyed(unitID, unitDefID, teamID, attackerID, attackerDef
 		local towerType = towerDefIDs[unitDefID]
 		LimitTowerType(towerOwnerID, teamID, towerType, 1) -- increase limit
 		towerOwners[unitID] = nil
+		ownedTowers[towerOwnerID][unitID] = nil
 	end
 	if DROPZONE_IDS[unitDefID] then -- unit was a team's dropzone, reset outpost options
 		--ToggleOutpostOptions(dropZoneBeaconIDs[teamID], true) -- REMOVE
@@ -375,6 +379,14 @@ function gadget:UnitDestroyed(unitID, unitDefID, teamID, attackerID, attackerDef
 			-- Re-add outpost options to beacon
 			ToggleOutpostOptions(outpostPointID, true)
 			DropshipBugOut(outpostPointBeaconIDs[outpostPointID], teamID, unitID) -- /give testing won't bug out
+		end
+		if unitDefID == TURRETCONTROL_ID then -- turret control died, kill link and disable
+			for towerID in pairs(ownedTowers[unitID]) do
+				GG.ToggleLink(towerID, teamID, true)
+				local env = Spring.UnitScript.GetScriptEnv(towerID)
+				Spring.UnitScript.CallAsUnit(towerID, env.TeamChange, GAIA_TEAM_ID) -- toggle firing
+			end
+			ownedTowers[unitID] = nil
 		end
 	elseif activeDropships[unitID] then
 		--Spring.Echo("Oh noes, my dropship! Send the next one", attackerID, attackerDefID, attackerTeam)

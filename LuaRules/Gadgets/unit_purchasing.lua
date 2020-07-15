@@ -196,6 +196,7 @@ local function ToggleLink(unitID, teamID, lost)
 		Spring.SetUnitRulesParam(unitID, "LOST_LINK", 0, {inlos = true})
 	end
 end
+GG.ToggleLink = ToggleLink
 
 function TonnageSort(a, b)
 	return a.tonnage > b.tonnage
@@ -349,7 +350,6 @@ local function ClearBuildOptions(unitID, everything)
 end
 
 local function ShowBuildOptionsByType(unitID, unitType)
-	Spring.Echo(unitType)
 	currMenu[unitID] = unitType
 	for i, cmdDesc in ipairs(Spring.GetUnitCmdDescs(unitID)) do
 		if cmdDesc.id < 0 then
