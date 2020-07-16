@@ -450,14 +450,17 @@ local coolDowns = {} -- coolDowns[teamID] = enableFrame
 GG.coolDowns = coolDowns
 
 function UpdateButtons(teamID) -- Toggles Submit Order vs Order Sent
+	Spring.Echo("test 6")
 	local unitID = teamDropZones[teamID]
 	if orderStatus[teamID] == 0 then
+		Spring.Echo("test 7")
 		EditUnitCmdDesc(unitID, FindUnitCmdDesc(unitID, CMD_SEND_ORDER), {disabled = false, name = "Submit \nOrder "})
 		if orderSizes[teamID] == 0 then
 			EditUnitCmdDesc(unitID, FindUnitCmdDesc(unitID, CMD_RUNNING_TOTAL), {name = "Order C-Bills: \n0"})
 			EditUnitCmdDesc(unitID, FindUnitCmdDesc(unitID, CMD_RUNNING_TONS), {name = "Order Tonnes: \n0"})
 		end
 	elseif orderStatus[teamID] == 1 then
+		Spring.Echo("test 8")
 		EditUnitCmdDesc(unitID, FindUnitCmdDesc(unitID, CMD_SEND_ORDER), {--[[disabled = false, ]]name = "Order \nSent "})
 	end
 	--coolDowns[teamID] = math.huge -- TODO: allow orders when ACTIVE? -> will be corrected when the dropship leave
@@ -618,6 +621,7 @@ function gadget:AllowCommand(unitID, unitDefID, teamID, cmdID, cmdParams, cmdOpt
 			end
 			
 		elseif cmdID == CMD_SEND_ORDER then
+			Spring.Echo("test 1")
 			local money = GetTeamResources(teamID, "metal")
 			local cost = orderCosts[unitID] or 0
 			if rightClick then
@@ -630,17 +634,19 @@ function gadget:AllowCommand(unitID, unitDefID, teamID, cmdID, cmdParams, cmdOpt
 					return true
 				else return false end
 			elseif orderStatus[teamID] == 1 then
+				Spring.Echo("test 2")
 				return false -- we already have submitted an order and not cancelled it
 			end
-			if (orderSizes[unitID] or 0) == 0 then return false end -- don't allow empty orders
+			if (orderSizes[unitID] or 0) == 0 then Spring.Echo("test 3") return false end -- don't allow empty orders
 			-- check we can afford the order; possible that a previously affordable order is now too much e.g. if towers have been purchased
 			-- N.B. It should not be possible for available tonnage to change between orders, so we don't need to check that
-			if cost > money then return false end
+			if cost > money then Spring.Echo("test 4") return false end
 			-- We are going ahead with this order. Deduct the cost now.
 			UseTeamResource(teamID, "metal", cost)
 			orderStatus[teamID] = 1
 			UpdateButtons(teamID)
 			GG.Delay.DelayCall(SendCommandFallback, {unitID, unitDefID, teamID, cost}, 16)
+			Spring.Echo("test 5")
 			return true
 		end
 	elseif GG.outpostDefs[unitDefID] then -- an outpost
@@ -714,9 +720,9 @@ function gadget:UnitDestroyed(unitID, unitDefID, teamID, attackerID, attackerDef
 			orderStatus[teamID] = 0
 		end
 		AddTeamResource(teamID, "metal", orderCosts[unitID] or 0)
+		teamDropZones[teamID] = nil
 		orderCosts[unitID] = 0
 		dropZones[unitID] = nil
-		teamDropZones[teamID] = nil
 	elseif unitDefID == C3_ID then
 		LanceControl(teamID, unitID, false)
 	elseif dropShipTypes[unitDefID] then-- main dropship

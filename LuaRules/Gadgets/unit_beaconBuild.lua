@@ -413,21 +413,26 @@ function gadget:UnitDamaged(unitID, unitDefID, teamID, damage)
 	end
 end
 
+function gadget:AllowUnitTransfer(unitID, unitDefID, oldTeam, newTeam, capture)
+	if unitID == dropZoneIDs[oldTeam] then
+		return false
+	end
+	return true
+end
+
+function gadget:AllowResourceTransfer(oldTeamID, newTeamID, res, amount)
+	if res == "e" then 
+		return false 
+	end
+	return true
+end
+
 function gadget:UnitGiven(unitID, unitDefID, newTeam, oldTeam)
 	if unitDefID == BEACON_ID then
 		for i, outpostPointID in pairs(beaconOutpostPointIDs[unitID]) do			
-			DelayCall(TransferUnit, {outpostPointID, newTeam}, 1)
-			--DelayCall(SetUnitNeutral,{outpostPoint, newTeam == GAIA_TEAM_ID}, 2) -- REMOVE
+			DelayCall(TransferUnit, {outpostPointID, newTeam}, 1) -- also transfer all the beacon outpost points
 		end
-		if dropZoneBeaconIDs[oldTeam] == unitID and oldTeam ~= GAIA_TEAM_ID then
-			local dropZoneID = dropZoneIDs[oldTeam]
-			DelayCall(Spring.DestroyUnit, {dropZoneID, false, true}, 1)
-			if newTeam == GAIA_TEAM_ID then -- dropzone given on team death, 
-				-- will be destroyed next frame but needs beaconID in UnitDestroyed
-				dropZoneBeaconIDs[newTeam] = unitID
-			end
-		end
-		DropshipBugOut(unitID, teamID)
+		DropshipBugOut(unitID, oldTeam) -- fly away the dropship if it is active
 	elseif unitDefID == TURRETCONTROL_ID then
 		for towerID, beaconID in pairs(towerOwners) do
 			if beaconID == unitID then
