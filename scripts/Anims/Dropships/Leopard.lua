@@ -181,11 +181,11 @@ function TakeOff(skip)
 	PlaySound("dropship_liftoff")
 	if not skip then
 		stage = 3
-		local vertSpeed = 8 --4
+		local vertSpeed = 12 --4
 		local wantedHeight = 400
 		local dist = wantedHeight - select(2, Spring.GetUnitPosition(unitID))
 		while (dist > 0) do
-			Spring.MoveCtrl.SetRelativeVelocity(unitID, 0, math.max(0.275, vertSpeed / (dist/20 + 1)), 0)
+			Spring.MoveCtrl.SetRelativeVelocity(unitID, 0, math.max(0.275, vertSpeed / (dist/40 + 1)), 0)
 			Sleep(10)
 			dist = wantedHeight - select(2, Spring.GetUnitPosition(unitID))
 		end
