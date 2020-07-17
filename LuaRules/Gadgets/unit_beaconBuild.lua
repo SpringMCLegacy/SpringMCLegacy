@@ -432,7 +432,11 @@ function gadget:UnitGiven(unitID, unitDefID, newTeam, oldTeam)
 		for i, outpostPointID in pairs(beaconOutpostPointIDs[unitID]) do			
 			DelayCall(TransferUnit, {outpostPointID, newTeam}, 1) -- also transfer all the beacon outpost points
 		end
-		DropshipBugOut(unitID, oldTeam) -- fly away the dropship if it is active
+		if dropZoneBeaconIDs[oldTeam] == unitID then
+			local dropZoneID = dropZoneIDs[oldTeam]
+			DelayCall(Spring.DestroyUnit, {dropZoneID, false, true}, 1)
+		end
+		DropshipBugOut(unitID, oldTeam)
 	elseif unitDefID == TURRETCONTROL_ID then
 		for towerID, beaconID in pairs(towerOwners) do
 			if beaconID == unitID then
