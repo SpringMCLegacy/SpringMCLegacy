@@ -8,7 +8,7 @@ local Hellspawn = Medium:New{
 }
 	
 local HSN7D = Hellspawn:New{
-	description         = "Medium Missile Boat",
+	description         = "Medium Skirmisher",
 	weapons = {	
 		[1] = {
 			name	= "LRM10",
