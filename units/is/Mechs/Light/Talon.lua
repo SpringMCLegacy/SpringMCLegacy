@@ -8,7 +8,7 @@ local Talon = Light:New{
 }
 
 local TLN5W = Talon:New{
-	description         = "Light Multirole",
+	description         = "Light Brawler",
 	weapons = {	
 		[1] = {
 			name	= "ERPPC",
@@ -31,7 +31,7 @@ local TLN5W = Talon:New{
 }
 
 local TLN5Z = Talon:New{
-	description         = "Light Ranged",
+	description         = "Light Sniper",
 	weapons = {	
 		[1] = {
 			name	= "ERLBL",

@@ -8,7 +8,7 @@ local Argus = Heavy:New{
 }
 
 local AGS4D = Argus:New{
-	description         = "Heavy Multirole",
+	description         = "Heavy Skirmisher",
 	weapons = {	
 		[1] = {
 			name	= "RAC5",

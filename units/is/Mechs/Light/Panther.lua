@@ -8,7 +8,7 @@ local Panther = Light:New{
 }
 
 local PNT10K = Panther:New{
-	description         = "Light Multirole",
+	description         = "Light Brawler",
 	weapons	= {	
 		[1] = {
 			name	= "ERPPC",

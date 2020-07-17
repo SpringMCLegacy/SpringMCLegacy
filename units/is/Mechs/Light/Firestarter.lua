@@ -7,7 +7,7 @@ local Firestarter = Light:New{
 }
 
 local FS9S = Firestarter:New{
-	description         = "Light Brawler",
+	description         = "Light Striker",
 	weapons = {	
 		[1] = {
 			name	= "MBL",

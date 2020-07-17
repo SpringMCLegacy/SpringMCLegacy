@@ -9,7 +9,7 @@ local Urbanmech = Light:New{
 }
 
 local UMR63 = Urbanmech:New{
-	description         = "Light Brawler",
+	description         = "Light Juggernaut",
 	weapons = {	
 		[1] = {
 			name	= "LBX10",
@@ -35,7 +35,7 @@ local UMR63 = Urbanmech:New{
 }
 
 local UMR60L = Urbanmech:New{
-	description         = "Light Brawler",
+	description         = "Light Juggernaut",
 	weapons = {	
 		[1] = {
 			name	= "AC20",
@@ -58,7 +58,7 @@ local UMR60L = Urbanmech:New{
 }
 
 local UMR70 = Urbanmech:New{
-	description         = "Light Multirole",
+	description         = "Light Brawler",
 	weapons = {	
 		[1] = {
 			name	= "RAC5",
@@ -83,7 +83,7 @@ local UMR70 = Urbanmech:New{
 }
 
 local UMR69 = Urbanmech:New{
-	description         = "Light Multirole",
+	description         = "Light Brawler",
 	weapons = {	
 		[1] = {
 			name	= "UAC10",
@@ -108,7 +108,7 @@ local UMR69 = Urbanmech:New{
 }
 
 local UMR68 = Urbanmech:New{
-	description         = "Light Multirole",
+	description         = "Light Skirmisher",
 	weapons = {	
 		[1] = {
 			name	= "MRM30",

@@ -8,7 +8,7 @@ local Enfield = Medium:New{
 }
 
 local END6Q = Enfield:New{
-	description         = "Medium Multirole",
+	description         = "Medium Striker",
 	weapons	= {	
 		[1] = {
 			name	= "LBX10",

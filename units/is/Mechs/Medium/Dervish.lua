@@ -8,7 +8,7 @@ local Dervish = Medium:New{
 }
 	
 local DV6M = Dervish:New{
-	description         = "Medium Ranged",
+	description         = "Medium Missile Boat",
 	weapons = {	
 		[1] = {
 			name	= "LRM10",
@@ -42,7 +42,7 @@ local DV6M = Dervish:New{
 }
 
 local DV8D = Dervish:New{
-	description         = "Medium Ranged",
+	description         = "Medium Missile Boat",
 	weapons = {	
 		[1] = {
 			name	= "ALRM15",

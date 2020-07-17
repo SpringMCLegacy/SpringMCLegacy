@@ -7,7 +7,7 @@ local Javelin = Light:New{
 }
 
 local JVN11B = Javelin:New{
-	description         = "Light Brawler",
+	description         = "Light Scout",
 	weapons	= {	
 		[1] = {
 			name	= "SRM4",
@@ -30,7 +30,7 @@ local JVN11B = Javelin:New{
 }
 
 local JVN10P = Javelin:New{
-	description         = "Light Brawler",
+	description         = "Light Striker",
 	weapons	= {	
 		[1] = {
 			name	= "SRM6",

@@ -8,7 +8,7 @@ local Marauder = Heavy:New{
 }
 
 local MAD5D = Marauder:New{
-	description         = "Heavy Ranged",
+	description         = "Heavy Sniper",
 	weapons = {	
 		[1] = {
 			name	= "LPL",
@@ -42,7 +42,7 @@ local MAD5D = Marauder:New{
 }
 
 local MAD7D = Marauder:New{
-	description         = "Heavy Multirole",
+	description         = "Heavy Brawler",
 	weapons = {	
 		[1] = {
 			name	= "RAC5",
@@ -73,7 +73,7 @@ local MAD7D = Marauder:New{
 }
 
 local MAD5S = Marauder:New{
-	description         = "Heavy Ranged",
+	description         = "Heavy Sniper",
 	weapons = {	
 		[1] = {
 			name	= "Gauss",
@@ -104,7 +104,7 @@ local MAD5S = Marauder:New{
 }
 
 local MAD9S = Marauder:New{
-	description         = "Heavy Multirole",
+	description         = "Heavy Brawler",
 	weapons = {	
 		[1] = {
 			name	= "LBX10",
@@ -140,7 +140,7 @@ local MAD9S = Marauder:New{
 }
 
 local MAD5L = Marauder:New{
-	description         = "Heavy Multirole",
+	description         = "Heavy Brawler",
 	weapons = {	
 		[1] = {
 			name	= "ERPPC",
@@ -201,7 +201,7 @@ local MAD5M = Marauder:New{
 }
 
 local MAD9M = Marauder:New{
-	description         = "Heavy Multirole",
+	description         = "Heavy Brawler",
 	weapons = {	
 		[1] = {
 			name	= "ERLBL",

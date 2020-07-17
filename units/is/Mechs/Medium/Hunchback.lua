@@ -8,7 +8,7 @@ local Hunchback = Medium:New{
 }
 
 local HBK4G = Hunchback:New{
-	description         = "Medium Brawler",
+	description         = "Medium Juggernaut",
 	weapons	= {	
 		[1] = {
 			name	= "AC20",
@@ -36,7 +36,7 @@ local HBK4G = Hunchback:New{
 }
 
 local HBK4P = Hunchback:New{
-	description         = "Medium Multirole",
+	description         = "Medium Skirmisher",
 	weapons = {	
 		[1] = {
 			name	= "MBL",
@@ -74,7 +74,7 @@ local HBK4P = Hunchback:New{
 }
 
 local HBK5S = Hunchback:New{
-	description         = "Medium Brawler",
+	description         = "Medium Juggernaut",
 	weapons	= {	
 		[1] = {
 			name	= "LBX20",
@@ -103,7 +103,7 @@ local HBK5S = Hunchback:New{
 }
 
 local HBK5M = Hunchback:New{
-	description         = "Medium Brawler",
+	description         = "Medium Juggernaut",
 	weapons	= {	
 		[1] = {
 			name	= "AC20",

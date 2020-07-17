@@ -7,7 +7,7 @@ local Victor = Assault:New{
 }
 
 local VTR9B = Victor:New{
-	description         = "Assault Brawler",
+	description         = "Assault Juggernaut",
 	weapons 		= {	
 		[1] = {
 			name	= "AC20",
@@ -94,7 +94,7 @@ local VTR9K = Victor:New{
 }
 
 local VTR9S = Victor:New{
-	description         = "Assault Brawler",
+	description         = "Assault Juggernaut",
 	weapons 		= {	
 		[1] = {
 			name	= "AC20",
@@ -123,7 +123,7 @@ local VTR9S = Victor:New{
 }
 
 local VTR10D = Victor:New{
-	description         = "Assault Brawler",
+	description         = "Assault Juggernaut",
 	weapons 		= {	
 		[1] = {
 			name	= "UAC20",
@@ -152,7 +152,7 @@ local VTR10D = Victor:New{
 }
 
 local VTR10L = Victor:New{
-	description         = "Assault Ranged",
+	description         = "Assault Sniper",
 	weapons 		= {	
 		[1] = {
 			name	= "Gauss",
@@ -182,7 +182,7 @@ local VTR10L = Victor:New{
 }
 
 local VTR11D = Victor:New{
-	description         = "Assault Multirole",
+	description         = "Assault Brawler",
 	weapons 		= {	
 		[1] = {
 			name	= "RAC5",

@@ -70,7 +70,7 @@ local CPLTC2 = Catapult:New{
 }
 
 local CPLTC3 = Catapult:New{
-	description         = "Heavy Missile Boat",
+	description         = "Heavy Missile Boat (Artillery)",
 	weapons	= {	
 		[1] = {
 			name	= "ArrowIV",
@@ -129,7 +129,7 @@ local CPLTC4 = Catapult:New{
 }
 	
 local CPLTK2 = Catapult:New{
-	description         = "Heavy Sniper",
+	description         = "Heavy Brawler",
 	weapons 		= {	
 		[1] = {
 			name	= "PPC",
@@ -161,7 +161,7 @@ local CPLTK2 = Catapult:New{
 }
 
 local CPLTK5 = Catapult:New{
-	description         = "Heavy Brawler",
+	description         = "Heavy Skirmisher",
 	weapons 		= {	
 		[1] = {
 			name	= "MRM30",

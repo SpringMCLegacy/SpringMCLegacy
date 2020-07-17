@@ -8,7 +8,7 @@ local Strider = Medium:New{
 }
 
 local SR1OP = Strider:New{
-	description         = "Medium Brawler",
+	description         = "Medium Striker",
 	weapons	= {	
 		[1] = {
 			name	= "ASRM6",
@@ -32,7 +32,7 @@ local SR1OP = Strider:New{
 }
 
 local SR1OB = Strider:New{
-	description         = "Medium Ranged",
+	description         = "Medium Missile Boat",
 	weapons	= {	
 		[1] = {
 			name	= "LRM10",

@@ -7,7 +7,7 @@ local HollanderII = Medium:New{
 }
 
 local BZKF7 = HollanderII:New{
-	description         = "Medium Ranged",
+	description         = "Medium Sniper",
 	weapons	= {	
 		[1] = {
 			name	= "HeavyGauss",

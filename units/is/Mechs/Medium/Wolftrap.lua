@@ -8,7 +8,7 @@ local Wolftrap = Medium:New{
 }
 
 local WFT1 = Wolftrap:New{
-	description         = "Medium Multirole",
+	description         = "Medium Brawler",
 	weapons	= {	
 		[1] = {
 			name	= "LBX10",

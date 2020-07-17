@@ -7,7 +7,7 @@ local Jenner = Light:New{
 }
 
 local JR7K = Jenner:New{
-	description         = "Light Scout",
+	description         = "Light Striker",
 	weapons	= {	
 		[1] = {
 			name	= "MBL",

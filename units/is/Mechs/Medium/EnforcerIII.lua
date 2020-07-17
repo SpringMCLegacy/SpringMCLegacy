@@ -8,7 +8,7 @@ local EnforcerIII = Medium:New{
 }
 
 local ENF6M = EnforcerIII:New{
-	description         = "Medium Multirole",
+	description         = "Medium Brawler",
 	weapons	= {	
 		[1] = {
 			name	= "UAC10",

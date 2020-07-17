@@ -7,7 +7,7 @@ local Battlehawk = Light:New{
 }
 
 local BHK305 = Battlehawk:New{
-	description         = "Light Brawler",
+	description         = "Light Striker",
 	weapons = {	
 		[1] = {
 			name	= "MPL",

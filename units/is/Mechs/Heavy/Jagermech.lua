@@ -8,7 +8,7 @@ local Jagermech = Heavy:New{
 }
 
 local JM6DD = Jagermech:New{
-	description         = "Heavy Ranged",
+	description         = "Heavy Sniper",
 	weapons = {	
 		[1] = {
 			name	= "UAC5",
@@ -42,7 +42,7 @@ local JM6DD = Jagermech:New{
 }
 
 local JM6DG = Jagermech:New{
-	description         = "Heavy Ranged",
+	description         = "Heavy Sniper",
 	weapons = {	
 		[1] = {
 			name	= "Gauss",
@@ -70,7 +70,7 @@ local JM6DG = Jagermech:New{
 }
 
 local JM7D = Jagermech:New{
-	description         = "Heavy Multirole",
+	description         = "Heavy Brawler",
 	weapons = {	
 		[1] = {
 			name	= "UAC5",
@@ -105,7 +105,7 @@ local JM7D = Jagermech:New{
 }
 
 local JM7F = Jagermech:New{
-	description         = "Heavy Multirole",
+	description         = "Heavy Juggernaut",
 	weapons = {	
 		[1] = {
 			name	= "RAC5",

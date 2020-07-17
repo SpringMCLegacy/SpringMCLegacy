@@ -8,7 +8,7 @@ local Wolfhound = Light:New{
 }
 
 local WLF2 = Wolfhound:New{
-	description         = "Light Multirole",
+	description         = "Light Brawler",
 	weapons	= {	
 		[1] = {
 			name	= "ERLBL",

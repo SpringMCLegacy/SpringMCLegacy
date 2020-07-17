@@ -74,7 +74,7 @@ local RVN4L = Raven:New{
 }
 
 local RVN3M = Raven:New{
-	description         = "Light Ranged",
+	description         = "Light Missile Boat",
 	weapons	= {	
 		[1] = {
 			name	= "LRM15",

@@ -9,7 +9,7 @@ local Blackjack = Medium:New{
 }
 
 local BJ2 = Blackjack:New{
-	description         = "Medium Ranged",
+	description         = "Medium Brawler",
 	weapons	= {	
 		[1] = {
 			name	= "ERLBL",
@@ -37,7 +37,7 @@ local BJ2 = Blackjack:New{
 }
 
 local BJ3 = Blackjack:New{
-	description         = "Medium Multirole",
+	description         = "Medium Brawler",
 	weapons	= {	
 		[1] = {
 			name	= "PPC",
@@ -70,13 +70,13 @@ local BJ3 = Blackjack:New{
 }
 
 local BJ4 = Blackjack:New{
-	description         = "Medium Ranged",
+	description         = "Medium Sniper",
 	weapons	= {	
 		[1] = {
-			name	= "AC5",
+			name	= "AC5", -- should be light AC/5
 		},
 		[2] = {
-			name	= "AC5",
+			name	= "AC5", -- should be light AC/5
 		},
 		[3] = {
 			name	= "MBL",
@@ -99,7 +99,7 @@ local BJ4 = Blackjack:New{
 }
 
 local BJ2OP = Blackjack:New{
-	description         = "Medium Multirole",
+	description         = "Medium Brawler",
 	weapons	= {	
 		[1] = {
 			name	= "UAC5",

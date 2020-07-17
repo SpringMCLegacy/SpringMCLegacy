@@ -8,7 +8,7 @@ local Mauler = Assault:New{
 }
 	
 local MAL1R = Mauler:New{
-	description         = "Assault Ranged",
+	description         = "Assault Sniper",
 	weapons	= {	
 		[1] = {
 			name	= "ERLBL",
@@ -47,7 +47,7 @@ local MAL1R = Mauler:New{
 }
 
 local MAL3R = Mauler:New{
-	description         = "Assault Multirole",
+	description         = "Assault Brawler",
 	weapons	= {	
 		[1] = {
 			name	= "LBX10",

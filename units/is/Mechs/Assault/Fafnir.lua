@@ -8,7 +8,7 @@ local Fafnir = Assault:New{
 }
 
 local FNR5 = Fafnir:New{
-	description         = "Assault Multirole",
+	description         = "Assault Juggernaut",
 	weapons = {	
 		[1] = {
 			name	= "HeavyGauss",
