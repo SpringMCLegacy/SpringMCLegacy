@@ -35,7 +35,7 @@ local PERK_JUMP_RANGE = GG.CustomCommands.GetCmdID("PERK_JUMP_EFFICIENCY")
 local desired = {"CMD_SEND_ORDER", "CMD_DROPZONE", -- mech purchasing
 				"CMD_DROPZONE_2", "CMD_DROPZONE_3", -- dropship upgrading
 				"CMD_JUMP", "CMD_MASC", -- mech behaviour
-				 "CMD_OUTPOST_C3ARRAY", "CMD_OUTPOST_VEHICLEPAD", "CMD_OUTPOST_SALVAGEYARD", -- outposts (can already use)
+				 "CMD_OUTPOST_C3ARRAY", "CMD_OUTPOST_VEHICLEPAD", --"CMD_OUTPOST_SALVAGEYARD", -- outposts (can already use)
 				 "CMD_OUTPOST_MECHBAY", "CMD_OUTPOST_GARRISON", "CMD_OUTPOST_UPLINK", -- outposts (maybe soon)
 				 "CMD_OUTPOST_SEISMIC", "CMD_OUTPOST_TURRETCONTROL", -- outposts (not a priority)
 				 }
@@ -128,7 +128,7 @@ local function Outpost(unitID, teamID)
 		--local cmd = ((teamOutpostCounts[teamID][C3_ID] + teamOutpostCounts[teamID][VPAD_ID]) % 2 == 1) and "CMD_OUTPOST_C3ARRAY" or "CMD_OUTPOST_VEHICLEPAD"
 		-- Try just randomly picking
 		local randPick = math.random(3)
-		local cmd = (randPick == 1 and "CMD_OUTPOST_C3ARRAY") or (randPick == 2 and "CMD_OUTPOST_VEHICLEPAD") or "CMD_OUTPOST_SALVAGEYARD"
+		local cmd = (randPick == 1 and "CMD_OUTPOST_C3ARRAY") or (randPick == 2 and "CMD_OUTPOST_VEHICLEPAD")-- or "CMD_OUTPOST_SALVAGEYARD"
 		if difficulty > 1 then
 			Spring.AddTeamResource(teamID, "metal", AI_CMDS[cmd].cost)
 		end
