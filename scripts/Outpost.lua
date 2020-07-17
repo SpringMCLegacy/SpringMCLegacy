@@ -535,14 +535,16 @@ end
 
 function Resupply(passengerID)
 	local ammoTypes = passengerInfo.ammoTypes
-	if passengerEnv.ChangeAmmo then -- N.B. currently this runs for all mechs regardless of whether they have any ammo using weapons...
+	if passengerEnv.ChangeAmmo then
 		while true do
 			local moreToDo = false
-			for weaponNum, ammoType in pairs(ammoTypes) do --... but this loop will finish immediatly in that case
-				local amount = passengerInfo.burstLengths[weaponNum]
-				local supplied = passengerEnv.ChangeAmmo(ammoType, amount)
-				--if supplied then Spring.Echo("Deduct " .. amount .. " " .. ammoType) end
-				moreToDo = moreToDo or supplied
+			for weaponNum, ammoType in pairs(ammoTypes) do
+				if ammoType then
+					local amount = passengerInfo.burstLengths[weaponNum]
+					local supplied = passengerEnv.ChangeAmmo(ammoType, amount)
+					--if supplied then Spring.Echo("Deduct " .. amount .. " " .. ammoType) end
+					moreToDo = moreToDo or supplied
+				end
 			end
 			if not moreToDo then break end
 			Sleep(1000)
