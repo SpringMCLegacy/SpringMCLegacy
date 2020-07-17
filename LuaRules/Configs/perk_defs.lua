@@ -7,8 +7,8 @@ local EFFECT = modOptions and modOptions.perkeffect or 50
 local PCENT_INC = (100+EFFECT)/100
 local PCENT_DEC = (100-EFFECT)/100
 
-local function PadString(input)
-	while input:len() < PAD_LENGTH do
+local function PadString(input, length)
+	while input:len() < (length or PAD_LENGTH) do
 		input = " " .. input .. " "
 	end
 	return input
@@ -16,11 +16,15 @@ end
 local function Pad(...)
 	local arg = {...}
 	local output = ""
+	local length = (type (arg[1]) == type(1) and arg[1]) or nil
 	for i, v in ipairs(arg) do
-		output = output .. PadString(v) .. "\n"
+		if type (v) == "string" then
+			output = output .. PadString(v, length) .. "\n"
+		end
 	end
 	return output:sub(1,-2) -- remove trailing newline
 end
+GG.Pad = Pad
 
 -- Common valid() functions here:
 local function allMechs(unitDefID) return (UnitDefs[unitDefID].customParams.baseclass == "mech") end

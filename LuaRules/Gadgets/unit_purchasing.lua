@@ -82,14 +82,14 @@ local CMD_RUNNING_TOTAL = GG.CustomCommands.GetCmdID("CMD_RUNNING_TOTAL")
 local runningTotalCmdDesc = {
 	id = CMD_RUNNING_TOTAL,
 	type   = CMDTYPE.ICON,
-	name   = "Order C-Bills: \n0",
+	name   = "Order\nC-Bills: \n0",
 	disabled = true,
 }
 local CMD_RUNNING_TONS = GG.CustomCommands.GetCmdID("CMD_RUNNING_TONS")
 local runningTonsCmdDesc = {
 	id = CMD_RUNNING_TONS,
 	type   = CMDTYPE.ICON,
-	name   = "Order Tonnes: \n0",
+	name   = "Order\nTonnes: \n0",
 	disabled = true,
 }
 local ignoredCmdDescs = {CMD_SEND_ORDER = true, CMD_RUNNING_TOTAL = true, CMD_RUNNING_TONS = true}
@@ -107,10 +107,10 @@ local typeStringAliases = { -- whitespace is to try and equalise resulting font 
 }]]
 local typeStrings = {"scoutmech", "brawlermech", "multirolemech", "rangedmech"}
 local typeStringAliases = { -- whitespace is to try and equalise resulting font size
-	["scoutmech"] 		= "Scout     \nMechs", 
-	["brawlermech"] 	= "Brawler   \nMechs", 
-	["multirolemech"] 	= "Multirole \nMechs", 
-	["rangedmech"] 		= "Ranged    \nMechs", 
+	["scoutmech"] 		= GG.Pad(11,"Scout", "&", "Striker"), 
+	["brawlermech"] 	= GG.Pad(10,"Brawler", "&", "Juggernaut"), 
+	["multirolemech"] 	= GG.Pad(10,"Skirmisher", "&", "Multirole"),
+	["rangedmech"] 		= GG.Pad(11,"Sniper", "&", "Missile", "Boat "),
 }
 
 local menuCmdDescs = {}
@@ -126,7 +126,7 @@ for i, typeString in ipairs(typeStrings) do
 		--disabled = i > 2,
 	}
 	menuCmdIDs[cmdID] = typeString
-	ignoredCmdDescs[cmdID] = true
+	ignoredCmdDescs[cmdID] = 1
 end
 
 local unitTypes = {} -- unitTypes[unitDefID] = "lightmech" etc from typeStrings
@@ -351,10 +351,15 @@ end
 
 local function ShowBuildOptionsByType(unitID, unitType)
 	currMenu[unitID] = unitType
+	local cmdID = unitType and GG.CustomCommands.GetCmdID("CMD_MENU_" .. unitType:upper())
 	for i, cmdDesc in ipairs(Spring.GetUnitCmdDescs(unitID)) do
-		if cmdDesc.id < 0 then
+		if cmdDesc.id == cmdID then
+			EditUnitCmdDesc(unitID, i, {texture = 'bitmaps/ui/selected.png',})
+		elseif cmdDesc.id < 0 then
 			local hide = locked[-cmdDesc.id] or unitTypes[-cmdDesc.id] ~= unitType -- nil or false = false, false or nil = nil, thanks lua
 			EditUnitCmdDesc(unitID, i, {hidden = hide})
+		elseif ignoredCmdDescs[cmdDesc.id] == 1 then 
+			EditUnitCmdDesc(unitID, i, {texture = '',})
 		end
 	end
 end
@@ -456,8 +461,8 @@ function UpdateButtons(teamID) -- Toggles Submit Order vs Order Sent
 		Spring.Echo("test 7")
 		EditUnitCmdDesc(unitID, FindUnitCmdDesc(unitID, CMD_SEND_ORDER), {disabled = false, name = "Submit \nOrder "})
 		if orderSizes[teamID] == 0 then
-			EditUnitCmdDesc(unitID, FindUnitCmdDesc(unitID, CMD_RUNNING_TOTAL), {name = "Order C-Bills: \n0"})
-			EditUnitCmdDesc(unitID, FindUnitCmdDesc(unitID, CMD_RUNNING_TONS), {name = "Order Tonnes: \n0"})
+			EditUnitCmdDesc(unitID, FindUnitCmdDesc(unitID, CMD_RUNNING_TOTAL), {name = "Order\nC-Bills: \n0"})
+			EditUnitCmdDesc(unitID, FindUnitCmdDesc(unitID, CMD_RUNNING_TONS), {name = "Order\nTonnes: \n0"})
 		end
 	elseif orderStatus[teamID] == 1 then
 		Spring.Echo("test 8")
@@ -596,8 +601,8 @@ function gadget:AllowCommand(unitID, unitDefID, teamID, cmdID, cmdParams, cmdOpt
 					orderTons[unitID] = newTons
 					orderSizes[unitID] = runningSize + 1
 					CheckBuildOptions(unitID, teamID, money - (newTotal), tonnage - (newTons), cmdID)
-					EditUnitCmdDesc(unitID, FindUnitCmdDesc(unitID, CMD_RUNNING_TOTAL), {name = "Order C-Bills: \n" .. newTotal})
-					EditUnitCmdDesc(unitID, FindUnitCmdDesc(unitID, CMD_RUNNING_TONS), {name = "Order Tonnes: \n" .. newTons})
+					EditUnitCmdDesc(unitID, FindUnitCmdDesc(unitID, CMD_RUNNING_TOTAL), {name = "Order\nC-Bills: \n" .. newTotal})
+					EditUnitCmdDesc(unitID, FindUnitCmdDesc(unitID, CMD_RUNNING_TONS), {name = "Order\nTonnes: \n" .. newTons})
 					--Spring.Echo(teamID, "SLOTS", TeamSlotsRemaining(teamID), orderSizesPending[unitID], runningSize)
 					return true
 				else
@@ -612,8 +617,8 @@ function gadget:AllowCommand(unitID, unitDefID, teamID, cmdID, cmdParams, cmdOpt
 					orderTons[unitID] = runningTons - weight
 					orderSizes[unitID] = runningSize - 1
 					CheckBuildOptions(unitID, teamID, money - (runningTotal - cost), tonnage - (runningTons - weight))
-					EditUnitCmdDesc(unitID, FindUnitCmdDesc(unitID, CMD_RUNNING_TOTAL), {name = "Order C-Bills: \n" .. runningTotal - cost})
-					EditUnitCmdDesc(unitID, FindUnitCmdDesc(unitID, CMD_RUNNING_TONS), {name = "Order Tonnes: \n" .. runningTons - weight})
+					EditUnitCmdDesc(unitID, FindUnitCmdDesc(unitID, CMD_RUNNING_TOTAL), {name = "Order\nC-Bills: \n" .. runningTotal - cost})
+					EditUnitCmdDesc(unitID, FindUnitCmdDesc(unitID, CMD_RUNNING_TONS), {name = "Order\nTonnes: \n" .. runningTons - weight})
 					return true
 				else
 					return false
@@ -763,7 +768,7 @@ function gadget:GamePreload()
 			-- sort into light, medium, heavy, assault
 			--local mass = unitDef.mass
 			--local weight = GetWeight(mass)
-			unitTypes[unitDefID] = cp.role .. "mech"
+			unitTypes[unitDefID] = cp.menu .. "mech"
 			unitSlotChanges[unitDefID] = 1
 		--[[elseif basicType == "vehicle" then
 			-- sort into vehicle, vtol, aero

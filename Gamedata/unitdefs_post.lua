@@ -20,6 +20,18 @@ local roleSensors = {
 	["ranged"] 		= {radar = 1500,	sector = 55},
 }
 
+local menuRoleAlias = {
+	["scout"]			= "scout",
+	["striker"]			= "scout",
+	["brawler"]			= "brawler",
+	["juggernaut"]		= "brawler",
+	["skirmisher"]		= "multirole",
+	["multirole"] 		= "multirole",
+	["sniper"]			= "ranged",
+	["missile boat"]	= "ranged",
+	["ranged"]			= "ranged", -- TODO: delete this
+}
+
 local function GetSpeedColoured(speed)
 	local speedString = "\nSpeed: "
 	if speed < 60 then -- red
@@ -276,7 +288,9 @@ for name, ud in pairs(UnitDefs) do
 		if cp.baseclass == "mech" then -- mechs only
 			table.insert(ud.weapons, {name = "sight"})
 			cp.role = GetRole(ud.description)
-			if not cp.role then
+			if cp.role then
+				cp.menu = menuRoleAlias[cp.role]
+			else
 				Spring.Echo("Warning [unitdefs_post.lua]: Unit (" .. name .. ") has no known role (" .. ud.description .. ")")
 			end
 			cp.sectorangle = (cp.sectorangle or (cp.role and roleSensors[cp.role].sector)) * modOptions.sectorangle
