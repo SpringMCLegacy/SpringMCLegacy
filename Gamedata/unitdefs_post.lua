@@ -14,10 +14,10 @@ end
 
 local roleSensors = {
 	["scout"] 			= {radar = 1500,	sector = 80},
+	["skirmisher"] 		= {radar = 1500,	sector = 65},
 	["striker"] 		= {radar = 1500,	sector = 65},
-	["brawler"] 		= {radar = 1500,	sector = 65},
 	["juggernaut"] 		= {radar = 1500,	sector = 65},
-	["skirmisher"] 		= {radar = 1500,	sector = 55},
+	["brawler"] 		= {radar = 1500,	sector = 55},
 	["multirole"] 		= {radar = 1500,	sector = 55},
 	["sniper"]			= {radar = 1500,	sector = 45},
 	["missile boat"]	= {radar = 1500,	sector = 55},
@@ -25,12 +25,15 @@ local roleSensors = {
 }
 
 local menuRoleAlias = {
-	["scout"]			= "scout",
-	["striker"]			= "scout",
-	["brawler"]			= "brawler",
-	["juggernaut"]		= "brawler",
-	["skirmisher"]		= "multirole",
-	["multirole"] 		= "multirole",
+	["scout"]			= "fast",
+	["skirmisher"]		= "fast",
+	
+	["striker"]			= "cqb",
+	["juggernaut"]		= "cqb",
+	
+	["brawler"]			= "flexible",
+	["multirole"] 		= "flexible",
+	
 	["sniper"]			= "ranged",
 	["missile boat"]	= "ranged",
 	["ranged"]			= "ranged", -- TODO: delete this
@@ -294,7 +297,6 @@ for name, ud in pairs(UnitDefs) do
 			cp.role = GetRole(ud.description)
 			if cp.role then
 				cp.menu = menuRoleAlias[cp.role]
-				Spring.Echo(name, cp.role, cp.menu)
 			else
 				Spring.Echo("Warning [unitdefs_post.lua]: Unit (" .. name .. ") has no known role (" .. ud.description .. ")")
 			end

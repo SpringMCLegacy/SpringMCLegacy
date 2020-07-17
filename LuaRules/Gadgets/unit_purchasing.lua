@@ -95,22 +95,12 @@ local runningTonsCmdDesc = {
 local ignoredCmdDescs = {CMD_SEND_ORDER = true, CMD_RUNNING_TOTAL = true, CMD_RUNNING_TONS = true}
 
 -- Variables
---[[local typeStrings = {"lightmech", "mediummech", "heavymech", "assaultmech"}--, "vehicle", "vtol", "aero"}
+local typeStrings = {"fast", "cqb", "flexible", "ranged"}
 local typeStringAliases = { -- whitespace is to try and equalise resulting font size
-	["lightmech"] 	= "Light     \nMechs", 
-	["mediummech"] 	= "Medium  \nMechs", 
-	["heavymech"] 	= "Heavy    \nMechs", 
-	["assaultmech"] = "Assault  \nMechs", 
-	--["vehicle"] 	= "Vehicles ", 
-	--["vtol"] 		= "VTOL     ",
-	--["aero"]		= "Aero     ",
-}]]
-local typeStrings = {"scoutmech", "brawlermech", "multirolemech", "rangedmech"}
-local typeStringAliases = { -- whitespace is to try and equalise resulting font size
-	["scoutmech"] 		= GG.Pad(11,"Scout", "&", "Striker"), 
-	["brawlermech"] 	= GG.Pad(10,"Brawler", "&", "Juggernaut"), 
-	["multirolemech"] 	= GG.Pad(10,"Skirmisher", "&", "Multirole"),
-	["rangedmech"] 		= GG.Pad(11,"Sniper", "&", "Missile", "Boat "),
+	["fast"] 		= GG.Pad(10,"Scout", "&", "Skirmisher"), 
+	["cqb"] 		= GG.Pad(10,"Striker", "&", "Juggernaut"), 
+	["flexible"] 	= GG.Pad(10,"Brawler", "&", "Multirole"),
+	["ranged"] 		= GG.Pad(11,"Sniper", "&", "Missile", "Boat "),
 }
 
 local menuCmdDescs = {}
@@ -768,7 +758,7 @@ function gadget:GamePreload()
 			-- sort into light, medium, heavy, assault
 			--local mass = unitDef.mass
 			--local weight = GetWeight(mass)
-			unitTypes[unitDefID] = cp.menu .. "mech"
+			unitTypes[unitDefID] = cp.menu
 			unitSlotChanges[unitDefID] = 1
 		--[[elseif basicType == "vehicle" then
 			-- sort into vehicle, vtol, aero
