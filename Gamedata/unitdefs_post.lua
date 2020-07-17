@@ -13,11 +13,15 @@ end
 
 
 local roleSensors = {
-	["scout"] 		= {radar = 1500,	sector = 80},
-	["ewar"] 		= {radar = 1500,	sector = 65}, -- effectively synonym for scout, though most have BAP which needs smaller sector
-	["brawler"] 	= {radar = 1500,	sector = 65},
-	["multirole"] 	= {radar = 1500,	sector = 55},
-	["ranged"] 		= {radar = 1500,	sector = 55},
+	["scout"] 			= {radar = 1500,	sector = 80},
+	["striker"] 		= {radar = 1500,	sector = 65},
+	["brawler"] 		= {radar = 1500,	sector = 65},
+	["juggernaut"] 		= {radar = 1500,	sector = 65},
+	["skirmisher"] 		= {radar = 1500,	sector = 55},
+	["multirole"] 		= {radar = 1500,	sector = 55},
+	["sniper"]			= {radar = 1500,	sector = 45},
+	["missile boat"]	= {radar = 1500,	sector = 55},
+	["ranged"] 			= {radar = 1500,	sector = 55}, -- TODO: delete this
 }
 
 local menuRoleAlias = {
@@ -290,6 +294,7 @@ for name, ud in pairs(UnitDefs) do
 			cp.role = GetRole(ud.description)
 			if cp.role then
 				cp.menu = menuRoleAlias[cp.role]
+				Spring.Echo(name, cp.role, cp.menu)
 			else
 				Spring.Echo("Warning [unitdefs_post.lua]: Unit (" .. name .. ") has no known role (" .. ud.description .. ")")
 			end
