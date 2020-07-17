@@ -15,12 +15,12 @@ end
 local roleSensors = {
 	["scout"] 			= {radar = 1500,	sector = 80},
 	["skirmisher"] 		= {radar = 1500,	sector = 65},
-	["striker"] 		= {radar = 1500,	sector = 65},
-	["juggernaut"] 		= {radar = 1500,	sector = 65},
+	["striker"] 		= {radar = 1500,	sector = 70},
+	["juggernaut"] 		= {radar = 1500,	sector = 70},
 	["brawler"] 		= {radar = 1500,	sector = 55},
 	["multirole"] 		= {radar = 1500,	sector = 55},
 	["sniper"]			= {radar = 1500,	sector = 45},
-	["missile boat"]	= {radar = 1500,	sector = 55},
+	["missile boat"]	= {radar = 1500,	sector = 45},
 	["ranged"] 			= {radar = 1500,	sector = 55}, -- TODO: delete this
 }
 
