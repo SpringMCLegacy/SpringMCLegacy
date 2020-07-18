@@ -57,8 +57,6 @@ Spring.SetGameRulesParam("insurance_mult", INSURANCE_MULT)
 local SELL_MULT = (modOptions and tonumber(modOptions.sell)) or 0.75
 Spring.SetGameRulesParam("sell_mult", SELL_MULT)
 
---local KILL_REWARD_MULT = 0.0
--- local NUM_ICONS_PER_PAGE = 3 * 8
 
 local SELL_DISTANCE = 460 -- TODO: flagCapradius, grab from GG or game rules?
 local CMD_SELL = GG.CustomCommands.GetCmdID("CMD_SELL")
@@ -67,7 +65,7 @@ local sellOrderCmdDesc = {
 	type   = CMDTYPE.ICON,
 	name   = "  Sell   \n  Unit  ",
 	action = 'sell_mech',
-	tooltip = "Calls a dropship to sell the unit (75% return)", -- TODO: read modoption for % return
+	tooltip = "Calls a dropship to sell the unit (" .. SELL_MULT * 100 .. "% return)",
 }
 	
 local CMD_SEND_ORDER = GG.CustomCommands.GetCmdID("CMD_SEND_ORDER")
@@ -112,23 +110,22 @@ for i, typeString in ipairs(typeStrings) do
 		type   = CMDTYPE.ICON,
 		name   = typeStringAliases[typeString], -- TODO: texture?
 		action = 'menu' .. typeString,
-		tooltip = "Purchase " .. typeStringAliases[typeString]:gsub("%s+\n", " "),-- .. (i > 2 and " (Requires Union-class dropship or better)" or ""),
-		--disabled = i > 2,
+		tooltip = "Purchase " .. typeStringAliases[typeString]:gsub("%s+\n", " "),
 	}
 	menuCmdIDs[cmdID] = typeString
 	ignoredCmdDescs[cmdID] = 1
 end
 
-local unitTypes = {} -- unitTypes[unitDefID] = "lightmech" etc from typeStrings
+local unitTypes = {} -- unitTypes[unitDefID] = "fast"/"cqb"/"flexible"/"ranged" from typeStrings
 local currMenu = {} -- [dropzoneID] = unitType
 local locked = {} -- unitDefID = true
 local dropShipTypes = {} -- dropShipTypes[unitDefID] = "mech", "vehicle" or "outpost"
-local unitSlotChanges = {} -- unitSlotChanges = 1 or 0.5
+local unitSlotChanges = {} -- unitSlotChanges = 1 -- TODO: remove this when splitting out to outpost_c3array
 
 local orderCosts = {} -- orderCosts[unitID] = cost
 local orderTons = {} -- orderTons[unitID] = totalTonnage
 local orderSizes = {} -- orderSizes[unitID] = size
-local orderSizesPending = {} -- orderSizesPending[unitID] = size -- used to track slots of untis pending arrival
+local orderSizesPending = {} -- orderSizesPending[unitID] = size -- used to track slots of units pending arrival
 
 local dropZones = {} -- dropZones[unitID] = teamID
 local teamDropZones = {} -- teamDropZone[teamID] = unitID
@@ -159,8 +156,7 @@ GG.GetWeight = GetWeight
 local function TeamSlotsRemaining(teamID)
 	local slots = 0
 	for i = 1, 3 do
-		-- we only want to consider slots in lances we actively control... 
-		-- ...and only whole slots should be counted (can't split a mech across 2x 0.5 slots!)
+		-- we only want to consider slots in lances we actively control
 		slots = slots + ((teamSlots[teamID][i].active and math.floor(teamSlots[teamID][i].available)) or 0)
 	end
 	return slots
@@ -298,10 +294,7 @@ local function UpdateTeamSlots(teamID, unitID, unitDefID, add)
 		local dz = teamDropZones[teamID]
 		if dz then
 			orderSizesPending[dz] = orderSizesPending[dz] - slotChange
-			--if orderSizesPending[dz] < 0 then Spring.Echo(teamID, "ORDER SIZES NEGATIVE L213", orderSizesPending[dz]) end
 		end
-		-- Deduct weight from current tonnage limit
-		UseTeamResource(teamID, "energy", ud.energyCost)
 		local group, active = TeamAvailableGroup(teamID, slotChange)
 		if group then
 			if not active then 
@@ -314,7 +307,7 @@ local function UpdateTeamSlots(teamID, unitID, unitDefID, add)
 		end
 	else -- unit died
 		-- reimburse 'weight'
-		AddTeamResource(teamID, "energy", ud.energyCost)
+		AddTeamResource(teamID, "energy", ud.energyCost) -- TODO: This might be better elsewhere when splitting out outpost_c3array
 		local group = unitLances[unitID]
 		AssignGroup(unitID, unitDefID, teamID, -slotChange, group)
 	end
@@ -346,7 +339,8 @@ local function ShowBuildOptionsByType(unitID, unitType)
 		if cmdDesc.id == cmdID then
 			EditUnitCmdDesc(unitID, i, {texture = 'bitmaps/ui/selected.png',})
 		elseif cmdDesc.id < 0 then
-			local hide = locked[-cmdDesc.id] or unitTypes[-cmdDesc.id] ~= unitType -- nil or false = false, false or nil = nil, thanks lua
+			-- Order matters here... nil or false = false, false or nil = nil, thanks lua
+			local hide = locked[-cmdDesc.id] or unitTypes[-cmdDesc.id] ~= unitType
 			EditUnitCmdDesc(unitID, i, {hidden = hide})
 		elseif ignoredCmdDescs[cmdDesc.id] == 1 then 
 			EditUnitCmdDesc(unitID, i, {texture = '',})
@@ -362,8 +356,6 @@ local function ResetBuildQueue(unitID)
 end
 
 local function 	LockHeavy(dropZone, lock) 
-	--EditUnitCmdDesc(dropZone, FindUnitCmdDesc(dropZone, menuCmdDescs[3].id), {disabled = false})
-	--EditUnitCmdDesc(dropZone, FindUnitCmdDesc(dropZone, menuCmdDescs[4].id), {disabled = false})
 	local cmdDescs = GetUnitCmdDescs(dropZone)
 	for i = 1, #cmdDescs do
 		local defID = cmdDescs[i].id
@@ -411,7 +403,6 @@ local function CheckBuildOptions(unitID, teamID, money, weightLeft, cmdID)
 		local buildDefID = cmdDescs[cmdDescID].id
 		local cmdDesc = cmdDescs[cmdDescID]
 		if cmdDesc.id ~= cmdID and not ignoredCmdDescs[cmdDesc.id] then
-			Spring.Echo(cmdDesc.id, cmdDesc.name, ignoredCmdDescs[cmdDesc.id])
 			local currParam = cmdDesc.params[1] or ""
 			local cCost, tCost
 			if buildDefID < 0 then -- a build order
@@ -425,10 +416,6 @@ local function CheckBuildOptions(unitID, teamID, money, weightLeft, cmdID)
 			and (currParam == "C" or currParam == "" or currParam == "L")
 			and (TeamSlotsRemaining(teamID) - (orderSizes[unitID] or 0) - (orderSizesPending[unitID] or 0)) < 1 then -- builder order but no team slots left
 				EditUnitCmdDesc(unitID, cmdDescID, {disabled = true, params = L})
-			--[[elseif cCost > 0 and 
-				(TeamSlotsRemaining(teamID) - (orderSizes[teamID] or 0) - (orderSizesPending[teamID] or 0)) < 1 and 
-				(currParam == "C" or currParam == "" or currParam == "L") then
-				EditUnitCmdDesc(unitID, cmdDescID, {disabled = true, params = L})]]
 			elseif cCost > money and (currParam == "" or currParam == "C") then
 				EditUnitCmdDesc(unitID, cmdDescID, {disabled = true, params = C})
 			elseif tCost > weightLeft and (currParam == "" or currParam == "T") then
@@ -446,20 +433,16 @@ local coolDowns = {} -- coolDowns[teamID] = enableFrame
 GG.coolDowns = coolDowns
 
 function UpdateButtons(teamID) -- Toggles Submit Order vs Order Sent
-	Spring.Echo("test 6")
 	local unitID = teamDropZones[teamID]
 	if orderStatus[teamID] == 0 then
-		Spring.Echo("test 7")
 		EditUnitCmdDesc(unitID, FindUnitCmdDesc(unitID, CMD_SEND_ORDER), {disabled = false, name = "Submit \nOrder "})
 		if orderSizes[teamID] == 0 then
 			EditUnitCmdDesc(unitID, FindUnitCmdDesc(unitID, CMD_RUNNING_TOTAL), {name = "Order\nC-Bills: \n0"})
 			EditUnitCmdDesc(unitID, FindUnitCmdDesc(unitID, CMD_RUNNING_TONS), {name = "Order\nTonnes: \n0"})
 		end
 	elseif orderStatus[teamID] == 1 then
-		Spring.Echo("test 8")
-		EditUnitCmdDesc(unitID, FindUnitCmdDesc(unitID, CMD_SEND_ORDER), {--[[disabled = false, ]]name = "Order \nSent "})
+		EditUnitCmdDesc(unitID, FindUnitCmdDesc(unitID, CMD_SEND_ORDER), {name = "Order \nSent "})
 	end
-	--coolDowns[teamID] = math.huge -- TODO: allow orders when ACTIVE? -> will be corrected when the dropship leave
 end
 
 function OrderFinished(unitID, teamID)
@@ -467,11 +450,9 @@ function OrderFinished(unitID, teamID)
 	orderCosts[unitID] = 0
 	orderTons[unitID] = 0
 	orderSizesPending[unitID] = orderSizes[unitID]
-	--if orderSizesPending[unitID] < 0 then Spring.Echo(teamID, "ORDER SIZES NEGATIVE L377", orderSizesPending[unitID]) end
 	orderSizes[unitID] = 0
 end
 
--- TODO: Issues if dropzone is 'flipped' to another beacon
 function DropshipLeft(teamID) -- called by Dropship once it has left, to enable "Submit Order"
 	local dead = select(3, Spring.GetTeamInfo(teamID))
 	if not dead then
@@ -494,36 +475,37 @@ end
 GG.DropshipLeft = DropshipLeft
 
 -- Factories can't implement gadget:CommandFallback, so fake it ourselves
-local function SendCommandFallback(unitID, unitDefID, teamID, cost)
+local function SendCommandFallback(unitID, unitDefID, teamID, cost, weight)
 	if (not Spring.ValidUnitID(unitID)) or Spring.GetUnitIsDead(unitID) then return false end -- unit died
 	if orderStatus[teamID] == 0 then return end -- order was cancelled
 	if dropShipStatus[teamID] == 0 then -- Dropship is READY
 		local unitID = teamDropZones[teamID]
-		if not unitID then -- Dropzone has died and not been replaced whilst order is due!
-			AddTeamResource(teamID, "metal", cost) -- refund
-		end
-		-- CALL DROPSHIP
-		local orderQueue = Spring.GetFullBuildQueue(unitID)
-		if not orderQueue then return end -- dropzone died TODO: Transfer to new DZ if there is one
-		if #orderQueue > 0 then -- proceed with order
-			-- TODO: Sound needs to change?
-			local beaconID = GG.dropZoneBeaconIDs[teamID]
-			GG.DropshipDelivery(beaconID, beaconID, teamID, teamDropShipTypes[teamID].def, orderQueue, 0, nil, 0)
-			Spring.SendMessageToTeam(teamID, "Sending purchase order for the following:")
-			for i, order in ipairs(orderQueue) do
-				for orderDefID, count in pairs(order) do
-					Spring.SendMessageToTeam(teamID, UnitDefs[orderDefID].humanName .. ":\t" .. count)
-				end
-			end
-			-- Dropship can now be considered ACTIVE even though it hasn't arrived yet
-			dropShipStatus[teamID] = 1
-			SetTeamRulesParam(teamID, "STATUS", 1)
-		else -- cancelled
+		if not unitID then -- Dropzone has died and not been replaced whilst order is due, refund
 			AddTeamResource(teamID, "metal", cost)
-			dropShipStatus[teamID] = 0
-			SetTeamRulesParam(teamID, "STATUS", 0)
-			orderStatus[teamID] = 0
-			UpdateButtons(teamID)
+			AddTeamResource(teamID, "energy", weight)
+		else
+			-- CALL DROPSHIP
+			local orderQueue = Spring.GetFullBuildQueue(unitID)
+			if not orderQueue then return end -- dropzone died TODO: Transfer to new DZ if there is one
+			if #orderQueue > 0 then -- proceed with order
+				-- TODO: Sound needs to change?
+				local beaconID = GG.dropZoneBeaconIDs[teamID]
+				GG.DropshipDelivery(beaconID, beaconID, teamID, teamDropShipTypes[teamID].def, orderQueue, 0, nil, 0)
+				Spring.SendMessageToTeam(teamID, "Sending purchase order for the following:")
+				for i, order in ipairs(orderQueue) do
+					for orderDefID, count in pairs(order) do
+						Spring.SendMessageToTeam(teamID, UnitDefs[orderDefID].humanName .. ":\t" .. count)
+					end
+				end
+				-- Dropship can now be considered ACTIVE even though it hasn't arrived yet
+				dropShipStatus[teamID] = 1
+				SetTeamRulesParam(teamID, "STATUS", 1)
+			else -- cancelled
+				dropShipStatus[teamID] = 0
+				SetTeamRulesParam(teamID, "STATUS", 0)
+				orderStatus[teamID] = 0
+				UpdateButtons(teamID)
+			end
 		end
 		-- clean up (regardless of whether or not order was fulfilled or cancelled)
 		OrderFinished(unitID, teamID)
@@ -582,7 +564,7 @@ function gadget:AllowCommand(unitID, unitDefID, teamID, cmdID, cmdParams, cmdOpt
 				if cmdOptions.shift or cmdOptions.ctrl then return false end -- otherwise we can (dramatically) circumvent unit limits
 				if (TeamSlotsRemaining(teamID) - orderSizesPending[unitID] - runningSize) < 1 then 
 					return false 
-				end -- <1 as may be 0.5, but _ordering_ is always 1
+				end
 				local newTotal = runningTotal + cost
 				local newTons = runningTons + weight
 				if  newTotal <= money and newTons <= tonnage then -- check we can afford it
@@ -594,6 +576,9 @@ function gadget:AllowCommand(unitID, unitDefID, teamID, cmdID, cmdParams, cmdOpt
 					CheckBuildOptions(unitID, teamID, money - (newTotal), tonnage - (newTons), cmdID)
 					EditUnitCmdDesc(unitID, FindUnitCmdDesc(unitID, CMD_RUNNING_TOTAL), {name = "Order\nC-Bills: \n" .. newTotal})
 					EditUnitCmdDesc(unitID, FindUnitCmdDesc(unitID, CMD_RUNNING_TONS), {name = "Order\nTonnes: \n" .. newTons})
+					-- Take the costs upfront, can be reimbursed
+					UseTeamResource(teamID, "metal", cost)
+					UseTeamResource(teamID, "energy", weight)
 					--Spring.Echo(teamID, "SLOTS", TeamSlotsRemaining(teamID), orderSizesPending[unitID], runningSize)
 					return true
 				else
@@ -606,6 +591,9 @@ function gadget:AllowCommand(unitID, unitDefID, teamID, cmdID, cmdParams, cmdOpt
 				if currNumber > 0 then -- only allow if more than 1 of **this** unit currently on order
 					orderCosts[unitID] = runningTotal - cost
 					orderTons[unitID] = runningTons - weight
+					-- reimburse the costs
+					AddTeamResource(teamID, "metal", cost)
+					AddTeamResource(teamID, "energy", weight)
 					orderSizes[unitID] = runningSize - 1
 					CheckBuildOptions(unitID, teamID, money - (runningTotal - cost), tonnage - (runningTons - weight))
 					EditUnitCmdDesc(unitID, FindUnitCmdDesc(unitID, CMD_RUNNING_TOTAL), {name = "Order\nC-Bills: \n" .. runningTotal - cost})
@@ -617,32 +605,20 @@ function gadget:AllowCommand(unitID, unitDefID, teamID, cmdID, cmdParams, cmdOpt
 			end
 			
 		elseif cmdID == CMD_SEND_ORDER then
-			Spring.Echo("test 1")
-			local money = GetTeamResources(teamID, "metal")
-			local cost = orderCosts[unitID] or 0
 			if rightClick then
 				if orderStatus[teamID] > 0 then
-					-- cancelling the order, refund the cost and update the buttons
+					-- cancelling the order, update the buttons
 					orderStatus[teamID] = 0
-					Spring.SendMessageToTeam(teamID, "Refunding C-Bills: " .. cost)
-					AddTeamResource(teamID, "metal", cost)
 					UpdateButtons(teamID)
 					return true
 				else return false end
 			elseif orderStatus[teamID] == 1 then
-				Spring.Echo("test 2")
 				return false -- we already have submitted an order and not cancelled it
 			end
-			if (orderSizes[unitID] or 0) == 0 then Spring.Echo("test 3") return false end -- don't allow empty orders
-			-- check we can afford the order; possible that a previously affordable order is now too much e.g. if towers have been purchased
-			-- N.B. It should not be possible for available tonnage to change between orders, so we don't need to check that
-			if cost > money then Spring.Echo("test 4") return false end
-			-- We are going ahead with this order. Deduct the cost now.
-			UseTeamResource(teamID, "metal", cost)
+			if (orderSizes[unitID] or 0) == 0 then return false end -- don't allow empty orders
 			orderStatus[teamID] = 1
 			UpdateButtons(teamID)
 			GG.Delay.DelayCall(SendCommandFallback, {unitID, unitDefID, teamID, cost}, 16)
-			Spring.Echo("test 5")
 			return true
 		end
 	elseif GG.outpostDefs[unitDefID] then -- an outpost
@@ -676,7 +652,7 @@ function gadget:UnitCreated(unitID, unitDefID, teamID)
 			LockHeavy(unitID, true)
 		end
 	elseif dropShipTypes[unitDefID] == "mech" then
-		if Spring.ValidUnitID(teamDropZones[teamID]) then -- TODO: (Why) is this even required?
+		if Spring.ValidUnitID(teamDropZones[teamID]) then
 			EditUnitCmdDesc(teamDropZones[teamID], FindUnitCmdDesc(teamDropZones[teamID], CMD_SEND_ORDER), {disabled = true, name = "Dropship \nArrived "})
 		end
 		if unitDefID == teamDropShipTypes[teamID].def and teamDropShipHPs[teamID] then -- check it is current def incase we upgraded before it left
@@ -693,6 +669,7 @@ function gadget:UnitCreated(unitID, unitDefID, teamID)
 end
 
 
+-- TODO: Split this all off into game_money
 local WALL_ID = UnitDefNames["wall"].id
 local GATE_ID = UnitDefNames["wall_gate"].id
 local MELTDOWN = WeaponDefNames["meltdown"].id
@@ -729,7 +706,6 @@ function gadget:UnitDestroyed(unitID, unitDefID, teamID, attackerID, attackerDef
 		DropshipLeft(teamID)
 	end
 	if attackerID and not AreTeamsAllied(teamID, attackerTeam) and unitDefID ~= WALL_ID and unitDefID ~= GATE_ID then
-		--AddTeamResource(attackerTeam, "metal", UnitDefs[unitDefID].metalCost * KILL_REWARD_MULT)
 		AddTeamResource(teamID, "metal", UnitDefs[unitDefID].metalCost * INSURANCE_MULT)
 	end
 	if unitTypes[unitDefID] then
@@ -757,16 +733,8 @@ function gadget:GamePreload()
 		local cp = unitDef.customParams
 		if cp.baseclass == "mech" then
 			-- sort into light, medium, heavy, assault
-			--local mass = unitDef.mass
-			--local weight = GetWeight(mass)
 			unitTypes[unitDefID] = cp.menu
 			unitSlotChanges[unitDefID] = 1
-		--[[elseif basicType == "vehicle" then
-			-- sort into vehicle, vtol, aero
-			local vtol = unitDef.hoverAttack
-			local aero = unitDef.canFly and not vtol
-			unitTypes[unitDefID] = vtol and "vtol" or aero and "aero" or "vehicle"
-			unitSlotChanges[unitDefID] = (unitDef.canFly and 1) or 0.5]]
 		elseif cp.dropship then
 			dropShipTypes[unitDefID] = cp.dropship
 		end
