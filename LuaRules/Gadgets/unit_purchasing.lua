@@ -457,7 +457,7 @@ end
 
 function DropshipLeft(teamID) -- called by Dropship once it has left, to enable "Submit Order"
 	local dead = select(3, Spring.GetTeamInfo(teamID))
-	if not dead then
+	if not dead and teamID and teamDropShipTypes[teamID] then
 		local unitID = teamDropZones[teamID]
 		local beaconID = GG.dropZoneBeaconIDs[teamID]
 		orderStatus[teamID] = 0
