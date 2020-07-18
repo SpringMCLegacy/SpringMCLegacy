@@ -92,7 +92,7 @@ local runningTonsCmdDesc = {
 	name   = "Order\nTonnes: \n0",
 	disabled = true,
 }
-local ignoredCmdDescs = {CMD_SEND_ORDER = true, CMD_RUNNING_TOTAL = true, CMD_RUNNING_TONS = true}
+local ignoredCmdDescs = {[CMD_SEND_ORDER] = true, [CMD_RUNNING_TOTAL] = true, [CMD_RUNNING_TONS] = true}
 
 -- Variables
 local typeStrings = {"fast", "cqb", "flexible", "ranged"}
@@ -410,7 +410,8 @@ local function CheckBuildOptions(unitID, teamID, money, weightLeft, cmdID)
 	for cmdDescID = 1, #cmdDescs do
 		local buildDefID = cmdDescs[cmdDescID].id
 		local cmdDesc = cmdDescs[cmdDescID]
-		if cmdDesc.id ~= cmdID and not ignoredCmdDescs[cmdDescs[cmdDescID].id] then
+		if cmdDesc.id ~= cmdID and not ignoredCmdDescs[cmdDesc.id] then
+			Spring.Echo(cmdDesc.id, cmdDesc.name, ignoredCmdDescs[cmdDesc.id])
 			local currParam = cmdDesc.params[1] or ""
 			local cCost, tCost
 			if buildDefID < 0 then -- a build order
