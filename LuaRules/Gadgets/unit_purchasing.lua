@@ -662,7 +662,7 @@ function gadget:UnitCreated(unitID, unitDefID, teamID)
 		end
 	elseif unitTypes[unitDefID] then
 		UpdateTeamSlots(teamID, unitID, unitDefID, true)
-		if unitTypes[unitDefID]:find("mech") then
+		if UnitDefs[unitDefID].customParams.baseclass == "mech" then
 			InsertUnitCmdDesc(unitID, sellOrderCmdDesc)
 		end
 	elseif GG.outpostDefs[unitDefID] then -- an outpost
