@@ -567,13 +567,13 @@ function gadget:AllowCommand(unitID, unitDefID, teamID, cmdID, cmdParams, cmdOpt
 				end
 				local newTotal = runningTotal + cost
 				local newTons = runningTons + weight
-				if  newTotal <= money and newTons <= tonnage then -- check we can afford it
+				if  cost <= money and weight <= tonnage then -- check we can afford it
 					Spring.SendMessageToTeam(teamID, "Running C-Bills: " .. newTotal)
 					Spring.SendMessageToTeam(teamID, "Running Tonnage: " .. newTons)
 					orderCosts[unitID] = newTotal
 					orderTons[unitID] = newTons
 					orderSizes[unitID] = runningSize + 1
-					CheckBuildOptions(unitID, teamID, money - (newTotal), tonnage - (newTons), cmdID)
+					CheckBuildOptions(unitID, teamID, money, tonnage, cmdID)
 					EditUnitCmdDesc(unitID, FindUnitCmdDesc(unitID, CMD_RUNNING_TOTAL), {name = "Order\nC-Bills: \n" .. newTotal})
 					EditUnitCmdDesc(unitID, FindUnitCmdDesc(unitID, CMD_RUNNING_TONS), {name = "Order\nTonnes: \n" .. newTons})
 					-- Take the costs upfront, can be reimbursed
