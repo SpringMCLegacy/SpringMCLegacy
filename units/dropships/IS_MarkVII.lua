@@ -1,4 +1,4 @@
-local IS_MarkVII = {
+local IS_MarkVII = Unit:New{ -- TODO: better base class than Unit
 	name              	= "Mark VII Landing Craft",
 	description         = "Cargo Landing Craft",
 	objectName        	= "IS_MarkVIIb.s3o",
@@ -90,4 +90,8 @@ local IS_MarkVII = {
 	},
 }
 
-return lowerkeys({["IS_MarkVII"] = IS_MarkVII})
+dropShips = {}
+for i, sideName in pairs(Sides) do
+	dropShips[sideName .. "_markvii"] = IS_MarkVII:New{}
+end
+return lowerkeys(dropShips)
