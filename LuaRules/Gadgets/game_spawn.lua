@@ -34,6 +34,12 @@ end
 --------------------------------------------------------------------------------
 --------------------------------------------------------------------------------
 
+local PROFILE_PATH = "maps/flagConfig/" .. Game.mapName .. "_profile.lua"
+local teamStarts
+if VFS.FileExists(PROFILE_PATH) then
+	_, _, teamStarts = VFS.Include(PROFILE_PATH)
+end
+
 local modOptions = Spring.GetModOptions()
 if not modOptions.startmetal then -- load via file
 	local raw = VFS.Include("modoptions.lua", nil, VFS.ZIP)
@@ -85,15 +91,6 @@ local function GetStartUnit(teamID)
 	else
 		startUnit = Spring.GetSideData(side)
 	end
-	-- Check for GM / Random team
-	--[[if startUnit == "gmtoolbox" then
-		local randSide = math.random(1,#GetSideData())	-- TODO: start at 2 to avoid picking random side again
-		if (modOptions.gm_team_enable == "0") then
-			side, startUnit = GetSideData(randSide)
-		else
-			side = GetSideData(randSide)
-		end
-	end--]]
 	GG.teamSide[teamID] = SideNames[side]
 	Spring.SetTeamRulesParam(teamID, "side", SideNames[side])
 	return startUnit
@@ -103,7 +100,15 @@ local function SpawnStartUnit(teamID)
 	local startUnit = sideStartUnits[teamID]
 	if (startUnit and startUnit ~= "") then
 		-- spawn the specified start unit
-		local x,y,z = Spring.GetTeamStartPosition(teamID)
+		local startPos = teamStarts and teamStarts[teamID]
+		local x,y,z
+		if startPos then
+			x = startPos.x
+			z = startPos.z
+			y = Spring.GetGroundHeight(x,z)
+		else
+			x,y,z = Spring.GetTeamStartPosition(teamID)
+		end
 		-- snap to 16x16 grid
 		x, z = 16*math.floor((x+8)/16), 16*math.floor((z+8)/16)
 		y = Spring.GetGroundHeight(x, z)
