@@ -396,8 +396,10 @@ local L = {"L"}
 local C = {"C"}
 local T = {"T"}
 
-local function CheckBuildOptions(unitID, teamID, money, weightLeft, cmdID)
-	--local weightLeft = GetTeamResources(teamID, "energy")
+local function CheckBuildOptions(unitID, teamID, cmdID)
+	local money = GetTeamResources(teamID, "metal")
+	local weightLeft = GetTeamResources(teamID, "energy")
+	
 	local cmdDescs = GetUnitCmdDescs(unitID) or EMPTY_TABLE
 	for cmdDescID = 1, #cmdDescs do
 		local buildDefID = cmdDescs[cmdDescID].id
@@ -568,17 +570,17 @@ function gadget:AllowCommand(unitID, unitDefID, teamID, cmdID, cmdParams, cmdOpt
 				local newTotal = runningTotal + cost
 				local newTons = runningTons + weight
 				if  cost <= money and weight <= tonnage then -- check we can afford it
-					Spring.SendMessageToTeam(teamID, "Running C-Bills: " .. newTotal)
-					Spring.SendMessageToTeam(teamID, "Running Tonnage: " .. newTons)
+					--Spring.SendMessageToTeam(teamID, "Running C-Bills: " .. newTotal)
+					--Spring.SendMessageToTeam(teamID, "Running Tonnage: " .. newTons)
 					orderCosts[unitID] = newTotal
 					orderTons[unitID] = newTons
 					orderSizes[unitID] = runningSize + 1
-					CheckBuildOptions(unitID, teamID, money, tonnage, cmdID)
-					EditUnitCmdDesc(unitID, FindUnitCmdDesc(unitID, CMD_RUNNING_TOTAL), {name = "Order\nC-Bills: \n" .. newTotal})
-					EditUnitCmdDesc(unitID, FindUnitCmdDesc(unitID, CMD_RUNNING_TONS), {name = "Order\nTonnes: \n" .. newTons})
 					-- Take the costs upfront, can be reimbursed
 					UseTeamResource(teamID, "metal", cost)
 					UseTeamResource(teamID, "energy", weight)
+					CheckBuildOptions(unitID, teamID, cmdID)
+					EditUnitCmdDesc(unitID, FindUnitCmdDesc(unitID, CMD_RUNNING_TOTAL), {name = "Order\nC-Bills: \n" .. newTotal})
+					EditUnitCmdDesc(unitID, FindUnitCmdDesc(unitID, CMD_RUNNING_TONS), {name = "Order\nTonnes: \n" .. newTons})
 					--Spring.Echo(teamID, "SLOTS", TeamSlotsRemaining(teamID), orderSizesPending[unitID], runningSize)
 					return true
 				else
@@ -595,7 +597,7 @@ function gadget:AllowCommand(unitID, unitDefID, teamID, cmdID, cmdParams, cmdOpt
 					AddTeamResource(teamID, "metal", cost)
 					AddTeamResource(teamID, "energy", weight)
 					orderSizes[unitID] = runningSize - 1
-					CheckBuildOptions(unitID, teamID, money - (runningTotal - cost), tonnage - (runningTons - weight))
+					CheckBuildOptions(unitID, teamID)
 					EditUnitCmdDesc(unitID, FindUnitCmdDesc(unitID, CMD_RUNNING_TOTAL), {name = "Order\nC-Bills: \n" .. runningTotal - cost})
 					EditUnitCmdDesc(unitID, FindUnitCmdDesc(unitID, CMD_RUNNING_TONS), {name = "Order\nTonnes: \n" .. runningTons - weight})
 					return true
@@ -752,9 +754,7 @@ function gadget:GameFrame(n)
 		end
 		-- check if orders are still too expensive
 		for unitID, teamID in pairs(dropZones) do
-			local cBills = GetTeamResources(teamID, "metal") - (orderCosts[unitID] or 0)
-			local tonnage = GetTeamResources(teamID, "energy") - (orderTons[unitID] or 0)
-			CheckBuildOptions(unitID, teamID, cBills, tonnage)
+			CheckBuildOptions(unitID, teamID)
 		end
 		-- reduce cooldown timers
 		for teamID, enableFrame in pairs(coolDowns) do
