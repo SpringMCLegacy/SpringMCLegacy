@@ -42,7 +42,7 @@ local temps = {
 }
 
 local starts = {
-	[1] = { -- teamID
+	[2] = { -- teamID
 		x = 400,
 		z = 2200,
 	},
