@@ -1,6 +1,13 @@
 -- USEFUL FUNCTIONS & INCLUDES
 VFS.Include("LuaRules/Includes/utilities.lua", nil, VFS.ZIP)
 
+local PROFILE_PATH = "maps/flagConfig/" .. Game.mapName .. "_profile.lua"
+local hoverMap
+if VFS.FileExists(PROFILE_PATH) then
+	_, env = VFS.Include(PROFILE_PATH)
+	hoverMap = env.hovers
+end
+
 local function GetWeight(mass)
 	mass = tonumber(mass)
 	local light = mass < 40
@@ -478,7 +485,7 @@ end
 
 table.sort(TCONTROL_BUILDOPTIONS)
 TCONTROL_UD["buildoptions"] = TCONTROL_BUILDOPTIONS
-VPAD_UD.customparams.spawn = VPAD_SPAWNOPTIONS
+VPAD_UD.customparams.spawn = hoverMap and HPAD_SPAWNOPTIONS or VPAD_SPAWNOPTIONS
 --HPAD_UD.customparams.spawn = HPAD_SPAWNOPTIONS
 --table.echo(VPAD_UD.customparams.spawn)
 --table.echo(HPAD_UD.customparams.spawn)

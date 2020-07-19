@@ -355,7 +355,7 @@ return {
 			tooltip = 'Adds heavy units to the militia, increases chance of medium units',
 			texture = 'bitmaps/ui/upgrade.png',	
 		},
-		valid = function (unitDefID) return UnitDefs[unitDefID].name:find("vehiclepad") end,
+		valid = function (unitDefID) return (not GG.hoverMap) and UnitDefs[unitDefID].name:find("vehiclepad") end,
 		applyPerk = function (unitID)
 			GG.PadUpgrade(unitID, 2)
 		end,
@@ -371,7 +371,7 @@ return {
 			tooltip = 'Adds assault units to the militia, increases chance of heavy units',
 			texture = 'bitmaps/ui/upgrade.png',	
 		},
-		valid = function (unitDefID) return UnitDefs[unitDefID].name:find("vehiclepad") end,
+		valid = function (unitDefID) return (not GG.hoverMap) and UnitDefs[unitDefID].name:find("vehiclepad") end,
 		applyPerk = function (unitID)
 			GG.PadUpgrade(unitID, 3)
 		end,
@@ -389,7 +389,7 @@ return {
 			tooltip = 'Adds medium units to the militia, increases chance of APC units',
 			texture = 'bitmaps/ui/upgrade.png',	
 		},
-		valid = function (unitDefID) return UnitDefs[unitDefID].name:find("hoverpad") end,
+		valid = function (unitDefID) return (GG.hoverMap) and UnitDefs[unitDefID].name:find("vehiclepad") end,
 		applyPerk = function (unitID)
 			GG.PadUpgrade(unitID, 2)
 		end,
@@ -405,7 +405,7 @@ return {
 			tooltip = 'Adds VTOL units to the militia, increases chance of medium units',
 			texture = 'bitmaps/ui/upgrade.png',	
 		},
-		valid = function (unitDefID) return UnitDefs[unitDefID].name:find("hoverpad") end,
+		valid = function (unitDefID) return (GG.hoverMap) and UnitDefs[unitDefID].name:find("vehiclepad") end,
 		applyPerk = function (unitID)
 			GG.PadUpgrade(unitID, 3)
 		end,

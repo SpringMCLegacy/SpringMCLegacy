@@ -15,17 +15,25 @@ end
 if gadgetHandler:IsSyncedCode() then
 --	SYNCED
 
+local PROFILE_PATH = "maps/flagConfig/" .. Game.mapName .. "_profile.lua"
+local hoverMap
+if VFS.FileExists(PROFILE_PATH) then
+	_, env = VFS.Include(PROFILE_PATH)
+	hoverMap = env.hovers
+end
+GG.hoverMap = hoverMap
+
 local modOptions = Spring.GetModOptions()
 local GAIA_TEAM_ID = Spring.GetGaiaTeamID()
 local BASE_DELAY = tonumber((modOptions and modOptions.vehicle_delay) or "30") * 30 -- base line delay, may be +{0,10}s
 local DEATH_DELAY = 60 * 30 -- delay next one by extra 1 minute if the last one died
 local BEACON_ID = UnitDefNames["beacon"].id
-local VPAD_ID = UnitDefNames["outpost_vehiclepad"].id
---local HPAD_ID = UnitDefNames["outpost_hoverpad"].id
+local VPAD_ID = (not hoverMap) and UnitDefNames["outpost_vehiclepad"].id or -1
+local HPAD_ID = hoverMap and UnitDefNames["outpost_vehiclepad"].id or -1
 
 local SPAWN_DEF_IDS = {
-	[VPAD_ID] = true,
-	--[HPAD_ID] = true,
+	[VPAD_ID] = not hoverMap,
+	[HPAD_ID] = hoverMap,
 }
 
 local flagSpots = {} --VFS.Include("maps/flagConfig/" .. Game.mapName .. "_profile.lua")
@@ -49,9 +57,11 @@ local weights = {"light", "medium", "heavy", "assault",} -- TODO: this is repeat
 function gadget:Initialize()
 	for sideName, shortName in pairs(GG.SideNames) do
 		sideSpawnLists[shortName] = {}
-		for spawnDefID in pairs(SPAWN_DEF_IDS) do
-			sideSpawnLists[shortName][spawnDefID] = table.unserialize(UnitDefs[spawnDefID].customParams.spawn)[shortName]
-			--table.echo(sideSpawnLists[shortName][spawnDefID])
+		for spawnDefID, use in pairs(SPAWN_DEF_IDS) do
+			if use then
+				sideSpawnLists[shortName][spawnDefID] = table.unserialize(UnitDefs[spawnDefID].customParams.spawn)[shortName]
+				--table.echo(sideSpawnLists[shortName][spawnDefID])
+			end
 		end
 	end
 	for unitDefID, unitDef in pairs(UnitDefs) do
@@ -118,7 +128,6 @@ local chances = {
 			},
 		},
 	},
-	--[[
 	[HPAD_ID] = {
 		[1] = { -- light hovers
 			class = {
@@ -153,7 +162,7 @@ local chances = {
 				medium = 0.5,			
 			},
 		},
-	}, --]]
+	},
 }
 
 local function PadUpgrade(unitID, level)
