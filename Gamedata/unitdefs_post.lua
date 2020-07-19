@@ -302,7 +302,6 @@ for name, ud in pairs(UnitDefs) do
 			ud.airsightdistance = modOptions.mechSight or 400
 		end
 		ud.sightdistance = ud.sightdistance or modOptions.mechsight
-		ud.airsightdistance = ud.airsightdistance or ud.sightdistance * 1.05
 		if cp.baseclass == "mech" then -- mechs only
 			table.insert(ud.weapons, {name = "sight"})
 			cp.role = GetRole(ud.description)
@@ -316,9 +315,11 @@ for name, ud in pairs(UnitDefs) do
 			ud.losemitheight = cp.cockpitheight or (ud.mass / 10)
 			ud.radaremitheight = 100
 			ud.seismicsignature = cp.tonnage / 10
+			ud.airsightdistance = ud.sightdistance * 1.05
 		else -- everything but mechs
 			ud.seismicsignature = 0
 			ud.radardistance = ud.radardistance or 0
+			ud.airsightdistance = ud.radardistance
 		end
 		if cp.ecm then
 			ud.radardistancejam	= 500
