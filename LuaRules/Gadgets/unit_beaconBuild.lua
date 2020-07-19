@@ -491,7 +491,7 @@ function gadget:AllowCommand(unitID, unitDefID, teamID, cmdID, cmdParams, cmdOpt
 			if cost <= GetTeamResources(teamID, "metal") then
 				--Spring.Echo("I'm totally gonna outpost your beacon bro!")
 				ToggleOutpostOptions(unitID, false)
-				DropshipDelivery(outpostPointBeaconIDs[unitID], unitID, teamID, "is_avenger", outpostDefID, cost, "BB_Dropship_Inbound", DROPSHIP_DELAY)
+				DropshipDelivery(outpostPointBeaconIDs[unitID], unitID, teamID, GG.teamSide[teamID] .. "_drost", outpostDefID, cost, "BB_Dropship_Inbound", DROPSHIP_DELAY)
 			else
 				GG.PlaySoundForTeam(teamID, "BB_Insufficient_Funds", 1)
 			end
