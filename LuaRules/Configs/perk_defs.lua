@@ -74,7 +74,7 @@ end
 
 local function deductCBills(unitID, amount)
 	local teamID = Spring.GetUnitTeam(unitID)
-	Spring.UseTeamResource(teamID, "m", amount)
+	Spring.UseTeamResource(teamID, "m", Spring.IsNoCostEnabled() and 0 or amount)
 end
 
 return {

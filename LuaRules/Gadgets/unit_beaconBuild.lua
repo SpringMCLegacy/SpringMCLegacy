@@ -487,7 +487,7 @@ function gadget:AllowCommand(unitID, unitDefID, teamID, cmdID, cmdParams, cmdOpt
 				return false 
 			end
 			local outpostDefID = outpostCMDs[cmdID]
-			local cost = outpostDefs[outpostDefID] and outpostDefs[outpostDefID].cost or 1000
+			local cost = (Spring.IsNoCostEnabled() and 0) or (outpostDefs[outpostDefID] and outpostDefs[outpostDefID].cost or 1000)
 			if cost <= GetTeamResources(teamID, "metal") then
 				--Spring.Echo("I'm totally gonna outpost your beacon bro!")
 				ToggleOutpostOptions(unitID, false)

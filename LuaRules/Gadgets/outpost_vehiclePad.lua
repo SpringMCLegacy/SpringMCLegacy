@@ -67,12 +67,6 @@ function gadget:Initialize()
 	end
 end
 
-local levelDropships = {
-	[1] = "_markvii",
-	[2] = "_markvii",
-	[3] = "_drost",
-}
-
 local delays = {
 	[1] = BASE_DELAY,
 	[2] = BASE_DELAY * 1.2, -- 20% increase
@@ -229,7 +223,7 @@ local function Deliver(unitID, teamID)
 		local vehName = RandomVehicle(unitID, spawnDefID, currLevel, class, weight, weightIndex)
 		if vehName and UnitDefNames[vehName] then -- double check def was actually loaded
 			--Spring.Echo("New Vehicle:", vehName, vehiclesDefCache[UnitDefNames[vehName].id], class, weight)
-			GG.DropshipDelivery(Spring.GetUnitRulesParam(unitID, "beaconID"), unitID, teamID, GG.teamSide[teamID] .. levelDropships[currLevel], {{[vehName] = vehiclesDefCache[UnitDefNames[vehName].id]}}, 0, nil, 1) 
+			GG.DropshipDelivery(Spring.GetUnitRulesParam(unitID, "beaconID"), unitID, teamID, GG.teamSide[teamID] .. "_markvii", {{[vehName] = vehiclesDefCache[UnitDefNames[vehName].id]}}, 0, nil, 1) 
 		else
 			--Spring.Echo("No vehicle of that weight :(")
 		end
