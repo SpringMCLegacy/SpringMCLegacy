@@ -232,7 +232,7 @@ local function Deliver(unitID, teamID)
 		local vehName = RandomVehicle(unitID, spawnDefID, currLevel, class, weight, weightIndex)
 		if vehName and UnitDefNames[vehName] then -- double check def was actually loaded
 			--Spring.Echo("New Vehicle:", vehName, vehiclesDefCache[UnitDefNames[vehName].id], class, weight)
-			GG.DropshipDelivery(Spring.GetUnitRulesParam(unitID, "beaconID"), unitID, teamID, GG.teamSide[teamID] .. "_markvii", {{[vehName] = vehiclesDefCache[UnitDefNames[vehName].id]}}, 0, nil, 1) 
+			GG.DropshipDelivery(Spring.GetUnitRulesParam(unitID, "beaconID"), unitID, teamID, GG.teamSide[teamID] .. "_dropship_markvii", {{[vehName] = vehiclesDefCache[UnitDefNames[vehName].id]}}, 0, nil, 1) 
 		else
 			--Spring.Echo("No vehicle of that weight :(")
 		end
