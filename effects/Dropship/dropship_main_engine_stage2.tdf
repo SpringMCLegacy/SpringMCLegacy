@@ -1,11 +1,13 @@
 [dropship_main_engine_stage2]
 {
 	usedefaultexplosions=0;	
+	alwaysvisible=1;
 [exhale]
 	{
 		class=CSimpleParticleSystem;
 		[properties]
 		{
+		alwaysvisible=1;
 		sizeGrowth=2;
 		sizeMod=1.0;
 		pos=0, 1, 0; 
@@ -44,6 +46,7 @@
 		class=CSimpleParticleSystem;
 		[properties]
 		{
+		alwaysvisible=1;
 		sizeGrowth=2;
 		sizeMod=1.0;
 		pos=0, 1, 0; 

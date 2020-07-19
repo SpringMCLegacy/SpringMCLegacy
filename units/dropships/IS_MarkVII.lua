@@ -1,16 +1,10 @@
-local IS_MarkVII = Unit:New{ -- TODO: better base class than Unit
+local IS_MarkVII = DropShip:New{
 	name              	= "Mark VII Landing Craft",
 	description         = "Cargo Landing Craft",
-	objectName        	= "IS_MarkVIIb.s3o",
 	iconType			= "markvii",
-	script				= "Dropship.lua",
 	category 			= "ground notbeacon",
-	activateWhenBuilt   = true,
 	maxDamage           = 10000,
 	mass                = 13000,
-	footprintX			= 20,
-	footprintZ 			= 20,
-	--collisionVolumeType = "ellipsoid",
 	buildCostEnergy     = 0,
 	buildCostMetal      = 0,
 	buildTime           = 0,
@@ -20,15 +14,7 @@ local IS_MarkVII = Unit:New{ -- TODO: better base class than Unit
 	maxSlope			= 50,
 	moveState			= 0,
 	levelGround			= false,
-	movementClass		= "LARGEMECH", -- herp
 	usePieceCollisionVolumes = true,
-	power				= 1, -- don't target me!
-	
-	-- Transport tags
-	transportSize		= 8,
-	transportCapacity	= 64, -- 1x transportSize
-	transportMass		= 1000000,
-	holdSteady 			= true,
 
 	--Makes unit use weapon from /weapons folder
 	weapons	= {	
@@ -92,6 +78,6 @@ local IS_MarkVII = Unit:New{ -- TODO: better base class than Unit
 
 dropShips = {}
 for i, sideName in pairs(Sides) do
-	dropShips[sideName .. "_markvii"] = IS_MarkVII:New{}
+	dropShips[sideName .. "_dropship_markvii"] = IS_MarkVII:New{}
 end
 return lowerkeys(dropShips)

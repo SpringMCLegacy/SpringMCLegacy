@@ -1,7 +1,7 @@
 local IS_DroST = Unit:New{ -- TODO: better base class than Unit
 	name              	= "DroST II Landing Craft",
 	description         = "Cargo Landing Craft",
-	objectName        	= "IS_DroST.s3o",
+	objectName        	= "Dropship/DroST.s3o",
 	iconType			= "drost",
 	script				= "Dropship.lua",
 	category 			= "ground notbeacon",
@@ -33,67 +33,39 @@ local IS_DroST = Unit:New{ -- TODO: better base class than Unit
 	--Makes unit use weapon from /weapons folder
 	weapons	= {	
 		[1] = {
-			name	= "AC5",
-			maxAngleDif = 200,
-			mainDir = [[0 1 0]],
+			name	= "AC10",
+			maxAngleDif = 100,
 		},
 		[2] = {
-			name	= "AC5",
-			maxAngleDif = 200,
-			mainDir = [[0 1 0]],
+			name	= "LBL",
+			maxAngleDif = 100,
 		},
 		[3] = {
-			name	= "AC5",
-			maxAngleDif = 200,
-			mainDir = [[0 -1 0]],
+			name	= "LBL",
+			maxAngleDif = 100,
 		},
 		[4] = {
-			name	= "AC5",
-			maxAngleDif = 200,
-			mainDir = [[0 -1 0]],
+			name	= "MBL",
+			maxAngleDif = 100,
 		},
 		[5] = {
-			name	= "AC5",
-			maxAngleDif = 30,
-		},
-		[6] = {
-			name	= "LBL",
-			maxAngleDif = 30,
-		},
-		[7] = {
-			name	= "LBL",
-			maxAngleDif = 30,
-		},
-		[8] = {
-			name	= "LBL",
-			maxAngleDif = 30,
-			mainDir = [[-1 0 0]],
-		},
-		[9] = {
-			name	= "ERMBL",
-			maxAngleDif = 30,
-		},
-		[10] = {
-			name	= "ERNBL",
-			maxAngleDif = 30,
-		},
-		[11] = {
-			name	= "ERMBL",
-			maxAngleDif = 30,
-			mainDir = [[-1 0 0]],
+			name	= "NBL",
+			maxAngleDif = 100,
 		},
 	},
 	--Gets CEG effects from /gamedata/explosions folder
 	sfxtypes = {
 		explosiongenerators = {
-			--"custom:heavy_jet_trail",
+			"custom:heavy_jet_trail_blue",
+			"custom:medium_jet_trail_blue",
 			"custom:dropship_main_engine_stage2",
+			"custom:heavy_jet_trail",
 		},
 	},
 	customparams = {
 		helptext		= "A Dropship",
-		dropship		= "vehicle",
-		hoverheight		= 43 + 12,
+		dropship		= "outpost",
+		hoverheight		= 300,
 		radialdist		= 2500,
 		ignoreatbeacon	= true,
     },
