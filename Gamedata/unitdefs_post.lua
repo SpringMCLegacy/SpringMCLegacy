@@ -1,11 +1,14 @@
 -- USEFUL FUNCTIONS & INCLUDES
 VFS.Include("LuaRules/Includes/utilities.lua", nil, VFS.ZIP)
 
-local PROFILE_PATH = "maps/flagConfig/" .. Game.mapName .. "_profile.lua"
+local PROFILE_PATH 
 local hoverMap
-if VFS.FileExists(PROFILE_PATH) then
-	_, env = VFS.Include(PROFILE_PATH)
-	hoverMap = env.hovers
+if Game then
+	PROFILE_PATH = "maps/flagConfig/" .. Game.mapName .. "_profile.lua"
+	if VFS.FileExists(PROFILE_PATH) then
+		_, env = VFS.Include(PROFILE_PATH)
+		hoverMap = env.hovers
+	end
 end
 
 local function GetWeight(mass)
