@@ -1,5 +1,5 @@
 local Outpost_Garrison = Outpost:New{
-	name              	= "Garrison",
+	name              	= "Garrison (Fortify)",
 	description         = "Fortified Defensive Outpost",
 	maxDamage           = 20000,
 	mass                = 10000,

@@ -1,5 +1,5 @@
 local Outpost_Uplink = Outpost:New{
-	name              	= "Orbital Uplink",
+	name              	= "Orbital Uplink (Bombard)",
 	description         = "Orbital Asset outpost",
 	maxDamage           = 10000,
 	mass                = 5000,

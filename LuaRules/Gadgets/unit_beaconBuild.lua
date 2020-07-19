@@ -105,6 +105,17 @@ local function BeaconPoints(beaconID, teamID, x, y, z)
 end
 GG.BeaconPoints = BeaconPoints
 
+local function mysplit (inputstr, sep)
+        if sep == nil then
+                sep = "%s"
+        end
+        local t={}
+        for str in string.gmatch(inputstr, "([^"..sep.."]+)") do
+                table.insert(t, str)
+        end
+        return t
+end
+
 function gadget:GamePreload()
 	for unitDefID, unitDef in pairs(UnitDefs) do
 		local name = unitDef.name
@@ -118,7 +129,7 @@ function gadget:GamePreload()
 			local outpostCmdDesc = {
 				id     = GG.CustomCommands.GetCmdID("CMD_" .. name:upper(), cBillCost),
 				type   = CMDTYPE.ICON,
-				name   = unitDef.humanName:gsub(" ", "  \n"),
+				name   = GG.Pad(10,unpack(mysplit(unitDef.humanName))),
 				action = 'outpost',
 				tooltip = unitDef.tooltip .. " (C-Bills cost: " .. cBillCost .. ")",
 			}

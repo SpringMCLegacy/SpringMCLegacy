@@ -449,6 +449,7 @@ function gadget:CommandFallback(unitID, unitDefID, teamID, cmdID, cmdParams, cmd
 	if GG.turning[unitID] then
 		return true, false
 	end
+	if not Spring.ValidUnitID(unitID) or Spring.GetUnitIsDead(unitID) then return false, true end
 
 	local x, y, z = spGetUnitBasePosition(unitID)
 	local distSqr = GetDist2Sqr({x, y, z}, cmdParams)

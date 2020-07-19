@@ -1,5 +1,5 @@
 local Outpost_Seismic = Outpost:New{
-	name              	= "Seismic Listening Post",
+	name              	= "Seismic Listening Post (Detect)",
 	description         = "Long-Range Seismic Sensor",
 	maxDamage           = 10000,
 	mass                = 5000,

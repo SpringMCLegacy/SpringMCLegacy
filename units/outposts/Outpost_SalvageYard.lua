@@ -1,5 +1,5 @@
 local Outpost_SalvageYard = Outpost:New{
-	name              	= "Salvage Yard",
+	name              	= "Salvage Yard (Upgrade)",
 	description         = "Salvage & Recovery outpost",
 	maxDamage           = 10000,
 	mass                = 9000,

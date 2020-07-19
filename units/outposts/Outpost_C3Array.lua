@@ -1,7 +1,7 @@
 
 
 local Outpost_C3Array = Outpost:New{
-	name              	= "C3 Network Relay",
+	name              	= "C3 Network Relay (Reinforce)",
 	description         = "Command & Control Capacity outpost",
 	maxDamage           = 2200,
 	mass                = 10000,

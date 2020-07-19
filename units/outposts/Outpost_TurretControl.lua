@@ -1,5 +1,5 @@
 local Outpost_TurretControl = Outpost:New{
-	name              	= "A.I. Turret Control",
+	name              	= "Turret Control (Defend)",
 	description         = "Automated Turret Control Station",
 	maxDamage           = 10000,
 	mass                = 5000,

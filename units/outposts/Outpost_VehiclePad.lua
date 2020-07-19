@@ -1,5 +1,5 @@
 local Outpost_VehiclePad = Outpost:New{
-	name              	= "Vehicle Pad",
+	name              	= "Vehicle Pad (Support)",
 	description         = "Vehicle Delivery outpost",
 	maxDamage           = 10000,
 	mass                = 5000,
