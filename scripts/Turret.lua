@@ -112,7 +112,8 @@ end
 local legs = {}
 local breaks = {}
 local exhausts = {}
-for i = 1, 4 do
+local extend = piece("extend")
+for i = 1, 6 do
 	legs[i] = piece("leg_" .. i)
 	breaks[i] = piece("break_" .. i)
 	exhausts[i] = piece("exhaust_" .. i)
@@ -141,7 +142,7 @@ function fx()
 		Sleep(50)
 	end
 	if stage == 2 then
-		for i = 1,4 do
+		for i = 1, #exhausts do
 			GG.EmitLupsSfx(unitID, "dropship_vertical_exhaust", exhausts[i], {id = "turret_exhaust", width = 25, length = 70})
 		end
 	end
@@ -157,29 +158,39 @@ function fx()
 		end
 		Sleep(1000)
 		PlaySound("turret_deploy")
-		for i = 1,4 do
-			local axis = (i % 2 == 0 and z_axis) or x_axis -- even use z, odd use x
-			local dir = (i == 1 or i == 4) and -1 or 1
-			Turn(legs[i], axis, math.rad(dir * 83), SPEED)
+		for i = 1,#legs do
+			if extend then
+				Turn(legs[i], x_axis, math.rad(90), SPEED)
+			else
+				local axis = (i % 2 == 0 and z_axis) or x_axis -- even use z, odd use x
+				local dir = (i == 1 or i == 4) and -1 or 1
+				Turn(legs[i], axis, math.rad(dir * 83), SPEED)
+			end
 		end
 		WaitForTurn(legs[4], z_axis)
-		for i = 1,4 do
-			local axis = (i % 2 == 0 and z_axis) or x_axis -- even use z, odd use x
-			local dir = (i == 1 or i == 4) and -1 or 1
-			Turn(legs[i], axis, math.rad(dir * 110), SPEED / 5)
-		end
-		local height = 0
-		local angleDiff = math.rad(110 - 83)
-		local hyp = 3.5 / math.sin(angleDiff)
-		while height < 3.5 do
-			local angle = angleDiff - (Spring.UnitScript.GetPieceRotation(legs[1]) - math.rad(250))
-			height = math.sin(angle) * hyp
-			Move(base, y_axis, height)
-			Sleep(50)
+		if not extend then
+			for i = 1,#legs do
+				local axis = (i % 2 == 0 and z_axis) or x_axis -- even use z, odd use x
+				local dir = (i == 1 or i == 4) and -1 or 1
+				Turn(legs[i], axis, math.rad(dir * 110), SPEED / 5)
+			end
+			local height = 0
+			local angleDiff = math.rad(110 - 83)
+			local hyp = 3.5 / math.sin(angleDiff)
+			while height < 3.5 do
+				local angle = angleDiff - (Spring.UnitScript.GetPieceRotation(legs[1]) - math.rad(250))
+				height = math.sin(angle) * hyp
+				Move(base, y_axis, height)
+				Sleep(50)
+			end
 		end
 		if mantlets[1] then 
 			Turn(mantlets[1], x_axis, 0, SPEED)
 			WaitForTurn(mantlets[1], x_axis)
+		end
+		if extend then
+			Move(barrels[1], z_axis, 0, 10)
+			WaitForMove(barrels[1], z_axis)
 		end
 		-- Start acting like a real boy
 		RealBoy()
@@ -195,9 +206,17 @@ function script.Create()
 	if mantlets[1] then 
 		Turn(mantlets[1], x_axis, math.rad(-90))
 	end
-	Turn(exhausts[1], y_axis, math.rad(180))	
-	Turn(exhausts[2], y_axis, math.rad(-90))
-	Turn(exhausts[4], y_axis, math.rad(90))
+	if extend then
+		Move(barrels[1], z_axis, -10)
+		for i = 1, #exhausts do
+			Turn(exhausts[i], y_axis, math.rad(-60 * (i-1)-30))
+			Turn(legs[i], y_axis, math.rad(-60 * (i-1)-30))
+		end
+	else
+		for i = 1, #exhausts do
+			Turn(exhausts[i], y_axis, math.rad(90*(i+1)))
+		end
+	end
 		
 	-- Orbital insertion anim
 	Spring.MoveCtrl.Enable(unitID)
@@ -209,9 +228,9 @@ function script.Create()
 	Spring.SetUnitSensorRadius(unitID, "airLos", 0)
 	Spring.SetUnitSensorRadius(unitID, "radar", 0)
 	
-	for i = 1,4 do
+	for i = 1,#exhausts do
 		Turn(exhausts[i], x_axis, math.rad(70))
-		Spin(exhausts[i], z_axis, math.rad(360)) -- doesn't seem to be working?
+		--Spin(exhausts[i], z_axis, math.rad(360)) -- doesn't seem to be working?
 	end
 
 	Spin(base, y_axis, 10)
@@ -229,7 +248,7 @@ function script.Create()
 	stage = 2
 	StopSpin(base, y_axis, 0.1)
 	
-	for i = 1,4 do
+	for i = 1,#breaks do
 		Hide(breaks[i])
 		Explode(breaks[i], SFX.FIRE + SFX.FALL)
 	end
@@ -380,8 +399,15 @@ end
 function script.FireWeapon(weaponID)
 	if barrels[weaponID] and barrelRecoils[weaponID] then
 		Move(barrels[weaponID], z_axis, -barrelRecoils[weaponID], BARREL_SPEED)
+		if extend then
+			Explode(piece("casing"), SFX.SMOKE + SFX.FALL)
+			Move(extend, z_axis, -barrelRecoils[weaponID], BARREL_SPEED)
+		end
 		WaitForMove(barrels[weaponID], z_axis)
 		Move(barrels[weaponID], z_axis, 0, 10)
+		if extend then
+			Move(extend, z_axis, 0, 10)
+		end
 	end
 	local ammoType = ammoTypes[weaponID]
 	if ammoType then
