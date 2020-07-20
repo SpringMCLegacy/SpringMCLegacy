@@ -509,13 +509,13 @@ return {
 		cmdDesc = {
 			id = GetCmdID('PERK_TURRETCONTROL_3'),
 			action = 'perkturretcontrol_3',
-			name = Pad("Missile","& LAMS", "Towers"),
-			tooltip = 'Unlocks LRM and LAMS towers',
+			name = Pad("Long","Range", "Towers"),
+			tooltip = 'Unlocks LRM and Sniper Artillery towers',
 			texture = 'bitmaps/ui/upgrade.png',	
 		},
 		valid = function (unitDefID) return UnitDefs[unitDefID].name == "outpost_turretcontrol" end,
 		applyPerk = function (unitID)
-			GG.LimitTowerType(unitID, Spring.GetUnitTeam(unitID), "missile", 2)
+			GG.LimitTowerType(unitID, Spring.GetUnitTeam(unitID), "ranged", 2)
 		end,
 		costFunction = deductCBills,
 		price = 8000,

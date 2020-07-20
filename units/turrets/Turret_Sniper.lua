@@ -13,7 +13,7 @@ local Turret_Sniper = Tower:New{
 		maxammo 		= {sniper = 2},
 		turretturnspeed = 100,
 		elevationspeed  = 150,
-		turrettype = "turret",
+		turrettype = "ranged",
     },
 	sounds = {
 	select = "Turret",

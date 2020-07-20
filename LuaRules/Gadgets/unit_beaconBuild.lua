@@ -50,7 +50,7 @@ local RADIUS = 230
 local DROPSHIP_DELAY = 10 * 30 -- 10s
 
 -- Variables
-local towerDefIDs = {} -- towerDefIDs[unitDefID] = "turret" or "energy" or "missile"
+local towerDefIDs = {} -- towerDefIDs[unitDefID] = "turret" or "energy" or "ranged"
 local buildLimits = {} -- buildLimits[unitID] = {turret = 4, ...}
 local towerOwners = {} -- towerOwners[towerID] = outpostID
 local ownedTowers = {} -- ownedTowers[outpostID] = {towerID = true, ...}
@@ -352,10 +352,10 @@ function gadget:UnitCreated(unitID, unitDefID, teamID, builderID)
 	elseif unitDefID == BEACON_POINT_ID then
 		AddOutpostOptions(unitID)
 	elseif unitDefID == TURRETCONTROL_ID then
-		buildLimits[unitID] = {["turret"] = 2, ["energy"] = 1, ["missile"] = 1}
+		buildLimits[unitID] = {["turret"] = 2, ["energy"] = 1, ["ranged"] = 1}
 		ownedTowers[unitID] = {}
 		LimitTowerType(unitID, teamID, "energy") -- reduce to 0 so we get the BP greyed out
-		LimitTowerType(unitID, teamID, "missile") -- reduce to 0 so we get the BP greyed out
+		LimitTowerType(unitID, teamID, "ranged") -- reduce to 0 so we get the BP greyed out
 	elseif cp and cp.baseclass == "tower" then
 		-- track creation of turrets and their originating beacons so we can give back slots if a turret dies
 		if builderID then -- ignore /give turrets
