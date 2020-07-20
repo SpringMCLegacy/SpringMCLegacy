@@ -393,13 +393,22 @@ end
 function gadget:AllowCommand(unitID, unitDefID, teamID, cmdID, cmdParams, cmdOptions)
   -- don't allow jumping if at/above critical heat
   if (cmdID == CMD_JUMP) then
-    if (spGetUnitRulesParam(unitID, "heat") or 0) >= 50 then return false end -- can't jump if too hot
-	if (spGetUnitRulesParam(unitID, "lostlegs") or 0) > 0 then return false end -- can't jump if a leg is disabled
+    if (spGetUnitRulesParam(unitID, "heat") or 0) >= 50 then 
+		Spring.SendMessageToTeam(teamID, "Can't jump - too hot!")
+		return false 
+	end -- can't jump if too hot
+	if (spGetUnitRulesParam(unitID, "lostlegs") or 0) > 0 then 
+		Spring.SendMessageToTeam(teamID, "Can't jump - leg disabled!")
+		return false 
+	end -- can't jump if a leg is disabled
 	
     local test = spTestBuildOrder(unitDefID, cmdParams[1], cmdParams[2], cmdParams[3], 1)
-    if not cmdOptions.shift then goalSet[unitID] = false end
+	if test ~= 2 then 
+		Spring.SendMessageToTeam(teamID, "Can't jump - Invalid target destination!")
+	end
     return test == 2
-  else
+  else -- any other command
+    if not cmdOptions.shift then goalSet[unitID] = false end
     return true
   end
 end
