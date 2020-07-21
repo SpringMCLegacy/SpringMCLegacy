@@ -11,9 +11,9 @@ local resources = {
 	},
 }
 
-local temps = {
+local env = {
 	ambient = -40,
 	water = -50,
 }
 
-return resources, outposts, temps
+return resources, env
