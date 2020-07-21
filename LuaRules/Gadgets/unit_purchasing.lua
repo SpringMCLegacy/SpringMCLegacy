@@ -695,8 +695,10 @@ function gadget:UnitDestroyed(unitID, unitDefID, teamID, attackerID, attackerDef
 			orderStatus[teamID] = 0
 		end
 		AddTeamResource(teamID, "metal", orderCosts[unitID] or 0)
+		AddTeamResource(teamID, "energy", orderTons[unitID] or 0)
 		teamDropZones[teamID] = nil
 		orderCosts[unitID] = 0
+		orderTons[unitID] = 0
 		dropZones[unitID] = nil
 	elseif unitDefID == C3_ID then
 		LanceControl(teamID, unitID, false)
