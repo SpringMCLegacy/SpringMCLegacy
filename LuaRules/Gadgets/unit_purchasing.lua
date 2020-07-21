@@ -436,13 +436,13 @@ GG.coolDowns = coolDowns
 
 function UpdateButtons(teamID) -- Toggles Submit Order vs Order Sent
 	local unitID = teamDropZones[teamID]
-	if orderStatus[teamID] == 0 then
+	if orderStatus[teamID] == 0 then -- ready for new order
 		EditUnitCmdDesc(unitID, FindUnitCmdDesc(unitID, CMD_SEND_ORDER), {disabled = false, name = "Submit \nOrder "})
 		if orderSizes[teamID] == 0 then
 			EditUnitCmdDesc(unitID, FindUnitCmdDesc(unitID, CMD_RUNNING_TOTAL), {name = "Order\nC-Bills: \n0"})
 			EditUnitCmdDesc(unitID, FindUnitCmdDesc(unitID, CMD_RUNNING_TONS), {name = "Order\nTonnes: \n0"})
 		end
-	elseif orderStatus[teamID] == 1 then
+	elseif orderStatus[teamID] == 1 then -- order submitted
 		EditUnitCmdDesc(unitID, FindUnitCmdDesc(unitID, CMD_SEND_ORDER), {name = "Order \nSent "})
 	end
 end
@@ -460,7 +460,7 @@ function DropshipLeft(teamID) -- called by Dropship once it has left, to enable 
 	if not dead and teamID and teamDropShipTypes[teamID] then
 		local unitID = teamDropZones[teamID]
 		local beaconID = GG.dropZoneBeaconIDs[teamID]
-		orderStatus[teamID] = 0
+		orderStatus[teamID] = 0 -- ready for new order
 		if unitID then -- dropzone might have died in the meantime
 			UpdateButtons(teamID)
 		end
@@ -503,6 +503,7 @@ local function SendCommandFallback(unitID, unitDefID, teamID, cost, weight)
 				dropShipStatus[teamID] = 1
 				SetTeamRulesParam(teamID, "STATUS", 1)
 			else -- cancelled
+				Spring.SendMessageToTeam(teamID, "Order cancelled, queue is empty")
 				dropShipStatus[teamID] = 0
 				SetTeamRulesParam(teamID, "STATUS", 0)
 				orderStatus[teamID] = 0
@@ -615,9 +616,13 @@ function gadget:AllowCommand(unitID, unitDefID, teamID, cmdID, cmdParams, cmdOpt
 					return true
 				else return false end
 			elseif orderStatus[teamID] == 1 then
+				Spring.SendMessageToTeam(teamID, "Cannot submit order, there is already an order pending!")
 				return false -- we already have submitted an order and not cancelled it
 			end
-			if (orderSizes[unitID] or 0) == 0 then return false end -- don't allow empty orders
+			if (orderSizes[unitID] or 0) == 0 then  -- don't allow empty orders
+				Spring.SendMessageToTeam(teamID, "Cannot submit order, queue is empty!")
+				return false 
+			end
 			orderStatus[teamID] = 1
 			UpdateButtons(teamID)
 			GG.Delay.DelayCall(SendCommandFallback, {unitID, unitDefID, teamID, cost}, 16)
@@ -691,7 +696,7 @@ end
 function gadget:UnitDestroyed(unitID, unitDefID, teamID, attackerID, attackerDefID, attackerTeam)
 	if dropZones[unitID] then -- dropZone switched
 		-- clear the order
-		if dropShipStatus[teamID] == 2 then
+		if dropShipStatus[teamID] == 2 then -- dropship is in cooldown
 			orderStatus[teamID] = 0
 		end
 		AddTeamResource(teamID, "metal", orderCosts[unitID] or 0)
@@ -702,7 +707,7 @@ function gadget:UnitDestroyed(unitID, unitDefID, teamID, attackerID, attackerDef
 		dropZones[unitID] = nil
 	elseif unitDefID == C3_ID then
 		LanceControl(teamID, unitID, false)
-	elseif dropShipTypes[unitDefID] then-- main dropship
+	elseif dropShipTypes[unitDefID] == "mech" then-- main dropship
 		-- TODO: move this to DropshipDelivery gadget and track e.g. avenger
 		if teamDropShipTypes[teamID] and unitDefID == teamDropShipTypes[teamID].def then -- it is the current type of dropship, save the HP
 			teamDropShipHPs[teamID] = Spring.GetUnitHealth(unitID)
