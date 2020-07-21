@@ -15,7 +15,7 @@ local Turret_LRM = Tower:New{
 		turrettype = "ranged",
     },
 	sounds = {
-	select = "Turret",
+		select = "Turret",
 	}
 }
 

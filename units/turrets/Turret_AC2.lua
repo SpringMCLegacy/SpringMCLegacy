@@ -28,7 +28,7 @@ local Turret_AC2 = Tower:New{
 		chainfiredelays = {[2] = 100, [3] = 200, [4] = 300},
     },
 	sounds = {
-	select = "Turret",
+		select = "Turret",
 	}
 }
 

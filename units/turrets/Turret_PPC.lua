@@ -17,7 +17,7 @@ local Turret_PPC = Tower:New{
 		turrettype = "energy",
     },
 	sounds = {
-	select = "Turret",
+		select = "Turret",
 	}
 }
 

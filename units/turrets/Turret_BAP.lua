@@ -7,7 +7,7 @@ local Turret_BAP = Tower:New{
 		bap			= true,
     },
 	sounds = {
-	select = "Turret",
+		select = "Turret",
 	}
 }
 

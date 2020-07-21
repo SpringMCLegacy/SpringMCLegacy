@@ -16,7 +16,7 @@ local Turret_AC20 = Tower:New{
 		turrettype = "turret",
     },
 	sounds = {
-	select = "Turret",
+		select = "Turret",
 	}
 }
 

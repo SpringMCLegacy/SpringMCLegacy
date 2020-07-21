@@ -7,7 +7,7 @@ local Turret_ECM = Tower:New{
 		ecm			= true,
     },
 	sounds = {
-	select = "Turret",
+		select = "Turret",
 	}
 }
 

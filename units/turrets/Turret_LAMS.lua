@@ -23,7 +23,7 @@ local Turret_LAMS = Tower:New{
 		turrettype = "missile",
     },
 	sounds = {
-	select = "Turret",
+		select = "Turret",
 	}
 }
 

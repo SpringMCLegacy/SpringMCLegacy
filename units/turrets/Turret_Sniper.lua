@@ -1,6 +1,6 @@
 local Turret_Sniper = Tower:New{
 	description         = "Sniper Artillery",
-	buildCostMetal      = 4000,
+	buildCostMetal      = 9700,
 
 	weapons	= {	
 		[1] = {
@@ -11,12 +11,12 @@ local Turret_Sniper = Tower:New{
 	customparams = {
 		barrelrecoildist = {[1] = 6},
 		maxammo 		= {sniper = 2},
-		turretturnspeed = 100,
-		elevationspeed  = 150,
+		turretturnspeed = 30,
+		elevationspeed  = 50,
 		turrettype = "ranged",
     },
 	sounds = {
-	select = "Turret",
+		select = "Turret",
 	}
 }
 

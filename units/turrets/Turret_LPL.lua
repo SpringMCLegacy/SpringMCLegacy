@@ -1,5 +1,5 @@
 local Turret_LPL = Tower:New{
-	description         = "Quad Medium Pulse Laser",
+	description         = "Quad Large Pulse Laser",
 	buildCostMetal      = 3000,
 
 	weapons = {	
@@ -26,7 +26,7 @@ local Turret_LPL = Tower:New{
 		turrettype = "energy",
     },
 	sounds = {
-	select = "Turret",
+		select = "Turret",
 	}
 }
 
