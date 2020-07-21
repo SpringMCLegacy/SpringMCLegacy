@@ -384,6 +384,7 @@ function Unpack()
 		local teamID = Spring.GetUnitTeam(unitID)
 		GG.LanceControl(teamID, unitID, true)
 	elseif name == "outpost_mechbay" then
+		Spring.SetUnitBlocking(unitID, false, false) -- make it easy to get out
 		MechBayOpen()
 		local x, _ ,z = Spring.GetUnitPosition(unitID)
 		local dx, _, dz = Spring.GetUnitDirection(unitID)
@@ -571,21 +572,18 @@ end
 
 
 
+
 function script.TransportDrop (passengerID, x, y, z)
 	local isTransporting = Spring.GetUnitIsTransporting(unitID)
 	if isTransporting and #isTransporting > 0 then
 		Signal(1) -- kill repair anim
 		passengerID = passengerID or isTransporting[1]
-		Spring.SetUnitBlocking(unitID, false, false) -- make it easy to get out
 		Spring.UnitScript.DropUnit(passengerID)
 		Spring.SetUnitMoveGoal(passengerID, UNLOAD_X, 0, UNLOAD_Z, 50) -- bug out over here
 		-- reset states
 		repaired = false
 		resupplied = false
 		restored = false
-		-- wait for current passenger to get out
-		Sleep(2000)
-		Spring.SetUnitBlocking(unitID, true, true)
 	end
 end
 
