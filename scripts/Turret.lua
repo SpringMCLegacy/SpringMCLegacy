@@ -255,6 +255,7 @@ function script.Create()
 	for i = 1,#breaks do
 		Hide(breaks[i])
 		Explode(breaks[i], SFX.FIRE + SFX.FALL)
+		PlaySound("NavBeacon_Pop")
 	end
 
 	Spring.MoveCtrl.SetGravity(unitID, 0)
