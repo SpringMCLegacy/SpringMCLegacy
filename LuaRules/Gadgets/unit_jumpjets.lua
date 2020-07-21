@@ -404,7 +404,7 @@ function gadget:AllowCommand(unitID, unitDefID, teamID, cmdID, cmdParams, cmdOpt
 	
     local test = spTestBuildOrder(unitDefID, cmdParams[1], cmdParams[2], cmdParams[3], 1)
 	if test ~= 2 then 
-		Spring.SendMessageToTeam(teamID, "Can't jump - Invalid target destination!")
+		Spring.SendMessageToTeam(teamID, "Can't jump - Invalid target destination!", test)
 	end
     return test == 2
   else -- any other command
