@@ -1,6 +1,6 @@
 local Turret_LRM = Tower:New{
 	description         = "LRM-20",
-	buildCostMetal      = 2000,
+	buildCostMetal      = 4200,
 
 	weapons = {	
 		[1] = {

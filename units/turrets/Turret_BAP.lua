@@ -1,7 +1,7 @@
 local Turret_BAP = Tower:New{
 	name              	= "Sensor Emplacement",
 	description         = "Beagle Active Probe",
-	buildCostMetal      = 4000,
+	buildCostMetal      = 4500,
 
 	customparams = {
 		bap			= true,

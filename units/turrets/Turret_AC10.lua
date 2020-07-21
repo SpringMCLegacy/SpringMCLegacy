@@ -1,6 +1,6 @@
 local Turret_AC10 = Tower:New{
 	description         = "Dual AC/10",
-	buildCostMetal      = 4000,
+	buildCostMetal      = 3500,
 	
 	weapons	= {	
 		[1] = {

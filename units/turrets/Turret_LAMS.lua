@@ -1,6 +1,6 @@
 local Turret_LAMS = Tower:New{
 	description         = "Laser Anti-Missile System",
-	buildCostMetal      = 3000,
+	buildCostMetal      = 3300,
 	airSightDistance 		= 1500,
 
 	weapons = {	
