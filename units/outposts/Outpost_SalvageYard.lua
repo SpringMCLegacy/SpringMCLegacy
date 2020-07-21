@@ -15,4 +15,6 @@ local Outpost_SalvageYard = Outpost:New{
 	}
 }
 
---return lowerkeys({ ["outpost_SalvageYard"] = Outpost_SalvageYard })
+return lowerkeys({ 
+--["outpost_SalvageYard"] = Outpost_SalvageYard 
+})
