@@ -3,7 +3,7 @@ local Outpost_TurretControl = Outpost:New{
 	description         = "Automated Turret Control Station",
 	maxDamage           = 10000,
 	mass                = 5000,
-	buildCostMetal      = 8000,
+	buildCostMetal      = 6600,
 
 	collisionVolumeScales = [[25 25 25]],
 

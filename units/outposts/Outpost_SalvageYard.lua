@@ -3,7 +3,7 @@ local Outpost_SalvageYard = Outpost:New{
 	description         = "Salvage & Recovery outpost",
 	maxDamage           = 10000,
 	mass                = 9000,
-	buildCostMetal      = 8000,
+	buildCostMetal      = 7200,
 		
 	transportSize		= 3,
 	transportCapacity	= 3, -- 1x transportSize

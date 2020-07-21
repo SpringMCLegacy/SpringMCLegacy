@@ -3,7 +3,7 @@ local Outpost_Uplink = Outpost:New{
 	description         = "Orbital Asset outpost",
 	maxDamage           = 10000,
 	mass                = 5000,
-	buildCostMetal      = 8000,
+	buildCostMetal      = 8300,
 
 	collisionVolumeScales = [[25 25 25]],
 

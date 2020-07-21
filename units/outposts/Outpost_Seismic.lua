@@ -3,7 +3,7 @@ local Outpost_Seismic = Outpost:New{
 	description         = "Long-Range Seismic Sensor",
 	maxDamage           = 10000,
 	mass                = 5000,
-	buildCostMetal      = 10000,
+	buildCostMetal      = 5350,
 
 	collisionVolumeScales = [[25 25 25]],
 

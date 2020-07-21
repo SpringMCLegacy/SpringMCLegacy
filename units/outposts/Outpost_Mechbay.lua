@@ -3,7 +3,7 @@ local Outpost_Mechbay = Outpost:New{
 	description         = "Repair & Rearm Outpost",
 	maxDamage           = 10000,
 	mass                = 9000,
-	buildCostMetal      = 8000,
+	buildCostMetal      = 7400,
 		
 	transportSize		= 3,
 	transportCapacity	= 3, -- 1x transportSize
