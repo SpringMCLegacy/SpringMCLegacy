@@ -35,6 +35,10 @@ for k,v in pairs(maxAmmo) do
 	SetUnitRulesParam(unitID, "ammo_" .. k, 100)
 end
 
+-- Sniper artillery drum setting
+local drumNum = 0
+local drum = piece("drum")
+
 --Turning/Movement Locals
 local TURRET_SPEED = info.turretTurnSpeed
 local ELEVATION_SPEED = info.elevationSpeed
@@ -400,8 +404,12 @@ function script.FireWeapon(weaponID)
 	if barrels[weaponID] and barrelRecoils[weaponID] then
 		Move(barrels[weaponID], z_axis, -barrelRecoils[weaponID], BARREL_SPEED)
 		if extend then
-			Explode(piece("casing"), SFX.SMOKE + SFX.FALL)
 			Move(extend, z_axis, -barrelRecoils[weaponID], BARREL_SPEED)
+			Explode(piece("casing"), SFX.SMOKE + SFX.FALL)
+			drumNum = drumNum + 1
+			--Spring.Echo(drumNum)
+			Turn(drum, z_axis, math.rad(drumNum * 45), 1)
+			if drumNum == 8 then drumNum = 0 end
 		end
 		WaitForMove(barrels[weaponID], z_axis)
 		Move(barrels[weaponID], z_axis, 0, 10)
