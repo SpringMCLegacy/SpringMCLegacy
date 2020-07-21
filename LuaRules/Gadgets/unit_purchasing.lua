@@ -483,6 +483,7 @@ local function SendCommandFallback(unitID, unitDefID, teamID, cost, weight)
 	if dropShipStatus[teamID] == 0 then -- Dropship is READY
 		local unitID = teamDropZones[teamID]
 		if not unitID then -- Dropzone has died and not been replaced whilst order is due, refund
+			Spring.SendMessageToTeam(teamID, "Refunding order, there is no dropzone")
 			AddTeamResource(teamID, "metal", cost)
 			AddTeamResource(teamID, "energy", weight)
 		else
@@ -513,7 +514,7 @@ local function SendCommandFallback(unitID, unitDefID, teamID, cost, weight)
 		-- clean up (regardless of whether or not order was fulfilled or cancelled)
 		OrderFinished(unitID, teamID)
 	else -- Dropship is ACTIVE or COOLDOWN
-		GG.Delay.DelayCall(SendCommandFallback, {unitID, unitDefID, teamID, cost}, 16)
+		GG.Delay.DelayCall(SendCommandFallback, {unitID, unitDefID, teamID, cost, weight}, 16)
 	end
 end
 
