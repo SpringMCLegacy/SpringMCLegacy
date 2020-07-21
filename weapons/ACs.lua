@@ -22,7 +22,7 @@ local LBX_Class = Weapon:New{
 	collisionSize			= 100,
 	weaponVelocity          = 2000,
 	size					= 0.8,
-	range					= 500,
+	range					= 400,
 	rgbcolor				= "1.0 0.6 0", -- slightly more orange for visual differentiation
 	soundHit              	= "AC2_Hit", -- TODO: Need a distinct sound really
 	sprayAngle				= 400, -- 800
@@ -163,7 +163,7 @@ local LBX5_Cluster = LBX5:New(LBX_Class):New{
 	dynDamageMin			= 100,
 	
 	damage = {
-		default = 30,--20, --50 DPS
+		default = 150,--20, --50 DPS
 	},
 }
 
@@ -215,7 +215,7 @@ local LBX10_Cluster = LBX10:New(LBX_Class):New{
 	dynDamageMin			= 100,
 	
 	damage = {
-		default = 60,--40, --50 DPS
+		default = 150,--40, --50 DPS
 	},
 }
 
