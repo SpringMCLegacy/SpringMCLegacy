@@ -465,7 +465,7 @@ function gadget:CommandFallback(unitID, unitDefID, teamID, cmdID, cmdParams, cmd
 	local jumpDef = jumpers[unitDefID]
 	local range   = spGetUnitRulesParam(unitID, "jumpRange") or jumpDef.range
 	local reload  = spGetUnitRulesParam(unitID, "jumpReload") or BASE_RELOAD
-	local barFull = tonumber(spGetUnitRulesParam(unitID, "jump_reload_bar") or 100) == 100
+	local barFull = math.ceil(tonumber(spGetUnitRulesParam(unitID, "jump_reload_bar") or 100)) >= 100
 	local t       = spGetGameSeconds()
   
 	if (distSqr < (range*range)) then -- we are within jumping range
@@ -500,7 +500,7 @@ function gadget:CommandFallback(unitID, unitDefID, teamID, cmdID, cmdParams, cmd
 					return true, false -- command was used, remove it 
 				end
 			else
-				Spring.Echo(teamID, "Can't jump right now, bar needs to refill first" t, lastJump[unitID], reload, spGetUnitRulesParam(unitID, "jump_reload_bar"), barFull)
+				Spring.Echo(teamID, "Can't jump right now, bar needs to refill first", t, lastJump[unitID], reload, spGetUnitRulesParam(unitID, "jump_reload_bar"), barFull)
 			end
 		else -- need to turn
 			Spring.SendMessageToTeam(teamID, "Can't jump right now, need to turn first")
