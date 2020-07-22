@@ -85,6 +85,40 @@ local SD1OA = Sunder:New{
     },
 }
 
+local SD1OB = Sunder:New{
+	description         = "Assault Missile Boat",
+	weapons 		= {	
+		[1] = {
+			name	= "LRM15",
+		},
+		[2] = {
+			name	= "LRM20",
+		},
+		[3] = {
+			name	= "MPL",
+		},
+		[4] = {
+			name	= "MPL",
+		},
+		[5] = {
+			name	= "MBL",
+			OnlyTargetCategory = "ground",
+		},
+		[6] = {
+			name	= "MBL",
+			OnlyTargetCategory = "ground",
+		},
+	},
+    customparams = {
+		variant			= "SD1-O (Cfg B)",
+		speed			= 60,
+		price			= 15970,
+		heatlimit 		= 30,
+		armor			= {type = "standard", tons = 16.5},
+		maxammo 		= {lrm = 5},
+    },
+}
+
 local SD1OC = Sunder:New{
 	description         = "Assault Skirmisher",
 	weapons 		= {	
@@ -120,5 +154,6 @@ local SD1OC = Sunder:New{
 return lowerkeys({
 	DC_Sunder_SD1OP = SD1OP:New(),
 	DC_Sunder_SD1OA = SD1OA:New(),
+	DC_Sunder_SD1OB = SD1OB:New(),
 	DC_Sunder_SD1OC = SD1OC:New(),
 })
