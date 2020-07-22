@@ -500,7 +500,7 @@ function gadget:CommandFallback(unitID, unitDefID, teamID, cmdID, cmdParams, cmd
 					return true, false -- command was used, remove it 
 				end
 			else
-				Spring.Echo(teamID, "Can't jump right now, bar needs to refill first" t, lastJump[unitID], reload, barFull)
+				Spring.Echo(teamID, "Can't jump right now, bar needs to refill first" t, lastJump[unitID], reload, spGetUnitRulesParam(unitID, "jump_reload_bar"), barFull)
 			end
 		else -- need to turn
 			Spring.SendMessageToTeam(teamID, "Can't jump right now, need to turn first")
