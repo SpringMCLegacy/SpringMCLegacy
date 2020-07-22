@@ -158,7 +158,8 @@ local LBX5 = AC5:New{
 }
 
 local LBX5_Cluster = LBX5:New(LBX_Class):New{
-	sprayAngle				= 700,
+	--sprayAngle				= 700,
+	range 					= 700,
 	projectiles				= 5,
 	dynDamageMin			= 100,
 	
@@ -210,7 +211,8 @@ local LBX10 = AC10:New{
 }
 
 local LBX10_Cluster = LBX10:New(LBX_Class):New{
-	sprayAngle				= 600,
+	--sprayAngle				= 600,
+	range					= 600,
 	projectiles				= 10,
 	dynDamageMin			= 100,
 	
@@ -263,7 +265,8 @@ local LBX20 = AC20:New{
 }
 
 local LBX20_Cluster = LBX20:New(LBX_Class):New{
-	sprayAngle				= 400,
+	--sprayAngle				= 400,
+	range					= 400;
 	projectiles				= 20,
 	dynDamageMin			= 100,
 	
