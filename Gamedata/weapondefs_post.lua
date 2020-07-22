@@ -29,8 +29,8 @@ local damageMults = {
 	medium		= 0.9, --80% default
 	heavy		= 0.8, --60% default
 	assault		= 0.6, --40% default
-	vehicle		= 1.25, --150% default
-	vtol		= 1.25, --150% default
+	vehicle		= 1.25, --125% default
+	vtol		= 1.25, --125% default
 	walls		= 0.8, -- 80% default
 }
 
