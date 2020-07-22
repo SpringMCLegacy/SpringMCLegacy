@@ -22,7 +22,8 @@ local BeamLaser_Class = Weapon:New{
 }
 
 local Sight = BeamLaser_Class:New{
-	range = 5000, -- should be more than enough
+	range = 1500, -- set to radar range
+	
 	avoidFriendly = false, -- don't let friendly mechs block LOS calcs
 	collideFriendly = false,
 	avoidNeutral = false,
