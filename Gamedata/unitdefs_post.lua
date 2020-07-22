@@ -304,6 +304,7 @@ for name, ud in pairs(UnitDefs) do
 		ud.sightdistance = ud.sightdistance or modOptions.mechsight
 		if cp.baseclass == "mech" then -- mechs only
 			table.insert(ud.weapons, {name = "sight"})
+			
 			cp.role = GetRole(ud.description)
 			if cp.role then
 				cp.menu = menuRoleAlias[cp.role]
@@ -361,6 +362,8 @@ for name, ud in pairs(UnitDefs) do
 						if not weapon.slaveto then -- don't overwrite unitdef
 							weapon.slaveto = 1
 						end
+					elseif i == #weapons then -- sight
+						weapon.onlytargetcategory = "nevertargetanythingever"
 					end
 				elseif cp.baseclass == vehicle then
 					if not weapon.onlytargetcategory then
