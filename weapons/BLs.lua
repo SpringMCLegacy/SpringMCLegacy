@@ -23,7 +23,7 @@ local BeamLaser_Class = Weapon:New{
 
 local Sight = BeamLaser_Class:New{
 	range = 1500, -- set to radar range
-	
+	commandFire = true, -- don't let the wepaon auto generate targets
 	avoidFriendly = false, -- don't let friendly mechs block LOS calcs
 	collideFriendly = false,
 	avoidNeutral = false,
