@@ -319,7 +319,10 @@ function script.HitByWeapon(x, z, weaponID, damage)
 		if not crashing then
 			crashing = true
 			for i, cargoID in ipairs(cargo) do
-				Spring.DestroyUnit(cargoID, false, true)
+				local inTransit = Spring.GetUnitTransporter(cargoID) == unitID
+				if inTransit then -- only destroy it if we're still carrying it
+					Spring.DestroyUnit(cargoID, false, true)
+				end
 			end
 			Signal() -- should kill ALL threads
 			--Signal(1)
