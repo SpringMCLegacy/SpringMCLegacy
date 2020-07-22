@@ -499,11 +499,8 @@ function gadget:CommandFallback(unitID, unitDefID, teamID, cmdID, cmdParams, cmd
 					jumps[coords] = jumps[coords] + 1
 					return true, false -- command was used, remove it 
 				end
-			else
-				Spring.Echo(teamID, "Can't jump right now, bar needs to refill first", t, lastJump[unitID], reload, spGetUnitRulesParam(unitID, "jump_reload_bar"), barFull)
 			end
 		else -- need to turn
-			Spring.SendMessageToTeam(teamID, "Can't jump right now, need to turn first")
 			if not GG.turning[unitID] then
 				--Spring.Echo("not GG.turning")
 				GG.Delay.DelayCall(TurnOrder, {unitID, cmdParams[1], cmdParams[2], cmdParams[3]}, 1)
@@ -511,7 +508,6 @@ function gadget:CommandFallback(unitID, unitDefID, teamID, cmdID, cmdParams, cmd
 			return true, true
 		end
 	else -- out of range
-		Spring.SendMessageToTeam(teamID, "Can't jump right now, need to get in range first")
 		if not goalSet[unitID] then
 			Approach(unitID, cmdParams, range)
 			goalSet[unitID] = true
