@@ -63,7 +63,7 @@ local HeavyGauss = Gauss_Class:New{
 	reloadtime              = 10,
 	DynDamageExp			= 1,
 	DynDamageMin			= 1000,--100 DPS 
-	DynDamageRange			= 1300,--Weapon will decrease in damage up to this range
+	--DynDamageRange			= 1300,--Weapon will decrease in damage up to this range
 	
 	damage = {
 		default = 2700,--2500,--250 DPS
