@@ -67,10 +67,10 @@ function gadget:ProjectileCreated(proID, proOwnerID, weaponID)
 		if GG.GetUnitDistanceToPoint(proOwnerID, tx, ty, tz) < 500 then
 			--Spring.Echo("Close range, switch to cluster!")
 			-- delete old projectile and fire cluster instead
-			local clusterWD = WeaponDefNames[lbx[weaponID]]
+			local clusterWD = WeaponDefNames[lbx[weaponID][1]]
 			local x,y,z = Spring.GetProjectilePosition(proID)
 			local vx, vy, vz = Spring.GetProjectileVelocity(proID)
-			local spray = math.asin(clusterWD.sprayAngle) * 140 -- a rough reproduction of engine spray TODO: cache this or find a nicer calculation
+			local spray = lbx[weaponID][2]
 			for i = 1, clusterWD.projectiles do
 				Spring.SpawnProjectile(clusterWD.id, {
 						pos = {x,y,z},
@@ -102,7 +102,11 @@ function gadget:Initialize()
 		if wd.customParams and (wd.customParams.projectilelups or wd.customParams.weaponclass == "lbx") then
 			Script.SetWatchWeapon(id, true) -- we can't call SWW outside of synced so do it here
 			if wd.customParams.weaponclass == "lbx" then -- don't include the cluster munuitions themselves or we end up with circular bs
-				lbx[id] = wd.name .. "_cluster"
+				local cluster = wd.name .. "_cluster"
+				lbx[id] = {
+					cluster,
+					math.asin(WeaponDefNames[cluster].sprayAngle) * 140, -- a rough reproduction of engine spray 
+				}
 			end
 		end
 	end
