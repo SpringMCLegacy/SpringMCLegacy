@@ -41,4 +41,23 @@ local temps = {
 	water = 35,
 }
 
-return resources, temps
+local starts = {
+	[0] = { -- teamID
+		x = 435,
+		z = 375,
+	},
+	[1] = { -- teamID
+		x = 9800,
+		z = 460,
+	},
+	[2] = { -- teamID
+		x = 385,
+		z = 5450,
+	},
+	[3] = { -- teamID
+		x = 9815,
+		z = 5750,
+	},
+}
+
+return resources, temps, starts

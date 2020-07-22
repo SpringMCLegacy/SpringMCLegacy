@@ -27,4 +27,19 @@ local temps = {
 	hovers = true,
 }
 
-return resources, temps
+local starts = {
+	[0] = { -- teamID
+		x = 1900,
+		z = 315,
+	},
+	[1] = { -- teamID
+		x = 2815,
+		z = 7710,
+	},
+	[2] = { -- teamID
+		x = 7550,
+		z = 3860,
+	},
+}
+
+return resources, temps, starts
