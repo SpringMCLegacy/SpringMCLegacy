@@ -24,7 +24,7 @@ local VND3L = Vindicator:New{
 	customparams = {
 		variant			= "VND-3L",
 		speed			= 60,
-		price			= 1105,
+		price			= 11050,
 		heatlimit 		= 30,
 		armor			= {type = "standard", tons = 9},
 		jumpjets		= 4,

@@ -325,7 +325,7 @@ return {
 			GG.TeamDropshipUpgrade(teamID)
 		end,
 		costFunction = deductCBills,
-		price = 10000,
+		price = 39620,
 	},
 	{
 		name = "overlord",
@@ -342,7 +342,7 @@ return {
 			GG.TeamDropshipUpgrade(teamID)
 		end,
 		costFunction = deductCBills,
-		price = 10000,
+		price = 47020,
 		requires = "union",
 	},
 	-- vehicle pad
