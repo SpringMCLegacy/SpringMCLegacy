@@ -86,7 +86,42 @@ local AV1OA = Avatar:New{
     },
 }
 
+local AV1OB = Avatar:New{
+	description         = "Heavy Missile Boat",
+	
+	weapons 		= {	
+		[1] = {
+			name	= "ALRM15",
+		},
+		[2] = {
+			name	= "ALRM15",
+		},
+		[3] = {
+			name	= "ALRM10",
+		},
+		[4] = {
+			name	= "ALRM10",
+		},
+		[5] = {
+			name	= "MBL",
+		},
+		[6] = {
+			name	= "MBL",
+		},
+	},
+
+    customparams = {
+		variant			= "AV1-O (Cfg B)",
+		speed			= 60,
+		price			= 14960,
+		heatlimit 		= 20,
+		armor			= {type = "standard", tons = 12},
+		maxammo 		= {lrm = 6},
+    },
+}
+
 return lowerkeys({
 	["DC_Avatar_AV1OP"] = AV1OP:New(),
 	["DC_Avatar_AV1OA"] = AV1OA:New(),
+	["DC_Avatar_AV1OB"] = AV1OB:New(),
 })
