@@ -46,12 +46,15 @@ local ERPPC = PPC_Class:New{
 	range                   = 2300,
 	customparams = {
 		heatgenerated		= 7.5,
-		minrange			= 300,
+		--minrange			= 300,
     },
 }
 
 local HeavyPPC = PPC_Class:New{
 	name                    = "Heavy PPC",
+	damage = {
+		default = 900,--750, --150 DPS
+	},
 	customparams = {
 		heatgenerated		= 7.5,
 		minrange			= 300,
@@ -72,9 +75,11 @@ local LightPPC = PPC_Class:New{
 local SnubNosePPC = PPC_Class:New{
 	name                    = "Snub-Nose PPC",
 	range					= 1500,
+	accuracy                = 300,
+	targetMoveError			= 0.05,
+	movingAccuracy			= 200,
 	DynDamageExp			= 1,
-	DynDamageMin			= 250,--100 DPS 
-	DynDamageRange			= 900,--Weapon will decrease in damage up to this range
+	DynDamageMin			= 300,--100 DPS 
 }
 
 local CERPPC = PPC_Class:New{
@@ -86,7 +91,7 @@ local CERPPC = PPC_Class:New{
 	},
 	customparams = {
 		heatgenerated		= 7.5,
-		minrange			= 300,
+		--minrange			= 300,
     },
 }
 
