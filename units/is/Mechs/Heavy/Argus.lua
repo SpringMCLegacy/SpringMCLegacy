@@ -17,11 +17,11 @@ local AGS4D = Argus:New{
 			name	= "MG",
 		},
 		[3] = {
-			name	= "MBL",
+			name	= "TCERMBL",
 			OnlyTargetCategory = "ground",
 		},
 		[4] = {
-			name	= "MBL",
+			name	= "TCERMBL",
 			OnlyTargetCategory = "ground",
 		},
 		[5] = {
