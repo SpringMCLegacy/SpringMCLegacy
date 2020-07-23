@@ -500,6 +500,8 @@ local repaired = false
 local resupplied = false
 local restored = false
 
+local restoredLimbs = {}
+local suppliedAmmos = {}
 
 function Repair(passengerID)
 	StartThread(MechBayRepair)
@@ -507,7 +509,7 @@ function Repair(passengerID)
 	while curHP ~= maxHP do
 		local newHP = math.min(curHP + maxHP * REPAIR_RATE, maxHP)
 		SetUnitHealth(passengerID, newHP)
-		curHP, maxHP = GetUnitHealth(passengerID)
+		--curHP, maxHP = GetUnitHealth(passengerID)
 		curHP, maxHP = GetUnitHealth(passengerID)
 		Sleep(1000)
 	end
@@ -517,41 +519,68 @@ function Repair(passengerID)
 	end
 end
 
+
+function RestoreLimb(passengerID, limb, maxHP)
+	restoredLimbs[limb] = false -- so the loop has something to go over
+	local curHP = passengerEnv.limbHPControl(limb, 0)
+	while curHP ~= maxHP do
+		curHP = passengerEnv.limbHPControl(limb, -maxHP * LIMB_REPAIR_RATE)
+		Sleep(1000)
+	end
+	restoredLimbs[limb] = true
+end
+
 function Restore(passengerID)
 	local limbHPs = passengerInfo.limbHPs
 	if passengerEnv.limbHPControl then -- N.B. currently this runs for all mechs
 		for limb, maxHP in pairs(limbHPs) do
-			local curHP = passengerEnv.limbHPControl(limb, 0)
-			while curHP ~= maxHP do
-				curHP = passengerEnv.limbHPControl(limb, -maxHP * LIMB_REPAIR_RATE)
-				Sleep(1000)
-			end
+			restoredLimbs[limb] = false
+			StartThread(RestoreLimb, passengerID, limb, maxHP)
 		end
 	end
-	restored = true
+	while not restored do
+		local allDone = true
+		for limb, done in pairs(restoredLimbs) do
+			allDone = allDone and done
+		end
+		restored = allDone
+		Sleep(1000)
+	end
 	if repaired and resupplied then -- I'm the last task to finish, move out!
 		script.TransportDrop(passengerID)
 	end	
 end
 
+function ResupplyAmmoType(passengerID, weaponNum, ammoType)
+	if ammoType then
+		suppliedAmmos[ammoType] = false -- so the loop has something to go over
+		local moreToDo = true
+		while moreToDo do
+			local amount = passengerInfo.burstLengths[weaponNum] or 1
+			local tookSome = passengerEnv.ChangeAmmo(ammoType, amount)
+			--if tookSome then Spring.Echo("Deduct " .. amount .. " " .. ammoType) end
+			moreToDo = moreToDo and tookSome
+			Sleep(1000)
+		end
+		suppliedAmmos[ammoType] = true
+	end
+end
+
 function Resupply(passengerID)
 	local ammoTypes = passengerInfo.ammoTypes
 	if passengerEnv.ChangeAmmo then
-		while true do
-			local moreToDo = false
-			for weaponNum, ammoType in pairs(ammoTypes) do
-				if ammoType then
-					local amount = passengerInfo.burstLengths[weaponNum]
-					local supplied = passengerEnv.ChangeAmmo(ammoType, amount)
-					--if supplied then Spring.Echo("Deduct " .. amount .. " " .. ammoType) end
-					moreToDo = moreToDo or supplied
-				end
-			end
-			if not moreToDo then break end
-			Sleep(1000)
+		for weaponNum, ammoType in pairs(ammoTypes) do
+			StartThread(ResupplyAmmoType, passengerID, weaponNum, ammoType)
 		end
 	end
-	resupplied = true
+	while not resupplied do
+		local allDone = true
+		for ammoType, done in pairs(suppliedAmmos) do
+			allDone = allDone and done
+		end
+		resupplied = allDone
+		Sleep(1000)
+	end
 	if repaired and restored then -- I'm the last task to finish, move out!
 		script.TransportDrop(passengerID)
 	end	
@@ -559,6 +588,9 @@ end
 
 function script.TransportPickup (passengerID)
 	if bayReady then
+		repaired = false
+		resupplied = false
+		restored = false
 		passengerDefID = GetUnitDefID(passengerID)
 		passengerInfo = GG.lusHelper[passengerDefID]
 		passengerEnv = Spring.UnitScript.GetScriptEnv(passengerID)
