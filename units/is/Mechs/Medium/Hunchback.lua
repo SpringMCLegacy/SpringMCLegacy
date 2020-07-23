@@ -36,7 +36,7 @@ local HBK4G = Hunchback:New{
 }
 
 local HBK4P = Hunchback:New{
-	description         = "Medium Skirmisher",
+	description         = "Medium Brawler",
 	weapons = {	
 		[1] = {
 			name	= "MBL",
@@ -135,8 +135,8 @@ return lowerkeys({
 	--["FS_Hunchback_HBK4P"] = HBK4P:New(),
 	["DC_Hunchback_HBK4G"] = HBK4G:New(),
 	["CC_Hunchback_HBK4G"] = HBK4G:New(),
-	--["CC_Hunchback_HBK4P"] = HBK4P:New(),
+	["CC_Hunchback_HBK4P"] = HBK4P:New(),
 	["LA_Hunchback_HBK5S"] = HBK5S:New(),
 	["FW_Hunchback_HBK5M"] = HBK5M:New(),
-	["FW_Hunchback_HBK4P"] = HBK4P:New(),
+	--["FW_Hunchback_HBK4P"] = HBK4P:New(),
 })
