@@ -82,17 +82,43 @@ local RAD1 = rad(1)
 --helper functions
 ------------------------------------------------
 
+local maxAlpha = 0.45
+local losAlpha = 0.15
+
+local modOptions = Spring.GetModOptions()
+local RADAR = 1500
+local LOS = (modOptions and modOptions.mechsight or 400) - 10
+
 
 local function DrawStationary(maxAngleDif)
+	--maxAngleDif = math.cos(math.rad(10))
+	local r, g, b = unpack({0.4, 0.9, 0})
+	local THICC = 0.05
+	local los = LOS/RADAR
 	local length = maxAngleDif
 	local width = sqrt(1 - maxAngleDif * maxAngleDif)
 	local vertices = {
-		{v = {-width, 0, length}},
-		{v = {0, 0, 0}},
-		{v = {width, 0, length}},
+		{v = {-width, 0, length}, 						c = {r, g, b, 0} },
+		{v = {-width+THICC, 0, length},					c = {r, g, b, maxAlpha}},
+		{v = {-width*los, 0, length*los}, 				c = {r, g, b, 0} },
+		{v = {-width*los+THICC, 0, length*los}, 		c = {r, g, b, maxAlpha}},
+	}
+	local vertices2 = {
+		{v = {width, 0, length}, 						c = {r, g, b, 0} },
+		{v = {width-THICC, 0, length},					c = {r, g, b, maxAlpha}},
+		{v = {width*los, 0, length*los}, 				c = {r, g, b, 0} },	
+		{v = {width*los-THICC, 0, length*los}, 			c = {r, g, b, maxAlpha}},
+	}
+	local vertices3 = {
+		{v = {-width+THICC, 0, length}, 				c = {1, 1, 1, losAlpha} },
+		{v = {-width*los+THICC, 0, length*los}, 		c = {1, 1, 1, losAlpha} },
+		{v = {width-THICC, 0, length}, 					c = {1, 1, 1, losAlpha} },
+		{v = {width*los-THICC, 0, length*los}, 			c = {1, 1, 1, losAlpha} },
 	}
 
-	glShape(GL_LINE_STRIP, vertices)
+	glShape(GL.QUAD_STRIP, vertices)
+	glShape(GL.QUAD_STRIP, vertices2)
+	glShape(GL.QUAD_STRIP, vertices3)
 end
 
 local function DrawFieldOfFire2(x, y, z, list, range, rotation)
