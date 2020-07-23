@@ -100,6 +100,11 @@ local AC5 = AC_Class:New{
     },
 }
 
+local TCAC5 = AC5:New{
+	name                    = "AC/5 (TC)",
+	accuracy                = 300,
+}
+
 local AC5_AA = AC5:New{
 	name                    = "AC/5 Flak",
 	burnblow				= true, 	--Bullets explode at range limit.

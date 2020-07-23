@@ -23,6 +23,12 @@ local BJ2 = Blackjack:New{
 		[4] = {
 			name	= "SSRM2",
 		},
+		[5] = {
+			name	= "SSRM2",
+		},
+		[6] = {
+			name	= "SSRM2",
+		},
 	},
 		
 	customparams = {
@@ -73,16 +79,16 @@ local BJ4 = Blackjack:New{
 	description         = "Medium Sniper",
 	weapons	= {	
 		[1] = {
-			name	= "AC5", -- should be light AC/5
+			name	= "TCAC5", -- should be light AC/5
 		},
 		[2] = {
-			name	= "AC5", -- should be light AC/5
+			name	= "TCAC5", -- should be light AC/5
 		},
 		[3] = {
-			name	= "MBL",
+			name	= "TCERMBL",
 		},
 		[4] = {
-			name	= "MBL",
+			name	= "TCERMBL",
 		},
 	},
 		

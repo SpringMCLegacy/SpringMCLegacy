@@ -133,6 +133,11 @@ local ERMBL = MBL:New{
     },
 }
 
+local TCERMBL = MBL:New{
+	name                    = "ERMLaser (TC)",
+	accuracy                = 350,
+}
+
 local CERMBL = ERMBL:New{
 	name                    = "CERMLaser",
 	range                   = 1500,
