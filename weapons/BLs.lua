@@ -133,8 +133,8 @@ local ERMBL = MBL:New{
     },
 }
 
-local TCERMBL = MBL:New{
-	name                    = "ERMLaser (TC)",
+local TCERMBL = ERMBL:New{
+	name                    = "ERMLaser",
 	accuracy                = 350,
 }
 
@@ -195,4 +195,5 @@ return lowerkeys({
 	LBL = LBL,
 	ERLBL = ERLBL,
 	CERLBL = CERLBL,
+	TCERMBL = TCERMBL,
 })
