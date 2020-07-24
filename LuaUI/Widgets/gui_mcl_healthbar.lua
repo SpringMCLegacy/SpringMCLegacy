@@ -198,8 +198,10 @@ local function GenerateUnitGraphics(uid, udid, getAuras)
 
 	-- Don't show transported
 	if not Spring.ValidUnitID(uid) 
-	or Spring.GetUnitTransporter(uid) 
-	or (ud.customParams.ignoreatbeacon and ud.customParams.baseclass ~= "vehicle") then
+	or Spring.GetUnitTransporter(uid)
+	or ud.name:find("beacon")
+	or ud.name:find("dropzone") then
+	--or (ud.customParams.ignoreatbeacon and ud.customParams.baseclass ~= "vehicle") then
         return false
 	end
 
@@ -224,7 +226,7 @@ local function GenerateUnitGraphics(uid, udid, getAuras)
                 bars.ammo.max = ud.customParams.maxammo
                 bars.ammo.color = {1.0, 1.0, 0, 0.8}
             end
-            if reloadDataList[udid] then
+            if reloadDataList[udid] and ud.customParams.baseclass == "mech" then
                 bars.reload = {}
                 bars.reload.max = 1
                 bars.reload.color = {0, 0.5, 0.9, 0.8}
