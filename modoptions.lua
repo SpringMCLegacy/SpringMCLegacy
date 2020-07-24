@@ -133,6 +133,17 @@ local options = {
 		section = "devtools",
 	},
 	{
+		key = "sectorrange",
+		name = "Test Mech Sector Range",
+		desc = "Developer tool",
+		type = "number",
+		def = 1500,
+		min = 500,
+		max = 1500,
+		step = 50,
+		section = "devtools",
+	},
+	{
 		key = "radar",
 		name = "Test Radar Radius Multiplier",
 		desc = "Developer tool",

@@ -86,39 +86,75 @@ local maxAlpha = 0.45
 local losAlpha = 0.15
 
 local modOptions = Spring.GetModOptions()
-local RADAR = 1500
+local RADAR = (modOptions and modOptions.sectorrange or 1500) - 50
 local LOS = (modOptions and modOptions.mechsight or 400) - 10
 
 
 local function DrawStationary(maxAngleDif)
-	--maxAngleDif = math.cos(math.rad(10))
 	local r, g, b = unpack({0.4, 0.9, 0})
 	local THICC = 0.05
 	local los = LOS/RADAR
 	local length = maxAngleDif
 	local width = sqrt(1 - maxAngleDif * maxAngleDif)
 	local vertices = {
-		{v = {-width, 0, length}, 						c = {r, g, b, 0} },
-		{v = {-width+THICC, 0, length},					c = {r, g, b, maxAlpha}},
-		{v = {-width*los, 0, length*los}, 				c = {r, g, b, 0} },
-		{v = {-width*los+THICC, 0, length*los}, 		c = {r, g, b, maxAlpha}},
+		{v = {-width, 0, length}, 						c = {r, g, b, maxAlpha} },
+		{v = {-width-THICC, 0, length+THICC},					c = {r, g, b, 0}},
+		{v = {-width*los, 0, length*los}, 				c = {r, g, b, maxAlpha} },
+		{v = {-width*los-THICC, 0, length*los}, 		c = {r, g, b, 0}},
 	}
 	local vertices2 = {
-		{v = {width, 0, length}, 						c = {r, g, b, 0} },
-		{v = {width-THICC, 0, length},					c = {r, g, b, maxAlpha}},
-		{v = {width*los, 0, length*los}, 				c = {r, g, b, 0} },	
-		{v = {width*los-THICC, 0, length*los}, 			c = {r, g, b, maxAlpha}},
+		{v = {width, 0, length}, 						c = {r, g, b, maxAlpha} },
+		{v = {width+THICC, 0, length+THICC},					c = {r, g, b, 0}},
+		{v = {width*los, 0, length*los}, 				c = {r, g, b, maxAlpha} },	
+		{v = {width*los+THICC, 0, length*los}, 			c = {r, g, b, 0}},
 	}
-	local vertices3 = {
-		{v = {-width+THICC, 0, length}, 				c = {1, 1, 1, losAlpha} },
-		{v = {-width*los+THICC, 0, length*los}, 		c = {1, 1, 1, losAlpha} },
-		{v = {width-THICC, 0, length}, 					c = {1, 1, 1, losAlpha} },
-		{v = {width*los-THICC, 0, length*los}, 			c = {1, 1, 1, losAlpha} },
-	}
-
+	local angle = math.acos(maxAngleDif)
+	local vertices3 = {}
+	for i = 0, 8 do
+		local angle = i * angle / 8
+		local ox = sin(angle)
+		local oz = cos(angle)
+		local ix = ox + THICC
+		local iz = oz + THICC
+		vertices3[2*i+1] = { v = {ix, 0, iz}, c = {r, g, b, 0} }
+		vertices3[2*i+2] = { v = {ox, 0, oz}, c = {r, g, b, maxAlpha} }
+	end
+	vertices3[1] = { v = {0, 0, 1+THICC}, c = {r, g, b, 0} }
+	vertices3[2] = { v = {0, 0, 1}, c = {r, g, b, maxAlpha} }
+	local vertices4 = {}
+	for i = 0, 8 do
+		local angle = i * angle / 8
+		local ox = -sin(angle)
+		local oz = cos(angle)
+		local ix = ox - THICC
+		local iz = oz + THICC
+		vertices4[2*i+1] = { v = {ix, 0, iz}, c = {r, g, b, 0} }
+		vertices4[2*i+2] = { v = {ox, 0, oz}, c = {r, g, b, maxAlpha} }
+	end
+	vertices4[1] = { v = {0, 0, 1+THICC}, c = {r, g, b, 0} }
+	vertices4[2] = { v = {0, 0, 1}, c = {r, g, b, maxAlpha} }
+	
+	angle = math.pi
+	local vertices5 = {}
+	for i = 1, 12 do
+		local angle = (i+2) * angle / 8
+		local ox = sin(angle)*los
+		local oz = cos(angle)*los
+		local ix = ox * 1.09
+		local iz = oz * 1.09
+		vertices5[2*i+1] = { v = {ix, 0, iz}, c = {r, g, b, 0} }
+		vertices5[2*i+2] = { v = {ox, 0, oz}, c = {r, g, b, maxAlpha} }
+	end
+	vertices5[1] = {v = {width*los+THICC, 0, length*los}, 	c = {r, g, b, 0}}
+	vertices5[2] = {v = {width*los, 0, length*los}, 		c = {r, g, b, maxAlpha} }	
+	vertices5[27] = {v = {-width*los-THICC, 0, length*los}, 	c = {r, g, b, 0}}
+	vertices5[28] = {v = {-width*los, 0, length*los}, 		c = {r, g, b, maxAlpha} }	
+	
 	glShape(GL.QUAD_STRIP, vertices)
 	glShape(GL.QUAD_STRIP, vertices2)
 	glShape(GL.QUAD_STRIP, vertices3)
+	glShape(GL.QUAD_STRIP, vertices4)
+	glShape(GL.QUAD_STRIP, vertices5)
 end
 
 local function DrawFieldOfFire2(x, y, z, list, range, rotation)
@@ -133,6 +169,7 @@ end
 local function DrawFieldOfFire(unitID, list, range)
 	local map = Spring.GetUnitPieceMap(unitID)
 	local x, y, z, dx, dy, dz = Spring.GetUnitPiecePosDir(unitID, map["cockpit"])
+	_,y,_ = Spring.GetUnitPosition(unitID)
 	local rotation = math.deg(math.atan2(dx, dz))
 
 	return DrawFieldOfFire2(x, y, z, list, range, rotation)
@@ -215,7 +252,7 @@ function widget:DrawWorld()
 			for i=1,#units do
 				local unitID = units[i]
 				if GetUnitDefID(unitID) then
-					DrawFieldOfFire(unitID, info[1], Spring.GetUnitSensorRadius(unitID, "radar"))
+					DrawFieldOfFire(unitID, info[1], RADAR)--Spring.GetUnitSensorRadius(unitID, "radar"))
 				end
 			end
 		end

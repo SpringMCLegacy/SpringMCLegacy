@@ -300,6 +300,7 @@ function gadget:UnitGiven(unitID, unitDefID, newTeam, oldTeam)
 	gadget:UnitCreated(unitID, unitDefID, newTeam)
 end
 
+local SECTOR_DISTANCE = modOptions and modOptions.sectorrange or 1500
 
 function gadget:GameFrame(n)
 	-- reset any BAP'd units before re-checking los & radar states
@@ -325,7 +326,7 @@ function gadget:GameFrame(n)
 		for unitID, info in pairs(allyTeamMechs[allyTeam]) do
 			if not inAutoLos[allyTeam][unitID] and Spring.ValidUnitID(unitID) and not Spring.GetUnitIsDead(unitID) and not Spring.GetUnitTransporter(unitID) then
 				local x, _, z = GetUnitPosition(unitID)
-				local inRadius = Spring.GetUnitsInCylinder(x, z, Spring.GetUnitSensorRadius(unitID, "radar")) -- use current sensor radius here as perks can change it
+				local inRadius = Spring.GetUnitsInCylinder(x, z, SECTOR_DISTANCE) -- use current sensor radius here as perks can change it
 				if not info.torso then Spring.Echo("Oh shit, ", UnitDefs[Spring.GetUnitDefID(unitID)].name, "seems to have no cockpit") else
 					local v1x, v1z, v2x, v2z = GG.Vector.SectorVectorsFromUnitPiece(unitID, info.torso, info.x, info.z)
 					--Spring.MarkerAddPoint(x + v1x, 0, z + v1z, "V1")
