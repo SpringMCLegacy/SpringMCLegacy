@@ -99,11 +99,11 @@ local NPPC = PPC_Class:New{
 	explosionGenerator    	= "custom:NPPC",
 	soundStart            	= "NPPC_Fire",
 	soundHit				= "NPPC_Hit",
-	areaOfEffect            = 350,
+	areaOfEffect            = 550,
 	edgeEffectiveness		= 0.8,
 	size					= 15,
 	damage = {
-		default = 5000,
+		default = 2000,
 	},
 	customparams = {
 		heatdamage			= 7,

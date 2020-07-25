@@ -38,5 +38,5 @@ local BHK305 = Battlehawk:New{
 }
 
 return lowerkeys({
-	--["LA_Battlehawk_BHK305"] = BHK305:New(),
+	["LA_Battlehawk_BHK305"] = BHK305:New(),
 })
