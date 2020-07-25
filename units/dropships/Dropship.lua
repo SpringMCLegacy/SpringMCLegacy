@@ -1,5 +1,4 @@
 local Union = DropShip:New{
-	objectName        	= "Dropship_Union.s3o",
 	name              	= "Union Class Dropship",
 	iconType			= "union",
 	maxDamage			= 40000,
