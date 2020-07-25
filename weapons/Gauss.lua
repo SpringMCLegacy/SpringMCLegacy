@@ -2,7 +2,7 @@ local Gauss_Class = Weapon:New{
 	weaponType              = "Cannon",
 	cegTag					= "RailTrail",
 	turret                  = true,
-	accuracy                = 300,
+	accuracy                = 250,
 	impactOnly				= true,
 	targetMoveError			= 0.01,
 	weaponVelocity          = 4000,
@@ -60,13 +60,13 @@ local HeavyGauss = Gauss_Class:New{
 	soundStart            	= "HeavyGauss_Fire",
 	range                   = 2000,
 	weaponVelocity          = 2500,
-	reloadtime              = 10,
+	reloadtime              = 8,
 	DynDamageExp			= 1,
 	DynDamageMin			= 1000,--100 DPS 
 	--DynDamageRange			= 1300,--Weapon will decrease in damage up to this range
 	
 	damage = {
-		default = 2700,--2500,--250 DPS
+		default = 2160,--2500,--250 DPS
 	},
 	customparams = {
 		heatgenerated		= 2,

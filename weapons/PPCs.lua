@@ -43,6 +43,7 @@ local PPC = PPC_Class:New{
 
 local ERPPC = PPC_Class:New{
 	name                    = "ERPPC",
+	accuracy                = 300,
 	range                   = 2300,
 	customparams = {
 		heatgenerated		= 7.5,
