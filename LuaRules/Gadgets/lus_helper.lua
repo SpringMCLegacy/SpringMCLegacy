@@ -61,22 +61,6 @@ function RemoveGrassCircle(cx, cz, r)
 end
 GG.RemoveGrassCircle = RemoveGrassCircle
 
-function BuildMaskCircle(cx, cz, r, mask)
-	local r2 = r * r
-	local step = Game.squareSize * 2
-	for z = 0, 2 * r, step do -- top to bottom diameter
-		local lineLength = math.sqrt(r2 - (r - z) ^ 2)
-		for x = -lineLength, lineLength, step do
-			local squareX, squareZ = (cx + x)/step, (cz + z - r)/step
-			if squareX > 0 and squareZ > 0 and squareX < Game.mapSizeX/step and squareZ < Game.mapSizeZ/step then
-				Spring.SetSquareBuildingMask(squareX, squareZ, mask)
-				--Spring.MarkerAddPoint((cx + x), 0, (cz + z - r))
-			end
-		end
-	end	
-end
-GG.BuildMaskCircle = BuildMaskCircle
-
 function SpawnDecal(decalType, x, y, z, teamID, alwaysVisible, delay, duration)
 	if delay then
 		GG.Delay.DelayCall(SpawnDecal, {decalType, x, y, z, teamID, nil, duration}, delay)

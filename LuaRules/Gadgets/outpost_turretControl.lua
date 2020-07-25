@@ -36,6 +36,23 @@ local towerOwners = {} -- towerOwners[towerID] = outpostID
 local ownedTowers = {} -- ownedTowers[outpostID] = {towerID = true, ...}
 
 
+-- Called by the outpost.lua script for the beacon it is associated with
+function BuildMaskCircle(cx, cz, r, mask)
+	local r2 = r * r
+	local step = Game.squareSize * 2
+	for z = 0, 2 * r, step do -- top to bottom diameter
+		local lineLength = math.sqrt(r2 - (r - z) ^ 2)
+		for x = -lineLength, lineLength, step do
+			local squareX, squareZ = (cx + x)/step, (cz + z - r)/step
+			if squareX > 0 and squareZ > 0 and squareX < Game.mapSizeX/step and squareZ < Game.mapSizeZ/step then
+				Spring.SetSquareBuildingMask(squareX, squareZ, mask)
+				--Spring.MarkerAddPoint((cx + x), 0, (cz + z - r))
+			end
+		end
+	end	
+end
+GG.BuildMaskCircle = BuildMaskCircle
+
 function gadget:GamePreload()
 	for unitDefID, unitDef in pairs(UnitDefs) do
 		local name = unitDef.name
