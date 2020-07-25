@@ -1,6 +1,6 @@
 function gadget:GetInfo()
 	return {
-		name		= "Outpost - AI Turret COntrol",
+		name		= "Outpost - AI Turret Control",
 		desc		= "Controls beacons' construction abilities",
 		author		= "FLOZi (C. Lawrence)",
 		date		= "24/07/20",
