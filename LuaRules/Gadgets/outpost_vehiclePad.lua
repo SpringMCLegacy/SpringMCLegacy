@@ -1,6 +1,6 @@
 function gadget:GetInfo()
 	return {
-		name		= "Vehicle Spawner",
+		name		= "Outpost - Vehicle Pad",
 		desc		= "AI Grunt Spawner",
 		author		= "FLOZi (C. Lawrence)",
 		date		= "16/08/14",

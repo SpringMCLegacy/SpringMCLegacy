@@ -1,6 +1,6 @@
 function gadget:GetInfo()
 	return {
-		name		= "Uplink Abilities",
+		name		= "Outpost - Orbital Uplink",
 		desc		= "Controls Orbital Uplink's abilities",
 		author		= "FLOZi (C. Lawrence)",
 		date		= "22/08/13",

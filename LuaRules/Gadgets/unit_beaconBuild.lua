@@ -26,35 +26,20 @@ local EditUnitCmdDesc		= Spring.EditUnitCmdDesc
 local InsertUnitCmdDesc		= Spring.InsertUnitCmdDesc
 local FindUnitCmdDesc		= Spring.FindUnitCmdDesc
 local TransferUnit			= Spring.TransferUnit
-local RemoveUnitCmdDesc		= Spring.RemoveUnitCmdDesc
-local SetUnitNeutral		= Spring.SetUnitNeutral
-local SetUnitRotation		= Spring.SetUnitRotation
 local UseTeamResource 		= Spring.UseTeamResource
 
 -- GG
-local GetUnitDistanceToPoint = GG.GetUnitDistanceToPoint
 local DelayCall				 = GG.Delay.DelayCall
 
 -- Constants
-local GAIA_TEAM_ID = Spring.GetGaiaTeamID()
 local BEACON_ID = UnitDefNames["beacon"].id
-local TURRETCONTROL_ID = UnitDefNames["outpost_turretcontrol"].id
 local BEACON_POINT_ID = UnitDefNames["beacon_point"].id
 local DROPZONE_IDS = {}
 GG.DROPZONE_IDS = DROPZONE_IDS
 
---local MIN_BUILD_RANGE = tonumber(UnitDefNames["beacon"].customParams.minbuildrange) or 230
-local MAX_BUILD_RANGE = UnitDefs[TURRETCONTROL_ID].buildDistance
-local RADIUS = 230
-
 local DROPSHIP_DELAY = 10 * 30 -- 10s
 
 -- Variables
-local towerDefIDs = {} -- towerDefIDs[unitDefID] = "turret" or "energy" or "ranged"
-local buildLimits = {} -- buildLimits[unitID] = {turret = 4, ...}
-local towerOwners = {} -- towerOwners[towerID] = outpostID
-local ownedTowers = {} -- ownedTowers[outpostID] = {towerID = true, ...}
-
 local outpostDefs = {} -- outpostDefs[unitDefID] = {cmdDesc = {cmdDescTable}, cost = cost}
 GG.outpostDefs = outpostDefs -- TODO: check why this is in GG
 local dropZoneDefs = {}
@@ -75,20 +60,6 @@ local dropZoneCmdDesc
 local activeDropships = {} -- activeDropships[dropshipID] = beaconID
 local beaconActive = {} -- beaconActive[beaconID] = dropshipID
 local beaconDropshipQueue = {} -- beaconDropshipQueue[beaconID] = {info1 = {}, info2 = {}, ...}
-
-local hotSwapIDs = {} -- hotSwapIDs[unitID] = true
-local function HotSwap(unitID, unitDefID, teamID)
-	hotSwapIDs[unitID] = true
-	local x,y,z = Spring.GetUnitPosition(unitID)
-	if not Spring.GetUnitIsDead(unitID) then
-		Spring.DestroyUnit(unitID, false, true)
-		--Spring.Echo("Destroy:", unitID)
-	end
-	if not teamID then
-		teamID = Spring.GetUnitTeam(unitID)
-	end
-	DelayCall(Spring.CreateUnit,{unitDefID, x,y,z, "s", teamID, false, false, unitID, nil}, 3) -- 3 frame delay appears to be minimum
-end
 
 local BEACON_POINT_DIST = 400
 local function BeaconPoints(beaconID, teamID, x, y, z)
@@ -120,9 +91,7 @@ function gadget:GamePreload()
 	for unitDefID, unitDef in pairs(UnitDefs) do
 		local name = unitDef.name
 		local cp = unitDef.customParams
-		if cp and cp.baseclass == "tower" and not name:find("garrison") then -- automatically build table of towers
-			towerDefIDs[unitDefID] = cp.turrettype or "turret"
-		elseif name:find("dropzone") then -- check for dropzones first
+		if name:find("dropzone") then -- check for dropzones first
 			DROPZONE_IDS[unitDefID] = true
 		elseif cp.baseclass == "outpost" then -- automatically build beacon outpost cmdDescs
 			local cBillCost = unitDef.metalCost
@@ -313,70 +282,18 @@ local function SetDropZone(beaconID, teamID)
 	Spring.SetUnitRulesParam(beaconID, "secure", 1)
 end
 
--- TOWERS
-function LimitTowerType(unitID, teamID, towerType, increase)	
-	local towersRemaining = buildLimits[unitID][towerType]
-	if increase then
-		buildLimits[unitID][towerType] = towersRemaining + increase
-		for tDefID, tType in pairs(towerDefIDs) do
-			if tType == towerType then
-				local cmdDescID = FindUnitCmdDesc(unitID, -tDefID)
-				if cmdDescID then
-					EditUnitCmdDesc(unitID, cmdDescID, {disabled = false, params = {}})
-				end
-			end
-		end
-	elseif towersRemaining == 0 then 
-		Spring.SendMessageToTeam(teamID, "Limit reached for " .. towerType)
-		return false 
-	else
-		buildLimits[unitID][towerType] = towersRemaining - 1
-		if towersRemaining == 1 then
-			for tDefID, tType in pairs(towerDefIDs) do
-				if tType == towerType then
-					EditUnitCmdDesc(unitID, FindUnitCmdDesc(unitID, -tDefID), {disabled = true, params = {"L"}})
-				end
-			end
-		end
-		return true
-	end
-end
-GG.LimitTowerType = LimitTowerType -- for outpost_turretcontrol perk
-
 function gadget:UnitCreated(unitID, unitDefID, teamID, builderID)
-	hotSwapIDs[unitID] = nil
 	local unitDef = UnitDefs[unitDefID]
 	local cp = unitDef.customParams
 	if unitDefID == BEACON_ID then
 		InsertUnitCmdDesc(unitID, dropZoneCmdDesc)
 	elseif unitDefID == BEACON_POINT_ID then
 		AddOutpostOptions(unitID)
-	elseif unitDefID == TURRETCONTROL_ID then
-		buildLimits[unitID] = {["turret"] = 2, ["energy"] = 1, ["ranged"] = 1}
-		ownedTowers[unitID] = {}
-		LimitTowerType(unitID, teamID, "energy") -- reduce to 0 so we get the BP greyed out
-		LimitTowerType(unitID, teamID, "ranged") -- reduce to 0 so we get the BP greyed out
-	elseif cp and cp.baseclass == "tower" then
-		-- track creation of turrets and their originating beacons so we can give back slots if a turret dies
-		if builderID then -- ignore /give turrets
-			towerOwners[unitID] = builderID
-			ownedTowers[builderID][unitID] = true
-		end
 	end
 end
 
 function gadget:UnitDestroyed(unitID, unitDefID, teamID, attackerID, attackerDefID, attackerTeam)
-	local towerOwnerID = towerOwners[unitID]
-	if towerOwnerID then -- unit was a turret with owning beacon, open the slot back up
-		local towerType = towerDefIDs[unitDefID]
-		LimitTowerType(towerOwnerID, teamID, towerType, 1) -- increase limit
-		towerOwners[unitID] = nil
-		if ownedTowers[towerOwnerID] then -- can be nil if control died, as this does not delete towerOwners
-			ownedTowers[towerOwnerID][unitID] = nil
-		end
-	end
 	if DROPZONE_IDS[unitDefID] then -- unit was a team's dropzone, reset outpost options
-		--ToggleOutpostOptions(dropZoneBeaconIDs[teamID], true) -- REMOVE
 		dropZoneIDs[teamID] = nil
 		dropZoneBeaconIDs[teamID] = nil
 	elseif outpostDefs[unitDefID] then
@@ -392,14 +309,6 @@ function gadget:UnitDestroyed(unitID, unitDefID, teamID, attackerID, attackerDef
 			-- Re-add outpost options to beacon
 			ToggleOutpostOptions(outpostPointID, true)
 			DropshipBugOut(outpostPointBeaconIDs[outpostPointID], teamID, unitID) -- /give testing won't bug out
-		end
-		if unitDefID == TURRETCONTROL_ID then -- turret control died, kill link and disable
-			for towerID in pairs(ownedTowers[unitID]) do
-				GG.ToggleLink(towerID, teamID, true)
-				local env = Spring.UnitScript.GetScriptEnv(towerID)
-				Spring.UnitScript.CallAsUnit(towerID, env.TeamChange, GAIA_TEAM_ID) -- toggle firing
-			end
-			ownedTowers[unitID] = nil
 		end
 	elseif activeDropships[unitID] then
 		--Spring.Echo("Oh noes, my dropship! Send the next one", attackerID, attackerDefID, attackerTeam)
@@ -448,15 +357,6 @@ function gadget:UnitGiven(unitID, unitDefID, newTeam, oldTeam)
 			DelayCall(Spring.DestroyUnit, {dropZoneID, false, true}, 1)
 		end
 		DropshipBugOut(unitID, oldTeam)
-	elseif unitDefID == TURRETCONTROL_ID then
-		for towerID, beaconID in pairs(towerOwners) do
-			if beaconID == unitID then
-				DelayCall(TransferUnit, {towerID, newTeam}, 1)
-				local env = Spring.UnitScript.GetScriptEnv(towerID)
-				Spring.UnitScript.CallAsUnit(towerID, env.TeamChange, newTeam)
-				DelayCall(SetUnitNeutral,{towerID, newTeam == GAIA_TEAM_ID}, 2)
-			end
-		end
 	end
 end
 
@@ -498,24 +398,6 @@ function gadget:AllowCommand(unitID, unitDefID, teamID, cmdID, cmdParams, cmdOpt
 		elseif cmdID == CMD.SELFD then -- Disallow self-d
 			return false
 		end	
-	elseif unitDefID == TURRETCONTROL_ID then
-		if cmdID < 0 then
-			local towerType = towerDefIDs[-cmdID]
-			if not towerType then return false end
-			if unitDefID == TURRETCONTROL_ID then -- TurretControl has limited build radius -- TODO: within the beacon
-				local tx, ty, tz = unpack(cmdParams)
-				local dist = GetUnitDistanceToPoint(unitID, tx, ty, tz, false)
-				--[[if dist < MIN_BUILD_RANGE then
-					Spring.SendMessageToTeam(teamID, "Too close to beacon")
-					return false
-				else]]
-				if dist > MAX_BUILD_RANGE then
-					Spring.SendMessageToTeam(teamID, "Too far from Turret Control!")
-					return false
-				end
-			end
-			return LimitTowerType(unitID, teamID, towerType)
-		end
 	elseif UnitDefs[unitDefID].customParams.decal then
 		return false -- disallow all commands to decals
 	end
@@ -537,40 +419,5 @@ end
 
 else
 --	UNSYNCED
---[[
--- localisations
-local GetUnitRulesParam			= Spring.GetUnitRulesParam
--- SyncedRead
-local GetGameFrame				= Spring.GetGameFrame
--- UnsyncedRead
-local GetSelectedUnitsSorted	= Spring.GetSelectedUnitsSorted
--- UnsyncedCtrl
-local SelectUnitArray			= Spring.SelectUnitArray
--- variables
-local outpostDefIDs = {}
-for unitDefID, unitDef in pairs(UnitDefs) do
-	local cp = unitDef.customParams
-	if cp and cp.baseclass == "outpost" then
-		outpostDefIDs[unitDefID] = true
-	end
-end
-local lastFrame = 0
-
-function gadget:Update()
-	local frameNum = Spring.GetGameFrame()
-	if lastFrame == frameNum then
-		return --same frame
-	end
-	lastFrame = frameNum
-	--Spring.Echo("unsynced gameframe: " .. lastFrame)
-	local selected = GetSelectedUnitsSorted()
-	for unitDefID, units in pairs(selected) do
-		if outpostDefIDs[unitDefID] then
-			for _, unitID in pairs(units) do
-				SelectUnitArray({GetUnitRulesParam(unitID, "beaconID")}, true)
-			end
-		end
-	end
-end]]
 
 end
