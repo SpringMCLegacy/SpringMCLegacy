@@ -31,5 +31,5 @@ local DRT3S = Dart:New{
 }
 
 return lowerkeys({
-	["LA_Dart_DRT3S"] = DRT3S:New(),
+	--["LA_Dart_DRT3S"] = DRT3S:New(),
 })
