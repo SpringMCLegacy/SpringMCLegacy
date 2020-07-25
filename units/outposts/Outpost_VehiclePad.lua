@@ -1,6 +1,6 @@
 local Outpost_VehiclePad = Outpost:New{
 	name              	= "Vehicle Pad (Support)",
-	description         = "Vehicle Delivery outpost",
+	description         = "Allows delivery of offensive vehicle support units",
 	maxDamage           = 10000,
 	mass                = 5000,
 	buildCostMetal      = 10000,
@@ -17,12 +17,6 @@ local Outpost_VehiclePad = Outpost:New{
 	}
 }
 
-local Outpost_HoverPad = Outpost_VehiclePad:New{
-	name				= "Hover Pad",
-	objectName			= "outpost/outpost_vehiclepad.s3o",
-}
-
 return lowerkeys({ 
 	["outpost_VehiclePad"] = Outpost_VehiclePad,
-	--["outpost_HoverPad"] = Outpost_HoverPad,
 })

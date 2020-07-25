@@ -1,6 +1,6 @@
 local Outpost_Garrison = Outpost:New{
 	name              	= "Garrison (Fortify)",
-	description         = "Fortified Defensive Outpost",
+	description         = "Deploys a fortified outpost to prevent beacon capture",
 	maxDamage           = 20000,
 	mass                = 10000,
 	collisionVolumeScales = [[50 50 50]],
@@ -22,7 +22,7 @@ local Outpost_Garrison = Outpost:New{
 		ignoreatbeacon	= false,
     },
 	sounds = {
-	select = "Garrison",
+		select = "Garrison",
 	}
 }
 

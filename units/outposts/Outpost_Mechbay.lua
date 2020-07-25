@@ -1,6 +1,6 @@
 local Outpost_Mechbay = Outpost:New{
 	name              	= "Field Mech Bay (Repair)",
-	description         = "Repair & Rearm Outpost",
+	description         = "Deploys an outpost that can repair & restore & resupply mechs",
 	maxDamage           = 10000,
 	mass                = 9000,
 	buildCostMetal      = 7400,
@@ -14,7 +14,7 @@ local Outpost_Mechbay = Outpost:New{
 		helptext		= "Repairs and re-arms Mechs and Vehicles.",
     },
 	sounds = {
-	select = "Mechbay",
+		select = "Mechbay",
 	}
 }
 

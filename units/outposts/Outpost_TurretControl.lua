@@ -1,6 +1,6 @@
 local Outpost_TurretControl = Outpost:New{
 	name              	= "Turret Control (Defend)",
-	description         = "Automated Turret Control Station",
+	description         = "Allows deployment of AI defense turrets around the beacon",
 	maxDamage           = 10000,
 	mass                = 5000,
 	buildCostMetal      = 6600,
@@ -9,7 +9,7 @@ local Outpost_TurretControl = Outpost:New{
 
 	-- Constructor stuff
 	builder				= true,
-	builddistance 		= 1000000,
+	builddistance 		= 1000,
 	workerTime			= 10, -- ?	
 	terraformSpeed		= 10000,
 	showNanoSpray		= false,
@@ -18,7 +18,7 @@ local Outpost_TurretControl = Outpost:New{
 		helptext		= "Ping Pong Potato",
     },
 	sounds = {
-	select = "TurretControl",
+		select = "TurretControl",
 	}
 }
 

@@ -1,6 +1,6 @@
 local Outpost_Seismic = Outpost:New{
 	name              	= "Seismic Listening Post (Detect)",
-	description         = "Long-Range Seismic Sensor",
+	description         = "Deploys a long-range seismic detection sensor",
 	maxDamage           = 10000,
 	mass                = 5000,
 	buildCostMetal      = 5350,
@@ -13,7 +13,7 @@ local Outpost_Seismic = Outpost:New{
 		helptext		= "Ping Pong Potato",
     },
 	sounds = {
-	select = "Seismic",
+		select = "Seismic",
 	}
 }
 

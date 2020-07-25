@@ -10,7 +10,7 @@ end
 
 local Outpost_Dropzone = Outpost:New{
 	name              	= "Dropzone",
-	description         = "Landing Demarcation",
+	description         = "Allows the purchase and delivery of battlemechs",
 	objectName        	= "outpost/outpost_Dropzone.s3o",
 	iconType			= "Ddropzone",
 	script				= "outpost_Dropzone.lua",

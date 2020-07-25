@@ -1,6 +1,6 @@
 local Outpost_Uplink = Outpost:New{
 	name              	= "Orbital Uplink (Bombard)",
-	description         = "Orbital Asset outpost",
+	description         = "Allows control over orbital bombardment assets",
 	maxDamage           = 10000,
 	mass                = 5000,
 	buildCostMetal      = 8300,
@@ -19,7 +19,7 @@ local Outpost_Uplink = Outpost:New{
 		hasbap			= true,
     },
 	sounds = {
-	select = "Uplink",
+		select = "Uplink",
 	}
 }
 
