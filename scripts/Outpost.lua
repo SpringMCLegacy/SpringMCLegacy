@@ -596,6 +596,7 @@ function script.TransportPickup (passengerID)
 		passengerEnv = Spring.UnitScript.GetScriptEnv(passengerID)
 		-- TODO: pickup animation
 		Spring.UnitScript.AttachUnit(base, passengerID)
+		bayReady = false
 		StartThread(Repair, passengerID)
 		StartThread(Resupply, passengerID)
 		StartThread(Restore, passengerID)
@@ -611,6 +612,7 @@ function script.TransportDrop (passengerID, x, y, z)
 		Signal(1) -- kill repair anim
 		passengerID = passengerID or isTransporting[1]
 		Spring.UnitScript.DropUnit(passengerID)
+		bayReady = true
 		Spring.SetUnitMoveGoal(passengerID, UNLOAD_X, 0, UNLOAD_Z, 50) -- bug out over here
 		-- reset states
 		repaired = false
