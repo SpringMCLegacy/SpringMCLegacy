@@ -24,12 +24,12 @@ local DRT3S = Dart:New{
 	customparams = {
 		variant         = "DRT-4S",
 		speed			= 140,
-		price			= 6560,
+		price			= 5560,
 		heatlimit 		= 10,
 		armor			= {type = "standard", tons = 3.5},
     },
 }
 
 return lowerkeys({
-	--["LA_Dart_DRT3S"] = DRT3S:New(),
+	["LA_Dart_DRT3S"] = DRT3S:New(),
 })
