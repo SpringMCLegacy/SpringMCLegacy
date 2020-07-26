@@ -25,7 +25,6 @@ local GAIA_TEAM_ID = Spring.GetGaiaTeamID()
 local C3_ID = UnitDefNames["outpost_c3array"].id
 
 -- Variables
-local mechCache = {} -- mechCache[unitDefID] = true
 local C3Status = {} -- C3Status[unitID] = bool deployed
 local teamC3Counts = {} -- teamC3Counts[teamID] = number
 local teamSlots = {} -- teamSlots[teamID] = {[1] = {active = true, used = number, available = number, units = {unitID1 = tons, unitID2 = tons, ...}}, ...}
@@ -183,7 +182,7 @@ local function UpdateTeamSlots(teamID, unitID, unitDefID, add)
 end
 
 function gadget:AllowCommand(unitID, unitDefID, teamID, cmdID, cmdParams, cmdOptions, cmdTag, synced)
-	if mechCache[unitDefID] then
+	if GG.mechCache[unitDefID] then
 		local group = unitLances[unitID]
 		local groupSlots = teamSlots[teamID][group]
 		if groupSlots then
@@ -199,7 +198,7 @@ end
 
 function gadget:UnitCreated(unitID, unitDefID, teamID)
 	local unitDef = UnitDefs[unitDefID]
-	if mechCache[unitDefID] then
+	if GG.mechCache[unitDefID] then
 		UpdateTeamSlots(teamID, unitID, unitDefID, true)
 	end
 end
@@ -208,13 +207,13 @@ end
 function gadget:UnitDestroyed(unitID, unitDefID, teamID, attackerID, attackerDefID, attackerTeam)
 	if unitDefID == C3_ID then
 		LanceControl(teamID, unitID, false)
-	elseif mechCache[unitDefID] then
+	elseif GG.mechCache[unitDefID] then
 		UpdateTeamSlots(teamID, unitID, unitDefID, false)
 	end
 end
 
 function gadget:UnitGiven(unitID, unitDefID, newTeam, oldTeam)
-	if mechCache[unitDefID] then
+	if GG.mechCache[unitDefID] then
 		UpdateTeamSlots(oldTeam, unitID, unitDefID, false)
 	end
 	if newTeam ~= GAIA_TEAM_ID then
@@ -225,16 +224,6 @@ function gadget:UnitGiven(unitID, unitDefID, newTeam, oldTeam)
 	end
 end
 
-
-function gadget:GamePreload()
-	for unitDefID, unitDef in pairs(UnitDefs) do
-		local name = unitDef.name
-		local cp = unitDef.customParams
-		if cp.baseclass == "mech" then
-			mechCache[unitDefID] = true
-		end
-	end
-end
 
 function gadget:Initialize()
 	for _, teamID in pairs(Spring.GetTeamList()) do
@@ -248,8 +237,7 @@ function gadget:Initialize()
 			teamSlots[teamID][i].units = {}
 		end
 	end
-	gadget:GamePreload()
-	for _,unitID in ipairs(Spring.GetAllUnits()) do
+		for _,unitID in ipairs(Spring.GetAllUnits()) do
 		local teamID = Spring.GetUnitTeam(unitID)
 		local unitDefID = Spring.GetUnitDefID(unitID)
 		gadget:UnitCreated(unitID, unitDefID, teamID)

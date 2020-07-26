@@ -37,27 +37,9 @@ local DelayCall				 = GG.Delay.DelayCall
 -- Constants
 local EMPTY_TABLE = {} -- keep as empty
 local GAIA_TEAM_ID = Spring.GetGaiaTeamID()
-local CBILLS_PER_SEC = (modOptions and tonumber(modOptions.income)) or 10
 local BEACON_ID = UnitDefNames["beacon"].id
 
 local DROPSHIP_DELAY = 2 * 30 -- 2s, time taken to arrive on the map from SPACE!
-local DAMAGE_REWARD_MULT = (modOptions and tonumber(modOptions.income_damage)) or 0.1
-Spring.SetGameRulesParam("damage_reward_mult", DAMAGE_REWARD_MULT)
-local INSURANCE_MULT = (modOptions and tonumber(modOptions.insurance)) or 0.1
-Spring.SetGameRulesParam("insurance_mult", INSURANCE_MULT)
-local SELL_MULT = (modOptions and tonumber(modOptions.sell)) or 0.75
-Spring.SetGameRulesParam("sell_mult", SELL_MULT)
-
-
-local SELL_DISTANCE = 460 -- TODO: flagCapradius, grab from GG or game rules?
-local CMD_SELL = GG.CustomCommands.GetCmdID("CMD_SELL")
-local sellOrderCmdDesc = {
-	id = CMD_SELL,
-	type   = CMDTYPE.ICON,
-	name   = "  Sell   \n  Unit  ",
-	action = 'sell_mech',
-	tooltip = "Calls a dropship to sell the unit (" .. SELL_MULT * 100 .. "% return)",
-}
 	
 local CMD_SEND_ORDER = GG.CustomCommands.GetCmdID("CMD_SEND_ORDER")
 local sendOrderCmdDesc = {
@@ -107,7 +89,8 @@ for i, typeString in ipairs(typeStrings) do
 	ignoredCmdDescs[cmdID] = 1
 end
 
-local unitTypes = {} -- unitTypes[unitDefID] = "fast"/"cqb"/"flexible"/"ranged" from typeStrings
+local mechCache = {} -- mechCache[unitDefID] = "fast"/"cqb"/"flexible"/"ranged" from typeStrings
+GG.mechCache = mechCache 
 local currMenu = {} -- [dropzoneID] = unitType
 local locked = {} -- unitDefID = true
 local dropShipTypes = {} -- dropShipTypes[unitDefID] = "mech", "vehicle" or "outpost"
@@ -164,7 +147,7 @@ local function ShowBuildOptionsByType(unitID, unitType)
 			EditUnitCmdDesc(unitID, i, {texture = 'bitmaps/ui/selected.png',})
 		elseif cmdDesc.id < 0 then
 			-- Order matters here... nil or false = false, false or nil = nil, thanks lua
-			local hide = locked[-cmdDesc.id] or unitTypes[-cmdDesc.id] ~= unitType
+			local hide = locked[-cmdDesc.id] or mechCache[-cmdDesc.id] ~= unitType
 			EditUnitCmdDesc(unitID, i, {hidden = hide})
 		elseif ignoredCmdDescs[cmdDesc.id] == 1 then 
 			EditUnitCmdDesc(unitID, i, {texture = '',})
@@ -275,7 +258,6 @@ function OrderFinished(unitID, teamID)
 	ResetBuildQueue(unitID)
 	orderCosts[unitID] = 0
 	orderTons[unitID] = 0
-	--orderSizesPending[unitID] = orderSizes[unitID]
 	orderSizes[unitID] = 0
 end
 
@@ -342,31 +324,9 @@ local function SendCommandFallback(unitID, unitDefID, teamID, cost, weight)
 	end
 end
 
-local function SellUnit(unitID, unitDefID, teamID, unitType)
-	Spring.SendMessageToTeam(teamID, "Selling " .. unitType .. "!")
-	AddTeamResource(teamID, "metal", UnitDefs[unitDefID].metalCost * SELL_MULT)
-	-- TODO: wait around and get in dropship
-	Spring.SetUnitRulesParam(unitID, "sold", 1)
-	Spring.DestroyUnit(unitID, false, true)
-end
 
 function gadget:AllowCommand(unitID, unitDefID, teamID, cmdID, cmdParams, cmdOptions, cmdTag, synced)
-	if unitTypes[unitDefID] then
-		if cmdID == CMD_SELL then
-			local dropZone = teamDropZones[teamID]
-			if dropZone then -- need to have a dropzone set and be close to it
-				local dist = Spring.GetUnitSeparation(unitID, dropZone)
-				if dist < SELL_DISTANCE then
-					SellUnit(unitID, unitDefID, teamID, "mech")
-				else
-					Spring.SendMessageToTeam(teamID, "Cannot sell mech; not within range of Dropzone!")
-				end
-			else
-				Spring.SendMessageToTeam(teamID, "Cannot sell mech; you have no Dropzone!")
-			end
-		end
-		return true -- allow all other commands through here
-	elseif dropZones[unitID] then
+	if dropZones[unitID] then
 		local typeString = menuCmdIDs[cmdID]
 		local rightClick = cmdOptions.right
 		if typeString then
@@ -423,8 +383,7 @@ function gadget:AllowCommand(unitID, unitDefID, teamID, cmdID, cmdParams, cmdOpt
 				else
 					return false
 				end
-			end
-			
+			end	
 		elseif cmdID == CMD_SEND_ORDER then
 			if rightClick then
 				if orderStatus[teamID] > 0 then
@@ -445,12 +404,6 @@ function gadget:AllowCommand(unitID, unitDefID, teamID, cmdID, cmdParams, cmdOpt
 			UpdateButtons(teamID)
 			GG.Delay.DelayCall(SendCommandFallback, {unitID, unitDefID, teamID, cost}, 16)
 			return true
-		end
-	elseif GG.outpostDefs[unitDefID] then -- an outpost
-		if cmdID == CMD_SELL then
-			SellUnit(unitID, unitDefID, teamID, "outpost")
-		else
-			return true -- allow all other commands through here
 		end
 	end
 	return true
@@ -483,28 +436,6 @@ function gadget:UnitCreated(unitID, unitDefID, teamID)
 		if unitDefID == teamDropShipTypes[teamID].def and teamDropShipHPs[teamID] then -- check it is current def incase we upgraded before it left
 			Spring.SetUnitHealth(unitID, teamDropShipHPs[teamID])
 		end
-	elseif unitTypes[unitDefID] then
-		InsertUnitCmdDesc(unitID, sellOrderCmdDesc)
-	elseif GG.outpostDefs[unitDefID] then -- an outpost
-		InsertUnitCmdDesc(unitID, sellOrderCmdDesc)
-	end
-end
-
-
--- TODO: Split this all off into game_money
-local WALL_ID = UnitDefNames["wall"].id
-local GATE_ID = UnitDefNames["wall_gate"].id
-local MELTDOWN = WeaponDefNames["meltdown"].id
-
-function gadget:UnitDamaged(unitID, unitDefID, teamID, damage, paralyzer, weaponID,  projectileID, attackerID, attackerDefID, attackerTeam)
-	if attackerID and attackerTeam and not AreTeamsAllied(teamID, attackerTeam) and unitDefID ~= WALL_ID and unitDefID ~= GATE_ID then
-		local attackerDefType = attackerDefID and UnitDefs[attackerDefID].customParams.baseclass or ""
-		if attackerDefType == "mech" then -- only mechs generate income
-			-- don't allow income from nukes
-			if not (weaponID and weaponID == MELTDOWN) then		
-				AddTeamResource(attackerTeam, "metal", damage * DAMAGE_REWARD_MULT)
-			end
-		end
 	end
 end
 
@@ -527,10 +458,7 @@ function gadget:UnitDestroyed(unitID, unitDefID, teamID, attackerID, attackerDef
 		end
 		DropshipLeft(teamID)
 	end
-	if attackerID and not AreTeamsAllied(teamID, attackerTeam) and unitDefID ~= WALL_ID and unitDefID ~= GATE_ID then
-		AddTeamResource(teamID, "metal", UnitDefs[unitDefID].metalCost * INSURANCE_MULT)
-	end
-	if unitTypes[unitDefID] then
+	if mechCache[unitDefID] then
 		-- reimburse 'weight'
 		AddTeamResource(teamID, "energy", UnitDefs[unitDefID].energyCost)
 	end
@@ -550,7 +478,7 @@ function gadget:GamePreload()
 		local cp = unitDef.customParams
 		if cp.baseclass == "mech" then
 			-- sort into light, medium, heavy, assault
-			unitTypes[unitDefID] = cp.menu
+			mechCache[unitDefID] = cp.menu
 			--unitSlotChanges[unitDefID] = 1
 		elseif cp.dropship then
 			dropShipTypes[unitDefID] = cp.dropship
@@ -564,9 +492,6 @@ end
 
 function gadget:GameFrame(n)
 	if n > 0 and n % 30 == 0 then -- once a second
-		for _, teamID in pairs(Spring.GetTeamList()) do
-			AddTeamResource(teamID, "metal", CBILLS_PER_SEC * Spring.GetTeamUnitDefCount(teamID, BEACON_ID))
-		end
 		-- check if orders are still too expensive
 		for unitID, teamID in pairs(dropZones) do
 			CheckBuildOptions(unitID, teamID)
