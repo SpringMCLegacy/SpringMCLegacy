@@ -26,7 +26,6 @@ local C3_ID = UnitDefNames["outpost_c3array"].id
 
 -- Variables
 local mechCache = {} -- mechCache[unitDefID] = true
-local unitSlotChanges = {} -- unitSlotChanges = 1 -- TODO: remove this when splitting out to outpost_c3array
 local C3Status = {} -- C3Status[unitID] = bool deployed
 local teamC3Counts = {} -- teamC3Counts[teamID] = number
 local teamSlots = {} -- teamSlots[teamID] = {[1] = {active = true, used = number, available = number, units = {unitID1 = tons, unitID2 = tons, ...}}, ...}
@@ -146,13 +145,12 @@ function LanceControl(teamID, unitID, add)
 			--Spring.GiveOrderToUnitMap(groupSlots.units, CMD.STOP, EMPTY_TABLE, EMPTY_TABLE)
 			for unitID, tonnage in pairs(groupSlots.units) do
 				local unitDefID = Spring.GetUnitDefID(unitID)
-				local slotChange = unitSlotChanges[unitDefID]
-				local lowerGroup, lowerActive = TeamAvailableGroup(teamID, slotChange)
+				local lowerGroup, lowerActive = TeamAvailableGroup(teamID, 1)
 				if lowerGroup and lowerActive then -- if there is a slot lower down, take it
 					-- cleanup old group
-					AssignGroup(unitID, unitDefID, teamID, -slotChange, unitLances[unitID])
+					AssignGroup(unitID, unitDefID, teamID, -1, unitLances[unitID])
 					-- add to new group
-					AssignGroup(unitID, unitDefID, teamID, slotChange, lowerGroup)
+					AssignGroup(unitID, unitDefID, teamID, 1, lowerGroup)
 				else -- otherwise we've lost the link
 					ToggleLink(unitID, teamID, true, tonnage)
 				end
@@ -166,21 +164,20 @@ GG.LanceControl = LanceControl
 local function UpdateTeamSlots(teamID, unitID, unitDefID, add)
 	if select(3,Spring.GetTeamInfo(teamID)) or teamID == GAIA_TEAM_ID then return end -- team died
 	local ud = UnitDefs[unitDefID]
-	local slotChange = unitSlotChanges[unitDefID]
 	if add then -- new unit
-		local group, active = TeamAvailableGroup(teamID, slotChange)
+		local group, active = TeamAvailableGroup(teamID, 1)
 		if group then
 			if not active then 
 				--Spring.Echo(teamID, "Assigned to an inactive group!") 
 				ToggleLink(unitID, teamID, true, ud.energyCost)
 			end
-			AssignGroup(unitID, unitDefID, teamID, slotChange, group)
+			AssignGroup(unitID, unitDefID, teamID, 1, group)
 		else 
-			Spring.Echo(teamID, "FLOZi logic fail: No available group", TeamSlotsRemaining(teamID), slotChange, ud.name) 
+			Spring.Echo(teamID, "FLOZi logic fail: No available group", TeamSlotsRemaining(teamID), 1, ud.name) 
 		end
 	else -- unit died
 		local group = unitLances[unitID]
-		AssignGroup(unitID, unitDefID, teamID, -slotChange, group)
+		AssignGroup(unitID, unitDefID, teamID, -1, group)
 	end
 	Spring.SetTeamRulesParam(teamID, "TEAM_SLOTS_REMAINING", TeamSlotsRemaining(teamID))
 end
@@ -235,7 +232,6 @@ function gadget:GamePreload()
 		local cp = unitDef.customParams
 		if cp.baseclass == "mech" then
 			mechCache[unitDefID] = true
-			unitSlotChanges[unitDefID] = 1
 		end
 	end
 end
