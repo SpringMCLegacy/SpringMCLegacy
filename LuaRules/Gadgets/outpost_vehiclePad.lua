@@ -279,9 +279,15 @@ end
 
 function gadget:UnitDestroyed(unitID, unitDefID, teamID)
 	-- TODO: remove from list to spawn at
-	unitSquads[unitID] = nil
-	spawnPads[unitID] = nil
-	padLevels[unitID] = nil
+	if spawnPads[unitID] then
+		unitSquads[unitID] = nil
+		spawnPads[unitID] = nil
+		padLevels[unitID] = nil
+		local beaconID = Spring.GetUnitRulesParam(unitID, "beaconID")
+		if beaconID then -- currently this will only force landing craft to bugout if it was properly built, not /give en
+			GG.DropshipBugOut(beaconID, teamID, unitID)
+		end
+	end
 end
 
 local function Wander(unitID, cmd)

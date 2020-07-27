@@ -137,7 +137,6 @@ function gadget:UnitDestroyed(unitID, unitDefID, teamID, attackerID, attackerDef
 			outpostIDs[outpostPointID] = nil
 			-- Re-add outpost options to beacon
 			ToggleOutpostOptions(outpostPointID, true)
-			GG.DropshipBugOut(outpostPointBeaconIDs[outpostPointID], teamID, unitID) -- /give testing won't bug out
 		end
 	end
 end
