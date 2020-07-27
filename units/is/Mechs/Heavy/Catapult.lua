@@ -51,10 +51,10 @@ local CPLTC2 = Catapult:New{
 			name	= "ALRM15",
 		},
 		[3] = {
-			name	= "AC2",
+			name	= "LBX2",
 		},
 		[4] = {
-			name	= "AC2",
+			name	= "LBX2",
 		},
 	},
 		

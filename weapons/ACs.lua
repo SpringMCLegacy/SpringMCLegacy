@@ -78,6 +78,30 @@ local UAC2 = AC2:New{
 	reloadtime              = 0.25,
 }
 
+local LBX2 = AC2:New{
+	name                    = "LBX/5",
+	soundStart            	= "LBX5_Fire",
+	range                   = 2700,
+	--accuracy                = 100,
+	reloadtime              = 2,
+	
+	customparams = {
+		weaponclass			= "lbx",
+		heatgenerated		= 0.05,--0.1/sec
+    },
+}
+
+local LBX2_Cluster = LBX2:New(LBX_Class):New{
+	--sprayAngle				= 700,
+	range 					= 700,
+	projectiles				= 2,
+	dynDamageMin			= 100,
+	
+	damage = {
+		default = 150,--20, --50 DPS
+	},
+}
+
 -- AC5 & Variants
 local AC5 = AC_Class:New{
 	name                    = "AC/5",
@@ -324,6 +348,8 @@ return lowerkeys({
 	AC2 = AC2,
 	RAC2 = RAC2,
 	UAC2 = UAC2,
+	LBX2 = LBX2,
+	LBX2_Cluster = LBX2_Cluster,
 	-- AC5 & Variants
 	AC5 = AC5,
 	AC5_AA = AC5_AA,
