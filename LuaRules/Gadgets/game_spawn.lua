@@ -13,7 +13,7 @@
 
 function gadget:GetInfo()
 	return {
-		name      = "Spawn",
+		name      = "Game - Spawn",
 		desc      = "spawns start unit and sets storage levels",
 		author    = "Tobi Vollebregt",
 		date      = "January, 2010",

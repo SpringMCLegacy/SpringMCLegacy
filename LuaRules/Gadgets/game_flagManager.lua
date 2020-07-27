@@ -1,6 +1,6 @@
 function gadget:GetInfo()
 	return {
-		name      = "Beacon Manager",
+		name      = "Game - Beacon Manager",
 		desc      = "Populates maps with flags and handles control",
 		author    = "FLOZi",
 		date      = "Adopted from S44 flagManager 10/02/2011",

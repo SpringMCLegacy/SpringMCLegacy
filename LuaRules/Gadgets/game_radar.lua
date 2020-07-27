@@ -1,6 +1,6 @@
 function gadget:GetInfo()
 	return {
-		name = "Game Radar",
+		name = "Game - Radar",
 		desc = "Units in radar range become visible",
 		author = "FLOZi (C. Lawrence)",
 		date = "02/02/2011",

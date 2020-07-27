@@ -18,15 +18,12 @@ local SetUnitRulesParam		= Spring.SetUnitRulesParam
 --SyncedRead
 local GetGameFrame			= Spring.GetGameFrame
 local GetTeamResources		= Spring.GetTeamResources
-local GetUnitPosition		= Spring.GetUnitPosition
 --SyncedCtrl
 local CreateUnit			= Spring.CreateUnit
-local DestroyUnit			= Spring.DestroyUnit
 local EditUnitCmdDesc		= Spring.EditUnitCmdDesc
 local InsertUnitCmdDesc		= Spring.InsertUnitCmdDesc
 local FindUnitCmdDesc		= Spring.FindUnitCmdDesc
 local TransferUnit			= Spring.TransferUnit
-local UseTeamResource 		= Spring.UseTeamResource
 
 -- GG
 local DelayCall				 = GG.Delay.DelayCall
@@ -34,10 +31,6 @@ local DelayCall				 = GG.Delay.DelayCall
 -- Constants
 local BEACON_ID = UnitDefNames["beacon"].id
 local BEACON_POINT_ID = UnitDefNames["beacon_point"].id
-local DROPZONE_IDS = {}
-GG.DROPZONE_IDS = DROPZONE_IDS
-
-local DROPSHIP_DELAY = 10 * 30 -- 10s
 
 -- Variables
 local outpostDefs = {} -- outpostDefs[unitDefID] = {cmdDesc = {cmdDescTable}, cost = cost}
@@ -51,15 +44,6 @@ local outpostIDs = {} -- outpostIDs[beaconID] = outpostID
 local outpostPointBeaconIDs = {} -- outpostPointBeaconIDs[outpostPointID] = beaconID
 local beaconOutpostPointIDs = {} -- beaconOutpostPointIDs[beaconID] = {outpostPointID1, outpostPointID2, outpostPointID3}
 GG.beaconOutpostPointIDs = beaconOutpostPointIDs -- for AI
-
-local dropZoneIDs = {} -- dropZoneIDs[teamID] = dropZoneID
-local dropZoneBeaconIDs = {} -- dropZoneBeaconIDs[teamID] = beaconID
-GG.dropZoneBeaconIDs = dropZoneBeaconIDs
-local dropZoneCmdDesc
-
-local activeDropships = {} -- activeDropships[dropshipID] = beaconID
-local beaconActive = {} -- beaconActive[beaconID] = dropshipID
-local beaconDropshipQueue = {} -- beaconDropshipQueue[beaconID] = {info1 = {}, info2 = {}, ...}
 
 local BEACON_POINT_DIST = 400
 local function BeaconPoints(beaconID, teamID, x, y, z)
@@ -91,9 +75,7 @@ function gadget:GamePreload()
 	for unitDefID, unitDef in pairs(UnitDefs) do
 		local name = unitDef.name
 		local cp = unitDef.customParams
-		if name:find("dropzone") then -- check for dropzones first
-			DROPZONE_IDS[unitDefID] = true
-		elseif cp.baseclass == "outpost" then -- automatically build beacon outpost cmdDescs
+		if cp.baseclass == "outpost" then -- automatically build beacon outpost cmdDescs
 			local cBillCost = unitDef.metalCost
 			local outpostCmdDesc = {
 				id     = GG.CustomCommands.GetCmdID("CMD_" .. name:upper(), cBillCost),
@@ -105,17 +87,6 @@ function gadget:GamePreload()
 			outpostDefs[unitDefID] = {cmdDesc = outpostCmdDesc, cost = cBillCost}
 			outpostCMDs[outpostCmdDesc.id] = unitDefID
 		end
-	end
-	GG.DROPZONE_IDS = DROPZONE_IDS
-	dropZoneCmdDesc = {
-		id     = GG.CustomCommands.GetCmdID("CMD_DROPZONE", 0), -- dropzone is free
-		type   = CMDTYPE.ICON,
-		name   = "Dropzone",
-		action = 'dropzone',
-		tooltip = "Set as primary dropzone",
-	}
-	for dropZoneDefID in pairs(DROPZONE_IDS) do
-		dropZoneDefs[dropZoneDefID] = {cmdDesc = dropZoneCmdDesc, cost = 0}
 	end
 end
 
@@ -133,170 +104,28 @@ local function ToggleOutpostOptions(unitID, on)
 	for outpostDefID, outpostInfo in pairs(outpostDefs) do
 		EditUnitCmdDesc(unitID, FindUnitCmdDesc(unitID, outpostInfo.cmdDesc.id), {disabled = not on})
 	end
-	--EditUnitCmdDesc(unitID, FindUnitCmdDesc(unitID, dropZoneCmdDesc.id), {disabled = not on}) -- REMOVE
 end
 GG.ToggleOutpostOptions = ToggleOutpostOptions
 
-function SpawnCargo(beaconID, targetID, dropshipID, unitDefID, teamID)
-	local tx, ty, tz = GetUnitPosition(dropshipID)
-	local cargoID = CreateUnit(unitDefID, tx, ty, tz, "s", teamID)
-	env = Spring.UnitScript.GetScriptEnv(dropshipID)
-	Spring.UnitScript.CallAsUnit(dropshipID, env.LoadCargo, cargoID, targetID, beaconID)
+local function AssociateOutpost(beaconID, targetID, cargoID)
 	-- extra behaviour to link outposts with beacons
-	if outpostDefs[unitDefID] then
-		outpostPointIDs[cargoID] = targetID 
-		outpostIDs[targetID] = cargoID
-		-- Let unsynced know about this pairing
-		Spring.SetUnitRulesParam(cargoID, "beaconID", beaconID)
-		Spring.SetUnitRulesParam(targetID, "outpostID", cargoID)
-	end
+	outpostPointIDs[cargoID] = targetID 
+	outpostIDs[targetID] = cargoID
+	-- Let unsynced know about this pairing
+	Spring.SetUnitRulesParam(cargoID, "beaconID", beaconID)
+	Spring.SetUnitRulesParam(targetID, "outpostID", cargoID)
 end
+GG.AssociateOutpost = AssociateOutpost
 
-function SpawnDropship(beaconID, unitID, teamID, dropshipType, cargo, cost)
-	--Spring.Echo("Spawn a dropship!", beaconID, unitID, teamID, dropshipType, cargo, cost)
-	if Spring.ValidUnitID(unitID) and not Spring.GetUnitIsDead(unitID) and not outpostIDs[unitID] and Spring.GetUnitTeam(unitID) == teamID then
-		local tx,ty,tz = GetUnitPosition(unitID)
-		local dropshipID = CreateUnit(dropshipType, tx, ty, tz, "s", teamID)
-		--SendToUnsynced("VEHICLE_UNLOADED", dropshipID, teamID)
-		if type(cargo) == "table" then
-			for i, order in ipairs(cargo) do -- preserve order here
-				for orderDefID, count in pairs(order) do
-					for i = 1, count do
-						DelayCall(SpawnCargo, {beaconID, unitID, dropshipID, orderDefID, teamID}, 1)
-					end
-				end
-			end
-		else
-			DelayCall(SpawnCargo, {beaconID, unitID, dropshipID, cargo, teamID}, 1)
-		end
-		return dropshipID
-	elseif teamID and not select(3, Spring.GetTeamInfo(teamID)) then -- dropzone moved or beacon was capped, but team lives
-		-- Refund
-		Spring.SendMessageToTeam(teamID, "No dropzone, order refunded: " .. cost)
-		Spring.AddTeamResource(teamID, "metal", cost)
-		-- Delete the entire drop queue
-		beaconDropshipQueue[beaconID] = {}
-	end
-end
-
-function NextDropshipQueueItem(beaconID, teamID)
-	if beaconID and #beaconDropshipQueue[beaconID] > 0 then
-		local item = beaconDropshipQueue[beaconID][1]
-		if item.sound then
-			GG.PlaySoundForTeam(teamID, item.sound, 1)
-		end
-		local dropshipID = SpawnDropship(beaconID, item.target, teamID, item.dropshipType, item.cargo, item.cost)
-		if dropshipID then -- can fail if beacon was lost or dropzone moved TODO: so reset queue here?
-			beaconActive[beaconID] = dropshipID
-			activeDropships[dropshipID] = beaconID
-		end
-	end
-end
-
-function EnqueueDropship(beaconID, beaconPointID, teamID, info, priority)
-	if not beaconDropshipQueue[beaconID] then beaconDropshipQueue[beaconID] = {} end -- TODO: move to unitcreated?
-	if priority then -- go to the top of the list, or just after currently active drop
-		table.insert(beaconDropshipQueue[beaconID], beaconActive[beaconID] and 2 or 1, info)
-	else -- add to the end of the list
-		table.insert(beaconDropshipQueue[beaconID], info)
-	end
-	Spring.SendMessageToTeam(teamID, "Adding dropship " .. info.dropshipType .. " to beacon " .. beaconID .. " (queue length " .. (#beaconDropshipQueue[beaconID]) .. ")")
-	-- If it's the first item in queue, start emptying
-	if #beaconDropshipQueue[beaconID] == 1 then
-		NextDropshipQueueItem(beaconID, teamID)
-	end
-end
-
-function DropzoneFree(beaconID, teamID)
-	--Spring.Echo("DropzoneFree", beaconID, teamID)
-	if beaconID then
-		beaconActive[beaconID] = false
-		table.remove(beaconDropshipQueue[beaconID], 1)
-		NextDropshipQueueItem(beaconID, teamID)
-	else
-		Spring.Echo("Uhoh, FLOZi logic fail. DropzoneFree was called with a nil beaconID. Team was", teamID)
-	end
-end
-GG.DropzoneFree = DropzoneFree
-
-function DropshipBugOut(beaconID, teamID, outpostID)
-	if beaconID then
-		local dropshipID = beaconActive[beaconID]
-		local bugOut = false
-		if dropshipID then -- there is a dropship in game
-			-- first check if this dropship is trying to land at a given point or the main beacon
-			if outpostID then
-				-- check if the currently active dropship is trying to land at that point
-				local item = beaconDropshipQueue[beaconID][1]
-				if item.target == outpostID then
-					bugOut = true
-				end
-			else -- assume main beacon was lost, all dropships must abort
-				bugOut = true
-			end
-			if bugOut then
-				env = Spring.UnitScript.GetScriptEnv(dropshipID)
-				if env and env.BugOut then
-					--Spring.UnitScript.CallAsUnit(dropshipID, env.BugOut)
-				end
-				DropzoneFree(beaconID, teamID) -- mark the zone as free and continue with the queue
-			end
-		end
-	else
-		Spring.Echo("Uhoh, FLOZi logic fail. DropshipBugOut was called with a nil beaconID. Team was", teamID)
-	end
-end	
-
-function DropshipDelivery(beaconID, beaconPointID, teamID, dropshipType, cargo, cost, sound, delay)
-	local info = {
-		["target"] = beaconPointID, 
-		["dropshipType"] = dropshipType, 
-		["cargo"] = cargo, 
-		["cost"] = cost, 
-		["sound"] = sound
-	}
-	-- check dropshipType for mech deliveries and add to front of queue
-	local priority = delay == 0
-	DelayCall(EnqueueDropship, {beaconID, beaconPointID, teamID, info, priority}, delay)
-	if cost then -- deduct cost immediately to give feedback to player that order was accepted
-	-- will be refunded later if it fails (e.g. beacon capped)
-		--Spring.Echo("COST!?", cost)
-		UseTeamResource(teamID, "metal", cost)
-	end
-end
-GG.DropshipDelivery = DropshipDelivery
-
--- DROPZONE
-local function SetDropZone(beaconID, teamID)
-	local currDropZone = dropZoneIDs[teamID]
-	if currDropZone then
-		--ToggleOutpostOptions(dropZoneBeaconIDs[teamID], true) -- REMOVE
-		DestroyUnit(currDropZone, false, true)
-		GG.DropshipLeft(teamID, true) -- reset the timer
-	end
-	local x,y,z = GetUnitPosition(beaconID)
-	local side = GG.teamSide[teamID]
-	local dropZoneID = CreateUnit(side .. "_dropzone", x,y,z, "s", teamID)
-	dropZoneIDs[teamID] = dropZoneID
-	dropZoneBeaconIDs[teamID] = beaconID
-	Spring.SetUnitRulesParam(beaconID, "secure", 1)
-end
 
 function gadget:UnitCreated(unitID, unitDefID, teamID, builderID)
-	local unitDef = UnitDefs[unitDefID]
-	local cp = unitDef.customParams
-	if unitDefID == BEACON_ID then
-		InsertUnitCmdDesc(unitID, dropZoneCmdDesc)
-	elseif unitDefID == BEACON_POINT_ID then
+	if unitDefID == BEACON_POINT_ID then
 		AddOutpostOptions(unitID)
 	end
 end
 
 function gadget:UnitDestroyed(unitID, unitDefID, teamID, attackerID, attackerDefID, attackerTeam)
-	if DROPZONE_IDS[unitDefID] then -- unit was a team's dropzone, reset outpost options
-		dropZoneIDs[teamID] = nil
-		dropZoneBeaconIDs[teamID] = nil
-	elseif outpostDefs[unitDefID] then
+	if outpostDefs[unitDefID] then
 		local outpostPointID = outpostPointIDs[unitID]
 		if outpostPointID then -- beaconID can be nil if /give testing
 			GG.Delay.DelayCall(SetUnitRulesParam, {unitID, "beaconID", ""}, 5) -- delay for safety
@@ -308,12 +137,8 @@ function gadget:UnitDestroyed(unitID, unitDefID, teamID, attackerID, attackerDef
 			outpostIDs[outpostPointID] = nil
 			-- Re-add outpost options to beacon
 			ToggleOutpostOptions(outpostPointID, true)
-			DropshipBugOut(outpostPointBeaconIDs[outpostPointID], teamID, unitID) -- /give testing won't bug out
+			GG.DropshipBugOut(outpostPointBeaconIDs[outpostPointID], teamID, unitID) -- /give testing won't bug out
 		end
-	elseif activeDropships[unitID] then
-		--Spring.Echo("Oh noes, my dropship! Send the next one", attackerID, attackerDefID, attackerTeam)
-		DropzoneFree(activeDropships[unitID], teamID)
-		activeDropships[unitID] = nil
 	end
 end
 
@@ -333,54 +158,16 @@ function gadget:UnitDamaged(unitID, unitDefID, teamID, damage)
 	end
 end
 
-function gadget:AllowUnitTransfer(unitID, unitDefID, oldTeam, newTeam, capture)
-	if unitID == dropZoneIDs[oldTeam] then
-		return false
-	end
-	return true
-end
-
-function gadget:AllowResourceTransfer(oldTeamID, newTeamID, res, amount)
-	if res == "e" then 
-		return false 
-	end
-	return true
-end
-
 function gadget:UnitGiven(unitID, unitDefID, newTeam, oldTeam)
 	if unitDefID == BEACON_ID then
 		for i, outpostPointID in pairs(beaconOutpostPointIDs[unitID]) do			
 			DelayCall(TransferUnit, {outpostPointID, newTeam}, 1) -- also transfer all the beacon outpost points
 		end
-		if dropZoneBeaconIDs[oldTeam] == unitID then
-			local dropZoneID = dropZoneIDs[oldTeam]
-			DelayCall(Spring.DestroyUnit, {dropZoneID, false, true}, 1)
-		end
-		DropshipBugOut(unitID, oldTeam)
 	end
 end
 
 function gadget:AllowCommand(unitID, unitDefID, teamID, cmdID, cmdParams, cmdOptions)
-	if unitDefID == BEACON_ID then
-		if cmdID == dropZoneCmdDesc.id then
-			if Spring.GetUnitRulesParam(unitID, "secure") == 0 then 
-				Spring.SendMessageToTeam(teamID, "Cannot establish dropzone - Under attack!")
-				return false 
-			elseif GG.dropShipStatus[teamID] == 1 then
-				-- double check if dropship is not in action
-				if Spring.GetTeamUnitDefCount(teamID, GG.teamDropShipTypes[teamID].def) ~= 0 then 
-					Spring.SendMessageToTeam(teamID, "Cannot establish dropzone - Dropship is active!")
-					return false
-				end
-				-- TODO: this will allow the command otherwise which is also dangerous, as dropship can be 'ACTIVE' without being in play
-				-- TODO: Solution is probably to make a new dropship state and have ACTIVE only the case when it is on map
-			elseif GG.orderStatus[teamID] > 0 and GG.teamDropZones[teamID] then
-				Spring.SendMessageToTeam(teamID, "Cannot establish dropzone - Order pending!")
-				return false 
-			end
-			SetDropZone(unitID, teamID)
-		end
-	elseif unitDefID == BEACON_POINT_ID then
+	if unitDefID == BEACON_POINT_ID then
 		if outpostCMDs[cmdID] and not outpostIDs[unitID] then
 			if Spring.GetUnitRulesParam(unitID, "secure") == 0 then 
 				Spring.SendMessageToTeam(teamID, "Cannot place outpost at beacon - Under attack!")
@@ -391,7 +178,7 @@ function gadget:AllowCommand(unitID, unitDefID, teamID, cmdID, cmdParams, cmdOpt
 			if cost <= GetTeamResources(teamID, "metal") then
 				--Spring.Echo("I'm totally gonna outpost your beacon bro!")
 				ToggleOutpostOptions(unitID, false)
-				DropshipDelivery(outpostPointBeaconIDs[unitID], unitID, teamID, GG.teamSide[teamID] .. "_drost", outpostDefID, cost, "BB_Dropship_Inbound", DROPSHIP_DELAY)
+				GG.DropshipDelivery(outpostPointBeaconIDs[unitID], unitID, teamID, GG.teamSide[teamID] .. "_drost", outpostDefID, cost, "BB_Dropship_Inbound", DROPSHIP_DELAY)
 			else
 				GG.PlaySoundForTeam(teamID, "BB_Insufficient_Funds", 1)
 			end
@@ -409,11 +196,7 @@ function gadget:Initialize()
 	for _,unitID in ipairs(Spring.GetAllUnits()) do
 		local teamID = Spring.GetUnitTeam(unitID)
 		local unitDefID = Spring.GetUnitDefID(unitID)
-		if DROPZONE_IDS[unitDefID] then
-			Spring.DestroyUnit(unitID, false, true)
-		else
-			gadget:UnitCreated(unitID, unitDefID, teamID)
-		end
+		gadget:UnitCreated(unitID, unitDefID, teamID)
 	end
 end
 

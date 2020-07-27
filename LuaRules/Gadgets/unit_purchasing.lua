@@ -409,13 +409,20 @@ function gadget:AllowCommand(unitID, unitDefID, teamID, cmdID, cmdParams, cmdOpt
 	return true
 end
 
+function gadget:AllowResourceTransfer(oldTeamID, newTeamID, res, amount) -- TODO: move to purchasing
+	if res == "e" then 
+		return false 
+	end
+	return true
+end
+
 function gadget:AllowUnitBuildStep(builderID, builderTeam, unitID, unitDefID, part)
 	local builderDefID = Spring.GetUnitDefID(builderID)
 	local builderDef = UnitDefs[builderDefID]
 	if builderDef.name:find("dropzone") then
 		return false
 	end
-	return true -- beacons!
+	return true -- turret control
 end
 
 function gadget:UnitCreated(unitID, unitDefID, teamID)

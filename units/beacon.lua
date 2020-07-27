@@ -9,22 +9,9 @@ local beacon = Unit:New{
 	mass                = 1000,
 	footprintX			= 2,
 	footprintZ 			= 2,
-	--collisionVolumeType = "box",
-	--collisionVolumeScales = [[4 25 4]],
 	buildCostMetal      = 0, -- default is 1
-	--canMove				= false,
 	movementClass   = "LARGEMECH",
 	canselfdestruct		= false,
-		
-	-- Constructor stuff
-	--[[builder				= true,
-	builddistance 		= 460,
-	workerTime			= 10, -- ?	
-	terraformSpeed		= 10000,
-	showNanoSpray		= false,]]
-	--[[sfxtypes = {
-		explosiongenerators = {"custom:reentry_fx", "custom:JumpJetTrail"},
-	},]]
 	
 	customparams = {
 		helptext		= "A Beacon indicating a strategically important location.",
