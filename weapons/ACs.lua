@@ -79,8 +79,8 @@ local UAC2 = AC2:New{
 }
 
 local LBX2 = AC2:New{
-	name                    = "LBX/5",
-	soundStart            	= "LBX5_Fire",
+	name                    = "LBX/2",
+	soundStart            	= "AC2_Fire",
 	range                   = 2700,
 	--accuracy                = 100,
 	reloadtime              = 2,
