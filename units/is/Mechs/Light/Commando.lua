@@ -30,7 +30,7 @@ local COM3A = Commando:New{
 		price			= 5400,
 		heatlimit 		= 10,
 		armor			= {type = "standard", tons = 3},
-		maxammo 		= {srm = 1},
+		maxammo 		= {srm = 2},
     },
 }
 
