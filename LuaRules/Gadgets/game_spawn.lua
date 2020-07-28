@@ -66,8 +66,6 @@ end
 GG.SideNames = SideNames
 GG.ValidSides = ValidSides
 
-local dropShipProgression = {"leopard", "union", "overlord"}
-GG.dropShipProgression = dropShipProgression
 local sideStartUnits = {}
 
 function gadget:GameID(id)
@@ -122,7 +120,7 @@ local function SpawnStartUnit(teamID)
 	-- set start resources, either from mod options or custom team keys
 	local teamOptions = select(7, Spring.GetTeamInfo(teamID))
 	local m = --[[teamOptions.startmetal  or ]]modOptions.startmetal  or 5000
-	local e = --[[teamOptions and teamOptions.startenergy or ]]modOptions.startenergy or 150 -- TODO: UnitDefNames[side .. "_dropship_" .. dropShipProgression[1]].customParams.maxtonnage
+	local e = --[[teamOptions and teamOptions.startenergy or ]]modOptions.startenergy or 150 -- TODO: should be based on cp.maxtonnage of leopard?
 
 	-- using SetTeamResource to get rid of any existing resource without affecting stats
 	-- using AddTeamResource to add starting resource and counting it as income

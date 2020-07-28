@@ -146,7 +146,7 @@ end
 
 local function SendOrder(teamID)
 	local unitID = dropZoneIDs[teamID]
-	local readyFrame = GG.coolDowns[teamID] or 0 --Spring.GetTeamRulesParam(teamID, "DROPSHIP_COOLDOWN") or 0
+	local readyFrame = GG.dropZoneCoolDowns[teamID] or 0 --Spring.GetTeamRulesParam(teamID, "DROPSHIP_COOLDOWN") or 0
 	local frameDelay = math.max(readyFrame - Spring.GetGameFrame(), 0)
 	if frameDelay == 0 and Spring.ValidUnitID(unitID) then
 		orderSizes[teamID] = 0

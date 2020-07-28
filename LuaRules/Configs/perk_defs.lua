@@ -322,7 +322,7 @@ return {
 		valid = function (unitDefID) return UnitDefs[unitDefID].name:find("dropzone") end,
 		applyPerk = function (unitID)
 			local teamID = Spring.GetUnitTeam(unitID)
-			GG.TeamDropshipUpgrade(teamID)
+			GG.DropZoneUpgrade(teamID)
 		end,
 		costFunction = deductCBills,
 		price = 39620,
@@ -339,7 +339,7 @@ return {
 		valid = function (unitDefID) return UnitDefs[unitDefID].name:find("dropzone") end,
 		applyPerk = function (unitID)
 			local teamID = Spring.GetUnitTeam(unitID)
-			GG.TeamDropshipUpgrade(teamID)
+			GG.DropZoneUpgrade(teamID)
 		end,
 		costFunction = deductCBills,
 		price = 47020,
