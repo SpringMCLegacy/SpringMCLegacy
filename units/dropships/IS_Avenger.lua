@@ -1,7 +1,7 @@
 local IS_Avenger = {
 	name              	= "Avenger-Class Dropship",
-	description         = "Prefab Delivery Dropship",
-	objectName        	= "IS_Avenger.s3o",
+	description         = "Assault Dropship",
+	objectName        	= "IS_Avenger2.s3o",
 	iconType			= "avenger",
 	script				= "Dropship.lua",
 	category 			= "dropship structure notbeacon",
@@ -14,6 +14,7 @@ local IS_Avenger = {
 	buildCostMetal      = 0,
 	buildTime           = 0,
 	canMove				= true,
+	canAttack			= true,
 	idleAutoHeal		= 0,
 	maxSlope			= 50,
 	moveState			= 0,
@@ -28,11 +29,123 @@ local IS_Avenger = {
 	holdSteady			= true,
 	--minTransportMass	= 10000,
 
-	--Makes unit use weapon from /weapons folder
-	--[[weapons	= {	
-
-	},]]
-	--Gets CEG effects from /gamedata/explosions folder
+	weapons 		= {	
+		-- Chin Turret
+		[1] = {
+			name	= "AC20",
+		},
+		[2] = {
+			name	= "AC5",
+			slaveTo = 1,
+		},
+		[3] = {
+			name	= "AC5",
+			slaveTo = 1,
+		},
+		-- Left Cheek Turret
+		[4] = {
+			name	= "LBL",
+			mainDir = "0 0 1",
+			maxAngleDif = 20,
+			slaveTo = 3,
+		},
+		[5] = {
+			name	= "ERMBL",
+			mainDir = "0 0 1",
+			maxAngleDif = 20,
+			slaveTo = 4,
+		},
+		-- Right Cheek Turret
+		[6] = {
+			name	= "LBL",
+			mainDir = "0 0 1",
+			maxAngleDif = 20,
+		},
+		[7] = {
+			name	= "ERMBL",
+			mainDir = "0 0 1",
+			maxAngleDif = 20,
+			slaveTo = 6,
+		},
+		-- Left Wing AC5s
+		[8] = {
+			name	= "AC5",
+			mainDir = "0 0 1",
+			maxAngleDif = 20,
+		},
+		[9] = {
+			name	= "AC5",
+			mainDir = "0 0 1",
+			maxAngleDif = 20,
+			slaveTo = 8,
+		},
+		-- Right Wing AC5s
+		[10] = {
+			name	= "AC5",
+			mainDir = "0 0 1",
+			maxAngleDif = 20,
+		},
+		[11] = {
+			name	= "AC5",
+			mainDir = "0 0 1",
+			maxAngleDif = 20,
+			slaveTo = 10,
+		},
+		--Left Wing
+		[12] = {
+			name	= "ERMBL",
+			mainDir = "0 0 1",
+			maxAngleDif = 45,
+		},
+		[13] = {
+			name	= "PPC",
+			mainDir = "0 0 1",
+			maxAngleDif = 20,
+		},
+		--Right Wing
+		[14] = {
+			name	= "ERMBL",
+			mainDir = "0 0 1",
+			maxAngleDif = 45,
+		},
+		[15] = {
+			name	= "PPC",
+			mainDir = "0 0 1",
+			maxAngleDif = 20,
+		},
+		--Rear
+		[16] = {
+			name	= "ERMBL",
+			mainDir = "0 0 -1",
+			maxAngleDif = 45,
+		},
+		[17] = {
+			name	= "ERMBL",
+			mainDir = "0 0 -1",
+			maxAngleDif = 45,
+		},
+		--LRMs
+		[18] = {
+			name	= "LRM20",
+			mainDir = "0 0 1",
+			maxAngleDif = 90,
+		},
+		[19] = {
+			name	= "LRM20",
+			mainDir = "1 0 1",
+			maxAngleDif = 90,
+		},
+		[20] = {
+			name	= "LRM20",
+			mainDir = "-1 0 1",
+			maxAngleDif = 90,
+		},
+		[21] = {
+			name	= "LRM20",
+			mainDir = "0 0 -1",
+			maxAngleDif = 90,
+		},
+	},
 	sfxtypes = {
 		explosiongenerators = {
 			"custom:heavy_jet_trail_blue",
