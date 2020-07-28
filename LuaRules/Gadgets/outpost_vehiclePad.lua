@@ -285,7 +285,7 @@ function gadget:UnitDestroyed(unitID, unitDefID, teamID)
 		padLevels[unitID] = nil
 		local beaconID = Spring.GetUnitRulesParam(unitID, "beaconID")
 		if beaconID then -- currently this will only force landing craft to bugout if it was properly built, not /give en
-			GG.DropshipBugOut(beaconID, teamID, unitID)
+			GG.BeaconDropshipBugOut(beaconID, teamID, unitID)
 		end
 	end
 end

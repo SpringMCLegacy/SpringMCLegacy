@@ -23,13 +23,15 @@ local AreTeamsAllied		= Spring.AreTeamsAllied
 local GetGameFrame			= Spring.GetGameFrame
 local GetTeamResources		= Spring.GetTeamResources
 local GetUnitCmdDescs 		= Spring.GetUnitCmdDescs
+local GetUnitPosition		= Spring.GetUnitPosition
 --SyncedCtrl
 local AddTeamResource 		= Spring.AddTeamResource
-local UseTeamResource 		= Spring.UseTeamResource
+local CreateUnit			= Spring.CreateUnit
 local DestroyUnit			= Spring.DestroyUnit
 local EditUnitCmdDesc		= Spring.EditUnitCmdDesc
-local InsertUnitCmdDesc		= Spring.InsertUnitCmdDesc
 local FindUnitCmdDesc		= Spring.FindUnitCmdDesc
+local InsertUnitCmdDesc		= Spring.InsertUnitCmdDesc
+local UseTeamResource 		= Spring.UseTeamResource
 
 -- GG
 local DelayCall				 = GG.Delay.DelayCall
@@ -38,9 +40,9 @@ local DelayCall				 = GG.Delay.DelayCall
 local EMPTY_TABLE = {} -- keep as empty
 local GAIA_TEAM_ID = Spring.GetGaiaTeamID()
 local BEACON_ID = UnitDefNames["beacon"].id
+local DROPZONE_IDS = {}
+GG.DROPZONE_IDS = DROPZONE_IDS
 
-local DROPSHIP_DELAY = 2 * 30 -- 2s, time taken to arrive on the map from SPACE!
-	
 local CMD_SEND_ORDER = GG.CustomCommands.GetCmdID("CMD_SEND_ORDER")
 local sendOrderCmdDesc = {
 	id = CMD_SEND_ORDER,
@@ -99,9 +101,13 @@ local orderCosts = {} -- orderCosts[unitID] = cost
 local orderTons = {} -- orderTons[unitID] = totalTonnage
 local orderSizes = {} -- orderSizes[unitID] = size
 
+
 local dropZones = {} -- dropZones[unitID] = teamID
 local teamDropZones = {} -- teamDropZone[teamID] = unitID
 GG.teamDropZones = teamDropZones
+local dropZoneBeaconIDs = {} -- dropZoneBeaconIDs[teamID] = beaconID
+GG.dropZoneBeaconIDs = dropZoneBeaconIDs
+local dropZoneCmdDesc
 
 local teamDropShipTypes = {} -- teamDropShipTypes[teamID] = {tier = 1 or 2 or 3, def = unitDefID}
 GG.teamDropShipTypes = teamDropShipTypes
@@ -109,7 +115,7 @@ local teamDropShipHPs = {} -- teamDropShipHPs[teamID] = number
 local dropShipStatus = {} -- dropShipStatus[teamID] = number, where 0 = Ready, 1 = Active, 2 = Cooldown
 GG.dropShipStatus = dropShipStatus
 
-local orderStatus = {} -- orderStatus[teamID] = number, where 0 = Ready for a new order, 1 = order submitted, 2 = can't submit atm?
+local orderStatus = {} -- orderStatus[teamID] = number, where 0 = Ready for a new order, 1 = order submitted, 2 = dropship in play?
 GG.orderStatus = orderStatus
 
 local function GetWeight(mass) -- still used by spamBot fore 'DireBolical' difficulty
@@ -178,6 +184,7 @@ local function 	LockHeavy(dropZone, lock)
 	-- show only the currently selected menu
 	ShowBuildOptionsByType(dropZone, currMenu[dropZone])
 end
+GG.LockHeavy = LockHeavy
 
 local function TeamDropshipUpgrade(teamID)
 	local side = GG.teamSide[teamID]
@@ -192,7 +199,7 @@ local function TeamDropshipUpgrade(teamID)
 		Spring.AddTeamResource(teamID, "e", tonnageIncrease)
 		teamDropShipHPs[teamID] = nil -- reset HP
 		-- first upgrade unlocks heavy and assault mechs
-		LockHeavy(teamDropZones[teamID], false)
+		GG.LockHeavy(teamDropZones[teamID], false)
 	else -- max upgrade reached, disable button
 		Spring.SendMessageToTeam(teamID, "Dropship Fully Upgraded!")
 	end
@@ -241,9 +248,11 @@ end
 local coolDowns = {} -- coolDowns[teamID] = enableFrame
 GG.coolDowns = coolDowns
 
-function UpdateButtons(teamID) -- Toggles Submit Order vs Order Sent
+function UpdateButtons(teamID, arrived) -- Toggles Submit Order vs Order Sent
 	local unitID = teamDropZones[teamID]
-	if orderStatus[teamID] == 0 then -- ready for new order
+	if arrived then
+		EditUnitCmdDesc(unitID, FindUnitCmdDesc(unitID, CMD_SEND_ORDER), {disabled = true, name = "Dropship \nArrived "})
+	elseif orderStatus[teamID] == 0 then -- ready for new order
 		EditUnitCmdDesc(unitID, FindUnitCmdDesc(unitID, CMD_SEND_ORDER), {disabled = false, name = "Submit \nOrder "})
 		if orderSizes[teamID] == 0 then
 			EditUnitCmdDesc(unitID, FindUnitCmdDesc(unitID, CMD_RUNNING_TOTAL), {name = "Order\nC-Bills: \n0"})
@@ -253,6 +262,7 @@ function UpdateButtons(teamID) -- Toggles Submit Order vs Order Sent
 		EditUnitCmdDesc(unitID, FindUnitCmdDesc(unitID, CMD_SEND_ORDER), {name = "Order \nSent "})
 	end
 end
+GG.UpdateButtons = UpdateButtons
 
 function OrderFinished(unitID, teamID)
 	ResetBuildQueue(unitID)
@@ -324,8 +334,23 @@ local function SendCommandFallback(unitID, unitDefID, teamID, cost, weight)
 	end
 end
 
+local function SetDropZone(beaconID, teamID)
+	local currDropZone = teamDropZones[teamID]
+	if currDropZone then
+		DestroyUnit(currDropZone, false, true)
+		GG.DropshipLeft(teamID, true) -- reset the timer
+	end
+	local x,y,z = GetUnitPosition(beaconID)
+	local side = GG.teamSide[teamID]
+	local dropZoneID = CreateUnit(side .. "_dropzone", x,y,z, "s", teamID)
+	dropZones[dropZoneID] = teamID
+	teamDropZones[teamID] = dropZoneID
+	dropZoneBeaconIDs[teamID] = beaconID
+	Spring.SetUnitRulesParam(beaconID, "secure", 1)
+end
 
 function gadget:AllowCommand(unitID, unitDefID, teamID, cmdID, cmdParams, cmdOptions, cmdTag, synced)
+	-- DROPZONE PURCHASE ORDERS
 	if dropZones[unitID] then
 		local typeString = menuCmdIDs[cmdID]
 		local rightClick = cmdOptions.right
@@ -405,6 +430,26 @@ function gadget:AllowCommand(unitID, unitDefID, teamID, cmdID, cmdParams, cmdOpt
 			GG.Delay.DelayCall(SendCommandFallback, {unitID, unitDefID, teamID, cost}, 16)
 			return true
 		end
+	-- DROPZONE PLACEMENT ORDERS
+	elseif unitDefID == BEACON_ID then
+		if cmdID == dropZoneCmdDesc.id then
+			if Spring.GetUnitRulesParam(unitID, "secure") == 0 then 
+				Spring.SendMessageToTeam(teamID, "Cannot establish dropzone - Under attack!")
+				return false 
+			elseif GG.dropShipStatus[teamID] == 1 then
+				-- double check if dropship is not in action
+				if Spring.GetTeamUnitDefCount(teamID, GG.teamDropShipTypes[teamID].def) ~= 0 then 
+					Spring.SendMessageToTeam(teamID, "Cannot establish dropzone - Dropship is active!")
+					return false
+				end
+				-- TODO: this will allow the command otherwise which is also dangerous, as dropship can be 'ACTIVE' without being in play
+				-- TODO: Solution is probably to make a new dropship state and have ACTIVE only the case when it is on map
+			elseif GG.orderStatus[teamID] > 0 and GG.teamDropZones[teamID] then
+				Spring.SendMessageToTeam(teamID, "Cannot establish dropzone - Order pending!")
+				return false 
+			end
+			SetDropZone(unitID, teamID)
+		end
 	end
 	return true
 end
@@ -412,6 +457,13 @@ end
 function gadget:AllowResourceTransfer(oldTeamID, newTeamID, res, amount) -- TODO: move to purchasing
 	if res == "e" then 
 		return false 
+	end
+	return true
+end
+
+function gadget:AllowUnitTransfer(unitID, unitDefID, oldTeam, newTeam, capture)
+	if dropZones[unitID] then
+		return false
 	end
 	return true
 end
@@ -427,7 +479,9 @@ end
 
 function gadget:UnitCreated(unitID, unitDefID, teamID)
 	local unitDef = UnitDefs[unitDefID]
-	if unitDef.name:find("dropzone") then
+	if unitDefID == BEACON_ID then
+		InsertUnitCmdDesc(unitID, dropZoneCmdDesc)
+	elseif DROPZONE_IDS[unitDefID] then
 		ClearBuildOptions(unitID, true)
 		AddBuildMenu(unitID)
 		dropZones[unitID] = teamID
@@ -437,9 +491,7 @@ function gadget:UnitCreated(unitID, unitDefID, teamID)
 			LockHeavy(unitID, true)
 		end
 	elseif dropShipTypes[unitDefID] == "mech" then
-		if Spring.ValidUnitID(teamDropZones[teamID]) then
-			EditUnitCmdDesc(teamDropZones[teamID], FindUnitCmdDesc(teamDropZones[teamID], CMD_SEND_ORDER), {disabled = true, name = "Dropship \nArrived "})
-		end
+		GG.UpdateButtons(teamID, true)
 		if unitDefID == teamDropShipTypes[teamID].def and teamDropShipHPs[teamID] then -- check it is current def incase we upgraded before it left
 			Spring.SetUnitHealth(unitID, teamDropShipHPs[teamID])
 		end
@@ -458,6 +510,7 @@ function gadget:UnitDestroyed(unitID, unitDefID, teamID, attackerID, attackerDef
 		orderCosts[unitID] = 0
 		orderTons[unitID] = 0
 		dropZones[unitID] = nil
+		dropZoneBeaconIDs[teamID] = nil
 	elseif dropShipTypes[unitDefID] == "mech" then-- main dropship
 		-- TODO: move this to DropshipDelivery gadget and track e.g. avenger
 		if teamDropShipTypes[teamID] and unitDefID == teamDropShipTypes[teamID].def then -- it is the current type of dropship, save the HP
@@ -472,9 +525,14 @@ function gadget:UnitDestroyed(unitID, unitDefID, teamID, attackerID, attackerDef
 end
 
 function gadget:UnitGiven(unitID, unitDefID, newTeam, oldTeam)
-	gadget:UnitDestroyed(unitID, unitDefID, oldTeam)
-	if newTeam ~= GAIA_TEAM_ID then
-		gadget:UnitCreated(unitID, unitDefID, newTeam)
+	if dropZoneBeaconIDs[oldTeam] == unitID then
+		local dropZoneID = dropZones[oldTeam]
+		DelayCall(Spring.DestroyUnit, {dropZoneID, false, true}, 1)
+	else
+		gadget:UnitDestroyed(unitID, unitDefID, oldTeam)
+		if newTeam ~= GAIA_TEAM_ID then
+			gadget:UnitCreated(unitID, unitDefID, newTeam)
+		end
 	end
 end
 
@@ -489,13 +547,24 @@ function gadget:GamePreload()
 			--unitSlotChanges[unitDefID] = 1
 		elseif cp.dropship then
 			dropShipTypes[unitDefID] = cp.dropship
+		elseif name:find("dropzone") then -- check for dropzones first
+			DROPZONE_IDS[unitDefID] = true
 		end
 	end
 	for _, teamID in pairs(Spring.GetTeamList()) do
 		dropShipStatus[teamID] = 0
 		orderStatus[teamID] = 0
 	end
+	GG.DROPZONE_IDS = DROPZONE_IDS
+	dropZoneCmdDesc = {
+		id     = GG.CustomCommands.GetCmdID("CMD_DROPZONE", 0), -- dropzone is free
+		type   = CMDTYPE.ICON,
+		name   = "Dropzone",
+		action = 'dropzone',
+		tooltip = "Set as primary dropzone",
+	}
 end
+
 
 function gadget:GameFrame(n)
 	if n > 0 and n % 30 == 0 then -- once a second
@@ -536,7 +605,11 @@ function gadget:Initialize()
 	for _,unitID in ipairs(Spring.GetAllUnits()) do
 		local teamID = Spring.GetUnitTeam(unitID)
 		local unitDefID = Spring.GetUnitDefID(unitID)
-		gadget:UnitCreated(unitID, unitDefID, teamID)
+		if DROPZONE_IDS[unitDefID] then
+			Spring.DestroyUnit(unitID, false, true)
+		else
+			gadget:UnitCreated(unitID, unitDefID, teamID)
+		end
 	end
 end
 
