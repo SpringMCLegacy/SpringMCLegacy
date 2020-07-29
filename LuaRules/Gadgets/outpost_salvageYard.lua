@@ -1,6 +1,6 @@
 function gadget:GetInfo()
 	return {
-		name		= "Salvage",
+		name		= "Outpost - Salvage Yard",
 		desc		= "Controls salvagers",
 		author		= "FLOZi (C. Lawrence)",
 		date		= "22/08/13",
