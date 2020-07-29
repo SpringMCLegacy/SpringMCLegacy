@@ -1,31 +1,6 @@
 -- Use the automatic CMD ID generator
 local GetCmdID = GG.CustomCommands.GetCmdID
 
-local PAD_LENGTH = 12
-local modOptions = Spring.GetModOptions()
-local EFFECT = modOptions and modOptions.perkeffect or 50
-local PCENT_INC = (100+EFFECT)/100
-local PCENT_DEC = (100-EFFECT)/100
-
-local function PadString(input, length)
-	while input:len() < (length or PAD_LENGTH) do
-		input = " " .. input .. " "
-	end
-	return input
-end
-local function Pad(...)
-	local arg = {...}
-	local output = ""
-	local length = (type (arg[1]) == type(1) and arg[1]) or nil
-	for i, v in ipairs(arg) do
-		if type (v) == "string" then
-			output = output .. PadString(v, length) .. "\n"
-		end
-	end
-	return output:sub(1,-2) -- remove trailing newline
-end
-GG.Pad = Pad
-
 -- Common valid() functions here:
 local function allMechs(unitDefID) return (UnitDefs[unitDefID].customParams.baseclass == "mech") end
 local function hasJumpjets(unitDefID) return (UnitDefs[unitDefID].customParams.jumpjets or false) end
@@ -84,7 +59,7 @@ return {
 		cmdDesc = {
 			id = GetCmdID('PERK_HEAT_EFFICIENCY'),
 			action = 'perkheatefficiency',
-			name = Pad("Heatsinks"),
+			name = GG.Pad("Heatsinks"),
 			tooltip = '+' .. EFFECT .. '% Heat dissipation rate & capacity',
 			texture = 'bitmaps/ui/perkbg.png',	
 		},
@@ -103,7 +78,7 @@ return {
 		cmdDesc = {
 			id = GetCmdID('PERK_SENSORS_RANGE'),
 			action = 'perksensorsrange',
-			name = Pad("Sensors"),
+			name = GG.Pad("Sensors"),
 			tooltip = '+' .. EFFECT .. '% Radar and LOS range',
 			texture = 'bitmaps/ui/perkbg.png',	
 		},
@@ -128,7 +103,7 @@ return {
 		cmdDesc = {
 			id = GetCmdID('PERK_NARC_DURATION'),
 			action = 'perknarkduration',
-			name = Pad("NARC"),
+			name = GG.Pad("NARC"),
 			tooltip = '+' .. EFFECT .. '% NARC duration',
 			texture = 'bitmaps/ui/perkbgability.png',	
 		},
@@ -145,7 +120,7 @@ return {
 		cmdDesc = {
 			id = GetCmdID('PERK_JUMP_EFFICIENCY'),
 			action = 'perkjumpjetefficiency',
-			name = Pad("Jumpjets"),
+			name = GG.Pad("Jumpjets"),
 			tooltip = '+' .. EFFECT .. '% Jump range, speed & reload',
 			texture = 'bitmaps/ui/perkbgability.png',	
 		},
@@ -166,7 +141,7 @@ return {
 		cmdDesc = {
 			id = GetCmdID('PERK_MASC_EFFICIENCY'),
 			action = 'perkmascefficiency',
-			name = Pad("MASC"),
+			name = GG.Pad("MASC"),
 			tooltip = '-' .. EFFECT .. '% MASC heat generation',
 			texture = 'bitmaps/ui/perkbgability.png',	
 		},
@@ -183,7 +158,7 @@ return {
 		cmdDesc = {
 			id = GetCmdID('PERK_AMS_RANGE'),
 			action = 'perkamsrange',
-			name = Pad("AMS"),
+			name = GG.Pad("AMS"),
 			tooltip = '+' .. EFFECT .. '% AMS Weapon Range',
 			texture = 'bitmaps/ui/perkbgability.png',	
 		},
@@ -199,7 +174,7 @@ return {
 		cmdDesc = {
 			id = GetCmdID('PERK_ECM_RANGE'),
 			action = 'perkecmrange',
-			name = Pad("ECM"),
+			name = GG.Pad("ECM"),
 			tooltip = '+' .. EFFECT .. '% ECM range',
 			texture = 'bitmaps/ui/perkbgability.png',	
 		},
@@ -217,7 +192,7 @@ return {
 		cmdDesc = {
 			id = GetCmdID('PERK_INSULATED_ELECTRONICS'),
 			action = 'perkinsulatedelectronics',
-			name = Pad("Insulated", "Electronics"),
+			name = GG.Pad("Insulated", "Electronics"),
 			tooltip = '-' .. EFFECT .. '% PPC disruption time',
 			texture = 'bitmaps/ui/perkbgability.png',	
 		},
@@ -234,7 +209,7 @@ return {
 		cmdDesc = {
 			id = GetCmdID('PERK_LRM_RANGE'),
 			action = 'perklrmrange',
-			name = Pad("LRM"),
+			name = GG.Pad("LRM"),
 			tooltip = '+' .. EFFECT .. '% LRM Range',
 			texture = 'bitmaps/ui/perkbgfaction.png',	
 		},
@@ -250,7 +225,7 @@ return {
 		cmdDesc = {
 			id = GetCmdID('PERK_MRM_RANGE'),
 			action = 'perkmrmrange',
-			name = Pad("MRM"),
+			name = GG.Pad("MRM"),
 			tooltip = '+' .. EFFECT .. '% MRM Range',
 			texture = 'bitmaps/ui/perkbgfaction.png',	
 		},
@@ -266,7 +241,7 @@ return {
 		cmdDesc = {
 			id = GetCmdID('PERK_PPC_RANGE'),
 			action = 'perkppcrange',
-			name = Pad("PPC"),
+			name = GG.Pad("PPC"),
 			tooltip = '+' .. EFFECT .. '% PPC Weapon Range',
 			texture = 'bitmaps/ui/perkbgfaction.png',	
 		},
@@ -282,7 +257,7 @@ return {
 		cmdDesc = {
 			id = GetCmdID('PERK_AUTOCANNON_RANGE'),
 			action = 'perkautocannonrange',
-			name = Pad("Autocannon"),
+			name = GG.Pad("Autocannon"),
 			tooltip = '+' .. EFFECT .. '% Autocannon Weapon Range',
 			texture = 'bitmaps/ui/perkbgfaction.png',	
 		},
@@ -298,7 +273,7 @@ return {
 		cmdDesc = {
 			id = GetCmdID('PERK_GAUSS_RANGE'),
 			action = 'perkgaussrange',
-			name = Pad("Gauss"),
+			name = GG.Pad("Gauss"),
 			tooltip = '+' .. EFFECT .. '% Gauss Weapon Range',
 			texture = 'bitmaps/ui/perkbgfaction.png',	
 		},
@@ -315,7 +290,7 @@ return {
 		cmdDesc = {
 			id = GetCmdID('CMD_DROPZONE_2'),
 			action = 'perkdropshipupgradeunion',
-			name = Pad("Union", "Dropship"),
+			name = GG.Pad("Union", "Dropship"),
 			tooltip = 'Unlocks Heavy & Assault mechs. Increases Tonnage Limit',
 			texture = 'bitmaps/ui/upgrade.png',	
 		},
@@ -332,7 +307,7 @@ return {
 			cmdDesc = {
 			id = GetCmdID('CMD_DROPZONE_3'),
 			action = 'perkdropshipupgradeoverlord',
-			name = Pad("Overlord", "Dropship"),
+			name = GG.Pad("Overlord", "Dropship"),
 			tooltip = 'Further Increases Tonnage Limit',
 			texture = 'bitmaps/ui/upgrade.png',
 		},
@@ -345,73 +320,73 @@ return {
 		price = 47020,
 		requires = "union",
 	},
-	-- vehicle pad
+	-- vehicle GG.Pad
 	{
-		name = "vpadheavy",
+		name = "vGG.Padheavy",
 		cmdDesc = {
-			id = GetCmdID('PERK_VPAD_2'),
-			action = 'perkvpadheavy',
-			name = Pad("Heavy", "Units"),
+			id = GetCmdID('PERK_VGG.Pad_2'),
+			action = 'perkvGG.Padheavy',
+			name = GG.Pad("Heavy", "Units"),
 			tooltip = 'Adds heavy units to the militia, increases chance of medium units',
 			texture = 'bitmaps/ui/upgrade.png',	
 		},
-		valid = function (unitDefID) return (not GG.hoverMap) and UnitDefs[unitDefID].name:find("vehiclepad") end,
+		valid = function (unitDefID) return (not GG.hoverMap) and UnitDefs[unitDefID].name:find("vehicleGG.Pad") end,
 		applyPerk = function (unitID)
-			GG.PadUpgrade(unitID, 2)
+			GG.GG.PadUpgrade(unitID, 2)
 		end,
 		costFunction = deductCBills,
 		price = 10000,
 	},
 	{
-		name = "vpadhouse",
+		name = "vGG.Padhouse",
 		cmdDesc = {
-			id = GetCmdID('PERK_VPAD_3'),
-			action = 'perkvpadhouse',
-			name = Pad("Assault", "Units"),
+			id = GetCmdID('PERK_VGG.Pad_3'),
+			action = 'perkvGG.Padhouse',
+			name = GG.Pad("Assault", "Units"),
 			tooltip = 'Adds assault units to the militia, increases chance of heavy units',
 			texture = 'bitmaps/ui/upgrade.png',	
 		},
-		valid = function (unitDefID) return (not GG.hoverMap) and UnitDefs[unitDefID].name:find("vehiclepad") end,
+		valid = function (unitDefID) return (not GG.hoverMap) and UnitDefs[unitDefID].name:find("vehicleGG.Pad") end,
 		applyPerk = function (unitID)
-			GG.PadUpgrade(unitID, 3)
+			GG.GG.PadUpgrade(unitID, 3)
 		end,
 		costFunction = deductCBills,
 		price = 10000,
-		requires = "vpadheavy",
+		requires = "vGG.Padheavy",
 	},
-	-- hover pad
+	-- hover GG.Pad
 	{
-		name = "hpad2",
+		name = "hGG.Pad2",
 		cmdDesc = {
-			id = GetCmdID('PERK_HPAD_2'),
-			action = 'perkhpad2',
-			name = Pad("Medium", "Units"),
+			id = GetCmdID('PERK_HGG.Pad_2'),
+			action = 'perkhGG.Pad2',
+			name = GG.Pad("Medium", "Units"),
 			tooltip = 'Adds medium units to the militia, increases chance of APC units',
 			texture = 'bitmaps/ui/upgrade.png',	
 		},
-		valid = function (unitDefID) return (GG.hoverMap) and UnitDefs[unitDefID].name:find("vehiclepad") end,
+		valid = function (unitDefID) return (GG.hoverMap) and UnitDefs[unitDefID].name:find("vehicleGG.Pad") end,
 		applyPerk = function (unitID)
-			GG.PadUpgrade(unitID, 2)
+			GG.GG.PadUpgrade(unitID, 2)
 		end,
 		costFunction = deductCBills,
 		price = 10000,
 	},
 	{
-		name = "hpad3",
+		name = "hGG.Pad3",
 		cmdDesc = {
-			id = GetCmdID('PERK_HPAD_3'),
-			action = 'perkhpad3',
-			name = Pad("VTOL", "Units"),
+			id = GetCmdID('PERK_HGG.Pad_3'),
+			action = 'perkhGG.Pad3',
+			name = GG.Pad("VTOL", "Units"),
 			tooltip = 'Adds VTOL units to the militia, increases chance of medium units',
 			texture = 'bitmaps/ui/upgrade.png',	
 		},
-		valid = function (unitDefID) return (GG.hoverMap) and UnitDefs[unitDefID].name:find("vehiclepad") end,
+		valid = function (unitDefID) return (GG.hoverMap) and UnitDefs[unitDefID].name:find("vehicleGG.Pad") end,
 		applyPerk = function (unitID)
-			GG.PadUpgrade(unitID, 3)
+			GG.GG.PadUpgrade(unitID, 3)
 		end,
 		costFunction = deductCBills,
 		price = 10000,
-		requires = "hpad2",
+		requires = "hGG.Pad2",
 	},
 	-- Garrison 
 	{
@@ -419,7 +394,7 @@ return {
 		cmdDesc = {
 			id = GetCmdID('PERK_GARRISON_2'),
 			action = 'perkgarrisonlaser',
-			name = Pad("Defensive", "Lasers"),
+			name = GG.Pad("Defensive", "Lasers"),
 			tooltip = 'Opens firing ports for lasers (-20% damage resistance)',
 			texture = 'bitmaps/ui/upgrade.png',	
 		},
@@ -437,7 +412,7 @@ return {
 		cmdDesc = {
 			id = GetCmdID('PERK_GARRISON_3'),
 			action = 'perkgarrisonphat',
-			name = Pad("Extra", "Armour"),
+			name = GG.Pad("Extra", "Armour"),
 			tooltip = 'Adds additional armour (+100% damage resistance)',
 			texture = 'bitmaps/ui/upgrade.png',	
 		},
@@ -459,7 +434,7 @@ return {
 		cmdDesc = {
 			id = GetCmdID('PERK_UPLINK_2'),
 			action = 'perkuplink_2',
-			name = Pad("Naval", "PPC"),
+			name = GG.Pad("Naval", "PPC"),
 			tooltip = 'Upgrade to Naval PPC weapon (+25s cooldown)',
 			texture = 'bitmaps/ui/upgrade.png',	
 		},
@@ -475,7 +450,7 @@ return {
 		cmdDesc = {
 			id = GetCmdID('PERK_UPLINK_3'),
 			action = 'perkuplink_3',
-			name = Pad("Naval", "AC/40"),
+			name = GG.Pad("Naval", "AC/40"),
 			tooltip = 'Upgrade to Naval Autocannon 40 weapon (+15s cooldown)',
 			texture = 'bitmaps/ui/upgrade.png',	
 		},
@@ -493,7 +468,7 @@ return {
 		cmdDesc = {
 			id = GetCmdID('PERK_TURRETCONTROL_2'),
 			action = 'perkturretcontrol_2',
-			name = Pad("Energy", "Weapon", "Towers"),
+			name = GG.Pad("Energy", "Weapon", "Towers"),
 			tooltip = 'Unlocks towers with energy weapons (no ammo limits)',
 			texture = 'bitmaps/ui/upgrade.png',	
 		},
@@ -509,7 +484,7 @@ return {
 		cmdDesc = {
 			id = GetCmdID('PERK_TURRETCONTROL_3'),
 			action = 'perkturretcontrol_3',
-			name = Pad("Long","Range", "Towers"),
+			name = GG.Pad("Long","Range", "Towers"),
 			tooltip = 'Unlocks LRM and Sniper Artillery towers',
 			texture = 'bitmaps/ui/upgrade.png',	
 		},
@@ -527,7 +502,7 @@ return {
 		cmdDesc = {
 			id = GetCmdID('PERK_SEISMIC_2'),
 			action = 'perkseismic_2',
-			name = Pad("Increase", "Range"),
+			name = GG.Pad("Increase", "Range"),
 			tooltip = 'Increases the range of the seismic sensor +50% (+10% time between pings)',
 			texture = 'bitmaps/ui/upgrade.png',	
 		},
@@ -545,7 +520,7 @@ return {
 		cmdDesc = {
 			id = GetCmdID('PERK_SEISMIC_3'),
 			action = 'perkseismic_3',
-			name = Pad("Increase", "Duration"),
+			name = GG.Pad("Increase", "Duration"),
 			tooltip = 'Increases the duration of each ping +250% (+20% time between pings)',
 			texture = 'bitmaps/ui/upgrade.png',	
 		},
