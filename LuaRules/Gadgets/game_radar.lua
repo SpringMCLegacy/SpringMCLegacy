@@ -53,7 +53,7 @@ local mobileUnits = {}
 local visionCache = {} -- visionCache[unitDefID] = {x = sectorVectorX, z = sectorVectorZ, sight = lastWeaponNum}
 for unitDefID, unitDef in pairs(UnitDefs) do
 	local cp = unitDef.customParams
-	if cp.baseclass == "mech" and cp.sectorangle then
+	if cp.sectorangle then
 		local angle = tonumber(cp.sectorangle) -- defaults in unitdefs_post
 		local s1x, s1z = GG.Vector.SectorVectorsFromAngle(math.rad(angle), unitDef.losRadius)
 		visionCache[unitDefID] = {
@@ -263,9 +263,11 @@ function gadget:UnitCreated(unitID, unitDefID, teamID)
 		mobileUnits[unitID] = true
 	end
 	if visionCache[unitDefID] then -- a mech!
-		visionCache[unitDefID].torso = GG.lusHelper[unitDefID].torso
+		visionCache[unitDefID].cockpit = GG.lusHelper[unitDefID].cockpit
 		allyTeamMechs[Spring.GetUnitAllyTeam(unitID)][unitID] = visionCache[unitDefID]
-		Spring.EditUnitCmdDesc(unitID, Spring.FindUnitCmdDesc(unitID, CMD.ONOFF), {params	= {1, ' Radar \n   Off  ', ' Radar \n   On  '}})
+		if ud.customParams.baseclass == "mech" then
+			Spring.EditUnitCmdDesc(unitID, Spring.FindUnitCmdDesc(unitID, CMD.ONOFF), {params	= {1, ' Radar \n   Off  ', ' Radar \n   On  '}})
+		end
 		-- force Spring to recognise units spawned within sectors should be full LOS
 		for i = 1, numAllyTeams do
 			local allyTeam = allyTeams[i]
@@ -327,8 +329,8 @@ function gadget:GameFrame(n)
 			if not inAutoLos[allyTeam][unitID] and Spring.ValidUnitID(unitID) and not Spring.GetUnitIsDead(unitID) and not Spring.GetUnitTransporter(unitID) then
 				local x, _, z = GetUnitPosition(unitID)
 				local inRadius = Spring.GetUnitsInCylinder(x, z, SECTOR_DISTANCE) -- use current sensor radius here as perks can change it
-				if not info.torso then Spring.Echo("Oh shit, ", UnitDefs[Spring.GetUnitDefID(unitID)].name, "seems to have no cockpit") else
-					local v1x, v1z, v2x, v2z = GG.Vector.SectorVectorsFromUnitPiece(unitID, info.torso, info.x, info.z)
+				if not info.cockpit then Spring.Echo("Oh shit, ", UnitDefs[Spring.GetUnitDefID(unitID)].name, "seems to have no cockpit") else
+					local v1x, v1z, v2x, v2z = GG.Vector.SectorVectorsFromUnitPiece(unitID, info.cockpit, info.x, info.z)
 					--Spring.MarkerAddPoint(x + v1x, 0, z + v1z, "V1")
 					--Spring.MarkerAddPoint(x + v2x, 0, z + v2z, "V2")
 					for _, enemyID in pairs(inRadius) do -- may not actually be enemy? should check allyteam prior to this?

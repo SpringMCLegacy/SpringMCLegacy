@@ -8,6 +8,7 @@ local IS_Avenger = {
 	activateWhenBuilt   = true,
 	maxDamage           = 30000,
 	mass                = 36000,
+	radardistance		= 1500,
 	footprintX			= 20,
 	footprintZ 			= 20,
 	buildCostEnergy     = 0,
@@ -23,10 +24,10 @@ local IS_Avenger = {
 	power				= 1, -- don't target me!
 	
 	-- Transport tags
-	transportSize		= 8,
+	--[[transportSize		= 8,
 	transportCapacity	= 8, -- 1x transportSize
 	transportMass		= 10000,
-	holdSteady			= true,
+	holdSteady			= true,]]
 	--minTransportMass	= 10000,
 
 	weapons 		= {	
@@ -46,49 +47,49 @@ local IS_Avenger = {
 		[4] = {
 			name	= "LBL",
 			mainDir = "0 0 1",
-			maxAngleDif = 20,
+			maxAngleDif = 40,--20,
 			slaveTo = 3,
 		},
 		[5] = {
 			name	= "ERMBL",
 			mainDir = "0 0 1",
-			maxAngleDif = 20,
+			maxAngleDif = 40, --20,
 			slaveTo = 4,
 		},
 		-- Right Cheek Turret
 		[6] = {
 			name	= "LBL",
 			mainDir = "0 0 1",
-			maxAngleDif = 20,
+			maxAngleDif = 40, --20,
 		},
 		[7] = {
 			name	= "ERMBL",
 			mainDir = "0 0 1",
-			maxAngleDif = 20,
+			maxAngleDif = 40, --20,
 			slaveTo = 6,
 		},
 		-- Left Wing AC5s
 		[8] = {
 			name	= "AC5",
 			mainDir = "0 0 1",
-			maxAngleDif = 20,
+			maxAngleDif = 40, --20,
 		},
 		[9] = {
 			name	= "AC5",
 			mainDir = "0 0 1",
-			maxAngleDif = 20,
+			maxAngleDif = 40, --20,
 			slaveTo = 8,
 		},
 		-- Right Wing AC5s
 		[10] = {
 			name	= "AC5",
 			mainDir = "0 0 1",
-			maxAngleDif = 20,
+			maxAngleDif = 40, --20,
 		},
 		[11] = {
 			name	= "AC5",
 			mainDir = "0 0 1",
-			maxAngleDif = 20,
+			maxAngleDif = 40, --20,
 			slaveTo = 10,
 		},
 		--Left Wing
@@ -100,7 +101,7 @@ local IS_Avenger = {
 		[13] = {
 			name	= "PPC",
 			mainDir = "0 0 1",
-			maxAngleDif = 20,
+			maxAngleDif = 40,--20,
 		},
 		--Right Wing
 		[14] = {
@@ -111,7 +112,7 @@ local IS_Avenger = {
 		[15] = {
 			name	= "PPC",
 			mainDir = "0 0 1",
-			maxAngleDif = 20,
+			maxAngleDif = 40, --20,
 		},
 		--Rear
 		[16] = {
@@ -145,6 +146,12 @@ local IS_Avenger = {
 			mainDir = "0 0 -1",
 			maxAngleDif = 90,
 		},
+		[22] = {
+			name 	= "ptab",
+		},
+		[23] = {
+			name 	= "sight",
+		},
 	},
 	sfxtypes = {
 		explosiongenerators = {
@@ -156,11 +163,12 @@ local IS_Avenger = {
 	},
 	customparams = {
 		helptext		= "A Dropship",
-		dropship		= "outpost",
+		--dropship		= "outpost",
 		flagdefendrate  = 100,
-		hoverheight		= 300,
-		radialdist		= 2500,
+		hoverheight		= 150,--300,
+		radialdist		= 5000, --2500,
 		ignoreatbeacon	= true,
+		sectorangle		= 30,
     },
 	sounds = {
 		underattack        = "Dropship_Alarm",

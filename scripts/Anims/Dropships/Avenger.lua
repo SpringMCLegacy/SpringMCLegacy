@@ -2,6 +2,13 @@
 local body = piece ("body")
 local cargoDoor1, cargoDoor2 = piece("cargodoor1", "cargodoor2")
 local attachment = piece("attachment")
+local bayOpen = false
+function WeaponCanFire(weaponID)
+	return (weaponID == 22 and bayOpen) or stage > 0
+	--if missileWeaponIDs[weaponID] then return stage == 4
+	--else return true
+	--end
+end
 
 function Setup()
 	-- Put pieces into starting pos
@@ -16,8 +23,6 @@ function Setup()
 	end	
 end
 
---[[function LandingGearDown()
-end]]
 
 function TouchDown()
 	PlaySound("dropship_stomp")
@@ -25,13 +30,6 @@ function TouchDown()
 		Spring.DestroyUnit(unitID, true)
 	end
 end
-
---[[function LandingGearUp()
-end]]
-
---[[local fxStages = {
-
-}]]
 
 function fx()
 	Signal(fx)
@@ -148,46 +146,11 @@ function fx()
 	end
 end
 
-function UnloadCargo()
-	local cargoID = cargo[1]
-	Spring.MoveCtrl.SetRelativeVelocity(unitID, 0, 0, 0)
-	_, y, _ = Spring.GetUnitPosition(unitID)
-	local BOOM_LENGTH = y - TY - 56
-	local BOOM_SPEED = 15
-	Move(attachment, y_axis, -56, BOOM_SPEED)
-	--WaitForMove(attachment, y_axis)
-	for i = 2, 3 do
-		Move(booms[i], y_axis, -BOOM_LENGTH / 2, BOOM_SPEED)
-	end
-	WaitForMove(booms[3], y_axis)
-	PlaySound("stomp")
-	Sleep(1500)
-	if Spring.ValidUnitID(cargoID) and not Spring.GetUnitIsDead(cargoID) then -- might be empty on /give testing
-		Spring.UnitScript.DropUnit(cargoID)
-		Spring.SetUnitBlocking(cargoID, true, true, true, true, true, true, true)
-		-- Let the cargo know it is unloaded
-		env = Spring.UnitScript.GetScriptEnv(cargoID)
-		Spring.UnitScript.CallAsUnit(cargoID, env.Unloaded)
-		-- Let the beacon know outpost is ready
-		env = Spring.UnitScript.GetScriptEnv(callerID)
-		Spring.UnitScript.CallAsUnit(callerID, env.ChangeType, true)
-	end
-	-- Cargo is down, close the doors!
-	PlaySound("dropship_doorclose")
-	for i = 2, 3 do
-		Move(booms[i], y_axis, 0, BOOM_SPEED * 2)
-	end
-	WaitForMove(booms[3], y_axis)
-	Turn(cargoDoor1, z_axis, 0, DOOR_SPEED)
-	Turn(cargoDoor2, z_axis, 0, DOOR_SPEED)
-	WaitForTurn(cargoDoor2, z_axis)
-end
-
 function TakeOff()
 	stage = 4
 	PlaySound("dropship_liftoff")
 	--Spring.MoveCtrl.SetRelativeVelocity(unitID, 0, 0, 5)
-	Spring.MoveCtrl.SetRelativeVelocity(unitID, 0, 0, 5)
+	Spring.MoveCtrl.SetRelativeVelocity(unitID, 0, 0, 15)
 	Spring.MoveCtrl.SetGravity(unitID, -0.75 * GRAVITY)
 	Turn(body, x_axis, math.rad(-30), math.rad(10))
 	WaitForTurn(body, x_axis)
@@ -241,36 +204,23 @@ function Drop()
 	Turn(body, x_axis, 0, math.rad(3.5))
 	Spring.MoveCtrl.SetVelocity(unitID, 0, 0, 0)
 	Spring.MoveCtrl.SetGravity(unitID, 0)
+	--Spring.GiveOrderToUnit(unitID, CMD.ATTACK, {TX, 0, TZ}, {})
+	local DOOR_SPEED = math.rad(60)
+	PlaySound("dropship_dooropen")
+	Turn(cargoDoor1, z_axis, math.rad(-90), DOOR_SPEED)
+	Turn(cargoDoor2, z_axis, math.rad(90), DOOR_SPEED)
+	bayOpen = true
 	local dist = GetUnitDistanceToPoint(unitID, TX, 0, TZ, false)
 	while dist > 10 do
 		dist = GetUnitDistanceToPoint(unitID, TX, 0, TZ, false)
 		--Spring.Echo("dist", dist)
-		Spring.MoveCtrl.SetRelativeVelocity(unitID, 0, 0, math.max(dist/50, 2))
+		Spring.MoveCtrl.SetRelativeVelocity(unitID, 0, 0, math.max(dist/200, 10))
 		Sleep(30)
 	end
-	-- only proceed if the beacon is still ours and is secure
-	if Spring.GetUnitTeam(beaconID) == teamID and Spring.GetUnitRulesParam(beaconID, "secure") == 1 then
-		-- We're over the target area, reduce height!
-		PlaySound("dropship_rumble")
-		stage = 3
-		local DOOR_SPEED = math.rad(60)
-		PlaySound("dropship_dooropen")
-		Turn(cargoDoor1, z_axis, math.rad(-90), DOOR_SPEED)
-		Turn(cargoDoor2, z_axis, math.rad(90), DOOR_SPEED)
-		local vertSpeed = 4
-		local wantedHeight = select(2, Spring.GetUnitPosition(unitID)) - HOVER_HEIGHT
-		local dist = select(2, Spring.GetUnitPosition(unitID)) - wantedHeight
-		while (dist > 0) do
-			Spring.MoveCtrl.SetRelativeVelocity(unitID, 0, -math.max(0.33, vertSpeed * (dist/HOVER_HEIGHT)), 0)
-			Sleep(10)
-			dist = select(2, Spring.GetUnitPosition(unitID)) - wantedHeight
-		end
-		-- We're in place. Halt and lower the cargo!
-		PlaySound("dropship_rumble")
-		UnloadCargo()
-	else -- bugging out, refund
-		Spring.AddTeamResource(teamID, "metal", UnitDefs[Spring.GetUnitDefID(cargo[1])].metalCost)
-	end
-	-- Take off!
+	Sleep(2500)
+	PlaySound("dropship_dooropen")
+	Turn(cargoDoor1, z_axis, 0, DOOR_SPEED)
+	Turn(cargoDoor2, z_axis, 0, DOOR_SPEED)
+	bayOpen = false
 	TakeOff()
 end
