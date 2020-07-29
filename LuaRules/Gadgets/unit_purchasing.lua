@@ -1,7 +1,7 @@
 function gadget:GetInfo()
 	return {
-		name		= "Purchasing",
-		desc		= "Controls purchasing abilities",
+		name		= "Outpost - DropZone",
+		desc		= "Controls DropZone mech purchasing abilities",
 		author		= "FLOZi (C. Lawrence)",
 		date		= "31/08/13",
 		license 	= "GNU GPL v2",
@@ -102,7 +102,6 @@ end
 
 local mechCache = {} -- mechCache[unitDefID] = "fast"/"cqb"/"flexible"/"ranged" from typeStrings
 GG.mechCache = mechCache 
-local dropShipCache = {} -- dropShipCache[unitDefID] = "mech", "vehicle" or "outpost"
 
 -- Menu
 local currMenu = {} -- [dropzoneID] = unitType
@@ -125,9 +124,6 @@ GG.dropZoneCoolDowns = dropZoneCoolDowns
 -- Upgrading dropzone
 local teamDropZoneLevels = {} -- teamDropZoneLevels[teamID] = {tier = 1 or 2 or 3, def = unitDefID}
 local dropZoneLevels = {"leopard", "union", "overlord"}
-
-
-local teamDropShipHPs = {} -- teamDropShipHPs[teamID] = number
 
 local function GetWeight(mass) -- still used by spamBot fore 'DireBolical' difficulty
 	local light = mass < 40 * 100
@@ -208,7 +204,6 @@ local function DropZoneUpgrade(teamID)
 		local tonnageIncrease = maxTonnage - UnitDefs[oldDefID].customParams.maxtonnage
 		Spring.SetTeamResource(teamID, "es", maxTonnage)
 		Spring.AddTeamResource(teamID, "e", tonnageIncrease)
-		teamDropShipHPs[teamID] = nil -- reset HP
 		-- first upgrade unlocks heavy and assault mechs
 		GG.LockHeavy(teamDropZones[teamID], false)
 	else -- max upgrade reached, disable button
@@ -496,11 +491,8 @@ function gadget:UnitCreated(unitID, unitDefID, teamID)
 		if teamDropZoneLevels[teamID].tier == 1 then
 			LockHeavy(unitID, true)
 		end
-	elseif dropShipCache[unitDefID] == "mech" then
+	elseif GG.dropShipCache[unitDefID] == "mech" then
 		UpdateButtons(teamID, true)
-		if unitDefID == teamDropZoneLevels[teamID].def and teamDropShipHPs[teamID] then -- check it is current def incase we upgraded before it left
-			Spring.SetUnitHealth(unitID, teamDropShipHPs[teamID])
-		end
 	end
 end
 
@@ -517,14 +509,9 @@ function gadget:UnitDestroyed(unitID, unitDefID, teamID, attackerID, attackerDef
 		orderTons[unitID] = 0
 		dropZones[unitID] = nil
 		dropZoneBeaconIDs[teamID] = nil
-	elseif dropShipCache[unitDefID] == "mech" then-- main dropship
-		-- TODO: move this to DropshipDelivery gadget and track e.g. avenger
-		if teamDropZoneLevels[teamID] and unitDefID == teamDropZoneLevels[teamID].def then -- it is the current type of dropship, save the HP
-			teamDropShipHPs[teamID] = Spring.GetUnitHealth(unitID)
-		end
+	elseif GG.dropShipCache[unitDefID] == "mech" then-- main dropship
 		DropZoneCoolDown(teamID)
-	end
-	if mechCache[unitDefID] then
+	elseif mechCache[unitDefID] then
 		-- reimburse 'weight'
 		AddTeamResource(teamID, "energy", UnitDefs[unitDefID].energyCost)
 	end
@@ -550,9 +537,6 @@ function gadget:GamePreload()
 		if cp.baseclass == "mech" then
 			-- sort into light, medium, heavy, assault
 			mechCache[unitDefID] = cp.menu
-			--unitSlotChanges[unitDefID] = 1
-		elseif cp.dropship then
-			dropShipCache[unitDefID] = cp.dropship
 		elseif name:find("dropzone") then -- check for dropzones first
 			DROPZONE_IDS[unitDefID] = true
 		end

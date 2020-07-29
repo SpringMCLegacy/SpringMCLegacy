@@ -31,7 +31,11 @@ local BEACON_ID = UnitDefNames["beacon"].id
 local DROPSHIP_DELAY = 10 * 30 -- 10s
 
 -- Variables
+local dropShipCache = {} -- dropShipCache[unitDefID] = "mech", "vehicle" or "outpost"
+GG.dropShipCache = dropShipCache
+
 local activeDropships = {} -- activeDropships[dropshipID] = beaconID
+local teamDropShipHPs = {} -- teamDropShipHPs[teamID][unitDefID] = health
 local beaconActive = {} -- beaconActive[beaconID] = dropshipID
 local beaconDropshipQueue = {} -- beaconDropshipQueue[beaconID] = {info1 = {}, info2 = {}, ...}
 
@@ -160,11 +164,22 @@ function BeaconDropshipBugOut(beaconID, teamID, outpostID)
 end	
 GG.BeaconDropshipBugOut = BeaconDropshipBugOut
 
+function gadget:UnitCreated(unitID, unitDefID, teamID)
+	if dropShipCache[unitDefID] == "mech" then -- TODO: Only tracking mech landers atm
+		if teamDropShipHPs[teamID][unitDefID] then -- Already registered set current HP
+			Spring.SetUnitHealth(unitID, teamDropShipHPs[teamID][unitDefID])
+		end
+	end
+end
+
 function gadget:UnitDestroyed(unitID, unitDefID, teamID, attackerID, attackerDefID, attackerTeam)
 	if activeDropships[unitID] then
 		--Spring.Echo("Oh noes, my dropship! Send the next one", attackerID, attackerDefID, attackerTeam)
 		BeaconFree(activeDropships[unitID], teamID)
 		activeDropships[unitID] = nil
+	end
+	if dropShipCache[unitDefID] == "mech" then  -- TODO: Only tracking mech landers atm
+		teamDropShipHPs[teamID][unitDefID] = Spring.GetUnitHealth(unitID)
 	end
 end
 
@@ -174,12 +189,24 @@ function gadget:UnitGiven(unitID, unitDefID, newTeam, oldTeam)
 	end
 end
 
+function gadget:GamePreload()
+	for unitDefID, unitDef in pairs(UnitDefs) do
+		local cp = unitDef.customParams
+		if cp.dropship then
+			dropShipCache[unitDefID] = cp.dropship
+		end
+	end
+end
 
 function gadget:Initialize()
+	gadget:GamePreload()
 	for _,unitID in ipairs(Spring.GetAllUnits()) do
 		local teamID = Spring.GetUnitTeam(unitID)
 		local unitDefID = Spring.GetUnitDefID(unitID)
 		gadget:UnitCreated(unitID, unitDefID, teamID)
+	end
+	for _, teamID in pairs(Spring.GetTeamList()) do
+		teamDropShipHPs[teamID] = {}
 	end
 end
 
