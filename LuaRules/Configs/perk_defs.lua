@@ -1,6 +1,11 @@
 -- Use the automatic CMD ID generator
 local GetCmdID = GG.CustomCommands.GetCmdID
 
+local modOptions = Spring.GetModOptions()
+local EFFECT = modOptions and modOptions.perkeffect or 50
+local PCENT_INC = (100+EFFECT)/100
+local PCENT_DEC = (100-EFFECT)/100
+
 -- Common valid() functions here:
 local function allMechs(unitDefID) return (UnitDefs[unitDefID].customParams.baseclass == "mech") end
 local function hasJumpjets(unitDefID) return (UnitDefs[unitDefID].customParams.jumpjets or false) end

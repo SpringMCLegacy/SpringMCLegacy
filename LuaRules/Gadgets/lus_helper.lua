@@ -37,11 +37,6 @@ local CallAsUnit 			= Spring.UnitScript.CallAsUnit
 
 -- Useful functions for GG
 local PAD_LENGTH = 12
-local modOptions = Spring.GetModOptions()
-local EFFECT = modOptions and modOptions.perkeffect or 50
-local PCENT_INC = (100+EFFECT)/100
-local PCENT_DEC = (100-EFFECT)/100
-
 local function PadString(input, length)
 	while input:len() < (length or PAD_LENGTH) do
 		input = " " .. input .. " "
