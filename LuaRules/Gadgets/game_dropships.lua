@@ -153,7 +153,7 @@ function BeaconDropshipBugOut(beaconID, teamID, outpostID)
 			if bugOut then
 				env = Spring.UnitScript.GetScriptEnv(dropshipID)
 				if env and env.BugOut then
-					--Spring.UnitScript.CallAsUnit(dropshipID, env.BugOut)
+					Spring.UnitScript.CallAsUnit(dropshipID, env.BugOut)
 				end
 				BeaconFree(beaconID, teamID) -- mark the zone as free and continue with the queue
 			end

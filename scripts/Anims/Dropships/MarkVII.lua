@@ -183,6 +183,8 @@ function fx()
 end
 
 function TakeOff()
+	Signal(Drop)
+	Signal(UnloadCargo)
 	if stage > 3 then return end -- in case we are told to BugOut, ignore it if already exiting
 	if booms[2] then
 		for i = 2, 3 do
@@ -223,6 +225,10 @@ function TakeOff()
 	-- We're out of the atmosphere, bye bye!
 	GG.LCLeft(beaconID, callerID, teamID) -- let the world know
 	Spring.DestroyUnit(unitID, false, true)
+end
+
+function BugOut()
+	StartThread(TakeOff)
 end
 
 function Drop()
@@ -327,6 +333,8 @@ function Drop()
 end
 
 function UnloadCargo()
+	Signal(UnloadCargo)
+	SetSignalMask(UnloadCargo)
 	local pad = piece("pad")
 	local attachment = piece("attachment")
 	local BOOM_SPEED = 15
