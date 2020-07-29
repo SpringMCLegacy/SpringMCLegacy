@@ -23,6 +23,23 @@ local IS_Avenger = {
 	movementClass		= "LARGEMECH", -- herp
 	power				= 1, -- don't target me!
 	
+	canFly				= true,
+	hoverAttack			= true,
+	cruiseAlt			= 350,
+	airHoverFactor		= 0.5,
+	maxVelocity			= 5,
+	
+		--[[turnRadius		= 1000,
+	maxAcc			= 0.18,
+	maxBank			= 0.0007,
+	maxPitch		= 0.0007,
+	maxAileron		= 0.0045,
+	maxElevator		= 0.004,
+	maxRudder		= 0.002,
+	wingAngle		= 0.1,
+	wingDrag		= 0.07,
+	myGravity		= 0.8,]]
+	
 	-- Transport tags
 	--[[transportSize		= 8,
 	transportCapacity	= 8, -- 1x transportSize
@@ -33,7 +50,7 @@ local IS_Avenger = {
 	weapons 		= {	
 		-- Chin Turret
 		[1] = {
-			name	= "AC20",
+			name	= "AC10",
 		},
 		[2] = {
 			name	= "AC5",
