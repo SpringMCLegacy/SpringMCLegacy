@@ -1,6 +1,6 @@
 function gadget:GetInfo()
 	return {
-		name = "Unit Perks",
+		name = "Unit - Perks",
 		desc = "XP Unlocked Unit Perks",
 		author = "FLOZi (C. Lawrence)",
 		date = "31/03/2013",
@@ -48,7 +48,7 @@ local dropZonePerks = {} -- dropZonePerks[teamID] = {perk1 = true, perk2 = true,
 local perkInclude = VFS.Include("LuaRules/Configs/perk_defs.lua")
 for i, perkDef in pairs(perkInclude) do
 	if perkDef.price then
-		perkDef.cmdDesc.tooltip = perkDef.cmdDesc.tooltip .. " (C-Bills cost: " .. perkDef.price .. ")"
+		perkDef.cmdDesc.tooltip = perkDef.cmdDesc.tooltip .. " (C-Bills cost: " .. (Spring.IsNoCostEnabled() and 0 or perkDef.price) .. ")"
 	end
 	perkDefs[perkDef.cmdDesc.id] = perkDef
 	perkDefNames[perkDef.name] = perkDef
@@ -56,6 +56,7 @@ end
 
 
 local function UpdateRemaining(unitID, newLevel, price)
+	price = Spring.IsNoCostEnabled() and 0 or price
 	-- disable perks here
 	local perkRemaining = false
 	for perkCmdID, perkDef in pairs(perkDefs) do
