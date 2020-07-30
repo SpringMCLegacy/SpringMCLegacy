@@ -281,6 +281,12 @@ local UAC20 = AC20:New{
 	reloadtime              = 2.5,
 }
 
+local AirAC20 = AC20:New{
+	name                    = "AC/20",
+	range                   = 1500,
+	reloadtime              = 3.5,
+}
+
 local LBX20 = AC20:New{
 	name                    = "LBX/20",
 	soundStart            	= "LBX20_Fire",
@@ -368,6 +374,7 @@ return lowerkeys({
 	UAC20 = UAC20,
 	LBX20 = LBX20,
 	LBX20_Cluster = LBX20_Cluster,
+	AirAC20 = AirAC20,
 	--Naval Autocannons
 	NAC10 = NAC10,
 	NAC40 = NAC40,

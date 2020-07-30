@@ -104,6 +104,46 @@ local ALRM20 = LRM_Class:New{
     },
 }
 
+local AirLRM_Class = LRM_Class:New{ --Air-launched LRMs don't need to fire at upwards angles
+	trajectoryHeight		= 0,
+}
+
+local AirLRM5 = AirLRM_Class:New{
+	name                    = "LRM-5",
+	turnRate				= 4000,
+	burst					= 5,
+	customparams = {
+		heatgenerated		= 3,
+	},
+}
+
+local AirLRM10 = AirLRM_Class:New{
+	name                    = "LRM-10",
+	turnRate				= 4000,
+	burst					= 10,
+	customparams = {
+		heatgenerated		= 6,
+    },
+}	
+
+local AirLRM15 = AirLRM_Class:New{
+	name                    = "LRM-15",
+	turnRate				= 4000,
+	burst					= 15,
+	customparams = {
+		heatgenerated		= 7.5,
+    },
+}
+
+local AirLRM20 = AirLRM_Class:New{
+	name                    = "LRM-20",
+	turnRate				= 4000,
+	burst					= 20,
+	customparams = {
+		heatgenerated		= 9,
+    },
+}
+
 return lowerkeys({ 
 	LRM5 = LRM5,
 	LRM10 = LRM10,
@@ -113,4 +153,8 @@ return lowerkeys({
 	ALRM10 = ALRM10,
 	ALRM15 = ALRM15,
 	ALRM20 = ALRM20,
+	AirLRM5 = AirLRM5,
+	AirLRM10 = AirLRM10,
+	AirLRM15 = AirLRM15,
+	AirLRM20 = AirLRM20,
 })

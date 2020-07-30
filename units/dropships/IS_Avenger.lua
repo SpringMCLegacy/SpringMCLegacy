@@ -50,7 +50,7 @@ local IS_Avenger = {
 	weapons 		= {	
 		-- Chin Turret
 		[1] = {
-			name	= "AC10",
+			name	= "AirAC20",
 		},
 		[2] = {
 			name	= "AC5",
@@ -144,22 +144,22 @@ local IS_Avenger = {
 		},
 		--LRMs
 		[18] = {
-			name	= "LRM20",
+			name	= "AirLRM20",
 			mainDir = "0 0 1",
 			maxAngleDif = 90,
 		},
 		[19] = {
-			name	= "LRM20",
+			name	= "AirLRM20",
 			mainDir = "1 0 1",
 			maxAngleDif = 90,
 		},
 		[20] = {
-			name	= "LRM20",
+			name	= "AirLRM20",
 			mainDir = "-1 0 1",
 			maxAngleDif = 90,
 		},
 		[21] = {
-			name	= "LRM20",
+			name	= "AirLRM20",
 			mainDir = "0 0 -1",
 			maxAngleDif = 90,
 		},
