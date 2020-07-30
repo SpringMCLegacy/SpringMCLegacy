@@ -14,11 +14,11 @@ local Corsair = Aero:New{
 	
 	weapons = {	
 		[1] = {
-			name	= "ERLBL",
+			name	= "LBL",
 			maxAngleDif = 35,
 		},
 		[2] = {
-			name	= "ERLBL",
+			name	= "LBL",
 			maxAngleDif = 35,
 		},
 		[3] = {
