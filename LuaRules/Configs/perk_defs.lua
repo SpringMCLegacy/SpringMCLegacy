@@ -439,8 +439,8 @@ return {
 		cmdDesc = {
 			id = GetCmdID('PERK_UPLINK_2'),
 			action = 'perkuplink_2',
-			name = GG.Pad("Naval", "PPC"),
-			tooltip = 'Upgrade to Naval PPC weapon (+25s cooldown)',
+			name = GG.Pad("Aero", "Sortie"),
+			tooltip = 'Unlock Aero fighter sorties',
 			texture = 'bitmaps/ui/upgrade.png',	
 		},
 		valid = function (unitDefID) return UnitDefs[unitDefID].name == "outpost_uplink" end,
@@ -455,8 +455,8 @@ return {
 		cmdDesc = {
 			id = GetCmdID('PERK_UPLINK_3'),
 			action = 'perkuplink_3',
-			name = GG.Pad("Naval", "AC/40"),
-			tooltip = 'Upgrade to Naval Autocannon 40 weapon (+15s cooldown)',
+			name = GG.Pad("Assault", "Dropship"),
+			tooltip = 'Unlock Assault dropship attack run',
 			texture = 'bitmaps/ui/upgrade.png',	
 		},
 		valid = function (unitDefID) return UnitDefs[unitDefID].name == "outpost_uplink" end,

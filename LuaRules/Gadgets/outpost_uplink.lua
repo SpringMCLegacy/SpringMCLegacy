@@ -22,6 +22,7 @@ local GetTeamResources		= Spring.GetTeamResources
 local CreateUnit			= Spring.CreateUnit
 local DestroyUnit			= Spring.DestroyUnit
 local InsertUnitCmdDesc		= Spring.InsertUnitCmdDesc
+local EditUnitCmdDesc		= Spring.EditUnitCmdDesc
 local FindUnitCmdDesc		= Spring.FindUnitCmdDesc
 local RemoveUnitCmdDesc		= Spring.RemoveUnitCmdDesc
 local SetUnitRulesParam		= Spring.SetUnitRulesParam
@@ -69,7 +70,10 @@ local artyWeaponInfo = {
 local uplinkLevels = {} -- uplinkLevels[uplinkID] = 1, 2 or 3
 
 local ARTY_HEIGHT = 10000
+
 local ARTY_COST = 10000
+local AERO_COST = 10000
+local ASSAULT_COST = 10000
 local artyLastFired = {} -- artyLastFired[teamID] = gameFrame
 local artyCanFire = {} -- artyCanFire[teamID] = gameFrame
 
@@ -77,11 +81,30 @@ local artyCanFire = {} -- artyCanFire[teamID] = gameFrame
 local artyCmdDesc = {
 	id 		= GG.CustomCommands.GetCmdID("CMD_UPLINK_ARTILLERY", ARTY_COST),
 	type	= CMDTYPE.ICON_MAP, -- UNIT_OR_MAP?
-	name 	= " Artillery \n Strike",
+	name 	= GG.Pad("Orbital","Strike"),
 	action	= "uplink_arty",
 	tooltip = "C-Bill cost: " .. ARTY_COST,
 	cursor	= "Attack",
 }
+local aeroCmdDesc = {
+	id 		= GG.CustomCommands.GetCmdID("CMD_UPLINK_AERO", AERO_COST),
+	type	= CMDTYPE.ICON_MAP, -- UNIT_OR_MAP?
+	name 	= GG.Pad("Aero","Sortie"),
+	action	= "uplink_aero",
+	tooltip = "C-Bill cost: " .. AERO_COST,
+	cursor	= "Attack",
+	hidden 	= true,
+}
+local assaultCmdDesc = {
+	id 		= GG.CustomCommands.GetCmdID("CMD_UPLINK_ASSAULT", ASSAULT_COST),
+	type	= CMDTYPE.ICON_MAP, -- UNIT_OR_MAP?
+	name 	= GG.Pad("Assault","Dropship"),
+	action	= "uplink_assault",
+	tooltip = "C-Bill cost: " .. ASSAULT_COST,
+	cursor	= "Attack",
+	hidden 	= true,
+}
+
 
 local getOutCmdDesc = {
 	id 		= GG.CustomCommands.GetCmdID("CMD_MECHBAY_GETOUT"),
@@ -93,6 +116,11 @@ local getOutCmdDesc = {
 
 local function UplinkUpgrade(unitID, level)
 	uplinkLevels[unitID] = level
+	if level == 2 then
+		EditUnitCmdDesc(unitID, FindUnitCmdDesc(unitID, aeroCmdDesc.id), {hidden = false})
+	elseif level == 3 then
+		EditUnitCmdDesc(unitID, FindUnitCmdDesc(unitID, assaultCmdDesc.id), {hidden = false})
+	end
 end
 GG.UplinkUpgrade = UplinkUpgrade
 
@@ -101,6 +129,8 @@ function gadget:UnitCreated(unitID, unitDefID, teamID, builderID)
 	local cp = unitDef.customParams
 	if unitDefID == UPLINK_ID then
 		InsertUnitCmdDesc(unitID, artyCmdDesc)
+		InsertUnitCmdDesc(unitID, aeroCmdDesc)
+		InsertUnitCmdDesc(unitID, assaultCmdDesc)
 		uplinkLevels[unitID] = 1
 	elseif unitDefID == MECHBAY_ID then
 		InsertUnitCmdDesc(unitID, getOutCmdDesc)
@@ -139,7 +169,7 @@ local function ArtyStrike(unitID, teamID, x, y, z)
 		local length = math.random(weapInfo.spread)
 		dx = math.sin(angle) * length
 		dz = math.cos(angle) * length
-		DelayCall(ArtyShot, {uplinkLevels[unitID], teamID, x + dx, y + ARTY_HEIGHT, z + dz}, weapInfo.delay + math.random(150))
+		DelayCall(ArtyShot, {1, teamID, x + dx, y + ARTY_HEIGHT, z + dz}, weapInfo.delay + math.random(150))
 	end
 	GG.PlaySoundForTeam(teamID, "BB_OrbitalStrike_Inbound", 1)
 	--DelayCall(GG.PlaySoundForTeam, {teamID, "BB_OrbitalStrike_Available_In_60", 1}, weapInfo.cooldown - 62 * 30) -- fudge
@@ -147,11 +177,28 @@ local function ArtyStrike(unitID, teamID, x, y, z)
 	return true
 end
 
+local function AssaultStrike(unitID, teamID, tx, ty, tz)
+	local money = GetTeamResources(teamID, "metal")
+	if money < ASSAULT_COST then
+		GG.PlaySoundForTeam(teamID, "BB_Insufficient_Funds", 1)
+		Spring.SendMessageToTeam(teamID, "Not enough C-Bills for assault dropship strike!")
+		return false 
+	end	
+	UseTeamResource(teamID, "metal", ASSAULT_COST)
+	local avenger = Spring.CreateUnit("is_avenger", tx, ty, tz, "s", teamID)
+	return true
+end
+
+
+
 function gadget:AllowCommand(unitID, unitDefID, teamID, cmdID, cmdParams, cmdOptions)
 	if unitDefID == UPLINK_ID then
 		if cmdID == artyCmdDesc.id then
 			local x,y,z = unpack(cmdParams)
 			return ArtyStrike(unitID, teamID, x, y, z)
+		elseif cmdID == assaultCmdDesc.id then
+			local x,y,z = unpack(cmdParams)
+			return AssaultStrike(unitID, teamID, x, y, z)
 		end
 	elseif unitDefID == MECHBAY_ID then
 		if cmdID == getOutCmdDesc.id then
