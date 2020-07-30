@@ -225,6 +225,13 @@ function Drop()
 	Spring.MoveCtrl.Disable(unitID)
 	Sleep(20000)
 	Spring.MoveCtrl.Enable(unitID)
-	--Spring.MoveCtrl.SetRotation(unitID, math.rad(30), 0, 0)
+	--[[Spring.Echo("POWPOWPOWPOW")
+	for i = 5, 0 do
+		Spring.Echo(i)
+		Spring.MoveCtrl.SetRotation(unitID, math.rad(i * 6), 0, 0)
+		Explode(body, SFX.FALL)
+		Sleep(2500)
+	end
+	Sleep(500)]]
 	TakeOff()
 end

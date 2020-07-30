@@ -91,29 +91,27 @@ local Bomb250kg = divebomb:New{
 
 -- PTAB "Antitank Aviation Bomb" (RUS)
 local PTAB = divebomb:New{ --BombClass:New{
-  areaOfEffect       = 240,
-  burst              = 36,
-  burstrate          = 0.1,
-  --commandfire		= true,
-  turret		= true,
-  tolerance		= 5000,
-  edgeEffectiveness  = 0.5,
-  explosionGenerator = [[custom:HE_large]], -- overrides default
-  model					= "Weapons/ArrowIV.s3o",
-  weaponVelocity     = 200,
-  leadlimit		= 100,
-  name               = [[PTAB Anti-Tank Bomblets]],
-  --projectiles        = 8,
-  range              = 500,
-  soundHitDry        = [[GEN_Explo_3]],
-  sprayangle         = 10000,--7000,
-  customparams = {
+	areaOfEffect			= 240,
+	burst					= 36,
+	burstrate				= 0.1,
+	turret					= true,
+	tolerance				= 5000,
+	edgeEffectiveness		= 0.5,
+	explosionGenerator		= "custom:HE_large", -- overrides default
+	model					= "Weapons/ArrowIV.s3o",
+	weaponVelocity			= 200,
+	leadlimit				= 100,
+	name					= "Bombs",
+	range					= 500,
+	soundHitDry				= "GEN_Explode4",
+	sprayangle				= 10000,--7000,
+	customparams = {
 
-  },
-  damage = {
-    default            = 2000,
 	},
-  }
+	damage = {
+		default            = 2000,
+	},
+}
 
   
 

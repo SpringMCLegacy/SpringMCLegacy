@@ -119,7 +119,7 @@ for unitName, ud in pairs(UnitDefs) do
 		table.insert(ud.sfxtypes.explosiongenerators, 1, "custom:heavy_jumpjet_trail_blue")
 		local cp = ud.customparams
 		if weapons then
-			for weaponID = 1, #weapons - (cp.baseclass == "mech" and 1 or 0) do -- SFX.CEG + weaponID
+			for weaponID = 1, #weapons - (cp.sectorangle and 1 or 0) do -- SFX.CEG + weaponID
 				local cegFlare = cegCache[string.lower(weapons[weaponID].name)]
 				if cegFlare then
 					--Spring.Echo("cegFlare: " .. cegFlare)

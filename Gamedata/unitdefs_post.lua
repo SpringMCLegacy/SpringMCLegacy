@@ -353,6 +353,8 @@ for name, ud in pairs(UnitDefs) do
 			elseif weapNameL == "tag" then
 				weapon.onlytargetcategory = "narctag"			
 				ud.description = ud.description .. " \255\255\051\051[TAG]"
+			elseif cp.sectorangle and i == #weapons then -- sight
+				weapon.onlytargetcategory = "nevertargetanythingever"
 			else
 				if cp.baseclass == "mech" then
 					--[[ Give all mechs 179d torso twist
@@ -362,8 +364,6 @@ for name, ud in pairs(UnitDefs) do
 						if not weapon.slaveto then -- don't overwrite unitdef
 							weapon.slaveto = 1
 						end
-					elseif i == #weapons then -- sight
-						weapon.onlytargetcategory = "nevertargetanythingever"
 					end
 				elseif cp.baseclass == vehicle then
 					if not weapon.onlytargetcategory then

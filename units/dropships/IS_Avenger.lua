@@ -26,17 +26,17 @@ local IS_Avenger = {
 	canFly				= true,
 	hoverAttack			= true,
 	cruiseAlt			= 350,
-	airHoverFactor		= 0.5,
+	airHoverFactor		= 0.8,
 	maxVelocity			= 5,
 	
-		--[[turnRadius		= 1000,
-	maxAcc			= 0.18,
-	maxBank			= 0.0007,
-	maxPitch		= 0.0007,
-	maxAileron		= 0.0045,
-	maxElevator		= 0.004,
-	maxRudder		= 0.002,
-	wingAngle		= 0.1,
+	--turnRadius		= 1000,
+	--maxAcc			= 0.18,
+	maxBank			= 0.95, -- default 0.8
+	--maxPitch		= 0.0007,
+	maxAileron		= 0.05, -- default 0.015
+	--maxElevator		= 0.004,
+	maxRudder		= 0.0008, -- default 0.004
+	--[[wingAngle		= 0.1,
 	wingDrag		= 0.07,
 	myGravity		= 0.8,]]
 	

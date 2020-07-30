@@ -110,7 +110,6 @@ local IsUnitTAGed = GG.IsUnitTAGed
 
 -- Info from lusHelper gadget
 missileWeaponIDs = info.missileWeaponIDs
-local flareOnShots = info.flareOnShots
 local jammableIDs = info.jammableIDs
 local missileWeaponIDs = info.missileWeaponIDs
 local flareOnShots = info.flareOnShots
@@ -306,9 +305,9 @@ end
 
 function script.QueryWeapon(weaponID) 
 	if missileWeaponIDs[weaponID] then
-		return launchPoints[weaponID] and launchPoints[weaponID][currPoints[weaponID]] or launchers[weaponID]
+		return launchPoints[weaponID] and launchPoints[weaponID][currPoints[weaponID]] or launchers[weaponID] or 1
 	else
-		return flares[weaponID]
+		return flares[weaponID] or 1
 	end
 end
 
