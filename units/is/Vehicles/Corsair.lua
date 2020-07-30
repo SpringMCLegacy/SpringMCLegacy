@@ -22,27 +22,27 @@ local Corsair = Aero:New{
 			maxAngleDif = 35,
 		},
 		[3] = {
-			name	= "MBL",
+			name	= "ERMBL",
 			maxAngleDif = 35,
 		},
 		[4] = {
-			name	= "MBL",
+			name	= "ERMBL",
 			maxAngleDif = 35,
 		},
 		[5] = {
-			name	= "SBL",
+			name	= "ERSBL",
 			maxAngleDif = 35,
 		},
 		[6] = {
-			name	= "SBL",
+			name	= "ERSBL",
 			maxAngleDif = 35,
 		},
 		[7] = {
-			name	= "SBL",
+			name	= "ERSBL",
 			maxAngleDif = 35,
 		},
 		[8] = {
-			name	= "SBL",
+			name	= "ERSBL",
 			maxAngleDif = 35,
 		},
 	},
