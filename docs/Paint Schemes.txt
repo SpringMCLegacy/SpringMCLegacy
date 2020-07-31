@@ -1,0 +1,45 @@
+Reference for Paint Schemes
+
+All factions will also get a "Teamcolour" scheme that allows them to cover the Mech in their teamcolour of choosing.
+
+CAPELLAN CONFEDERATION
+Default: Death Commandos (Black with green detailing)
+Alt 1: Prefectorate Guards (Dark red with black and gold detailing)
+Alt 2: House Imarra (Ivory with Liao green detailing)
+Alt 3: House Hiritsu (Liao green with black detailing)
+Alt 4: House Kamata (Ivory with red detailing)
+
+DRACONIS COMBINE
+Default: Sword of Light (Red)
+Alt 1: Benjamin Regulards (Tan with bronze detailing)
+Alt 2: Genyosha (Dark Grey with red detailing)
+Alt 3: Otomo (Black with ivory/iron detailing)
+Alt 4: Ghost Regiment (White with green detailing and snakeskin going from left leg, across back, to over right shoulder)
+
+FEDERATED SUNS
+Default: Davion Brigades (Red/White/Blue stripe) https://i.imgur.com/7CpNIxO.jpg
+Alt 1: Avalon Hussars (Light grey with green/blue detailing) 
+Alt 2: Ceti Hussars (Blue with red & light blue detailing)
+Alt 3: Crucis Lancers (Green drab with red/blue detailing)
+Alt 4: Capellan March Militia (Dark green with red detailing)
+
+FREE WORLDS LEAGUE
+Default: Free Worlds Guards (white  with purple detailing)
+Alt 1: Knights of the Inner Sphere (white with gold detailing)
+Alt 2: Marik Militia (Purple with red & blue detailing)
+Alt 3: Fusiliers of Oriente (Yellow-Green)
+Alt 4: Regular Hussars (Ochre/Dark orange with Tan detailing)
+
+LYRAN ALLIANCE
+Default: Lyran Guards (Blue with white on right side)
+Alt 1: Skye Jaegers (Half blue, half checkered white/blue)
+Alt 2: Lyran Regulars (Olive drab with pale yellow details)
+Alt 3: Royal Guards (Blue with yellow/gold on the outside?)
+Alt 4: Arcturan Guards (White with tigerstripe upper arms)
+
+CC: 
+DC: Shadow of Light 
+FS: 
+FW: Marik Militia
+LA:
+
