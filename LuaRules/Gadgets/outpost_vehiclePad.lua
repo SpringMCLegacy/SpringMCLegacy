@@ -291,7 +291,7 @@ function gadget:UnitDestroyed(unitID, unitDefID, teamID)
 end
 
 local function Wander(unitID, cmd)
-	if Spring.ValidUnitID(unitID) and not Spring.GetUnitIsDead(unitID) then
+	if Spring.ValidUnitID(unitID) and not Spring.GetUnitIsDead(unitID) and vehiclesDefCache[Spring.GetUnitDefID(unitID)] then
 		--Spring.Echo("Wander!", unitID, cmd)
 		local teamID = Spring.GetUnitTeam(unitID)
 		if select(3, Spring.GetTeamInfo(teamID)) then return false end -- team died

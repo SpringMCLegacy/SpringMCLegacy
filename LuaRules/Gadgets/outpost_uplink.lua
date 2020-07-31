@@ -69,13 +69,24 @@ local artyWeaponInfo = {
 
 local uplinkLevels = {} -- uplinkLevels[uplinkID] = 1, 2 or 3
 
-local ARTY_HEIGHT = 10000
-
+-- ARTY
 local ARTY_COST = 10000
-local AERO_COST = 10000
-local ASSAULT_COST = 10000
+local ARTY_HEIGHT = 10000
 local artyLastFired = {} -- artyLastFired[teamID] = gameFrame
 local artyCanFire = {} -- artyCanFire[teamID] = gameFrame
+
+-- AERO
+local AERO_COST = 1--0000
+local vicOffsets = {
+	[1] = {0, 0, 0},
+	[2] = {-150, 0, -150},
+	[3] = {150, 0, -150},
+}
+local spawnPoints = {} -- unitID = {x,y,z}
+local targetVics = {} -- targetID = {id1, id2, id3}
+
+-- ASSAULT
+local ASSAULT_COST = 10000
 
 -- Variables
 local artyCmdDesc = {
@@ -88,7 +99,7 @@ local artyCmdDesc = {
 }
 local aeroCmdDesc = {
 	id 		= GG.CustomCommands.GetCmdID("CMD_UPLINK_AERO", AERO_COST),
-	type	= CMDTYPE.ICON_MAP, -- UNIT_OR_MAP?
+	type	= CMDTYPE.ICON_UNIT,
 	name 	= GG.Pad("Aero","Sortie"),
 	action	= "uplink_aero",
 	tooltip = "C-Bill cost: " .. AERO_COST,
@@ -137,6 +148,18 @@ function gadget:UnitCreated(unitID, unitDefID, teamID, builderID)
 	end
 end
 
+function gadget:UnitDestroyed(unitID, unitDefID, teamID, builderID)
+	local vic = targetVics[unitID]
+	if vic then -- unit was the target of an aero attack, tell the team to bug out
+		-- can't assume all of them made it
+		for i = 1, #vic do
+			Spring.GiveOrderToUnit(vic[i], CMD.MOVE, spawnPoints[vic[i]], {})
+		end
+		targetVics[unitID] = nil
+	end
+	spawnPoints[unitID] = nil
+end
+
 local function ArtyShot(level, teamID, x,y,z)
 	local projParams = {}
 	projParams.gravity = -3 + math.random()
@@ -177,6 +200,42 @@ local function ArtyStrike(unitID, teamID, x, y, z)
 	return true
 end
 
+local function SpawnVic(teamID, targetID)
+	local facing = math.random(0,3)
+	local sx, sy, sz
+	if facing % 2 == 0 then -- N/S
+		sx = math.random(0, Game.mapSizeX)
+		sz = facing == 0 and 150 or Game.mapSizeZ - 150
+	else -- E/W
+		sz = math.random(0, Game.mapSizeZ)
+		sx = facing == 1 and 150 or Game.mapSizeX - 150
+	end
+	local side = GG.teamSide[teamID]
+	local vic = {}
+	for i = 1, 3 do
+		local ox, oy, oz = unpack(vicOffsets[i])
+		ox, oy, oz = GG.Vector.RotateY(ox, oy, oz, math.rad(facing * 90))
+		vic[i] = Spring.CreateUnit(side .. "_corsair", sx+ox, 500, sz+oz, facing, teamID)
+		spawnPoints[vic[i]] = {sx+ox, 500, sz+oz}
+		SendToUnsynced("TOGGLE_SELECT", vic[i], teamID, false)
+	end
+	targetVics[targetID] = vic
+	Spring.GiveOrderToUnitArray(vic, CMD.ATTACK, {targetID}, {})
+end
+
+local function AeroStrike(unitID, teamID, targetID)
+	local money = GetTeamResources(teamID, "metal")
+	if money < AERO_COST then
+		GG.PlaySoundForTeam(teamID, "BB_Insufficient_Funds", 1)
+		Spring.SendMessageToTeam(teamID, "Not enough C-Bills for aero fighter strike!")
+		return false 
+	end	
+	UseTeamResource(teamID, "metal", AERO_COST)
+	SpawnVic(teamID, targetID)
+	return true
+end
+
+
 local function AssaultStrike(unitID, teamID, tx, ty, tz)
 	local money = GetTeamResources(teamID, "metal")
 	if money < ASSAULT_COST then
@@ -189,13 +248,21 @@ local function AssaultStrike(unitID, teamID, tx, ty, tz)
 	return true
 end
 
-
+function gadget:UnitCmdDone(unitID, unitDefID, unitTeam, cmdID, cmdParams, cmdOpts, cmdTag)
+	if spawnPoints[unitID] then
+		if cmdID == CMD.MOVE then
+			DelayCall(DestroyUnit, {unitID, false, true}, 30 * 5) -- 5 seconds
+		end
+	end
+end
 
 function gadget:AllowCommand(unitID, unitDefID, teamID, cmdID, cmdParams, cmdOptions)
 	if unitDefID == UPLINK_ID then
 		if cmdID == artyCmdDesc.id then
 			local x,y,z = unpack(cmdParams)
 			return ArtyStrike(unitID, teamID, x, y, z)
+		elseif cmdID == aeroCmdDesc.id then
+			return AeroStrike(unitID, teamID, cmdParams[1])
 		elseif cmdID == assaultCmdDesc.id then
 			local x,y,z = unpack(cmdParams)
 			return AssaultStrike(unitID, teamID, x, y, z)

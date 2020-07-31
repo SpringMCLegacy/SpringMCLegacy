@@ -18,4 +18,6 @@ return {
 	Gauss		= 13,--8/ton
 	LtGauss		= 40,--16/ton
 	HvGauss		= 4,--4/ton
+	
+	Bomb		= 1,
 }

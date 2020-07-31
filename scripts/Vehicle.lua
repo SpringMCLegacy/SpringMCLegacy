@@ -606,7 +606,9 @@ function script.AimWeapon(weaponID, heading, pitch)
 	elseif flares[weaponID] then -- TODO: 'else' should be sufficient here
 		Turn(flares[weaponID], x_axis, -pitch, ELEVATION_SPEED)
 	end
-	WaitForTurn(piece(weaponProgenitors[weaponID]), y_axis)
+	if piece(weaponProgenitors[weaponID]) then -- ick
+		WaitForTurn(piece(weaponProgenitors[weaponID]), y_axis)
+	end
 	if mantlets[weaponID] then
 		WaitForTurn(mantlets[weaponID], x_axis)
 	end
@@ -677,7 +679,7 @@ function script.FireWeapon(weaponID)
 	if ammoType then
 		ChangeAmmo(ammoType, -burstLengths[weaponID])
 	end
-	if not missileWeaponIDs[weaponID] and not flareOnShots[weaponID] then
+	if not missileWeaponIDs[weaponID] and not flareOnShots[weaponID] and flares[weaponID] then
 		EmitSfx(flares[weaponID], SFX.CEG + weaponID)
 	end
 end
@@ -712,7 +714,7 @@ function script.QueryWeapon(weaponID)
 	if missileWeaponIDs[weaponID] then
 		return launchPoints[weaponID][currPoints[weaponID]]
 	else
-		return flares[weaponID] or turret
+		return flares[weaponID] or turret or piece("bomb")
 	end
 end
 

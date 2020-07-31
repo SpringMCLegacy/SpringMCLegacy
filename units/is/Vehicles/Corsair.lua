@@ -11,6 +11,7 @@ local Corsair = Aero:New{
 	wingAngle		= 0.1,
 	wingDrag		= 0.07,
 	myGravity		= 0.8,
+	radardistance	= 1500,
 	
 	weapons = {	
 		[1] = {
@@ -45,6 +46,9 @@ local Corsair = Aero:New{
 			name	= "ERSBL",
 			maxAngleDif = 35,
 		},
+		[9] = {
+			name	= "Bomb",
+		}
 	},
 	
 	customparams = {
@@ -55,9 +59,13 @@ local Corsair = Aero:New{
 		heatlimit 		= 32,
 		armor			= {type = "standard", tons = 13.5},
 		squadsize 		= 2,
+		maxammo 		= {bomb = 5},
     },
 }
 
-return lowerkeys({ 
-	["FS_Corsair"] = Corsair:New{},
-})
+
+aeros = {}
+for i, sideName in pairs(Sides) do
+	aeros[sideName .. "_corsair"] = Corsair:New{}
+end
+return lowerkeys(aeros)
