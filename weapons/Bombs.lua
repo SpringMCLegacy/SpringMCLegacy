@@ -6,15 +6,16 @@ local Bomb = BombClass:New{
 
 -- PTAB "Antitank Aviation Bomb" (RUS)
 local PTAB = BombClass:New{
-	--[[areaOfEffect			= 240,
+	areaOfEffect			= 240,
 	burst					= 36,
 	burstrate				= 0.1,
+	weaponType				= "Cannon",
 	turret					= true,
 	tolerance				= 5000,
 	edgeEffectiveness		= 0.5,
-	explosionGenerator		= "custom:HE_large", -- overrides default]]
+	explosionGenerator		= "custom:HE_large",
 	model					= "Weapons/ArrowIV.s3o",
-	--[[weaponVelocity			= 200,
+	weaponVelocity			= 200,
 	leadlimit				= 100,
 	name					= "Bombs",
 	range					= 500,
@@ -25,7 +26,7 @@ local PTAB = BombClass:New{
 	},
 	damage = {
 		default            = 2000,
-	},]]
+	},
 }
 
   

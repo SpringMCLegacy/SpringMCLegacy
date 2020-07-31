@@ -76,7 +76,7 @@ local artyLastFired = {} -- artyLastFired[teamID] = gameFrame
 local artyCanFire = {} -- artyCanFire[teamID] = gameFrame
 
 -- AERO
-local AERO_COST = 1--0000
+local AERO_COST = 8000
 local vicOffsets = {
 	[1] = {0, 0, 0},
 	[2] = {-150, 0, -150},
@@ -86,7 +86,7 @@ local spawnPoints = {} -- unitID = {x,y,z}
 local targetVics = {} -- targetID = {id1, id2, id3}
 
 -- ASSAULT
-local ASSAULT_COST = 10000
+local ASSAULT_COST = 12500
 
 -- Variables
 local artyCmdDesc = {
@@ -168,7 +168,7 @@ local function ArtyShot(level, teamID, x,y,z)
 	GG.PlaySoundForTeam(teamID, artyWeaponInfo[level].sound, 1)
 end
 
-local function ArtyStrike(unitID, teamID, x, y, z)
+local function ArtyStrike(unitID, teamID, x, y, z, cost)
 	local canFireFrame = artyCanFire[teamID]
 	local currFrame = GetGameFrame()
 	local weapInfo = artyWeaponInfo[uplinkLevels[unitID]]
@@ -178,12 +178,12 @@ local function ArtyStrike(unitID, teamID, x, y, z)
 		return false
 	end
 	local money = GetTeamResources(teamID, "metal")
-	if money < ARTY_COST then  -- not enough C-Bills (TODO: Should never get this far, button disabled by unit_purchasing.lua?)
+	if money < cost then  -- not enough C-Bills (TODO: Should never get this far, button disabled by unit_purchasing.lua?)
 		GG.PlaySoundForTeam(teamID, "BB_Insufficient_Funds", 1)
 		Spring.SendMessageToTeam(teamID, "Not enough C-Bills for artillery strike!")
 		return false 
 	end
-	UseTeamResource(teamID, "metal", ARTY_COST)
+	UseTeamResource(teamID, "metal", cost)
 	artyCanFire[teamID] = currFrame + weapInfo.cooldown
 	SetTeamRulesParam(teamID, "UPLINK_ARTILLERY", currFrame + weapInfo.cooldown) -- frame this team can fire arty again
 	local dx, dz
@@ -223,27 +223,27 @@ local function SpawnVic(teamID, targetID)
 	Spring.GiveOrderToUnitArray(vic, CMD.ATTACK, {targetID}, {})
 end
 
-local function AeroStrike(unitID, teamID, targetID)
+local function AeroStrike(unitID, teamID, targetID, cost)
 	local money = GetTeamResources(teamID, "metal")
-	if money < AERO_COST then
+	if money < cost then
 		GG.PlaySoundForTeam(teamID, "BB_Insufficient_Funds", 1)
 		Spring.SendMessageToTeam(teamID, "Not enough C-Bills for aero fighter strike!")
 		return false 
 	end	
-	UseTeamResource(teamID, "metal", AERO_COST)
+	UseTeamResource(teamID, "metal", cost)
 	SpawnVic(teamID, targetID)
 	return true
 end
 
 
-local function AssaultStrike(unitID, teamID, tx, ty, tz)
+local function AssaultStrike(unitID, teamID, tx, ty, tz, cost)
 	local money = GetTeamResources(teamID, "metal")
-	if money < ASSAULT_COST then
+	if money < cost then
 		GG.PlaySoundForTeam(teamID, "BB_Insufficient_Funds", 1)
 		Spring.SendMessageToTeam(teamID, "Not enough C-Bills for assault dropship strike!")
 		return false 
 	end	
-	UseTeamResource(teamID, "metal", ASSAULT_COST)
+	UseTeamResource(teamID, "metal", cost)
 	local avenger = Spring.CreateUnit("is_avenger", tx, ty, tz, "s", teamID)
 	return true
 end
@@ -260,7 +260,7 @@ function gadget:AllowCommand(unitID, unitDefID, teamID, cmdID, cmdParams, cmdOpt
 	if unitDefID == UPLINK_ID then
 		if cmdID == artyCmdDesc.id then
 			local x,y,z = unpack(cmdParams)
-			return ArtyStrike(unitID, teamID, x, y, z)
+			return ArtyStrike(unitID, teamID, x, y, z, Spring.IsNoCostEnabled() and 0 or ARTY_COST)
 		elseif cmdID == aeroCmdDesc.id then
 			local targetID = cmdParams[1]
 			local targetTeam = Spring.GetUnitTeam(targetID)
@@ -268,10 +268,10 @@ function gadget:AllowCommand(unitID, unitDefID, teamID, cmdID, cmdParams, cmdOpt
 			if Spring.AreTeamsAllied(teamID, targetTeam) or targetTeam == GAIA_TEAM_ID or targetDef.modCategories["beacon"] then
 				return false
 			end
-			return AeroStrike(unitID, teamID, cmdParams[1])
+			return AeroStrike(unitID, teamID, cmdParams[1], Spring.IsNoCostEnabled() and 0 or AERO_COST)
 		elseif cmdID == assaultCmdDesc.id then
 			local x,y,z = unpack(cmdParams)
-			return AssaultStrike(unitID, teamID, x, y, z)
+			return AssaultStrike(unitID, teamID, x, y, z, Spring.IsNoCostEnabled() and 0 or ASSAULT_COST)
 		end
 	elseif unitDefID == MECHBAY_ID then
 		if cmdID == getOutCmdDesc.id then
