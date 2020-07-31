@@ -21,6 +21,7 @@ local Outpost_Dropzone = Outpost:New{
 	footprintX			= footPrint,
 	footprintZ 			= footPrint,
 	yardMap				= yardMapString,
+	levelGround			= false,
 
 	-- Constructor stuff
 	builder				= true,

@@ -262,6 +262,12 @@ function gadget:AllowCommand(unitID, unitDefID, teamID, cmdID, cmdParams, cmdOpt
 			local x,y,z = unpack(cmdParams)
 			return ArtyStrike(unitID, teamID, x, y, z)
 		elseif cmdID == aeroCmdDesc.id then
+			local targetID = cmdParams[1]
+			local targetTeam = Spring.GetUnitTeam(targetID)
+			local targetDef = UnitDefs[Spring.GetUnitDefID(targetID)]
+			if Spring.AreTeamsAllied(teamID, targetTeam) or targetTeam == GAIA_TEAM_ID or targetDef.modCategories["beacon"] then
+				return false
+			end
 			return AeroStrike(unitID, teamID, cmdParams[1])
 		elseif cmdID == assaultCmdDesc.id then
 			local x,y,z = unpack(cmdParams)
