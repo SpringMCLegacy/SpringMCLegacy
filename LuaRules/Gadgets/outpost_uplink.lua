@@ -153,7 +153,9 @@ function gadget:UnitDestroyed(unitID, unitDefID, teamID, builderID)
 	if vic then -- unit was the target of an aero attack, tell the team to bug out
 		-- can't assume all of them made it
 		for i = 1, #vic do
-			Spring.GiveOrderToUnit(vic[i], CMD.MOVE, spawnPoints[vic[i]], {})
+			if Spring.ValidUnitID(vic[i]) and not Spring.GetUnitIsDead(vic[i]) then
+				Spring.GiveOrderToUnit(vic[i], CMD.MOVE, spawnPoints[vic[i]], {})
+			end
 		end
 		targetVics[unitID] = nil
 	end
