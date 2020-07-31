@@ -4,19 +4,19 @@ local Turret_AC2 = Tower:New{
 
 	weapons = {	
 		[1] = {
-			name	= "AC2",
+			name	= "AC2_AA",
 			OnlyTargetCategory = "notbeacon",
 		},
 		[2] = {
-			name	= "AC2",
+			name	= "AC2_AA",
 			OnlyTargetCategory = "notbeacon",
 		},
 		[3] = {
-			name	= "AC2",
+			name	= "AC2_AA",
 			OnlyTargetCategory = "notbeacon",
 		},
 		[4] = {
-			name	= "AC2",
+			name	= "AC2_AA",
 			OnlyTargetCategory = "notbeacon",
 		},
 	},

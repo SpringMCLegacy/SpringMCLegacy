@@ -102,6 +102,25 @@ local LBX2_Cluster = LBX2:New(LBX_Class):New{
 	},
 }
 
+local AC2_AA = AC2:New{
+	name                    = "AC/2 Flak",
+	explosionGenerator    	= "custom:HE_Flak",
+	burnblow				= true, 	--Bullets explode at range limit.
+	impactOnly 				= false,
+	--accuracy                = 25,
+	soundHit              	= "GEN_Explode_Flak",
+	weaponVelocity          = 4000,
+	areaOfEffect      		= 200,
+	explosionSpeed			= 1000,
+	collisionSize			= 15,
+	edgeEffectiveness		= 25,
+	reloadtime              = 0.5,
+	damage = {
+		default = 25,--20, --50 DPS
+		vtol	= 40,--40,
+	},
+}
+
 -- AC5 & Variants
 local AC5 = AC_Class:New{
 	name                    = "AC/5",
@@ -356,6 +375,7 @@ return lowerkeys({
 	UAC2 = UAC2,
 	LBX2 = LBX2,
 	LBX2_Cluster = LBX2_Cluster,
+	AC2_AA = AC2_AA,
 	-- AC5 & Variants
 	AC5 = AC5,
 	AC5_AA = AC5_AA,

@@ -2,6 +2,12 @@
 
 local Bomb = BombClass:New{
 	model					= "Weapons/ArrowIV.s3o",
+	sprayangle				= 300,
+	areaOfEffect			= 240,
+	damage = {
+		default            = 3000,
+	},
+}
 }
 
 -- PTAB "Antitank Aviation Bomb" (RUS)
@@ -25,7 +31,7 @@ local PTAB = BombClass:New{
 
 	},
 	damage = {
-		default            = 5000,
+		default            = 1000,
 	},
 }
 
