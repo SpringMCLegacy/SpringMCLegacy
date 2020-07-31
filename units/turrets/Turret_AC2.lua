@@ -23,9 +23,11 @@ local Turret_AC2 = Tower:New{
 	customparams = {
 		helptext		= "A defensive turret for beacons.",
 		barrelrecoildist = {2, 2, 2, 2},
-		turretturnspeed = 250,
-		elevationspeed  = 300,
+		maxammo 		= {ac2 = 2},
+		turretturnspeed = 450,
+		elevationspeed  = 500,
 		chainfiredelays = {[2] = 100, [3] = 200, [4] = 300},
+		turrettype = "turret",
     },
 	sounds = {
 		select = "Turret",
@@ -33,5 +35,5 @@ local Turret_AC2 = Tower:New{
 }
 
 return lowerkeys({
-	--["Turret_AC2"] = Turret_AC2,
+	["Turret_AC2"] = Turret_AC2,
 })

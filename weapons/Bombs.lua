@@ -15,7 +15,7 @@ local PTAB = BombClass:New{
 	edgeEffectiveness		= 0.5,
 	explosionGenerator		= "custom:HE_large",
 	model					= "Weapons/ArrowIV.s3o",
-	weaponVelocity			= 200,
+	weaponVelocity			= 600,
 	leadlimit				= 100,
 	name					= "Bombs",
 	range					= 500,
@@ -25,7 +25,7 @@ local PTAB = BombClass:New{
 
 	},
 	damage = {
-		default            = 2000,
+		default            = 5000,
 	},
 }
 

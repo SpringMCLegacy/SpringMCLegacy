@@ -34,12 +34,12 @@ local sidedata = {
 		shortName = "FW",
 		startUnit = "beacon",
 	},
-	{
+--[[	{
 		name = "Clan Wolf - TEST ONLY",
 		shortName = "WF",
 		startUnit = "beacon",
 	},
---[[	{
+	{
 		name = "Clan Hells Horses",
 		shortName = "HH",
 		startUnit = "beacon",
