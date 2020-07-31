@@ -8,7 +8,6 @@ local Bomb = BombClass:New{
 		default            = 3000,
 	},
 }
-}
 
 -- PTAB "Antitank Aviation Bomb" (RUS)
 local PTAB = BombClass:New{
