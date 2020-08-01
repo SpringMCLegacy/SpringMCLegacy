@@ -3,7 +3,6 @@ local Outpost_Garrison = Outpost:New{
 	description         = "Deploys a fortified outpost to prevent beacon capture",
 	maxDamage           = 20000,
 	mass                = 10000,
-	collisionVolumeScales = [[50 50 50]],
 	buildCostMetal      = 10520,
 
 	-- Constructor stuff

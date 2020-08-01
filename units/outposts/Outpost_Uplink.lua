@@ -5,8 +5,6 @@ local Outpost_Uplink = Outpost:New{
 	mass                = 5000,
 	buildCostMetal      = 8300,
 
-	collisionVolumeScales = [[25 25 25]],
-
 	-- Constructor stuff
 	builder				= true,
 	builddistance 		= 1000000,

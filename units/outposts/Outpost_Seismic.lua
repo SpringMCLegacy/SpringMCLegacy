@@ -5,8 +5,6 @@ local Outpost_Seismic = Outpost:New{
 	mass                = 5000,
 	buildCostMetal      = 5350,
 
-	collisionVolumeScales = [[25 25 25]],
-
 	seismicdistance 	= 5000,
 	
 	customparams = {

@@ -5,8 +5,6 @@ local Outpost_TurretControl = Outpost:New{
 	mass                = 5000,
 	buildCostMetal      = 6600,
 
-	collisionVolumeScales = [[25 25 25]],
-
 	-- Constructor stuff
 	builder				= true,
 	builddistance 		= 1000,
