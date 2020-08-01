@@ -164,7 +164,7 @@ local IS_Avenger = {
 			maxAngleDif = 90,
 		},
 		[22] = {
-			name 	= "ptab",
+			name 	= "bomb",
 		},
 		[23] = {
 			name 	= "sight",

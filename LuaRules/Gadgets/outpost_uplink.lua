@@ -247,6 +247,7 @@ local function AssaultStrike(unitID, teamID, tx, ty, tz, cost)
 	end	
 	UseTeamResource(teamID, "metal", cost)
 	local avenger = Spring.CreateUnit("is_avenger", tx, ty, tz, "s", teamID)
+	SendToUnsynced("TOGGLE_SELECT", avenger, teamID, false)
 	return true
 end
 
