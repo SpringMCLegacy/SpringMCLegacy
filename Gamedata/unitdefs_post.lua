@@ -370,8 +370,14 @@ for name, ud in pairs(UnitDefs) do
 						weapon.onlytargetcategory = "ground"
 					end
 					cpwheelspeed = ud.maxvelocity * 166
+				--elseif cp.baseclass == tower then
+				--	if not weapon.onlytargetcategory then
+				--		weapon.onlytargetcategory = "notbeacon"
+				--	end
 				end
-				weapon.onlytargetcategory = (weapon.onlytargetcategory or "") .. " notbeacon"
+				if not weapon.onlytargetcategory == "air" then -- anti-aircraft weapons don't get "notbeacon" forced into onlytargetcategory
+					weapon.onlytargetcategory = (weapon.onlytargetcategory or "") .. " notbeacon"
+				end
 				weapon.badtargetcategory = (weapon.badtargetcategory or "") .. " dropship structure"
 			end
 		end

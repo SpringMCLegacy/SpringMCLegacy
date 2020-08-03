@@ -117,6 +117,7 @@ local legs = {}
 local breaks = {}
 local exhausts = {}
 local extend = piece("extend")
+local sam = piece("missile_1")
 for i = 1, 6 do
 	legs[i] = piece("leg_" .. i)
 	breaks[i] = piece("break_" .. i)
@@ -163,7 +164,7 @@ function fx()
 		Sleep(1000)
 		PlaySound("turret_deploy")
 		for i = 1,#legs do
-			if extend then
+			if extend or sam then
 				Turn(legs[i], x_axis, math.rad(90), SPEED)
 			else
 				local axis = (i % 2 == 0 and z_axis) or x_axis -- even use z, odd use x
@@ -172,7 +173,7 @@ function fx()
 			end
 		end
 		WaitForTurn(legs[4], z_axis)
-		if not extend then
+		if not extend and not sam then
 			for i = 1,#legs do
 				local axis = (i % 2 == 0 and z_axis) or x_axis -- even use z, odd use x
 				local dir = (i == 1 or i == 4) and -1 or 1
@@ -212,6 +213,11 @@ function script.Create()
 	end
 	if extend then
 		Move(barrels[1], z_axis, -10)
+		for i = 1, #exhausts do
+			Turn(exhausts[i], y_axis, math.rad(-60 * (i-1)-30))
+			Turn(legs[i], y_axis, math.rad(-60 * (i-1)-30))
+		end
+	elseif sam then
 		for i = 1, #exhausts do
 			Turn(exhausts[i], y_axis, math.rad(-60 * (i-1)-30))
 			Turn(legs[i], y_axis, math.rad(-60 * (i-1)-30))

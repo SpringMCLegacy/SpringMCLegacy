@@ -55,6 +55,7 @@ local ArrowIV_Guided = ArrowIV:New{
 
 local ADArrow = ArrowIV:New{
 	name                    = "Air Defense Arrow Missile",
+	canAttackGround 		= false,
 	wobble					= 0,
 	accuracy                = 100,
 	flightTime				= 10,
