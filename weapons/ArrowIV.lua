@@ -53,7 +53,23 @@ local ArrowIV_Guided = ArrowIV:New{
     },
 }
 
+local ADArrow = ArrowIV:New{
+	name                    = "Air Defense Arrow Missile",
+	wobble					= 0,
+	accuracy                = 100,
+	flightTime				= 10,
+	weaponTimer				= 10,
+	burnblow				= true,
+	trajectoryHeight		= 1,
+	tracks					= true,
+	turnRate				= 7000,	
+	startVelocity			= 100,
+	weaponAcceleration 		= 700,
+	weaponVelocity          = 1500,
+}
+
 return lowerkeys({ 
 	ArrowIV = ArrowIV,
 	ArrowIV_Guided = ArrowIV_Guided,
+	ADArrow = ADArrow,
 	})

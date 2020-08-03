@@ -4,7 +4,7 @@ return {
 	InfSRM		= 2,--1/ton
 	ATM			= 80,--20/ton
 	MRM			= 96,--24/ton
-	Arrow		= 5,--5/ton
+	Arrow		= 6,--5/ton
 	Narc		= 12,--6/ton
 	MML			= 132,--33-40/ton
 
