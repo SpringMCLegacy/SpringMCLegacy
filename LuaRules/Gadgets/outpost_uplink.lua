@@ -70,13 +70,13 @@ local artyWeaponInfo = {
 local uplinkLevels = {} -- uplinkLevels[uplinkID] = 1, 2 or 3
 
 -- ARTY
-local ARTY_COST = 10000
+local ARTY_COST = 8000
 local ARTY_HEIGHT = 10000
 local artyLastFired = {} -- artyLastFired[teamID] = gameFrame
 local artyCanFire = {} -- artyCanFire[teamID] = gameFrame
 
 -- AERO
-local AERO_COST = 8000
+local AERO_COST = 16000
 local vicOffsets = {
 	[1] = {0, 0, 0},
 	[2] = {-150, 0, -150},
@@ -86,7 +86,7 @@ local spawnPoints = {} -- unitID = {x,y,z}
 local targetVics = {} -- targetID = {id1, id2, id3}
 
 -- ASSAULT
-local ASSAULT_COST = 12500
+local ASSAULT_COST = 36000
 
 -- Variables
 local artyCmdDesc = {

@@ -289,7 +289,7 @@ return {
 		end,
 		costFunction = deductXP,
 	},
-	-- Outpost Upgrades
+	-- Dropship Upgrades
 	{
 		name = "union",
 		cmdDesc = {
@@ -297,7 +297,7 @@ return {
 			action = 'perkdropshipupgradeunion',
 			name = GG.Pad("Union", "Dropship"),
 			tooltip = 'Unlocks Heavy & Assault mechs. Increases Tonnage Limit',
-			texture = 'bitmaps/ui/upgrade.png',	
+			texture = 'unitpics/Dropship_Union.png',	
 		},
 		valid = function (unitDefID) return UnitDefs[unitDefID].name:find("dropzone") end,
 		applyPerk = function (unitID)
@@ -305,7 +305,7 @@ return {
 			GG.DropZoneUpgrade(teamID)
 		end,
 		costFunction = deductCBills,
-		price = 39620,
+		price = 1,--39620,
 	},
 	{
 		name = "overlord",
@@ -314,7 +314,7 @@ return {
 			action = 'perkdropshipupgradeoverlord',
 			name = GG.Pad("Overlord", "Dropship"),
 			tooltip = 'Further Increases Tonnage Limit',
-			texture = 'bitmaps/ui/upgrade.png',
+			texture = 'unitpics/Dropship_Overlord.png',
 		},
 		valid = function (unitDefID) return UnitDefs[unitDefID].name:find("dropzone") end,
 		applyPerk = function (unitID)
@@ -322,7 +322,7 @@ return {
 			GG.DropZoneUpgrade(teamID)
 		end,
 		costFunction = deductCBills,
-		price = 47020,
+		price = 1,--47020,
 		requires = "union",
 	},
 	-- vehicle pad
@@ -340,7 +340,7 @@ return {
 			GG.PadUpgrade(unitID, 2)
 		end,
 		costFunction = deductCBills,
-		price = 10000,
+		price = 8000,
 	},
 	{
 		name = "vpadhouse",
@@ -356,7 +356,7 @@ return {
 			GG.PadUpgrade(unitID, 3)
 		end,
 		costFunction = deductCBills,
-		price = 10000,
+		price = 12000,
 		requires = "vpadheavy",
 	},
 	-- hover pad
@@ -374,7 +374,7 @@ return {
 			GG.PadUpgrade(unitID, 2)
 		end,
 		costFunction = deductCBills,
-		price = 10000,
+		price = 7000,
 	},
 	{
 		name = "hpad3",
@@ -410,7 +410,7 @@ return {
 			Spring.SetUnitArmored(unitID, true, 0.8)
 		end,
 		costFunction = deductCBills,
-		price = 8000,
+		price = 6000,
 	},
 	{
 		name = "garrisonfaction",
@@ -430,7 +430,7 @@ return {
 			Spring.SetUnitArmored(unitID, true, 2)
 		end,
 		costFunction = deductCBills,
-		price = 10000,
+		price = 12000,
 		requires = "garrisonlaser",
 	},
 	-- Uplink
@@ -441,14 +441,14 @@ return {
 			action = 'perkuplink_2',
 			name = GG.Pad("Aero", "Sortie"),
 			tooltip = 'Unlock Aero fighter sorties',
-			texture = 'bitmaps/ui/upgrade.png',	
+			texture = 'unitpics/Sortie_Attack.png',	
 		},
 		valid = function (unitDefID) return UnitDefs[unitDefID].name == "outpost_uplink" end,
 		applyPerk = function (unitID)
 			GG.UplinkUpgrade(unitID, 2)
 		end,
 		costFunction = deductCBills,
-		price = 8000,
+		price = 35000,
 	},
 	{
 		name = "uplink_3",
@@ -457,14 +457,14 @@ return {
 			action = 'perkuplink_3',
 			name = GG.Pad("Assault", "Dropship"),
 			tooltip = 'Unlock Assault dropship attack run',
-			texture = 'bitmaps/ui/upgrade.png',	
+			texture = 'unitpics/Dropship_Avenger.png',	
 		},
 		valid = function (unitDefID) return UnitDefs[unitDefID].name == "outpost_uplink" end,
 		applyPerk = function (unitID)
 			GG.UplinkUpgrade(unitID, 3)
 		end,
 		costFunction = deductCBills,
-		price = 8000,
+		price = 52000,
 		requires = "uplink_2",
 	},
 	-- Turret Control
@@ -482,7 +482,7 @@ return {
 			GG.LimitTowerType(unitID, Spring.GetUnitTeam(unitID), "energy", 2)
 		end,
 		costFunction = deductCBills,
-		price = 8000,
+		price = 6000,
 	},
 	{
 		name = "turretcontrol_3",
@@ -498,7 +498,7 @@ return {
 			GG.LimitTowerType(unitID, Spring.GetUnitTeam(unitID), "ranged", 2)
 		end,
 		costFunction = deductCBills,
-		price = 8000,
+		price = 12000,
 		requires = "turretcontrol_2",
 	},
 	-- Seismic Sensor
