@@ -375,7 +375,7 @@ for name, ud in pairs(UnitDefs) do
 				--		weapon.onlytargetcategory = "notbeacon"
 				--	end
 				end
-				if not weapon.onlytargetcategory == "air" then -- anti-aircraft weapons don't get "notbeacon" forced into onlytargetcategory
+				if weapon.onlytargetcategory ~= "air" then 
 					weapon.onlytargetcategory = (weapon.onlytargetcategory or "") .. " notbeacon"
 				end
 				weapon.badtargetcategory = (weapon.badtargetcategory or "") .. " dropship structure"
