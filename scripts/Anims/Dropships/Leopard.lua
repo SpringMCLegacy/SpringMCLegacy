@@ -25,15 +25,15 @@ function TurretOut(out)
 	Signal(1)
 	Turn(turrets[1], y_axis, 0, TURRET_SPEED)
 	WaitForTurn(turrets[1], y_axis)
-	Move(turrets[1], y_axis, out and 7 or 0, 5)
+	Move(turrets[1], y_axis, out and 7 or 0, 10)
 	WaitForMove(turrets[1], y_axis)
 	noFiring = not out
 end
 
 function LandingGearDown()
-	Move(gears[1].gear, y_axis, -20, 3)
+	Move(gears[1].gear, y_axis, -20, 20)
 	for i = 2, 3 do
-		Move(gears[i].gear, y_axis, -9, 1)
+		Move(gears[i].gear, y_axis, -9, 10)
 	end
 	Turn(gears[1].gear, x_axis, math.rad(9), math.rad(3))
 	WaitForMove(gears[1].gear, y_axis)
@@ -290,7 +290,7 @@ function Drop()
 	Spring.MoveCtrl.SetRelativeVelocity(unitID, 0, 0, 10)
 	Spring.MoveCtrl.SetGravity(unitID, -3.78 * GRAVITY)
 	local x, y, z = Spring.GetUnitPosition(unitID)
-	local HOVER_HEIGHT = 300
+	local HOVER_HEIGHT = 200
 	while y - TY > 150 + HOVER_HEIGHT do
 		x, y, z = Spring.GetUnitPosition(unitID)
 		local newAngle = math.atan2(x - TX, z - TZ)
@@ -307,14 +307,14 @@ function Drop()
 	PlaySound("dropship_rumble")
 	-- Descent complete, move over the target
 	StartThread(LandingGearDown)
-	Turn(body, x_axis, 0, math.rad(3.5))
+	Turn(body, x_axis, 0, math.rad(10)) --was 3.5
 	Spring.MoveCtrl.SetVelocity(unitID, 0, 0, 0)
 	Spring.MoveCtrl.SetGravity(unitID, 0)
 	local dist = GetUnitDistanceToPoint(unitID, TX, 0, TZ, false) -- 2D distance
 	while dist > 10 do
 		dist = GetUnitDistanceToPoint(unitID, TX, 0, TZ, false)
 		--Spring.Echo("dist", dist)
-		Spring.MoveCtrl.SetRelativeVelocity(unitID, 0, 0, math.max(dist/50, 4))
+		Spring.MoveCtrl.SetRelativeVelocity(unitID, 0, 0, math.max(dist/200, 4)) -- was 50
 		Sleep(30)
 	end
 	-- only proceed if the beacon is still ours --and is secure

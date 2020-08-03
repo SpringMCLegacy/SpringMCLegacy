@@ -6,45 +6,45 @@ local Union = DropShip:New{
 	weapons 		= {	
 		-- LBLs
 		[1] = {
-			name	= "LBL",
+			name	= "LPL",
 			mainDir = "0 0 1",
 			maxAngleDif = 90,
 		},
 		[2] = {
-			name	= "LBL",
+			name	= "LPL",
 			mainDir = "0 0 1",
 			maxAngleDif = 90,
 			slaveTo = 1,
 		},
 		[3] = {
-			name	= "LBL",
+			name	= "LPL",
 			mainDir = "-1 0 0",
 			maxAngleDif = 90,
 		},
 		[4] = {
-			name	= "LBL",
+			name	= "LPL",
 			mainDir = "-1 0 0",
 			maxAngleDif = 90,
 			slaveTo = 3,
 		},
 		[5] = {
-			name	= "LBL",
+			name	= "LPL",
 			mainDir = "0 0 -1",
 			maxAngleDif = 90,
 		},
 		[6] = {
-			name	= "LBL",
+			name	= "LPL",
 			mainDir = "0 0 -1",
 			maxAngleDif = 90,
 			slaveTo = 5,
 		},
 		[7] = {
-			name	= "LBL",
+			name	= "LPL",
 			mainDir = "1 0 0",
 			maxAngleDif = 90,
 		},
 		[8] = {
-			name	= "LBL",
+			name	= "LPL",
 			mainDir = "1 0 0",
 			maxAngleDif = 90,
 			slaveTo = 7,
@@ -180,6 +180,7 @@ local Leopard = DropShip:New{
 	maxDamage			= 20000,
 
 	weapons 		= {	
+		-- turret
 		[1] = {
 			name	= "PPC",
 			maxAngleDif = 280,
@@ -187,23 +188,81 @@ local Leopard = DropShip:New{
 		[2] = {
 			name	= "PPC",
 			maxAngleDif = 280,
+			SlaveTo = 1,
 		},
 		[3] = {
 			name	= "LBL",
 			maxAngleDif = 280,
+			SlaveTo = 1,
 		},
 		[4] = {
 			name	= "LBL",
 			maxAngleDif = 280,
+			SlaveTo = 1,
 		},
+		-- nose
 		[5] = {
+			name	= "LBL",
+			maxAngleDif = 45,
+		},
+		[6] = {
+			name	= "MBL",
+			maxAngleDif = 45,
+		},
+		[7] = {
+			name	= "MBL",
+			maxAngleDif = 45,
+		},
+		-- right wing
+		[8] = {
+			name	= "LBL",
+			maxAngleDif = 45,
+		},
+		[9] = {
+			name	= "ERMBL",
+			maxAngleDif = 45,
+		},
+		--left wing
+		[10] = {
+			name	= "LBL",
+			maxAngleDif = 45,
+		},
+		[11] = {
+			name	= "ERMBL",
+			maxAngleDif = 45,
+		},
+		--rear
+		[12] = {
+			name	= "MBL",
+			mainDir = "0 0 -1",
+			maxAngleDif = 45,
+		},
+		[13] = {
+			name	= "MBL",
+			mainDir = "0 0 -1",
+			maxAngleDif = 45,
+		},
+		--lrms
+		[14] = {
 			name	= "LRM20",
-			maxAngleDif = 60,
+			mainDir = "0 0 1",
+			maxAngleDif = 45,
+		},
+		[15] = {
+			name	= "LRM20",
+			mainDir = "0 0 1",
+			maxAngleDif = 45,
+		},
+		[16] = { -- turret
+			name	= "LRM20",
+			mainDir = "0 0 1",
+			maxAngleDif = 280,
+			SlaveTo = 1,
 		},
 	},
 		
 	customparams = {
-		radialdist		= 2500,
+		radialdist		= 4000,
 		maxtonnage		= 150,
 		cooldown		= 20 * 30,
 		-- droptime
