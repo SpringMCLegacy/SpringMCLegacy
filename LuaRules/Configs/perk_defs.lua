@@ -305,7 +305,7 @@ return {
 			GG.DropZoneUpgrade(teamID)
 		end,
 		costFunction = deductCBills,
-		price = 1,--39620,
+		price = 39620,
 	},
 	{
 		name = "overlord",
@@ -322,7 +322,7 @@ return {
 			GG.DropZoneUpgrade(teamID)
 		end,
 		costFunction = deductCBills,
-		price = 1,--47020,
+		price = 47020,
 		requires = "union",
 	},
 	-- vehicle pad

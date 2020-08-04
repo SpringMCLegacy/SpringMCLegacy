@@ -262,7 +262,7 @@ local Leopard = DropShip:New{
 	},
 		
 	customparams = {
-		radialdist		= 4000,
+		radialdist		= 3000,
 		maxtonnage		= 150,
 		cooldown		= 20 * 30,
 		-- droptime
