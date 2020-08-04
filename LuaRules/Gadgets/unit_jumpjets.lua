@@ -183,13 +183,13 @@ local function Jump(unitID, goal, cmdTag)
   local fakeUnitID
   local unitDefID     = spGetUnitDefID(unitID)
   local jumpDef       = jumpers[unitDefID]
-  local speed         = Spring.GetUnitRulesParam(unitID, "jumpSpeed") or 6
-  local delay    	  = 30 --jumpDef.delay
+  local speed         = Spring.GetUnitRulesParam(unitID, "jumpSpeed") or 10
+  local delay    	  = 30 --jumpDef.delay, how long unit stays crouched after anim_PreJump, change to 10 for PERKIFY
   local height        = jumpDef.height
   local reloadTime    = (Spring.GetUnitRulesParam(unitID, "jumpReload") or (BASE_RELOAD))*30
   local teamID        = spGetUnitTeam(unitID)
   
-  local rotateMidAir  = false --jumpDef.rotateMidAir
+  local rotateMidAir  = true --jumpDef.rotateMidAir Should be true for Perk to remove need to turn and face direction
   local cob 	 	  = false --jumpDef.cobscript
   local env
 
@@ -471,7 +471,7 @@ function gadget:CommandFallback(unitID, unitDefID, teamID, cmdID, cmdParams, cmd
 	if (distSqr < (range*range)) then -- we are within jumping range
 		-- Extra FLOZi code
 		local dx, dz = cmdParams[1] - x, cmdParams[3] - z
-		local MINIMUM_TURN = 10 * 182
+		local MINIMUM_TURN = 10 * 182 -- How off-angle can mech be to still initiate a jump, Change to 360 for PERKIFY
 		local newHeading = math.deg(math.atan2(dx, dz)) * 182 -- COB_ANGULAR	
 		local currHeading = Spring.GetUnitCOBValue(unitID, COB.HEADING)
 		local deltaHeading = newHeading - currHeading
