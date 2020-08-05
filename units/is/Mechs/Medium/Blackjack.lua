@@ -153,7 +153,7 @@ local BJ2OP = Blackjack:New{
 
 
 return lowerkeys({
-	["FS_Blackjack_BJ2"] = BJ2:New(),
+	--["FS_Blackjack_BJ2"] = BJ2:New(),
 	["CC_Blackjack_BJ3"] = BJ3:New(),
 	["FS_Blackjack_BJ4"] = BJ4:New(),
 	--["DC_Blackjack_BJ2OP"] = BJ2OP:New(),

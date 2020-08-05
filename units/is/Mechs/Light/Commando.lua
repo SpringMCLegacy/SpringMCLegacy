@@ -78,7 +78,7 @@ local COM7S = Commando:New{
 	customparams = {
 		variant         = "COM-7S",
 		speed			= 90,
-		price			= 6580,
+		price			= 5580,--6580
 		heatlimit 		= 20,
 		armor			= {type = "standard", tons = 3.5},
 		maxammo 		= {srm = 2},
@@ -86,7 +86,7 @@ local COM7S = Commando:New{
 }
 
 return lowerkeys({
-	["LA_Commando_COM3A"] = COM3A:New(),
+	--["LA_Commando_COM3A"] = COM3A:New(),
 	--["LA_Commando_COM5S"] = COM5S:New(),
-	--["LA_Commando_COM7S"] = COM7S:New(),
+	["LA_Commando_COM7S"] = COM7S:New(),
 })

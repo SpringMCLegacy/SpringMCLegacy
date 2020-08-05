@@ -33,5 +33,5 @@ local STO4A = Stiletto:New{
 }
 
 return lowerkeys({
-	["LA_Stiletto_STO4A"] = STO4A:New(),
+	--["LA_Stiletto_STO4A"] = STO4A:New(),
 })
