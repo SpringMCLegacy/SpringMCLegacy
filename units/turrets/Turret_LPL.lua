@@ -1,6 +1,7 @@
 local Turret_LPL = Tower:New{
 	description         = "Quad Large Pulse Laser",
 	buildCostMetal      = 3500,
+	maxDamage           = 2500,
 
 	weapons = {	
 		[1] = {

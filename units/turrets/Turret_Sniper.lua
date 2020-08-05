@@ -1,6 +1,7 @@
 local Turret_Sniper = Tower:New{
 	description         = "Sniper Artillery",
 	buildCostMetal      = 9700,
+	maxDamage           = 2500,
 	footprintX			= 5,
 	footprintZ 			= 5,
 

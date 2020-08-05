@@ -1,6 +1,7 @@
 local Turret_Arrow = Tower:New{
 	description         = "Air Defense Arrow",
 	buildCostMetal      = 7300,
+	maxDamage           = 2000,
 	footprintX			= 5,
 	footprintZ 			= 5,
 

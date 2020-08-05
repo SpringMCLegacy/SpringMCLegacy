@@ -1,6 +1,7 @@
 local Turret_AC20 = Tower:New{
 	description         = "Ultra Autocannon/20",
 	buildCostMetal      = 4200,
+	maxDamage           = 2000,
 
 	weapons	= {	
 		[1] = {

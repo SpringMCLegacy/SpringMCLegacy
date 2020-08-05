@@ -1,6 +1,7 @@
 local Turret_AC2 = Tower:New{
 	description         = "Quad AC/2",
 	buildCostMetal      = 2200,
+	maxDamage           = 1500,
 
 	weapons = {	
 		[1] = {

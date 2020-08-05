@@ -1,6 +1,7 @@
 local Turret_PPC = Tower:New{
 	description         = "Dual PPC",
 	buildCostMetal      = 3500,
+	maxDamage           = 2000,
 
 	weapons = {	
 		[1] = {
