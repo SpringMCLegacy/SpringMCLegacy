@@ -77,6 +77,7 @@ return {
 			Spring.SetUnitRulesParam(unitID, "heatLimit", env.heatLimit)
 		end,
 		costFunction = deductXP,
+		levels = 3,
 	},
 	{
 		name = "sensorrange",
@@ -101,6 +102,7 @@ return {
 			end
 		end,
 		costFunction = deductXP,
+		levels = 3,
 	},
 	-- Ability modifiers
 	{
@@ -119,6 +121,7 @@ return {
 			Spring.SetUnitRulesParam(unitID, "NARC_DURATION", currDuration * PCENT_INC)
 		end,
 		costFunction = deductXP,
+		levels = 3,
 	},
 	{
 		name = "jumpjetefficiency",
@@ -140,6 +143,7 @@ return {
 			Spring.SetUnitRulesParam(unitID, "jumpReload", currReload * PCENT_DEC)
 		end,
 		costFunction = deductXP,
+		levels = 3,
 	},
 	{
 		name = "mascefficiency",
@@ -157,6 +161,7 @@ return {
 			env.mascHeatRate = env.mascHeatRate * PCENT_DEC
 		end,
 		costFunction = deductXP,
+		levels = 3,
 	},
 	{
 		name = "amsrange",
@@ -173,6 +178,7 @@ return {
 			setWeaponClassAttribute(unitID, "ams", "range", PCENT_INC)
 		end,
 		costFunction = deductXP,
+		levels = 3,
 	},
 	{
 		name = "ecmrange",
@@ -191,6 +197,7 @@ return {
 			GG.allyJammers[Spring.GetUnitAllyTeam(unitID)][unitID] = currECM * PCENT_INC
 		end,
 		costFunction = deductXP,
+		levels = 3,
 	},
 	{
 		name = "insulation",
@@ -207,6 +214,7 @@ return {
 			Spring.SetUnitRulesParam(unitID, "insulation", PCENT_DEC)
 		end,
 		costFunction = deductXP,
+		levels = 3,
 	},
 	-- Weapon (Faction) specific
 	{
@@ -224,6 +232,7 @@ return {
 			setWeaponClassAttribute(unitID, "lrm", "range", PCENT_INC)
 		end,
 		costFunction = deductXP,
+		levels = 3,
 	},
 	{
 		name = "mrmrange",
@@ -240,6 +249,7 @@ return {
 			setWeaponClassAttribute(unitID, "mrm", "range", PCENT_INC)
 		end,
 		costFunction = deductXP,
+		levels = 3,
 	},
 	{
 		name = "ppcrange",
@@ -256,6 +266,7 @@ return {
 			setWeaponClassAttribute(unitID, "ppc", "range", PCENT_INC)
 		end,
 		costFunction = deductXP,
+		levels = 3,
 	},
 	{
 		name = "autocannonrange",
@@ -272,6 +283,7 @@ return {
 			setWeaponClassAttribute(unitID, "autocannon", "range", PCENT_INC)
 		end,
 		costFunction = deductXP,
+		levels = 3,
 	},
 	{
 		name = "gaussrange",
@@ -288,6 +300,7 @@ return {
 			setWeaponClassAttribute(unitID, "gauss", "range", PCENT_INC)
 		end,
 		costFunction = deductXP,
+		levels = 3,
 	},
 	-- Dropship Upgrades
 	{

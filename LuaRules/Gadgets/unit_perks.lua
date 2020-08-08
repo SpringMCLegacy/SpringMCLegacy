@@ -28,7 +28,7 @@ local SetUnitExperience		= Spring.SetUnitExperience
 -- Unsynced Ctrl
 
 -- Constants
-local PERK_XP_COST = 1.5
+local PERK_XP_COST = 1.0 -- 1.5
 
 -- function for toggling weapon status via gui
 local CMD_WEAPON_TOGGLE = GG.CustomCommands.GetCmdID("CMD_WEAPON_TOGGLE")
@@ -60,7 +60,9 @@ local function UpdateRemaining(unitID, newLevel, price)
 	-- disable perks here
 	local perkRemaining = false
 	for perkCmdID, perkDef in pairs(perkDefs) do
-		if not currentPerks[unitID][perkDef.name] and validPerks[Spring.GetUnitDefID(unitID)][perkCmdID] then
+		if (not currentPerks[unitID][perkDef.name] 
+		or currentPerks[unitID][perkDef.name] < (perkDef.levels or 1)) 
+		and validPerks[Spring.GetUnitDefID(unitID)][perkCmdID] then
 			perkRemaining = true
 			if (not newLevel) or not (price or perkDef.price) then
 				Spring.Echo("ERROR: unit_perks:", newLevel, price, perkDef.price, UnitDefs[Spring.GetUnitDefID(unitID)].name)
@@ -136,11 +138,19 @@ function gadget:AllowCommand(unitID, unitDefID, teamID, cmdID, cmdParams, cmdOpt
 		local cp = ud.customParams
 		-- check that this unit can receive this perk (can be issued the order due to multiple units selected)
 		-- ... and that it doesn't already have it
-		if validPerks[unitDefID][cmdID] and not currentPerks[unitID][cmdID] then
+		if validPerks[unitDefID][cmdID] then --and not (currentPerks[unitID][cmdID] or 0) == (perkDef.levels or 1) then
 			if perkDef.requires and not currentPerks[unitID][perkDef.requires] then return false end
+			local level = currentPerks[unitID][perkDef.name] or 0
+			if level == (perkDef.levels or 1) then return false end -- in case it was issued when multiple were selected
+			level = level + 1
+			currentPerks[unitID][perkDef.name] = level -- TODO: shouldn't be needed?
+			Spring.Echo("applyperk", level)
 			perkDef.applyPerk(unitID)
-			EditUnitCmdDesc(unitID, FindUnitCmdDesc(unitID, cmdID), {name = perkDef.cmdDesc.name .."\n  (Trained)", disabled = true})
-			currentPerks[unitID][perkDef.name] = true
+			if level == (perkDef.levels or 1) then -- fully trained
+				EditUnitCmdDesc(unitID, FindUnitCmdDesc(unitID, cmdID), {name = perkDef.cmdDesc.name .."\n  (Trained)", disabled = true})
+			else
+				EditUnitCmdDesc(unitID, FindUnitCmdDesc(unitID, cmdID), {name = perkDef.cmdDesc.name .. "\n     (" .. level .. " of " .. perkDef.levels .. ")"})
+			end
 			-- deduct 'cost' of perk
 			perkDef.costFunction(unitID, perkDef.price or PERK_XP_COST)
 			UpdateUnitPerks(unitID, perkUnits[unitID]) -- update perks here too to prevent pause cheating
