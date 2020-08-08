@@ -61,10 +61,10 @@ local options = {
 		name	= "Perk Effect %",
 		desc	= "% To increase/decrease by when perking attributes",
 		type	= "number",
-		def		= 15,
+		def		= 5,
 		min		= 1,
 		max		= 100,
-		step	= 5,
+		step	= 1,
 		section	= "devtools",
 	},
 	{
