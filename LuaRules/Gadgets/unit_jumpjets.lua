@@ -120,6 +120,11 @@ local jumpCmdDesc = {
   action  = 'jump',
   tooltip = 'Jump to selected position.',
 }
+local blankCmdDesc = {
+  id      = GG.CustomCommands.GetCmdID("CMD_BLANK"),
+  type    = CMDTYPE.ICON,
+  tooltip = 'This space intentionally left blank',
+}
 
 --------------------------------------------------------------------------------
 --------------------------------------------------------------------------------
@@ -402,6 +407,10 @@ end
 
 function gadget:UnitCreated(unitID, unitDefID, unitTeam)
   if (not jumpers[unitDefID]) then
+	if GG.mechCache[unitDefID] then
+		Spring.Echo("add a blank!")
+		spInsertUnitCmdDesc(unitID, blankCmdDesc)
+	end
     return
   end 
   local t = spGetGameSeconds()

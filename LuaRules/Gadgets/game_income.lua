@@ -83,9 +83,9 @@ end
 
 function gadget:UnitCreated(unitID, unitDefID, teamID)
 	if GG.mechCache[unitDefID] then
-		InsertUnitCmdDesc(unitID, sellOrderCmdDesc)
+		--InsertUnitCmdDesc(unitID, sellOrderCmdDesc)
 	elseif GG.outpostDefs[unitDefID] then -- an outpost
-		InsertUnitCmdDesc(unitID, sellOrderCmdDesc)
+		--InsertUnitCmdDesc(unitID, sellOrderCmdDesc)
 	end
 end
 

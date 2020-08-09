@@ -386,6 +386,15 @@ function gadget:UnitCreated(unitID, unitDefID, teamID, builderID)
 				Spring.RemoveUnitCmdDesc(unitID, cmdDescID)
 			end
 		end		
+	else -- remove Wait, Repeat from mechs
+		local toRemove = {CMD.WAIT, CMD.REPEAT}
+		for _, cmdID in pairs(toRemove) do
+			local cmdDescID = Spring.FindUnitCmdDesc(unitID, cmdID)
+			if cmdDescID then
+				Spring.RemoveUnitCmdDesc(unitID, cmdDescID)
+			end
+		end		
+		
 	end
 end
 
