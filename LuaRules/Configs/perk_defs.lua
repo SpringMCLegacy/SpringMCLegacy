@@ -127,6 +127,29 @@ return {
 		costFunction = deductXP,
 		levels = 3,
 	},
+	{
+		name = "peakcondition",
+		cmdDesc = {
+			id = GetCmdID('PERK_PEAK_CONDITION'),
+			action = 'perkpeakcondition',
+			name = GG.Pad("Peak", "Condition"),
+			tooltip = '+' .. EFFECT .. '% turn rate and acceleration',
+			texture = 'bitmaps/ui/perkbgability.png',	
+		},
+		valid = allMechs,
+		applyPerk = function (unitID, level) 
+			GG.SetUnitTurnRate(unitID, PCENT_INC)
+			local ud = UnitDefs[Spring.GetUnitDefID(unitID)]
+			local values = {
+				turnRate		= ud.turnRate * PCENT_INC ^ level,
+				accRate			= ud.maxAcc * PCENT_INC ^ level,
+				decRate			= ud.maxDec * PCENT_INC ^ level,
+			}
+			Spring.MoveCtrl.SetGroundMoveTypeData(unitID, values)
+		end,
+		costFunction = deductXP,
+		levels = 3,
+	},
 	--[[ Generic
 	{
 		name = "heatefficiency",

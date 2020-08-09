@@ -253,7 +253,7 @@ function widget:DrawWorld()
 			for i=1,#units do
 				local unitID = units[i]
 				if GetUnitDefID(unitID) then
-					DrawFieldOfFire(unitID, info[1], Spring.GetUnitRulesParam(unitID, "sectorradius") or RADAR)
+					DrawFieldOfFire(unitID, info[1], (Spring.GetUnitRulesParam(unitID, "sectorradius") or RADAR) - 50)
 				end
 			end
 		end

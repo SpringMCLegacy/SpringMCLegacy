@@ -38,10 +38,16 @@ if (gadgetHandler:IsSyncedCode()) then
 -- SYNCED
 local DelayCall = GG.Delay.DelayCall
 
+local unitTurnRates = {} -- unitID = turnRate
+
+local function SetUnitTurnRate(unitID, mult)
+	unitTurnRates[unitID] = unitTurnRates[unitID] * mult
+end
+GG.SetUnitTurnRate = SetUnitTurnRate
 
 local function StartTurn(unitID, unitDefID, tx, tz)
 	local ud = UnitDefs[unitDefID]
-	local turnRate = ud.turnRate
+	local turnRate = unitTurnRates[unitID]
 	local ux, uy, uz = GetUnitPosition(unitID)
 	local dx, dz = tx - ux, tz - uz
 
@@ -114,6 +120,7 @@ end
 function gadget:UnitCreated(unitID, unitDefID, unitTeam, builderID)
 	local ud = UnitDefs[unitDefID]
 	if ud.customParams.hasturnbutton then
+		unitTurnRates[unitID] = ud.turnRate
 		Spring.InsertUnitCmdDesc(unitID, 500, turnCmdDesc)
 	end
 end

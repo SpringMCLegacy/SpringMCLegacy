@@ -28,7 +28,7 @@ local SetUnitExperience		= Spring.SetUnitExperience
 -- Unsynced Ctrl
 
 -- Constants
-local PERK_XP_COST = 0.1--.0 -- 1.5
+local PERK_XP_COST = 1.0 -- 1.5
 
 -- function for toggling weapon status via gui
 local CMD_WEAPON_TOGGLE = GG.CustomCommands.GetCmdID("CMD_WEAPON_TOGGLE")
@@ -144,8 +144,7 @@ function gadget:AllowCommand(unitID, unitDefID, teamID, cmdID, cmdParams, cmdOpt
 			if level == (perkDef.levels or 1) then return false end -- in case it was issued when multiple were selected
 			level = level + 1
 			currentPerks[unitID][perkDef.name] = level -- TODO: shouldn't be needed?
-			Spring.Echo("applyperk", level)
-			perkDef.applyPerk(unitID)
+			perkDef.applyPerk(unitID, level)
 			if level == (perkDef.levels or 1) then -- fully trained
 				local complete = perkDef.price and "Applied" or "Trained" 
 				EditUnitCmdDesc(unitID, FindUnitCmdDesc(unitID, cmdID), {name = perkDef.cmdDesc.name .."\n  (" .. complete .. ")", disabled = true})
