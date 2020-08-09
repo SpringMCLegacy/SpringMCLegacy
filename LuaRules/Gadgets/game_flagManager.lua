@@ -57,6 +57,7 @@ local BEACON_ID = UnitDefNames["beacon"].id
 
 -- variables
 
+local unitCapStrengths = {} -- unitCapStrengths[unitID] = number or 1
 local unitDefsToIgnore = {}
 local flagTypes = {"beacon"}
 local flags = {} -- flags[flagType][index] == flagUnitID
@@ -114,6 +115,11 @@ if (gadgetHandler:IsSyncedCode()) then
 -- SYNCED
 
 local DelayCall = GG.Delay.DelayCall
+
+local function SetUnitCapStrength(unitID, mult)
+	unitCapStrengths[unitID] = unitCapStrengths[unitID] * mult
+end
+GG.SetUnitCapStrength = SetUnitCapStrength
 
 function UpdateBeacons(teamID, num)
 	if teamID == GAIA_TEAM_ID then return end -- Gaia does not have tickets
@@ -325,9 +331,9 @@ function gadget:GameFrame(n)
 				
 				for i, unitID in ipairs(unitsAtFlag) do
 					local teamID = Spring.GetUnitTeam(unitID)
-					flagTeamCounts[teamID] = (flagTeamCounts[teamID] or 0) + 1
+					flagTeamCounts[teamID] = (flagTeamCounts[teamID] or 0) + unitCapStrengths[unitID]
 					local allyTeamID = select(6, Spring.GetTeamInfo(teamID))
-					flagAllyTeamCounts[allyTeamID] = (flagAllyTeamCounts[allyTeamID] or 0) + 1
+					flagAllyTeamCounts[allyTeamID] = (flagAllyTeamCounts[allyTeamID] or 0) + unitCapStrengths[unitID]
 				end
 				if flagAllyTeamCounts[flagAllyTeam] or 0 > 0 then -- flag is defended, reduce all cap status
 					FlagCapRegen(flagID, flagTeamID, -REGEN)
@@ -351,7 +357,7 @@ function gadget:GameFrame(n)
 								cappingTeam = teamID
 							end
 						end
-						FlagCapChange(flagID, flagTeamID, cappingAllyTeam, cappingTeam, 1)
+						FlagCapChange(flagID, flagTeamID, cappingAllyTeam, cappingTeam, maxCount)
 						-- TODO: if equal then go for team with fewest beacons
 						-- TODO: if equal pick first unit in list
 					elseif numberOfAllyTeamsAtFlag > 1 then -- flag is contested, pause cap status
@@ -391,6 +397,7 @@ function gadget:UnitCreated(unitID, unitDefID, unitTeam, builderID)
 	local cp = ud.customParams
 	if cp.baseclass == "mech" then
 		teamUnitCounts[unitTeam] = teamUnitCounts[unitTeam] + 1
+		unitCapStrengths[unitID] = 1
 	end
 	if unitDefID == BEACON_ID and unitTeam ~= GAIA_TEAM_ID then
 		local x,_, z = Spring.GetUnitPosition(unitID)

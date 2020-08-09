@@ -128,6 +128,22 @@ return {
 		levels = 3,
 	},
 	{
+		name = "kingofthehill",
+		cmdDesc = {
+			id = GetCmdID('PERK_KING_OF_THE_HILL'),
+			action = 'perkkindofthehill',
+			name = GG.Pad("King of", "The Hill"),
+			tooltip = '+' .. EFFECT .. '% beacon capture rate',
+			texture = 'bitmaps/ui/perkbg.png',	
+		},
+		valid = allMechs,
+		applyPerk = function (unitID) 
+			GG.SetUnitCapStrength(unitID, PCENT_INC)
+		end,
+		costFunction = deductXP,
+		levels = 3,
+	},
+	{
 		name = "peakcondition",
 		cmdDesc = {
 			id = GetCmdID('PERK_PEAK_CONDITION'),
