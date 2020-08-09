@@ -2,7 +2,8 @@
 local GetCmdID = GG.CustomCommands.GetCmdID
 
 local modOptions = Spring.GetModOptions()
-local EFFECT = modOptions and modOptions.perkeffect or 50
+
+local EFFECT = modOptions and modOptions.perkeffect or 5
 local PCENT_INC = (100+EFFECT)/100
 local PCENT_DEC = (100-EFFECT)/100
 
@@ -34,7 +35,7 @@ end
 local function setWeaponClassAttribute(unitID, className, attrib, multiplier)
 	local weapons = UnitDefs[Spring.GetUnitDefID(unitID)].weapons
 	for weapNum, weapTable in pairs(weapons) do
-		if WeaponDefs[weapTable["weaponDef"]].customParams["weaponclass"] == className then
+		if className == "all" or (WeaponDefs[weapTable["weaponDef"]].customParams["weaponclass"] == className) then
 			local currAttrib = Spring.GetUnitWeaponState(unitID, weapNum, attrib)
 			--Spring.Echo("Current " .. attrib .. ": ", currAttrib, weapNum, WeaponDefs[weapTable["weaponDef"]].name)
 			Spring.SetUnitWeaponState(unitID, weapNum, attrib, currAttrib * multiplier)
@@ -58,7 +59,59 @@ local function deductCBills(unitID, amount)
 end
 
 return {
-	-- Generic
+	-- Weapon
+	{
+		name = "deadshot",
+		cmdDesc = {
+			id = GetCmdID('PERK_DEAD_SHOT'),
+			action = 'perkdeadshot',
+			name = GG.Pad("Dead", "Shot"),
+			tooltip = '+' .. EFFECT .. '% weapon accuracy',
+			texture = 'bitmaps/ui/perkbg.png',	
+		},
+		valid = allMechs,
+		applyPerk = function (unitID) 
+			setWeaponClassAttribute(unitID, "all", "accuracy", PCENT_INC)
+		end,
+		costFunction = deductXP,
+		levels = 3,
+	},
+	{
+		name = "triggerfinger",
+		cmdDesc = {
+			id = GetCmdID('PERK_TRIGGER_FINGER'),
+			action = 'perktriggerfinger',
+			name = GG.Pad("Trigger", "Finger"),
+			tooltip = '+' .. EFFECT .. '% weapon rate of fire',
+			texture = 'bitmaps/ui/perkbg.png',	
+		},
+		valid = allMechs,
+		applyPerk = function (unitID) 
+			setWeaponClassAttribute(unitID, "all", "reloadTime", PCENT_DEC)
+		end,
+		costFunction = deductXP,
+		levels = 3,
+	},
+	{
+		name = "firediscipline",
+		cmdDesc = {
+			id = GetCmdID('PERK_FIRE_DISCIPLINE'),
+			action = 'perkfirediscipline',
+			name = GG.Pad("Fire", "Discipline"),
+			tooltip = '-' .. EFFECT .. '% weapon heat generation',
+			texture = 'bitmaps/ui/perkbg.png',	
+		},
+		valid = allMechs,
+		applyPerk = function (unitID) 
+			env = Spring.UnitScript.GetScriptEnv(unitID)
+			for i = 1, env.numWeapons do
+				env.firingHeats[i] = env.firingHeats[i] * PCENT_DEC
+			end
+		end,
+		costFunction = deductXP,
+		levels = 3,
+	},
+	--[[ Generic
 	{
 		name = "heatefficiency",
 		cmdDesc = {
@@ -301,7 +354,7 @@ return {
 		end,
 		costFunction = deductXP,
 		levels = 3,
-	},
+	},]]
 	-- Dropship Upgrades
 	{
 		name = "union",

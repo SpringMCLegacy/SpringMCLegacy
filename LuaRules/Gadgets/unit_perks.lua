@@ -28,7 +28,7 @@ local SetUnitExperience		= Spring.SetUnitExperience
 -- Unsynced Ctrl
 
 -- Constants
-local PERK_XP_COST = 1.0 -- 1.5
+local PERK_XP_COST = 0.1--.0 -- 1.5
 
 -- function for toggling weapon status via gui
 local CMD_WEAPON_TOGGLE = GG.CustomCommands.GetCmdID("CMD_WEAPON_TOGGLE")
@@ -147,9 +147,11 @@ function gadget:AllowCommand(unitID, unitDefID, teamID, cmdID, cmdParams, cmdOpt
 			Spring.Echo("applyperk", level)
 			perkDef.applyPerk(unitID)
 			if level == (perkDef.levels or 1) then -- fully trained
-				EditUnitCmdDesc(unitID, FindUnitCmdDesc(unitID, cmdID), {name = perkDef.cmdDesc.name .."\n  (Trained)", disabled = true})
+				local complete = perkDef.price and "Applied" or "Trained" 
+				EditUnitCmdDesc(unitID, FindUnitCmdDesc(unitID, cmdID), {name = perkDef.cmdDesc.name .."\n  (" .. complete .. ")", disabled = true})
 			else
-				EditUnitCmdDesc(unitID, FindUnitCmdDesc(unitID, cmdID), {name = perkDef.cmdDesc.name .. "\n     (" .. level .. " of " .. perkDef.levels .. ")"})
+				local nameString = GG.Pad(perkDef.cmdDesc.name, "(" .. level .. " of " .. perkDef.levels ..")")
+				EditUnitCmdDesc(unitID, FindUnitCmdDesc(unitID, cmdID), {name = nameString})--perkDef.cmdDesc.name .. "\n     (" .. level .. " of " .. perkDef.levels .. ")"})
 			end
 			-- deduct 'cost' of perk
 			perkDef.costFunction(unitID, perkDef.price or PERK_XP_COST)

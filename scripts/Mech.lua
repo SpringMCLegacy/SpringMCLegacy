@@ -31,19 +31,20 @@ include ("anims/" .. unitDef.name:sub(4, (unitDef.name:find("_", 4) or 0) - 1) .
 heatLimit = info.heatLimit
 baseCoolRate = info.coolRate
 mascHeatRate = 0.1
+firingHeats = info.firingHeats
+numWeapons = info.numWeapons - 1 -- remove sight
+
 local coolRate = baseCoolRate
 local inWater = false
 local activated = true
 local mascActive = false
 
-local numWeapons = info.numWeapons - 1 -- remove sight
 local missileWeaponIDs = info.missileWeaponIDs
 local flareOnShots = info.flareOnShots
 local jammableIDs = info.jammableIDs
 local launcherIDs = info.launcherIDs
 local barrelRecoils = info.barrelRecoilDist
 local burstLengths = info.burstLengths
-local firingHeats = info.firingHeats
 local ammoTypes = info.ammoTypes
 local minRanges = info.minRanges
 local spinSpeeds = info.spinSpeeds
