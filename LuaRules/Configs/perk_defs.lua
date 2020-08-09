@@ -144,6 +144,23 @@ return {
 		levels = 3,
 	},
 	{
+		name = "Womble",
+		cmdDesc = {
+			id = GetCmdID('PERK_WOMBLE'),
+			action = 'perkwomble',
+			name = GG.Pad("Womble"),
+			tooltip = '+1 salvage per kill',
+			texture = 'bitmaps/ui/perkbg.png',	
+		},
+		valid = allMechs,
+		applyPerk = function (unitID) 
+			--GG.SetUnitSalvageGlean(unitID, 1)
+		end,
+		costFunction = deductXP,
+		levels = 3,
+		requires = "nonsenseputheretodisableituntilitisuseful",
+	},
+	{
 		name = "peakcondition",
 		cmdDesc = {
 			id = GetCmdID('PERK_PEAK_CONDITION'),
