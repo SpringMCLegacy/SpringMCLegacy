@@ -150,6 +150,22 @@ return {
 		costFunction = deductXP,
 		levels = 3,
 	},
+	{
+		name = "parkour",
+		cmdDesc = {
+			id = GetCmdID('PERK_PARKOUR'),
+			action = 'perkparkour',
+			name = GG.Pad("Parkour!"),
+			tooltip = '-1/10th second to jump start delay',
+			texture = 'bitmaps/ui/perkbgability.png',	
+		},
+		valid = hasJumpjets,
+		applyPerk = function (unitID) 
+			GG.SetUnitJumpDelay(unitID, -10)
+		end,
+		costFunction = deductXP,
+		levels = 3,
+	},
 	--[[ Generic
 	{
 		name = "heatefficiency",

@@ -97,6 +97,7 @@ local jumps       = {}
 local jumping     = {}
 local goalSet	  = {}
 
+local unitJumpDelays = {} -- unitID = delayTime
 --------------------------------------------------------------------------------
 --------------------------------------------------------------------------------
 
@@ -176,6 +177,11 @@ local function ReloadQueue(unitID, queue, cmdTag)
   
 end
 
+local function SetUnitJumpDelay(unitID, delta)
+	unitJumpDelays[unitID] = unitJumpDelays[unitID] + delta
+end
+GG.SetUnitJumpDelay = SetUnitJumpDelay
+
 local function Jump(unitID, goal, cmdTag)
   goal[2]             = spGetGroundHeight(goal[1],goal[3])
   local start         = {spGetUnitBasePosition(unitID)}
@@ -184,7 +190,7 @@ local function Jump(unitID, goal, cmdTag)
   local unitDefID     = spGetUnitDefID(unitID)
   local jumpDef       = jumpers[unitDefID]
   local speed         = Spring.GetUnitRulesParam(unitID, "jumpSpeed") or 10
-  local delay    	  = 30 --jumpDef.delay, how long unit stays crouched after anim_PreJump, change to 10 for PERKIFY
+  local delay    	  = unitJumpDelays[unitID] --how long unit stays crouched after anim_PreJump
   local height        = jumpDef.height
   local reloadTime    = (Spring.GetUnitRulesParam(unitID, "jumpReload") or (BASE_RELOAD))*30
   local teamID        = spGetUnitTeam(unitID)
@@ -377,6 +383,7 @@ function gadget:UnitCreated(unitID, unitDefID, unitTeam)
   end 
   local t = spGetGameSeconds()
   lastJump[unitID] = t - BASE_RELOAD
+  unitJumpDelays[unitID] = 40
   spInsertUnitCmdDesc(unitID, jumpCmdDesc)
   spSetUnitRulesParam(unitID,"jump_reload_bar",100)
   spSetUnitRulesParam(unitID,"jumpReload", BASE_RELOAD)
