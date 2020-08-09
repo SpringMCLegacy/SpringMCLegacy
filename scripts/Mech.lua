@@ -422,11 +422,11 @@ function limbHPControl(limb, damage)
 end
 GG.limbHPControl = limbHPControl
 
-function script.HitByWeapon(x, z, weaponID, damage)
+function script.HitByWeapon(x, z, weaponID, damage, piece)
 	local wd = WeaponDefs[weaponID]
 	local heatDamage = wd and wd.customParams.heatdamage or 0
 	ChangeHeat(heatDamage)
-	local hitPiece = GetUnitLastAttackedPiece(unitID) or ""
+	local hitPiece = piece or GetUnitLastAttackedPiece(unitID) or ""
 	if hitPiece == "torso" or hitPiece == "pelvis" or hitPiece == "" then 
 		return damage
 	elseif hitPiece == "lupperleg" or hitPiece == "llowerleg" then
@@ -475,7 +475,7 @@ function StopJump()
 	jumping = false
 	local x,y,z = GetUnitPosition(unitID)
 	SpawnCEG("mech_jump_dust", x,y,z)
-	Spring.SpawnExplosion(x,y,z, 0,0,0, {weaponDef = WeaponDefNames["dfa"].id, owner = unitID,  damageAreaOfEffect = unitDef.customParams.tonnage * 10, explosionSpeed = 100})
+	Spring.SpawnExplosion(x,y,z, 0,0,0, {weaponDef = WeaponDefNames["dfa"].id, owner = unitID,  damageAreaOfEffect = unitDef.customParams.tonnage, explosionSpeed = 100})
 	StartThread(anim_StopJump)
 end
 

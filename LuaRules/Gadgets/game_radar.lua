@@ -17,6 +17,7 @@ if (gadgetHandler:IsSyncedCode()) then
 local DelayCall = GG.Delay.DelayCall
 local SetUnitRulesParam	= Spring.SetUnitRulesParam
 -- Synced Read
+local AreTeamsAllied 	= Spring.AreTeamsAllied
 local GetGameFrame 		= Spring.GetGameFrame
 local GetTeamInfo		= Spring.GetTeamInfo
 local GetUnitIsActive 	= Spring.GetUnitIsActive
@@ -202,11 +203,13 @@ function gadget:UnitPreDamaged(unitID, unitDefID, unitTeam, damage, paralyzer, w
 	if not attackerID then return damage end
 	-- DFA
 	if weaponID == DFA_ID then
-		if attackerID == unitID then return 0 end -- don't deal self damage via the engine
+		if attackerID == unitID or AreTeamsAllied(attackerTeam, unitTeam) then return 0 end -- don't deal self damage via the engine
 		local attackerDef = UnitDefs[attackerDefID]
-		local tonnage = tonumber(attackerDef.customParams.tonnage)
-		--Spring.Echo("Death From Above!", attackerID, damage, damage * tonnage * 10)
-		return damage * tonnage * 100
+		local applied = damage * attackerDef.health * 0.1 -- 10% of max HP
+		local env = Spring.UnitScript.GetScriptEnv(attackerID)
+		Spring.UnitScript.CallAsUnit(attackerID, env.script.HitByWeapon, 0, 0, DFA_ID, applied/2, "llowerleg")
+		Spring.UnitScript.CallAsUnit(attackerID, env.script.HitByWeapon, 0, 0, DFA_ID, applied/2, "rlowerleg")
+		return applied
 	-- NARCs
 	elseif weaponID == NARC_ID then
 		-- Don't allow dropships to be NARCed
