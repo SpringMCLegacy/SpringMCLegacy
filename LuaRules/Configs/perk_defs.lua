@@ -67,7 +67,7 @@ return {
 			action = 'perkdeadshot',
 			name = GG.Pad("Dead", "Shot"),
 			tooltip = '+' .. EFFECT .. '% weapon accuracy',
-			texture = 'bitmaps/ui/perkbgfaction.png',	
+			texture = 'bitmaps/ui/perkred.png',	
 		},
 		valid = allMechs,
 		applyPerk = function (unitID) 
@@ -83,7 +83,7 @@ return {
 			action = 'perktriggerfinger',
 			name = GG.Pad("Trigger", "Finger"),
 			tooltip = '+' .. EFFECT .. '% weapon rate of fire',
-			texture = 'bitmaps/ui/perkbgfaction.png',	
+			texture = 'bitmaps/ui/perkred.png',	
 		},
 		valid = allMechs,
 		applyPerk = function (unitID) 
@@ -99,7 +99,7 @@ return {
 			action = 'perkfirediscipline',
 			name = GG.Pad("Fire", "Discipline"),
 			tooltip = '-' .. EFFECT .. '% weapon heat generation',
-			texture = 'bitmaps/ui/perkbgfaction.png',	
+			texture = 'bitmaps/ui/perkred.png',	
 		},
 		valid = allMechs,
 		applyPerk = function (unitID) 
@@ -178,6 +178,22 @@ return {
 		valid = hasJumpjets,
 		applyPerk = function (unitID) 
 			GG.SetUnitJumpDelay(unitID, -10)
+		end,
+		costFunction = deductXP,
+		levels = 3,
+	},
+	{
+		name = "cannonball",
+		cmdDesc = {
+			id = GetCmdID('PERK_CANNONBALL'),
+			action = 'perkcannonball',
+			name = GG.Pad("Cannonball"),
+			tooltip = '+' .. EFFECT .. '% Death From Above attack damage',
+			texture = 'bitmaps/ui/perkbgability.png',	
+		},
+		valid = hasJumpjets,
+		applyPerk = function (unitID) 
+			GG.SetUnitDFADamage(unitID, PCENT_INC)
 		end,
 		costFunction = deductXP,
 		levels = 3,

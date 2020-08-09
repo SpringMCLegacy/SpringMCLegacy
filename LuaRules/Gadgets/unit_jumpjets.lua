@@ -51,6 +51,7 @@ local random = math.random
 
 local CMD_STOP = CMD.STOP
 
+local AreTeamsAllied 	= Spring.AreTeamsAllied
 local spGetHeadingFromVector = Spring.GetHeadingFromVector
 local spGetUnitBasePosition  = Spring.GetUnitBasePosition
 local spInsertUnitCmdDesc  = Spring.InsertUnitCmdDesc
@@ -81,6 +82,7 @@ local jumpers = {} -- jumpers[unitDefID] = {range = number, height = number, spe
 local BASE_RELOAD = 10
 local BASE_RANGE = 600
 local BASE_HEIGHT = BASE_RANGE / 3
+local DFA_ID = WeaponDefNames["dfa"].id
 
 local mcSetRotationVelocity = MoveCtrl.SetRotationVelocity
 local mcSetPosition         = MoveCtrl.SetPosition
@@ -98,6 +100,7 @@ local jumping     = {}
 local goalSet	  = {}
 
 local unitJumpDelays = {} -- unitID = delayTime
+local unitDFADamages = {} -- unitID = mult
 --------------------------------------------------------------------------------
 --------------------------------------------------------------------------------
 
@@ -356,10 +359,30 @@ local function UpdateCoroutines()
   end
 end
 
+local function SetUnitDFADamage(unitID, mult)
+	unitDFADamages[unitID] = unitDFADamages[unitID] * mult
+end
+GG.SetUnitDFADamage = SetUnitDFADamage
 
 --------------------------------------------------------------------------------
 --------------------------------------------------------------------------------
 
+function gadget:UnitPreDamaged(unitID, unitDefID, unitTeam, damage, paralyzer, weaponID, projectileID, attackerID, attackerDefID, attackerTeam)
+	-- DFA
+	if weaponID == DFA_ID then
+		if attackerID == unitID or AreTeamsAllied(attackerTeam, unitTeam) then return 0 end -- don't deal self damage via the engine
+		local attackerDef = UnitDefs[attackerDefID]
+		local applied = damage * attackerDef.health * 0.1 * unitDFADamages[attackerID] -- 10% of max HP
+		local env = Spring.UnitScript.GetScriptEnv(attackerID)
+		Spring.UnitScript.CallAsUnit(attackerID, env.script.HitByWeapon, 0, 0, DFA_ID, applied/2, "llowerleg")
+		Spring.UnitScript.CallAsUnit(attackerID, env.script.HitByWeapon, 0, 0, DFA_ID, applied/2, "rlowerleg")
+		return applied
+	else
+		return damage, 1
+	end
+end
+		
+		
 function gadget:Initialize()
   Spring.SetCustomCommandDrawData(CMD_JUMP, "Attack", {0, 1, 0, 1})
   --Spring.SendCommands({"bind j jump"})
@@ -384,6 +407,7 @@ function gadget:UnitCreated(unitID, unitDefID, unitTeam)
   local t = spGetGameSeconds()
   lastJump[unitID] = t - BASE_RELOAD
   unitJumpDelays[unitID] = 40
+  unitDFADamages[unitID] = 1
   spInsertUnitCmdDesc(unitID, jumpCmdDesc)
   spSetUnitRulesParam(unitID,"jump_reload_bar",100)
   spSetUnitRulesParam(unitID,"jumpReload", BASE_RELOAD)
