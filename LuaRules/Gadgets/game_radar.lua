@@ -33,9 +33,8 @@ local SetUnitLosState 	= Spring.SetUnitLosState
 -- Constants
 
 local FRAME_FUDGE = 16
-
+local SECTOR_RADIUS = modOptions and modOptions.sectorrange or 1500
 local BEACON_ID = UnitDefNames["beacon"].id
-
 local NARC_ID = WeaponDefNames["narc"].id
 local NARC_DURATION = 30 * 30 -- 30 seconds
 Spring.SetGameRulesParam("NARC_DURATION", NARC_DURATION)
@@ -73,6 +72,7 @@ local inRadarUnits = {}
 local outRadarUnits = {}
 
 local inAutoLos = {}
+local unitSectorRadii = {} -- unitSectorRadii[unitID] = length
 local allyJammers = {} -- allyJammers[unitID] = radius
 GG.allyJammers = allyJammers
 local allyBAPs = {} -- allyBAPs[unitID] = radius
@@ -157,6 +157,12 @@ local function IsUnitTAGed(unitID)
 	return (GetUnitRulesParam(unitID, "TAG") or 0) + FRAME_FUDGE >= GetGameFrame()
 end
 GG.IsUnitTAGed = IsUnitTAGed
+
+local function SetUnitSectorRadius(unitID, mult)
+	unitSectorRadii[unitID] = (unitSectorRadii[unitID] or SECTOR_RADIUS) * mult
+	SetUnitRulesParam(unitID, "sectorradius", unitSectorRadii[unitID])
+end
+GG.SetUnitSectorRadius = SetUnitSectorRadius
 
 local function ResetLosStates(unitID, allyTeam) -- TODO:need to check los/radar status properly here rather than hard reset
 	-- don't reset for turrets or outposts etc, they remain always visible once detected by whatever means
@@ -302,8 +308,6 @@ function gadget:UnitGiven(unitID, unitDefID, newTeam, oldTeam)
 	gadget:UnitCreated(unitID, unitDefID, newTeam)
 end
 
-local SECTOR_DISTANCE = modOptions and modOptions.sectorrange or 1500
-
 function gadget:GameFrame(n)
 	-- reset any BAP'd units before re-checking los & radar states
 	for bapped, data in pairs(bapUnits) do
@@ -328,7 +332,7 @@ function gadget:GameFrame(n)
 		for unitID, info in pairs(allyTeamMechs[allyTeam]) do
 			if not inAutoLos[allyTeam][unitID] and Spring.ValidUnitID(unitID) and not Spring.GetUnitIsDead(unitID) and not Spring.GetUnitTransporter(unitID) then
 				local x, _, z = GetUnitPosition(unitID)
-				local inRadius = Spring.GetUnitsInCylinder(x, z, SECTOR_DISTANCE) -- use current sensor radius here as perks can change it
+				local inRadius = Spring.GetUnitsInCylinder(x, z, unitSectorRadii[unitID] or SECTOR_RADIUS) -- use current sensor radius here as perks can change it
 				if not info.cockpit then Spring.Echo("Oh shit, ", UnitDefs[Spring.GetUnitDefID(unitID)].name, "seems to have no cockpit") else
 					local v1x, v1z, v2x, v2z = GG.Vector.SectorVectorsFromUnitPiece(unitID, info.cockpit, info.x, info.z)
 					--Spring.MarkerAddPoint(x + v1x, 0, z + v1z, "V1")

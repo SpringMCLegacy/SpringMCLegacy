@@ -67,7 +67,7 @@ return {
 			action = 'perkdeadshot',
 			name = GG.Pad("Dead", "Shot"),
 			tooltip = '+' .. EFFECT .. '% weapon accuracy',
-			texture = 'bitmaps/ui/perkbg.png',	
+			texture = 'bitmaps/ui/perkbgfaction.png',	
 		},
 		valid = allMechs,
 		applyPerk = function (unitID) 
@@ -83,7 +83,7 @@ return {
 			action = 'perktriggerfinger',
 			name = GG.Pad("Trigger", "Finger"),
 			tooltip = '+' .. EFFECT .. '% weapon rate of fire',
-			texture = 'bitmaps/ui/perkbg.png',	
+			texture = 'bitmaps/ui/perkbgfaction.png',	
 		},
 		valid = allMechs,
 		applyPerk = function (unitID) 
@@ -99,7 +99,7 @@ return {
 			action = 'perkfirediscipline',
 			name = GG.Pad("Fire", "Discipline"),
 			tooltip = '-' .. EFFECT .. '% weapon heat generation',
-			texture = 'bitmaps/ui/perkbg.png',	
+			texture = 'bitmaps/ui/perkbgfaction.png',	
 		},
 		valid = allMechs,
 		applyPerk = function (unitID) 
@@ -107,6 +107,22 @@ return {
 			for i = 1, env.numWeapons do
 				env.firingHeats[i] = env.firingHeats[i] * PCENT_DEC
 			end
+		end,
+		costFunction = deductXP,
+		levels = 3,
+	},
+	{
+		name = "eagleeye",
+		cmdDesc = {
+			id = GetCmdID('PERK_EAGLE_EYE'),
+			action = 'perkeagleeye',
+			name = GG.Pad("Eagle", "Eye"),
+			tooltip = '+' .. EFFECT .. '% sector view range',
+			texture = 'bitmaps/ui/perkbg.png',	
+		},
+		valid = allMechs,
+		applyPerk = function (unitID) 
+			GG.SetUnitSectorRadius(unitID, PCENT_INC)
 		end,
 		costFunction = deductXP,
 		levels = 3,

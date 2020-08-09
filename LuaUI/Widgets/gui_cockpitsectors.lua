@@ -86,14 +86,15 @@ local maxAlpha = 0.45
 local losAlpha = 0.15
 
 local modOptions = Spring.GetModOptions()
-local RADAR = (modOptions and modOptions.sectorrange or 1500) - 50
-local LOS = (modOptions and modOptions.mechsight or 400) - 10
+local RADAR = (modOptions and modOptions.sectorrange or 1500)
+local LOS = (modOptions and modOptions.mechsight or 400)
 
 
-local function DrawStationary(maxAngleDif)
+local function DrawStationary(maxAngleDif, sectorRange)
+	sectorRange = (sectorRange or RADAR)
 	local r, g, b = unpack({0.4, 0.9, 0})
 	local THICC = 0.05
-	local los = LOS/RADAR
+	local los = LOS/sectorRange
 	local length = maxAngleDif
 	local width = sqrt(1 - maxAngleDif * maxAngleDif)
 	local vertices = {
@@ -252,7 +253,7 @@ function widget:DrawWorld()
 			for i=1,#units do
 				local unitID = units[i]
 				if GetUnitDefID(unitID) then
-					DrawFieldOfFire(unitID, info[1], RADAR)--Spring.GetUnitSensorRadius(unitID, "radar"))
+					DrawFieldOfFire(unitID, info[1], Spring.GetUnitRulesParam(unitID, "sectorradius") or RADAR)
 				end
 			end
 		end
