@@ -1,6 +1,5 @@
 local Death_Class = Weapon:New{
 	soundHit             	= "GEN_ExplodeDeath",
-	soundStart           	= "GEN_ExplodeDeath",
 	impulseBoost			= 0,
 	impulseFactor			= 0,
 	craterBoost				= 0,
@@ -26,7 +25,17 @@ local MeltDown = Death_Class:New{
 	alwaysVisible = true,
 }
 
+local DFA = Death_Class:New{
+	soundHit             	= "dropship_stomp",
+	explosionGenerator    	= "custom:mech_jump_dust",
+	areaOfEffect			= 100,
+	damage = {
+		default = 100,
+	},	
+}
+
 return lowerkeys({ 
 	MechExplode = MechExplode,
 	MeltDown = MeltDown,
+	DFA = DFA,
 })

@@ -475,6 +475,7 @@ function StopJump()
 	jumping = false
 	local x,y,z = GetUnitPosition(unitID)
 	SpawnCEG("mech_jump_dust", x,y,z)
+	Spring.SpawnExplosion(x,y,z, 0,0,0, {weaponDef = WeaponDefNames["dfa"].id, owner = unitID,  damageAreaOfEffect = unitDef.customParams.tonnage * 10, explosionSpeed = 100})
 	StartThread(anim_StopJump)
 end
 

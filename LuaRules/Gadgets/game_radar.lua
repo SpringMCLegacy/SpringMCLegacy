@@ -40,6 +40,7 @@ local NARC_DURATION = 30 * 30 -- 30 seconds
 Spring.SetGameRulesParam("NARC_DURATION", NARC_DURATION)
 
 local TAG_ID = WeaponDefNames["tag"].id
+local DFA_ID = WeaponDefNames["dfa"].id
 local PPC_IDS = {}
 for weaponDefID, weaponDef in pairs(WeaponDefs) do
 	if weaponDef.name:find("ppc") then
@@ -199,8 +200,15 @@ function gadget:UnitPreDamaged(unitID, unitDefID, unitTeam, damage, paralyzer, w
 	if unitDefID == BEACON_ID or UnitDefs[unitDefID].name:find("dropzone") or UnitDefs[unitDefID].customParams.decal then return 0 end
 	-- ignore none weapons
 	if not attackerID then return damage end
+	-- DFA
+	if weaponID == DFA_ID then
+		if attackerID == unitID then return 0 end -- don't deal self damage via the engine
+		local attackerDef = UnitDefs[attackerDefID]
+		local tonnage = tonumber(attackerDef.customParams.tonnage)
+		--Spring.Echo("Death From Above!", attackerID, damage, damage * tonnage * 10)
+		return damage * tonnage * 100
 	-- NARCs
-	if weaponID == NARC_ID then
+	elseif weaponID == NARC_ID then
 		-- Don't allow dropships to be NARCed
 		if UnitDefs[unitDefID].customParams.dropship then return 0 end
 		--if GetUnitUnderJammer(unitID, unitTeam) then return 0 end
