@@ -360,6 +360,8 @@ function hideLimbPieces(limb, hide)
 		RecursiveHide(rootPiece, hide)
 	else -- legs
 		if hide then
+			local side = limb == "left_leg" and llowerleg or rlowerleg
+			Explode(side, SFX.FIRE + SFX.SHATTER + SFX.RECURSIVE)
 			lostLegs = lostLegs + 1
 			--Spring.Echo("Lost a leg! halving move speed")
 			speedMod = speedMod / 2
@@ -698,6 +700,8 @@ function script.Killed(recentDamage, maxHealth)
 			local payout = hp * Spring.GetGameRulesParam("damage_reward_mult")
 			Spring.AddTeamResource(attackerTeam, "metal", payout)
 		end
+	else
+		Explode(torso, SFX.FIRE + SFX.SMOKE)
 	end
 	GG.PlaySoundForTeam(Spring.GetUnitTeam(unitID), "BB_BattleMech_destroyed", 1)
 	--local severity = recentDamage / maxHealth * 100

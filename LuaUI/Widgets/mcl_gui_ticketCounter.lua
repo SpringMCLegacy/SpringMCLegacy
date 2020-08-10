@@ -65,14 +65,16 @@ local btFont
 local allyTicketTexts = {}
 local ticketWidth = 0
 local cBillsText = "C-Bills: " .. colors.grey .. 0
+local salvageText = "Salvage: " .. colors.slategray .. 0
 local tonnageText= "Tonnage: " .. colors.yellow .. 0
 local gameTime = "Time: 0:00:00"
 local dropTime = "Dropship: 00:00"
 local artyTime = ""
 local haveArty = 0
-local fps = "fps: " .. colors.slategray .. GetFPS()
+local fps = "fps: " .. colors.white .. GetFPS()
 local tempAmbient = ""
 local tempWater = ""
+local MAX_TEMP = 150
 
 local function FramesToMinutesAndSeconds(frames)
 	local gameSecs = floor(frames / 30)
@@ -107,12 +109,6 @@ function BeaconUpdate(allyTeam, new)
 	allyBeaconCounts[allyTeam] = new
 end
 
-
-function widget:GamePreload()
-	tempAmbient = "Ambient: " .. GetGameRulesParam("MAP_TEMP_AMBIENT") .. " \'C"
-	tempWater = "Water: " .. GetGameRulesParam("MAP_TEMP_WATER") .. " \'C"
-end
-
 local function FloatTo128(num)
 	return string.char(string.format("%03d",math.max(num * 255, 1)))
 end
@@ -120,6 +116,21 @@ end
 local function RGBtoString(r, g, b)
 	local rgb = {r, g, b}
 	return '\255' .. FloatTo128(rgb[1]) .. FloatTo128(rgb[2]) .. FloatTo128(rgb[3])
+end
+
+local function GetTempColour(temp)
+	local g = temp > 0 and (MAX_TEMP-temp)/MAX_TEMP or 0.01
+	local temp = math.max(temp+50, 0) -- ensure +ve
+	local r = temp/MAX_TEMP
+	local b = (MAX_TEMP - temp)/MAX_TEMP
+	return RGBtoString(r, g, b)
+end
+
+function widget:GamePreload()
+	local ambTemp = GetGameRulesParam("MAP_TEMP_AMBIENT")
+	local watTemp = GetGameRulesParam("MAP_TEMP_WATER")
+	tempAmbient = "Ambient: " .. GetTempColour(ambTemp) .. ambTemp .. colors.white .. " \'C"
+	tempWater = "Water: " .. GetTempColour(watTemp) .. watTemp .. colors.white .. " \'C"
 end
 
 function widget:Initialize()
@@ -180,7 +191,7 @@ function widget:GameFrame(n)
 		local hours = format("%d",  floor(gameSecs / 3600))
 		local minutes = format("%02d",  floor(gameSecs / 60))
 		local seconds = format("%02d", gameSecs % 60)
-		gameTime = "Time: " .. colors.slategray .. hours .. colors.white .. ":" .. colors.slategray .. minutes .. colors.white .. ":" .. colors.slategray .. seconds
+		gameTime = "Time: " .. colors.white .. hours .. colors.white .. ":" .. colors.white .. minutes .. colors.white .. ":" .. colors.white .. seconds
 		local coolDownFrame = tonumber(GetTeamRulesParam(MY_TEAM_ID, "DROPSHIP_COOLDOWN") or 0)
 		local countColour
 		if coolDownFrame >= 0 then
@@ -198,11 +209,11 @@ function widget:GameFrame(n)
 			minutes, seconds = FramesToMinutesAndSeconds(frames)
 			artyTime = "Artillery: " .. countColour .. minutes .. colors.white .. ":" .. countColour .. seconds
 		end
-		fps = "fps: " .. colors.slategray .. GetFPS()
-	end
-	if n % 32 == 0 then
+		fps = "fps: " .. colors.white .. GetFPS()
 		local cBills = floor(GetTeamResources(MY_TEAM_ID, "metal"))
 		cBillsText = "C-Bills: " .. colors.grey .. cBills
+		local salvage = tonumber(GetTeamRulesParam(MY_TEAM_ID, "SALVAGE") or 0)
+		salvageText = "Salvage: " .. colors.slategray .. salvage
 		local tonnage, maxTonnage = GetTeamResources(MY_TEAM_ID, "energy")
 		maxTonnage = floor(maxTonnage) 
 		tonnage = floor(maxTonnage - (tonnage))
@@ -222,6 +233,7 @@ end
 function widget:DrawScreen()
 	btFont:Begin()
 		btFont:Print(cBillsText, xMax * 0.25, yMax - 32, 16, "od")
+		btFont:Print(salvageText, xMax * 0.25, yMax - 48, 16, "od")
 		btFont:Print(tonnageText, xMax * 0.45, yMax - 32, 16, "od")
 		btFont:Print(dropTime, xMax * 0.75, yMax - 32, 16, "odr")
 		if (haveArty or 0) > 0 then
