@@ -121,7 +121,7 @@ local jumpCmdDesc = {
   id      = GG.CustomCommands.GetCmdID("CMD_JUMP"),
   type    = CMDTYPE.ICON_MAP,
   name    = GG.Pad("Jump"),
-  cursor  = 'Attack',  -- add with LuaUI?
+  cursor  = 'Jump',
   action  = 'jump',
   tooltip = 'Jump to selected position.',
 }
