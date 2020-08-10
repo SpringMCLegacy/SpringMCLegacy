@@ -33,7 +33,7 @@ local fireStateCmdDesc = {
 	id = CMD.FIRE_STATE,
 	type   = CMDTYPE.ICON_MODE,
 	action = 'firestate',
-	params = {0, GG.Pad(14,"Fire", "At", "Will"), GG.Pad("Return", "Fire"), GG.Pad("Hold", "Fire")}
+	params = {2, GG.Pad("Hold", "Fire"), GG.Pad("Return", "Fire"), GG.Pad(14,"Fire", "At", "Will")}
 	--tooltip = "",
 }
 -- CMD.MOVE_STATE
