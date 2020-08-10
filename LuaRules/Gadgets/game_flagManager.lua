@@ -331,9 +331,9 @@ function gadget:GameFrame(n)
 				
 				for i, unitID in ipairs(unitsAtFlag) do
 					local teamID = Spring.GetUnitTeam(unitID)
-					flagTeamCounts[teamID] = (flagTeamCounts[teamID] or 0) + unitCapStrengths[unitID]
+					flagTeamCounts[teamID] = (flagTeamCounts[teamID] or 0) + (unitCapStrengths[unitID] or 1)
 					local allyTeamID = select(6, Spring.GetTeamInfo(teamID))
-					flagAllyTeamCounts[allyTeamID] = (flagAllyTeamCounts[allyTeamID] or 0) + unitCapStrengths[unitID]
+					flagAllyTeamCounts[allyTeamID] = (flagAllyTeamCounts[allyTeamID] or 0) + (unitCapStrengths[unitID] or 1)
 				end
 				if flagAllyTeamCounts[flagAllyTeam] or 0 > 0 then -- flag is defended, reduce all cap status
 					FlagCapRegen(flagID, flagTeamID, -REGEN)
