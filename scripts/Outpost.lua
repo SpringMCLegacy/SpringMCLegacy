@@ -503,7 +503,10 @@ local restored = false
 local restoredLimbs = {}
 local suppliedAmmos = {}
 
+local SIG_EXIT = 1
+
 function Repair(passengerID)
+	SetSignalMask(SIG_EXIT)
 	StartThread(MechBayRepair)
 	local curHP, maxHP = GetUnitHealth(passengerID)
 	while curHP ~= maxHP do
@@ -531,6 +534,7 @@ function RestoreLimb(passengerID, limb, maxHP)
 end
 
 function Restore(passengerID)
+	SetSignalMask(SIG_EXIT)
 	local limbHPs = passengerInfo.limbHPs
 	if passengerEnv.limbHPControl then -- N.B. currently this runs for all mechs
 		for limb, maxHP in pairs(limbHPs) do
@@ -567,6 +571,7 @@ function ResupplyAmmoType(passengerID, weaponNum, ammoType)
 end
 
 function Resupply(passengerID)
+	SetSignalMask(SIG_EXIT)
 	local ammoTypes = passengerInfo.ammoTypes
 	if passengerEnv.ChangeAmmo then
 		for weaponNum, ammoType in pairs(ammoTypes) do
@@ -609,7 +614,7 @@ end
 function script.TransportDrop (passengerID, x, y, z)
 	local isTransporting = Spring.GetUnitIsTransporting(unitID)
 	if isTransporting and #isTransporting > 0 then
-		Signal(1) -- kill repair anim
+		Signal(1) -- kill repair anim & threads
 		passengerID = passengerID or isTransporting[1]
 		Spring.UnitScript.DropUnit(passengerID)
 		bayReady = true
