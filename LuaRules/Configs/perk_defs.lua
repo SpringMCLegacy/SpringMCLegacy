@@ -67,7 +67,7 @@ return {
 			action = 'perkdeadshot',
 			name = GG.Pad("Dead", "Shot"),
 			tooltip = '+' .. EFFECT .. '% weapon accuracy',
-			texture = 'bitmaps/ui/perkred.png',	
+			texture = 'bitmaps/ui/perks/deadshot.png',	
 		},
 		valid = allMechs,
 		applyPerk = function (unitID) 
@@ -83,7 +83,7 @@ return {
 			action = 'perktriggerfinger',
 			name = GG.Pad("Trigger", "Finger"),
 			tooltip = '+' .. EFFECT .. '% weapon rate of fire',
-			texture = 'bitmaps/ui/perkred.png',	
+			texture = 'bitmaps/ui/perks/triggerfinger.png',	
 		},
 		valid = allMechs,
 		applyPerk = function (unitID) 
@@ -99,7 +99,7 @@ return {
 			action = 'perkfirediscipline',
 			name = GG.Pad("Fire", "Discipline"),
 			tooltip = '-' .. EFFECT .. '% weapon heat generation',
-			texture = 'bitmaps/ui/perkred.png',	
+			texture = 'bitmaps/ui/perks/heatdiscipline.png',	
 		},
 		valid = allMechs,
 		applyPerk = function (unitID) 
@@ -118,7 +118,7 @@ return {
 			action = 'perkeagleeye',
 			name = GG.Pad("Eagle", "Eye"),
 			tooltip = '+' .. EFFECT .. '% sector view range',
-			texture = 'bitmaps/ui/perkbg.png',	
+			texture = 'bitmaps/ui/perks/eagleeye.png',	
 		},
 		valid = allMechs,
 		applyPerk = function (unitID) 
@@ -134,7 +134,7 @@ return {
 			action = 'perkkindofthehill',
 			name = GG.Pad("King of", "The Hill"),
 			tooltip = '+' .. EFFECT .. '% beacon capture rate',
-			texture = 'bitmaps/ui/perkbg.png',	
+			texture = 'bitmaps/ui/perks/kingofthehill.png',	
 		},
 		valid = allMechs,
 		applyPerk = function (unitID) 
@@ -150,7 +150,7 @@ return {
 			action = 'perkwomble',
 			name = GG.Pad("Womble"),
 			tooltip = '+1 salvage per kill',
-			texture = 'bitmaps/ui/perkbg.png',	
+			texture = 'bitmaps/ui/perks/wastelander.png',	
 		},
 		valid = allMechs,
 		applyPerk = function (unitID) 
@@ -167,7 +167,7 @@ return {
 			action = 'perkpeakcondition',
 			name = GG.Pad("Peak", "Condition"),
 			tooltip = '+' .. EFFECT .. '% turn rate and acceleration',
-			texture = 'bitmaps/ui/perkbgability.png',	
+			texture = 'bitmaps/ui/perks/peakcondition.png',	
 		},
 		valid = allMechs,
 		applyPerk = function (unitID, level) 
@@ -190,7 +190,7 @@ return {
 			action = 'perkparkour',
 			name = GG.Pad("Parkour!"),
 			tooltip = '-1/10th second to jump start delay',
-			texture = 'bitmaps/ui/perkbgability.png',	
+			texture = 'bitmaps/ui/perks/parkour.png',	
 		},
 		valid = hasJumpjets,
 		applyPerk = function (unitID) 
@@ -206,7 +206,7 @@ return {
 			action = 'perkcannonball',
 			name = GG.Pad("Cannonball"),
 			tooltip = '+' .. EFFECT .. '% Death From Above attack damage',
-			texture = 'bitmaps/ui/perkbgability.png',	
+			texture = 'bitmaps/ui/perks/cannonball.png',	
 		},
 		valid = hasJumpjets,
 		applyPerk = function (unitID) 
