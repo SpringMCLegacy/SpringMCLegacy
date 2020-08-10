@@ -1,6 +1,6 @@
 function gadget:GetInfo()
 	return {
-		name      = "Turn Command",
+		name      = "Unit - Turn Command",
 		desc      = "Implements Turn command for vehicles",
 		author    = "FLOZi, yuritch", -- yuritch is magical
 		date      = "5/02/10",
@@ -21,14 +21,6 @@ local GetUnitPosition = Spring.GetUnitPosition
 local CMD_TURN = GG.CustomCommands.GetCmdID("CMD_TURN")
 local COB_ANGULAR = 182
 local MINIMUM_TURN = 5 * COB_ANGULAR
-local turnCmdDesc = {
-	id = CMD_TURN,
-	type = CMDTYPE.ICON_MAP,
-	name = "   Turn    ",
-	action = "turn",
-	tooltip = "Turn to face a given point",
-	cursor = "Patrol",
-}
 
 -- Variables
 local turning = {} -- structure: turning = {unitID={turnRate=number COB units to rotate per frame, numFrames=number of frames left to rotate in, currHeading= current heading}}
@@ -121,7 +113,6 @@ function gadget:UnitCreated(unitID, unitDefID, unitTeam, builderID)
 	local ud = UnitDefs[unitDefID]
 	if ud.customParams.hasturnbutton then
 		unitTurnRates[unitID] = ud.turnRate
-		Spring.InsertUnitCmdDesc(unitID, 500, turnCmdDesc)
 	end
 end
 

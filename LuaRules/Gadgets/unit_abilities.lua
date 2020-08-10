@@ -1,11 +1,11 @@
 function gadget:GetInfo()
 	return {
-		name = "Unit Abilities",
+		name = "Unit - Abilities",
 		desc = "Unit Special Abilities",
 		author = "FLOZi (C. Lawrence)",
 		date = "01/08/2014",
 		license = "GNU GPL v2",
-		layer = 2, -- run after game_radar
+		layer = -5,
 		enabled = true
 	}
 end
@@ -29,26 +29,16 @@ local FindUnitCmdDesc		= Spring.FindUnitCmdDesc
 -- Constants
 
 local CMD_MASC = GG.CustomCommands.GetCmdID("CMD_MASC")
-local MascCmdDesc = {
-	id = CMD_MASC,
-	action = 'masc',
-	--name = '  MASC Off  ',
-	tooltip = 'Activate MASC sprinting',
-	type	= CMDTYPE.ICON_MODE,
-	params	= {0, '  MASC Off  ', '  MASC On   '},
-}
 local mascUnitDefs = {}
+GG.mascUnitDefs = mascUnitDefs
 
+local MascCmdDesc = {
+	params	= {0, GG.Pad("MASC Off"), GG.Pad("MASC On")},
+}
 
 local CMD_FLUSH = GG.CustomCommands.GetCmdID("CMD_FLUSH")
-local CoolantCmdDesc = {
-	id = CMD_FLUSH,
-	action = 'flush',
-	name = ' Flush\n Coolant ',
-	tooltip = 'Rapidly cool the mech heatsinks.',
-	queueing = false,
-}
 local coolantUnitDefs = {}
+GG.coolantUnitDefs = coolantUnitDefs
 
 -- Variables
 
@@ -121,12 +111,12 @@ function gadget:UnitCreated(unitID, unitDefID, teamID, builderID)
 	local ud = UnitDefs[unitDefID]
 	local cp = ud.customParams
 	if cp and cp.masc then
-		InsertUnitCmdDesc(unitID, MascCmdDesc)
+		--InsertUnitCmdDesc(unitID, MascCmdDesc)
 		Spring.SetUnitRulesParam(unitID, "masc", 100)
 		mascUnitDefs[unitDefID] = true
 	end
 	if cp and cp.baseclass == "mech" then
-		InsertUnitCmdDesc(unitID, CoolantCmdDesc)
+		--InsertUnitCmdDesc(unitID, CoolantCmdDesc)
 		Spring.SetUnitRulesParam(unitID, "ammo_coolant", 100)
 		coolantUnitDefs[unitDefID] = true
 	end

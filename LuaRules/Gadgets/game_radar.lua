@@ -271,9 +271,6 @@ function gadget:UnitCreated(unitID, unitDefID, teamID)
 	if visionCache[unitDefID] then -- a mech!
 		visionCache[unitDefID].cockpit = GG.lusHelper[unitDefID].cockpit
 		allyTeamMechs[Spring.GetUnitAllyTeam(unitID)][unitID] = visionCache[unitDefID]
-		if ud.customParams.baseclass == "mech" then
-			Spring.EditUnitCmdDesc(unitID, Spring.FindUnitCmdDesc(unitID, CMD.ONOFF), {params	= {1, ' Radar \n   Off  ', ' Radar \n   On  '}})
-		end
 		-- force Spring to recognise units spawned within sectors should be full LOS
 		for i = 1, numAllyTeams do
 			local allyTeam = allyTeams[i]

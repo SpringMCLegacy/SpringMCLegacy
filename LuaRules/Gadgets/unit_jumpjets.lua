@@ -4,7 +4,7 @@
 
 function gadget:GetInfo()
   return {
-    name      = "Jumpjets",
+    name      = "Unit - Jumpjets",
     desc      = "Gives units the jump ability",
     author    = "quantum",
     date      = "May 14, 2008",
@@ -79,6 +79,7 @@ local spSetUnitLeaveTracks = Spring.SetUnitLeaveTracks
 local spGetUnitRulesParam  = Spring.GetUnitRulesParam
 
 local jumpers = {} -- jumpers[unitDefID] = {range = number, height = number, speed = number}  
+GG.jumpers = jumpers
 local BASE_RELOAD = 10
 local BASE_RANGE = 600
 local BASE_HEIGHT = BASE_RANGE / 3
@@ -111,20 +112,6 @@ for name, data in pairs(jumpDefNames) do
   jumpDefs[UnitDefNames[name].id] = data
 end]]
 --GG.jumpDefs = jumpDefs
-
-local jumpCmdDesc = {
-  id      = CMD_JUMP,
-  type    = CMDTYPE.ICON_MAP,
-  name    = '  Jump    ',
-  cursor  = 'Attack',  -- add with LuaUI?
-  action  = 'jump',
-  tooltip = 'Jump to selected position.',
-}
-local blankCmdDesc = {
-  id      = GG.CustomCommands.GetCmdID("CMD_BLANK"),
-  type    = CMDTYPE.ICON,
-  tooltip = 'This space intentionally left blank',
-}
 
 --------------------------------------------------------------------------------
 --------------------------------------------------------------------------------
@@ -407,17 +394,17 @@ end
 
 function gadget:UnitCreated(unitID, unitDefID, unitTeam)
   if (not jumpers[unitDefID]) then
-	if GG.mechCache[unitDefID] then
+	--[[if GG.mechCache[unitDefID] then
 		Spring.Echo("add a blank!")
 		spInsertUnitCmdDesc(unitID, blankCmdDesc)
-	end
+	end]]
     return
   end 
   local t = spGetGameSeconds()
   lastJump[unitID] = t - BASE_RELOAD
   unitJumpDelays[unitID] = 40
   unitDFADamages[unitID] = 1
-  spInsertUnitCmdDesc(unitID, jumpCmdDesc)
+  --spInsertUnitCmdDesc(unitID, jumpCmdDesc)
   spSetUnitRulesParam(unitID,"jump_reload_bar",100)
   spSetUnitRulesParam(unitID,"jumpReload", BASE_RELOAD)
   spSetUnitRulesParam(unitID,"jumpSpeed", jumpers[unitDefID].speed)

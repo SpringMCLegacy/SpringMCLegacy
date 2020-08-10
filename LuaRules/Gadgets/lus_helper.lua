@@ -1,6 +1,6 @@
 function gadget:GetInfo()
 	return {
-		name = "LUS Helper",
+		name = "LUS - Helper",
 		desc = "Parses UnitDef and Model data for LUS",
 		author = "FLOZi (C. Lawrence)",
 		date = "20/02/2011", -- 25 today ;_;
@@ -385,16 +385,7 @@ function gadget:UnitCreated(unitID, unitDefID, teamID, builderID)
 			if cmdDescID then
 				Spring.RemoveUnitCmdDesc(unitID, cmdDescID)
 			end
-		end		
-	else -- remove Wait, Repeat from mechs
-		local toRemove = {CMD.WAIT, CMD.REPEAT}
-		for _, cmdID in pairs(toRemove) do
-			local cmdDescID = Spring.FindUnitCmdDesc(unitID, cmdID)
-			if cmdDescID then
-				Spring.RemoveUnitCmdDesc(unitID, cmdDescID)
-			end
-		end		
-		
+		end				
 	end
 end
 
