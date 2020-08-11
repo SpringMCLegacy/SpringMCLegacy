@@ -701,7 +701,7 @@ function script.Killed(recentDamage, maxHealth)
 			Spring.AddTeamResource(attackerTeam, "metal", payout)
 		end
 	else
-		Explode(torso, SFX.FIRE + SFX.SMOKE)
+		Explode(pelvis, SFX.FIRE + SFX.SMOKE)
 	end
 	GG.PlaySoundForTeam(Spring.GetUnitTeam(unitID), "BB_BattleMech_destroyed", 1)
 	--local severity = recentDamage / maxHealth * 100

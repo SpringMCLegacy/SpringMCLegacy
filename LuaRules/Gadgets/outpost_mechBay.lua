@@ -47,7 +47,7 @@ local getOutCmdDesc = {
 -- Variables
 local pieces = {}
 local names = {
-	["torso"] = true,
+	["pelvis"] = true,
 	["lupperarm"] = true,
 	["rupperarm"] = true,
 	["turret"] = true,
