@@ -5,7 +5,7 @@ function gadget:GetInfo()
 		author		= "FLOZi (C. Lawrence)",
 		date		= "10/08/20",
 		license 	= "GNU GPL v2",
-		layer		= 0,
+		layer		= 5, -- after perks
 		enabled	= true,
 	}
 end
@@ -36,15 +36,54 @@ local GAIA_TEAM_ID = Spring.GetGaiaTeamID()
 local MECHBAY_ID = UnitDefNames["outpost_mechbay"].id
 local PICKUP_DIST = 50
 
+-- Command Descriptions
 local getOutCmdDesc = {
 	id 		= GG.CustomCommands.GetCmdID("CMD_MECHBAY_GETOUT"),
 	type	= CMDTYPE.ICON,
-	name 	= " Get  \n Out  ",
+	name 	= GG.Pad("Get","Out"),
 	action	= "mechbay_out",
 	tooltip = "Emergency unload",
 }
+local sellMechCmdDesc = {
+	id 		= GG.CustomCommands.GetCmdID("CMD_MECHBAY_SELLMECH"),
+	type	= CMDTYPE.ICON,
+	name 	= GG.Pad("Sell","Mech"),
+	action	= "mechbay_out",
+	tooltip = "Sells the mech for C-Bills",
+}
 
 -- Variables
+-- Mechbay menu
+local typeStrings = {"mobility", "tactical", "offensive", "defensive", "ammo"}
+local typeStringAliases = {
+	["mobility"] 	= GG.Pad(11,"Upgrade", "Mobility"), 
+	["tactical"] 	= GG.Pad(11,"Upgrade", "Tactical"), 
+	["offensive"] 	= GG.Pad(10,"Upgrade", "Offense"),
+	["defensive"] 	= GG.Pad(10,"Upgrade", "Defense"),
+	["ammo"] 		= GG.Pad(10,"Upgrade", "Ammo"),
+}
+
+local menuCmdDescs = {}
+local menuCmdIDs = {}
+for i, typeString in ipairs(typeStrings) do
+	local cmdID = GG.CustomCommands.GetCmdID("CMD_MENU_" .. typeString:upper())
+	menuCmdDescs[i] = {
+		id     = cmdID,
+		type   = CMDTYPE.ICON,
+		name   = typeStringAliases[typeString],
+		action = 'menu' .. typeString,
+		tooltip = typeStringAliases[typeString]:gsub("%s+\n", " ") .. " capabilities of the mech",
+	}
+	menuCmdIDs[cmdID] = typeString
+end
+
+-- Mods
+local mechBays = {} -- mechBayID = level
+local validMods = {} -- unitDefID = {[i] = true, etc}
+local currentMods = {} -- unitID = {mod1 = true, mod2 = true, ...}}
+local modInclude = VFS.Include("LuaRules/Configs/mod_defs.lua")
+
+-- Salvage pickup
 local pieces = {}
 local names = {
 	["pelvis"] = true,
@@ -58,9 +97,39 @@ local salvageSources = {} -- featureID = {x,z}
 local salvageCache = {} -- featureDefID = true
 local salvageArray = {} -- [1] = featureDefID1, ...
 
+
+local function ChangeTeamSalvage(teamID, delta)
+	teamSalvages[teamID] = (teamSalvages[teamID] or 0) + delta
+	Spring.SetTeamRulesParam(teamID, "SALVAGE", teamSalvages[teamID])
+end
+GG.ChangeTeamSalvage = ChangeTeamSalvage
+
 function gadget:UnitCreated(unitID, unitDefID, teamID, builderID)
 	if unitDefID == MECHBAY_ID then
+		InsertUnitCmdDesc(unitID, sellMechCmdDesc)
 		InsertUnitCmdDesc(unitID, getOutCmdDesc)
+		for i, cmdDesc in ipairs(menuCmdDescs) do
+			InsertUnitCmdDesc(unitID, cmdDesc)
+		end
+		mechBays[unitID] = 1  -- TODO: update this when upgrading bay
+	end
+end
+
+function gadget:UnitLoaded(unitID, unitDefID, unitTeam, transportID, transportTeam)
+	if mechBays[transportID] then -- TODO: check it is level 2
+		-- TODO: add the relevant mods for this mech
+		for i in pairs(validMods[unitDefID]) do
+			InsertUnitCmdDesc(transportID, modInclude[i].cmdDesc)
+		end
+	end
+end
+
+function gadget:UnitUnloaded(unitID, unitDefID, unitTeam, transportID, transportTeam)
+	if mechBays[transportID] then -- TODO: check it is level 2
+		-- reset menu
+		for i in pairs(validMods[unitDefID]) do
+			RemoveUnitCmdDesc(transportID, FindUnitCmdDesc(transportID, modInclude[i].cmdDesc.id))
+		end
 	end
 end
 
@@ -119,8 +188,7 @@ function gadget:GameFrame(n)
 				local unitDefID = Spring.GetUnitDefID(units[1])
 				if GG.mechCache[unitDefID] then
 					local teamID = Spring.GetUnitTeam(units[1])
-					teamSalvages[teamID] = (teamSalvages[teamID] or 0) + info.amount
-					Spring.SetTeamRulesParam(teamID, "SALVAGE", teamSalvages[teamID])
+					ChangeTeamSalvage(teamID, info.amount)
 					Spring.DestroyFeature(featureID)
 				end
 			end
@@ -139,6 +207,18 @@ function gadget:Initialize()
 		if featureDef.name:find("salvage") then -- TODO: customparam
 			salvageCache[featureDefID] = true
 			table.insert(salvageArray, featureDefID)
+		end
+	end
+	for unitDefID, unitDef in pairs(UnitDefs) do
+		for i, perkDef in ipairs(modInclude) do
+			-- ...check if the perk is valid and cache the result
+			local valid = perkDef.valid(unitDefID)
+			if valid then
+				if not validMods[unitDefID] then -- first time
+					validMods[unitDefID] = {} 
+				end
+				validMods[unitDefID][i] = valid
+			end
 		end
 	end
 end

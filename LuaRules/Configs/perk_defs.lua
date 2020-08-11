@@ -708,4 +708,38 @@ return {
 		costFunction = deductCBills,
 		price = 8000,
 	},
+	-- Mechbay
+	{
+		name = "mechbay_2",
+		cmdDesc = {
+			id = GetCmdID('PERK_MECHBAY_2'),
+			action = 'perkmechbay_2',
+			name = GG.Pad("Upgrades", "&", "Omnitech"),
+			tooltip = 'Unlock mech equipment upgrades and omnitech',
+			texture = 'bitmaps/ui/upgrade.png',	
+		},
+		valid = function (unitDefID) return UnitDefs[unitDefID].name == "outpost_mechbay" end,
+		applyPerk = function (unitID)
+			-- No-op
+		end,
+		costFunction = deductCBills,
+		price = 1,
+	},
+	{
+		name = "mechbay_3",
+		cmdDesc = {
+			id = GetCmdID('PERK_MECHBAY_3'),
+			action = 'perkmechbay_3',
+			name = GG.Pad("Battlemech", "Recovery", "Vehicle"),
+			tooltip = 'Adds a BRV that picks up salvage and recovers dead mechs',
+			texture = 'bitmaps/ui/upgrade.png',	
+		},
+		valid = function (unitDefID) return UnitDefs[unitDefID].name == "outpost_mechbay" end,
+		applyPerk = function (unitID)
+			-- No-op
+		end,
+		costFunction = deductCBills,
+		price = 1,
+		requires = "mechbay_2",
+	},
 }

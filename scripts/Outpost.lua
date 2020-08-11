@@ -518,6 +518,7 @@ function Repair(passengerID)
 	end
 	repaired = true
 	if resupplied and restored then -- I'm the last task to finish, move out!
+		Sleep(5000) -- always wait 5 seconds before shoving the mech out
 		script.TransportDrop(passengerID)
 	end
 end
@@ -551,6 +552,7 @@ function Restore(passengerID)
 		Sleep(1000)
 	end
 	if repaired and resupplied then -- I'm the last task to finish, move out!
+		Sleep(5000) -- always wait 5 seconds before shoving the mech out
 		script.TransportDrop(passengerID)
 	end	
 end
@@ -587,6 +589,7 @@ function Resupply(passengerID)
 		Sleep(1000)
 	end
 	if repaired and restored then -- I'm the last task to finish, move out!
+		Sleep(5000) -- always wait 5 seconds before shoving the mech out
 		script.TransportDrop(passengerID)
 	end	
 end
