@@ -33,6 +33,7 @@ local fireStateCmdDesc = {
 	id = CMD.FIRE_STATE,
 	type   = CMDTYPE.ICON_MODE,
 	action = 'firestate',
+	tooltip = "Set the unit's rules of engagement",
 	params = {2, GG.Pad("Hold", "Fire"), GG.Pad("Return", "Fire"), GG.Pad(14,"Fire", "At", "Will")}
 	--tooltip = "",
 }
@@ -41,6 +42,7 @@ local moveStateCmdDesc = {
 	id = CMD.MOVE_STATE,
 	type   = CMDTYPE.ICON_MODE,
 	action = 'movestate',
+	tooltip = "Set the unit's movement rules",
 	params = {0, GG.Pad("Hold", "Position"), GG.Pad("Maneuver"), GG.Pad("Roam")}
 	--tooltip = "",
 }
@@ -49,6 +51,7 @@ local onOffCmdDesc = {
 	id 	= CMD.ONOFF,
 	type   = CMDTYPE.ICON_MODE,
 	action = 'onoff',
+	tooltip = "Turning Sensors off makes the unit harder to detect by enemy sensors",
 	params	= {1, GG.Pad("Radar", "Off"), GG.Pad("Radar", "On")},
 	--tooltip = "",
 }
@@ -59,6 +62,7 @@ local moveCmdDesc = {
 	type   = CMDTYPE.ICON_MAP,
 	action = "move",
 	cursor = "Move",
+	tooltip = "Move to destination",
 	name   = GG.Pad("Move")
 	--tooltip = "",
 }
@@ -68,7 +72,7 @@ local turnCmdDesc = {
 	type = CMDTYPE.ICON_MAP,
 	name = GG.Pad("Turn"),
 	action = "turn",
-	tooltip = "Turn to face a given point",
+	tooltip = "Turn to face a location",
 	cursor = "Patrol",
 }
 -- CMD.STOP
@@ -76,6 +80,7 @@ local stopCmdDesc = {
 	id 	= CMD.STOP,
 	type   = CMDTYPE.ICON,
 	action = "stop",
+	tooltip = "Stop all actions",
 	name   = GG.Pad("Stop")
 	--tooltip = "",
 }
@@ -86,6 +91,7 @@ local attackCmdDesc = {
 	type   = CMDTYPE.ICON_UNIT_OR_MAP,
 	action = "attack",
 	cursor = "Attack",
+	tooltip = "Attack the target or targetted location",
 	name   = GG.Pad("Attack")
 	--tooltip = "",
 }
@@ -95,6 +101,7 @@ local fightCmdDesc = {
 	type   = CMDTYPE.ICON_MAP,
 	action = "fight",
 	cursor = "Fight",
+	tooltip = "Move towards target destination, stopping to engage any enemies along the way",
 	name   = GG.Pad("Fight")
 	--tooltip = "",
 }
@@ -104,6 +111,7 @@ local guardCmdDesc = {
 	type   = CMDTYPE.ICON_UNIT,
 	action = "guard",
 	cursor = "Guard",
+	tooltip = "Follow and guard targeted friendly unit",
 	name   = GG.Pad("Guard")
 	--tooltip = "",
 }
@@ -113,7 +121,7 @@ local flushCmdDesc = {
 	id = GG.CustomCommands.GetCmdID("CMD_FLUSH"),
 	action = 'flush',
 	name = GG.Pad("Flush","Coolant"),
-	tooltip = 'Rapidly cool the mech heatsinks.',
+	tooltip = 'Rapidly cool down the unit',
 	queueing = false,
 }
 -- CMD_JUMP
@@ -123,14 +131,14 @@ local jumpCmdDesc = {
   name    = GG.Pad("Jump"),
   cursor  = 'Jump',
   action  = 'jump',
-  tooltip = 'Jump to selected position.',
+  tooltip = 'Jump to selected position',
 }
 -- CMD_MASC
 local mascCmdDesc = {
 	id = GG.CustomCommands.GetCmdID("CMD_MASC"),
 	action = 'masc',
 	--name = '  MASC Off  ',
-	tooltip = 'Activate MASC sprinting',
+	tooltip = 'Activate MASC accelerated sprint',
 	type	= CMDTYPE.ICON_MODE,
 	params	= {0, GG.Pad("MASC Off"), GG.Pad("MASC On")},
 }
