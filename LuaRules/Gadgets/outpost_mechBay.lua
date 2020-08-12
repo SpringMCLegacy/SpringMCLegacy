@@ -98,6 +98,11 @@ local salvageCache = {} -- featureDefID = true
 local salvageArray = {} -- [1] = featureDefID1, ...
 
 
+local function GetTeamSalvage(teamID)
+	return teamSalvages[teamID] or 0
+end
+GG.GetTeamSalvage = GetTeamSalvage
+
 local function ChangeTeamSalvage(teamID, delta)
 	teamSalvages[teamID] = (teamSalvages[teamID] or 0) + delta
 	Spring.SetTeamRulesParam(teamID, "SALVAGE", teamSalvages[teamID])

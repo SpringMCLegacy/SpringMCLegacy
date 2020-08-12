@@ -27,6 +27,8 @@ local InsertUnitCmdDesc		= Spring.InsertUnitCmdDesc
 local RemoveUnitCmdDesc		= Spring.RemoveUnitCmdDesc
 
 -- Constants
+-- function for toggling weapon status via gui
+local CMD_WEAPON_TOGGLE = GG.CustomCommands.GetCmdID("CMD_WEAPON_TOGGLE")
 
 -- CMD.FIRE_STATE
 local fireStateCmdDesc = {
@@ -191,6 +193,15 @@ function gadget:UnitCreated(unitID, unitDefID, teamID)
 	end
 end
 
+function gadget:AllowCommand(unitID, unitDefID, teamID, cmdID, cmdParams, cmdOptions)
+	if cmdID == CMD_WEAPON_TOGGLE then
+		env = Spring.UnitScript.GetScriptEnv(unitID)
+		Spring.UnitScript.CallAsUnit(unitID, env.ToggleWeapon, cmdParams[1]) -- 1st param is weaponNum
+		return false
+	end
+	-- everything else
+	return true
+end
 
 function gadget:Initialize()
 	for _,unitID in ipairs(Spring.GetAllUnits()) do

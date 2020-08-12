@@ -3,6 +3,7 @@ local GetCmdID = GG.CustomCommands.GetCmdID
 
 local modOptions = Spring.GetModOptions()
 
+local PERK_XP_COST = 1.0 -- 1.5
 local EFFECT = modOptions and modOptions.perkeffect or 5
 local PCENT_INC = (100+EFFECT)/100
 local PCENT_DEC = (100-EFFECT)/100
@@ -45,7 +46,6 @@ end
 
 
 -- Common costFunction() functions
-
 local function deductXP(unitID, amount)
 	local currExp = Spring.GetUnitExperience(unitID)
 	local newExp = currExp - amount
@@ -58,163 +58,470 @@ local function deductCBills(unitID, amount)
 	Spring.UseTeamResource(teamID, "m", Spring.IsNoCostEnabled() and 0 or amount)
 end
 
+local function deductSalvage(unitID, amount)
+	local teamID = Spring.GetUnitTeam(unitID)
+	GG.ChangeTeamSalvage(teamID, amount)
+end
+
 return {
-	-- Weapon
-	{
-		name = "deadshot",
-		cmdDesc = {
-			id = GetCmdID('PERK_DEAD_SHOT'),
-			action = 'perkdeadshot',
-			name = GG.Pad("Dead", "Shot"),
-			tooltip = '+' .. EFFECT .. '% weapon accuracy',
-			texture = 'bitmaps/ui/perks/deadshot.png',	
+	-- Mech Experience Perks
+	perks = {
+		-- Weapon
+		{
+			name = "deadshot",
+			cmdDesc = {
+				id = GetCmdID('PERK_DEAD_SHOT'),
+				action = 'perkdeadshot',
+				name = GG.Pad("Dead", "Shot"),
+				tooltip = '+' .. EFFECT .. '% weapon accuracy',
+				texture = 'bitmaps/ui/perks/deadshot.png',	
+			},
+			valid = allMechs,
+			applyPerk = function (unitID) 
+				setWeaponClassAttribute(unitID, "all", "accuracy", PCENT_INC)
+			end,
+			costFunction = deductXP,
+			price = PERK_XP_COST,
+			levels = 3,
 		},
-		valid = allMechs,
-		applyPerk = function (unitID) 
-			setWeaponClassAttribute(unitID, "all", "accuracy", PCENT_INC)
-		end,
-		costFunction = deductXP,
-		levels = 3,
-	},
-	{
-		name = "triggerfinger",
-		cmdDesc = {
-			id = GetCmdID('PERK_TRIGGER_FINGER'),
-			action = 'perktriggerfinger',
-			name = GG.Pad("Trigger", "Finger"),
-			tooltip = '+' .. EFFECT .. '% weapon rate of fire',
-			texture = 'bitmaps/ui/perks/triggerfinger.png',	
+		{
+			name = "triggerfinger",
+			cmdDesc = {
+				id = GetCmdID('PERK_TRIGGER_FINGER'),
+				action = 'perktriggerfinger',
+				name = GG.Pad("Trigger", "Finger"),
+				tooltip = '+' .. EFFECT .. '% weapon rate of fire',
+				texture = 'bitmaps/ui/perks/triggerfinger.png',	
+			},
+			valid = allMechs,
+			applyPerk = function (unitID) 
+				setWeaponClassAttribute(unitID, "all", "reloadTime", PCENT_DEC)
+			end,
+			costFunction = deductXP,
+			price = PERK_XP_COST,
+			levels = 3,
 		},
-		valid = allMechs,
-		applyPerk = function (unitID) 
-			setWeaponClassAttribute(unitID, "all", "reloadTime", PCENT_DEC)
-		end,
-		costFunction = deductXP,
-		levels = 3,
-	},
-	{
-		name = "firediscipline",
-		cmdDesc = {
-			id = GetCmdID('PERK_FIRE_DISCIPLINE'),
-			action = 'perkfirediscipline',
-			name = GG.Pad("Fire", "Discipline"),
-			tooltip = '-' .. EFFECT .. '% weapon heat generation',
-			texture = 'bitmaps/ui/perks/heatdiscipline.png',	
+		{
+			name = "firediscipline",
+			cmdDesc = {
+				id = GetCmdID('PERK_FIRE_DISCIPLINE'),
+				action = 'perkfirediscipline',
+				name = GG.Pad("Fire", "Discipline"),
+				tooltip = '-' .. EFFECT .. '% weapon heat generation',
+				texture = 'bitmaps/ui/perks/heatdiscipline.png',	
+			},
+			valid = allMechs,
+			applyPerk = function (unitID) 
+				env = Spring.UnitScript.GetScriptEnv(unitID)
+				for i = 1, env.numWeapons do
+					env.firingHeats[i] = env.firingHeats[i] * PCENT_DEC
+				end
+			end,
+			costFunction = deductXP,
+			price = PERK_XP_COST,
+			levels = 3,
 		},
-		valid = allMechs,
-		applyPerk = function (unitID) 
-			env = Spring.UnitScript.GetScriptEnv(unitID)
-			for i = 1, env.numWeapons do
-				env.firingHeats[i] = env.firingHeats[i] * PCENT_DEC
-			end
-		end,
-		costFunction = deductXP,
-		levels = 3,
-	},
-	{
-		name = "eagleeye",
-		cmdDesc = {
-			id = GetCmdID('PERK_EAGLE_EYE'),
-			action = 'perkeagleeye',
-			name = GG.Pad("Eagle", "Eye"),
-			tooltip = '+' .. EFFECT .. '% sector view range',
-			texture = 'bitmaps/ui/perks/eagleeye.png',	
+		-- Utility
+		{
+			name = "eagleeye",
+			cmdDesc = {
+				id = GetCmdID('PERK_EAGLE_EYE'),
+				action = 'perkeagleeye',
+				name = GG.Pad("Eagle", "Eye"),
+				tooltip = '+' .. EFFECT .. '% sector view range',
+				texture = 'bitmaps/ui/perks/eagleeye.png',	
+			},
+			valid = allMechs,
+			applyPerk = function (unitID) 
+				GG.SetUnitSectorRadius(unitID, PCENT_INC)
+			end,
+			costFunction = deductXP,
+			price = PERK_XP_COST,
+			levels = 3,
 		},
-		valid = allMechs,
-		applyPerk = function (unitID) 
-			GG.SetUnitSectorRadius(unitID, PCENT_INC)
-		end,
-		costFunction = deductXP,
-		levels = 3,
-	},
-	{
-		name = "kingofthehill",
-		cmdDesc = {
-			id = GetCmdID('PERK_KING_OF_THE_HILL'),
-			action = 'perkkindofthehill',
-			name = GG.Pad("King of", "The Hill"),
-			tooltip = '+' .. EFFECT .. '% beacon capture rate',
-			texture = 'bitmaps/ui/perks/kingofthehill.png',	
+		{
+			name = "kingofthehill",
+			cmdDesc = {
+				id = GetCmdID('PERK_KING_OF_THE_HILL'),
+				action = 'perkkindofthehill',
+				name = GG.Pad("King of", "The Hill"),
+				tooltip = '+' .. EFFECT .. '% beacon capture rate',
+				texture = 'bitmaps/ui/perks/kingofthehill.png',	
+			},
+			valid = allMechs,
+			applyPerk = function (unitID) 
+				GG.SetUnitCapStrength(unitID, PCENT_INC)
+			end,
+			costFunction = deductXP,
+			price = PERK_XP_COST,
+			levels = 3,
 		},
-		valid = allMechs,
-		applyPerk = function (unitID) 
-			GG.SetUnitCapStrength(unitID, PCENT_INC)
-		end,
-		costFunction = deductXP,
-		levels = 3,
-	},
-	{
-		name = "Womble",
-		cmdDesc = {
-			id = GetCmdID('PERK_WOMBLE'),
-			action = 'perkwomble',
-			name = GG.Pad("Womble"),
-			tooltip = '+1 salvage per kill',
-			texture = 'bitmaps/ui/perks/wastelander.png',	
+		{
+			name = "Piñata",
+			cmdDesc = {
+				id = GetCmdID('PERK_PINATA'),
+				action = 'perkpinata',
+				name = GG.Pad("Pinata"),
+				tooltip = '+1 salvage per kill',
+				texture = 'bitmaps/ui/perks/wastelander.png',	
+			},
+			valid = allMechs,
+			applyPerk = function (unitID) 
+				--GG.SetUnitSalvageGlean(unitID, 1)
+			end,
+			costFunction = deductXP,
+			price = PERK_XP_COST,
+			levels = 3,
+			--requires = "nonsenseputheretodisableituntilitisuseful",
 		},
-		valid = allMechs,
-		applyPerk = function (unitID) 
-			--GG.SetUnitSalvageGlean(unitID, 1)
-		end,
-		costFunction = deductXP,
-		levels = 3,
-		requires = "nonsenseputheretodisableituntilitisuseful",
-	},
-	{
-		name = "peakcondition",
-		cmdDesc = {
-			id = GetCmdID('PERK_PEAK_CONDITION'),
-			action = 'perkpeakcondition',
-			name = GG.Pad("Peak", "Condition"),
-			tooltip = '+' .. EFFECT .. '% turn rate and acceleration',
-			texture = 'bitmaps/ui/perks/peakcondition.png',	
+		-- Jumpjets
+		{
+			name = "peakcondition",
+			cmdDesc = {
+				id = GetCmdID('PERK_PEAK_CONDITION'),
+				action = 'perkpeakcondition',
+				name = GG.Pad("Peak", "Condition"),
+				tooltip = '+' .. EFFECT .. '% turn rate and acceleration',
+				texture = 'bitmaps/ui/perks/peakcondition.png',	
+			},
+			valid = allMechs,
+			applyPerk = function (unitID, level) 
+				GG.SetUnitTurnRate(unitID, PCENT_INC)
+				local ud = UnitDefs[Spring.GetUnitDefID(unitID)]
+				local values = {
+					turnRate		= ud.turnRate * PCENT_INC ^ level,
+					accRate			= ud.maxAcc * PCENT_INC ^ level,
+					decRate			= ud.maxDec * PCENT_INC ^ level,
+				}
+				Spring.MoveCtrl.SetGroundMoveTypeData(unitID, values)
+			end,
+			costFunction = deductXP,
+			price = PERK_XP_COST,
+			levels = 3,
 		},
-		valid = allMechs,
-		applyPerk = function (unitID, level) 
-			GG.SetUnitTurnRate(unitID, PCENT_INC)
-			local ud = UnitDefs[Spring.GetUnitDefID(unitID)]
-			local values = {
-				turnRate		= ud.turnRate * PCENT_INC ^ level,
-				accRate			= ud.maxAcc * PCENT_INC ^ level,
-				decRate			= ud.maxDec * PCENT_INC ^ level,
-			}
-			Spring.MoveCtrl.SetGroundMoveTypeData(unitID, values)
-		end,
-		costFunction = deductXP,
-		levels = 3,
-	},
-	{
-		name = "parkour",
-		cmdDesc = {
-			id = GetCmdID('PERK_PARKOUR'),
-			action = 'perkparkour',
-			name = GG.Pad("Parkour!"),
-			tooltip = '-1/10th second to jump start delay',
-			texture = 'bitmaps/ui/perks/parkour.png',	
+		{
+			name = "parkour",
+			cmdDesc = {
+				id = GetCmdID('PERK_PARKOUR'),
+				action = 'perkparkour',
+				name = GG.Pad("Parkour!"),
+				tooltip = '-1/10th second to jump start delay',
+				texture = 'bitmaps/ui/perks/parkour.png',	
+			},
+			valid = hasJumpjets,
+			applyPerk = function (unitID) 
+				GG.SetUnitJumpDelay(unitID, -10)
+			end,
+			costFunction = deductXP,
+			price = PERK_XP_COST,
+			levels = 3,
 		},
-		valid = hasJumpjets,
-		applyPerk = function (unitID) 
-			GG.SetUnitJumpDelay(unitID, -10)
-		end,
-		costFunction = deductXP,
-		levels = 3,
-	},
-	{
-		name = "cannonball",
-		cmdDesc = {
-			id = GetCmdID('PERK_CANNONBALL'),
-			action = 'perkcannonball',
-			name = GG.Pad("Cannonball"),
-			tooltip = '+' .. EFFECT .. '% Death From Above attack damage',
-			texture = 'bitmaps/ui/perks/cannonball.png',	
+		{
+			name = "cannonball",
+			cmdDesc = {
+				id = GetCmdID('PERK_CANNONBALL'),
+				action = 'perkcannonball',
+				name = GG.Pad("Cannonball"),
+				tooltip = '+' .. EFFECT .. '% Death From Above attack damage',
+				texture = 'bitmaps/ui/perks/cannonball.png',	
+			},
+			valid = hasJumpjets,
+			applyPerk = function (unitID) 
+				GG.SetUnitDFADamage(unitID, PCENT_INC)
+			end,
+			costFunction = deductXP,
+			price = PERK_XP_COST,
+			levels = 3,
 		},
-		valid = hasJumpjets,
-		applyPerk = function (unitID) 
-			GG.SetUnitDFADamage(unitID, PCENT_INC)
-		end,
-		costFunction = deductXP,
-		levels = 3,
 	},
+	-- Outpost Upgrades
+	upgrades = {
+		-- Dropzone
+		{
+			name = "union",
+			cmdDesc = {
+				id = GetCmdID('CMD_DROPZONE_2'),
+				action = 'perkdropshipupgradeunion',
+				name = GG.Pad("Union", "Dropship"),
+				tooltip = 'Unlocks Heavy & Assault mechs. Increases Tonnage Limit',
+				texture = 'unitpics/Dropship_Union.png',	
+			},
+			valid = function (unitDefID) return UnitDefs[unitDefID].name:find("dropzone") end,
+			applyPerk = function (unitID)
+				local teamID = Spring.GetUnitTeam(unitID)
+				GG.DropZoneUpgrade(teamID)
+			end,
+			costFunction = deductCBills,
+			price = 39620,
+		},
+		{
+			name = "overlord",
+				cmdDesc = {
+				id = GetCmdID('CMD_DROPZONE_3'),
+				action = 'perkdropshipupgradeoverlord',
+				name = GG.Pad("Overlord", "Dropship"),
+				tooltip = 'Further Increases Tonnage Limit',
+				texture = 'unitpics/Dropship_Overlord.png',
+			},
+			valid = function (unitDefID) return UnitDefs[unitDefID].name:find("dropzone") end,
+			applyPerk = function (unitID)
+				local teamID = Spring.GetUnitTeam(unitID)
+				GG.DropZoneUpgrade(teamID)
+			end,
+			costFunction = deductCBills,
+			price = 47020,
+			requires = "union",
+		},
+		-- vehicle pad
+		{
+			name = "vpadheavy",
+			cmdDesc = {
+				id = GetCmdID('PERK_VPAD_2'),
+				action = 'perkvpadheavy',
+				name = GG.Pad("Heavy", "Units"),
+				tooltip = 'Adds heavy units to the militia, increases chance of medium units',
+				texture = 'bitmaps/ui/upgrade.png',	
+			},
+			valid = function (unitDefID) return (not GG.hoverMap) and UnitDefs[unitDefID].name:find("vehiclepad") end,
+			applyPerk = function (unitID)
+				GG.PadUpgrade(unitID, 2)
+			end,
+			costFunction = deductCBills,
+			price = 8000,
+		},
+		{
+			name = "vpadhouse",
+			cmdDesc = {
+				id = GetCmdID('PERK_VPAD_3'),
+				action = 'perkvpadhouse',
+				name = GG.Pad("Assault", "Units"),
+				tooltip = 'Adds assault units to the militia, increases chance of heavy units',
+				texture = 'bitmaps/ui/upgrade.png',	
+			},
+			valid = function (unitDefID) return (not GG.hoverMap) and UnitDefs[unitDefID].name:find("vehiclepad") end,
+			applyPerk = function (unitID)
+				GG.PadUpgrade(unitID, 3)
+			end,
+			costFunction = deductCBills,
+			price = 12000,
+			requires = "vpadheavy",
+		},
+		-- hover pad
+		{
+			name = "hpad2",
+			cmdDesc = {
+				id = GetCmdID('PERK_HPAD_2'),
+				action = 'perkhpad2',
+				name = GG.Pad("Medium", "Units"),
+				tooltip = 'Adds medium units to the militia, increases chance of APC units',
+				texture = 'bitmaps/ui/upgrade.png',	
+			},
+			valid = function (unitDefID) return (GG.hoverMap) and UnitDefs[unitDefID].name:find("vehiclepad") end,
+			applyPerk = function (unitID)
+				GG.PadUpgrade(unitID, 2)
+			end,
+			costFunction = deductCBills,
+			price = 7000,
+		},
+		{
+			name = "hpad3",
+			cmdDesc = {
+				id = GetCmdID('PERK_HPAD_3'),
+				action = 'perkhpad3',
+				name = GG.Pad("VTOL", "Units"),
+				tooltip = 'Adds VTOL units to the militia, increases chance of medium units',
+				texture = 'bitmaps/ui/upgrade.png',	
+			},
+			valid = function (unitDefID) return (GG.hoverMap) and UnitDefs[unitDefID].name:find("vehiclepad") end,
+			applyPerk = function (unitID)
+				GG.PadUpgrade(unitID, 3)
+			end,
+			costFunction = deductCBills,
+			price = 10000,
+			requires = "hpad2",
+		},
+		-- Garrison 
+		{
+			name = "garrisonlaser",
+			cmdDesc = {
+				id = GetCmdID('PERK_GARRISON_2'),
+				action = 'perkgarrisonlaser',
+				name = GG.Pad("Defensive", "Lasers"),
+				tooltip = 'Opens firing ports for lasers (-20% damage resistance)',
+				texture = 'bitmaps/ui/upgrade.png',	
+			},
+			valid = function (unitDefID) return UnitDefs[unitDefID].name == "outpost_garrison" end,
+			applyPerk = function (unitID)
+				env = Spring.UnitScript.GetScriptEnv(unitID)
+				env.noFiring = false
+				Spring.SetUnitArmored(unitID, true, 0.8)
+			end,
+			costFunction = deductCBills,
+			price = 6000,
+		},
+		{
+			name = "garrisonfaction",
+			cmdDesc = {
+				id = GetCmdID('PERK_GARRISON_3'),
+				action = 'perkgarrisonphat',
+				name = GG.Pad("Extra", "Armour"),
+				tooltip = 'Adds additional armour (+100% damage resistance)',
+				texture = 'bitmaps/ui/upgrade.png',	
+			},
+			valid = function (unitDefID) return UnitDefs[unitDefID].name:find("garrison") end,
+			applyPerk = function (unitID)
+				--local x,y,z = Spring.GetUnitPosition(unitID)
+				--local faction = GG.teamSide[Spring.GetUnitTeam(unitID)]
+				--local turretID = Spring.CreateUnit("garrison_" .. faction, x,y,z, 0, Spring.GetUnitTeam(unitID))
+				--Spring.UnitAttach(unitID, turretID, 8)
+				Spring.SetUnitArmored(unitID, true, 2)
+			end,
+			costFunction = deductCBills,
+			price = 12000,
+			requires = "garrisonlaser",
+		},
+		-- Uplink
+		{
+			name = "uplink_2",
+			cmdDesc = {
+				id = GetCmdID('PERK_UPLINK_2'),
+				action = 'perkuplink_2',
+				name = GG.Pad("Aero", "Sortie"),
+				tooltip = 'Unlock Aero fighter sorties',
+				texture = 'unitpics/Sortie_Attack.png',	
+			},
+			valid = function (unitDefID) return UnitDefs[unitDefID].name == "outpost_uplink" end,
+			applyPerk = function (unitID)
+				GG.UplinkUpgrade(unitID, 2)
+			end,
+			costFunction = deductCBills,
+			price = 35000,
+		},
+		{
+			name = "uplink_3",
+			cmdDesc = {
+				id = GetCmdID('PERK_UPLINK_3'),
+				action = 'perkuplink_3',
+				name = GG.Pad("Assault", "Dropship"),
+				tooltip = 'Unlock Assault dropship attack run',
+				texture = 'unitpics/Dropship_Avenger.png',	
+			},
+			valid = function (unitDefID) return UnitDefs[unitDefID].name == "outpost_uplink" end,
+			applyPerk = function (unitID)
+				GG.UplinkUpgrade(unitID, 3)
+			end,
+			costFunction = deductCBills,
+			price = 52000,
+			requires = "uplink_2",
+		},
+		-- Turret Control
+		{
+			name = "turretcontrol_2",
+			cmdDesc = {
+				id = GetCmdID('PERK_TURRETCONTROL_2'),
+				action = 'perkturretcontrol_2',
+				name = GG.Pad("Energy", "Weapon", "Towers"),
+				tooltip = 'Unlocks towers with energy weapons (no ammo limits)',
+				texture = 'bitmaps/ui/upgrade.png',	
+			},
+			valid = function (unitDefID) return UnitDefs[unitDefID].name == "outpost_turretcontrol" end,
+			applyPerk = function (unitID)
+				GG.LimitTowerType(unitID, Spring.GetUnitTeam(unitID), "energy", 2)
+			end,
+			costFunction = deductCBills,
+			price = 6000,
+		},
+		{
+			name = "turretcontrol_3",
+			cmdDesc = {
+				id = GetCmdID('PERK_TURRETCONTROL_3'),
+				action = 'perkturretcontrol_3',
+				name = GG.Pad("Long","Range", "Towers"),
+				tooltip = 'Unlocks LRM and Sniper Artillery towers',
+				texture = 'bitmaps/ui/upgrade.png',	
+			},
+			valid = function (unitDefID) return UnitDefs[unitDefID].name == "outpost_turretcontrol" end,
+			applyPerk = function (unitID)
+				GG.LimitTowerType(unitID, Spring.GetUnitTeam(unitID), "ranged", 2)
+			end,
+			costFunction = deductCBills,
+			price = 12000,
+			requires = "turretcontrol_2",
+		},
+		-- Seismic Sensor
+		{
+			name = "seismic_2",
+			cmdDesc = {
+				id = GetCmdID('PERK_SEISMIC_2'),
+				action = 'perkseismic_2',
+				name = GG.Pad("Increase", "Range"),
+				tooltip = 'Increases the range of the seismic sensor +50% (+10% time between pings)',
+				texture = 'bitmaps/ui/upgrade.png',	
+			},
+			valid = function (unitDefID) return UnitDefs[unitDefID].name == "outpost_seismic" end,
+			applyPerk = function (unitID)
+				env = Spring.UnitScript.GetScriptEnv(unitID)
+				env.seismicRange = env.seismicRange * 1.5
+				env.seismicDelay = env.seismicDelay * 1.1
+			end,
+			costFunction = deductCBills,
+			price = 8000,
+		},
+		{
+			name = "seismic_3",
+			cmdDesc = {
+				id = GetCmdID('PERK_SEISMIC_3'),
+				action = 'perkseismic_3',
+				name = GG.Pad("Increase", "Duration"),
+				tooltip = 'Increases the duration of each ping +250% (+20% time between pings)',
+				texture = 'bitmaps/ui/upgrade.png',	
+			},
+			valid = function (unitDefID) return UnitDefs[unitDefID].name == "outpost_seismic" end,
+			applyPerk = function (unitID)
+				env = Spring.UnitScript.GetScriptEnv(unitID)
+				env.seismicDuration = env.seismicDuration * 2.5
+				env.seismicDelay = env.seismicDelay * 1.2
+			end,
+			costFunction = deductCBills,
+			price = 8000,
+		},
+		-- Mechbay
+		{
+			name = "mechbay_2",
+			cmdDesc = {
+				id = GetCmdID('PERK_MECHBAY_2'),
+				action = 'perkmechbay_2',
+				name = GG.Pad("Upgrades", "&", "Omnitech"),
+				tooltip = 'Unlock mech equipment upgrades and omnitech',
+				texture = 'bitmaps/ui/upgrade.png',	
+			},
+			valid = function (unitDefID) return UnitDefs[unitDefID].name == "outpost_mechbay" end,
+			applyPerk = function (unitID)
+				-- No-op
+			end,
+			costFunction = deductCBills,
+			price = 1,
+		},
+		{
+			name = "mechbay_3",
+			cmdDesc = {
+				id = GetCmdID('PERK_MECHBAY_3'),
+				action = 'perkmechbay_3',
+				name = GG.Pad("Battlemech", "Recovery", "Vehicle"),
+				tooltip = 'Adds a BRV that picks up salvage and recovers dead mechs',
+				texture = 'bitmaps/ui/upgrade.png',	
+			},
+			valid = function (unitDefID) return UnitDefs[unitDefID].name == "outpost_mechbay" end,
+			applyPerk = function (unitID)
+				-- No-op
+			end,
+			costFunction = deductCBills,
+			price = 1,
+			requires = "mechbay_2",
+		},
+	}
+}
+
 	--[[ Generic
 	{
 		name = "heatefficiency",
@@ -459,287 +766,3 @@ return {
 		costFunction = deductXP,
 		levels = 3,
 	},]]
-	-- Dropship Upgrades
-	{
-		name = "union",
-		cmdDesc = {
-			id = GetCmdID('CMD_DROPZONE_2'),
-			action = 'perkdropshipupgradeunion',
-			name = GG.Pad("Union", "Dropship"),
-			tooltip = 'Unlocks Heavy & Assault mechs. Increases Tonnage Limit',
-			texture = 'unitpics/Dropship_Union.png',	
-		},
-		valid = function (unitDefID) return UnitDefs[unitDefID].name:find("dropzone") end,
-		applyPerk = function (unitID)
-			local teamID = Spring.GetUnitTeam(unitID)
-			GG.DropZoneUpgrade(teamID)
-		end,
-		costFunction = deductCBills,
-		price = 39620,
-	},
-	{
-		name = "overlord",
-			cmdDesc = {
-			id = GetCmdID('CMD_DROPZONE_3'),
-			action = 'perkdropshipupgradeoverlord',
-			name = GG.Pad("Overlord", "Dropship"),
-			tooltip = 'Further Increases Tonnage Limit',
-			texture = 'unitpics/Dropship_Overlord.png',
-		},
-		valid = function (unitDefID) return UnitDefs[unitDefID].name:find("dropzone") end,
-		applyPerk = function (unitID)
-			local teamID = Spring.GetUnitTeam(unitID)
-			GG.DropZoneUpgrade(teamID)
-		end,
-		costFunction = deductCBills,
-		price = 47020,
-		requires = "union",
-	},
-	-- vehicle pad
-	{
-		name = "vpadheavy",
-		cmdDesc = {
-			id = GetCmdID('PERK_VPAD_2'),
-			action = 'perkvpadheavy',
-			name = GG.Pad("Heavy", "Units"),
-			tooltip = 'Adds heavy units to the militia, increases chance of medium units',
-			texture = 'bitmaps/ui/upgrade.png',	
-		},
-		valid = function (unitDefID) return (not GG.hoverMap) and UnitDefs[unitDefID].name:find("vehiclepad") end,
-		applyPerk = function (unitID)
-			GG.PadUpgrade(unitID, 2)
-		end,
-		costFunction = deductCBills,
-		price = 8000,
-	},
-	{
-		name = "vpadhouse",
-		cmdDesc = {
-			id = GetCmdID('PERK_VPAD_3'),
-			action = 'perkvpadhouse',
-			name = GG.Pad("Assault", "Units"),
-			tooltip = 'Adds assault units to the militia, increases chance of heavy units',
-			texture = 'bitmaps/ui/upgrade.png',	
-		},
-		valid = function (unitDefID) return (not GG.hoverMap) and UnitDefs[unitDefID].name:find("vehiclepad") end,
-		applyPerk = function (unitID)
-			GG.PadUpgrade(unitID, 3)
-		end,
-		costFunction = deductCBills,
-		price = 12000,
-		requires = "vpadheavy",
-	},
-	-- hover pad
-	{
-		name = "hpad2",
-		cmdDesc = {
-			id = GetCmdID('PERK_HPAD_2'),
-			action = 'perkhpad2',
-			name = GG.Pad("Medium", "Units"),
-			tooltip = 'Adds medium units to the militia, increases chance of APC units',
-			texture = 'bitmaps/ui/upgrade.png',	
-		},
-		valid = function (unitDefID) return (GG.hoverMap) and UnitDefs[unitDefID].name:find("vehiclepad") end,
-		applyPerk = function (unitID)
-			GG.PadUpgrade(unitID, 2)
-		end,
-		costFunction = deductCBills,
-		price = 7000,
-	},
-	{
-		name = "hpad3",
-		cmdDesc = {
-			id = GetCmdID('PERK_HPAD_3'),
-			action = 'perkhpad3',
-			name = GG.Pad("VTOL", "Units"),
-			tooltip = 'Adds VTOL units to the militia, increases chance of medium units',
-			texture = 'bitmaps/ui/upgrade.png',	
-		},
-		valid = function (unitDefID) return (GG.hoverMap) and UnitDefs[unitDefID].name:find("vehiclepad") end,
-		applyPerk = function (unitID)
-			GG.PadUpgrade(unitID, 3)
-		end,
-		costFunction = deductCBills,
-		price = 10000,
-		requires = "hpad2",
-	},
-	-- Garrison 
-	{
-		name = "garrisonlaser",
-		cmdDesc = {
-			id = GetCmdID('PERK_GARRISON_2'),
-			action = 'perkgarrisonlaser',
-			name = GG.Pad("Defensive", "Lasers"),
-			tooltip = 'Opens firing ports for lasers (-20% damage resistance)',
-			texture = 'bitmaps/ui/upgrade.png',	
-		},
-		valid = function (unitDefID) return UnitDefs[unitDefID].name == "outpost_garrison" end,
-		applyPerk = function (unitID)
-			env = Spring.UnitScript.GetScriptEnv(unitID)
-			env.noFiring = false
-			Spring.SetUnitArmored(unitID, true, 0.8)
-		end,
-		costFunction = deductCBills,
-		price = 6000,
-	},
-	{
-		name = "garrisonfaction",
-		cmdDesc = {
-			id = GetCmdID('PERK_GARRISON_3'),
-			action = 'perkgarrisonphat',
-			name = GG.Pad("Extra", "Armour"),
-			tooltip = 'Adds additional armour (+100% damage resistance)',
-			texture = 'bitmaps/ui/upgrade.png',	
-		},
-		valid = function (unitDefID) return UnitDefs[unitDefID].name:find("garrison") end,
-		applyPerk = function (unitID)
-			--local x,y,z = Spring.GetUnitPosition(unitID)
-			--local faction = GG.teamSide[Spring.GetUnitTeam(unitID)]
-			--local turretID = Spring.CreateUnit("garrison_" .. faction, x,y,z, 0, Spring.GetUnitTeam(unitID))
-			--Spring.UnitAttach(unitID, turretID, 8)
-			Spring.SetUnitArmored(unitID, true, 2)
-		end,
-		costFunction = deductCBills,
-		price = 12000,
-		requires = "garrisonlaser",
-	},
-	-- Uplink
-	{
-		name = "uplink_2",
-		cmdDesc = {
-			id = GetCmdID('PERK_UPLINK_2'),
-			action = 'perkuplink_2',
-			name = GG.Pad("Aero", "Sortie"),
-			tooltip = 'Unlock Aero fighter sorties',
-			texture = 'unitpics/Sortie_Attack.png',	
-		},
-		valid = function (unitDefID) return UnitDefs[unitDefID].name == "outpost_uplink" end,
-		applyPerk = function (unitID)
-			GG.UplinkUpgrade(unitID, 2)
-		end,
-		costFunction = deductCBills,
-		price = 35000,
-	},
-	{
-		name = "uplink_3",
-		cmdDesc = {
-			id = GetCmdID('PERK_UPLINK_3'),
-			action = 'perkuplink_3',
-			name = GG.Pad("Assault", "Dropship"),
-			tooltip = 'Unlock Assault dropship attack run',
-			texture = 'unitpics/Dropship_Avenger.png',	
-		},
-		valid = function (unitDefID) return UnitDefs[unitDefID].name == "outpost_uplink" end,
-		applyPerk = function (unitID)
-			GG.UplinkUpgrade(unitID, 3)
-		end,
-		costFunction = deductCBills,
-		price = 52000,
-		requires = "uplink_2",
-	},
-	-- Turret Control
-	{
-		name = "turretcontrol_2",
-		cmdDesc = {
-			id = GetCmdID('PERK_TURRETCONTROL_2'),
-			action = 'perkturretcontrol_2',
-			name = GG.Pad("Energy", "Weapon", "Towers"),
-			tooltip = 'Unlocks towers with energy weapons (no ammo limits)',
-			texture = 'bitmaps/ui/upgrade.png',	
-		},
-		valid = function (unitDefID) return UnitDefs[unitDefID].name == "outpost_turretcontrol" end,
-		applyPerk = function (unitID)
-			GG.LimitTowerType(unitID, Spring.GetUnitTeam(unitID), "energy", 2)
-		end,
-		costFunction = deductCBills,
-		price = 6000,
-	},
-	{
-		name = "turretcontrol_3",
-		cmdDesc = {
-			id = GetCmdID('PERK_TURRETCONTROL_3'),
-			action = 'perkturretcontrol_3',
-			name = GG.Pad("Long","Range", "Towers"),
-			tooltip = 'Unlocks LRM and Sniper Artillery towers',
-			texture = 'bitmaps/ui/upgrade.png',	
-		},
-		valid = function (unitDefID) return UnitDefs[unitDefID].name == "outpost_turretcontrol" end,
-		applyPerk = function (unitID)
-			GG.LimitTowerType(unitID, Spring.GetUnitTeam(unitID), "ranged", 2)
-		end,
-		costFunction = deductCBills,
-		price = 12000,
-		requires = "turretcontrol_2",
-	},
-	-- Seismic Sensor
-	{
-		name = "seismic_2",
-		cmdDesc = {
-			id = GetCmdID('PERK_SEISMIC_2'),
-			action = 'perkseismic_2',
-			name = GG.Pad("Increase", "Range"),
-			tooltip = 'Increases the range of the seismic sensor +50% (+10% time between pings)',
-			texture = 'bitmaps/ui/upgrade.png',	
-		},
-		valid = function (unitDefID) return UnitDefs[unitDefID].name == "outpost_seismic" end,
-		applyPerk = function (unitID)
-			env = Spring.UnitScript.GetScriptEnv(unitID)
-			env.seismicRange = env.seismicRange * 1.5
-			env.seismicDelay = env.seismicDelay * 1.1
-		end,
-		costFunction = deductCBills,
-		price = 8000,
-	},
-	{
-		name = "seismic_3",
-		cmdDesc = {
-			id = GetCmdID('PERK_SEISMIC_3'),
-			action = 'perkseismic_3',
-			name = GG.Pad("Increase", "Duration"),
-			tooltip = 'Increases the duration of each ping +250% (+20% time between pings)',
-			texture = 'bitmaps/ui/upgrade.png',	
-		},
-		valid = function (unitDefID) return UnitDefs[unitDefID].name == "outpost_seismic" end,
-		applyPerk = function (unitID)
-			env = Spring.UnitScript.GetScriptEnv(unitID)
-			env.seismicDuration = env.seismicDuration * 2.5
-			env.seismicDelay = env.seismicDelay * 1.2
-		end,
-		costFunction = deductCBills,
-		price = 8000,
-	},
-	-- Mechbay
-	{
-		name = "mechbay_2",
-		cmdDesc = {
-			id = GetCmdID('PERK_MECHBAY_2'),
-			action = 'perkmechbay_2',
-			name = GG.Pad("Upgrades", "&", "Omnitech"),
-			tooltip = 'Unlock mech equipment upgrades and omnitech',
-			texture = 'bitmaps/ui/upgrade.png',	
-		},
-		valid = function (unitDefID) return UnitDefs[unitDefID].name == "outpost_mechbay" end,
-		applyPerk = function (unitID)
-			-- No-op
-		end,
-		costFunction = deductCBills,
-		price = 1,
-	},
-	{
-		name = "mechbay_3",
-		cmdDesc = {
-			id = GetCmdID('PERK_MECHBAY_3'),
-			action = 'perkmechbay_3',
-			name = GG.Pad("Battlemech", "Recovery", "Vehicle"),
-			tooltip = 'Adds a BRV that picks up salvage and recovers dead mechs',
-			texture = 'bitmaps/ui/upgrade.png',	
-		},
-		valid = function (unitDefID) return UnitDefs[unitDefID].name == "outpost_mechbay" end,
-		applyPerk = function (unitID)
-			-- No-op
-		end,
-		costFunction = deductCBills,
-		price = 1,
-		requires = "mechbay_2",
-	},
-}

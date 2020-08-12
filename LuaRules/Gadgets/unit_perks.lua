@@ -1,7 +1,7 @@
 function gadget:GetInfo()
 	return {
-		name = "Unit - Perks",
-		desc = "XP Unlocked Unit Perks",
+		name = "Unit - Perks, Upgrades & Mods",
+		desc = "Controls Mexh XP Perks, Outpost Upgrades and Mechbay Mods",
 		author = "FLOZi (C. Lawrence)",
 		date = "31/03/2013",
 		license = "GNU GPL v2",
@@ -28,57 +28,73 @@ local SetUnitExperience		= Spring.SetUnitExperience
 -- Unsynced Ctrl
 
 -- Constants
-local PERK_XP_COST = 1.0 -- 1.5
-
--- function for toggling weapon status via gui
-local CMD_WEAPON_TOGGLE = GG.CustomCommands.GetCmdID("CMD_WEAPON_TOGGLE")
-
 
 -- Variables
-local perkDefs = {} -- perkCmdID = PerkDef table
-local perkDefNames = {} -- perkName = PerkDef table
-local validPerks = {} -- unitDefID = {perkCmdID = true, etc}
-local orderedPerks = {} -- unitDefID = {cmdDesc1, cmdDesc2, ...}
-local currentPerks = {} -- currentPerks = {unitID = {perk1 = true, perk2 = true, ...}}
-local perkUnits = {} -- unitID = baseclass
+local appDefs = {} -- [appCmdID] = appDef table
+local appDefNames = {} --[appName] = appDef table
+local appDefTypes = {} --[appCmdID] = appType
+local validApps = {} -- [unitDefID][appType] = {appCmdID = true, etc}
+local orderedApps = {} -- unitDefID = {cmdDesc1, cmdDesc2, ...} -- TODO: get rid of need for this by just using the include directly which is already in order
+local currentApps = {} --[unitID][appType] = {app1 = true, app2 = true, ...}}
+local appUnits = {} -- [unitID][appType] = true
 
--- dropzone perks need to be persistent
-local dropZonePerks = {} -- dropZonePerks[teamID] = {perk1 = true, perk2 = true, ...}
+-- dropzone perks need to be persistent -- TODO: make 'persistent' an appDef property so Aero & Avenger can be persistent too
+local dropZoneUpgrades = {} -- dropZoneUpgrades[teamID] = {perk1 = true, perk2 = true, ...}
 
-local perkInclude = VFS.Include("LuaRules/Configs/perk_defs.lua")
-for i, perkDef in pairs(perkInclude) do
-	if perkDef.price then
-		perkDef.cmdDesc.tooltip = perkDef.cmdDesc.tooltip .. " (C-Bills cost: " .. (Spring.IsNoCostEnabled() and 0 or perkDef.price) .. ")"
+local appInclude = VFS.Include("LuaRules/Configs/perk_defs.lua")
+for appType, defs in pairs(appInclude) do
+	for i, appDef in ipairs(defs) do
+		local currency = appType == "upgrades" and "C-Bills" or appType == "mods" and "Salvage" or nil -- TODO: would be nice to read cost function name?
+		if currency then
+			appDef.cmdDesc.tooltip = appDef.cmdDesc.tooltip .. "\n( " .. currency .. " cost: " .. (Spring.IsNoCostEnabled() and 0 or appDef.price) .. " )"
+		end
+		if appDef.requires then
+			Spring.Echo("TOOT", appDef.name, appDef.requires, appDefNames[appDef.requires])
+			appDef.cmdDesc.tooltip = appDef.cmdDesc.tooltip .. "\n[ Requires" .. appDefNames[appDef.requires].cmdDesc.name:gsub("\n", ""):gsub("%s+", " ") .. "]"
+		end
+		appDefs[appDef.cmdDesc.id] = appDef
+		appDefTypes[appDef.cmdDesc.id] = appType
+		appDefNames[appDef.name] = appDef
 	end
-	perkDefs[perkDef.cmdDesc.id] = perkDef
-	perkDefNames[perkDef.name] = perkDef
 end
 
-
-local function UpdateRemaining(unitID, newLevel, price)
-	price = Spring.IsNoCostEnabled() and 0 or price
-	-- disable perks here
-	local perkRemaining = false
-	for perkCmdID, perkDef in pairs(perkDefs) do
-		if (not currentPerks[unitID][perkDef.name] 
-		or currentPerks[unitID][perkDef.name] < (perkDef.levels or 1)) 
-		and validPerks[Spring.GetUnitDefID(unitID)][perkCmdID] then
-			perkRemaining = true
-			if (not newLevel) or not (price or perkDef.price) then
-				Spring.Echo("ERROR: unit_perks:", newLevel, price, perkDef.price, UnitDefs[Spring.GetUnitDefID(unitID)].name)
-			end
-			if (newLevel < (price or perkDef.price)) or (perkDef.requires and not currentPerks[unitID][perkDef.requires]) then
-				EditUnitCmdDesc(unitID, FindUnitCmdDesc(unitID, perkCmdID), {disabled = true})
+-- Checks if apps are affordable and disables those that are not
+local function UpdateRemaining(unitID, appType, newLevel, applierID)
+	applierID = applierID or unitID -- mechbays apply mods to units, perks and upgrades are applied by the unit itself
+	local appRemaining = false
+	for appCmdID, appDef in pairs(appDefs) do
+		if (not currentApps[unitID][appType][appDef.name] 
+		or currentApps[unitID][appType][appDef.name] < (appDef.levels or 1)) 
+		and validApps[Spring.GetUnitDefID(unitID)][appType][appCmdID] then
+			appRemaining = true
+			local price = Spring.IsNoCostEnabled() and 0 or appDef.price
+			if (newLevel < price) or (appDef.requires and not currentApps[unitID][appType][appDef.requires]) then
+				EditUnitCmdDesc(applierID, FindUnitCmdDesc(applierID, appCmdID), {disabled = true, params = (appType == "upgrades" and {"C"}) or nil})
 			else
-				EditUnitCmdDesc(unitID, FindUnitCmdDesc(unitID, perkCmdID), {disabled = false})
+				EditUnitCmdDesc(applierID, FindUnitCmdDesc(applierID, appCmdID), {disabled = false})
 			end
 		end
 	end
-	if not perkRemaining then
+	if not appRemaining and appType == "perks" then
 		Spring.SetUnitRulesParam(unitID, "perk_fully", 1)
 	end
 end
 
+local function UpdateUnitApps(unitID, appType)
+	local teamID, _, dead = Spring.GetUnitTeam(unitID)
+	if not dead then
+		local newLevel
+		if appType == "perks" then
+			newLevel = Spring.GetUnitExperience(unitID)
+			Spring.SetUnitRulesParam(unitID, "perk_xp", math.min(100, 100 * newLevel / 1)) -- TODO: refers to PERK_UNIT_COST from include :(
+		elseif appType == "mods" then
+			newLevel = GG.GetTeamSalvage(teamID)
+		elseif appType == "upgrades" then
+			newLevel = select(1, Spring.GetTeamResources(teamID, "metal"))
+		end
+		UpdateRemaining(unitID, appType, newLevel)
+	end
+end
 
 function gadget:Initialize()
 	-- Support /luarules reload
@@ -89,77 +105,65 @@ function gadget:Initialize()
 	end
 	
 	for unitDefID, unitDef in pairs(UnitDefs) do
-		for i, perkDef in ipairs(perkInclude) do
-			-- ...check if the perk is valid and cache the result
-			local valid = perkDef.valid(unitDefID)
-			if valid then
-				if not validPerks[unitDefID] then -- first time
-					validPerks[unitDefID] = {} 
+		for appType, defs in pairs(appInclude) do
+			for i, appDef in ipairs(defs) do
+				-- ...check if the app is valid and cache the result
+				local valid = appDef.valid(unitDefID)
+				if valid then
+					if not validApps[unitDefID] then -- first time
+						validApps[unitDefID] = {} 
+						validApps[unitDefID][appType] = {}
+					end
+					--Spring.Echo("Valid perk for", unitDef.name, appType, appDef.name)
+					validApps[unitDefID][appType][appDef.cmdDesc.id] = valid
+					--[[if not orderedPerks[unitDefID] then
+						orderedPerks[unitDefID] = {}
+					end
+					table.insert(orderedPerks[unitDefID], perkDef.cmdDesc)]]
 				end
-				validPerks[unitDefID][perkDef.cmdDesc.id] = valid
-				if not orderedPerks[unitDefID] then
-					orderedPerks[unitDefID] = {}
-				end
-				table.insert(orderedPerks[unitDefID], perkDef.cmdDesc)
 			end
 		end
-	end
-end
-
-local function UpdateUnitPerks(unitID, baseclass)
-	if baseclass == "mech" then -- only mechs use xp to perk up
-		local newExp = Spring.GetUnitExperience(unitID)
-		UpdateRemaining(unitID, newExp, PERK_XP_COST)
-		Spring.SetUnitRulesParam(unitID, "perk_xp", math.min(100, 100 * newExp / PERK_XP_COST))
-	elseif not select(3, Spring.GetUnitTeam(unitID)) then -- team isn't dead
-		-- other units use CBills
-		local cBills = select(1, Spring.GetTeamResources(Spring.GetUnitTeam(unitID), "metal"))
-		UpdateRemaining(unitID, cBills)
 	end
 end
 
 function gadget:GameFrame(n)
 	if n % 15 == 0 then
-		for unitID, baseclass in pairs(perkUnits) do
-			UpdateUnitPerks(unitID, baseclass)
+		for unitID, unitAppTypes in pairs(appUnits) do
+			for appType in pairs(unitAppTypes) do
+				UpdateUnitApps(unitID, appType)
+			end
 		end
 	end
 end
 
+local completeTexts = {
+	["perks"] = "Trained",
+	["upgrades"] = "Purchased",
+	["mods"] = "Applied",
+}
 function gadget:AllowCommand(unitID, unitDefID, teamID, cmdID, cmdParams, cmdOptions)
-	if cmdID == CMD_WEAPON_TOGGLE then
-		env = Spring.UnitScript.GetScriptEnv(unitID)
-		Spring.UnitScript.CallAsUnit(unitID, env.ToggleWeapon, cmdParams[1]) -- 1st param is weaponNum
-		return false
-	end
-	local perkDef = perkDefs[cmdID]
-	if perkDef and perkUnits[unitID] then
-		local ud = UnitDefs[unitDefID]
-		local cp = ud.customParams
-		-- check that this unit can receive this perk (can be issued the order due to multiple units selected)
-		-- ... and that it doesn't already have it
-		if validPerks[unitDefID][cmdID] then --and not (currentPerks[unitID][cmdID] or 0) == (perkDef.levels or 1) then
-			if perkDef.requires and not currentPerks[unitID][perkDef.requires] then return false end
-			local level = currentPerks[unitID][perkDef.name] or 0
-			if level == (perkDef.levels or 1) then return false end -- in case it was issued when multiple were selected
-			level = level + 1
-			currentPerks[unitID][perkDef.name] = level -- TODO: shouldn't be needed?
-			perkDef.applyPerk(unitID, level)
-			if level == (perkDef.levels or 1) then -- fully trained
-				local complete = perkDef.price and "Applied" or "Trained" 
-				EditUnitCmdDesc(unitID, FindUnitCmdDesc(unitID, cmdID), {name = perkDef.cmdDesc.name .."\n  (" .. complete .. ")", disabled = true})
-			else
-				local nameString = GG.Pad(perkDef.cmdDesc.name, "(" .. level .. " of " .. perkDef.levels ..")")
-				EditUnitCmdDesc(unitID, FindUnitCmdDesc(unitID, cmdID), {name = nameString})--perkDef.cmdDesc.name .. "\n     (" .. level .. " of " .. perkDef.levels .. ")"})
-			end
-			-- deduct 'cost' of perk
-			perkDef.costFunction(unitID, perkDef.price or PERK_XP_COST)
-			UpdateUnitPerks(unitID, perkUnits[unitID]) -- update perks here too to prevent pause cheating
-		else -- perk is not valid, command not accepted
-			return false
+	local appType = appDefTypes[cmdID]
+	-- check that this unit can receive this perk (can be issued the order due to multiple units selected)
+	-- ... and that it doesn't already have it
+	if appType and validApps[unitDefID][appType][cmdID] then
+		local appDef = appDefs[cmdID]
+		if appDef.requires and not currentApps[unitID][appType][appDef.requires] then return false end
+		local level = currentApps[unitID][appType][appDef.name] or 0
+		if level == (appDef.levels or 1) then return false end -- in case it was issued when multiple were selected
+		level = level + 1
+		currentApps[unitID][appType][appDef.name] = level -- TODO: shouldn't be needed?
+		appDef.applyPerk(unitID, level) -- TODO: this is where it gets convoluted with needing to apply to transportee, not mechbay
+		if level == (appDef.levels or 1) then -- fully trained
+			local complete = completeTexts[appType]
+			EditUnitCmdDesc(unitID, FindUnitCmdDesc(unitID, cmdID), {name = appDef.cmdDesc.name .."\n  (" .. complete .. ")", disabled = true})
+		else
+			local nameString = GG.Pad(appDef.cmdDesc.name, "(" .. level .. " of " .. appDef.levels ..")")
+			EditUnitCmdDesc(unitID, FindUnitCmdDesc(unitID, cmdID), {name = nameString})
 		end
+		appDef.costFunction(unitID, appDef.price)
+		UpdateUnitApps(unitID, appType) -- update here too to prevent pause cheating
 		-- return false for mechs (so command queue is not changed), true otherwise (to clear stack for dropzone?)
-		return perkUnits[unitID] ~= "mech"
+		return appType ~= "perks"
 	end
 	-- let all other commands run through this gadget unharmed
 	return true
@@ -168,31 +172,39 @@ end
 function gadget:UnitCreated(unitID, unitDefID, teamID, builderID)
 	local ud = UnitDefs[unitDefID]
 	local cp = ud.customParams
-	if validPerks[unitDefID] then
+	if validApps[unitDefID] then
 		 -- start out with enough XP for one perk
 		if cp.baseclass == "mech" then
 			Spring.SetUnitRulesParam(unitID, "perk_xp", 100)
-			SetUnitExperience(unitID, PERK_XP_COST)
+			SetUnitExperience(unitID, 1) -- Ach, another reference to XP cost
 		end
-		currentPerks[unitID] = {}
-		perkUnits[unitID] = cp.baseclass
-
+		currentApps[unitID] = {}
+		appUnits[unitID] = {}
+		for appType, list in pairs(validApps[unitDefID]) do
+			currentApps[unitID][appType] = {}
+			appUnits[unitID][appType] = true
+			for i, appDef in ipairs(appInclude[appType]) do
+				if validApps[unitDefID][appType][appDef.cmdDesc.id] then
+					InsertUnitCmdDesc(unitID, appDef.cmdDesc)
+				end
+			end
+		end
 		--[[for perkCmdID, perkDef in pairs(perkDefs) do -- using pairs here means perks aren't in order, use Find?
 			if validPerks[unitDefID][perkCmdID] then -- Only add perks valid for this mech
 				InsertUnitCmdDesc(unitID, perkDef.cmdDesc)
 			end
 		end]]
 		
-		for i, cmdDesc in ipairs(orderedPerks[unitDefID]) do -- enforce order
+		--[[for i, cmdDesc in ipairs(orderedPerks[unitDefID]) do -- enforce order
 			InsertUnitCmdDesc(unitID, cmdDesc)
-		end
+		end]]
 		
 		-- check if unit is a DZ and team DZ has previously been perked
-		if GG.DROPZONE_IDS[unitDefID] and dropZonePerks[teamID] then
-			table.copy(dropZonePerks[teamID], currentPerks[unitID])
-			for perkName in pairs(currentPerks[unitID]) do
-				local perkDef = perkDefNames[perkName]
-				EditUnitCmdDesc(unitID, FindUnitCmdDesc(unitID, perkDef.cmdDesc.id), {name = perkDef.cmdDesc.name .."\n  (Trained)", disabled = true})
+		if GG.DROPZONE_IDS[unitDefID] and dropZoneUpgrades[teamID] then
+			table.copy(dropZoneUpgrades[teamID], currentApps[unitID]["upgrades"])
+			for appName in pairs(currentApps[unitID]["upgrades"]) do
+				local appDef = appDefNames[appName]
+				EditUnitCmdDesc(unitID, FindUnitCmdDesc(unitID, appDef.cmdDesc.id), {name = appDef.cmdDesc.name .."\n  (Purchased)", disabled = true})
 			end
 		end
 	end
@@ -200,11 +212,11 @@ end
 
 function gadget:UnitDestroyed(unitID, unitDefID, teamID)
 	if GG.DROPZONE_IDS[unitDefID] then
-		dropZonePerks[teamID] = {}
-		table.copy(currentPerks[unitID], dropZonePerks[teamID])
+		dropZoneUpgrades[teamID] = {}
+		table.copy(currentApps[unitID]["upgrades"], dropZoneUpgrades[teamID])
 	end
-	currentPerks[unitID] = nil
-	perkUnits[unitID] = nil
+	currentApps[unitID] = nil
+	appUnits[unitID] = nil
 end
 
 else
