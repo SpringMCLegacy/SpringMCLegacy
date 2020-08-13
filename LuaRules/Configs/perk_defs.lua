@@ -8,7 +8,7 @@ local EFFECT = modOptions and modOptions.perkeffect or 5
 local PCENT_INC = (100+EFFECT)/100
 local PCENT_DEC = (100-EFFECT)/100
 
--- Common valid() functions here:
+-- Common valid() functions
 local function allMechs(unitDefID) return (UnitDefs[unitDefID].customParams.baseclass == "mech") end
 local function hasJumpjets(unitDefID) return (UnitDefs[unitDefID].customParams.jumpjets or false) end
 local function hasMASC(unitDefID) return (allMechs(unitDefID) and UnitDefs[unitDefID].customParams.masc or false) end
@@ -18,6 +18,7 @@ local function isFaction(unitDefID, faction) return (allMechs(unitDefID) and Uni
 
 local function isMechBay(unitDefID) return (UnitDefs[unitDefID].name == "outpost_mechbay") end
 
+-- Common applyTo() functions
 local function hasWeaponName(unitDefID, weapName)
 	local weapons = UnitDefs[unitDefID].weapons
 	for weapNum, weapTable in pairs(weapons) do 
@@ -61,7 +62,7 @@ end
 
 local function deductSalvage(unitID, amount)
 	local teamID = Spring.GetUnitTeam(unitID)
-	GG.ChangeTeamSalvage(teamID, -amount)
+	GG.ChangeTeamSalvage(teamID, Spring.IsNoCostEnabled() and 0 or -amount)
 end
 
 return {
@@ -533,6 +534,7 @@ return {
 				texture = 'bitmaps/ui/perkbgfaction.png',	
 			},
 			valid = isMechBay,
+			applyTo = function (unitDefID) return hasWeaponClass(unitDefID, "lrm") end,
 			applyPerk = function (unitID)
 				--Spring.Echo("Missile range selected") 
 				setWeaponClassAttribute(unitID, "lrm", "range", 1.5)

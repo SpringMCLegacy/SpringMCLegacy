@@ -22,6 +22,7 @@ local GetTeamResources		= Spring.GetTeamResources
 local CreateUnit			= Spring.CreateUnit
 local DestroyUnit			= Spring.DestroyUnit
 local InsertUnitCmdDesc		= Spring.InsertUnitCmdDesc
+local EditUnitCmdDesc		= Spring.EditUnitCmdDesc
 local FindUnitCmdDesc		= Spring.FindUnitCmdDesc
 local RemoveUnitCmdDesc		= Spring.RemoveUnitCmdDesc
 local SetUnitRulesParam		= Spring.SetUnitRulesParam
@@ -79,9 +80,7 @@ end
 
 -- Mods
 local mechBays = {} -- mechBayID = level
-local validMods = {} -- unitDefID = {[i] = true, etc}
-local currentMods = {} -- unitID = {mod1 = true, mod2 = true, ...}}
-
+local hiddenMods = {} -- unitDefID = {[i] = true, etc}
 
 -- Salvage pickup
 local pieces = {}
@@ -122,8 +121,12 @@ end
 
 function gadget:UnitLoaded(unitID, unitDefID, unitTeam, transportID, transportTeam)
 	if mechBays[transportID] then -- TODO: check it is level 2
-		-- add the relevant mods for this mech
+		-- update mods for this mech
 		GG.UpdateUnitApps(transportID, "mods")
+		-- hide irrelevant mods
+		for cmdID in pairs(hiddenMods[unitDefID]) do
+			EditUnitCmdDesc(transportID, FindUnitCmdDesc(transportID, cmdID), {hidden = true})
+		end
 	end
 end
 
@@ -131,6 +134,10 @@ function gadget:UnitUnloaded(unitID, unitDefID, unitTeam, transportID, transport
 	if mechBays[transportID] then -- TODO: check it is level 2
 		-- reset menu
 		GG.UpdateUnitApps(transportID, "mods")
+		-- show all mods -- TODO: should no longer be required when menu is done as that will unhide
+		for cmdID in pairs(hiddenMods[unitDefID]) do
+			EditUnitCmdDesc(transportID, FindUnitCmdDesc(transportID, cmdID), {hidden = false})
+		end
 	end
 end
 
@@ -210,18 +217,20 @@ function gadget:Initialize()
 			table.insert(salvageArray, featureDefID)
 		end
 	end
-	--[[for unitDefID, unitDef in pairs(UnitDefs) do
-		for i, perkDef in ipairs(modInclude) do
+	local modInclude = VFS.Include("LuaRules/Configs/perk_defs.lua")["mods"]
+	--for unitDefID, unitDef in pairs(UnitDefs) do
+	for unitDefID in pairs(GG.mechCache) do
+		local unitDef = UnitDefs[unitDefID]
+		hiddenMods[unitDefID] = {} 
+		for i, modDef in ipairs(modInclude) do
 			-- ...check if the perk is valid and cache the result
-			local valid = perkDef.valid(unitDefID)
-			if valid then
-				if not validMods[unitDefID] then -- first time
-					validMods[unitDefID] = {} 
-				end
-				validMods[unitDefID][i] = valid
+			local show = modDef.applyTo(unitDefID)
+			Spring.Echo(unitDef.name, modDef.name, show)
+			if not show then
+				hiddenMods[unitDefID][modDef.cmdDesc.id] = true
 			end
 		end
-	end]]
+	end
 end
 
 else
