@@ -37,8 +37,10 @@ local desiredOrder = {"perks", "upgrades", "mods"}
 
 -- Variables
 local appDefs = {} -- [appCmdID] = appDef table
+GG.appDefs = appDefs
 local appDefNames = {} --[appName] = appDef table
 local appDefTypes = {} --[appCmdID] = appType
+GG.appDefTypes = appDefTypes
 local validApps = {} -- [unitDefID][appType] = {appCmdID = true, etc}
 local orderedApps = {} -- unitDefID = {cmdDesc1, cmdDesc2, ...} -- TODO: get rid of need for this by just using the include directly which is already in order
 local currentApps = {} --[unitID][appType] = {app1 = true, app2 = true, ...}}

@@ -57,11 +57,11 @@ local sellMechCmdDesc = {
 -- Mechbay menu
 local typeStrings = {"mobility", "tactical", "offensive", "defensive", "ammo"}
 local typeStringAliases = {
-	["mobility"] 	= GG.Pad(11,"Upgrade", "Mobility"), 
-	["tactical"] 	= GG.Pad(11,"Upgrade", "Tactical"), 
-	["offensive"] 	= GG.Pad(10,"Upgrade", "Offense"),
-	["defensive"] 	= GG.Pad(10,"Upgrade", "Defense"),
-	["ammo"] 		= GG.Pad(10,"Upgrade", "Ammo"),
+	["mobility"] 	= GG.Pad(10,"Mobility", "Mods"), 
+	["tactical"] 	= GG.Pad(10,"Tactical", "Mods"), 
+	["offensive"] 	= GG.Pad(10,"Offense", "Mods"),
+	["defensive"] 	= GG.Pad(10,"Defense", "Mods"),
+	["ammo"] 		= GG.Pad(10,"Ammo", "Mods"),
 }
 
 local menuCmdDescs = {}
@@ -108,20 +108,42 @@ local function ChangeTeamSalvage(teamID, delta)
 end
 GG.ChangeTeamSalvage = ChangeTeamSalvage
 
+local function SetMechBayLevel(unitID, level)
+	mechBays[unitID] = level
+	if level == 2 then
+		for i, cmdDesc in ipairs(menuCmdDescs) do
+			InsertUnitCmdDesc(unitID, 10+i, cmdDesc)
+		end
+	end
+end
+GG.SetMechBayLevel = SetMechBayLevel
+
+local function ShowModsByType(unitID, modType)
+	local cmdID = modType and GG.CustomCommands.GetCmdID("CMD_MENU_" .. modType:upper())
+	for i, cmdDesc in ipairs(Spring.GetUnitCmdDescs(unitID)) do
+		if cmdDesc.id == cmdID then
+			EditUnitCmdDesc(unitID, i, {texture = 'bitmaps/ui/selected.png',})
+		elseif menuCmdIDs[cmdDesc.id] then 
+			EditUnitCmdDesc(unitID, i, {texture = '',})
+		elseif GG.appDefTypes[cmdDesc.id] == "mods" then
+			EditUnitCmdDesc(unitID, i, {hidden = GG.appDefs[cmdDesc.id].menu ~= modType}) -- eww
+		end
+	end
+end
+
 function gadget:UnitCreated(unitID, unitDefID, teamID, builderID)
 	if unitDefID == MECHBAY_ID then
-		InsertUnitCmdDesc(unitID, sellMechCmdDesc)
-		InsertUnitCmdDesc(unitID, getOutCmdDesc)
-		for i, cmdDesc in ipairs(menuCmdDescs) do
-			InsertUnitCmdDesc(unitID, cmdDesc)
-		end
-		mechBays[unitID] = 1  -- TODO: update this when upgrading bay
+		--Spring.Echo(FindUnitCmdDesc(unitID, GG.CustomCommands.GetCmdID("PERK_MECHBAY_2")))
+		InsertUnitCmdDesc(unitID, 9, sellMechCmdDesc)
+		InsertUnitCmdDesc(unitID, 10, getOutCmdDesc)
+		SetMechBayLevel(unitID, 1)
+		ShowModsByType(unitID, "none")
 	end
 end
 
 function gadget:UnitLoaded(unitID, unitDefID, unitTeam, transportID, transportTeam)
-	if mechBays[transportID] then -- TODO: check it is level 2
-		-- update mods for this mech
+	if mechBays[transportID] >= 2 then
+		-- update mod status for this mech
 		GG.UpdateUnitApps(transportID, "mods")
 		-- hide irrelevant mods
 		for cmdID in pairs(hiddenMods[unitDefID]) do
@@ -131,7 +153,7 @@ function gadget:UnitLoaded(unitID, unitDefID, unitTeam, transportID, transportTe
 end
 
 function gadget:UnitUnloaded(unitID, unitDefID, unitTeam, transportID, transportTeam)
-	if mechBays[transportID] then -- TODO: check it is level 2
+	if mechBays[transportID] >= 2 then -- TODO: check it is level 2
 		-- reset menu
 		GG.UpdateUnitApps(transportID, "mods")
 		-- show all mods -- TODO: should no longer be required when menu is done as that will unhide
@@ -153,6 +175,8 @@ function gadget:AllowCommand(unitID, unitDefID, teamID, cmdID, cmdParams, cmdOpt
 				end
 			end
 			return false
+		elseif menuCmdIDs[cmdID] then
+			ShowModsByType(unitID, menuCmdIDs[cmdID])
 		end
 	end
 	return true
@@ -225,7 +249,6 @@ function gadget:Initialize()
 		for i, modDef in ipairs(modInclude) do
 			-- ...check if the perk is valid and cache the result
 			local show = modDef.applyTo(unitDefID)
-			Spring.Echo(unitDef.name, modDef.name, show)
 			if not show then
 				hiddenMods[unitDefID][modDef.cmdDesc.id] = true
 			end

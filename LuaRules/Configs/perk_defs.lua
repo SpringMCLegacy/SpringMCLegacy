@@ -493,13 +493,13 @@ return {
 			cmdDesc = {
 				id = GetCmdID('PERK_MECHBAY_2'),
 				action = 'perkmechbay_2',
-				name = GG.Pad("Upgrades", "&", "Omnitech"),
-				tooltip = 'Unlock mech equipment upgrades and omnitech',
+				name = GG.Pad("Mech", "Mods &", "Omni"),
+				tooltip = 'Unlock mech equipment mods and omnitech',
 				texture = 'bitmaps/ui/upgrade.png',	
 			},
 			valid = isMechBay,
 			applyPerk = function (unitID)
-				-- No-op
+				GG.SetMechBayLevel(unitID, 2)
 			end,
 			costFunction = deductCBills,
 			price = 1,
@@ -515,7 +515,7 @@ return {
 			},
 			valid = isMechBay,
 			applyPerk = function (unitID)
-				-- No-op
+				GG.SetMechBayLevel(unitID, 3)
 			end,
 			costFunction = deductCBills,
 			price = 1,
@@ -526,6 +526,7 @@ return {
 	mods = {
 		{
 			name = "extendedrangelrm",
+			menu = "offensive",
 			cmdDesc = {
 				id = GetCmdID('UPGRADE_EXTENDEDRANGELRM'),
 				action = 'upgradeextendedrangelrm',
