@@ -81,7 +81,7 @@ end
 local mechBays = {} -- mechBayID = level
 local validMods = {} -- unitDefID = {[i] = true, etc}
 local currentMods = {} -- unitID = {mod1 = true, mod2 = true, ...}}
-local modInclude = VFS.Include("LuaRules/Configs/mod_defs.lua")
+
 
 -- Salvage pickup
 local pieces = {}
@@ -122,19 +122,15 @@ end
 
 function gadget:UnitLoaded(unitID, unitDefID, unitTeam, transportID, transportTeam)
 	if mechBays[transportID] then -- TODO: check it is level 2
-		-- TODO: add the relevant mods for this mech
-		for i in pairs(validMods[unitDefID]) do
-			InsertUnitCmdDesc(transportID, modInclude[i].cmdDesc)
-		end
+		-- add the relevant mods for this mech
+		GG.UpdateUnitApps(transportID, "mods")
 	end
 end
 
 function gadget:UnitUnloaded(unitID, unitDefID, unitTeam, transportID, transportTeam)
 	if mechBays[transportID] then -- TODO: check it is level 2
 		-- reset menu
-		for i in pairs(validMods[unitDefID]) do
-			RemoveUnitCmdDesc(transportID, FindUnitCmdDesc(transportID, modInclude[i].cmdDesc.id))
-		end
+		GG.UpdateUnitApps(transportID, "mods")
 	end
 end
 
@@ -214,7 +210,7 @@ function gadget:Initialize()
 			table.insert(salvageArray, featureDefID)
 		end
 	end
-	for unitDefID, unitDef in pairs(UnitDefs) do
+	--[[for unitDefID, unitDef in pairs(UnitDefs) do
 		for i, perkDef in ipairs(modInclude) do
 			-- ...check if the perk is valid and cache the result
 			local valid = perkDef.valid(unitDefID)
@@ -225,7 +221,7 @@ function gadget:Initialize()
 				validMods[unitDefID][i] = valid
 			end
 		end
-	end
+	end]]
 end
 
 else

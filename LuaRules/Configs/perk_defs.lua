@@ -16,6 +16,8 @@ local function hasECM(unitDefID) return (allMechs(unitDefID) and UnitDefs[unitDe
 local function hasBAP(unitDefID) return (allMechs(unitDefID) and UnitDefs[unitDefID].customParams.bap or false) end
 local function isFaction(unitDefID, faction) return (allMechs(unitDefID) and UnitDefs[unitDefID].name:sub(1,2) == faction) end
 
+local function isMechBay(unitDefID) return (UnitDefs[unitDefID].name == "outpost_mechbay") end
+
 local function hasWeaponName(unitDefID, weapName)
 	local weapons = UnitDefs[unitDefID].weapons
 	for weapNum, weapTable in pairs(weapons) do 
@@ -44,7 +46,6 @@ local function setWeaponClassAttribute(unitID, className, attrib, multiplier)
 	end
 end
 
-
 -- Common costFunction() functions
 local function deductXP(unitID, amount)
 	local currExp = Spring.GetUnitExperience(unitID)
@@ -60,7 +61,7 @@ end
 
 local function deductSalvage(unitID, amount)
 	local teamID = Spring.GetUnitTeam(unitID)
-	GG.ChangeTeamSalvage(teamID, amount)
+	GG.ChangeTeamSalvage(teamID, -amount)
 end
 
 return {
@@ -495,7 +496,7 @@ return {
 				tooltip = 'Unlock mech equipment upgrades and omnitech',
 				texture = 'bitmaps/ui/upgrade.png',	
 			},
-			valid = function (unitDefID) return UnitDefs[unitDefID].name == "outpost_mechbay" end,
+			valid = isMechBay,
 			applyPerk = function (unitID)
 				-- No-op
 			end,
@@ -511,7 +512,7 @@ return {
 				tooltip = 'Adds a BRV that picks up salvage and recovers dead mechs',
 				texture = 'bitmaps/ui/upgrade.png',	
 			},
-			valid = function (unitDefID) return UnitDefs[unitDefID].name == "outpost_mechbay" end,
+			valid = isMechBay,
 			applyPerk = function (unitID)
 				-- No-op
 			end,
@@ -519,7 +520,29 @@ return {
 			price = 1,
 			requires = "mechbay_2",
 		},
-	}
+	},
+	-- Mods
+	mods = {
+		{
+			name = "extendedrangelrm",
+			cmdDesc = {
+				id = GetCmdID('UPGRADE_EXTENDEDRANGELRM'),
+				action = 'upgradeextendedrangelrm',
+				name = GG.Pad("Extended", "Range", "LRM"),
+				tooltip = 'Applies to LRMs only. Increases LRM range by 50%, but reduces ammo by 50% and will not receive tracking/damage bonus from TAG/Narc. Is incompatible with Artemis IV upgrade and LRM special ammo.',
+				texture = 'bitmaps/ui/perkbgfaction.png',	
+			},
+			valid = isMechBay,
+			applyPerk = function (unitID)
+				--Spring.Echo("Missile range selected") 
+				setWeaponClassAttribute(unitID, "lrm", "range", 1.5)
+				-- TODO: reduce max ammo by 50%
+				-- TODO: Remove tracking bonus (TODO: implement tracking bonus)
+			end,
+			costFunction = deductSalvage,
+			price = 1,
+		},
+	},
 }
 
 	--[[ Generic
