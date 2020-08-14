@@ -95,7 +95,15 @@ local teamSalvages = {} -- teamID = salvageAmount
 local salvageSources = {} -- featureID = {x,z}
 local salvageCache = {} -- featureDefID = true
 local salvageArray = {} -- [1] = featureDefID1, ...
+local unitPinataLevels = {} -- unitID = 0 or 1 or 2 or 3
 
+local function PinataLevel(unitID, delta)
+	if new then
+		unitPinataLevels[unitID] = unitPinataLevels[unitID] + delta
+	end
+	return unitPinataLevels[unitID] or 0 -- incase of non-mech killer
+end
+GG.PinataLevel = PinataLevel
 
 local function GetTeamSalvage(teamID)
 	return teamSalvages[teamID] or 0
@@ -138,6 +146,8 @@ function gadget:UnitCreated(unitID, unitDefID, teamID, builderID)
 		InsertUnitCmdDesc(unitID, 10, getOutCmdDesc)
 		SetMechBayLevel(unitID, 1)
 		ShowModsByType(unitID, "none")
+	elseif GG.mechCache[unitDefID] then -- a mech
+		unitPinataLevels[unitID] = 0
 	end
 end
 

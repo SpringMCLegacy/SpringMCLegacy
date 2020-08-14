@@ -159,7 +159,7 @@ return {
 			levels = 3,
 		},
 		{
-			name = "Piñata",
+			name = "Pinata",
 			cmdDesc = {
 				id = GetCmdID('PERK_PINATA'),
 				action = 'perkpinata',
@@ -169,12 +169,11 @@ return {
 			},
 			valid = allMechs,
 			applyPerk = function (unitID) 
-				--GG.SetUnitSalvageGlean(unitID, 1)
+				GG.PinataLevel(unitID, 1) -- add one
 			end,
 			costFunction = deductXP,
 			price = PERK_XP_COST,
 			levels = 3,
-			--requires = "nonsenseputheretodisableituntilitisuseful",
 		},
 		-- Jumpjets
 		{

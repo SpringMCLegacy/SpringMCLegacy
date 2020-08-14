@@ -682,6 +682,12 @@ function script.QueryWeapon(weaponID)
 	end
 end
 
+function GenSalvage(amount)
+	for i = 1, amount do
+		Explode(pelvis, SFX.FIRE + SFX.SMOKE)
+	end
+end
+
 function script.Killed(recentDamage, maxHealth)
 	if excessHeat >= heatLimit * 2 then
 		--Spring.Echo("NUUUUUUUUUUUKKKKKE")
@@ -701,7 +707,9 @@ function script.Killed(recentDamage, maxHealth)
 			Spring.AddTeamResource(attackerTeam, "metal", payout)
 		end
 	else
-		Explode(pelvis, SFX.FIRE + SFX.SMOKE)
+		local attackerID = Spring.GetUnitLastAttacker(unitID)
+		local numSalvage = GG.PinataLevel(attackerID) + 1 -- always produce at least 1
+		GenSalvage(numSalvage)
 	end
 	GG.PlaySoundForTeam(Spring.GetUnitTeam(unitID), "BB_BattleMech_destroyed", 1)
 	--local severity = recentDamage / maxHealth * 100
