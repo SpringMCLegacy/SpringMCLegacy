@@ -66,7 +66,7 @@ local function deductSalvage(unitID, amount)
 end
 
 return {
-	-- Mech Experience Perks
+	-- Mech Experience Perks -------------------------------------------------------------------------
 	perks = {
 		-- Weapon
 		{
@@ -235,7 +235,7 @@ return {
 			levels = 3,
 		},
 	},
-	-- Outpost Upgrades
+	-- Outpost Upgrades -------------------------------------------------------------------------
 	upgrades = {
 		-- Dropzone
 		{
@@ -521,14 +521,40 @@ return {
 			requires = "mechbay_2",
 		},
 	},
-	-- Mods
+	-- Mods -------------------------------------------------------------------------
 	mods = {
+		-- Mobility
+		{
+			name = "aes",
+			menu = "mobility",
+			cmdDesc = {
+				id = GetCmdID('UPGRADE_AES'),
+				action = 'modaes',
+				name = GG.Pad("Actuator", "Enhance", "System"),
+				tooltip = 'Increases rotational speed of torso and arms by 50%.',
+				texture = 'bitmaps/ui/perkgreen.png',	
+			},
+			valid = isMechBay,
+			applyTo = allMechs,
+			applyPerk = function (unitID, level, invert)
+				--Spring.Echo("Missile range selected") 
+				local effect = 1.5
+				effect = (invert and 1/effect) or effect
+				
+				env = Spring.UnitScript.GetScriptEnv(unitID)
+				env.TORSO_SPEED = env.TORSO_SPEED * effect -- haha, screw encapsulation
+				env.ELEVATION_SPEED = env.ELEVATION_SPEED * effect
+			end,
+			costFunction = deductSalvage,
+			price = 1,
+		},
+		-- Offensive
 		{
 			name = "extendedrangelrm",
 			menu = "offensive",
 			cmdDesc = {
-				id = GetCmdID('UPGRADE_EXTENDEDRANGELRM'),
-				action = 'upgradeextendedrangelrm',
+				id = GetCmdID('MOD_EXTENDEDRANGELRM'),
+				action = 'modextendedrangelrm',
 				name = GG.Pad("Extended", "Range", "LRM"),
 				tooltip = 'Applies to LRMs only. Increases LRM range by 50%, but reduces ammo by 50% and will not receive tracking/damage bonus from TAG/Narc. Is incompatible with Artemis IV upgrade and LRM special ammo.',
 				texture = 'bitmaps/ui/perkbgfaction.png',	

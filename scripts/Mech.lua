@@ -33,6 +33,8 @@ baseCoolRate = info.coolRate
 mascHeatRate = 0.1
 firingHeats = info.firingHeats
 numWeapons = info.numWeapons - 1 -- remove sight
+TORSO_SPEED = info.torsoTurnSpeed -- AES mod
+ELEVATION_SPEED = info.elevationSpeed -- AES mod
 
 local coolRate = baseCoolRate
 local inWater = false
@@ -66,8 +68,6 @@ for limb,limbHP in pairs(info.limbHPs) do -- copy table from defaults
 end
 
 --Turning/Movement Locals
-local TORSO_SPEED = info.torsoTurnSpeed
-local ELEVATION_SPEED = info.elevationSpeed
 local BARREL_SPEED = info.barrelRecoilSpeed
 local RESTORE_DELAY = Spring.UnitScript.GetLongestReloadTime(unitID) * 2
 local CMD_JUMP = GG.CustomCommands.GetCmdID("CMD_JUMP")
