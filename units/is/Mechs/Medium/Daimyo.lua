@@ -8,7 +8,7 @@ local Daimyo = Medium:New{
 }
 
 local DMO1K = Daimyo:New{
-	description         = "Medium Brawler",
+	description         = "Medium Sniper",
 	weapons	= {	
 		[1] = {
 			name	= "ERPPC",
@@ -26,7 +26,7 @@ local DMO1K = Daimyo:New{
 	},
 
 	customparams = {
-		variant			= "WFT-1",
+		variant			= "DMO-1K",
 		speed			= 80,
 		price			= 11480,
 		heatlimit 		= 22,
