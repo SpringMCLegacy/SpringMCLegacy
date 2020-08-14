@@ -106,7 +106,7 @@ local function UpdateUnitApps(unitID, appType)
 		elseif appType == "mods" then
 			newLevel = GG.GetTeamSalvage(teamID)
 			applierID = unitID
-			unitID = Spring.GetUnitIsTransporting(unitID)[1]
+			unitID = (Spring.GetUnitIsTransporting(unitID) or {})[1]
 		elseif appType == "upgrades" then
 			newLevel = select(1, Spring.GetTeamResources(teamID, "metal"))
 		end
@@ -199,7 +199,7 @@ function gadget:AllowCommand(unitID, unitDefID, teamID, cmdID, cmdParams, cmdOpt
 		local applierID
 		if appType == "mods" then
 			applierID = unitID
-			unitID = Spring.GetUnitIsTransporting(unitID)[1]
+			unitID = (Spring.GetUnitIsTransporting(unitID) or {})[1]
 			if not unitID then return false end
 			if rightClick then -- removing mod
 				return RemoveMod(unitID, appDef, applierID)
