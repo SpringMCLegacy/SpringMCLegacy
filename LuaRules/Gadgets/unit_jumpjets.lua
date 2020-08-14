@@ -102,6 +102,7 @@ local goalSet	  = {}
 
 local unitJumpDelays = {} -- unitID = delayTime
 local unitDFADamages = {} -- unitID = mult
+local unitJumpInstant = {} -- unitID = true
 --------------------------------------------------------------------------------
 --------------------------------------------------------------------------------
 
@@ -172,10 +173,18 @@ local function ReloadQueue(unitID, queue, cmdTag)
   
 end
 
+-- Perk and Mod functions
 local function SetUnitJumpDelay(unitID, delta)
 	unitJumpDelays[unitID] = unitJumpDelays[unitID] + delta
 end
 GG.SetUnitJumpDelay = SetUnitJumpDelay
+
+local function SetUnitJumpInstant(unitID, tOrF)
+	unitJumpInstant[unitID] = tOrF
+end
+GG.SetUnitJumpInstant = SetUnitJumpInstant
+
+
 
 local function Jump(unitID, goal, cmdTag)
   goal[2]             = spGetGroundHeight(goal[1],goal[3])
@@ -190,7 +199,7 @@ local function Jump(unitID, goal, cmdTag)
   local reloadTime    = (Spring.GetUnitRulesParam(unitID, "jumpReload") or (BASE_RELOAD))*30
   local teamID        = spGetUnitTeam(unitID)
   
-  local rotateMidAir  = true --jumpDef.rotateMidAir Should be true for Perk to remove need to turn and face direction
+  local rotateMidAir  = unitJumpInstant[unitID] --jumpDef.rotateMidAir Should be true for Perk to remove need to turn and face direction
   local cob 	 	  = false --jumpDef.cobscript
   local env
 
@@ -403,6 +412,7 @@ function gadget:UnitCreated(unitID, unitDefID, unitTeam)
   end 
   local t = spGetGameSeconds()
   lastJump[unitID] = t - BASE_RELOAD
+  unitJumpInstant[unitID] = false
   unitJumpDelays[unitID] = 40
   unitDFADamages[unitID] = 1
   --spInsertUnitCmdDesc(unitID, jumpCmdDesc)
@@ -415,6 +425,9 @@ end
 
 function gadget:UnitDestroyed(unitID, unitDefID)
   lastJump[unitID]  = nil
+  unitJumpInstant[unitID] = nil
+  unitJumpDelays[unitID] = nil
+  unitDFADamages[unitID] = nil
 end
 
 
@@ -503,7 +516,7 @@ function gadget:CommandFallback(unitID, unitDefID, teamID, cmdID, cmdParams, cmd
 		local newHeading = math.deg(math.atan2(dx, dz)) * 182 -- COB_ANGULAR	
 		local currHeading = Spring.GetUnitCOBValue(unitID, COB.HEADING)
 		local deltaHeading = newHeading - currHeading
-		if math.abs(deltaHeading) < MINIMUM_TURN then
+		if math.abs(deltaHeading) < MINIMUM_TURN or unitJumpInstant[unitID] then
 			-- don't have to turn, continue as normal
 			local cmdTag = spGetCommandQueue(unitID,1)[1].tag
 			-- reload perk can change reload before bar is full so check both

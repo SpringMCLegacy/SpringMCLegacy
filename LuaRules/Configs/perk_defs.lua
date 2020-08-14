@@ -528,7 +528,7 @@ return {
 			name = "aes",
 			menu = "mobility",
 			cmdDesc = {
-				id = GetCmdID('UPGRADE_AES'),
+				id = GetCmdID('MOD_AES'),
 				action = 'modaes',
 				name = GG.Pad("Actuator", "Enhance", "System"),
 				tooltip = 'Increases rotational speed of torso and arms by 50%.',
@@ -537,13 +537,30 @@ return {
 			valid = isMechBay,
 			applyTo = allMechs,
 			applyPerk = function (unitID, level, invert)
-				--Spring.Echo("Missile range selected") 
 				local effect = 1.5
 				effect = (invert and 1/effect) or effect
 				
 				env = Spring.UnitScript.GetScriptEnv(unitID)
 				env.TORSO_SPEED = env.TORSO_SPEED * effect -- haha, screw encapsulation
 				env.ELEVATION_SPEED = env.ELEVATION_SPEED * effect
+			end,
+			costFunction = deductSalvage,
+			price = 1,
+		},
+		{
+			name = "directionalthrusters",
+			menu = "mobility",
+			cmdDesc = {
+				id = GetCmdID('MOD_DIRECTIONAL_THRUSTERS'),
+				action = 'moddirectionalthrusters',
+				name = GG.Pad("Directional", "Thrusters"),
+				tooltip = 'Allows Mechs to adjust their heading mid-air after a jump, removing the need to turn and face its jump location.',
+				texture = 'bitmaps/ui/perkgreen.png',	
+			},
+			valid = isMechBay,
+			applyTo = hasJumpjets,
+			applyPerk = function (unitID, level, invert)
+				GG.SetUnitJumpInstant(unitID, not invert)
 			end,
 			costFunction = deductSalvage,
 			price = 1,
