@@ -81,7 +81,7 @@ local function UpdateRemaining(unitID, appType, newLevel, applierID)
 					if (newLevel < price) or (appDef.requires and not currentApps[unitID][appType][appDef.requires]) then
 						EditUnitCmdDesc(applierID, FindUnitCmdDesc(applierID, appCmdID), {disabled = true, params = {"C"}})
 					else
-						EditUnitCmdDesc(applierID, FindUnitCmdDesc(applierID, appCmdID), {disabled = false})
+						EditUnitCmdDesc(applierID, FindUnitCmdDesc(applierID, appCmdID), {disabled = false, name = appDef.cmdDesc.name})
 					end
 				elseif appType == "mods" -- a mech re-entering mechbay
 				and currentApps[unitID][appType][appDef.name] == 1 then -- with an applied mod
@@ -177,9 +177,21 @@ local function ApplyAppToUnit(unitID, appType, appDef, cmdID, applierID)
 	UpdateUnitApps(applierID, appType) -- update here too to prevent pause cheating
 end		
 
+local function RemoveMod(unitID, appDef, applierID)
+	if not currentApps[unitID]["mods"][appDef.name] then
+		return false -- mod is not installed
+	else
+		currentApps[unitID]["mods"][appDef.name] = nil
+		appDef.costFunction(unitID, -appDef.price)
+		appDef.applyPerk(unitID, 0, true) -- invert
+		UpdateUnitApps(applierID, "mods")
+		return true
+	end
+end
 
 function gadget:AllowCommand(unitID, unitDefID, teamID, cmdID, cmdParams, cmdOptions)
 	local appType = appDefTypes[cmdID]
+	local rightClick = cmdOptions.right
 	-- check that this unit can receive this perk (can be issued the order due to multiple units selected)
 	-- ... and that it doesn't already have it
 	if appType and validApps[unitDefID][appType][cmdID] then
@@ -189,6 +201,9 @@ function gadget:AllowCommand(unitID, unitDefID, teamID, cmdID, cmdParams, cmdOpt
 			applierID = unitID
 			unitID = Spring.GetUnitIsTransporting(unitID)[1]
 			if not unitID then return false end
+			if rightClick then -- removing mod
+				return RemoveMod(unitID, appDef, applierID)
+			end
 		end
 		local success = ApplyAppToUnit(unitID, appType, appDef, cmdID, applierID)
 		-- return false for mechs (so command queue is not changed), true otherwise (to clear stack for dropzone?)

@@ -535,9 +535,12 @@ return {
 			},
 			valid = isMechBay,
 			applyTo = function (unitDefID) return hasWeaponClass(unitDefID, "lrm") end,
-			applyPerk = function (unitID)
+			applyPerk = function (unitID, level, invert)
 				--Spring.Echo("Missile range selected") 
-				setWeaponClassAttribute(unitID, "lrm", "range", 1.5)
+				local effect = 1.5
+				effect = (invert and 1/effect) or effect
+				
+				setWeaponClassAttribute(unitID, "lrm", "range", effect)
 				-- TODO: reduce max ammo by 50%
 				-- TODO: Remove tracking bonus (TODO: implement tracking bonus)
 			end,
