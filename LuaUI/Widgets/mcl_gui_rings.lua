@@ -90,7 +90,7 @@ end
 function widget:DrawWorldPreUnit()
 	for _,unitID in ipairs(GetSelectedUnits()) do
 		local unitDefID = GetUnitDefID(unitID)
-		if select(4, GetActiveCommand()) == "Attack" then
+		if select(2, GetActiveCommand()) == CMD.ATTACK then
 			glColor(AttackRed)
 			local minRangesU = minRangesToDraw[unitDefID]
 			local maxRangesU = maxRangesToDraw[unitDefID]
