@@ -98,7 +98,7 @@ local salvageArray = {} -- [1] = featureDefID1, ...
 local unitPinataLevels = {} -- unitID = 0 or 1 or 2 or 3
 
 local function PinataLevel(unitID, delta)
-	if new then
+	if delta then
 		unitPinataLevels[unitID] = unitPinataLevels[unitID] + delta
 	end
 	return unitPinataLevels[unitID] or 0 -- incase of non-mech killer
