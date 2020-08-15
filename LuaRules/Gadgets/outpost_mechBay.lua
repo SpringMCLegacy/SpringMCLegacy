@@ -271,7 +271,7 @@ function gadget:Initialize()
 			-- ...check if the perk is valid and cache the result
 			local show = modDef.applyTo(unitDefID)
 			if not show then
-				Spring.Echo("Hiding", unitDef.name, modDef.name)
+				--Spring.Echo("Hiding", unitDef.name, modDef.name)
 				hiddenMods[unitDefID][modDef.cmdDesc.id] = true
 			end
 		end

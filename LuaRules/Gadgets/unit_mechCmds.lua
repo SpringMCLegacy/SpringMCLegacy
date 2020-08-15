@@ -125,6 +125,7 @@ local flushCmdDesc = {
 	name = GG.Pad("Flush","Coolant"),
 	tooltip = 'Rapidly cool down the unit',
 	queueing = false,
+	disabled = true,
 }
 -- CMD_JUMP
 local jumpCmdDesc = {
@@ -177,9 +178,7 @@ function gadget:UnitCreated(unitID, unitDefID, teamID)
 		InsertUnitCmdDesc(unitID, attackCmdDesc)
 		InsertUnitCmdDesc(unitID, fightCmdDesc)
 		InsertUnitCmdDesc(unitID, guardCmdDesc)
-		if GG.coolantUnitDefs[unitDefID] then
-			InsertUnitCmdDesc(unitID, flushCmdDesc)
-		end
+		InsertUnitCmdDesc(unitID, flushCmdDesc)
 		if GG.jumpers[unitDefID] then
 			InsertUnitCmdDesc(unitID, jumpCmdDesc)
 		else

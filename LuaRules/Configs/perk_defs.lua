@@ -532,7 +532,7 @@ return {
 				action = 'modaes',
 				name = GG.Pad("Actuator", "Enhance", "System"),
 				tooltip = 'Increases rotational speed of torso and arms by 50%.',
-				texture = 'bitmaps/ui/perkgreen.png',	
+				texture = 'bitmaps/ui/perkorange.png',	
 			},
 			valid = isMechBay,
 			applyTo = allMechs,
@@ -555,7 +555,7 @@ return {
 				action = 'moddirectionalthrusters',
 				name = GG.Pad("Directional", "Thrusters"),
 				tooltip = 'Allows Mechs to adjust their heading mid-air after a jump, removing the need to turn and face its jump location.',
-				texture = 'bitmaps/ui/perkgreen.png',	
+				texture = 'bitmaps/ui/perkorange.png',	
 			},
 			valid = isMechBay,
 			applyTo = hasJumpjets,
@@ -573,12 +573,31 @@ return {
 				action = 'modmechanicaljumpsystem',
 				name = GG.Pad("Mechanical", "Jump", "System"),
 				tooltip = 'Replaces the jet-propelled jump system of a Mech with a mechanical system. Removes the need to recharge after a jump, but halves jump distance, and damage to legs will make the system inoperable.',
-				texture = 'bitmaps/ui/perkgreen.png',	
+				texture = 'bitmaps/ui/perkorange.png',	
 			},
 			valid = isMechBay,
 			applyTo = hasJumpjets,
 			applyPerk = function (unitID, level, invert)
 				GG.SetUnitMechanicalJump(unitID, not invert)
+			end,
+			costFunction = deductSalvage,
+			price = 1,
+		},
+		-- Tactical
+		{
+			name = "coolantpods",
+			menu = "tactical",
+			cmdDesc = {
+				id = GetCmdID('MOD_COOLANT_PODS'),
+				action = 'modcoolantpods',
+				name = GG.Pad("Coolant", "Pods"),
+				tooltip = 'Gives Mechs the "Coolant Flush" ability with 5 charges.',
+				texture = 'bitmaps/ui/perkbgability.png',	
+			},
+			valid = isMechBay,
+			applyTo = allMechs,
+			applyPerk = function (unitID, level, invert)
+				GG.EnableCoolantFlush(unitID, not invert)
 			end,
 			costFunction = deductSalvage,
 			price = 1,
