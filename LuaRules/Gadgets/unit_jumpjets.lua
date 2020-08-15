@@ -100,9 +100,12 @@ local jumps       = {}
 local jumping     = {}
 local goalSet	  = {}
 
+-- Perk and Mods
 local unitJumpDelays = {} -- unitID = delayTime
 local unitDFADamages = {} -- unitID = mult
 local unitJumpInstant = {} -- unitID = true
+local unitMechanicalJumps = {} -- unitID = true
+GG.unitMechanicalJumps = unitMechanicalJumps
 --------------------------------------------------------------------------------
 --------------------------------------------------------------------------------
 
@@ -184,7 +187,15 @@ local function SetUnitJumpInstant(unitID, tOrF)
 end
 GG.SetUnitJumpInstant = SetUnitJumpInstant
 
-
+local function SetUnitMechanicalJump(unitID, tOrF)
+	local jumpDef = jumpers[Spring.GetUnitDefID(unitID)]
+	local range   = spGetUnitRulesParam(unitID, "jumpRange") or jumpDef.range
+	local reload  = spGetUnitRulesParam(unitID, "jumpReload") or BASE_RELOAD
+	Spring.SetUnitRulesParam(unitID, "jumpRange", tOrF and range/2 or 2*range)
+	Spring.SetUnitRulesParam(unitID, "jumpReload", tOrF and 1 or BASE_RELOAD)
+	unitMechanicalJumps[unitID] = tOrF
+end
+GG.SetUnitMechanicalJump = SetUnitMechanicalJump
 
 local function Jump(unitID, goal, cmdTag)
   goal[2]             = spGetGroundHeight(goal[1],goal[3])
@@ -438,10 +449,10 @@ function gadget:AllowCommand(unitID, unitDefID, teamID, cmdID, cmdParams, cmdOpt
 		Spring.SendMessageToTeam(teamID, "Can't jump - too hot!")
 		return false 
 	end -- can't jump if too hot
-	if (spGetUnitRulesParam(unitID, "lostlegs") or 0) > 0 then 
+	if (unitMechanicalJumps[unitID] and spGetUnitRulesParam(unitID, "lostlegs") or 0) > 0 then 
 		Spring.SendMessageToTeam(teamID, "Can't jump - leg disabled!")
 		return false 
-	end -- can't jump if a leg is disabled
+	end -- can't jump if a leg is disabled if we are using mechanical jump system mod
 	
     local test = spTestBuildOrder(unitDefID, cmdParams[1], cmdParams[2], cmdParams[3], 1)
 	if test ~= 2 then 

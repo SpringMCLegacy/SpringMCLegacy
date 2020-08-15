@@ -565,6 +565,24 @@ return {
 			costFunction = deductSalvage,
 			price = 1,
 		},
+		{
+			name = "mechanicaljumpsystem",
+			menu = "mobility",
+			cmdDesc = {
+				id = GetCmdID('MOD_MECHANICAL_JUMP_SYSTEM'),
+				action = 'modmechanicaljumpsystem',
+				name = GG.Pad("Mechanical", "Jump", "System"),
+				tooltip = 'Replaces the jet-propelled jump system of a Mech with a mechanical system. Removes the need to recharge after a jump, but halves jump distance, and damage to legs will make the system inoperable.',
+				texture = 'bitmaps/ui/perkgreen.png',	
+			},
+			valid = isMechBay,
+			applyTo = hasJumpjets,
+			applyPerk = function (unitID, level, invert)
+				GG.SetUnitMechanicalJump(unitID, not invert)
+			end,
+			costFunction = deductSalvage,
+			price = 1,
+		},
 		-- Offensive
 		{
 			name = "extendedrangelrm",

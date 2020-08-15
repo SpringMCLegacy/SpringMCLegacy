@@ -464,8 +464,10 @@ function StartJump()
 end
 
 function Jumping()-- Gets called throughout by gadget
-	for i = 1, info.jumpjets do -- emit JumpJetTrail
-		EmitSfx(jets[i], SFX.CEG)
+	if not GG.unitMechanicalJumps[unitID] then
+		for i = 1, info.jumpjets do -- emit JumpJetTrail
+			EmitSfx(jets[i], SFX.CEG)
+		end
 	end
 end
 
