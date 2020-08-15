@@ -602,6 +602,30 @@ return {
 			costFunction = deductSalvage,
 			price = 1,
 		},
+		{
+			name = "doubleheatsinks",
+			menu = "tactical",
+			cmdDesc = {
+				id = GetCmdID('MOD_DOUBLE_HEATSINKS'),
+				action = 'moddoubleheatsinks',
+				name = GG.Pad("Double", "Heatsinks"),
+				tooltip = "Advanced Heatsinks that improves a Mech's maximum heat threshold. Though they are twice as effective as regular heatsink, they are three times the size, so the increase is 50% rather than actually double.",
+				texture = 'bitmaps/ui/perkbgability.png',	
+			},
+			valid = isMechBay,
+			applyTo = allMechs,
+			applyPerk = function (unitID, level, invert) 
+				local effect = 1.5
+				effect = (invert and 1/effect) or effect
+				
+				env = Spring.UnitScript.GetScriptEnv(unitID)
+				env.baseCoolRate = env.baseCoolRate * effect
+				env.heatLimit = env.heatLimit * effect
+				Spring.SetUnitRulesParam(unitID, "heatLimit", env.heatLimit)
+			end,
+			costFunction = deductSalvage,
+			price = 1,
+		},
 		-- Offensive
 		{
 			name = "extendedrangelrm",
@@ -631,26 +655,6 @@ return {
 }
 
 	--[[ Generic
-	{
-		name = "heatefficiency",
-		cmdDesc = {
-			id = GetCmdID('PERK_HEAT_EFFICIENCY'),
-			action = 'perkheatefficiency',
-			name = GG.Pad("Heatsinks"),
-			tooltip = '+' .. EFFECT .. '% Heat dissipation rate & capacity',
-			texture = 'bitmaps/ui/perkbg.png',	
-		},
-		valid = allMechs,
-		applyPerk = function (unitID) 
-			--Spring.Echo("Heatsink Dissipation selected") 
-			env = Spring.UnitScript.GetScriptEnv(unitID)
-			env.baseCoolRate = env.baseCoolRate * PCENT_INC
-			env.heatLimit = env.heatLimit * PCENT_INC
-			Spring.SetUnitRulesParam(unitID, "heatLimit", env.heatLimit)
-		end,
-		costFunction = deductXP,
-		levels = 3,
-	},
 	{
 		name = "sensorrange",
 		cmdDesc = {
