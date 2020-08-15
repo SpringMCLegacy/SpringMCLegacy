@@ -646,6 +646,35 @@ return {
 			price = 1,
 		},
 		{
+			name = "improvedsensors",
+			menu = "tactical",
+			cmdDesc = {
+				id = GetCmdID('MOD_IMPROVED_SENSORS'),
+				action = 'modimprovedsensors',
+				name = GG.Pad("Improved", "Sensors"),
+				tooltip = 'Increases sensor range by 10%.',
+				texture = 'bitmaps/ui/perkbgability.png',	
+			},
+			valid = isMechBay,
+			applyTo = allMechs,
+			applyPerk = function (unitID, level, invert)
+				local effect = 1.1
+				effect = (invert and 1/effect) or effect
+				
+				local currRadar = Spring.GetUnitSensorRadius(unitID, "radar")
+				--local currLos = Spring.GetUnitSensorRadius(unitID, "los")
+				local currAirLos = Spring.GetUnitSensorRadius(unitID, "airLos")
+				Spring.SetUnitSensorRadius(unitID, "radar", currRadar * effect)
+				--Spring.SetUnitSensorRadius(unitID, "los", currLos * effect)
+				Spring.SetUnitSensorRadius(unitID, "airLos", currAirLos * effect)
+				if hasBAP(Spring.GetUnitDefID(unitID)) then
+					GG.allyBAPs[Spring.GetUnitAllyTeam(unitID)][unitID] = currRadar * effect
+				end
+			end,
+			costFunction = deductSalvage,
+			price = 1,
+		},
+		{
 			name = "disruptionfieldbooster",
 			menu = "tactical",
 			cmdDesc = {
@@ -664,6 +693,29 @@ return {
 				local currECM = Spring.GetUnitSensorRadius(unitID, "radarJammer")
 				Spring.SetUnitSensorRadius(unitID, "radarJammer", currECM * effect)
 				GG.allyJammers[Spring.GetUnitAllyTeam(unitID)][unitID] = currECM * effect
+			end,
+			costFunction = deductSalvage,
+			price = 1,
+		},
+		{
+			name = "inarc",
+			menu = "tactical",
+			cmdDesc = {
+				id = GetCmdID('MOD_I_NARC'),
+				action = 'modinarc',
+				name = GG.Pad("Improved", "NARC"),
+				tooltip = "Improved Narc Launcher. 50% range increase and Homing Pod duration. It also unlocks additional iNarc Pod upgrades (see Offensive upgrades section).",
+				texture = 'bitmaps/ui/perkbgability.png',	
+			},
+			valid = isMechBay,
+			applyTo = function (unitDefID) return allMechs(unitDefID) and hasWeaponName(unitDefID, "NARC") end,
+			applyPerk = function (unitID, level, invert) 
+				local effect = 1.5
+				effect = (invert and 1/effect) or effect
+				
+				local currDuration = Spring.GetUnitRulesParam(unitID, "NARC_DURATION") or Spring.GetGameRulesParam("NARC_DURATION")
+				Spring.SetUnitRulesParam(unitID, "NARC_DURATION", currDuration * effect)
+				setWeaponClassAttribute(unitID, "narc", "range", effect)
 			end,
 			costFunction = deductSalvage,
 			price = 1,
@@ -697,72 +749,8 @@ return {
 }
 
 	--[[ Generic
-	{
-		name = "sensorrange",
-		cmdDesc = {
-			id = GetCmdID('PERK_SENSORS_RANGE'),
-			action = 'perksensorsrange',
-			name = GG.Pad("Sensors"),
-			tooltip = '+' .. EFFECT .. '% Radar and LOS range',
-			texture = 'bitmaps/ui/perkbg.png',	
-		},
-		valid = allMechs,
-		applyPerk = function (unitID) 
-			--Spring.Echo("Sensor range selected") 
-			local currRadar = Spring.GetUnitSensorRadius(unitID, "radar")
-			local currLos = Spring.GetUnitSensorRadius(unitID, "los")
-			local currAirLos = Spring.GetUnitSensorRadius(unitID, "airLos")
-			Spring.SetUnitSensorRadius(unitID, "radar", currRadar * PCENT_INC)
-			Spring.SetUnitSensorRadius(unitID, "los", currLos * PCENT_INC)
-			Spring.SetUnitSensorRadius(unitID, "airLos", currAirLos * PCENT_INC)
-			if hasBAP(Spring.GetUnitDefID(unitID)) then
-				GG.allyBAPs[Spring.GetUnitAllyTeam(unitID)][unitID] = currRadar * PCENT_INC
-			end
-		end,
-		costFunction = deductXP,
-		levels = 3,
-	},
+
 	-- Ability modifiers
-	{
-		name = "narcduration",
-		cmdDesc = {
-			id = GetCmdID('PERK_NARC_DURATION'),
-			action = 'perknarkduration',
-			name = GG.Pad("NARC"),
-			tooltip = '+' .. EFFECT .. '% NARC duration',
-			texture = 'bitmaps/ui/perkbgability.png',	
-		},
-		valid = function (unitDefID) return allMechs(unitDefID) and hasWeaponName(unitDefID, "NARC") end,
-		applyPerk = function (unitID) 
-			--Spring.Echo("Sensor range selected") 
-			local currDuration = Spring.GetUnitRulesParam(unitID, "NARC_DURATION") or Spring.GetGameRulesParam("NARC_DURATION")
-			Spring.SetUnitRulesParam(unitID, "NARC_DURATION", currDuration * PCENT_INC)
-		end,
-		costFunction = deductXP,
-		levels = 3,
-	},
-	{
-		name = "jumpjetefficiency",
-		cmdDesc = {
-			id = GetCmdID('PERK_JUMP_EFFICIENCY'),
-			action = 'perkjumpjetefficiency',
-			name = GG.Pad("Jumpjets"),
-			tooltip = '+' .. EFFECT .. '% Jump range, speed & reload',
-			texture = 'bitmaps/ui/perkbgability.png',	
-		},
-		valid = hasJumpjets,
-		applyPerk = function (unitID) 
-			--Spring.Echo("Extended Range Jumpjets selected") 
-			local currRange = Spring.GetUnitRulesParam(unitID, "jumpRange")
-			local currSpeed = Spring.GetUnitRulesParam(unitID, "jumpSpeed")
-			local currReload = Spring.GetUnitRulesParam(unitID, "jumpReload")
-			Spring.SetUnitRulesParam(unitID, "jumpRange", currRange * PCENT_INC)
-			Spring.SetUnitRulesParam(unitID, "jumpSpeed", currSpeed * PCENT_INC)
-			Spring.SetUnitRulesParam(unitID, "jumpReload", currReload * PCENT_DEC)
-		end,
-		costFunction = deductXP,
-		levels = 3,
-	},
 	{
 		name = "mascefficiency",
 		cmdDesc = {

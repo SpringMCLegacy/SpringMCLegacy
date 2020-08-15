@@ -164,7 +164,7 @@ function gadget:UnitLoaded(unitID, unitDefID, unitTeam, transportID, transportTe
 		ShowModsByType(transportID, currMenu[unitID], unitID)
 		-- hide irrelevant mods
 		for cmdID in pairs(hiddenMods[unitDefID]) do
-			Spring.Echo("Hiding2", UnitDefs[unitDefID].name, GG.appDefs[cmdID].name)
+			--Spring.Echo("Hiding2", UnitDefs[unitDefID].name, GG.appDefs[cmdID].name)
 			EditUnitCmdDesc(transportID, FindUnitCmdDesc(transportID, cmdID), {hidden = true})
 		end
 	end
