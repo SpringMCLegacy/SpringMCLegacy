@@ -79,9 +79,11 @@ local function UpdateRemaining(unitID, appType, newLevel, applierID)
 					appRemaining = true
 					local price = Spring.IsNoCostEnabled() and 0 or appDef.price
 					if (newLevel < price) or (appDef.requires and not currentApps[unitID][appType][appDef.requires]) then
-						EditUnitCmdDesc(applierID, FindUnitCmdDesc(applierID, appCmdID), {disabled = true, params = {"C"}})
-					else
+						EditUnitCmdDesc(applierID, FindUnitCmdDesc(applierID, appCmdID), {disabled = true})
+					elseif appType == "mods" then -- reset name if no longer applied
 						EditUnitCmdDesc(applierID, FindUnitCmdDesc(applierID, appCmdID), {disabled = false, name = appDef.cmdDesc.name})
+					else
+						EditUnitCmdDesc(applierID, FindUnitCmdDesc(applierID, appCmdID), {disabled = false,})
 					end
 				elseif appType == "mods" -- a mech re-entering mechbay
 				and currentApps[unitID][appType][appDef.name] == 1 then -- with an applied mod
