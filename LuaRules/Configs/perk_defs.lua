@@ -795,10 +795,7 @@ return {
 			valid = isMechBay,
 			applyTo = allMechs,
 			applyPerk = function (unitID, level, invert)
-				local effect = 1.12
-				effect = (invert and 1/effect) or effect
-				
-				Spring.SetUnitArmored(unitID, not invert, effect)
+				GG.EnableArmour(unitID, not invert, "ferro")
 			end,
 			costFunction = deductSalvage,
 			price = 1,
@@ -816,10 +813,7 @@ return {
 			valid = isMechBay,
 			applyTo = allMechs,
 			applyPerk = function (unitID, level, invert)
-				local effect = 1.25
-				effect = (invert and 1/effect) or effect
-				
-				Spring.SetUnitArmored(unitID, not invert, effect)
+				GG.EnableArmour(unitID, not invert, "hard")
 				-- TODO: nullify double damage from AP and T-C
 				
 				effect = 0.8
@@ -837,6 +831,60 @@ return {
 				Spring.MoveCtrl.SetGroundMoveTypeData(unitID, values)
 				env = Spring.UnitScript.GetScriptEnv(unitID)
 				env.speedMod = env.speedMod * effect
+			end,
+			costFunction = deductSalvage,
+			price = 1,
+		},
+		{
+			name = "heatarmour",
+			menu = "defensive",
+			cmdDesc = {
+				id = GetCmdID('MOD_HEAT_ARMOUR'),
+				action = 'modheatarmour',
+				name = GG.Pad("Heat", "Dissipating", "Armour"),
+				tooltip = 'Makes the unit immune to heat damage from weapons like Flamers and PPCs.',
+				texture = 'bitmaps/ui/perkgreen.png',	
+			},
+			valid = isMechBay,
+			applyTo = allMechs,
+			applyPerk = function (unitID, level, invert)
+				GG.EnableArmour(unitID, not invert, "heat")
+			end,
+			costFunction = deductSalvage,
+			price = 1,
+		},
+		{
+			name = "reactivearmour",
+			menu = "defensive",
+			cmdDesc = {
+				id = GetCmdID('MOD_REACTIVE_ARMOUR'),
+				action = 'modreactivearmour',
+				name = GG.Pad("Reactive", "Armour"),
+				tooltip = '25% increased defense against all missiles.',
+				texture = 'bitmaps/ui/perkgreen.png',	
+			},
+			valid = isMechBay,
+			applyTo = allMechs,
+			applyPerk = function (unitID, level, invert)
+				GG.EnableArmour(unitID, not invert, "reactive")
+			end,
+			costFunction = deductSalvage,
+			price = 1,
+		},
+		{
+			name = "reflecarmour",
+			menu = "defensive",
+			cmdDesc = {
+				id = GetCmdID('MOD_REFLEC_ARMOUR'),
+				action = 'modreflecarmour',
+				name = GG.Pad("Reflec", "Armour"),
+				tooltip = '25% increased defense against damage from energy weapons - Lasers, PPCs and Plasma weapons.',
+				texture = 'bitmaps/ui/perkgreen.png',	
+			},
+			valid = isMechBay,
+			applyTo = allMechs,
+			applyPerk = function (unitID, level, invert)
+				GG.EnableArmour(unitID, not invert, "reflec")
 			end,
 			costFunction = deductSalvage,
 			price = 1,

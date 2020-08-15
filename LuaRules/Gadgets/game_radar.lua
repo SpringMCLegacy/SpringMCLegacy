@@ -193,6 +193,12 @@ local function DeNARC(unitID, allyTeam, force)
 	end
 end
 
+local unitArmours = {} -- unitID = true
+
+local function EnableArmour(unitID, apply, armourType)
+	unitArmours[unitID] = apply and armourType or nil
+end
+GG.EnableArmour = EnableArmour
 
 function gadget:UnitPreDamaged(unitID, unitDefID, unitTeam, damage, paralyzer, weaponID, projectileID, attackerID, attackerDefID, attackerTeam)
 	-- Don't allow any damage to beacons or dropzones
@@ -220,6 +226,25 @@ function gadget:UnitPreDamaged(unitID, unitDefID, unitTeam, damage, paralyzer, w
 		return 0
 	elseif PPC_IDS[weaponID] then
 		ApplyPPC(unitID)
+	end
+	local weaponDef = weaponID and WeaponDefs[weaponID]
+	local heatDamage = weaponDef and weaponDef.customParams.heatdamage
+	if heatDamage and not unitArmours[unitID] == "heat" then
+		env = Spring.UnitScript.GetScriptEnv(unitID)
+		Spring.UnitScript.CallAsUnit(unitID, env.ChangeHeat, heatDamage)
+	end
+	if unitArmours[unitID] == "reactive" and weaponDef.weaponType == "MissileLauncher" then
+		damage = damage * 0.75
+	elseif unitArmours[unitID] == "ferro" then
+		damage = damage * 0.88
+	elseif unitArmours[unitID] == "hard" then
+		damage = damage * 0.75
+		-- TODO: nullify double damage from AP and T-C
+	elseif unitArmours[unitID] == "reflec" then
+		local energy = weaponDef.customParams.weaponclass == "ppc" or weaponDef.customParams.weaponclass == "energy"
+		if energy then
+			damage = damage * 0.75
+		end
 	end
 	return damage, 1
 end
@@ -298,6 +323,8 @@ function gadget:UnitDestroyed(unitID, unitDefID, teamID)
 	ecmUnits[unitID] = nil
 	allyTeamMechs[Spring.GetUnitAllyTeam(unitID)][unitID] = nil
 	SetUnitRulesParam(unitID, "FRIENDLY_ECM", 0)
+	-- armour
+	unitArmours[unitID] = nil
 end
 
 function gadget:UnitGiven(unitID, unitDefID, newTeam, oldTeam)

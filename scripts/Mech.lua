@@ -446,8 +446,8 @@ end
 
 function script.HitByWeapon(x, z, weaponID, damage, piece)
 	local wd = WeaponDefs[weaponID]
-	local heatDamage = wd and wd.customParams.heatdamage or 0
-	ChangeHeat(heatDamage)
+	--local heatDamage = wd and wd.customParams.heatdamage or 0
+	--ChangeHeat(heatDamage)
 	local hitPiece = piece or GetUnitLastAttackedPiece(unitID) or ""
 	if hitPiece == "torso" or hitPiece == "pelvis" or hitPiece == "" then 
 		return damage

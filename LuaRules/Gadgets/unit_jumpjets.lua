@@ -445,7 +445,9 @@ function gadget:UnitDestroyed(unitID, unitDefID)
   lastJump[unitID]  = nil
   unitJumpInstant[unitID] = nil
   unitJumpDelays[unitID] = nil
-  unitDFADamages[unitID] = nil
+  unitDFADamages[unitID] = nil 
+  unitMechanicalJumps = nil
+  unitReinforcedLegs = nil
 end
 
 
