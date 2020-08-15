@@ -339,13 +339,13 @@ function ToggleWeapon(weaponID, code)
 	end
 end
 
-function SmokeLimb(limb, piece)
+function SmokeLimb(limb, hitPiece)
 	local maxHealth = info.limbHPs[limb] / 100
 	while true do
 		local health = limbHPs[limb]/maxHealth
 		if (health <= 66) then -- only smoke if less then 2/3rd limb maxhealth left
-			EmitSfx(piece, SFX.CEG + numWeapons + 2)
-			EmitSfx(piece, SFX.CEG + numWeapons + 3)
+			EmitSfx(piece(hitPiece), SFX.CEG + numWeapons + 2)
+			EmitSfx(piece(hitPiece), SFX.CEG + numWeapons + 3)
 		end
 		Sleep(20*health + 150)
 	end
@@ -408,11 +408,11 @@ function hideLimbPieces(limb, hide)
 end
 
 local limbsLost = 0
-function limbHPControl(limb, damage)
+function limbHPControl(limb, damage, piece)
 	local currHP = limbHPs[limb]
 	if currHP > 0 or (damage or 0) < 0 then
 		local newHP = math.min(limbHPs[limb] - damage, info.limbHPs[limb]) -- don't allow HP above max
-		--Spring.Echo(unitDef.name, limb, newHP)
+		--Spring.Echo(unitDef.name, limb, "newHP", newHP, "currHP", currHP)
 		if newHP < 0 then 
 			hideLimbPieces(limb, true)
 			newHP = 0
@@ -422,6 +422,10 @@ function limbHPControl(limb, damage)
 			hideLimbPieces(limb, false)
 			limbsLost = limbsLost - 1
 			SetUnitRulesParam(unitID, "limblost", limbsLost)
+		else
+			if (newHP/info.limbHPs[limb] * 100) <= 66 and (currHP/info.limbHPs[limb] * 100) > 66 and piece then
+				StartThread(SmokeLimb, limb, piece)
+			end
 		end
 		limbHPs[limb] = newHP
 		SetUnitRulesParam(unitID, "limb_hp_" .. limb, newHP/info.limbHPs[limb]*100)
@@ -429,6 +433,16 @@ function limbHPControl(limb, damage)
 	return currHP
 end
 GG.limbHPControl = limbHPControl
+
+function SetLimbMaxHP(mult)
+	for limb,limbHP in pairs(info.limbHPs) do -- copy table from defaults
+		info.limbHPs[limb] = limbHP * mult
+		limbHPs[limb] = limbHP * mult -- set to new max
+		SetUnitRulesParam(unitID, "limb_hp_" .. limb, 100)
+		-- run through LimbHPControl to ensure visibility etc
+		limbHPControl(limb, -1)
+	end
+end
 
 function script.HitByWeapon(x, z, weaponID, damage, piece)
 	local wd = WeaponDefs[weaponID]
@@ -439,18 +453,18 @@ function script.HitByWeapon(x, z, weaponID, damage, piece)
 		return damage
 	elseif hitPiece == "lupperleg" or hitPiece == "llowerleg" then
 		--deduct Left Leg HP
-		local hp = limbHPControl("left_leg", damage)
+		local hp = limbHPControl("left_leg", damage, hitPiece)
 		if hp == 0 then return damage end
 	elseif hitPiece == "rupperleg" or hitPiece == "rlowerleg" then
 		--deduct Right Leg HP
-		local hp = limbHPControl("right_leg", damage)
+		local hp = limbHPControl("right_leg", damage, hitPiece)
 		if hp == 0 then return damage end
 	elseif hitPiece == "lupperarm" or hitPiece == "llowerarm" then
 		--deduct Left Arm HP
-		limbHPControl("left_arm", damage)
+		limbHPControl("left_arm", damage, hitPiece)
 	elseif hitPiece == "rupperarm" or hitPiece == "rlowerarm" then
 		--deduct Right Arm HP
-		limbHPControl("right_arm", damage)
+		limbHPControl("right_arm", damage, hitPiece)
 	end
 	--Spring.Echo(weaponID, wd.name, wd.customParams.heatdamage)
 	--Spring.Echo("HIT PIECE?", hitPiece, damage, heatDamage)
@@ -516,10 +530,10 @@ function script.Create()
 	Spring.SetUnitMidAndAimPos(unitID, x,y,z, x,y,z, true)
 	if info.builderID then script.StartMoving() end -- walk down ramp
 	--StartThread(SmokeUnit, {pelvis, torso})
-	StartThread(SmokeLimb, "left_arm", lupperarm)
+	--[[StartThread(SmokeLimb, "left_arm", lupperarm)
 	StartThread(SmokeLimb, "right_arm", rupperarm)
 	StartThread(SmokeLimb, "left_leg", llowerleg)
-	StartThread(SmokeLimb, "right_leg", rlowerleg)
+	StartThread(SmokeLimb, "right_leg", rlowerleg)]]
 	StartThread(CoolOff)
 end
 

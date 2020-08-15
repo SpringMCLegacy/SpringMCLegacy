@@ -720,6 +720,52 @@ return {
 			costFunction = deductSalvage,
 			price = 1,
 		},
+		-- Defensive
+		{
+			name = "protectedactuators",
+			menu = "defensive",
+			cmdDesc = {
+				id = GetCmdID('MOD_PROTECTED_ACTUATORS'),
+				action = 'modprotectedactuators',
+				name = GG.Pad("Protected", "Actuators"),
+				tooltip = 'Increases limb health by 25%.',
+				texture = 'bitmaps/ui/perkgreen.png',	
+			},
+			valid = isMechBay,
+			applyTo = allMechs,
+			applyPerk = function (unitID, level, invert)
+				--Spring.Echo("Missile range selected") 
+				local effect = 1.25
+				effect = (invert and 1/effect) or effect
+				
+				env = Spring.UnitScript.GetScriptEnv(unitID)
+				Spring.UnitScript.CallAsUnit(unitID, env.SetLimbMaxHP, effect)
+			end,
+			costFunction = deductSalvage,
+			price = 1,
+		},
+		{
+			name = "particlefielddamper",
+			menu = "defensive",
+			cmdDesc = {
+				id = GetCmdID('MOD_PARTICLE_FIELD_DAMPER'),
+				action = 'modparticlefielddamper',
+				name = GG.Pad("Particle", "Field", "Damper"),
+				tooltip = 'Reduces the amount of time electronics are affected by "PPC effect" from PPC hits.',
+				texture = 'bitmaps/ui/perkgreen.png',	
+			},
+			valid = isMechBay,
+			applyTo = function (unitDefID) return (allMechs(unitDefID) and hasECM(unitDefID)) end,
+			applyPerk = function (unitID, level, invert)
+				--Spring.Echo("Missile range selected") 
+				local effect = 0.5
+				effect = (invert and 1/effect) or effect
+				
+				Spring.SetUnitRulesParam(unitID, "insulation", effect)
+			end,
+			costFunction = deductSalvage,
+			price = 1,
+		},
 		-- Offensive
 		{
 			name = "extendedrangelrm",
@@ -782,23 +828,6 @@ return {
 		applyPerk = function (unitID) 
 			--Spring.Echo("Projectile range selected") 
 			setWeaponClassAttribute(unitID, "ams", "range", PCENT_INC)
-		end,
-		costFunction = deductXP,
-		levels = 3,
-	},
-	{
-		name = "insulation",
-		cmdDesc = {
-			id = GetCmdID('PERK_INSULATED_ELECTRONICS'),
-			action = 'perkinsulatedelectronics',
-			name = GG.Pad("Insulated", "Electronics"),
-			tooltip = '-' .. EFFECT .. '% PPC disruption time',
-			texture = 'bitmaps/ui/perkbgability.png',	
-		},
-		valid = function (unitDefID) return (allMechs(unitDefID) and hasECM(unitDefID) or hasBAP(unitDefID)) end,
-		applyPerk = function (unitID) 
-			--Spring.Echo("Insulated Electronics selected") 
-			Spring.SetUnitRulesParam(unitID, "insulation", PCENT_DEC)
 		end,
 		costFunction = deductXP,
 		levels = 3,
