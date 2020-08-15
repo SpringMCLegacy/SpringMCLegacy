@@ -106,6 +106,7 @@ local unitDFADamages = {} -- unitID = mult
 local unitJumpInstant = {} -- unitID = true
 local unitMechanicalJumps = {} -- unitID = true
 GG.unitMechanicalJumps = unitMechanicalJumps
+local unitReinforcedLegs = {} -- unitID = true
 --------------------------------------------------------------------------------
 --------------------------------------------------------------------------------
 
@@ -186,6 +187,11 @@ local function SetUnitJumpInstant(unitID, tOrF)
 	unitJumpInstant[unitID] = tOrF
 end
 GG.SetUnitJumpInstant = SetUnitJumpInstant
+
+local function SetUnitReinforcedLegs(unitID, tOrF)
+	unitReinforcedLegs[unitID] = tOrF
+end
+GG.SetUnitReinforcedLegs = SetUnitReinforcedLegs
 
 local function SetUnitMechanicalJump(unitID, tOrF)
 	local jumpDef = jumpers[Spring.GetUnitDefID(unitID)]
@@ -385,9 +391,10 @@ function gadget:UnitPreDamaged(unitID, unitDefID, unitTeam, damage, paralyzer, w
 		if attackerID == unitID or AreTeamsAllied(attackerTeam, unitTeam) then return 0 end -- don't deal self damage via the engine
 		local attackerDef = UnitDefs[attackerDefID]
 		local applied = damage * attackerDef.health * 0.1 * unitDFADamages[attackerID] -- 10% of max HP
+		local self = applied / (unitReinforcedLegs[unitID] and 4 or 2)
 		local env = Spring.UnitScript.GetScriptEnv(attackerID)
-		Spring.UnitScript.CallAsUnit(attackerID, env.script.HitByWeapon, 0, 0, DFA_ID, applied/2, "llowerleg")
-		Spring.UnitScript.CallAsUnit(attackerID, env.script.HitByWeapon, 0, 0, DFA_ID, applied/2, "rlowerleg")
+		Spring.UnitScript.CallAsUnit(attackerID, env.script.HitByWeapon, 0, 0, DFA_ID, self, "llowerleg")
+		Spring.UnitScript.CallAsUnit(attackerID, env.script.HitByWeapon, 0, 0, DFA_ID, self, "rlowerleg")
 		return applied
 	else
 		return damage, 1
@@ -455,10 +462,10 @@ function gadget:AllowCommand(unitID, unitDefID, teamID, cmdID, cmdParams, cmdOpt
 	end -- can't jump if a leg is disabled if we are using mechanical jump system mod
 	
     local test = spTestBuildOrder(unitDefID, cmdParams[1], cmdParams[2], cmdParams[3], 1)
-	if test ~= 2 then 
+	if test < 1 then 
 		Spring.SendMessageToTeam(teamID, "Can't jump - Invalid target destination!", test)
 	end
-    return test == 2
+    return test > 0
   else -- any other command
     if not cmdOptions.shift then goalSet[unitID] = false end
     return true

@@ -734,7 +734,6 @@ return {
 			valid = isMechBay,
 			applyTo = allMechs,
 			applyPerk = function (unitID, level, invert)
-				--Spring.Echo("Missile range selected") 
 				local effect = 1.25
 				effect = (invert and 1/effect) or effect
 				
@@ -757,11 +756,28 @@ return {
 			valid = isMechBay,
 			applyTo = function (unitDefID) return (allMechs(unitDefID) and hasECM(unitDefID)) end,
 			applyPerk = function (unitID, level, invert)
-				--Spring.Echo("Missile range selected") 
 				local effect = 0.5
 				effect = (invert and 1/effect) or effect
 				
 				Spring.SetUnitRulesParam(unitID, "insulation", effect)
+			end,
+			costFunction = deductSalvage,
+			price = 1,
+		},
+		{
+			name = "reinforcedlegs",
+			menu = "defensive",
+			cmdDesc = {
+				id = GetCmdID('MOD_REINFORCED_LEGS'),
+				action = 'modreinforcedlegs',
+				name = GG.Pad("Reinforced", "Legs"),
+				tooltip = 'Damage taken by executing Death from Above attacks reduced by half.',
+				texture = 'bitmaps/ui/perkgreen.png',	
+			},
+			valid = isMechBay,
+			applyTo = hasJumpjets,
+			applyPerk = function (unitID, level, invert)
+				GG.SetUnitReinforcedLegs(unitID, not invert)
 			end,
 			costFunction = deductSalvage,
 			price = 1,
