@@ -585,24 +585,6 @@ return {
 		},
 		-- Tactical
 		{
-			name = "coolantpods",
-			menu = "tactical",
-			cmdDesc = {
-				id = GetCmdID('MOD_COOLANT_PODS'),
-				action = 'modcoolantpods',
-				name = GG.Pad("Coolant", "Pods"),
-				tooltip = 'Gives Mechs the "Coolant Flush" ability with 5 charges.',
-				texture = 'bitmaps/ui/perkbgability.png',	
-			},
-			valid = isMechBay,
-			applyTo = allMechs,
-			applyPerk = function (unitID, level, invert)
-				GG.EnableCoolantFlush(unitID, not invert)
-			end,
-			costFunction = deductSalvage,
-			price = 1,
-		},
-		{
 			name = "doubleheatsinks",
 			menu = "tactical",
 			cmdDesc = {
@@ -624,6 +606,43 @@ return {
 				Spring.SetUnitRulesParam(unitID, "heatLimit", env.heatLimit)
 			end,
 			costFunction = deductSalvage,
+			price = 1,
+		},
+		{
+			name = "coolantpods",
+			menu = "tactical",
+			cmdDesc = {
+				id = GetCmdID('MOD_COOLANT_PODS'),
+				action = 'modcoolantpods',
+				name = GG.Pad("Coolant", "Pods"),
+				tooltip = 'Gives Mechs the "Coolant Flush" ability with 5 charges.',
+				texture = 'bitmaps/ui/perkbgability.png',	
+			},
+			valid = isMechBay,
+			applyTo = allMechs,
+			applyPerk = function (unitID, level, invert)
+				GG.EnableCoolantFlush(unitID, not invert)
+			end,
+			costFunction = deductSalvage,
+			price = 1,
+		},
+		{
+			name = "emergencycoolantsystem",
+			menu = "tactical",
+			cmdDesc = {
+				id = GetCmdID('MOD_EMERGENCY_COOLANT_SYSTEM'),
+				action = 'modemergencycoolantsystem',
+				name = GG.Pad("Emergency", "Coolant", "System"),
+				tooltip = 'A further upgrade for Coolant Pods, this system will automatically trigger a coolant flush when the Mech reaches high heat levels.',
+				texture = 'bitmaps/ui/perkbgability.png',	
+			},
+			valid = isMechBay,
+			applyTo = allMechs,
+			applyPerk = function (unitID, level, invert)
+				GG.EnableAutoCoolant(unitID, not invert)
+			end,
+			costFunction = deductSalvage,
+			requires = "coolantpods",
 			price = 1,
 		},
 		-- Offensive

@@ -39,6 +39,8 @@ local MascCmdDesc = {
 local CMD_FLUSH = GG.CustomCommands.GetCmdID("CMD_FLUSH")
 local coolantUnitDefs = {}
 local coolantUnits = {}
+local autoCoolantUnits = {}
+GG.autoCoolantUnits = autoCoolantUnits
 -- Variables
 
 local function EnableCoolantFlush(unitID, tOrF)
@@ -46,6 +48,11 @@ local function EnableCoolantFlush(unitID, tOrF)
 	EditUnitCmdDesc(unitID, FindUnitCmdDesc(unitID, CMD_FLUSH), {disabled = not tOrF})
 end
 GG.EnableCoolantFlush = EnableCoolantFlush
+
+local function EnableAutoCoolant(unitID, tOrF)
+	autoCoolantUnits[unitID] = tOrF
+end
+GG.EnableAutoCoolant = EnableAutoCoolant
 
 local function ChangeMoveData(unitDefID, mult)
 	local ud = UnitDefs[unitDefID]

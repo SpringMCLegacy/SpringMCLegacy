@@ -199,6 +199,51 @@ function ChangeHeat(amount)
 	SetUnitRulesParam(unitID, "excess_heat", math.ceil(100 * excessHeat / (2 * heatLimit)))
 end
 
+local function MASCHeat()
+	while moving and mascActive do
+		ChangeHeat(mascHeatRate)
+		if excessHeat > 0 then
+			--Spring.Echo("Overheating! Terminate MASC!")
+			-- SIG_ANIMATE is just an empty table, don't create a new one just for empty command options
+			Spring.GiveOrderToUnit(unitID, GG.CustomCommands.GetCmdID("CMD_MASC"), {0}, SIG_ANIMATE) 
+			return
+		end
+		Sleep(100)
+	end
+end
+
+function SpeedChangeCheck()
+	while jumping do -- don't trigger speed change until jump is finished
+		Sleep(500)
+	end
+	GG.SpeedChange(unitID, unitDefID, speedMod)
+end
+
+function MASC(activated)
+	if activated then
+		speedMod = speedMod * 1.3
+		mascActive = true
+		StartThread(SpeedChangeCheck)
+		StartThread(MASCHeat)
+	else
+		speedMod = speedMod / 1.3
+		mascActive = false
+		StartThread(SpeedChangeCheck)
+		StartThread(MASCHeat)
+	end
+end
+
+function FlushCoolant()
+	if currAmmo.coolant > 0 then
+		GG.EmitSfxName(unitID, torso, "greengoo")
+		ChangeHeat(-10)
+		ChangeAmmo("coolant", -20)
+		return true
+	else
+		return false
+	end
+end
+
 local function CoolOff()
 	local min = math.min
 	-- localised API functions
@@ -243,6 +288,9 @@ local function CoolOff()
 					local reload = reloadTimes[weaponID] * 2
 					SetUnitWeaponState(unitID, weaponID, {reloadTime = reload})
 				end
+				if GG.autoCoolantUnits[unitID] then
+					FlushCoolant()
+				end
 			end
 		else
 			if heatCritical then -- critical->elevated->normal
@@ -275,48 +323,6 @@ function script.setSFXoccupy(terrainType)
 	else
 		inWater = false
 		coolRate = baseCoolRate
-	end
-end
-
-local function MASCHeat()
-	while moving and mascActive do
-		ChangeHeat(mascHeatRate)
-		if excessHeat > 0 then
-			--Spring.Echo("Overheating! Terminate MASC!")
-			-- SIG_ANIMATE is just an empty table, don't create a new one just for empty command options
-			Spring.GiveOrderToUnit(unitID, GG.CustomCommands.GetCmdID("CMD_MASC"), {0}, SIG_ANIMATE) 
-			return
-		end
-		Sleep(100)
-	end
-end
-
-function SpeedChangeCheck()
-	while jumping do -- don't trigger speed change until jump is finished
-		Sleep(500)
-	end
-	GG.SpeedChange(unitID, unitDefID, speedMod)
-end
-
-function MASC(activated)
-	if activated then
-		speedMod = speedMod * 1.3
-		mascActive = true
-		StartThread(SpeedChangeCheck)
-		StartThread(MASCHeat)
-	else
-		speedMod = speedMod / 1.3
-		mascActive = false
-		StartThread(SpeedChangeCheck)
-		StartThread(MASCHeat)
-	end
-end
-
-function FlushCoolant()
-	if currAmmo.coolant > 0 then
-		GG.EmitSfxName(unitID, torso, "greengoo")
-		ChangeHeat(-10)
-		ChangeAmmo("coolant", -20)
 	end
 end
 
