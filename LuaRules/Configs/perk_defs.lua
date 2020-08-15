@@ -645,6 +645,29 @@ return {
 			requires = "coolantpods",
 			price = 1,
 		},
+		{
+			name = "disruptionfieldbooster",
+			menu = "tactical",
+			cmdDesc = {
+				id = GetCmdID('MOD_DISRUPTION_FIELD_BOOSTER'),
+				action = 'moddisruptionfieldbooster',
+				name = GG.Pad("Disruption", "Field", "Booster"),
+				tooltip = "Increases the range of ECM's disruption field.",
+				texture = 'bitmaps/ui/perkbgability.png',	
+			},
+			valid = isMechBay,
+			applyTo = function (unitDefID) return (allMechs(unitDefID) and hasECM(unitDefID)) end,
+			applyPerk = function (unitID, level, invert) 
+				local effect = 1.5
+				effect = (invert and 1/effect) or effect
+				
+				local currECM = Spring.GetUnitSensorRadius(unitID, "radarJammer")
+				Spring.SetUnitSensorRadius(unitID, "radarJammer", currECM * effect)
+				GG.allyJammers[Spring.GetUnitAllyTeam(unitID)][unitID] = currECM * effect
+			end,
+			costFunction = deductSalvage,
+			price = 1,
+		},
 		-- Offensive
 		{
 			name = "extendedrangelrm",
@@ -771,25 +794,6 @@ return {
 		applyPerk = function (unitID) 
 			--Spring.Echo("Projectile range selected") 
 			setWeaponClassAttribute(unitID, "ams", "range", PCENT_INC)
-		end,
-		costFunction = deductXP,
-		levels = 3,
-	},
-	{
-		name = "ecmrange",
-		cmdDesc = {
-			id = GetCmdID('PERK_ECM_RANGE'),
-			action = 'perkecmrange',
-			name = GG.Pad("ECM"),
-			tooltip = '+' .. EFFECT .. '% ECM range',
-			texture = 'bitmaps/ui/perkbgability.png',	
-		},
-		valid = function (unitDefID) return (allMechs(unitDefID) and hasECM(unitDefID) and isFaction(unitDefID, "cc")) end,
-		applyPerk = function (unitID) 
-			--Spring.Echo("ECM range selected") 
-			local currECM = Spring.GetUnitSensorRadius(unitID, "radarJammer")
-			Spring.SetUnitSensorRadius(unitID, "radarJammer", currECM * PCENT_INC)
-			GG.allyJammers[Spring.GetUnitAllyTeam(unitID)][unitID] = currECM * PCENT_INC
 		end,
 		costFunction = deductXP,
 		levels = 3,
