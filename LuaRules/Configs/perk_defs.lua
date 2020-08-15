@@ -782,6 +782,65 @@ return {
 			costFunction = deductSalvage,
 			price = 1,
 		},
+		{
+			name = "ferrofibrousarmour",
+			menu = "defensive",
+			cmdDesc = {
+				id = GetCmdID('MOD_FERRO_FIBROUS_ARMOUR'),
+				action = 'modferrofirbousarmour',
+				name = GG.Pad("Ferro", "Fibrous", "Armour"),
+				tooltip = 'A general 12% increase in damage resistance against all forms of damage.',
+				texture = 'bitmaps/ui/perkgreen.png',	
+			},
+			valid = isMechBay,
+			applyTo = allMechs,
+			applyPerk = function (unitID, level, invert)
+				local effect = 1.12
+				effect = (invert and 1/effect) or effect
+				
+				Spring.SetUnitArmored(unitID, not invert, effect)
+			end,
+			costFunction = deductSalvage,
+			price = 1,
+		},
+		{
+			name = "hardenedarmour",
+			menu = "defensive",
+			cmdDesc = {
+				id = GetCmdID('MOD_HARDENED_ARMOUR'),
+				action = 'modhardenedarmour',
+				name = GG.Pad("Hardened", "Armour"),
+				tooltip = '25% increased defense against all damage and nullifies the double-damage done by Autocannon Armour Piercing ammo and SRM Tandem-Charge warheads, but speed, acceleration and leg turn rate reduced by 20%.',
+				texture = 'bitmaps/ui/perkgreen.png',	
+			},
+			valid = isMechBay,
+			applyTo = allMechs,
+			applyPerk = function (unitID, level, invert)
+				local effect = 1.25
+				effect = (invert and 1/effect) or effect
+				
+				Spring.SetUnitArmored(unitID, not invert, effect)
+				-- TODO: nullify double damage from AP and T-C
+				
+				effect = 0.8
+				effect = (invert and 1/effect) or effect
+				
+				GG.SetUnitTurnRate(unitID, effect)
+				local ud = UnitDefs[Spring.GetUnitDefID(unitID)]
+				local values = {
+					turnRate		= ud.turnRate * effect,
+					accRate			= ud.maxAcc * effect,
+					decRate			= ud.maxDec * effect,
+					maxSpeed		= ud.speed * effect,
+					maxReverseSpeed	= ud.rSpeed * effect,
+				}
+				Spring.MoveCtrl.SetGroundMoveTypeData(unitID, values)
+				env = Spring.UnitScript.GetScriptEnv(unitID)
+				env.speedMod = env.speedMod * effect
+			end,
+			costFunction = deductSalvage,
+			price = 1,
+		},
 		-- Offensive
 		{
 			name = "extendedrangelrm",
