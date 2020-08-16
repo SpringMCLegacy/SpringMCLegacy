@@ -28,13 +28,16 @@ include ("anims/" .. unitDef.name:sub(4, (unitDef.name:find("_", 4) or 0) - 1) .
 
 -- Info from lusHelper gadget
 -- non-local so perks can change them (flagrant lack of encapsulation!)
+numWeapons = info.numWeapons - 1 -- remove sight
 heatLimit = info.heatLimit
 baseCoolRate = info.coolRate
 mascHeatRate = 0.1
-firingHeats = info.firingHeats
-numWeapons = info.numWeapons - 1 -- remove sight
+firingHeats = info.firingHeats -- fire discipline perk
 TORSO_SPEED = info.torsoTurnSpeed -- AES mod
 ELEVATION_SPEED = info.elevationSpeed -- AES mod
+maxAmmo = {} -- Extended Range LRM mod
+table.copy(info.maxAmmo, maxAmmo) -- need our own local copy or the lus helper one is overriden
+currAmmo = {}  -- Extended Range LRM mod
 
 local coolRate = baseCoolRate
 local inWater = false
@@ -50,8 +53,7 @@ local burstLengths = info.burstLengths
 local ammoTypes = info.ammoTypes
 local minRanges = info.minRanges
 local spinSpeeds = info.spinSpeeds
-local maxAmmo = info.maxAmmo
-local currAmmo = {} -- copy maxAmmo table into currAmmo
+-- copy maxAmmo table into currAmmo
 for k,v in pairs(maxAmmo) do 
 	currAmmo[k] = v 
 	SetUnitRulesParam(unitID, "ammo_" .. k, 100)

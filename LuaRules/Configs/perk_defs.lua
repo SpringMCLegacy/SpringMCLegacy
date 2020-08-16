@@ -49,6 +49,7 @@ end
 -- Common apply() functions
 local function setWeaponClassAttribute(unitID, className, attrib, multiplier, tag, with, value)
 	local weapons = UnitDefs[Spring.GetUnitDefID(unitID)].weapons
+	local changed = {}
 	for weapNum, weapTable in pairs(weapons) do
 		local wd = WeaponDefs[weapTable["weaponDef"]]
 		if className == "all" or (wd.customParams["weaponclass"] == className) then
@@ -58,9 +59,11 @@ local function setWeaponClassAttribute(unitID, className, attrib, multiplier, ta
 				local currAttrib = Spring.GetUnitWeaponState(unitID, weapNum, attrib)
 				--Spring.Echo("Current " .. attrib .. ": ", currAttrib, weapNum, WeaponDefs[weapTable["weaponDef"]].name)
 				Spring.SetUnitWeaponState(unitID, weapNum, attrib, currAttrib * multiplier)
+				changed[weapNum] = true
 			end
 		end
 	end
+	return changed
 end
 
 -- Common costFunction() functions
@@ -949,12 +952,18 @@ return {
 			valid = isMechBay,
 			applyTo = function (unitDefID) return hasWeaponClass(unitDefID, "lrm") end,
 			applyPerk = function (unitID, level, invert)
-				--Spring.Echo("Missile range selected") 
+				-- increase range by 50%
 				local effect = 1.5
 				effect = (invert and 1/effect) or effect
 				
-				setWeaponClassAttribute(unitID, "lrm", "range", effect)
-				-- TODO: reduce max ammo by 50%
+				local changed = setWeaponClassAttribute(unitID, "lrm", "range", effect)
+				-- reduce max ammo by 50%
+				effect = 0.5
+				effect = (invert and 1/effect) or effect
+				env = Spring.UnitScript.GetScriptEnv(unitID)
+				env.maxAmmo["lrm"] = env.maxAmmo["lrm"] * effect
+				env.currAmmo["lrm"] = env.maxAmmo["lrm"]
+				Spring.SetUnitRulesParam(unitID, "ammo_lrm", 100)
 				-- TODO: Remove tracking bonus (TODO: implement tracking bonus)
 			end,
 			costFunction = deductSalvage,
