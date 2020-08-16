@@ -1119,130 +1119,45 @@ return {
 			costFunction = deductSalvage,
 			price = 1,
 		},
+		-- Ammo
+		{
+			name = "ammoprecision",
+			menu = "ammo",
+			cmdDesc = {
+				id = GetCmdID('MOD_AMMO_PRECISION'),
+				action = 'modammoprecision',
+				name = GG.Pad("Autocannon", "Precision"),
+				tooltip = 'Autocannons only. Increases range and accuracy of autocannons by 25%, but with 50% reduction in ammunition.',
+				texture = 'bitmaps/ui/perkyellow.png',	
+			},
+			valid = isMechBay,
+			applyTo = function (unitDefID) return hasWeaponClass(unitDefID, "autocannon") and isFaction(unitDefID, "fs") end,
+			applyPerk = function (unitID, level, invert)
+				-- increase range, accuracy by 25%
+				local effect = 1.25
+				effect = (invert and 1/effect) or effect
+				local changed = setWeaponClassAttribute(unitID, "autocannon", "range", effect)
+				-- increase accuracy by 25%, lower is better
+				effect = 0.75
+				effect = (invert and 1/effect) or effect
+				setWeaponClassAttribute(unitID, "autocannon", "accuracy", effect)
+				-- reduce max ammo by 50%
+				effect = 0.5
+				effect = (invert and 1/effect) or effect
+				env = Spring.UnitScript.GetScriptEnv(unitID)
+				local ammoCache = {}
+				for weapNum, wd in pairs(changed) do
+					local ammoType = wd.customParams.ammotype
+					if not ammoCache[ammoType] then -- only once per ammotype
+						ammoCache[ammoType] = true
+						env.maxAmmo[ammoType] = env.maxAmmo[ammoType] * effect
+						env.currAmmo[ammoType] = env.maxAmmo[ammoType]
+						Spring.SetUnitRulesParam(unitID, "ammo_" .. ammoType, 100)
+					end
+				end
+			end,
+			costFunction = deductSalvage,
+			price = 1,
+		},
 	},
 }
-
-	--[[ Generic
-
-	-- Ability modifiers
-	{
-		name = "mascefficiency",
-		cmdDesc = {
-			id = GetCmdID('PERK_MASC_EFFICIENCY'),
-			action = 'perkmascefficiency',
-			name = GG.Pad("MASC"),
-			tooltip = '-' .. EFFECT .. '% MASC heat generation',
-			texture = 'bitmaps/ui/perkbgability.png',	
-		},
-		valid = hasMASC,
-		applyPerk = function (unitID) 
-			--Spring.Echo("MASC heat reduction selected") 
-			env = Spring.UnitScript.GetScriptEnv(unitID)
-			env.mascHeatRate = env.mascHeatRate * PCENT_DEC
-		end,
-		costFunction = deductXP,
-		levels = 3,
-	},
-	{
-		name = "amsrange",
-		cmdDesc = {
-			id = GetCmdID('PERK_AMS_RANGE'),
-			action = 'perkamsrange',
-			name = GG.Pad("AMS"),
-			tooltip = '+' .. EFFECT .. '% AMS Weapon Range',
-			texture = 'bitmaps/ui/perkbgability.png',	
-		},
-		valid = function (unitDefID) return allMechs(unitDefID) and hasWeaponClass(unitDefID, "ams") end,
-		applyPerk = function (unitID) 
-			--Spring.Echo("Projectile range selected") 
-			setWeaponClassAttribute(unitID, "ams", "range", PCENT_INC)
-		end,
-		costFunction = deductXP,
-		levels = 3,
-	},
-	-- Weapon (Faction) specific
-	{
-		name = "lrmrange",
-		cmdDesc = {
-			id = GetCmdID('PERK_LRM_RANGE'),
-			action = 'perklrmrange',
-			name = GG.Pad("LRM"),
-			tooltip = '+' .. EFFECT .. '% LRM Range',
-			texture = 'bitmaps/ui/perkbgfaction.png',	
-		},
-		valid = function (unitDefID) return (allMechs(unitDefID) and hasWeaponClass(unitDefID, "lrm") and isFaction(unitDefID, "fw")) end,
-		applyPerk = function (unitID) 
-			--Spring.Echo("Missile range selected") 
-			setWeaponClassAttribute(unitID, "lrm", "range", PCENT_INC)
-		end,
-		costFunction = deductXP,
-		levels = 3,
-	},
-	{
-		name = "mrmrange",
-		cmdDesc = {
-			id = GetCmdID('PERK_MRM_RANGE'),
-			action = 'perkmrmrange',
-			name = GG.Pad("MRM"),
-			tooltip = '+' .. EFFECT .. '% MRM Range',
-			texture = 'bitmaps/ui/perkbgfaction.png',	
-		},
-		valid = function (unitDefID) return (allMechs(unitDefID) and hasWeaponClass(unitDefID, "mrm") and isFaction(unitDefID, "dc")) end,
-		applyPerk = function (unitID) 
-			--Spring.Echo("Missile range selected") 
-			setWeaponClassAttribute(unitID, "mrm", "range", PCENT_INC)
-		end,
-		costFunction = deductXP,
-		levels = 3,
-	},
-	{
-		name = "ppcrange",
-		cmdDesc = {
-			id = GetCmdID('PERK_PPC_RANGE'),
-			action = 'perkppcrange',
-			name = GG.Pad("PPC"),
-			tooltip = '+' .. EFFECT .. '% PPC Weapon Range',
-			texture = 'bitmaps/ui/perkbgfaction.png',	
-		},
-		valid = function (unitDefID) return (allMechs(unitDefID) and hasWeaponClass(unitDefID, "ppc") and isFaction(unitDefID, "dc")) end,
-		applyPerk = function (unitID) 
-			--Spring.Echo("PPC range selected") 
-			setWeaponClassAttribute(unitID, "ppc", "range", PCENT_INC)
-		end,
-		costFunction = deductXP,
-		levels = 3,
-	},
-	{
-		name = "autocannonrange",
-		cmdDesc = {
-			id = GetCmdID('PERK_AUTOCANNON_RANGE'),
-			action = 'perkautocannonrange',
-			name = GG.Pad("Autocannon"),
-			tooltip = '+' .. EFFECT .. '% Autocannon Weapon Range',
-			texture = 'bitmaps/ui/perkbgfaction.png',	
-		},
-		valid = function (unitDefID) return (allMechs(unitDefID) and hasWeaponClass(unitDefID, "autocannon") and isFaction(unitDefID, "fs")) end,
-		applyPerk = function (unitID) 
-			--Spring.Echo("Autocannon range selected") 
-			setWeaponClassAttribute(unitID, "autocannon", "range", PCENT_INC)
-		end,
-		costFunction = deductXP,
-		levels = 3,
-	},
-	{
-		name = "gaussrange",
-		cmdDesc = {
-			id = GetCmdID('PERK_GAUSS_RANGE'),
-			action = 'perkgaussrange',
-			name = GG.Pad("Gauss"),
-			tooltip = '+' .. EFFECT .. '% Gauss Weapon Range',
-			texture = 'bitmaps/ui/perkbgfaction.png',	
-		},
-		valid = function (unitDefID) return (allMechs(unitDefID) and hasWeaponClass(unitDefID, "gauss") and isFaction(unitDefID, "la")) end,
-		applyPerk = function (unitID) 
-			--Spring.Echo("Gauss range selected") 
-			setWeaponClassAttribute(unitID, "gauss", "range", PCENT_INC)
-		end,
-		costFunction = deductXP,
-		levels = 3,
-	},]]
