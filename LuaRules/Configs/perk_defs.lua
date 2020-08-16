@@ -1081,7 +1081,7 @@ return {
 				id = GetCmdID('MOD_QUICK_CHARGING_CAPACITORS'),
 				action = 'modquickchargingcapacitors',
 				name = GG.Pad("Quick", "Charging", "Capacitors"),
-				tooltip = 'Gauss Rifles only. Rate of fire increased by 25%, but generates heat similar to a PPC.',
+				tooltip = 'Gauss-based weapons only. Rate of fire increased by 25%, but generates heat similar to a PPC.',
 				texture = 'bitmaps/ui/perkbgfaction.png',	
 			},
 			valid = isMechBay,
@@ -1096,6 +1096,25 @@ return {
 				for weapNum in pairs(changed) do
 					env.firingHeats[weapNum] = invert and wd.customParams.heatgenerated or 2.5 -- PPC is 5 * 0.5 in lus_helper
 				end
+			end,
+			costFunction = deductSalvage,
+			price = 1,
+		},
+		{
+			name = "silverbullet",
+			menu = "offensive",
+			cmdDesc = {
+				id = GetCmdID('MOD_SILVER_BULLET'),
+				action = 'modsilverbullet',
+				name = GG.Pad("Silver", "Bullet", "Gauss"),
+				tooltip = 'Regular Gauss Rifle only. Transforms the Gauss into an LBX-like weapon that fires 15 flechette rounds.',
+				texture = 'bitmaps/ui/perkbgfaction.png',	
+			},
+			valid = isMechBay,
+			applyTo = function (unitDefID) return hasWeaponName(unitDefID, "gauss") and isFaction(unitDefID, "la") end,
+			applyPerk = function (unitID, level, invert)
+				--Spring.Echo("Missile range selected") 
+				GG.EnableSilverBullet(unitID, not invert)
 			end,
 			costFunction = deductSalvage,
 			price = 1,
