@@ -214,7 +214,7 @@ return {
 				action = 'perkpinata',
 				name = GG.Pad("Pinata"),
 				tooltip = '+1 salvage per kill',
-				texture = 'bitmaps/ui/perks/wastelander.png',	
+				texture = 'bitmaps/ui/perks/pinata.png',	
 			},
 			valid = allMechs,
 			applyPerk = function (unitID) 
