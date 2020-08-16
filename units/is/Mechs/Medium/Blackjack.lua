@@ -79,16 +79,16 @@ local BJ4 = Blackjack:New{
 	description         = "Medium Sniper",
 	weapons	= {	
 		[1] = {
-			name	= "TCAC5", -- should be light AC/5
+			name	= "AC5", -- should be light AC/5
 		},
 		[2] = {
-			name	= "TCAC5", -- should be light AC/5
+			name	= "AC5", -- should be light AC/5
 		},
 		[3] = {
-			name	= "TCERMBL",
+			name	= "ERMBL",
 		},
 		[4] = {
-			name	= "TCERMBL",
+			name	= "ERMBL",
 		},
 	},
 		

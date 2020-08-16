@@ -143,11 +143,6 @@ local AC5 = AC_Class:New{
     },
 }
 
-local TCAC5 = AC5:New{
-	name                    = "AC/5",
-	accuracy                = 300,
-}
-
 local AC5_AA = AC5:New{
 	name                    = "AC/5 Flak",
 	burnblow				= true, 	--Bullets explode at range limit.
@@ -381,7 +376,6 @@ return lowerkeys({
 	AC5_AA = AC5_AA,
 	RAC5 = RAC5,
 	UAC5 = UAC5,
-	TCAC5 = TCAC5,
 	LBX5 = LBX5,
 	LBX5_Cluster = LBX5_Cluster,
 	-- AC10 & Variants
