@@ -21,8 +21,15 @@ local function isMechBay(unitDefID) return (UnitDefs[unitDefID].name == "outpost
 -- Common applyTo() functions
 local function hasWeaponName(unitDefID, weapName)
 	local weapons = UnitDefs[unitDefID].weapons
+	local found
 	for weapNum, weapTable in pairs(weapons) do 
-		if weapTable["weaponDef"] == WeaponDefNames[weapName:lower()].id then return true end
+		if weapTable["weaponDef"] == WeaponDefNames[weapName:lower()].id then 
+			if not found then found = {} end
+			found[weapNum] = true
+		end
+	end
+	if found then
+		return true, found
 	end
 	return false
 end
@@ -943,10 +950,10 @@ return {
 			name = "extendedrangelrm",
 			menu = "offensive",
 			cmdDesc = {
-				id = GetCmdID('MOD_EXTENDEDRANGELRM'),
+				id = GetCmdID('MOD_EXTENDED_RANGE_LRM'),
 				action = 'modextendedrangelrm',
 				name = GG.Pad("Extended", "Range", "LRM"),
-				tooltip = 'Applies to LRMs only. Increases LRM range by 50%, but reduces ammo by 50% and will not receive tracking/damage bonus from TAG/Narc. Is incompatible with Artemis IV upgrade and LRM special ammo.',
+				tooltip = 'Applies to LRMs only. Increases LRM range by 50%, but reduces ammo by 50% and will not receive tracking/damage bonus from TAG/Narc.',
 				texture = 'bitmaps/ui/perkbgfaction.png',	
 			},
 			valid = isMechBay,
@@ -965,6 +972,30 @@ return {
 				env.currAmmo["lrm"] = env.maxAmmo["lrm"]
 				Spring.SetUnitRulesParam(unitID, "ammo_lrm", 100)
 				-- TODO: Remove tracking bonus (TODO: implement tracking bonus)
+			end,
+			costFunction = deductSalvage,
+			price = 1,
+		},
+		{
+			name = "improvedheavygauss",
+			menu = "offensive",
+			cmdDesc = {
+				id = GetCmdID('MOD_IMPROVED_HEAVY_GAUSS'),
+				action = 'modimprovedheavygauss',
+				name = GG.Pad("Improved", "Heavy", "Gauss"),
+				tooltip = 'Heavy Gauss only. Shots do consistent damage (1900) at all ranges, increasing damage at long ranges but decreasing it at close range.',
+				texture = 'bitmaps/ui/perkbgfaction.png',	
+			},
+			valid = isMechBay,
+			applyTo = function (unitDefID) return (allMechs(unitDefID) and hasWeaponName(unitDefID, "heavygauss") and isFaction(unitDefID, "la")) end,
+			applyPerk = function (unitID, level, invert)
+				local _, toChange = hasWeaponName(Spring.GetUnitDefID(unitID), "heavygauss")
+				for weapNum in pairs(toChange) do
+					Spring.SetUnitWeaponDamages(unitID, weapNum, "dynDamageExp", 0)
+					for i = 0, 13 do -- there are 13 armourdefs
+						Spring.SetUnitWeaponDamages(unitID, weapNum, i, 1900)
+					end
+				end
 			end,
 			costFunction = deductSalvage,
 			price = 1,
