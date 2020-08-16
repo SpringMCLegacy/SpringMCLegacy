@@ -158,7 +158,7 @@ function gadget:UnitCreated(unitID, unitDefID, teamID, builderID)
 end
 
 function gadget:UnitLoaded(unitID, unitDefID, unitTeam, transportID, transportTeam)
-	if mechBays[transportID] >= 2 then
+	if mechBays[transportID] and mechBays[transportID] >= 2 then
 		-- update mod status for this mech
 		GG.UpdateUnitApps(transportID, "mods")
 		ShowModsByType(transportID, currMenu[unitID], unitID)
@@ -171,7 +171,7 @@ function gadget:UnitLoaded(unitID, unitDefID, unitTeam, transportID, transportTe
 end
 
 function gadget:UnitUnloaded(unitID, unitDefID, unitTeam, transportID, transportTeam)
-	if mechBays[transportID] >= 2 then -- TODO: check it is level 2
+	if mechBays[transportID] and mechBays[transportID] >= 2 then -- TODO: check it is level 2
 		-- reset menu
 		GG.UpdateUnitApps(transportID, "mods")
 		ShowModsByType(transportID, "none", nil)
