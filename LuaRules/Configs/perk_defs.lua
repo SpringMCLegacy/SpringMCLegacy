@@ -969,6 +969,28 @@ return {
 			price = 1,
 		},
 		{
+			name = "apollofcs",
+			menu = "offensive",
+			cmdDesc = {
+				id = GetCmdID('MOD_APOLLO_FCS'),
+				action = 'modapollofcs',
+				name = GG.Pad("Apollo", "FCS"),
+				tooltip = 'Increases the accuracy of MRM weapons by 25%.',
+				texture = 'bitmaps/ui/perkbgfaction.png',	
+			},
+			valid = isMechBay,
+			applyTo = function (unitDefID) return hasWeaponClass(unitDefID, "mrm") and isFaction(unitDefID, "dc") end,
+			applyPerk = function (unitID, level, invert)
+				--Spring.Echo("Missile range selected") 
+				local effect = 0.75 -- smaller accuracy is better, 25% reduction
+				effect = (invert and 1/effect) or effect
+				
+				setWeaponClassAttribute(unitID, "mrm", "accuracy", effect)
+			end,
+			costFunction = deductSalvage,
+			price = 1,
+		},
+		{
 			name = "extendedrangelrm",
 			menu = "offensive",
 			cmdDesc = {
