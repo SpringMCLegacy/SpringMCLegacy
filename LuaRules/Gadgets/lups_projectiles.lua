@@ -45,10 +45,16 @@ if (gadgetHandler:IsSyncedCode()) then
 local projectiles = {}
 local tracking = {}
 local lbx = {}
+local silverBulletUnits = {}
+local function EnableSilverBullet(unitID, tOrF)
+	silverBulletUnits[unitID] = tOrF
+end
+GG.EnableSilverBullet = EnableSilverBullet
 
 function gadget:ProjectileCreated(proID, proOwnerID, weaponID)
 	--Spring.Echo("PC", proID, proOwnerID, weaponID)
-	if WeaponDefs[weaponID] and WeaponDefs[weaponID].name == "arrowiv" then
+	local wd = WeaponDefs[weaponID]
+	if wd and WeaponDefs[weaponID].name == "arrowiv" then
 		for i = 1, 5 do
 			--Spring.Echo("Arrow IV launched!")
 		end
@@ -75,11 +81,28 @@ function gadget:ProjectileCreated(proID, proOwnerID, weaponID)
 				Spring.SpawnProjectile(clusterWD.id, {
 						pos = {x,y,z},
 						speed = {(vx+math.random(-spray,spray))/2, (vy-math.random(spray))/2, (vz+math.random(-spray,spray))/2}, -- TODO: remove halving?
+						owner = proOwnerID,
+						team = Spring.GetUnitTeam(proOwnerID),
 					})
 			end
 			Spring.DeleteProjectile(proID)
 		end
+	elseif wd and wd.name == "gauss" and proOwnerID and silverBulletUnits[proOwnerID] then
+		local clusterWD = WeaponDefNames["silverbullet"]
+		local x,y,z = Spring.GetProjectilePosition(proID)
+		local vx, vy, vz = Spring.GetProjectileVelocity(proID)
+		local spray = math.asin(clusterWD.sprayAngle) * 140
+		for i = 1, clusterWD.projectiles do
+			Spring.SpawnProjectile(clusterWD.id, {
+					pos = {x,y,z},
+					speed = {(vx+math.random(-spray,spray))/2, (vy-math.random(spray))/2, (vz+math.random(-spray,spray))/2}, -- TODO: remove halving?
+					owner = proOwnerID,
+					team = Spring.GetUnitTeam(proOwnerID),
+				})
+		end
+		Spring.DeleteProjectile(proID)
 	end
+	
 	if weapons[weaponID] then
 		projectiles[proID] = true
 		SendToUnsynced("lupsProjectiles_AddProjectile", proID, proOwnerID, weaponID)
@@ -99,7 +122,7 @@ function gadget:Initialize()
 		Script.SetWatchWeapon(weaponID, true)
 	end
 	for id, wd in pairs(WeaponDefs) do
-		if wd.customParams and (wd.customParams.projectilelups or wd.customParams.weaponclass == "lbx") then
+		if wd.customParams and (wd.customParams.projectilelups or wd.customParams.weaponclass == "lbx") or wd.name == "gauss" then
 			Script.SetWatchWeapon(id, true) -- we can't call SWW outside of synced so do it here
 			if wd.customParams.weaponclass == "lbx" then -- don't include the cluster munuitions themselves or we end up with circular bs
 				local clusterName = wd.name .. "_cluster"

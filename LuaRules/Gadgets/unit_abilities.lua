@@ -38,9 +38,21 @@ local MascCmdDesc = {
 
 local CMD_FLUSH = GG.CustomCommands.GetCmdID("CMD_FLUSH")
 local coolantUnitDefs = {}
-GG.coolantUnitDefs = coolantUnitDefs
-
+local coolantUnits = {}
+local autoCoolantUnits = {}
+GG.autoCoolantUnits = autoCoolantUnits
 -- Variables
+
+local function EnableCoolantFlush(unitID, tOrF)
+	coolantUnits[unitID] = tOrF
+	EditUnitCmdDesc(unitID, FindUnitCmdDesc(unitID, CMD_FLUSH), {disabled = not tOrF})
+end
+GG.EnableCoolantFlush = EnableCoolantFlush
+
+local function EnableAutoCoolant(unitID, tOrF)
+	autoCoolantUnits[unitID] = tOrF
+end
+GG.EnableAutoCoolant = EnableAutoCoolant
 
 local function ChangeMoveData(unitDefID, mult)
 	local ud = UnitDefs[unitDefID]
@@ -99,7 +111,7 @@ function gadget:AllowCommand(unitID, unitDefID, teamID, cmdID, cmdParams, cmdOpt
 			return false 
 		end
 	elseif cmdID == CMD_FLUSH then 
-		if coolantUnitDefs[unitDefID] then
+		if coolantUnits[unitID] then
 			env = Spring.UnitScript.GetScriptEnv(unitID)
 			Spring.UnitScript.CallAsUnit(unitID, env.FlushCoolant)
 		else return false end
@@ -115,10 +127,9 @@ function gadget:UnitCreated(unitID, unitDefID, teamID, builderID)
 		Spring.SetUnitRulesParam(unitID, "masc", 100)
 		mascUnitDefs[unitDefID] = true
 	end
-	if cp and cp.baseclass == "mech" then
+	if GG.mechCache[unitDefID] then
 		--InsertUnitCmdDesc(unitID, CoolantCmdDesc)
 		Spring.SetUnitRulesParam(unitID, "ammo_coolant", 100)
-		coolantUnitDefs[unitDefID] = true
 	end
 end
 

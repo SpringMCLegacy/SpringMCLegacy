@@ -100,8 +100,13 @@ local jumps       = {}
 local jumping     = {}
 local goalSet	  = {}
 
+-- Perk and Mods
 local unitJumpDelays = {} -- unitID = delayTime
 local unitDFADamages = {} -- unitID = mult
+local unitJumpInstant = {} -- unitID = true
+local unitMechanicalJumps = {} -- unitID = true
+GG.unitMechanicalJumps = unitMechanicalJumps
+local unitReinforcedLegs = {} -- unitID = true
 --------------------------------------------------------------------------------
 --------------------------------------------------------------------------------
 
@@ -172,10 +177,31 @@ local function ReloadQueue(unitID, queue, cmdTag)
   
 end
 
+-- Perk and Mod functions
 local function SetUnitJumpDelay(unitID, delta)
 	unitJumpDelays[unitID] = unitJumpDelays[unitID] + delta
 end
 GG.SetUnitJumpDelay = SetUnitJumpDelay
+
+local function SetUnitJumpInstant(unitID, tOrF)
+	unitJumpInstant[unitID] = tOrF
+end
+GG.SetUnitJumpInstant = SetUnitJumpInstant
+
+local function SetUnitReinforcedLegs(unitID, tOrF)
+	unitReinforcedLegs[unitID] = tOrF
+end
+GG.SetUnitReinforcedLegs = SetUnitReinforcedLegs
+
+local function SetUnitMechanicalJump(unitID, tOrF)
+	local jumpDef = jumpers[Spring.GetUnitDefID(unitID)]
+	local range   = spGetUnitRulesParam(unitID, "jumpRange") or jumpDef.range
+	local reload  = spGetUnitRulesParam(unitID, "jumpReload") or BASE_RELOAD
+	Spring.SetUnitRulesParam(unitID, "jumpRange", tOrF and range/2 or 2*range)
+	Spring.SetUnitRulesParam(unitID, "jumpReload", tOrF and 1 or BASE_RELOAD)
+	unitMechanicalJumps[unitID] = tOrF
+end
+GG.SetUnitMechanicalJump = SetUnitMechanicalJump
 
 local function Jump(unitID, goal, cmdTag)
   goal[2]             = spGetGroundHeight(goal[1],goal[3])
@@ -190,7 +216,7 @@ local function Jump(unitID, goal, cmdTag)
   local reloadTime    = (Spring.GetUnitRulesParam(unitID, "jumpReload") or (BASE_RELOAD))*30
   local teamID        = spGetUnitTeam(unitID)
   
-  local rotateMidAir  = true --jumpDef.rotateMidAir Should be true for Perk to remove need to turn and face direction
+  local rotateMidAir  = unitJumpInstant[unitID] --jumpDef.rotateMidAir Should be true for Perk to remove need to turn and face direction
   local cob 	 	  = false --jumpDef.cobscript
   local env
 
@@ -365,9 +391,10 @@ function gadget:UnitPreDamaged(unitID, unitDefID, unitTeam, damage, paralyzer, w
 		if attackerID == unitID or AreTeamsAllied(attackerTeam, unitTeam) then return 0 end -- don't deal self damage via the engine
 		local attackerDef = UnitDefs[attackerDefID]
 		local applied = damage * attackerDef.health * 0.1 * unitDFADamages[attackerID] -- 10% of max HP
+		local self = applied / (unitReinforcedLegs[unitID] and 4 or 2)
 		local env = Spring.UnitScript.GetScriptEnv(attackerID)
-		Spring.UnitScript.CallAsUnit(attackerID, env.script.HitByWeapon, 0, 0, DFA_ID, applied/2, "llowerleg")
-		Spring.UnitScript.CallAsUnit(attackerID, env.script.HitByWeapon, 0, 0, DFA_ID, applied/2, "rlowerleg")
+		Spring.UnitScript.CallAsUnit(attackerID, env.script.HitByWeapon, 0, 0, DFA_ID, self, "llowerleg")
+		Spring.UnitScript.CallAsUnit(attackerID, env.script.HitByWeapon, 0, 0, DFA_ID, self, "rlowerleg")
 		return applied
 	else
 		return damage, 1
@@ -403,6 +430,7 @@ function gadget:UnitCreated(unitID, unitDefID, unitTeam)
   end 
   local t = spGetGameSeconds()
   lastJump[unitID] = t - BASE_RELOAD
+  unitJumpInstant[unitID] = false
   unitJumpDelays[unitID] = 40
   unitDFADamages[unitID] = 1
   --spInsertUnitCmdDesc(unitID, jumpCmdDesc)
@@ -415,6 +443,11 @@ end
 
 function gadget:UnitDestroyed(unitID, unitDefID)
   lastJump[unitID]  = nil
+  unitJumpInstant[unitID] = nil
+  unitJumpDelays[unitID] = nil
+  unitDFADamages[unitID] = nil 
+  unitMechanicalJumps = nil
+  unitReinforcedLegs = nil
 end
 
 
@@ -425,16 +458,16 @@ function gadget:AllowCommand(unitID, unitDefID, teamID, cmdID, cmdParams, cmdOpt
 		Spring.SendMessageToTeam(teamID, "Can't jump - too hot!")
 		return false 
 	end -- can't jump if too hot
-	if (spGetUnitRulesParam(unitID, "lostlegs") or 0) > 0 then 
+	if (unitMechanicalJumps[unitID] and spGetUnitRulesParam(unitID, "lostlegs") or 0) > 0 then 
 		Spring.SendMessageToTeam(teamID, "Can't jump - leg disabled!")
 		return false 
-	end -- can't jump if a leg is disabled
+	end -- can't jump if a leg is disabled if we are using mechanical jump system mod
 	
     local test = spTestBuildOrder(unitDefID, cmdParams[1], cmdParams[2], cmdParams[3], 1)
-	if test ~= 2 then 
+	if test < 1 then 
 		Spring.SendMessageToTeam(teamID, "Can't jump - Invalid target destination!", test)
 	end
-    return test == 2
+    return test > 0
   else -- any other command
     if not cmdOptions.shift then goalSet[unitID] = false end
     return true
@@ -503,7 +536,7 @@ function gadget:CommandFallback(unitID, unitDefID, teamID, cmdID, cmdParams, cmd
 		local newHeading = math.deg(math.atan2(dx, dz)) * 182 -- COB_ANGULAR	
 		local currHeading = Spring.GetUnitCOBValue(unitID, COB.HEADING)
 		local deltaHeading = newHeading - currHeading
-		if math.abs(deltaHeading) < MINIMUM_TURN then
+		if math.abs(deltaHeading) < MINIMUM_TURN or unitJumpInstant[unitID] then
 			-- don't have to turn, continue as normal
 			local cmdTag = spGetCommandQueue(unitID,1)[1].tag
 			-- reload perk can change reload before bar is full so check both

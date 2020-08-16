@@ -31,6 +31,7 @@ weaponDef = {
 		narc				= "1",
 		cegflare			= "MISSILE_MUZZLEFLASH",
 		ammotype			= "narc",
+		weaponclass			= "narc",
     },
 }
 

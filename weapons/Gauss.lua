@@ -74,8 +74,32 @@ local HeavyGauss = Gauss_Class:New{
     },
 }
 
+local SilverBullet = Gauss:New{
+	explosionGenerator    	= "custom:MG_Hit",
+	impactOnly				= true,
+	areaOfEffect            = 1,
+	collisionSize			= 100,
+	weaponVelocity          = 2000,
+	size					= 0.8,
+	soundHit              	= "AC2_Hit", -- TODO: Need a distinct sound really
+	sprayAngle				= 300, -- 800
+	dynDamageExp			= 1.0,
+	
+	range 					= 2200,
+	projectiles				= 15,
+	dynDamageMin			= 100,
+	
+	damage = {
+		default = 150,
+	},
+	customparams = {
+		weaponclass			= "lbx_cluster", -- needs to differ from base lbx as used to detect firing lbx weapons
+    },	
+}
+
 return lowerkeys({ 
 	LightGauss = LightGauss,
 	Gauss = Gauss,
 	HeavyGauss = HeavyGauss,
+	SilverBullet = SilverBullet,
 })
