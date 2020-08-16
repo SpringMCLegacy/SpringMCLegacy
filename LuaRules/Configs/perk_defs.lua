@@ -27,22 +27,38 @@ local function hasWeaponName(unitDefID, weapName)
 	return false
 end
 
-local function hasWeaponClass(unitDefID, className) -- projectile, energy, missile
+local function hasWeaponClass(unitDefID, className, tag, with, value) -- projectile, energy, missile
 	local weapons = UnitDefs[unitDefID].weapons
 	for weapNum, weapTable in pairs(weapons) do 
-		if WeaponDefs[weapTable["weaponDef"]].customParams["weaponclass"] == className then return true end
+		local wd = WeaponDefs[weapTable["weaponDef"]]
+		if wd.customParams["weaponclass"] == className then 
+			if not tag then
+				return true 
+			elseif with and wd[tag] and wd[tag] == value then
+				--Spring.Echo(UnitDefs[unitDefID].name, "has weapon class", className, "(", wd.name, ") with", tag, "value", value)
+				return true
+			elseif not with and not (wd[tag] == value) then
+				--Spring.Echo(UnitDefs[unitDefID].name, "has weapon class", className, "(", wd.name, ") without", tag, "value", value)
+				return true
+			end
+		end
 	end
 	return false
 end	
 
 -- Common apply() functions
-local function setWeaponClassAttribute(unitID, className, attrib, multiplier)
+local function setWeaponClassAttribute(unitID, className, attrib, multiplier, tag, with, value)
 	local weapons = UnitDefs[Spring.GetUnitDefID(unitID)].weapons
 	for weapNum, weapTable in pairs(weapons) do
-		if className == "all" or (WeaponDefs[weapTable["weaponDef"]].customParams["weaponclass"] == className) then
-			local currAttrib = Spring.GetUnitWeaponState(unitID, weapNum, attrib)
-			--Spring.Echo("Current " .. attrib .. ": ", currAttrib, weapNum, WeaponDefs[weapTable["weaponDef"]].name)
-			Spring.SetUnitWeaponState(unitID, weapNum, attrib, currAttrib * multiplier)
+		local wd = WeaponDefs[weapTable["weaponDef"]]
+		if className == "all" or (wd.customParams["weaponclass"] == className) then
+			if not tag
+			or with and wd[tag] and wd[tag] == value
+			or not with and not (wd[tag] == value) then
+				local currAttrib = Spring.GetUnitWeaponState(unitID, weapNum, attrib)
+				--Spring.Echo("Current " .. attrib .. ": ", currAttrib, weapNum, WeaponDefs[weapTable["weaponDef"]].name)
+				Spring.SetUnitWeaponState(unitID, weapNum, attrib, currAttrib * multiplier)
+			end
 		end
 	end
 end
@@ -890,6 +906,36 @@ return {
 			price = 1,
 		},
 		-- Offensive
+		{
+			name = "targetingcomputer",
+			menu = "offensive",
+			cmdDesc = {
+				id = GetCmdID('MOD_TARGETING_COMPUTER'),
+				action = 'modtargetingcomputer',
+				name = GG.Pad("Targeting", "Computer"),
+				tooltip = 'Increases the accuracy of all ballistic and energy direct-fire weapons by 25%, except weapons which fire in bursts.',
+				texture = 'bitmaps/ui/perkbgfaction.png',	
+			},
+			valid = isMechBay,
+			applyTo = function (unitDefID) 
+				return hasWeaponClass(unitDefID, "autocannon", "salvoSize", true, 1) 
+				or hasWeaponClass(unitDefID, "gauss", "salvoSize", true, 1) 
+				or hasWeaponClass(unitDefID, "ppc", "salvoSize", true, 1) 
+				or hasWeaponClass(unitDefID, "energy", "soundTrigger", true, true) 
+			end,
+			applyPerk = function (unitID, level, invert)
+				--Spring.Echo("Missile range selected") 
+				local effect = 0.75 -- smaller accuracy is better, 25% reduction
+				effect = (invert and 1/effect) or effect
+				
+				setWeaponClassAttribute(unitID, "autocannon", "accuracy", effect, "salvoSize", true, 1)
+				setWeaponClassAttribute(unitID, "gauss", "accuracy", effect, "salvoSize", true, 1)
+				setWeaponClassAttribute(unitID, "ppc", "accuracy", effect, "salvoSize", true, 1)
+				setWeaponClassAttribute(unitID, "energy", "accuracy", effect, "soundTrigger", true, true)
+			end,
+			costFunction = deductSalvage,
+			price = 1,
+		},
 		{
 			name = "extendedrangelrm",
 			menu = "offensive",
