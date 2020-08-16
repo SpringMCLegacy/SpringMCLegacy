@@ -127,7 +127,6 @@ local function ReplaceStrings(t, name)
 end
 
 local ammoPerTon = lowerkeys(VFS.Include("gamedata/AmmoTypes.lua", nil, VFS.ZIP))
-local armorTypes = lowerkeys(VFS.Include("gamedata/ArmorTypes.lua", nil, VFS.ZIP))
 
 -- TODO: put this in a file and VFS.Include here and in the widget
 local partsList	= {	mech	= {	"torso", "arm_left", "arm_right", "leg_left", "leg_right"},
@@ -246,7 +245,6 @@ for name, ud in pairs(UnitDefs) do
 			ud.mass = (cp.tonnage or 0) * 100
 			if cp.armor then
 				ud.maxdamage = cp.tonnage / 10 + cp.armor.tons * 1000
-				ud.maxdamage = ud.maxdamage * (armorTypes[cp.armor.type] or 1)
 			end
 			cp.weightclass = GetWeight(cp.tonnage)
 		end

@@ -28,11 +28,16 @@ include ("anims/" .. unitDef.name:sub(4, (unitDef.name:find("_", 4) or 0) - 1) .
 
 -- Info from lusHelper gadget
 -- non-local so perks can change them (flagrant lack of encapsulation!)
+numWeapons = info.numWeapons - 1 -- remove sight
 heatLimit = info.heatLimit
 baseCoolRate = info.coolRate
 mascHeatRate = 0.1
-firingHeats = info.firingHeats
-numWeapons = info.numWeapons - 1 -- remove sight
+firingHeats = info.firingHeats -- fire discipline perk, PPC capacitor mod
+TORSO_SPEED = info.torsoTurnSpeed -- AES mod
+ELEVATION_SPEED = info.elevationSpeed -- AES mod
+maxAmmo = {} -- Extended Range LRM mod
+table.copy(info.maxAmmo, maxAmmo) -- need our own local copy or the lus helper one is overriden
+currAmmo = {}  -- Extended Range LRM mod
 
 local coolRate = baseCoolRate
 local inWater = false
@@ -48,8 +53,7 @@ local burstLengths = info.burstLengths
 local ammoTypes = info.ammoTypes
 local minRanges = info.minRanges
 local spinSpeeds = info.spinSpeeds
-local maxAmmo = info.maxAmmo
-local currAmmo = {} -- copy maxAmmo table into currAmmo
+-- copy maxAmmo table into currAmmo
 for k,v in pairs(maxAmmo) do 
 	currAmmo[k] = v 
 	SetUnitRulesParam(unitID, "ammo_" .. k, 100)
@@ -66,8 +70,6 @@ for limb,limbHP in pairs(info.limbHPs) do -- copy table from defaults
 end
 
 --Turning/Movement Locals
-local TORSO_SPEED = info.torsoTurnSpeed
-local ELEVATION_SPEED = info.elevationSpeed
 local BARREL_SPEED = info.barrelRecoilSpeed
 local RESTORE_DELAY = Spring.UnitScript.GetLongestReloadTime(unitID) * 2
 local CMD_JUMP = GG.CustomCommands.GetCmdID("CMD_JUMP")
@@ -199,6 +201,51 @@ function ChangeHeat(amount)
 	SetUnitRulesParam(unitID, "excess_heat", math.ceil(100 * excessHeat / (2 * heatLimit)))
 end
 
+local function MASCHeat()
+	while moving and mascActive do
+		ChangeHeat(mascHeatRate)
+		if excessHeat > 0 then
+			--Spring.Echo("Overheating! Terminate MASC!")
+			-- SIG_ANIMATE is just an empty table, don't create a new one just for empty command options
+			Spring.GiveOrderToUnit(unitID, GG.CustomCommands.GetCmdID("CMD_MASC"), {0}, SIG_ANIMATE) 
+			return
+		end
+		Sleep(100)
+	end
+end
+
+function SpeedChangeCheck()
+	while jumping do -- don't trigger speed change until jump is finished
+		Sleep(500)
+	end
+	GG.SpeedChange(unitID, unitDefID, speedMod)
+end
+
+function MASC(activated)
+	if activated then
+		speedMod = speedMod * 1.3
+		mascActive = true
+		StartThread(SpeedChangeCheck)
+		StartThread(MASCHeat)
+	else
+		speedMod = speedMod / 1.3
+		mascActive = false
+		StartThread(SpeedChangeCheck)
+		StartThread(MASCHeat)
+	end
+end
+
+function FlushCoolant()
+	if currAmmo.coolant > 0 then
+		GG.EmitSfxName(unitID, torso, "greengoo")
+		ChangeHeat(-10)
+		ChangeAmmo("coolant", -20)
+		return true
+	else
+		return false
+	end
+end
+
 local function CoolOff()
 	local min = math.min
 	-- localised API functions
@@ -243,6 +290,9 @@ local function CoolOff()
 					local reload = reloadTimes[weaponID] * 2
 					SetUnitWeaponState(unitID, weaponID, {reloadTime = reload})
 				end
+				if GG.autoCoolantUnits[unitID] then
+					FlushCoolant()
+				end
 			end
 		else
 			if heatCritical then -- critical->elevated->normal
@@ -278,48 +328,6 @@ function script.setSFXoccupy(terrainType)
 	end
 end
 
-local function MASCHeat()
-	while moving and mascActive do
-		ChangeHeat(mascHeatRate)
-		if excessHeat > 0 then
-			--Spring.Echo("Overheating! Terminate MASC!")
-			-- SIG_ANIMATE is just an empty table, don't create a new one just for empty command options
-			Spring.GiveOrderToUnit(unitID, GG.CustomCommands.GetCmdID("CMD_MASC"), {0}, SIG_ANIMATE) 
-			return
-		end
-		Sleep(100)
-	end
-end
-
-function SpeedChangeCheck()
-	while jumping do -- don't trigger speed change until jump is finished
-		Sleep(500)
-	end
-	GG.SpeedChange(unitID, unitDefID, speedMod)
-end
-
-function MASC(activated)
-	if activated then
-		speedMod = speedMod * 1.3
-		mascActive = true
-		StartThread(SpeedChangeCheck)
-		StartThread(MASCHeat)
-	else
-		speedMod = speedMod / 1.3
-		mascActive = false
-		StartThread(SpeedChangeCheck)
-		StartThread(MASCHeat)
-	end
-end
-
-function FlushCoolant()
-	if currAmmo.coolant > 0 then
-		GG.EmitSfxName(unitID, torso, "greengoo")
-		ChangeHeat(-10)
-		ChangeAmmo("coolant", -20)
-	end
-end
-
 function ToggleWeapon(weaponID, code)
 	-- codes are: 1: destroyed, 2: repaired, nil implies player toggle
 	if not code then
@@ -333,13 +341,13 @@ function ToggleWeapon(weaponID, code)
 	end
 end
 
-function SmokeLimb(limb, piece)
+function SmokeLimb(limb, hitPiece)
 	local maxHealth = info.limbHPs[limb] / 100
 	while true do
 		local health = limbHPs[limb]/maxHealth
 		if (health <= 66) then -- only smoke if less then 2/3rd limb maxhealth left
-			EmitSfx(piece, SFX.CEG + numWeapons + 2)
-			EmitSfx(piece, SFX.CEG + numWeapons + 3)
+			EmitSfx(piece(hitPiece), SFX.CEG + numWeapons + 2)
+			EmitSfx(piece(hitPiece), SFX.CEG + numWeapons + 3)
 		end
 		Sleep(20*health + 150)
 	end
@@ -402,11 +410,11 @@ function hideLimbPieces(limb, hide)
 end
 
 local limbsLost = 0
-function limbHPControl(limb, damage)
+function limbHPControl(limb, damage, piece)
 	local currHP = limbHPs[limb]
 	if currHP > 0 or (damage or 0) < 0 then
 		local newHP = math.min(limbHPs[limb] - damage, info.limbHPs[limb]) -- don't allow HP above max
-		--Spring.Echo(unitDef.name, limb, newHP)
+		--Spring.Echo(unitDef.name, limb, "newHP", newHP, "currHP", currHP)
 		if newHP < 0 then 
 			hideLimbPieces(limb, true)
 			newHP = 0
@@ -416,6 +424,10 @@ function limbHPControl(limb, damage)
 			hideLimbPieces(limb, false)
 			limbsLost = limbsLost - 1
 			SetUnitRulesParam(unitID, "limblost", limbsLost)
+		else
+			if (newHP/info.limbHPs[limb] * 100) <= 66 and (currHP/info.limbHPs[limb] * 100) > 66 and piece then
+				StartThread(SmokeLimb, limb, piece)
+			end
 		end
 		limbHPs[limb] = newHP
 		SetUnitRulesParam(unitID, "limb_hp_" .. limb, newHP/info.limbHPs[limb]*100)
@@ -424,27 +436,37 @@ function limbHPControl(limb, damage)
 end
 GG.limbHPControl = limbHPControl
 
+function SetLimbMaxHP(mult)
+	for limb,limbHP in pairs(info.limbHPs) do -- copy table from defaults
+		info.limbHPs[limb] = limbHP * mult
+		limbHPs[limb] = limbHP * mult -- set to new max
+		SetUnitRulesParam(unitID, "limb_hp_" .. limb, 100)
+		-- run through LimbHPControl to ensure visibility etc
+		limbHPControl(limb, -1)
+	end
+end
+
 function script.HitByWeapon(x, z, weaponID, damage, piece)
 	local wd = WeaponDefs[weaponID]
-	local heatDamage = wd and wd.customParams.heatdamage or 0
-	ChangeHeat(heatDamage)
+	--local heatDamage = wd and wd.customParams.heatdamage or 0
+	--ChangeHeat(heatDamage)
 	local hitPiece = piece or GetUnitLastAttackedPiece(unitID) or ""
 	if hitPiece == "torso" or hitPiece == "pelvis" or hitPiece == "" then 
 		return damage
 	elseif hitPiece == "lupperleg" or hitPiece == "llowerleg" then
 		--deduct Left Leg HP
-		local hp = limbHPControl("left_leg", damage)
+		local hp = limbHPControl("left_leg", damage, hitPiece)
 		if hp == 0 then return damage end
 	elseif hitPiece == "rupperleg" or hitPiece == "rlowerleg" then
 		--deduct Right Leg HP
-		local hp = limbHPControl("right_leg", damage)
+		local hp = limbHPControl("right_leg", damage, hitPiece)
 		if hp == 0 then return damage end
 	elseif hitPiece == "lupperarm" or hitPiece == "llowerarm" then
 		--deduct Left Arm HP
-		limbHPControl("left_arm", damage)
+		limbHPControl("left_arm", damage, hitPiece)
 	elseif hitPiece == "rupperarm" or hitPiece == "rlowerarm" then
 		--deduct Right Arm HP
-		limbHPControl("right_arm", damage)
+		limbHPControl("right_arm", damage, hitPiece)
 	end
 	--Spring.Echo(weaponID, wd.name, wd.customParams.heatdamage)
 	--Spring.Echo("HIT PIECE?", hitPiece, damage, heatDamage)
@@ -464,8 +486,10 @@ function StartJump()
 end
 
 function Jumping()-- Gets called throughout by gadget
-	for i = 1, info.jumpjets do -- emit JumpJetTrail
-		EmitSfx(jets[i], SFX.CEG)
+	if not GG.unitMechanicalJumps[unitID] then
+		for i = 1, info.jumpjets do -- emit JumpJetTrail
+			EmitSfx(jets[i], SFX.CEG)
+		end
 	end
 end
 
@@ -508,10 +532,10 @@ function script.Create()
 	Spring.SetUnitMidAndAimPos(unitID, x,y,z, x,y,z, true)
 	if info.builderID then script.StartMoving() end -- walk down ramp
 	--StartThread(SmokeUnit, {pelvis, torso})
-	StartThread(SmokeLimb, "left_arm", lupperarm)
+	--[[StartThread(SmokeLimb, "left_arm", lupperarm)
 	StartThread(SmokeLimb, "right_arm", rupperarm)
 	StartThread(SmokeLimb, "left_leg", llowerleg)
-	StartThread(SmokeLimb, "right_leg", rlowerleg)
+	StartThread(SmokeLimb, "right_leg", rlowerleg)]]
 	StartThread(CoolOff)
 end
 
@@ -682,6 +706,12 @@ function script.QueryWeapon(weaponID)
 	end
 end
 
+function GenSalvage(amount)
+	for i = 1, amount do
+		Explode(pelvis, SFX.FIRE + SFX.SMOKE)
+	end
+end
+
 function script.Killed(recentDamage, maxHealth)
 	if excessHeat >= heatLimit * 2 then
 		--Spring.Echo("NUUUUUUUUUUUKKKKKE")
@@ -701,7 +731,9 @@ function script.Killed(recentDamage, maxHealth)
 			Spring.AddTeamResource(attackerTeam, "metal", payout)
 		end
 	else
-		Explode(pelvis, SFX.FIRE + SFX.SMOKE)
+		local attackerID = Spring.GetUnitLastAttacker(unitID)
+		local numSalvage = GG.PinataLevel(attackerID) + 1 -- always produce at least 1
+		GenSalvage(numSalvage)
 	end
 	GG.PlaySoundForTeam(Spring.GetUnitTeam(unitID), "BB_BattleMech_destroyed", 1)
 	--local severity = recentDamage / maxHealth * 100
