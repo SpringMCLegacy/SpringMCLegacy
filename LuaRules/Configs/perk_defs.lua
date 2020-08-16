@@ -23,9 +23,10 @@ local function hasWeaponName(unitDefID, weapName)
 	local weapons = UnitDefs[unitDefID].weapons
 	local found
 	for weapNum, weapTable in pairs(weapons) do 
-		if weapTable["weaponDef"] == WeaponDefNames[weapName:lower()].id then 
+		local wd = WeaponDefNames[weapName:lower()]
+		if weapTable["weaponDef"] == wd.id then 
 			if not found then found = {} end
-			found[weapNum] = true
+			found[weapNum] = wd
 		end
 	end
 	if found then
@@ -66,7 +67,7 @@ local function setWeaponClassAttribute(unitID, className, attrib, multiplier, ta
 				local currAttrib = Spring.GetUnitWeaponState(unitID, weapNum, attrib)
 				--Spring.Echo("Current " .. attrib .. ": ", currAttrib, weapNum, WeaponDefs[weapTable["weaponDef"]].name)
 				Spring.SetUnitWeaponState(unitID, weapNum, attrib, currAttrib * multiplier)
-				changed[weapNum] = true
+				changed[weapNum] = wd
 			end
 		end
 	end
@@ -87,7 +88,7 @@ local function setWeaponClassDamage(unitID, className, multiplier, tag, with, va
 				for i = 0, NUM_DAMAGE_TYPES do
 					local currAttrib = Spring.GetUnitWeaponDamages(unitID, weapNum, i)
 					Spring.SetUnitWeaponDamages(unitID, weapNum, i, currAttrib * multiplier)
-					changed[weapNum] = true
+					changed[weapNum] = wf
 				end
 			end
 		end
@@ -1068,6 +1069,32 @@ return {
 				env = Spring.UnitScript.GetScriptEnv(unitID)
 				for weapNum in pairs(changed) do
 					env.firingHeats[weapNum] = env.firingHeats[weapNum] * effect				
+				end
+			end,
+			costFunction = deductSalvage,
+			price = 1,
+		},
+		{
+			name = "quickchargingcapacitors",
+			menu = "offensive",
+			cmdDesc = {
+				id = GetCmdID('MOD_QUICK_CHARGING_CAPACITORS'),
+				action = 'modquickchargingcapacitors',
+				name = GG.Pad("Quick", "Charging", "Capacitors"),
+				tooltip = 'Gauss Rifles only. Rate of fire increased by 25%, but generates heat similar to a PPC.',
+				texture = 'bitmaps/ui/perkbgfaction.png',	
+			},
+			valid = isMechBay,
+			applyTo = function (unitDefID) return hasWeaponClass(unitDefID, "gauss") and (isFaction(unitDefID, "la") or isFaction(unitDefID, "fw")) end,
+			applyPerk = function (unitID, level, invert)
+				--Spring.Echo("Missile range selected") 
+				local effect = 0.75 -- 25% reduction
+				effect = (invert and 1/effect) or effect
+				local changed, wd = setWeaponClassAttribute(unitID, "gauss", "reloadTime", effect)
+				
+				env = Spring.UnitScript.GetScriptEnv(unitID)
+				for weapNum in pairs(changed) do
+					env.firingHeats[weapNum] = invert and wd.customParams.heatgenerated or 2.5 -- PPC is 5 * 0.5 in lus_helper
 				end
 			end,
 			costFunction = deductSalvage,
