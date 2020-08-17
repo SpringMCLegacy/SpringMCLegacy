@@ -1249,6 +1249,24 @@ return {
 			price = 5,
 		},
 		{
+			name = "ammolrmmagpulse",
+			menu = "ammo",
+			cmdDesc = {
+				id = GetCmdID('MOD_AMMO_LRM_MAG_PULSE'),
+				action = 'modammolrmmagpulse',
+				name = GG.Pad("LRM", "Mag", "Pulse"),
+				tooltip = 'LRMs only. Mag-Pulse Warheads effectively deal the heat and electronic disruption effect of PPC hits, but no damage.',
+				texture = 'bitmaps/ui/perkyellow.png',	
+			},
+			valid = isMechBay,
+			applyTo = function (unitDefID) return hasWeaponClass(unitDefID, "lrm") and isFaction(unitDefID, "fw") end,
+			applyPerk = function (unitID, level, invert)
+				GG.EnableAmmo(unitID, not invert, "lrm", "magpulse")				
+			end,
+			costFunction = deductSalvage,
+			price = 5,
+		},
+		{
 			name = "ammosrminferno",
 			menu = "ammo",
 			cmdDesc = {

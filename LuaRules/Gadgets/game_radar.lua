@@ -246,6 +246,10 @@ function gadget:UnitPreDamaged(unitID, unitDefID, unitTeam, damage, paralyzer, w
 		if specialAmmo == "inferno" then
 			damage = 0
 			heatDamage = 2
+		elseif specialAmmo == "magpulse" then
+			damage = 0
+			heatDamage = 2.5
+			ApplyPPC(unitID)
 		end
 	end
 	-- Armours
