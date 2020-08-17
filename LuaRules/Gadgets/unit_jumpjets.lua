@@ -198,7 +198,7 @@ local function SetUnitMechanicalJump(unitID, tOrF)
 	local range   = spGetUnitRulesParam(unitID, "jumpRange") or jumpDef.range
 	local reload  = spGetUnitRulesParam(unitID, "jumpReload") or BASE_RELOAD
 	Spring.SetUnitRulesParam(unitID, "jumpRange", tOrF and range/2 or 2*range)
-	Spring.SetUnitRulesParam(unitID, "jumpReload", tOrF and 1 or BASE_RELOAD)
+	Spring.SetUnitRulesParam(unitID, "jumpReload", tOrF and 0.1 or BASE_RELOAD)
 	unitMechanicalJumps[unitID] = tOrF
 end
 GG.SetUnitMechanicalJump = SetUnitMechanicalJump
