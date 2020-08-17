@@ -391,7 +391,7 @@ function gadget:UnitPreDamaged(unitID, unitDefID, unitTeam, damage, paralyzer, w
 		if attackerID == unitID or AreTeamsAllied(attackerTeam, unitTeam) then return 0 end -- don't deal self damage via the engine
 		local attackerDef = UnitDefs[attackerDefID]
 		local applied = damage * attackerDef.health * 0.1 * unitDFADamages[attackerID] -- 10% of max HP
-		local self = applied / (unitReinforcedLegs[unitID] and 4 or 2)
+		local self = applied / (unitReinforcedLegs[attackerID] and 4 or 2)
 		local env = Spring.UnitScript.GetScriptEnv(attackerID)
 		Spring.UnitScript.CallAsUnit(attackerID, env.script.HitByWeapon, 0, 0, DFA_ID, self, "llowerleg")
 		Spring.UnitScript.CallAsUnit(attackerID, env.script.HitByWeapon, 0, 0, DFA_ID, self, "rlowerleg")
