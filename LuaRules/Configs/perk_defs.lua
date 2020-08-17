@@ -129,7 +129,7 @@ return {
 			},
 			valid = allMechs,
 			applyPerk = function (unitID) 
-				setWeaponClassAttribute(unitID, "all", "accuracy", PCENT_INC)
+				setWeaponClassAttribute(unitID, "all", "accuracy", PCENT_DEC)
 			end,
 			costFunction = deductXP,
 			price = PERK_XP_COST,
