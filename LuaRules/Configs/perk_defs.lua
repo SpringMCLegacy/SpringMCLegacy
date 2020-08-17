@@ -1216,6 +1216,7 @@ return {
 				effect = (invert and 1/effect) or effect
 				env = Spring.UnitScript.GetScriptEnv(unitID)
 				local ammoCache = {}
+				local changed = setWeaponClassAttribute(unitID, "autocannon", "range", 1) -- hack to get weapon numbers
 				for weapNum, wd in pairs(changed) do
 					local ammoType = wd.customParams.ammotype
 					if not ammoCache[ammoType] then -- only once per ammotype
