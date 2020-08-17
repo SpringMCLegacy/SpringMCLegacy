@@ -503,6 +503,8 @@ local restored = false
 local restoredLimbs = {}
 local suppliedAmmos = {}
 
+autoGetOut = true
+
 local SIG_EXIT = 1
 
 function Repair(passengerID)
@@ -517,7 +519,7 @@ function Repair(passengerID)
 		Sleep(1000)
 	end
 	repaired = true
-	if resupplied and restored then -- I'm the last task to finish, move out!
+	if autoGetOut and resupplied and restored then -- I'm the last task to finish, move out!
 		Sleep(5000) -- always wait 5 seconds before shoving the mech out
 		script.TransportDrop(passengerID)
 	end
@@ -551,7 +553,7 @@ function Restore(passengerID)
 		restored = allDone
 		Sleep(1000)
 	end
-	if repaired and resupplied then -- I'm the last task to finish, move out!
+	if autoGetOut and repaired and resupplied then -- I'm the last task to finish, move out!
 		Sleep(5000) -- always wait 5 seconds before shoving the mech out
 		script.TransportDrop(passengerID)
 	end	
@@ -588,7 +590,7 @@ function Resupply(passengerID)
 		resupplied = allDone
 		Sleep(1000)
 	end
-	if repaired and restored then -- I'm the last task to finish, move out!
+	if autoGetOut and repaired and restored then -- I'm the last task to finish, move out!
 		Sleep(5000) -- always wait 5 seconds before shoving the mech out
 		script.TransportDrop(passengerID)
 	end	
@@ -627,6 +629,7 @@ function script.TransportDrop (passengerID, x, y, z)
 		resupplied = false
 		restored = false
 	end
+	autoGetOut = true
 end
 
 -- Garrison weapons
