@@ -1229,5 +1229,41 @@ return {
 			costFunction = deductSalvage,
 			price = 5,
 		},
+		{
+			name = "ammolrminferno",
+			menu = "ammo",
+			cmdDesc = {
+				id = GetCmdID('MOD_AMMO_LRM_INFERNO'),
+				action = 'modammolrminferno',
+				name = GG.Pad("LRM", "Inferno"),
+				tooltip = 'LRMs only. Missiles will apply heat damage to targets, but deal no damage.',
+				texture = 'bitmaps/ui/perkyellow.png',	
+			},
+			valid = isMechBay,
+			applyTo = function (unitDefID) return hasWeaponClass(unitDefID, "lrm") end,
+			applyPerk = function (unitID, level, invert)
+				GG.EnableAmmo(unitID, not invert, "lrm", "inferno")				
+			end,
+			costFunction = deductSalvage,
+			price = 5,
+		},
+		{
+			name = "ammosrminferno",
+			menu = "ammo",
+			cmdDesc = {
+				id = GetCmdID('MOD_AMMO_SRM_INFERNO'),
+				action = 'modammosrminferno',
+				name = GG.Pad("SRM", "Inferno"),
+				tooltip = 'SRMs only. Missiles will apply heat damage to targets, but deal no damage.',
+				texture = 'bitmaps/ui/perkyellow.png',	
+			},
+			valid = isMechBay,
+			applyTo = function (unitDefID) return hasWeaponClass(unitDefID, "srm") end,
+			applyPerk = function (unitID, level, invert)
+				GG.EnableAmmo(unitID, not invert, "srm", "inferno")				
+			end,
+			costFunction = deductSalvage,
+			price = 5,
+		},
 	},
 }

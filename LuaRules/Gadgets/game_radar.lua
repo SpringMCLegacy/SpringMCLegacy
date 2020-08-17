@@ -194,11 +194,18 @@ local function DeNARC(unitID, allyTeam, force)
 end
 
 local unitArmours = {} -- unitID = true
-
 local function EnableArmour(unitID, apply, armourType)
 	unitArmours[unitID] = apply and armourType or nil
 end
 GG.EnableArmour = EnableArmour
+
+local unitSpecialAmmos = {} -- [unitID][weaponType] = ammoName
+local function EnableAmmo(unitID, apply, weaponType, ammoName)
+	unitSpecialAmmos[unitID] = unitSpecialAmmos[unitID] or {}
+	unitSpecialAmmos[unitID][weaponType] = unitSpecialAmmos[unitID][weaponType] or {}
+	unitSpecialAmmos[unitID][weaponType] = apply and ammoName or nil
+end
+GG.EnableAmmo = EnableAmmo
 
 function gadget:UnitPreDamaged(unitID, unitDefID, unitTeam, damage, paralyzer, weaponID, projectileID, attackerID, attackerDefID, attackerTeam)
 	-- Don't allow any damage to beacons or dropzones
@@ -227,9 +234,22 @@ function gadget:UnitPreDamaged(unitID, unitDefID, unitTeam, damage, paralyzer, w
 	elseif PPC_IDS[weaponID] then
 		ApplyPPC(unitID)
 	end
+	
+	-- Armour & Ammo Mods
 	local weaponDef = weaponID and WeaponDefs[weaponID]
 	local heatDamage = weaponDef and weaponDef.customParams.heatdamage
-	if heatDamage and not unitArmours[unitID] == "heat" then
+	-- Ammos
+	local specialAmmos = unitSpecialAmmos[attackerID]
+	if specialAmmos then
+		local weaponType = weaponDef.customParams.weaponclass
+		local specialAmmo = specialAmmos[weaponType]
+		if specialAmmo == "inferno" then
+			damage = 0
+			heatDamage = 2
+		end
+	end
+	-- Armours
+	if heatDamage and not (unitArmours[unitID] == "heat") then
 		env = Spring.UnitScript.GetScriptEnv(unitID)
 		Spring.UnitScript.CallAsUnit(unitID, env.ChangeHeat, heatDamage)
 	end
