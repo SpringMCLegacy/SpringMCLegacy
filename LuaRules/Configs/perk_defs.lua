@@ -1198,5 +1198,36 @@ return {
 			costFunction = deductSalvage,
 			price = 1,
 		},
+		{
+			name = "ammocaseless",
+			menu = "ammo",
+			cmdDesc = {
+				id = GetCmdID('MOD_AMMO_CASELESS'),
+				action = 'modammocaseless',
+				name = GG.Pad("Autocannon", "Caseless"),
+				tooltip = 'Autocannons only.  Increases ammunition storage by 50%.',
+				texture = 'bitmaps/ui/perkyellow.png',	
+			},
+			valid = isMechBay,
+			applyTo = function (unitDefID) return hasWeaponClass(unitDefID, "autocannon") and isFaction(unitDefID, "fs") end,
+			applyPerk = function (unitID, level, invert)
+				-- increase max ammo by 50%
+				local effect = 1.5
+				effect = (invert and 1/effect) or effect
+				env = Spring.UnitScript.GetScriptEnv(unitID)
+				local ammoCache = {}
+				for weapNum, wd in pairs(changed) do
+					local ammoType = wd.customParams.ammotype
+					if not ammoCache[ammoType] then -- only once per ammotype
+						ammoCache[ammoType] = true
+						env.maxAmmo[ammoType] = env.maxAmmo[ammoType] * effect
+						env.currAmmo[ammoType] = env.maxAmmo[ammoType]
+						Spring.SetUnitRulesParam(unitID, "ammo_" .. ammoType, 100)
+					end
+				end
+			end,
+			costFunction = deductSalvage,
+			price = 1,
+		},
 	},
 }
