@@ -550,7 +550,7 @@ return {
 				GG.SetMechBayLevel(unitID, 2)
 			end,
 			costFunction = deductCBills,
-			price = 1,
+			price = 3000,
 		},
 		{
 			name = "mechbay_3",
@@ -566,7 +566,7 @@ return {
 				GG.SetMechBayLevel(unitID, 3)
 			end,
 			costFunction = deductCBills,
-			price = 1,
+			price = 6000,
 			requires = "mechbay_2",
 		},
 	},
