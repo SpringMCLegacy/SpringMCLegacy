@@ -1267,6 +1267,24 @@ return {
 			price = 5,
 		},
 		{
+			name = "ammolrmthunder",
+			menu = "ammo",
+			cmdDesc = {
+				id = GetCmdID('MOD_AMMO_LRM_THUNDER'),
+				action = 'modammolrmthunder',
+				name = GG.Pad("LRM", "Thunder"),
+				tooltip = 'LRMs only. LRM hits deal 25% less damage, but missiles that impact the ground leave behind a small mine, allowing for planting of minefields.',
+				texture = 'bitmaps/ui/perkyellow.png',	
+			},
+			valid = isMechBay,
+			applyTo = function (unitDefID) return hasWeaponClass(unitDefID, "lrm") and isFaction(unitDefID, "cc") end,
+			applyPerk = function (unitID, level, invert)
+				GG.EnableAmmo(unitID, not invert, "lrm", "thunder")				
+			end,
+			costFunction = deductSalvage,
+			price = 5,
+		},
+		{
 			name = "ammosrminferno",
 			menu = "ammo",
 			cmdDesc = {

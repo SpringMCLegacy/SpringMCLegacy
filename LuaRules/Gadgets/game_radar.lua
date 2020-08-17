@@ -200,6 +200,7 @@ end
 GG.EnableArmour = EnableArmour
 
 local unitSpecialAmmos = {} -- [unitID][weaponType] = ammoName
+GG.unitSpecialAmmos = unitSpecialAmmos -- for Thunder spawning
 local function EnableAmmo(unitID, apply, weaponType, ammoName)
 	unitSpecialAmmos[unitID] = unitSpecialAmmos[unitID] or {}
 	unitSpecialAmmos[unitID][weaponType] = unitSpecialAmmos[unitID][weaponType] or {}
@@ -250,6 +251,8 @@ function gadget:UnitPreDamaged(unitID, unitDefID, unitTeam, damage, paralyzer, w
 			damage = 0
 			heatDamage = 2.5
 			ApplyPPC(unitID)
+		elseif specialAmmo == "thunder" then
+			damage = damage * 0.75
 		end
 	end
 	-- Armours
