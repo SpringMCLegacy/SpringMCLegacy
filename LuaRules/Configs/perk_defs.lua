@@ -1328,6 +1328,24 @@ return {
 			price = 5,
 		},
 		{
+			name = "ammonarcexplosive",
+			menu = "ammo",
+			cmdDesc = {
+				id = GetCmdID('MOD_AMMO_NARC_EXPLOSIVE'),
+				action = 'modammonarcexplosive',
+				name = GG.Pad("NARC", "Explosive", "Pod"),
+				tooltip = 'Narc only. Replaced standard Homing Pod fired by Narc Launchers with an Explosive Pod that deals 400 damage.',
+				texture = 'bitmaps/ui/perkyellow.png',	
+			},
+			valid = isMechBay,
+			applyTo = function (unitDefID) return hasWeaponName(unitDefID, "narc") and isFaction(unitDefID, "dc") end,
+			applyPerk = function (unitID, level, invert)
+				GG.EnableAmmo(unitID, not invert, "narc", "explosivepod")				
+			end,
+			costFunction = deductSalvage,
+			price = 5,
+		},
+		{
 			name = "ammonarcbola",
 			menu = "ammo",
 			cmdDesc = {

@@ -234,6 +234,8 @@ function gadget:UnitPreDamaged(unitID, unitDefID, unitTeam, damage, paralyzer, w
 			damage = damage * 0.75
 		elseif specialAmmo == "bola" then
 			speedChange = 0.01
+		elseif specialAmmo == "explosivepod" then
+			damage = 400
 		elseif specialAmmo == "tandem" then
 			damage = damage * 2
 		end
@@ -263,10 +265,12 @@ function gadget:UnitPreDamaged(unitID, unitDefID, unitTeam, damage, paralyzer, w
 		if UnitDefs[unitDefID].customParams.dropship then return 0 end
 		if speedChange then -- Bola Pod
 			--GG.SpeedChange(unitID, unitDefID, speedChange)
-			--DelayCall(GG.SpeedChange, {unitID, unitDefID, 1/speedChange}, 5*30)
+			--DelayCall(GG.SpeedChange, {unitID, unitDefID, 1}, 5*30)
 			Spring.MoveCtrl.Enable(unitID)
 			DelayCall(Spring.MoveCtrl.Disable, {unitID}, 5 * 30)
 			return 0
+		elseif damage == 400 then -- Explosive Pod
+			return damage
 		else -- regular NARC
 			--if GetUnitUnderJammer(unitID, unitTeam) then return 0 end
 			local allyTeam = select(6, GetTeamInfo(attackerTeam))
