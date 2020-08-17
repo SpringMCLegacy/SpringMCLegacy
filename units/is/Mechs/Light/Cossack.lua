@@ -25,7 +25,7 @@ local CSK1 = Cossack:New{
 	},
 		
 	customparams = {
-		variant         = "C=SK1",
+		variant         = "C-SK1",
 		speed			= 90,
 		price			= 4650,
 		heatlimit 		= 10,
