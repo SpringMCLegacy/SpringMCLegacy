@@ -594,7 +594,7 @@ return {
 				env.ELEVATION_SPEED = env.ELEVATION_SPEED * effect
 			end,
 			costFunction = deductSalvage,
-			price = 1,
+			price = 5,
 		},
 		{
 			name = "directionalthrusters",
@@ -612,7 +612,7 @@ return {
 				GG.SetUnitJumpInstant(unitID, not invert)
 			end,
 			costFunction = deductSalvage,
-			price = 1,
+			price = 5,
 		},
 		{
 			name = "mechanicaljumpsystem",
@@ -630,7 +630,7 @@ return {
 				GG.SetUnitMechanicalJump(unitID, not invert)
 			end,
 			costFunction = deductSalvage,
-			price = 1,
+			price = 10,
 		},
 		-- Tactical
 		{
@@ -655,7 +655,7 @@ return {
 				Spring.SetUnitRulesParam(unitID, "heatLimit", env.heatLimit)
 			end,
 			costFunction = deductSalvage,
-			price = 1,
+			price = 10,
 		},
 		{
 			name = "coolantpods",
@@ -673,7 +673,7 @@ return {
 				GG.EnableCoolantFlush(unitID, not invert)
 			end,
 			costFunction = deductSalvage,
-			price = 1,
+			price = 5,
 		},
 		{
 			name = "emergencycoolantsystem",
@@ -692,7 +692,7 @@ return {
 			end,
 			costFunction = deductSalvage,
 			requires = "coolantpods",
-			price = 1,
+			price = 10,
 		},
 		{
 			name = "improvedsensors",
@@ -721,7 +721,7 @@ return {
 				end
 			end,
 			costFunction = deductSalvage,
-			price = 1,
+			price = 10,
 		},
 		{
 			name = "disruptionfieldbooster",
@@ -744,7 +744,7 @@ return {
 				GG.allyJammers[Spring.GetUnitAllyTeam(unitID)][unitID] = currECM * effect
 			end,
 			costFunction = deductSalvage,
-			price = 1,
+			price = 10,
 		},
 		{
 			name = "inarc",
@@ -767,7 +767,7 @@ return {
 				setWeaponClassAttribute(unitID, "narc", "range", effect)
 			end,
 			costFunction = deductSalvage,
-			price = 1,
+			price = 10,
 		},
 		-- Defensive
 		{
@@ -790,7 +790,7 @@ return {
 				Spring.UnitScript.CallAsUnit(unitID, env.SetLimbMaxHP, effect)
 			end,
 			costFunction = deductSalvage,
-			price = 1,
+			price = 5,
 		},
 		{
 			name = "particlefielddamper",
@@ -811,7 +811,7 @@ return {
 				Spring.SetUnitRulesParam(unitID, "insulation", effect)
 			end,
 			costFunction = deductSalvage,
-			price = 1,
+			price = 10,
 		},
 		{
 			name = "reinforcedlegs",
@@ -829,7 +829,7 @@ return {
 				GG.SetUnitReinforcedLegs(unitID, not invert)
 			end,
 			costFunction = deductSalvage,
-			price = 1,
+			price = 7,
 		},
 		{
 			name = "ferrofibrousarmour",
@@ -847,7 +847,7 @@ return {
 				GG.EnableArmour(unitID, not invert, "ferro")
 			end,
 			costFunction = deductSalvage,
-			price = 1,
+			price = 7,
 		},
 		{
 			name = "hardenedarmour",
@@ -882,7 +882,7 @@ return {
 				env.speedMod = env.speedMod * effect
 			end,
 			costFunction = deductSalvage,
-			price = 1,
+			price = 10,
 		},
 		{
 			name = "heatarmour",
@@ -900,7 +900,7 @@ return {
 				GG.EnableArmour(unitID, not invert, "heat")
 			end,
 			costFunction = deductSalvage,
-			price = 1,
+			price = 5,
 		},
 		{
 			name = "reactivearmour",
@@ -918,7 +918,7 @@ return {
 				GG.EnableArmour(unitID, not invert, "reactive")
 			end,
 			costFunction = deductSalvage,
-			price = 1,
+			price = 10,
 		},
 		{
 			name = "reflecarmour",
@@ -936,7 +936,7 @@ return {
 				GG.EnableArmour(unitID, not invert, "reflec")
 			end,
 			costFunction = deductSalvage,
-			price = 1,
+			price = 10,
 		},
 		-- Offensive
 		{
@@ -967,7 +967,7 @@ return {
 				setWeaponClassAttribute(unitID, "energy", "accuracy", effect, "soundTrigger", true, true)
 			end,
 			costFunction = deductSalvage,
-			price = 1,
+			price = 10,
 		},
 		{
 			name = "apollofcs",
@@ -989,7 +989,7 @@ return {
 				setWeaponClassAttribute(unitID, "mrm", "accuracy", effect)
 			end,
 			costFunction = deductSalvage,
-			price = 1,
+			price = 10,
 		},
 		{
 			name = "extendedrangelrm",
@@ -1019,7 +1019,7 @@ return {
 				-- TODO: Remove tracking bonus (TODO: implement tracking bonus)
 			end,
 			costFunction = deductSalvage,
-			price = 1,
+			price = 10,
 		},
 		{
 			name = "improvedheavygauss",
@@ -1043,7 +1043,7 @@ return {
 				end
 			end,
 			costFunction = deductSalvage,
-			price = 1,
+			price = 10,
 		},
 		{
 			name = "ppccapacitors",
@@ -1072,7 +1072,7 @@ return {
 				end
 			end,
 			costFunction = deductSalvage,
-			price = 1,
+			price = 10,
 		},
 		{
 			name = "quickchargingcapacitors",
@@ -1098,7 +1098,7 @@ return {
 				end
 			end,
 			costFunction = deductSalvage,
-			price = 1,
+			price = 10,
 		},
 		{
 			name = "silverbullet",
@@ -1117,7 +1117,7 @@ return {
 				GG.EnableSilverBullet(unitID, not invert)
 			end,
 			costFunction = deductSalvage,
-			price = 1,
+			price = 15,
 		},
 		-- Ammo
 		{
@@ -1157,7 +1157,7 @@ return {
 				end
 			end,
 			costFunction = deductSalvage,
-			price = 1,
+			price = 5,
 		},
 		{
 			name = "ammoarmourpiercing",
@@ -1196,7 +1196,7 @@ return {
 				end
 			end,
 			costFunction = deductSalvage,
-			price = 1,
+			price = 10,
 		},
 		{
 			name = "ammocaseless",
@@ -1227,7 +1227,7 @@ return {
 				end
 			end,
 			costFunction = deductSalvage,
-			price = 1,
+			price = 5,
 		},
 	},
 }
