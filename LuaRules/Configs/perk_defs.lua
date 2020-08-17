@@ -1159,5 +1159,44 @@ return {
 			costFunction = deductSalvage,
 			price = 1,
 		},
+		{
+			name = "ammoarmourpiercing",
+			menu = "ammo",
+			cmdDesc = {
+				id = GetCmdID('MOD_AMMO_ARMOUR_PIERCING'),
+				action = 'modammoarmourpiercing',
+				name = GG.Pad("Autocannon", "Armour", "Piercing"),
+				tooltip = 'Autocannons only. Increases damage of shells by 25%, but with 50% reduction in ammunition and 25% reduction in accuracy.',
+				texture = 'bitmaps/ui/perkyellow.png',	
+			},
+			valid = isMechBay,
+			applyTo = function (unitDefID) return hasWeaponClass(unitDefID, "autocannon") and isFaction(unitDefID, "fs") end,
+			applyPerk = function (unitID, level, invert)
+				-- increase range, accuracy by 25%
+				local effect = 1.25
+				effect = (invert and 1/effect) or effect
+				local changed = setWeaponClassDamage(unitID, "autocannon", effect)
+				-- decrease accuracy by 25%, lower is better
+				effect = 1.25
+				effect = (invert and 1/effect) or effect
+				setWeaponClassAttribute(unitID, "autocannon", "accuracy", effect)
+				-- reduce max ammo by 50%
+				effect = 0.5
+				effect = (invert and 1/effect) or effect
+				env = Spring.UnitScript.GetScriptEnv(unitID)
+				local ammoCache = {}
+				for weapNum, wd in pairs(changed) do
+					local ammoType = wd.customParams.ammotype
+					if not ammoCache[ammoType] then -- only once per ammotype
+						ammoCache[ammoType] = true
+						env.maxAmmo[ammoType] = env.maxAmmo[ammoType] * effect
+						env.currAmmo[ammoType] = env.maxAmmo[ammoType]
+						Spring.SetUnitRulesParam(unitID, "ammo_" .. ammoType, 100)
+					end
+				end
+			end,
+			costFunction = deductSalvage,
+			price = 1,
+		},
 	},
 }
