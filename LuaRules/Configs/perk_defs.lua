@@ -1302,5 +1302,30 @@ return {
 			costFunction = deductSalvage,
 			price = 5,
 		},
+		{
+			name = "ammosrmtandem",
+			menu = "ammo",
+			cmdDesc = {
+				id = GetCmdID('MOD_AMMO_SRM_TANDEM'),
+				action = 'modammosrmtandem',
+				name = GG.Pad("SRM", "Tandem"),
+				tooltip = 'SRMs only. Doubles the amount of damage SRMs do, but halves ammo capacity.',
+				texture = 'bitmaps/ui/perkyellow.png',	
+			},
+			valid = isMechBay,
+			applyTo = function (unitDefID) return hasWeaponClass(unitDefID, "srm") end,
+			applyPerk = function (unitID, level, invert)
+				GG.EnableAmmo(unitID, not invert, "srm", "tandem")		
+				
+				local effect = 0.5
+				effect = (invert and 1/effect) or effect
+				env = Spring.UnitScript.GetScriptEnv(unitID)
+				env.maxAmmo["srm"] = env.maxAmmo["srm"] * effect
+				env.currAmmo["srm"] = env.maxAmmo["srm"]
+				Spring.SetUnitRulesParam(unitID, "ammo_srm", 100)
+			end,
+			costFunction = deductSalvage,
+			price = 5,
+		},
 	},
 }

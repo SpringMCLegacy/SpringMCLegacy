@@ -253,6 +253,8 @@ function gadget:UnitPreDamaged(unitID, unitDefID, unitTeam, damage, paralyzer, w
 			ApplyPPC(unitID)
 		elseif specialAmmo == "thunder" then
 			damage = damage * 0.75
+		elseif specialAmmo == "tandem" then
+			damage = damage * 2
 		end
 	end
 	-- Armours
