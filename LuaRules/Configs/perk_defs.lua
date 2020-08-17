@@ -1327,5 +1327,23 @@ return {
 			costFunction = deductSalvage,
 			price = 5,
 		},
+		{
+			name = "ammonarcbola",
+			menu = "ammo",
+			cmdDesc = {
+				id = GetCmdID('MOD_AMMO_NARC_BOLA'),
+				action = 'modammonarcbola',
+				name = GG.Pad("NARC", "Bola", "Pod"),
+				tooltip = 'Narc only. Replaces standard Homing Pod fired by Narcs with a Bola Pod that temporarily immobilizes target Mechs for several seconds.',
+				texture = 'bitmaps/ui/perkyellow.png',	
+			},
+			valid = isMechBay,
+			applyTo = function (unitDefID) return hasWeaponName(unitDefID, "narc") and isFaction(unitDefID, "cc") end,
+			applyPerk = function (unitID, level, invert)
+				GG.EnableAmmo(unitID, not invert, "narc", "bola")				
+			end,
+			costFunction = deductSalvage,
+			price = 5,
+		},
 	},
 }

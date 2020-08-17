@@ -213,32 +213,11 @@ function gadget:UnitPreDamaged(unitID, unitDefID, unitTeam, damage, paralyzer, w
 	if unitDefID == BEACON_ID or UnitDefs[unitDefID].name:find("dropzone") or UnitDefs[unitDefID].customParams.decal then return 0 end
 	-- ignore none weapons
 	if not attackerID then return damage end
-	-- NARCs
-	if weaponID == NARC_ID then
-		-- Don't allow dropships to be NARCed
-		if UnitDefs[unitDefID].customParams.dropship then return 0 end
-		--if GetUnitUnderJammer(unitID, unitTeam) then return 0 end
-		local allyTeam = select(6, GetTeamInfo(attackerTeam))
-		-- do the NARC, delay the deNARC
-		local duration = GetUnitRulesParam(attackerID, "NARC_DURATION") or NARC_DURATION
-		NARC(unitID, allyTeam, duration)
-		DelayCall(DeNARC, {unitID, allyTeam}, duration)
-		-- NARC does 0 damage
-		return 0
-	elseif weaponID == TAG_ID then
-		-- Don't allow dropships to be TAGed
-		if not UnitDefs[unitDefID].customParams.dropship then
-			SetUnitRulesParam(unitID, "TAG", GetGameFrame(), {inlos = true})
-			--Spring.Echo("I AM BEING TAGGED!")
-		end
-		return 0
-	elseif PPC_IDS[weaponID] then
-		ApplyPPC(unitID)
-	end
 	
 	-- Armour & Ammo Mods
 	local weaponDef = weaponID and WeaponDefs[weaponID]
 	local heatDamage = weaponDef and weaponDef.customParams.heatdamage
+	local speedChange
 	-- Ammos
 	local specialAmmos = unitSpecialAmmos[attackerID]
 	if specialAmmos then
@@ -253,6 +232,8 @@ function gadget:UnitPreDamaged(unitID, unitDefID, unitTeam, damage, paralyzer, w
 			ApplyPPC(unitID)
 		elseif specialAmmo == "thunder" then
 			damage = damage * 0.75
+		elseif specialAmmo == "bola" then
+			speedChange = 0.01
 		elseif specialAmmo == "tandem" then
 			damage = damage * 2
 		end
@@ -275,6 +256,38 @@ function gadget:UnitPreDamaged(unitID, unitDefID, unitTeam, damage, paralyzer, w
 			damage = damage * 0.75
 		end
 	end
+	
+	-- NARCs
+	if weaponID == NARC_ID then
+		-- Don't allow dropships to be NARCed
+		if UnitDefs[unitDefID].customParams.dropship then return 0 end
+		if speedChange then -- Bola Pod
+			--GG.SpeedChange(unitID, unitDefID, speedChange)
+			--DelayCall(GG.SpeedChange, {unitID, unitDefID, 1/speedChange}, 5*30)
+			Spring.MoveCtrl.Enable(unitID)
+			DelayCall(Spring.MoveCtrl.Disable, {unitID}, 5 * 30)
+			return 0
+		else -- regular NARC
+			--if GetUnitUnderJammer(unitID, unitTeam) then return 0 end
+			local allyTeam = select(6, GetTeamInfo(attackerTeam))
+			-- do the NARC, delay the deNARC
+			local duration = GetUnitRulesParam(attackerID, "NARC_DURATION") or NARC_DURATION
+			NARC(unitID, allyTeam, duration)
+			DelayCall(DeNARC, {unitID, allyTeam}, duration)
+			-- NARC does 0 damage
+			return 0
+		end
+	elseif weaponID == TAG_ID then
+		-- Don't allow dropships to be TAGed
+		if not UnitDefs[unitDefID].customParams.dropship then
+			SetUnitRulesParam(unitID, "TAG", GetGameFrame(), {inlos = true})
+			--Spring.Echo("I AM BEING TAGGED!")
+		end
+		return 0
+	elseif PPC_IDS[weaponID] then
+		ApplyPPC(unitID)
+	end
+
 	return damage, 1
 end
 
