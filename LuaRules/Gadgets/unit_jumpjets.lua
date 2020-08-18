@@ -107,6 +107,7 @@ local unitJumpInstant = {} -- unitID = true
 local unitMechanicalJumps = {} -- unitID = true
 GG.unitMechanicalJumps = unitMechanicalJumps
 local unitReinforcedLegs = {} -- unitID = true
+local unitImprovedJumpjets = {} -- unitID = true
 --------------------------------------------------------------------------------
 --------------------------------------------------------------------------------
 
@@ -193,6 +194,11 @@ local function SetUnitReinforcedLegs(unitID, tOrF)
 end
 GG.SetUnitReinforcedLegs = SetUnitReinforcedLegs
 
+local function SetUnitDFADamage(unitID, mult)
+	unitDFADamages[unitID] = unitDFADamages[unitID] * mult
+end
+GG.SetUnitDFADamage = SetUnitDFADamage
+
 local function SetUnitMechanicalJump(unitID, tOrF)
 	local jumpDef = jumpers[Spring.GetUnitDefID(unitID)]
 	local range   = spGetUnitRulesParam(unitID, "jumpRange") or jumpDef.range
@@ -202,6 +208,15 @@ local function SetUnitMechanicalJump(unitID, tOrF)
 	unitMechanicalJumps[unitID] = tOrF
 end
 GG.SetUnitMechanicalJump = SetUnitMechanicalJump
+
+local function SetUnitImprovedJumpjets(unitID, tOrF)
+	local jumpDef = jumpers[Spring.GetUnitDefID(unitID)]
+	local range   = spGetUnitRulesParam(unitID, "jumpRange") or jumpDef.range
+	Spring.SetUnitRulesParam(unitID, "jumpRange", tOrF and 1.5*range or range/1.5)
+	Spring.SetUnitRulesParam(unitID, "jumpHeat", tOrF and 1 or 2)
+	unitImprovedJumpjets[unitID] = tOrF
+end
+GG.SetUnitImprovedJumpjets = SetUnitImprovedJumpjets
 
 local function Jump(unitID, goal, cmdTag)
   goal[2]             = spGetGroundHeight(goal[1],goal[3])
@@ -214,6 +229,7 @@ local function Jump(unitID, goal, cmdTag)
   local delay    	  = unitJumpDelays[unitID] --how long unit stays crouched after anim_PreJump
   local height        = jumpDef.height
   local reloadTime    = (Spring.GetUnitRulesParam(unitID, "jumpReload") or (BASE_RELOAD))*30
+  local jumpHeat      = Spring.GetUnitRulesParam(unitID, "jumpHeat") or 2
   local teamID        = spGetUnitTeam(unitID)
   
   local rotateMidAir  = unitJumpInstant[unitID] --jumpDef.rotateMidAir Should be true for Perk to remove need to turn and face direction
@@ -267,9 +283,11 @@ local function Jump(unitID, goal, cmdTag)
   end
   
   if (delay == 0) then
+
 	if cob then
 		spCallCOBScript( unitID, "StartJump", 0)
       else
+	    Spring.UnitScript.CallAsUnit(unitID, env.ChangeHeat, jumpHeat)
 	    Spring.UnitScript.CallAsUnit(unitID,env.StartJump)
 	  end
 	if rotateMidAir then
@@ -296,6 +314,7 @@ local function Jump(unitID, goal, cmdTag)
 		spCallCOBScript( unitID, "StartJump", 0)
       else
 		Spring.UnitScript.CallAsUnit(unitID,env.StartJump)
+		Spring.UnitScript.CallAsUnit(unitID, env.ChangeHeat, jumpHeat)
 	  end
 
 	  if rotateMidAir then
@@ -379,11 +398,6 @@ local function UpdateCoroutines()
   end
 end
 
-local function SetUnitDFADamage(unitID, mult)
-	unitDFADamages[unitID] = unitDFADamages[unitID] * mult
-end
-GG.SetUnitDFADamage = SetUnitDFADamage
-
 --------------------------------------------------------------------------------
 --------------------------------------------------------------------------------
 
@@ -448,6 +462,7 @@ function gadget:UnitDestroyed(unitID, unitDefID)
   unitDFADamages[unitID] = nil 
   unitMechanicalJumps[unitID] = nil
   unitReinforcedLegs[unitID] = nil
+  unitImprovedJumpjets[unitID] = nil
 end
 
 
