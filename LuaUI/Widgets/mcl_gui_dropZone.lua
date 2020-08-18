@@ -18,7 +18,10 @@ local MECH_TEX = ":a:luaui/images/mech.png"
 local BEACON_POINT_DEFID = UnitDefNames["beacon_point"].id
 local BEACON_POINT_TEX = ":a:luaui/images/outpostpoint.png"
 
+
 local OUTPOST_TEX = ":a:icons/beaconpoint.png"
+
+local SALVAGE_DEFID = FeatureDefNames["salvage"].id
 
 local DZDefs = {}
 local DZ_LIST
@@ -111,15 +114,16 @@ end
 
 function widget:DrawWorldPreUnit()
 	-- TODO: Use local myDZ = Spring.GetTeamUnitsByDefs(Spring.GetMyUnitDefID instead, need to know 'my' side
-	local visible = GetVisibleUnits(Spring.GetMyTeamID())
+	local visibleUnits = GetVisibleUnits(Spring.GetMyTeamID())
+	local visibleFeatures = Spring.GetVisibleFeatures()
 
-	if #visible > 0 then
+	if (#visibleUnits + #visibleFeatures) > 0 then
 		glBlending(GL_SRC_ALPHA, GL_ONE)
 		glDepthTest(true)
 		glDepthMask(false)
 		gl.PolygonOffset(-50, -50)
 		local r,g,b = Spring.GetTeamColor(Spring.GetMyTeamID())
-		for _,unitID in pairs(visible) do
+		for _,unitID in pairs(visibleUnits) do
 			local unitDefID = GetUnitDefID(unitID)
 			local selected = Spring.IsUnitSelected(unitID)
 			if DZDefs[unitDefID] then
@@ -150,6 +154,19 @@ function widget:DrawWorldPreUnit()
 				glTexture(selected and MECH_TEX_SELECT or MECH_TEX)
 				glColor(r, g, b, selected and 0.9 or 0.65)
 				glDrawListAtUnit(unitID, DZ_LIST, false, radius, 1.0, radius, math.deg(-ry), 0, 1, 0)
+			end
+		end
+		for _, featureID in pairs(visibleFeatures) do
+			local featureDefID = Spring.GetFeatureDefID(featureID)
+			if featureDefID == SALVAGE_DEFID then
+				local x,y,z = Spring.GetFeaturePosition(featureID)
+				gl.PushMatrix()
+					gl.Translate(x, y, z)
+					glTexture(OUTPOST_TEX)
+					glColor(0.8, 0.8, 0.8, 0.45) -- colors.slategray = "\255\198\226\255"
+					gl.Scale(15, 1, 15) 
+					gl.CallList(DZ_LIST)
+				gl.PopMatrix()
 			end
 		end
 		glTexture(false)
