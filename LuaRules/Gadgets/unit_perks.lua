@@ -221,7 +221,10 @@ function gadget:AllowCommand(unitID, unitDefID, teamID, cmdID, cmdParams, cmdOpt
 	local rightClick = cmdOptions.right
 	-- check that this unit can receive this perk (can be issued the order due to multiple units selected)
 	-- ... and that it doesn't already have it
-	if appType and validApps[unitDefID][appType][cmdID] then
+	if appType 
+	and validApps[unitDefID] -- unit can receive apps of any sort
+	and validApps[unitDefID][appType] -- unit can recieve apps of this type
+	and validApps[unitDefID][appType][cmdID] then -- unit can receive this specific app
 		local appDef = appDefs[cmdID]
 		local applierID
 		if appType == "mods" then
