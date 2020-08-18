@@ -264,10 +264,11 @@ function gadget:UnitPreDamaged(unitID, unitDefID, unitTeam, damage, paralyzer, w
 		-- Don't allow dropships to be NARCed
 		if UnitDefs[unitDefID].customParams.dropship then return 0 end
 		if speedChange then -- Bola Pod
-			--GG.SpeedChange(unitID, unitDefID, speedChange)
-			--DelayCall(GG.SpeedChange, {unitID, unitDefID, 1}, 5*30)
-			Spring.MoveCtrl.Enable(unitID)
-			DelayCall(Spring.MoveCtrl.Disable, {unitID}, 5 * 30)
+			Spring.Echo("speed change now", Spring.GetGameFrame())
+			GG.SpeedChange(unitID, unitDefID, 0.1)
+			DelayCall(GG.SpeedChange, {unitID, unitDefID, 1}, 5*30)
+			--Spring.MoveCtrl.Enable(unitID)
+			--DelayCall(Spring.MoveCtrl.Disable, {unitID}, 5 * 30)
 			return 0
 		elseif damage == 400 then -- Explosive Pod
 			return damage

@@ -59,10 +59,10 @@ local function ChangeMoveData(unitDefID, mult)
 	return {
 		turnRate = ud.turnRate * mult,
 		accRate = ud.maxAcc * mult,
-		decRate = ud.maxDec * mult,
+		decRate = ud.maxDec * (mult > 1 and mult or 100), -- if we are slowing down, we need to force deceleration from our higher velocity
 		maxSpeed = ud.speed * mult,
 		maxReverseSpeed = ud.speed * mult / 1.5, -- 98.0 no ud.rSpeed
-		--maxWantedSpeed = ud.speed * mult,
+		maxWantedSpeed = ud.speed * mult,
 	}
 end
 
@@ -70,6 +70,7 @@ function SpeedChange(unitID, unitDefID, mult, masc)
 	env = Spring.UnitScript.GetScriptEnv(unitID)
 	if not env.jumping then
 		Spring.MoveCtrl.SetGroundMoveTypeData(unitID, ChangeMoveData(unitDefID, mult or masc and 2))
+		env.speedMod = mult
 	end
 end
 GG.SpeedChange = SpeedChange
