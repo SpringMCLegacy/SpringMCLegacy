@@ -15,6 +15,7 @@ local TowerDefs = {}
 local MECH_TEX_SELECT = ":a:luaui/images/mech_select.png"
 local MECH_TEX = ":a:luaui/images/mech.png"
 
+
 local BEACON_POINT_DEFID = UnitDefNames["beacon_point"].id
 local BEACON_POINT_TEX = ":a:luaui/images/outpostpoint.png"
 
@@ -22,6 +23,7 @@ local BEACON_POINT_TEX = ":a:luaui/images/outpostpoint.png"
 local OUTPOST_TEX = ":a:icons/beaconpoint.png"
 
 local SALVAGE_DEFID = FeatureDefNames["salvage"].id
+local SALVAGE_TEX = ":a:luaui/images/salvage.png"
 
 local DZDefs = {}
 local DZ_LIST
@@ -162,9 +164,10 @@ function widget:DrawWorldPreUnit()
 				local x,y,z = Spring.GetFeaturePosition(featureID)
 				gl.PushMatrix()
 					gl.Translate(x, y, z)
-					glTexture(OUTPOST_TEX)
-					glColor(0.8, 0.8, 0.8, 0.45) -- colors.slategray = "\255\198\226\255"
-					gl.Scale(15, 1, 15) 
+					glTexture(SALVAGE_TEX)
+					--glColor(0.8, 0.8, 0.8, 0.45) -- colors.slategray = "\255\198\226\255"
+					glColor(198/255, 226/255, 1, 0.65)
+					gl.Scale(10, 1, 10) 
 					gl.CallList(DZ_LIST)
 				gl.PopMatrix()
 			end
