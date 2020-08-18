@@ -767,7 +767,7 @@ return {
 			costFunction = deductSalvage,
 			price = 10,
 		},
-		{
+		--[[{
 			name = "inarc",
 			menu = "tactical",
 			cmdDesc = {
@@ -789,7 +789,7 @@ return {
 			end,
 			costFunction = deductSalvage,
 			price = 10,
-		},
+		},]]
 		-- Defensive
 		{
 			name = "protectedactuators",
