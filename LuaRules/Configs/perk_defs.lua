@@ -863,7 +863,6 @@ return {
 			applyTo = allMechs,
 			applyPerk = function (unitID, level, invert)
 				GG.EnableArmour(unitID, not invert, "hard")
-				-- TODO: nullify double damage from AP and T-C
 				
 				effect = 0.8
 				effect = (invert and 1/effect) or effect
@@ -1172,10 +1171,9 @@ return {
 			valid = isMechBay,
 			applyTo = function (unitDefID) return hasWeaponClass(unitDefID, "autocannon") and isFaction(unitDefID, "fs") end,
 			applyPerk = function (unitID, level, invert)
-				-- increase range, accuracy by 25%
-				local effect = 1.25
-				effect = (invert and 1/effect) or effect
-				local changed = setWeaponClassDamage(unitID, "autocannon", effect)
+				-- increase damage by 25%
+				GG.EnableAmmo(unitID, not invert, "autocannon", "armourpiercing")				
+
 				-- decrease accuracy by 25%, lower is better
 				effect = 1.25
 				effect = (invert and 1/effect) or effect

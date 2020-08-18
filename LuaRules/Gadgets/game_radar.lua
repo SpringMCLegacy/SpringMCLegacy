@@ -226,6 +226,8 @@ function gadget:UnitPreDamaged(unitID, unitDefID, unitTeam, damage, paralyzer, w
 		if specialAmmo == "inferno" then
 			damage = 0
 			heatDamage = 2
+		elseif specialAmmo == "armourpiercing" and not unitArmours[unitID] == "hard" then
+			damage = damage * 1.25
 		elseif specialAmmo == "magpulse" then
 			damage = 0
 			heatDamage = 2.5
@@ -236,7 +238,7 @@ function gadget:UnitPreDamaged(unitID, unitDefID, unitTeam, damage, paralyzer, w
 			speedChange = 0.01
 		elseif specialAmmo == "explosivepod" then
 			damage = 400
-		elseif specialAmmo == "tandem" then
+		elseif specialAmmo == "tandem" and not unitArmours[unitID] == "hard" then
 			damage = damage * 2
 		end
 	end
@@ -251,7 +253,6 @@ function gadget:UnitPreDamaged(unitID, unitDefID, unitTeam, damage, paralyzer, w
 		damage = damage * 0.88
 	elseif unitArmours[unitID] == "hard" then
 		damage = damage * 0.75
-		-- TODO: nullify double damage from AP and T-C
 	elseif unitArmours[unitID] == "reflec" then
 		local energy = weaponDef.customParams.weaponclass == "ppc" or weaponDef.customParams.weaponclass == "energy"
 		if energy then
