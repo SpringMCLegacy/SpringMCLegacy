@@ -869,6 +869,7 @@ return {
 			end,
 			costFunction = deductSalvage,
 			price = 7,
+			incompatible = {"hardenedarmour", "heatarmour", "reactivearmour", "reflecarmour"},
 		},
 		{
 			name = "hardenedarmour",
@@ -903,6 +904,7 @@ return {
 			end,
 			costFunction = deductSalvage,
 			price = 10,
+			incompatible = {"ferrofibrousarmour", "heatarmour", "reactivearmour", "reflecarmour"},
 		},
 		{
 			name = "heatarmour",
@@ -921,6 +923,7 @@ return {
 			end,
 			costFunction = deductSalvage,
 			price = 5,
+			incompatible = {"ferrofibrousarmour", "hardenedarmour", "reactivearmour", "reflecarmour"},
 		},
 		{
 			name = "reactivearmour",
@@ -939,6 +942,7 @@ return {
 			end,
 			costFunction = deductSalvage,
 			price = 10,
+			incompatible = {"ferrofibrousarmour", "hardenedarmour", "heatarmour", "reflecarmour"},
 		},
 		{
 			name = "reflecarmour",
@@ -957,6 +961,7 @@ return {
 			end,
 			costFunction = deductSalvage,
 			price = 10,
+			incompatible = {"ferrofibrousarmour", "hardenedarmour", "heatarmour", "reactivearmour"},
 		},
 		-- Offensive
 		{
