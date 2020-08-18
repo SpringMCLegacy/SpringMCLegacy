@@ -28,6 +28,7 @@ local SetUnitExperience		= Spring.SetUnitExperience
 -- Unsynced Ctrl
 
 -- Constants
+local EMPTY_TABLE = {}
 local completeTexts = {
 	["perks"] = "Trained",
 	["upgrades"] = "Purchased",
@@ -45,6 +46,8 @@ local validApps = {} -- [unitDefID][appType] = {appCmdID = true, etc}
 local orderedApps = {} -- unitDefID = {cmdDesc1, cmdDesc2, ...} -- TODO: get rid of need for this by just using the include directly which is already in order
 local currentApps = {} --[unitID][appType] = {app1 = true, app2 = true, ...}}
 local appUnits = {} -- [unitID][appType] = true
+
+local incompatible = {} -- [unitID][modName] = true
 
 -- dropzone perks need to be persistent -- TODO: make 'persistent' an appDef property so Aero & Avenger can be persistent too
 local dropZoneUpgrades = {} -- dropZoneUpgrades[teamID] = {perk1 = true, perk2 = true, ...}
@@ -65,6 +68,18 @@ for appType, defs in pairs(appInclude) do
 	end
 end
 
+-- loop again for conflicts as all must be laoded
+for i, appDef in ipairs(appInclude.mods) do
+	if appDef.incompatible then
+		local conflicts = ""
+		for _, modName in pairs(appDef.incompatible) do
+			--Spring.Echo(modName, appDefNames[modName])
+			conflicts = conflicts .. appDefNames[modName].cmdDesc.name:gsub("\n", ""):gsub("%s+", " ") .. ","
+		end
+		appDef.cmdDesc.tooltip = appDef.cmdDesc.tooltip .. "\n{ Incompatible with" .. conflicts .. "}"
+	end
+end
+
 -- Checks if apps are affordable and disables those that are not
 local function UpdateRemaining(unitID, appType, newLevel, applierID)
 	applierID = applierID or unitID
@@ -78,7 +93,9 @@ local function UpdateRemaining(unitID, appType, newLevel, applierID)
 				and validApps[Spring.GetUnitDefID(applierID)][appType][appCmdID] then
 					appRemaining = true
 					local price = Spring.IsNoCostEnabled() and 0 or appDef.price
-					if (newLevel < price) or (appDef.requires and not currentApps[unitID][appType][appDef.requires]) then
+					if (newLevel < price) 
+					or (appDef.requires and not currentApps[unitID][appType][appDef.requires]) 
+					or incompatible[unitID] and incompatible[unitID][appDef.name] then
 						EditUnitCmdDesc(applierID, FindUnitCmdDesc(applierID, appCmdID), {disabled = true})
 					elseif appType == "mods" then -- reset name if no longer applied
 						EditUnitCmdDesc(applierID, FindUnitCmdDesc(applierID, appCmdID), {disabled = false, name = appDef.cmdDesc.name})
@@ -108,7 +125,7 @@ local function UpdateUnitApps(unitID, appType)
 		elseif appType == "mods" then
 			newLevel = GG.GetTeamSalvage(teamID)
 			applierID = unitID
-			unitID = (Spring.GetUnitIsTransporting(unitID) or {})[1]
+			unitID = (Spring.GetUnitIsTransporting(unitID) or EMPTY_TABLE)[1]
 		elseif appType == "upgrades" then
 			newLevel = select(1, Spring.GetTeamResources(teamID, "metal"))
 		end
@@ -168,6 +185,9 @@ local function ApplyAppToUnit(unitID, appType, appDef, cmdID, applierID)
 	level = level + 1
 	currentApps[unitID][appType][appDef.name] = level
 	appDef.applyPerk(unitID, level)
+	for _, modName in pairs(appDef.incompatible or EMPTY_TABLE) do -- assumes only mods can be incompatible
+		incompatible[unitID][modName] = true
+	end
 	if cmdID then
 		if level == (appDef.levels or 1) then -- fully trained
 			local complete = completeTexts[appType]
@@ -188,6 +208,9 @@ local function RemoveMod(unitID, appDef, applierID)
 		currentApps[unitID]["mods"][appDef.name] = nil
 		appDef.costFunction(unitID, -appDef.price)
 		appDef.applyPerk(unitID, 0, true) -- invert
+		for _, modName in pairs(appDef.incompatible or EMPTY_TABLE) do -- assumes only mods can be incompatible
+			incompatible[unitID][modName] = nil -- assumes if A and B are incompatible with C, then A and B are incompatible
+		end
 		UpdateUnitApps(applierID, "mods")
 		return true
 	end
@@ -203,7 +226,7 @@ function gadget:AllowCommand(unitID, unitDefID, teamID, cmdID, cmdParams, cmdOpt
 		local applierID
 		if appType == "mods" then
 			applierID = unitID
-			unitID = (Spring.GetUnitIsTransporting(unitID) or {})[1]
+			unitID = (Spring.GetUnitIsTransporting(unitID) or EMPTY_TABLE)[1]
 			if not unitID then return false end
 			if rightClick then -- removing mod
 				return RemoveMod(unitID, appDef, applierID)
@@ -239,6 +262,7 @@ function gadget:UnitCreated(unitID, unitDefID, teamID, builderID)
 			Spring.SetUnitRulesParam(unitID, "perk_xp", 100)
 			SetUnitExperience(unitID, 1) -- Ach, another reference to XP cost
 			currentApps[unitID]["mods"] = {} -- As actually only 'valid' for mechbay
+			incompatible[unitID] = {}
 			-- install pre-loaded mods
 			local mods = table.unserialize(cp.mods)
 			for i, modName in pairs(mods) do

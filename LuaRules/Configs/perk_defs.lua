@@ -632,6 +632,7 @@ return {
 			end,
 			costFunction = deductSalvage,
 			price = 5,
+			incompatible = {"directionalthrusters", "mechanicaljumpsystem"},
 		},
 		{
 			name = "mechanicaljumpsystem",
@@ -650,6 +651,7 @@ return {
 			end,
 			costFunction = deductSalvage,
 			price = 10,
+			incompatible = {"directionalthrusters", "improvedjumpjets"},
 		},
 		-- Tactical
 		{
@@ -1062,6 +1064,7 @@ return {
 			end,
 			costFunction = deductSalvage,
 			price = 10,
+			incompatible = {"quickchargingcapacitors"},
 		},
 		{
 			name = "ppccapacitors",
@@ -1117,6 +1120,7 @@ return {
 			end,
 			costFunction = deductSalvage,
 			price = 10,
+			incompatible = {"improvedheavygauss", "silverbullet"},
 		},
 		{
 			name = "silverbullet",
@@ -1136,6 +1140,7 @@ return {
 			end,
 			costFunction = deductSalvage,
 			price = 15,
+			incompatible = {"quickchargingcapacitors"},
 		},
 		-- Ammo
 		{
@@ -1176,6 +1181,7 @@ return {
 			end,
 			costFunction = deductSalvage,
 			price = 5,
+			incompatible = {"ammoarmourpiercing", "ammocaseless"},
 		},
 		{
 			name = "ammoarmourpiercing",
@@ -1196,7 +1202,7 @@ return {
 				-- decrease accuracy by 25%, lower is better
 				effect = 1.25
 				effect = (invert and 1/effect) or effect
-				setWeaponClassAttribute(unitID, "autocannon", "accuracy", effect)
+				local changed = setWeaponClassAttribute(unitID, "autocannon", "accuracy", effect)
 				-- reduce max ammo by 50%
 				effect = 0.5
 				effect = (invert and 1/effect) or effect
@@ -1214,6 +1220,7 @@ return {
 			end,
 			costFunction = deductSalvage,
 			price = 10,
+			incompatible = {"ammoprecision", "ammocaseless"},
 		},
 		{
 			name = "ammocaseless",
@@ -1246,6 +1253,7 @@ return {
 			end,
 			costFunction = deductSalvage,
 			price = 5,
+			incompatible = {"ammoprecision", "ammoarmourpiercing"},
 		},
 		{
 			name = "ammolrminferno",
@@ -1264,6 +1272,7 @@ return {
 			end,
 			costFunction = deductSalvage,
 			price = 5,
+			incompatible = {"ammolrmmagpulse", "ammolrmthunder"},
 		},
 		{
 			name = "ammolrmmagpulse",
@@ -1282,6 +1291,7 @@ return {
 			end,
 			costFunction = deductSalvage,
 			price = 5,
+			incompatible = {"ammolrminferno", "ammolrmthunder"},
 		},
 		{
 			name = "ammolrmthunder",
@@ -1300,6 +1310,7 @@ return {
 			end,
 			costFunction = deductSalvage,
 			price = 5,
+			incompatible = {"ammolrminferno", "ammolrmmagpulse"},
 		},
 		{
 			name = "ammosrminferno",
@@ -1318,6 +1329,7 @@ return {
 			end,
 			costFunction = deductSalvage,
 			price = 5,
+			incompatible = {"ammosrmtandem"},
 		},
 		{
 			name = "ammosrmtandem",
@@ -1343,6 +1355,7 @@ return {
 			end,
 			costFunction = deductSalvage,
 			price = 5,
+			incompatible = {"ammosrminferno"},
 		},
 		{
 			name = "ammonarcexplosive",
@@ -1361,6 +1374,7 @@ return {
 			end,
 			costFunction = deductSalvage,
 			price = 5,
+			incompatible = {"ammonarcbola"},
 		},
 		{
 			name = "ammonarcbola",
@@ -1379,6 +1393,7 @@ return {
 			end,
 			costFunction = deductSalvage,
 			price = 5,
+			incompatible = {"ammonarcexplosive"},
 		},
 	},
 }
