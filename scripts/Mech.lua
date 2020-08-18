@@ -374,14 +374,14 @@ function hideLimbPieces(limb, hide)
 			--Spring.Echo("Lost a leg! halving move speed")
 			speedMod = speedMod / 2
 			-- disable jumpjets
-			if info.jumpjets > 0 then
+			if GG.unitMechanicalJumps[unitID] and info.jumpjets > 0 then
 				Spring.EditUnitCmdDesc(unitID, Spring.FindUnitCmdDesc(unitID, CMD_JUMP), {disabled = true})
 			end
 		else -- leg is restored
 			lostLegs = lostLegs - 1
 			--Spring.Echo("Regained a leg! doubling move speed")
 			speedMod = speedMod * 2
-			if lostLegs == 0 and info.jumpjets > 0 then -- enable jumpjets
+			if GG.unitMechanicalJumps[unitID] and lostLegs == 0 and info.jumpjets > 0 then -- enable jumpjets
 				Spring.EditUnitCmdDesc(unitID, Spring.FindUnitCmdDesc(unitID, CMD_JUMP), {disabled = false})
 			end
 		end

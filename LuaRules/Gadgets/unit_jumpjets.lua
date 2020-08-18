@@ -333,15 +333,17 @@ local function Jump(unitID, goal, cmdTag)
       Sleep()
     end
 
+	lastJump[unitID] = spGetGameSeconds()
+    jumping[unitID] = false
+	mcDisable(unitID) -- need to disable ScriptMoveType before calling StopJump, 
+	-- so that SetGroundMoveTypeData is called once regular movetype is restored
+	
     if (fakeUnitID) then spDestroyUnit(fakeUnitID, false, true) end
     if cob then
 	  spCallCOBScript( unitID, "StopJump", 0)
 	else
 	   Spring.UnitScript.CallAsUnit(unitID,env.StopJump)
 	end
-    lastJump[unitID] = spGetGameSeconds()
-    jumping[unitID] = false
-	mcDisable(unitID)
 	
 		--mcSetPosition(unitID, start[1] + vector[1],start[2] + vector[2]-6,start[3] + vector[3])
     local oldQueue = spGetCommandQueue(unitID, -1)
@@ -388,10 +390,12 @@ GG.SetUnitDFADamage = SetUnitDFADamage
 function gadget:UnitPreDamaged(unitID, unitDefID, unitTeam, damage, paralyzer, weaponID, projectileID, attackerID, attackerDefID, attackerTeam)
 	-- DFA
 	if weaponID == DFA_ID then
+		--Spring.Echo("We got DFA", damage)
 		if attackerID == unitID or AreTeamsAllied(attackerTeam, unitTeam) then return 0 end -- don't deal self damage via the engine
 		local attackerDef = UnitDefs[attackerDefID]
 		local applied = damage * attackerDef.health * 0.1 * unitDFADamages[attackerID] -- 10% of max HP
 		local self = applied / (unitReinforcedLegs[attackerID] and 4 or 2)
+		--Spring.Echo("We got DFA applied", damage, applied, self)
 		local env = Spring.UnitScript.GetScriptEnv(attackerID)
 		Spring.UnitScript.CallAsUnit(attackerID, env.script.HitByWeapon, 0, 0, DFA_ID, self, "llowerleg")
 		Spring.UnitScript.CallAsUnit(attackerID, env.script.HitByWeapon, 0, 0, DFA_ID, self, "rlowerleg")
@@ -422,10 +426,6 @@ end
 
 function gadget:UnitCreated(unitID, unitDefID, unitTeam)
   if (not jumpers[unitDefID]) then
-	--[[if GG.mechCache[unitDefID] then
-		Spring.Echo("add a blank!")
-		spInsertUnitCmdDesc(unitID, blankCmdDesc)
-	end]]
     return
   end 
   local t = spGetGameSeconds()
@@ -433,7 +433,7 @@ function gadget:UnitCreated(unitID, unitDefID, unitTeam)
   unitJumpInstant[unitID] = false
   unitJumpDelays[unitID] = 40
   unitDFADamages[unitID] = 1
-  --spInsertUnitCmdDesc(unitID, jumpCmdDesc)
+
   spSetUnitRulesParam(unitID,"jump_reload_bar",100)
   spSetUnitRulesParam(unitID,"jumpReload", BASE_RELOAD)
   spSetUnitRulesParam(unitID,"jumpSpeed", jumpers[unitDefID].speed)
