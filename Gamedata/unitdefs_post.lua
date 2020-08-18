@@ -297,7 +297,7 @@ for name, ud in pairs(UnitDefs) do
 		if cp.dropship then
 			ud.radardistance = 1500
 			ud.sightdistance = 0
-			ud.airsightdistance = modOptions.mechSight or 400
+			ud.airsightdistance = ud.radardistance
 		end
 		ud.sightdistance = ud.sightdistance or modOptions.mechsight
 		if cp.baseclass == "mech" then -- mechs only
@@ -314,7 +314,7 @@ for name, ud in pairs(UnitDefs) do
 			ud.losemitheight = cp.cockpitheight or (ud.mass / 10)
 			ud.radaremitheight = 100
 			ud.seismicsignature = cp.tonnage / 10
-			ud.airsightdistance = ud.sightdistance * 1.05
+			ud.airsightdistance = ud.radardistance
 		else -- everything but mechs
 			ud.seismicsignature = 0
 			ud.radardistance = ud.radardistance or 0
