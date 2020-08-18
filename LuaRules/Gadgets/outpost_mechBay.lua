@@ -229,8 +229,8 @@ end
 	
 function gadget:ProjectileDestroyed(proID)
 	if pieces[proID] then
-		local x,y,z = Spring.GetProjectilePosition(proID)
-		Spring.CreateFeature(salvageArray[math.random(#salvageArray)], x,y,z)
+		local x,_,z = Spring.GetProjectilePosition(proID)
+		Spring.CreateFeature(salvageArray[math.random(#salvageArray)], x,Spring.GetGroundHeight(x,z),z)
 		pieces[proID] = nil
 	end
 end
