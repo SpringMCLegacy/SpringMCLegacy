@@ -41,6 +41,7 @@ local FNR5 = Fafnir:New{
 		maxammo 		= {hvgauss = 8},
 		barrelrecoildist = {[1] = 5, [2] = 5},
 		ecm 			= true,
+		mods			= {"doubleheatsinks"},
     },
 }
 

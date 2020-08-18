@@ -168,15 +168,17 @@ local function ApplyAppToUnit(unitID, appType, appDef, cmdID, applierID)
 	level = level + 1
 	currentApps[unitID][appType][appDef.name] = level
 	appDef.applyPerk(unitID, level)
-	if level == (appDef.levels or 1) then -- fully trained
-		local complete = completeTexts[appType]
-		EditUnitCmdDesc(applierID, FindUnitCmdDesc(applierID, cmdID), {name = appDef.cmdDesc.name .."\n  (" .. complete .. ")", disabled = false})
-	else
-		local nameString = GG.Pad(appDef.cmdDesc.name, "(" .. level .. " of " .. appDef.levels ..")")
-		EditUnitCmdDesc(applierID, FindUnitCmdDesc(applierID, cmdID), {name = nameString})
+	if cmdID then
+		if level == (appDef.levels or 1) then -- fully trained
+			local complete = completeTexts[appType]
+			EditUnitCmdDesc(applierID, FindUnitCmdDesc(applierID, cmdID), {name = appDef.cmdDesc.name .."\n  (" .. complete .. ")", disabled = false})
+		else
+			local nameString = GG.Pad(appDef.cmdDesc.name, "(" .. level .. " of " .. appDef.levels ..")")
+			EditUnitCmdDesc(applierID, FindUnitCmdDesc(applierID, cmdID), {name = nameString})
+		end
+		appDef.costFunction(unitID, appDef.price)
+		UpdateUnitApps(applierID, appType) -- update here too to prevent pause cheating
 	end
-	appDef.costFunction(unitID, appDef.price)
-	UpdateUnitApps(applierID, appType) -- update here too to prevent pause cheating
 end		
 
 local function RemoveMod(unitID, appDef, applierID)
@@ -237,17 +239,12 @@ function gadget:UnitCreated(unitID, unitDefID, teamID, builderID)
 			Spring.SetUnitRulesParam(unitID, "perk_xp", 100)
 			SetUnitExperience(unitID, 1) -- Ach, another reference to XP cost
 			currentApps[unitID]["mods"] = {} -- As actually only 'valid' for mechbay
-		end
-		--[[for perkCmdID, perkDef in pairs(perkDefs) do -- using pairs here means perks aren't in order, use Find?
-			if validPerks[unitDefID][perkCmdID] then -- Only add perks valid for this mech
-				InsertUnitCmdDesc(unitID, perkDef.cmdDesc)
+			-- install pre-loaded mods
+			local mods = table.unserialize(cp.mods)
+			for i, modName in pairs(mods) do
+				ApplyAppToUnit(unitID, "mods", appDefNames[modName])
 			end
-		end]]
-		
-		--[[for i, cmdDesc in ipairs(orderedPerks[unitDefID]) do -- enforce order
-			InsertUnitCmdDesc(unitID, cmdDesc)
-		end]]
-		
+		end
 		-- check if unit is a DZ and team DZ has previously been perked
 		if GG.DROPZONE_IDS[unitDefID] and dropZoneUpgrades[teamID] then
 			table.copy(dropZoneUpgrades[teamID], currentApps[unitID]["upgrades"])
