@@ -51,17 +51,66 @@ local function EnableSilverBullet(unitID, tOrF)
 end
 GG.EnableSilverBullet = EnableSilverBullet
 
+local contTAG = {}
+local arrows = {}
+local function SetArrowTarget(proID, targetID)
+	if targetID and not Spring.GetUnitIsDead(targetID) then
+		if GG.IsUnitTAGed(targetID) then
+			--Spring.Echo("Target is tagged", contTAG[proID] and "continuous lock" or "lock reaquired!")
+			contTAG[proID] = true -- re-establish TAG if lost
+			Spring.SetProjectileTarget(proID, targetID)
+		elseif contTAG[proID] then -- continuous TAG up to here
+			Spring.Echo("Target TAG lost")
+			contTAG[proID] = false
+			local x,y,z = Spring.GetUnitPosition(targetID)
+			Spring.SetProjectileTarget(proID, x,y,z)
+		end
+	else -- target is dead, stop tracking altogether
+		arrows[proID] = nil
+	end
+end
+
+local function ChangeArrow(proID, proOwnerID, wd)
+		local targetType, info = Spring.GetProjectileTarget(proID)
+		if targetType == string.byte('u') then -- unit target, info is ID
+			if GG.IsUnitTAGed(info) then
+				local x,y,z = Spring.GetProjectilePosition(proID)
+				local vx, vy, vz = Spring.GetProjectileVelocity(proID)
+				local _,_,_, _,_,_,tx, ty, tz = Spring.GetUnitPosition(info, true, true)
+				--Spring.Echo("Arrow detected a TAG!", vx,vy,vz)
+				local newProID = Spring.SpawnProjectile(wd.id, {
+					pos = {x,y,z},
+					speed = {vx, vy, vz},
+					["error"] = {0, 0, 0},
+					spread = {0, 0, 0},
+					owner = proOwnerID,
+					team = Spring.GetUnitTeam(proOwnerID),
+					tracking = 8000, --?
+					ttl = 100,
+					["end"] = {tx, ty, tz},
+				})
+				arrows[newProID] = info
+				SetArrowTarget(newProID, info)
+				Spring.SetProjectileIgnoreTrackingError(newProID, true)
+				Spring.DeleteProjectile(proID)
+			end
+		end
+end
+
 function gadget:ProjectileCreated(proID, proOwnerID, weaponID)
 	--Spring.Echo("PC", proID, proOwnerID, weaponID)
 	local wd = WeaponDefs[weaponID]
-	if wd and WeaponDefs[weaponID].name == "arrowiv" then
-		for i = 1, 5 do
-			--Spring.Echo("Arrow IV launched!")
+	if wd and wd.name == "arrowiv" then
+		if GG.unitSpecialAmmos[proOwnerID]["arrowiv"] == "homing" then
+			ChangeArrow(proID, proOwnerID, WeaponDefNames["arrowiv_guided"])
 		end
-		--tracking[proID] = true
+	elseif wd and wd.customParams.weaponclass == "lrm" then
+		if GG.unitSpecialAmmos[proOwnerID]["lrm"] == "homing" then
+			ChangeArrow(proID, proOwnerID, WeaponDefNames["lrm_guided"])
+		end
 	elseif lbx[weaponID] then
 		--Spring.Echo("LBX Fired!")
-		local targetType, info, more = Spring.GetProjectileTarget(proID)
+		local targetType, info = Spring.GetProjectileTarget(proID)
 		local tx,ty,tz
 		if targetType == string.byte('u') then -- unit target, info is ID
 			tx,ty,tz = Spring.GetUnitPosition(info)
@@ -111,6 +160,8 @@ end
 
 function gadget:ProjectileDestroyed(proID)
 	tracking[proID] = nil
+	arrows[proID] = nil
+	contTAG[proID] = nil
 	if projectiles[proID] then
 		SendToUnsynced("lupsProjectiles_RemoveProjectile", proID)
 		projectiles[proID] = nil
@@ -136,8 +187,12 @@ function gadget:Initialize()
 		end
 	end
 end
---[[function gadget:GameFrame()
-	for id in pairs(tracking) do
+
+function gadget:GameFrame()
+	for proID, targetID in pairs(arrows) do
+		SetArrowTarget(proID, targetID)
+	end
+	--[[for id in pairs(tracking) do
 		local ydir = select(2,Spring.GetProjectileDirection(id))
 		Spring.Echo(id, "TTL:", Spring.GetProjectileTimeToLive(id), "DIR Y:",ydir)
 		if ydir < 0 then
@@ -153,8 +208,8 @@ end
 				})
 			end
 		end
-	end
-end]]
+	end]]
+end
 
 function gadget:Shutdown()
 	for weaponID in pairs(weapons) do

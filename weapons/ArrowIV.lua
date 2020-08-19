@@ -44,10 +44,10 @@ local ArrowIV = Weapon:New{
 
 local ArrowIV_Guided = ArrowIV:New{
 	name                    = "Homing Arrow Missile",
-	wobble					= 100,
-	trajectoryHeight		= 1,
-	tracks					= false,
-	turnRate				= 500,	
+	--wobble					= 100,
+	trajectoryHeight		= 1.5,
+	tracks					= true,
+	turnRate				= 500000,	
 	customparams = {
 		minrange			= 300,
     },

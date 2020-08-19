@@ -1306,7 +1306,7 @@ return {
 			end,
 			costFunction = deductSalvage,
 			price = 5,
-			incompatible = {"ammolrmmagpulse", "ammolrmthunder", "ammolrmarad"},
+			incompatible = {"ammolrmmagpulse", "ammolrmthunder", "ammolrmarad", "ammolrmhoming"},
 		},
 		{
 			name = "ammolrmmagpulse",
@@ -1325,7 +1325,7 @@ return {
 			end,
 			costFunction = deductSalvage,
 			price = 5,
-			incompatible = {"ammolrminferno", "ammolrmthunder", "ammolrmarad"},
+			incompatible = {"ammolrminferno", "ammolrmthunder", "ammolrmarad", "ammolrmhoming"},
 		},
 		{
 			name = "ammolrmarad",
@@ -1344,7 +1344,7 @@ return {
 			end,
 			costFunction = deductSalvage,
 			price = 5,
-			incompatible = {"ammolrminferno", "ammolrmthunder", "ammolrmmagpulse"},
+			incompatible = {"ammolrminferno", "ammolrmthunder", "ammolrmmagpulse", "ammolrmhoming"},
 		},
 		{
 			name = "ammolrmthunder",
@@ -1363,7 +1363,44 @@ return {
 			end,
 			costFunction = deductSalvage,
 			price = 5,
-			incompatible = {"ammolrminferno", "ammolrmmagpulse", "ammolrmarad"},
+			incompatible = {"ammolrminferno", "ammolrmmagpulse", "ammolrmarad", "ammolrmhoming"},
+		},
+		{
+			name = "ammolrmhoming",
+			menu = "ammo",
+			cmdDesc = {
+				id = GetCmdID('MOD_AMMO_LRM_HOMING'),
+				action = 'modammolrmhoming',
+				name = GG.Pad("LRM", "Smart"),
+				tooltip = 'LRMs only. Missiles can track targets being painted with TAG, becoming much more accurate.',
+				texture = 'bitmaps/ui/perkyellow.png',	
+			},
+			valid = isMechBay,
+			applyTo = function (unitDefID) return hasWeaponClass(unitDefID, "lrm") end,
+			applyPerk = function (unitID, level, invert)
+				GG.EnableAmmo(unitID, not invert, "lrm", "homing")				
+			end,
+			costFunction = deductSalvage,
+			price = 5,
+			incompatible = {"ammolrminferno", "ammolrmmagpulse", "ammolrmarad", "ammolrmthunder"},
+		},
+		{
+			name = "ammonarrowhoming",
+			menu = "ammo",
+			cmdDesc = {
+				id = GetCmdID('MOD_AMMO_ARROW_HOMING'),
+				action = 'modammoarrowhoming',
+				name = GG.Pad("Arrow IV", "Homing"),
+				tooltip = 'Arrow Artillery missile only. Allows Arrow missiles to track targets being painted with TAG, becoming much more accurate.',
+				texture = 'bitmaps/ui/perkyellow.png',	
+			},
+			valid = isMechBay,
+			applyTo = function (unitDefID) return hasWeaponName(unitDefID, "arrowiv") end,
+			applyPerk = function (unitID, level, invert)
+				GG.EnableAmmo(unitID, not invert, "arrowiv", "homing")				
+			end,
+			costFunction = deductSalvage,
+			price = 5,
 		},
 		{
 			name = "ammosrminferno",

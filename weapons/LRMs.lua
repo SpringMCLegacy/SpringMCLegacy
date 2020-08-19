@@ -36,6 +36,10 @@ local LRM_Class = Weapon:New{
     },
 }
 
+local LRM_Guided = LRM_Class:New{
+	turnRate				= 40000,
+}
+
 local LRM5 = LRM_Class:New{
 	name                    = "LRM-5",
 	burst					= 5,
@@ -157,4 +161,5 @@ return lowerkeys({
 	AirLRM10 = AirLRM10,
 	AirLRM15 = AirLRM15,
 	AirLRM20 = AirLRM20,
+	LRM_Guided = LRM_Guided,
 })
