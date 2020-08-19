@@ -965,6 +965,34 @@ return {
 		},
 		-- Offensive
 		{
+			name = "aatargetingcomputer",
+			menu = "offensive",
+			cmdDesc = {
+				id = GetCmdID('MOD_AATARGETING_COMPUTER'),
+				action = 'modaatargetingcomputer',
+				name = GG.Pad("AA", "Targeting", "Computer"),
+				tooltip = 'Increases accuracy of all ballistic and energy direct-fire weapons by 50% when targeting flying units, except weapons that fire in bursts.',
+				texture = 'bitmaps/ui/perkbgfaction.png',	
+			},
+			valid = isMechBay,
+			applyTo = function (unitDefID) 
+				return hasWeaponClass(unitDefID, "autocannon", "salvoSize", true, 1) 
+				or hasWeaponClass(unitDefID, "gauss", "salvoSize", true, 1) 
+				or hasWeaponClass(unitDefID, "ppc", "salvoSize", true, 1) 
+				or hasWeaponClass(unitDefID, "energy", "soundTrigger", true, true) 
+			end,
+			applyPerk = function (unitID, level, invert)
+				--Spring.Echo("Missile range selected") 
+				local effect = 0.75 -- smaller accuracy is better, 25% reduction
+				effect = (invert and 1/effect) or effect
+				
+				GG.AATC[unitID] = ture
+			end,
+			costFunction = deductSalvage,
+			price = 10,
+			incompatible = {"targetingcomputer"},
+		},
+		{
 			name = "targetingcomputer",
 			menu = "offensive",
 			cmdDesc = {
@@ -993,6 +1021,7 @@ return {
 			end,
 			costFunction = deductSalvage,
 			price = 10,
+			incompatible = {"aatargetingcomputer"},
 		},
 		{
 			name = "apollofcs",

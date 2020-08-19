@@ -194,6 +194,9 @@ local function DeNARC(unitID, allyTeam, force)
 end
 
 
+local AATC = {}
+GG.AATC = AATC
+
 local unitArmours = {} -- unitID = true
 local function EnableArmour(unitID, apply, armourType)
 	unitArmours[unitID] = apply and armourType or nil
@@ -375,6 +378,8 @@ function gadget:UnitDestroyed(unitID, unitDefID, teamID)
 	SetUnitRulesParam(unitID, "FRIENDLY_ECM", 0)
 	-- armour
 	unitArmours[unitID] = nil
+	unitSpecialAmmos[unitID] = nil
+	AATC[unitID] = nil
 end
 
 function gadget:UnitGiven(unitID, unitDefID, newTeam, oldTeam)

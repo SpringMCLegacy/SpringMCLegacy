@@ -618,10 +618,12 @@ function script.AimWeapon(weaponID, heading, pitch)
 	return WeaponCanFire(weaponID)
 end
 
+local weaponsToReset = {}
 function script.BlockShot(weaponID, targetID, userTarget)
 	if amsIDs[weaponID] then return false end
 	local minRange = minRanges[weaponID]
 	local weapDef = WeaponDefs[unitDef.weapons[weaponID].weaponDef]
+	local targetDef = UnitDefs[Spring.GetUnitDefID(targetID)]
 	if minRange then
 		local distance
 		if targetID then
@@ -647,8 +649,9 @@ function script.BlockShot(weaponID, targetID, userTarget)
 			local ARAD = weapDef.customParams.weaponclass == "lrm"	 -- an ECM targeted by ARAD missile
 						and GG.unitSpecialAmmos[unitID]["lrm"] == "arad" 
 			if ARAD then
-				if UnitDefs[Spring.GetUnitDefID(targetID)].jammerRadius > 0 then return false end
+				if targetDef.jammerRadius > 0 then return false end
 				Spring.SetUnitWeaponState(unitID, weaponID, "accuracy", weapDef.accuracy * 0.5)
+				weaponsToReset[weaponID] = true
 			end
 			if jammed then
 				--Spring.Echo("Can't fire weapon " .. weaponID .. " as target is jammed")
@@ -657,6 +660,17 @@ function script.BlockShot(weaponID, targetID, userTarget)
 			else
 				Spring.SetUnitRulesParam(targetID, "ENEMY_MISSILE_LOCK", Spring.GetGameFrame(), {inlos = true})
 			end
+		end
+	end
+	if targetDef.canFly and GG.AATC[unitID] then
+		if (not (weapDef.salvoSize > 1) -- TODO: cache this mess
+		and (weapDef.customParams.weaponclass == "autocannon")
+		or (weapDef.customParams.weaponclass == "gauss")
+		or (weapDef.customParams.weaponclass == "ppc"))
+		or (weapDef.customParams.weaponclass == "energy" and weapDef.soundTrigger) then
+			Spring.SetUnitWeaponState(unitID, weaponID, "accuracy", weapDef.accuracy * 0.5)
+			Spring.SetUnitWeaponState(unitID, weaponID, "projectileSpeed", 8000)
+			weaponsToReset[weaponID] = true
 		end
 	end
 	--Spring.Echo(unitID, weaponID, "Weapon is allowed to fire by BlockShot")
@@ -698,8 +712,9 @@ function script.EndBurst(weaponID)
 	local weapDef = WeaponDefs[unitDef.weapons[weaponID].weaponDef]
 	if spinSpeeds[weaponID] then
 		StartThread(SpinBarrels, weaponID, false)
-	elseif weapDef.customParams.weaponclass == "lrm" and GG.unitSpecialAmmos[unitID]["lrm"] == "arad" then -- TODO: cache this?
+	elseif weaponsToReset[weaponID] then
 		Spring.SetUnitWeaponState(unitID, weaponID, "accuracy", weapDef.accuracy)
+		Spring.SetUnitWeaponState(unitID, weaponID, "projectileSpeed", weapDef.weaponVelocity or 0)
 	end
 	
 end
