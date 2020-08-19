@@ -621,6 +621,7 @@ end
 function script.BlockShot(weaponID, targetID, userTarget)
 	if amsIDs[weaponID] then return false end
 	local minRange = minRanges[weaponID]
+	local weapDef = WeaponDefs[unitDef.weapons[weaponID].weaponDef]
 	if minRange then
 		local distance
 		if targetID then
@@ -640,7 +641,15 @@ function script.BlockShot(weaponID, targetID, userTarget)
 	local jammable = jammableIDs[weaponID]
 	if jammable then
 		if targetID then
-			local jammed = GetUnitUnderJammer(targetID) and (not IsUnitNARCed(targetID)) and (not IsUnitTAGed(targetID))
+			local jammed = GetUnitUnderJammer(targetID) -- under the effects of ECM
+				and (not IsUnitNARCed(targetID)) and (not IsUnitTAGed(targetID)) -- Not TAGed or NARCed
+			
+			local ARAD = weapDef.customParams.weaponclass == "lrm"	 -- an ECM targeted by ARAD missile
+						and GG.unitSpecialAmmos[unitID]["lrm"] == "arad" 
+			if ARAD then
+				if UnitDefs[Spring.GetUnitDefID(targetID)].jammerRadius > 0 then return false end
+				Spring.SetUnitWeaponState(unitID, weaponID, "accuracy", weapDef.accuracy * 0.5)
+			end
 			if jammed then
 				--Spring.Echo("Can't fire weapon " .. weaponID .. " as target is jammed")
 				Spring.SetUnitRulesParam(unitID, "MISSILE_TARGET_JAMMED", Spring.GetGameFrame(), {inlos = true})
@@ -686,9 +695,13 @@ function script.Shot(weaponID)
 end
 
 function script.EndBurst(weaponID)
+	local weapDef = WeaponDefs[unitDef.weapons[weaponID].weaponDef]
 	if spinSpeeds[weaponID] then
 		StartThread(SpinBarrels, weaponID, false)
+	elseif weapDef.customParams.weaponclass == "lrm" and GG.unitSpecialAmmos[unitID]["lrm"] == "arad" then -- TODO: cache this?
+		Spring.SetUnitWeaponState(unitID, weaponID, "accuracy", weapDef.accuracy)
 	end
+	
 end
 
 function script.AimFromWeapon(weaponID) 

@@ -1277,7 +1277,7 @@ return {
 			end,
 			costFunction = deductSalvage,
 			price = 5,
-			incompatible = {"ammolrmmagpulse", "ammolrmthunder"},
+			incompatible = {"ammolrmmagpulse", "ammolrmthunder", "ammolrmarad"},
 		},
 		{
 			name = "ammolrmmagpulse",
@@ -1296,7 +1296,26 @@ return {
 			end,
 			costFunction = deductSalvage,
 			price = 5,
-			incompatible = {"ammolrminferno", "ammolrmthunder"},
+			incompatible = {"ammolrminferno", "ammolrmthunder", "ammolrmarad"},
+		},
+		{
+			name = "ammolrmarad",
+			menu = "ammo",
+			cmdDesc = {
+				id = GetCmdID('MOD_AMMO_LRM_ARAD'),
+				action = 'modammolrmarad',
+				name = GG.Pad("LRM", "Anti", "Radiation"),
+				tooltip = 'LRMs only. Anti-Radiation warheads that can fire at units with ECM, though not at other units inside ECM, but have poorer tracking against non-ECM targets.',
+				texture = 'bitmaps/ui/perkyellow.png',	
+			},
+			valid = isMechBay,
+			applyTo = function (unitDefID) return hasWeaponClass(unitDefID, "lrm") and isFaction(unitDefID, "fw") end,
+			applyPerk = function (unitID, level, invert)
+				GG.EnableAmmo(unitID, not invert, "lrm", "arad")				
+			end,
+			costFunction = deductSalvage,
+			price = 5,
+			incompatible = {"ammolrminferno", "ammolrmthunder", "ammolrmmagpulse"},
 		},
 		{
 			name = "ammolrmthunder",
@@ -1315,7 +1334,7 @@ return {
 			end,
 			costFunction = deductSalvage,
 			price = 5,
-			incompatible = {"ammolrminferno", "ammolrmmagpulse"},
+			incompatible = {"ammolrminferno", "ammolrmmagpulse", "ammolrmarad"},
 		},
 		{
 			name = "ammosrminferno",

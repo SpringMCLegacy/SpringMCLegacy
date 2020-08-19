@@ -73,9 +73,9 @@ local outRadarUnits = {}
 
 local inAutoLos = {}
 local unitSectorRadii = {} -- unitSectorRadii[unitID] = length
-local allyJammers = {} -- allyJammers[unitID] = radius
+local allyJammers = {} -- allyJammers[allyTeam][unitID] = radius
 GG.allyJammers = allyJammers
-local allyBAPs = {} -- allyBAPs[unitID] = radius
+local allyBAPs = {} -- allyBAPs[allyTeam][unitID] = radius
 GG.allyBAPs = allyBAPs
 
 local allyTeams = Spring.GetAllyTeamList()
@@ -193,6 +193,7 @@ local function DeNARC(unitID, allyTeam, force)
 	end
 end
 
+
 local unitArmours = {} -- unitID = true
 local function EnableArmour(unitID, apply, armourType)
 	unitArmours[unitID] = apply and armourType or nil
@@ -201,7 +202,7 @@ GG.EnableArmour = EnableArmour
 
 local unitSpecialAmmos = {} -- [unitID][weaponType] = ammoName
 GG.unitSpecialAmmos = unitSpecialAmmos -- for Thunder spawning
-local function EnableAmmo(unitID, apply, weaponType, ammoName)
+local function EnableAmmo(unitID, apply, weaponType, ammoName, weapNum)
 	unitSpecialAmmos[unitID] = unitSpecialAmmos[unitID] or {}
 	unitSpecialAmmos[unitID][weaponType] = unitSpecialAmmos[unitID][weaponType] or {}
 	unitSpecialAmmos[unitID][weaponType] = apply and ammoName or nil
@@ -342,6 +343,7 @@ function gadget:UnitCreated(unitID, unitDefID, teamID)
 		mobileUnits[unitID] = true
 	end
 	if visionCache[unitDefID] then -- a mech!
+		unitSpecialAmmos[unitID] = {}
 		visionCache[unitDefID].cockpit = GG.lusHelper[unitDefID].cockpit
 		allyTeamMechs[Spring.GetUnitAllyTeam(unitID)][unitID] = visionCache[unitDefID]
 		-- force Spring to recognise units spawned within sectors should be full LOS
