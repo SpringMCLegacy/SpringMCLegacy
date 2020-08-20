@@ -623,7 +623,7 @@ function script.BlockShot(weaponID, targetID, userTarget)
 	if amsIDs[weaponID] then return false end
 	local minRange = minRanges[weaponID]
 	local weapDef = WeaponDefs[unitDef.weapons[weaponID].weaponDef]
-	local targetDef = UnitDefs[Spring.GetUnitDefID(targetID)]
+	local targetDef = targetID and UnitDefs[Spring.GetUnitDefID(targetID)]
 	if minRange then
 		local distance
 		if targetID then
@@ -662,7 +662,7 @@ function script.BlockShot(weaponID, targetID, userTarget)
 			end
 		end
 	end
-	if targetDef.canFly and GG.AATC[unitID] then
+	if targetDef and targetDef.canFly and GG.AATC[unitID] then
 		if (not (weapDef.salvoSize > 1) -- TODO: cache this mess
 		and (weapDef.customParams.weaponclass == "autocannon")
 		or (weapDef.customParams.weaponclass == "gauss")

@@ -64,7 +64,7 @@ local function SetArrowTarget(proID, targetID)
 			local vx, vy, vz = Spring.GetUnitVelocity(targetID)
 			Spring.SetProjectileTarget(proID, x+vx,y+vy+1.5,z+vz)
 		elseif contTAG[proID] then -- continuous TAG up to here
-			Spring.Echo("Target TAG lost")
+			--Spring.Echo("Target TAG lost")
 			contTAG[proID] = false
 			local x,y,z = Spring.GetUnitPosition(targetID)
 			Spring.SetProjectileTarget(proID, x,y,z)
