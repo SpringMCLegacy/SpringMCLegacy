@@ -58,7 +58,11 @@ local function SetArrowTarget(proID, targetID)
 		if GG.IsUnitTAGed(targetID) then
 			--Spring.Echo("Target is tagged", contTAG[proID] and "continuous lock" or "lock reaquired!")
 			contTAG[proID] = true -- re-establish TAG if lost
-			Spring.SetProjectileTarget(proID, targetID)
+			--Spring.SetProjectileTarget(proID, targetID)
+			local _,_,_,_,_,_,x,y,z = Spring.GetUnitPosition(targetID, true, true)
+			--Spring.Echo(x,y,z)
+			local vx, vy, vz = Spring.GetUnitVelocity(targetID)
+			Spring.SetProjectileTarget(proID, x+vx,y+vy+1.5,z+vz)
 		elseif contTAG[proID] then -- continuous TAG up to here
 			Spring.Echo("Target TAG lost")
 			contTAG[proID] = false
