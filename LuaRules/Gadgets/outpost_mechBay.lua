@@ -13,12 +13,15 @@ end
 if gadgetHandler:IsSyncedCode() then
 --	SYNCED
 
+local modOptions = Spring.GetModOptions()
+
 -- localisations
 --SyncedRead
 local GetGameFrame			= Spring.GetGameFrame
 local GetUnitPosition		= Spring.GetUnitPosition
 local GetTeamResources		= Spring.GetTeamResources
 --SyncedCtrl
+local AddTeamResource 		= Spring.AddTeamResource
 local CreateUnit			= Spring.CreateUnit
 local DestroyUnit			= Spring.DestroyUnit
 local InsertUnitCmdDesc		= Spring.InsertUnitCmdDesc
@@ -192,6 +195,15 @@ function gadget:AllowCommand(unitID, unitDefID, teamID, cmdID, cmdParams, cmdOpt
 					Spring.UnitScript.CallAsUnit(unitID, env.script.TransportDrop, transporting[1])
 					return true
 				end
+			end
+			return false
+		elseif cmdID == sellMechCmdDesc.id then
+			local transporting = Spring.GetUnitIsTransporting(unitID)
+			if transporting[1] then
+				local cBills = UnitDefs[Spring.GetUnitDefID(transporting[1])].metalCost * (modOptions and modOptions.sell or 0.75)
+				Spring.DestroyUnit(transporting[1], false, true)
+				AddTeamResource(teamID, "m", cBills)
+				return true
 			end
 			return false
 		elseif menuCmdIDs[cmdID] then
