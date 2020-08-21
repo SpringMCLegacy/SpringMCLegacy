@@ -1063,7 +1063,7 @@ return {
 			end,
 			costFunction = deductSalvage,
 			price = 10,
-			incompatible = {"extendedrangelrm"},
+			incompatible = {"extendedrangelrm", "ammolrminferno", "ammolrmmagpulse", "ammolrmthunder", "ammolrmarad", "ammolrmhoming"},
 		},
 		{
 			name = "extendedrangelrm",
@@ -1094,6 +1094,7 @@ return {
 			end,
 			costFunction = deductSalvage,
 			price = 10,
+			incompatible = {"artemislrm", "ammolrminferno", "ammolrmmagpulse", "ammolrmthunder", "ammolrmarad", "ammolrmhoming"},
 		},
 		{
 			name = "artemissrm",
@@ -1345,7 +1346,7 @@ return {
 			end,
 			costFunction = deductSalvage,
 			price = 5,
-			incompatible = {"ammolrmmagpulse", "ammolrmthunder", "ammolrmarad", "ammolrmhoming"},
+			incompatible = {"extendedrangelrm", "artemislrm", "ammolrmmagpulse", "ammolrmthunder", "ammolrmarad", "ammolrmhoming"},
 		},
 		{
 			name = "ammolrmmagpulse",
@@ -1364,7 +1365,7 @@ return {
 			end,
 			costFunction = deductSalvage,
 			price = 5,
-			incompatible = {"ammolrminferno", "ammolrmthunder", "ammolrmarad", "ammolrmhoming"},
+			incompatible = {"extendedrangelrm", "artemislrm", "ammolrminferno", "ammolrmthunder", "ammolrmarad", "ammolrmhoming"},
 		},
 		{
 			name = "ammolrmarad",
@@ -1383,7 +1384,7 @@ return {
 			end,
 			costFunction = deductSalvage,
 			price = 5,
-			incompatible = {"ammolrminferno", "ammolrmthunder", "ammolrmmagpulse", "ammolrmhoming"},
+			incompatible = {"extendedrangelrm", "artemislrm", "ammolrminferno", "ammolrmthunder", "ammolrmmagpulse", "ammolrmhoming"},
 		},
 		{
 			name = "ammolrmthunder",
@@ -1402,7 +1403,7 @@ return {
 			end,
 			costFunction = deductSalvage,
 			price = 5,
-			incompatible = {"ammolrminferno", "ammolrmmagpulse", "ammolrmarad", "ammolrmhoming"},
+			incompatible = {"extendedrangelrm", "artemislrm", "ammolrminferno", "ammolrmmagpulse", "ammolrmarad", "ammolrmhoming"},
 		},
 		{
 			name = "ammolrmhoming",
@@ -1421,7 +1422,7 @@ return {
 			end,
 			costFunction = deductSalvage,
 			price = 5,
-			incompatible = {"ammolrminferno", "ammolrmmagpulse", "ammolrmarad", "ammolrmthunder"},
+			incompatible = {"extendedrangelrm", "artemislrm", "ammolrminferno", "ammolrmmagpulse", "ammolrmarad", "ammolrmthunder"},
 		},
 		{
 			name = "ammonarrowhoming",

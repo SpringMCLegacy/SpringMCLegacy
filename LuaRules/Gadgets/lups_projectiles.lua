@@ -55,7 +55,8 @@ local contTAG = {}
 local arrows = {}
 local function SetArrowTarget(proID, info)
 	if info.targetID and not Spring.GetUnitIsDead(info.targetID) then
-		if GG.IsUnitNARCed(info.targetID) or GG.IsUnitTAGed(info.targetID) or GG.IsTargetArtemised(info.ownerID, info.targetID, info.weaponclass) then
+		if ((GG.IsUnitNARCed(info.targetID) or GG.IsUnitTAGed(info.targetID)) and not info.artemisOnly)
+		or (info.artemisOnly and GG.IsTargetArtemised(info.ownerID, info.targetID, info.weaponclass)) then
 			--Spring.Echo("Target is tagged", contTAG[proID] and "continuous lock" or "lock reaquired!")
 			contTAG[proID] = true -- re-establish TAG if lost
 			--Spring.SetProjectileTarget(proID, targetID)
@@ -74,10 +75,11 @@ local function SetArrowTarget(proID, info)
 	end
 end
 
-local function ChangeArrow(proID, proOwnerID, wd)
+local function ChangeArrow(proID, proOwnerID, wd, artemisOnly)
 		local targetType, targetID = Spring.GetProjectileTarget(proID)
 		if targetType == string.byte('u') then -- unit target, info is ID
-			if GG.IsUnitNARCed(targetID) or GG.IsUnitTAGed(targetID) or GG.IsTargetArtemised(proOwnerID, targetID, wd.customParams.weaponclass) then
+			if ((GG.IsUnitNARCed(targetID) or GG.IsUnitTAGed(targetID)) and not artemisOnly) 
+			or (artemisOnly and GG.IsTargetArtemised(proOwnerID, targetID, wd.customParams.weaponclass)) then
 				local x,y,z = Spring.GetProjectilePosition(proID)
 				local vx, vy, vz = Spring.GetProjectileVelocity(proID)
 				local _,_,_, _,_,_,tx, ty, tz = Spring.GetUnitPosition(targetID, true, true)
@@ -97,6 +99,7 @@ local function ChangeArrow(proID, proOwnerID, wd)
 					["targetID"] = targetID,
 					["ownerID"] = proOwnerID,
 					["weaponclass"] = wd.customParams.weaponclass,
+					["artemisOnly"] = artemisOnly,
 				}
 				arrows[newProID] = info
 				SetArrowTarget(newProID, info)
@@ -116,7 +119,7 @@ function gadget:ProjectileCreated(proID, proOwnerID, weaponID)
 			end
 		elseif wd and wd.customParams.weaponclass == "lrm" then
 			if GG.unitSpecialAmmos[proOwnerID]["lrm"] == "homing" or (GG.artemisUnits[proOwnerID] and GG.artemisUnits[proOwnerID]["lrm"]) then
-				ChangeArrow(proID, proOwnerID, WeaponDefNames["lrm_guided"])
+				ChangeArrow(proID, proOwnerID, WeaponDefNames["lrm_guided"], GG.artemisUnits[proOwnerID] and GG.artemisUnits[proOwnerID]["lrm"])
 			end
 		elseif wd and wd.customParams.weaponclass == "srm" then
 			if GG.artemisUnits[proOwnerID] and GG.artemisUnits[proOwnerID]["srm"] then
