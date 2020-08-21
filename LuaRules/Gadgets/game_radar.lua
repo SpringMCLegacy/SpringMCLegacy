@@ -158,6 +158,25 @@ local function IsUnitTAGed(unitID)
 end
 GG.IsUnitTAGed = IsUnitTAGed
 
+local artemisUnits = {} -- [unitID][wepaonType] = true
+GG.artemisUnits = artemisUnits
+
+local targetsInUnitSector = {} -- [unitID][targetID] = true
+local function IsTargetArtemised(unitID, targetID, weaponType)
+	local info = visionCache[Spring.GetUnitDefID(unitID)]
+	local dist = Spring.GetUnitSeparation(unitID, targetID)
+	local rayTrace = Spring.GetUnitWeaponHaveFreeLineOfFire(unitID, info.sight, targetID) -- TODO: could try and cache this from the main loop, but not easy to nullify it correctly
+	--Spring.Echo("Is target artemised?", artemisUnits[unitID] and artemisUnits[unitID][weaponType] and dist <= SECTOR_RADIUS and rayTrace)
+	return artemisUnits[unitID] and artemisUnits[unitID][weaponType] and dist <= SECTOR_RADIUS and rayTrace
+end
+GG.IsTargetArtemised = IsTargetArtemised
+
+local function EnableArtemis(unitID, weaponType, tOrF)
+	artemisUnits[unitID] = artemisUnits[unitID] or {}
+	artemisUnits[unitID][weaponType] = tOrF
+end
+GG.EnableArtemis = EnableArtemis
+
 local function SetUnitSectorRadius(unitID, mult)
 	unitSectorRadii[unitID] = (unitSectorRadii[unitID] or SECTOR_RADIUS) * mult
 	SetUnitRulesParam(unitID, "sectorradius", unitSectorRadii[unitID])

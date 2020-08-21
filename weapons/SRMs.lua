@@ -43,6 +43,10 @@ local SRM2 = SRM_Class:New{
 	}
 }
 
+local SRM_Guided = SRM_Class:New{
+	turnRate				= 40000,
+}
+
 local ASRM2 = SRM2:New{
 	name                    = "Artemis SRM-2",
 	turnRate				= 4000,
@@ -124,6 +128,7 @@ local SSRM6 = SRM6:New{
 }
 
 return lowerkeys({ 
+	SRM_Guided = SRM_Guided,
 	SRM2 = SRM2,
 	InfSRM = InfSRM,
 	InfSRM2 = InfSRM2,

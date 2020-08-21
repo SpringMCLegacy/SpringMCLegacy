@@ -1046,6 +1046,26 @@ return {
 			price = 10,
 		},
 		{
+			name = "artemislrm",
+			menu = "offensive",
+			cmdDesc = {
+				id = GetCmdID('MOD_ARTEMIS_LRM'),
+				action = 'modartemissrm',
+				name = GG.Pad("Artemis", "LRM", "FCS"),
+				tooltip = "Applies to LRMs only. Increases accuracy of missiles, but only if fired at target in the Mech's own LOS, as it effectively acts like the unit's own personal TAG.",
+				texture = 'bitmaps/ui/perkbgfaction.png',	
+			},
+			valid = isMechBay,
+			applyTo = function (unitDefID) return hasWeaponClass(unitDefID, "lrm") end,
+			applyPerk = function (unitID, level, invert)
+				--Spring.Echo("Missile range selected") 
+				GG.EnableArtemis(unitID, "lrm", not invert)
+			end,
+			costFunction = deductSalvage,
+			price = 10,
+			incompatible = {"extendedrangelrm"},
+		},
+		{
 			name = "extendedrangelrm",
 			menu = "offensive",
 			cmdDesc = {
@@ -1071,6 +1091,25 @@ return {
 				env.currAmmo["lrm"] = env.maxAmmo["lrm"]
 				Spring.SetUnitRulesParam(unitID, "ammo_lrm", 100)
 				-- TODO: Remove tracking bonus (TODO: implement tracking bonus)
+			end,
+			costFunction = deductSalvage,
+			price = 10,
+		},
+		{
+			name = "artemissrm",
+			menu = "offensive",
+			cmdDesc = {
+				id = GetCmdID('MOD_ARTEMIS_SRM'),
+				action = 'modartemissrm',
+				name = GG.Pad("Artemis", "SRM", "FCS"),
+				tooltip = "Applies to SRMs only. Increases accuracy of missiles, but only if fired at target in the Mech's own LOS, as it effectively acts like the unit's own personal TAG.",
+				texture = 'bitmaps/ui/perkbgfaction.png',	
+			},
+			valid = isMechBay,
+			applyTo = function (unitDefID) return hasWeaponClass(unitDefID, "srm") end,
+			applyPerk = function (unitID, level, invert)
+				--Spring.Echo("Missile range selected") 
+				GG.EnableArtemis(unitID, "srm", not invert)
 			end,
 			costFunction = deductSalvage,
 			price = 10,
