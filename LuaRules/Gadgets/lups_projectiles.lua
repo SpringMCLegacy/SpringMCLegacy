@@ -109,19 +109,36 @@ end
 function gadget:ProjectileCreated(proID, proOwnerID, weaponID)
 	--Spring.Echo("PC", proID, proOwnerID, weaponID)
 	local wd = WeaponDefs[weaponID]
-	if wd and wd.name == "arrowiv" then
-		if GG.unitSpecialAmmos[proOwnerID]["arrowiv"] == "homing" then
-			ChangeArrow(proID, proOwnerID, WeaponDefNames["arrowiv_guided"])
+	if proOwnerID and GG.mechCache[Spring.GetUnitDefID(proOwnerID)] then
+		if wd and wd.name == "arrowiv" then
+			if GG.unitSpecialAmmos[proOwnerID]["arrowiv"] == "homing" then
+				ChangeArrow(proID, proOwnerID, WeaponDefNames["arrowiv_guided"])
+			end
+		elseif wd and wd.customParams.weaponclass == "lrm" then
+			if GG.unitSpecialAmmos[proOwnerID]["lrm"] == "homing" or (GG.artemisUnits[proOwnerID] and GG.artemisUnits[proOwnerID]["lrm"]) then
+				ChangeArrow(proID, proOwnerID, WeaponDefNames["lrm_guided"])
+			end
+		elseif wd and wd.customParams.weaponclass == "srm" then
+			if GG.artemisUnits[proOwnerID] and GG.artemisUnits[proOwnerID]["srm"] then
+				ChangeArrow(proID, proOwnerID, WeaponDefNames["srm_guided"])
+			end
+		elseif wd and wd.name == "gauss" and proOwnerID and silverBulletUnits[proOwnerID] then
+			local clusterWD = WeaponDefNames["silverbullet"]
+			local x,y,z = Spring.GetProjectilePosition(proID)
+			local vx, vy, vz = Spring.GetProjectileVelocity(proID)
+			local spray = math.asin(clusterWD.sprayAngle) * 140
+			for i = 1, clusterWD.projectiles do
+				Spring.SpawnProjectile(clusterWD.id, {
+					pos = {x,y,z},
+					speed = {(vx+math.random(-spray,spray))/2, (vy-math.random(spray))/2, (vz+math.random(-spray,spray))/2}, -- TODO: remove halving?
+					owner = proOwnerID,
+					team = Spring.GetUnitTeam(proOwnerID),
+				})
+			end
+			Spring.DeleteProjectile(proID)
 		end
-	elseif wd and wd.customParams.weaponclass == "lrm" then
-		if GG.unitSpecialAmmos[proOwnerID]["lrm"] == "homing" or (GG.artemisUnits[proOwnerID] and GG.artemisUnits[proOwnerID]["lrm"]) then
-			ChangeArrow(proID, proOwnerID, WeaponDefNames["lrm_guided"])
-		end
-	elseif wd and wd.customParams.weaponclass == "srm" then
-		if GG.artemisUnits[proOwnerID] and GG.artemisUnits[proOwnerID]["srm"] then
-			ChangeArrow(proID, proOwnerID, WeaponDefNames["srm_guided"])
-		end
-	elseif lbx[weaponID] then
+	end
+	if lbx[weaponID] then -- vehicles might have LBX
 		--Spring.Echo("LBX Fired!")
 		local targetType, info = Spring.GetProjectileTarget(proID)
 		local tx,ty,tz
@@ -149,20 +166,6 @@ function gadget:ProjectileCreated(proID, proOwnerID, weaponID)
 			end
 			Spring.DeleteProjectile(proID)
 		end
-	elseif wd and wd.name == "gauss" and proOwnerID and silverBulletUnits[proOwnerID] then
-		local clusterWD = WeaponDefNames["silverbullet"]
-		local x,y,z = Spring.GetProjectilePosition(proID)
-		local vx, vy, vz = Spring.GetProjectileVelocity(proID)
-		local spray = math.asin(clusterWD.sprayAngle) * 140
-		for i = 1, clusterWD.projectiles do
-			Spring.SpawnProjectile(clusterWD.id, {
-					pos = {x,y,z},
-					speed = {(vx+math.random(-spray,spray))/2, (vy-math.random(spray))/2, (vz+math.random(-spray,spray))/2}, -- TODO: remove halving?
-					owner = proOwnerID,
-					team = Spring.GetUnitTeam(proOwnerID),
-				})
-		end
-		Spring.DeleteProjectile(proID)
 	end
 	
 	if weapons[weaponID] then

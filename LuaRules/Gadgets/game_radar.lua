@@ -164,6 +164,7 @@ GG.artemisUnits = artemisUnits
 local targetsInUnitSector = {} -- [unitID][targetID] = true
 local function IsTargetArtemised(unitID, targetID, weaponType)
 	local info = visionCache[Spring.GetUnitDefID(unitID)]
+	if not info then return false end
 	local dist = Spring.GetUnitSeparation(unitID, targetID)
 	local rayTrace = Spring.GetUnitWeaponHaveFreeLineOfFire(unitID, info.sight, targetID) -- TODO: could try and cache this from the main loop, but not easy to nullify it correctly
 	--Spring.Echo("Is target artemised?", artemisUnits[unitID] and artemisUnits[unitID][weaponType] and dist <= SECTOR_RADIUS and rayTrace)
@@ -268,7 +269,9 @@ function gadget:UnitPreDamaged(unitID, unitDefID, unitTeam, damage, paralyzer, w
 	-- Armours
 	if heatDamage and not (unitArmours[unitID] == "heat") then
 		env = Spring.UnitScript.GetScriptEnv(unitID)
-		Spring.UnitScript.CallAsUnit(unitID, env.ChangeHeat, heatDamage)
+		if env and env.ChangeHeat then -- dropships don't track heat
+			Spring.UnitScript.CallAsUnit(unitID, env.ChangeHeat, heatDamage)
+		end
 	end
 	if unitArmours[unitID] == "reactive" and weaponDef.weaponType == "MissileLauncher" then
 		damage = damage * 0.75
