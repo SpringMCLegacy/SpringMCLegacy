@@ -55,7 +55,7 @@ local contTAG = {}
 local arrows = {}
 local function SetArrowTarget(proID, info)
 	if info.targetID and not Spring.GetUnitIsDead(info.targetID) then
-		if GG.IsUnitTAGed(info.targetID) or GG.IsTargetArtemised(info.ownerID, info.targetID, info.weaponclass) then
+		if GG.IsUnitNARCed(info.targetID) or GG.IsUnitTAGed(info.targetID) or GG.IsTargetArtemised(info.ownerID, info.targetID, info.weaponclass) then
 			--Spring.Echo("Target is tagged", contTAG[proID] and "continuous lock" or "lock reaquired!")
 			contTAG[proID] = true -- re-establish TAG if lost
 			--Spring.SetProjectileTarget(proID, targetID)
@@ -77,7 +77,7 @@ end
 local function ChangeArrow(proID, proOwnerID, wd)
 		local targetType, targetID = Spring.GetProjectileTarget(proID)
 		if targetType == string.byte('u') then -- unit target, info is ID
-			if GG.IsUnitTAGed(targetID) or GG.IsTargetArtemised(proOwnerID, targetID, wd.customParams.weaponclass) then
+			if GG.IsUnitNARCed(targetID) or GG.IsUnitTAGed(targetID) or GG.IsTargetArtemised(proOwnerID, targetID, wd.customParams.weaponclass) then
 				local x,y,z = Spring.GetProjectilePosition(proID)
 				local vx, vy, vz = Spring.GetProjectileVelocity(proID)
 				local _,_,_, _,_,_,tx, ty, tz = Spring.GetUnitPosition(targetID, true, true)
