@@ -1041,6 +1041,7 @@ return {
 				effect = (invert and 1/effect) or effect
 				
 				setWeaponClassAttribute(unitID, "mrm", "accuracy", effect)
+				setWeaponClassAttribute(unitID, "mrm", "sprayAngle", effect)
 			end,
 			costFunction = deductSalvage,
 			price = 10,
