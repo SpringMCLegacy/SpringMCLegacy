@@ -31,11 +31,12 @@ local UZL2S = Uziel:New{
 		variant			= "UZL-2S",
 		speed			= 90,
 		price			= 13520,
-		heatlimit 		= 20,
-		armor			= {type = "standard", tons = 8},
+		heatlimit 		= 13,--10 double
+		armor			= 8,
 		jumpjets		= 6,
 		maxammo 		= {srm = 1},
 		bap				= true,
+		mods			= {"doubleheatsinks"},
     },
 }
 
@@ -66,11 +67,12 @@ local UZL3S = Uziel:New{
 		variant			= "UZL-2S",
 		speed			= 90,
 		price			= 11890,
-		heatlimit 		= 20,
-		armor			= {type = "standard", tons = 8},
+		heatlimit 		= 13,--10 double
+		armor			= 8,
 		jumpjets		= 6,
 		maxammo 		= {srm = 1, ac2 = 1},
 		barrelrecoildist = {[1] = 4},
+		mods			= {"doubleheatsinks"},
     },
 }
 

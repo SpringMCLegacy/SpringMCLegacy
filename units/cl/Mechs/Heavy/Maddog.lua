@@ -2,8 +2,10 @@ local Maddog = Heavy:New{
 	name				= "Mad Dog",
 		
     customparams = {
-		cockpitheight	= 55,
+		cockpitheight	= 13.4,
 		tonnage			= 60,
+		mods			= {"ferrofibrousarmour", "doubleheatsinks"},
+		omni			= true,
     },
 }
 
@@ -34,8 +36,8 @@ local Prime = Maddog:New{
 		variant			= "Prime",
 		speed			= 80,
 		price			= 23510,
-		heatlimit 		= 24,
-		armor			= {type = "ferro", tons = 8.5},
+		heatlimit 		= 16,
+		armor			= 8.5,
 		maxammo 		= {lrm = 2},
     },
 }
@@ -73,8 +75,8 @@ local A = Maddog:New{
 		variant			= "A",
 		speed			= 80,
 		price			= 19230,
-		heatlimit 		= 24,
-		armor			= {type = "ferro", tons = 8.5},
+		heatlimit 		= 16,
+		armor			= 8.5,
 		maxammo 		= {srm = 4, ac5 = 2},
     },
 }
@@ -112,8 +114,8 @@ local D = Maddog:New{
 		variant			= "D",
 		speed			= 80,
 		price			= 24470,
-		heatlimit 		= 24,
-		armor			= {type = "ferro", tons = 8.5},
+		heatlimit 		= 16,
+		armor			= 8.5,
 		maxammo 		= {atm = 6},
     },
 }

@@ -22,9 +22,10 @@ local Hephaestus = Hover:New{
 		speed			= 130,
 		price			= 7770,
 		heatlimit 		= 10,
-		armor			= {type = "ferro", tons = 5},
+		armor			= 5,
 		ecm				= true,
 		squadsize 		= 1,
+		mods			= {"ferrofibrousarmour"},
     },
 }
 

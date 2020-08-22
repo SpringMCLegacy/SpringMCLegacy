@@ -37,10 +37,11 @@ local AKUX1 = Akuma:New{
 		variant			= "AKU-X1",
 		speed			= 50,
 		price			= 19590,
-		heatlimit 		= 26,
-		armor			= {type = "standard", tons = 17.5},
+		heatlimit 		= 17,--13 double
+		armor			= 17.5,
 		maxammo 		= {ac10 = 2, srm = 2, mrm = 2},
 		barrelrecoildist = {[1] = 5},
+		mods			= {"doubleheatsinks"},
     },
 }
 

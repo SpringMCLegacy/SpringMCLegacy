@@ -20,9 +20,10 @@ local BZKF7 = HollanderII:New{
 		speed			= 80,
 		price			= 11920,
 		heatlimit 		= 10,
-		armor			= {type = "ferro", tons = 5.5},
+		armor			= 5.5,
 		maxammo 		= {hvgauss = 3},
 		barrelrecoildist = {[1] = 4},
+		mods			= {"ferrofibrousarmour"},
     },
 }
 

@@ -25,8 +25,9 @@ local TLN5W = Talon:New{
 		variant         = "TLN-5W",
 		speed			= 120,
 		price			= 11750,
-		heatlimit 		= 22,
-		armor			= {type = "standard", tons = 7.5},
+		heatlimit 		= 15,--11 double
+		armor			= 7.5,
+		mods			= {"doubleheatsinks"},
     },
 }
 
@@ -45,8 +46,9 @@ local TLN5Z = Talon:New{
 		variant         = "TLN-5Z",
 		speed			= 110,
 		price			= 11680,
-		heatlimit 		= 20,
-		armor			= {type = "standard", tons = 7.5},
+		heatlimit 		= 13,--10 double
+		armor			= 7.5,
+		mods			= {"doubleheatsinks"},
     },
 }
 

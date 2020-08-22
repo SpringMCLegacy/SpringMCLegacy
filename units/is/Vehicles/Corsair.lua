@@ -58,7 +58,7 @@ local Corsair = Aero:New{
 		speed			= 700,
 		price			= 9450,
 		heatlimit 		= 32,
-		armor			= {type = "standard", tons = 2},
+		armor			= 2,
 		squadsize 		= 2,
 		maxammo 		= {bomb = 5},
     },

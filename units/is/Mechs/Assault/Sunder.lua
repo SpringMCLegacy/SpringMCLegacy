@@ -3,6 +3,8 @@ local Sunder = Assault:New{
     customparams = {
 		cockpitheight	= 5,
 		tonnage			= 90,
+		mods			= {"doubleheatsinks"},
+		omni			= true,
     },
 }
 
@@ -40,8 +42,8 @@ local SD1OP = Sunder:New{
 		variant			= "SD1-O (Prime)",
 		speed			= 60,
 		price			= 17470,
-		heatlimit 		= 30,
-		armor			= {type = "standard", tons = 16.5},
+		heatlimit 		= 20,--15 double
+		armor			= 16.5,
 		maxammo 		= {ac20 = 2, srm = 2},
 		barrelrecoildist = {[1] = 3},
     },
@@ -78,8 +80,8 @@ local SD1OA = Sunder:New{
 		variant			= "SD1-O (Cfg A)",
 		speed			= 60,
 		price			= 20030,
-		heatlimit 		= 30,
-		armor			= {type = "standard", tons = 16.5},
+		heatlimit 		= 20,--15 double
+		armor			= 16.5,
 		maxammo 		= {gauss = 2, lrm = 2},
 		barrelrecoildist = {[1] = 3},
     },
@@ -113,8 +115,8 @@ local SD1OB = Sunder:New{
 		variant			= "SD1-O (Cfg B)",
 		speed			= 60,
 		price			= 15970,
-		heatlimit 		= 30,
-		armor			= {type = "standard", tons = 16.5},
+		heatlimit 		= 20,--15 double
+		armor			= 16.5,
 		maxammo 		= {lrm = 5},
     },
 }
@@ -145,8 +147,8 @@ local SD1OC = Sunder:New{
 		variant			= "SD1-O (Cfg C)",
 		speed			= 60,
 		price			= 17350,
-		heatlimit 		= 30,
-		armor			= {type = "standard", tons = 16.5},
+		heatlimit 		= 20,--15 double
+		armor			= 16.5,
 		maxammo 		= {mrm = 5, srm = 1},
     },
 }

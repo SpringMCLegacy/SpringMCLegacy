@@ -16,7 +16,7 @@ local Harasser = Hover:New{
 		speed			= 150,
 		price			= 4130,
 		heatlimit 		= 10,
-		armor			= {type = "standard", tons = 1.5},
+		armor			= 1.5,
 		maxammo 		= {srm = 1},
 		squadsize 		= 2,
     },

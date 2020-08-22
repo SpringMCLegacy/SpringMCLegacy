@@ -40,9 +40,10 @@ local MAL1R = Mauler:New{
 		variant			= "MAL-1R",
 		speed			= 50,
 		price			= 14600,
-		heatlimit 		= 22,
-		armor			= {type = "ferro", tons = 11.5},
+		heatlimit 		= 15, --11 double
+		armor			= 11.5,
 		maxammo 		= {lrm = 4, ac2 = 2},
+		mods			= {"ferrofibrousarmour", "doubleheatsinks"},
     },
 }
 
@@ -70,11 +71,12 @@ local MAL3R = Mauler:New{
 		variant			= "MAL-3R",
 		speed			= 50,
 		price			= 18770,
-		heatlimit 		= 20,
-		armor			= {type = "ferro", tons = 16},
+		heatlimit 		= 13,--10 double
+		armor			= 16,
 		maxammo 		= {lrm = 4, ac10 = 4},
 		jumpjets		= 3,
 		barrelrecoildist = {[1] = 5, [2] = 5},
+		mods			= {"ferrofibrousarmour", "doubleheatsinks"},
     },
 }
 	

@@ -22,9 +22,10 @@ local Ares = LightTank:New{
 		speed			= 60,
 		price			= 11510,
 		heatlimit 		= 10,
-		armor			= {type = "ferro", tons = 4.5},
+		armor			= 4.5,
 		maxammo 		= {lrm = 3},
 		squadsize 		= 1,
+		mods			= {"ferrofibrousarmour"},
     },
 }
 

@@ -34,8 +34,9 @@ local RFL5D = Rifleman:New{
 		variant			= "RFL-5D",
 		speed			= 60,
 		price			= 13950,
-		heatlimit 		= 34,
-		armor			= {type = "standard", tons = 9},
+		heatlimit 		= 23,--17 double
+		armor			= 9,
+		mods			= {"doubleheatsinks"},
     },
 }
 
@@ -66,10 +67,11 @@ local RFL5M = Rifleman:New{
 		variant			= "RFL-5M",
 		speed			= 60,
 		price			= 12270,
-		heatlimit 		= 24,
-		armor			= {type = "standard", tons = 8.5},
+		heatlimit 		= 16,--12 double
+		armor			= 8.5,
 		maxammo 		= {ac5 = 1},
 		barrelrecoildist = {[1] = 5, [2] = 5},
+		mods			= {"doubleheatsinks"},
     },
 }
 
@@ -100,10 +102,11 @@ local RFL6X = Rifleman:New{
 		variant			= "RFL-6X",
 		speed			= 80,
 		price			= 14640,
-		heatlimit 		= 20,
-		armor			= {type = "standard", tons = 11.5},
+		heatlimit 		= 13,--10 double
+		armor			= 11.5,
 		maxammo 		= {ac10 = 4},
 		barrelrecoildist = {[1] = 5, [2] = 5},
+		mods			= {"doubleheatsinks"},
     },
 }
 
@@ -140,11 +143,12 @@ local RFL7M = Rifleman:New{
 		variant			= "RFL-7M",
 		speed			= 60,
 		price			= 15210,
-		heatlimit 		= 22,
-		armor			= {type = "standard", tons = 11.5},
+		heatlimit 		= 15,--11 double
+		armor			= 11.5,
 		maxammo 		= {ltgauss = 2},
 		barrelrecoildist = {[1] = 5, [2] = 5},
 		ecm				= true,
+		mods			= {"doubleheatsinks"},
     },
 }
 

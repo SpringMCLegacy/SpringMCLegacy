@@ -21,7 +21,7 @@ local Pegasus = Hover:New{
 		speed			= 120,
 		price			= 6060,
 		heatlimit 		= 10,
-		armor			= {type = "standard", tons = 5},
+		armor			= 5,
 		maxammo 		= {srm = 2},
 		squadsize 		= 2,
     },

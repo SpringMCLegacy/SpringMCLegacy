@@ -3,6 +3,8 @@ local MarauderIIC = Medium:New{
 
 	customparams = {
 		tonnage			= 85,
+		cockpitheight	= 4.5,
+		mods			= {"ferrofibrousarmour", "doubleheatsinks"},
     },	
 }
 
@@ -42,8 +44,8 @@ local Mk1 = MarauderIIC:New{
 		variant			= "Mk 1",
 		speed			= 60,
 		price			= 26800,
-		heatlimit 		= 42,
-		armor			= {type = "ferro", tons = 11.5},
+		heatlimit 		= 28,
+		armor			= 11.5,
 		barrelrecoildist = {[1] = 4},
     },
 }

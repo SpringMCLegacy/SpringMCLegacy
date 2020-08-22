@@ -37,10 +37,11 @@ local ABS3L = Anubis:New{
 		variant         = "ABS-3L",
 		speed			= 120,
 		price			= 9510,
-		heatlimit 		= 20,
-		armor			= {type = "stealth", tons = 5.5},
+		heatlimit 		= 13,--10 double
+		armor			= 5.5,
 		maxammo 		= {lrm = 1},
 		ecm 			= true,
+		mods			= {"doubleheatsinks"},
     },
 }
 

@@ -30,9 +30,10 @@ local Epona = Hover:New{
 		speed			= 150,
 		price			= 14770,
 		heatlimit 		= 20,
-		armor			= {type = "ferro", tons = 5},
+		armor			= 5,
 		maxammo 		= {srm = 2},
 		squadsize 		= 1,
+		mods			= {"ferrofibrousarmour"},
     },
 }
 

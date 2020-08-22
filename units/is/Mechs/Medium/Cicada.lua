@@ -28,10 +28,11 @@ local CDA3M = Cicada:New{
 		variant			= "CMA-1S",
 		speed			= 120,
 		price			= 8120,
-		heatlimit 		= 20,
-		armor			= {type = "standard", tons = 4},
+		heatlimit 		= 13,--10 double
+		armor			= 4,
 		maxammo 		= {ac5 = 1},
 		barrelrecoildist = {[1] = 3},
+		mods			= {"doubleheatsinks"},
     },
 }
 

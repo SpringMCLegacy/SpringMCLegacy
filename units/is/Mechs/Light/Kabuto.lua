@@ -22,7 +22,7 @@ local KBO7A = Kabuto:New{
 		speed			= 110,
 		price			= 5240,
 		heatlimit 		= 10,
-		armor			= {type = "standard", tons = 4.5},
+		armor			= 4.5,
 		maxammo 		= {srm = 2},
     },
 }

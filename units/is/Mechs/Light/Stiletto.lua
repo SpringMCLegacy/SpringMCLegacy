@@ -25,10 +25,11 @@ local STO4A = Stiletto:New{
 		variant         = "STO-4A",
 		speed			= 120,
 		price			= 8590,
-		heatlimit 		= 20,
-		armor			= {type = "ferro", tons = 6},
+		heatlimit 		= 13,--10 Double
+		armor			= 6,
 		ecm 			= true,
 		maxammo 		= {lrm = 1, srm = 1},
+		mods 			= {"ferrofibrousarmour", "doubleheatsinks"},
     },
 }
 

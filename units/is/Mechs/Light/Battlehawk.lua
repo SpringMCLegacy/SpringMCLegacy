@@ -30,10 +30,11 @@ local BHK305 = Battlehawk:New{
 		variant         = "BH-K305",
 		speed			= 80,
 		price			= 7710,
-		heatlimit 		= 22,
-		armor			= {type = "ferro", tons = 5.5},
+		heatlimit 		= 15,--11 double
+		armor			= 5.5,
 		jumpjets		= 5,
 		maxammo 		= {srm = 2},
+		mods			= {"ferrofibrousarmour","doubleheatsinks"},
     },
 }
 

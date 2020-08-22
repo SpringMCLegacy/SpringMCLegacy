@@ -31,7 +31,7 @@ local Gurteltier = Tank:New{
 		speed			= 50,
 		price			= 21250,
 		heatlimit 		= 20,
-		armor			= {type = "ferro", tons = 19},
+		armor			= 19,
 		maxammo 		= {gauss = 2, mml = 2},
 		barrelrecoildist = {[1] = 5},
 		squadsize 		= 1,

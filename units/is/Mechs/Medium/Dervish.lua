@@ -35,7 +35,7 @@ local DV6M = Dervish:New{
 		speed			= 80,
 		price			= 11460,
 		heatlimit 		= 10,
-		armor			= {type = "standard", tons = 7.5},
+		armor			= 7.5,
 		jumpjets		= 5,
 		maxammo 		= {srm = 2, lrm = 2},
     },
@@ -69,9 +69,10 @@ local DV7D = Dervish:New{
 		speed			= 80,
 		price			= 14120,
 		heatlimit 		= 20,
-		armor			= {type = "ferro", tons = 8},
+		armor			= 8,
 		jumpjets		= 5,
 		maxammo 		= {srm = 2, lrm = 2},
+		mods			= {"ferrofibrousarmour"},
     },
 }
 
@@ -103,9 +104,10 @@ local DV8D = Dervish:New{
 		speed			= 80,
 		price			= 17650,
 		heatlimit 		= 20,
-		armor			= {type = "standard", tons = 10.5},
+		armor			= 10.5,
 		jumpjets		= 5,
 		maxammo 		= {lrm = 4},
+		mods			= {"artemislrm"},
     },
 }
 

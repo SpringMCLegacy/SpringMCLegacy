@@ -33,10 +33,11 @@ local RVN3L = Raven:New{
 		speed			= 90,
 		price			= 7080,
 		heatlimit 		= 11,
-		armor			= {type = "ferro", tons = 4.5},
+		armor			= 4.5,
 		bap				= true,
 		ecm				= true,
 		maxammo 		= {narc = 2, srm = 1},
+		mods 			= {"ferrofibrousarmour"},
     },
 }
 
@@ -65,11 +66,12 @@ local RVN4L = Raven:New{
 		variant         = "RVN-4L",
 		speed			= 90,
 		price			= 8730,
-		heatlimit 		= 20,
-		armor			= {type = "stealth", tons = 6},
+		heatlimit 		= 13,--10 double
+		armor			= 6,
 		bap				= true,
 		ecm				= true,
 		maxammo 		= {narc = 1, srm = 1},
+		mods			= {"doubleheatsinks"},--stealtharmour
     },
 }
 
@@ -101,8 +103,9 @@ local RVN3M = Raven:New{
 		speed			= 90,
 		price			= 6390,
 		heatlimit 		= 11,
-		armor			= {type = "ferro", tons = 3.5},
+		armor			= 3.5,
 		maxammo 		= {narc = 2, lrm = 2},
+		mods 			= {"ferrofibrousarmour"},
     },
 }
 

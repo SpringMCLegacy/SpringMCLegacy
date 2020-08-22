@@ -3,6 +3,9 @@ local Direwolf = Medium:New{
 
 	customparams = {
 		tonnage			= 100,
+		cockpitheight	= 8.2,
+		mods			= {"doubleheatsinks"},
+		omni			= true,
     },	
 }
 
@@ -56,8 +59,8 @@ local Prime = Direwolf:New{
 		variant			= "Prime",
 		speed			= 50,
 		price			= 27120,
-		heatlimit 		= 44,
-		armor			= {type = "standard", tons = 19},
+		heatlimit 		= 29,
+		armor			= 19,
 		maxammo 		= {ac5 = 2, lrm = 1},
 		barrelrecoildist = {[1] = 1, [2] = 1},
     },
@@ -95,8 +98,8 @@ local A = Direwolf:New{
 		variant			= "A",
 		speed			= 50,
 		price			= 28960,
-		heatlimit 		= 42,
-		armor			= {type = "standard", tons = 19},
+		heatlimit 		= 28,
+		armor			= 19,
 		maxammo 		= {gauss = 3, srm = 2},
 		barrelrecoildist = {[1] = 5},
     },

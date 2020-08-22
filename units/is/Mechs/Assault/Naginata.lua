@@ -11,13 +11,13 @@ local NGC3A = Naginata:New{
 	description         = "Assault Missile Boat",
 	weapons	= {	
 		[1] = {
-			name	= "ALRM15",
+			name	= "LRM15",
 		},
 		[2] = {
-			name	= "ALRM15",
+			name	= "LRM15",
 		},
 		[3] = {
-			name	= "ALRM15",
+			name	= "LRM15",
 		},
 		[4] = {
 			name	= "ERPPC",
@@ -28,9 +28,10 @@ local NGC3A = Naginata:New{
 		variant			= "NG-C3A",
 		speed			= 50,
 		price			= 19540,
-		heatlimit 		= 30,
-		armor			= {type = "standard", tons = 14},
+		heatlimit 		= 20,--15 double
+		armor			= 14,
 		maxammo 		= {lrm = 6},
+		mods			= {"artemislrm", "doubleheatsinks"},
     },
 }
 

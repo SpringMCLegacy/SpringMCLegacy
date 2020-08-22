@@ -21,7 +21,7 @@ local Tiger = Tank:New{
 		speed			= 60,
 		price			= 6190,
 		heatlimit 		= 20,
-		armor			= {type = "standard", tons = 7},
+		armor			= 7,
 		maxammo 		= {ac10 = 2, srm = 1},
 		barrelrecoildist = {[1] = 3},
 		squadsize 		= 1,

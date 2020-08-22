@@ -3,6 +3,9 @@ local Shadowcat = Medium:New{
 	
 	customparams = {
 		tonnage			= 45,
+		cockpitheight	= 1.4,
+		mods			= {"ferrofibrousarmour", "doubleheatsinks"},
+		omni			= true,
     },
 }
 	
@@ -25,8 +28,8 @@ local Prime = Shadowcat:New{
 		variant         = "Prime",
 		speed			= 90,
 		price			= 21560,
-		heatlimit 		= 20,
-		armor			= {type = "ferro", tons = 7},
+		heatlimit 		= 13,
+		armor			= 7,
 		maxammo 		= {gauss = 2},
 		masc			= true,
 		bap				= true,
@@ -53,8 +56,8 @@ local A = Shadowcat:New{
 		variant         = "A",
 		speed			= 90,
 		price			= 22200,
-		heatlimit 		= 26,
-		armor			= {type = "ferro", tons = 7},
+		heatlimit 		= 17,
+		armor			= 7,
 		maxammo 		= {srm = 2},
 		masc			= true,
 		bap				= true,
@@ -84,8 +87,8 @@ local B = Shadowcat:New{
 		variant         = "B",
 		speed			= 90,
 		price			= 24200,
-		heatlimit 		= 20,
-		armor			= {type = "ferro", tons = 7},
+		heatlimit 		= 13,
+		armor			= 7,
 		maxammo 		= {lrm = 4},
 		masc			= true,
 		bap				= true,
@@ -94,7 +97,7 @@ local B = Shadowcat:New{
 }
 
 return lowerkeys({
-	--["SJ_Shadowcat_Prime"] = Prime:New(),
-	--["SJ_Shadowcat_A"] = A:New(),
-	--["SJ_Shadowcat_B"] = B:New(),
+	["WF_Shadowcat_Prime"] = Prime:New(),
+	["WF_Shadowcat_A"] = A:New(),
+	["WF_Shadowcat_B"] = B:New(),
 })

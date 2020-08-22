@@ -31,9 +31,10 @@ local END6Q = Enfield:New{
 		variant			= "END-6Q",
 		speed			= 80,
 		price			= 12480,
-		heatlimit 		= 22,
-		armor			= {type = "standard", tons = 11},
+		heatlimit 		= 15,--11 double
+		armor			= 11,
 		maxammo 		= {ac10 = 2},
+		mods			= {"doubleheatsinks"},
     },
 }
 

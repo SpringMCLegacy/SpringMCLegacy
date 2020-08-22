@@ -28,10 +28,11 @@ local CMA1S = Chimera:New{
 		variant			= "CMA-1S",
 		speed			= 90,
 		price			= 11730,
-		heatlimit 		= 20,
-		armor			= {type = "standard", tons = 7},
+		heatlimit 		= 13,--10 double
+		armor			= 7,
 		jumpjets		= 6,
 		maxammo 		= {mrm = 2},
+		mods			= {"doubleheatsinks"},
     },
 }
 

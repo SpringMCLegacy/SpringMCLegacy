@@ -3,6 +3,9 @@ local Phantom = Medium:New{
 	
 	customparams = {
 		tonnage			= 45,
+		cockpitheight	= 10.7,
+		mods			= {"ferrofibrousarmour", "doubleheatsinks"},
+		omni			= true,
     },
 }
 	
@@ -26,8 +29,8 @@ local Prime = Phantom:New{
 		variant         = "Prime",
 		speed			= 140,
 		price			= 11590,
-		heatlimit 		= 24,
-		armor			= {type = "ferro", tons = 6},
+		heatlimit 		= 16,
+		armor			= 6,
 		maxammo 		= {lrm = 1},
 		bap				= true,
 		ecm				= true,
@@ -54,8 +57,8 @@ local B = Phantom:New{
 		variant         = "B",
 		speed			= 140,
 		price			= 10960,
-		heatlimit 		= 24,
-		armor			= {type = "ferro", tons = 6},
+		heatlimit 		= 16,
+		armor			= 6,
 		maxammo 		= {srm = 2},
     },
 }

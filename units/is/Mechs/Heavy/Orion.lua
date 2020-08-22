@@ -20,10 +20,10 @@ local ON1MA = Orion:New{
 			name	= "MPL",
 		},
 		[4] = {
-			name	= "ALRM20",
+			name	= "LRM20",
 		},
 		[5] = {
-			name	= "ASRM6",
+			name	= "SRM6",
 		},
 	},
 		
@@ -31,10 +31,11 @@ local ON1MA = Orion:New{
 		variant			= "ON-1MA",
 		speed			= 60,
 		price			= 15020,
-		heatlimit 		= 22,
-		armor			= {type = "standard", tons = 14},
+		heatlimit 		= 15,--11 double
+		armor			= 14,
 		maxammo 		= {ac10 = 2, lrm = 2, srm = 2},
 		barrelrecoildist = {[1] = 3},
+		mods			= {"artemissrm", "doubleheatsinks"},
     },
 }
 		
@@ -65,10 +66,11 @@ local ON1MB = Orion:New{
 		variant			= "ON-1MB",
 		speed			= 60,
 		price			= 15020,
-		heatlimit 		= 22,
-		armor			= {type = "standard", tons = 14},
+		heatlimit 		= 15,--11 doble
+		armor			= 14,
 		maxammo 		= {ltgauss = 1, lrm = 2, srm = 2, narc = 2},
 		barrelrecoildist = {[1] = 3},
+		mods			= {"doubleheatsinks"},
     },
 }
 

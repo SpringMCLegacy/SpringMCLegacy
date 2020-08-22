@@ -28,9 +28,10 @@ local YMN6Y = Yeoman:New{
 		variant			= "YMN-6Y",
 		speed			= 60,
 		price			= 13440,
-		heatlimit 		= 20,
-		armor			= {type = "ferro", tons = 8.5},
+		heatlimit 		= 13,--10 double
+		armor			= 8.5,
 		maxammo 		= {lrm = 6},
+		mods			= {"ferrofibrousarmour", "doubleheatsinks"},
     },
 }
 

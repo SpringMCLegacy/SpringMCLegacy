@@ -11,7 +11,7 @@ local VLKQD = Valkyrie:New{
 	description         = "Light Missile Boat",
 	weapons	= {	
 		[1] = {
-			name	= "ALRM10",
+			name	= "LRM10",
 		},
 		[2] = {
 			name	= "MPL",
@@ -23,9 +23,10 @@ local VLKQD = Valkyrie:New{
 		speed			= 80,
 		price			= 8070,
 		heatlimit 		= 10,
-		armor			= {type = "ferro", tons = 6},
+		armor			= 6,
 		jumpjets		= 5,
 		maxammo 		= {lrm = 1},
+		mods 			= {"artemislrm", "ferrofibrousarmour"}
     },
 }
 

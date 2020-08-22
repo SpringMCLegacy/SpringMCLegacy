@@ -42,11 +42,12 @@ local Challenger = Tank:New{
 		speed			= 50,
 		price			= 10170,
 		heatlimit 		= 20,
-		armor			= {type = "ferro", tons = 14},
+		armor			= 14,
 		maxammo 		= {ac10 = 1, gauss = 2, lrm = 1, srm = 1},
 		barrelrecoildist = {[1] = 5, [2] = 5},
 		squadsize 		= 1,
 		--replaces		= "fs_behemoth",
+		mods			= {"ferrofibrousarmour"},
 	},
 }
 

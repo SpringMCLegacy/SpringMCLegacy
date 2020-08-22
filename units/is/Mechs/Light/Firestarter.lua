@@ -40,7 +40,7 @@ local FS9S = Firestarter:New{
 		speed			= 90,
 		price			= 7540,
 		heatlimit 		= 10,
-		armor			= {type = "standard", tons = 5.5},
+		armor			= 5.5,
 		bap 			= true,
 		jumpjets		= 6,
     },

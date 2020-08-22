@@ -25,10 +25,11 @@ local ENF6M = EnforcerIII:New{
 		variant			= "ENF-6M",
 		speed			= 80,
 		price			= 14600,
-		heatlimit 		= 24,
-		armor			= {type = "standard", tons = 10},
+		heatlimit 		= 16,--12 double
+		armor			= 10,
 		jumpjets		= 5,
 		maxammo 		= {ac10 = 2},
+		mods			= {"doubleheatsinks"},
     },
 }
 

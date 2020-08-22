@@ -2,7 +2,10 @@ local Pouncer = Medium:New{
 	name				= "Pouncer",
 	
 	customparams = {
-		tonnage		= 40,
+		tonnage			= 40,
+		cockpitheight	= 5.5,
+		mods			= {"ferrofibrousarmour", "doubleheatsinks"},
+		omni			= true,
     },
 }
 
@@ -25,8 +28,8 @@ local Prime = Pouncer:New{
 		variant         = "Prime",
 		speed			= 90,
 		price			= 25570,
-		heatlimit 		= 24,
-		armor			= {type = "ferro", tons = 6},
+		heatlimit 		= 16,
+		armor			= 6,
 		jumpjets		= 5,
     },
 }
@@ -56,8 +59,8 @@ local B = Pouncer:New{
 		variant         = "B",
 		speed			= 90,
 		price			= 18360,
-		heatlimit 		= 24,
-		armor			= {type = "ferro", tons = 6},
+		heatlimit 		= 16,
+		armor			= 6,
 		maxammo 		= {lrm = 1, srm = 2},
 		jumpjets		= 5,
     },
@@ -91,8 +94,8 @@ local C = Pouncer:New{
 		variant         = "C",
 		speed			= 90,
 		price			= 16530,
-		heatlimit 		= 24,
-		armor			= {type = "ferro", tons = 6},
+		heatlimit 		= 16,
+		armor			= 6,
 		maxammo 		= {ac10 = 2},
 		jumpjets		= 5,
     },

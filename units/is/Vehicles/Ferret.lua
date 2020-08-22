@@ -16,8 +16,9 @@ local Ferret = VTOL:New{
 		speed			= 400,
 		price			= 580,
 		heatlimit 		= 10,
-		armor			= {type = "ferro", tons = 1},
+		armor			= 1,
 		squadsize 		= 2,
+		mods			= {"ferrofibrousarmour"},
     },
 }
 

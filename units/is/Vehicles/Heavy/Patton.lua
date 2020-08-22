@@ -25,7 +25,7 @@ local Patton = Tank:New{
 		speed			= 60,
 		price			= 9610,
 		heatlimit 		= 20,
-		armor			= {type = "standard", tons = 12.5},
+		armor			= 12.5,
 		maxammo 		= {ac10 = 3, lrm = 1},
 		barrelrecoildist = {[1] = 5},
 		squadsize 		= 1,

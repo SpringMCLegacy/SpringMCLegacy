@@ -21,11 +21,12 @@ local JVN11B = Javelin:New{
 		variant         = "JVN-11B",
 		speed			= 90,
 		price			= 6780,
-		heatlimit 		= 20,
-		armor			= {type = "ferro", tons = 5},
+		heatlimit 		= 13,--10 double
+		armor			= 5,
 		bap 			= true,
 		ecm				= true,
 		maxammo 		= {srm = 2},
+		mods 			= {"ferrofibrousarmour", "doubleheatsinks"},
     },
 }
 
@@ -44,10 +45,11 @@ local JVN10P = Javelin:New{
 		variant         = "JVN-10P",
 		speed			= 90,
 		price			= 5900,
-		heatlimit 		= 20,
-		armor			= {type = "ferro", tons = 5},
+		heatlimit 		= 13,--10 double
+		armor			= 5,
 		jumpjets		= 6,
 		maxammo 		= {srm = 2},
+		mods 			= {"ferrofibrousarmour", "doubleheatsinks"},
     },
 }
 

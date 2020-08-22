@@ -46,10 +46,11 @@ local DVS2 = Devastator:New{
 		variant			= "DVS-2",
 		speed			= 50,
 		price			= 24810,
-		heatlimit 		= 28,
-		armor			= {type = "standard", tons = 18.5},
+		heatlimit 		= 19,--14 double
+		armor			= 18.5,
 		maxammo 		= {gauss = 4},
 		barrelrecoildist = {[1] = 5, [2] = 5},
+		mods			= {"doubleheatsinks"},
     },
 }
 

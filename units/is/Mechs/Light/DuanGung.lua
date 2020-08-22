@@ -26,7 +26,7 @@ local D9G9 = DuanGung:New{
 		speed			= 110,
 		price			= 7370,
 		heatlimit 		= 10,
-		armor			= {type = "standard", tons = 4},
+		armor			= 4,
 		jumpjets		= 6,
 		maxammo 		= {lrm = 1},
     },

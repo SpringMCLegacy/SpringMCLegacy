@@ -22,7 +22,7 @@ local ALM9D = Fireball:New{
 		speed			= 170,
 		price			= 6740,
 		heatlimit 		= 10,
-		armor			= {type = "standard", tons = 4.5},
+		armor			= 4.5,
 		maxammo 		= {srm = 1},
     },
 }

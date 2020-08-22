@@ -4,6 +4,8 @@ local Avatar = Heavy:New{
 	customparams = {
 		cockpitheight	= 9.4,
 		tonnage			= 70,
+		mods			= {"doubleheatsinks"},
+		omni			= true,
 	},
 }
 
@@ -26,10 +28,10 @@ local AV1OP = Avatar:New{
 			name	= "MBL",
 		},
 		[6] = {
-			name	= "ALRM10",
+			name	= "LRM10",
 		},
 		[7] = {
-			name	= "ALRM10",
+			name	= "LRM10",
 		},
 		[8] = {
 			name	= "MG",
@@ -43,10 +45,11 @@ local AV1OP = Avatar:New{
 		variant			= "AV1-O (Prime)",
 		speed			= 60,
 		price			= 13950,
-		heatlimit 		= 20,
-		armor			= {type = "standard", tons = 12},
+		heatlimit 		= 13,--10 double
+		armor			= 12,
 		maxammo 		= {ac10 = 2, lrm = 3},
 		barrelrecoildist = {[1] = 5},
+		mods			= {"artemislrm", "doubleheatsinks"},
     },
 }
 
@@ -78,8 +81,8 @@ local AV1OA = Avatar:New{
 		variant			= "AV1-O (Cfg A)",
 		speed			= 60,
 		price			= 14810,
-		heatlimit 		= 20,
-		armor			= {type = "standard", tons = 12},
+		heatlimit 		= 13,--10 double
+		armor			= 12,
 		maxammo 		= {ac20 = 3, srm = 2},
 		barrelrecoildist = {[1] = 4},
 		jumpjets		= 4,
@@ -91,16 +94,16 @@ local AV1OB = Avatar:New{
 	
 	weapons 		= {	
 		[1] = {
-			name	= "ALRM15",
+			name	= "LRM15",
 		},
 		[2] = {
-			name	= "ALRM15",
+			name	= "LRM15",
 		},
 		[3] = {
-			name	= "ALRM10",
+			name	= "LRM10",
 		},
 		[4] = {
-			name	= "ALRM10",
+			name	= "LRM10",
 		},
 		[5] = {
 			name	= "MBL",
@@ -114,9 +117,10 @@ local AV1OB = Avatar:New{
 		variant			= "AV1-O (Cfg B)",
 		speed			= 60,
 		price			= 14960,
-		heatlimit 		= 20,
-		armor			= {type = "standard", tons = 12},
+		heatlimit 		= 13,--10 double
+		armor			= 12,
 		maxammo 		= {lrm = 6},
+		mods			= {"artemislrm", "doubleheatsinks"},
     },
 }
 

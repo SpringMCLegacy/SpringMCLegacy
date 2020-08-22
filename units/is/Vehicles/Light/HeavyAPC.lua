@@ -23,7 +23,7 @@ local HeavyAPC = LightTank:New{
 		speed			= 80,
 		price			= 4130,
 		heatlimit 		= 10,
-		armor			= {type = "standard", tons = 4},
+		armor			= 4,
 		barrelrecoildist = {[1] = 4},
 		squadsize 		= 1,
     },

@@ -14,7 +14,7 @@ local PNT10K = Panther:New{
 			name	= "ERPPC",
 		},
 		[2] = {
-			name	= "ASRM4",
+			name	= "SRM4",
 		},
 	},
 		
@@ -24,8 +24,9 @@ local PNT10K = Panther:New{
 		price			= 8380,
 		heatlimit 		= 13,
 		jumpjets		= 4,
-		armor			= {type = "standard", tons = 6.5},
+		armor			= 6.5,
 		maxammo 		= {srm = 2},
+		mods 			= {"artemissrm","ferrofibrousarmour"},
     },
 }
 

@@ -26,9 +26,10 @@ local Enyo = LightTank:New{
 		speed			= 90,
 		price			= 15270,
 		heatlimit 		= 20,
-		armor			= {type = "ferro", tons = 7.5},
+		armor			= 7.5,
 		maxammo 		= {srm = 3},
 		squadsize 		= 1,
+		mods			= {"ferrofibrousarmour"},
     },
 }
 

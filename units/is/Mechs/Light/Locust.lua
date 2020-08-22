@@ -35,7 +35,8 @@ local LCT3M = Locust:New{
 		speed			= 120,
 		price			= 5220,
 		heatlimit 		= 10,
-		armor			= {type = "ferro", tons = 3},
+		armor			= 3,
+		mods 			= {"ferrofibrousarmour"},
     },
 }
 
@@ -69,7 +70,8 @@ local LCT5M = Locust:New{
 		speed			= 180,
 		price			= 7190,
 		heatlimit 		= 10,
-		armor			= {type = "ferro", tons = 4},
+		armor			= 4,
+		mods 			= {"ferrofibrousarmour"},
     },
 }
 
@@ -91,8 +93,9 @@ local LCT3D = Locust:New{
 		speed			= 120,
 		price			= 4360,
 		heatlimit 		= 10,
-		armor			= {type = "ferro", tons = 2.5},
+		armor			= 2.5,
 		maxammo 		= {lrm = 1},
+		mods 			= {"ferrofibrousarmour"},
     },
 }
 
@@ -118,8 +121,9 @@ local LCT3S = Locust:New{
 		speed			= 120,
 		price			= 4830,
 		heatlimit 		= 10,
-		armor			= {type = "ferro", tons = 2.5},
+		armor			= 2.5,
 		maxammo 		= {srm = 1},
+		mods 			= {"ferrofibrousarmour"},
     },
 }
 
@@ -153,7 +157,7 @@ local LCT1L = Locust:New{
 		speed			= 120,
 		price			= 4320,
 		heatlimit 		= 10,
-		armor			= {type = "standard", tons = 4},
+		armor			= 4,
 		masc			= true,
     },
 }

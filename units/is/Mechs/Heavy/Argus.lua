@@ -33,11 +33,12 @@ local AGS4D = Argus:New{
 		variant			= "AGS-4D",
 		speed			= 80,
 		price			= 18380, --16380
-		heatlimit 		= 24,
-		armor			= {type = "standard", tons = 12},
+		heatlimit 		= 16,--12 double
+		armor			= 12,
 		bap				= true,
 		maxammo 		= {ac5 = 2, lrm = 2},
 		barrelrecoildist = {[1] = 4},
+		mods			= {"targetingcomputer", "doubleheatsinks"},
     },
 }
 

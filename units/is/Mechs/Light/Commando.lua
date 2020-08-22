@@ -29,7 +29,7 @@ local COM3A = Commando:New{
 		speed			= 90,
 		price			= 5400,
 		heatlimit 		= 10,
-		armor			= {type = "standard", tons = 3},
+		armor			= 3,
 		maxammo 		= {srm = 2},
     },
 }
@@ -38,7 +38,7 @@ local COM5S = Commando:New{
 	description         = "Light Striker",
 	weapons	= {	
 		[1] = {
-			name	= "ASRM6",
+			name	= "SRM6",
 		},
 		[2] = {
 			name	= "SSRM2",
@@ -53,8 +53,9 @@ local COM5S = Commando:New{
 		speed			= 90,
 		price			= 5570,
 		heatlimit 		= 10,
-		armor			= {type = "ferro", tons = 3},
+		armor			= 3,
 		maxammo 		= {srm = 2},
+		mods 			= {"artemissrm", "ferrofibrousarmour"},
     },
 }
 
@@ -62,7 +63,7 @@ local COM7S = Commando:New{
 	description         = "Light Striker",
 	weapons	= {	
 		[1] = {
-			name	= "ASRM4",
+			name	= "SRM4",
 		},
 		[2] = {
 			name	= "SSRM4",
@@ -79,9 +80,10 @@ local COM7S = Commando:New{
 		variant         = "COM-7S",
 		speed			= 90,
 		price			= 5580,--6580
-		heatlimit 		= 20,
-		armor			= {type = "standard", tons = 3.5},
+		heatlimit 		= 13,--10 double
+		armor			= 3.5,
 		maxammo 		= {srm = 2},
+		mods 			= {"artemissrm", "doubleheatsinks"},
     },
 }
 

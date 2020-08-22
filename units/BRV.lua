@@ -19,8 +19,9 @@ local BRV = Tank:New{
 		speed			= 50,
 		price			= 10170,
 		heatlimit 		= 10,
-		armor			= {type = "ferro", tons = 6},
+		armor			= 6,
 		squadsize 		= 1,
+		mods			= {"ferrofibrousarmour"},
 	},
 }
 

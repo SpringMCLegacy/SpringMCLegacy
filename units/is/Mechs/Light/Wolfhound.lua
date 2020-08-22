@@ -31,8 +31,9 @@ local WLF2 = Wolfhound:New{
 		variant         = "WLF-2",
 		speed			= 90,
 		price			= 10610,
-		heatlimit 		= 20,
-		armor			= {type = "standard", tons = 7.5},
+		heatlimit 		= 13,--10 Double
+		armor			= 7.5,
+		mods			= {"doubleheatsinks"},
     },
 }
 

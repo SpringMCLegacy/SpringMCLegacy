@@ -26,9 +26,10 @@ local Odin = LightTank:New{
 		speed			= 130,
 		price			= 6910,
 		heatlimit 		= 10,
-		armor			= {type = "ferro", tons = 1.5},
+		armor			= 1.5,
 		maxammo 		= {srm = 2},
 		squadsize 		= 2,
+		mods			= {"ferrofibrousarmour"},
     },
 }
 

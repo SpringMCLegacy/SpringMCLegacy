@@ -11,10 +11,10 @@ local LGB7V = Longbow:New{
 	description         = "Assault Missile Boat",
 	weapons	= {	
 		[1] = {
-			name	= "ALRM20",
+			name	= "LRM20",
 		},
 		[2] = {
-			name	= "ALRM20",
+			name	= "LRM20",
 		},
 		[3] = {
 			name	= "ERLBL",
@@ -40,9 +40,10 @@ local LGB7V = Longbow:New{
 		variant			= "LGB-7V",
 		speed			= 50,
 		price			= 18160,
-		heatlimit 		= 28,
-		armor			= {type = "standard", tons = 16},
+		heatlimit 		= 19,--14 double
+		armor			= 16,
 		maxammo 		= {lrm = 6},
+		mods			= {"artemislrm", "doubleheatsinks"},
     },
 }
 
@@ -50,16 +51,16 @@ local LGB12C = Longbow:New{
 	description         = "Assault Missile Boat",
 	weapons	= {	
 		[1] = {
-			name	= "ALRM20",
+			name	= "LRM20",
 		},
 		[2] = {
-			name	= "ALRM20",
+			name	= "LRM20",
 		},
 		[3] = {
-			name	= "ALRM15",
+			name	= "LRM15",
 		},
 		[4] = {
-			name	= "ALRM15",
+			name	= "LRM15",
 		},
 		[5] = {
 			name	= "ERSBL",
@@ -76,9 +77,10 @@ local LGB12C = Longbow:New{
 		variant			= "LGB-12C",
 		speed			= 50,
 		price			= 16860,
-		heatlimit 		= 24,
-		armor			= {type = "standard", tons = 12.5},
+		heatlimit 		= 16,--12 double
+		armor			= 12.5,
 		maxammo 		= {lrm = 9},
+		mods			= {"artemislrm", "doubleheatsinks"},
     },
 }
 
@@ -106,9 +108,10 @@ local LGB8V = Longbow:New{
 		variant			= "LGB-8V",
 		speed			= 50,
 		price			= 18080,
-		heatlimit 		= 32,
-		armor			= {type = "standard", tons = 12.5},
+		heatlimit 		= 11,--16 double
+		armor			= 12.5,
 		maxammo 		= {arrow = 4},
+		mods			= {"doubleheatsinks"},
     },
 }
 	

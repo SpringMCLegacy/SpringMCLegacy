@@ -20,9 +20,10 @@ local BZKF3 = Hollander:New{
 		speed			= 80,
 		price			= 9530,
 		heatlimit 		= 10,
-		armor			= {type = "ferro", tons = 4},
+		armor			= 4,
 		maxammo 		= {gauss = 2},
 		barrelrecoildist = {[1] = 5},
+		mods 			= {"ferrofibrousarmour"},
     },
 }
 
@@ -46,9 +47,10 @@ local BZKG1 = Hollander:New{
 		speed			= 80,
 		price			= 9730,
 		heatlimit 		= 10,
-		armor			= {type = "ferro", tons = 6},
+		armor			= 6,
 		maxammo 		= {ac10 = 2},
-		barrelrecoildist = {[1] = 5}
+		barrelrecoildist = {[1] = 5},
+		mods 			= {"ferrofibrousarmour"},
     },	
 }
 

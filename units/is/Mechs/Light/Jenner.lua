@@ -31,9 +31,10 @@ local JR7K = Jenner:New{
 		speed			= 110,
 		price			= 8890,
 		heatlimit 		= 10,
-		armor			= {type = "ferro", tons = 3.5},
+		armor			= 3.5,
 		maxammo 		= {srm = 1},
 		jumpjets		= 5,
+		mods 			= {"ferrofibrousarmour"},
     },
 }
 

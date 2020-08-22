@@ -27,7 +27,7 @@ local Narukami = Tank:New{
 		speed			= 50,
 		price			= 21250,
 		heatlimit 		= 20,
-		armor			= {type = "standard", tons = 17.5},
+		armor			= 17.5,
 		maxammo 		= {gauss = 2},
 		barrelrecoildist = {[1] = 5},
 		squadsize 		= 1,

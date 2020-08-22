@@ -32,8 +32,9 @@ local SCB9A = Scarabus:New{
 		speed			= 150,
 		price			= 8460,
 		heatlimit 		= 10,
-		armor			= {type = "ferro", tons = 5.5},
+		armor			= 5.5,
 		ecm 			= true,
+		mods 			= {"ferrofibrousarmour"},
     },
 }
 

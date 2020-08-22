@@ -19,7 +19,7 @@ local Demolisher = Tank:New{
 		speed			= 50,
 		price			= 6090,
 		heatlimit 		= 20,
-		armor			= {type = "standard", tons = 12},
+		armor			= 12,
 		maxammo 		= {ac20 = 2},
 		barrelrecoildist = {[1] = 5, [2] = 5},
 		squadsize 		= 1,
@@ -52,7 +52,7 @@ local Devastator = Demolisher:New{
 		},
 	},
 	customparams = {
-		armor			= {type = "standard", tons = 14},
+		armor			= 14,
 		price			= 10290,
 		maxammo 		= {ac20 = 2, srm = 2},
 		replaces		= "cc_demolisher",

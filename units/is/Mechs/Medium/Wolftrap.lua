@@ -29,7 +29,7 @@ local WFT1 = Wolftrap:New{
 		speed			= 90,
 		price			= 10700,
 		heatlimit 		= 10,
-		armor			= {type = "standard", tons = 7.5},
+		armor			= 7.5,
 		maxammo 		= {ac10 = 2, lrm = 1},
     },
 }

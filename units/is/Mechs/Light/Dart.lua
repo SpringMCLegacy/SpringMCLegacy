@@ -26,7 +26,7 @@ local DRT3S = Dart:New{
 		speed			= 140,
 		price			= 5560,
 		heatlimit 		= 10,
-		armor			= {type = "standard", tons = 3.5},
+		armor			= 3.5,
     },
 }
 

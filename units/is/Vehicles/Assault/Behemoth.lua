@@ -10,7 +10,7 @@ local BehemothBase = Tank:New{
 		speed			= 30,
 		price			= 10000,
 		heatlimit 		= 20,
-		armor			= {type = "standard", tons = 13},
+		armor			= 13,
 		maxammo 		= {ac10 = 2, lrm = 1, srm = 3},
 		barrelrecoildist = {[1] = 5, [2] = 5},
 		squadsize 		= 1,

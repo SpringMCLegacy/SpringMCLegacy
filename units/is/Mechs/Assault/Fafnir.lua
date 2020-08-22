@@ -36,8 +36,8 @@ local FNR5 = Fafnir:New{
 		variant			= "FNR-5",
 		speed			= 50,
 		price			= 26360,
-		heatlimit 		= 20,
-		armor			= {type = "standard", tons = 19.5},
+		heatlimit 		= 13,--10 double
+		armor			= 19.5,
 		maxammo 		= {hvgauss = 8},
 		barrelrecoildist = {[1] = 5, [2] = 5},
 		ecm 			= true,

@@ -35,10 +35,11 @@ local Morrigu = Tank:New{
 		speed			= 50,
 		price			= 16850,
 		heatlimit 		= 30,
-		armor			= {type = "ferro", tons = 13},
+		armor			= 13,
 		maxammo 		= {lrm = 3, srm = 2},
 		hasecm			= true,
 		squadsize 		= 1,
+		mods			= {"ferrofibrousarmour"},
     },
 }
 

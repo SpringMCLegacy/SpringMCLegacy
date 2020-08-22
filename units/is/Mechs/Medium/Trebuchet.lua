@@ -32,7 +32,7 @@ local TBT5N = Trebuchet:New{
 		speed			= 80,
 		price			= 11910,
 		heatlimit 		= 10,
-		armor			= {type = "standard", tons = 7.5},
+		armor			= 7.5,
 		maxammo 		= {lrm = 2},
     },
 }
@@ -62,7 +62,7 @@ local TBT5S = Trebuchet:New{
 		speed			= 80,
 		price			= 9840,
 		heatlimit 		= 18,
-		armor			= {type = "standard", tons = 7.5},
+		armor			= 7.5,
 		maxammo 		= {srm = 2},
     },
 }
@@ -91,10 +91,11 @@ local TBT9K = Trebuchet:New{
 		variant			= "TBT-9K",
 		speed			= 80,
 		price			= 13290,
-		heatlimit 		= 18,
-		armor			= {type = "standard", tons = 9},
+		heatlimit 		= 13,--10 double
+		armor			= 9,
 		jumpjets		= 5,
 		maxammo 		= {mrm = 3},
+		mods			= {"doubleheatsinks"},
     },
 }
 

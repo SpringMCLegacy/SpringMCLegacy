@@ -2,6 +2,8 @@ local LocustIIC = Light:New{
 	name              	= "Locust IIC",
 	customparams = {
 		tonnage			= 25,
+		cockpitheight	= 1.6,
+		mods			= {"ferrofibrousarmour", "doubleheatsinks"},
     },
 }
 
@@ -23,8 +25,8 @@ local Mk2 = LocustIIC:New{
 		variant         = "Mk 2",
 		speed			= 120,
 		price			= 9370,
-		heatlimit 		= 20,
-		armor			= {type = "ferro", tons = 4},
+		heatlimit 		= 13,
+		armor			= 4,
 		maxammo 		= {srm = 1},
     },
 }
@@ -47,8 +49,8 @@ local Mk3 = LocustIIC:New{
 		variant         = "Mk 3",
 		speed			= 120,
 		price			= 9800,
-		heatlimit 		= 20,
-		armor			= {type = "ferro", tons = 4},
+		heatlimit 		= 13,
+		armor			= 4,
     },
 }
 
@@ -70,14 +72,12 @@ local Mk5 = LocustIIC:New{
 		variant         = "Mk 5",
 		speed			= 120,
 		price			= 8780,
-		heatlimit 		= 20,
-		armor			= {type = "ferro", tons = 4},
+		heatlimit 		= 13,
+		armor			= 4,
 		maxammo 		= {atm = 2},
     },
 }
 
 return lowerkeys({
-	--["JF_LocustIIC_Mk2"] = Mk2:New(),
-	--["SJ_LocustIIC_Mk3"] = Mk3:New(),
 	["WF_LocustIIC_Mk5"] = Mk5:New(),
 })

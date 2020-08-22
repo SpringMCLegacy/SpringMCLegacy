@@ -22,9 +22,10 @@ local Ku = LightTank:New{
 		speed			= 60,
 		price			= 10910,
 		heatlimit 		= 10,
-		armor			= {type = "ferro", tons = 7},
+		armor			= 7,
 		maxammo 		= {ac10 = 2, srm = 2},
 		squadsize 		= 1,
+		mods			= {"ferrofibrousarmour"},
     },
 }
 

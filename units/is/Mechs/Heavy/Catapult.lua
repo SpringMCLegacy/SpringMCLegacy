@@ -35,7 +35,7 @@ local CPLTC1 = Catapult:New{
 		speed			= 60,
 		price			= 13990,
 		heatlimit 		= 15,
-		armor			= {type = "standard", tons = 10},
+		armor			= 10,
 		maxammo 		= {lrm = 2},
 		jumpjets		= 4,
     },
@@ -45,10 +45,10 @@ local CPLTC2 = Catapult:New{
 	description         = "Heavy Missile Boat",
 	weapons	= {	
 		[1] = {
-			name	= "ALRM15",
+			name	= "LRM15",
 		},
 		[2] = {
-			name	= "ALRM15",
+			name	= "LRM15",
 		},
 		[3] = {
 			name	= "LBX2",
@@ -63,9 +63,10 @@ local CPLTC2 = Catapult:New{
 		speed			= 60,
 		price			= 13460,
 		heatlimit 		= 15,
-		armor			= {type = "standard", tons = 11.5},
+		armor			= 11.5,
 		maxammo 		= {lrm = 4, ac2 = 1},
 		jumpjets		= 4,
+		mods			= {"artemislrm"},
     },
 }
 
@@ -94,7 +95,7 @@ local CPLTC3 = Catapult:New{
 		speed			= 60,
 		price			= 13680,
 		heatlimit 		= 15,
-		armor			= {type = "standard", tons = 10},
+		armor			= 10,
 		maxammo 		= {arrow = 1},
 		jumpjets		= 4,
     },
@@ -122,7 +123,7 @@ local CPLTC4 = Catapult:New{
 		speed			= 60,
 		price			= 13580,
 		heatlimit 		= 10,
-		armor			= {type = "standard", tons = 10},
+		armor			= 10,
 		maxammo 		= {lrm = 4},
 		jumpjets		= 4,
     },
@@ -156,7 +157,7 @@ local CPLTK2 = Catapult:New{
 		speed			= 60,
 		price			= 13190,
 		heatlimit 		= 20,
-		armor			= {type = "standard", tons = 11},
+		armor			= 11,
     },
 }
 
@@ -181,10 +182,11 @@ local CPLTK5 = Catapult:New{
 		variant			= "CPLT-K5",
 		speed			= 60,
 		price			= 14570,
-		heatlimit 		= 24,
-		armor			= {type = "standard", tons = 12.5},
+		heatlimit 		= 16,--12 double
+		armor			= 12.5,
 		maxammo 		= {mrm = 4},
 		jumpjets		= 4,
+		mods			= {"doubleheatsinks"},
     },
 }
 

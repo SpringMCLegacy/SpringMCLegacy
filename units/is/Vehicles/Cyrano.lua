@@ -16,8 +16,9 @@ local Cyrano = VTOL:New{
 		speed			= 190,
 		price			= 4590,
 		heatlimit 		= 10,
-		armor			= {type = "ferro", tons = 1},
+		armor			= 1,
 		squadsize 		= 2,
+		mods			= {"ferrofibrousarmour"},
     },
 }
 

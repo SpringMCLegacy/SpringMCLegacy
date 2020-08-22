@@ -31,9 +31,10 @@ local SYU2B = ShaYu:New{
 		variant			= "SYU-2B",
 		speed			= 110,
 		price			= 14880,
-		heatlimit 		= 26,
-		armor			= {type = "stealth", tons = 6.5},
+		heatlimit 		= 17,--13 double
+		armor			= 6.5,
 		ecm				= true,
+		mods			= {"doubleheatsinks"},--stealtharmour
     },
 }
 

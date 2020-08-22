@@ -24,9 +24,10 @@ local Donar = VTOL:New{
 		speed			= 240,
 		price			= 9150,
 		heatlimit 		= 20,
-		armor			= {type = "ferro", tons = 3},
+		armor			= 3,
 		maxammo 		= {srm = 1},
 		squadsize 		= 2,
+		mods			= {"ferrofibrousarmour"},
     },
 }
 

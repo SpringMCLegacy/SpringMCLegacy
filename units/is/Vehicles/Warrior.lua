@@ -24,7 +24,7 @@ local Warrior = VTOL:New{
 		speed			= 160,
 		price			= 3340,
 		heatlimit 		= 10,
-		armor			= {type = "standard", tons = 3},
+		armor			= 3,
 		maxammo 		= {ac2 = 2, srm = 1},
 		squadsize 		= 2,
     },

@@ -3,6 +3,9 @@ local Kitfox = Light:New{
 
 	customparams = {
 		tonnage			= 30,
+		cockpitheight	= 7.1,
+		mods			= {"ferrofibrousarmour", "doubleheatsinks"},
+		omni			= true,
     },
 
 }
@@ -29,8 +32,8 @@ local Prime = Kitfox:New{
 		variant         = "Prime",
 		speed			= 90,
 		price			= 10850,
-		heatlimit 		= 20,
-		armor			= {type = "ferro", tons = 4},
+		heatlimit 		= 13,--10 double
+		armor			= 4,
 		maxammo 		= {ac5 = 1, srm = 1},
     },
 }
@@ -54,8 +57,8 @@ local A = Kitfox:New{
 		variant         = "A",
 		speed			= 90,
 		price			= 13100,
-		heatlimit 		= 20,
-		armor			= {type = "ferro", tons = 4},
+		heatlimit 		= 13,--10 double
+		armor			= 4,
 		maxammo 		= {gauss = 2},
     },
 }
@@ -94,15 +97,15 @@ local C = Kitfox:New{
 		variant         = "C",
 		speed			= 90,
 		price			= 11470,
-		heatlimit 		= 20,
-		armor			= {type = "ferro", tons = 4},
+		heatlimit 		= 13,--10 double
+		armor			= 4,
 		bap				= true,
 		ecm				= true,
     },
 }
 
 return lowerkeys({
-	--["JF_Kitfox_Prime"] = Prime:New(),
-	--["JF_Kitfox_A"] = A:New(),
-	--["JF_Kitfox_C"] = C:New(),
+	["WF_Kitfox_Prime"] = Prime:New(),
+	["WF_Kitfox_A"] = A:New(),
+	["WF_Kitfox_C"] = C:New(),
 })

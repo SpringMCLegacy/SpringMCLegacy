@@ -3,6 +3,9 @@ local Adder = Light:New{
 
     customparams = {
 		tonnage			= 35,
+		cockpitheight	= 4.6,
+		mods			= {"ferrofibrousarmour", "doubleheatsinks"},
+		omni			= true,
     },
 }
 
@@ -23,9 +26,9 @@ local Prime = Adder:New{
 		variant         = "Prime",
 		speed			= 90,
 		price			= 20830,
-		heatlimit 		= 22,
+		heatlimit 		= 15,--11 double
 		barrelrecoildist = {[1] = 5, [2] = 5},
-		armor			= {type = "ferro", tons = 6},
+		armor			= 6,
     },
 }
 
@@ -52,8 +55,8 @@ local A = Adder:New{
 		variant         = "A",
 		speed			= 90,
 		price			= 14370,
-		heatlimit 		= 20,
-		armor			= {type = "ferro", tons = 6},
+		heatlimit 		= 13,--10 double
+		armor			= 6,
 		maxammo 		= {lrm = 4},
     },
 }
@@ -78,8 +81,8 @@ local B = Adder:New{
 		variant         = "B",
 		speed			= 90,
 		price			= 14220,
-		heatlimit 		= 20,
-		armor			= {type = "ferro", tons = 6},
+		heatlimit 		= 13,--10 double
+		armor			= 6,
 		barrelrecoildist = {[1] = 5},
 		maxammo 		= {ac5 = 1},
     },

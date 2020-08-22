@@ -29,9 +29,10 @@ local DMO1K = Daimyo:New{
 		variant			= "DMO-1K",
 		speed			= 80,
 		price			= 11480,
-		heatlimit 		= 22,
-		armor			= {type = "ferro", tons = 7.5},
+		heatlimit 		= 15,--11 double
+		armor			= 7.5,
 		maxammo 		= {srm = 2},
+		mods			= {"ferrofibrousarmour", "doubleheatsinks"},
     },
 }
 

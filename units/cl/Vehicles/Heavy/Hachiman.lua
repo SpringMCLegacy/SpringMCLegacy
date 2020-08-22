@@ -28,9 +28,10 @@ local Hachiman = LightTank:New{
 		speed			= 60,
 		price			= 14840,
 		heatlimit 		= 20,
-		armor			= {type = "ferro", tons = 7},
+		armor			= 7,
 		maxammo 		= {lrm = 4, srm = 2},
 		squadsize 		= 1,
+		mods			= {"ferrofibrousarmour"},
     },
 }
 

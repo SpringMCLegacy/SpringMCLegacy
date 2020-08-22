@@ -34,7 +34,7 @@ local Brutus = Tank:New{
 		speed			= 50,
 		price			= 11150,
 		heatlimit 		= 20,
-		armor			= {type = "standard", tons = 8.5},
+		armor			= 8.5,
 		maxammo 		= {srm = 2, lrm = 2},
 		squadsize 		= 1,
 		--replaces		= "cc_manticore",

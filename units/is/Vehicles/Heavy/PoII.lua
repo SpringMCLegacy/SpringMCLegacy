@@ -10,7 +10,7 @@ local PoIIBase = Tank:New{
 		speed			= 60,
 		price			= 11810,
 		heatlimit 		= 20,
-		armor			= {type = "standard", tons = 11},
+		armor			= 11,
 		maxammo 		= {ac20 = 3, lrm = 1, srm = 1},
 		barrelrecoildist = {[1] = 5},
 		squadsize 		= 1,

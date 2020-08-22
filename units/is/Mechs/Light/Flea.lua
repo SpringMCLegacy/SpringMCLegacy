@@ -34,7 +34,7 @@ local FLE17 = Flea:New{
 		speed			= 90,
 		price			= 5100,
 		heatlimit 		= 10,
-		armor			= {type = "standard", tons = 3},
+		armor			= 3,
 		masc 			= true,
     },
 }

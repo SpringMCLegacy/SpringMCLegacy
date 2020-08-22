@@ -24,7 +24,7 @@ local Tyr = Hover:New{
 		speed			= 150,
 		price			= 12600,
 		heatlimit 		= 10,
-		armor			= {type = "standard", tons = 6.5},
+		armor			= 6.5,
 		maxammo 		= {srm = 2},
 		squadsize 		= 1,
     },

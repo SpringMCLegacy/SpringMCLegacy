@@ -24,7 +24,7 @@ local Partisan = Tank:New{
 		speed			= 50,
 		price			= 6730,
 		heatlimit 		= 20,
-		armor			= {type = "standard", tons = 7},
+		armor			= 7,
 		maxammo 		= {ac5 = 8},
 		barrelrecoildist = {[1] = 1, [2] = 1, [3] = 1, [4] = 1},
 		squadsize 		= 1,

@@ -22,9 +22,10 @@ local Mithras = LightTank:New{
 		speed			= 90,
 		price			= 6700,
 		heatlimit 		= 10,
-		armor			= {type = "ferro", tons = 3},
+		armor			= 3,
 		maxammo 		= {ac2 = 3},
 		squadsize 		= 2,
+		mods			= {"ferrofibrousarmour"},
     },
 }
 

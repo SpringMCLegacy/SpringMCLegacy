@@ -18,7 +18,7 @@ local Zorya = LightTank:New{
 		speed			= 60,
 		price			= 5620,
 		heatlimit 		= 10,
-		armor			= {type = "standard", tons = 3.5},
+		armor			= 3.5,
 		maxammo 		= {ac5 = 3, lrm = 2},
 		squadsize 		= 2,
     },

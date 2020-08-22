@@ -34,10 +34,11 @@ local MAD5D = Marauder:New{
 		variant			= "MAD-5D",
 		speed			= 60,
 		price			= 17870,
-		heatlimit 		= 32,
-		armor			= {type = "standard", tons = 14},
+		heatlimit 		= 21,--16 double
+		armor			= 14,
 		jumpjets		= 4,
 		maxammo 		= {srm = 1},
+		mods			= {"doubleheatsinks"},
     },
 }
 
@@ -65,10 +66,11 @@ local MAD7D = Marauder:New{
 		variant			= "MAD-7D",
 		speed			= 60,
 		price			= 19860,
-		heatlimit 		= 32,
-		armor			= {type = "standard", tons = 14},
+		heatlimit 		= 21,--16 double
+		armor			= 14,
 		maxammo 		= {ac5 = 2},
 		ecm				= true,
+		mods			= {"doubleheatsinks"},
     },
 }
 
@@ -96,10 +98,11 @@ local MAD5S = Marauder:New{
 		variant			= "MAD-5S",
 		speed			= 60,
 		price			= 17990,
-		heatlimit 		= 32,
-		armor			= {type = "standard", tons = 11.5},
+		heatlimit 		= 21,--16 double
+		armor			= 11.5,
 		maxammo 		= {gauss = 1},
 		barrelrecoildist = {[1] = 5},
+		mods			= {"doubleheatsinks"},
     },
 }
 
@@ -130,12 +133,13 @@ local MAD9S = Marauder:New{
 		variant			= "MAD-9S",
 		speed			= 60,
 		price			= 17860,
-		heatlimit 		= 28,
-		armor			= {type = "standard", tons = 13},
+		heatlimit 		= 19,--14 double
+		armor			= 13,
 		maxammo 		= {ac10 = 2},
 		ecm				= true,
 		bap				= true,
 		barrelrecoildist = {[1] = 5},
+		mods			= {"doubleheatsinks"},
     },
 }
 
@@ -163,9 +167,10 @@ local MAD5L = Marauder:New{
 		variant			= "MAD-5L",
 		speed			= 60,
 		price			= 22860,
-		heatlimit 		= 36,
-		armor			= {type = "stealth", tons = 14},
+		heatlimit 		= 24,--18 double
+		armor			= 14,
 		barrelrecoildist = {[1] = 5},
+		mods			= {"doubleheatsinks"},--"stealtharmour"
     },
 }
 
@@ -193,10 +198,11 @@ local MAD5M = Marauder:New{
 		variant			= "MAD-5M",
 		speed			= 60,
 		price			= 14710,
-		heatlimit 		= 32,
-		armor			= {type = "standard", tons = 11.5},
+		heatlimit 		= 21,--16 double
+		armor			= 11.5,
 		maxammo 		= {ac10 = 1},
 		barrelrecoildist = {[1] = 5},
+		mods			= {"doubleheatsinks"},
     },
 }
 
@@ -230,11 +236,12 @@ local MAD9M = Marauder:New{
 		variant			= "MAD-9M",
 		speed			= 60,
 		price			= 17040,
-		heatlimit 		= 32,
-		armor			= {type = "ferro", tons = 12.5},
+		heatlimit 		= 21,--16 double
+		armor			= 12.5,
 		maxammo 		= {srm = 2},
 		barrelrecoildist = {[1] = 5},
 		ecm				= true,
+		mods			= {"ferrofibrousarmour", "doubleheatsinks"},
     },
 }
 

@@ -34,9 +34,10 @@ local RZK9S = Razorback:New{
 		variant         = "RZK-9S",
 		speed			= 90,
 		price			= 8550,
-		heatlimit 		= 20,
-		armor			= {type = "ferro", tons = 6},
+		heatlimit 		= 13,--10 double
+		armor			= 6,
 		maxammo 		= {srm = 1},
+		mods 			= {"ferrofibrousarmour", "doubleheatsinks"},
     },
 }
 

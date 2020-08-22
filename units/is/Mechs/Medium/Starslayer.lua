@@ -34,10 +34,11 @@ local STY3C = Starslayer:New{
 		variant			= "STY-3C",
 		speed			= 80,
 		price			= 15080,
-		heatlimit 		= 22,
-		armor			= {type = "ferro", tons = 9.5},
+		heatlimit 		= 15,--11 double
+		armor			= 9.5,
 		jumpjets		= 5,
 		maxammo 		= {srm = 1},
+		mods			= {"ferrofibrousarmour", "doubleheatsinks"},
     },
 }
 
@@ -65,9 +66,10 @@ local STY3D = Starslayer:New{
 		variant			= "STY-3D",
 		speed			= 80,
 		price			= 15930,
-		heatlimit 		= 24,
-		armor			= {type = "ferro", tons = 9.5},
+		heatlimit 		= 16,--12 single
+		armor			= 9.5,
 		jumpjets		= 5,
+		mods			= {"ferrofibrousarmour", "doubleheatsinks"},
     },
 }
 

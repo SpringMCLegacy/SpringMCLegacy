@@ -4,6 +4,7 @@ local Strider = Medium:New{
 	customparams = {
 		cockpitheight	= 3.1,
 		tonnage			= 40,
+		omni			= true,
     },
 }
 
@@ -11,10 +12,10 @@ local SR1OP = Strider:New{
 	description         = "Medium Striker",
 	weapons	= {	
 		[1] = {
-			name	= "ASRM6",
+			name	= "SRM6",
 		},
 		[2] = {
-			name	= "ASRM6",
+			name	= "SRM6",
 		},
 		[3] = {
 			name	= "SBL",
@@ -26,8 +27,9 @@ local SR1OP = Strider:New{
 		speed			= 90,
 		price			= 8670,
 		heatlimit 		= 10,
-		armor			= {type = "standard", tons = 7.5},
+		armor			= 7.5,
 		maxammo 		= {srm = 2},
+		mods			= {"artemissrm"},
     },
 }
 
@@ -47,7 +49,7 @@ local SR1OB = Strider:New{
 		speed			= 90,
 		price			= 9100,
 		heatlimit 		= 10,
-		armor			= {type = "standard", tons = 7.5},
+		armor			= 7.5,
 		maxammo 		= {lrm = 2},
     },
 }

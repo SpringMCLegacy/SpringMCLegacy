@@ -44,9 +44,10 @@ local BLRK3 = Battlemaster:New{
 		variant			= "BLR-K3",
 		speed			= 60,
 		price			= 18510,
-		heatlimit 		= 36,
-		armor			= {type = "standard", tons = 16},
+		heatlimit 		= 24,--18 double
+		armor			= 16,
 		maxammo 		= {srm = 1},
+		mods			= {"doubleheatsinks"},
     },
 }
 
@@ -95,7 +96,7 @@ local BLR1G = Battlemaster:New{
 		speed			= 60,
 		price			= 15190,
 		heatlimit 		= 36,
-		armor			= {type = "standard", tons = 14.5},
+		armor			= 14.5,
 		maxammo 		= {srm = 1},
     },
 }
@@ -141,9 +142,10 @@ local BLR3M = Battlemaster:New{
 		variant			= "BLR-3M",
 		speed			= 60,
 		price			= 16790,
-		heatlimit 		= 36,
-		armor			= {type = "standard", tons = 14.5},
+		heatlimit 		= 24,--18 double
+		armor			= 14.5,
 		maxammo 		= {srm = 1},
+		mods			= {"doubleheatsinks"},
     },
 }
 
@@ -185,10 +187,11 @@ local BLR5M = Battlemaster:New{
 		variant			= "BLR-5M",
 		speed			= 60,
 		price			= 17660,
-		heatlimit 		= 28,
-		armor			= {type = "standard", tons = 14.5},
+		heatlimit 		= 19,--14 double
+		armor			= 14.5,
 		maxammo 		= {ltgauss = 1},
 		barrelrecoildist = {[1] = 3},
+		mods			= {"doubleheatsinks"},
     },
 }
 
@@ -223,7 +226,7 @@ local BLR4S = Battlemaster:New{
 			OnlyTargetCategory = "ground",
 		},
 		[8] = {
-			name	= "ASRM6",
+			name	= "SRM6",
 		},
 		[7] = {
 			name	= "SPL",
@@ -236,10 +239,11 @@ local BLR4S = Battlemaster:New{
 		variant			= "BLR-4S",
 		speed			= 60,
 		price			= 20180,
-		heatlimit 		= 26,
-		armor			= {type = "ferro", tons = 13.5},
+		heatlimit 		= 17,--13 double
+		armor			= 13.5,
 		maxammo 		= {gauss = 3, srm = 2},
 		barrelrecoildist = {[1] = 3},
+		mods			= {"ferrofibrousarmour", "artemissrm", "doubleheatsinks"},
     },
 }
 

@@ -3,6 +3,7 @@ local Icestorm = Light:New{
 	
 	customparams = {
 		tonnage			= 25,
+		cockpitheight	= 1.8,
     },
 }
 
@@ -26,7 +27,7 @@ local Mk1 = Icestorm:New{
 		speed			= 180,
 		price			= 7280,
 		heatlimit 		= 10,
-		armor			= {type = "standard", tons = 3.5},
+		armor			= 3.5,
 		maxammo 		= {srm = 1},
     },
 }

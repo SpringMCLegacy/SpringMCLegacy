@@ -22,10 +22,11 @@ local Oro = Tank:New{
 		speed			= 60,
 		price			= 9610,
 		heatlimit 		= 20,
-		armor			= {type = "ferro", tons = 5.5},
+		armor			= 5.5,
 		maxammo 		= {ac20 = 3},
 		barrelrecoildist = {[1] = 3},
 		squadsize 		= 1,
+		mods			= {"ferrofibrousarmour"},
     },
 }
 

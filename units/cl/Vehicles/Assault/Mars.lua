@@ -54,11 +54,12 @@ local Mars = Tank:New{
 		speed			= 30,
 		price			= 20760,
 		heatlimit 		= 20,
-		armor			= {type = "ferro", tons = 11.5},
+		armor			= 11.5,
 		maxammo 		= {gauss = 2, ac10 = 2, lrm = 3, srm = 2},
 		barrelrecoildist = {[1] = 4, [3] = 2},
 		hasecm			= true,
 		squadsize 		= 1,
+		mods			= {"ferrofibrousarmour"},
     },
 }
 

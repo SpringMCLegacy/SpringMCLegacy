@@ -37,7 +37,7 @@ local Sparrowhawk = Aero:New{
 		speed			= 400,
 		price			= 9450,
 		heatlimit 		= 20,
-		armor			= {type = "standard", tons = 2},
+		armor			= 2,
 		squadsize 		= 2,
     },
 }

@@ -32,7 +32,7 @@ local AWS8Q = Awesome:New{
 		speed			= 50,
 		price			= 16050,
 		heatlimit 		= 28,
-		armor			= {type = "standard", tons = 15},
+		armor			= 15,
     },
 }
 
@@ -71,9 +71,10 @@ local AWS9M = Awesome:New{
 		variant			= "AWS-9M",
 		speed			= 60,
 		price			= 18120,
-		heatlimit 		= 40,
-		armor			= {type = "standard", tons = 15.5},
+		heatlimit 		= 27,--20 double
+		armor			= 15.5,
 		maxammo 		= {srm = 1},
+		mods			= {"doubleheatsinks"},
     },
 }
 	

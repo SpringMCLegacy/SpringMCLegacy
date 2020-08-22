@@ -28,7 +28,7 @@ local VTR9B = Victor:New{
 		speed			= 60,
 		price			= 13780,
 		heatlimit 		= 15,
-		armor			= {type = "standard", tons = 11.5},
+		armor			= 11.5,
 		maxammo 		= {ac20 = 3, srm = 1},
 		barrelrecoildist = {[1] = 5},
 		jumpjets		= 4,
@@ -57,7 +57,7 @@ local VTR9D = Victor:New{
 		speed			= 60,
 		price			= 17170,
 		heatlimit 		= 15,
-		armor			= {type = "standard", tons = 12.5},
+		armor			= 12.5,
 		maxammo 		= {gauss = 2, srm = 1},
 		barrelrecoildist = {[1] = 5},
 		jumpjets		= 4,
@@ -86,7 +86,7 @@ local VTR9K = Victor:New{
 		speed			= 60,
 		price			= 17170,
 		heatlimit 		= 15,
-		armor			= {type = "standard", tons = 12.5},
+		armor			= 12.5,
 		maxammo 		= {gauss = 2, srm = 1},
 		barrelrecoildist = {[1] = 5},
 		jumpjets		= 4,
@@ -115,7 +115,7 @@ local VTR9S = Victor:New{
 		speed			= 60,
 		price			= 13600,
 		heatlimit 		= 15,
-		armor			= {type = "standard", tons = 10.5},
+		armor			= 10.5,
 		maxammo 		= {ac20 = 3, srm = 1},
 		barrelrecoildist = {[1] = 5},
 		jumpjets		= 4,
@@ -143,11 +143,12 @@ local VTR10D = Victor:New{
 		variant			= "VTR-10D",
 		speed			= 60,
 		price			= 18940,
-		heatlimit 		= 24,
-		armor			= {type = "standard", tons = 13},
+		heatlimit 		= 16,--12 double
+		armor			= 13,
 		maxammo 		= {ac20 = 6, srm = 1},
 		barrelrecoildist = {[1] = 5},
 		jumpjets		= 4,
+		mods			= {"doubleheatsinks"},
     },
 }
 
@@ -172,12 +173,13 @@ local VTR10L = Victor:New{
 		variant			= "VTR-10L",
 		speed			= 60,
 		price			= 23200,
-		heatlimit 		= 24,
-		armor			= {type = "stealth", tons = 15.5},
+		heatlimit 		= 16,--12 double
+		armor			= 15.5,
 		maxammo 		= {gauss = 3, srm = 1},
 		barrelrecoildist = {[1] = 5},
 		ecm 			= true,
 		jumpjets		= 4,
+		mods			= {"doubleheatsinks"}, --"stealtharmour"
     },
 }
 
@@ -202,11 +204,12 @@ local VTR11D = Victor:New{
 		variant			= "VTR-11D",
 		speed			= 60,
 		price			= 20210,
-		heatlimit 		= 30,
-		armor			= {type = "standard", tons = 14.5},
+		heatlimit 		= 20, --15 double
+		armor			= 14.5,
 		maxammo 		= {ac5 = 3, srm = 1},
 		barrelrecoildist = {[1] = 5},
 		jumpjets		= 4,
+		mods			= {"doubleheatsinks"},
     },
 }
 

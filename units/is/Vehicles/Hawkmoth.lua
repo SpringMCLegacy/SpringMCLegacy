@@ -16,9 +16,10 @@ local Hawkmoth = VTOL:New{
 		speed			= 230,
 		price			= 3340,
 		heatlimit 		= 10,
-		armor			= {type = "ferro", tons = 1.5},
+		armor			= 1.5,
 		maxammo 		= {ltgauss = 2},
 		squadsize 		= 2,
+		mods			= {"ferrofibrousarmour"},
     },
 }
 

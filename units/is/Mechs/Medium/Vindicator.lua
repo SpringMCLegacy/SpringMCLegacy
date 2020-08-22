@@ -25,10 +25,11 @@ local VND3L = Vindicator:New{
 		variant			= "VND-3L",
 		speed			= 60,
 		price			= 11050,
-		heatlimit 		= 30,
-		armor			= {type = "standard", tons = 9},
+		heatlimit 		= 20,--15 double
+		armor			= 9,
 		jumpjets		= 4,
 		maxammo 		= {lrm = 1},
+		mods			= {"doubleheatsinks"},
     },
 }
 

@@ -29,7 +29,7 @@ local HBK4G = Hunchback:New{
 		speed			= 60,
 		price			= 10410,
 		heatlimit 		= 13,
-		armor			= {type = "standard", tons = 10},
+		armor			= 10,
 		maxammo 		= {ac20 = 2},
 		barrelrecoildist = {[1] = 3},
     },
@@ -69,7 +69,7 @@ local HBK4P = Hunchback:New{
 		speed			= 60,
 		price			= 11380,
 		heatlimit 		= 23,
-		armor			= {type = "standard", tons = 10},
+		armor			= 10,
     },
 }
 
@@ -94,11 +94,12 @@ local HBK5S = Hunchback:New{
 		variant			= "HBK-5S",
 		speed			= 60,
 		price			= 13500,
-		heatlimit 		= 20,
-		armor			= {type = "standard", tons = 11},
+		heatlimit 		= 13,--10 double
+		armor			= 11,
 		jumpjets		= 4,
 		maxammo 		= {ac20 = 4},
 		barrelrecoildist = {[1] = 3},
+		mods			= {"doubleheatsinks"},
     },
 }
 
@@ -123,10 +124,11 @@ local HBK5M = Hunchback:New{
 		variant			= "HBK-5N",
 		speed			= 60,
 		price			= 10410,
-		heatlimit 		= 26,
-		armor			= {type = "standard", tons = 11},
+		heatlimit 		= 17,--13 double
+		armor			= 11,
 		maxammo 		= {ac20 = 2},
 		barrelrecoildist = {[1] = 3},
+		mods			= {"doubleheatsinks"},
     },
 }
 

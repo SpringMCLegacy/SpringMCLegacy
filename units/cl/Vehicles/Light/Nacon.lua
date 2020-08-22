@@ -23,9 +23,10 @@ local Nacon = LightTank:New{
 		speed			= 160,
 		price			= 6900,
 		heatlimit 		= 10,
-		armor			= {type = "ferro", tons = 5},
+		armor			= 5,
 		maxammo 		= {atm = 3},
 		squadsize 		= 1,
+		mods			= {"ferrofibrousarmour"},
     },
 }
 

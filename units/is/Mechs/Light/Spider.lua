@@ -22,9 +22,10 @@ local SDR7K = Spider:New{
 		variant         = "SDR-7K",
 		speed			= 120,
 		price			= 7520,
-		heatlimit 		= 20,
-		armor			= {type = "ferro", tons = 5.5},
+		heatlimit 		= 13,--10 Doble
+		armor			= 5.5,
 		jumpjets		= 8,
+		mods 			= {"ferrofibrousarmour", "doubleheatsinks"},
     },
 }
 
@@ -44,8 +45,9 @@ local SDR7M = Spider:New{
 		speed			= 120,
 		price			= 6210,
 		heatlimit 		= 10,
-		armor			= {type = "ferro", tons = 3},
+		armor			= 3,
 		jumpjets		= 8,
+		mods 			= {"ferrofibrousarmour"},
     },
 }
 

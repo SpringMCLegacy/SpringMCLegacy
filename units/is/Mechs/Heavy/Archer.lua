@@ -35,7 +35,7 @@ local ARC2R = Archer:New{
 		speed			= 60,
 		price			= 14770,
 		heatlimit 		= 10,
-		armor			= {type = "standard", tons = 13},
+		armor			= 13,
 		maxammo 		= {lrm = 4},
     },
 }
@@ -78,9 +78,10 @@ local ARC5S = Archer:New{
 		variant			= "ARC-5S",
 		speed			= 60,
 		price			= 13530,
-		heatlimit 		= 20,
-		armor			= {type = "standard", tons = 13},
+		heatlimit 		= 13,--10 double
+		armor			= 13,
 		maxammo 		= {lrm = 4, narc = 1, srm = 1},
+		mods			= {"doubleheatsinks"},
     },
 }
 
@@ -88,10 +89,10 @@ local ARC4M = Archer:New{
 	description         = "Heavy Missile Boat",
 	weapons	= {	
 		[1] = {
-			name	= "ALRM20",
+			name	= "LRM20",
 		},
 		[2] = {
-			name	= "ALRM20",
+			name	= "LRM20",
 		},
 		[3] = {
 			name	= "MBL",
@@ -111,9 +112,10 @@ local ARC4M = Archer:New{
 		variant			= "CPLT-C3",
 		speed			= 60,
 		price			= 13680,
-		heatlimit 		= 20,
-		armor			= {type = "standard", tons = 13.5},
+		heatlimit 		= 13, --10 double
+		armor			= 13.5,
 		maxammo 		= {lrm = 4},
+		mods			= {"artemislrm", "doubleheatsinks"},
     },
 }
 

@@ -3,6 +3,9 @@ local Cougar = Light:New{
 
 	customparams = {
 		tonnage			= 35,
+		cockpitheight	= 7.2,
+		mods			= {"ferrofibrousarmour", "doubleheatsinks"},
+		omni			= true,
     },
 }
 	
@@ -28,8 +31,8 @@ local Prime = Cougar:New{
 		variant         = "Prime",
 		speed			= 80,
 		price			= 14850,
-		heatlimit 		= 20,
-		armor			= {type = "ferro", tons = 5.5},
+		heatlimit 		= 13,--10 double
+		armor			= 5.5,
 		maxammo 		= {lrm = 2},
     },
 }
@@ -59,8 +62,8 @@ local A = Cougar:New{
 		variant         = "A",
 		speed			= 80,
 		price			= 16970,
-		heatlimit 		= 20,
-		armor			= {type = "ferro", tons = 5.5},
+		heatlimit 		= 13,
+		armor			= 5.5,
 		maxammo 		= {lrm = 4},
     },
 }
@@ -84,14 +87,14 @@ local B = Cougar:New{
 		variant         = "B",
 		speed			= 80,
 		price			= 16970,
-		heatlimit 		= 32,
-		armor			= {type = "ferro", tons = 5.5},
+		heatlimit 		= 21,--16 double
+		armor			= 5.5,
 		barrelrecoildist = {[1] = 5, [2] = 5},
     },
 }
 
 return lowerkeys({
-	--["JF_Cougar_Prime"] = Prime:New(),
-	--["JF_Cougar_A"] = A:New(),
-	--["JF_Cougar_B"] = B:New(),
+	["WF_Cougar_Prime"] = Prime:New(),
+	["WF_Cougar_A"] = A:New(),
+	["WF_Cougar_B"] = B:New(),
 })

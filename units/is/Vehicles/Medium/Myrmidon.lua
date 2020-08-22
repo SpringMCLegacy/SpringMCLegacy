@@ -18,7 +18,7 @@ local Myrmidon = LightTank:New{
 		speed			= 80,
 		price			= 6020,
 		heatlimit 		= 10,
-		armor			= {type = "standard", tons = 9},
+		armor			= 9,
 		maxammo 		= {srm = 1},
 		squadsize 		= 1,
     },

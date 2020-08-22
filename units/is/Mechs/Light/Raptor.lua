@@ -3,6 +3,8 @@ local Raptor = Light:New{
 	customparams = {
 		cockpitheight	= 2.9,
 		tonnage 		= 25,
+		mods			= {"doubleheatsinks"},
+		omni			= true,
     },
 }
 
@@ -36,9 +38,9 @@ local RTX1OP = Raptor:New{
 		variant         = "RTX1-O (Prime)",
 		speed			= 110,
 		price			= 7210,
-		heatlimit 		= 20,
+		heatlimit 		= 13,--10 double
 		maxammo 		= {lrm = 1},
-		armor			= {type = "standard", tons = 4},
+		armor			= 4,
     },
 }
 
@@ -65,8 +67,8 @@ local RTX1OA = Raptor:New{
 		variant         = "RTX1-O (Cfg A)",
 		speed			= 110,
 		price			= 7830,
-		heatlimit 		= 20,
-		armor			= {type = "standard", tons = 4},
+		heatlimit 		= 13,--10 double
+		armor			= 4,
     },
 }
 
@@ -89,9 +91,9 @@ local RTX1OB = Raptor:New{
 		variant         = "RTX1-O (Cfg B)",
 		speed			= 110,
 		price			= 6130,
-		heatlimit 		= 20,
+		heatlimit 		= 13,--10 double
 		maxammo 		= {srm = 2},
-		armor			= {type = "standard", tons = 4},
+		armor			= 4,
     },
 }
 

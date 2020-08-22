@@ -37,10 +37,11 @@ local OSR3D = Osiris:New{
 		variant			= "OSR-3D",
 		speed			= 120,
 		price			= 11380,
-		heatlimit 		= 20,
-		armor			= {type = "ferro", tons = 4.5},
+		heatlimit 		= 13,--10 double
+		armor			= 4.5,
 		jumpjets		= 4,
 		maxammo 		= {srm = 1},
+		mods 			= {"ferrofibrousarmour", "doubleheatsinks"},
     },
 }
 
@@ -71,9 +72,10 @@ local OSR4D = Osiris:New{
 		variant			= "OSR-4D",
 		speed			= 120,
 		price			= 12300,
-		heatlimit 		= 20,
-		armor			= {type = "ferro", tons = 5.5},
+		heatlimit 		= 13,--10 double
+		armor			= 5.5,
 		jumpjets		= 8,
+		mods 			= {"ferrofibrousarmour", "doubleheatsinks"},
     },
 }
 

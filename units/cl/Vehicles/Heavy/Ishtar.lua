@@ -33,10 +33,11 @@ local Ishtar = Tank:New{
 		speed			= 50,
 		price			= 14040,
 		heatlimit 		= 20,
-		armor			= {type = "ferro", tons = 7.5},
+		armor			= 7.5,
 		maxammo 		= {ac10 = 4, lrm = 2},
 		barrelrecoildist = {[1] = 1, [2] = 3},
 		squadsize 		= 1,
+		mods			= {"ferrofibrousarmour"},
     },
 }
 

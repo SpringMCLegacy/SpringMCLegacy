@@ -10,7 +10,7 @@ local BulldogBase = Tank:New{
 		speed			= 60,
 		price			= 7050,
 		heatlimit 		= 10,
-		armor			= {type = "standard", tons = 6.5},
+		armor			= 6.5,
 		maxammo 		= {srm = 1},
 		squadsize 		= 2,
     },

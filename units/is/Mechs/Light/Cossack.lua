@@ -29,7 +29,7 @@ local CSK1 = Cossack:New{
 		speed			= 90,
 		price			= 4650,
 		heatlimit 		= 10,
-		armor			= {type = "standard", tons = 3},
+		armor			= 3,
 		maxammo 		= {srm = 1},
 		jumpjets		= 6,
     },
