@@ -66,7 +66,7 @@ local A = Firemoth:New{
 }
 
 local C = Firemoth:New{
-	description         = "Light Scout",
+	description         = "Light Ranged",
 
 	weapons = {	
 		[1] = {
@@ -92,7 +92,7 @@ local C = Firemoth:New{
 }
 
 return lowerkeys({
-	["WF_Firemoth_Prime"] = Prime:New(),
-	["WF_Firemoth_A"] = A:New(),
-	["WF_Firemoth_C"] = C:New(),
+	--["WF_Firemoth_Prime"] = Prime:New(),
+	--["WF_Firemoth_A"] = A:New(),
+	--["WF_Firemoth_C"] = C:New(),
 })

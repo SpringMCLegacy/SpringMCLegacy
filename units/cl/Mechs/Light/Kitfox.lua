@@ -39,7 +39,7 @@ local Prime = Kitfox:New{
 }
 
 local A = Kitfox:New{
-	description         = "Light Multirole",
+	description         = "Light Sniper",
 	
 	weapons = {	
 		[1] = {
@@ -105,7 +105,7 @@ local C = Kitfox:New{
 }
 
 return lowerkeys({
-	["WF_Kitfox_Prime"] = Prime:New(),
-	["WF_Kitfox_A"] = A:New(),
-	["WF_Kitfox_C"] = C:New(),
+	--["WF_Kitfox_Prime"] = Prime:New(),
+	--["WF_Kitfox_A"] = A:New(),
+	--["WF_Kitfox_C"] = C:New(),
 })

@@ -94,7 +94,7 @@ local B = Cougar:New{
 }
 
 return lowerkeys({
-	["WF_Cougar_Prime"] = Prime:New(),
-	["WF_Cougar_A"] = A:New(),
-	["WF_Cougar_B"] = B:New(),
+	--["WF_Cougar_Prime"] = Prime:New(),
+	--["WF_Cougar_A"] = A:New(),
+	--["WF_Cougar_B"] = B:New(),
 })

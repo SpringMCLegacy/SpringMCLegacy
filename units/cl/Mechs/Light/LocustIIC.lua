@@ -8,7 +8,7 @@ local LocustIIC = Light:New{
 }
 
 local Mk2 = LocustIIC:New{
-	description         = "Light Brawler",
+	description         = "Light Striker",
 	weapons = {	
 		[1] = {
 			name	= "SSRM4",

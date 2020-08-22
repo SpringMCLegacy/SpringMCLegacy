@@ -1,14 +1,4 @@
 local sidedata = {
-	--[[{
-		name = "Inner Sphere",
-		shortName = "IS",
-		startUnit = "beacon",
-	},
-	{
-		name = "Clans",
-		shortName = "CL",
-		startUnit = "beacon",
-	},]]
 	{
 		name = "Federated Suns",
 		shortName = "FS",
@@ -34,22 +24,12 @@ local sidedata = {
 		shortName = "FW",
 		startUnit = "beacon",
 	},
---[[	{
-		name = "Clan Wolf - TEST ONLY",
+	{
+		name = "Clan Wolf",
 		shortName = "WF",
 		startUnit = "beacon",
 	},
-	{
-		name = "Clan Hells Horses",
-		shortName = "HH",
-		startUnit = "beacon",
-	},
-	{
-		name = "Clan Ghost Bear",
-		shortName = "GB",
-		startUnit = "beacon",
-	},
-	{
+--[[	{
 		name = "Clan Jade Falcon",
 		shortName = "JF",
 		startUnit = "beacon",
@@ -58,7 +38,6 @@ local sidedata = {
 		name = "Clan Smoke Jaguar",
 		shortName = "SJ",
 		startUnit = "beacon",
-	},]]
-	
+	},]]	
 }
 return sidedata

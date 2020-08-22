@@ -29,6 +29,7 @@ local Prime = Adder:New{
 		heatlimit 		= 15,--11 double
 		barrelrecoildist = {[1] = 5, [2] = 5},
 		armor			= 6,
+		mods			= {"ferrofibrousarmour", "doubleheatsinks", "targetingcomputer"},
     },
 }
 

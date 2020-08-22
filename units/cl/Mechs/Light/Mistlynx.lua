@@ -40,7 +40,7 @@ local Prime = Mistlynx:New{
 }
 
 local B = Mistlynx:New{
-	description         = "Light Brawler",
+	description         = "Light Striker",
 	
 	weapons = {	
 		[1] = {
@@ -101,7 +101,7 @@ local C = Mistlynx:New{
 }
 
 local E = Mistlynx:New{
-	description         = "Light Ranged",
+	description         = "Light Skirmisher",
 	
 	weapons = {	
 		[1] = {

@@ -31,6 +31,7 @@ local Prime = Pouncer:New{
 		heatlimit 		= 16,
 		armor			= 6,
 		jumpjets		= 5,
+		mods			= {"ferrofibrousarmour", "doubleheatsinks", "targetingcomputer"},
     },
 }
 
