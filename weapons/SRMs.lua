@@ -71,14 +71,18 @@ local InfSRM2 = SRM2:New{
 	}
 }
 
-local SSRM2 = SRM2:New{
-	name                    = "Streak SRM-2",
+local SSRM_Class = Weapon:New{
 	reloadtime              = 7.5,
 	sprayangle				= 500,
 	turnRate				= 10000,
 	customparams = {
 		jammable			= true,
+		weaponclass			= "ssrm",
 	}
+}
+
+local SSRM2 = SRM2:New(SSRM_Class):New{
+	name                    = "Streak SRM-2",
 }
 
 local SRM4 = SRM_Class:New{
@@ -94,14 +98,8 @@ local ASRM4 = SRM4:New{
 	turnRate				= 4000,
 }
 
-local SSRM4 = SRM4:New{
+local SSRM4 = SRM4:New(SSRM_Class):New{
 	name                    = "Streak SRM-4",
-	reloadtime              = 7.5,
-	sprayangle				= 500,
-	turnRate				= 10000,
-	customparams = {
-		jammable			= true,
-	}
 }
 
 local SRM6 = SRM_Class:New{
@@ -117,14 +115,8 @@ local ASRM6 = SRM6:New{
 	turnRate				= 4000,
 }
 
-local SSRM6 = SRM6:New{
+local SSRM6 = SRM6:New(SSRM_Class):New{
 	name                    = "Streak SRM-6",
-	reloadtime              = 7.5,
-	sprayangle				= 500,
-	turnRate				= 10000,
-	customparams = {
-		jammable			= true,
-	}
 }
 
 return lowerkeys({ 
