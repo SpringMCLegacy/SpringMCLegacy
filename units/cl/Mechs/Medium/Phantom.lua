@@ -10,7 +10,7 @@ local Phantom = Medium:New{
 }
 	
 local Prime = Phantom:New{
-	description         = "Medium Multirole",
+	description         = "Medium Scout",
 	weapons	= {	
 		[1] = {
 			name	= "CERMBL",
@@ -38,7 +38,7 @@ local Prime = Phantom:New{
 }
 
 local B = Phantom:New{
-	description         = "Medium Brawler",
+	description         = "Medium Striker",
 	weapons	= {	
 		[1] = {
 			name	= "SRM4",

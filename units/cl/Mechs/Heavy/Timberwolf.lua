@@ -8,7 +8,7 @@ local Timberwolf = Heavy:New{
 }
 
 local Prime = Timberwolf:New{
-	description         = "Heavy Multirole",
+	description         = "Heavy Brawler",
 	weapons = {	
 		[1] = {
 			name	= "CERLBL",

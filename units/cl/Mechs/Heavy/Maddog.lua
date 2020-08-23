@@ -10,7 +10,7 @@ local Maddog = Heavy:New{
 }
 
 local Prime = Maddog:New{
-	description         = "Heavy Ranged",
+	description         = "Heavy Missile Boat",
 	weapons = {	
 		[1] = {
 			name	= "LRM20",
@@ -43,7 +43,7 @@ local Prime = Maddog:New{
 }
 
 local A = Maddog:New{
-	description         = "Heavy Brawler",
+	description         = "Heavy Striker",
 	weapons = {	
 		[1] = {
 			name	= "CERPPC",
@@ -82,7 +82,7 @@ local A = Maddog:New{
 }
 
 local D = Maddog:New{
-	description         = "Heavy Ranged",
+	description         = "Heavy Missile Boat",
 	weapons = {	
 		[1] = {
 			name	= "ATM12",
@@ -121,6 +121,7 @@ local D = Maddog:New{
 }
 return lowerkeys({ 
 	["WF_Maddog_Prime"] = Prime:New(),
+	["WF_Maddog_A"] = A:New(),
 	["WF_Maddog_D"] = D:New(),
 	--["JF_Maddog_Prime"] = Prime:New(),
 	--["JF_Maddog_D"] = D:New(),

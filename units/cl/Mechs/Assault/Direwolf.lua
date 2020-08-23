@@ -67,7 +67,7 @@ local Prime = Direwolf:New{
 }
 
 local A = Direwolf:New{
-	description         = "Assault Brawler",
+	description         = "Assault Juggernaut",
 	weapons	= {	
 		[1] = {
 			name	= "Gauss",

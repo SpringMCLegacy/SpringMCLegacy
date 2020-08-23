@@ -55,7 +55,7 @@ local Mk3 = LocustIIC:New{
 }
 
 local Mk5 = LocustIIC:New{
-	description         = "Light Ranged",
+	description         = "Light Missile Boat",
 	weapons = {	
 		[1] = {
 			name	= "ATM3",

@@ -10,7 +10,7 @@ local Iceferret = Medium:New{
 }
 	
 local Prime = Iceferret:New{
-	description         = "Medium Ranged",
+	description         = "Medium Sniper",
 	weapons	= {	
 		[1] = {
 			name	= "CERPPC",
@@ -57,7 +57,7 @@ local B = Iceferret:New{
 }
 
 local D = Iceferret:New{
-	description         = "Medium Brawler",
+	description         = "Medium Striker",
 	weapons	= {	
 		[1] = {
 			name	= "CMPL",

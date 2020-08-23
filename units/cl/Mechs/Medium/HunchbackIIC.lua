@@ -9,7 +9,7 @@ local HunchbackIIC = Medium:New{
 }
 
 local Mk1 = HunchbackIIC:New{
-	description         = "Medium Brawler",
+	description         = "Medium Juggernaut",
 	weapons	= {	
 		[1] = {
 			name	= "UAC20",
