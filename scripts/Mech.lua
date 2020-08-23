@@ -42,7 +42,9 @@ currAmmo = {}  -- Extended Range LRM mod
 local coolRate = baseCoolRate
 local inWater = false
 local activated = true
+local running = false
 local mascActive = false
+local mascDamage = 1
 
 local missileWeaponIDs = info.missileWeaponIDs
 local flareOnShots = info.flareOnShots
@@ -135,8 +137,8 @@ for weaponID = 1, info.numWeapons - 1 do
 	SetUnitRulesParam(unitID, "weapon_" .. weaponID, "active")
 end
 
-local function RestoreAfterDelay(unitID)
-	Sleep(RESTORE_DELAY)
+local function RestoreAfterDelay(delay)
+	Sleep(delay)
 	Turn(torso, y_axis, 0, TORSO_SPEED)
 	for id in pairs(mantlets) do
 		Turn(mantlets[id], x_axis, 0, ELEVATION_SPEED)
@@ -199,40 +201,6 @@ function ChangeHeat(amount)
 	end
 	SetUnitRulesParam(unitID, "heat", math.ceil(100 * currHeatLevel / heatLimit))
 	SetUnitRulesParam(unitID, "excess_heat", math.ceil(100 * excessHeat / (2 * heatLimit)))
-end
-
-local function MASCHeat()
-	while moving and mascActive do
-		ChangeHeat(mascHeatRate)
-		if excessHeat > 0 then
-			--Spring.Echo("Overheating! Terminate MASC!")
-			-- SIG_ANIMATE is just an empty table, don't create a new one just for empty command options
-			Spring.GiveOrderToUnit(unitID, GG.CustomCommands.GetCmdID("CMD_MASC"), {0}, SIG_ANIMATE) 
-			return
-		end
-		Sleep(100)
-	end
-end
-
-function SpeedChangeCheck()
-	while jumping do -- don't trigger speed change until jump is finished
-		Sleep(500)
-	end
-	GG.SpeedChange(unitID, unitDefID, speedMod)
-end
-
-function MASC(activated)
-	if activated then
-		speedMod = speedMod * 1.3
-		mascActive = true
-		StartThread(SpeedChangeCheck)
-		StartThread(MASCHeat)
-	else
-		speedMod = speedMod / 1.3
-		mascActive = false
-		StartThread(SpeedChangeCheck)
-		StartThread(MASCHeat)
-	end
 end
 
 function FlushCoolant()
@@ -473,6 +441,77 @@ function script.HitByWeapon(x, z, weaponID, damage, piece)
 	return 0
 end
 
+local SIG_RUN = maxAmmo
+
+local function RunHeat()
+	Signal(SIG_RUN)
+	SetSignalMask(SIG_RUN)
+	while moving and running do
+		ChangeHeat(mascHeatRate)
+		if excessHeat > 0 then
+			--Spring.Echo("Overheating! Slow down")
+			-- SIG_ANIMATE is just an empty table, don't create a new one just for empty command options
+			--Spring.GiveOrderToUnit(unitID, GG.CustomCommands.GetCmdID("CMD_MASC"), {0}, SIG_ANIMATE) 
+			Run(false)
+			return
+		end
+		Sleep(100)
+	end
+end
+
+local function MASCDamage()
+	Signal(SIG_RUN)
+	SetSignalMask(SIG_RUN)
+	while moving and running and mascActive do
+		Spring.Echo("In mascdamage loop")
+		limbHPControl("left_leg", mascDamage, "llowerleg")
+		limbHPControl("right_leg", mascDamage, "rlowerleg")
+		if lostLegs > 0 then
+			Spring.Echo("Owww, my hammy")
+			-- SIG_ANIMATE is just an empty table, don't create a new one just for empty command options
+			Spring.GiveOrderToUnit(unitID, GG.CustomCommands.GetCmdID("CMD_MASC"), {0}, SIG_ANIMATE) 
+			Run(false)
+			return
+		end
+		Sleep(100)
+	end
+end
+
+function SpeedChangeCheck()
+	while jumping do -- don't trigger speed change until jump is finished
+		Sleep(100)
+	end
+	GG.SpeedChange(unitID, unitDefID, speedMod)
+end
+
+function Run(activate)
+	if not activate then
+		speedMod = 1
+	else
+		if mascActive then
+			speedMod = 2
+		else
+			speedMod = 1.5
+		end
+	end
+	speedMod = speedMod * (GG.modOptions and GG.modOptions.speed or 1.0)
+	running = activate
+	StartThread(SpeedChangeCheck)
+	if activate then 
+		StartThread(RestoreAfterDelay, 1)
+		if mascActive then
+			StartThread(MASCDamage)
+		else
+			StartThread(RunHeat)
+		end
+	end
+end
+
+function EnableMASC(enable)
+	mascActive = enable
+	Run(running)
+end
+
 function PreJump(delay, turn, lineDist)
 	StartThread(anim_PreJump)
 end
@@ -516,9 +555,6 @@ function script.StartMoving(reversing)
 	--Spring.Echo("Reversing?", reversing)
 	StartThread(anim_Walk)
 	moving = true
-	if mascActive then
-		StartThread(DrainMASC)
-	end
 end
 
 function script.StopMoving()
@@ -582,6 +618,7 @@ end
 GG.WeaponCanFire = WeaponCanFire
 
 function script.AimWeapon(weaponID, heading, pitch)
+	if running then return false end
 	Signal(2 ^ weaponID) -- 2 'to the power of' weapon ID
 	SetSignalMask(2 ^ weaponID)
 
@@ -614,7 +651,7 @@ function script.AimWeapon(weaponID, heading, pitch)
 
 	Turn(torso, y_axis, heading, TORSO_SPEED)
 	WaitForTurn(torso, y_axis)
-	StartThread(RestoreAfterDelay)
+	StartThread(RestoreAfterDelay, RESTORE_DELAY)
 	return WeaponCanFire(weaponID)
 end
 

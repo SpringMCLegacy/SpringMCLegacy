@@ -25,7 +25,7 @@ end
 
 -- Automatically generated local definitions
 
-local CMD_MASC     = Spring.GetGameRulesParam("CMD_MASC")
+local CMD_MASC     = Spring.GetGameRulesParam("CMD_RUNFAST")
 local CMD_MOVE      = CMD.MOVE
 local CMD_OPT_ALT   = CMD.OPT_ALT
 local CMD_OPT_CTRL  = CMD.OPT_CTRL
@@ -52,7 +52,7 @@ local abs = math.abs
 --------------------------------------------------------------------------------
 --------------------------------------------------------------------------------
 
-local tolerance = spGetConfigInt('DoubleClickTime', 200) * 0.001
+local tolerance = spGetConfigInt('DoubleClickTime', 200) * 0.01
 local mouseTolerance = 4
 
 local timer = spGetTimer()
@@ -120,7 +120,7 @@ function widget:MousePress(x, y, button)
         timer = now
         mouseX = x
         mouseY = y
-		spGiveOrder(CMD_MASC, {0}, GetOpts())
+		--spGiveOrder(CMD_MASC, {0}, GetOpts())
       end
     end
   end
@@ -135,7 +135,7 @@ function widget:MouseRelease(x, y, button)
   end
 
   --Spring.Echo("MouseRelease", CMD_MASC)
-  spGiveOrder(CMD_MASC, {1}, GetOpts())
+  spGiveOrder(CMD_MASC, coords, GetOpts())
 end
 
 

@@ -144,6 +144,7 @@ local mascCmdDesc = {
 	tooltip = 'Activate MASC accelerated sprint',
 	type	= CMDTYPE.ICON_MODE,
 	params	= {0, GG.Pad("MASC Off"), GG.Pad("MASC On")},
+	cursor	= "run",
 }
 
 -- CMD_BLANK

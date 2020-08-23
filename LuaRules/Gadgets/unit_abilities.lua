@@ -54,6 +54,15 @@ local function EnableAutoCoolant(unitID, tOrF)
 end
 GG.EnableAutoCoolant = EnableAutoCoolant
 
+local CMD_RUN = GG.CustomCommands.GetCmdID("CMD_RUNFAST")
+local runCmdDesc = {
+	id = GG.CustomCommands.GetCmdID("CMD_RUNFAST"),
+	name = 'run',
+	action = 'run',
+	type	= CMDTYPE.ICON_MAP,
+	cursor	= "run",
+}
+
 local function ChangeMoveData(unitDefID, mult)
 	local ud = UnitDefs[unitDefID]
 	return {
@@ -61,16 +70,16 @@ local function ChangeMoveData(unitDefID, mult)
 		accRate = ud.maxAcc * mult,
 		decRate = ud.maxDec * (mult > 1 and mult or 100), -- if we are slowing down, we need to force deceleration from our higher velocity
 		maxSpeed = ud.speed * mult,
-		maxReverseSpeed = ud.speed * mult / 1.5, -- 98.0 no ud.rSpeed
+		maxReverseSpeed = ud.rSpeed * mult,
 		maxWantedSpeed = ud.speed * mult,
 	}
 end
 
-function SpeedChange(unitID, unitDefID, mult, masc)
+function SpeedChange(unitID, unitDefID, mult)
 	env = Spring.UnitScript.GetScriptEnv(unitID)
 	if not env.jumping then
-		Spring.MoveCtrl.SetGroundMoveTypeData(unitID, ChangeMoveData(unitDefID, mult or masc and 2))
-		env.speedMod = mult
+		Spring.MoveCtrl.SetGroundMoveTypeData(unitID, ChangeMoveData(unitDefID, mult))
+		--env.speedMod = mult
 	end
 end
 GG.SpeedChange = SpeedChange
@@ -88,22 +97,38 @@ function gadget:Initialize()
 	Spring.SendCommands({"bind j jump"})
 	Spring.SendCommands({"bind t turn"})
 	Spring.SendCommands({"bind r onoff"})
+	
+	--Spring.AssignMouseCursor("run", "cursorrun", true, false)
+	--Spring.SetCustomCommandDrawData(CMD_RUN, "run", {1,0.5,0,.8})
 end
 	
 
 function gadget:AllowCommand(unitID, unitDefID, teamID, cmdID, cmdParams, cmdOptions)
-	if cmdID == CMD_MASC then
+	if cmdID == CMD_RUN then
+		Spring.Echo("Tramps like us, baby we were borrrn to ruuun!")
+		env = Spring.UnitScript.GetScriptEnv(unitID)
+		Spring.UnitScript.CallAsUnit(unitID, env.Run, true)
+		--SpeedChange(unitID, unitDefID, 1.5)
+		--Spring.SetUnitMoveGoal(unitID, cmdParams[1], cmdParams[2], cmdParams[3], 50, 1.5)
+		return false
+	elseif cmdID == CMD.MOVE then
+		Spring.Echo("Harold Bishop power walk")
+		env = Spring.UnitScript.GetScriptEnv(unitID)
+		Spring.UnitScript.CallAsUnit(unitID, env.Run, false)
+		--SpeedChange(unitID, unitDefID, 1)
+		return true
+	elseif cmdID == CMD_MASC then
 		if mascUnitDefs[unitDefID] then
 			env = Spring.UnitScript.GetScriptEnv(unitID)
 			if cmdParams[1] == 1 and not activeMASCs[unitID] then -- toggle on
-				if (Spring.GetUnitRulesParam(unitID, "excess_heat") or 0) > 0 then
+				--[[if (Spring.GetUnitRulesParam(unitID, "excess_heat") or 0) > 0 then
 					return false -- don't allow overheated mechs to toggle on
-				end
+				end]]
 				activeMASCs[unitID] = true
-				Spring.UnitScript.CallAsUnit(unitID, env.MASC, true)
+				Spring.UnitScript.CallAsUnit(unitID, env.EnableMASC, true)
 			elseif activeMASCs[unitID] then -- toggle off
 				activeMASCs[unitID] = false
-				Spring.UnitScript.CallAsUnit(unitID, env.MASC, false)
+				Spring.UnitScript.CallAsUnit(unitID, env.EnableMASC, false)
 			end
 			MascCmdDesc.params[1] = cmdParams[1]
 			EditUnitCmdDesc(unitID, FindUnitCmdDesc(unitID, CMD_MASC), { params = MascCmdDesc.params})
