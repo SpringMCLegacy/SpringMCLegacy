@@ -70,7 +70,7 @@ local function ChangeMoveData(unitDefID, mult)
 		accRate = ud.maxAcc * mult,
 		decRate = ud.maxDec * (mult > 1 and mult or 100), -- if we are slowing down, we need to force deceleration from our higher velocity
 		maxSpeed = ud.speed * mult,
-		maxReverseSpeed = ud.rSpeed * mult,
+		maxReverseSpeed = ud.rSpeed * (mult > 1 and 1 or mult), -- allow reducing reverse speed for damage but not increasing it for running
 		maxWantedSpeed = ud.speed * mult,
 	}
 end

@@ -327,6 +327,7 @@ local function GenerateUnitGraphics(uid, udid, getAuras)
 		local heat = (GetUnitRulesParam(uid, "heat") or 0) > 50
 		local damage = (GetUnitRulesParam(uid, "limblost") or 0) > 0
 		local outofammo = GetUnitRulesParam(uid, "outofammo") or 0
+		local running = GetUnitRulesParam(uid, "running") or 0
 		local narc = GetUnitRulesParam(uid, "NARC") or 0
 		local tag = GetUnitRulesParam(uid, "TAG") or 0
 		local ppc = GetUnitRulesParam(uid, "PPC_HIT") or 0
@@ -336,7 +337,7 @@ local function GenerateUnitGraphics(uid, udid, getAuras)
 		local friendlyecm = ecm > 0 and friendlyUnit
 		local enemyecm = ecm > 0 and not friendlyUnit
 		local perk = (GetUnitRulesParam(uid, "perk_xp") or 0) == 100 and not GetUnitRulesParam(uid, "perk_fully")
-		if ((narc + tag + ppc + missilelock + nolock) > 0 or outofammo or perk or friendlyecm or enemyecm) then
+		if ((narc + tag + ppc + missilelock + nolock) > 0 or outofammo or running or perk or friendlyecm or enemyecm) then
 			unitAuras[uid] =
 			{
 				["heat"] = {
@@ -347,6 +348,9 @@ local function GenerateUnitGraphics(uid, udid, getAuras)
 				},
 				["noammo"] = {
 					value = outofammo,
+				},
+				["run"] = {
+					value = running,
 				},
 				["narc"] = {
 					value = narc,

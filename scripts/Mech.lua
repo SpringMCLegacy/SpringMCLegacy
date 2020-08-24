@@ -487,7 +487,9 @@ end
 function Run(activate)
 	if not activate then
 		speedMod = 1
+		Spring.SetUnitRulesParam(unitID, "running", 0)
 	else
+		Spring.SetUnitRulesParam(unitID, "running", 1)
 		if mascActive then
 			speedMod = 2
 		else
@@ -552,12 +554,14 @@ function StopTurn()
 end
 
 function script.StartMoving(reversing)
+	if reversing then Run(false) end
 	--Spring.Echo("Reversing?", reversing)
 	StartThread(anim_Walk)
 	moving = true
 end
 
 function script.StopMoving()
+	Spring.SetUnitRulesParam(unitID, "running", 0)
 	StartThread(anim_Reset)
 	moving = false
 end
