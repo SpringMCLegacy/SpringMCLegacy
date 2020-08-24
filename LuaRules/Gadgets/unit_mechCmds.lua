@@ -57,6 +57,9 @@ local onOffCmdDesc = {
 	params	= {1, GG.Pad("Radar", "Off"), GG.Pad("Radar", "On")},
 	--tooltip = "",
 }
+GG.onOffCmdDesc = onOffCmdDesc
+local stealthParams = {1, GG.Pad("Radar", "Off"), GG.Pad("Radar", "On"), GG.Pad("Stealth")}
+GG.stealthParams = stealthParams
 
 -- CMD.MOVE
 local moveCmdDesc = {
@@ -192,6 +195,7 @@ function gadget:UnitCreated(unitID, unitDefID, teamID)
 		end
 	end
 end
+
 
 function gadget:AllowCommand(unitID, unitDefID, teamID, cmdID, cmdParams, cmdOptions)
 	if cmdID == CMD_WEAPON_TOGGLE then

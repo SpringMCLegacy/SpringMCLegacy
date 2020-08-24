@@ -888,7 +888,7 @@ return {
 			end,
 			costFunction = deductSalvage,
 			price = 7,
-			incompatible = {"hardenedarmour", "heatarmour", "reactivearmour", "reflecarmour"},
+			incompatible = {"hardenedarmour", "heatarmour", "reactivearmour", "reflecarmour", "stealtharmour"},
 		},
 		{
 			name = "hardenedarmour",
@@ -923,7 +923,7 @@ return {
 			end,
 			costFunction = deductSalvage,
 			price = 10,
-			incompatible = {"ferrofibrousarmour", "heatarmour", "reactivearmour", "reflecarmour"},
+			incompatible = {"ferrofibrousarmour", "heatarmour", "reactivearmour", "reflecarmour", "stealtharmour"},
 		},
 		{
 			name = "heatarmour",
@@ -942,7 +942,7 @@ return {
 			end,
 			costFunction = deductSalvage,
 			price = 5,
-			incompatible = {"ferrofibrousarmour", "hardenedarmour", "reactivearmour", "reflecarmour"},
+			incompatible = {"ferrofibrousarmour", "hardenedarmour", "reactivearmour", "reflecarmour", "stealtharmour"},
 		},
 		{
 			name = "reactivearmour",
@@ -961,7 +961,7 @@ return {
 			end,
 			costFunction = deductSalvage,
 			price = 10,
-			incompatible = {"ferrofibrousarmour", "hardenedarmour", "heatarmour", "reflecarmour"},
+			incompatible = {"ferrofibrousarmour", "hardenedarmour", "heatarmour", "reflecarmour", "stealtharmour"},
 		},
 		{
 			name = "reflecarmour",
@@ -980,7 +980,26 @@ return {
 			end,
 			costFunction = deductSalvage,
 			price = 10,
-			incompatible = {"ferrofibrousarmour", "hardenedarmour", "heatarmour", "reactivearmour"},
+			incompatible = {"ferrofibrousarmour", "hardenedarmour", "heatarmour", "reactivearmour", "stealtharmour"},
+		},
+		{
+			name = "stealtharmour",
+			menu = "defensive",
+			cmdDesc = {
+				id = GetCmdID('MOD_STEALTH_ARMOUR'),
+				action = 'modstealtharmour',
+				name = GG.Pad("Stealth", "Armour"),
+				tooltip = 'Invisible to enemy sensors, including Beagle Active Probes, can not be targeted by lock-on weapons, and any unit that shoots at it will suffer 25% accuracy reduction. However, prevents dissapation of heat.',
+				texture = 'bitmaps/ui/perkgreen.png',	
+			},
+			valid = isMechBay,
+			applyTo = function (unitDefID) return hasECM(unitDefID) and isFaction(unitDefID, "cc") end,
+			applyPerk = function (unitID, level, invert)
+				GG.EnableStealth(unitID, not invert)
+			end,
+			costFunction = deductSalvage,
+			price = 10,
+			incompatible = {"ferrofibrousarmour", "hardenedarmour", "heatarmour", "reactivearmour", "reflecarmour"},
 		},
 		-- Offensive
 		{

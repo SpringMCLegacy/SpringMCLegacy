@@ -213,6 +213,35 @@ local function DeNARC(unitID, allyTeam, force)
 	end
 end
 
+local hasStealthMod = {} -- unitID = true
+GG.stealthActive = {} -- unitID = true
+
+local function EnableStealth(unitID, tOrF)
+	Spring.EditUnitCmdDesc(unitID, Spring.FindUnitCmdDesc(unitID, CMD.ONOFF), { params = tOrF and GG.stealthParams or GG.onOffCmdDesc.params})
+	hasStealthMod[unitID] = tOrF
+end
+GG.EnableStealth = EnableStealth
+
+function gadget:AllowCommand(unitID, unitDefID, teamID, cmdID, cmdParams, cmdOptions)
+	if GG.mechCache[unitDefID] and cmdID == CMD.ONOFF then
+		if cmdParams[1] == 2 then
+			--Spring.Echo("Engage stealth armour!")
+			Spring.SetUnitSensorRadius(unitID, "radarJammer", 10)
+			Spring.SetUnitStealth(unitID, true)
+			GG.stealthActive[unitID] = true
+		else
+			Spring.SetUnitSensorRadius(unitID, "radarJammer", UnitDefs[unitDefID].jammerRadius) -- TODO: respect mods
+			Spring.SetUnitStealth(unitID, false)
+			GG.stealthActive[unitID] = false
+		end
+		GG.onOffCmdDesc.params[1] = cmdParams[1]
+		GG.stealthParams[1] = cmdParams[1]
+		local newParams = hasStealthMod[unitID] and GG.stealthParams or GG.onOffCmdDesc.params
+		Spring.EditUnitCmdDesc(unitID, Spring.FindUnitCmdDesc(unitID, CMD.ONOFF), { params = newParams})
+	end
+	-- everything else
+	return true
+end
 
 local AATC = {}
 GG.AATC = AATC
@@ -505,7 +534,7 @@ function gadget:GameFrame(n)
 					local unitAllyTeam = Spring.GetUnitAllyTeam(enemyID)
 					if enemyID ~= unitID and unitAllyTeam ~= allyTeam then-- not an allied unit
 					--and not sectorUnits[allyTeam][enemyID] then -- not already visible in sector
-						if allyJammers[unitAllyTeam][enemyID] then -- it is an enemy ECM emitter
+						if allyJammers[unitAllyTeam][enemyID] and not GG.stealthUnits[enemyID] then -- it is an enemy ECM emitter
 							if n % 30 == 0 then -- every second emit a ping
 								local ex, ey, ez = Spring.GetUnitPosition(enemyID)
 								Spring.SpawnCEG("ecm_ping", ex,ey,ez)
