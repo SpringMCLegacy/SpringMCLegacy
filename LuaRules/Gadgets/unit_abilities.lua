@@ -105,14 +105,14 @@ end
 
 function gadget:AllowCommand(unitID, unitDefID, teamID, cmdID, cmdParams, cmdOptions)
 	if cmdID == CMD_RUN then
-		Spring.Echo("Tramps like us, baby we were borrrn to ruuun!")
+		--Spring.Echo("Tramps like us, baby we were borrrn to ruuun!")
 		env = Spring.UnitScript.GetScriptEnv(unitID)
 		Spring.UnitScript.CallAsUnit(unitID, env.Run, true)
 		--SpeedChange(unitID, unitDefID, 1.5)
 		--Spring.SetUnitMoveGoal(unitID, cmdParams[1], cmdParams[2], cmdParams[3], 50, 1.5)
 		return false
 	elseif cmdID == CMD.MOVE then
-		Spring.Echo("Harold Bishop power walk")
+		--Spring.Echo("Harold Bishop power walk")
 		env = Spring.UnitScript.GetScriptEnv(unitID)
 		Spring.UnitScript.CallAsUnit(unitID, env.Run, false)
 		--SpeedChange(unitID, unitDefID, 1)

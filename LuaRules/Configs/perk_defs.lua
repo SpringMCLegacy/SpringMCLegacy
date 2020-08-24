@@ -597,6 +597,25 @@ return {
 			price = 5,
 		},
 		{
+			name = "supercharger",
+			menu = "mobility",
+			cmdDesc = {
+				id = GetCmdID('MOD_SUPERCHARGER'),
+				action = 'modsupercharger',
+				name = GG.Pad("Super", "Charger"),
+				tooltip = 'Attaches directly to the engine to boost performance, increasing running speed by 50%. However, generates double heat. Stackable with MASC.',
+				texture = 'bitmaps/ui/perkorange.png',	
+			},
+			valid = isMechBay,
+			applyTo = allMechs,
+			applyPerk = function (unitID, level, invert)
+				env = Spring.UnitScript.GetScriptEnv(unitID)
+				Spring.UnitScript.CallAsUnit(unitID, env.EnableSuperCharger, not invert)
+			end,
+			costFunction = deductSalvage,
+			price = 5,
+		},
+		{
 			name = "directionalthrusters",
 			menu = "mobility",
 			cmdDesc = {

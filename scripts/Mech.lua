@@ -31,7 +31,7 @@ include ("anims/" .. unitDef.name:sub(4, (unitDef.name:find("_", 4) or 0) - 1) .
 numWeapons = info.numWeapons - 1 -- remove sight
 heatLimit = info.heatLimit
 baseCoolRate = info.coolRate
-mascHeatRate = 0.1
+runHeat = 0.1
 firingHeats = info.firingHeats -- fire discipline perk, PPC capacitor mod
 TORSO_SPEED = info.torsoTurnSpeed -- AES mod
 ELEVATION_SPEED = info.elevationSpeed -- AES mod
@@ -45,6 +45,8 @@ local activated = true
 local running = false
 local mascActive = false
 local mascDamage = 1
+local superCharger = false
+local superChargerHeat = 0.1
 
 local missileWeaponIDs = info.missileWeaponIDs
 local flareOnShots = info.flareOnShots
@@ -446,8 +448,9 @@ local SIG_RUN = maxAmmo
 local function RunHeat()
 	Signal(SIG_RUN)
 	SetSignalMask(SIG_RUN)
+	local heat = (mascActive and superChargerHeat) or (superCharger and superChargerHeat + runHeat) or runHeat
 	while moving and running do
-		ChangeHeat(mascHeatRate)
+		ChangeHeat(heat)
 		if excessHeat > 0 then
 			--Spring.Echo("Overheating! Slow down")
 			-- SIG_ANIMATE is just an empty table, don't create a new one just for empty command options
@@ -496,14 +499,18 @@ function Run(activate)
 			speedMod = 1.5
 		end
 	end
-	speedMod = speedMod * (GG.modOptions and GG.modOptions.speed or 1.0)
+	if superCharger then -- supercharger stacks
+		speedMod = speedMod * 1.5
+	end
+	speedMod = speedMod * (GG.modOptions and GG.modOptions.speed or 1.0) -- respect modoption
 	running = activate
 	StartThread(SpeedChangeCheck)
 	if activate then 
 		StartThread(RestoreAfterDelay, 1)
 		if mascActive then
 			StartThread(MASCDamage)
-		else
+		end
+		if superCharger or not mascActive then
 			StartThread(RunHeat)
 		end
 	end
@@ -511,6 +518,11 @@ end
 
 function EnableMASC(enable)
 	mascActive = enable
+	Run(running)
+end
+
+function EnableSuperCharger(enable)
+	superCharger = enable
 	Run(running)
 end
 
