@@ -432,6 +432,9 @@ function gadget:UnitDestroyed(unitID, unitDefID, teamID)
 	unitArmours[unitID] = nil
 	unitSpecialAmmos[unitID] = nil
 	AATC[unitID] = nil
+	GG.stealthActive[unitID] = nil
+	unitSectorRadii[unitID] = nil
+	hasStealthMod[unitID] = nil
 end
 
 function gadget:UnitGiven(unitID, unitDefID, newTeam, oldTeam)
