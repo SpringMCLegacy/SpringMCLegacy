@@ -167,8 +167,8 @@ local function IsTargetArtemised(unitID, targetID, weaponType)
 	if not info then return false end
 	local dist = Spring.GetUnitSeparation(unitID, targetID)
 	local rayTrace = Spring.GetUnitWeaponHaveFreeLineOfFire(unitID, info.sight, targetID) -- TODO: could try and cache this from the main loop, but not easy to nullify it correctly
-	--Spring.Echo("Is target artemised?", artemisUnits[unitID] and artemisUnits[unitID][weaponType] and dist <= SECTOR_RADIUS and rayTrace)
-	return artemisUnits[unitID] and artemisUnits[unitID][weaponType] and dist <= unitSectorRadii[unitID] and rayTrace
+	--Spring.Echo("Is target artemised?", artemisUnits[unitID], dist,unitSectorRadii[unitID], rayTrace)
+	return artemisUnits[unitID] and artemisUnits[unitID][weaponType] and (dist <= unitSectorRadii[unitID]) and rayTrace
 end
 GG.IsTargetArtemised = IsTargetArtemised
 
@@ -179,7 +179,7 @@ end
 GG.EnableArtemis = EnableArtemis
 
 local function SetUnitSectorRadius(unitID, mult)
-	unitSectorRadii[unitID] = (unitSectorRadii[unitID] or SECTOR_RADIUS) * mult
+	unitSectorRadii[unitID] = unitSectorRadii[unitID] * mult
 	SetUnitRulesParam(unitID, "sectorradius", unitSectorRadii[unitID])
 end
 GG.SetUnitSectorRadius = SetUnitSectorRadius
@@ -398,6 +398,7 @@ function gadget:UnitCreated(unitID, unitDefID, teamID)
 	end
 	if visionCache[unitDefID] then -- a mech!
 		unitSpecialAmmos[unitID] = {}
+		unitSectorRadii[unitID] = SECTOR_RADIUS
 		visionCache[unitDefID].cockpit = GG.lusHelper[unitDefID].cockpit
 		allyTeamMechs[Spring.GetUnitAllyTeam(unitID)][unitID] = visionCache[unitDefID]
 		-- force Spring to recognise units spawned within sectors should be full LOS
@@ -462,7 +463,7 @@ function gadget:GameFrame(n)
 		for unitID, info in pairs(allyTeamMechs[allyTeam]) do
 			if not inAutoLos[allyTeam][unitID] and Spring.ValidUnitID(unitID) and not Spring.GetUnitIsDead(unitID) and not Spring.GetUnitTransporter(unitID) then
 				local x, _, z = GetUnitPosition(unitID)
-				local inRadius = Spring.GetUnitsInCylinder(x, z, unitSectorRadii[unitID] or SECTOR_RADIUS) -- use current sensor radius here as perks can change it
+				local inRadius = Spring.GetUnitsInCylinder(x, z, unitSectorRadii[unitID]) -- use current sensor radius here as perks can change it
 				if not info.cockpit then Spring.Echo("Oh shit, ", UnitDefs[Spring.GetUnitDefID(unitID)].name, "seems to have no cockpit") else
 					local v1x, v1z, v2x, v2z = GG.Vector.SectorVectorsFromUnitPiece(unitID, info.cockpit, info.x, info.z)
 					--Spring.MarkerAddPoint(x + v1x, 0, z + v1z, "V1")
@@ -534,7 +535,7 @@ function gadget:GameFrame(n)
 					local unitAllyTeam = Spring.GetUnitAllyTeam(enemyID)
 					if enemyID ~= unitID and unitAllyTeam ~= allyTeam then-- not an allied unit
 					--and not sectorUnits[allyTeam][enemyID] then -- not already visible in sector
-						if allyJammers[unitAllyTeam][enemyID] and not GG.stealthUnits[enemyID] then -- it is an enemy ECM emitter
+						if allyJammers[unitAllyTeam][enemyID] and not GG.stealthActive[enemyID] then -- it is an enemy ECM emitter
 							if n % 30 == 0 then -- every second emit a ping
 								local ex, ey, ez = Spring.GetUnitPosition(enemyID)
 								Spring.SpawnCEG("ecm_ping", ex,ey,ez)

@@ -44,7 +44,7 @@ local function GetCmdID(name, cost)
 		customCommands.names[cmdID] = name
 		_G.CustomCommandIDs[name] = cmdID
 		gadgetHandler:RegisterCMDID(cmdID)
-		Spring.SetGameRulesParam(name, cmdID)
+		--Spring.SetGameRulesParam(name, cmdID)
 		--Spring.Echo(name, cmdID)
 	end
 	return cmdID, cost or 0

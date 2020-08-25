@@ -104,43 +104,45 @@ end
 	
 
 function gadget:AllowCommand(unitID, unitDefID, teamID, cmdID, cmdParams, cmdOptions)
-	if cmdID == CMD_RUN then
-		--Spring.Echo("Tramps like us, baby we were borrrn to ruuun!")
-		env = Spring.UnitScript.GetScriptEnv(unitID)
-		Spring.UnitScript.CallAsUnit(unitID, env.Run, true)
-		--SpeedChange(unitID, unitDefID, 1.5)
-		--Spring.SetUnitMoveGoal(unitID, cmdParams[1], cmdParams[2], cmdParams[3], 50, 1.5)
-		return false
-	elseif cmdID == CMD.MOVE then
-		--Spring.Echo("Harold Bishop power walk")
-		env = Spring.UnitScript.GetScriptEnv(unitID)
-		Spring.UnitScript.CallAsUnit(unitID, env.Run, false)
-		--SpeedChange(unitID, unitDefID, 1)
-		return true
-	elseif cmdID == CMD_MASC then
-		if mascUnitDefs[unitDefID] then
+	if GG.mechCache[unitDefID] then
+		if cmdID == CMD_RUN then
+			--Spring.Echo("Tramps like us, baby we were borrrn to ruuun!")
 			env = Spring.UnitScript.GetScriptEnv(unitID)
-			if cmdParams[1] == 1 and not activeMASCs[unitID] then -- toggle on
-				--[[if (Spring.GetUnitRulesParam(unitID, "excess_heat") or 0) > 0 then
-					return false -- don't allow overheated mechs to toggle on
-				end]]
-				activeMASCs[unitID] = true
-				Spring.UnitScript.CallAsUnit(unitID, env.EnableMASC, true)
-			elseif activeMASCs[unitID] then -- toggle off
-				activeMASCs[unitID] = false
-				Spring.UnitScript.CallAsUnit(unitID, env.EnableMASC, false)
-			end
-			MascCmdDesc.params[1] = cmdParams[1]
-			EditUnitCmdDesc(unitID, FindUnitCmdDesc(unitID, CMD_MASC), { params = MascCmdDesc.params})
+			Spring.UnitScript.CallAsUnit(unitID, env.Run, true)
+			--SpeedChange(unitID, unitDefID, 1.5)
+			--Spring.SetUnitMoveGoal(unitID, cmdParams[1], cmdParams[2], cmdParams[3], 50, 1.5)
+			return false
+		elseif cmdID == CMD.MOVE then
+			--Spring.Echo("Harold Bishop power walk")
+			env = Spring.UnitScript.GetScriptEnv(unitID)
+			Spring.UnitScript.CallAsUnit(unitID, env.Run, false)
+			--SpeedChange(unitID, unitDefID, 1)
 			return true
-		else 
-			return false 
+		elseif cmdID == CMD_MASC then
+			if mascUnitDefs[unitDefID] then
+				env = Spring.UnitScript.GetScriptEnv(unitID)
+				if cmdParams[1] == 1 and not activeMASCs[unitID] then -- toggle on
+					--[[if (Spring.GetUnitRulesParam(unitID, "excess_heat") or 0) > 0 then
+						return false -- don't allow overheated mechs to toggle on
+					end]]	
+					activeMASCs[unitID] = true
+					Spring.UnitScript.CallAsUnit(unitID, env.EnableMASC, true)
+				elseif activeMASCs[unitID] then -- toggle off
+					activeMASCs[unitID] = false
+					Spring.UnitScript.CallAsUnit(unitID, env.EnableMASC, false)
+				end
+				MascCmdDesc.params[1] = cmdParams[1]
+				EditUnitCmdDesc(unitID, FindUnitCmdDesc(unitID, CMD_MASC), { params = MascCmdDesc.params})
+				return true
+			else 
+				return false 
+			end
+		elseif cmdID == CMD_FLUSH then 
+			if coolantUnits[unitID] then
+				env = Spring.UnitScript.GetScriptEnv(unitID)
+				Spring.UnitScript.CallAsUnit(unitID, env.FlushCoolant)
+			else return false end
 		end
-	elseif cmdID == CMD_FLUSH then 
-		if coolantUnits[unitID] then
-			env = Spring.UnitScript.GetScriptEnv(unitID)
-			Spring.UnitScript.CallAsUnit(unitID, env.FlushCoolant)
-		else return false end
 	end
 	return true
 end
