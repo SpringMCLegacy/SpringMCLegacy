@@ -179,7 +179,7 @@ local VTR10L = Victor:New{
 		barrelrecoildist = {[1] = 5},
 		ecm 			= true,
 		jumpjets		= 4,
-		mods			= {"doubleheatsinks"}, --"stealtharmour"
+		mods			= {"doubleheatsinks", "stealtharmour"},
     },
 }
 

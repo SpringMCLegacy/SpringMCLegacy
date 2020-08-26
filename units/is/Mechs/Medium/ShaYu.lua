@@ -34,7 +34,7 @@ local SYU2B = ShaYu:New{
 		heatlimit 		= 17,--13 double
 		armor			= 6.5,
 		ecm				= true,
-		mods			= {"doubleheatsinks"},--stealtharmour
+		mods			= {"doubleheatsinks", "stealtharmour"},
     },
 }
 

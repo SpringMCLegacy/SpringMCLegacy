@@ -185,7 +185,7 @@ local WHM4L = Warhammer:New{
 		heatlimit 		= 24,--18 double
 		armor			= 13.5,
 		maxammo 		= {srm = 1},
-		mods			= {"doubleheatsinks"},--"stealtharmour"
+		mods			= {"doubleheatsinks", "stealtharmour"},
     },
 }
 		

@@ -41,7 +41,7 @@ local ABS3L = Anubis:New{
 		armor			= 5.5,
 		maxammo 		= {lrm = 1},
 		ecm 			= true,
-		mods			= {"doubleheatsinks"},
+		mods			= {"doubleheatsinks", "stealtharmour"},
     },
 }
 
