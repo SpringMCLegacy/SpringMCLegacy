@@ -1,7 +1,7 @@
 local Outpost_VehiclePad = Outpost:New{
 	name              	= "Vehicle Pad (Support)",
 	description         = "Allows delivery of offensive vehicle support units",
-	maxDamage           = 10000,
+	maxDamage           = 72000,
 	mass                = 5000,
 	buildCostMetal      = 10000,
 

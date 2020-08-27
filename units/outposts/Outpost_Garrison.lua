@@ -1,7 +1,7 @@
 local Outpost_Garrison = Outpost:New{
 	name              	= "Garrison (Fortify)",
 	description         = "Deploys a fortified outpost to prevent beacon capture",
-	maxDamage           = 20000,
+	maxDamage           = 10000,
 	mass                = 10000,
 	buildCostMetal      = 10520,
 
