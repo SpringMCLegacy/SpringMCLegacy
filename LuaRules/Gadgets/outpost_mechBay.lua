@@ -201,6 +201,8 @@ function gadget:AllowCommand(unitID, unitDefID, teamID, cmdID, cmdParams, cmdOpt
 			local transporting = Spring.GetUnitIsTransporting(unitID)
 			if transporting[1] then
 				local cBills = UnitDefs[Spring.GetUnitDefID(transporting[1])].metalCost * (modOptions and modOptions.sell or 0.75)
+				env = Spring.UnitScript.GetScriptEnv(unitID)
+				Spring.UnitScript.CallAsUnit(unitID, env.script.TransportDrop, transporting[1])
 				Spring.DestroyUnit(transporting[1], false, true)
 				AddTeamResource(teamID, "m", cBills)
 				return true
