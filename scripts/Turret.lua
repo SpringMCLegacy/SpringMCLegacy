@@ -104,13 +104,13 @@ local FACING
 local stage = 1
 
 function TeamChange(teamID)
-	if stage == 3 then -- only toggle noFiring once landed
+	--if stage == 3 then -- only toggle noFiring once landed
 		if teamID == GAIA_TEAM_ID then
 			noFiring = true
 		else
 			noFiring = false
 		end
-	end
+	--end
 end
 
 local legs = {}
