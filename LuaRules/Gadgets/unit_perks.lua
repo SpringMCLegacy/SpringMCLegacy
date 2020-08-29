@@ -31,7 +31,7 @@ local SetUnitExperience		= Spring.SetUnitExperience
 local EMPTY_TABLE = {}
 local completeTexts = {
 	["perks"] = "Trained",
-	["upgrades"] = "Purchased",
+	["upgrades"] = "Installed",
 	["mods"] = "Applied",
 }
 local desiredOrder = {"perks", "upgrades", "mods"}

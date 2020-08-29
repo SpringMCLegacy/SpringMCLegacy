@@ -541,8 +541,8 @@ return {
 			cmdDesc = {
 				id = GetCmdID('PERK_MECHBAY_2'),
 				action = 'perkmechbay_2',
-				name = GG.Pad("Mech", "Mods &", "Omni"),
-				tooltip = 'Unlock mech equipment mods and omnitech',
+				name = GG.Pad("Mech", "Mods"),
+				tooltip = 'Unlock mech equipment mods',
 				texture = 'bitmaps/ui/upgrade.png',	
 			},
 			valid = isMechBay,
@@ -557,8 +557,8 @@ return {
 			cmdDesc = {
 				id = GetCmdID('PERK_MECHBAY_3'),
 				action = 'perkmechbay_3',
-				name = GG.Pad("Battlemech", "Recovery", "Vehicle"),
-				tooltip = 'Adds a BRV that picks up salvage and recovers dead mechs',
+				name = GG.Pad("Omnitech"),
+				tooltip = 'Unlocks omnitech allowing for changing weapon loadouts of omnimechs',
 				texture = 'bitmaps/ui/upgrade.png',	
 			},
 			valid = isMechBay,
@@ -567,7 +567,42 @@ return {
 			end,
 			costFunction = deductCBills,
 			price = 6000,
-			requires = "mechbay_2",
+			--requires = "mechbay_2",
+			requires = "seismic_3", -- so it can't be enabled atm
+		},
+		-- Salvage Yard
+		{
+			name = "salvageyard_2",
+			cmdDesc = {
+				id = GetCmdID('PERK_SALVAGEYARD_2'),
+				action = 'perksalvageyard_2',
+				name = GG.Pad("Heavy", "BRV"),
+				tooltip = 'Unlocks Heavy Battlemech Recovery Vehicle, allowing recovery of mechs over 60 tons',
+				texture = 'bitmaps/ui/upgrade.png',	
+			},
+			valid = function (unitDefID) return UnitDefs[unitDefID].name == "outpost_salvageyard" end,
+			applyPerk = function (unitID)
+				--GG.SetMechBayLevel(unitID, 2)
+			end,
+			costFunction = deductCBills,
+			price = 3000,
+		},
+		{
+			name = "salvageyard_3",
+			cmdDesc = {
+				id = GetCmdID('PERK_SALVAGEYARD_3'),
+				action = 'perksalvageyard_3',
+				name = GG.Pad("VTOL", "RV"),
+				tooltip = 'Adds a VTOL Recovery Vehicle that picks up salvage and recovers dead mechs',
+				texture = 'bitmaps/ui/upgrade.png',	
+			},
+			valid = function (unitDefID) return UnitDefs[unitDefID].name == "outpost_salvageyard" end,
+			applyPerk = function (unitID)
+				--GG.SetMechBayLevel(unitID, 3)
+			end,
+			costFunction = deductCBills,
+			price = 6000,
+			requires = "salvageyard_2",
 		},
 	},
 	-- Mods -------------------------------------------------------------------------
