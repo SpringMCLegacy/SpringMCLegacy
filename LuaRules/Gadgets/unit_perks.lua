@@ -176,13 +176,13 @@ function gadget:GameFrame(n)
 	end
 end
 
-local function ApplyAppToUnit(unitID, appType, appDef, cmdID, applierID, newLevel)
+local function ApplyAppToUnit(unitID, appType, appDef, cmdID, applierID, free)
 	applierID = applierID or unitID -- default to unitID
 	if not currentApps[unitID][appType] then currentApps[unitID][appType] = {} end -- create current aps for mods in mechbay
 	if appDef.requires and not currentApps[unitID][appType][appDef.requires] then return false end
 	local level = currentApps[unitID][appType][appDef.name] or 0
 	if level == (appDef.levels or 1) then return false end -- in case it was issued when multiple were selected
-	level = newLevel or (level + 1)
+	level = level + 1
 	currentApps[unitID][appType][appDef.name] = level
 	appDef.applyPerk(unitID, level)
 	for _, modName in pairs(appDef.incompatible or EMPTY_TABLE) do -- assumes only mods can be incompatible
@@ -196,7 +196,7 @@ local function ApplyAppToUnit(unitID, appType, appDef, cmdID, applierID, newLeve
 			local nameString = GG.Pad(appDef.cmdDesc.name, "(" .. level .. " of " .. appDef.levels ..")")
 			EditUnitCmdDesc(applierID, FindUnitCmdDesc(applierID, cmdID), {name = nameString})
 		end
-		if not newLevel then
+		if not free then
 			appDef.costFunction(unitID, appDef.price)
 		end
 		UpdateUnitApps(applierID, appType) -- update here too to prevent pause cheating
@@ -223,7 +223,9 @@ local function CloneMechApps(oldID, newID)
 	-- clone perks
 	for name, level in pairs(currentApps[oldID]["perks"]) do
 		local appDef = appDefNames[name]
-		ApplyAppToUnit(newID, "perks", appDef, appDef.cmdDesc.id, nil, level)
+		for i = 1, level do
+			ApplyAppToUnit(newID, "perks", appDef, appDef.cmdDesc.id, nil, true)
+		end
 	end
 	-- remove and refund mods
 	for name, level in pairs(currentApps[oldID]["mods"]) do
