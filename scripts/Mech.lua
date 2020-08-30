@@ -31,7 +31,7 @@ include ("anims/" .. unitDef.name:sub(4, (unitDef.name:find("_", 4) or 0) - 1) .
 numWeapons = info.numWeapons - 1 -- remove sight
 heatLimit = info.heatLimit
 baseCoolRate = info.coolRate
-runHeat = 0.1
+runHeat = unitDef.customParams.tonnage / 200
 firingHeats = info.firingHeats -- fire discipline perk, PPC capacitor mod
 TORSO_SPEED = info.torsoTurnSpeed -- AES mod
 ELEVATION_SPEED = info.elevationSpeed -- AES mod
