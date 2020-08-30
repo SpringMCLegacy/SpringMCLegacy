@@ -4,6 +4,7 @@ local Timberwolf = Heavy:New{
     customparams = {
 		cockpitheight	= 9.6,
 		tonnage			= 75,
+		omni			= true,
     },
 }
 
@@ -117,7 +118,7 @@ local E = Timberwolf:New{
 }
 
 return lowerkeys({ 
-	["WF_Timberwolf_Prime"] = Prime:New(),
+	["WF_Timberwolf_P"] = Prime:New(),
 	["WF_Timberwolf_A"] = A:New(),
 	["WF_Timberwolf_E"] = E:New(),
 })

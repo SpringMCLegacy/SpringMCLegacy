@@ -90,7 +90,7 @@ local B = Adder:New{
 }
 
 return lowerkeys({
-	["WF_Adder_Prime"] = Prime:New(),
+	["WF_Adder_P"] = Prime:New(),
 	--["HH_Adder_Prime"] = Prime:New(),
 	--["GB_Adder_Prime"] = Prime:New(),
 	--["SJ_Adder_Prime"] = Prime:New(),

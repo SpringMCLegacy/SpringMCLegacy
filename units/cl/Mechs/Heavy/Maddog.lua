@@ -120,7 +120,7 @@ local D = Maddog:New{
     },
 }
 return lowerkeys({ 
-	["WF_Maddog_Prime"] = Prime:New(),
+	["WF_Maddog_P"] = Prime:New(),
 	["WF_Maddog_A"] = A:New(),
 	["WF_Maddog_D"] = D:New(),
 	--["JF_Maddog_Prime"] = Prime:New(),

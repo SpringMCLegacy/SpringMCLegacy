@@ -118,7 +118,7 @@ local C = Gargoyle:New{
 }
 
 return lowerkeys({ 
-	["WF_Gargoyle_Prime"] = Prime:New(),
+	["WF_Gargoyle_P"] = Prime:New(),
 	["WF_Gargoyle_A"] = A:New(),
 	["WF_Gargoyle_C"] = C:New(),
 })

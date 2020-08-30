@@ -64,6 +64,6 @@ local B = Phantom:New{
 }
 
 return lowerkeys({
-	["WF_Phantom_Prime"] = Prime:New(),
+	["WF_Phantom_P"] = Prime:New(),
 	["WF_Phantom_B"] = B:New(),
 })

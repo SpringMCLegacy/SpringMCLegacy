@@ -103,7 +103,7 @@ local C = Pouncer:New{
 }
 
 return lowerkeys({
-	["WF_Pouncer_Prime"] = Prime:New(),
+	["WF_Pouncer_P"] = Prime:New(),
 	["WF_Pouncer_B"] = B:New(),
 	["WF_Pouncer_C"] = C:New(),
 })

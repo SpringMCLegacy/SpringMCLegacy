@@ -85,7 +85,7 @@ local D = Iceferret:New{
 }
 
 return lowerkeys({
-	["WF_Iceferret_Prime"] = Prime:New(),
+	["WF_Iceferret_P"] = Prime:New(),
 	["WF_Iceferret_B"] = B:New(),
 	["WF_Iceferret_D"] = D:New(),
 })

@@ -201,7 +201,7 @@ local function SetMechBayLevel(unitID, level)
 		if mechID then
 			omni = omniCache[Spring.GetUnitDefID(mechID)] ~= nil
 		end
-		--ShowOmniMenu(unitID, omni)
+		ShowOmniMenu(unitID, omni)
 	elseif level == 3 then
 		EditUnitCmdDesc(unitID, 15, {disabled = false})
 	end
