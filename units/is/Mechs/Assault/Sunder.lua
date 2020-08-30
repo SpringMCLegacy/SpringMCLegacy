@@ -46,6 +46,7 @@ local SD1OP = Sunder:New{
 		armor			= 16.5,
 		maxammo 		= {ac20 = 2, srm = 2},
 		barrelrecoildist = {[1] = 3},
+		omniswapcost 	= 5,
     },
 }
 
@@ -84,6 +85,7 @@ local SD1OA = Sunder:New{
 		armor			= 16.5,
 		maxammo 		= {gauss = 2, lrm = 2},
 		barrelrecoildist = {[1] = 3},
+		omniswapcost 	= 8,
     },
 }
 
@@ -118,6 +120,7 @@ local SD1OB = Sunder:New{
 		heatlimit 		= 20,--15 double
 		armor			= 16.5,
 		maxammo 		= {lrm = 5},
+		omniswapcost 	= 4,
     },
 }
 
@@ -150,6 +153,7 @@ local SD1OC = Sunder:New{
 		heatlimit 		= 20,--15 double
 		armor			= 16.5,
 		maxammo 		= {mrm = 5, srm = 1},
+		omniswapcost 	= 5,
     },
 }
 

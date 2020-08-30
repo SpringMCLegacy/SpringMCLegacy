@@ -15,6 +15,8 @@ local function hasMASC(unitDefID) return (allMechs(unitDefID) and UnitDefs[unitD
 local function hasECM(unitDefID) return (allMechs(unitDefID) and UnitDefs[unitDefID].customParams.ecm or false) end
 local function hasBAP(unitDefID) return (allMechs(unitDefID) and UnitDefs[unitDefID].customParams.bap or false) end
 local function isFaction(unitDefID, faction) return (allMechs(unitDefID) and UnitDefs[unitDefID].name:sub(1,2) == faction) end
+local function isOmni(unitDefID) return (allMechs(unitDefID) and UnitDefs[unitDefID].customParams.omni) end
+local function isNotOmni(unitDefID) return not isOmni(unitDefID) end
 
 local function isMechBay(unitDefID) return (UnitDefs[unitDefID].name == "outpost_mechbay") end
 
@@ -567,8 +569,7 @@ return {
 			end,
 			costFunction = deductCBills,
 			price = 6000,
-			--requires = "mechbay_2",
-			requires = "seismic_3", -- so it can't be enabled atm
+			requires = "mechbay_2",
 		},
 		-- Salvage Yard
 		{
@@ -619,7 +620,7 @@ return {
 				texture = 'bitmaps/ui/perkorange.png',	
 			},
 			valid = isMechBay,
-			applyTo = allMechs,
+			applyTo = isNotOmni,
 			applyPerk = function (unitID, level, invert)
 				local effect = 1.5
 				effect = (invert and 1/effect) or effect
@@ -642,7 +643,7 @@ return {
 				texture = 'bitmaps/ui/perkorange.png',	
 			},
 			valid = isMechBay,
-			applyTo = allMechs,
+			applyTo = isNotOmni,
 			applyPerk = function (unitID, level, invert)
 				env = Spring.UnitScript.GetScriptEnv(unitID)
 				Spring.UnitScript.CallAsUnit(unitID, env.EnableSuperCharger, not invert)
@@ -661,7 +662,7 @@ return {
 				texture = 'bitmaps/ui/perkorange.png',	
 			},
 			valid = isMechBay,
-			applyTo = hasJumpjets,
+			applyTo = function (unitDefID) return hasJumpjets(unitDefID) and isNotOmni(unitDefID) end,
 			applyPerk = function (unitID, level, invert)
 				GG.SetUnitJumpInstant(unitID, not invert)
 			end,
@@ -680,7 +681,7 @@ return {
 				texture = 'bitmaps/ui/perkorange.png',	
 			},
 			valid = isMechBay,
-			applyTo = hasJumpjets,
+			applyTo = function (unitDefID) return hasJumpjets(unitDefID) and isNotOmni(unitDefID) end,
 			applyPerk = function (unitID, level, invert)
 				GG.SetUnitImprovedJumpjets(unitID, not invert)
 			end,
@@ -699,7 +700,7 @@ return {
 				texture = 'bitmaps/ui/perkorange.png',	
 			},
 			valid = isMechBay,
-			applyTo = hasJumpjets,
+			applyTo = function (unitDefID) return hasJumpjets(unitDefID) and isNotOmni(unitDefID) end,
 			applyPerk = function (unitID, level, invert)
 				GG.SetUnitMechanicalJump(unitID, not invert)
 			end,
@@ -719,7 +720,7 @@ return {
 				texture = 'bitmaps/ui/perkbgability.png',	
 			},
 			valid = isMechBay,
-			applyTo = allMechs,
+			applyTo = isNotOmni,
 			applyPerk = function (unitID, level, invert) 
 				local effect = 1.5
 				effect = (invert and 1/effect) or effect
@@ -743,7 +744,7 @@ return {
 				texture = 'bitmaps/ui/perkbgability.png',	
 			},
 			valid = isMechBay,
-			applyTo = allMechs,
+			applyTo = isNotOmni,
 			applyPerk = function (unitID, level, invert)
 				GG.EnableCoolantFlush(unitID, not invert)
 			end,
@@ -761,7 +762,7 @@ return {
 				texture = 'bitmaps/ui/perkbgability.png',	
 			},
 			valid = isMechBay,
-			applyTo = allMechs,
+			applyTo = isNotOmni,
 			applyPerk = function (unitID, level, invert)
 				GG.EnableAutoCoolant(unitID, not invert)
 			end,
@@ -780,7 +781,7 @@ return {
 				texture = 'bitmaps/ui/perkbgability.png',	
 			},
 			valid = isMechBay,
-			applyTo = allMechs,
+			applyTo = isNotOmni,
 			applyPerk = function (unitID, level, invert)
 				local effect = 1.1
 				effect = (invert and 1/effect) or effect
@@ -809,7 +810,7 @@ return {
 				texture = 'bitmaps/ui/perkbgability.png',	
 			},
 			valid = isMechBay,
-			applyTo = function (unitDefID) return (allMechs(unitDefID) and hasECM(unitDefID)) end,
+			applyTo = function (unitDefID) return (isNotOmni(unitDefID) and hasECM(unitDefID)) end,
 			applyPerk = function (unitID, level, invert) 
 				local effect = 1.5
 				effect = (invert and 1/effect) or effect
@@ -856,7 +857,7 @@ return {
 				texture = 'bitmaps/ui/perkgreen.png',	
 			},
 			valid = isMechBay,
-			applyTo = allMechs,
+			applyTo = isNotOmni,
 			applyPerk = function (unitID, level, invert)
 				local effect = 1.25
 				effect = (invert and 1/effect) or effect
@@ -878,7 +879,7 @@ return {
 				texture = 'bitmaps/ui/perkgreen.png',	
 			},
 			valid = isMechBay,
-			applyTo = function (unitDefID) return (allMechs(unitDefID) and hasECM(unitDefID)) end,
+			applyTo = function (unitDefID) return (isNotOmni(unitDefID) and hasECM(unitDefID)) end,
 			applyPerk = function (unitID, level, invert)
 				local effect = 0.5
 				effect = (invert and 1/effect) or effect
@@ -899,7 +900,7 @@ return {
 				texture = 'bitmaps/ui/perkgreen.png',	
 			},
 			valid = isMechBay,
-			applyTo = hasJumpjets,
+			applyTo = function (unitDefID) return hasJumpjets(unitDefID) and isNotOmni(unitDefID) end,
 			applyPerk = function (unitID, level, invert)
 				GG.SetUnitReinforcedLegs(unitID, not invert)
 			end,
@@ -917,7 +918,7 @@ return {
 				texture = 'bitmaps/ui/perkgreen.png',	
 			},
 			valid = isMechBay,
-			applyTo = allMechs,
+			applyTo = isNotOmni,
 			applyPerk = function (unitID, level, invert)
 				GG.EnableArmour(unitID, not invert, "ferro")
 			end,
@@ -936,7 +937,7 @@ return {
 				texture = 'bitmaps/ui/perkgreen.png',	
 			},
 			valid = isMechBay,
-			applyTo = allMechs,
+			applyTo = isNotOmni,
 			applyPerk = function (unitID, level, invert)
 				GG.EnableArmour(unitID, not invert, "hard")
 				
@@ -971,7 +972,7 @@ return {
 				texture = 'bitmaps/ui/perkgreen.png',	
 			},
 			valid = isMechBay,
-			applyTo = allMechs,
+			applyTo = isNotOmni,
 			applyPerk = function (unitID, level, invert)
 				GG.EnableArmour(unitID, not invert, "heat")
 			end,
@@ -990,7 +991,7 @@ return {
 				texture = 'bitmaps/ui/perkgreen.png',	
 			},
 			valid = isMechBay,
-			applyTo = allMechs,
+			applyTo = isNotOmni,
 			applyPerk = function (unitID, level, invert)
 				GG.EnableArmour(unitID, not invert, "reactive")
 			end,
@@ -1009,7 +1010,7 @@ return {
 				texture = 'bitmaps/ui/perkgreen.png',	
 			},
 			valid = isMechBay,
-			applyTo = allMechs,
+			applyTo = isNotOmni,
 			applyPerk = function (unitID, level, invert)
 				GG.EnableArmour(unitID, not invert, "reflec")
 			end,
@@ -1028,7 +1029,7 @@ return {
 				texture = 'bitmaps/ui/perkgreen.png',	
 			},
 			valid = isMechBay,
-			applyTo = function (unitDefID) return hasECM(unitDefID) and isFaction(unitDefID, "cc") end,
+			applyTo = function (unitDefID) return hasECM(unitDefID) and isFaction(unitDefID, "cc") and isNotOmni(unitDefID) end,
 			applyPerk = function (unitID, level, invert)
 				GG.EnableStealth(unitID, not invert)
 			end,
@@ -1049,10 +1050,11 @@ return {
 			},
 			valid = isMechBay,
 			applyTo = function (unitDefID) 
-				return hasWeaponClass(unitDefID, "autocannon", "salvoSize", true, 1) 
+				return isNotOmni(unitDefID)
+				and (hasWeaponClass(unitDefID, "autocannon", "salvoSize", true, 1) 
 				or hasWeaponClass(unitDefID, "gauss", "salvoSize", true, 1) 
 				or hasWeaponClass(unitDefID, "ppc", "salvoSize", true, 1) 
-				or hasWeaponClass(unitDefID, "energy", "soundTrigger", true, true) 
+				or hasWeaponClass(unitDefID, "energy", "soundTrigger", true, true))
 			end,
 			applyPerk = function (unitID, level, invert)
 				--Spring.Echo("Missile range selected") 
@@ -1077,10 +1079,11 @@ return {
 			},
 			valid = isMechBay,
 			applyTo = function (unitDefID) 
-				return hasWeaponClass(unitDefID, "autocannon", "salvoSize", true, 1) 
+				return isNotOmni(unitDefID)
+				and (hasWeaponClass(unitDefID, "autocannon", "salvoSize", true, 1) 
 				or hasWeaponClass(unitDefID, "gauss", "salvoSize", true, 1) 
 				or hasWeaponClass(unitDefID, "ppc", "salvoSize", true, 1) 
-				or hasWeaponClass(unitDefID, "energy", "soundTrigger", true, true) 
+				or hasWeaponClass(unitDefID, "energy", "soundTrigger", true, true)) 
 			end,
 			applyPerk = function (unitID, level, invert)
 				--Spring.Echo("Missile range selected") 
@@ -1107,7 +1110,7 @@ return {
 				texture = 'bitmaps/ui/perkbgfaction.png',	
 			},
 			valid = isMechBay,
-			applyTo = function (unitDefID) return hasWeaponClass(unitDefID, "mrm") and isFaction(unitDefID, "dc") end,
+			applyTo = function (unitDefID) return hasWeaponClass(unitDefID, "mrm") and isNotOmni(unitDefID) and isFaction(unitDefID, "dc") end,
 			applyPerk = function (unitID, level, invert)
 				--Spring.Echo("Missile range selected") 
 				local effect = 0.75 -- smaller accuracy is better, 25% reduction
@@ -1130,7 +1133,7 @@ return {
 				texture = 'bitmaps/ui/perkbgfaction.png',	
 			},
 			valid = isMechBay,
-			applyTo = function (unitDefID) return hasWeaponClass(unitDefID, "lrm") end,
+			applyTo = function (unitDefID) return isNotOmni(unitDefID) and hasWeaponClass(unitDefID, "lrm") end,
 			applyPerk = function (unitID, level, invert)
 				--Spring.Echo("Missile range selected") 
 				GG.EnableArtemis(unitID, "lrm", not invert)
@@ -1146,11 +1149,11 @@ return {
 				id = GetCmdID('MOD_EXTENDED_RANGE_LRM'),
 				action = 'modextendedrangelrm',
 				name = GG.Pad("Extended", "Range", "LRM"),
-				tooltip = 'Applies to LRMs only. Increases LRM range by 50%, but reduces ammo by 50% and will not receive tracking/damage bonus from TAG/Narc.',
+				tooltip = 'Applies to LRMs only. Increases LRM range by 50%, but reduces ammo by 50%.',
 				texture = 'bitmaps/ui/perkbgfaction.png',	
 			},
 			valid = isMechBay,
-			applyTo = function (unitDefID) return hasWeaponClass(unitDefID, "lrm") end,
+			applyTo = function (unitDefID) return isNotOmni(unitDefID) and hasWeaponClass(unitDefID, "lrm") end,
 			applyPerk = function (unitID, level, invert)
 				-- increase range by 50%
 				local effect = 1.5
@@ -1164,7 +1167,6 @@ return {
 				env.maxAmmo["lrm"] = env.maxAmmo["lrm"] * effect
 				env.currAmmo["lrm"] = env.maxAmmo["lrm"]
 				Spring.SetUnitRulesParam(unitID, "ammo_lrm", 100)
-				-- TODO: Remove tracking bonus (TODO: implement tracking bonus)
 			end,
 			costFunction = deductSalvage,
 			price = 10,
@@ -1181,7 +1183,7 @@ return {
 				texture = 'bitmaps/ui/perkbgfaction.png',	
 			},
 			valid = isMechBay,
-			applyTo = function (unitDefID) return hasWeaponClass(unitDefID, "srm") end,
+			applyTo = function (unitDefID) return isNotOmni(unitDefID) and hasWeaponClass(unitDefID, "srm") end,
 			applyPerk = function (unitID, level, invert)
 				--Spring.Echo("Missile range selected") 
 				GG.EnableArtemis(unitID, "srm", not invert)
@@ -1200,7 +1202,7 @@ return {
 				texture = 'bitmaps/ui/perkbgfaction.png',	
 			},
 			valid = isMechBay,
-			applyTo = function (unitDefID) return (allMechs(unitDefID) and hasWeaponName(unitDefID, "heavygauss") and isFaction(unitDefID, "la")) end,
+			applyTo = function (unitDefID) return (isNotOmni(unitDefID) and hasWeaponName(unitDefID, "heavygauss") and isFaction(unitDefID, "la")) end,
 			applyPerk = function (unitID, level, invert)
 				local _, toChange = hasWeaponName(Spring.GetUnitDefID(unitID), "heavygauss")
 				for weapNum in pairs(toChange) do
@@ -1225,7 +1227,7 @@ return {
 				texture = 'bitmaps/ui/perkbgfaction.png',	
 			},
 			valid = isMechBay,
-			applyTo = function (unitDefID) return (allMechs(unitDefID) and hasWeaponClass(unitDefID, "ppc") and isFaction(unitDefID, "dc")) end,
+			applyTo = function (unitDefID) return (isNotOmni(unitDefID) and hasWeaponClass(unitDefID, "ppc") and isFaction(unitDefID, "dc")) end,
 			applyPerk = function (unitID, level, invert)
 				local effect = 1.25
 				effect = (invert and 1/effect) or effect
@@ -1254,7 +1256,7 @@ return {
 				texture = 'bitmaps/ui/perkbgfaction.png',	
 			},
 			valid = isMechBay,
-			applyTo = function (unitDefID) return hasWeaponClass(unitDefID, "gauss") and (isFaction(unitDefID, "la") or isFaction(unitDefID, "fw")) end,
+			applyTo = function (unitDefID) return isNotOmni(unitDefID) and hasWeaponClass(unitDefID, "gauss") and (isFaction(unitDefID, "la") or isFaction(unitDefID, "fw")) end,
 			applyPerk = function (unitID, level, invert)
 				--Spring.Echo("Missile range selected") 
 				local effect = 0.75 -- 25% reduction
@@ -1281,7 +1283,7 @@ return {
 				texture = 'bitmaps/ui/perkbgfaction.png',	
 			},
 			valid = isMechBay,
-			applyTo = function (unitDefID) return hasWeaponName(unitDefID, "gauss") and isFaction(unitDefID, "la") end,
+			applyTo = function (unitDefID) return isNotOmni(unitDefID) and hasWeaponName(unitDefID, "gauss") and isFaction(unitDefID, "la") end,
 			applyPerk = function (unitID, level, invert)
 				--Spring.Echo("Missile range selected") 
 				GG.EnableSilverBullet(unitID, not invert)
