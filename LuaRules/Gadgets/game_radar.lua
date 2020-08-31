@@ -184,6 +184,15 @@ local function SetUnitSectorRadius(unitID, mult)
 end
 GG.SetUnitSectorRadius = SetUnitSectorRadius
 
+local function SetUnitECMRadius(unitID, mult, absolute, pieceNum)
+	local allyTeam = Spring.GetUnitAllyTeam(unitID)
+	local newValue = absolute or ((allyJammers[allyTeam][unitID] or 500) * (mult or 1))
+	allyJammers[allyTeam][unitID] = newValue
+	Spring.SetUnitSensorRadius(unitID, "radarJammer", newValue)
+	GG.ECMBubble(unitID, pieceNum or 1, newValue)
+end
+GG.SetUnitECMRadius = SetUnitECMRadius
+
 local function ResetLosStates(unitID, allyTeam) -- TODO:need to check los/radar status properly here rather than hard reset
 	-- don't reset for turrets or outposts etc, they remain always visible once detected by whatever means
 	if Spring.ValidUnitID(unitID) and not Spring.GetUnitIsDead(unitID) and mobileUnits[unitID] then
@@ -387,7 +396,7 @@ function gadget:UnitCreated(unitID, unitDefID, teamID)
 	local jamRadius = ud.jammerRadius
 	if jamRadius > 0 then
 		local allyTeam = select(6, GetTeamInfo(teamID))
-		allyJammers[allyTeam][unitID] = jamRadius
+		SetUnitECMRadius(unitID, nil, jamRadius)
 	end
 	if ud.customParams.bap then
 		local allyTeam = select(6, GetTeamInfo(teamID))

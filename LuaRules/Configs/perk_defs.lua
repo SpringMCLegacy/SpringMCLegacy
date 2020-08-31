@@ -537,6 +537,40 @@ return {
 			costFunction = deductCBills,
 			price = 8000,
 		},
+		-- EWAR
+		{
+			name = "ewar2",
+			cmdDesc = {
+				id = GetCmdID('PERK_EWAR_2'),
+				action = 'perkewar2',
+				name = GG.Pad("ECM", "Suite"),
+				tooltip = 'Adds ECM jammer',
+				texture = 'bitmaps/ui/upgrade.png',	
+			},
+			valid = function (unitDefID) return UnitDefs[unitDefID].name == "outpost_ewar" end,
+			applyPerk = function (unitID)
+				GG.EWARUpgrade(unitID, 2)
+			end,
+			costFunction = deductCBills,
+			price = 8000,
+		},
+		{
+			name = "ewar3",
+			cmdDesc = {
+				id = GetCmdID('PERK_EWAR_3'),
+				action = 'perkewar3',
+				name = GG.Pad("TAG", "Lasers"),
+				tooltip = 'Adds Target Aquisition Gear designataor lasers',
+				texture = 'bitmaps/ui/upgrade.png',	
+			},
+			valid = function (unitDefID) return UnitDefs[unitDefID].name == "outpost_ewar" end,
+			applyPerk = function (unitID)
+				GG.EWARUpgrade(unitID, 3)
+			end,
+			costFunction = deductCBills,
+			price = 12000,
+			requires = "ewar2",
+		},
 		-- Mechbay
 		{
 			name = "mechbay_2",
@@ -815,9 +849,7 @@ return {
 				local effect = 1.5
 				effect = (invert and 1/effect) or effect
 				
-				local currECM = Spring.GetUnitSensorRadius(unitID, "radarJammer")
-				Spring.SetUnitSensorRadius(unitID, "radarJammer", currECM * effect)
-				GG.allyJammers[Spring.GetUnitAllyTeam(unitID)][unitID] = currECM * effect
+				GG.SetUnitECMRadius(unitID, effect)
 			end,
 			costFunction = deductSalvage,
 			price = 10,

@@ -1,4 +1,28 @@
 local effects = {
+	ecmbubble = {
+		class = 'ShieldSphere', 
+		options = {
+			life = math.huge, 
+			pos = {0,0,0}, 
+			--size = 500, 
+			onActive = true, 
+			colormap1 = {{0.9, 0.2, 0.2, 0.45}}, 
+			repeatEffect = true
+		},
+	},
+	ecmjitter = {
+		class = 'ShieldJitter', 
+		options = {
+			delay = 0,
+			life = math.huge, 
+			pos = {0,0,0}, 
+			--size = 512,
+			onActive = true, 
+			precision = 222, 
+			strength = 0.002,
+			repeatEffect = true
+		},
+	},
 	dropship_hull_heat = {
 		class = "SimpleParticles2",
 		options = {

@@ -92,6 +92,71 @@ local function Blinks()
 	end
 end
 
+function ECM()
+	local ecm, ecmdoor1, ecmdoor2, console1 = piece("ecm", "ecmdoor1", "ecmdoor2", "console1")
+	Move(console1, z_axis, -7, CRATE_SPEED)
+	Move(ecmdoor1, x_axis, 5, CRATE_SPEED)
+	Move(ecmdoor2, x_axis, -5, CRATE_SPEED)
+	WaitForMove(ecmdoor2, x_axis)
+	Move(ecm, y_axis, 11, CRATE_SPEED)
+	WaitForMove(ecm, y_axis)
+	GG.SetUnitECMRadius(unitID, nil, 1000)
+end
+
+noFiring = true
+function TAG()
+	local tagbase1, tagstand1, tagbase2, tagstand2 = piece("tagbase1", "tagstand1", "tagbase2", "tagstand2")
+	Turn(tagbase1, z_axis, 0, CRATE_SPEED)
+	Turn(tagbase2, z_axis, 0, CRATE_SPEED)
+	WaitForTurn(tagbase2, z_axis)
+	Turn(tagstand1, z_axis, 0, CRATE_SPEED)
+	Turn(tagstand2, z_axis, 0, CRATE_SPEED)
+	WaitForTurn(tagstand2, z_axis)
+	noFiring = false
+	Spring.SetUnitRulesParam(unitID, "weapon_1", "active")
+	Spring.SetUnitRulesParam(unitID, "weapon_2", "active")
+end
+
+local turrets = {}
+local mantlets = {}
+local flares = {}
+
+for i = 1,2 do
+	turrets[i] = piece("turret_" .. i)
+	mantlets[i] = piece("mantlet_" .. i)
+	flares[i] = piece("flare_" .. i)
+end
+
+-- Garrison weapons
+function script.AimWeapon(weaponID, heading, pitch)
+	if noFiring then return false end
+	Signal(2 ^ weaponID) -- 2 'to the power of' weapon ID
+	SetSignalMask(2 ^ weaponID)
+
+	if turrets[weaponID] then
+		Turn(turrets[weaponID], y_axis, heading, CRATE_SPEED * 10)
+		WaitForTurn(turrets[weaponID], y_axis)
+		Turn(mantlets[weaponID], x_axis, -pitch, CRATE_SPEED * 5)
+		WaitForTurn(mantlets[weaponID], x_axis)
+	else
+		Turn(flares[weaponID], y_axis, heading)
+		Turn(flares[weaponID], x_axis, -pitch)
+	end
+	return true
+end
+
+function script.Shot(weaponID)
+	EmitSfx(flares[weaponID], SFX.CEG + weaponID)
+end
+
+function script.AimFromWeapon(weaponID) 
+	return flares[weaponID]
+end
+
+function script.QueryWeapon(weaponID) 
+	return flares[weaponID]
+end
+
 function Upgrade(level)
 	if name == "outpost_vehiclepad" or name == "outpost_hoverpad" then
 		--[[if level == 2 then
@@ -106,24 +171,39 @@ function Upgrade(level)
 	elseif name == "outpost_salvageyard" and level == 2 then
 		Show(foundation)
 		RecursiveHide(recoveryrail, false)
+	elseif name == "outpost_ewar" then
+		if level == 2 then
+			StartThread(ECM)
+		elseif level == 3 then
+			StartThread(TAG)
+		end
 	end
 end
 
 function script.Create()
-	if ramps[1] then -- vapd
+	if ramps[1] then -- vpad
 		for i = 1, 6 do
 			Turn(ramps[i], y_axis, rad((i-1) * -60))
 		end
 		--Hide(base2)
 		--Hide(flags)
-	elseif foot1 then -- seismic sensor
+	elseif name == "outpost_seismic" then
 		Turn(foot2, y_axis, rad(-60), CRATE_SPEED * 10)
 		Turn(foot3, y_axis, rad(60), CRATE_SPEED * 10)
-	elseif recoveryrail then -- salvage yard
+	elseif name == "outpost_salvageyard" then
 		Hide(foundation)
 		--RecursiveHide(recoveryrail, true)
 		Move(armature1, z_axis, 10)
 		Move(armature2, z_axis, -10)
+	elseif name == "outpost_ewar" then
+		local bapstand, bapmantlet = piece("bapstand", "bapmantlet")
+		Turn(bapstand, x_axis, math.rad(-90))
+		Turn(bapmantlet, x_axis, math.rad(135))
+		local tagbase1, tagstand1, tagbase2, tagstand2 = piece("tagbase1", "tagstand1", "tagbase2", "tagstand2")
+		Turn(tagbase1, z_axis, math.rad(90))
+		Turn(tagstand1, z_axis, math.rad(90))
+		Turn(tagbase2, z_axis, math.rad(-90))
+		Turn(tagstand2, z_axis, math.rad(-90))
 	end
 	Sleep(100) -- wait a few frames
 	if not Spring.GetUnitTransporter(unitID) then
@@ -344,6 +424,18 @@ function SeismicPings()
 	end
 end
 
+function BAP()
+	Sleep(2000)
+	local bapmantlet, bapturret = piece ("bapmantlet", "bapturret")
+	while true do
+		Turn(bapmantlet, x_axis, rad(math.random(-15, 15)), CRATE_SPEED/2)
+		Turn(bapturret, y_axis, rad(math.random(-180, 180)), CRATE_SPEED/2)
+		WaitForTurn(bapmantlet, x_axis)
+		WaitForTurn(bapturret, y_axis)
+		Sleep(math.random(2000, 5000))
+	end
+end
+
 function Unpack()
 	-- Wait for delivery van to bug out
 	Sleep(2000)
@@ -473,7 +565,18 @@ function Unpack()
 		-- parent beacon location not our own, if it exists
 		local x, y, z = Spring.GetUnitPosition(beaconID or unitID)
 		GG.BuildMaskCircle(x, z, 460, 2)
+	elseif name == "outpost_ewar" then
+		local console2 = piece("console2")
+		Move(console2, z_axis, 7, CRATE_SPEED)
+		local bapstand, bapmantlet = piece("bapstand", "bapmantlet")
+		Turn(bapstand, x_axis, 0, CRATE_SPEED/4)
+		Turn(bapmantlet, x_axis, 0, CRATE_SPEED/2)
+		WaitForTurn(bapstand, x_axis)
+		WaitForTurn(bapmantlet, x_axis)
+		WaitForMove(console2, z_axis)
+		StartThread(BAP)
 	end
+	Spring.UnitScript.SetUnitValue(COB.ACTIVATION, 1)
 	-- Let the sands of time cover the crate
 	Sleep(2500)
 	Move(crate_base, y_axis, -5, CRATE_SPEED)
@@ -630,31 +733,6 @@ function script.TransportDrop (passengerID, x, y, z)
 		restored = false
 	end
 	autoGetOut = true
-end
-
--- Garrison weapons
-noFiring = true
-function script.AimWeapon(weaponID, heading, pitch)
-	if noFiring then return false end
-	Signal(2 ^ weaponID) -- 2 'to the power of' weapon ID
-	SetSignalMask(2 ^ weaponID)
-
-	Turn(flares[weaponID], y_axis, heading)
-	Turn(flares[weaponID], x_axis, -pitch)
-
-	return true
-end
-
-function script.Shot(weaponID)
-	EmitSfx(flares[weaponID], SFX.CEG + weaponID)
-end
-
-function script.AimFromWeapon(weaponID) 
-	return flares[weaponID]
-end
-
-function script.QueryWeapon(weaponID) 
-	return flares[weaponID]
 end
 
 function script.Killed(recentDamage, maxRepairth)

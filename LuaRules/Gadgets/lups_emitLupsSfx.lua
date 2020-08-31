@@ -35,6 +35,13 @@ local function BlendJet(time, unitID, piecenum, ID, minWidth, minLength)
 end
 GG.BlendJet = BlendJet
 
+	
+local function ECMBubble(unitID, piecenum, radius)
+	--Spring.Echo("Add ECM bubble radius", radius, "to unit", unitID)
+	GG.EmitLupsSfx(unitID, "ecmbubble", piecenum, {size = radius or 500})
+	GG.EmitLupsSfx(unitID, "ecmjitter", piecenum, {size = (radius or 500) + 6})
+end
+GG.ECMBubble = ECMBubble
 
 local function EmitLupsSfx(unitID, effectName, pieceNum, options)
 	bufferSize = bufferSize + 1
