@@ -108,12 +108,14 @@ end
 GG.ToggleOutpostOptions = ToggleOutpostOptions
 
 local function AssociateOutpost(beaconID, targetID, cargoID)
-	-- extra behaviour to link outposts with beacons
-	outpostPointIDs[cargoID] = targetID 
-	outpostIDs[targetID] = cargoID
-	-- Let unsynced know about this pairing
-	Spring.SetUnitRulesParam(cargoID, "beaconID", beaconID)
-	Spring.SetUnitRulesParam(targetID, "outpostID", cargoID)
+	if cargoID and targetID then -- can fail at game end
+		-- extra behaviour to link outposts with beacons
+		outpostPointIDs[cargoID] = targetID 
+		outpostIDs[targetID] = cargoID
+		-- Let unsynced know about this pairing
+		Spring.SetUnitRulesParam(cargoID, "beaconID", beaconID)
+		Spring.SetUnitRulesParam(targetID, "outpostID", cargoID)
+	end
 end
 GG.AssociateOutpost = AssociateOutpost
 
