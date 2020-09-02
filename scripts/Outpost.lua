@@ -62,8 +62,16 @@ for i = 1, 4 do
 end
 -- Garrison pieces
 local flares = {}
-for i = 1, 6 do
+for i = 1, #unitDef.weapons do
 	flares[i] = piece("flare_" .. i)
+end
+-- EWAR pieces
+local turrets = {}
+local mantlets = {}
+
+for i = 1,#unitDef.weapons do
+	turrets[i] = piece("turret_" .. i)
+	mantlets[i] = piece("mantlet_" .. i)
 end
 
 -- Constants
@@ -115,16 +123,6 @@ function TAG()
 	noFiring = false
 	Spring.SetUnitRulesParam(unitID, "weapon_1", "active")
 	Spring.SetUnitRulesParam(unitID, "weapon_2", "active")
-end
-
-local turrets = {}
-local mantlets = {}
-local flares = {}
-
-for i = 1,2 do
-	turrets[i] = piece("turret_" .. i)
-	mantlets[i] = piece("mantlet_" .. i)
-	flares[i] = piece("flare_" .. i)
 end
 
 -- Garrison weapons

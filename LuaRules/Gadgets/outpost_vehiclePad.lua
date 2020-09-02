@@ -173,15 +173,6 @@ local function PadUpgrade(unitID, level)
 end
 GG.PadUpgrade = PadUpgrade
 
-
-local function EWARUpgrade(unitID, level)
-	--padLevels[unitID] = level
-	--Spring.Echo("Upgrade pad (" .. unitID .. ") to level " .. level)
-	env = Spring.UnitScript.GetScriptEnv(unitID)
-	Spring.UnitScript.CallAsUnit(unitID, env.Upgrade, level)
-end
-GG.EWARUpgrade = EWARUpgrade
-
 local function RandomElement(input)
 	return input[math.random(1, #input)]
 end

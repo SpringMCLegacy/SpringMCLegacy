@@ -116,6 +116,12 @@ local losFalseRestTrue = {los = false, prevLos = true, radar = true, contRadar =
 local fullLOS = {los = true, prevLos = true, radar = true, contRadar = true}
 local engineControl = {los = false, prevLos = true, radar = false, contRadar = true}
 
+-- TODO: Worth an outpost_ewarStation.lua?
+local function EWARUpgrade(unitID, level)
+	env = Spring.UnitScript.GetScriptEnv(unitID)
+	Spring.UnitScript.CallAsUnit(unitID, env.Upgrade, level)
+end
+GG.EWARUpgrade = EWARUpgrade
 
 local function FinishPPC(unitID)
 	if ppcUnits[unitID] and ppcUnits[unitID] <= Spring.GetGameFrame() then
