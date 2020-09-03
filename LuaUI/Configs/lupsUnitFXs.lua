@@ -24,6 +24,26 @@ effectUnitDefs = {
 		{class='Ribbon',	options={width=6, size=6, piece="root2"}},
 	},
  }
+
+ecm =  {
+	{class='ShieldSphere', options={life=math.huge, pos={0,0,0}, size=500, onActive=true, colormap1 = {{0.9, 0.2, 0.2, 0.45}}, repeatEffect=true}},
+	{class='ShieldJitter', options={delay=0,life=math.huge, pos={0,0,0}, size=512,onActive=true, precision=222, strength   = 0.002,  repeatEffect=true}},
+	--{class='ShieldJitter', options={delay=0,life=math.huge, pos={0,0,0}, size=5, precision=22, strength   = 0.15,  repeatEffect=true}},
+	--{class='ShieldJitter', options={delay=0,life=math.huge, pos={0,0,0}, size=100, precision=22, strength   = 0.005,  repeatEffect=true}},
+}
+local bigecm = {}
+table.copy(ecm, bigecm)
+bigecm[1].options.size = 1000
+bigecm[2].options.size = 1012
+
+for name, unitDef in pairs(UnitDefNames) do
+	if unitDef.customParams.ecm then -- and unitDef.canMove then -- mobiles
+		effectUnitDefs[name] = ecm
+		if name == "outpost_ewar" then
+			effectUnitDefs[name] = bigecm
+		end
+	end
+end
  
 leopard = {
 	{class='Ribbon',	options={width=4, size=12, piece="fin1"}},

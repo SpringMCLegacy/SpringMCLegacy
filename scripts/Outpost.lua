@@ -194,6 +194,7 @@ function script.Create()
 		Move(armature1, z_axis, 10)
 		Move(armature2, z_axis, -10)
 	elseif name == "outpost_ewar" then
+		Spring.SetUnitRulesParam(unitID, "FXOFF", 1, {public = true})
 		local bapstand, bapmantlet = piece("bapstand", "bapmantlet")
 		Turn(bapstand, x_axis, math.rad(-90))
 		Turn(bapmantlet, x_axis, math.rad(135))

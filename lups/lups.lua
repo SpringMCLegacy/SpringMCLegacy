@@ -710,9 +710,9 @@ end
 
 local function IsUnitFXVisible(fx)
 	local unitActive = true
-        local unitID = fx.unit
+    local unitID = fx.unit
 	if fx.onActive then
-		unitActive = spGetUnitIsActive(unitID)
+		unitActive = spGetUnitIsActive(unitID) and not (tonumber(Spring.GetUnitRulesParam(unitID, "FXOFF") or 0) == 1)
 		if (unitActive == nil) then
 			unitActive = true
 		end

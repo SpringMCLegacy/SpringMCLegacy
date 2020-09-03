@@ -130,6 +130,7 @@ local function FinishPPC(unitID)
 		end
 		ppcUnits[unitID] = nil
 		SetUnitRulesParam(unitID, "PPC_HIT", -1, {inlos = true})
+		SetUnitRulesParam(unitID, "FXOFF", 0, {public = true})
 	end
 end
 
@@ -145,6 +146,7 @@ local function ApplyPPC(unitID)
 	local delay = (GetUnitRulesParam(unitID, "insulation") or 1) * PPC_DURATION
 	ppcUnits[unitID] = Spring.GetGameFrame() + delay
 	SetUnitRulesParam(unitID, "PPC_HIT", ppcUnits[unitID], {inlos = true})
+	SetUnitRulesParam(unitID, "FXOFF", 1, {public = true})
 	GG.Delay.DelayCall(FinishPPC, {unitID}, delay)
 end
 
@@ -195,7 +197,8 @@ local function SetUnitECMRadius(unitID, mult, absolute, pieceNum)
 	local newValue = absolute or ((allyJammers[allyTeam][unitID] or 500) * (mult or 1))
 	allyJammers[allyTeam][unitID] = newValue
 	Spring.SetUnitSensorRadius(unitID, "radarJammer", newValue)
-	GG.ECMBubble(unitID, pieceNum or 1, newValue)
+	--GG.ECMBubble(unitID, pieceNum or 1, newValue) -- TODO: disabled as luarules lups does not follow unit visibility
+	Spring.SetUnitRulesParam(unitID, "FXOFF", 0, {public = true})
 end
 GG.SetUnitECMRadius = SetUnitECMRadius
 
