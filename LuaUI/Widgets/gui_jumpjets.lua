@@ -208,7 +208,7 @@ local function  DrawMouseArc(unitID, shift, groundPos)
   if (not groundPos or not jumpDefs[unitDefID]) then
     return
   end
-  local queue = spGetCommandQueue(unitID, 0)
+  local queue = (Spring.GetUnitCommandCount and Spring.GetUnitCommandCount(unitID)) or Spring.GetCommandQueue(unitID, 0) or 0
   local range = Spring.GetUnitRulesParam(unitID, "jumpRange") or jumpDefs[unitDefID].range
   if (not queue or queue == 0 or not shift) then
     local unitPos = {spGetUnitPosition(unitID)}
@@ -240,7 +240,8 @@ function widget:CommandNotify(id, params, options)
   end
   for _, unitID in ipairs(spGetSelectedUnits()) do
     local _, _, _, shift   = spGetModKeyState()
-    if (spGetCommandQueue(unitID, 0) == 0 or not shift) then
+	local queueSize = (Spring.GetUnitCommandCount and Spring.GetUnitCommandCount(unitID)) or Spring.GetCommandQueue(unitID, 0) or 0
+    if (queueSize == 0 or not shift) then
       lastJump[unitID] = {
         pos   = {spGetUnitPosition(unitID)},
         frame = spGetGameFrame(),

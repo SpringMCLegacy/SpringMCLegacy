@@ -365,7 +365,7 @@ end
 local WAIT_TIME = 45 * 30 -- 45s
 local function UnitIdleCheck(unitID, unitDefID, teamID)
 	if Spring.GetUnitIsDead(unitID) then return false end
-	local cmdQueueSize = Spring.GetCommandQueue(unitID, -1, false) or 0
+	local cmdQueueSize = (Spring.GetUnitCommandCount and Spring.GetUnitCommandCount(unitID)) or Spring.GetCommandQueue(unitID, 0) or 0
 	if cmdQueueSize > 0 then 
 		--Spring.Echo(UnitDefs[unitDefID].name .. [[ "I'm so not idle!"]]) 
 		return

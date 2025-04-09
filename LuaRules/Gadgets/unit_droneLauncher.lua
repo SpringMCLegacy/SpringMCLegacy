@@ -217,7 +217,7 @@ local function UnitIdleCheck(unitID, unitDefID, teamID)
 	if (not Spring.ValidUnitID(unitID)) or Spring.GetUnitIsDead(unitID) then return false end -- unit died
 	if select(3, Spring.GetTeamInfo(teamID)) then return false end -- team died
 	if teamID == GAIA_TEAM_ID then return false end -- team died and unit transferred to gaia
-	local cmdQueueSize = Spring.GetCommandQueue(unitID, 0)
+	local cmdQueueSize = (Spring.GetUnitCommandCount and Spring.GetUnitCommandCount(unitID)) or Spring.GetCommandQueue(unitID, 0) or 0
 	--Spring.Echo(unitID, "cmdQueueSize:", cmdQueueSize)
 	if cmdQueueSize > 0 then 
 		--Spring.Echo(unitID, "UnitIdleCheck: I'm so not idle!") 
