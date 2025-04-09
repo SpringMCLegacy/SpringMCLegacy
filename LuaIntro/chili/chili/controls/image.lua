@@ -62,7 +62,7 @@ function Image:DrawControl()
     if (self.file) then
       TextureHandler.LoadTexture(0,self.file,self)
       local texInfo = gl.TextureInfo(self.file) or {xsize=1, ysize=1}
-      local tw,th = texInfo.xsize, texInfo.ysize
+      local tw,th = math.max(texInfo.xsize,1), math.max(texInfo.ysize,1)
       _DrawTextureAspect(0,0,self.width,self.height, tw,th, self.flip)
     end
   else

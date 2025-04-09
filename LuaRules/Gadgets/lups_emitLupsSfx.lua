@@ -105,7 +105,7 @@ end
 GG.sunpack = sunpack
 
 local function scopytable(_in, _out)
-	for k,v in spairs(_in) do
+	for k,v in pairs(_in) do
 		if type(v)=="table" then
 			local t = {}
 			_out[k] = t
@@ -166,8 +166,8 @@ end
 	
 local function UpdateLupsSfx()
 	local Lups = GG.Lups
-	for i, callInfo in spairs(SYNCED.unsyncedBuffer) do
-		--for k,v in spairs(callInfo) do Spring.Echo(k,v) end
+	for i, callInfo in pairs(SYNCED.unsyncedBuffer) do
+		--for k,v in pairs(callInfo) do Spring.Echo(k,v) end
 		if callInfo[1] == "lups_emitsfx" then
 			EmitLupsSfx(select(2, sunpack(callInfo)))
 		elseif callInfo[1] == "lups_removesfx" then

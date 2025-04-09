@@ -35,7 +35,7 @@ local DelayCall				 = GG.Delay.DelayCall
 local GAIA_TEAM_ID = Spring.GetGaiaTeamID()
 local BEACON_ID = UnitDefNames["beacon"].id
 local BRV_ID = UnitDefNames["brv"].id -- TODO: support multiple brv types
-local SALVAGEYARD_ID = UnitDefNames["outpost_salvageyard"].id
+local SALVAGEYARD_ID = UnitDefNames["outpost_salvageyard"] and UnitDefNames["outpost_salvageyard"].id or nil
 
 local SALVAGE_RANGE = 1000
 local CMD_DEPOSIT = GG.CustomCommands.GetCmdID("CMD_DEPOSIT")

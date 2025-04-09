@@ -340,9 +340,9 @@ function gadget:FeatureDestroyed(featureID)
 end
 
 function gadget:ProjectileCreated(proID, proOwnerID, weaponID)
-	local name = Spring.GetProjectileName(proID)
+	--local name = Spring.GetProjectileName(proID)
 	local weap, piece = Spring.GetProjectileType(proID)
-	if piece and names[name] then pieces[proID] = true end
+	if piece and not GG.Beacons[proOwnerID] --[[and names[name]] then pieces[proID] = true end
 	--Spring.Echo("PC", proID, proOwnerID, weaponID, name, defID, weap, piece)
 end
 	

@@ -137,6 +137,11 @@ for unitName, ud in pairs(UnitDefs) do
 				--Spring.Echo("[WeaponDefs_post.lua]:" .. unitName .. " has a corpse (" .. ud.corpse .. ")")
 				local modelPath = ud.objectname:sub(1, -(string.len(unitName .. ".s3o")+1))
 				-- First level corpse
+				--local corpseModel = cp.baseclass == "mech" and ud.objectname or modelPath .. "corpse/" .. unitName .. "_x.s3o"
+				local corpseModel = modelPath .. "corpse/" .. unitName .. "_x.s3o"
+				local corpseModelExists = VFS.FileExists("objects3d/" .. corpseModel          , VFS.ZIP)
+				corpseModel = corpseModelExists and corpseModel or ud.objectname
+				--Spring.Echo("corspeModel", corpseModel, corpseModelExists)
 				FeatureDefs[ud.corpse] = Feature:New{
 					damage = ud.maxdamage * 0.5,
 					description = "Wrecked " .. ud.name,
@@ -145,7 +150,7 @@ for unitName, ud in pairs(UnitDefs) do
 					featuredead = ud.corpse .. "x",
 					footprintx = ud.footprintx,
 					footprintz = ud.footprintz,
-					object = cp.baseclass == "mech" and ud.objectname or modelPath .. "corpse/" .. unitName .. "_x.s3o",
+					object = corpseModel,
 					customparams = {["was"] = ud.name},
 					reclaimable = true,
 					upright = cp.baseclass == "mech",
@@ -159,7 +164,7 @@ for unitName, ud in pairs(UnitDefs) do
 					featuredead = "wreck_x",
 					footprintx = ud.footprintx,
 					footprintz = ud.footprintz,
-					object = cp.baseclass == "mech" and ud.objectname or modelPath .. "corpse/" .. unitName .. "_x.s3o",
+					object = corpseModel,
 					customparams = {["was"] = ud.name},
 					reclaimable = true,
 					upright = cp.baseclass == "mech",
@@ -194,9 +199,42 @@ for unitName, ud in pairs(UnitDefs) do
 	end
 end
 
+local function isModelOK(fd)
+ 	local specifiesModel = fd.object and (fd.object ~= "")
+ 
+ 	-- explicitly modelless (geo etc)
+ 	if fd.drawtype == -1 and not specifiesModel then
+ 		return true
+ 	end
+ 
+ 	-- implicitly modelless
+ 	if not fd.drawtype and not specifiesModel then
+ 		return true
+ 	end
+ 
+ 	-- explicitly specified to use a model, but doesn't provide one (gigachad.jpg)
+ 	if fd.drawtype == 0
+ 	and not specifiesModel then
+ 		return false
+ 	end
+ 
+ 	-- old tree renderer removed from engine
+ 	if tonumber(fd.drawtype or 0) > 0 then
+ 		return false
+ 	end
+ 
+ 	local modelPath = "objects3d/" .. fd.object
+ 	return VFS.FileExists(modelPath          , VFS.ZIP)
+ 	    or VFS.FileExists(modelPath .. ".3do", VFS.ZIP)
+ end
+ 
 for featureName, fd in pairs(FeatureDefs) do
 	local cp = fd.customparams
 	if not (cp and cp.was) then
 		fd.reclaimable = false -- force all non corpses to be non salvageable
 	end
+	if not isModelOK(fd) then -- should be caught earlier (L142) but, bolts and braces
+ 		Spring.Log("weapondefs_post.lua", LOG.WARNING, "Removing feature def", featureName, "for having invalid model that would crash the engine", fd.object)
+ 		FeatureDefs[featureName] = nil
+ 	end
 end

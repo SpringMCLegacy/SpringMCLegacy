@@ -38,7 +38,7 @@ function widget:Initialize()
 	-- Change default command menu font
 	local currentFont = Spring.GetConfigString("FontFile")
 	local currentFontSmall = Spring.GetConfigString("SmallFontFile")
-	Spring.SendCommands("font Handel Gothic.ttf")
+	Spring.SendCommands("font HandelGothic.ttf")
 	Spring.SetConfigString("FontFile", currentFont)
 	Spring.SetConfigString("SmallFontFile", currentFontSmall)
 	-- Cache ranges

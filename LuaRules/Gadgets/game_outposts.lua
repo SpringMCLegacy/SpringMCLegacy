@@ -30,6 +30,7 @@ local DelayCall				 = GG.Delay.DelayCall
 
 -- Constants
 local BEACON_ID = UnitDefNames["beacon"].id
+GG.Beacons = {}
 local BEACON_POINT_ID = UnitDefNames["beacon_point"].id
 
 -- Variables
@@ -121,7 +122,9 @@ GG.AssociateOutpost = AssociateOutpost
 
 
 function gadget:UnitCreated(unitID, unitDefID, teamID, builderID)
-	if unitDefID == BEACON_POINT_ID then
+	if unitDefID == BEACON_ID then
+		GG.Beacons[unitID] = true
+	elseif unitDefID == BEACON_POINT_ID then
 		AddOutpostOptions(unitID)
 	end
 end

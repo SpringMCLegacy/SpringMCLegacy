@@ -310,7 +310,8 @@ local GL_QUADS        = GL.QUADS
 local function BeginEndDrawList(self)
   local color = self.color
   local ev    = self.emitVector 
-  glMultiTexCoord(0,self.jitterWidthScale,self.jitterLengthScale,self.width/self.length,self.distortion)
+  --Spring.Echo("AirJet", 0,self.jitterWidthScale,self.jitterLengthScale,self.width,self.length,self.distortion)
+  glMultiTexCoord(0,self.jitterWidthScale,self.jitterLengthScale,(self.width + 0.001)/(self.length + 1),self.distortion)
   glMultiTexCoord(1,ev[1],ev[2],ev[3],1)
   glMultiTexCoord(2,color[1],color[2],color[3],self.animSpeed)
 
