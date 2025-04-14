@@ -127,7 +127,7 @@ local function Outpost(unitID, teamID)
 		-- TODO: Truly horrible, just randomnly pick?
 		--local cmd = ((teamOutpostCounts[teamID][C3_ID] + teamOutpostCounts[teamID][VPAD_ID]) % 2 == 1) and "CMD_OUTPOST_C3ARRAY" or "CMD_OUTPOST_VEHICLEPAD"
 		-- Try just randomly picking
-		local randPick = math.random(3)
+		local randPick = math.random(2)
 		local cmd = (randPick == 1 and "CMD_OUTPOST_C3ARRAY") or (randPick == 2 and "CMD_OUTPOST_VEHICLEPAD")-- or "CMD_OUTPOST_SALVAGEYARD"
 		if difficulty > 1 then
 			Spring.AddTeamResource(teamID, "metal", AI_CMDS[cmd].cost)
