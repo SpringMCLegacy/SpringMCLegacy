@@ -7,7 +7,6 @@ local IS_MarkVII = DropShip:New{
 	mass                = 13000,
 	buildCostEnergy     = 0,
 	buildCostMetal      = 0,
-	buildTime           = 0,
 	canMove				= true,
 	maxVelocity			= 0,
 	idleAutoHeal		= 0,

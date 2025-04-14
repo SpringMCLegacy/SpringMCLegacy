@@ -13,7 +13,6 @@ local IS_Avenger = {
 	footprintZ 			= 20,
 	buildCostEnergy     = 0,
 	buildCostMetal      = 0,
-	buildTime           = 0,
 	canMove				= true,
 	canAttack			= true,
 	idleAutoHeal		= 0,
