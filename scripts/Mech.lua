@@ -748,7 +748,11 @@ function script.FireWeapon(weaponID)
 		ChangeAmmo(ammoType, -burstLengths[weaponID])
 	end
 	if not missileWeaponIDs[weaponID] and not flareOnShots[weaponID] then
-		EmitSfx(flares[weaponID], SFX.CEG + weaponID) -- TODO: something can be nil here too, maybe a unit lacks a flare piece?
+		if not flares[weaponID] then 
+			Spring.Echo("BUGREPORT", unitDef.name, weaponID) 
+		else
+			EmitSfx(flares[weaponID], SFX.CEG + weaponID) -- TODO: something can be nil here too, maybe a unit lacks a flare piece?
+		end
 	end
 end
 
