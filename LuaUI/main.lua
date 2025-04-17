@@ -13,7 +13,8 @@
 
 Spring.SendCommands({"ctrlpanel " .. LUAUI_DIRNAME .. "ctrlpanel.txt"})
 
-VFS.Include(LUAUI_DIRNAME .. 'utils.lua', utilFile)
+VFS.Include(LUAUI_DIRNAME .. "rml_setup.lua",  nil)--, VFS.ZIP)
+VFS.Include(LUAUI_DIRNAME .. 'utils.lua', nil)--, VFS.ZIP)
 
 include("setupdefs.lua")
 include("savetable.lua")
@@ -96,6 +97,10 @@ function ConfigureLayout(command)
   return widgetHandler:ConfigureLayout(command)
 end
 
+function ActiveCommandChanged(id, cmdType)
+  return widgetHandler:ActiveCommandChanged(id, cmdType)
+end
+
 function CommandNotify(id, params, options)
   return widgetHandler:CommandNotify(id, params, options)
 end
@@ -105,12 +110,16 @@ function DrawScreen(vsx, vsy)
   return widgetHandler:DrawScreen()
 end
 
-function KeyPress(key, mods, isRepeat, label, unicode)
-  return widgetHandler:KeyPress(key, mods, isRepeat, label, unicode)
+function KeyMapChanged()
+  return widgetHandler:KeyMapChanged()
 end
 
-function KeyRelease(key, mods, label, unicode)
-  return widgetHandler:KeyRelease(key, mods, label, unicode)
+function KeyPress(key, mods, isRepeat, label, unicode, scanCode, actions)
+  return widgetHandler:KeyPress(key, mods, isRepeat, label, unicode, scanCode, actions)
+end
+
+function KeyRelease(key, mods, label, unicode, scanCode, actions)
+  return widgetHandler:KeyRelease(key, mods, label, unicode, scanCode, actions)
 end
 
 function MouseMove(x, y, dx, dy, button)
