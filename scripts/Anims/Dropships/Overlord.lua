@@ -63,6 +63,7 @@ end
 function DeployWeapons(out)
 	local mantlet = piece("mantlet_1")
 	local barrel = piece("barrel_1")
+	if not out then sniperCanFire = out end -- disable firing before retract
 	Move(mantlet, z_axis, out and 40 or 0, 20)
 	Move(barrel, z_axis, out and 0 or -58, 20)
 	WaitForMove(mantlet, z_axis)
@@ -172,7 +173,7 @@ function UnloadCargo()
 		end
 		Sleep(2000)
 	end
-	StartThread(DeployWeapons, false)
+	DeployWeapons(false) -- not threaded so we wait
 	PlaySound("dropship_doorclose")
 	Turn(main_door, x_axis, 0, DOOR_SPEED/2)
 	WaitForTurn(main_door, x_axis)
