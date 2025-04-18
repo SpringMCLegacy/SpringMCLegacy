@@ -261,7 +261,7 @@ function UpdateButtons(teamID, arrived) -- Toggles Submit Order vs Order Sent
 			EditUnitCmdDesc(unitID, FindUnitCmdDesc(unitID, CMD_RUNNING_TOTAL), {name = "Order\nC-Bills: \n0"})
 			EditUnitCmdDesc(unitID, FindUnitCmdDesc(unitID, CMD_RUNNING_TONS), {name = "Order\nTonnes: \n0"})
 		end
-	elseif orderStatus[teamID] == 1 then -- order submitted
+	elseif orderStatus[teamID] >= 1 then -- order submitted
 		EditUnitCmdDesc(unitID, FindUnitCmdDesc(unitID, CMD_SEND_ORDER), {name = "Order \nSent "})
 	end
 end
@@ -273,6 +273,7 @@ function OrderFinished(unitID, teamID)
 	orderSizes[unitID] = 0
 end
 
+-- TODO: Is this failing to be called somehow so not resetting orderstatus?
 function DropZoneCoolDown(teamID) -- called by Dropship once it has left, to enable "Submit Order"
 	local dead = select(3, Spring.GetTeamInfo(teamID))
 	if not dead and teamID and teamDropZoneLevels[teamID] then
@@ -290,6 +291,8 @@ function DropZoneCoolDown(teamID) -- called by Dropship once it has left, to ena
 		local enableFrame = GetGameFrame() + dropShipDef.customParams.cooldown
 		dropZoneCoolDowns[teamID] = enableFrame
 		Spring.SetTeamRulesParam(teamID, "DROPSHIP_COOLDOWN", enableFrame) -- frame this team can call dropship again
+	else
+		Spring.Echo("Uhh, your dropship is dead, dude?", teamID)
 	end
 end
 
@@ -418,15 +421,15 @@ function gadget:AllowCommand(unitID, unitDefID, teamID, cmdID, cmdParams, cmdOpt
 					UpdateButtons(teamID)
 					return true
 				else return false end
-			elseif orderStatus[teamID] == 1 then
-				Spring.SendMessageToTeam(teamID, "Cannot submit order, there is already an order pending!")
+			elseif orderStatus[teamID] >= 1 then
+				Spring.SendMessageToTeam(teamID, "Cannot submit order, there is already an order pending!", orderStatus[teamID])
 				return false -- we already have submitted an order and not cancelled it
 			end
 			if (orderSizes[unitID] or 0) == 0 then  -- don't allow empty orders
 				Spring.SendMessageToTeam(teamID, "Cannot submit order, queue is empty!")
 				return false 
 			end
-			orderStatus[teamID] = 1
+			orderStatus[teamID] = Spring.GetGameFrame() --1
 			UpdateButtons(teamID)
 			GG.Delay.DelayCall(SendCommandFallback, {unitID, unitDefID, teamID, cost}, 16)
 			return true

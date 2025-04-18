@@ -364,8 +364,8 @@ function hideLimbPieces(limb, hide)
 		EmitSfx(rootPiece, SFX.CEG + numWeapons + 1)
 		Explode(rootPiece, SFX.FIRE + SFX.SMOKE + SFX.RECURSIVE)
 		for id, valid in pairs(limbWeapons) do
-			if valid then
-				local weapDef = WeaponDefs[unitDef.weapons[id].weaponDef]
+			if id and valid then
+				--local weapDef = WeaponDefs[unitDef.weapons[id].weaponDef]
 				--Spring.Echo(unitDef.humanName .. ": " .. weapDef.name .. " destroyed!")
 				ToggleWeapon(id, 1)
 			end

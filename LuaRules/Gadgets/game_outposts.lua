@@ -179,7 +179,7 @@ function gadget:AllowCommand(unitID, unitDefID, teamID, cmdID, cmdParams, cmdOpt
 			end
 			local outpostDefID = outpostCMDs[cmdID]
 			local cost = (Spring.IsNoCostEnabled() and 0) or (outpostDefs[outpostDefID] and outpostDefs[outpostDefID].cost or 1000)
-			if cost <= GetTeamResources(teamID, "metal") then
+			if cost <= GetTeamResources(teamID, "metal") and GG.teamSide[teamID] then
 				--Spring.Echo("I'm totally gonna outpost your beacon bro!")
 				ToggleOutpostOptions(unitID, false)
 				GG.DropshipDelivery(outpostPointBeaconIDs[unitID], unitID, teamID, GG.teamSide[teamID] .. "_drost", outpostDefID, cost, "BB_Dropship_Inbound", DROPSHIP_DELAY)

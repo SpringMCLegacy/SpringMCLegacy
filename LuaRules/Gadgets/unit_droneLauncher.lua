@@ -33,9 +33,13 @@ local function GroupCentre(group)
 			z = z + uz
 		end
 	end
-	x = x / n
-	z = z / n
-	return x, z
+	if n == 0 then
+		return nil, nil
+	else
+		x = x / n
+		z = z / n
+		return x, z
+	end
 end
 
 
@@ -47,7 +51,9 @@ local function SupportGroup(apcID, group)
 	-- TODO: use APC primary weapon range
 	if group then
 		local x, z = GroupCentre(group)
-		Spring.SetUnitMoveGoal(apcID, x, 0, z, 400 * 0.7)
+		if x and z then
+			Spring.SetUnitMoveGoal(apcID, x, 0, z, 400 * 0.7)
+		end
 		--Spring.MarkerAddPoint(x, 0, z)
 	end
 end
@@ -183,7 +189,7 @@ function gadget:UnitDestroyed(unitID, unitDefID, teamID)
 	if baAPCs[unitID] then -- A BA died
 		local apcID = baAPCs[unitID]
 		if apcID and apcGroups[apcID] then
-			--APCCountChange(apcID, -1)
+			--APCCountChange(apcID, -1) -- TODO: why is this disabled? without this there's no handling of squad-wipe?
 			apcGroups[apcID][unitID] = nil
 		end
 		baAPCs[unitID] = nil
@@ -251,6 +257,7 @@ function gadget:CommandFallback(unitID, unitDefID, unitTeam, cmdID, cmdParams, c
 			SupportGroup(unitID, apcGroups[unitID])
 			return true, false
 			-- TODO: handle the command ending on embark
+			-- TODO: check if there are any drones left to support here?
 		end
 	elseif unitDefID == UnitDefNames["cl_elemental_prime"].id then -- TODO: dehack this, cache BA defs
 		if cmdID == CMD_EMBARK then
