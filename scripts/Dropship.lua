@@ -50,7 +50,7 @@ end
 -- Constants
 HOVER_HEIGHT = unitDef.customParams.hoverheight or 0
 DROP_HEIGHT = 10000 + HOVER_HEIGHT
-GRAVITY = 120/Game.gravity
+GRAVITY = 120/Game.gravity -- TODO: map default is actually 130, but all the aero dropships were coded with this in mind
 TX, TY, TZ = Spring.GetUnitPosition(unitID)
 GY = Spring.GetGroundHeight(TX, TZ)
 CEG = SFX.CEG + #weapons

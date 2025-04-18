@@ -46,7 +46,6 @@ function LandingGearDown()
 		Turn(gears[i].door, x_axis, math.rad(60), SPEED * 5)
 	end
 	WaitForTurn(gears[4].door, x_axis)
-	Spring.MoveCtrl.SetGravity(unitID, -6 * GRAVITY) -- -3.72, -4
 	Sleep(2500)
 	for i = 1, 4 do -- feet into deploy position
 		Turn(gears[i].joint, x_axis, math.rad(5), SPEED)
@@ -103,7 +102,7 @@ function LandingGearUp()
 		Turn(gears[i].door, x_axis, 0, SPEED)
 	end
 	WaitForTurn(gears[4].door, x_axis)
-	
+	--Spring.Echo("ROCKET FULL ASCENT BURN NOW!")
 	Spring.MoveCtrl.SetGravity(unitID, -4 * GRAVITY)
 end
 
@@ -238,43 +237,70 @@ function TakeOff()
 	Spring.DestroyUnit(unitID, false, true)
 end
 
+local BURN_HEIGHT = 3500
+local APPROACH_HEIGHT = 925
+local V_START = -60
+local V_BURNSTART = -40
+local V_BURNEND = -1
+local CONVERSION = 30 * 30 / 130
+
+function FindA(s, u, v)
+	return CONVERSION * GRAVITY * (v^2 - u^2) / (2*s)
+end
+
+GRAVITY = 130/Game.gravity -- TODO: this should be in main dropship
+
 function Drop()
-	local s = DROP_HEIGHT - 925
-	local u = -60
-	local v = -50
-	local a = (u^2 -v^2) / (2*s)
 	Signal(Drop)
 	SetSignalMask(Drop)
 	Spring.SetTeamRulesParam(Spring.GetUnitTeam(unitID), "DROPSHIP_COOLDOWN", -1)
 	Spring.MoveCtrl.Enable(unitID)
 	Spring.MoveCtrl.SetPosition(unitID, TX, GY + DROP_HEIGHT, TZ)
 	Spring.MoveCtrl.SetHeading(unitID, HEADING)
-	Spring.MoveCtrl.SetVelocity(unitID, 0, u, 0) -- -55
-	Spring.MoveCtrl.SetGravity(unitID, -a)---1.8 * GRAVITY) -- -0.4
-	
+	Spring.MoveCtrl.SetVelocity(unitID, 0, V_START, 0)
+	Spring.MoveCtrl.SetGravity(unitID, FindA(DROP_HEIGHT - BURN_HEIGHT, V_START, V_BURNSTART))
+	--Spring.Echo("1st a", FindA(DROP_HEIGHT - BURN_HEIGHT, V_START, V_BURNSTART))
 	local SPEED = 0
-
+	
 	stage = 1
 	StartThread(fx)
 	
+	-- Wait whilst we fall
 	local _, y, _ = Spring.GetUnitPosition(unitID)
-	while y - GY > 3500 do
+	--[[Spring.Echo("1st Y", y, y - GY)
+	local _,vy,_ = Spring.GetUnitVelocity(unitID)
+	Spring.Echo("1st V", vy)--]]
+	while y - GY > BURN_HEIGHT do
 		Sleep(30)
-		_, y, _ = Spring.GetUnitPosition(unitID)
+		_, y, _ = Spring.GetUnitPosition(unitID) -- update
+		--[[Spring.Echo("next Y", y, y - GY)
+		local vx,vy,vz = Spring.GetUnitVelocity(unitID)
+		Spring.Echo("next V", vy)--]]
 	end
+	--Spring.Echo("2nd Y", y, y - GY)
+	local _,vy,_ = Spring.GetUnitVelocity(unitID) -- use actual velocity & position rather than desired
+	--[[Spring.Echo("2nd V", vy)
+	Spring.Echo("ROCKET SUICIDE DESCENT BURN NOW!")--]]
+	Spring.MoveCtrl.SetGravity(unitID, FindA(y - APPROACH_HEIGHT, vy, V_BURNEND))
+	--Spring.Echo("2nd a", FindA(y - APPROACH_HEIGHT, vy, V_BURNEND))
+	
 	-- only proceed if the beacon is still ours --and is secure
 	if Spring.GetUnitTeam(beaconID) == Spring.GetUnitTeam(unitID) then 
 		stage = 2
-		--Spring.Echo("ROCKET FULL BURN NOW!")
-	
-
-		StartThread(LandingGearDown)
-		while y - GY > 925 do
+		StartThread(LandingGearDown) -- this sets main slowdown at end
+		_, y, _ = Spring.GetUnitPosition(unitID)
+		while y - GY > APPROACH_HEIGHT do
 			Sleep(30)
-			_, y, _ = Spring.GetUnitPosition(unitID)
+			_, y, _ = Spring.GetUnitPosition(unitID) -- update
+			--[[Spring.Echo("next Y", y, y - GY)
+			local _,vy,_ = Spring.GetUnitVelocity(unitID)
+			Spring.Echo("next V", vy)--]]
 		end
 		stage = 3
-		Spring.MoveCtrl.SetGravity(unitID, -0.02 * GRAVITY) -- -0.02
+		--[[Spring.Echo("3rd Y", y, y - GY)
+		local _,vy,_ = Spring.GetUnitVelocity(unitID)
+		Spring.Echo("3rd V", vy)--]]
+		Spring.MoveCtrl.SetGravity(unitID, -0.02 * GRAVITY)
 		Spring.MoveCtrl.SetCollideStop(unitID, true)
 		Spring.MoveCtrl.SetTrackGround(unitID, true)
 	else
