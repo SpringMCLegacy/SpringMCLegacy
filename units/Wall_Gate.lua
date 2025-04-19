@@ -18,7 +18,6 @@ local Wall_Gate = {
 	collisionVolumeOffsets = "0 -20 0",
 	buildCostEnergy     = 0,
 	buildCostMetal      = 0,
-	buildTime           = 0,
 	canMove				= false,
 	maxVelocity			= 0,
 	idleAutoHeal		= 0,
