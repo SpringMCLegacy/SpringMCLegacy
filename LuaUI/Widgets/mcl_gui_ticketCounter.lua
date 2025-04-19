@@ -169,6 +169,7 @@ end
 
 function widget:PlayerChanged()
 	MY_TEAM_ID = Spring.GetMyTeamID()
+	MY_ALLY_ID = select(6, Spring.GetTeamInfo(MY_TEAM_ID))
 	haveArty = Spring.GetTeamUnitsCounts(MY_TEAM_ID)[UPLINK_ID] or 0 
 end
 
