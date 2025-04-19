@@ -228,10 +228,10 @@ local BLR4S = Battlemaster:New{
 		[8] = {
 			name	= "SRM6",
 		},
-		[7] = {
+		[9] = {
 			name	= "SPL",
 		},
-		[8] = {
+		[10] = {
 			name	= "SPL",
 		},
 	},
