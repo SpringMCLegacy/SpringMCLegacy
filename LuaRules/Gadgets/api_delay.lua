@@ -54,7 +54,13 @@ function gadget:GameFrame(n)
 	if frameCalls then
 		for i=1,#frameCalls do
 			local currCall = frameCalls[i]
-			currCall[1](unpack(currCall[2]))
+			-- check if argument is a unitID and if it is dead
+			local unitID = currCall[2][1]
+			if Spring and unitID and Spring.ValidUnitID(unitID) and Spring.GetUnitIsDead(unitID) then
+				currCall[1] = nil
+			else
+				currCall[1](unpack(currCall[2]))
+			end
 		end
 		--delete
 		calls[n] = nil
