@@ -273,9 +273,9 @@ function OrderFinished(unitID, teamID)
 	orderSizes[unitID] = 0
 end
 
--- TODO: Is this failing to be called somehow so not resetting orderstatus?
 function DropZoneCoolDown(teamID) -- called by Dropship once it has left, to enable "Submit Order"
 	local dead = select(3, Spring.GetTeamInfo(teamID))
+	if dead then return end
 	if not dead and teamID and teamDropZoneLevels[teamID] then
 		local unitID = teamDropZones[teamID]
 		local beaconID = GG.dropZoneBeaconIDs[teamID]
@@ -292,7 +292,7 @@ function DropZoneCoolDown(teamID) -- called by Dropship once it has left, to ena
 		dropZoneCoolDowns[teamID] = enableFrame
 		Spring.SetTeamRulesParam(teamID, "DROPSHIP_COOLDOWN", enableFrame) -- frame this team can call dropship again
 	else
-		Spring.Echo("Uhh, your dropship is dead, dude?", teamID)
+		Spring.Echo("FLOZi logic fail, a non-dead team seems to be missing teamDropZoneLevels?")
 	end
 end
 

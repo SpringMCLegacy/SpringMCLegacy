@@ -43,9 +43,9 @@ GG.TeamSlotsRemaining = TeamSlotsRemaining
 local function TeamAvailableGroup(teamID, size)
 	if select(3, Spring.GetTeamInfo(teamID)) then return false end -- team died
 	if teamID == GAIA_TEAM_ID then return false end
-	for i = 1, 3 do
-		if teamSlots[teamID][i].available == nil or size == nil then Spring.Echo("FLOZi Logic Fail", teamSlots[teamID][i].available, size) return false end
-		if teamSlots[teamID][i].available >= size then return i, teamSlots[teamID][i].active end
+	for lance = 1, 3 do
+		if teamSlots[teamID][lance].available == nil or size == nil then Spring.Echo("FLOZi Logic Fail C3 line 47", teamSlots[teamID][lance].available, size) return false end
+		if teamSlots[teamID][lance].available >= size then return lance, teamSlots[teamID][lance].active end
 	end
 	return false
 end
@@ -67,8 +67,10 @@ end
 
 local function AssignGroup(unitID, unitDefID, teamID, slotChange, group)
 	local groupSlots = teamSlots[teamID][group]
-	groupSlots.used = groupSlots.used + slotChange
-	groupSlots.available = groupSlots.available - slotChange
+	if groupSlots then -- can be called to remove from a dead group
+		groupSlots.used = groupSlots.used + slotChange
+		groupSlots.available = groupSlots.available - slotChange
+	end
 	if slotChange > 0 then -- adding a unit to group
 		unitLances[unitID] = group
 		SendToUnsynced("LANCE", teamID, unitID, group)
@@ -84,11 +86,11 @@ local function AssignGroup(unitID, unitDefID, teamID, slotChange, group)
 			-- AND it has units assigned to it
 			-- AND the team has inssufficient C3's to support it
 			if groupNum > group and currGroupSlots.used > 0 and (teamC3Counts[teamID] + 1) < groupNum then
-				for groupUnitID, tonnage in pairs(currGroupSlots.units) do
+				for groupUnitID, unitTonnage in pairs(currGroupSlots.units) do
 					local linkLost = (Spring.GetUnitRulesParam(groupUnitID, "LOST_LINK") or 0) == 1
 					if linkLost then
 						numCandidates = numCandidates + 1
-						candidates[groupUnitID] = {id = groupUnitID, tonnage = tonnage}
+						candidates[groupUnitID] = {id = groupUnitID, tonnage = unitTonnage}
 						--[[if numCandidates == groupSlots.available then
 							break -- no point continuing if we already have enough mechs to fill the lance
 						end]]
@@ -97,7 +99,7 @@ local function AssignGroup(unitID, unitDefID, teamID, slotChange, group)
 			end
 		end
 		-- TODO: Probably a FILO queue is better here?
-		-- sort by tonnage (descending) -- TODO: Is this even still needed after splitting tonnage and lancing?
+		-- sort by tonnage (descending) -- TODO: Is this even still needed after splitting tonnage and lancing? Probably you want to prioritise heaviest mechs
 		table.sort(candidates, TonnageSort)
 		-- we don't want to change the list as we iterate over it so build a list of candidates first then iterate over that making the changes
 		-- use a first-fit decreasing bin packing algorithm
@@ -137,21 +139,23 @@ function LanceControl(teamID, unitID, add)
 		if teamC3Counts[teamID] < 2 then -- team lost control of / capacity for a lance
 			local lostLance = teamC3Counts[teamID] + 2
 			Spring.SendMessageToTeam(teamID, "Lost lance #" .. lostLance)
-			Spring.SetTeamRulesParam(teamID, "LANCES", lostLance)
+			Spring.SetTeamRulesParam(teamID, "LANCES", lostLance - 1)
 			local groupSlots = teamSlots[teamID][lostLance]
 			groupSlots.active = false
 			-- stop any mechs in this lance and make them unselectable
 			--Spring.GiveOrderToUnitMap(groupSlots.units, CMD.STOP, EMPTY_TABLE, EMPTY_TABLE)
 			for unitID, tonnage in pairs(groupSlots.units) do
-				local unitDefID = Spring.GetUnitDefID(unitID)
-				local lowerGroup, lowerActive = TeamAvailableGroup(teamID, 1)
-				if lowerGroup and lowerActive then -- if there is a slot lower down, take it
-					-- cleanup old group
-					AssignGroup(unitID, unitDefID, teamID, -1, unitLances[unitID])
-					-- add to new group
-					AssignGroup(unitID, unitDefID, teamID, 1, lowerGroup)
-				else -- otherwise we've lost the link
-					ToggleLink(unitID, teamID, true, tonnage)
+				local unitDefID = Spring.GetUnitDefID(unitID) -- TODO: somehow, this can be nil? unitID is dead?
+				if unitDefID then -- work around the bug for now
+					local lowerGroup, lowerActive = TeamAvailableGroup(teamID, 1)
+					if lowerGroup and lowerActive then -- if there is a slot lower down, take it
+						-- cleanup old group
+						AssignGroup(unitID, unitDefID, teamID, -1, unitLances[unitID])
+						-- add to new group
+						AssignGroup(unitID, unitDefID, teamID, 1, lowerGroup)
+					else -- otherwise we've lost the link
+						ToggleLink(unitID, teamID, true, tonnage)
+					end
 				end
 			end
 		end
@@ -172,7 +176,7 @@ local function UpdateTeamSlots(teamID, unitID, unitDefID, add)
 			end
 			AssignGroup(unitID, unitDefID, teamID, 1, group)
 		else 
-			Spring.Echo(teamID, "FLOZi logic fail: No available group", TeamSlotsRemaining(teamID), 1, ud.name) 
+			Spring.Echo(teamID, "FLOZi logic fail: No available group", TeamSlotsRemaining(teamID), 1, ud.name) -- TODO: can reach here
 		end
 	else -- unit died
 		local group = unitLances[unitID]
@@ -257,9 +261,9 @@ function ToggleSelectionByTeam(eventID, unitID, teamID, selectable)
 end
 
 function AddUnitToLance(eventID, teamID, unitID, group)
-	if teamID == MY_TEAM_ID then
+	--if teamID == MY_TEAM_ID then
 		CallAsTeam(teamID, Spring.SetUnitGroup, unitID, group)
-	end
+	--end
 end
 
 function gadget:Initialize()

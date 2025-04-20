@@ -154,12 +154,12 @@ local function initializeSetView()
 		-- initialize lance groups
 		units[lanceNumber]	= {}
 		unitIdCache[lanceNumber]	= {}
-		-- set 2x4 grid for all units in this lance
+		-- set 2x2 grid for all units in this lance
 		local unitNumber = 1
-		for counterY = 0, 3 do -- 4 across
-			for counterX = 1, 2 do	-- 2 down
-				local hSpacing	= (counterX-1)*48+2
-				local vSpacing	= (counterY)*24+2
+		for counterY = 0, 1 do -- 4 across
+			for counterX = 0, 1 do	-- 2 down
+				local hSpacing	= counterX*48+2
+				local vSpacing	= counterY*24+2
 				local myIndex	= unitNumber
 				units[lanceNumber][unitNumber]	= Chili.Window:New{
 					parent			= deckSets[lanceNumber];
@@ -193,7 +193,7 @@ local function initializeSetView()
 							valign		= "top";
 							y			= "20%";
 							x			= "10%";
-							fontsize	= fontSizes.large;
+							fontsize	= fontSizes.medium;
 						},				
 						Chili.Progressbar:New{
 							color			= green;
@@ -244,7 +244,7 @@ end
 -------------------------------------------------------------------------------------
 local function updateLance()
 	local groupUnits = spGetGroupUnits(currentLance)
-	for unitNumber = 1, 8 do
+	for unitNumber = 1, 4 do
 		local unitPreview = units[currentLance][unitNumber].children
 		--Spring.Echo("removed", currentLance, unitNumber)
 		deckSets[currentLance]:RemoveChild(units[currentLance][unitNumber])
@@ -263,7 +263,7 @@ local function updateLance()
 	
 	-- update all the units in the lance, ensure they have some health
 	for unitNumber,unitId in pairs(groupUnits)do
-		if unitNumber <  9 then
+		if unitNumber <  5 then
 			local unitDefId		= spGetUnitDefID(unitId)
 			local currentDef 	= UnitDefs[unitDefId]
 			local health, maxHealth	= spGetUnitHealth(unitId)
@@ -299,4 +299,12 @@ end
 -------------------------------------------------------------------------------------
 function widget:Update()
 	updateLance()
+end
+
+function widget:PlayerChanged()
+	for i = 1, 3 do
+		currentLance = i
+		updateLance()
+	end
+	currentLance = 1
 end

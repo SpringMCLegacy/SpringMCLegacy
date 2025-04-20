@@ -59,7 +59,7 @@ function gadget:GameFrame(n)
 			if Spring and unitID and Spring.ValidUnitID(unitID) and Spring.GetUnitIsDead(unitID) then
 				currCall[1] = nil
 			else
-				currCall[1](unpack(currCall[2]))
+				currCall[1](unpack(currCall[2])) -- TODO: can still call a function expecting a unitID with an invalid ID, though rarely
 			end
 		end
 		--delete
