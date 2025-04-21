@@ -344,6 +344,7 @@ function hideLimbPieces(limb, hide)
 			lostLegs = lostLegs + 1
 			--Spring.Echo("Lost a leg! halving move speed")
 			speedMod = speedMod / 2
+			StartThread(SpeedChangeCheck)
 			-- disable jumpjets
 			if GG.unitMechanicalJumps[unitID] and info.jumpjets > 0 then
 				Spring.EditUnitCmdDesc(unitID, Spring.FindUnitCmdDesc(unitID, CMD_JUMP), {disabled = true})
@@ -352,6 +353,7 @@ function hideLimbPieces(limb, hide)
 			lostLegs = lostLegs - 1
 			--Spring.Echo("Regained a leg! doubling move speed")
 			speedMod = speedMod * 2
+			StartThread(SpeedChangeCheck)
 			if GG.unitMechanicalJumps[unitID] and lostLegs == 0 and info.jumpjets > 0 then -- enable jumpjets
 				Spring.EditUnitCmdDesc(unitID, Spring.FindUnitCmdDesc(unitID, CMD_JUMP), {disabled = false})
 			end
@@ -489,6 +491,9 @@ function SpeedChangeCheck()
 end
 
 function Run(activate)
+	if lostLegs > 0 then
+		return -- do not allow running at all if you have a damaged leg
+	end
 	if not activate then
 		speedMod = 1
 		Spring.SetUnitRulesParam(unitID, "running", 0)
