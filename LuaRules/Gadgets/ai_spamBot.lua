@@ -115,25 +115,28 @@ function gadget:GamePreload()
 	end
 end
 
+local AI_OUTPOST_OPTIONS = {
+	"CMD_OUTPOST_C3ARRAY",
+	"CMD_OUTPOST_VEHICLEPAD",
+}
+
 local function Outpost(unitID, teamID)
 	if not unitID then -- set as starting beacon if not given
 		unitID = GG.dropZoneBeaconIDs[teamID]
 	end
-	if beaconOutpostCounts[unitID] == 3 then return false end -- fully outposted TODO: change to 3
+	if beaconOutpostCounts[unitID] == 3 then return false end -- fully outposted
 	if not dropZoneIDs[teamID] then -- no dropzone left!
 		GG.Delay.DelayCall(Spring.GiveOrderToUnit, {unitID, AI_CMDS["CMD_DROPZONE"].id, {}, {}}, 1)
 		return true
 	elseif unitID then -- gonna outpost a point, could still be nil if dropZoneBeaconIDs is behind the times
-		-- TODO: Truly horrible, just randomnly pick?
-		--local cmd = ((teamOutpostCounts[teamID][C3_ID] + teamOutpostCounts[teamID][VPAD_ID]) % 2 == 1) and "CMD_OUTPOST_C3ARRAY" or "CMD_OUTPOST_VEHICLEPAD"
 		-- Try just randomly picking
-		local randPick = math.random(2)
-		local cmd = (randPick == 1 and "CMD_OUTPOST_C3ARRAY") or (randPick == 2 and "CMD_OUTPOST_VEHICLEPAD")-- or "CMD_OUTPOST_SALVAGEYARD"
-		if difficulty > 1 then
+		local randPick = math.random(#AI_OUTPOST_OPTIONS)
+		local cmd = AI_OUTPOST_OPTIONS[randPick]
+		if difficulty > 1 then -- cheat the required resources in
 			Spring.AddTeamResource(teamID, "metal", AI_CMDS[cmd].cost)
 		end
 		if Spring.GetTeamResources(teamID, "metal") > AI_CMDS[cmd].cost then
-			local slot = randPick --cmd == "CMD_OUTPOST_C3ARRAY" and 1 or 2 -- TODO: horrible, keep track of this internally? or in beaconBuild
+			local slot = math.random(3) -- choose from the 3 points
 			local pointID = GG.beaconOutpostPointIDs[unitID][slot]
 			--Spring.Echo("Outpost", cmd)
 			GG.Delay.DelayCall(Spring.GiveOrderToUnit, {pointID, AI_CMDS[cmd].id, {}, {}}, 1)
