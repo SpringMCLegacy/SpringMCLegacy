@@ -79,7 +79,10 @@ function SpeedChange(unitID, unitDefID, mult)
 	env = Spring.UnitScript.GetScriptEnv(unitID)
 	if not env.jumping and Spring.ValidUnitID(unitID) and not Spring.GetUnitIsDead(unitID) then
 		--Spring.Echo("debug SpeedChange:", UnitDefs[unitDefID].name)
-		Spring.MoveCtrl.SetGroundMoveTypeData(unitID, ChangeMoveData(unitDefID, mult))
+		if not pcall(Spring.MoveCtrl.SetGroundMoveTypeData, unitID, ChangeMoveData(unitDefID, mult)) then
+			Spring.Echo("unit_abilities debug:", unitDefID, unitDefID and UnitDefs[unitDefID].name)
+		end
+		-- TODO: still not fixed: unit 17678 has incompatible movetype for SetGroundMoveTypeData
 		--env.speedMod = mult
 	end
 end
