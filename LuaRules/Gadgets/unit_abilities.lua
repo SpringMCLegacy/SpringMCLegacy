@@ -77,7 +77,8 @@ end
 
 function SpeedChange(unitID, unitDefID, mult)
 	env = Spring.UnitScript.GetScriptEnv(unitID)
-	if not env.jumping then
+	if not env.jumping and Spring.ValidUnitID(unitID) and not Spring.GetUnitIsDead(unitID) then
+		--Spring.Echo("debug SpeedChange:", UnitDefs[unitDefID].name)
 		Spring.MoveCtrl.SetGroundMoveTypeData(unitID, ChangeMoveData(unitDefID, mult))
 		--env.speedMod = mult
 	end

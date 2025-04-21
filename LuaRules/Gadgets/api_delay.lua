@@ -56,10 +56,14 @@ function gadget:GameFrame(n)
 			local currCall = frameCalls[i]
 			-- check if argument is a unitID and if it is dead
 			local unitID = currCall[2][1]
-			if Spring and unitID and Spring.ValidUnitID(unitID) and Spring.GetUnitIsDead(unitID) then
+			if (unitID and Spring.ValidUnitID(unitID) and Spring.GetUnitIsDead(unitID)) then
+				currCall[1] = nil
+			-- this is gross but can't think how this can be non-valid without being dead, unless it is beyond tombstoned...
+			-- ... and can't just check for valid unitID as first param may actually be e.g. a teamID
+			elseif (currCall[1] == Spring.GiveOrderToUnit and unitID and not Spring.ValidUnitID(unitID)) then
 				currCall[1] = nil
 			else
-				currCall[1](unpack(currCall[2])) -- TODO: can still call a function expecting a unitID with an invalid ID, though rarely
+				currCall[1](unpack(currCall[2])) 
 			end
 		end
 		--delete
