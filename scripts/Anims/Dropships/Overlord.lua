@@ -102,8 +102,8 @@ end
 
 -- Global to be picked up by functions in the include, what could go wrong?
 -- (Sorry hokomoko)
-BURN_HEIGHT = 3000
-APPROACH_HEIGHT = 1050
+BURN_HEIGHT = 2750
+APPROACH_HEIGHT = 1500
 V_START = -60
 V_BURNSTART = -20
 V_BURNEND = -1
@@ -171,7 +171,7 @@ function UnloadCargo()
 		else
 			Spring.SetUnitMoveGoal(cargoID, UNLOAD_X +  math.random(-100, 100), 0, UNLOAD_Z +  math.random(-100, 100), 25) -- bug out over here
 		end
-		Sleep(2000)
+		Sleep(WAIT_TIME/2) -- Big and slow, dominate the battlefield!
 	end
 	DeployWeapons(false) -- not threaded so we wait
 	PlaySound("dropship_doorclose")
