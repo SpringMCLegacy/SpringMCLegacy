@@ -16,6 +16,14 @@ local moveDefs 	=	 {
 		heatmapping		=	false,
 	},
 	{
+		name			=	"BA",
+		footprintX		=	1,
+		maxWaterDepth	=	2,
+		maxSlope		=	45,
+		crushStrength	=	0,
+		heatmapping		=	false,
+	},
+	{
 		name			=	"SMALLMECH",
 		footprintX		=	2,
 		maxWaterDepth	=	30,

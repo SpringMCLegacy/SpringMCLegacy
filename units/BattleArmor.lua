@@ -12,8 +12,7 @@ local BattleArmor = Light:New{
 	brakeRate       = 0.1,
 	turnRate 		= 3000,
 	
-	footprintX = 1,
-	footprintZ = 1,
+	movementClass		= "BA",
 	script = "Infantry.lua",
 
 	--cruisealt = 50,
