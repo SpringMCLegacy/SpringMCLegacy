@@ -42,7 +42,6 @@ local glLineWidth				= gl.LineWidth
 local glPolygonOffset			= gl.PolygonOffset
 local glPopMatrix				= gl.PopMatrix
 local glPushMatrix				= gl.PushMatrix
-local glText					= gl.Text
 local glVertex					= gl.Vertex
 local spDiffTimers				= Spring.DiffTimers
 local spGetAllUnits				= Spring.GetAllUnits
@@ -69,12 +68,17 @@ local circleOffset  = 0
  
 local MY_TEAM_ID = Spring.GetMyTeamID()
 local NARC_DURATION = Spring.GetGameRulesParam("NARC_DURATION")
- 
+local FONT_SIZE = 18
+
 local startTimer  = spGetTimer()
  
 local realRadii    = {}
 local heights = {}
- 
+local colors = {}
+colors.narc = "\255\255\255\001"
+colors.tag = "\255\255\051\051"
+colors.linkLost = "\255\255\255\255"
+colors.ppc = "\255\140\166\255"
  
 function widget:Initialize()
   circleLines = glCreateList(function()
@@ -86,6 +90,7 @@ function widget:Initialize()
       end
     end)
   end)
+  btFont = gl.LoadFont("LuaUI/Fonts/bt_oldstyle.ttf", FONT_SIZE, 2, 30)
 end
  
 function widget:PlayerChanged()
@@ -125,14 +130,14 @@ local function CountDown(frame, height)
 	local timeLeft = string.format('%.1f', (frame - Spring.GetGameFrame()) / 32.0)
 	glPushMatrix()
 	glBillboard()
-	glText("NARC: " .. timeLeft, 0, height + 8, 20, "c")
+	btFont:Print(colors.narc .. "NARC: " .. timeLeft, 0, height + 8, FONT_SIZE, "oc")
 	glPopMatrix()
 end
  
 local function TagText(height)
 	glPushMatrix()
 	glBillboard()
-	glText("TAG", 0, height + 24, 20, "c")
+	btFont:Print(colors.tag .. "TAG", 0, height + 24, FONT_SIZE, "oc")
 	glPopMatrix()
 end
 
@@ -142,7 +147,7 @@ local function LinkText(height)
 	local num = Spring.GetGameSeconds() % 4
 	local dots = ""
 	for i = 1, num do dots = dots .. "." end
-	glText("Link lost" .. dots, -40, height - 8, 20, "l")
+	btFont:Print(colors.linkLost .. "Link lost" .. dots, -40, height - 8, FONT_SIZE, "oc")
 	glPopMatrix()
 end
 
@@ -150,11 +155,11 @@ local function PPCText(frame, gameFrame, height) -- hodor, frame calc is reverse
 	local timeLeft = string.format('%.1f', (frame - gameFrame) / 30.0)
 	glPushMatrix()
 	glBillboard()
-	glText("PPC: " .. timeLeft, 0, height + 40, 20, "c")
+	btFont:Print(colors.ppc .. "PPC: " .. timeLeft, 0, height + 40, FONT_SIZE, "oc")
 	glPopMatrix()
 end
 
-function widget:GameFrame(n)
+--[[function widget:GameFrame(n)
 	for _,unitID in ipairs(spGetAllUnits()) do
 		--if (spIsUnitVisible(unitID)) then
 			-- check if it's NARCed
@@ -168,11 +173,11 @@ function widget:GameFrame(n)
 			end
 		--end
 	end
- end
+ end]]
  
 function widget:DrawWorldPreUnit()
 	glLineWidth(2.0)
-	glDepthTest(false)--true)
+	glDepthTest(false)
 	glPolygonOffset(-50, -2)
  
 	local gameFrame = GetGameFrame()
@@ -180,7 +185,6 @@ function widget:DrawWorldPreUnit()
 		if (spIsUnitVisible(unitID)) then
 			-- check if it's NARCed
 			local NARCFrame = GetUnitRulesParam(unitID, "NARC") or 0
-			--Spring.Echo(NARCFrame, Spring.GetGameFrame())
 			if NARCFrame > 0 then
 				local teamID = spGetUnitTeam(unitID)
 				if (teamID and teamID ~= Spring.GetGaiaTeamID()) then
@@ -197,11 +201,6 @@ function widget:DrawWorldPreUnit()
 						local x, y, z = spGetUnitBasePosition(unitID)
 						local gx, gy, gz = spGetGroundNormal(x, z)
 						local degrot = math.acos(gy) * 180 / math.pi
-						local xs,zs = 4*UnitDefs[udid].xsize or 4, 4*UnitDefs[udid].zsize or 4
-                          
-						if (Spring.GetUnitBuildFacing(unitID) or 0)%2==1 then
-							xs,zs=zs,xs
-						end
 						-- draw concentric yellow blinky circles
 						glColor(1, 1, 0, 1)
 						glDrawFuncAtUnit(unitID, true, CountDown, NARCFrame, height) -- should really cache heights
@@ -221,25 +220,21 @@ function widget:DrawWorldPreUnit()
 					height = spGetUnitHeight(unitID)
 					heights[udid] = height
 				end
-				glColor(1.0, 0.2, 0.2, 1)
 				glDrawFuncAtUnit(unitID, true, TagText, height)
 			end
 			-- check Link
 			local linkLost = (GetUnitRulesParam(unitID, "LOST_LINK") or 0) == 1
 			if linkLost then
-				--Spring.Echo(unitID, "LINK LOST")
 				local udid = spGetUnitDefID(unitID)
 				local height = heights[udid]
 				if not height then
 					height = spGetUnitHeight(unitID)
 					heights[udid] = height
 				end
-				glColor(1.0, 1.0, 1.0, 1)
 				glDrawFuncAtUnit(unitID, true, LinkText, height)
 			end
 			-- check PPC
 			local PPCFrame = GetUnitRulesParam(unitID, "PPC_HIT") or 0
-			--Spring.Echo(NARCFrame, Spring.GetGameFrame())
 			if PPCFrame > gameFrame then
 				local udid = spGetUnitDefID(unitID)
 				local height = heights[udid]
@@ -247,7 +242,6 @@ function widget:DrawWorldPreUnit()
 					height = spGetUnitHeight(unitID)
 					heights[udid] = height
 				end
-				glColor(0.55, 0.65, 1.0, 1)
 				glDrawFuncAtUnit(unitID, true, PPCText, PPCFrame, gameFrame, height)
             end
 		end
