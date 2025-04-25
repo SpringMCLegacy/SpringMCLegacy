@@ -280,24 +280,24 @@ local Overlord = DropShip:New{ -- TODO: DropShip:New, custom weapons etc
 		},
 		[2] = {
 			name	= "UAC10",
-			mainDir = "1 0 1",
-			maxAngleDif = 90,
+			mainDir = "-1 0 1",
+			maxAngleDif = 170,
 		},
 		[3] = {
 			name	= "UAC10",
-			mainDir = "1 0 1",
-			maxAngleDif = 90,
+			mainDir = "-1 0 1",
+			maxAngleDif = 170,
 			slaveTo = 2,
 		},
 		[4] = {
 			name	= "UAC10",
-			mainDir = "-1 0 -1",
-			maxAngleDif = 90,
+			mainDir = "1 0 -1",
+			maxAngleDif = 170,
 		},
 		[5] = {
 			name	= "UAC10",
-			mainDir = "-1 0 -1",
-			maxAngleDif = 90,
+			mainDir = "1 0 -1",
+			maxAngleDif = 170,
 			slaveTo = 4,
 		},
 		-- emitter 6
