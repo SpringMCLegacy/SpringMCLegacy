@@ -25,8 +25,13 @@ local sideAssaults = {} -- sideAssaults[sideShortName] = {assaultDefID1, assault
 local AI_TEAMS = {}
 local BEACON_ID = UnitDefNames["beacon"].id
 local DROPZONE_IDS = GG.DROPZONE_IDS
+
+-- TODO: auto build a table instead of this crap
 local C3_ID = UnitDefNames["outpost_c3array"].id
 local VPAD_ID = UnitDefNames["outpost_vehiclepad"].id
+local UPLINK_ID = UnitDefNames["outpost_uplink"].id
+local GARRISON_ID = UnitDefNames["outpost_garrison"].id
+
 --local DelayCall = GG.Delay.DelayCall
 local CMD_JUMP = GG.CustomCommands.GetCmdID("CMD_JUMP")
 
@@ -48,6 +53,7 @@ end
 local dropZoneIDs = {}
 local orderSizes = {}
 
+local teamUplinkIDs =  {} -- TODO: be more generic, teamOutpostIDs = teamID = {{id = type}}?
 local flagSpots = {} --VFS.Include("maps/flagConfig/" .. Game.mapName .. "_profile.lua")
 
 local teamOutpostCounts = {} -- teamOutpostCounts[teamID] = {c3 = 1, vpad = 1} etc
@@ -55,6 +61,7 @@ local teamOutpostIDs = {} -- teamOutpostIDs[teamID] = {unitID1 = 1, unitID2 = 2 
 local teamDropshipOutposts = {} -- teamDropshipOutposts[teamID] = 1
 local teamBeacons = {} -- teamBeacons[teamID] = {beaconID1, beaconID2, ...}
 local beaconOutpostCounts = {} -- beaconOutpostCounts[beaconID] = 3
+local beaconIDs = {}
 
 local function CostSort(unitDefID1, unitDefID2)
 	return UnitDefs[unitDefID1].metalCost < UnitDefs[unitDefID2].metalCost
@@ -84,10 +91,13 @@ function gadget:GamePreload()
 		teamOutpostCounts[t] = {}
 		teamOutpostCounts[t][C3_ID] = 0
 		teamOutpostCounts[t][VPAD_ID] = 0
+		teamOutpostCounts[t][UPLINK_ID] = 0
+		teamOutpostCounts[t][GARRISON_ID] = 0
 		if Spring.GetTeamLuaAI(t) ==  name then
 			AI_TEAMS[t] = true
 		end
 		teamBeacons[t] = {}
+		teamUplinkIDs[t] = {}
 	end
 	GG.AI_TEAMS = AI_TEAMS
 	for unitDefID, unitDef in pairs(UnitDefs) do
@@ -118,6 +128,8 @@ end
 local AI_OUTPOST_OPTIONS = {
 	"CMD_OUTPOST_C3ARRAY",
 	"CMD_OUTPOST_VEHICLEPAD",
+	"CMD_OUTPOST_GARRISON",
+	"CMD_OUTPOST_UPLINK",
 }
 
 local function Outpost(unitID, teamID)
@@ -263,6 +275,7 @@ function gadget:UnitCreated(unitID, unitDefID, teamID)
 		table.insert(flagSpots, {x = x, z = z})
 		table.insert(teamBeacons[teamID], unitID)
 		beaconOutpostCounts[unitID] = 0
+		beaconIDs[unitID] = teamID
 	end
 	if AI_TEAMS[teamID] then
 		local unitDef = UnitDefs[unitDefID]
@@ -350,18 +363,85 @@ local function RunAndJump(unitID, unitDefID, cmdID, spotNum, replace)
 end
 GG.RunAndJump = RunAndJump
 
+
+local function GetSpotTarget(teamID, filter)
+	local spot
+	if filter then
+		local enemyBeacons = {}
+		for beaconID, beaconTeamID in pairs(beaconIDs) do
+			if beaconTeamID ~= teamID then
+				table.insert(enemyBeacons, beaconID)
+			end
+		end
+		if #enemyBeacons > 0 then
+			local targetID = enemyBeacons[math.random(1, #enemyBeacons)]
+			return Spring.GetUnitPosition(targetID)
+		end
+	end
+	-- any flag, ours or theirs
+	spot = flagSpots[math.random(1, #flagSpots)]
+	local offsetX = math.random(50, 150)
+	local offsetZ = math.random(50, 150)
+	offsetX = offsetX * -1 ^ (offsetX % 2)
+	offsetZ = offsetZ * -1 ^ (offsetZ % 2)
+	return spot.x + offsetX, 0, spot.z + offsetZ
+end
+
+
+
+local function GetUnitTarget(unitID)
+	return Spring.GetUnitNearestEnemy(unitID, 9999999, true)
+end
+
 local function Wander(unitID, cmd)
 	if Spring.ValidUnitID(unitID) then
-		local spot = flagSpots[math.random(1, #flagSpots)]
-		local offsetX = math.random(50, 150)
-		local offsetZ = math.random(50, 150)
-		offsetX = offsetX * -1 ^ (offsetX % 2)
-		offsetZ = offsetZ * -1 ^ (offsetZ % 2)
 		--GG.Delay.DelayCall(Spring.GiveOrderToUnit, {unitID, CMD.MOVE_STATE, {2}, {}}, 1)
 		if cmd then
-			GG.Delay.DelayCall(Spring.GiveOrderToUnit, {unitID, cmd, {spot.x + offsetX, 0, spot.z + offsetZ}, {}}, 1)
+			GG.Delay.DelayCall(Spring.GiveOrderToUnit, {unitID, cmd, {GetSpotTarget(_, true)}, {}}, 1)
 		end
-		GG.Delay.DelayCall(Spring.GiveOrderToUnit, {unitID, CMD.FIGHT, {spot.x + offsetX, 0, spot.z + offsetZ}, {"shift"}}, 1)
+		GG.Delay.DelayCall(Spring.GiveOrderToUnit, {unitID, CMD.FIGHT, {GetSpotTarget(_, true)}, {"shift"}}, 1)
+	end
+end
+
+local function CallStrike(unitID, cmd, func, params)
+	if Spring.ValidUnitID(unitID) then
+		if Spring.GetUnitIsDead(unitID) then
+			uplinkIDs[unitID] = nil
+			return
+		end
+		-- TODO: track enemy units rather than just spamming at beacons
+		-- in this case cmd should be passed
+		-- TODO: filter out your own beacons
+		GG.Delay.DelayCall(Spring.GiveOrderToUnit, {unitID, cmd, {func(params)}, {}}, 1)
+	end
+end
+
+-- TODO: properly lookup costs
+local UPLINK_CMD_COSTS = {
+	8000,
+	16000,
+	360000,
+}
+
+local function UplinkCalls(teamID)
+	for unitID in pairs(teamUplinkIDs[teamID]) do
+		local randPick = math.random(GG.uplinkLevels[unitID])
+		local cmdDesc = Spring.GetUnitCmdDescs(unitID, randPick + 8)[1] -- skip irrelevant cmdDescs
+		--for i, cmdDesc in pairs(Spring.GetUnitCmdDescs(unitID)) do
+			--[[for k,v in pairs(cmdDesc) do
+				Spring.Echo("PARP", k, v)
+			end--]]
+		--end]]
+		if difficulty > 1 then -- cheat the required resources in
+			Spring.AddTeamResource(teamID, "metal", UPLINK_CMD_COSTS[randPick])
+		end
+		if Spring.GetTeamResources(teamID, "metal") > UPLINK_CMD_COSTS[randPick] then
+			if cmdDesc.type == CMDTYPE.ICON_UNIT then
+				CallStrike(unitID, cmdDesc.id, GetUnitTarget, unitID)
+			else
+				CallStrike(unitID, cmdDesc.id, GetSpotTarget, teamID, true)
+			end
+		end
 	end
 end
 
@@ -402,16 +482,19 @@ function gadget:UnitUnloaded(unitID, unitDefID, teamID, transportID, transportTe
 	if AI_TEAMS[teamID] then
 		local ud = UnitDefs[unitDefID]
 		local cp = ud.customParams
-		if unitDefID == C3_ID then
-			teamOutpostCounts[teamID][C3_ID] = teamOutpostCounts[teamID][C3_ID] + 1
-			--Spring.Echo("C3!")
-			-- C3's take a little time to deploy and grant the extra tonnage & slots, so delay 10s
-			GG.Delay.DelayCall(Spam, {teamID}, 10 * 30)
-			--[[for k,v in pairs(Spring.GetTeamUnits(teamID)) do
-				GG.Delay.DelayCall(UnitIdleCheck, {unitID, unitDefID, teamID}, 10 * 30)
-			end]]
-		elseif unitDefID == VPAD_ID then
-			teamOutpostCounts[teamID][VPAD_ID] = teamOutpostCounts[teamID][VPAD_ID] + 1
+		if cp.baseclass == "outpost" then
+			teamOutpostCounts[teamID][unitDefID] = teamOutpostCounts[teamID][unitDefID] + 1
+			if unitDefID == C3_ID then
+				--Spring.Echo("C3!")
+				-- C3's take a little time to deploy and grant the extra tonnage & slots, so delay 10s
+				GG.Delay.DelayCall(Spam, {teamID}, 10 * 30)
+				--[[for k,v in pairs(Spring.GetTeamUnits(teamID)) do
+					GG.Delay.DelayCall(UnitIdleCheck, {unitID, unitDefID, teamID}, 10 * 30)
+				end]]
+			elseif unitDefID == UPLINK_ID then
+				teamUplinkIDs[teamID][unitID] = true
+				GG.Delay.DelayCall(UplinkCalls, {teamID}, 10 * 30)
+			end
 		elseif cp.jumpjets then
 			--Spring.Echo("JUMP MECH!")
 			Perk(unitID, unitDefID, PERK_JUMP_RANGE, true)
@@ -427,12 +510,13 @@ end
 function gadget:UnitDestroyed(unitID, unitDefID, teamID, attackerID, attackerDefID, attackerTeam)
 	if AI_TEAMS[teamID] then
 		local beaconID = Spring.GetUnitRulesParam(unitID, "beaconID")
-		if (unitDefID == C3_ID or unitDefID == VPAD_ID) and beaconID then
+		if UnitDefs[unitDefID].customParams.baseclass == "outpost" and beaconID then
 			teamOutpostCounts[teamID][unitDefID] = teamOutpostCounts[teamID][unitDefID] - 1
 			if tonumber(beaconID) then
 				Outpost(tonumber(beaconID), teamID)
 			end
 			beaconOutpostCounts[beaconID] = beaconOutpostCounts[beaconID] - 1
+			teamUplinkIDs[teamID][unitID] = nil
 		elseif UnitDefs[unitDefID].name:find("dropzone") then -- TODO: "DROPZONE_IDS[unitDefID] then" should work here
 			dropZoneIDs[teamID] = nil
 			-- TODO: why doesn't it get auto-switched like it does for player?
@@ -451,6 +535,7 @@ end
 function gadget:UnitGiven(unitID, unitDefID, newTeam, oldTeam)
 	if AI_TEAMS[newTeam] then
 		if unitDefID == BEACON_ID then
+			beaconIDs[unitID] = newTeam
 			table.insert(teamBeacons[newTeam], unitID)
 			beaconOutpostCounts[unitID] = 0
 			-- TODO: not sure if I need to be so careful here or can remove during the loop?
@@ -466,7 +551,7 @@ function gadget:UnitGiven(unitID, unitDefID, newTeam, oldTeam)
 			Outpost(unitID, newTeam)
 			Spam(newTeam)
 		end
-		if unitDefID == C3_ID or unitDefID == VPAD_ID then
+		if UnitDefs[unitDefID].customParams.baseclass == "outpost" then
 			gadget:UnitDestroyed(unitID, unitDefID, oldTeam)
 			gadget:UnitUnloaded(unitID, unitDefID, newTeam)
 		end
@@ -491,6 +576,7 @@ function gadget:GameFrame(n)
 	if n % (30 * 60) == 0 then -- once a minute
 		for teamID in pairs(AI_TEAMS) do
 			Spam(teamID)
+			UplinkCalls(teamID)
 		end
 	end
 end

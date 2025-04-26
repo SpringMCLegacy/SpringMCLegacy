@@ -5,7 +5,7 @@ function gadget:GetInfo()
 		author		= "FLOZi (C. Lawrence)",
 		date		= "22/08/13",
 		license 	= "GNU GPL v2",
-		layer		= 0,
+		layer		= 5, -- after unit_perks
 		enabled	= true	--	loaded by default?
 	}
 end
@@ -67,6 +67,7 @@ local artyWeaponInfo = {
 }
 
 local uplinkLevels = {} -- uplinkLevels[uplinkID] = 1, 2 or 3
+GG.uplinkLevels = uplinkLevels
 
 -- ARTY
 local ARTY_COST = 8000
