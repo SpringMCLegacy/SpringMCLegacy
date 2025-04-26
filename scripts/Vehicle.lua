@@ -564,12 +564,6 @@ end
 function script.AimWeapon(weaponID, heading, pitch)
 	Signal(2 ^ weaponID) -- 2 'to the power of' weapon ID
 	SetSignalMask(2 ^ weaponID)
-	if amsIDs[weaponID] then 
-		Turn(flares[weaponID], y_axis, heading, TURRET_SPEED * 10)
-		Turn(flares[weaponID], x_axis, -pitch, ELEVATION_SPEED * 50)
-		WaitForTurn(flares[weaponID], y_axis)
-		return WeaponCanFire(weaponID)
-	end
 	-- use a weapon-specific turret if it exists
 	if turretOnTurretIDs[weaponID] then
 		WaitForTurn(turret, y_axis)
@@ -580,6 +574,8 @@ function script.AimWeapon(weaponID, heading, pitch)
 		elseif targetType == 2 then
 			tx = info[1]
 			tz = info[3]
+		else -- a projectile
+			tx, _, tz = Spring.GetProjectilePosition(info)
 		end
 		local x, _, z = Spring.GetUnitPiecePosDir(unitID, turrets[weaponID])
 		local angle = (math.rad(90) - math.atan(math.abs(tx - x), math.abs(tz - z))) * (turretOnTurretSides[weaponID] * 25)
@@ -590,6 +586,11 @@ function script.AimWeapon(weaponID, heading, pitch)
 		Turn(turrets[weaponID], y_axis, heading, TURRET_2_SPEED)
 	elseif mainTurretIDs[weaponID] then -- otherwise use main
 		Turn(turret, y_axis, heading, TURRET_SPEED)
+	elseif amsIDs[weaponID] then 
+		Turn(flares[weaponID], y_axis, heading, TURRET_SPEED * 10)
+		Turn(flares[weaponID], x_axis, -pitch, ELEVATION_SPEED * 50)
+		WaitForTurn(flares[weaponID], y_axis)
+		return WeaponCanFire(weaponID)
 	end
 	if mantlets[weaponID] then
 		Turn(mantlets[weaponID], x_axis, -pitch, ELEVATION_SPEED)
