@@ -4,6 +4,7 @@ local GetCmdID = GG.CustomCommands.GetCmdID
 local modOptions = Spring.GetModOptions()
 
 local PERK_XP_COST = 1.0 -- 1.5
+GG.PERK_XP_COST = PERK_XP_COST
 local EFFECT = modOptions and modOptions.perkeffect or 5
 local PCENT_INC = (100+EFFECT)/100
 local PCENT_DEC = (100-EFFECT)/100
@@ -238,14 +239,15 @@ return {
 			},
 			valid = allMechs,
 			applyPerk = function (unitID, level) 
-				GG.SetUnitTurnRate(unitID, PCENT_INC)
-				local ud = UnitDefs[Spring.GetUnitDefID(unitID)]
+				GG.SetUnitTurnRate(unitID, PCENT_INC) -- rate in the unit_turn gadget
+				local unitDefID = Spring.GetUnitDefID(unitID)
+				local ud = UnitDefs[unitDefID]
 				local values = {
-					turnRate		= ud.turnRate * PCENT_INC ^ level,
+					turnRate		= ud.turnRate * PCENT_INC ^ level, -- rate when moving
 					accRate			= ud.maxAcc * PCENT_INC ^ level,
 					decRate			= ud.maxDec * PCENT_INC ^ level,
 				}
-				Spring.MoveCtrl.SetGroundMoveTypeData(unitID, values)
+				GG.SpeedChange(unitID, unitDefID, nil, values) -- Sets groundmovetypedata with safety checks
 			end,
 			costFunction = deductXP,
 			price = PERK_XP_COST,

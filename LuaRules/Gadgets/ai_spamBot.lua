@@ -238,7 +238,7 @@ local function Perk(unitID, unitDefID, perkID, firstTime)
 			end
 		end
 	end
-	if cp.baseclass == "mech" and Spring.GetUnitExperience(unitID) < 1.5 then 
+	if cp.baseclass == "mech" and Spring.GetUnitExperience(unitID) < GG.PERK_XP_COST then
 		return 
 	end -- TODO: check for cost of c-bill outposts
 	if not perkID and availablePerkCounts[unitID] > 0 then
