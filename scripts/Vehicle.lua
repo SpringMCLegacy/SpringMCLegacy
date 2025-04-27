@@ -574,9 +574,10 @@ function script.AimWeapon(weaponID, heading, pitch)
 		elseif targetType == 2 then
 			tx = info[1]
 			tz = info[3]
-		else -- a projectile
+		elseif targetType == 3 then -- a projectile
 			tx, _, tz = Spring.GetProjectilePosition(info)
 		end
+		if not tx then return false end -- somehow can still end up here
 		local x, _, z = Spring.GetUnitPiecePosDir(unitID, turrets[weaponID])
 		local angle = (math.rad(90) - math.atan(math.abs(tx - x), math.abs(tz - z))) * (turretOnTurretSides[weaponID] * 25)
 		--Spring.Echo(weaponID, tx - x, tz - z, math.deg(angle))

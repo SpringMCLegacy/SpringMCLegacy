@@ -346,6 +346,7 @@ local function SetDropZone(beaconID, teamID)
 	end
 	local x,y,z = GetUnitPosition(beaconID)
 	local side = GG.teamSide[teamID]
+	if not side then return end -- a weird bug to avoid here, maybe due to dead team?
 	local dropZoneID = CreateUnit(side .. "_dropzone", x,y,z, "s", teamID)
 	dropZones[dropZoneID] = teamID
 	teamDropZones[teamID] = dropZoneID

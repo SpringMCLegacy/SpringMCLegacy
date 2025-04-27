@@ -176,7 +176,7 @@ local function IsTargetArtemised(unitID, targetID, weaponType)
 	local dist = Spring.GetUnitSeparation(unitID, targetID)
 	local rayTrace = Spring.GetUnitWeaponHaveFreeLineOfFire(unitID, info.sight, targetID) -- TODO: could try and cache this from the main loop, but not easy to nullify it correctly
 	--Spring.Echo("Is target artemised?", artemisUnits[unitID], dist,unitSectorRadii[unitID], rayTrace)
-	return artemisUnits[unitID] and artemisUnits[unitID][weaponType] and (dist <= unitSectorRadii[unitID]) and rayTrace
+	return artemisUnits[unitID] and artemisUnits[unitID][weaponType] and (dist and dist <= unitSectorRadii[unitID]) and rayTrace -- compare num with nil
 end
 GG.IsTargetArtemised = IsTargetArtemised
 

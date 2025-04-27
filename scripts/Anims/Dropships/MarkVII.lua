@@ -369,19 +369,22 @@ function UnloadCargo()
 		-- off the tray, raise it up for the next one
 		Move(attachment, y_axis, 0, BOOM_SPEED * 1.5)
 		-- only rollers need to deal with the ramp
-		if cargoID and not UnitDefs[Spring.GetUnitDefID(cargoID)].canFly then
-			Turn(cargoPieces[1], x_axis, math.rad(12), math.rad(20))
-			WaitForTurn(cargoPieces[1], x_axis)
-			Move(pad, z_axis, 19, UnitDefs[Spring.GetUnitDefID(cargoID)].speed / 5)
-			WaitForMove(pad, z_axis)
-			Turn(cargoPieces[1], x_axis, math.rad(21), math.rad(20))
-			WaitForTurn(cargoPieces[1], x_axis)
-			Move(pad, z_axis, 30, UnitDefs[Spring.GetUnitDefID(cargoID)].speed / 5)
-			WaitForMove(pad, z_axis)
-			--Turn(cargoPieces[1], x_axis, math.rad(0), math.rad(20))
-			--WaitForTurn(cargoPieces[1], x_axis)
-			Move(pad, z_axis, 45, UnitDefs[Spring.GetUnitDefID(cargoID)].speed / 5)
-			WaitForMove(pad, z_axis)
+		if cargoID then
+			local cargoUDID = Spring.GetUnitDefID(cargoID)
+			if cargoUDID and not UnitDefs[cargoUDID].canFly then
+				Turn(cargoPieces[1], x_axis, math.rad(12), math.rad(20))
+				WaitForTurn(cargoPieces[1], x_axis)
+				Move(pad, z_axis, 19, UnitDefs[Spring.GetUnitDefID(cargoID)].speed / 5)
+				WaitForMove(pad, z_axis)
+				Turn(cargoPieces[1], x_axis, math.rad(21), math.rad(20))
+				WaitForTurn(cargoPieces[1], x_axis)
+				Move(pad, z_axis, 30, UnitDefs[Spring.GetUnitDefID(cargoID)].speed / 5)
+				WaitForMove(pad, z_axis)
+				--Turn(cargoPieces[1], x_axis, math.rad(0), math.rad(20))
+				--WaitForTurn(cargoPieces[1], x_axis)
+				Move(pad, z_axis, 45, UnitDefs[Spring.GetUnitDefID(cargoID)].speed / 5)
+				WaitForMove(pad, z_axis)
+			end
 		end
 		Spring.UnitScript.DropUnit(cargoID)
 		Spring.SetUnitBlocking(cargoID, true, true, true, true, true, true, true)

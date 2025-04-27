@@ -302,7 +302,7 @@ function Drop()
 		Sleep(30)
 	end
 	-- only proceed if the beacon is still ours and is secure
-	if Spring.GetUnitTeam(beaconID) == teamID and Spring.GetUnitRulesParam(beaconID, "secure") == 1 then
+	if beaconID and Spring.GetUnitTeam(beaconID) == teamID and Spring.GetUnitRulesParam(beaconID, "secure") == 1 then
 		-- We're over the target area, reduce height!
 		PlaySound("dropship_rumble")
 		stage = 3
@@ -348,10 +348,12 @@ function UnloadCargo()
 		Spring.SetUnitBlocking(cargoID, true, true, true, true, true, true, true)
 		-- Let the cargo know it is unloaded
 		env = Spring.UnitScript.GetScriptEnv(cargoID)
-		Spring.UnitScript.CallAsUnit(cargoID, env.Unloaded)
-		-- Let the beacon know outpost is ready
-		env = Spring.UnitScript.GetScriptEnv(callerID)
-		Spring.UnitScript.CallAsUnit(callerID, env.ChangeType, true)
+		if env then
+			Spring.UnitScript.CallAsUnit(cargoID, env.Unloaded)
+			-- Let the beacon know outpost is ready
+			env = Spring.UnitScript.GetScriptEnv(callerID)
+			Spring.UnitScript.CallAsUnit(callerID, env.ChangeType, true)
+		end
 	end
 	-- Cargo is down, close the doors!
 	PlaySound("dropship_doorclose")
