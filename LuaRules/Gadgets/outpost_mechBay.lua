@@ -51,21 +51,33 @@ local getOutCmdDesc = {
 local sellMechCmdDesc = {
 	id 		= GG.CustomCommands.GetCmdID("CMD_MECHBAY_SELLMECH"),
 	type	= CMDTYPE.ICON,
-	name 	= GG.Pad("Sell","Mech"),
+	name 	= GG.Pad("Sell","Mech (+C)"),
 	action	= "mechbay_out",
 	tooltip = "Sells the mech for C-Bills",
+}
+local scrapMechCmdDesc = {
+	id 		= GG.CustomCommands.GetCmdID("CMD_MECHBAY_SCRAPMECH"),
+	type	= CMDTYPE.ICON,
+	name 	= GG.Pad("Scrap","Mech (+S)"),
+	action	= "mechbay_out",
+	tooltip = "Scraps the mech for Salvage",
 }
 
 -- Variables
 -- Mechbay menu
-local typeStrings = {"mobility", "tactical", "offensive", "defensive", "omni", "ammo"}
+local START_POSITION = 9
+local GET_OUT_POSITION = START_POSITION
+local SELL_POSITION = START_POSITION + 1
+local SCRAP_POSITION = START_POSITION + 2
+
+local typeStrings = {"ammo", "mobility", "tactical", "offensive", "defensive", "omni"}
 local typeStringAliases = {
+	["ammo"] 		= GG.Pad(10,"Ammo", "Mods"),
 	["mobility"] 	= GG.Pad(10,"Mobility", "Mods"), 
 	["tactical"] 	= GG.Pad(10,"Tactical", "Mods"), 
 	["offensive"] 	= GG.Pad(10,"Offense", "Mods"),
 	["defensive"] 	= GG.Pad(10,"Defense", "Mods"),
 	["omni"]		= GG.Pad(10, "Omni", "Configs"),
-	["ammo"] 		= GG.Pad(10,"Ammo", "Mods"),
 }
 
 local currMenu = {}
@@ -191,9 +203,11 @@ end
 
 local function SetMechBayLevel(unitID, level)
 	mechBays[unitID] = level
-	if level == 2 then
+	if level == 1 then
+		EditUnitCmdDesc(unitID, SELL_POSITION, {disabled = true}) -- disable Sell
+		EditUnitCmdDesc(unitID, SCRAP_POSITION, {disabled = true}) -- disable Scrap
 		for i, cmdDesc in ipairs(menuCmdDescs) do
-			InsertUnitCmdDesc(unitID, 10+i, cmdDesc)
+			InsertUnitCmdDesc(unitID, START_POSITION + 2 +i, cmdDesc)
 		end
 		local transporting = Spring.GetUnitIsTransporting(unitID)
 		local mechID = transporting and transporting[1]
@@ -202,8 +216,12 @@ local function SetMechBayLevel(unitID, level)
 			omni = omniCache[Spring.GetUnitDefID(mechID)] ~= nil
 		end
 		ShowOmniMenu(unitID, omni)
-	elseif level == 3 then
-		EditUnitCmdDesc(unitID, 15, {disabled = false})
+	--elseif level == 3 then
+		EditUnitCmdDesc(unitID, START_POSITION + 7, {disabled = false})
+	elseif level == 2 then -- Enable Sell
+		EditUnitCmdDesc(unitID, SELL_POSITION, {disabled = false})
+	elseif level == 3 then -- Enable Scrap
+		EditUnitCmdDesc(unitID, SCRAP_POSITION, {disabled = false})
 	end
 end
 GG.SetMechBayLevel = SetMechBayLevel
@@ -232,8 +250,9 @@ end
 
 function gadget:UnitCreated(unitID, unitDefID, teamID, builderID)
 	if unitDefID == MECHBAY_ID then
-		InsertUnitCmdDesc(unitID, 9, sellMechCmdDesc)
-		InsertUnitCmdDesc(unitID, 10, getOutCmdDesc)
+		InsertUnitCmdDesc(unitID, GET_OUT_POSITION, getOutCmdDesc)
+		InsertUnitCmdDesc(unitID, SELL_POSITION, sellMechCmdDesc)
+		InsertUnitCmdDesc(unitID, SCRAP_POSITION, scrapMechCmdDesc)
 		SetMechBayLevel(unitID, 1)
 		ShowModsByType(unitID, "none", nil) -- don't show any mods until the ability is unlocked
 	elseif GG.mechCache[unitDefID] then -- a mech
@@ -261,9 +280,6 @@ function gadget:UnitUnloaded(unitID, unitDefID, unitTeam, transportID, transport
 		GG.UpdateUnitApps(transportID, "mods")
 		ShowModsByType(transportID, "none", unitID)
 		ShowOmniMenu(transportID, false)
-		if mechBays[transportID] == 3 and omniCache[unitDefID] then
-			--ShowOmniOptions(transportID, omniCache[unitDefID], false)
-		end
 	end
 end
 
@@ -287,6 +303,17 @@ function gadget:AllowCommand(unitID, unitDefID, teamID, cmdID, cmdParams, cmdOpt
 				Spring.UnitScript.CallAsUnit(unitID, env.script.TransportDrop, transporting[1])
 				Spring.DestroyUnit(transporting[1], false, true)
 				AddTeamResource(teamID, "m", cBills)
+				return true
+			end
+			return false
+		elseif cmdID == scrapMechCmdDesc.id then
+			local transporting = Spring.GetUnitIsTransporting(unitID)
+			if transporting[1] then
+				local salvage = UnitDefs[Spring.GetUnitDefID(transporting[1])].customParams.tonnage * (modOptions and modOptions.scrap or 1)
+				env = Spring.UnitScript.GetScriptEnv(unitID)
+				Spring.UnitScript.CallAsUnit(unitID, env.script.TransportDrop, transporting[1])
+				Spring.DestroyUnit(transporting[1], false, true)
+				ChangeTeamSalvage(teamID, salvage)
 				return true
 			end
 			return false

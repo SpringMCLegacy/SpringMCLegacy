@@ -579,8 +579,8 @@ return {
 			cmdDesc = {
 				id = GetCmdID('PERK_MECHBAY_2'),
 				action = 'perkmechbay_2',
-				name = GG.Pad("Mech", "Mods"),
-				tooltip = 'Unlock mech equipment mods',
+				name = GG.Pad("Selling"), --"Mech", "Mods"),
+				tooltip = 'Unlocks the ability to sell mechs for C-Bills', --'Unlock mech equipment mods',
 				texture = 'bitmaps/ui/upgrade.png',	
 			},
 			valid = isMechBay,
@@ -595,8 +595,8 @@ return {
 			cmdDesc = {
 				id = GetCmdID('PERK_MECHBAY_3'),
 				action = 'perkmechbay_3',
-				name = GG.Pad("Omnitech"),
-				tooltip = 'Unlocks omnitech allowing for changing weapon loadouts of omnimechs',
+				name = GG.Pad("Scrapping"), --"Omnitech"),
+				tooltip = 'Unlocks the ability to scrap mechs for Salvage', --'Unlocks omnitech allowing for changing weapon loadouts of omnimechs',
 				texture = 'bitmaps/ui/upgrade.png',	
 			},
 			valid = isMechBay,
