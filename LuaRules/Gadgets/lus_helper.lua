@@ -494,9 +494,10 @@ function gadget:GamePreload()
 		-- And finally, stick it in GG for the script to access
 		GG.lusHelper[unitDefID] = info
 	end
-	
+	GG.lusHelper.MINE_WDID = WeaponDefNames["mine"].id
 end
 
+local MELTDOWN_WDID = WeaponDefNames["meltdown"].id
 function gadget:Initialize()
 	gadget:GamePreload()
 	for _,unitID in ipairs(Spring.GetAllUnits()) do
@@ -504,7 +505,7 @@ function gadget:Initialize()
 		local unitDefID = Spring.GetUnitDefID(unitID)
 		gadget:UnitCreated(unitID, unitDefID, teamID)
 	end
-	Script.SetWatchWeapon(WeaponDefNames["meltdown"].id, true)
+	Script.SetWatchWeapon(MELTDOWN_WDID, true)
 end
 
 function gadget:MoveCtrlNotify(unitID, unitDefID, unitTeam, data)
@@ -519,7 +520,7 @@ function gadget:MoveCtrlNotify(unitID, unitDefID, unitTeam, data)
 end
 
 function gadget:ProjectileCreated(proID, proOwnerID, weaponDefID)
-	if weaponDefID == WeaponDefNames["meltdown"].id then
+	if weaponDefID == MELTDOWN_WDID then
 		Spring.SetProjectileAlwaysVisible(proID, true)
 	end
 end

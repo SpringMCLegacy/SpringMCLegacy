@@ -424,6 +424,13 @@ function script.HitByWeapon(x, z, weaponID, damage, piece)
 	--local heatDamage = wd and wd.customParams.heatdamage or 0
 	--ChangeHeat(heatDamage)
 	local hitPiece = piece or GetUnitLastAttackedPiece(unitID) or ""
+	--Spring.Echo(weaponID, wd.name, wd.customParams.heatdamage)
+	--Spring.Echo("HIT PIECE?", hitPiece, damage, heatDamage)
+	if weaponID == GG.lusHelper.MINE_WDID then
+		--Spring.Echo("MOIN! MOIN! MOIN!")
+		limbHPControl("left_leg", damage/2, "llowerleg")
+		limbHPControl("right_leg", damage/2, "rlowerleg")
+	end -- hitPiece will be "" for mines so the next bit deals normal torso damage too
 	if hitPiece == "torso" or hitPiece == "pelvis" or hitPiece == "" then 
 		return damage
 	elseif hitPiece == "lupperleg" or hitPiece == "llowerleg" then
@@ -441,8 +448,6 @@ function script.HitByWeapon(x, z, weaponID, damage, piece)
 		--deduct Right Arm HP
 		limbHPControl("right_arm", damage, hitPiece)
 	end
-	--Spring.Echo(weaponID, wd.name, wd.customParams.heatdamage)
-	--Spring.Echo("HIT PIECE?", hitPiece, damage, heatDamage)
 	return 0
 end
 

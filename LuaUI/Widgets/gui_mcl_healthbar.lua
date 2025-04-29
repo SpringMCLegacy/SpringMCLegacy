@@ -52,6 +52,7 @@ local mathRad = math.rad
 local mathSin = math.sin
 local mathCos = math.cos
 
+local MINE_UDID = UnitDefNames["mine"].id
 
 local MIN_RELOAD_TIME = 4
 local reloadDataList = {} -- {[unitDefID] = {primaryWeapon, reloadTime}}
@@ -199,7 +200,7 @@ local function GenerateUnitGraphics(uid, udid, getAuras)
 	-- Don't show transported
 	if not Spring.ValidUnitID(uid) 
 	or Spring.GetUnitTransporter(uid)
-	or ud.name:find("beacon")
+	or ud.name:find("beacon") -- TODO: cache IDs rather than string comp!
 	or ud.name:find("dropzone") then
 	--or (ud.customParams.ignoreatbeacon and ud.customParams.baseclass ~= "vehicle") then
         return false
@@ -321,7 +322,7 @@ local function GenerateUnitGraphics(uid, udid, getAuras)
 	
 	-- AURAS
 
-	if getAuras then
+	if getAuras and udid ~= MINE_UDID then
 		local n = Spring.GetGameFrame()
 		local friendlyUnit = Spring.AreTeamsAllied(Spring.GetUnitTeam(uid), Spring.GetMyTeamID())
 		local heat = (GetUnitRulesParam(uid, "heat") or 0) > 50

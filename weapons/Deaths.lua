@@ -34,8 +34,18 @@ local DFA = Death_Class:New{
 	},	
 }
 
+local Mine = Death_Class:New{
+	name                    = "Mech Explosion",
+	explosionGenerator    	= "custom:HE_large",
+	areaOfEffect            = 100, -- has to be sufficiently large to hit unit centre from ground...
+	damage = {
+		default = 1000,
+	},
+}
+
 return lowerkeys({ 
 	MechExplode = MechExplode,
 	MeltDown = MeltDown,
 	DFA = DFA,
+	Mine = Mine,
 })
