@@ -425,17 +425,26 @@ local UPLINK_CMD_COSTS = {
 
 local function UplinkCalls(teamID)
 	for unitID in pairs(teamUplinkIDs[teamID]) do
-		local randPick = math.random(GG.uplinkLevels[unitID])
-		local cmdDesc = Spring.GetUnitCmdDescs(unitID, randPick + 8)[1] -- skip irrelevant cmdDescs
-		--for i, cmdDesc in pairs(Spring.GetUnitCmdDescs(unitID)) do
-			--[[for k,v in pairs(cmdDesc) do
-				Spring.Echo("PARP", k, v)
-			end--]]
-		--end]]
+		-- always try arty first as well as others
+		local artyFrame = Spring.GetTeamRulesParam(teamID, "UPLINK_ARTILLERY")
+		if not artyFrame then return end -- don't bother going any further
+		local cBills = Spring.GetTeamResources(teamID, "metal")
+		local randPick = math.random(GG.uplinkLevels[unitID]) 
+		local artyCmdDesc = Spring.GetUnitCmdDescs(unitID, 1 + 8)[1]
 		if difficulty > 1 then -- cheat the required resources in
+			Spring.AddTeamResource(teamID, "metal", UPLINK_CMD_COSTS[1])
 			Spring.AddTeamResource(teamID, "metal", UPLINK_CMD_COSTS[randPick])
 		end
-		if Spring.GetTeamResources(teamID, "metal") > UPLINK_CMD_COSTS[randPick] then
+		if cBills > UPLINK_CMD_COSTS[1] then
+			local currFrame = Spring.GetGameFrame()
+			if artyFrame <= currFrame then
+				CallStrike(unitID, artyCmdDesc.id, GetSpotTarget, teamID, true)
+			else -- not ready yet, try again when it is ready
+				GG.Delay.DelayCall(CallStrike, {unitID, artyCmdDesc.id, GetSpotTarget, teamID, true}, artyFrame - currFrame)
+			end	
+		end
+		if randPick > 1 and cBills > UPLINK_CMD_COSTS[randPick] then
+			local cmdDesc = Spring.GetUnitCmdDescs(unitID, randPick + 8)[1] -- skip irrelevant cmdDescs
 			if cmdDesc.type == CMDTYPE.ICON_UNIT then
 				CallStrike(unitID, cmdDesc.id, GetUnitTarget, unitID)
 			else

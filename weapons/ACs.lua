@@ -329,7 +329,7 @@ local LBX20_Cluster = LBX20:New(LBX_Class):New{
 
 -- Naval AC's for Orbital Strike
 local NAC10 = AC_Class:New{
-	explosionGenerator    	= "custom:HE_LARGE",
+	explosionGenerator    	= "custom:ROACHPLOSION",
 	soundHit             	= "NAC10_Hit",
 	soundStart           	= "NAC10_Fire",
 	areaOfEffect            = 500,
@@ -346,7 +346,7 @@ local NAC10 = AC_Class:New{
 }
 
 local NAC40 = AC_Class:New{
-	explosionGenerator    	= "custom:HE_LARGE",
+	explosionGenerator    	= "custom:ROACHPLOSION",
 	soundHit             	= "NAC40_Hit",
 	soundStart           	= "NAC40_Fire",
 	areaOfEffect            = 700,
