@@ -283,7 +283,7 @@ function gadget:UnitCreated(unitID, unitDefID, teamID, builderID)
 		 -- start out with enough XP for one perk
 		if cp.baseclass == "mech" then
 			Spring.SetUnitRulesParam(unitID, "perk_xp", 100)
-			SetUnitExperience(unitID, 1) -- Ach, another reference to XP cost
+			SetUnitExperience(unitID, GG.PERK_XP_COST)
 			currentApps[unitID]["mods"] = {} -- As actually only 'valid' for mechbay
 			incompatible[unitID] = {}
 			-- install pre-loaded mods

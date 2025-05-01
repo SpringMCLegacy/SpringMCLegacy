@@ -385,8 +385,8 @@ function UnloadCargo()
 				Move(pad, z_axis, 45, UnitDefs[Spring.GetUnitDefID(cargoID)].speed / 5)
 				WaitForMove(pad, z_axis)
 			end
+			Spring.UnitScript.DropUnit(cargoID)
 		end
-		Spring.UnitScript.DropUnit(cargoID)
 		Spring.SetUnitBlocking(cargoID, true, true, true, true, true, true, true)
 	end
 end
