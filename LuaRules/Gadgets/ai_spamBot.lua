@@ -253,7 +253,7 @@ local function Perk(unitID, unitDefID, perkID, firstTime)
 	if cp.baseclass == "mech" and Spring.GetUnitExperience(unitID) < GG.PERK_XP_COST then
 		return 
 	end -- TODO: check for cost of c-bill outposts
-	if not perkID and availablePerkCounts[unitID] > 0 then
+	if not perkID and availablePerkCounts[unitID] > 0 then -- attempt to compare number with nil, via UnitDestroyed
 		local cmdDescs = Spring.GetUnitCmdDescs(unitID)
 		local ID = math.random(1, #cmdDescs)
 		while not (availablePerks[unitID][ID]) do
@@ -543,7 +543,7 @@ function gadget:UnitDestroyed(unitID, unitDefID, teamID, attackerID, attackerDef
 	end
 	if attackerTeam and AI_TEAMS[attackerTeam] then
 		--Spam(attackerTeam)
-		if attackerID and (UnitDefs[attackerDefID].customParams.baseclass == "mech") then 
+		if attackerID and not Spring.GetUnitIsDead(attackerID) and (UnitDefs[attackerDefID].customParams.baseclass == "mech") then 
 			Perk(attackerID, attackerDefID) 
 		end
 	end
