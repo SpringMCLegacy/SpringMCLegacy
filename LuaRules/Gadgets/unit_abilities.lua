@@ -78,12 +78,12 @@ end
 function SpeedChange(unitID, unitDefID, mult, values)
 	env = Spring.UnitScript.GetScriptEnv(unitID)
 	if not env.jumping and Spring.ValidUnitID(unitID) and not Spring.GetUnitIsDead(unitID) then
+		-- It shouldn't happen, but, to really nail it:
+		Spring.MoveCtrl.Disable(unitID)
 		--Spring.Echo("debug SpeedChange:", UnitDefs[unitDefID].name)
 		if not pcall(Spring.MoveCtrl.SetGroundMoveTypeData, unitID, values or ChangeMoveData(unitDefID, mult)) then
-			Spring.Echo("unit_abilities debug:", unitDefID, unitDefID and UnitDefs[unitDefID].name)
+			Spring.Echo("unit_abilities debug:", unitDefID, unitDefID and UnitDefs[unitDefID].name) -- fw_spider_sdr7m, la_starslayer_sty3c called 6 times in a frame? JJ after perking?
 		end
-		-- TODO: still not fixed: unit 17678 has incompatible movetype for SetGroundMoveTypeData
-		--env.speedMod = mult
 	end
 end
 GG.SpeedChange = SpeedChange
