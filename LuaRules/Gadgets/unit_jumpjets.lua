@@ -402,6 +402,8 @@ end
 --------------------------------------------------------------------------------
 
 function gadget:UnitPreDamaged(unitID, unitDefID, unitTeam, damage, paralyzer, weaponID, projectileID, attackerID, attackerDefID, attackerTeam)
+	-- Don't allow any damage to beacons or dropzones
+	if GG.InvincibleUnit(unitDefID) then return 0 end
 	-- DFA
 	if weaponID == DFA_ID then
 		--Spring.Echo("We got DFA", damage)

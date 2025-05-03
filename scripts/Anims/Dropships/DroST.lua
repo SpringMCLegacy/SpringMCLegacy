@@ -352,7 +352,9 @@ function UnloadCargo()
 			Spring.UnitScript.CallAsUnit(cargoID, env.Unloaded)
 			-- Let the beacon know outpost is ready
 			env = Spring.UnitScript.GetScriptEnv(callerID)
-			Spring.UnitScript.CallAsUnit(callerID, env.ChangeType, true)
+			if env then -- there was a crash here, beacon point died by DFA, should not happen now but just in case!
+				Spring.UnitScript.CallAsUnit(callerID, env.ChangeType, true)
+			end
 		end
 	end
 	-- Cargo is down, close the doors!

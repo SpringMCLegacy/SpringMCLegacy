@@ -71,7 +71,7 @@ local function SetMissileTarget(proID, info)
 			--Spring.Echo("Target TAG lost")
 			contTAG[proID] = false
 			local x,y,z = Spring.GetUnitPosition(info.targetID)
-			Spring.SetProjectileTarget(proID, x,y,z) -- CRASH: bad argument #4 to 'SetProjectileTarget' (number expected, got nil), via SetMissileTarget
+			Spring.SetProjectileTarget(proID, x,y,z)
 		end
 	else -- target is dead, stop tracking altogether
 		arrows[proID] = nil
@@ -121,7 +121,7 @@ function gadget:ProjectileCreated(proID, proOwnerID, weaponID)
 				ChangeMissile(proID, proOwnerID, WeaponDefNames["arrowiv_guided"])
 			end
 		elseif wd and wd.customParams.weaponclass == "lrm" then
-			if GG.unitSpecialAmmos[proOwnerID]["lrm"] == "homing" or (GG.artemisUnits[proOwnerID] and GG.artemisUnits[proOwnerID]["lrm"]) then -- CRASH: attempt to index field '?' (a nil value), via SetMissileTarget
+			if GG.unitSpecialAmmos[proOwnerID]["lrm"] == "homing" or (GG.artemisUnits[proOwnerID] and GG.artemisUnits[proOwnerID]["lrm"]) then
 				ChangeMissile(proID, proOwnerID, WeaponDefNames["lrm_guided"], GG.artemisUnits[proOwnerID] and GG.artemisUnits[proOwnerID]["lrm"])
 			end
 		elseif wd and wd.customParams.weaponclass == "srm" then
