@@ -74,6 +74,7 @@ local ARTY_COST = 8000
 local ARTY_HEIGHT = 10000
 local artyLastFired = {} -- artyLastFired[teamID] = gameFrame
 local artyCanFire = {} -- artyCanFire[teamID] = gameFrame
+GG.artyCanFire = artyCanFire
 
 -- AERO
 local AERO_COST = 16000
@@ -134,6 +135,12 @@ function gadget:UnitCreated(unitID, unitDefID, teamID, builderID)
 		InsertUnitCmdDesc(unitID, aeroCmdDesc)
 		InsertUnitCmdDesc(unitID, assaultCmdDesc)
 		uplinkLevels[unitID] = 1
+	end
+end
+
+function gadget:UnitUnloaded(unitID, unitDefID, teamID, transportID, transportTeam)
+	if unitDefID == UPLINK_ID then
+		artyCanFire[teamID] = Spring.GetGameFrame()
 	end
 end
 

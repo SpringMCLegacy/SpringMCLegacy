@@ -366,15 +366,18 @@ GG.RunAndJump = RunAndJump
 
 local function GetSpotTarget(teamID, filter)
 	local spot
-	if filter then
+	if teamID and filter then
+		--Spring.Echo("GetSpotTarget1", teamID, filter)
 		local enemyBeacons = {}
 		for beaconID, beaconTeamID in pairs(beaconIDs) do
+			--Spring.Echo("GST Loop", beaconID, beaconTeamID, teamID)
 			if beaconTeamID ~= teamID then
 				table.insert(enemyBeacons, beaconID)
 			end
 		end
 		if #enemyBeacons > 0 then
 			local targetID = enemyBeacons[math.random(1, #enemyBeacons)]
+			--Spring.Echo("GetSpotTarget2", teamID, Spring.GetUnitTeam(targetID), filter, #enemyBeacons, targetID)
 			return Spring.GetUnitPosition(targetID)
 		end
 	end
@@ -389,21 +392,21 @@ end
 
 
 
-local function GetUnitTarget(unitID)
-	return Spring.GetUnitNearestEnemy(unitID, 9999999, true)
+local function GetUnitTarget(unitID, range)
+	return Spring.GetUnitNearestEnemy(unitID, range or 9999999, true)
 end
 
 local function Wander(unitID, cmd)
 	if Spring.ValidUnitID(unitID) then
 		--GG.Delay.DelayCall(Spring.GiveOrderToUnit, {unitID, CMD.MOVE_STATE, {2}, {}}, 1)
 		if cmd then
-			GG.Delay.DelayCall(Spring.GiveOrderToUnit, {unitID, cmd, {GetSpotTarget(_, true)}, {}}, 1)
+			GG.Delay.DelayCall(Spring.GiveOrderToUnit, {unitID, cmd, {GetSpotTarget(_, false)}, {}}, 1)
 		end
-		GG.Delay.DelayCall(Spring.GiveOrderToUnit, {unitID, CMD.FIGHT, {GetSpotTarget(_, true)}, {"shift"}}, 1)
+		GG.Delay.DelayCall(Spring.GiveOrderToUnit, {unitID, CMD.FIGHT, {GetSpotTarget(_, false)}, {"shift"}}, 1)
 	end
 end
 
-local function CallStrike(unitID, cmd, func, params)
+local function CallStrike(unitID, cmd, func, param1, param2)
 	if Spring.ValidUnitID(unitID) then
 		if Spring.GetUnitIsDead(unitID) then
 			uplinkIDs[unitID] = nil
@@ -411,8 +414,8 @@ local function CallStrike(unitID, cmd, func, params)
 		end
 		-- TODO: track enemy units rather than just spamming at beacons
 		-- in this case cmd should be passed
-		-- TODO: filter out your own beacons
-		GG.Delay.DelayCall(Spring.GiveOrderToUnit, {unitID, cmd, {func(params)}, {}}, 1)
+		--Spring.Echo("CallStrike", unitID, cmd, func, params)
+		GG.Delay.DelayCall(Spring.GiveOrderToUnit, {unitID, cmd, {func(param1, param2)}, {}}, 1)
 	end
 end
 
@@ -424,31 +427,36 @@ local UPLINK_CMD_COSTS = {
 }
 
 local function UplinkCalls(teamID)
+	local artyFrame = GG.artyCanFire[teamID]
+	--Spring.Echo("UplinkCalls", teamID, artyFrame, GG.artyCanFire)
+	if not artyFrame then return end -- don't bother going any further
 	for unitID in pairs(teamUplinkIDs[teamID]) do
-		-- always try arty first as well as others
-		local artyFrame = Spring.GetTeamRulesParam(teamID, "UPLINK_ARTILLERY")
-		if not artyFrame then return end -- don't bother going any further
-		local cBills = Spring.GetTeamResources(teamID, "metal")
-		local randPick = math.random(GG.uplinkLevels[unitID]) 
-		local artyCmdDesc = Spring.GetUnitCmdDescs(unitID, 1 + 8)[1]
-		if difficulty > 1 then -- cheat the required resources in
-			Spring.AddTeamResource(teamID, "metal", UPLINK_CMD_COSTS[1])
-			Spring.AddTeamResource(teamID, "metal", UPLINK_CMD_COSTS[randPick])
-		end
-		if cBills > UPLINK_CMD_COSTS[1] then
-			local currFrame = Spring.GetGameFrame()
-			if artyFrame <= currFrame then
-				CallStrike(unitID, artyCmdDesc.id, GetSpotTarget, teamID, true)
-			else -- not ready yet, try again when it is ready
-				GG.Delay.DelayCall(CallStrike, {unitID, artyCmdDesc.id, GetSpotTarget, teamID, true}, artyFrame - currFrame)
-			end	
-		end
-		if randPick > 1 and cBills > UPLINK_CMD_COSTS[randPick] then
-			local cmdDesc = Spring.GetUnitCmdDescs(unitID, randPick + 8)[1] -- skip irrelevant cmdDescs
-			if cmdDesc.type == CMDTYPE.ICON_UNIT then
-				CallStrike(unitID, cmdDesc.id, GetUnitTarget, unitID)
-			else
-				CallStrike(unitID, cmdDesc.id, GetSpotTarget, teamID, true)
+		if Spring.GetUnitIsDead(unitID) then
+			teamUplinkIDs[teamID] = nil
+		else
+			-- always try arty first as well as others
+			local cBills = Spring.GetTeamResources(teamID, "metal")
+			local randPick = math.random(GG.uplinkLevels[unitID]) 
+			local artyCmdDesc = Spring.GetUnitCmdDescs(unitID, 1 + 8)[1]
+			if difficulty > 1 then -- cheat the required resources in
+				Spring.AddTeamResource(teamID, "metal", UPLINK_CMD_COSTS[1])
+				Spring.AddTeamResource(teamID, "metal", UPLINK_CMD_COSTS[randPick])
+			end
+			if cBills > UPLINK_CMD_COSTS[1] then
+				local currFrame = Spring.GetGameFrame()
+				if artyFrame <= currFrame then
+					CallStrike(unitID, artyCmdDesc.id, GetSpotTarget, teamID, true)
+				else -- not ready yet, try again when it is ready
+					GG.Delay.DelayCall(CallStrike, {unitID, artyCmdDesc.id, GetSpotTarget, teamID, true}, artyFrame - currFrame)
+				end	
+			end
+			if randPick > 1 and cBills > UPLINK_CMD_COSTS[randPick] then
+				local cmdDesc = Spring.GetUnitCmdDescs(unitID, randPick + 8)[1] -- skip irrelevant cmdDescs
+				if cmdDesc.type == CMDTYPE.ICON_UNIT then
+					CallStrike(unitID, cmdDesc.id, GetUnitTarget, unitID)
+				else
+					CallStrike(unitID, cmdDesc.id, GetSpotTarget, teamID, true)
+				end
 			end
 		end
 	end
