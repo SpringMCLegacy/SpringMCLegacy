@@ -53,11 +53,14 @@ GG.EnableSilverBullet = EnableSilverBullet
 
 local contTAG = {}
 local arrows = {}
-local function SetArrowTarget(proID, info)
-	if info.targetID and not Spring.GetUnitIsDead(info.targetID) then
+local function SetMissileTarget(proID, info)
+--	Spring.Echo("SetMissileTarget", proID, info.targetID, info.ownerID, info.weaponclass, info.artemisOnly)
+	if info.targetID and Spring.ValidUnitID(info.targetID) and not Spring.GetUnitIsDead(info.targetID) -- target is alive
+    and info.ownerID and Spring.ValidUnitID(info.ownerID) and not Spring.GetUnitIsDead(info.ownerID) then -- owner is alive
+		--Spring.Echo("SetMissileTarget", proID, UnitDefs(Spring.GetUnitDefID(info.targetID)].name, UnitDefs[Spring.GetUnitDefID(info.ownerID)].name, info.weaponclass, info.artemisOnly)
 		if ((GG.IsUnitNARCed(info.targetID) or GG.IsUnitTAGed(info.targetID)) and not info.artemisOnly)
 		or (info.artemisOnly and GG.IsTargetArtemised(info.ownerID, info.targetID, info.weaponclass)) then
-			--Spring.Echo("Target is tagged", contTAG[proID] and "continuous lock" or "lock reaquired!")
+			--Spring.Echo("Target is tagged", info.weaponclass, contTAG[proID] and "continuous lock" or "lock reaquired!")
 			contTAG[proID] = true -- re-establish TAG if lost
 			--Spring.SetProjectileTarget(proID, targetID)
 			local _,_,_,_,_,_,x,y,z = Spring.GetUnitPosition(info.targetID, true, true)
@@ -68,14 +71,14 @@ local function SetArrowTarget(proID, info)
 			--Spring.Echo("Target TAG lost")
 			contTAG[proID] = false
 			local x,y,z = Spring.GetUnitPosition(info.targetID)
-			Spring.SetProjectileTarget(proID, x,y,z)
+			Spring.SetProjectileTarget(proID, x,y,z) -- CRASH: bad argument #4 to 'SetProjectileTarget' (number expected, got nil), via SetMissileTarget
 		end
 	else -- target is dead, stop tracking altogether
 		arrows[proID] = nil
 	end
 end
 
-local function ChangeArrow(proID, proOwnerID, wd, artemisOnly)
+local function ChangeMissile(proID, proOwnerID, wd, artemisOnly)
 		local targetType, targetID = Spring.GetProjectileTarget(proID)
 		if targetType == string.byte('u') then -- unit target, info is ID
 			if ((GG.IsUnitNARCed(targetID) or GG.IsUnitTAGed(targetID)) and not artemisOnly) 
@@ -102,7 +105,7 @@ local function ChangeArrow(proID, proOwnerID, wd, artemisOnly)
 					["artemisOnly"] = artemisOnly,
 				}
 				arrows[newProID] = info
-				SetArrowTarget(newProID, info)
+				SetMissileTarget(newProID, info)
 				Spring.SetProjectileIgnoreTrackingError(newProID, true)
 				Spring.DeleteProjectile(proID)
 			end
@@ -115,15 +118,15 @@ function gadget:ProjectileCreated(proID, proOwnerID, weaponID)
 	if proOwnerID and GG.mechCache[Spring.GetUnitDefID(proOwnerID)] then
 		if wd and wd.name == "arrowiv" then
 			if GG.unitSpecialAmmos[proOwnerID]["arrowiv"] == "homing" then
-				ChangeArrow(proID, proOwnerID, WeaponDefNames["arrowiv_guided"])
+				ChangeMissile(proID, proOwnerID, WeaponDefNames["arrowiv_guided"])
 			end
 		elseif wd and wd.customParams.weaponclass == "lrm" then
-			if GG.unitSpecialAmmos[proOwnerID]["lrm"] == "homing" or (GG.artemisUnits[proOwnerID] and GG.artemisUnits[proOwnerID]["lrm"]) then
-				ChangeArrow(proID, proOwnerID, WeaponDefNames["lrm_guided"], GG.artemisUnits[proOwnerID] and GG.artemisUnits[proOwnerID]["lrm"])
+			if GG.unitSpecialAmmos[proOwnerID]["lrm"] == "homing" or (GG.artemisUnits[proOwnerID] and GG.artemisUnits[proOwnerID]["lrm"]) then -- CRASH: attempt to index field '?' (a nil value), via SetMissileTarget
+				ChangeMissile(proID, proOwnerID, WeaponDefNames["lrm_guided"], GG.artemisUnits[proOwnerID] and GG.artemisUnits[proOwnerID]["lrm"])
 			end
 		elseif wd and wd.customParams.weaponclass == "srm" then
 			if GG.artemisUnits[proOwnerID] and GG.artemisUnits[proOwnerID]["srm"] then
-				ChangeArrow(proID, proOwnerID, WeaponDefNames["srm_guided"])
+				ChangeMissile(proID, proOwnerID, WeaponDefNames["srm_guided"])
 			end
 		elseif wd and wd.name == "gauss" and proOwnerID and silverBulletUnits[proOwnerID] then
 			local clusterWD = WeaponDefNames["silverbullet"]
@@ -209,7 +212,7 @@ end
 
 function gadget:GameFrame()
 	for proID, info in pairs(arrows) do
-		SetArrowTarget(proID, info)
+		SetMissileTarget(proID, info)
 	end
 	--[[for id in pairs(tracking) do
 		local ydir = select(2,Spring.GetProjectileDirection(id))
