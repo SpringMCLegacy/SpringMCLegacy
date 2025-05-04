@@ -26,11 +26,18 @@ local AI_TEAMS = {}
 local BEACON_ID = UnitDefNames["beacon"].id
 local DROPZONE_IDS = GG.DROPZONE_IDS
 
--- TODO: auto build a table instead of this crap
-local C3_ID = UnitDefNames["outpost_c3array"].id
-local VPAD_ID = UnitDefNames["outpost_vehiclepad"].id
-local UPLINK_ID = UnitDefNames["outpost_uplink"].id
-local GARRISON_ID = UnitDefNames["outpost_garrison"].id
+local AI_OUTPOST_OPTIONS = {
+	"OUTPOST_C3ARRAY",
+	"OUTPOST_VEHICLEPAD",
+	"OUTPOST_GARRISON",
+	"OUTPOST_UPLINK",
+	"OUTPOST_EWAR",
+}
+
+local AI_OUTPOST_DEFS = {}
+for i, name in pairs(AI_OUTPOST_OPTIONS) do
+	AI_OUTPOST_DEFS[name] = UnitDefNames[name:lower()].id
+end
 
 --local DelayCall = GG.Delay.DelayCall
 local CMD_JUMP = GG.CustomCommands.GetCmdID("CMD_JUMP")
@@ -40,9 +47,9 @@ local PERK_JUMP_RANGE = GG.CustomCommands.GetCmdID("PERK_JUMP_EFFICIENCY")
 local desired = {"CMD_SEND_ORDER", "CMD_DROPZONE", -- mech purchasing
 				"CMD_DROPZONE_2", "CMD_DROPZONE_3", -- dropship upgrading
 				"CMD_JUMP", "CMD_MASC", -- mech behaviour
-				 "CMD_OUTPOST_C3ARRAY", "CMD_OUTPOST_VEHICLEPAD", --"CMD_OUTPOST_SALVAGEYARD", -- outposts (can already use)
-				 "CMD_OUTPOST_MECHBAY", "CMD_OUTPOST_GARRISON", "CMD_OUTPOST_UPLINK", -- outposts (maybe soon)
-				 "CMD_OUTPOST_SEISMIC", "CMD_OUTPOST_TURRETCONTROL", -- outposts (not a priority)
+				 "CMD_OUTPOST_C3ARRAY", "CMD_OUTPOST_VEHICLEPAD", "CMD_OUTPOST_EWAR", "CMD_OUTPOST_GARRISON", "CMD_OUTPOST_UPLINK", -- outposts (can already use)
+				 "CMD_OUTPOST_MECHBAY", "CMD_OUTPOST_TURRETCONTROL", -- outposts (maybe soon)
+				 "CMD_OUTPOST_SEISMIC", --"CMD_OUTPOST_SALVAGEYARD" -- outposts (not a priority)
 				 }
 local AI_CMDS = {}
 for _, cmd in pairs(desired) do
@@ -89,10 +96,9 @@ function gadget:GamePreload()
 	local name = gadget:GetInfo().name
 	for _,t in ipairs(Spring.GetTeamList()) do
 		teamOutpostCounts[t] = {}
-		teamOutpostCounts[t][C3_ID] = 0
-		teamOutpostCounts[t][VPAD_ID] = 0
-		teamOutpostCounts[t][UPLINK_ID] = 0
-		teamOutpostCounts[t][GARRISON_ID] = 0
+		for name, id in pairs(AI_OUTPOST_DEFS) do
+			teamOutpostCounts[t][id] = 0
+		end
 		if Spring.GetTeamLuaAI(t) ==  name then
 			AI_TEAMS[t] = true
 		end
@@ -125,13 +131,6 @@ function gadget:GamePreload()
 	end
 end
 
-local AI_OUTPOST_OPTIONS = {
-	"CMD_OUTPOST_C3ARRAY",
-	"CMD_OUTPOST_VEHICLEPAD",
-	"CMD_OUTPOST_GARRISON",
-	"CMD_OUTPOST_UPLINK",
-}
-
 local function Outpost(unitID, teamID)
 	if not unitID then -- set as starting beacon if not given
 		unitID = GG.dropZoneBeaconIDs[teamID]
@@ -143,7 +142,7 @@ local function Outpost(unitID, teamID)
 	elseif unitID then -- gonna outpost a point, could still be nil if dropZoneBeaconIDs is behind the times
 		-- Try just randomly picking
 		local randPick = math.random(#AI_OUTPOST_OPTIONS)
-		local cmd = AI_OUTPOST_OPTIONS[randPick]
+		local cmd = "CMD_" .. AI_OUTPOST_OPTIONS[randPick]
 		if difficulty > 1 then -- cheat the required resources in
 			Spring.AddTeamResource(teamID, "metal", AI_CMDS[cmd].cost)
 		end
@@ -499,16 +498,16 @@ function gadget:UnitUnloaded(unitID, unitDefID, teamID, transportID, transportTe
 	if AI_TEAMS[teamID] then
 		local ud = UnitDefs[unitDefID]
 		local cp = ud.customParams
-		if cp.baseclass == "outpost" then
+		if AI_OUTPOST_DEFS[ud.name] then
 			teamOutpostCounts[teamID][unitDefID] = teamOutpostCounts[teamID][unitDefID] + 1
-			if unitDefID == C3_ID then
+			if unitDefID == AI_OUTPOST_DEFS["OUTPOST_C3ARRAY"] then
 				--Spring.Echo("C3!")
 				-- C3's take a little time to deploy and grant the extra tonnage & slots, so delay 10s
 				GG.Delay.DelayCall(Spam, {teamID}, 10 * 30)
 				--[[for k,v in pairs(Spring.GetTeamUnits(teamID)) do
 					GG.Delay.DelayCall(UnitIdleCheck, {unitID, unitDefID, teamID}, 10 * 30)
 				end]]
-			elseif unitDefID == UPLINK_ID then
+			elseif unitDefID == AI_OUTPOST_DEFS["OUTPOST_UPLINK"] then
 				teamUplinkIDs[teamID][unitID] = true
 				GG.Delay.DelayCall(UplinkCalls, {teamID}, 10 * 30)
 			end
