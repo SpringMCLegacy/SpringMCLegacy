@@ -347,7 +347,7 @@ function UnloadCargo()
 		Turn(cargoPieces[1], x_axis, 0)
 		Sleep(30)
 		if Spring.GetUnitIsDead(beaconID) or Spring.GetUnitTeam(beaconID) ~= teamID then return end
-		if not (cargoID and Spring.GetUnitDefID(cargoID)) then return end
+		if not (cargoID and Spring.GetUnitDefID(cargoID)) or Spring.GetUnitIsDead(cargoID) then return end
 		-- lower the tray
 		PlaySound("dropship_dooropen")
 		Spring.UnitScript.AttachUnit(pad, cargo[i])
@@ -359,6 +359,7 @@ function UnloadCargo()
 		env = Spring.UnitScript.GetScriptEnv(cargoID)
 		if env and env.script and env.script.StartMoving then -- TODO: shouldn't be required, maybe if cargo died?
 			Spring.UnitScript.CallAsUnit(cargoID, env.script.StartMoving, false)
+			Spring.SetUnitCOBValue(cargoID, COB.ACTIVATION, 1)
 		end
 		-- roll out
 		Move(cargoPieces[1], z_axis, 40, UnitDefs[Spring.GetUnitDefID(cargoID)].speed / 2) -- 50
@@ -374,15 +375,15 @@ function UnloadCargo()
 			if cargoUDID and not UnitDefs[cargoUDID].canFly then
 				Turn(cargoPieces[1], x_axis, math.rad(12), math.rad(20))
 				WaitForTurn(cargoPieces[1], x_axis)
-				Move(pad, z_axis, 19, UnitDefs[Spring.GetUnitDefID(cargoID)].speed / 5)
+				Move(pad, z_axis, 19, UnitDefs[cargoUDID].speed / 5)
 				WaitForMove(pad, z_axis)
 				Turn(cargoPieces[1], x_axis, math.rad(21), math.rad(20))
 				WaitForTurn(cargoPieces[1], x_axis)
-				Move(pad, z_axis, 30, UnitDefs[Spring.GetUnitDefID(cargoID)].speed / 5)
+				Move(pad, z_axis, 30, UnitDefs[cargoUDID].speed / 5)
 				WaitForMove(pad, z_axis)
 				--Turn(cargoPieces[1], x_axis, math.rad(0), math.rad(20))
 				--WaitForTurn(cargoPieces[1], x_axis)
-				Move(pad, z_axis, 45, UnitDefs[Spring.GetUnitDefID(cargoID)].speed / 5)
+				Move(pad, z_axis, 45, UnitDefs[cargoUDID].speed / 5)
 				WaitForMove(pad, z_axis)
 			end
 			Spring.UnitScript.DropUnit(cargoID)

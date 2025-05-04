@@ -1,5 +1,5 @@
 local effects = {
-	ecmbubble = {
+	--[[ecmbubble = {
 		class = 'ShieldSphere', 
 		options = {
 			life = math.huge, 
@@ -22,7 +22,7 @@ local effects = {
 			strength = 0.002,
 			repeatEffect = true
 		},
-	},
+	},--]]
 	dropship_hull_heat = {
 		class = "SimpleParticles2",
 		options = {

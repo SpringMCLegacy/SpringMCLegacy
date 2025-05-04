@@ -225,6 +225,7 @@ function UnloadMech(i)
 	local env = Spring.UnitScript.GetScriptEnv(cargo[i])
 	if env and env.script and env.script.StartMoving then -- TODO: shouldn't be required, maybe if cargo died?
 		Spring.UnitScript.CallAsUnit(cargo[i], env.script.StartMoving, false)
+		Spring.SetUnitCOBValue(cargo[i], COB.ACTIVATION, 1)
 	end
 	local currUnitDef = UnitDefs[Spring.GetUnitDefID(cargo[i])]
 	local moveSpeed = currUnitDef.speed * 1.2

@@ -145,6 +145,7 @@ function UnloadCargo()
 		env = Spring.UnitScript.GetScriptEnv(cargoID)
 		if env and env.script and env.script.StartMoving then -- TODO: shouldn't be required, maybe if cargo died?
 			Spring.UnitScript.CallAsUnit(cargoID, env.script.StartMoving, false)
+			Spring.SetUnitCOBValue(cargoID, COB.ACTIVATION, 1)
 		end
 		
 		-- attach and move
