@@ -431,7 +431,7 @@ local function UplinkCalls(teamID)
 	if not artyFrame then return end -- don't bother going any further
 	for unitID in pairs(teamUplinkIDs[teamID]) do
 		if Spring.GetUnitIsDead(unitID) then
-			teamUplinkIDs[teamID] = nil
+			teamUplinkIDs[teamID][unitID] = nil
 		else
 			-- always try arty first as well as others
 			local cBills = Spring.GetTeamResources(teamID, "metal")
