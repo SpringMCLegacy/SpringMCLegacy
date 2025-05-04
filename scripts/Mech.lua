@@ -421,9 +421,8 @@ end
 
 function script.HitByWeapon(x, z, weaponID, damage, piece)
 	local wd = WeaponDefs[weaponID]
-	--local heatDamage = wd and wd.customParams.heatdamage or 0
-	--ChangeHeat(heatDamage)
 	local hitPiece = piece or GetUnitLastAttackedPiece(unitID) or ""
+	--heat damage is now dealt in UnitPreDamaged of game_radar gadget (as it implements many mods, TODO: refactor to game_mods.lua)
 	--Spring.Echo(weaponID, wd.name, wd.customParams.heatdamage)
 	--Spring.Echo("HIT PIECE?", hitPiece, damage, heatDamage)
 	if weaponID == GG.lusHelper.MINE_WDID then

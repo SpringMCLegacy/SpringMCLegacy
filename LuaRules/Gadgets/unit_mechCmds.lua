@@ -198,7 +198,7 @@ end
 
 
 function gadget:AllowCommand(unitID, unitDefID, teamID, cmdID, cmdParams, cmdOptions)
-	if cmdID == CMD_WEAPON_TOGGLE then
+	if cmdID == CMD_WEAPON_TOGGLE and GG.mechCache[unitDefID] then
 		env = Spring.UnitScript.GetScriptEnv(unitID)
 		Spring.UnitScript.CallAsUnit(unitID, env.ToggleWeapon, cmdParams[1]) -- 1st param is weaponNum
 		return false
