@@ -79,10 +79,10 @@ local ignoredCmdDescs = {[CMD_SEND_ORDER] = true, [CMD_RUNNING_TOTAL] = true, [C
 -- Variables
 local typeStrings = {"fast", "cqb", "flexible", "ranged"}
 local typeStringAliases = { -- whitespace is to try and equalise resulting font size
-	["fast"] 		= GG.Pad(10,"Scout", "&", "Skirmisher"), 
-	["cqb"] 		= GG.Pad(10,"Striker", "&", "Juggernaut"), 
-	["flexible"] 	= GG.Pad(10,"Brawler", "&", "Multirole"),
-	["ranged"] 		= GG.Pad(11,"Sniper", "&", "Missile", "Boat "),
+	["fast"] 		= GG.Pad(10,"Scout"),-- "&", "Skirmisher"), 
+	["cqb"] 		= GG.Pad(10,"Striker"),--, "&", "Juggernaut"), 
+	["flexible"] 	= GG.Pad(10,"Brawler"),-- "&", "Multirole"),
+	["ranged"] 		= GG.Pad(10,"Ranged"), --"Sniper", "&", "Missile", "Boat "),
 }
 
 local menuCmdDescs = {}
@@ -94,7 +94,8 @@ for i, typeString in ipairs(typeStrings) do
 		type   = CMDTYPE.ICON,
 		name   = typeStringAliases[typeString], -- TODO: texture?
 		action = 'menu' .. typeString,
-		tooltip = "Purchase " .. typeStringAliases[typeString]:gsub("%s+\n", " "),
+		tooltip = "Switch menu to " .. typeStringAliases[typeString]:gsub("%s+\n", " "),
+		texture = 'bitmaps/ui/filter.png',
 	}
 	menuCmdIDs[cmdID] = typeString
 	ignoredCmdDescs[cmdID] = 1
@@ -163,7 +164,7 @@ local function ShowBuildOptionsByType(unitID, unitType)
 			local hide = locked[-cmdDesc.id] or mechCache[-cmdDesc.id] ~= unitType
 			EditUnitCmdDesc(unitID, i, {hidden = hide})
 		elseif ignoredCmdDescs[cmdDesc.id] == 1 then 
-			EditUnitCmdDesc(unitID, i, {texture = '',})
+			EditUnitCmdDesc(unitID, i, {texture = 'bitmaps/ui/filter.png',})
 		end
 	end
 end

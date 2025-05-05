@@ -234,7 +234,7 @@ local function ShowModsByType(unitID, modType, mechID)
 		if cmdDescID == cmdID then
 			EditUnitCmdDesc(unitID, i, {texture = 'bitmaps/ui/selected.png',})
 		elseif menuCmdIDs[cmdDescID] then 
-			EditUnitCmdDesc(unitID, i, {texture = '',})
+			EditUnitCmdDesc(unitID, i, {texture = 'bitmaps/ui/filter.png',})
 		elseif GG.appDefTypes[cmdDescID] == "mods" then
 			if mechID and not hiddenMods[mechDefID][cmdDescID] then
 				EditUnitCmdDesc(unitID, i, {hidden = GG.appDefs[cmdDesc.id].menu ~= modType}) -- eww
