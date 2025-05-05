@@ -51,14 +51,14 @@ local getOutCmdDesc = {
 local sellMechCmdDesc = {
 	id 		= GG.CustomCommands.GetCmdID("CMD_MECHBAY_SELLMECH"),
 	type	= CMDTYPE.ICON,
-	name 	= GG.Pad("Sell","Mech (+C)"),
+	name 	= GG.Pad("Sell","Mech","(+C)"),
 	action	= "mechbay_out",
 	tooltip = "Sells the mech for C-Bills",
 }
 local scrapMechCmdDesc = {
 	id 		= GG.CustomCommands.GetCmdID("CMD_MECHBAY_SCRAPMECH"),
 	type	= CMDTYPE.ICON,
-	name 	= GG.Pad("Scrap","Mech (+S)"),
+	name 	= GG.Pad("Scrap","Mech", "(+S)"),
 	action	= "mechbay_out",
 	tooltip = "Scraps the mech for Salvage",
 }

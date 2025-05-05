@@ -3,6 +3,7 @@
 info = GG.lusHelper[unitDefID]
 -- the following have to be non-local for the walkscript include to find them
 rad = math.rad
+local teamID = Spring.GetUnitTeam(unitID)
 
 SIG_ANIMATE = {}
 moving = false
@@ -393,6 +394,7 @@ function limbHPControl(limb, damage, piece)
 			newHP = 0
 			limbsLost = limbsLost + 1
 			SetUnitRulesParam(unitID, "limblost", limbsLost)
+			Script.LuaRules.MechNeedsBay(unitID, teamID) -- let AI know
 		elseif currHP == 0 then -- can only get here if damage < 0 i.e. repairing
 			hideLimbPieces(limb, false)
 			limbsLost = limbsLost - 1
@@ -628,6 +630,7 @@ function WeaponCanFire(weaponID)
 			StartThread(SpinBarrels, weaponID, false)
 		end
 		SetUnitRulesParam(unitID, "outofammo", 1)
+		Script.LuaRules.MechNeedsBay(unitID, teamID) -- let AI know
 		return false
 	elseif spinSpeeds[weaponID] then 
 		if spinPiecesState[weaponID] < 1 then

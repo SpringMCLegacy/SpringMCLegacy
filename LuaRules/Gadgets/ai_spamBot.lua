@@ -32,6 +32,7 @@ local AI_OUTPOST_OPTIONS = {
 	"OUTPOST_GARRISON",
 	"OUTPOST_UPLINK",
 	"OUTPOST_EWAR",
+	"OUTPOST_MECHBAY",
 }
 
 local AI_OUTPOST_DEFS = {}
@@ -60,11 +61,15 @@ end
 local dropZoneIDs = {}
 local orderSizes = {}
 
-local teamUplinkIDs =  {} -- TODO: be more generic, teamOutpostIDs = teamID = {{id = type}}?
 local flagSpots = {} --VFS.Include("maps/flagConfig/" .. Game.mapName .. "_profile.lua")
 
 local teamOutpostCounts = {} -- teamOutpostCounts[teamID] = {c3 = 1, vpad = 1} etc
 local teamOutpostIDs = {} -- teamOutpostIDs[teamID] = {unitID1 = 1, unitID2 = 2 etc}
+
+ -- TODO: be more generic, teamOutpostIDs = {teamID = {type1 = {id1, id2, ...}, type2 = {}, ...}}?
+local teamUplinkIDs =  {}
+local teamMechbayIDs = {}
+
 local teamDropshipOutposts = {} -- teamDropshipOutposts[teamID] = 1
 local teamBeacons = {} -- teamBeacons[teamID] = {beaconID1, beaconID2, ...}
 local beaconOutpostCounts = {} -- beaconOutpostCounts[beaconID] = 3
@@ -91,6 +96,23 @@ end
 GG.AI = {}
 GG.AI.TeamResourceChange = TeamResourceChange
 
+local teamMechsNeedingBays = {}
+
+local function MechNeedsBay(unitID, teamID)
+	--Spring.Echo("Mech", unitID, "from team", teamID, "needs a mechbay")
+	teamMechsNeedingBays[unitID] = true
+	local mechbayID = next(teamMechbayIDs[teamID])
+	if mechbayID then
+		-- we have a mechbay, send it there
+		--Spring.Echo("team", teamID, "totally has a mechbay")
+		Spring.GiveOrderToUnit(unitID, CMD.LOAD_ONTO, {mechbayID}, {"alt"})
+	end
+end
+
+function gadget:Initialize()
+	gadgetHandler:RegisterGlobal('MechNeedsBay', MechNeedsBay)
+end
+
 function gadget:GamePreload()
 	-- Initialise unit limit for all AI teams.
 	local name = gadget:GetInfo().name
@@ -104,6 +126,8 @@ function gadget:GamePreload()
 		end
 		teamBeacons[t] = {}
 		teamUplinkIDs[t] = {}
+		teamMechbayIDs[t] = {}
+		teamMechsNeedingBays[t] = {}
 	end
 	GG.AI_TEAMS = AI_TEAMS
 	for unitDefID, unitDef in pairs(UnitDefs) do
@@ -267,6 +291,12 @@ local function Perk(unitID, unitDefID, perkID, firstTime)
 	end
 end
 
+function gadget:UnitLoaded(unitID, unitDefID, unitTeam, transportID, transportTeam)
+	if teamMechbayIDs[transportTeam][transportID] then
+		-- TODO: extend Perk to work for mods as well as perks
+		--Perk(unitID, unitDefID, nil, false)
+	end
+end
 
 function gadget:UnitCreated(unitID, unitDefID, teamID)
 	if unitDefID == BEACON_ID then
@@ -472,18 +502,14 @@ local function UnitIdleCheck(unitID, unitDefID, teamID)
 	local ud = UnitDefs[unitDefID]
 	local cp = ud.customParams
 	if cp.baseclass == "mech" then -- vehicles handled by unit_vehiclePad as they are always 'automated'
-		-- random chance a idle unit will wander somewhere else
-		--local chance = math.random(1, 100)
-		--if chance < 75 then
-			--Spring.Echo(UnitDefs[unitDefID].name .. [[ "Fuck it, I'm off for a wander"]])
-			if cp.jumpjets then
-				GG.Delay.DelayCall(RunAndJump, {unitID, unitDefID}, 1)
-			else
-				GG.Delay.DelayCall(Wander, {unitID}, 1)
-			end
-		--else
-			--Spring.Echo(UnitDefs[unitDefID].name .. [[ "I think I'll stay here..."]])
-		--end
+		local mechbayID = next(teamMechbayIDs[teamID]) 
+		if mechbayID and teamMechsNeedingBays[unitID] then -- in need of repair, go to a mechbay first
+			Spring.GiveOrderToUnit(unitID, CMD.LOAD_ONTO, {mechbayID}, {"alt"})
+		elseif cp.jumpjets then
+			GG.Delay.DelayCall(RunAndJump, {unitID, unitDefID}, 1)
+		else
+			GG.Delay.DelayCall(Wander, {unitID}, 1)
+		end
 	end
 end
 
@@ -494,22 +520,27 @@ function gadget:UnitIdle(unitID, unitDefID, teamID)
 	end
 end
 
+local OUTPOST_FUNCTION_ALIASES = {
+	[AI_OUTPOST_DEFS["OUTPOST_UPLINK"]] = UplinkCalls,
+	[AI_OUTPOST_DEFS["OUTPOST_C3ARRAY"]] = Spam,
+}
+
 function gadget:UnitUnloaded(unitID, unitDefID, teamID, transportID, transportTeam)
 	if AI_TEAMS[teamID] then
 		local ud = UnitDefs[unitDefID]
 		local cp = ud.customParams
-		if AI_OUTPOST_DEFS[ud.name] then
+		if AI_OUTPOST_DEFS[ud.name:upper()] then
+			--Spring.Echo("team", teamID, "deployed a", ud.name)
 			teamOutpostCounts[teamID][unitDefID] = teamOutpostCounts[teamID][unitDefID] + 1
-			if unitDefID == AI_OUTPOST_DEFS["OUTPOST_C3ARRAY"] then
-				--Spring.Echo("C3!")
-				-- C3's take a little time to deploy and grant the extra tonnage & slots, so delay 10s
-				GG.Delay.DelayCall(Spam, {teamID}, 10 * 30)
-				--[[for k,v in pairs(Spring.GetTeamUnits(teamID)) do
-					GG.Delay.DelayCall(UnitIdleCheck, {unitID, unitDefID, teamID}, 10 * 30)
-				end]]
-			elseif unitDefID == AI_OUTPOST_DEFS["OUTPOST_UPLINK"] then
+			local func = OUTPOST_FUNCTION_ALIASES[unitDefID]
+			if func then -- the  Outpost should trigger a function
+				GG.Delay.DelayCall(func, {teamID}, 10 * 30)
+			end
+			-- TODO: generalise this bit too
+			if unitDefID == AI_OUTPOST_DEFS["OUTPOST_UPLINK"] then
 				teamUplinkIDs[teamID][unitID] = true
-				GG.Delay.DelayCall(UplinkCalls, {teamID}, 10 * 30)
+			elseif unitDefID == AI_OUTPOST_DEFS["OUTPOST_MECHBAY"] then
+				teamMechbayIDs[teamID][unitID] = true
 			end
 		elseif cp.jumpjets then
 			--Spring.Echo("JUMP MECH!")
@@ -532,7 +563,9 @@ function gadget:UnitDestroyed(unitID, unitDefID, teamID, attackerID, attackerDef
 				Outpost(tonumber(beaconID), teamID)
 			end
 			beaconOutpostCounts[beaconID] = beaconOutpostCounts[beaconID] - 1
+			-- Just set all these to nil regardless of which it was
 			teamUplinkIDs[teamID][unitID] = nil
+			teamMechbayIDs[teamID][unitID] = nil
 		elseif UnitDefs[unitDefID].name:find("dropzone") then -- TODO: "DROPZONE_IDS[unitDefID] then" should work here
 			dropZoneIDs[teamID] = nil
 			-- TODO: why doesn't it get auto-switched like it does for player?
