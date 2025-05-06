@@ -347,7 +347,10 @@ function UnloadCargo()
 		Turn(cargoPieces[1], x_axis, 0)
 		Sleep(30)
 		if Spring.GetUnitIsDead(beaconID) or Spring.GetUnitTeam(beaconID) ~= teamID then return end
-		if not (cargoID and Spring.GetUnitDefID(cargoID)) or Spring.GetUnitIsDead(cargoID) then return end
+		if not (cargoID and Spring.ValidUnitID(cargoID)) or Spring.GetUnitIsDead(cargoID) then return end
+		local cargoUDID = Spring.GetUnitDefID(cargoID)
+		if not cargoUDID then return end
+		local cargoUD = UnitDefs[cargoUDID]
 		-- lower the tray
 		PlaySound("dropship_dooropen")
 		Spring.UnitScript.AttachUnit(pad, cargo[i])
@@ -362,28 +365,27 @@ function UnloadCargo()
 			Spring.SetUnitCOBValue(cargoID, COB.ACTIVATION, 1)
 		end
 		-- roll out
-		Move(cargoPieces[1], z_axis, 40, UnitDefs[Spring.GetUnitDefID(cargoID)].speed / 2) -- 50
+		Move(cargoPieces[1], z_axis, 40, cargoUD.speed / 2) -- 50
 		WaitForMove(cargoPieces[1], z_axis)
 		Move(cargoPieces[1], y_axis, -31)
-		Move(cargoPieces[1], z_axis, 90, UnitDefs[Spring.GetUnitDefID(cargoID)].speed / 2)
+		Move(cargoPieces[1], z_axis, 90, cargoUD.speed / 2)
 		WaitForMove(cargoPieces[1], z_axis)
 		-- off the tray, raise it up for the next one
 		Move(attachment, y_axis, 0, BOOM_SPEED * 1.5)
 		-- only rollers need to deal with the ramp
-		if cargoID then
-			local cargoUDID = Spring.GetUnitDefID(cargoID)
-			if cargoUDID and not UnitDefs[cargoUDID].canFly then
+		if cargoID and Spring.ValidUnitID(cargoID) and not Spring.GetUnitIsDead(cargoID) then
+			if cargoUDID and not cargoUD.canFly then
 				Turn(cargoPieces[1], x_axis, math.rad(12), math.rad(20))
 				WaitForTurn(cargoPieces[1], x_axis)
-				Move(pad, z_axis, 19, UnitDefs[cargoUDID].speed / 5)
+				Move(pad, z_axis, 19, cargoUD.speed / 5)
 				WaitForMove(pad, z_axis)
 				Turn(cargoPieces[1], x_axis, math.rad(21), math.rad(20))
 				WaitForTurn(cargoPieces[1], x_axis)
-				Move(pad, z_axis, 30, UnitDefs[cargoUDID].speed / 5)
+				Move(pad, z_axis, 30, cargoUD.speed / 5)
 				WaitForMove(pad, z_axis)
 				--Turn(cargoPieces[1], x_axis, math.rad(0), math.rad(20))
 				--WaitForTurn(cargoPieces[1], x_axis)
-				Move(pad, z_axis, 45, UnitDefs[cargoUDID].speed / 5)
+				Move(pad, z_axis, 45, cargoUD.speed / 5)
 				WaitForMove(pad, z_axis)
 			end
 			Spring.UnitScript.DropUnit(cargoID)
