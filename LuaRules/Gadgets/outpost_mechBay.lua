@@ -319,7 +319,7 @@ function gadget:AllowCommand(unitID, unitDefID, teamID, cmdID, cmdParams, cmdOpt
 			return false
 		elseif menuCmdIDs[cmdID] then
 			env = Spring.UnitScript.GetScriptEnv(unitID)
-			env.autoGetOut = false
+			env.autoGetOut = false or GG.AI_TEAMS[teamID] -- don't disable autoGetOut if it is on an AI team
 			currMenu[unitID] = menuCmdIDs[cmdID]
 			local mechID = (Spring.GetUnitIsTransporting(unitID) or {})[1]
 			ShowModsByType(unitID, menuCmdIDs[cmdID], mechID)

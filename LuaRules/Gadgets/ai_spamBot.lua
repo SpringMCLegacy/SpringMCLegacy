@@ -275,26 +275,61 @@ local function Perk(unitID, unitDefID, perkID, firstTime)
 	end
 	if cp.baseclass == "mech" and Spring.GetUnitExperience(unitID) < GG.PERK_XP_COST then
 		return 
-	end -- TODO: check for cost of c-bill outposts
+	end -- TODO: check for cost of c-bill outposts, its not in the cmdDesc, it's in the perkDef!
+	local ID
 	if not perkID and availablePerkCounts[unitID] > 0 then -- attempt to compare number with nil, via UnitDestroyed
 		local cmdDescs = Spring.GetUnitCmdDescs(unitID)
-		local ID = math.random(1, #cmdDescs)
+		ID = math.random(1, #cmdDescs)
 		while not (availablePerks[unitID][ID]) do
 			ID = math.random(1, #cmdDescs)
 		end
 		perkID = cmdDescs[ID].id
+	end
+	if perkID and ID then
 		availablePerks[unitID][ID] = false
 		availablePerkCounts[unitID] = availablePerkCounts[unitID] - 1
-	end
-	if perkID then
 		GG.Delay.DelayCall(Spring.GiveOrderToUnit, {unitID, perkID, {}, {}}, 1)
+	end
+end
+
+local availableMods = {} -- availableMods[unitID] = {cmdDescID = true, ...}
+local availableModsCounts = {} -- availableModsCounts[unitID] = number
+
+-- TODO: generalise Perk instead of this copy paste job, complicated by the fact that mods are in bay menu but apply to mech
+local function Mod(unitID, mechbayID, salvage)
+	if not availableMods[unitID] then -- first time, setup
+		availableMods[unitID] = {}
+		availableModsCounts[unitID] = 0
+		local cmdDescs = Spring.GetUnitCmdDescs(mechbayID)
+		for id, cmdDesc in pairs(cmdDescs) do
+			if cmdDesc.action:find("mod") then
+				availableMods[unitID][id] = true
+				availableModsCounts[unitID] = availableModsCounts[unitID] + 1
+			end
+		end
+	end
+	local modID, cost, ID
+	if availableModsCounts[unitID] > 0 then
+		--Spring.Echo("Available mods for", UnitDefs[Spring.GetUnitDefID(unitID)].name, availableModsCounts[unitID])
+		local cmdDescs = Spring.GetUnitCmdDescs(mechbayID)
+		local ID = math.random(1, #cmdDescs)
+		while not (availablePerks[unitID][ID]) do
+			ID = math.random(1, #cmdDescs)
+			--Spring.Echo("I'm in a loop", ID)
+		end
+		modID = cmdDescs[ID].id
+		--Spring.Echo("Mod selected for", UnitDefs[Spring.GetUnitDefID(unitID)].name, cmdDescs[ID].name)
+	end	
+	if modID and ID then -- TODO: lookup cost of mod, it's not in the cmdDesc but in the perkDef...
+		availableMods[unitID][ID] = false
+		availableModsCounts[unitID] = availableModsCounts[unitID] - 1
+		GG.Delay.DelayCall(Spring.GiveOrderToUnit, {mechbayID, modID, {}, {}}, 1)
 	end
 end
 
 function gadget:UnitLoaded(unitID, unitDefID, unitTeam, transportID, transportTeam)
 	if teamMechbayIDs[transportTeam][transportID] then
-		-- TODO: extend Perk to work for mods as well as perks
-		--Perk(unitID, unitDefID, nil, false)
+		Mod(unitID, transportID, GG.GetTeamSalvage(teamID))
 	end
 end
 
@@ -493,7 +528,7 @@ end
 
 local WAIT_TIME = 45 * 30 -- 45s
 local function UnitIdleCheck(unitID, unitDefID, teamID)
-	if Spring.GetUnitIsDead(unitID) then return false end
+	if Spring.GetUnitIsDead(unitID) or not Spring.ValidUnitID(unitID) then return false end
 	local cmdQueueSize = (Spring.GetUnitCommandCount and Spring.GetUnitCommandCount(unitID)) or Spring.GetCommandQueue(unitID, 0) or 0
 	if cmdQueueSize > 0 then 
 		--Spring.Echo(UnitDefs[unitDefID].name .. [[ "I'm so not idle!"]]) 
@@ -503,7 +538,7 @@ local function UnitIdleCheck(unitID, unitDefID, teamID)
 	local cp = ud.customParams
 	if cp.baseclass == "mech" then -- vehicles handled by unit_vehiclePad as they are always 'automated'
 		local mechbayID = next(teamMechbayIDs[teamID]) 
-		if mechbayID and teamMechsNeedingBays[unitID] then -- in need of repair, go to a mechbay first
+		if mechbayID and not Spring.GetUnitIsDead(mechbayID) and teamMechsNeedingBays[unitID] then -- in need of repair, go to a mechbay first
 			Spring.GiveOrderToUnit(unitID, CMD.LOAD_ONTO, {mechbayID}, {"alt"})
 		elseif cp.jumpjets then
 			GG.Delay.DelayCall(RunAndJump, {unitID, unitDefID}, 1)
@@ -556,6 +591,7 @@ end
 
 function gadget:UnitDestroyed(unitID, unitDefID, teamID, attackerID, attackerDefID, attackerTeam)
 	if AI_TEAMS[teamID] then
+	
 		local beaconID = Spring.GetUnitRulesParam(unitID, "beaconID")
 		if UnitDefs[unitDefID].customParams.baseclass == "outpost" and beaconID then
 			teamOutpostCounts[teamID][unitDefID] = teamOutpostCounts[teamID][unitDefID] - 1
