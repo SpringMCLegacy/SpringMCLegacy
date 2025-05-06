@@ -56,14 +56,14 @@ local CMD_RUNNING_TOTAL = GG.CustomCommands.GetCmdID("CMD_RUNNING_TOTAL")
 local runningTotalCmdDesc = {
 	id = CMD_RUNNING_TOTAL,
 	type   = CMDTYPE.ICON,
-	name   = "Order\nC-Bills: \n0",
+	name   = "Order\n\255\160\160\160C-Bills: \n0",
 	disabled = true,
 }
 local CMD_RUNNING_TONS = GG.CustomCommands.GetCmdID("CMD_RUNNING_TONS")
 local runningTonsCmdDesc = {
 	id = CMD_RUNNING_TONS,
 	type   = CMDTYPE.ICON,
-	name   = "Order\nTonnes: \n0",
+	name   = "Order\n\255\255\255\001Tonnes: \n0",
 	disabled = true,
 }
 local dropZoneCmdDesc = {
@@ -259,8 +259,8 @@ function UpdateButtons(teamID, arrived) -- Toggles Submit Order vs Order Sent
 	elseif orderStatus[teamID] == 0 then -- ready for new order
 		EditUnitCmdDesc(unitID, FindUnitCmdDesc(unitID, CMD_SEND_ORDER), {disabled = false, name = "Submit \nOrder "})
 		if orderSizes[teamID] == 0 then
-			EditUnitCmdDesc(unitID, FindUnitCmdDesc(unitID, CMD_RUNNING_TOTAL), {name = "Order\nC-Bills: \n0"})
-			EditUnitCmdDesc(unitID, FindUnitCmdDesc(unitID, CMD_RUNNING_TONS), {name = "Order\nTonnes: \n0"})
+			EditUnitCmdDesc(unitID, FindUnitCmdDesc(unitID, CMD_RUNNING_TOTAL), {name = "Order\n\255\160\160\160C-Bills: \n0"})
+			EditUnitCmdDesc(unitID, FindUnitCmdDesc(unitID, CMD_RUNNING_TONS), {name = "Order\n\255\255\255\001Tonnes: \n0"})
 		end
 	elseif orderStatus[teamID] >= 1 then -- order submitted
 		EditUnitCmdDesc(unitID, FindUnitCmdDesc(unitID, CMD_SEND_ORDER), {name = "Order \nSent "})
@@ -390,8 +390,8 @@ function gadget:AllowCommand(unitID, unitDefID, teamID, cmdID, cmdParams, cmdOpt
 					UseTeamResource(teamID, "metal", cost)
 					UseTeamResource(teamID, "energy", weight)
 					CheckBuildOptions(unitID, teamID, cmdID)
-					EditUnitCmdDesc(unitID, FindUnitCmdDesc(unitID, CMD_RUNNING_TOTAL), {name = "Order\nC-Bills: \n" .. newTotal})
-					EditUnitCmdDesc(unitID, FindUnitCmdDesc(unitID, CMD_RUNNING_TONS), {name = "Order\nTonnes: \n" .. newTons})
+					EditUnitCmdDesc(unitID, FindUnitCmdDesc(unitID, CMD_RUNNING_TOTAL), {name = "Order\n\255\160\160\160C-Bills: \n" .. newTotal})
+					EditUnitCmdDesc(unitID, FindUnitCmdDesc(unitID, CMD_RUNNING_TONS), {name = "Order\n\255\255\255\001Tonnes: \n" .. newTons})
 					return true
 				else
 					--Spring.Echo("not enough money")
@@ -408,8 +408,8 @@ function gadget:AllowCommand(unitID, unitDefID, teamID, cmdID, cmdParams, cmdOpt
 					AddTeamResource(teamID, "energy", weight)
 					orderSizes[unitID] = runningSize - 1
 					CheckBuildOptions(unitID, teamID)
-					EditUnitCmdDesc(unitID, FindUnitCmdDesc(unitID, CMD_RUNNING_TOTAL), {name = "Order\nC-Bills: \n" .. runningTotal - cost})
-					EditUnitCmdDesc(unitID, FindUnitCmdDesc(unitID, CMD_RUNNING_TONS), {name = "Order\nTonnes: \n" .. runningTons - weight})
+					EditUnitCmdDesc(unitID, FindUnitCmdDesc(unitID, CMD_RUNNING_TOTAL), {name = "Order\n\255\160\160\160C-Bills: \n" .. runningTotal - cost})
+					EditUnitCmdDesc(unitID, FindUnitCmdDesc(unitID, CMD_RUNNING_TONS), {name = "Order\n\255\255\255\001Tonnes: \n" .. runningTons - weight})
 					return true
 				else
 					return false
