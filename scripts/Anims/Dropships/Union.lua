@@ -157,7 +157,7 @@ function UnloadCargo()
 			Move(pad, z_axis, 100, moveSpeed)
 			WaitForMove(pad, z_axis)
 		end
-		if cargoID and not Spring.GetUnitIsDead(cargoID) then
+		if cargoID and Spring.ValidUnitID(cargoID) and not Spring.GetUnitIsDead(cargoID) then
 			Spring.UnitScript.DropUnit(cargoID)
 			Spring.SetUnitBlocking(cargoID, true, true, true, true, true, true, true)
 			if currUnitDef.canFly then
