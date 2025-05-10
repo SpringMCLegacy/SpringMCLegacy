@@ -254,17 +254,15 @@ end
 else
 --	UNSYNCED
 
-local MY_TEAM_ID = Spring.GetMyTeamID()
-
 -- used when link is lost and also for vehicles
 function ToggleSelectionByTeam(eventID, unitID, teamID, selectable)
-	if teamID == MY_TEAM_ID and not (GG.AI_TEAMS and GG.AI_TEAMS[teamID]) and not Spring.GetSpectatingState() then
+	if teamID == Spring.GetMyTeamID() and not (GG.AI_TEAMS and GG.AI_TEAMS[teamID]) and not Spring.GetSpectatingState() then
 		Spring.SetUnitNoSelect(unitID, not selectable)
 	end
 end
 
 function AddUnitToLance(eventID, teamID, unitID, group)
-	if teamID == MY_TEAM_ID then
+	if teamID == Spring.GetMyTeamID() then
 		CallAsTeam(teamID, Spring.SetUnitGroup, unitID, group)
 		Script.LuaUI.SetLance(unitID, group)
 	end
