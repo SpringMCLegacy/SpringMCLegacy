@@ -53,6 +53,11 @@ local lanceNames	= {"Alpha", "Bravo", "Charlie"}
 for k,v in pairs(lanceNames)do
 	lanceNames[v]=k
 end
+
+local lances = {}
+for i = 1, 3 do
+	lances[i] = {}
+end
 -- getting font in scale with screen
 
 -------------------------------------------------------------------------------------
@@ -138,8 +143,14 @@ local function initializeSetView()
 						-- show new tab
 						currentLance = counter
 						spSendCommands("group" .. currentLance)
+						Spring.SelectUnitArray(lances[currentLance])
 						setWindow:AddChild(deckSets[currentLance])
 						updateButton(green, white)
+					end
+				},
+				OnDblClick = {
+					function()
+						spSendCommands("viewselection")
 					end
 				},
 			}	
@@ -182,9 +193,14 @@ local function initializeSetView()
 							height		= "100%";
 							backgroundColor		= clear;
 							OnMouseUp = { 					
-								function()					
+								function()
 									WG.currentUnitId = unitIdCache[lanceNumber][myIndex]
 									spSendCommands("selectunits clear +" .. WG.currentUnitId)
+								end
+							},
+							OnDblClick = {
+								function()
+									spSendCommands("viewselection")
 								end
 							},
 						},	
@@ -225,7 +241,44 @@ end
 -------------------------------------------------------------------------------------
 -- Init
 -------------------------------------------------------------------------------------
+local MY_TEAM = Spring.GetMyTeamID()
+local MECH_DEFIDS = {}
+
+local function CleanLance(unitID, lance)
+	for slot = 1, #lances[lance] do
+		if lances[lance][slot] == unitID then
+			lances[lance][slot] = nil
+		end
+	end
+end
+
+local function SetLance(unitID, lanceNum)
+	--Spring.Echo("SetLance", unitID, lanceNum)
+	-- can't use insert as we may have missing indices
+	local slot = 1
+	while lances[lanceNum][slot] do
+		slot = slot + 1
+	end
+	lances[lanceNum][slot] = unitID
+	-- clean other lances
+	for lance = 1, 3 do
+		if lance ~= lanceNum then
+			CleanLance(unitID, lance)
+			return
+		end
+	end
+end
+
 function widget:Initialize()
+	MY_TEAM = Spring.GetMyTeamID()
+	for unitDefID, ud in pairs(UnitDefs) do
+		if ud.customParams.baseclass == "mech" then
+			MECH_DEFIDS[unitDefID] = true
+		end
+	end
+	WG.MECH_DEFIDS = MECH_DEFIDS -- make available to other widgets
+		
+	widgetHandler:RegisterGlobal('SetLance', SetLance)
 	Chili = WG.Chili
 	
 	if (not Chili) then
@@ -238,12 +291,20 @@ function widget:Initialize()
 	initializeSetView()
 end	
 
+function widget:UnitDestroyed(unitID, unitDefID, teamID, attackerID, attackerDefID, attackerTeam)
+	if MECH_DEFIDS[unitDefID] then
+		local lance = spGetUnitRulesParam(unitID, "LANCE")
+		if lance then
+			CleanLance(unitID, lance)
+		end
+	end
+end
 
 -------------------------------------------------------------------------------------
 -- function updates lance preview of units and switches currently displayed lance set
 -------------------------------------------------------------------------------------
 local function updateLance()
-	local groupUnits = spGetGroupUnits(currentLance)
+	local groupUnits = lances[currentLance] -- spGetGroupUnits(currentLance)
 	for unitNumber = 1, 4 do
 		local unitPreview = units[currentLance][unitNumber].children
 		--Spring.Echo("removed", currentLance, unitNumber)
@@ -289,7 +350,9 @@ local function updateLance()
 				--Spring.Echo("removed def".. unitDefId .. "from lance " .. currentLance)
 			end
 		else
-			Spring.Echo("you have more than the lance supports in group #" .. currentLance)
+			local unitDefId		= spGetUnitDefID(unitId)
+			local currentDef 	= UnitDefs[unitDefId]
+			Spring.Echo("you have more than the lance supports in group #" .. currentLance, unitNumber, currentDef.name)
 		end
 	end	
 end
@@ -302,9 +365,26 @@ function widget:Update()
 end
 
 function widget:PlayerChanged()
-	for i = 1, 3 do
-		currentLance = i
-		updateLance()
+	local teamID = Spring.GetMyTeamID()
+	if teamID ~= MY_TEAM then
+		MY_TEAM = teamID
+		-- proceed to rebuild the deck
+		local allTheUnits = Spring.GetTeamUnitsSorted(teamID)
+		local mechsToLance = {}
+		for unitDefID, unitTable in pairs(allTheUnits) do
+			if unitDefID and MECH_DEFIDS[unitDefID] then
+				for _, unitID in pairs(unitTable) do
+					mechsToLance[unitID] = true
+				end
+			end
+		end
+		-- first delete all existing lances
+		for i = 1, 3 do
+			lances[i] = {}
+		end
+		-- then rebuild using the rules params
+		for mechID in pairs(mechsToLance) do
+			SetLance(mechID, spGetUnitRulesParam(mechID, "LANCE"))
+		end
 	end
-	currentLance = 1
 end

@@ -73,7 +73,9 @@ local function AssignGroup(unitID, unitDefID, teamID, slotChange, group)
 	end
 	if slotChange > 0 then -- adding a unit to group
 		unitLances[unitID] = group
+		--Spring.Echo("AssignGroup 1. Team:", teamID, "Group:", group, slotChange, groupSlots.available)
 		SendToUnsynced("LANCE", teamID, unitID, group)
+		Spring.SetUnitRulesParam(unitID, "LANCE", group)
 		groupSlots.units[unitID] = UnitDefs[unitDefID].energyCost
 	else -- removing a unit from a group
 		groupSlots.units[unitID] = nil
@@ -108,6 +110,7 @@ local function AssignGroup(unitID, unitDefID, teamID, slotChange, group)
 			if numAssigned < groupSlots.available then -- unit will fit
 				unitLances[candidate.id] = group
 				ToggleLink(candidate.id, teamID, false)
+				--Spring.Echo("AssignGroup 2. Team:", teamID, "Group:", group, numAssigned, groupSlots.available)
 				SendToUnsynced("LANCE", teamID, candidate.id, group)
 				numAssigned = numAssigned + 1
 			end
@@ -255,15 +258,16 @@ local MY_TEAM_ID = Spring.GetMyTeamID()
 
 -- used when link is lost and also for vehicles
 function ToggleSelectionByTeam(eventID, unitID, teamID, selectable)
-	if teamID == MY_TEAM_ID and not (GG.AI_TEAMS and GG.AI_TEAMS[teamID]) then
+	if teamID == MY_TEAM_ID and not (GG.AI_TEAMS and GG.AI_TEAMS[teamID]) and not Spring.GetSpectatingState() then
 		Spring.SetUnitNoSelect(unitID, not selectable)
 	end
 end
 
 function AddUnitToLance(eventID, teamID, unitID, group)
-	--if teamID == MY_TEAM_ID then
+	if teamID == MY_TEAM_ID then
 		CallAsTeam(teamID, Spring.SetUnitGroup, unitID, group)
-	--end
+		Script.LuaUI.SetLance(unitID, group)
+	end
 end
 
 function gadget:Initialize()
