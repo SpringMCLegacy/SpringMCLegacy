@@ -209,6 +209,7 @@ local function SpawnVic(teamID, targetID)
 		sx = facing == 1 and 150 or Game.mapSizeX - 150
 	end
 	local side = GG.teamSide[teamID]
+	if not side then return end -- implies team died
 	local vic = {}
 	for i = 1, 3 do
 		local ox, oy, oz = unpack(vicOffsets[i])
@@ -260,11 +261,11 @@ function gadget:AllowCommand(unitID, unitDefID, teamID, cmdID, cmdParams, cmdOpt
 		if cmdID == artyCmdDesc.id then
 			local x,y,z = unpack(cmdParams)
 			return ArtyStrike(unitID, teamID, x, y, z, Spring.IsNoCostEnabled() and 0 or ARTY_COST)
-		elseif cmdID == aeroCmdDesc.id then
+		elseif cmdID == aeroCmdDesc.id and teamID then
 			local targetID = cmdParams[1]
 			local targetTeam = Spring.GetUnitTeam(targetID)
 			local targetDef = UnitDefs[Spring.GetUnitDefID(targetID)]
-			if Spring.AreTeamsAllied(teamID, targetTeam) or targetTeam == GAIA_TEAM_ID or targetDef.modCategories["beacon"] then
+			if targetTeam and Spring.AreTeamsAllied(teamID, targetTeam) or targetTeam == GAIA_TEAM_ID or targetDef.modCategories["beacon"] then
 				return false
 			end
 			return AeroStrike(unitID, teamID, cmdParams[1], Spring.IsNoCostEnabled() and 0 or AERO_COST)

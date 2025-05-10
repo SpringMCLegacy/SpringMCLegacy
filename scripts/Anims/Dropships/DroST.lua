@@ -322,7 +322,7 @@ function Drop()
 		-- We're in place. Halt and lower the cargo!
 		PlaySound("dropship_rumble")
 		UnloadCargo()
-	else -- bugging out, refund
+	elseif cargo[1] then -- bugging out, refund
 		Spring.AddTeamResource(teamID, "metal", UnitDefs[Spring.GetUnitDefID(cargo[1])].metalCost)
 	end
 	-- Take off!

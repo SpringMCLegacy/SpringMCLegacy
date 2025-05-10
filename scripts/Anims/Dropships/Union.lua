@@ -157,12 +157,14 @@ function UnloadCargo()
 			Move(pad, z_axis, 100, moveSpeed)
 			WaitForMove(pad, z_axis)
 		end
-		Spring.UnitScript.DropUnit(cargoID)
-		Spring.SetUnitBlocking(cargoID, true, true, true, true, true, true, true)
-		if currUnitDef.canFly then
-			Spring.GiveOrderToUnit(cargoID, CMD.MOVE, {TX + 256, 0, Z}, {})
-		else
-			Spring.SetUnitMoveGoal(cargoID, UNLOAD_X +  math.random(-100, 100), 0, UNLOAD_Z +  math.random(-100, 100), 25) -- bug out over here
+		if cargoID and not Spring.GetUnitIsDead(cargoID) then
+			Spring.UnitScript.DropUnit(cargoID)
+			Spring.SetUnitBlocking(cargoID, true, true, true, true, true, true, true)
+			if currUnitDef.canFly then
+				Spring.GiveOrderToUnit(cargoID, CMD.MOVE, {TX + 256, 0, Z}, {})
+			else
+				Spring.SetUnitMoveGoal(cargoID, UNLOAD_X +  math.random(-100, 100), 0, UNLOAD_Z +  math.random(-100, 100), 25) -- bug out over here
+			end
 		end
 		Sleep(2000)
 	end

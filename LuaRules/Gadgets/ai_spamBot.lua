@@ -495,8 +495,10 @@ local function UplinkCalls(teamID)
 	--Spring.Echo("UplinkCalls", teamID, artyFrame, GG.artyCanFire)
 	if not artyFrame then return end -- don't bother going any further
 	for unitID in pairs(teamUplinkIDs[teamID]) do
-		if Spring.GetUnitIsDead(unitID) then
+		if not Spring.ValidUnitID(unitID) or Spring.GetUnitIsDead(unitID) then -- Uplink is dead
 			teamUplinkIDs[teamID][unitID] = nil
+		elseif select(3, Spring.GetTeamInfo(teamID)) then -- Team is dead
+			teamUplinkIDs[teamID] = nil
 		else
 			-- always try arty first as well as others
 			local cBills = Spring.GetTeamResources(teamID, "metal")
