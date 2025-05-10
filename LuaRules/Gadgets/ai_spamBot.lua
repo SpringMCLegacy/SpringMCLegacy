@@ -171,7 +171,7 @@ local function Outpost(unitID, teamID)
 			Spring.AddTeamResource(teamID, "metal", AI_CMDS[cmd].cost)
 		end
 		if Spring.GetTeamResources(teamID, "metal") > AI_CMDS[cmd].cost then
-			local slot = math.random(3) -- choose from the 3 points
+			local slot = (beaconOutpostCounts[unitID] or 0) + 1 -- math.random(3) -- choose from the 3 points
 			local pointID = GG.beaconOutpostPointIDs[unitID][slot]
 			--Spring.Echo("Outpost", cmd)
 			GG.Delay.DelayCall(Spring.GiveOrderToUnit, {pointID, AI_CMDS[cmd].id, {}, {}}, 1)
@@ -206,9 +206,9 @@ local function Spam(teamID)
 			--Spring.Echo("COMPARING:", orderSizes[teamID], GG.TeamSlotsRemaining(teamID))
 			local buildID
 			if difficulty > 1 then
-				Spring.AddTeamResource(teamID, "metal", 1000)
+				Spring.AddTeamResource(teamID, "metal", 1500)
 				if difficulty > 2 then
-					Spring.AddTeamResource(teamID, "metal", 2000)
+					Spring.AddTeamResource(teamID, "metal", 2500)
 					if difficulty == 4 then -- Assaults only
 						buildID = -sideAssaults[side][math.random(1, #sideAssaults[side])]
 					elseif difficulty == 3 then -- jumpers only
@@ -346,6 +346,8 @@ function gadget:UnitCreated(unitID, unitDefID, teamID)
 		if unitDef.name:find("dropzone") then
 			dropZoneIDs[teamID] = unitID	
 			Spam(teamID)
+			Outpost(nil, teamID)
+			Outpost(nil, teamID)
 			Outpost(nil, teamID)
 			teamDropshipOutposts[teamID] = 1
 			GG.Delay.DelayCall(Outpost, {nil, teamID}, 1)
@@ -491,14 +493,16 @@ local UPLINK_CMD_COSTS = {
 }
 
 local function UplinkCalls(teamID)
+	if select(3, Spring.GetTeamInfo(teamID)) then -- Team is dead
+		teamUplinkIDs[teamID] = nil
+		return
+	end
 	local artyFrame = GG.artyCanFire[teamID]
 	--Spring.Echo("UplinkCalls", teamID, artyFrame, GG.artyCanFire)
 	if not artyFrame then return end -- don't bother going any further
 	for unitID in pairs(teamUplinkIDs[teamID]) do
 		if not Spring.ValidUnitID(unitID) or Spring.GetUnitIsDead(unitID) then -- Uplink is dead
 			teamUplinkIDs[teamID][unitID] = nil
-		elseif select(3, Spring.GetTeamInfo(teamID)) then -- Team is dead
-			teamUplinkIDs[teamID] = nil
 		else
 			-- always try arty first as well as others
 			local cBills = Spring.GetTeamResources(teamID, "metal")
@@ -607,6 +611,10 @@ function gadget:UnitDestroyed(unitID, unitDefID, teamID, attackerID, attackerDef
 		elseif UnitDefs[unitDefID].name:find("dropzone") then -- TODO: "DROPZONE_IDS[unitDefID] then" should work here
 			dropZoneIDs[teamID] = nil
 			-- TODO: why doesn't it get auto-switched like it does for player?
+			local newBaseBeacon = next(teamBeacons[teamID])
+			if newBaseBeacon and Spring.ValidUnitID(newBaseBeacon) then
+				Spring.GiveOrderToUnit(newBaseBeacon, GG.CustomCommands.GetCmdID("CMD_DROPZONE"))
+			end
 		elseif UnitDefs[unitDefID].customParams.baseclass == "mech" then
 			Spam(teamID)
 		end
@@ -635,6 +643,8 @@ function gadget:UnitGiven(unitID, unitDefID, newTeam, oldTeam)
 			if toRemove > 0 then
 				table.remove(teamBeacons[oldTeam], i)
 			end
+			Outpost(unitID, newTeam)
+			Outpost(unitID, newTeam)
 			Outpost(unitID, newTeam)
 			Spam(newTeam)
 		end
