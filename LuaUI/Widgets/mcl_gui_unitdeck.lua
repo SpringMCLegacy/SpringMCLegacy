@@ -247,19 +247,20 @@ local MECH_DEFIDS = {}
 local function CleanLance(unitID, lance)
 	for slot = 1, #lances[lance] do
 		if lances[lance][slot] == unitID then
+			--Spring.Echo("CleanLance", unitID, lance, "slot", slot)
 			lances[lance][slot] = nil
 		end
 	end
 end
 
 local function SetLance(unitID, lanceNum)
-	--Spring.Echo("SetLance", unitID, lanceNum)
 	-- can't use insert as we may have missing indices
 	local slot = 1
 	while lances[lanceNum][slot] do
 		slot = slot + 1
 	end
 	lances[lanceNum][slot] = unitID
+	--Spring.Echo("SetLance", unitID, lanceNum, "slot", slot)
 	-- clean other lances
 	for lance = 1, 3 do
 		if lance ~= lanceNum then
@@ -279,6 +280,7 @@ function widget:Initialize()
 	WG.MECH_DEFIDS = MECH_DEFIDS -- make available to other widgets
 		
 	widgetHandler:RegisterGlobal('SetLance', SetLance)
+	widgetHandler:RegisterGlobal('CleanLance', CleanLance)
 	Chili = WG.Chili
 	
 	if (not Chili) then
@@ -290,15 +292,6 @@ function widget:Initialize()
 	CreateWindows()
 	initializeSetView()
 end	
-
-function widget:UnitDestroyed(unitID, unitDefID, teamID, attackerID, attackerDefID, attackerTeam)
-	if MECH_DEFIDS[unitDefID] then
-		local lance = spGetUnitRulesParam(unitID, "LANCE")
-		if lance then
-			CleanLance(unitID, lance)
-		end
-	end
-end
 
 -------------------------------------------------------------------------------------
 -- function updates lance preview of units and switches currently displayed lance set

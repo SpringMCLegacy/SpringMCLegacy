@@ -68,18 +68,21 @@ end
 local function AssignGroup(unitID, unitDefID, teamID, slotChange, group)
 	local groupSlots = teamSlots[teamID][group]
 	if groupSlots then -- can be called to remove from a dead group
+		--Spring.Echo("AssignGroup groupSlots delta", teamID, group, slotChange)
 		groupSlots.used = groupSlots.used + slotChange
 		groupSlots.available = groupSlots.available - slotChange
 	end
 	if slotChange > 0 then -- adding a unit to group
 		unitLances[unitID] = group
-		--Spring.Echo("AssignGroup 1. Team:", teamID, "Group:", group, slotChange, groupSlots.available)
+		--Spring.Echo("AssignGroup ++. Team:", teamID, "Group:", group, "available:", groupSlots.available, "used:", groupSlots.used , UnitDefs[unitDefID].name, unitID)
 		SendToUnsynced("LANCE", teamID, unitID, group)
 		Spring.SetUnitRulesParam(unitID, "LANCE", group)
 		groupSlots.units[unitID] = UnitDefs[unitDefID].energyCost
 	else -- removing a unit from a group
 		groupSlots.units[unitID] = nil
 		unitLances[unitID] = nil
+		--Spring.Echo("AssignGroup --. Team:", teamID, "Group:", group, "available:", groupSlots.available, "used", groupSlots.used, UnitDefs[unitDefID].name, unitID)
+		SendToUnsynced("LANCE", teamID, _, group, unitID)
 		-- iterate through existing link lost mechs to see if they will fit into this group (TODO: tonnage also an issue)
 		local candidates = {}
 		local numCandidates = 0
@@ -110,11 +113,13 @@ local function AssignGroup(unitID, unitDefID, teamID, slotChange, group)
 			if numAssigned < groupSlots.available then -- unit will fit
 				unitLances[candidate.id] = group
 				ToggleLink(candidate.id, teamID, false)
-				--Spring.Echo("AssignGroup 2. Team:", teamID, "Group:", group, numAssigned, groupSlots.available)
+				--Spring.Echo("AssignGroup LostLink", teamID, "Group:", group, numAssigned, "available:", groupSlots.available, "used", groupSlots.used, UnitDefs[Spring.GetUnitDefID(candidate.id)].name, candidate.id)
 				SendToUnsynced("LANCE", teamID, candidate.id, group)
 				numAssigned = numAssigned + 1
 			end
 		end
+		groupSlots.used = groupSlots.used + numAssigned
+		groupSlots.available = groupSlots.available - numAssigned
 	end
 end
 
@@ -261,12 +266,17 @@ function ToggleSelectionByTeam(eventID, unitID, teamID, selectable)
 	end
 end
 
-function AddUnitToLance(eventID, teamID, unitID, group)
+function AddUnitToLance(eventID, teamID, unitID, group, removeID)
 	if teamID == Spring.GetMyTeamID() then
-		CallAsTeam(teamID, Spring.SetUnitGroup, unitID, group)
-		Script.LuaUI.SetLance(unitID, group)
+		if removeID then
+			Script.LuaUI.CleanLance(removeID, group)
+		elseif unitID then 
+			CallAsTeam(teamID, Spring.SetUnitGroup, unitID, group)
+			Script.LuaUI.SetLance(unitID, group)
+		end
 	end
 end
+
 
 function gadget:Initialize()
 	gadgetHandler:AddSyncAction("LANCE", AddUnitToLance)
