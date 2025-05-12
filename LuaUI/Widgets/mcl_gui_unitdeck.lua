@@ -67,22 +67,22 @@ local function CreateWindows()
 	deckWindow = Chili.Window:New{
 		parent	= Chili.Screen0;
 		right	= "0%";
-		y		= "60%";
+		y		= "75%";
 		width	= "15%";
-		height	= "40%";
+		height	= "25%";
 		color	= clear;
 		draggable	= false;
 		dockable	= false;
 		resizable	= false,
-		padding 	= {0,5,0,0};
+		padding 	= {0,0,0,0};
 	}	
 	
 	setWindow = Chili.Window:New{
 		parent	= deckWindow;
 		right	= "0%";
-		y		= "10%";
+		y		= "15%";
 		width	= "100%";
-		height	= "90%";
+		height	= "85%";
 		color		= grey;
 		draggable	= false;
 		dockable	= false;
@@ -133,7 +133,7 @@ local function initializeSetView()
 				textColor 		= grey;
 				x				= spacing .. "%";
 				width			= "32%";
-				height			= "11%";
+				height			= "15%";
 				backgroundColor = black;
 				OnMouseUp = { 
 					function()
@@ -167,17 +167,17 @@ local function initializeSetView()
 		unitIdCache[lanceNumber]	= {}
 		-- set 2x2 grid for all units in this lance
 		local unitNumber = 1
-		for counterY = 0, 1 do -- 4 across
+		for counterY = 0, 1 do -- 2 across
 			for counterX = 0, 1 do	-- 2 down
 				local hSpacing	= counterX*48+2
-				local vSpacing	= counterY*24+2
+				local vSpacing	= counterY*48+2
 				local myIndex	= unitNumber
 				units[lanceNumber][unitNumber]	= Chili.Window:New{
 					parent			= deckSets[lanceNumber];
 					x				= hSpacing.."%";
 					y				= vSpacing.."%";
 					width			= 50 .."%";
-					height			= 25 .."%";
+					height			= 50 .."%";
 					draggable		= false;
 					dockable		= false;
 					resizable		= false;					
@@ -223,10 +223,10 @@ local function initializeSetView()
 						},
 						Chili.Image:New{
 							file 		= noUnit;
-							x			= "25%";
+							x			= "10%";
 							y			= "10%";
-							width		= "50%";
-							height		= "90%";
+							width		= "80%";
+							height		= "80%";
 							keepAspect	= true;
 							color		= grey;
 						}						

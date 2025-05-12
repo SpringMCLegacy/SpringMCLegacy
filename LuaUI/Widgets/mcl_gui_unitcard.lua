@@ -292,7 +292,7 @@ local function CreateWindows()
 		--parent	= Chili.Screen0;
 		name	= "mech card";
 		right	= "0%";
-		y		= "25%";
+		y		= "40%";
 		width	= "15%";
 		height	= "35%";
 		draggable	= false;
