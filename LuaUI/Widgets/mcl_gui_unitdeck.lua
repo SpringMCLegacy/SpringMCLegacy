@@ -200,7 +200,7 @@ local function initializeSetView()
 							},
 							OnDblClick = {
 								function()
-									spSendCommands("viewselection")
+									spSendCommands("track")
 								end
 							},
 						},	

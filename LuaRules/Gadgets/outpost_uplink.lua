@@ -214,7 +214,7 @@ local function SpawnVic(teamID, targetID)
 	for i = 1, 3 do
 		local ox, oy, oz = unpack(vicOffsets[i])
 		ox, oy, oz = GG.Vector.RotateY(ox, oy, oz, math.rad(facing * 90))
-		vic[i] = Spring.CreateUnit(side .. "_corsair", sx+ox, 500, sz+oz, facing, teamID)
+		vic[i] = Spring.CreateUnit(side .. "_corsair", sx+ox, 500, sz+oz, facing, teamID) -- TODO: deal with clans aircraft
 		spawnPoints[vic[i]] = {sx+ox, 500, sz+oz}
 		SendToUnsynced("TOGGLE_SELECT", vic[i], teamID, false)
 	end
