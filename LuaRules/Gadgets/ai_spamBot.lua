@@ -549,7 +549,7 @@ local function UnitIdleCheck(unitID, unitDefID, teamID)
 		elseif cp.jumpjets then
 			GG.Delay.DelayCall(RunAndJump, {unitID, unitDefID}, 1)
 		else
-			GG.Delay.DelayCall(Wander, {unitID}, 1)
+			GG.Delay.DelayCall(Wander, {unitID, tonumber(cp.tonnage) <= 35 and CMD.MOVE}, 1)
 		end
 	end
 end
@@ -590,7 +590,7 @@ function gadget:UnitUnloaded(unitID, unitDefID, teamID, transportID, transportTe
 		elseif cp.baseclass == "mech" then
 			--Spring.Echo("MECH!")
 			Perk(unitID, unitDefID, nil, true)
-			Wander(unitID)
+			Wander(unitID, tonumber(cp.tonnage) <= 35 and CMD.MOVE)
 		end
 	end
 end
