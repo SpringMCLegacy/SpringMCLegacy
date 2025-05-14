@@ -388,8 +388,11 @@ function UnloadCargo()
 				Move(pad, z_axis, 45, cargoUD.speed / 5)
 				WaitForMove(pad, z_axis)
 			end
-			Spring.UnitScript.DropUnit(cargoID)
+			-- check AGAIN as there were some WaitFor's above and it might have died
+			if cargoID and Spring.ValidUnitID(cargoID) and not Spring.GetUnitIsDead(cargoID) then
+				Spring.UnitScript.DropUnit(cargoID)
+				Spring.SetUnitBlocking(cargoID, true, true, true, true, true, true, true)
+			end
 		end
-		Spring.SetUnitBlocking(cargoID, true, true, true, true, true, true, true)
 	end
 end
