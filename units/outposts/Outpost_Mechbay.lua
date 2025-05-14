@@ -8,7 +8,7 @@ local Outpost_Mechbay = Outpost:New{
 	transportSize		= 3,
 	transportCapacity	= 3, -- 1x transportSize
 	transportMass		= 10000,
-	loadingradius		= 100,
+	loadingradius		= 200,
 	
 	customparams = {
 		helptext		= "Repairs and re-arms Mechs and Vehicles.",
