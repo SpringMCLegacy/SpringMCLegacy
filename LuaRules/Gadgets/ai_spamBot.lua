@@ -159,7 +159,7 @@ local function Outpost(unitID, teamID)
 	if not unitID then -- set as starting beacon if not given
 		unitID = GG.dropZoneBeaconIDs[teamID]
 	end
-	if beaconOutpostCounts[unitID] == 3 then return false end -- fully outposted
+	if beaconOutpostCounts[unitID] == 3 or not GG.beaconOutpostPointIDs[unitID] then return false end -- fully outposted or beacon's not deployed yet
 	if not dropZoneIDs[teamID] then -- no dropzone left!
 		GG.Delay.DelayCall(Spring.GiveOrderToUnit, {unitID, AI_CMDS["CMD_DROPZONE"].id, {}, {}}, 1)
 		return true
@@ -674,6 +674,9 @@ function gadget:GameFrame(n)
 		for teamID in pairs(AI_TEAMS) do
 			Spam(teamID)
 			UplinkCalls(teamID)
+			for i, unitID in pairs(teamBeacons[teamID]) do
+				Outpost(unitID, teamID)
+			end
 		end
 	end
 end
