@@ -194,7 +194,7 @@ local CPLTK5 = Catapult:New{
 return lowerkeys({
 	["CC_Catapult_CPLTC1"] = CPLTC1:New(),
 	["DC_Catapult_CPLTC1"] = CPLTC1:New(),
-	--["LA_Catapult_CPLTC1"] = CPLTC1:New(),
+	["LA_Catapult_CPLTC1"] = CPLTC1:New(),
 	["FS_Catapult_CPLTC2"] = CPLTC2:New(),
 	["CC_Catapult_CPLTC3"] = CPLTC3:New(),
 	["CC_Catapult_CPLTC4"] = CPLTC4:New(),
