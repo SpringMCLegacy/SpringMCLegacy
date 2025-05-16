@@ -63,12 +63,8 @@ local orderSizes = {}
 
 local flagSpots = {} --VFS.Include("maps/flagConfig/" .. Game.mapName .. "_profile.lua")
 
-local teamOutpostCounts = {} -- teamOutpostCounts[teamID] = {c3 = 1, vpad = 1} etc
-local teamOutpostIDs = {} -- teamOutpostIDs[teamID] = {unitID1 = 1, unitID2 = 2 etc}
-
- -- TODO: be more generic, teamOutpostIDs = {teamID = {type1 = {id1, id2, ...}, type2 = {}, ...}}?
-local teamUplinkIDs =  {}
-local teamMechbayIDs = {}
+local teamOutpostCounts = {} -- teamOutpostCounts[teamID] = {c3_id = 1, vpad_id = 1} etc
+local teamOutpostIDs = {} -- teamOutpostIDs[teamID] = {unitDefID1 = {unit1, 2 ...}, ...}
 
 local teamDropshipOutposts = {} -- teamDropshipOutposts[teamID] = 1
 local teamBeacons = {} -- teamBeacons[teamID] = {beaconID1, beaconID2, ...}
@@ -101,7 +97,7 @@ local teamMechsNeedingBays = {}
 local function MechNeedsBay(unitID, teamID)
 	--Spring.Echo("Mech", unitID, "from team", teamID, "needs a mechbay")
 	teamMechsNeedingBays[unitID] = true
-	local mechbayID = next(teamMechbayIDs[teamID])
+	local mechbayID = next(teamOutpostIDs[teamID]["OUTPOST_MECHBAY"])--teamMechbayIDs[teamID])
 	if mechbayID then
 		-- we have a mechbay, send it there
 		--Spring.Echo("team", teamID, "totally has a mechbay")
@@ -117,6 +113,10 @@ function gadget:GamePreload()
 	-- Initialise unit limit for all AI teams.
 	local name = gadget:GetInfo().name
 	for _,t in ipairs(Spring.GetTeamList()) do
+		teamOutpostIDs[t] = {}
+		for _, name in pairs(AI_OUTPOST_OPTIONS) do
+			teamOutpostIDs[t][name] = {}
+		end
 		teamOutpostCounts[t] = {}
 		for name, id in pairs(AI_OUTPOST_DEFS) do
 			teamOutpostCounts[t][id] = 0
@@ -125,8 +125,6 @@ function gadget:GamePreload()
 			AI_TEAMS[t] = true
 		end
 		teamBeacons[t] = {}
-		teamUplinkIDs[t] = {}
-		teamMechbayIDs[t] = {}
 		teamMechsNeedingBays[t] = {}
 	end
 	GG.AI_TEAMS = AI_TEAMS
@@ -159,11 +157,16 @@ local function Outpost(unitID, teamID)
 	if not unitID then -- set as starting beacon if not given
 		unitID = GG.dropZoneBeaconIDs[teamID]
 	end
-	if beaconOutpostCounts[unitID] == 3 or not GG.beaconOutpostPointIDs[unitID] then return false end -- fully outposted or beacon's not deployed yet
+	if beaconOutpostCounts[unitID] == 3 or not GG.beaconOutpostPointIDs[unitID] then -- fully outposted or beacon's not deployed yet
+		--Spring.Echo("Outpost 1 (return false, full count)", unitID, teamID, beaconOutpostCounts[unitID], GG.beaconOutpostPointIDs[unitID])
+		return false 
+	end 
 	if not dropZoneIDs[teamID] then -- no dropzone left!
 		GG.Delay.DelayCall(Spring.GiveOrderToUnit, {unitID, AI_CMDS["CMD_DROPZONE"].id, {}, {}}, 1)
+		--Spring.Echo("Outpost 2 (DROPZONE)", unitID, teamID, beaconOutpostCounts[unitID], GG.beaconOutpostPointIDs[unitID])
 		return true
 	elseif unitID then -- gonna outpost a point, could still be nil if dropZoneBeaconIDs is behind the times
+		--Spring.Echo("Outpost 3", unitID, teamID, beaconOutpostCounts[unitID], GG.beaconOutpostPointIDs[unitID])
 		-- Try just randomly picking
 		local randPick = math.random(#AI_OUTPOST_OPTIONS)
 		local cmd = "CMD_" .. AI_OUTPOST_OPTIONS[randPick]
@@ -176,10 +179,13 @@ local function Outpost(unitID, teamID)
 			--Spring.Echo("Outpost", cmd)
 			GG.Delay.DelayCall(Spring.GiveOrderToUnit, {pointID, AI_CMDS[cmd].id, {}, {}}, 1)
 			beaconOutpostCounts[unitID] = (beaconOutpostCounts[unitID] or 0) + 1
+			--Spring.Echo("Outpost 4 (return true with cmd)", unitID, teamID, beaconOutpostCounts[unitID], GG.beaconOutpostPointIDs[unitID], slot, cmd)
 			return true
 		end
+		--Spring.Echo("Outpost 5 (return false)", unitID, teamID, beaconOutpostCounts[unitID], GG.beaconOutpostPointIDs[unitID])
 		return false
 	end
+	--Spring.Echo("Outpost 6 (nothing happened)", unitID, teamID, beaconOutpostCounts[unitID], GG.beaconOutpostPointIDs[unitID])
 end
 
 local function SendOrder(teamID)
@@ -218,14 +224,14 @@ local function Spam(teamID)
 				else
 					buildID = SimpleReverseSearch(sideMechs[side], 
 							math.max(UnitDefs[sideMechs[side][1]].metalCost, 
-							Spring.GetTeamResources(teamID, "metal") * math.random(55, 95)/100), 
+							Spring.GetTeamResources(teamID, "metal") * math.random(5, 95)/100), 
 							Spring.GetTeamResources(teamID, "energy"))
 				end
 			else
 				--local cmdDesc = cmdDescs[math.random(1, #cmdDescs)]
 				buildID = SimpleReverseSearch(sideMechs[side], 
 						math.max(UnitDefs[sideMechs[side][1]].metalCost, 
-						Spring.GetTeamResources(teamID, "metal") * math.random(55, 95)/100), 
+						Spring.GetTeamResources(teamID, "metal") * math.random(5, 95)/100), 
 						Spring.GetTeamResources(teamID, "energy"))
 			end
 			if buildID then
@@ -236,6 +242,7 @@ local function Spam(teamID)
 				-- couldn't find any affordable mechs, try upgrading 
 				local beaconID = teamBeacons[teamID][math.random(#teamBeacons[teamID])]
 				if not Outpost(beaconID, teamID) then
+				
 					-- outpost failed, try upgrading dropship
 					local nextLevel = teamDropshipOutposts[teamID] + 1
 					if nextLevel <= 3 then
@@ -277,7 +284,8 @@ local function Perk(unitID, unitDefID, perkID, firstTime)
 		return 
 	end -- TODO: check for cost of c-bill outposts, its not in the cmdDesc, it's in the perkDef!
 	local ID
-	if not perkID and availablePerkCounts[unitID] > 0 then -- attempt to compare number with nil, via UnitDestroyed
+	local count = availablePerkCounts[unitID]
+	if not perkID and count and count > 0 then -- attempt to compare number with nil, via UnitDestroyed
 		local cmdDescs = Spring.GetUnitCmdDescs(unitID)
 		ID = math.random(1, #cmdDescs)
 		while not (availablePerks[unitID][ID]) do
@@ -287,7 +295,7 @@ local function Perk(unitID, unitDefID, perkID, firstTime)
 	end
 	if perkID and ID then
 		availablePerks[unitID][ID] = false
-		availablePerkCounts[unitID] = availablePerkCounts[unitID] - 1
+		availablePerkCounts[unitID] = count - 1
 		GG.Delay.DelayCall(Spring.GiveOrderToUnit, {unitID, perkID, {}, {}}, 1)
 	end
 end
@@ -328,7 +336,8 @@ local function Mod(unitID, mechbayID, salvage)
 end
 
 function gadget:UnitLoaded(unitID, unitDefID, unitTeam, transportID, transportTeam)
-	if teamMechbayIDs[transportTeam][transportID] then
+	--if teamMechbayIDs[transportTeam][transportID] then
+	if teamOutpostIDs[transportTeam]["OUTPOST_MECHBAY"][transportID] then
 		Mod(unitID, transportID, GG.GetTeamSalvage(teamID))
 	end
 end
@@ -492,17 +501,25 @@ local UPLINK_CMD_COSTS = {
 	360000,
 }
 
+local function CleanTeamOutPosts(teamID, outpostName, unitID)
+	if unitID then
+		teamOutpostIDs[teamID][outpostName][unitID] = nil
+	else -- delete all of them, should only be called if team died
+		teamOutpostIDs[teamID][outpostName] = nil	
+	end
+end
+
 local function UplinkCalls(teamID)
 	if select(3, Spring.GetTeamInfo(teamID)) then -- Team is dead
-		teamUplinkIDs[teamID] = nil
+		--CleanTeamOutPosts(teamID, "OUTPOST_UPLINK")
 		return
 	end
 	local artyFrame = GG.artyCanFire[teamID]
 	--Spring.Echo("UplinkCalls", teamID, artyFrame, GG.artyCanFire)
 	if not artyFrame then return end -- don't bother going any further
-	for unitID in pairs(teamUplinkIDs[teamID]) do
+	for unitID in pairs(teamOutpostIDs[teamID]["OUTPOST_UPLINK"]) do
 		if not Spring.ValidUnitID(unitID) or Spring.GetUnitIsDead(unitID) then -- Uplink is dead
-			teamUplinkIDs[teamID][unitID] = nil
+			--CleanTeamOutPosts(teamID, "OUTPOST_UPLINK", unitID)
 		else
 			-- always try arty first as well as others
 			local cBills = Spring.GetTeamResources(teamID, "metal")
@@ -543,7 +560,7 @@ local function UnitIdleCheck(unitID, unitDefID, teamID)
 	local ud = UnitDefs[unitDefID]
 	local cp = ud.customParams
 	if cp.baseclass == "mech" then -- vehicles handled by unit_vehiclePad as they are always 'automated'
-		local mechbayID = next(teamMechbayIDs[teamID]) 
+		local mechbayID = next(teamOutpostIDs[teamID]["OUTPOST_MECHBAY"])--teamMechbayIDs[teamID]) 
 		if mechbayID and not Spring.GetUnitIsDead(mechbayID) and teamMechsNeedingBays[unitID] then -- in need of repair, go to a mechbay first
 			Spring.GiveOrderToUnit(unitID, CMD.LOAD_ONTO, {mechbayID}, {"alt"})
 		elseif cp.jumpjets then
@@ -573,16 +590,21 @@ function gadget:UnitUnloaded(unitID, unitDefID, teamID, transportID, transportTe
 		if AI_OUTPOST_DEFS[ud.name:upper()] then
 			--Spring.Echo("team", teamID, "deployed a", ud.name)
 			teamOutpostCounts[teamID][unitDefID] = teamOutpostCounts[teamID][unitDefID] + 1
+			-- TODO: really this should be updated here, but creates an even worse race condition than having it upon ordering
+			--[[local beaconID = Spring.GetUnitRulesParam(unitID, "beaconID")
+			if beaconID then
+				beaconOutpostCounts[beaconID] = beaconOutpostCounts[beaconID] + 1
+			end]]
 			local func = OUTPOST_FUNCTION_ALIASES[unitDefID]
 			if func then -- the  Outpost should trigger a function
 				GG.Delay.DelayCall(func, {teamID}, 10 * 30)
 			end
-			-- TODO: generalise this bit too
-			if unitDefID == AI_OUTPOST_DEFS["OUTPOST_UPLINK"] then
-				teamUplinkIDs[teamID][unitID] = true
-			elseif unitDefID == AI_OUTPOST_DEFS["OUTPOST_MECHBAY"] then
-				teamMechbayIDs[teamID][unitID] = true
+			for _, name in pairs(AI_OUTPOST_OPTIONS) do
+				if unitDefID == AI_OUTPOST_DEFS[name] then	
+					teamOutpostIDs[teamID][name][unitID] = true	
+				end
 			end
+			Perk(unitID, unitDefID, nil, true)
 		elseif cp.jumpjets then
 			--Spring.Echo("JUMP MECH!")
 			Perk(unitID, unitDefID, PERK_JUMP_RANGE, true)
@@ -598,19 +620,21 @@ end
 function gadget:UnitDestroyed(unitID, unitDefID, teamID, attackerID, attackerDefID, attackerTeam)
 	if AI_TEAMS[teamID] then
 	
-		local beaconID = Spring.GetUnitRulesParam(unitID, "beaconID")
+		local beaconID = Spring.GetUnitRulesParam(unitID, "beaconID") -- not cleared until 5 frames later by game_outposts
 		if UnitDefs[unitDefID].customParams.baseclass == "outpost" and beaconID then
 			teamOutpostCounts[teamID][unitDefID] = teamOutpostCounts[teamID][unitDefID] - 1
 			if tonumber(beaconID) then
 				Outpost(tonumber(beaconID), teamID)
 			end
 			beaconOutpostCounts[beaconID] = beaconOutpostCounts[beaconID] - 1
+			--Spring.Echo("UnitDestroyed outpost died", UnitDefs[unitDefID].name, "new beacon outpost count", beaconOutpostCounts[beaconID])
 			-- Just set all these to nil regardless of which it was
-			teamUplinkIDs[teamID][unitID] = nil
-			teamMechbayIDs[teamID][unitID] = nil
+			for _, name in pairs(AI_OUTPOST_OPTIONS) do
+				teamOutpostIDs[teamID][name][unitID] = nil
+			end
 		elseif UnitDefs[unitDefID].name:find("dropzone") then -- TODO: "DROPZONE_IDS[unitDefID] then" should work here
 			dropZoneIDs[teamID] = nil
-			-- TODO: why doesn't it get auto-switched like it does for player?
+			-- TODO: why doesn't it get auto-switched like it does for player? Presume it is a widget so isn't executed as unsynced?
 			local newBaseBeacon = next(teamBeacons[teamID])
 			if newBaseBeacon and Spring.ValidUnitID(newBaseBeacon) then
 				Spring.GiveOrderToUnit(newBaseBeacon, GG.CustomCommands.GetCmdID("CMD_DROPZONE"))
@@ -672,10 +696,21 @@ end]]
 function gadget:GameFrame(n)
 	if n % (30 * 60) == 0 then -- once a minute
 		for teamID in pairs(AI_TEAMS) do
-			Spam(teamID)
-			UplinkCalls(teamID)
-			for i, unitID in pairs(teamBeacons[teamID]) do
-				Outpost(unitID, teamID)
+			if not select(3, Spring.GetTeamInfo(teamID)) then -- not dead
+				-- try and buy new mechs
+				Spam(teamID)
+				-- try and order artillery strikes
+				UplinkCalls(teamID)
+				-- try and outpost any beacons
+				for i, unitID in pairs(teamBeacons[teamID]) do
+					Outpost(unitID, teamID)
+				end
+				-- try and upgrade any existing outposts
+				for _, name in pairs(AI_OUTPOST_OPTIONS) do
+					for i, unitID in pairs(teamOutpostIDs[teamID][name]) do
+						Perk(unitID, AI_OUTPOST_DEFS[name])
+					end
+				end
 			end
 		end
 	end
