@@ -237,6 +237,17 @@ local options = {
 		step	= 0.1,
 		section	= '2income',
 	},
+	{
+		key		= "tonnagemult",
+		name	= "Tonnage Multiplier",
+		desc	= "Dev tool for balancing costs",
+		type	= "number",
+		def		= 2.0,
+		min		= 0.1,
+		max		= 2.5,
+		step	= 0.1,
+		section	= '2income',
+	},
 	------------------------------------
 	{
 		key    = '2AI',

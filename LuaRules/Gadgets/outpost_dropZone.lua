@@ -14,6 +14,7 @@ if gadgetHandler:IsSyncedCode() then
 --	SYNCED
 
 local modOptions = Spring.GetModOptions()
+local tonnageMult = tonumber(modOptions and modOptions.tonnagemult or "2")
 
 -- localisations
 local SetUnitRulesParam		= Spring.SetUnitRulesParam
@@ -201,8 +202,8 @@ local function DropZoneUpgrade(teamID)
 	if newTier <= #(dropZoneLevels) then -- another tier is available beyond what we currently have
 		local newDefID = UnitDefNames[side .. "_dropship_" .. dropZoneLevels[newTier]].id
 		teamDropZoneLevels[teamID] = {def = newDefID, tier = newTier}
-		local maxTonnage = UnitDefs[newDefID].customParams.maxtonnage
-		local tonnageIncrease = maxTonnage - UnitDefs[oldDefID].customParams.maxtonnage
+		local maxTonnage = math.floor(UnitDefs[newDefID].customParams.maxtonnage * tonnageMult)
+		local tonnageIncrease = maxTonnage - math.floor(UnitDefs[oldDefID].customParams.maxtonnage * tonnageMult)
 		Spring.SetTeamResource(teamID, "es", maxTonnage)
 		Spring.AddTeamResource(teamID, "e", tonnageIncrease)
 		-- first upgrade unlocks heavy and assault mechs
