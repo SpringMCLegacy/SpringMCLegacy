@@ -169,22 +169,22 @@ function Drop()
 	
 	-- Wait whilst we fall
 	local _, y, _ = Spring.GetUnitPosition(unitID)
-	--[[Spring.Echo("1st Y", y, y - GY)
+	--Spring.Echo("1st Y", y, y - GY)
 	local _,vy,_ = Spring.GetUnitVelocity(unitID)
-	Spring.Echo("1st V", vy)--]]
+	--Spring.Echo("1st V", vy)
 	while y - GY > BURN_HEIGHT do
 		Sleep(30)
 		_, y, _ = Spring.GetUnitPosition(unitID) -- update
 		--[[Spring.Echo("next Y", y, y - GY)
 		local vx,vy,vz = Spring.GetUnitVelocity(unitID)
-		Spring.Echo("next V", vy)--]]
+		Spring.Echo("next V", vy)]]
 	end
 	--Spring.Echo("2nd Y", y, y - GY)
 	local _,vy,_ = Spring.GetUnitVelocity(unitID) -- use actual velocity & position rather than desired
 	--[[Spring.Echo("2nd V", vy)
 	Spring.Echo("ROCKET SUICIDE DESCENT BURN NOW!")--]]
-	Spring.MoveCtrl.SetGravity(unitID, FindA(y - APPROACH_HEIGHT, vy, V_BURNEND))
-	--Spring.Echo("2nd a", FindA(y - APPROACH_HEIGHT, vy, V_BURNEND))
+	Spring.MoveCtrl.SetGravity(unitID, FindA(BURN_HEIGHT - APPROACH_HEIGHT, vy, V_BURNEND))
+	--Spring.Echo("2nd a", FindA(BURN_HEIGHT - APPROACH_HEIGHT, vy, V_BURNEND))
 	
 	-- only proceed if the beacon is still ours --and is secure
 	if Spring.GetUnitTeam(beaconID) == Spring.GetUnitTeam(unitID) then 

@@ -93,10 +93,10 @@ end
 
 -- Global to be picked up by functions in the include, what could go wrong?
 -- (Sorry hokomoko)
-BURN_HEIGHT = 3500
-APPROACH_HEIGHT = 925
+BURN_HEIGHT = 2500
+APPROACH_HEIGHT = 600--925
 V_START = -60
-V_BURNSTART = -40
+V_BURNSTART = -45
 V_BURNEND = -1
 CONVERSION = 30 * 30 / 130
 include ("anims/dropships/common.lua")
