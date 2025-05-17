@@ -623,15 +623,14 @@ function gadget:UnitDestroyed(unitID, unitDefID, teamID, attackerID, attackerDef
 		local beaconID = Spring.GetUnitRulesParam(unitID, "beaconID") -- not cleared until 5 frames later by game_outposts
 		if UnitDefs[unitDefID].customParams.baseclass == "outpost" and beaconID then
 			teamOutpostCounts[teamID][unitDefID] = teamOutpostCounts[teamID][unitDefID] - 1
-			if tonumber(beaconID) then
-				Outpost(tonumber(beaconID), teamID)
-			end
 			beaconOutpostCounts[beaconID] = beaconOutpostCounts[beaconID] - 1
-			--Spring.Echo("UnitDestroyed outpost died", UnitDefs[unitDefID].name, "new beacon outpost count", beaconOutpostCounts[beaconID])
+			--Spring.Echo("UnitDestroyed outpost died", UnitDefs[unitDefID].name, beaconID, "new beacon outpost count", beaconOutpostCounts[beaconID])
 			-- Just set all these to nil regardless of which it was
 			for _, name in pairs(AI_OUTPOST_OPTIONS) do
 				teamOutpostIDs[teamID][name][unitID] = nil
 			end
+			-- try building a new outpost
+			Outpost(beaconID, teamID)
 		elseif UnitDefs[unitDefID].name:find("dropzone") then -- TODO: "DROPZONE_IDS[unitDefID] then" should work here
 			dropZoneIDs[teamID] = nil
 			-- TODO: why doesn't it get auto-switched like it does for player? Presume it is a widget so isn't executed as unsynced?
@@ -668,8 +667,8 @@ function gadget:UnitGiven(unitID, unitDefID, newTeam, oldTeam)
 				table.remove(teamBeacons[oldTeam], i)
 			end
 			Outpost(unitID, newTeam)
-			Outpost(unitID, newTeam)
-			Outpost(unitID, newTeam)
+			--Outpost(unitID, newTeam)
+			--Outpost(unitID, newTeam)
 			Spam(newTeam)
 		end
 		if UnitDefs[unitDefID].customParams.baseclass == "outpost" then
