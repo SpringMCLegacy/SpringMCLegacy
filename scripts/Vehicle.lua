@@ -510,7 +510,7 @@ end
 
 function script.StartMoving()
 	for i = 1, #wheels do
-		Spin(wheels[i], x_axis, WHEEL_SPEED, WHEEL_ACCEL) -- bad argument #1 to 'Spin' (number expected, got nil)
+		Spin(wheels[i], x_axis, WHEEL_SPEED, WHEEL_ACCEL)
 	end
 	moving = true
 end
