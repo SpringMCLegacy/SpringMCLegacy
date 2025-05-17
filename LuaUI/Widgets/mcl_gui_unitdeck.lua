@@ -25,6 +25,7 @@ local darkGrey	= { 0.2, 0.2, 0.2, 1.0}
 local black = { 0.0, 0.0, 0.0, 1.0}
 local clear = { 0.0, 0.0, 0.0, 0.0}
 local olive = { 0.25, 0.3, 0.1, 1.0}
+local red = { 1.0, 0.1, 0.1, 1.0}
 
 -- windows
 local deckWindow
@@ -45,6 +46,7 @@ local deckSets		= {}
 local deckButtons	= {}
 
 local currentLance  = 1
+local maxLance = 1
 local noUnit		= ":cl:bitmaps/ui/infocard/no_unit.png"
 
 local testColors	= { {1,0,0,1}, {0,1,0,1}, {0,0,1,1},}
@@ -134,12 +136,14 @@ local function initializeSetView()
 				x				= spacing .. "%";
 				width			= "32%";
 				height			= "15%";
-				backgroundColor = black;
+				backgroundColor = maxLance >= counter and black or red;
 				OnMouseUp = { 
 					function()
+						if counter > maxLance then return end 
 						-- hide old tab
 						setWindow:RemoveChild(deckSets[currentLance])
-						updateButton(black, grey)
+						local colour = maxLance >= currentLance and black or red
+						updateButton(colour, grey)
 						-- show new tab
 						currentLance = counter
 						spSendCommands("group" .. currentLance)
@@ -271,6 +275,18 @@ local function SetLance(unitID, lanceNum)
 	end
 end
 
+local function SetMaxLance(newMaxLance)
+	maxLance = newMaxLance
+	local cache = currentLance
+	for lance = 1,3 do
+		currentLance = lance
+		local colour = maxLance >= currentLance and black or red
+		updateButton(colour, grey)
+	end
+	currentLance = cache
+	updateButton(green, white)
+end
+
 function widget:Initialize()
 	MY_TEAM = Spring.GetMyTeamID()
 	for unitDefID, ud in pairs(UnitDefs) do
@@ -282,6 +298,7 @@ function widget:Initialize()
 		
 	widgetHandler:RegisterGlobal('SetLance', SetLance)
 	widgetHandler:RegisterGlobal('CleanLance', CleanLance)
+	widgetHandler:RegisterGlobal('SetMaxLance', SetMaxLance)
 	Chili = WG.Chili
 	
 	if (not Chili) then
@@ -380,5 +397,7 @@ function widget:PlayerChanged()
 		for mechID in pairs(mechsToLance) do
 			SetLance(mechID, spGetUnitRulesParam(mechID, "LANCE"))
 		end
+		maxLance = Spring.GetTeamRulesParam(teamID, "LANCES")
+		SetMaxLance(maxLance)
 	end
 end

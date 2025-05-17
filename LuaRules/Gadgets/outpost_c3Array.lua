@@ -133,6 +133,7 @@ function LanceControl(teamID, unitID, add)
 			local newLance = teamC3Counts[teamID] + 1
 			Spring.SendMessageToTeam(teamID, "Gained lance #" .. newLance)
 			Spring.SetTeamRulesParam(teamID, "LANCES", newLance)
+			SendToUnsynced("MAX_LANCE", teamID, newLance)
 			local groupSlots = teamSlots[teamID][newLance]
 			groupSlots.active = true
 			-- If there were any mechs in this lance, make them selectable again
@@ -148,6 +149,7 @@ function LanceControl(teamID, unitID, add)
 			local lostLance = teamC3Counts[teamID] + 2
 			Spring.SendMessageToTeam(teamID, "Lost lance #" .. lostLance)
 			Spring.SetTeamRulesParam(teamID, "LANCES", lostLance - 1)
+			SendToUnsynced("MAX_LANCE", teamID, lostLance - 1)
 			local groupSlots = teamSlots[teamID][lostLance]
 			groupSlots.active = false
 			-- stop any mechs in this lance and make them unselectable
@@ -248,6 +250,7 @@ function gadget:Initialize()
 			teamSlots[teamID][i].available = 4
 			teamSlots[teamID][i].units = {}
 		end
+		Spring.SetTeamRulesParam(teamID, "LANCES", 1) 
 	end
 		for _,unitID in ipairs(Spring.GetAllUnits()) do
 		local teamID = Spring.GetUnitTeam(unitID)
@@ -277,9 +280,15 @@ function AddUnitToLance(eventID, teamID, unitID, group, removeID)
 	end
 end
 
+function SetMaxLance(eventID, teamID, maxLance)
+	if teamID == Spring.GetMyTeamID() then
+		Script.LuaUI.SetMaxLance(maxLance)
+	end
+end
 
 function gadget:Initialize()
 	gadgetHandler:AddSyncAction("LANCE", AddUnitToLance)
+	gadgetHandler:AddSyncAction("MAX_LANCE", SetMaxLance)
 	gadgetHandler:AddSyncAction("TOGGLE_SELECT", ToggleSelectionByTeam)
 end
 
