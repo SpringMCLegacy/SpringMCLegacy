@@ -1,4 +1,4 @@
-local MarauderIIC = Medium:New{
+local MarauderIIC = Assault:New{
 	name				= "Marauder IIC",
 
 	customparams = {

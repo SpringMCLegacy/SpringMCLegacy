@@ -1,4 +1,4 @@
-local Gargoyle = Heavy:New{
+local Gargoyle = Assault:New{
 	name				= "Gargoyle",
 		
     customparams = {

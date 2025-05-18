@@ -1,4 +1,4 @@
-local Direwolf = Medium:New{
+local Direwolf = Assault:New{
 	name				= "Dire Wolf",
 
 	customparams = {
