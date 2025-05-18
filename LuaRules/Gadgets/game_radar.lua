@@ -35,6 +35,7 @@ local SetUnitLosState 	= Spring.SetUnitLosState
 local FRAME_FUDGE = 16
 local SECTOR_RADIUS = modOptions and modOptions.sectorrange or 1500
 local BEACON_ID = UnitDefNames["beacon"].id
+local BEACON_POINT_ID = UnitDefNames["beacon_point"].id
 local NARC_ID = WeaponDefNames["narc"].id
 local NARC_DURATION = 30 * 30 -- 30 seconds
 Spring.SetGameRulesParam("NARC_DURATION", NARC_DURATION)
@@ -280,7 +281,7 @@ end
 GG.EnableAmmo = EnableAmmo
 
 local function InvincibleUnit(unitDefID)
-	if unitDefID == BEACON_ID or UnitDefs[unitDefID].name:find("dropzone") or UnitDefs[unitDefID].customParams.decal then return true end
+	if unitDefID == BEACON_ID or unitDefID == BEACON_POINT_ID or UnitDefs[unitDefID].name:find("dropzone") or UnitDefs[unitDefID].customParams.decal then return true end
 	return false
 end
 GG.InvincibleUnit = InvincibleUnit
