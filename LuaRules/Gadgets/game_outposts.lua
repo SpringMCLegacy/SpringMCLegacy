@@ -40,7 +40,8 @@ local dropZoneDefs = {}
 
 local outpostCMDs = {} -- outpostCMDs[cmdID] = unitDefID
 local outpostPointIDs = {} -- outpostPointIDs[outpostID] = outpostPointID
-local outpostIDs = {} -- outpostIDs[beaconID] = outpostID
+local outpostIDs = {} -- outpostIDs[outpostPointID] = outpostID
+GG.outpostIDs = outpostIDs -- for AI
 
 local outpostPointBeaconIDs = {} -- outpostPointBeaconIDs[outpostPointID] = beaconID
 local beaconOutpostPointIDs = {} -- beaconOutpostPointIDs[beaconID] = {outpostPointID1, outpostPointID2, outpostPointID3}
@@ -182,11 +183,12 @@ function gadget:AllowCommand(unitID, unitDefID, teamID, cmdID, cmdParams, cmdOpt
 			if cost <= GetTeamResources(teamID, "metal") and GG.teamSide[teamID] then
 				--Spring.Echo("I'm totally gonna outpost your beacon bro!")
 				ToggleOutpostOptions(unitID, false)
+				outpostIDs[unitID] = true -- overwritten with unitID on spawn
 				GG.DropshipDelivery(outpostPointBeaconIDs[unitID], unitID, teamID, GG.teamSide[teamID] .. "_drost", outpostDefID, cost, "BB_Dropship_Inbound", DROPSHIP_DELAY)
 			else
 				GG.PlaySoundForTeam(teamID, "BB_Insufficient_Funds", 1)
 			end
-		elseif cmdID == CMD.SELFD then -- Disallow self-d
+		else -- any other command or the beaconPoint is already outposted
 			return false
 		end	
 	elseif UnitDefs[unitDefID].customParams.decal then

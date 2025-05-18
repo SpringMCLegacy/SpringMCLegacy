@@ -153,19 +153,19 @@ function gadget:GamePreload()
 	end
 end
 
-local function Outpost(unitID, teamID)
+local function Outpost(beaconID, teamID)
 	if not unitID then -- set as starting beacon if not given
 		unitID = GG.dropZoneBeaconIDs[teamID]
 	end
-	if beaconOutpostCounts[unitID] == 3 or not GG.beaconOutpostPointIDs[unitID] then -- fully outposted or beacon's not deployed yet
-		--Spring.Echo("Outpost 1 (return false, full count)", unitID, teamID, beaconOutpostCounts[unitID], GG.beaconOutpostPointIDs[unitID])
+	if beaconOutpostCounts[beaconID] == 3 or not GG.beaconOutpostPointIDs[beaconID] then -- fully outposted or beacon's not deployed yet
+		--Spring.Echo("Outpost 1 (return false, full count) BID:", beaconID, "TID:", teamID, beaconOutpostCounts[beaconID], GG.beaconOutpostPointIDs[beaconID])
 		return false 
 	end 
 	if not dropZoneIDs[teamID] then -- no dropzone left!
-		GG.Delay.DelayCall(Spring.GiveOrderToUnit, {unitID, AI_CMDS["CMD_DROPZONE"].id, {}, {}}, 1)
-		--Spring.Echo("Outpost 2 (DROPZONE)", unitID, teamID, beaconOutpostCounts[unitID], GG.beaconOutpostPointIDs[unitID])
+		GG.Delay.DelayCall(Spring.GiveOrderToUnit, {beaconID, AI_CMDS["CMD_DROPZONE"].id, {}, {}}, 1)
+		--Spring.Echo("Outpost 2 (DROPZONE) BID:", beaconID, "TID:", teamID, beaconOutpostCounts[beaconID], GG.beaconOutpostPointIDs[beaconID])
 		return true
-	elseif unitID then -- gonna outpost a point, could still be nil if dropZoneBeaconIDs is behind the times
+	elseif beaconID then -- gonna outpost a point, could still be nil if dropZoneBeaconIDs is behind the times
 		--Spring.Echo("Outpost 3", unitID, teamID, beaconOutpostCounts[unitID], GG.beaconOutpostPointIDs[unitID])
 		-- Try just randomly picking
 		local randPick = math.random(#AI_OUTPOST_OPTIONS)
@@ -174,18 +174,25 @@ local function Outpost(unitID, teamID)
 			Spring.AddTeamResource(teamID, "metal", AI_CMDS[cmd].cost)
 		end
 		if Spring.GetTeamResources(teamID, "metal") > AI_CMDS[cmd].cost then
-			local slot = (beaconOutpostCounts[unitID] or 0) + 1 -- math.random(3) -- choose from the 3 points
-			local pointID = GG.beaconOutpostPointIDs[unitID][slot]
-			--Spring.Echo("Outpost", cmd)
-			GG.Delay.DelayCall(Spring.GiveOrderToUnit, {pointID, AI_CMDS[cmd].id, {}, {}}, 1)
-			beaconOutpostCounts[unitID] = (beaconOutpostCounts[unitID] or 0) + 1
-			--Spring.Echo("Outpost 4 (return true with cmd)", unitID, teamID, beaconOutpostCounts[unitID], GG.beaconOutpostPointIDs[unitID], slot, cmd)
-			return true
+			-- outpostPointIDs[outpostID] = outpostPointID
+			-- outpostIDs[outpostPointID] = outpostID
+			-- need to check available slot rather than just picking...
+			for slot, outpostPointID in pairs(GG.beaconOutpostPointIDs[beaconID]) do
+				local currOutpost = GG.outpostIDs[outpostPointID]
+				if not currOutpost then -- found free slot
+					GG.Delay.DelayCall(Spring.GiveOrderToUnit, {outpostPointID, AI_CMDS[cmd].id, {}, {}}, 1)
+					beaconOutpostCounts[beaconID] = (beaconOutpostCounts[beaconID] or 0) + 1
+					--Spring.Echo("Outpost 4 (return true with cmd) BID:", beaconID, "TID:", teamID, beaconOutpostCounts[beaconID], GG.beaconOutpostPointIDs[beaconID], slot, cmd)
+					return true
+				end
+			end
+			--Spring.Echo("Outpost 5 (return false no free slot) BID:", beaconID, "TID:", teamID, beaconOutpostCounts[beaconID], GG.beaconOutpostPointIDs[beaconID])
+			return false
 		end
-		--Spring.Echo("Outpost 5 (return false)", unitID, teamID, beaconOutpostCounts[unitID], GG.beaconOutpostPointIDs[unitID])
+		--Spring.Echo("Outpost 6 (return false not enough c-bill) BID:", beaconID, "TID:", teamID, beaconOutpostCounts[beaconID], GG.beaconOutpostPointIDs[beaconID])
 		return false
 	end
-	--Spring.Echo("Outpost 6 (nothing happened)", unitID, teamID, beaconOutpostCounts[unitID], GG.beaconOutpostPointIDs[unitID])
+	--Spring.Echo("Outpost 7 (nothing happened) BID:", beaconID, "TID:", teamID, beaconOutpostCounts[beaconID], GG.beaconOutpostPointIDs[beaconID])
 end
 
 local function SendOrder(teamID)
@@ -624,7 +631,7 @@ function gadget:UnitDestroyed(unitID, unitDefID, teamID, attackerID, attackerDef
 		if UnitDefs[unitDefID].customParams.baseclass == "outpost" and beaconID then
 			teamOutpostCounts[teamID][unitDefID] = teamOutpostCounts[teamID][unitDefID] - 1
 			beaconOutpostCounts[beaconID] = beaconOutpostCounts[beaconID] - 1
-			--Spring.Echo("UnitDestroyed outpost died", UnitDefs[unitDefID].name, beaconID, "new beacon outpost count", beaconOutpostCounts[beaconID])
+			--Spring.Echo("UnitDestroyed outpost died BID:", beaconID, "TID:", teamID, UnitDefs[unitDefID].name, "new beacon outpost count", beaconOutpostCounts[beaconID])
 			-- Just set all these to nil regardless of which it was
 			for _, name in pairs(AI_OUTPOST_OPTIONS) do
 				teamOutpostIDs[teamID][name][unitID] = nil
