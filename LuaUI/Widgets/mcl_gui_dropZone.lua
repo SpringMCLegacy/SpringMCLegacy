@@ -19,6 +19,9 @@ local MECH_TEX = ":a:luaui/images/mech.png"
 local BEACON_POINT_DEFID = UnitDefNames["beacon_point"].id
 local BEACON_POINT_TEX = ":a:luaui/images/outpostpoint.png"
 
+local BEACON_DEFID = UnitDefNames["beacon"].id
+local BEACON_TEX = ":a:luaui/images/beacon.png"
+
 
 local OUTPOST_TEX = ":a:icons/beaconpoint.png"
 
@@ -137,7 +140,12 @@ function widget:DrawWorldPreUnit()
 				local radius = 20 * UnitDefs[unitDefID].xsize
 				glColor(r, g, b, selected and 0.9 or 0.4)
 				glTexture(BEACON_POINT_TEX)
-				glDrawListAtUnit(unitID, DZ_LIST, false, radius, 1.0, radius, 0, 0, 1.0, 0)				
+				glDrawListAtUnit(unitID, DZ_LIST, false, radius, 1.0, radius, 0, 0, 1.0, 0)		
+			elseif unitDefID == BEACON_DEFID then
+                local radius = 120 * UnitDefs[unitDefID].xsize
+                glColor(r, g, b, selected and 0.9 or 0.4)
+                glTexture(BEACON_TEX)
+                glDrawListAtUnit(unitID, DZ_LIST, false, radius, 1.0, radius, 0, 0, 1.0, 0)
 			elseif UnitDefs[unitDefID].customParams.baseclass == "outpost" then -- TODO: cache
 				local radius = 15 * UnitDefs[unitDefID].xsize
 				glTexture(OUTPOST_TEX)
