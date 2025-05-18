@@ -168,6 +168,10 @@ function gadget:UnitGiven(unitID, unitDefID, newTeam, oldTeam)
 		for i, outpostPointID in pairs(beaconOutpostPointIDs[unitID]) do			
 			DelayCall(TransferUnit, {outpostPointID, newTeam}, 1) -- also transfer all the beacon outpost points
 		end
+	elseif unitDefID == BEACON_POINT_ID then
+		-- in case point was captured between order being sent and dropship arriving
+		outpostIDs[unitID] = nil -- was set to true on order, unitID only once spawned
+		ToggleOutpostOptions(unitID, true) -- Re-add outpost options to beacon point
 	end
 end
 
