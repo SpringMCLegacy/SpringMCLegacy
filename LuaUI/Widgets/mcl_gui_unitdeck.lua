@@ -363,7 +363,9 @@ local function updateLance()
 		else
 			local unitDefId		= spGetUnitDefID(unitId)
 			local currentDef 	= UnitDefs[unitDefId]
-			Spring.Echo("you have more than the lance supports in group #" .. currentLance, unitNumber, currentDef.name)
+			if unitDefId and currentDef then
+				Spring.Echo("you have more than the lance supports in group #" .. currentLance, unitNumber, currentDef.name)
+			end
 		end
 	end	
 end
