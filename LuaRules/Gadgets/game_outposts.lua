@@ -111,6 +111,7 @@ GG.ToggleOutpostOptions = ToggleOutpostOptions
 
 local function AssociateOutpost(beaconID, targetID, cargoID)
 	if cargoID and targetID then -- can fail at game end
+		if Spring.GetUnitTeam(beaconID) ~= Spring.GetUnitTeam(cargoID) then return end -- in case beaocn was capped before dropship spawned
 		-- extra behaviour to link outposts with beacons
 		outpostPointIDs[cargoID] = targetID 
 		outpostIDs[targetID] = cargoID
@@ -139,11 +140,11 @@ function gadget:UnitDestroyed(unitID, unitDefID, teamID, attackerID, attackerDef
 			if env and env.ChangeType then
 				Spring.UnitScript.CallAsUnit(outpostPointID, env.ChangeType, false)
 			end
-			outpostPointIDs[unitID] = nil
 			outpostIDs[outpostPointID] = nil
 			-- Re-add outpost options to beacon
 			ToggleOutpostOptions(outpostPointID, true)
 		end
+		outpostPointIDs[unitID] = nil
 	end
 end
 
