@@ -28,7 +28,7 @@ local C3_ID = UnitDefNames["outpost_c3array"].id
 local C3Status = {} -- C3Status[unitID] = bool deployed
 local teamC3Counts = {} -- teamC3Counts[teamID] = number
 local teamSlots = {} -- teamSlots[teamID] = {[1] = {active = true, used = number, available = number, units = {unitID1 = tons, unitID2 = tons, ...}}, ...}
-local unitLances = {} -- unitLances[unitID] = group_number
+local unitLances = {} -- unitLances[unitID] = lance_number
 
 local function TeamSlotsRemaining(teamID)
 	local slots = 0
@@ -40,7 +40,7 @@ local function TeamSlotsRemaining(teamID)
 end
 GG.TeamSlotsRemaining = TeamSlotsRemaining
 
-local function TeamAvailableGroup(teamID, size)
+local function TeamAvailableLance(teamID, size)
 	if select(3, Spring.GetTeamInfo(teamID)) then return false end -- team died
 	if teamID == GAIA_TEAM_ID then return false end
 	for lance = 1, 3 do
@@ -65,61 +65,72 @@ function TonnageSort(a, b)
 	return a.tonnage > b.tonnage
 end
 
-local function AssignGroup(unitID, unitDefID, teamID, slotChange, group)
-	local groupSlots = teamSlots[teamID][group]
-	if groupSlots then -- can be called to remove from a dead group
-		--Spring.Echo("AssignGroup groupSlots delta", teamID, group, slotChange)
-		groupSlots.used = groupSlots.used + slotChange
-		groupSlots.available = groupSlots.available - slotChange
-	end
-	if slotChange > 0 then -- adding a unit to group
-		unitLances[unitID] = group
-		--Spring.Echo("AssignGroup ++. Team:", teamID, "Group:", group, "available:", groupSlots.available, "used:", groupSlots.used , UnitDefs[unitDefID].name, unitID)
-		SendToUnsynced("LANCE", teamID, unitID, group)
-		Spring.SetUnitRulesParam(unitID, "LANCE", group)
-		groupSlots.units[unitID] = UnitDefs[unitDefID].energyCost
-	else -- removing a unit from a group
-		groupSlots.units[unitID] = nil
-		unitLances[unitID] = nil
-		--Spring.Echo("AssignGroup --. Team:", teamID, "Group:", group, "available:", groupSlots.available, "used", groupSlots.used, UnitDefs[unitDefID].name, unitID)
-		SendToUnsynced("LANCE", teamID, _, group, unitID)
-		-- iterate through existing link lost mechs to see if they will fit into this group (TODO: tonnage also an issue)
-		local candidates = {}
-		local numCandidates = 0
-		for groupNum, currGroupSlots in ipairs(teamSlots[teamID]) do
-			-- lance is higher than the one that lost a unit
-			-- AND it has units assigned to it
-			-- AND the team has inssufficient C3's to support it
-			if groupNum > group and currGroupSlots.used > 0 and (teamC3Counts[teamID] + 1) < groupNum then
-				for groupUnitID, unitTonnage in pairs(currGroupSlots.units) do
-					local linkLost = (Spring.GetUnitRulesParam(groupUnitID, "LOST_LINK") or 0) == 1
-					if linkLost then
-						numCandidates = numCandidates + 1
-						candidates[groupUnitID] = {id = groupUnitID, tonnage = unitTonnage}
-						--[[if numCandidates == groupSlots.available then
-							break -- no point continuing if we already have enough mechs to fill the lance
-						end]]
-					end
-				end
+local function AddToLance(unitID, teamID, lance, tonnage)
+	unitLances[unitID] = lance
+	local lanceSlots = teamSlots[teamID][lance]
+	lanceSlots.units[unitID] = tonnage
+	lanceSlots.used = lanceSlots.used + 1
+	lanceSlots.available = lanceSlots.available - 1
+	--Spring.Echo("AddToLance. Team:", teamID, "lance:", lance, "available:", lanceSlots.available, "used:", lanceSlots.used , UnitDefs[Spring.GetUnitDefID(unitID)].name, unitID)
+	-- Send info through to Unsynced
+	SendToUnsynced("LANCE", teamID, unitID, lance, false)
+	Spring.SetUnitRulesParam(unitID, "LANCE", lance)
+end
+
+local function RemoveFromLance(unitID, teamID, lance)
+	unitLances[unitID] = nil
+	local lanceSlots = teamSlots[teamID][lance]
+	lanceSlots.units[unitID] = nil
+	lanceSlots.used = lanceSlots.used - 1 
+	lanceSlots.available = lanceSlots.available + 1
+	--Spring.Echo("RemoveToLance. Team:", teamID, "lance:", lance, "available:", lanceSlots.available, "used:", lanceSlots.used , UnitDefs[Spring.GetUnitDefID(unitID)].name, unitID)
+	-- Send info through to Unsynced
+	SendToUnsynced("LANCE", teamID, unitID, lance, true)
+	Spring.SetUnitRulesParam(unitID, "LANCE", "")
+end
+
+-- when a mech dies SD(teamID, thatMech'sLance), when C3 dies call SD(teamID, lanceBelowC3)
+local function ShuffleDown(teamID, lanceNumWithSlot)
+	-- iterate through existing link lost mechs to see if they will fit into this lance (TODO: tonnage also an issue)
+	local candidates = {}
+	local numCandidates = 0
+	for lanceNum, currlanceSlots in ipairs(teamSlots[teamID]) do
+		-- lance is higher than the one that lost a unit
+		-- AND it has units assigned to it
+		-- AND the team has inssufficient C3's to support it
+		if lanceNum > lanceNumWithSlot and currlanceSlots.used > 0 and (teamC3Counts[teamID] + 1) < lanceNum then
+			-- we don't want to change the list as we iterate over it so build a list of candidates first...
+			for lanceUnitID, unitTonnage in pairs(currlanceSlots.units) do
+				numCandidates = numCandidates + 1
+				candidates[lanceUnitID] = {id = lanceUnitID, tonnage = unitTonnage, currLance = lanceNum}
 			end
 		end
-		-- TODO: Probably a FILO queue is better here?
-		-- sort by tonnage (descending) -- TODO: Is this even still needed after splitting tonnage and lancing? Probably you want to prioritise heaviest mechs
+		-- sort by tonnage, probably you want to prioritise heaviest mechs
 		table.sort(candidates, TonnageSort)
-		-- we don't want to change the list as we iterate over it so build a list of candidates first then iterate over that making the changes
-		-- use a first-fit decreasing bin packing algorithm
+		-- ... then iterate over that making the changes
+		local newLance = teamSlots[teamID][lanceNumWithSlot]
 		local numAssigned = 0
+		local available = newLance.available -- cache incase it changes whilst iterating
 		for i, candidate in pairs(candidates) do
-			if numAssigned < groupSlots.available then -- unit will fit
-				unitLances[candidate.id] = group
-				ToggleLink(candidate.id, teamID, false)
-				--Spring.Echo("AssignGroup LostLink", teamID, "Group:", group, numAssigned, "available:", groupSlots.available, "used", groupSlots.used, UnitDefs[Spring.GetUnitDefID(candidate.id)].name, candidate.id)
-				SendToUnsynced("LANCE", teamID, candidate.id, group)
+			if numAssigned < available then -- unit will fit
+				ToggleLink(candidate.id, teamID, false) -- moving into an active lance, activate the link
+				--Spring.Echo("ShuffleDown candidate team:", teamID, "into lance:", lanceNumWithSlot, "from lance", candidate.currLance, UnitDefs[Spring.GetUnitDefID(candidate.id)].name, candidate.id)
+				RemoveFromLance(candidate.id, teamID, candidate.currLance)
+				AddToLance(candidate.id, teamID, lanceNumWithSlot, candidate.tonnage)
 				numAssigned = numAssigned + 1
 			end
 		end
-		groupSlots.used = groupSlots.used + numAssigned
-		groupSlots.available = groupSlots.available - numAssigned
+	end
+end
+
+local function AssignLance(unitID, unitDefID, teamID, slotChange, lance)
+	if slotChange > 0 then -- adding a unit to lance
+		AddToLance(unitID, teamID, lance, UnitDefs[unitDefID].energyCost)
+	else -- removing a unit from a lance
+		RemoveFromLance(unitID, teamID, lance)
+		-- Check if this has made a gap to shuffle into
+		--Spring.Echo("AssignLance (mech died) Shuffle team:", teamID, "lanceNumWithSlot", lance)
+		ShuffleDown(teamID, lance)
 	end
 end
 
@@ -134,10 +145,10 @@ function LanceControl(teamID, unitID, add)
 			Spring.SendMessageToTeam(teamID, "Gained lance #" .. newLance)
 			Spring.SetTeamRulesParam(teamID, "LANCES", newLance)
 			SendToUnsynced("MAX_LANCE", teamID, newLance)
-			local groupSlots = teamSlots[teamID][newLance]
-			groupSlots.active = true
+			local lanceSlots = teamSlots[teamID][newLance]
+			lanceSlots.active = true
 			-- If there were any mechs in this lance, make them selectable again
-			for unitID in pairs(groupSlots.units) do
+			for unitID in pairs(lanceSlots.units) do
 				ToggleLink(unitID, teamID, false)
 			end
 		end
@@ -150,25 +161,20 @@ function LanceControl(teamID, unitID, add)
 			Spring.SendMessageToTeam(teamID, "Lost lance #" .. lostLance)
 			Spring.SetTeamRulesParam(teamID, "LANCES", lostLance - 1)
 			SendToUnsynced("MAX_LANCE", teamID, lostLance - 1)
-			local groupSlots = teamSlots[teamID][lostLance]
-			groupSlots.active = false
-			-- stop any mechs in this lance and make them unselectable
-			--Spring.GiveOrderToUnitMap(groupSlots.units, CMD.STOP, EMPTY_TABLE, EMPTY_TABLE)
-			for unitID, tonnage in pairs(groupSlots.units) do
-				local unitDefID = Spring.GetUnitDefID(unitID) -- TODO: somehow, this can be nil? unitID is dead?
-				if unitDefID then -- work around the bug for now
-					local lowerGroup, lowerActive = TeamAvailableGroup(teamID, 1)
-					if lowerGroup and lowerActive then -- if there is a slot lower down, take it
-						-- cleanup old group
-						AssignGroup(unitID, unitDefID, teamID, -1, unitLances[unitID])
-						-- add to new group
-						AssignGroup(unitID, unitDefID, teamID, 1, lowerGroup)
-					else -- otherwise we've lost the link
-						ToggleLink(unitID, teamID, true, tonnage)
-					end
-				end
+			local lanceSlots = teamSlots[teamID][lostLance]
+			lanceSlots.active = false
+			-- first check if we can shuffle any down
+			for i = (lostLance - 1), 1, -1 do
+				--Spring.Echo("LanceControl (C3 died) Shuffle team:", teamID, "lanceToCheck", i)
+				ShuffleDown(teamID, i)
+			end
+			-- stop any mechs remaining in this lance and make them unselectable
+			--Spring.GiveOrderToUnitMap(lanceSlots.units, CMD.STOP, EMPTY_TABLE, EMPTY_TABLE)
+			for unitID, tonnage in pairs(lanceSlots.units) do
+				ToggleLink(unitID, teamID, true, tonnage)
 			end
 		end
+		-- cleanup the C3 itself
 		C3Status[unitID] = nil
 	end
 end
@@ -178,29 +184,29 @@ local function UpdateTeamSlots(teamID, unitID, unitDefID, add)
 	if select(3,Spring.GetTeamInfo(teamID)) or teamID == GAIA_TEAM_ID then return end -- team died
 	local ud = UnitDefs[unitDefID]
 	if add then -- new unit
-		local group, active = TeamAvailableGroup(teamID, 1)
-		if group then
+		local lance, active = TeamAvailableLance(teamID, 1)
+		if lance then
 			if not active then 
-				--Spring.Echo(teamID, "Assigned to an inactive group!") 
+				--Spring.Echo(teamID, "Assigned to an inactive lance!") 
 				ToggleLink(unitID, teamID, true, ud.energyCost)
 			end
-			AssignGroup(unitID, unitDefID, teamID, 1, group)
+			AssignLance(unitID, unitDefID, teamID, 1, lance)
 		else 
-			Spring.Echo(teamID, "FLOZi logic fail: No available group", TeamSlotsRemaining(teamID), 1, ud.name) -- TODO: can reach here
+			Spring.Echo(teamID, "FLOZi logic fail: No available lance", TeamSlotsRemaining(teamID), 1, ud.name) -- TODO: can reach here
 		end
 	else -- unit died
-		local group = unitLances[unitID]
-		AssignGroup(unitID, unitDefID, teamID, -1, group)
+		local lance = unitLances[unitID]
+		AssignLance(unitID, unitDefID, teamID, -1, lance)
 	end
 	Spring.SetTeamRulesParam(teamID, "TEAM_SLOTS_REMAINING", TeamSlotsRemaining(teamID))
 end
 
 function gadget:AllowCommand(unitID, unitDefID, teamID, cmdID, cmdParams, cmdOptions, cmdTag, synced)
 	if GG.mechCache[unitDefID] then
-		local group = unitLances[unitID]
-		local groupSlots = teamSlots[teamID][group]
-		if groupSlots then
-			if not groupSlots.active then 
+		local lance = unitLances[unitID]
+		local lanceSlots = teamSlots[teamID][lance]
+		if lanceSlots then
+			if not lanceSlots.active then 
 				return false -- strictly no commands to lost link units
 			end
 		end
@@ -269,13 +275,13 @@ function ToggleSelectionByTeam(eventID, unitID, teamID, selectable)
 	end
 end
 
-function AddUnitToLance(eventID, teamID, unitID, group, removeID)
+function AddUnitToLance(eventID, teamID, unitID, lance, clean)
 	if teamID == Spring.GetMyTeamID() then
-		if removeID then
-			Script.LuaUI.CleanLance(removeID, group)
+		if clean then
+			Script.LuaUI.CleanLance(unitID, lance)
 		elseif unitID then 
-			CallAsTeam(teamID, Spring.SetUnitGroup, unitID, group)
-			Script.LuaUI.SetLance(unitID, group)
+			CallAsTeam(teamID, Spring.SetUnitGroup, unitID, lance)
+			Script.LuaUI.SetLance(unitID, lance)
 		end
 	end
 end
