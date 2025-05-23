@@ -276,6 +276,7 @@ function ToggleSelectionByTeam(eventID, unitID, teamID, selectable)
 end
 
 function AddUnitToLance(eventID, teamID, unitID, lance, clean)
+	--Spring.Echo("AddUnitToLance team:", teamID, "unit:", unitID, "lance:", lance, "clean", clean)
 	if teamID == Spring.GetMyTeamID() then
 		if clean then
 			Script.LuaUI.CleanLance(unitID, lance)

@@ -250,9 +250,9 @@ local MY_TEAM = Spring.GetMyTeamID()
 local MECH_DEFIDS = {}
 
 local function CleanLance(unitID, lance)
-	for slot = 1, #lances[lance] do
+	for slot = 1, 4 do
 		if lances[lance][slot] == unitID then
-			--Spring.Echo("CleanLance", unitID, lance, "slot", slot)
+			--Spring.Echo("CleanLance team:", Spring.GetMyTeamID(), "unit:", unitID, lance, "slot", slot)
 			lances[lance][slot] = nil
 		end
 	end
@@ -265,7 +265,7 @@ local function SetLance(unitID, lanceNum)
 		slot = slot + 1
 	end
 	lances[lanceNum][slot] = unitID
-	--Spring.Echo("SetLance", unitID, lanceNum, "slot", slot)
+	--Spring.Echo("SetLance team:", Spring.GetMyTeamID(), "unit:", unitID, lanceNum, "slot", slot)
 	-- clean other lances
 	for lance = 1, 3 do
 		if lance ~= lanceNum then
