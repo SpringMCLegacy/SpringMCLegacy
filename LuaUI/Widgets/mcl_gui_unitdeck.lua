@@ -354,7 +354,7 @@ local function updateLance()
 				unitPreview[3]:SetCaption(math.floor(maxHealth - (maxHealth - health)))--math.floor(maxHealth - health))
 
 				unitPreview[4].file		= '#' .. unitDefId
-				unitPreview[4].color	= white
+				unitPreview[4].color	= Spring.GetUnitTransporter(unitId) and red or white
 				unitPreview[4]:Invalidate()
 			else -- just a catch all for some reason this was happening after a unit was dead/removed causing the script to blowup
 				deckSets[currentLance]:RemoveChild(units[currentLance][unitNumber])
