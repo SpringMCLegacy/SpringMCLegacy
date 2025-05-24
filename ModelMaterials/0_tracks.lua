@@ -13,7 +13,7 @@ local trackWidths = {} -- unitID = proportionOfTexture
 
 local function UnitCreated(unitID)
 	local unitDef = UnitDefs[Spring.GetUnitDefID(unitID)]
-	if unitDef.leaveTracks then
+	if unitDef.leaveTracks and unitDef.customParams.baseclass == "vehicle" then
 		trackWidths[unitID] = unitDef.customParams.trackwidth
 		--Spring.Echo("MY WIDTH IS", trackWidths[unitID])
 	end
