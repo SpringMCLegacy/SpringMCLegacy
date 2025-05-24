@@ -64,7 +64,7 @@ local orderSizes = {}
 local flagSpots = {} --VFS.Include("maps/flagConfig/" .. Game.mapName .. "_profile.lua")
 
 local teamOutpostCounts = {} -- teamOutpostCounts[teamID] = {c3_id = 1, vpad_id = 1} etc
-local teamOutpostIDs = {} -- teamOutpostIDs[teamID] = {unitDefID1 = {unit1, 2 ...}, ...}
+local teamOutpostIDs = {} -- teamOutpostIDs[teamID] = {unitDefID1 = {unit1 = true, ...}, ...}
 
 local teamDropshipOutposts = {} -- teamDropshipOutposts[teamID] = 1
 local teamBeacons = {} -- teamBeacons[teamID] = {beaconID1, beaconID2, ...}
@@ -97,11 +97,17 @@ local teamMechsNeedingBays = {}
 local function MechNeedsBay(unitID, teamID)
 	--Spring.Echo("Mech", unitID, "from team", teamID, "needs a mechbay")
 	teamMechsNeedingBays[unitID] = true
-	local mechbayID = next(teamOutpostIDs[teamID]["OUTPOST_MECHBAY"])--teamMechbayIDs[teamID])
-	if mechbayID then
-		-- we have a mechbay, send it there
-		--Spring.Echo("team", teamID, "totally has a mechbay")
-		Spring.GiveOrderToUnit(unitID, CMD.LOAD_ONTO, {mechbayID}, {"alt"})
+	for mechbayID in pairs(teamOutpostIDs[teamID]["OUTPOST_MECHBAY"]) do
+		--Spring.Echo("team", teamID, "totally has a mechbay is it empty?", Spring.GetUnitIsTransporting(mechbayID)[1])
+		if not Spring.GetUnitIsTransporting(mechbayID)[1] then -- MechBay is currently empty 
+		--TODO: of course this is not optimal as there may already be another mech on the way there, and a full one could be nearly done...
+			-- we have a mechbay, send it there
+			--Spring.Echo("team", teamID, "totally has an empty mechbay")
+			local x,y,z = Spring.GetUnitPosition(mechbayID)
+			Spring.GiveOrderToUnit(unitID, CMD.MOVE, {x,y,z}, {"alt"})
+			Spring.GiveOrderToUnit(unitID, CMD.LOAD_ONTO, {mechbayID}, {"shift"})
+			break
+		end
 	end
 end
 
