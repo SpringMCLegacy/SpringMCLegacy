@@ -10,11 +10,13 @@ local SHADER_DIR = "ModelMaterials/Shaders/"
 local frameLoc, frameLoc2, frameLoc3
 
 local trackWidths = {} -- unitID = proportionOfTexture
+local trackCache = {}
 
 local function UnitCreated(unitID)
-	local unitDef = UnitDefs[Spring.GetUnitDefID(unitID)]
-	if unitDef.leaveTracks and unitDef.customParams.baseclass == "vehicle" then
-		trackWidths[unitID] = unitDef.customParams.trackwidth
+	local unitDefID = Spring.GetUnitDefID(unitID)
+	local width = trackCache[unitDefID]
+	if width then
+		trackWidths[unitID] = width
 		--Spring.Echo("MY WIDTH IS", trackWidths[unitID])
 	end
 end
@@ -88,11 +90,12 @@ local unitMaterials = {}
 for i=1,#UnitDefs do
   local udef = UnitDefs[i]
 
-  if udef.leaveTracks and not udef.customParams.wheels and udef.customParams.normaltex then
+  if udef.leaveTracks and udef.customParams.baseclass == "Vehicle" and not udef.customParams.wheels and udef.customParams.normaltex then
     unitMaterials[udef.name] = {
 	  "trackShader", 
 	  NORMALTEX = udef.customParams.normaltex,
 	}
+	trackCache[i] = udef.trackWidth
   end
 end
   
