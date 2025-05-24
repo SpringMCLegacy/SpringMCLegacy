@@ -1,6 +1,11 @@
 local Jagermech = Heavy:New{
 	name				= "Jagermech",
 		
+	leaveTracks			= true,	
+	trackType			= "Jagermech",
+	trackOffset			= 6,
+	trackWidth			= 46,
+	
     customparams = {
 		cockpitheight	= 2,
 		tonnage			= 65,

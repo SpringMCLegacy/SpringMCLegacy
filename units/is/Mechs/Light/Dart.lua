@@ -1,6 +1,12 @@
 local Dart = Light:New{
 	name              	= "Dart",
 	
+	leaveTracks			= true,	
+	trackType			= "Dart",
+	trackOffset			= 6,
+	trackWidth			= 26,
+	trackStretch 		= 2,
+	
 	customparams = {
 		cockpitheight	= 5,
 		tonnage			= 25,

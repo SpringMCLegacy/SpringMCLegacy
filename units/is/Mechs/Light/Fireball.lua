@@ -1,5 +1,12 @@
 local Fireball = Light:New{
 	name              	= "Fireball",
+	
+	leaveTracks			= true,	
+	trackType			= "Fireball",
+	trackOffset			= 6,
+	trackWidth			= 26,
+	trackStretch 		= 2,
+	
 	customparams = {
 		cockpitheight	= 5.95,
 		tonnage			= 20,
