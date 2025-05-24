@@ -1,6 +1,12 @@
 local Chimera = Medium:New{
 	name				= "Chimera",
 	
+	leaveTracks			= true,	
+	trackType			= "Chimera",
+	trackOffset			= 6,
+	trackWidth			= 36,
+	trackStretch 		= 2,
+	
 	customparams = {
 		cockpitheight	= 8.3,
 		tonnage			= 40,
