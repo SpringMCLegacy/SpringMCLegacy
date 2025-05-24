@@ -381,7 +381,7 @@ function gadget:UnitCreated(unitID, unitDefID, teamID)
 			end
 			--table.insert(teamOutpostIDs[teamID], unitID)
 		elseif unitDef.customParams.baseclass == "mech" then
-			local closeRange = WeaponDefs[unitDef.weapons[1].weaponDef].range * 0.9
+			local closeRange = WeaponDefs[unitDef.weapons[1].weaponDef].range * 0.7
 			-- set engagement range to weapon 1 range
 			Spring.SetUnitMaxRange(unitID, closeRange)
 			teamMechCounts[teamID] = teamMechCounts[teamID] + 1
