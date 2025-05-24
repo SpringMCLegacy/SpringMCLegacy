@@ -175,8 +175,8 @@ function ChangeAmmo(ammoType, amount)
 end
 
 local function SpinBarrels(weaponID, start)
-	Signal(spinSpeeds)
-	SetSignalMask(spinSpeeds)
+	Signal(weaponID == 1 and spinSpeeds or maxAmmo) -- TODO: stupid hack for Jagermech having two spinning things
+	SetSignalMask(weaponID == 1 and spinSpeeds or maxAmmo)
 	if start then
 		spinPiecesState[weaponID] = 1
 		for weaponID, spinPiece in pairs(spinPieces) do
