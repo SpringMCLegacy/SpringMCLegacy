@@ -71,6 +71,8 @@ local teamBeacons = {} -- teamBeacons[teamID] = {beaconID1, beaconID2, ...}
 local beaconOutpostCounts = {} -- beaconOutpostCounts[beaconID] = 3
 local beaconIDs = {}
 
+local teamMechCounts = {} -- teamMechCounts[myTeamID] = number
+
 local function CostSort(unitDefID1, unitDefID2)
 	return UnitDefs[unitDefID1].metalCost < UnitDefs[unitDefID2].metalCost
 end
@@ -132,6 +134,7 @@ function gadget:GamePreload()
 		end
 		teamBeacons[t] = {}
 		teamMechsNeedingBays[t] = {}
+		teamMechCounts[t] = 0
 	end
 	GG.AI_TEAMS = AI_TEAMS
 	for unitDefID, unitDef in pairs(UnitDefs) do
@@ -173,8 +176,8 @@ local function Outpost(beaconID, teamID)
 		return true
 	elseif beaconID then -- gonna outpost a point, could still be nil if dropZoneBeaconIDs is behind the times
 		--Spring.Echo("Outpost 3", unitID, teamID, beaconOutpostCounts[unitID], GG.beaconOutpostPointIDs[unitID])
-		-- Try just randomly picking
-		local randPick = math.random(#AI_OUTPOST_OPTIONS)
+		-- C3 if we have more mechs than capacity, otherwise try just randomly picking
+		local randPick = teamMechCounts[teamID] > ((teamOutpostCounts[teamID][UnitDefNames["outpost_c3array"].id] + 1) * 4) and 1 or math.random(#AI_OUTPOST_OPTIONS)
 		local cmd = "CMD_" .. AI_OUTPOST_OPTIONS[randPick]
 		if difficulty > 1 then -- cheat the required resources in
 			Spring.AddTeamResource(teamID, "metal", AI_CMDS[cmd].cost)
@@ -378,9 +381,10 @@ function gadget:UnitCreated(unitID, unitDefID, teamID)
 			end
 			--table.insert(teamOutpostIDs[teamID], unitID)
 		elseif unitDef.customParams.baseclass == "mech" then
-			local closeRange = WeaponDefs[unitDef.weapons[1].weaponDef].range * 0.9
+			local closeRange = WeaponDefs[unitDef.weapons[1].weaponDef].range * 0.7
 			-- set engagement range to weapon 1 range
 			Spring.SetUnitMaxRange(unitID, closeRange)
+			teamMechCounts[teamID] = teamMechCounts[teamID] + 1
 		elseif unitDef.customParams.baseclass == "outpost" then
 			--table.insert(teamOutpostIDs[teamID], unitID)
 			if difficulty > 1 then -- loadsa money!
@@ -652,6 +656,7 @@ function gadget:UnitDestroyed(unitID, unitDefID, teamID, attackerID, attackerDef
 				Spring.GiveOrderToUnit(newBaseBeacon, GG.CustomCommands.GetCmdID("CMD_DROPZONE"))
 			end
 		elseif UnitDefs[unitDefID].customParams.baseclass == "mech" then
+			teamMechCounts[teamID] = teamMechCounts[teamID] - 1
 			Spam(teamID)
 		end
 	end

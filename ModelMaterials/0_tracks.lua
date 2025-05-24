@@ -17,7 +17,7 @@ local function UnitCreated(unitID)
 	local width = trackCache[unitDefID]
 	if width then
 		trackWidths[unitID] = width
-		--Spring.Echo("MY WIDTH IS", trackWidths[unitID])
+		--Spring.Echo("MY WIDTH IS", trackWidths[unitID], width)
 	end
 end
 
@@ -91,11 +91,12 @@ for i=1,#UnitDefs do
   local udef = UnitDefs[i]
 
   if udef.leaveTracks and udef.customParams.baseclass == "vehicle" and not udef.customParams.wheels and udef.customParams.normaltex then
+	--Spring.Echo("found a unit with tracks", udef.name)
     unitMaterials[udef.name] = {
 	  "trackShader", 
 	  NORMALTEX = udef.customParams.normaltex,
 	}
-	trackCache[i] = udef.trackWidth
+	trackCache[i] = udef.customParams.trackwidth
   end
 end
   
