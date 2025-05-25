@@ -6,6 +6,8 @@ local Catapult = Heavy:New{
 	trackOffset			= 6,
 	trackWidth			= 46,
 	trackStretch 		= 2,
+	trackStrength 		= 52,
+	
 	customparams = {
 		cockpitheight	= 3.5,
 		tonnage			= 65,

@@ -1,5 +1,12 @@
 local Locust = Light:New{
 	name			= "Locust",
+	
+	leaveTracks			= true,	
+	trackType			= "Locust",
+	trackOffset			= 6,
+	trackWidth			= 20,
+	trackStretch 		= 2.5,
+	
 	customparams = {
 		cockpitheight	= 1.6,
 		tonnage 		= 20,
