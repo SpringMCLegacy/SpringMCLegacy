@@ -6,7 +6,6 @@ local Jagermech = Heavy:New{
 	trackOffset			= 6,
 	trackWidth			= 46,
 	trackStretch 		= 2,
-	trackStrength 		= 52,
 	
     customparams = {
 		cockpitheight	= 2,

@@ -334,9 +334,9 @@ for name, ud in pairs(UnitDefs) do
 			ud.description = ud.description .. " \255\001\255\001[BAP]"
 		end
 	end
-	-- track strength should be 1/1000th of mass
+	-- track strength should be 2x tonnage
 	if ud.leavetracks then
-		ud.trackstrength = ud.mass / 1000
+		ud.trackstrength = (cp.tonnage or 20)
 		cp.trackwidth = 1 - ((cp.trackwidth or 46)/512)
 	end
 	local weapons = ud.weapons

@@ -6,7 +6,6 @@ local Chimera = Medium:New{
 	trackOffset			= 6,
 	trackWidth			= 36,
 	trackStretch 		= 2,
-	trackStrength 		= 40,
 	
 	customparams = {
 		cockpitheight	= 8.3,
