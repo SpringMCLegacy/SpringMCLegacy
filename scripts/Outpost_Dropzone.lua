@@ -8,12 +8,17 @@ end
 function script.Create()
 	local i = 1
 	Spring.SetUnitBlocking(unitID, false, false, false, --[[true]]false, false, false, true)
+	Spring.SetFactoryBuggerOff(unitID, true, 0, 200)
 	while true do
 		EmitSfx(blinks[i], SFX.CEG)
 		Sleep(500)
 		i = i + 1
 		if i == 13 then i = 1 end
 	end
+end
+
+function ClearTheDeck(yes)
+	Spring.UnitScript.SetUnitValue(COB.BUGGER_OFF, yes)
 end
 
 function script.Killed(recentDamage, maxHealth)

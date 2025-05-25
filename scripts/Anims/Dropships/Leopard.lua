@@ -49,6 +49,12 @@ function TouchDown()
 		for i = 1, 3 do
 			GG.EmitSfxName(unitID, gears[i].gear, "mech_jump_dust")
 		end
+		local victims = Spring.GetUnitsInCylinder(TX, TZ, 180)
+		for i, victimID in pairs(victims) do
+			if victimID ~= unitID and not GG.InvincibleUnit(Spring.GetUnitDefID(victimID)) and not Spring.GetUnitTransporter(victimID) then
+				Spring.DestroyUnit(victimID, true, false)
+			end
+		end
 	end
 end
 
@@ -201,6 +207,9 @@ function TakeOff(skip)
 	WaitForTurn(body, x_axis)
 	Turn(body, x_axis, math.rad(-80), math.rad(5))
 	WaitForTurn(body, x_axis)
+	local DZID = GG.teamDropZones[teamID]
+	env = Spring.UnitScript.GetScriptEnv(DZID)
+	if env then env.ClearTheDeck(false) end
 	Spring.MoveCtrl.SetGravity(unitID, -6 * GRAVITY)
 	stage = 5
 	PlaySound("dropship_burn")
@@ -305,6 +314,9 @@ function Drop()
 		end
 		Sleep(100)
 	end
+	local DZID = GG.teamDropZones[teamID]
+	env = Spring.UnitScript.GetScriptEnv(DZID)
+	if env then env.ClearTheDeck(true) end
 	PlaySound("dropship_rumble")
 	-- Descent complete, move over the target
 	StartThread(LandingGearDown)

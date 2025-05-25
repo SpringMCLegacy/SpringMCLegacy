@@ -129,6 +129,12 @@ function TouchDown()
 		for i = 1, info.numDusts do
 			GG.EmitSfxName(unitID, piece("dust" .. i), "mech_jump_dust")
 		end
+		local victims = Spring.GetUnitsInCylinder(TX, TZ, 180)
+		for i, victimID in pairs(victims) do
+			if victimID ~= unitID and not GG.InvincibleUnit(Spring.GetUnitDefID(victimID)) and not Spring.GetUnitTransporter(victimID) then
+				Spring.DestroyUnit(victimID, true, false)
+			end
+		end
 		StartThread(DeployWeapons, true)
 	end
 end
@@ -142,6 +148,9 @@ function TakeOff()
 	stage = 2
 	StartThread(fx) -- need to restart here as we're going back up a step
 	StartThread(LandingGearUp)
+	local DZID = GG.teamDropZones[teamID]
+	env = Spring.UnitScript.GetScriptEnv(DZID)
+	if env then env.ClearTheDeck(false) end
 	Sleep(10000)
 	-- We're out of the atmosphere, bye bye!
 	Spring.DestroyUnit(unitID, false, true)
@@ -205,6 +214,9 @@ function Drop()
 		Spring.MoveCtrl.SetGravity(unitID, -0.02 * GRAVITY)
 		Spring.MoveCtrl.SetCollideStop(unitID, true)
 		Spring.MoveCtrl.SetTrackGround(unitID, true)
+		local DZID = GG.teamDropZones[teamID]
+		env = Spring.UnitScript.GetScriptEnv(DZID)
+		if env then env.ClearTheDeck(true) end
 	else
 		TakeOff()
 	end
