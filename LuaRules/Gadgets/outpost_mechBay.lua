@@ -369,7 +369,7 @@ end
 function gadget:ProjectileCreated(proID, proOwnerID, weaponID)
 	--local name = Spring.GetProjectileName(proID)
 	local weap, piece = Spring.GetProjectileType(proID)
-	if piece and not GG.Beacons[proOwnerID] --[[and names[name]] then pieces[proID] = true end
+	if piece and GG.mechCache[Spring.GetUnitDefID(proOwnerID)] --[[and names[name]] then pieces[proID] = true end
 	--Spring.Echo("PC", proID, proOwnerID, weaponID, name, defID, weap, piece)
 end
 	
