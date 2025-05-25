@@ -1,5 +1,6 @@
 local Odin = LightTank:New{
 	name              	= "Odin",
+	description			= "Light Scout",
 	trackWidth			= 18,--width to render the decal
 	
 	weapons 		= {	

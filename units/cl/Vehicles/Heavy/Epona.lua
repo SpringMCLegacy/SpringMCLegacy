@@ -1,6 +1,6 @@
 local Epona = Hover:New{
 	name              	= "Epona",
-	description			= "Light Skirmisher",
+	description			= "Heavy Skirmisher",
 	
 	weapons 		= {	
 		[1] = {

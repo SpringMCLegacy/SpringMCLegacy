@@ -1,5 +1,6 @@
 local Nacon = LightTank:New{
 	name              	= "Nacon",
+	description			= "Light Scout",
 	trackWidth			= 16,--width to render the decal
 	
 	weapons 		= {	

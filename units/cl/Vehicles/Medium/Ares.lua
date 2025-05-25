@@ -1,5 +1,6 @@
 local Ares = LightTank:New{
 	name              	= "Ares",
+	description			= "Medium Fire Support",
 	trackWidth			= 16,--width to render the decal
 	
 	weapons 		= {	

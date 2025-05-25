@@ -1,5 +1,6 @@
 local Mithras = LightTank:New{
 	name              	= "Mithras",
+	description			= "Light Skirmisher",
 	trackWidth			= 16,--width to render the decal
 	
 	weapons 		= {	

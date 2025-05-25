@@ -1,5 +1,6 @@
 local Zorya = LightTank:New{
 	name              	= "Zorya",
+	description			= "Light Fire Support",
 	trackWidth			= 16,--width to render the decal
 	
 	weapons 		= {	

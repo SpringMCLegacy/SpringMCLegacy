@@ -1,5 +1,6 @@
 local Hachiman = LightTank:New{
 	name              	= "Hachiman",
+	description			= "Heavy Fire Support",
 	trackWidth			= 16,--width to render the decal
 	
 	weapons 		= {	
