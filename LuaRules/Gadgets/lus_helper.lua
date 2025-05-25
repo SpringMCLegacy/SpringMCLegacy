@@ -122,7 +122,8 @@ GG.RecursiveHide = RecursiveHide
 
 local function PlaySoundAtUnit(unitID, sound, volume, sx, sy, sz, channel)
 	local x,y,z = GetUnitPosition(unitID)
-	volume = volume or 5
+	local ud = UnitDefs[Spring.GetUnitDefID(unitID)]
+	volume = volume or (ud and ud.customParams.tonnage or 5)
 	channel = channel or "sfx"
 	PlaySoundFile(sound, volume, x, y, z, sx, sy, sz, channel)
 end
