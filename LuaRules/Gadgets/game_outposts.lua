@@ -35,7 +35,7 @@ local BEACON_POINT_ID = UnitDefNames["beacon_point"].id
 
 -- Variables
 local outpostDefs = {} -- outpostDefs[unitDefID] = {cmdDesc = {cmdDescTable}, cost = cost}
-GG.outpostDefs = outpostDefs -- TODO: check why this is in GG
+GG.outpostDefs = outpostDefs -- make available to game_dropships for running AssociateOutpost
 local dropZoneDefs = {}
 
 local outpostCMDs = {} -- outpostCMDs[cmdID] = unitDefID
@@ -152,8 +152,7 @@ end
 local lastDamaged = {} -- lastDamaged[unitID] = lastDamagedFrame
 local MIN_LAST_DAMAGED = 20 * 30 -- 20s
 function gadget:UnitDamaged(unitID, unitDefID, teamID, damage)
-	local cp = UnitDefs[unitDefID].customParams
-	if cp.baseclass == "outpost" then -- unit is an outpost 
+	if outpostDefs[unitDefID] then -- unit is an outpost 
 		local lastDamagedFrame = lastDamaged[unitID] or 0
 		local currFrame = GetGameFrame()
 		local name = UnitDefs[unitDefID].name

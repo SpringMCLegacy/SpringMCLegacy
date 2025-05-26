@@ -385,7 +385,7 @@ function gadget:UnitCreated(unitID, unitDefID, teamID)
 			-- set engagement range to weapon 1 range
 			Spring.SetUnitMaxRange(unitID, closeRange)
 			teamMechCounts[teamID] = teamMechCounts[teamID] + 1
-		elseif unitDef.customParams.baseclass == "outpost" then
+		elseif GG.outpostDefs[unitDefID] then
 			--table.insert(teamOutpostIDs[teamID], unitID)
 			if difficulty > 1 then -- loadsa money!
 				Perk(unitID, unitDefID, nil, true)
@@ -638,7 +638,7 @@ function gadget:UnitDestroyed(unitID, unitDefID, teamID, attackerID, attackerDef
 	if AI_TEAMS[teamID] then
 	
 		local beaconID = Spring.GetUnitRulesParam(unitID, "beaconID") -- not cleared until 5 frames later by game_outposts
-		if UnitDefs[unitDefID].customParams.baseclass == "outpost" and beaconID then
+		if GG.outpostDefs[unitDefID] and beaconID then
 			teamOutpostCounts[teamID][unitDefID] = teamOutpostCounts[teamID][unitDefID] - 1
 			beaconOutpostCounts[beaconID] = beaconOutpostCounts[beaconID] - 1
 			--Spring.Echo("UnitDestroyed outpost died BID:", beaconID, "TID:", teamID, UnitDefs[unitDefID].name, "new beacon outpost count", beaconOutpostCounts[beaconID])
@@ -689,7 +689,7 @@ function gadget:UnitGiven(unitID, unitDefID, newTeam, oldTeam)
 			--Outpost(unitID, newTeam)
 			Spam(newTeam)
 		end
-		if UnitDefs[unitDefID].customParams.baseclass == "outpost" then
+		if GG.outpostDefs[unitDefID] then
 			gadget:UnitDestroyed(unitID, unitDefID, oldTeam)
 			gadget:UnitUnloaded(unitID, unitDefID, newTeam)
 		end
