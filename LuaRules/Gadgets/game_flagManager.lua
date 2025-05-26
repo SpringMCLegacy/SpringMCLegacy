@@ -196,7 +196,6 @@ function PlaceFlag(spot, flagType, newFlag)
 	FlagSpecialBehaviour("placed", flagType, newFlag, GAIA_TEAM_ID, GAIA_TEAM_ID)
 end
 
-
 function gadget:GamePreload()
 	if DEBUG then Spring.Echo(PROFILE_PATH) end
 	-- CHECK FOR PROFILES
@@ -216,6 +215,16 @@ function gadget:GamePreload()
 	else
 		for i=1,20 do
 			Spring.Echo("NO MAP PROFILE FOUND FOR " .. Game.mapName)
+		end
+		flagTypeSpots["beacon"] = {}
+		
+		Map = {}
+		Map.configFile = "maps/" .. Game.mapName .. ".smd"
+		local mh = VFS.Include("maphelper/mapinfo.lua")
+		for t = #teams - 1, #(mh.teams) do -- start beyond spawned teams
+			local startPos = mh.teams[t]["startpos"]
+			--Spring.Echo(t, startPos, startPos and startPos.x or nil, startPos and startPos.z or nil)
+			table.insert(flagTypeSpots["beacon"], startPos)
 		end
 		local temps = {ambient = 20, water = 10}
 		GG.MapTemperatures = temps
