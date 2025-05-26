@@ -561,9 +561,9 @@ function Unpack()
 		WaitForMove(pole[#pole], y_axis)
 		Spin(pole[1], y_axis, math.rad(20), math.rad(5))
 		SetUnitValue(COB.INBUILDSTANCE, 1)
-		-- parent beacon location not our own, if it exists
-		local x, y, z = Spring.GetUnitPosition(beaconID or unitID)
-		GG.BuildMaskCircle(x, z, 460, 2)
+		-- use our own location, not beaconID
+		local x, y, z = Spring.GetUnitPosition(unitID)
+		GG.BuildMaskCircle(x, z, 460 * 1.5, 2)
 	elseif name == "outpost_ewar" then
 		local console2 = piece("console2")
 		Move(console2, z_axis, 7, CRATE_SPEED)

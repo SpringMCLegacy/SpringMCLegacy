@@ -7,7 +7,7 @@ local Outpost_TurretControl = Outpost:New{
 
 	-- Constructor stuff
 	builder				= true,
-	builddistance 		= 1000,
+	builddistance 		= 460 * 1.5,
 	workerTime			= 10, -- ?	
 	terraformSpeed		= 10000,
 	showNanoSpray		= false,

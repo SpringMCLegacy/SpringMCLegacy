@@ -149,7 +149,7 @@ function gadget:AllowCommand(unitID, unitDefID, teamID, cmdID, cmdParams, cmdOpt
 		if cmdID < 0 then
 			local towerType = towerDefIDs[-cmdID]
 			if not towerType then return false end
-			if unitDefID == TURRETCONTROL_ID then -- TurretControl has limited build radius -- TODO: within the beacon
+			if unitDefID == TURRETCONTROL_ID then -- TurretControl has limited build radius
 				local tx, ty, tz = unpack(cmdParams)
 				local dist = GetUnitDistanceToPoint(unitID, tx, ty, tz, false)
 				-- check for max range, although limited via unit script to only build inside beacon radius... 
