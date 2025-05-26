@@ -131,7 +131,10 @@ function widget:DrawWorldPreUnit()
 		for _,unitID in pairs(visibleUnits) do
 			local unitDefID = GetUnitDefID(unitID)
 			local selected = Spring.IsUnitSelected(unitID)
-			if DZDefs[unitDefID] then
+			local transported = Spring.GetUnitTransporter(unitID)
+			if transported then
+				-- purposeful no-op
+			elseif DZDefs[unitDefID] then
 				local radius = 4.75 * UnitDefs[unitDefID].xsize
 				glColor(1.0, 1.0, 1.0, 0.5)
 				glTexture(DZ_TEXS[math.floor(Spring.GetGameFrame() % DZ_ANIM_WAIT / (DZ_ANIM_WAIT / #DZ_TEXS))+1])
@@ -142,25 +145,31 @@ function widget:DrawWorldPreUnit()
 				glTexture(BEACON_POINT_TEX)
 				glDrawListAtUnit(unitID, DZ_LIST, false, radius, 1.0, radius, 0, 0, 1.0, 0)		
 			elseif unitDefID == BEACON_DEFID then
-                local radius = 120 * UnitDefs[unitDefID].xsize
-                glColor(r, g, b, selected and 0.9 or 0.4)
-                glTexture(BEACON_TEX)
-                glDrawListAtUnit(unitID, DZ_LIST, false, radius, 1.0, radius, 0, 0, 1.0, 0)
+				local x, y, z = Spring.GetUnitBasePosition(unitID)
+				if y <= Spring.GetGroundHeight(x,z) + 5 then 
+					local radius = 120 * UnitDefs[unitDefID].xsize
+					glColor(r, g, b, selected and 0.9 or 0.4)
+					glTexture(BEACON_TEX)
+					glDrawListAtUnit(unitID, DZ_LIST, false, radius, 1.0, radius, 0, 0, 1.0, 0)
+				end
 			elseif UnitDefs[unitDefID].customParams.baseclass == "outpost" then -- TODO: cache
 				local radius = 15 * UnitDefs[unitDefID].xsize
 				glTexture(OUTPOST_TEX)
 				glColor(r, g, b, selected and 0.9 or 0.65)
 				glDrawListAtUnit(unitID, DZ_LIST, false, radius, 1.0, radius, 0, 0, 1.0, 0)								
 			elseif TowerDefs[unitDefID] and not Spring.GetUnitNeutral(unitID) then -- ewww
-				local radius = 5 * UnitDefs[unitDefID].xsize
-				glTexture(OUTPOST_TEX)
-				glColor(r, g, b, selected and 0.9 or 0.65)
-				glDrawListAtUnit(unitID, DZ_LIST, false, radius, 1.0, radius, 0, 0, 1.0, 0)								
+				local x, y, z = Spring.GetUnitBasePosition(unitID)
+				if y <= Spring.GetGroundHeight(x,z) + 5 then 
+					local radius = 5 * UnitDefs[unitDefID].xsize
+					glTexture(OUTPOST_TEX)
+					glColor(r, g, b, selected and 0.9 or 0.65)
+					glDrawListAtUnit(unitID, DZ_LIST, false, radius, 1.0, radius, 0, 0, 1.0, 0)								
+				end
 			elseif MechDefs[unitDefID] then
 				local radius = Spring.GetUnitRadius(unitID) * 2.25
 				local rx, ry, rz = Spring.GetUnitRotation(unitID)
-				local x, y, z = Spring.GetUnitBasePosition(unitID)
-				local gx, gy, gz = Spring.GetGroundNormal(x, z)
+				--local x, y, z = Spring.GetUnitBasePosition(unitID)
+				--local gx, gy, gz = Spring.GetGroundNormal(x, z)
 				glTexture(selected and MECH_TEX_SELECT or MECH_TEX)
 				glColor(r, g, b, selected and 0.9 or 0.65)
 				glDrawListAtUnit(unitID, DZ_LIST, false, radius, 1.0, radius, math.deg(-ry), 0, 1, 0)
