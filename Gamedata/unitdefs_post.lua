@@ -126,7 +126,8 @@ local function ReplaceStrings(t, name)
 	RecursiveReplaceStrings(t, name, side, replacedMap)
 end
 
-local ammoPerTon = lowerkeys(VFS.Include("gamedata/AmmoTypes.lua", nil, VFS.ZIP))
+local GameConstants = VFS.Include("gamedata/GameConstants.lua", nil, VFS.ZIP)
+local ammoPerTon = lowerkeys(GameConstants.ammoTypes)
 
 -- TODO: put this in a file and VFS.Include here and in the widget
 local partsList	= {	mech	= {	"torso", "arm_left", "arm_right", "leg_left", "leg_right"},

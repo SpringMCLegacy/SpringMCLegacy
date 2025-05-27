@@ -91,7 +91,7 @@ end
 
 -- when a mech dies SD(teamID, thatMech'sLance), when C3 dies call SD(teamID, lanceBelowC3)
 local function ShuffleDown(teamID, lanceNumWithSlot)
-	-- iterate through existing link lost mechs to see if they will fit into this lance (TODO: tonnage also an issue)
+	-- iterate through existing link lost mechs to see if they will fit into this lance
 	local candidates = {}
 	local numCandidates = 0
 	for lanceNum, currlanceSlots in ipairs(teamSlots[teamID]) do
@@ -192,7 +192,7 @@ local function UpdateTeamSlots(teamID, unitID, unitDefID, add)
 			end
 			AssignLance(unitID, unitDefID, teamID, 1, lance)
 		else 
-			Spring.Echo(teamID, "FLOZi logic fail: No available lance", TeamSlotsRemaining(teamID), 1, ud.name) -- TODO: can reach here
+			Spring.Echo(teamID, "FLOZi logic fail: outpost_c3array.lua L 195 No available lance", TeamSlotsRemaining(teamID), 1, ud.name)
 		end
 	else -- unit died
 		local lance = unitLances[unitID]

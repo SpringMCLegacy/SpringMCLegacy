@@ -539,8 +539,10 @@ do
 
   local customInfo = {}
   local ci
+  
+  local GameConstants = VFS.Include("gamedata/GameConstants.lua", nil, VFS.ZIP)
   local ammoTypes = {}
-  for ammoType, tons in pairs (VFS.Include("gamedata/AmmoTypes.lua", nil, VFS.ZIP)) do ammoTypes[#ammoTypes + 1] = ammoType end
+  for ammoType, tons in pairs (GameConstants.ammoTypes) do ammoTypes[#ammoTypes + 1] = ammoType end
 
   function DrawUnitInfos(unitID,unitDefID, ud)
     if (not customInfo[unitDefID]) then
