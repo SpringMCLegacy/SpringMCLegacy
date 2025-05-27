@@ -19,6 +19,8 @@ GG.modOptions = modOptions
 GG.lusHelper = {}
 GG.Sounds = VFS.Include("gamedata/sounds.lua")
 sqrt = math.sqrt
+local GameConstants = VFS.Include("gamedata/GameConstants.lua", nil, VFS.ZIP)
+GG.GameConstants = GameConstants
 
 -- Synced Read
 local GetUnitPieceInfo 		= Spring.GetUnitPieceInfo

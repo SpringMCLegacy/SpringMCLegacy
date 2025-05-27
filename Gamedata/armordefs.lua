@@ -1,20 +1,13 @@
-local armorDefs = {
-	dropship = {
-	},
-	beacons = {
-		"beacon",
-	},
-	infantry = {},
-	light = {},
-	medium = {},
-	heavy = {},
-	assault = {},
-    vehicle = {},
-	aero = {},
-	vtol = {},
-	tower = {},
-	walls = {},
-	outpost = {},
+local GameConstants = VFS.Include("gamedata/GameConstants.lua", nil, VFS.ZIP)
+
+local armorDefs = {}
+for armorType in pairs(GameConstants.damageMults) do
+	armorDefs[armorType] = {}
+end
+
+armorDefs["beacons"] = {
+	"beacon",
+	"beacon_point",
 }
 
 local DEFS = _G.DEFS

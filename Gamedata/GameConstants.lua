@@ -23,11 +23,18 @@ return {
 		Bomb		= 1,
 	},
 	damageMults = {
-		light		= 1,   --100% default
-		medium		= 0.9, --80% default
-		heavy		= 0.8, --60% default
-		assault		= 0.6, --40% default
-		vehicle		= 1.25, --125% default
-		vtol		= 1.25, --125% default
+		dropship	= 0.5,
+		beacons		= 0,
+		infantry	= 1,
+		light		= 1,   
+		medium		= 0.9, 
+		heavy		= 0.8, 
+		assault		= 0.6, 
+		vehicle		= 1.25,
+		aero		= 1.25, 
+		vtol		= 1.25,
+		tower		= 1,
+		walls		= 1,
+		outpost		= 1,
 	},
 }

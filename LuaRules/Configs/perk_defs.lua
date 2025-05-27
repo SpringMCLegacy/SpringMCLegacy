@@ -3,6 +3,11 @@ local GetCmdID = GG.CustomCommands.GetCmdID
 
 local modOptions = Spring.GetModOptions()
 
+local NUM_DAMAGE_TYPES = 0
+for damageType in pairs(GG.GameConstants.damageMults) do
+	NUM_DAMAGE_TYPES = NUM_DAMAGE_TYPES + 1
+end
+
 local PERK_XP_COST = 1.0 -- 1.5
 GG.PERK_XP_COST = PERK_XP_COST
 local EFFECT = modOptions and modOptions.perkeffect or 5
@@ -76,8 +81,6 @@ local function setWeaponClassAttribute(unitID, className, attrib, multiplier, ta
 	end
 	return changed
 end
-
-local NUM_DAMAGE_TYPES = 13
 
 local function setWeaponClassDamage(unitID, className, multiplier, tag, with, value)
 	local weapons = UnitDefs[Spring.GetUnitDefID(unitID)].weapons
@@ -1241,9 +1244,7 @@ return {
 				local _, toChange = hasWeaponName(Spring.GetUnitDefID(unitID), "heavygauss")
 				for weapNum in pairs(toChange) do
 					Spring.SetUnitWeaponDamages(unitID, weapNum, "dynDamageExp", invert and 1 or 0)
-					for i = 0, NUM_DAMAGE_TYPES do -- there are 13 armourdefs
-						Spring.SetUnitWeaponDamages(unitID, weapNum, i, invert and 2160 or 1900) -- TODO: doesn't account for per-armour type reductions, eeek!
-					end
+					setWeaponClassDamage(unitID, "all", invert and 2160/1900 or 1900/2160)
 				end
 			end,
 			costFunction = deductSalvage,
