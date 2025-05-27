@@ -90,6 +90,17 @@ local options = {
 		section	= "devtools",
 	},
 	{
+		key		= "reloadmult",
+		name	= "Test Weapon Reload Multiplier",
+		desc	= "Developer tool",
+		type	= "number",
+		def		= 1.0,
+		min		= 0.1,
+		max		= 10.0,
+		step	= 0.1,
+		section	= "devtools",
+	},
+	{
 		key = "speed",
 		name = "Test Speed Multipliers",
 		desc = "Developer tool",

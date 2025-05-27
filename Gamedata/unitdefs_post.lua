@@ -256,7 +256,7 @@ for name, ud in pairs(UnitDefs) do
 		if cp.maxammo then
 			for ammoType, tons in pairs(cp.maxammo) do
 				if ammoPerTon[ammoType] then
-					cp.maxammo[ammoType] = tons * ammoPerTon[ammoType]
+					cp.maxammo[ammoType] = tons * ammoPerTon[ammoType] / (modOptions.reloadmult or 1)
 				else
 					Spring.Echo("ERROR: unitdefs_post.lua; unknown ammoType (" .. ammoType .. ") for " .. ud.name)
 				end
