@@ -22,4 +22,12 @@ return {
 	
 		Bomb		= 1,
 	},
+	damageMults = {
+		light		= 1,   --100% default
+		medium		= 0.9, --80% default
+		heavy		= 0.8, --60% default
+		assault		= 0.6, --40% default
+		vehicle		= 1.25, --125% default
+		vtol		= 1.25, --125% default
+	},
 }

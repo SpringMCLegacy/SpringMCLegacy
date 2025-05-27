@@ -23,16 +23,8 @@ if not modOptions.startmetal then -- load via file
 	end
 end
 
-local damageMults = {
-	beacons		= 0,
-	light		= 1,   --100% default
-	medium		= 0.9, --80% default
-	heavy		= 0.8, --60% default
-	assault		= 0.6, --40% default
-	vehicle		= 1.25, --125% default
-	vtol		= 1.25, --125% default
-	walls		= 0.8, -- 80% default
-}
+local GameConstants = VFS.Include("gamedata/GameConstants.lua", nil, VFS.ZIP)
+local damageMults = GameConstants.damageMults
 
 local function FloatTo128(num)
 	return string.char(string.format("%03d",math.max(num * 255, 1)))
@@ -106,6 +98,9 @@ for weapName, wd in pairs(WeaponDefs) do
 	-- remove the functions so Spring doesn't complain about invalid tags
 	for _, f in pairs(FUNCTIONS_TO_REMOVE) do
 		wd[f] = nil
+	end
+	if wd.range then
+		wd.range = wd.range * (modOptions.rangemult or 1)
 	end
 end
 
