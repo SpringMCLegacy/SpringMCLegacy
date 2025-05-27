@@ -164,10 +164,15 @@ function BeaconDropshipBugOut(beaconID, teamID, outpostID)
 end	
 GG.BeaconDropshipBugOut = BeaconDropshipBugOut
 
+local REGEN = 100 -- how much HP per frame of being off-map
+
 function gadget:UnitCreated(unitID, unitDefID, teamID)
 	if dropShipCache[unitDefID] == "mech" then -- TODO: Only tracking mech landers atm
 		if teamDropShipHPs[teamID][unitDefID] then -- Already registered set current HP
-			Spring.SetUnitHealth(unitID, teamDropShipHPs[teamID][unitDefID])
+			local info = teamDropShipHPs[teamID][unitDefID]
+			local health = math.floor(info.hp + REGEN * (Spring.GetGameFrame() - info.frame))
+			local maxHealth = UnitDefs[unitDefID].health
+			Spring.SetUnitHealth(unitID,  math.min(health, maxHealth))
 		end
 	end
 end
@@ -179,7 +184,7 @@ function gadget:UnitDestroyed(unitID, unitDefID, teamID, attackerID, attackerDef
 		activeDropships[unitID] = nil
 	end
 	if dropShipCache[unitDefID] == "mech" then  -- TODO: Only tracking mech landers atm
-		teamDropShipHPs[teamID][unitDefID] = Spring.GetUnitHealth(unitID)
+		teamDropShipHPs[teamID][unitDefID] = {hp = Spring.GetUnitHealth(unitID), frame = Spring.GetGameFrame()}
 	end
 end
 
