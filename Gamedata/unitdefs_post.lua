@@ -299,7 +299,7 @@ for name, ud in pairs(UnitDefs) do
 			cp.role = GetRole(ud.description)
 			if cp.role then
 				cp.menu = menuRoleAlias[cp.role]
-				Spring.Echo("[unitdefs_post.lua]: Unit (" .. name .. ") has role (" .. cp.role .. ")")
+				--Spring.Echo("[unitdefs_post.lua]: Unit (" .. name .. ") has role (" .. cp.role .. ")")
 			else
 				Spring.Echo("Warning [unitdefs_post.lua]: Unit (" .. name .. ") has no known role (" .. ud.description .. ")")
 			end
