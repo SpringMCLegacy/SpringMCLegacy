@@ -298,7 +298,7 @@ local function FlagCapChange(flagID, flagTeamID, allyTeamID, teamID, change)
 		-- TODO: Really we need to check that __all__ non-ally statuses are 0
 		GG.PlaySoundForTeam(flagTeamID, "bb_beacon_secured", 1)
 		SetUnitRulesParam(flagID, "secure", 1, {public = true})
-	elseif flagCapStatuses[flagID][allyTeamID].cap == 1 then -- first cap step
+	elseif flagCapStatuses[flagID][allyTeamID].cap < 2 then -- first cap step
 		if change > 0 then
 			GG.PlaySoundForTeam(flagTeamID, "bb_beacon_underattack", 1)
 			if flagTeamID == GAIA_TEAM_ID then -- first step of capping rather than neutralising
