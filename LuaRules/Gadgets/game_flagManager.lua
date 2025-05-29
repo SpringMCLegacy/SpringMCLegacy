@@ -296,16 +296,20 @@ local function FlagCapChange(flagID, flagTeamID, allyTeamID, teamID, change)
 	SetUnitRulesParam(flagID, "cap" .. tostring(teamID), flagCapStatuses[flagID][allyTeamID].cap, {public = true}) -- set the rules param per team for team colour
 	if flagCapStatuses[flagID][allyTeamID].cap <= 0 then
 		-- TODO: Really we need to check that __all__ non-ally statuses are 0
-		GG.PlaySoundForTeam(flagTeamID, "BB_Beacon_Secured", 1)
+		GG.PlaySoundForTeam(flagTeamID, "bb_beacon_secured", 1)
 		SetUnitRulesParam(flagID, "secure", 1, {public = true})
-	elseif flagCapStatuses[flagID][allyTeamID].cap == 1 then -- first cap step
-		GG.PlaySoundForTeam(flagTeamID, "BB_Beacon_UnderAttack", 1)
+	elseif flagCapStatuses[flagID][allyTeamID].cap == 1 and change > 0 then -- first cap step
+		GG.PlaySoundForTeam(flagTeamID, "bb_beacon_underattack", 1)
+		GG.PlaySoundForTeam(teamID, "bb_beacon_bapturing", 1)
+		if flagTeamID == GAIA_TEAM_ID then -- first step of capping rather than neutralising
+			GG.PlaySoundForTeam(teamID, "bb_beacon_securing", 1)
+		end
 		SetUnitRulesParam(flagID, "secure", 0, {public = true})
 	elseif flagCapStatuses[flagID][allyTeamID].cap > CAP_THRESHOLD and teamID ~= flagTeamID then -- capped or neutralised
 		TransferFlag(flagID, flagTeamID, teamID)
-		GG.PlaySoundForTeam(flagTeamID, "BB_Beacon_Lost", 1)
+		GG.PlaySoundForTeam(flagTeamID, "bb_beacon_lost", 1)
 		if flagTeamID == GAIA_TEAM_ID then -- flag was capped, not neutralised
-			GG.PlaySoundForTeam(teamID, "BB_Beacon_Captured", 1)
+			GG.PlaySoundForTeam(teamID, "bb_beacon_secured", 1)
 			SetUnitRulesParam(flagID, "secure", 1, {public = true})
 		end
 	end

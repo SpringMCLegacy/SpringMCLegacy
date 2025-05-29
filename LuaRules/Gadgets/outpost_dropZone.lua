@@ -286,7 +286,7 @@ function DropZoneCoolDown(teamID) -- called by Dropship once it has left, to ena
 			UpdateButtons(teamID)
 		end
 		-- Dropship is no longer ACTIVE, it is entering COOLDOWN
-		GG.PlaySoundForTeam(teamID, "BB_Reinforcements_Inbound_ETA_30", 1)
+		GG.PlaySoundForTeam(teamID, "bb_reinforcements_inbound_eta_30", 1)
 		dropZoneStatus[teamID] = 2
 		SetTeamRulesParam(teamID, "STATUS", 2)
 		local dropShipDef = UnitDefs[teamDropZoneLevels[teamID].def]

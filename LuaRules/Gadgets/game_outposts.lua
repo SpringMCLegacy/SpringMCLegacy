@@ -158,7 +158,7 @@ function gadget:UnitDamaged(unitID, unitDefID, teamID, damage)
 		local name = UnitDefs[unitDefID].name
 		if lastDamagedFrame < currFrame - MIN_LAST_DAMAGED then
 			lastDamaged[unitID] = currFrame
-			GG.PlaySoundForTeam(teamID, "BB_" .. name .. "_UnderAttack", 1)
+			GG.PlaySoundForTeam(teamID, "bb_" .. name .. "_underattack", 1)
 		end
 	end
 end

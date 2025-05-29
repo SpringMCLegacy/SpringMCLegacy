@@ -147,7 +147,7 @@ function gadget:Initialize()
 end
 
 function gadget:GameStart()
-	Spring.PlaySoundFile("BB_All_Systems_Nominal", 1, "ui")
+	Spring.PlaySoundFile("bb_all_systems_nominal", 1, "ui")
 	-- spawn start units
 	local gaiaTeamID = Spring.GetGaiaTeamID()
 	local teams = Spring.GetTeamList()
