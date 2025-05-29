@@ -69,11 +69,8 @@ local lastUnitId
 
 -- list for mech parts. Used to determine what parts are 
 -- displayed in card and what the image is named
-local partsList	= {	mech	= {	"torso", "arm_left", "arm_right", "leg_left", "leg_right"},
-					vehicle	= {	"turret", "base"},
-					aero	= {	"body", "left_wing", "right_wing"},
-					vtol	= {	"body", "rotor"},}
-					
+local GameConstants = VFS.Include("gamedata/GameConstants.lua", nil, VFS.ZIP)
+local partsList	= GameConstants.partsList
 
 local currentPartsList	= {}
 
@@ -91,10 +88,10 @@ local weaponButton		= {}
 local CMD_WEAPON_TOGGLE = Spring.GetGameRulesParam("CMD_WEAPON_TOGGLE")
 
 -- parts for display
-local parts			= { mech 	= {},
-						vehicle	= {},
-						vtol 	= {},
-						aero	= {},}
+local parts = {}
+for part in pairs(partsList) do
+	parts[part] = {}
+end
 						
 -- temporary storage for part list
 local currentParts	= {}

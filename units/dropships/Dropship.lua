@@ -269,7 +269,7 @@ local Leopard = DropShip:New{
 	},	
 }
 
-local Overlord = DropShip:New{ -- TODO: DropShip:New, custom weapons etc
+local Overlord = DropShip:New{
 	objectName        	= "Dropship_Overlord.s3o",
 	iconType			= "overlord",
 	maxDamage			= 60000,

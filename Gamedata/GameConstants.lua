@@ -37,4 +37,11 @@ return {
 		walls		= 1,
 		outpost		= 1,
 	},
+	partsList = {
+		mech	= {"torso", "arm_left", "arm_right", "leg_left", "leg_right"},
+		apc		= {"turret", "base"},
+		vehicle	= {"turret", "base"},
+		aero	= {"body", "left_wing", "right_wing"},
+		vtol	= {"body", "rotor"},
+	},
 }

@@ -9,7 +9,7 @@ local MarauderIIC = Assault:New{
 }
 
 local Mk1 = MarauderIIC:New{
-	description         = "Assault Ranged",
+	description         = "Assault Sniper",
 	weapons	= {	
 		[1] = {
 			name	= "CERPPC",

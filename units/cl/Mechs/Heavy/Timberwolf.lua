@@ -87,7 +87,7 @@ local A = Timberwolf:New{
 }
 
 local E = Timberwolf:New{
-	description         = "Heavy Ranged",
+	description         = "Heavy Missile Boat",
 	weapons = {	
 		[1] = {
 			name	= "CERLBL",

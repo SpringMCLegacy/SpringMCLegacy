@@ -49,7 +49,7 @@ end
 
 -- Make sides available to all def files
 local sideData = VFS.Include("gamedata/sidedata.lua", VFS.ZIP)
-local Sides = {}
+Sides = {}
 for sideNum, data in pairs(sideData) do
 	Sides[sideNum] = data.shortName:lower()
 end

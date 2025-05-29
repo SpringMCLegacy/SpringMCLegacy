@@ -31,7 +31,6 @@ local roleSensors = {
 	["multirole"] 		= {radar = 1500,	sector = 55},
 	["sniper"]			= {radar = 1500,	sector = 45},
 	["missile boat"]	= {radar = 1500,	sector = 45},
-	["ranged"] 			= {radar = 1500,	sector = 55}, -- TODO: delete this
 }
 
 local menuRoleAlias = {
@@ -46,7 +45,6 @@ local menuRoleAlias = {
 	
 	["sniper"]			= "ranged",
 	["missile boat"]	= "ranged",
-	["ranged"]			= "ranged", -- TODO: delete this
 }
 
 local function GetSpeedColoured(speed)
@@ -89,13 +87,9 @@ if not modOptions.startmetal then -- load via file
 end
 
 
--- TODO: I still don't quite follow why the SIDES table from _pre (available to all defs) isn't available here
-local sideData = VFS.Include("gamedata/sidedata.lua", VFS.ZIP)
-local SIDES = {}
 local VALID_SIDES = {}
-for sideNum, data in pairs(sideData) do
-	SIDES[sideNum] = data.shortName:lower()
-	VALID_SIDES[data.shortName:lower()] = true
+for sideNum, sideName in pairs(Sides) do
+	VALID_SIDES[sideName] = true
 end
 
 local function RecursiveReplaceStrings(t, name, side, replacedMap)
@@ -117,7 +111,7 @@ end
 local function ReplaceStrings(t, name)
 	local side = ""
 	local replacedMap = {}
-	for _, sideName in pairs(SIDES) do
+	for _, sideName in pairs(Sides) do
 		if name:find(sideName) == 1 then
 			side = sideName
 			break
@@ -128,13 +122,7 @@ end
 
 local GameConstants = VFS.Include("gamedata/GameConstants.lua", nil, VFS.ZIP)
 local ammoPerTon = lowerkeys(GameConstants.ammoTypes)
-
--- TODO: put this in a file and VFS.Include here and in the widget
-local partsList	= {	mech	= {	"torso", "arm_left", "arm_right", "leg_left", "leg_right"},
-					apc		= {	"turret", "base"},
-					vehicle	= {	"turret", "base"},
-					aero	= {	"body", "left_wing", "right_wing"},
-					vtol	= {	"body", "rotor"},}
+local partsList	= GameConstants.partsList
 
 local spawnTable = {
 	regular = {
@@ -175,7 +163,7 @@ local HPAD_UD
 local HPAD_SPAWNOPTIONS = {} -- H_S = {shortSideName = {unitname1, ...}}
 local HPAD_HOUSE_REMOVE = {} -- H_R = {shortSideName = {oldUnitName = newUnitName}}
 
-for i, sideName in pairs(SIDES) do
+for i, sideName in pairs(Sides) do
 	DROPZONE_BUILDOPTIONS[sideName] = {}
 	VPAD_HOUSE_REMOVE[sideName] = {}
 	HPAD_HOUSE_REMOVE[sideName] = {}
@@ -311,6 +299,7 @@ for name, ud in pairs(UnitDefs) do
 			cp.role = GetRole(ud.description)
 			if cp.role then
 				cp.menu = menuRoleAlias[cp.role]
+				Spring.Echo("[unitdefs_post.lua]: Unit (" .. name .. ") has role (" .. cp.role .. ")")
 			else
 				Spring.Echo("Warning [unitdefs_post.lua]: Unit (" .. name .. ") has no known role (" .. ud.description .. ")")
 			end
@@ -403,7 +392,7 @@ for name, ud in pairs(UnitDefs) do
 		else -- a vehicle
 			ud.icontype = "vehicle" .. cp.weightclass
 			local startTier = ((cp.weightclass == "light" or cp.weightclass == "medium") and 1) or (cp.weightclass == "heavy" and 2) or 3
-			local hover = ud.movementclass == "HOVER" -- TODO: make hover a baseclass? (used in armordefs.lua, unitcard widget, game_radar, lus_helper, unitPieceHitVols, unit_vehiclePad, ...)
+			local hover = ud.movementclass == "HOVER"
 			local vtol = cp.baseclass == "vtol"
 			local class = (ud.transportcapacity and "apc") or (cp.artillery and "arty") or (vtol and "vtol") or "regular"
 			if cp.replaces then
@@ -476,7 +465,6 @@ end
 -- VPAD_HOUSE_REMOVE[side][cp.weightclass][cp.replaces] = true
 -- VPAD_HOUSE_REMOVE sideName = {light = {unitName = true, unitName2 = true , ... }, medium = {...}, ...}
 
--- TODO: function?
 for side, sideTable in pairs(VPAD_HOUSE_REMOVE) do
 	for tier = 1, 3 do
 		for class, weightTable in pairs(sideTable) do
