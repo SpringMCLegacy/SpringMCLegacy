@@ -11,7 +11,7 @@ local PPC_Class = Weapon:New{
 	range                   = 1800,
 	accuracy                = 400,
 	targetMoveError			= 0.05,
-	movingAccuracy			= 200,
+	movingAccuracy			= 600,
 	areaOfEffect            = 50,
 	weaponVelocity          = 3000,
 	reloadtime              = 5,
@@ -22,6 +22,8 @@ local PPC_Class = Weapon:New{
 	AlphaDecay				= 0.5, 		--How much a plasma particle is more transparent than the previous particle. 
 	rgbcolor				= "0.55 0.65 1.0",
 	intensity				= 0.5,
+	DynDamageExp			= 1,
+	DynDamageMin			= 300,--1/2
 	damage = {
 		default = 600,--500, --100 DPS
 	},
@@ -53,6 +55,8 @@ local ERPPC = PPC_Class:New{
 
 local HeavyPPC = PPC_Class:New{
 	name                    = "Heavy PPC",
+	DynDamageExp			= 1,
+	DynDamageMin			= 450,--1/2
 	damage = {
 		default = 900,--750, --150 DPS
 	},
@@ -64,6 +68,8 @@ local HeavyPPC = PPC_Class:New{
 
 local LightPPC = PPC_Class:New{
 	name                    = "Light PPC",
+	DynDamageExp			= 1,
+	DynDamageMin			= 150,--1/2
 	damage = {
 		default = 300,--250, --50 DPS
 	},
@@ -75,18 +81,21 @@ local LightPPC = PPC_Class:New{
 
 local SnubNosePPC = PPC_Class:New{
 	name                    = "Snub-Nose PPC",
-	range					= 1500,
-	accuracy                = 300,
-	targetMoveError			= 0.05,
-	movingAccuracy			= 200,
+	range					= 1200,
+	accuracy                = 200,
+	targetMoveError			= 0.02,
+	movingAccuracy			= 300,
 	DynDamageExp			= 1,
 	DynDamageMin			= 300,--100 DPS 
+	DynDamageRange			= 600,
 }
 
 local CERPPC = PPC_Class:New{
 	name                    = "CERPPC",
 	heightBoostFactor		= 0,
 	range                   = 2300,
+	DynDamageExp			= 1,
+	DynDamageMin			= 450,--1/2
 	damage = {
 		default = 900,--750, --150 DPS
 	},
