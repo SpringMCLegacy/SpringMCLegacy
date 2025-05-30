@@ -286,7 +286,7 @@ function DropZoneCoolDown(teamID) -- called by Dropship once it has left, to ena
 			UpdateButtons(teamID)
 		end
 		-- Dropship is no longer ACTIVE, it is entering COOLDOWN
-		GG.PlaySoundForTeam(teamID, "bb_reinforcements_inbound_eta_30", 1)
+		--GG.PlaySoundForTeam(teamID, "bb_reinforcements_inbound_eta_30", 1)
 		dropZoneStatus[teamID] = 2
 		SetTeamRulesParam(teamID, "STATUS", 2)
 		local dropShipDef = UnitDefs[teamDropZoneLevels[teamID].def]
@@ -340,6 +340,8 @@ local function SendCommandFallback(unitID, unitDefID, teamID, cost, weight)
 	end
 end
 
+local firstDZCache = {}
+
 local function SetDropZone(beaconID, teamID)
 	local currDropZone = teamDropZones[teamID]
 	if currDropZone then
@@ -354,6 +356,11 @@ local function SetDropZone(beaconID, teamID)
 	teamDropZones[teamID] = dropZoneID
 	dropZoneBeaconIDs[teamID] = beaconID
 	Spring.SetUnitRulesParam(beaconID, "secure", 1)
+	if firstDZCache[teamID] then 
+		GG.PlaySoundForTeam(teamID, "bb_dropzone_reassigned", 1)
+	else -- don't play sound on the first one TODO: Maybe this goes when new startup script is sorted, currently clips 'all systems nominal'
+		firstDZCache[teamID] = true
+	end
 end
 
 function gadget:AllowCommand(unitID, unitDefID, teamID, cmdID, cmdParams, cmdOptions, cmdTag, synced)
@@ -442,17 +449,20 @@ function gadget:AllowCommand(unitID, unitDefID, teamID, cmdID, cmdParams, cmdOpt
 		if cmdID == dropZoneCmdDesc.id then
 			if Spring.GetUnitRulesParam(unitID, "secure") == 0 then 
 				Spring.SendMessageToTeam(teamID, "Cannot establish dropzone - Under attack!")
+				GG.PlaySoundForTeam(teamID, "bb_dropzone_reassign_blocked_enemy", 1)
 				return false 
 			elseif dropZoneStatus[teamID] == 1 then
 				-- double check if dropship is not in action
 				if Spring.GetTeamUnitDefCount(teamID, teamDropZoneLevels[teamID].def) ~= 0 then 
 					Spring.SendMessageToTeam(teamID, "Cannot establish dropzone - Dropship is active!")
+					GG.PlaySoundForTeam(teamID, "bb_dropzone_reassign_blocked", 1)
 					return false
 				end
 				-- TODO: this will allow the command otherwise which is also dangerous, as dropship can be 'ACTIVE' without being in play
 				-- TODO: Solution is probably to make a new dropship state and have ACTIVE only the case when it is on map
 			elseif GG.orderStatus[teamID] > 0 and GG.teamDropZones[teamID] then
 				Spring.SendMessageToTeam(teamID, "Cannot establish dropzone - Order pending!")
+				GG.PlaySoundForTeam(teamID, "bb_dropzone_reassign_blocked", 1)
 				return false 
 			end
 			SetDropZone(unitID, teamID)

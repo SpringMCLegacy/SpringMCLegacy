@@ -298,19 +298,23 @@ local function FlagCapChange(flagID, flagTeamID, allyTeamID, teamID, change)
 		-- TODO: Really we need to check that __all__ non-ally statuses are 0
 		GG.PlaySoundForTeam(flagTeamID, "bb_beacon_secured", 1)
 		SetUnitRulesParam(flagID, "secure", 1, {public = true})
-	elseif flagCapStatuses[flagID][allyTeamID].cap > (0.25 * CAP_THRESHOLD) and flagCapStatuses[flagID][allyTeamID].cap < (0.25 * CAP_THRESHOLD) + 1 then -- dropped to 75%
+		flagCapStatuses[flagID][allyTeamID].cap = 0
+	elseif flagCapStatuses[flagID][allyTeamID].cap < 2 then -- first cap step, mark as insecure
+		SetUnitRulesParam(flagID, "secure", 0, {public = true})
+	elseif 	flagCapStatuses[flagID][allyTeamID].cap >= math.floor(0.25 * CAP_THRESHOLD) 
+		and flagCapStatuses[flagID][allyTeamID].cap <  math.floor(0.25 * CAP_THRESHOLD) + 1 then -- dropped to 75%, inform player
 		if change > 0 then
 			GG.PlaySoundForTeam(flagTeamID, "bb_beacon_underattack", 1)
-			--[[if flagTeamID == GAIA_TEAM_ID then -- first step of capping rather than neutralising
-				GG.PlaySoundForTeam(teamID, "bb_beacon_securing", 1)
-			else
-				GG.PlaySoundForTeam(teamID, "bb_beacon_capturing", 1)
-			end]]
 		end
-		SetUnitRulesParam(flagID, "secure", 0, {public = true})
 	elseif flagCapStatuses[flagID][allyTeamID].cap > CAP_THRESHOLD and teamID ~= flagTeamID then -- capped or neutralised
 		TransferFlag(flagID, flagTeamID, teamID)
-		GG.PlaySoundForTeam(flagTeamID, "bb_beacon_lost", 1)
+		if Spring.GetTeamUnitDefCount(flagTeamID, BEACON_ID) == 0 then -- this was the last beacon!
+			GG.PlaySoundForTeam(flagTeamID, "bb_dropzone_lost_last", 1)
+		elseif GG.dropZoneBeaconIDs[flagTeamID] == flagID then -- this was the dropzone beacon!
+			GG.PlaySoundForTeam(flagTeamID, "bb_dropzone_lost_noauto", 1)
+		else
+			GG.PlaySoundForTeam(flagTeamID, "bb_beacon_lost", 1)
+		end
 		if flagTeamID == GAIA_TEAM_ID then -- flag was capped, not neutralised
 			GG.PlaySoundForTeam(teamID, "bb_beacon_secured", 1)
 			SetUnitRulesParam(flagID, "secure", 1, {public = true})
@@ -432,17 +436,20 @@ GG.SetTickets = SetTickets
 
 function CheckAllyTeamUnits(unitTeam)
 	if unitTeam == GAIA_TEAM_ID then return end -- Gaia does not have tickets
-	if teamUnitCounts[unitTeam] + Spring.GetTeamUnitDefCount(unitTeam, BEACON_ID) == 0 then
-		-- Check if this was last unit on whole allyteam
-		local allyTeam = select(6, Spring.GetTeamInfo(unitTeam))
-		local allyTeamUnitCount = 0
-		for _, teamID in pairs(Spring.GetTeamList(allyTeam)) do
-			allyTeamUnitCount = allyTeamUnitCount + teamUnitCounts[teamID] + Spring.GetTeamUnitDefCount(teamID, BEACON_ID)
-		end
-		-- If it was, this implies they lost all beacons and DZ so can't get any more
-		if allyTeamUnitCount == 0 then
-			-- Therefore deduct (nearly) all their remaining tickets
-			SetTickets(allyTeam, 5)
+	if Spring.GetTeamUnitDefCount(unitTeam, BEACON_ID) == 0 then
+		-- lost last beacon, panic
+		if teamUnitCounts[unitTeam] then
+			-- Check if this was last unit on whole allyteam
+			local allyTeam = select(6, Spring.GetTeamInfo(unitTeam))
+			local allyTeamUnitCount = 0
+			for _, teamID in pairs(Spring.GetTeamList(allyTeam)) do
+				allyTeamUnitCount = allyTeamUnitCount + teamUnitCounts[teamID] + Spring.GetTeamUnitDefCount(teamID, BEACON_ID)
+			end
+			-- If it was, this implies they lost all beacons and DZ so can't get any more
+			if allyTeamUnitCount == 0 then
+				-- Therefore deduct (nearly) all their remaining tickets
+				SetTickets(allyTeam, 5)
+			end
 		end
 	end
 end
