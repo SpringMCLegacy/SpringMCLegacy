@@ -295,7 +295,7 @@ local options = {
 				name = "Banker",
 				desc = "Random unit selection. C-Bill cheating."
 			},
-			{
+			--[[{
 				key = "3",
 				name = "Athlete",
 				desc = "Only jump mechs. C-Bill & Tonnage cheating."
@@ -304,7 +304,7 @@ local options = {
 				key = "4",
 				name = "Direbolical",
 				desc = "Only assault mechs. C-Bill & Tonnage cheating."
-			},
+			},]]
 		}
 	},
 }

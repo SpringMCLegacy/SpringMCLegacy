@@ -16,7 +16,8 @@ if gadgetHandler:IsSyncedCode() then
 --	SYNCED
 
 local modOptions = Spring.GetModOptions()
-local difficulty = tonumber(modOptions and modOptions.ai_difficulty or "1")
+local difficulty = tonumber(modOptions and modOptions.ai_difficulty or "2")
+if difficulty > 2 then difficulty = 2 end -- TODO: Decide how to properly deal with 'Athlete' and 'Direbolical' modes
 
 local sideMechs = {} -- sideMechs[sideShortName] = {mechDefID1, mechDefID2, ...}
 local sideJumpers = {} -- sideJumpers[sideShortName] = {jumperDefID1, jumperDefID2, ...}
@@ -218,14 +219,14 @@ local function SendOrder(teamID)
 end
 
 local function Spam(teamID)
-	--Spring.Echo("Spamming for team", teamID)
+	Spring.Echo("Spamming for team", teamID)
 	local unitID = dropZoneIDs[teamID]
 	if unitID and Spring.ValidUnitID(unitID) then
 		local cmdDescs = Spring.GetUnitCmdDescs(unitID)
 		local side = GG.teamSide[teamID]
 		orderSizes[teamID] = 0
 		while orderSizes[teamID] < GG.TeamSlotsRemaining(teamID) do
-			--Spring.Echo("COMPARING:", orderSizes[teamID], GG.TeamSlotsRemaining(teamID))
+			Spring.Echo("COMPARING:", orderSizes[teamID], GG.TeamSlotsRemaining(teamID))
 			local buildID
 			if difficulty > 1 then
 				Spring.AddTeamResource(teamID, "metal", 1500)
@@ -253,7 +254,7 @@ local function Spam(teamID)
 			if buildID then
 				GG.Delay.DelayCall(Spring.GiveOrderToUnit, {unitID, -buildID, {}, {}}, 1)
 				orderSizes[teamID] = orderSizes[teamID] + 1
-			--Spring.Echo("Adding to order;", orderSizes[teamID], UnitDefs[-buildID].name, GG.TeamSlotsRemaining(teamID))
+				Spring.Echo("Adding to order;", orderSizes[teamID], UnitDefs[-buildID] and UnitDefs[-buildID].name or "wtf", GG.TeamSlotsRemaining(teamID))
 			elseif orderSizes[teamID] == 0 then 
 				-- couldn't find any affordable mechs, try upgrading 
 				local beaconID = teamBeacons[teamID][math.random(#teamBeacons[teamID])]
