@@ -151,7 +151,12 @@ function DecrementTickets(allyTeam)
 			deadAllyTeams = deadAllyTeams + 1
 			if deadAllyTeams == (#allyTeams - 1) then
 				for team, alive in pairs(allyTeamAlive) do
-					if alive then GameOver({team}) break end
+					if alive then 
+						GameOver({team}) 
+						GG.PlaySoundForTeam(team, "bb_game_won", 1)
+					else
+						GG.PlaySoundForTeam(team, "bb_game_lost", 1)
+					end
 				end
 			end
 		end
