@@ -28,6 +28,8 @@ local LightGauss = Gauss_Class:New{
 	reloadtime              = 4,
 	size					= 1.5,
 	stages					= 200, 		--Number of particles used in one plasma shot.
+	DynDamageExp			= 1,
+	DynDamageMin			= 190,--1/2 of default damage
 	damage = {
 		default = 380,--320, --80 dps
 	},
@@ -44,7 +46,8 @@ local Gauss = Gauss_Class:New{
 	soundStart            	= "Gauss_Fire",
 	range                   = 2200,
 	reloadtime              = 6,
-
+	DynDamageExp			= 1,
+	DynDamageMin			= 550,--1/2 of default damage
 	damage = {
 		default = 1100,--937.5, --150 DPS
 	},
@@ -62,7 +65,7 @@ local HeavyGauss = Gauss_Class:New{
 	weaponVelocity          = 2500,
 	reloadtime              = 8,
 	DynDamageExp			= 1,
-	DynDamageMin			= 1000,--100 DPS 
+	DynDamageMin			= 1080,--1/2 of default damage
 	--DynDamageRange			= 1300,--Weapon will decrease in damage up to this range
 	
 	damage = {
@@ -87,7 +90,7 @@ local SilverBullet = Gauss:New{
 	
 	range 					= 2200,
 	projectiles				= 15,
-	dynDamageMin			= 100,
+	dynDamageMin			= 75,--1/2 of default damage
 	
 	damage = {
 		default = 150,
