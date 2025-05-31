@@ -1,6 +1,12 @@
 local Scarabus = Light:New{
 	name				= "Scarabus",
 	
+	leaveTracks			= true,	
+	trackType			= "Scarabus",
+	trackOffset			= 6,
+	trackWidth			= 24,
+	trackStretch 		= 2,
+	
 	customparams = {
 		cockpitheight	= 8.3,
 		tonnage			= 30,
