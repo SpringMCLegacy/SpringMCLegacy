@@ -46,13 +46,53 @@ local iconTypes = {
 	},
 	beaconpoint = {
 		bitmap		=	"icons/beaconpoint.png",
-		size			=	1.5,
-		distance	=	4.0,
+		size			=	3,
+		distance	=	2.2,
 	},
 	outpost = {
-		bitmap		=	"icons/beaconpoint.png",
-		size			=	3.5,
-		distance	=	4.0,	
+		bitmap		=	"icons/outpost.png",
+		size			=	3,
+		distance	=	2.2,	
+	},
+	outpost_c3array = {
+		bitmap		=	"icons/outpost_c3array.png",
+		size			=	3,
+		distance	=	2.2,	
+	},
+	outpost_sensors = {
+		bitmap		=	"icons/outpost_sensors.png",
+		size			=	3,
+		distance	=	2.2,	
+	},
+	outpost_turretcontrol = {
+		bitmap		=	"icons/outpost_turretcontrol.png",
+		size			=	3,
+		distance	=	2.2,	
+	},
+	outpost_vehiclepad = {
+		bitmap		=	"icons/outpost_vehiclepad.png",
+		size			=	3,
+		distance	=	2.2,	
+	},
+	outpost_garrison = {
+		bitmap		=	"icons/outpost_garrison.png",
+		size			=	3,
+		distance	=	2.2,	
+	},
+	outpost_uplink = {
+		bitmap		=	"icons/outpost_uplink.png",
+		size			=	3,
+		distance	=	2.2,	
+	},
+	outpost_ewar = {
+		bitmap		=	"icons/outpost_ewar.png",
+		size			=	3,
+		distance	=	2.2,	
+	},
+	outpost_mechbay = {
+		bitmap		=	"icons/outpost_mechbay.png",
+		size			=	3,
+		distance	=	2.2,	
 	},
 	infantry = {
 		bitmap		=	"icons/infantry.png",
