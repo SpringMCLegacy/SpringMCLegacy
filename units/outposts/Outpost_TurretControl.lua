@@ -1,6 +1,7 @@
 local Outpost_TurretControl = Outpost:New{
 	name              	= "Turret Control (Defend)",
 	description         = "Allows deployment of AI defense turrets around the beacon",
+	iconType			= "outpost_turretcontrol",
 	maxDamage           = 7000,
 	mass                = 5000,
 	buildCostMetal      = 6600,
