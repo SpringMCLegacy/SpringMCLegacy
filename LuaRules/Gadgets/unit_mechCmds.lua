@@ -24,6 +24,7 @@ local FindUnitCmdDesc		= Spring.FindUnitCmdDesc
 local AddTeamResource 		= Spring.AddTeamResource
 local DestroyUnit			= Spring.DestroyUnit
 local InsertUnitCmdDesc		= Spring.InsertUnitCmdDesc
+local EditUnitCmdDesc		= Spring.EditUnitCmdDesc
 local RemoveUnitCmdDesc		= Spring.RemoveUnitCmdDesc
 
 -- Constants
@@ -36,7 +37,7 @@ local fireStateCmdDesc = {
 	type   = CMDTYPE.ICON_MODE,
 	action = 'firestate',
 	tooltip = "Set the unit's rules of engagement",
-	params = {2, GG.Pad("Hold", "Fire"), GG.Pad("Return", "Fire"), GG.Pad(14,"Fire", "At", "Will")}
+	params = {2, GG.Pad(14,"Hold", "Fire"), GG.Pad(14,"Return", "Fire"), GG.Pad(14,"Fire", "At", "Will")}
 	--tooltip = "",
 }
 -- CMD.MOVE_STATE
@@ -45,7 +46,7 @@ local moveStateCmdDesc = {
 	type   = CMDTYPE.ICON_MODE,
 	action = 'movestate',
 	tooltip = "Set the unit's movement rules",
-	params = {0, GG.Pad("Hold", "Position"), GG.Pad("Maneuver"), GG.Pad("Roam")}
+	params = {0, GG.Pad(10,"Hold", "Position"), GG.Pad(10,"Maneuver"), GG.Pad(10,"Roam")}
 	--tooltip = "",
 }
 -- CMD.ONOFF
@@ -54,11 +55,11 @@ local onOffCmdDesc = {
 	type   = CMDTYPE.ICON_MODE,
 	action = 'onoff',
 	tooltip = "Turning Sensors off makes the unit harder to detect by enemy sensors",
-	params	= {1, GG.Pad("Radar", "Off"), GG.Pad("Radar", "On")},
+	params	= {1, GG.Pad(10,"Radar", "Off"), GG.Pad(10,"Radar", "On")},
 	--tooltip = "",
 }
 GG.onOffCmdDesc = onOffCmdDesc
-local stealthParams = {1, GG.Pad("Radar", "Off"), GG.Pad("Radar", "On"), GG.Pad("Stealth")}
+local stealthParams = {1, GG.Pad(10,"Radar", "Off"), GG.Pad(10,"Radar", "On"), GG.Pad(10,"Stealth")}
 GG.stealthParams = stealthParams
 
 -- CMD.MOVE
@@ -68,14 +69,14 @@ local moveCmdDesc = {
 	action = "move",
 	cursor = "Move",
 	tooltip = "Move to destination",
-	name   = GG.Pad("Move")
+	name   = GG.Pad(10,"Move")
 	--tooltip = "",
 }
 -- CMD_TURN
 local turnCmdDesc = {
 	id = GG.CustomCommands.GetCmdID("CMD_TURN"),
 	type = CMDTYPE.ICON_MAP,
-	name = GG.Pad("Turn"),
+	name = GG.Pad(10,"Turn"),
 	action = "turn",
 	tooltip = "Turn to face a location",
 	cursor = "Patrol",
@@ -86,7 +87,7 @@ local stopCmdDesc = {
 	type   = CMDTYPE.ICON,
 	action = "stop",
 	tooltip = "Stop all actions",
-	name   = GG.Pad("Stop")
+	name   = GG.Pad(10,"Stop")
 	--tooltip = "",
 }
 
@@ -97,7 +98,7 @@ local attackCmdDesc = {
 	action = "attack",
 	cursor = "Attack",
 	tooltip = "Attack the target or targetted location",
-	name   = GG.Pad("Attack")
+	name   = GG.Pad(10,"Attack")
 	--tooltip = "",
 }
 -- CMD.FIGHT
@@ -107,7 +108,7 @@ local fightCmdDesc = {
 	action = "fight",
 	cursor = "Fight",
 	tooltip = "Move towards target destination, stopping to engage any enemies along the way",
-	name   = GG.Pad("Fight")
+	name   = GG.Pad(10,"Fight")
 	--tooltip = "",
 }
 -- CMD.GUARD
@@ -117,7 +118,17 @@ local guardCmdDesc = {
 	action = "guard",
 	cursor = "Guard",
 	tooltip = "Follow and guard targeted friendly unit",
-	name   = GG.Pad("Guard")
+	name   = GG.Pad(10,"Guard")
+	--tooltip = "",
+}
+-- CMD.PATROL
+local patrolCmdDesc = {
+	id 	= CMD.PATROL,
+	type   = CMDTYPE.ICON_UNIT,
+	action = "patrol",
+	cursor = "Patrol",
+	tooltip = "Repeatly patrol between waypoints",
+	name   = GG.Pad(10,"Patrol")
 	--tooltip = "",
 }
 
@@ -125,7 +136,7 @@ local guardCmdDesc = {
 local flushCmdDesc = {
 	id = GG.CustomCommands.GetCmdID("CMD_FLUSH"),
 	action = 'flush',
-	name = GG.Pad("Flush","Coolant"),
+	name = GG.Pad(10,"Flush","Coolant"),
 	tooltip = 'Rapidly cool down the unit',
 	queueing = false,
 	disabled = true,
@@ -134,7 +145,7 @@ local flushCmdDesc = {
 local jumpCmdDesc = {
   id      = GG.CustomCommands.GetCmdID("CMD_JUMP"),
   type    = CMDTYPE.ICON_MAP,
-  name    = GG.Pad("Jump"),
+  name    = GG.Pad(10,"Jump"),
   cursor  = 'Jump',
   action  = 'jump',
   tooltip = 'Jump to selected position',
@@ -146,10 +157,30 @@ local mascCmdDesc = {
 	--name = '  MASC Off  ',
 	tooltip = 'Activate MASC accelerated sprint',
 	type	= CMDTYPE.ICON_MODE,
-	params	= {0, GG.Pad("MASC Off"), GG.Pad("MASC On")},
+	params	= {0, GG.Pad(10,"MASC Off"), GG.Pad(10,"MASC On")},
 	cursor	= "run",
 }
 
+-- CMD_UNIT_SET_TARGET
+local unitSetTargetCircleCmdDesc = {
+	id = GG.CustomCommands.GetCmdID("CMD_UNIT_SET_TARGET"),
+	type = CMDTYPE.ICON_UNIT_OR_AREA,
+	name = GG.Pad(10,'Set', 'Target'), --extra spaces center the 'Set' text
+	action = 'settarget',
+	cursor = 'settarget',
+	tooltip = tooltipText,
+	hidden = false,
+}
+-- CMD_UNIT_CANCEL_TARGET
+local unitCancelTargetCmdDesc = {
+	id = GG.CustomCommands.GetCmdID("CMD_UNIT_CANCEL_TARGET"),
+	type = CMDTYPE.ICON,
+	name = GG.Pad(10,'Cancel', 'Target'),
+	action = 'canceltarget',
+	tooltip = 'Removes top priority target, if set',
+	hidden = false,
+}
+	
 -- CMD_BLANK
 local blankCmdDesc = {
   id      = GG.CustomCommands.GetCmdID("CMD_BLANK"),
@@ -164,25 +195,131 @@ local blank2CmdDesc = {
 
 -- CMD_PERK_1..N
 
-local CMDS = {CMD.FIRE_STATE, CMD.MOVE_STATE, CMD.ONOFF, CMD.MOVE, CMD.STOP, CMD.ATTACK, CMD.FIGHT, CMD.GUARD, CMD.PATROL, CMD.WAIT, CMD.REPEAT}
+local menuCmdDescs = {}
+local menuCmdIDs = {}
+local ignoredCmdDescs = {}
+
+local menuStrings = {"issueorder", "pilotperks", "viewmods"}
+local menuStringAliases = { -- whitespace is to try and equalise resulting font size
+	["issueorder"] 		= GG.Pad(10,"Issue", "Orders"),
+	["pilotperks"] 		= GG.Pad(10,"Pilot", "Perks"),
+	["viewmods"] 		= GG.Pad(10,"View", "Mods"),
+}
+local currMenu = {}
+
+for i, menuString in ipairs(menuStrings) do
+	local cmdID = GG.CustomCommands.GetCmdID("CMD_MENU_" .. menuString:upper())
+	menuCmdDescs[i] = {
+		id     = cmdID,
+		type   = CMDTYPE.ICON,
+		name   = menuStringAliases[menuString],
+		action = 'menu' .. menuString,
+		tooltip = "Switch menu to " .. menuStringAliases[menuString]:gsub("%s+\n", " "),
+		texture = 'bitmaps/ui/filter.png',
+	}
+	menuCmdIDs[cmdID] = menuString
+	ignoredCmdDescs[cmdID] = 1
+end
+
+local CMDS_TO_REMOVE = {CMD.FIRE_STATE, CMD.MOVE_STATE, CMD.ONOFF, CMD.MOVE, CMD.STOP, CMD.ATTACK, CMD.FIGHT, CMD.GUARD, CMD.PATROL, CMD.WAIT, CMD.REPEAT}
+local CMD_DESCS_TO_ADD = {
+	fireStateCmdDesc, moveStateCmdDesc, onOffCmdDesc,
+	moveCmdDesc, turnCmdDesc, stopCmdDesc,
+	attackCmdDesc, unitSetTargetCircleCmdDesc, unitCancelTargetCmdDesc,
+	fightCmdDesc, guardCmdDesc, patrolCmdDesc,
+	flushCmdDesc, -- TODO: this is to be removed eventually
+	jumpCmdDesc,
+	mascCmdDesc,
+}
+local wantedCmdDescs = {}
+for i, cmdDesc in ipairs(CMD_DESCS_TO_ADD) do
+	wantedCmdDescs[cmdDesc.id] = true
+end
+
+local function ClearMechOptions(unitID, everything)
+	for i, cmdDesc in ipairs(Spring.GetUnitCmdDescs(unitID)) do
+		if cmdDesc.id < 0 or everything then
+			EditUnitCmdDesc(unitID, i, {hidden = true})
+		end
+	end
+end
+
+local function AddMechMenu(unitID)
+	--ClearMechOptions(unitID, true)
+	for i, cmdDesc in ipairs(menuCmdDescs) do
+		InsertUnitCmdDesc(unitID, cmdDesc)
+	end
+	for i, cmdDesc in ipairs(CMD_DESCS_TO_ADD) do
+		InsertUnitCmdDesc(unitID, cmdDesc)
+	end
+end
+
+local lookup = {}
+
+local function ShowMechMenu(unitID, unitDefID, menuType)
+	currMenu[unitID] = menuType
+	local cmdID = menuType and GG.CustomCommands.GetCmdID("CMD_MENU_" .. menuType:upper())
+	for i, cmdDesc in ipairs(Spring.GetUnitCmdDescs(unitID)) do
+		if cmdDesc.id == cmdID then -- show this menu as selected
+			EditUnitCmdDesc(unitID, i, {texture = 'bitmaps/ui/selected.png',})
+		elseif ignoredCmdDescs[cmdDesc.id] == 1 then -- show other menus as unselected
+			EditUnitCmdDesc(unitID, i, {texture = 'bitmaps/ui/filter.png',})
+		else -- show/hide other commands
+			local hide = not lookup[unitDefID][menuType][cmdDesc.id]
+			if menuType == "viewmods" then
+				hide = not cmdDesc.action:find("mod")
+			end
+			EditUnitCmdDesc(unitID, i, {hidden = hide})
+		end
+	end
+end
 
 function gadget:UnitCreated(unitID, unitDefID, teamID)
 	if GG.mechCache[unitDefID] then
 		-- first remove all the default command descriptions
-		for _, cmd in pairs(CMDS) do
+		for i, cmd in pairs(CMDS_TO_REMOVE) do
 			RemoveUnitCmdDesc(unitID, FindUnitCmdDesc(unitID, cmd))
 		end
+		-- Add back in 
+		AddMechMenu(unitID)
+		GG.AddApps(unitID, unitDefID)
+		if not lookup[unitDefID] then
+			-- setup the cache
+			lookup[unitDefID] = {}
+			for i, menuType in pairs(menuStrings) do
+				lookup[unitDefID][menuType] = {}
+			end
+			-- loop over all cmdDescs and assign to correct menu
+			for i, cmdDesc in pairs(Spring.GetUnitCmdDescs(unitID)) do
+				if cmdDesc.action:find("perk") then
+					lookup[unitDefID]["pilotperks"][cmdDesc.id] = true
+				elseif wantedCmdDescs[cmdDesc.id] then
+					lookup[unitDefID]["issueorder"][cmdDesc.id] = true
+				end
+			end
+			lookup[unitDefID]["issueorder"][jumpCmdDesc.id] = GG.jumpers[unitDefID]
+			lookup[unitDefID]["issueorder"][mascCmdDesc.id] = GG.mascUnitDefs[unitDefID]
+		end
+
 		-- then re-add them in our desired order
-		InsertUnitCmdDesc(unitID, fireStateCmdDesc)
+		--[[InsertUnitCmdDesc(unitID, fireStateCmdDesc)
 		InsertUnitCmdDesc(unitID, moveStateCmdDesc)
 		InsertUnitCmdDesc(unitID, onOffCmdDesc)
+		
 		InsertUnitCmdDesc(unitID, moveCmdDesc)
 		InsertUnitCmdDesc(unitID, turnCmdDesc)
 		InsertUnitCmdDesc(unitID, stopCmdDesc)
+		
 		InsertUnitCmdDesc(unitID, attackCmdDesc)
+		InsertUnitCmdDesc(unitID, unitSetTargetCircleCmdDesc)
+		InsertUnitCmdDesc(unitID, unitCancelTargetCmdDesc)
+		
 		InsertUnitCmdDesc(unitID, fightCmdDesc)
 		InsertUnitCmdDesc(unitID, guardCmdDesc)
-		InsertUnitCmdDesc(unitID, flushCmdDesc)
+		InsertUnitCmdDesc(unitID, patrolCmdDesc)]]
+		--AddMechMenu(unitID)
+		ShowMechMenu(unitID, unitDefID, "issueorder")
+		--[[InsertUnitCmdDesc(unitID, flushCmdDesc)
 		if GG.jumpers[unitDefID] then
 			InsertUnitCmdDesc(unitID, jumpCmdDesc)
 		else
@@ -192,16 +329,22 @@ function gadget:UnitCreated(unitID, unitDefID, teamID)
 			InsertUnitCmdDesc(unitID, mascCmdDesc)
 		else
 			InsertUnitCmdDesc(unitID, blank2CmdDesc)
-		end
+		end]]
 	end
 end
 
 
 function gadget:AllowCommand(unitID, unitDefID, teamID, cmdID, cmdParams, cmdOptions)
-	if cmdID == CMD_WEAPON_TOGGLE and GG.mechCache[unitDefID] then
-		env = Spring.UnitScript.GetScriptEnv(unitID)
-		Spring.UnitScript.CallAsUnit(unitID, env.ToggleWeapon, cmdParams[1]) -- 1st param is weaponNum
-		return false
+	if GG.mechCache[unitDefID] then
+		if cmdID == CMD_WEAPON_TOGGLE then
+			env = Spring.UnitScript.GetScriptEnv(unitID)
+			Spring.UnitScript.CallAsUnit(unitID, env.ToggleWeapon, cmdParams[1]) -- 1st param is weaponNum
+			return false
+		elseif menuCmdIDs[cmdID] then
+			--ClearMechOptions(unitID, true)
+			ShowMechMenu(unitID, unitDefID, menuCmdIDs[cmdID])
+			return true
+		end
 	end
 	-- everything else
 	return true

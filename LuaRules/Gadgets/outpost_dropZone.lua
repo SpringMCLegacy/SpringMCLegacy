@@ -93,7 +93,7 @@ for i, typeString in ipairs(typeStrings) do
 	menuCmdDescs[i] = {
 		id     = cmdID,
 		type   = CMDTYPE.ICON,
-		name   = typeStringAliases[typeString], -- TODO: texture?
+		name   = typeStringAliases[typeString],
 		action = 'menu' .. typeString,
 		tooltip = "Switch menu to " .. typeStringAliases[typeString]:gsub("%s+\n", " "),
 		texture = 'bitmaps/ui/filter.png',

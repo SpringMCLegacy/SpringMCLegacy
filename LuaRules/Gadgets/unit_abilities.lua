@@ -101,6 +101,7 @@ function gadget:Initialize()
 	Spring.SendCommands({"bind j jump"})
 	Spring.SendCommands({"bind t turn"})
 	Spring.SendCommands({"bind r onoff"})
+	Spring.SendCommands({"bind y settarget"})
 	
 	--Spring.AssignMouseCursor("run", "cursorrun", true, false)
 	--Spring.SetCustomCommandDrawData(CMD_RUN, "run", {1,0.5,0,.8})

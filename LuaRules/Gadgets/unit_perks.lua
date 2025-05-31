@@ -185,6 +185,12 @@ local function ApplyAppToUnit(unitID, appType, appDef, cmdID, applierID, free)
 	level = level + 1
 	currentApps[unitID][appType][appDef.name] = level
 	appDef.applyPerk(unitID, level)
+	if appType == "mods" and GG.mechCache[Spring.GetUnitDefID(unitID)] then
+		-- need to make a copy that is hidden by default as it is added after unit_mechCommands sorts out the menu...
+		local desc = appDef.cmdDesc
+		desc.hidden = true
+		InsertUnitCmdDesc(unitID, desc)
+	end
 	for _, modName in pairs(appDef.incompatible or EMPTY_TABLE) do -- assumes only mods can be incompatible
 		incompatible[unitID][modName] = true
 	end
@@ -263,23 +269,27 @@ function gadget:AllowCommand(unitID, unitDefID, teamID, cmdID, cmdParams, cmdOpt
 	return true
 end
 
+function AddApps(unitID, unitDefID)
+	currentApps[unitID] = {}
+	appUnits[unitID] = {}
+	for i, appType in ipairs(desiredOrder) do
+		if validApps[unitDefID][appType] then
+			currentApps[unitID][appType] = {}
+			appUnits[unitID][appType] = true
+			for i, appDef in ipairs(appInclude[appType]) do
+				if validApps[unitDefID][appType][appDef.cmdDesc.id] then
+					InsertUnitCmdDesc(unitID, appDef.cmdDesc)
+				end
+			end
+		end
+	end
+end
+GG.AddApps = AddApps
+
 function gadget:UnitCreated(unitID, unitDefID, teamID, builderID)
 	local ud = UnitDefs[unitDefID]
 	local cp = ud.customParams
 	if validApps[unitDefID] then
-		currentApps[unitID] = {}
-		appUnits[unitID] = {}
-		for i, appType in ipairs(desiredOrder) do
-			if validApps[unitDefID][appType] then
-				currentApps[unitID][appType] = {}
-				appUnits[unitID][appType] = true
-				for i, appDef in ipairs(appInclude[appType]) do
-					if validApps[unitDefID][appType][appDef.cmdDesc.id] then
-						InsertUnitCmdDesc(unitID, appDef.cmdDesc)
-					end
-				end
-			end
-		end
 		 -- start out with enough XP for one perk
 		if cp.baseclass == "mech" then
 			Spring.SetUnitRulesParam(unitID, "perk_xp", 100)
@@ -291,6 +301,9 @@ function gadget:UnitCreated(unitID, unitDefID, teamID, builderID)
 			for i, modName in pairs(mods) do
 				ApplyAppToUnit(unitID, "mods", appDefNames[modName])
 			end
+		elseif GG.outpostDefs[unitDefID] then	
+		-- outposts handled here, mechs handed in unit_mechCommands.lua
+			AddApps(unitID, unitDefID)
 		end
 		-- check if unit is a DZ and team DZ has previously been perked
 		if GG.DROPZONE_IDS[unitDefID] and dropZoneUpgrades[teamID] then
