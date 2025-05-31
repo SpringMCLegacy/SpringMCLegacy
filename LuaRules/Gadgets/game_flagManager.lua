@@ -437,7 +437,6 @@ function SetTickets(allyTeam, amount)
 	tickets[allyTeam] = math.min(amount, tickets[allyTeam])
 	DecrementTickets(allyTeam)
 end
-GG.SetTickets = SetTickets
 
 function CheckAllyTeamUnits(unitTeam)
 	if unitTeam == GAIA_TEAM_ID then return end -- Gaia does not have tickets
@@ -458,6 +457,13 @@ function CheckAllyTeamUnits(unitTeam)
 		end
 	end
 end
+
+function NotifyDropshipDied(teamID)
+	local allyTeam = select(6, Spring.GetTeamInfo(teamID))
+	local teamsInAlliance = Spring.GetTeamList(allyTeam)
+	SetTickets(allyTeam, (#teamsInAlliance - 1)/#teamsInAlliance * tickets[allyTeam] + 1)
+end
+GG.NotifyDropshipDied = NotifyDropshipDied
 
 function gadget:UnitDestroyed(unitID, unitDefID, unitTeam, attackerID, attackerDefID, attackerTeam)
 	local ud = UnitDefs[unitDefID]
