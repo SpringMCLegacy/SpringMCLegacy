@@ -164,7 +164,7 @@ function BeaconDropshipBugOut(beaconID, teamID, outpostID)
 end	
 GG.BeaconDropshipBugOut = BeaconDropshipBugOut
 
-local REGEN = 100 -- how much HP per frame of being off-map
+local REGEN = 10 -- how much HP per frame of being off-map
 
 function gadget:UnitCreated(unitID, unitDefID, teamID)
 	if dropShipCache[unitDefID] == "mech" then -- TODO: Only tracking mech landers atm

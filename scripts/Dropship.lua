@@ -363,8 +363,6 @@ function script.Killed()
 			Explode(gear.door, SFX.FIRE + SFX.FALL + SFX.RECURSIVE)	
 		end
 	end
-	if unitDef.customParams.dropship == "mech" then
-		GG.SetTickets(select(6, Spring.GetTeamInfo(teamID)), 1) -- TODO: do this in flag manager instead?
-	end
+	GG.NotifyDropshipDied(teamID) -- let flagManager know you screwed up, Mechcommander
 	return 0
 end

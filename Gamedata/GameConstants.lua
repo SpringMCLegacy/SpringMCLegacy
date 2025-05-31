@@ -23,7 +23,7 @@ return {
 		Bomb		= 1,
 	},
 	damageMults = {
-		dropship	= 0.5,
+		dropship	= 0.8,
 		beacons		= 0,
 		infantry	= 1,
 		light		= 1,   
