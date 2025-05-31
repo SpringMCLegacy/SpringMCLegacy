@@ -236,16 +236,7 @@ for i, cmdDesc in ipairs(CMD_DESCS_TO_ADD) do
 	wantedCmdDescs[cmdDesc.id] = true
 end
 
-local function ClearMechOptions(unitID, everything)
-	for i, cmdDesc in ipairs(Spring.GetUnitCmdDescs(unitID)) do
-		if cmdDesc.id < 0 or everything then
-			EditUnitCmdDesc(unitID, i, {hidden = true})
-		end
-	end
-end
-
 local function AddMechMenu(unitID)
-	--ClearMechOptions(unitID, true)
 	for i, cmdDesc in ipairs(menuCmdDescs) do
 		InsertUnitCmdDesc(unitID, cmdDesc)
 	end
@@ -284,6 +275,7 @@ function gadget:UnitCreated(unitID, unitDefID, teamID)
 		-- Add back in 
 		AddMechMenu(unitID)
 		GG.AddApps(unitID, unitDefID)
+		
 		if not lookup[unitDefID] then
 			-- setup the cache
 			lookup[unitDefID] = {}
@@ -301,36 +293,8 @@ function gadget:UnitCreated(unitID, unitDefID, teamID)
 			lookup[unitDefID]["issueorder"][jumpCmdDesc.id] = GG.jumpers[unitDefID]
 			lookup[unitDefID]["issueorder"][mascCmdDesc.id] = GG.mascUnitDefs[unitDefID]
 		end
-
-		-- then re-add them in our desired order
-		--[[InsertUnitCmdDesc(unitID, fireStateCmdDesc)
-		InsertUnitCmdDesc(unitID, moveStateCmdDesc)
-		InsertUnitCmdDesc(unitID, onOffCmdDesc)
-		
-		InsertUnitCmdDesc(unitID, moveCmdDesc)
-		InsertUnitCmdDesc(unitID, turnCmdDesc)
-		InsertUnitCmdDesc(unitID, stopCmdDesc)
-		
-		InsertUnitCmdDesc(unitID, attackCmdDesc)
-		InsertUnitCmdDesc(unitID, unitSetTargetCircleCmdDesc)
-		InsertUnitCmdDesc(unitID, unitCancelTargetCmdDesc)
-		
-		InsertUnitCmdDesc(unitID, fightCmdDesc)
-		InsertUnitCmdDesc(unitID, guardCmdDesc)
-		InsertUnitCmdDesc(unitID, patrolCmdDesc)]]
-		--AddMechMenu(unitID)
+		-- then show the order menu
 		ShowMechMenu(unitID, unitDefID, "issueorder")
-		--[[InsertUnitCmdDesc(unitID, flushCmdDesc)
-		if GG.jumpers[unitDefID] then
-			InsertUnitCmdDesc(unitID, jumpCmdDesc)
-		else
-			InsertUnitCmdDesc(unitID, blankCmdDesc)
-		end
-		if GG.mascUnitDefs[unitDefID] then
-			InsertUnitCmdDesc(unitID, mascCmdDesc)
-		else
-			InsertUnitCmdDesc(unitID, blank2CmdDesc)
-		end]]
 	end
 end
 
@@ -342,7 +306,6 @@ function gadget:AllowCommand(unitID, unitDefID, teamID, cmdID, cmdParams, cmdOpt
 			Spring.UnitScript.CallAsUnit(unitID, env.ToggleWeapon, cmdParams[1]) -- 1st param is weaponNum
 			return false
 		elseif menuCmdIDs[cmdID] then
-			--ClearMechOptions(unitID, true)
 			ShowMechMenu(unitID, unitDefID, menuCmdIDs[cmdID])
 			return true
 		end
