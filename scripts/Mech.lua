@@ -750,6 +750,33 @@ function script.BlockShot(weaponID, targetID, userTarget)
 	return false
 end
 
+function script.TargetWeight(weaponID, targetID)
+	local targetDefID = Spring.GetUnitDefID(targetID)
+	if not targetDefID then return 1 end
+	local weapDef = WeaponDefs[unitDef.weapons[weaponID].weaponDef]
+	if GG.dropShipCache[targetDefID] then 
+		--Spring.Echo("TargetWeight (dropShip)", unitID, weapDef.name, UnitDefs[targetDefID].name, 5)
+		return 5  -- low priority
+	elseif GG.mechCache[targetDefID] then
+		local range = weapDef.range
+		local minRange = minRanges[weaponID]
+		local dist = Spring.GetUnitSeparation(unitID, targetID)
+		if minRange then
+			if dist < minRange then
+				--Spring.Echo("TargetWeight (In minRange)", unitID, weapDef.name, UnitDefs[targetDefID].name, 50)
+				return 50 -- really don't want to target things in minrange if we can help it
+			elseif missileWeaponIDs[weaponID] then
+				--Spring.Echo("TargetWeight (Far)", unitID, weapDef.name, UnitDefs[targetDefID].name, range/dist)
+				return (range-dist)/range -- prefer far targets for LRM / Arrow
+			end
+		else
+			--Spring.Echo("TargetWeight (Close)", unitID, weapDef.name, UnitDefs[targetDefID].name, dist/range)
+			return dist/range -- prefer close targets
+		end
+	end
+	return 1
+end
+
 function script.FireWeapon(weaponID)
 	ChangeHeat(firingHeats[weaponID])
 	if barrels[weaponID] and barrelRecoils[weaponID] then
