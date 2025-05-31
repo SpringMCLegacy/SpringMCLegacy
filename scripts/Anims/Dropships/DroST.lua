@@ -319,9 +319,11 @@ function Drop()
 			Sleep(10)
 			dist = select(2, Spring.GetUnitPosition(unitID)) - wantedHeight
 		end
-		-- We're in place. Halt and lower the cargo!
-		PlaySound("dropship_rumble")
-		UnloadCargo()
+		if Spring.GetUnitRulesParam(beaconID, "secure") == 1 then -- one last check
+			-- We're in place. Halt and lower the cargo!
+			PlaySound("dropship_rumble")
+			UnloadCargo()
+		end
 	elseif cargo[1] then -- bugging out, refund
 		Spring.AddTeamResource(teamID, "metal", UnitDefs[Spring.GetUnitDefID(cargo[1])].metalCost)
 	end
