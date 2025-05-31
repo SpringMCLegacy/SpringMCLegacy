@@ -1,5 +1,12 @@
 local Javelin = Light:New{
 	name              	= "Javelin",
+	
+	leaveTracks			= true,	
+	trackType			= "Javelin",
+	trackOffset			= 6,
+	trackWidth			= 24,
+	trackStretch 		= 2,
+	
 	customparams = {
 		cockpitheight	= 5.3,
 		tonnage 		= 30,
