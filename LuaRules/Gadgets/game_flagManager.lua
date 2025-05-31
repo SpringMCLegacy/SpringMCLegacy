@@ -475,7 +475,7 @@ function NotifyDropshipDied(teamID)
 			end
 		end
 		-- inform enemy teams
-		for _, team in pairs(Spring.GetTeamList())
+		for _, team in pairs(Spring.GetTeamList()) do
 			if not alliedTeams[team] then
 				PlaySoundForTeam(team, "bb_elimination_enemy", 1)
 			end
