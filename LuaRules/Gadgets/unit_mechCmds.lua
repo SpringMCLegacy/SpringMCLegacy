@@ -256,6 +256,7 @@ end
 
 local lookup = {}
 
+-- TODO: deal with all the copy-pasta from outpost_dropZone.lua menu by genericising it all into one horrifying 'bendSpringUIToMyWill.lua'
 local function ShowMechMenu(unitID, unitDefID, menuType)
 	currMenu[unitID] = menuType
 	local cmdID = menuType and GG.CustomCommands.GetCmdID("CMD_MENU_" .. menuType:upper())

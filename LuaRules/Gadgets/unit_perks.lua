@@ -301,7 +301,7 @@ function gadget:UnitCreated(unitID, unitDefID, teamID, builderID)
 			for i, modName in pairs(mods) do
 				ApplyAppToUnit(unitID, "mods", appDefNames[modName])
 			end
-		elseif GG.outpostDefs[unitDefID] then	
+		else
 		-- outposts handled here, mechs handed in unit_mechCommands.lua
 			AddApps(unitID, unitDefID)
 		end
