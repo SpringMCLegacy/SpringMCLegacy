@@ -461,7 +461,26 @@ end
 function NotifyDropshipDied(teamID)
 	local allyTeam = select(6, Spring.GetTeamInfo(teamID))
 	local teamsInAlliance = Spring.GetTeamList(allyTeam)
-	SetTickets(allyTeam, (#teamsInAlliance - 1)/#teamsInAlliance * tickets[allyTeam] + 1)
+	local numTeams = #teamsInAlliance
+	SetTickets(allyTeam, (numTeams - 1)/numTeams * tickets[allyTeam] + 1)
+	if numTeams > 1 then
+		local alliedTeams = {}
+		-- inform allied teams
+		for _, team in pairs(teamsInAlliance) do
+			alliedTeams[team] = true
+			if team == teamID then
+				PlaySoundForTeam(team, "bb_elimination", 1)
+			else
+				PlaySoundForTeam(team, "bb_elimination_ally", 1)
+			end
+		end
+		-- inform enemy teams
+		for _, team in pairs(Spring.GetTeamList())
+			if not alliedTeams[team] then
+				PlaySoundForTeam(team, "bb_elimination_enemy", 1)
+			end
+		end
+	end
 end
 GG.NotifyDropshipDied = NotifyDropshipDied
 
