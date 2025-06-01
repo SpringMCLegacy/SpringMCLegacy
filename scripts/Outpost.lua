@@ -461,7 +461,7 @@ function Unpack()
 	Turn(crate_top, z_axis, rad(-90), CRATE_SPEED * 2)
 	
 	-- Begin outpost-specific anims
-	GG.PlaySoundForTeam(Spring.GetUnitTeam(unitID), "BB_" .. name .. "_deployed", 1)
+	GG.PlaySoundForTeam(Spring.GetUnitTeam(unitID), "bb_" .. name .. "_deployed", 1)
 	if name == "outpost_c3array" then
 		Move(emitter, y_axis, 30, CRATE_SPEED * 5)
 		Turn(antennarot, x_axis, rad(-90), CRATE_SPEED)
