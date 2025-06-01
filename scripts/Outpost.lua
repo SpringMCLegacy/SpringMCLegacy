@@ -735,5 +735,5 @@ function script.TransportDrop (passengerID, x, y, z)
 end
 
 function script.Killed(recentDamage, maxRepairth)
-	GG.PlaySoundForTeam(Spring.GetUnitTeam(unitID), "BB_" .. name .. "_destroyed", 1)
+	GG.PlaySoundForTeam(Spring.GetUnitTeam(unitID), "bb_" .. name .. "_destroyed", 1)
 end
