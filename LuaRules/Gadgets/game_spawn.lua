@@ -131,6 +131,7 @@ local function SpawnStartUnit(teamID)
 		Spring.SetTeamResource(teamID, "ms", tonumber(m * 100))
 		Spring.SetTeamResource(teamID, "m", 0)
 		Spring.AddTeamResource(teamID, "m", tonumber(m))
+		GG.ChangeTeamSalvage(teamID, modOptions.startsalvage or 100)
 	end
 	if (e and tonumber(e) ~= 0) then
 		-- remove the pre-existing storage

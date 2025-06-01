@@ -38,7 +38,7 @@ local DelayCall				 = GG.Delay.DelayCall
 -- Constants
 local GAIA_TEAM_ID = Spring.GetGaiaTeamID()
 local MECHBAY_ID = UnitDefNames["outpost_mechbay"].id
-local PICKUP_DIST = 50
+local PICKUP_DIST = 100
 
 -- Command Descriptions
 local getOutCmdDesc = {
@@ -357,7 +357,7 @@ function gadget:FeatureCreated(featureID, allyTeamID)
 		salvageSources[featureID] = {
 			["x"] = x, 
 			["z"] = z,
-			["amount"] = 1, -- TODO: customparam
+			["amount"] = modOptions.salvageperpile or 10, -- TODO: customparam
 		}
 	end
 end

@@ -58,7 +58,18 @@ local options =
     step   = 10,  -- quantization is aligned to the def value
                     -- (step <= 0) means that there is no quantization
   },
-  
+    {
+    key    = "startsalvage",
+    name   = "Starting Salvage",
+    desc   = "Sets the amount of Salvage players start with at the beginning of the game.",
+    type   = "number",
+    section= "StartingResources",
+    def    = 100,
+    min    = 00,
+    max    = 1000,
+    step   = 10,  -- quantization is aligned to the def value
+                    -- (step <= 0) means that there is no quantization
+  },
   --[[{
     key    = "MaxUnits",
     name   = "Max units",

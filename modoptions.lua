@@ -270,6 +270,17 @@ local options = {
 		step	= 0.1,
 		section	= '2income',
 	},
+	{
+		key		= "salvageperpile",
+		name	= "Salvage Per Pile",
+		desc	= "Dev tool for balancing costs",
+		type	= "number",
+		def		= 10,
+		min		= 1,
+		max		= 100,
+		step	= 1,
+		section	= '2income',
+	},
 	------------------------------------
 	{
 		key    = '2AI',
