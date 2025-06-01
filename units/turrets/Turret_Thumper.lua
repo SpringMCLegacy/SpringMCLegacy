@@ -1,5 +1,5 @@
-local Turret_Sniper = Tower:New{
-	description         = "Sniper Artillery",
+local Turret_Thumper = Tower:New{
+	description         = "Thumper Artillery",
 	buildCostMetal      = 9700,
 	maxDamage           = 2500,
 	footprintX			= 5,
@@ -7,7 +7,7 @@ local Turret_Sniper = Tower:New{
 
 	weapons	= {	
 		[1] = {
-			name	= "Sniper",
+			name	= "Thumper",
 			OnlyTargetCategory = "notbeacon",
 		},
 	},
@@ -24,5 +24,5 @@ local Turret_Sniper = Tower:New{
 }
 
 return lowerkeys({
-	["Turret_Sniper"] = Turret_Sniper,
+	["Turret_Thumper"] = Turret_Thumper,
 })
