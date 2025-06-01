@@ -34,9 +34,9 @@ weaponDef = {
 	proximitypriority = -1,
 	predictboost = 500,
 	
-	--beamBurst				= true,
-	--burst 					= 50,
-	--burstRate				= 0.015,
+	beamBurst				= true,
+	burst 					= 50,
+	burstRate				= 0.001,
 	cylinderTargeting		= 5,
 	allowNonBlockingAim 	= true,
 	collideFriendly			= false,

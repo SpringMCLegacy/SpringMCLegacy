@@ -9,18 +9,12 @@ local Turret_LAMS = Tower:New{
 			name	= "LAMS",
 		},
 		[2] = {
-			name	= "LAMS",
-		},
-		[3] = {
-			name	= "LAMS",
-		},
-		[4] = {
-			name	= "LAMS",
+			name	= "LAMS_Shield",
 		},
 	},
 	customparams = {
-		turretturnspeed = 3000,
-		elevationspeed  = 3000,
+		turretturnspeed = 9000,
+		elevationspeed  = 9000,
 		turrettype = "missile",
     },
 	sounds = {
@@ -29,5 +23,5 @@ local Turret_LAMS = Tower:New{
 }
 
 return lowerkeys({
-	--["Turret_LAMS"] = Turret_LAMS,
+	["Turret_LAMS"] = Turret_LAMS,
 })
