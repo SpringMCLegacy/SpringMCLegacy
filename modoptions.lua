@@ -281,6 +281,17 @@ local options = {
 		step	= 1,
 		section	= '2income',
 	},
+	{
+		key		= "beaconpoints",
+		name	= "Number of outposts points per beacon",
+		desc	= "Dev tool for balancing costs",
+		type	= "number",
+		def		= 3,
+		min		= 3,
+		max		= 12,
+		step	= 3,
+		section	= '2income',
+	},
 	------------------------------------
 	{
 		key    = '2AI',

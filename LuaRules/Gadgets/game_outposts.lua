@@ -14,6 +14,7 @@ if gadgetHandler:IsSyncedCode() then
 --	SYNCED
 
 -- localisations
+local modOptions = Spring.GetModOptions()
 local SetUnitRulesParam		= Spring.SetUnitRulesParam
 --SyncedRead
 local GetGameFrame			= Spring.GetGameFrame
@@ -48,10 +49,12 @@ local beaconOutpostPointIDs = {} -- beaconOutpostPointIDs[beaconID] = {outpostPo
 GG.beaconOutpostPointIDs = beaconOutpostPointIDs -- for AI
 
 local BEACON_POINT_DIST = 400
+local NUM_BEACON_POINTS = tonumber(modOptions.beaconpoints) or 3
+
 local function BeaconPoints(beaconID, teamID, x, y, z)
 	beaconOutpostPointIDs[beaconID] = {}
-	for i = 0, 2 do
-		local angle = i * 2 * math.pi / 3
+	for i = 0, NUM_BEACON_POINTS - 1 do
+		local angle = i * 2 * math.pi / NUM_BEACON_POINTS
 		local dx, dz = math.sin(angle) * BEACON_POINT_DIST, math.cos(angle) * BEACON_POINT_DIST
 		local outpostPointID = CreateUnit(BEACON_POINT_ID, x + dx, y, z + dz, "s", teamID)
 		Spring.SetUnitAlwaysVisible(outpostPointID, true)
