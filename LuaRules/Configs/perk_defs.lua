@@ -310,6 +310,7 @@ return {
 			end,
 			costFunction = deductCBills,
 			price = 39620,
+			sound = 'bb_dropship_upgraded',
 		},
 		{
 			name = "overlord",
@@ -328,6 +329,7 @@ return {
 			costFunction = deductCBills,
 			price = 47020,
 			requires = "union",
+			sound = 'bb_dropship_upgraded',
 		},
 		-- vehicle pad
 		{

@@ -185,12 +185,25 @@ local function ApplyAppToUnit(unitID, appType, appDef, cmdID, applierID, free)
 	level = level + 1
 	currentApps[unitID][appType][appDef.name] = level
 	appDef.applyPerk(unitID, level)
-	if appType == "mods" and GG.mechCache[Spring.GetUnitDefID(unitID)] then
-		-- need to make a copy that is hidden by default as it is added after unit_mechCommands sorts out the menu...
-		local desc = appDef.cmdDesc
-		desc.hidden = true
-		InsertUnitCmdDesc(unitID, desc)
+	-- Play sounds
+	if appDef.sound then
+		GG.PlaySoundForTeam(Spring.GetUnitTeam(unitID), appDef.sound, 1)
+	elseif appType == "upgrades" then
+		GG.PlaySoundForTeam(Spring.GetUnitTeam(unitID), "bb_" .. UnitDefs[Spring.GetUnitDefID(unitID)].name .. "_upgraded", 1)
+	elseif appType == "perks" then
+		GG.PlaySoundForTeam(Spring.GetUnitTeam(unitID), "bb_battlemech_perked", 1)
+	elseif appType == "mods" then
+		-- Special case to add to mech's 'View Mods' menu page, don't play the sound
+		if GG.mechCache[Spring.GetUnitDefID(unitID)] then
+			-- need to make a copy that is hidden by default as it is added after unit_mechCommands sorts out the menu...
+			local desc = appDef.cmdDesc
+			desc.hidden = true
+			InsertUnitCmdDesc(unitID, desc)
+		else -- mechbay
+			GG.PlaySoundForTeam(Spring.GetUnitTeam(unitID), "bb_battlemech_modded", 1)
+		end
 	end
+	-- Update any conflicts with the new mod
 	for _, modName in pairs(appDef.incompatible or EMPTY_TABLE) do -- assumes only mods can be incompatible
 		incompatible[unitID][modName] = true
 	end
