@@ -151,6 +151,9 @@ function LanceControl(teamID, unitID, add)
 			for unitID in pairs(lanceSlots.units) do
 				ToggleLink(unitID, teamID, false)
 			end
+			 -- no need for delay here, as outpost_c3array_deployed is called on unload...
+			-- ...whereas this function is called after the unfold anim
+			GG.PlaySoundForTeam(teamID, "bb_c3_increased")
 		end
 	elseif C3Status[unitID] then -- lost a deployed C3
 		teamC3Counts[teamID] = teamC3Counts[teamID] - 1
@@ -173,6 +176,8 @@ function LanceControl(teamID, unitID, add)
 			for unitID, tonnage in pairs(lanceSlots.units) do
 				ToggleLink(unitID, teamID, true, tonnage)
 			end
+			-- Here we need to delay 1.2 seconds so outpost_c3array_destroyed can play first as both are triggered together
+			GG.Delay.DelayCall(GG.PlaySoundForTeam, {teamID, "bb_c3_reduced"}, 1.2 * 30) 
 		end
 		-- cleanup the C3 itself
 		C3Status[unitID] = nil
