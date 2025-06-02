@@ -221,7 +221,7 @@ for i, menuString in ipairs(menuStrings) do
 	ignoredCmdDescs[cmdID] = 1
 end
 
-local CMDS_TO_REMOVE = {CMD.FIRE_STATE, CMD.MOVE_STATE, CMD.ONOFF, CMD.MOVE, CMD.STOP, CMD.ATTACK, CMD.FIGHT, CMD.GUARD, CMD.PATROL, CMD.WAIT, CMD.REPEAT}
+local CMDS_TO_REMOVE = {CMD.FIRE_STATE, CMD.MOVE_STATE, CMD.ONOFF, CMD.MOVE, CMD.STOP, CMD.ATTACK, CMD.FIGHT, CMD.GUARD, CMD.PATROL, CMD.REPEAT}
 local CMD_DESCS_TO_ADD = {
 	fireStateCmdDesc, moveStateCmdDesc, onOffCmdDesc,
 	moveCmdDesc, turnCmdDesc, stopCmdDesc,
