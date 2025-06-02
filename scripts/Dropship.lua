@@ -363,6 +363,8 @@ function script.Killed()
 			Explode(gear.door, SFX.FIRE + SFX.FALL + SFX.RECURSIVE)	
 		end
 	end
-	GG.NotifyDropshipDied(teamID) -- let flagManager know you screwed up, Mechcommander
+	if unitDef.customParams.dropship == "mech" then
+		GG.NotifyDropshipDied(teamID) -- let flagManager know you screwed up, Mechcommander
+	end
 	return 0
 end
