@@ -3,6 +3,7 @@ local Tower = Unit:New{
 	name              	= "Weapon Emplacement", -- overwritten by ecm & bap
 	script				= "Turret.lua",
 	category 			= "structure notbeacon ground",
+	iconType			= "turret",
 	activateWhenBuilt   = true, -- false? activate when deployed?
 	buildCostMetal      = 6000,
 	maxDamage           = 4000,

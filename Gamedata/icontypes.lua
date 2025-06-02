@@ -94,6 +94,11 @@ local iconTypes = {
 		size			=	3,
 		distance	=	2.2,	
 	},
+	turret = {
+		bitmap		=	"icons/turret.png",
+		size			=	2,
+		distance	=	1.2,	
+	},
 	infantry = {
 		bitmap		=	"icons/infantry.png",
 		size			=	3,
