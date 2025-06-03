@@ -383,7 +383,8 @@ function gadget:AllowCommand(unitID, unitDefID, teamID, cmdID, cmdParams, cmdOpt
 			local tonnage = GetTeamResources(teamID, "energy")
 			if not rightClick then
 				if cmdOptions.shift or cmdOptions.ctrl then return false end -- otherwise we can (dramatically) circumvent unit limits
-				if (GG.TeamSlotsRemaining(teamID) - runningSize) < 1 then -- TODO: Can this even happen? Maybe with giving units --[[ orderSizesPending[unitID]]
+				if (GG.TeamSlotsRemaining(teamID) - runningSize) < 1 then  -- not enough C3 bandwidth
+					GG.PlaySoundForTeam(teamID, "bb_insufficient_c3bandwidth", 1)
 					return false 
 				end
 				local newTotal = runningTotal + cost
@@ -402,8 +403,12 @@ function gadget:AllowCommand(unitID, unitDefID, teamID, cmdID, cmdParams, cmdOpt
 					EditUnitCmdDesc(unitID, FindUnitCmdDesc(unitID, CMD_RUNNING_TONS), {name = "Order\n\255\255\255\001Tonnes: \n" .. newTons})
 					return true
 				else
-					--Spring.Echo("not enough money")
-					return false -- not enough money
+					if cost > money then  -- not enough money
+						GG.PlaySoundForTeam(teamID, "bb_insufficient_cbills", 1)
+					elseif weight > tonnage then  -- not enough tonnage
+						GG.PlaySoundForTeam(teamID, "bb_insufficient_tonnage", 1)
+					end
+					return false
 				end
 			elseif runningSize > 0 then  -- only allow removal if order contains units (prevent -ve running totals!)
 				local cmdDesc = GetUnitCmdDescs(unitID, FindUnitCmdDesc(unitID, cmdID))[1] -- TODO: This is just awful
