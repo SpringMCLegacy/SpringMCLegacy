@@ -177,7 +177,7 @@ local function ArtyStrike(unitID, teamID, x, y, z, cost)
 	end
 	local money = GetTeamResources(teamID, "metal")
 	if money < cost then  -- not enough C-Bills (TODO: Should never get this far, button disabled by unit_purchasing.lua?)
-		GG.PlaySoundForTeam(teamID, "BB_Insufficient_Funds", 1)
+		GG.PlaySoundForTeam(teamID, "bb_insufficient_cbills", 1)
 		Spring.SendMessageToTeam(teamID, "Not enough C-Bills for artillery strike!")
 		return false 
 	end
@@ -226,7 +226,7 @@ end
 local function AeroStrike(unitID, teamID, targetID, cost)
 	local money = GetTeamResources(teamID, "metal")
 	if money < cost then
-		GG.PlaySoundForTeam(teamID, "BB_Insufficient_Funds", 1)
+		GG.PlaySoundForTeam(teamID, "bb_insufficient_cbills", 1)
 		Spring.SendMessageToTeam(teamID, "Not enough C-Bills for aero fighter strike!")
 		return false 
 	end	
@@ -239,7 +239,7 @@ end
 local function AssaultStrike(unitID, teamID, tx, ty, tz, cost)
 	local money = GetTeamResources(teamID, "metal")
 	if money < cost then
-		GG.PlaySoundForTeam(teamID, "BB_Insufficient_Funds", 1)
+		GG.PlaySoundForTeam(teamID, "bb_insufficient_cbills", 1)
 		Spring.SendMessageToTeam(teamID, "Not enough C-Bills for assault dropship strike!")
 		return false 
 	end	

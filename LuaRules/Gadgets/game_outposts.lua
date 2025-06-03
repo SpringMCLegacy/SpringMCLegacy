@@ -193,7 +193,7 @@ function gadget:AllowCommand(unitID, unitDefID, teamID, cmdID, cmdParams, cmdOpt
 				outpostIDs[unitID] = true -- overwritten with unitID on spawn
 				GG.DropshipDelivery(outpostPointBeaconIDs[unitID], unitID, teamID, GG.teamSide[teamID] .. "_drost", outpostDefID, cost, "bb_outpost_deploying", DROPSHIP_DELAY)
 			else
-				GG.PlaySoundForTeam(teamID, "BB_Insufficient_Funds", 1)
+				GG.PlaySoundForTeam(teamID, "bb_insufficient_cbills", 1)
 			end
 		else -- any other command or the beaconPoint is already outposted
 			return false
