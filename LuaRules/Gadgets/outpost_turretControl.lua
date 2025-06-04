@@ -67,7 +67,7 @@ end
 -- TOWERS
 function LimitTowerType(unitID, teamID, towerType, increase)	
 	local towersRemaining = buildLimits[unitID][towerType]
-	if increase then
+	if increase then -- giving slots back
 		buildLimits[unitID][towerType] = towersRemaining + increase
 		for tDefID, tType in pairs(towerDefIDs) do
 			if tType == towerType then
@@ -80,7 +80,7 @@ function LimitTowerType(unitID, teamID, towerType, increase)
 	elseif towersRemaining == 0 then 
 		Spring.SendMessageToTeam(teamID, "Limit reached for " .. towerType)
 		return false 
-	else
+	else -- we have the slots
 		buildLimits[unitID][towerType] = towersRemaining - 1
 		if towersRemaining == 1 then
 			for tDefID, tType in pairs(towerDefIDs) do
@@ -149,17 +149,25 @@ function gadget:AllowCommand(unitID, unitDefID, teamID, cmdID, cmdParams, cmdOpt
 		if cmdID < 0 then
 			local towerType = towerDefIDs[-cmdID]
 			if not towerType then return false end
-			if unitDefID == TURRETCONTROL_ID then -- TurretControl has limited build radius
-				local tx, ty, tz = unpack(cmdParams)
-				local dist = GetUnitDistanceToPoint(unitID, tx, ty, tz, false)
-				-- check for max range, although limited via unit script to only build inside beacon radius... 
-				-- ...need to ensure it is within the beacon radius we are built at!
-				if dist > MAX_BUILD_RANGE then
-					Spring.SendMessageToTeam(teamID, "Too far from Turret Control!")
-					return false
-				end
+			
+			local tx, ty, tz = unpack(cmdParams)
+			local dist = GetUnitDistanceToPoint(unitID, tx, ty, tz, false)
+			-- check for max range, although limited via unit script to only build inside beacon radius... 
+			-- ...need to ensure it is within the beacon radius we are built at!
+			if dist > MAX_BUILD_RANGE then
+				Spring.SendMessageToTeam(teamID, "Too far from Turret Control!")
+				GG.PlaySoundForTeam(teamID, "bb_turret_toofar", 1)
+			-- check we have the resources
+			elseif Spring.GetTeamResources(teamID, "metal") < UnitDefs[-cmdID].metalCost then
+				GG.PlaySoundForTeam(teamID, "bb_insufficient_cbills", 1)
+				Spring.SendMessageToTeam(teamID, "Not enough C-Bills for tower deployment!")	
 			end
-			return LimitTowerType(unitID, teamID, towerType)
+			-- check we have the slots
+			if LimitTowerType(unitID, teamID, towerType) then
+				local success = Spring.CreateUnit(-cmdID, tx, ty, tz, 1, teamID, false, false, nil, unitID)
+				--Spring.Echo("Yo make a turret!", -cmdID, UnitDefs[-cmdID].name, success)
+			end
+			return false -- don't let the engine build it itself whether we passed the conditions or not
 		end
 	elseif UnitDefs[unitDefID].customParams.decal then
 		return false -- disallow all commands to decals
