@@ -243,7 +243,7 @@ local function ShowModsByType(unitID, modType, mechID)
 			end
 		end
 	end
-	if mechBays[unitID] == 3 and omniCache[mechDefID] then
+	if mechBays[unitID] == 1 and omniCache[mechDefID] then
 		ShowOmniOptions(unitID, mechDefID, omniCache[mechDefID], modType == "omni")
 	end
 end
@@ -254,14 +254,14 @@ function gadget:UnitCreated(unitID, unitDefID, teamID, builderID)
 		InsertUnitCmdDesc(unitID, SELL_POSITION, sellMechCmdDesc)
 		InsertUnitCmdDesc(unitID, SCRAP_POSITION, scrapMechCmdDesc)
 		SetMechBayLevel(unitID, 1)
-		ShowModsByType(unitID, "none", nil) -- don't show any mods until the ability is unlocked
+		--ShowModsByType(unitID, "none", nil) -- don't show any mods until the ability is unlocked
 	elseif GG.mechCache[unitDefID] then -- a mech
 		unitPinataLevels[unitID] = 0
 	end
 end
 
 function gadget:UnitLoaded(unitID, unitDefID, unitTeam, transportID, transportTeam)
-	if mechBays[transportID] and mechBays[transportID] >= 2 then
+	if mechBays[transportID] and mechBays[transportID] >= 1 then
 		-- update mod status for this mech
 		GG.UpdateUnitApps(transportID, "mods")
 		ShowModsByType(transportID, currMenu[unitID], unitID)
@@ -275,7 +275,7 @@ function gadget:UnitLoaded(unitID, unitDefID, unitTeam, transportID, transportTe
 end
 
 function gadget:UnitUnloaded(unitID, unitDefID, unitTeam, transportID, transportTeam)
-	if mechBays[transportID] and mechBays[transportID] >= 2 then -- TODO: check it is level 2
+	if mechBays[transportID] and mechBays[transportID] >= 1 then
 		-- reset menu
 		GG.UpdateUnitApps(transportID, "mods")
 		ShowModsByType(transportID, "none", unitID)
