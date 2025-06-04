@@ -344,6 +344,7 @@ function gadget:AllowCommand(unitID, unitDefID, teamID, cmdID, cmdParams, cmdOpt
 					CheckOmniOptions(unitID, teamID, cmdID)
 				else
 					Spring.SendMessageToTeam(teamID, "Insufficient salvage!")
+					GG.PlaySoundForTeam(teamID, "bb_insufficient_salvage", 1)
 				end
 			end
 		end
