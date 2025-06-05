@@ -79,6 +79,17 @@ local options = {
 		section	= "devtools",
 	},
 	{
+		key		= "vehicledamagemult",
+		name	= "Test Vehicle only Damage Multiplier",
+		desc	= "Developer tool",
+		type	= "number",
+		def		= 1.0,
+		min		= 0.1,
+		max		= 10.0,
+		step	= 0.1,
+		section	= "devtools",
+	},
+	{
 		key		= "rangemult",
 		name	= "Test Weapon Range Multiplier",
 		desc	= "Developer tool",

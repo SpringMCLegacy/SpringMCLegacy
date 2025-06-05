@@ -80,6 +80,9 @@ for weapName, wd in pairs(WeaponDefs) do
 	for unitType, multiplier in pairs(damageMults) do
 		if not damage[unitType] then -- don't override weaponDefs
 			damage[unitType] = default * damageMults[unitType] * (modOptions.damagemult or 1)
+			if unitType == "vehicle" then
+				damage[unitType] = damage[unitType] * (modOptions.vehdamagemult or 1)
+			end
 		end
 	end
 	if (wd.weapontype ~= nil) and (string.lower(wd.weapontype) == "missilelauncher" or string.lower(wd.weapontype) == "starburstlauncher") then
