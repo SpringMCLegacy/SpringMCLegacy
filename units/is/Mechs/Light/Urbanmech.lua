@@ -1,6 +1,12 @@
 local Urbanmech = Light:New{
 	name              	= "Urbanmech",
 	
+	leaveTracks			= true,	
+	trackType			= "Urbanmech",
+	trackOffset			= 6,
+	trackWidth			= 24,
+	trackStretch 		= 2,
+	
 	customparams = {
 		cockpitheight	= 8,
 		tonnage			= 30,
@@ -8,24 +14,21 @@ local Urbanmech = Light:New{
     },
 }
 
-local UMR63 = Urbanmech:New{
-	description         = "Light Juggernaut",
+local UMR60 = Urbanmech:New{
+	description         = "Light Brawler",
 	weapons = {	
 		[1] = {
-			name	= "LBX10",
+			name	= "AC10",
 		},
 		[2] = {
 			name	= "SBL",
 		},
-		[3] = {
-			name	= "SPL",
-		},
 	},
 		
 	customparams = {
-		variant         = "UM-R63",
+		variant         = "UM-R60L",
 		speed			= 30,
-		price			= 5400,
+		price			= 5040,
 		heatlimit 		= 11,
 		armor			= 6,
 		jumpjets		= 2,
@@ -57,29 +60,54 @@ local UMR60L = Urbanmech:New{
     },
 }
 
-local UMR70 = Urbanmech:New{
-	description         = "Light Brawler",
+local UMR63 = Urbanmech:New{
+	description         = "Light Juggernaut",
 	weapons = {	
 		[1] = {
-			name	= "RAC5",
+			name	= "LBX10",
 		},
 		[2] = {
-			name	= "ERMBL",
+			name	= "SBL",
 		},
 		[3] = {
-			name	= "ERSBL",
+			name	= "SPL",
 		},
 	},
 		
 	customparams = {
-		variant         = "UM-R70",
+		variant         = "UM-R63",
 		speed			= 30,
-		price			= 7240,
+		price			= 5400,
 		heatlimit 		= 11,
 		armor			= 6,
 		jumpjets		= 2,
-		maxammo 		= {ac5 = 2},
-		mods 			= {"ferrofibrousarmour"},
+		maxammo 		= {ac10 = 1},
+		barrelrecoildist = {[1] = 4},
+    },
+}
+
+local UMR68 = Urbanmech:New{
+	description         = "Light Skirmisher",
+	weapons = {	
+		[1] = {
+			name	= "MRM30",
+		},
+		[2] = {
+			name	= "SBL",
+		},
+		[3] = {
+			name	= "SPL",
+		},
+	},
+		
+	customparams = {
+		variant         = "UM-R68",
+		speed			= 30,
+		price			= 5610,
+		heatlimit 		= 11,
+		armor			= 6,
+		jumpjets		= 2,
+		maxammo 		= {mrm = 2},
     },
 }
 
@@ -109,35 +137,42 @@ local UMR69 = Urbanmech:New{
     },
 }
 
-local UMR68 = Urbanmech:New{
-	description         = "Light Skirmisher",
+local UMR70 = Urbanmech:New{
+	description         = "Light Brawler",
 	weapons = {	
 		[1] = {
-			name	= "MRM30",
+			name	= "RAC5",
 		},
 		[2] = {
-			name	= "SBL",
+			name	= "ERMBL",
 		},
 		[3] = {
-			name	= "SPL",
+			name	= "ERSBL",
 		},
 	},
 		
 	customparams = {
-		variant         = "UM-R68",
+		variant         = "UM-R70",
 		speed			= 30,
-		price			= 5610,
+		price			= 7240,
 		heatlimit 		= 11,
 		armor			= 6,
 		jumpjets		= 2,
-		maxammo 		= {mrm = 2},
+		maxammo 		= {ac5 = 2},
+		mods 			= {"ferrofibrousarmour"},
     },
 }
 
 return lowerkeys({
-	--["CC_Urbanmech_UMR63"] = UMR63:New(),
+	["CC_Urbanmech_UMR60"] = UMR60:New(),
+	["DC_Urbanmech_UMR60"] = UMR60:New(),
+	["FS_Urbanmech_UMR60"] = UMR60:New(),
+	["FW_Urbanmech_UMR60"] = UMR60:New(),
+	["LA_Urbanmech_UMR60"] = UMR60:New(),
+	
 	["CC_Urbanmech_UMR60L"] = UMR60L:New(),
-	--["FS_Urbanmech_UMR70"] = UMR70:New(),
-	--["FW_Urbanmech_UMR69"] = UMR69:New(),
-	--["DC_Urbanmech_UMR68"] = UMR68:New(),
+	["CC_Urbanmech_UMR63"] = UMR63:New(),
+	["FS_Urbanmech_UMR70"] = UMR70:New(),
+	["FW_Urbanmech_UMR69"] = UMR69:New(),
+	["DC_Urbanmech_UMR68"] = UMR68:New(),
 })
