@@ -1,6 +1,11 @@
 local Osiris = Light:New{
 	name				= "Osiris",
-
+	
+	leaveTracks			= true,	
+	trackType			= "Osiris",
+	trackOffset			= 6,
+	trackWidth			= 28,
+	trackStretch 		= 2.75,
 	customparams = {
 		cockpitheight	= 3.6,
 		tonnage			= 30,
