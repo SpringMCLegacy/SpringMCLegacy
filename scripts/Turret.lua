@@ -157,9 +157,9 @@ function fx()
 	if stage == 3 then -- for clarity only
 		GG.RemoveLupsSfx(unitID, "turret_exhaust")
 		if unitDef.customParams.hasbap then
-			GG.PlaySoundForTeam(Spring.GetUnitTeam(unitID), "BB_bap_deployed", 1)
+			GG.PlaySoundForTeam(Spring.GetUnitTeam(unitID), "bb_bap_deployed", 1)
 		else
-			GG.PlaySoundForTeam(Spring.GetUnitTeam(unitID), "BB_turret_deployed", 1)
+			GG.PlaySoundForTeam(Spring.GetUnitTeam(unitID), "bb_turret_deployed", 1)
 		end
 		Sleep(1000)
 		PlaySound("turret_deploy")
@@ -477,5 +477,6 @@ function script.Killed(recentDamage, maxHealth)
 	--	Explode(base, math.bit_or({SFX.FALL, SFX.SMOKE, SFX.FIRE, SFX.EXPLODE_ON_HIT, SFX.BITMAP1}))
 	--	return 3
 	--end
+	GG.PlaySoundForTeam(Spring.GetUnitTeam(unitID), "bb_turret_destroyed", 1)
 	return 1
 end
