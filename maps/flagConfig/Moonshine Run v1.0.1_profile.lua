@@ -52,7 +52,7 @@ local resources = {
 }
 
 local temps = {
-	ambient = 0,
+	ambient = -5,
 	water = -20,
 	hovers = true,
 }

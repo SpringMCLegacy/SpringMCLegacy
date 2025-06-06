@@ -33,7 +33,7 @@ local resources = {
 
 local temps = {
 	ambient = 15,
-	water = 7,
+	water = 5,
 	hovers = true,
 }
 

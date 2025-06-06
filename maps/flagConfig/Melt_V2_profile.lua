@@ -27,7 +27,7 @@ local resources = {
 }
 
 local temps = {
-	ambient = -30,
+	ambient = -20,
 	water = -30, -- no water on Melt
 }
 

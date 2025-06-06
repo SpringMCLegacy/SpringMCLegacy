@@ -1,4 +1,4 @@
-local resources = {
+llocal resources = {
 	{
 		x = 6240, 
 		z = 6023,
@@ -92,8 +92,8 @@ local resources = {
 }
 
 local temps = {
-	ambient = 35,
-	water = 20,
+	ambient = 15,
+	water = 5,
 }
 
 local starts = {

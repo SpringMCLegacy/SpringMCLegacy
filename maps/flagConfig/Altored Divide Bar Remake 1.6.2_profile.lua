@@ -33,7 +33,7 @@ local resources = {
 
 local temps = {
 	ambient = 15,
-	water = 8,
+	water = 5,
 }
 
 return resources, temps

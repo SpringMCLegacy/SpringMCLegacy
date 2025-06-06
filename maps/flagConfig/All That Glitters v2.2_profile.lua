@@ -53,7 +53,7 @@ local resources = {
 
 local temps = {
 	ambient = 10,
-	water = 5,
+	water = 1,
 }
 
 local starts = {

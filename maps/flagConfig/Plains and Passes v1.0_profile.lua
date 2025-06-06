@@ -42,9 +42,8 @@ local resources = {
 }
 
 local temps = {
-	ambient = 18,
-	water = 12,
-	hovers = true,
+	ambient = 16,
+	water = 8,
 }
 
 local starts = {
