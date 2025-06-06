@@ -1,6 +1,12 @@
 local Adder = Light:New{
 	name				= "Adder",
-
+	
+	leaveTracks			= true,	
+	trackType			= "Adder",
+	trackOffset			= 6,
+	trackWidth			= 32,
+	trackStretch 		= 2,
+	
     customparams = {
 		tonnage			= 35,
 		cockpitheight	= 4.6,
@@ -84,7 +90,7 @@ local B = Adder:New{
 		price			= 14220,
 		heatlimit 		= 13,--10 double
 		armor			= 6,
-		barrelrecoildist = {[1] = 5},
+		barrelrecoildist = {[1] = 3},
 		maxammo 		= {ac5 = 1},
     },
 }
