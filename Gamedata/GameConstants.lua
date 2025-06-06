@@ -15,6 +15,7 @@ return {
 		AC20		= 10,--5/ton
 		Thumper		= 20,--15/ton ???
 		Sniper		= 10,--10/ton ???
+		LongTom		= 5,--5/ton ???
 
 		Gauss		= 13,--8/ton
 		LtGauss		= 40,--16/ton
