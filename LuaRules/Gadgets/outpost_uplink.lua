@@ -17,7 +17,10 @@ if gadgetHandler:IsSyncedCode() then
 --SyncedRead
 local GetGameFrame			= Spring.GetGameFrame
 local GetUnitPosition		= Spring.GetUnitPosition
+local GetUnitTeam			= Spring.GetUnitTeam
 local GetTeamResources		= Spring.GetTeamResources
+local GetTeamList			= Spring.GetTeamList
+local AreTeamsAllied		= Spring.AreTeamsAllied
 --SyncedCtrl
 local CreateUnit			= Spring.CreateUnit
 local DestroyUnit			= Spring.DestroyUnit
@@ -197,6 +200,12 @@ local function ArtyStrike(unitID, teamID, x, y, z, cost)
 	GG.PlaySoundForTeam(teamID, "bb_orbitalstrike_inbound", 1)
 	DelayCall(GG.PlaySoundForTeam, {teamID, "bb_orbitalstrike_available_in_60", 1}, weapInfo.delay + lastDelay + 30 * 8) -- fudge for time to fall from orbit after spawned
 	DelayCall(GG.PlaySoundForTeam, {teamID, "bb_orbitalstrike_available", 1}, weapInfo.cooldown)
+	-- let all enemies know
+	for _, enemyTeamID in pairs(GetTeamList()) do
+		if not AreTeamsAllied(teamID, enemyTeamID) then
+			GG.PlaySoundForTeam(enemyTeamID, "bb_Enemy_Orbital_Inbound", 1)
+		end
+	end
 	return true
 end
 
@@ -234,6 +243,8 @@ local function AeroStrike(unitID, teamID, targetID, cost)
 	end	
 	UseTeamResource(teamID, "metal", cost)
 	SpawnVic(teamID, targetID)
+	-- only let target team know
+	GG.PlaySoundForTeam(GetUnitTeam(targetID), "bb_Enemy_Aero_Inbound", 1)
 	return true
 end
 
