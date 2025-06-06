@@ -454,7 +454,7 @@ function gadget:GamePreload()
 			local waterSign = MapTemps.ambient - MapTemps.water < 0 and -1 or 1
 			local mapWaterTempMult = waterSign * 0.9 ^ (waterSign * MapTemps.water / 10)
 			info.heatLimit = (tonumber(cp.heatlimit) or 50)
-			info.coolRate = info.heatLimit / 25 * mapAmbientTempMult
+			info.coolRate = info.heatLimit / 25 * mapAmbientTempMult * (modOptions.coolrate or 1)
 			info.waterCoolRate = mapWaterTempMult
 		end
 		-- Mechs
