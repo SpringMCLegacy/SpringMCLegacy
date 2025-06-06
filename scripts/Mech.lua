@@ -866,7 +866,8 @@ function script.Killed(recentDamage, maxHealth)
 		local numSalvage = GG.PinataLevel(attackerID) + 1 -- always produce at least 1
 		GenSalvage(numSalvage)
 	end
-	GG.PlaySoundForTeam(Spring.GetUnitTeam(unitID), "BB_BattleMech_destroyed", 1)
+	local soundNum = math.random(2)
+	GG.PlaySoundForTeam(Spring.GetUnitTeam(unitID), "BB_BattleMech_destroyed_" .. soundNum, 1)
 	--local severity = recentDamage / maxHealth * 100
 	--if severity <= 25 then
 	--	Explode(body, math.bit_or({SFX.BITMAPONLY, SFX.BITMAP1}))
