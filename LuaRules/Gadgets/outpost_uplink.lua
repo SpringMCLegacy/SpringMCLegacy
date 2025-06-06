@@ -185,16 +185,18 @@ local function ArtyStrike(unitID, teamID, x, y, z, cost)
 	artyCanFire[teamID] = currFrame + weapInfo.cooldown
 	SetTeamRulesParam(teamID, "UPLINK_ARTILLERY", currFrame + weapInfo.cooldown) -- frame this team can fire arty again
 	local dx, dz
+	local lastDelay
 	for i = 1, weapInfo.salvo do
 		local angle = math.random(360)
 		local length = math.random(weapInfo.spread)
 		dx = math.sin(angle) * length
 		dz = math.cos(angle) * length
-		DelayCall(ArtyShot, {1, teamID, x + dx, y + ARTY_HEIGHT, z + dz}, weapInfo.delay + math.random(150))
+		lastDelay = math.random(150)
+		DelayCall(ArtyShot, {1, teamID, x + dx, y + ARTY_HEIGHT, z + dz}, weapInfo.delay + lastDelay)
 	end
-	GG.PlaySoundForTeam(teamID, "BB_OrbitalStrike_Inbound", 1)
-	--DelayCall(GG.PlaySoundForTeam, {teamID, "BB_OrbitalStrike_Available_In_60", 1}, weapInfo.cooldown - 62 * 30) -- fudge
-	DelayCall(GG.PlaySoundForTeam, {teamID, "BB_OrbitalStrike_Available", 1}, weapInfo.cooldown)
+	GG.PlaySoundForTeam(teamID, "bb_orbitalstrike_inbound", 1)
+	DelayCall(GG.PlaySoundForTeam, {teamID, "bb_orbitalstrike_available_in_60", 1}, weapInfo.delay + lastDelay + 30 * 8) -- fudge for time to fall from orbit after spawned
+	DelayCall(GG.PlaySoundForTeam, {teamID, "bb_orbitalstrike_available", 1}, weapInfo.cooldown)
 	return true
 end
 

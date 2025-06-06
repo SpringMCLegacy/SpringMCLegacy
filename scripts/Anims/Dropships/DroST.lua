@@ -269,7 +269,7 @@ function Drop()
 	Turn(body, x_axis, math.rad(-50))
 	-- Begin the drop
 	PlaySound("dropship_entry")
-	GG.PlaySoundForTeam(teamID, "BB_Dropship_Inbound", 1)
+	--GG.PlaySoundForTeam(teamID, "BB_Dropship_Inbound", 1)
 	Turn(body, x_axis, math.rad(-10), math.rad(5))
 	Spring.MoveCtrl.SetVelocity(unitID, 0, -100, 0)
 	Spring.MoveCtrl.SetRelativeVelocity(unitID, 0, 0, 10)
