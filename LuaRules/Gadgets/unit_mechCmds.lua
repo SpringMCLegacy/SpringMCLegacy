@@ -307,7 +307,7 @@ function gadget:AllowCommand(unitID, unitDefID, teamID, cmdID, cmdParams, cmdOpt
 			return false
 		elseif menuCmdIDs[cmdID] then
 			ShowMechMenu(unitID, unitDefID, menuCmdIDs[cmdID])
-			return true
+			return false
 		end
 	end
 	-- everything else
