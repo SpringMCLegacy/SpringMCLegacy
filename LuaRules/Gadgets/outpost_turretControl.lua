@@ -125,22 +125,10 @@ function gadget:UnitDestroyed(unitID, unitDefID, teamID, attackerID, attackerDef
 			GG.ToggleLink(towerID, teamID, true)
 			local env = Spring.UnitScript.GetScriptEnv(towerID)
 			Spring.UnitScript.CallAsUnit(towerID, env.TeamChange, GAIA_TEAM_ID) -- toggle firing
+			DelayCall(TransferUnit, {towerID, GAIA_TEAM_ID}, 1)
+			DelayCall(SetUnitNeutral,{towerID, true}, 1)
 		end
 		ownedTowers[unitID] = nil
-	end
-end
-
-
-function gadget:UnitGiven(unitID, unitDefID, newTeam, oldTeam)
-	if unitDefID == TURRETCONTROL_ID then
-		for towerID, beaconID in pairs(towerOwners) do
-			if beaconID == unitID then
-				DelayCall(TransferUnit, {towerID, newTeam}, 1)
-				local env = Spring.UnitScript.GetScriptEnv(towerID)
-				Spring.UnitScript.CallAsUnit(towerID, env.TeamChange, newTeam)
-				DelayCall(SetUnitNeutral,{towerID, newTeam == GAIA_TEAM_ID}, 2)
-			end
-		end
 	end
 end
 
