@@ -307,7 +307,7 @@ function gadget:AllowCommand(unitID, unitDefID, teamID, cmdID, cmdParams, cmdOpt
 			return false
 		elseif menuCmdIDs[cmdID] then
 			ShowMechMenu(unitID, unitDefID, menuCmdIDs[cmdID])
-			return false
+			return false -- don't clear the command queue!
 		end
 	end
 	-- everything else

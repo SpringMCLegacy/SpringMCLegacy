@@ -155,10 +155,10 @@ end
 local lastDamaged = {} -- lastDamaged[unitID] = lastDamagedFrame
 local MIN_LAST_DAMAGED = 20 * 30 -- 20s
 function gadget:UnitDamaged(unitID, unitDefID, teamID, damage)
-	if outpostDefs[unitDefID] then -- unit is an outpost 
+	if outpostDefs[unitDefID] or GG.dropShipCache[unitDefID] then -- unit is an outpost or dropship
 		local lastDamagedFrame = lastDamaged[unitID] or 0
 		local currFrame = GetGameFrame()
-		local name = UnitDefs[unitDefID].name
+		local name = GG.dropShipCache[unitDefID] and "dropship" or UnitDefs[unitDefID].name
 		if lastDamagedFrame < currFrame - MIN_LAST_DAMAGED then
 			lastDamaged[unitID] = currFrame
 			GG.PlaySoundForTeam(teamID, "bb_" .. name .. "_underattack", 1)

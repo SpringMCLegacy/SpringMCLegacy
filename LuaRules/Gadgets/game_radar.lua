@@ -25,6 +25,7 @@ local GetUnitLosState	= Spring.GetUnitLosState
 local GetUnitRulesParam	= Spring.GetUnitRulesParam
 local GetUnitSeparation	= Spring.GetUnitSeparation
 local GetUnitTeam		= Spring.GetUnitTeam
+local GetUnitHealth		= Spring.GetUnitHealth
 -- Synced Ctrl
 local SetUnitLosMask 	= Spring.SetUnitLosMask
 local SetUnitLosState 	= Spring.SetUnitLosState
@@ -286,6 +287,9 @@ local function InvincibleUnit(unitDefID)
 end
 GG.InvincibleUnit = InvincibleUnit
 
+local firstTime75 = {}
+local firstTime50 = {}
+
 function gadget:UnitPreDamaged(unitID, unitDefID, unitTeam, damage, paralyzer, weaponID, projectileID, attackerID, attackerDefID, attackerTeam)
 	-- Don't allow any damage to beacons or dropzones
 	if InvincibleUnit(unitDefID) then return 0 end
@@ -374,6 +378,18 @@ function gadget:UnitPreDamaged(unitID, unitDefID, unitTeam, damage, paralyzer, w
 		ApplyPPC(unitID)
 	end
 
+	if GG.dropShipCache[unitDefID] then
+		local health, maxHealth = GetUnitHealth(unitID)
+		if not firstTime75[unitID] and (health-damage) / maxHealth <= 0.75 then
+			--Spring.Echo("YO YO DROPSHIP IS DAMAGED 25%")
+			GG.PlaySoundForTeam(unitTeam, "bb_dropship_damaged", 1)
+			firstTime75[unitID] = true
+		elseif not firstTime50[unitID] and (health-damage) / maxHealth <= 0.50 and (health-damage) / maxHealth >= 0.475 then
+			--Spring.Echo("YO YO DROPSHIP IS DAMAGED 50%")
+			GG.PlaySoundForTeam(unitTeam, "bb_dropship_damaged", 1) -- for now the same sound, but maybe a more severe warning later
+			firstTime50[unitID] = true
+		end
+	end
 	return damage, 1
 end
 
@@ -460,6 +476,8 @@ function gadget:UnitDestroyed(unitID, unitDefID, teamID)
 	GG.stealthActive[unitID] = nil
 	unitSectorRadii[unitID] = nil
 	hasStealthMod[unitID] = nil
+	firstTime75[unitID] = nil
+	firstTime50[unitID] = nil
 end
 
 function gadget:UnitGiven(unitID, unitDefID, newTeam, oldTeam)
