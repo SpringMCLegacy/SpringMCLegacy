@@ -721,19 +721,28 @@ function script.QueryWeapon(weaponID)
 end
 
 if unitDef.isBuilder then -- BRVS
-	Spring.SetUnitNanoPieces(unitID, {piece("cranewrist3")})
+	Spring.SetUnitNanoPieces(unitID, {piece("crane_wrist2")})
 
 	local CRANE_Y = math.rad(30)
 	
 	function script.StartBuilding(heading, pitch)
 		--Spring.Echo("StartBuilding!")
 		-- TODO: unfold anim and waits
-		Turn(piece("craneturret"), y_axis, heading - math.rad(90), CRANE_Y)
-		Turn(piece("cranemid"), z_axis, math.rad(180), CRANE_Y)
-		Turn(piece("cranearm"), z_axis, math.rad(180), CRANE_Y)
-		WaitForTurn(piece("craneturret"), y_axis)
-		WaitForTurn(piece("cranemid"), z_axis)
-		WaitForTurn(piece("cranearm"), z_axis)
+		Turn(piece("crane_turret"), y_axis, heading, CRANE_Y * 3)
+		Turn(piece("crane_base"), x_axis, math.rad(80), CRANE_Y)
+		Turn(piece("crane_arm1"), x_axis, math.rad(-95), CRANE_Y * 3)
+		WaitForTurn(piece("crane_turret"), y_axis)
+		WaitForTurn(piece("crane_arm1"), x_axis)
+		--WaitForTurn(piece("crane_sleeve"), x_axis)
+		Turn(piece("crane_sleeve"), x_axis, math.rad(130), CRANE_Y * 3)
+		WaitForTurn(piece("crane_sleeve"), x_axis)
+		Turn(piece("crane_sleeve"), x_axis, math.rad(240), CRANE_Y * 6)
+		WaitForTurn(piece("crane_sleeve"), x_axis)
+		Move(piece("crane_arm2"), z_axis, -10, CRANE_Y * 30)
+		Turn(piece("crane_wrist2"), z_axis, math.rad(90), CRANE_Y * 3)
+		Turn(piece("crane_claw1"), x_axis, math.rad(45), CRANE_Y)
+		Turn(piece("crane_claw2"), x_axis, math.rad(-45), CRANE_Y)
+		WaitForTurn(piece("crane_wrist2"), z_axis)
 		SetUnitValue(COB.INBUILDSTANCE, 1)
 	end
 	
