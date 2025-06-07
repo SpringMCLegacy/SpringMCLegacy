@@ -21,6 +21,7 @@ local Salvager = LightTank:New{
 		heatlimit 		= 10,
 		armor			= 6,
 		squadsize 		= 1,
+		wheels			= true,
 	},
 }
 
