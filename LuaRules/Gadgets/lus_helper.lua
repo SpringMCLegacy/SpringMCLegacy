@@ -27,6 +27,8 @@ local GetUnitPieceInfo 		= Spring.GetUnitPieceInfo
 local GetUnitPieceMap		= Spring.GetUnitPieceMap
 local GetUnitPiecePosDir	= Spring.GetUnitPiecePosDir
 local GetUnitPosition		= Spring.GetUnitPosition
+local GetTeamList			= Spring.GetTeamList
+local AreTeamsAllied		= Spring.AreTeamsAllied
 -- Synced Ctrl
 local PlaySoundFile			= Spring.PlaySoundFile
 local SpawnCEG				= Spring.SpawnCEG
@@ -132,11 +134,19 @@ end
 GG.PlaySoundAtUnit = PlaySoundAtUnit
 
 local unsyncedBuffer = {}
-local function PlaySoundForTeam(teamID, sound, volume)
+local function PlaySoundForTeam(teamID, sound, volume, enemy)
 	sound = sound:lower()
 	local exists = GG.Sounds.SoundItems[sound]
 	if exists then -- To check for missing sounds, remove this
-		table.insert(unsyncedBuffer, {teamID, sound, volume})
+		if not enemy then
+			table.insert(unsyncedBuffer, {teamID, sound, volume})
+		else -- play for enemy teams only
+			for _, enemyTeamID in pairs(GetTeamList()) do
+				if not AreTeamsAllied(teamID, enemyTeamID) then
+					table.insert(unsyncedBuffer, {enemyTeamID, sound, volume})
+				end
+			end
+		end
 	end
 end
 GG.PlaySoundForTeam = PlaySoundForTeam

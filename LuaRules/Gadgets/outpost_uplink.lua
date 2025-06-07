@@ -201,11 +201,7 @@ local function ArtyStrike(unitID, teamID, x, y, z, cost)
 	DelayCall(GG.PlaySoundForTeam, {teamID, "bb_orbitalstrike_available_in_60", 1}, weapInfo.delay + lastDelay + 30 * 8) -- fudge for time to fall from orbit after spawned
 	DelayCall(GG.PlaySoundForTeam, {teamID, "bb_orbitalstrike_available", 1}, weapInfo.cooldown)
 	-- let all enemies know
-	for _, enemyTeamID in pairs(GetTeamList()) do
-		if not AreTeamsAllied(teamID, enemyTeamID) then
-			GG.PlaySoundForTeam(enemyTeamID, "bb_Enemy_Orbital_Inbound", 1)
-		end
-	end
+	GG.PlaySoundForTeam(teamID, "bb_Enemy_Orbital_Inbound", 1, true)
 	return true
 end
 
