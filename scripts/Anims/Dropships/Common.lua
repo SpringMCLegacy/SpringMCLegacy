@@ -140,6 +140,7 @@ function TouchDown()
 end
 
 function TakeOff()
+	GG.PlaySoundForTeam(teamID, "bb_dropship_departing", 1)
 	stage = 5 --3
 	StartThread(fx)
 	Spring.MoveCtrl.Enable(unitID)

@@ -185,6 +185,7 @@ end
 function TakeOff(skip)
 	StartThread(LandingGearUp)
 	PlaySound("dropship_liftoff")
+	GG.PlaySoundForTeam(teamID, "bb_dropship_departing", 1)
 	if not skip then
 		stage = 3
 		local vertSpeed = 12 --4
