@@ -275,6 +275,12 @@ function OrderFinished(unitID, teamID)
 	orderSizes[unitID] = 0
 end
 
+local function DropShipAvailable(teamID)
+	if orderStatus[teamID] == 0 then -- only play this sound if no new order is queued
+		GG.PlaySoundForTeam(teamID, "bb_reinforcements_available", 1)
+	end
+end
+
 function DropZoneCoolDown(teamID) -- called by Dropship once it has left, to enable "Submit Order"
 	local dead = select(3, Spring.GetTeamInfo(teamID))
 	if dead then return end
@@ -293,6 +299,7 @@ function DropZoneCoolDown(teamID) -- called by Dropship once it has left, to ena
 		local enableFrame = GetGameFrame() + dropShipDef.customParams.cooldown
 		dropZoneCoolDowns[teamID] = enableFrame
 		Spring.SetTeamRulesParam(teamID, "DROPSHIP_COOLDOWN", enableFrame) -- frame this team can call dropship again
+		GG.Delay.DelayCall(DropShipAvailable, {teamID}, tonumber(dropShipDef.customParams.cooldown))
 	else
 		Spring.Echo("FLOZi logic fail, a non-dead team seems to be missing teamDropZoneLevels?")
 	end
@@ -446,6 +453,9 @@ function gadget:AllowCommand(unitID, unitDefID, teamID, cmdID, cmdParams, cmdOpt
 			end
 			orderStatus[teamID] = Spring.GetGameFrame() --1
 			UpdateButtons(teamID)
+			if dropZoneStatus[teamID] ~= 0 then -- check here so it only plays once rather than every fallback
+				GG.PlaySoundForTeam(teamID, "bb_reinforcements_queued", 1)
+			end
 			GG.Delay.DelayCall(SendCommandFallback, {unitID, unitDefID, teamID, cost}, 16)
 			return true
 		end
