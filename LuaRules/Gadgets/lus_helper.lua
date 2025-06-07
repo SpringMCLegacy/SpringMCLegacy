@@ -522,6 +522,8 @@ function gadget:Initialize()
 	Script.SetWatchWeapon(MELTDOWN_WDID, true)
 end
 
+local firstBeaconDeployed = false
+
 function gadget:MoveCtrlNotify(unitID, unitDefID, unitTeam, data)
 	-- check for tower drops too
 	local unitDef = UnitDefs[unitDefID]
@@ -530,6 +532,10 @@ function gadget:MoveCtrlNotify(unitID, unitDefID, unitTeam, data)
 	if env.TouchDown then
 		Spring.UnitScript.CallAsUnit(unitID, env.TouchDown)
 		Spring.MoveCtrl.Disable(unitID)
+	end
+	if not firstBeaconDeployed and unitDef.name == "beacon" then
+		GG.DeploySpawnBeacons()
+		firstBeaconDeployed = true
 	end
 end
 

@@ -367,6 +367,8 @@ local function SetDropZone(beaconID, teamID)
 		GG.PlaySoundForTeam(teamID, "bb_dropzone_reassigned", 1)
 	else -- don't play sound on the first one TODO: Maybe this goes when new startup script is sorted, currently clips 'all systems nominal'
 		firstDZCache[teamID] = true
+		Spring.SendCommands("viewspring")
+		Spring.PlaySoundFile("bb_startup_command_authority", 1, "ui")
 	end
 end
 
@@ -519,6 +521,10 @@ function gadget:UnitCreated(unitID, unitDefID, teamID)
 		dropZones[unitID] = teamID
 		teamDropZones[teamID] = unitID
 		SetTeamRulesParam(teamID, "STATUS", 0)
+		if not teamDropZoneLevels[teamID] then
+			local side = GG.teamSide and GG.teamSide[teamID] or select(5, Spring.GetTeamInfo(teamID))
+			teamDropZoneLevels[teamID] = {def = UnitDefNames[side .. "_dropship_" .. dropZoneLevels[1]].id, tier = 1}
+		end
 		if teamDropZoneLevels[teamID].tier == 1 then
 			LockHeavy(unitID, true)
 		end
@@ -600,16 +606,6 @@ function gadget:GameFrame(n)
 					SetTeamRulesParam(teamID, "STATUS", 0)
 				end
 			end
-		end
-	end
-end
-
-function gadget:GameStart()
-	-- math.randomseed is only seeded at game start, so sides are determined then
-	for _, teamID in pairs(Spring.GetTeamList()) do
-		local side = GG.teamSide and GG.teamSide[teamID] or select(5, Spring.GetTeamInfo(teamID))
-		if side ~= "" then -- shouldn't be the case but maybe during loading
-			teamDropZoneLevels[teamID] = {def = UnitDefNames[side .. "_dropship_" .. dropZoneLevels[1]].id, tier = 1}
 		end
 	end
 end
