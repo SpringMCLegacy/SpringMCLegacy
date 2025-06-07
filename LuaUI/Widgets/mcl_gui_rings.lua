@@ -68,7 +68,6 @@ function widget:Initialize()
 		for name, range in pairs(maxRanges[unitDefID]) do
 			if not maxRangesToDraw[unitDefID][range] then
 				maxRangesToDraw[unitDefID][range] = "Max Range: " .. (WeaponDefNames[name].customParams.textcolour or "") .. name
-				end
 			else
 				maxRangesToDraw[unitDefID][range] = maxRangesToDraw[unitDefID][range] .. ", " .. WeaponDefNames[name].customParams.textcolour.. name
 			end
