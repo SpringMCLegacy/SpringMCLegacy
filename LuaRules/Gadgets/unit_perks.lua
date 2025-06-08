@@ -88,7 +88,7 @@ local function UpdateRemaining(unitID, appType, newLevel, applierID)
 		if appType == appDefTypes[appDef.cmdDesc.id] then -- eww
 			if not unitID then -- no mech in mechbay
 				EditUnitCmdDesc(applierID, FindUnitCmdDesc(applierID, appCmdID), {disabled = false, name = appDef.cmdDesc.name})
-			elseif unitID then
+			elseif unitID and currentApps[unitID] then
 				if (not currentApps[unitID][appType][appDef.name] or currentApps[unitID][appType][appDef.name] < (appDef.levels or 1)) 
 				and validApps[Spring.GetUnitDefID(applierID)][appType][appCmdID] then
 					appRemaining = true

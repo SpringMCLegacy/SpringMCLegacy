@@ -19,6 +19,8 @@ local Mine = {
 	kamikaze			= true,
 	kamikazeDistance	= 25,
 	selfDestructAs		= "Mine",
+	radardistance		= 0,
+	sightdistance		= 0,
 }
 
 return lowerkeys({ ["Mine"] = Mine })

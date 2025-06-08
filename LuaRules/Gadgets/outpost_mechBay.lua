@@ -359,7 +359,7 @@ function gadget:FeatureCreated(featureID, allyTeamID)
 		salvageSources[featureID] = {
 			["x"] = x, 
 			["z"] = z,
-			["amount"] = amount * modOptions.salvageperpile,
+			["amount"] = amount * (modOptions.salvageperpile or 1),
 		}
 	end
 end
