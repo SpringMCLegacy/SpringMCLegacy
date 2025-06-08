@@ -790,9 +790,9 @@ function script.FireWeapon(weaponID)
 	end
 	if not missileWeaponIDs[weaponID] and not flareOnShots[weaponID] then
 		if not flares[weaponID] then 
-			Spring.Echo("BUGREPORT", unitDef.name, weaponID) 
+			Spring.Echo("BUGREPORT", unitDef.name, weaponID)
 		else
-			EmitSfx(flares[weaponID], SFX.CEG + weaponID) -- TODO: something can be nil here too, maybe a unit lacks a flare piece?
+			EmitSfx(flares[weaponID], SFX.CEG + weaponID)
 		end
 	end
 end
