@@ -21,6 +21,9 @@ local Mine = {
 	selfDestructAs		= "Mine",
 	radardistance		= 0,
 	sightdistance		= 0,
+	customParams		= {
+		ignoreatbeacon	= true,
+	},
 }
 
 return lowerkeys({ ["Mine"] = Mine })
