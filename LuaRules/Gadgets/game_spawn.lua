@@ -18,7 +18,7 @@ function gadget:GetInfo()
 		author    = "Tobi Vollebregt",
 		date      = "January, 2010",
 		license   = "GNU GPL, v2 or later",
-		layer     = 2, -- must be after flagManager, before unit_purchasing
+		layer     = 1, -- must be before flagManager, before unit_purchasing
 		enabled   = true  --  loaded by default?
 	}
 end
@@ -33,12 +33,6 @@ end
 
 --------------------------------------------------------------------------------
 --------------------------------------------------------------------------------
-
-local PROFILE_PATH = "maps/flagConfig/" .. Game.mapName .. "_profile.lua"
-local teamStarts
-if VFS.FileExists(PROFILE_PATH) then
-	_, _, teamStarts = VFS.Include(PROFILE_PATH)
-end
 
 local modOptions = Spring.GetModOptions()
 if not modOptions.startmetal then -- load via file
@@ -66,6 +60,12 @@ end
 GG.SideNames = SideNames
 GG.ValidSides = ValidSides
 
+local teamStarts
+local PROFILE_PATH = "maps/flagConfig/" .. Game.mapName .. "_profile.lua"
+if VFS.FileExists(PROFILE_PATH) then
+	_, _, teamStarts = VFS.Include(PROFILE_PATH)
+end
+teamStarts = teamStarts or {}
 local sideStartUnits = {}
 
 function gadget:GameID(id)
@@ -98,18 +98,19 @@ local function SpawnStartUnit(teamID)
 	local startUnit = sideStartUnits[teamID]
 	if (startUnit and startUnit ~= "") then
 		-- spawn the specified start unit
-		local startPos = teamStarts and teamStarts[teamID]
+		local startPos = teamStarts[teamID]
 		local x,y,z
-		if startPos then
+		--if startPos then
 			x = startPos.x
+			y = startPos.y
 			z = startPos.z
-			y = Spring.GetGroundHeight(x,z)
-		else
-			x,y,z = Spring.GetTeamStartPosition(teamID)
-		end
+			--y = Spring.GetGroundHeight(x,z)
+		--else
+			--x,y,z = Spring.GetTeamStartPosition(teamID)
+		--end
 		-- snap to 16x16 grid
-		x, z = 16*math.floor((x+8)/16), 16*math.floor((z+8)/16)
-		y = Spring.GetGroundHeight(x, z)
+		--x, z = 16*math.floor((x+8)/16), 16*math.floor((z+8)/16)
+		--y = Spring.GetGroundHeight(x, z)
 		-- facing toward map center
 		local facing=math.abs(Game.mapSizeX/2 - x) > math.abs(Game.mapSizeZ/2 - z)
 			and ((x>Game.mapSizeX/2) and "west" or "east")
@@ -151,6 +152,24 @@ function gadget:GamePreload()
 	Spring.PlaySoundFile("bb_startup_all_systems_nominal", 1, "ui")
 end
 
+function gadget:GameStart()
+	for i, teamID in pairs(Spring.GetTeamList()) do
+		if teamID == Spring.GetGaiaTeamID() then
+			-- do nothing
+		elseif not teamStarts[teamID] then
+			local x,y,z = Spring.GetTeamStartPosition(teamID)
+			teamStarts[teamID] = {
+				["x"] = x,
+				["y"] = y,
+				["z"] = z,
+			}
+		else
+			teamStarts[teamID].y = Spring.GetGroundHeight(teamStarts[teamID].x,teamStarts[teamID].z)
+		end	
+	end
+	GG.teamStarts = teamStarts
+end
+
 local function DeploySpawnBeacons()
 	Spring.PlaySoundFile("bb_startup_beacon_deployed", 1, "ui")
 	-- spawn start units
@@ -166,7 +185,3 @@ local function DeploySpawnBeacons()
 	end
 end
 GG.DeploySpawnBeacons = DeploySpawnBeacons
-
-function gadget:GameStart()
-	--GG.Delay.DelayCall(DeploySpawnBeacons, {}, 10 * 30)
-end

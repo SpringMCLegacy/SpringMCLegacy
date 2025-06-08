@@ -368,7 +368,7 @@ local function SetDropZone(beaconID, teamID)
 	else -- don't play sound on the first one TODO: Maybe this goes when new startup script is sorted, currently clips 'all systems nominal'
 		firstDZCache[teamID] = true
 		Spring.SendCommands("viewspring")
-		Spring.PlaySoundFile("bb_startup_command_authority", 1, "ui")
+		GG.PlaySoundForTeam(teamID, "bb_startup_command_authority", 1)
 	end
 end
 

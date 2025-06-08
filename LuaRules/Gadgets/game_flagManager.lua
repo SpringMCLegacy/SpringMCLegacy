@@ -5,7 +5,7 @@ function gadget:GetInfo()
 		author    = "FLOZi",
 		date      = "Adopted from S44 flagManager 10/02/2011",
 		license   = "GNU GPL v2",
-		layer     = 1, -- must be before game_spawn
+		layer     = 2, -- must be after game_spawn
 		enabled   = true  --  loaded by default?
 	}
 end
@@ -181,7 +181,12 @@ function PlaceFlag(spot, flagType, newFlag)
 		Spring.Echo("	z = " .. spot.z .. ",")
 		Spring.Echo("},")
 	end
-	
+	spot.y = Spring.GetGroundHeight(spot.x, spot.z)
+	for teamID, startPos in pairs(GG.teamStarts) do
+		if GG.Vector.DistanceBetween(spot.x, spot.y, spot.z, startPos.x, startPos.y, startPos.z) < 1.5 * CAP_RADIUS then
+			return
+		end
+	end
 	if not newFlag then
 		newFlag = CreateUnit(flagType, spot.x, Spring.GetGroundHeight(spot.x, spot.z), spot.z, 0, GAIA_TEAM_ID)
 	end
@@ -242,7 +247,6 @@ function gadget:GamePreload()
 		end
 	end
 end
-
 
 local beaconsDeployed = math.huge
 local function DeployBeacons() 

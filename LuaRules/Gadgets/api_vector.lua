@@ -24,6 +24,10 @@ local function Magnitude(x, y, z)
 	return sqrt(x * x + y * y + z * z)
 end
 
+local function DistanceBetween(x1, y1, z1, x2, y2, z2)
+	return Magnitude(x1 - x2, y1 - y2, z1 - z2)
+end
+
 local function Normalized(x, y, z)
 	local mag = Magnitude(x, y, z)
 	if mag == 0 then
@@ -195,6 +199,7 @@ local Vector = {
 	RotateY = RotateY,
 	ClampToMapSize = ClampToMapSize,
 	NearestMapEdge = NearestMapEdge,
+	DistanceBetween = DistanceBetween,
 	DistanceToMapEdge = DistanceToMapEdge,
 	HeadingToDegrees = HeadingToDegrees,
 	DegreesToHeading = DegreesToHeading,
