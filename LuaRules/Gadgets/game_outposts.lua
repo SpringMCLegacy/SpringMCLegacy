@@ -155,7 +155,7 @@ end
 local lastDamaged = {} -- lastDamaged[unitID] = lastDamagedFrame
 local MIN_LAST_DAMAGED = 20 * 30 -- 20s
 function gadget:UnitDamaged(unitID, unitDefID, teamID, damage)
-	if outpostDefs[unitDefID] or GG.dropShipCache[unitDefID] then -- unit is an outpost or dropship
+	if outpostDefs[unitDefID] or GG.dropShipCache[unitDefID] == "mech" then -- unit is an outpost or dropship
 		local lastDamagedFrame = lastDamaged[unitID] or 0
 		local currFrame = GetGameFrame()
 		local name = GG.dropShipCache[unitDefID] and "dropship" or UnitDefs[unitDefID].name
