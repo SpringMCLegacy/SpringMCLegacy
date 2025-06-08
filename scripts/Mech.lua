@@ -703,7 +703,7 @@ function script.BlockShot(weaponID, targetID, userTarget)
 				distance = GetUnitDistanceToPoint(unitID, tx, ty, tz, false)
 			end
 		end
-		if distance < minRange then 
+		if distance and distance < minRange then
 			--Spring.Echo("Can't fire weapon " .. weaponID .. " as target is within minimum range")
 			return true 
 		end
