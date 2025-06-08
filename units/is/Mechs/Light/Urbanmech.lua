@@ -26,7 +26,7 @@ local UMR60 = Urbanmech:New{
 	},
 		
 	customparams = {
-		variant         = "UM-R60L",
+		variant         = "UM-R60",
 		speed			= 30,
 		price			= 5040,
 		heatlimit 		= 11,
