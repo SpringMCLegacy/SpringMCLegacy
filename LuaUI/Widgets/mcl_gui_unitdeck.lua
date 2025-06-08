@@ -198,8 +198,9 @@ local function initializeSetView()
 							backgroundColor		= clear;
 							OnMouseUp = { 					
 								function()
+									local transport = Spring.GetUnitTransporter(WG.currentUnitId)
 									WG.currentUnitId = unitIdCache[lanceNumber][myIndex]
-									spSendCommands("selectunits clear +" .. WG.currentUnitId)
+									spSendCommands("selectunits clear +" .. (transport or WG.currentUnitId))
 								end
 							},
 							OnDblClick = {
