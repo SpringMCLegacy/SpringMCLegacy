@@ -353,12 +353,13 @@ function gadget:AllowCommand(unitID, unitDefID, teamID, cmdID, cmdParams, cmdOpt
 end
 
 function gadget:FeatureCreated(featureID, allyTeamID)
-	if salvageCache[Spring.GetFeatureDefID(featureID)] then
+	local amount = salvageCache[Spring.GetFeatureDefID(featureID)]
+	if amount then
 		local x,y,z = Spring.GetFeaturePosition(featureID)
 		salvageSources[featureID] = {
 			["x"] = x, 
 			["z"] = z,
-			["amount"] = modOptions.salvageperpile or 10, -- TODO: customparam
+			["amount"] = amount * modOptions.salvageperpile,
 		}
 	end
 end
@@ -411,8 +412,8 @@ function gadget:Initialize()
 		gadget:UnitCreated(unitID, unitDefID, teamID)
 	end
 	for featureDefID, featureDef in pairs(FeatureDefs) do
-		if featureDef.name:find("salvage") then -- TODO: customparam
-			salvageCache[featureDefID] = true
+		if featureDef.customParams.salvage then
+			salvageCache[featureDefID] = tonumber(featureDef.customParams.salvage)
 			table.insert(salvageArray, featureDefID)
 		end
 	end

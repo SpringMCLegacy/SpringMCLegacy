@@ -8,6 +8,9 @@ local featureDefs = {
     metal              = 2000,
     object             = "salvage.s3o",
     reclaimable        = true,
+	customParams = {
+		salvage = 10,
+	}
   },
 }
 return featureDefs

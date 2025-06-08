@@ -305,10 +305,10 @@ local options = {
 	},
 	{
 		key		= "salvageperpile",
-		name	= "Salvage Per Pile",
+		name	= "Salvage Per Pile (multiplier)",
 		desc	= "Dev tool for balancing costs",
 		type	= "number",
-		def		= 10,
+		def		= 1,
 		min		= 1,
 		max		= 100,
 		step	= 1,
