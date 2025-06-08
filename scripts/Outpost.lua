@@ -706,6 +706,9 @@ function script.TransportPickup (passengerID)
 		passengerDefID = GetUnitDefID(passengerID)
 		passengerInfo = GG.lusHelper[passengerDefID]
 		passengerEnv = Spring.UnitScript.GetScriptEnv(passengerID)
+		if passengerEnv then
+			Spring.UnitScript.CallAsUnit(passengerID, passengerEnv.script.StopMoving)
+		end
 		-- TODO: pickup animation
 		Spring.UnitScript.AttachUnit(base, passengerID)
 		bayReady = false
