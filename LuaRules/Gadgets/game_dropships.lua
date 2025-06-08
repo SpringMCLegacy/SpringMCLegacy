@@ -56,7 +56,9 @@ function SpawnDropship(beaconID, unitID, teamID, dropshipType, cargo, cost)
 	and Spring.GetUnitTeam(unitID) == teamID then
 		local tx,ty,tz = GetUnitPosition(unitID)
 		local dropshipID = CreateUnit(dropshipType, tx, ty, tz, "s", teamID)
-		GG.PlaySoundForTeam(teamID, "bb_Enemy_dropship_detected", 1, true) -- notify enemies
+		if dropshipType == "mech" then
+			GG.PlaySoundForTeam(teamID, "bb_Enemy_dropship_detected", 1, true) -- notify enemies
+		end
 		if type(cargo) == "table" then
 			for i, order in ipairs(cargo) do -- preserve order here
 				for orderDefID, count in pairs(order) do

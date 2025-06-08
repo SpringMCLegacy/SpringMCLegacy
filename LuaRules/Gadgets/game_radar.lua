@@ -378,7 +378,7 @@ function gadget:UnitPreDamaged(unitID, unitDefID, unitTeam, damage, paralyzer, w
 		ApplyPPC(unitID)
 	end
 
-	if GG.dropShipCache[unitDefID] then
+	if GG.dropShipCache[unitDefID] == "mech" then
 		local health, maxHealth = GetUnitHealth(unitID)
 		if not firstTime75[unitID] and (health-damage) / maxHealth <= 0.75 then
 			--Spring.Echo("YO YO DROPSHIP IS DAMAGED 25%")
