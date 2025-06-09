@@ -20,6 +20,8 @@ local SetUnitRulesParam		= Spring.SetUnitRulesParam
 --SyncedRead
 local AreTeamsAllied		= Spring.AreTeamsAllied
 local FindUnitCmdDesc		= Spring.FindUnitCmdDesc
+local GetUnitDefID			= Spring.GetUnitDefID
+local ValidUnitID			= Spring.ValidUnitID
 --SyncedCtrl
 local AddTeamResource 		= Spring.AddTeamResource
 local DestroyUnit			= Spring.DestroyUnit
@@ -308,6 +310,12 @@ function gadget:AllowCommand(unitID, unitDefID, teamID, cmdID, cmdParams, cmdOpt
 		elseif menuCmdIDs[cmdID] then
 			ShowMechMenu(unitID, unitDefID, menuCmdIDs[cmdID])
 			return false -- don't clear the command queue!
+		elseif cmdID == CMD.ATTACK then
+			local target = cmdParams[1]
+			if ValidUnitID(target) then -- don't allow attack commands vs beacons et al
+				return not GG.InvincibleUnit(GetUnitDefID(target))
+			end
+			return true
 		end
 	end
 	-- everything else
