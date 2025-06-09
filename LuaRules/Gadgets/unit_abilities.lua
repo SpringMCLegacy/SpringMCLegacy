@@ -45,7 +45,7 @@ GG.autoCoolantUnits = autoCoolantUnits
 
 local function EnableCoolantFlush(unitID, tOrF)
 	coolantUnits[unitID] = tOrF
-	EditUnitCmdDesc(unitID, FindUnitCmdDesc(unitID, CMD_FLUSH), {disabled = not tOrF})
+	--EditUnitCmdDesc(unitID, FindUnitCmdDesc(unitID, CMD_FLUSH), {disabled = not tOrF})
 end
 GG.EnableCoolantFlush = EnableCoolantFlush
 
@@ -147,7 +147,8 @@ function gadget:AllowCommand(unitID, unitDefID, teamID, cmdID, cmdParams, cmdOpt
 			if coolantUnits[unitID] then
 				env = Spring.UnitScript.GetScriptEnv(unitID)
 				Spring.UnitScript.CallAsUnit(unitID, env.FlushCoolant)
-			else return false end
+			end
+			return false -- don't clear other commands in the queue
 		end
 	end
 	return true

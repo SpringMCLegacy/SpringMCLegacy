@@ -208,11 +208,14 @@ function ChangeHeat(amount)
 	SetUnitRulesParam(unitID, "excess_heat", math.ceil(100 * excessHeat / (2 * heatLimit)))
 end
 
+local lastCoolant = 0
+local COOLANT_TIME = 10 * 30 -- 10 seconds
 function FlushCoolant()
-	if currAmmo.coolant > 0 then
+	--if currAmmo.coolant > 0 then
+	if Spring.GetGameFrame() >= lastCoolant + COOLANT_TIME then
 		GG.EmitSfxName(unitID, torso, "greengoo")
 		ChangeHeat(-10)
-		ChangeAmmo("coolant", -20)
+		--ChangeAmmo("coolant", -20)
 		return true
 	else
 		return false

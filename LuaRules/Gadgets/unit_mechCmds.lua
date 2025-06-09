@@ -133,14 +133,14 @@ local patrolCmdDesc = {
 }
 
 -- CMD_FLUSH
-local flushCmdDesc = {
+--[[local flushCmdDesc = {
 	id = GG.CustomCommands.GetCmdID("CMD_FLUSH"),
 	action = 'flush',
 	name = GG.Pad(10,"Flush","Coolant"),
 	tooltip = 'Rapidly cool down the unit',
 	queueing = false,
 	disabled = true,
-}
+}]]
 -- CMD_JUMP
 local jumpCmdDesc = {
   id      = GG.CustomCommands.GetCmdID("CMD_JUMP"),
@@ -227,7 +227,7 @@ local CMD_DESCS_TO_ADD = {
 	moveCmdDesc, turnCmdDesc, stopCmdDesc,
 	attackCmdDesc, unitSetTargetCircleCmdDesc, unitCancelTargetCmdDesc,
 	fightCmdDesc, guardCmdDesc, patrolCmdDesc,
-	flushCmdDesc, -- TODO: this is to be removed eventually
+	--flushCmdDesc, -- this is to be removed eventually
 	jumpCmdDesc,
 	mascCmdDesc,
 }

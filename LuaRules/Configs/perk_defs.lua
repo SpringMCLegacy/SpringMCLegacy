@@ -781,18 +781,19 @@ return {
 				id = GetCmdID('MOD_COOLANT_PODS'),
 				action = 'modcoolantpods',
 				name = GG.Pad("Coolant", "Pods"),
-				tooltip = 'Gives Mechs the "Coolant Flush" ability with 5 charges.',
+				tooltip = 'Gives Mechs the "Coolant Flush" ability.',-- with 5 charges.',
 				texture = 'bitmaps/ui/perkbgability.png',	
 			},
 			valid = isMechBay,
 			applyTo = isNotOmni,
 			applyPerk = function (unitID, level, invert)
 				GG.EnableCoolantFlush(unitID, not invert)
+				GG.EnableAutoCoolant(unitID, not invert)
 			end,
 			costFunction = deductSalvage,
 			price = 5,
 		},
-		{
+		--[[{
 			name = "emergencycoolantsystem",
 			menu = "tactical",
 			cmdDesc = {
@@ -810,7 +811,7 @@ return {
 			costFunction = deductSalvage,
 			requires = "coolantpods",
 			price = 10,
-		},
+		},--]]
 		{
 			name = "improvedsensors",
 			menu = "tactical",
