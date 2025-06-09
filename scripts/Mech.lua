@@ -194,7 +194,6 @@ local function SpinBarrels(weaponID, start)
 end
 
 function ChangeHeat(amount)
-	Spring.Echo("ChangeHeat", unitID, amount)
 	currHeatLevel = currHeatLevel + amount
 	if currHeatLevel > heatLimit then
 		excessHeat = excessHeat + currHeatLevel - heatLimit
