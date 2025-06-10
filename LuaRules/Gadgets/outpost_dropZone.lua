@@ -313,6 +313,7 @@ local function SendCommandFallback(unitID, unitDefID, teamID, cost, weight)
 		local unitID = teamDropZones[teamID]
 		if not unitID then -- Dropzone has died and not been replaced whilst order is due, refund
 			Spring.SendMessageToTeam(teamID, "Refunding order, there is no dropzone")
+			GG.PlaySoundForTeam(teamID, "bb_reinforcements_refund", 1)
 			AddTeamResource(teamID, "metal", cost)
 			AddTeamResource(teamID, "energy", weight)
 		else
@@ -359,6 +360,7 @@ local function SetDropZone(beaconID, teamID)
 	local side = GG.teamSide[teamID]
 	if not side then return end -- a weird bug to avoid here, maybe due to dead team?
 	local dropZoneID = CreateUnit(side .. "_dropzone", x,y,z, "s", teamID)
+	ShowBuildOptionsByType(dropZoneID, "fast")
 	dropZones[dropZoneID] = teamID
 	teamDropZones[teamID] = dropZoneID
 	dropZoneBeaconIDs[teamID] = beaconID
