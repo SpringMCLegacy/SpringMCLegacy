@@ -1,6 +1,12 @@
 local Direwolf = Assault:New{
 	name				= "Dire Wolf",
-
+	
+	leaveTracks			= true,	
+	trackType			= "Direwolf",
+	trackOffset			= 6,
+	trackWidth			= 46,
+	trackStretch 		= 2,
+	
 	customparams = {
 		tonnage			= 100,
 		cockpitheight	= 8.2,
