@@ -215,8 +215,17 @@ function fx()
 	end	
 end
 
-function TakeOff()
-	if stage > 3 then return end -- in case we are told to BugOut, ignore it if already exiting
+local function Refund()
+	Spring.AddTeamResource(teamID, "metal", UnitDefs[Spring.GetUnitDefID(cargo[1])].metalCost)
+	Spring.DestroyUnit(cargo[1], false, true)
+	GG.PlaySoundForTeam(teamID, "bb_outpost_refund", 1)
+end
+
+function TakeOff(bugOut)
+	if stage > 3 then  -- in case we are told to BugOut, ignore it if already exiting
+		Refund()
+		return 
+	end
 	if booms[2] then
 		for i = 2, 3 do
 			Move(booms[i], y_axis, 0, BOOM_SPEED * 2)
@@ -254,6 +263,9 @@ function TakeOff()
 	--StopSpin(body, z_axis, math.rad(45))
 	Sleep(2000)
 	-- We're out of the atmosphere, bye bye!
+	if bugOut then
+		Refund()
+	end
 	Spring.DestroyUnit(unitID, false, true)
 end
 
@@ -302,6 +314,7 @@ function Drop()
 		Sleep(30)
 	end
 	-- only proceed if the beacon is still ours and is secure
+	local bugOut = false
 	if beaconID and Spring.GetUnitTeam(beaconID) == teamID and Spring.GetUnitRulesParam(beaconID, "secure") == 1 then
 		-- We're over the target area, reduce height!
 		PlaySound("dropship_rumble")
@@ -325,10 +338,10 @@ function Drop()
 			UnloadCargo()
 		end
 	elseif cargo[1] then -- bugging out, refund
-		Spring.AddTeamResource(teamID, "metal", UnitDefs[Spring.GetUnitDefID(cargo[1])].metalCost)
+		bugOut = true
 	end
 	-- Take off!
-	TakeOff()
+	TakeOff(bugOut)
 end
 
 function UnloadCargo()

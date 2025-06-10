@@ -139,7 +139,7 @@ function TouchDown()
 	end
 end
 
-function TakeOff()
+function TakeOff(bugout)
 	GG.PlaySoundForTeam(teamID, "bb_dropship_departing", 1)
 	stage = 5 --3
 	StartThread(fx)
@@ -154,6 +154,13 @@ function TakeOff()
 	if env then env.ClearTheDeck(false) end
 	Sleep(10000)
 	-- We're out of the atmosphere, bye bye!
+	if bugout then
+		for i, cargoID in pairs(cargo) do
+			Spring.AddTeamResource(teamID, "metal", UnitDefs[Spring.GetUnitDefID(cargoID)].metalCost)
+			Spring.DestroyUnit(cargoID, false, true)
+		end
+		GG.PlaySoundForTeam(teamID, "bb_reinforcements_refund", 1)
+	end
 	Spring.DestroyUnit(unitID, false, true)
 end
 
@@ -221,6 +228,6 @@ function Drop()
 		env = Spring.UnitScript.GetScriptEnv(DZID)
 		if env then env.ClearTheDeck(true) end
 	else
-		TakeOff()
+		TakeOff(true)
 	end
 end

@@ -870,7 +870,9 @@ function script.Killed(recentDamage, maxHealth)
 		GenSalvage(numSalvage)
 	end
 	local soundNum = math.random(2)
-	GG.PlaySoundForTeam(Spring.GetUnitTeam(unitID), "BB_BattleMech_destroyed_" .. soundNum, 1)
+	if not Spring.GetUnitTransporter(unitID) then
+		GG.PlaySoundForTeam(Spring.GetUnitTeam(unitID), "BB_BattleMech_destroyed_" .. soundNum, 1)
+	end
 	--local severity = recentDamage / maxHealth * 100
 	--if severity <= 25 then
 	--	Explode(body, math.bit_or({SFX.BITMAPONLY, SFX.BITMAP1}))

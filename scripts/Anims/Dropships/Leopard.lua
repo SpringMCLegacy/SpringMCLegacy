@@ -182,11 +182,12 @@ for i = 1,4 do
 	links[i] = piece("link" .. i)
 end
 
-function TakeOff(skip)
+
+function TakeOff(bugout)
 	StartThread(LandingGearUp)
 	PlaySound("dropship_liftoff")
 	GG.PlaySoundForTeam(teamID, "bb_dropship_departing", 1)
-	if not skip then
+	if not bugout then
 		stage = 3
 		local vertSpeed = 12 --4
 		local wantedHeight = 400
@@ -220,6 +221,13 @@ function TakeOff(skip)
 	StopSpin(body, z_axis, math.rad(45))
 	Sleep(2000)
 	-- We're out of the atmosphere, bye bye!
+	if bugout then
+		for i, cargoID in pairs(cargo) do
+			Spring.AddTeamResource(teamID, "metal", UnitDefs[Spring.GetUnitDefID(cargoID)].metalCost)
+			Spring.DestroyUnit(cargoID, false, true)
+		end
+		GG.PlaySoundForTeam(teamID, "bb_reinforcements_refund", 1)
+	end
 	Spring.DestroyUnit(unitID, false, true)
 end
 
@@ -351,6 +359,5 @@ function Drop()
 		UnloadCargo()
 	else -- bugging out
 		TakeOff(true) -- skip checks and get right to booster
-		--Spring.AddTeamResource(teamID, "metal", UnitDefs[Spring.GetUnitDefID(cargo[1])].metalCost) -- refund?
 	end
 end
