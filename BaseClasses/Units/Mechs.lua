@@ -10,6 +10,7 @@ local Mech = Unit:New{
 	script				= "Mech.lua",
 	upright				= true,
 	usepiececollisionvolumes = true,
+	turnInPlaceAngleLimit = 90,
 	
 	sounds = {
 		select = {
