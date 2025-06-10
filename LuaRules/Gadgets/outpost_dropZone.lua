@@ -305,46 +305,52 @@ function DropZoneCoolDown(teamID) -- called by Dropship once it has left, to ena
 	end
 end
 
+local function Refund(teamID, cost, weight)
+	--Spring.Echo("Refund", teamID, cost, weight)
+	Spring.SendMessageToTeam(teamID, "Refunding order, there is no dropzone")
+	GG.PlaySoundForTeam(teamID, "bb_reinforcements_refund", 1)
+	AddTeamResource(teamID, "metal", cost)
+	AddTeamResource(teamID, "energy", weight)
+end
+
 -- Factories can't implement gadget:CommandFallback, so fake it ourselves
-local function SendCommandFallback(unitID, unitDefID, teamID, cost, weight)
-	if (not Spring.ValidUnitID(unitID)) or Spring.GetUnitIsDead(unitID) then return false end -- unit died
-	if orderStatus[teamID] == 0 then return end -- order was cancelled
+local function SendCommandFallback(cost, weight, unitID, unitDefID, teamID)
+	--Spring.Echo("SendCommandFallback", unitID, unitDefID, teamID, cost, weight, Spring.GetGameFrame())
+	if (not Spring.ValidUnitID(unitID)) or Spring.GetUnitIsDead(unitID) or not teamDropZones[teamID] or orderStatus[teamID] == 0 then 
+		-- dropZone died
+		Refund(teamID, cost, weight)
+		return false
+	end 
 	if dropZoneStatus[teamID] == 0 then -- Dropship is READY
 		local unitID = teamDropZones[teamID]
-		if not unitID then -- Dropzone has died and not been replaced whilst order is due, refund
-			Spring.SendMessageToTeam(teamID, "Refunding order, there is no dropzone")
-			GG.PlaySoundForTeam(teamID, "bb_reinforcements_refund", 1)
-			AddTeamResource(teamID, "metal", cost)
-			AddTeamResource(teamID, "energy", weight)
-		else
-			-- CALL DROPSHIP
-			local orderQueue = Spring.GetFullBuildQueue(unitID)
-			if not orderQueue then return end -- dropzone died TODO: Transfer to new DZ if there is one
-			if #orderQueue > 0 then -- proceed with order
-				-- TODO: Sound needs to change?
-				local beaconID = GG.dropZoneBeaconIDs[teamID]
-				GG.DropshipDelivery(beaconID, beaconID, teamID, teamDropZoneLevels[teamID].def, orderQueue, 0, nil, 0)
-				Spring.SendMessageToTeam(teamID, "Sending purchase order for the following:")
-				for i, order in ipairs(orderQueue) do
-					for orderDefID, count in pairs(order) do
-						Spring.SendMessageToTeam(teamID, UnitDefs[orderDefID].humanName .. ":\t" .. count)
-					end
+		-- CALL DROPSHIP
+		local orderQueue = Spring.GetFullBuildQueue(unitID)
+		if not orderQueue then 
+			return 
+		end -- dropzone died TODO: Transfer to new DZ if there is one
+		if #orderQueue > 0 then -- proceed with order
+			local beaconID = GG.dropZoneBeaconIDs[teamID]
+			GG.DropshipDelivery(beaconID, beaconID, teamID, teamDropZoneLevels[teamID].def, orderQueue, 0, nil, 0)
+			Spring.SendMessageToTeam(teamID, "Sending purchase order for the following:")
+			for i, order in ipairs(orderQueue) do
+				for orderDefID, count in pairs(order) do
+					Spring.SendMessageToTeam(teamID, UnitDefs[orderDefID].humanName .. ":\t" .. count)
 				end
-				-- Dropship can now be considered ACTIVE even though it hasn't arrived yet
-				dropZoneStatus[teamID] = 1
-				SetTeamRulesParam(teamID, "STATUS", 1)
-			else -- cancelled
-				Spring.SendMessageToTeam(teamID, "Order cancelled, queue is empty")
-				dropZoneStatus[teamID] = 0
-				SetTeamRulesParam(teamID, "STATUS", 0)
-				orderStatus[teamID] = 0
-				UpdateButtons(teamID)
 			end
+			-- Dropship can now be considered ACTIVE even though it hasn't arrived yet
+			dropZoneStatus[teamID] = 1
+			SetTeamRulesParam(teamID, "STATUS", 1)
+		else -- cancelled
+			Spring.SendMessageToTeam(teamID, "Order cancelled, queue is empty")
+			dropZoneStatus[teamID] = 0
+			SetTeamRulesParam(teamID, "STATUS", 0)
+			orderStatus[teamID] = 0
+			UpdateButtons(teamID)
 		end
 		-- clean up (regardless of whether or not order was fulfilled or cancelled)
 		OrderFinished(unitID, teamID)
 	else -- Dropship is ACTIVE or COOLDOWN
-		GG.Delay.DelayCall(SendCommandFallback, {unitID, unitDefID, teamID, cost, weight}, 16)
+		GG.Delay.DelayCall(SendCommandFallback, {cost, weight, unitID, unitDefID, teamID}, 16)
 	end
 end
 
@@ -460,7 +466,7 @@ function gadget:AllowCommand(unitID, unitDefID, teamID, cmdID, cmdParams, cmdOpt
 			if dropZoneStatus[teamID] ~= 0 then -- check here so it only plays once rather than every fallback
 				GG.PlaySoundForTeam(teamID, "bb_reinforcements_queued", 1)
 			end
-			GG.Delay.DelayCall(SendCommandFallback, {unitID, unitDefID, teamID, cost}, 16)
+			GG.Delay.DelayCall(SendCommandFallback, {orderCosts[unitID], orderTons[unitID], unitID, unitDefID, teamID}, 16)
 			return true
 		end
 	-- DROPZONE PLACEMENT ORDERS
@@ -537,15 +543,14 @@ end
 
 function gadget:UnitDestroyed(unitID, unitDefID, teamID, attackerID, attackerDefID, attackerTeam)
 	if dropZones[unitID] then -- dropZone switched
-		-- clear the order
-		if dropZoneStatus[teamID] == 2 then -- dropship is in cooldown
-			orderStatus[teamID] = 0
-		end
-		AddTeamResource(teamID, "metal", orderCosts[unitID] or 0)
-		AddTeamResource(teamID, "energy", orderTons[unitID] or 0)
+		--Spring.Echo("UnitDestroyed dropZone uID", unitID, "tID", teamID) 
+		--Spring.Echo("orderStatus", orderStatus[teamID], "orderCosts", orderCosts[unitID], "orderTons", orderTons[unitID], "orderSizes",orderSizes[unitID])
+		-- clear the order, will be refunded in Fallback
+		orderStatus[teamID] = 0
 		teamDropZones[teamID] = nil
 		orderCosts[unitID] = 0
 		orderTons[unitID] = 0
+		orderSizes[unitID] = 0
 		dropZones[unitID] = nil
 		dropZoneBeaconIDs[teamID] = nil
 	elseif GG.dropShipCache[unitDefID] == "mech" then-- main dropship

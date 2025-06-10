@@ -328,7 +328,7 @@ local function FlagCapChange(flagID, flagTeamID, allyTeamID, teamID, change)
 		TransferFlag(flagID, flagTeamID, teamID)
 		if Spring.GetTeamUnitDefCount(flagTeamID, BEACON_ID) == 0 then -- this was the last beacon!
 			GG.PlaySoundForTeam(flagTeamID, "bb_dropzone_lost_last", 1)
-		elseif GG.dropZoneBeaconIDs[flagTeamID] == flagID then -- this was the dropzone beacon!
+		elseif GG.dropZoneBeaconIDs[flagTeamID] == flagID and not (GG.orderStatus[flagTeamID] > 0) then -- this was the dropzone beacon! (and no order pending)
 			GG.PlaySoundForTeam(flagTeamID, "bb_dropzone_lost_noauto", 1)
 		else
 			GG.PlaySoundForTeam(flagTeamID, "bb_beacon_lost", 1)
