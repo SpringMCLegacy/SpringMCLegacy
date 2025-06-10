@@ -104,9 +104,12 @@ for weapName, wd in pairs(WeaponDefs) do
 	end
 	if wd.range then
 		wd.range = wd.range * (modOptions.rangemult or 1)
+		if cp and cp.minrange then
+			cp.minrange = cp.minrange * (modOptions.rangemult or 1)
+		end
 	end
-	if wd.reloadTime then
-		wd.reloadTime = wd.reloadTime * (modOptions.reloadmult or 1)
+	if wd.reloadtime then
+		wd.reloadtime = wd.reloadtime * (modOptions.reloadmult or 1)
 		if wd.customparams.heatgenerated then
 			wd.customparams.heatgenerated = wd.customparams.heatgenerated * (modOptions.reloadmult or 1)
 		end
