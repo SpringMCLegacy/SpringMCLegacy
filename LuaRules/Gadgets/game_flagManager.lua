@@ -182,13 +182,13 @@ function PlaceFlag(spot, flagType, newFlag)
 		Spring.Echo("},")
 	end
 	spot.y = Spring.GetGroundHeight(spot.x, spot.z)
-	for teamID, startPos in pairs(GG.teamStarts) do
-		startPos.y = startPos.y or Spring.GetGroundHeight(startPos.x, startPos.z)
-		if GG.Vector.DistanceBetween(spot.x, spot.y, spot.z, startPos.x, startPos.y, startPos.z) < 1.5 * CAP_RADIUS then
-			return
-		end
-	end
 	if not newFlag then
+		for teamID, startPos in pairs(GG.teamStarts) do
+			startPos.y = startPos.y or Spring.GetGroundHeight(startPos.x, startPos.z)
+			if GG.Vector.DistanceBetween(spot.x, spot.y, spot.z, startPos.x, startPos.y, startPos.z) < 1.5 * CAP_RADIUS then
+				return
+			end
+		end
 		newFlag = CreateUnit(flagType, spot.x, spot.y, spot.z, 0, GAIA_TEAM_ID)
 	end
 	numFlags[flagType] = numFlags[flagType] + 1
