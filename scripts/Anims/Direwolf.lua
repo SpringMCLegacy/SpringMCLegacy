@@ -191,7 +191,7 @@ function anim_Walk()
 		Turn(pelvis, z_axis, rad(0), LEG_SPEED * speedMod/ 5)
 		
 		Turn(lupperleg, x_axis, rad(-45), LEG_SPEED)
-		Turn(llowerleg, x_axis, rad(35), LEG_SPEED)
+		Turn(llowerleg, x_axis, rad(25), LEG_SPEED)
 		Turn(lfoot, x_axis, rad(10), LEG_SPEED)
 		
 		Turn(rupperleg, x_axis, rad(45), LEG_SPEED)
@@ -254,7 +254,7 @@ function anim_Walk()
 		Turn(lfoot, x_axis, rad(-5), LEG_SPEED)
 		
 		Turn(rupperleg, x_axis, rad(-45), LEG_SPEED)
-		Turn(rlowerleg, x_axis, rad(35), LEG_SPEED)
+		Turn(rlowerleg, x_axis, rad(25), LEG_SPEED)
 		Turn(rfoot, x_axis, rad(10), LEG_SPEED)
 		
 		WaitForTurn(lupperleg, x_axis)

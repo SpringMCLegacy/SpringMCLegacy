@@ -59,7 +59,7 @@ local Prime = Direwolf:New{
 		variant			= "Prime",
 		speed			= 50,
 		price			= 27120,
-		heatlimit 		= 29,
+		heatlimit 		= 22,
 		armor			= 19,
 		maxammo 		= {ac5 = 2, lrm = 1},
 		barrelrecoildist = {[1] = 1, [2] = 1},
@@ -98,14 +98,112 @@ local A = Direwolf:New{
 		variant			= "A",
 		speed			= 50,
 		price			= 28960,
-		heatlimit 		= 28,
+		heatlimit 		= 21,
 		armor			= 19,
 		maxammo 		= {gauss = 3, srm = 2},
 		barrelrecoildist = {[1] = 5},
     },
 }
 
+local B = Direwolf:New{
+	description         = "Assault Brawler",
+	weapons	= {	
+		[1] = {
+			name	= "CERPPC",
+		},
+		[2] = {
+			name	= "CERPPC",
+			SlaveTo = 1,
+		},
+		[3] = {
+			name	= "LBX10",
+		},
+		[4] = {
+			name	= "CMPL",
+			SlaveTo = 1,
+		},
+		[5] = {
+			name	= "CMPL",
+			SlaveTo = 1,
+		},
+		[6] = {
+			name	= "UAC2",
+		},
+		[7] = {
+			name	= "UAC2",
+			SlaveTo = 6,
+		},
+		[8] = {
+			name	= "UAC2",
+			SlaveTo = 6,
+		},
+		[9] = {
+			name	= "UAC2",
+			SlaveTo = 6,
+		},
+	},
+		
+	customparams = {
+		variant			= "B",
+		speed			= 50,
+		price			= 26090,
+		heatlimit 		= 15,
+		armor			= 19,
+		maxammo 		= {ac2 = 2, ac10 = 2},
+		barrelrecoildist = {[3] = 2},
+    },
+}
+
+local C = Direwolf:New{
+	description         = "Assault Brawler",
+	weapons	= {	
+		[1] = {
+			name	= "CERPPC",
+		},
+		[2] = {
+			name	= "CERPPC",
+			SlaveTo = 1,
+		},
+		[3] = {
+			name	= "ATM6",
+			SlaveTo = 1,
+		},
+		[4] = {
+			name	= "ATM6",
+			SlaveTo = 1,
+		},
+		[5] = {
+			name	= "CMPL",
+		},
+		[6] = {
+			name	= "CMPL",
+			SlaveTo = 5,
+		},
+		[7] = {
+			name	= "CMPL",
+		},
+		[8] = {
+			name	= "CMPL",
+			SlaveTo = 7,
+		},
+	},
+		
+	customparams = {
+		variant			= "C",
+		speed			= 50,
+		price			= 36100,
+		heatlimit 		= 23,
+		armor			= 19,
+		jumpjets		= 3,
+		ecm				= true,
+		maxammo 		= {atm = 2},
+		mods			= {"targetingcomputer"},
+    },
+}
+
 return lowerkeys({
 	["WF_Direwolf_P"] = Prime:New(),
 	["WF_Direwolf_A"] = A:New(),
+	["WF_Direwolf_B"] = B:New(),
+	["WF_Direwolf_C"] = C:New(),
 })
