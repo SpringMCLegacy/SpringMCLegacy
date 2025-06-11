@@ -172,11 +172,10 @@ local C = Direwolf:New{
 		},
 		[3] = {
 			name	= "ATM6",
-			SlaveTo = 1,
 		},
 		[4] = {
 			name	= "ATM6",
-			SlaveTo = 1,
+			SlaveTo = 3,
 		},
 		[5] = {
 			name	= "CMPL",

@@ -16,6 +16,7 @@ local ATM_Class = Weapon:New{
 	dance 					= 100,
 	trajectoryHeight		= 0.5,
 	tracks					= true,
+	tolerance				= 3000,
 	turnRate				= 2000,
 	flightTime				= 10,
 	weaponTimer				= 20,
