@@ -226,7 +226,7 @@ local function Spam(teamID)
 		local side = GG.teamSide[teamID]
 		orderSizes[teamID] = 0
 		while orderSizes[teamID] < GG.TeamSlotsRemaining(teamID) do
-			Spring.Echo("COMPARING:", orderSizes[teamID], GG.TeamSlotsRemaining(teamID))
+			--Spring.Echo("COMPARING:", orderSizes[teamID], GG.TeamSlotsRemaining(teamID))
 			local buildID
 			if difficulty > 1 then
 				Spring.AddTeamResource(teamID, "metal", 1500)
@@ -254,7 +254,7 @@ local function Spam(teamID)
 			if buildID then
 				GG.Delay.DelayCall(Spring.GiveOrderToUnit, {unitID, -buildID, {}, {}}, 1)
 				orderSizes[teamID] = orderSizes[teamID] + 1
-				Spring.Echo("Adding to order;", orderSizes[teamID], UnitDefs[-buildID] and UnitDefs[-buildID].name or "wtf", GG.TeamSlotsRemaining(teamID))
+				--Spring.Echo("Adding to order;", orderSizes[teamID], UnitDefs[-buildID] and UnitDefs[-buildID].name or "wtf", GG.TeamSlotsRemaining(teamID))
 			elseif orderSizes[teamID] == 0 then 
 				-- couldn't find any affordable mechs, try upgrading 
 				local beaconID = teamBeacons[teamID][math.random(#teamBeacons[teamID])]
