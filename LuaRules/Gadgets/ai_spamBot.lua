@@ -219,7 +219,7 @@ local function SendOrder(teamID)
 end
 
 local function Spam(teamID)
-	Spring.Echo("Spamming for team", teamID)
+	--Spring.Echo("Spamming for team", teamID)
 	local unitID = dropZoneIDs[teamID]
 	if unitID and Spring.ValidUnitID(unitID) then
 		local cmdDescs = Spring.GetUnitCmdDescs(unitID)
