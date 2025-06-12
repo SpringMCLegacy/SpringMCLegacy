@@ -480,11 +480,11 @@ local function MASCDamage()
 	Signal(SIG_RUN)
 	SetSignalMask(SIG_RUN)
 	while moving and running and mascActive do
-		Spring.Echo("In mascdamage loop")
+		--Spring.Echo("In mascdamage loop")
 		limbHPControl("left_leg", mascDamage, "llowerleg")
 		limbHPControl("right_leg", mascDamage, "rlowerleg")
 		if lostLegs > 0 then
-			Spring.Echo("Owww, my hammy")
+			--Spring.Echo("Owww, my hammy")
 			-- SIG_ANIMATE is just an empty table, don't create a new one just for empty command options
 			Spring.GiveOrderToUnit(unitID, GG.CustomCommands.GetCmdID("CMD_MASC"), {0}, SIG_ANIMATE) 
 			Run(false)
