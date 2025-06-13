@@ -147,7 +147,7 @@ function widget:DrawWorldPreUnit()
 			elseif unitDefID == BEACON_DEFID then
 				local x, y, z = Spring.GetUnitBasePosition(unitID)
 				if y <= Spring.GetGroundHeight(x,z) + 5 then 
-					local radius = 120 * UnitDefs[unitDefID].xsize
+					local radius = Spring.GetUnitRulesParam(unitID, "BEACON_CAP_RADIUS")
 					glColor(r, g, b, selected and 0.9 or 0.4)
 					glTexture(BEACON_TEX)
 					glDrawListAtUnit(unitID, DZ_LIST, false, radius, 1.0, radius, 0, 0, 1.0, 0)
