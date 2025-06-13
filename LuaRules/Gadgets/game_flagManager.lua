@@ -204,7 +204,11 @@ function PlaceFlag(spot, flagType, newFlag)
 	for i = 1, #features do
 		DestroyFeature(features[i])
 	end
-	FlagSpecialBehaviour("placed", flagType, newFlag, GAIA_TEAM_ID, GAIA_TEAM_ID)
+	spot.radius = spot.radius or CAP_RADIUS * (spot.radiusmult or 1)
+	SetUnitRulesParam(newFlag, "BEACON_CAP_RADIUS", spot.radius, {public = true})
+	spot.points = spot.points or tonumber(modOptions.beaconpoints) or 3
+	SetUnitRulesParam(newFlag, "BEACON_NUM_POINTS", spot.points, {public = true})
+	--FlagSpecialBehaviour("placed", flagType, newFlag, GAIA_TEAM_ID, GAIA_TEAM_ID)
 end
 
 function gadget:GamePreload()
@@ -369,11 +373,11 @@ function gadget:GameFrame(n)
 				local flagTeamID = GetUnitTeam(flagID)
 				local flagAllyTeam = select(6, Spring.GetTeamInfo(flagTeamID))
 				local spots = flagTypeSpots[flagType]
-				
+				local currSpot = spots[spotNum]
 				local flagTeamCounts = {} -- flagTeamCounts[teamID] = number
 				local flagAllyTeamCounts = {} -- flagAllyTeamCounts[teamID] = number
 				-- First check if there are any friendly (ally) units here -> flag is defended
-				local unitsAtFlag = GetUnitsInCylinder(spots[spotNum].x, spots[spotNum].z, CAP_RADIUS)
+				local unitsAtFlag = GetUnitsInCylinder(currSpot.x, currSpot.z, currSpot.radius)
 				StripUnits(unitsAtFlag) -- strips table (in place) of ignored unitdefs
 				
 				for i, unitID in ipairs(unitsAtFlag) do

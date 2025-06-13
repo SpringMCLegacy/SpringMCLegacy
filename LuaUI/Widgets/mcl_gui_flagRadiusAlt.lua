@@ -106,9 +106,10 @@ function widget:DrawWorldPreUnit()
         if IsUnitVisible(unitID, FLAG_RADIUS, true) then
           local x, y, z = GetUnitPosition(unitID)
 		  if y <= GetGroundHeight(x, z) + 5 then
+			local myRadius = GetUnitRulesParam(unitID, "BEACON_CAP_RADIUS") or FLAG_RADIUS
 			glPushMatrix()
 				glTranslate(x, y, z)
-				glScale(FLAG_RADIUS, 1, FLAG_RADIUS)
+				glScale(myRadius, 1, myRadius)
 				glCallList(circleLists[teamID])
           
 				for j = 1, #teams do
