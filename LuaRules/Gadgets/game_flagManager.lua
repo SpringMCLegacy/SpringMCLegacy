@@ -482,9 +482,9 @@ function NotifyDropshipDied(teamID)
 		for _, team in pairs(teamsInAlliance) do
 			alliedTeams[team] = true
 			if team == teamID then
-				PlaySoundForTeam(team, "bb_elimination", 1)
+				GG.PlaySoundForTeam(team, "bb_elimination", 1)
 			else
-				PlaySoundForTeam(team, "bb_elimination_ally", 1)
+				GG.PlaySoundForTeam(team, "bb_elimination_ally", 1)
 			end
 		end
 		-- inform enemy teams
