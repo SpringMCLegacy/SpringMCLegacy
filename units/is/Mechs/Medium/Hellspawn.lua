@@ -1,6 +1,12 @@
 local Hellspawn = Medium:New{
 	name				= "Hellspawn",
-
+	
+	leaveTracks			= true,	
+	trackType			= "Hellspawn",
+	trackOffset			= 6,
+	trackWidth			= 32,
+	trackStretch 		= 2,
+	
 	customparams = {
 		cockpitheight	= 8.5,
 		tonnage			= 45,
