@@ -51,6 +51,14 @@ local options = {
 		step   	= 5,
 	},
 	{
+		key 	= "skip_briefing",
+		name 	= "Skip Startup Briefing",
+		desc 	= "Skips the startup briefing",
+		type   	= "bool",
+		def    	= false,
+		section = '2gamemode',
+	},
+	{
 		key    = 'devtools',
 		name   = 'Developer Tools',
 		desc   = 'Sets options for tweaking balance',

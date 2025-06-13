@@ -533,7 +533,7 @@ function gadget:MoveCtrlNotify(unitID, unitDefID, unitTeam, data)
 		Spring.UnitScript.CallAsUnit(unitID, env.TouchDown)
 		Spring.MoveCtrl.Disable(unitID)
 	end
-	if not firstBeaconDeployed and unitDef.name == "beacon" then
+	if not firstBeaconDeployed and unitDef.name == "beacon" and not GG.skip then
 		GG.DeploySpawnBeacons()
 		firstBeaconDeployed = true
 	end

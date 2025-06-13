@@ -170,8 +170,10 @@ function gadget:GameStart()
 	GG.teamStarts = teamStarts
 end
 
-local function DeploySpawnBeacons()
-	Spring.PlaySoundFile("bb_startup_beacon_deployed", 1, "ui")
+local function DeploySpawnBeacons(skip)
+	if not skip then
+		Spring.PlaySoundFile("bb_startup_beacon_deployed", 1, "ui")
+	end
 	-- spawn start units
 	local gaiaTeamID = Spring.GetGaiaTeamID()
 	local teams = Spring.GetTeamList()

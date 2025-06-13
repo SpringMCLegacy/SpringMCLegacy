@@ -64,7 +64,7 @@ local flags = {} -- flags[flagType][index] == flagUnitID
 local numFlags = {} -- numFlags[flagType] == numberOfFlagsOfType
 local totalFlags = 0
 local flagTypeSpots = {} -- flagTypeSpots[flagType][metalSpotCount] == {x = x_coord, z = z_coord}
-
+local EXPECTED_FLAGS = 0
 
 for _, flagType in pairs(flagTypes) do
 	flags[flagType] = {}
@@ -223,6 +223,7 @@ function gadget:GamePreload()
 		GG.MapTemperatures = temps
 		Spring.SetGameRulesParam("MAP_TEMP_AMBIENT", temps.ambient)
 		Spring.SetGameRulesParam("MAP_TEMP_WATER", temps.water)
+		EXPECTED_FLAGS = #flagTypeSpots["beacon"] + #teams - 1
 	else
 		for i=1,20 do
 			Spring.Echo("NO MAP PROFILE FOUND FOR " .. Game.mapName)
@@ -241,6 +242,7 @@ function gadget:GamePreload()
 		GG.MapTemperatures = temps
 		Spring.SetGameRulesParam("MAP_TEMP_AMBIENT", temps.ambient)
 		Spring.SetGameRulesParam("MAP_TEMP_WATER", temps.water)
+		EXPECTED_FLAGS = #flagTypeSpots["beacon"]
 	end
 	for unitDefID, ud in pairs(UnitDefs) do -- cache ignored unitDefIDs
 		if ud.canFly or string.tobool(ud.customParams.ignoreatbeacon) then
@@ -250,9 +252,11 @@ function gadget:GamePreload()
 end
 
 local beaconsDeployed = math.huge
-local function DeployBeacons() 
-	Spring.SendCommands("toggleoverview")
-	Spring.PlaySoundFile("bb_startup_beacon_deploying", 1, "ui")
+local function DeployBeacons(skip) 
+	if not skip then
+		Spring.SendCommands("toggleoverview")
+		Spring.PlaySoundFile("bb_startup_beacon_deploying", 1, "ui")
+	end
 	-- FLAG PLACEMENT
 	for _, flagType in pairs(flagTypes) do
 		if DEBUG then Spring.Echo("-- flagType is " .. flagType) end
@@ -261,11 +265,16 @@ local function DeployBeacons()
 		end
 		GG[flagType .. "s"] = flags[flagType] -- nicer to have GG.flags rather than GG.flag
 	end
-	beaconsDeployed = Spring.GetGameFrame() + 5
 end
 
+local skip = modOptions.skip_briefing == nil and true or modOptions.skip_briefing
+GG.skip = skip
+
 function gadget:GameStart()
-	GG.Delay.DelayCall(DeployBeacons, {}, 4.5 * 30) -- delay 5 seconds for 'all systems nomnimal'
+	if skip then
+		DeployBeacons(skip)
+	end
+	GG.Delay.DelayCall(skip and GG.DeploySpawnBeacons or DeployBeacons, {skip}, skip and 1 or 4.5 * 30) -- delay 5 seconds for 'all systems nomnimal'
 end
 
 local function StripUnits(unitsAtFlag)
@@ -443,6 +452,9 @@ function gadget:UnitCreated(unitID, unitDefID, unitTeam, builderID)
 		table.insert(flagTypeSpots["beacon"], newSpot)
 		PlaceFlag(newSpot, "beacon", unitID)
 		UpdateBeacons(unitTeam, 1)
+		if #flagTypeSpots["beacon"] == EXPECTED_FLAGS then
+			beaconsDeployed = Spring.GetGameFrame() + 5
+		end
 	end
 end
 
