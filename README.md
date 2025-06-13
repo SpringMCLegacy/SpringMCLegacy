@@ -1,11 +1,13 @@
 **MechCommander: Legacy Credits**
 
 **Art**
+
 All 3d models - zverofaust
 
 All textures - zverofaust
 
 **Lua Gadgets & Unit Scripts**
+
 Lua gadgets - FLOZi unless otherwise specified
 
 Walk animations - zverofaust
@@ -19,6 +21,7 @@ unit_script.lua - Tobi
 <unit_jumpjets.lua, etc>
 
 **Lua UI**
+
 Widgets - FLOZi unless otherwise specified
 
 unit_card.lua & unit_deck.lua - Smoth
@@ -26,6 +29,7 @@ unit_card.lua & unit_deck.lua - Smoth
 <list>
 
 **FX**
+
 CustomExplosionGenerators - <todo>
 
 PPC - PicassoCT
@@ -33,6 +37,7 @@ PPC - PicassoCT
 <?> - Forboding Angel
 
 **Sounds**
+
 Weapons - <?>
 
 Betty - zverofaust using <?> AI
