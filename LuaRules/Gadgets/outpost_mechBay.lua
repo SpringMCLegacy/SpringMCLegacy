@@ -102,6 +102,7 @@ menuCmdDescs[5].hidden = true
 
 -- Mods
 local mechBays = {} -- mechBayID = level
+GG.mechBays = mechBays
 local hiddenMods = {} -- unitDefID = {[i] = true, etc}
 
 -- Omni
