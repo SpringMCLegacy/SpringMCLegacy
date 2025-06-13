@@ -644,10 +644,15 @@ function WeaponCanFire(weaponID)
 		else
 			return spinPiecesState[weaponID] == 2
 		end
-	else
-		--Spring.Echo(unitID, weaponID, "Weapon is allowed to fire by WeaponCanFire")
-		return true
+	elseif missileWeaponIDs[weaponID] then
+		-- check we are not inside a mechbay
+		local nearby = Spring.GetUnitNearestAlly(unitID, 50)
+		if nearby then
+			return not GG.mechBays[nearby]
+		end
 	end
+	--Spring.Echo(unitID, weaponID, "Weapon is allowed to fire by WeaponCanFire")
+	return true
 end
 GG.WeaponCanFire = WeaponCanFire
 
