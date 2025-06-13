@@ -48,10 +48,10 @@ end
 
 function TouchDown()
 	touchDown = true
+	Spring.SetUnitNoSelect(unitID, false)
 	if startUnit then -- Place dropzone
 		Spring.GiveOrderToUnit(unitID, GG.CustomCommands.GetCmdID("CMD_DROPZONE"), {}, {})
 	end
-	Spring.SetUnitNoSelect(unitID, false)
 	GG.RemoveGrassSquare(X, Z, 64)
 	GG.SpawnDecal("decal_beacon", X, GY + 1, Z, teamID, true)
 	local myRadius = Spring.GetUnitRulesParam(unitID, "BEACON_CAP_RADIUS")

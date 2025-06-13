@@ -307,18 +307,20 @@ end
 
 local function Refund(teamID, cost, weight)
 	--Spring.Echo("Refund", teamID, cost, weight)
-	Spring.SendMessageToTeam(teamID, "Refunding order, there is no dropzone")
-	GG.PlaySoundForTeam(teamID, "bb_reinforcements_refund", 1)
-	AddTeamResource(teamID, "metal", cost)
-	AddTeamResource(teamID, "energy", weight)
+	if cost and weight then
+		Spring.SendMessageToTeam(teamID, "Refunding order, there is no dropzone")
+		GG.PlaySoundForTeam(teamID, "bb_reinforcements_refund", 1)
+		AddTeamResource(teamID, "metal", cost)
+		AddTeamResource(teamID, "energy", weight)
+	end
 end
 
 -- Factories can't implement gadget:CommandFallback, so fake it ourselves
 local function SendCommandFallback(cost, weight, unitID, unitDefID, teamID)
 	--Spring.Echo("SendCommandFallback", unitID, unitDefID, teamID, cost, weight, Spring.GetGameFrame())
 	if (not Spring.ValidUnitID(unitID)) or Spring.GetUnitIsDead(unitID) or not teamDropZones[teamID] or orderStatus[teamID] == 0 then 
-		-- dropZone died
-		Refund(teamID, cost, weight)
+		-- dropZone died, I'm not sure this is reachable now?
+		Spring.Echo("FLOZi logic fail? outpost_dropZone.lua L321")
 		return false
 	end 
 	if dropZoneStatus[teamID] == 0 then -- Dropship is READY
@@ -371,9 +373,10 @@ local function SetDropZone(beaconID, teamID)
 	teamDropZones[teamID] = dropZoneID
 	dropZoneBeaconIDs[teamID] = beaconID
 	Spring.SetUnitRulesParam(beaconID, "secure", 1)
+	Spring.SetUnitNoSelect(beaconID, true)
 	if firstDZCache[teamID] then 
 		GG.PlaySoundForTeam(teamID, "bb_dropzone_reassigned", 1)
-	else -- don't play sound on the first one TODO: Maybe this goes when new startup script is sorted, currently clips 'all systems nominal'
+	else -- don't play sound on the first one
 		firstDZCache[teamID] = true
 		Spring.SendCommands("viewspring")
 		GG.PlaySoundForTeam(teamID, "bb_startup_command_authority", 1)
@@ -545,13 +548,14 @@ function gadget:UnitDestroyed(unitID, unitDefID, teamID, attackerID, attackerDef
 	if dropZones[unitID] then -- dropZone switched
 		--Spring.Echo("UnitDestroyed dropZone uID", unitID, "tID", teamID) 
 		--Spring.Echo("orderStatus", orderStatus[teamID], "orderCosts", orderCosts[unitID], "orderTons", orderTons[unitID], "orderSizes",orderSizes[unitID])
-		-- clear the order, will be refunded in Fallback
+		-- Refund & clear order
+		Refund(teamID, orderCosts[unitID], orderTons[unitID])
+		OrderFinished(unitID, teamID)
+		-- clearup the dropzone
 		orderStatus[teamID] = 0
 		teamDropZones[teamID] = nil
-		orderCosts[unitID] = 0
-		orderTons[unitID] = 0
-		orderSizes[unitID] = 0
 		dropZones[unitID] = nil
+		Spring.SetUnitNoSelect(dropZoneBeaconIDs[teamID], false)
 		dropZoneBeaconIDs[teamID] = nil
 	elseif GG.dropShipCache[unitDefID] == "mech" then-- main dropship
 		DropZoneCoolDown(teamID)
