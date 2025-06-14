@@ -63,21 +63,23 @@ local temps = {
 }
 
 local starts = {
-	[0] = { -- teamID 1
+	[0] = {
 		x = 699,
 		z = 561,
 	},
-	[1] = { -- teamID 2
+	[1] = {
 		x = 7493,
 		z = 6613,
 	},
-	[2] = { -- teamID 1
+	[2] = {
 		x = 458,
 		z = 6400,
+		alwaysbeacon = true,
 	},
-	[3] = { -- teamID 2
+	[3] = {
 		x = 7741,
 		z = 772,
+		alwaysbeacon = true,
 	},
 }
 
