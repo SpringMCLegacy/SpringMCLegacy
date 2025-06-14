@@ -192,7 +192,7 @@ function gadget:AllowCommand(unitID, unitDefID, teamID, cmdID, cmdParams, cmdOpt
 				--Spring.Echo("I'm totally gonna outpost your beacon bro!")
 				ToggleOutpostOptions(unitID, false)
 				outpostIDs[unitID] = true -- overwritten with unitID on spawn
-				GG.DropshipDelivery(outpostPointBeaconIDs[unitID], unitID, teamID, GG.teamSide[teamID] .. "_drost", outpostDefID, cost, "bb_outpost_deploying", DROPSHIP_DELAY)
+				GG.DropshipDelivery(outpostPointBeaconIDs[unitID], unitID, teamID, GG.teamSide[teamID] .. "_bishop", outpostDefID, cost, "bb_outpost_deploying", DROPSHIP_DELAY)
 			else
 				GG.PlaySoundForTeam(teamID, "bb_insufficient_cbills", 1)
 			end

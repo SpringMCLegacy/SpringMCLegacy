@@ -1,7 +1,7 @@
 -- Unit-specific pieces only declared here, generic dropship pieces in main script
 local body = piece("body")
-local cargoDoor1, cargoDoor2 = piece("cargodoor1", "cargodoor2")
-local attachment = piece("attachment")
+--local cargoDoor1, cargoDoor2 = piece("cargodoor1", "cargodoor2")
+--local attachment = piece("attachment")
 local DOOR_SPEED = math.rad(60)
 local BOOM_SPEED = 25
 
@@ -228,23 +228,43 @@ function TakeOff(bugOut)
 		Refund()
 		return 
 	end
-	if booms[2] then
+	if not bugout then
+		stage = 3
+		local vertSpeed = 12 --4
+		local wantedHeight = 400
+		local dist = wantedHeight - select(2, Spring.GetUnitPosition(unitID))
+		while (dist > 0) do
+			Spring.MoveCtrl.SetRelativeVelocity(unitID, 0, math.max(0.275, vertSpeed / (dist/40 + 1)), 0)
+			Sleep(10)
+			dist = wantedHeight - select(2, Spring.GetUnitPosition(unitID))
+		end
+	end
+		-- Cargo is down, close the doors!
+	PlaySound("dropship_doorclose")
+	local LEG_SPEED = math.rad(15)
+	for i = 1, 2 do
+		Turn(piece("leg_" .. i), z_axis, -math.rad(60), LEG_SPEED)
+	end
+	for i = 3, 4 do
+		Turn(piece("leg_" .. i), z_axis, math.rad(60), LEG_SPEED)
+	end
+	--[[if booms[2] then
 		for i = 2, 3 do
 			Move(booms[i], y_axis, 0, BOOM_SPEED * 2)
 		end
-		WaitForMove(booms[3], y_axis)
+		WaitForMove(booms[3], y_axis)]]
 		local engine1, engine2, engine3, engine4 = piece("engine1", "engine2", "engine3", "engine4")
 		Turn(engine1, x_axis, math.rad(0), DOOR_SPEED/3)
 		Turn(engine2, x_axis, math.rad(0), DOOR_SPEED/3)
 		Turn(engine3, x_axis, math.rad(0), DOOR_SPEED/3)
 		Turn(engine4, x_axis, math.rad(0), DOOR_SPEED/3)
 		WaitForTurn(engine1, z_axis)
-	end
+	--[[end
 	if cargoDoor1 then
 		Turn(cargoDoor1, z_axis, 0, DOOR_SPEED)
 		Turn(cargoDoor2, z_axis, 0, DOOR_SPEED)
 		WaitForTurn(cargoDoor2, z_axis)
-	end
+	end]]
 	-- Take off!
 	PlaySound("dropship_liftoff")
 	stage = 4
@@ -280,6 +300,8 @@ function Drop()
 	-- Move us up to the drop position
 	Spring.MoveCtrl.Enable(unitID)
 	Spring.MoveCtrl.SetPosition(unitID, TX + UX, TY + DROP_HEIGHT, TZ + UZ)
+	Sleep(60)
+	Spring.UnitScript.AttachUnit(cargoPieces[1], cargo[1])
 	local newAngle = math.atan2(UX, UZ)
 	Spring.MoveCtrl.SetRotation(unitID, 0, newAngle + math.pi, 0)
 	Turn(body, x_axis, math.rad(-50))
@@ -327,17 +349,18 @@ function Drop()
 		stage = 3
 		local DOOR_SPEED = math.rad(60)
 		PlaySound("dropship_dooropen")
-		Spring.UnitScript.AttachUnit(cargoPieces[1], cargo[1])
-		Turn(cargoDoor1, z_axis, math.rad(-90), DOOR_SPEED)
-		Turn(cargoDoor2, z_axis, math.rad(90), DOOR_SPEED)
+		--Turn(cargoDoor1, z_axis, math.rad(-90), DOOR_SPEED)
+		--Turn(cargoDoor2, z_axis, math.rad(90), DOOR_SPEED)
 		local vertSpeed = 4
-		local wantedHeight = select(2, Spring.GetUnitPosition(unitID)) - HOVER_HEIGHT
-		local dist = select(2, Spring.GetUnitPosition(unitID)) - wantedHeight
+		local wantedHeight = GY + 5
+		local dist = select(2, Spring.GetUnitPosition(unitID)) - GY
 		while (dist > 0) do
-			Spring.MoveCtrl.SetRelativeVelocity(unitID, 0, -math.max(0.33, vertSpeed * (dist/HOVER_HEIGHT)), 0)
+			Spring.MoveCtrl.SetRelativeVelocity(unitID, 0, -math.max(2, vertSpeed * dist/300), 0)
 			Sleep(10)
 			dist = select(2, Spring.GetUnitPosition(unitID)) - wantedHeight
 		end
+		-- We're in place. Halt and lower the cargo!
+		Spring.MoveCtrl.SetRelativeVelocity(unitID, 0, 0, 0)
 		if Spring.GetUnitRulesParam(beaconID, "secure") == 1 then -- one last check
 			-- We're in place. Halt and lower the cargo!
 			PlaySound("dropship_rumble")
@@ -354,18 +377,21 @@ function UnloadCargo()
 	local cargoID = cargo[1]
 	Spring.MoveCtrl.SetRelativeVelocity(unitID, 0, 0, 0)
 	_, y, _ = Spring.GetUnitPosition(unitID)
-	local BOOM_LENGTH = y - TY - 56
-	local BOOM_SPEED = 15
-	Move(attachment, y_axis, -56, BOOM_SPEED)
-	WaitForMove(attachment, y_axis)
-	for i = 2, 3 do
-		Move(booms[i], y_axis, -BOOM_LENGTH / 2, BOOM_SPEED)
+	local LEG_SPEED = math.rad(15)
+	for i = 1, 2 do
+		Turn(piece("leg_" .. i), z_axis, math.rad(20), LEG_SPEED)
 	end
-	WaitForMove(booms[3], y_axis)
-	PlaySound("stomp")
-	Sleep(1500)
+	for i = 3, 4 do
+		Turn(piece("leg_" .. i), z_axis, -math.rad(20), LEG_SPEED)
+	end
+	--WaitForTurn(piece("leg_4"), z_axis)
 	if Spring.ValidUnitID(cargoID) and not Spring.GetUnitIsDead(cargoID) then -- might be empty on /give testing
 		Spring.UnitScript.DropUnit(cargoID)
+		PlaySound("stomp")
+		for i = 1, 5 do
+			SpawnCEG("mech_jump_dust", TX,TY,TZ)
+			Sleep(60)
+		end
 		Spring.SetUnitBlocking(cargoID, true, true, true, true, true, true, true)
 		-- Let the cargo know it is unloaded
 		env = Spring.UnitScript.GetScriptEnv(cargoID)
@@ -378,13 +404,10 @@ function UnloadCargo()
 			end
 		end
 	end
-	-- Cargo is down, close the doors!
-	PlaySound("dropship_doorclose")
-	for i = 2, 3 do
-		Move(booms[i], y_axis, 0, BOOM_SPEED * 2)
-	end
-	WaitForMove(booms[3], y_axis)
-	Turn(cargoDoor1, z_axis, 0, DOOR_SPEED)
-	Turn(cargoDoor2, z_axis, 0, DOOR_SPEED)
-	WaitForTurn(cargoDoor2, z_axis)
+	Sleep(1500)
+
+	--WaitForMove(booms[3], y_axis)
+	--Turn(cargoDoor1, z_axis, 0, DOOR_SPEED)
+	--Turn(cargoDoor2, z_axis, 0, DOOR_SPEED)
+	--WaitForTurn(cargoDoor2, z_axis)
 end
