@@ -153,9 +153,10 @@ function gadget:GamePreload()
 end
 
 function gadget:GameStart()
-	for i, teamID in pairs(Spring.GetTeamList()) do
+	local existingTeams = Spring.GetTeamList()
+	for i, teamID in pairs(existingTeams) do
 		if teamID == Spring.GetGaiaTeamID() then
-			-- do nothing
+			--teamStarts[teamID] = nil
 		elseif not teamStarts[teamID] then
 			local x,y,z = Spring.GetTeamStartPosition(teamID)
 			teamStarts[teamID] = {
@@ -163,9 +164,17 @@ function gadget:GameStart()
 				["y"] = y,
 				["z"] = z,
 			}
+			--Spring.Echo("teamStarts", teamID, x, y, z)
 		else
 			teamStarts[teamID].y = Spring.GetGroundHeight(teamStarts[teamID].x,teamStarts[teamID].z)
 		end	
+	end
+	local numTeamStarts = #teamStarts
+	if numTeamStarts > #existingTeams - 1 then
+		for teamID = #existingTeams - 1, numTeamStarts do
+			--Spring.Echo("remove team start", teamID)
+			teamStarts[teamID] = nil
+		end
 	end
 	GG.teamStarts = teamStarts
 end

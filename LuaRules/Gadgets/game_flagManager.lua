@@ -208,47 +208,47 @@ function PlaceFlag(spot, flagType, newFlag)
 	SetUnitRulesParam(newFlag, "BEACON_CAP_RADIUS", spot.radius, {public = true})
 	spot.points = spot.points or tonumber(modOptions.beaconpoints) or 3
 	SetUnitRulesParam(newFlag, "BEACON_NUM_POINTS", spot.points, {public = true})
-	--FlagSpecialBehaviour("placed", flagType, newFlag, GAIA_TEAM_ID, GAIA_TEAM_ID)
 end
 
 function gadget:GamePreload()
 	if DEBUG then Spring.Echo(PROFILE_PATH) end
+	local flagSpots = {}
+	local temps = {}
+	local startPos = {}
 	-- CHECK FOR PROFILES
 	if VFS.FileExists(PROFILE_PATH) then
-		local flagSpots, temps = VFS.Include(PROFILE_PATH)
-		if flagSpots and #flagSpots > 0 then 
+		flagSpots, temps, startPos = VFS.Include(PROFILE_PATH)
+		if #flagSpots > 0 then 
 			Spring.Echo("Map Beacon Profile found. Loading " .. (#flagSpots or 0) .. " Beacon positions...")
-			flagTypeSpots["beacon"] = flagSpots 
 		end
-		-- setup default ambient temps
-		if not temps then temps = {} end
-		temps.ambient = temps.ambient or 20
-		temps.water = temps.water or 10
-		GG.MapTemperatures = temps
-		Spring.SetGameRulesParam("MAP_TEMP_AMBIENT", temps.ambient)
-		Spring.SetGameRulesParam("MAP_TEMP_WATER", temps.water)
-		EXPECTED_FLAGS = #flagTypeSpots["beacon"] + #teams - 1
+		if #startPos > #teams - 1 then
+			for t = #teams - 1, #startPos do
+				if startPos[t].alwaysbeacon then
+					table.insert(flagSpots, startPos[t])
+				end
+			end
+		end
+		EXPECTED_FLAGS = #flagSpots + #teams - 1
 	else
 		for i=1,20 do
 			Spring.Echo("NO MAP PROFILE FOUND FOR " .. Game.mapName)
 		end
-		flagTypeSpots["beacon"] = {}
-		
 		Map = {}
 		Map.configFile = "maps/" .. Game.mapName .. ".smd"
 		local mh = VFS.Include("maphelper/mapinfo.lua")
 		for t = #teams - 1, #(mh.teams) do -- start beyond spawned teams
-			local startPos = mh.teams[t]["startpos"]
-			--Spring.Echo(t, startPos, startPos and startPos.x or nil, startPos and startPos.z or nil)
-			table.insert(flagTypeSpots["beacon"], startPos)
+			table.insert(flagSpots, mh.teams[t]["startpos"])
 		end
-		local temps = {ambient = 20, water = 10}
-		GG.MapTemperatures = temps
-		Spring.SetGameRulesParam("MAP_TEMP_AMBIENT", temps.ambient)
-		Spring.SetGameRulesParam("MAP_TEMP_WATER", temps.water)
-		EXPECTED_FLAGS = #flagTypeSpots["beacon"]
+		EXPECTED_FLAGS = #flagSpots
 	end
-	for unitDefID, ud in pairs(UnitDefs) do -- cache ignored unitDefIDs
+	flagTypeSpots["beacon"] = flagSpots 
+	temps.ambient = temps.ambient or 20
+	temps.water = temps.water or 10
+	GG.MapTemperatures = temps
+	Spring.SetGameRulesParam("MAP_TEMP_AMBIENT", temps.ambient)
+	Spring.SetGameRulesParam("MAP_TEMP_WATER", temps.water)
+	-- cache ignored unitDefIDs
+	for unitDefID, ud in pairs(UnitDefs) do
 		if ud.canFly or string.tobool(ud.customParams.ignoreatbeacon) then
 			unitDefsToIgnore[unitDefID] = true
 		end
