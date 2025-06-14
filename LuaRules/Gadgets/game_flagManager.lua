@@ -221,7 +221,7 @@ function gadget:GamePreload()
 		if #flagSpots > 0 then 
 			Spring.Echo("Map Beacon Profile found. Loading " .. (#flagSpots or 0) .. " Beacon positions...")
 		end
-		if #startPos > #teams - 1 then
+		if startPos and #startPos > #teams - 1 then
 			for t = #teams - 1, #startPos do
 				if startPos[t].alwaysbeacon then
 					table.insert(flagSpots, startPos[t])
