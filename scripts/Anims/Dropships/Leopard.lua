@@ -4,6 +4,7 @@ local cargoDoor1, cargoDoor2 = piece("cargodoor1", "cargodoor2")
 local attachment = piece("attachment")
 
 function WeaponCanFire(weaponID)
+	if missileWeaponIDs[weaponID] then return stage == 3 end
 	return not noFiring
 end
 

@@ -422,6 +422,7 @@ function gadget:GamePreload()
 		local minRanges = {}
 		local spinSpeeds = {}
 		local flareOnShots = {}
+		local minpitchs = {}
 		for i = 1, #weapons do
 			local weaponInfo = weapons[i]
 			local weaponDef = WeaponDefs[weaponInfo.weaponDef]
@@ -457,6 +458,7 @@ function gadget:GamePreload()
 		info.hasEcm = string.tobool(cp.hasecm)
 		info.numWeapons = #weapons
 		info.maxAmmo = table.unserialize(cp.maxammo)
+		info.minpitches = table.unserialize(cp.minpitches)
 		-- Temperatures
 		local MapTemps = GG.MapTemperatures
 		if MapTemps then -- purely for dumb loading bug

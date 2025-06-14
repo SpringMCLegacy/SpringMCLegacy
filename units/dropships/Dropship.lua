@@ -265,7 +265,12 @@ local Leopard = DropShip:New{
 		radialdist		= 3000,
 		maxtonnage		= 150,
 		cooldown		= 20 * 30,
-		-- droptime
+		minpitches		= {
+			[1]				= -math.rad(7),
+			[2]				= -math.rad(7),
+			[3]				= 0,
+			[4]				= 0,
+		},
 	},	
 }
 
