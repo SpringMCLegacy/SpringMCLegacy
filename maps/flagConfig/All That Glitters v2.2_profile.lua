@@ -1,53 +1,32 @@
 local resources = {
-	{
-		x = 3244,
-		z = 940,
-		feature = nil
+	{ -- west
+		x = 864,
+		z = 5529,
+		feature = nil,
+		points = 6,
+	}, 	
+	{ -- east
+		x = 5549,
+		z = 4182,
+		feature = nil,
+		points = 6,
 	},
-	{
-		x = 5283,
-		z = 656,
-		feature = nil
+	{ -- south mid
+		x = 2900,
+		z = 7967,
+		feature = nil,
 	},
-	{
-		x = 5098,
-		z = 2299,
-		feature = nil
+	{ -- north mid
+		x = 3059,
+		z = 2401,
+		feature = nil,
 	},
-	{
-		x = 2927,
-		z = 3377,
-		feature = nil
-	},
-	{
-		x = 5217,
-		z = 4280,
-		feature = nil
-	},
-	{
-		x = 1516,
-		z = 5771,
-		feature = nil
-	},
-	{
-		x = 3110,
-		z = 6934,
-		feature = nil
-	},
-	{
-		x = 1072,
-		z = 7303,
-		feature = nil
-	},
-	{
-		x = 1183,
-		z = 9702,
-		feature = nil
-	},
-	{
-		x = 2767,
-		z = 9507,
-		feature = nil
+	{ -- big middle
+		x = 3197,
+		z = 4753,
+		feature = nil,
+		points = 0,
+		radiusmult = 1.5,
 	},
 }
 
@@ -64,6 +43,16 @@ local starts = {
 	[1] = { -- teamID 2
 		x = 5171,
 		z = 9164,
+	},
+	[2] = { -- teamID 2
+		x = 5086,
+		z = 805,
+		alwaysbeacon = true,
+	},
+	[3] = { -- teamID 2
+		x = 720,
+		z = 9556,
+		alwaysbeacon = true,
 	},
 }
 

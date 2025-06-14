@@ -1,23 +1,28 @@
 local resources = {
-	{
+	{ -- center
 		x = 4050,
 		z = 3650,
-		feature = nil
+		feature = nil,
+		radiusmult = 1.5,
+		points = 0,
 	},
-	{
+	{ -- west
 		x = 810,
 		z = 3480,
-		feature = nil
+		feature = nil,
+		points = 6,
 	},
-	{
+	{ -- northeast
 		x = 7200,
 		z = 1170,
-		feature = nil
+		feature = nil,
+		points = 6,
 	},
-	{
+	{ --southeast
 		x = 5300,
 		z = 6750,
-		feature = nil
+		feature = nil,
+		points = 6,
 	},
 }
 
@@ -30,7 +35,7 @@ local temps = {
 local starts = {
 	[0] = { -- teamID
 		x = 1900,
-		z = 315,
+		z = 465,
 	},
 	[1] = { -- teamID
 		x = 2815,
