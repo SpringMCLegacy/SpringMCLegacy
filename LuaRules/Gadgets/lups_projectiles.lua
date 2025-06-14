@@ -112,6 +112,10 @@ local function ChangeMissile(proID, proOwnerID, wd, artemisOnly)
 		end
 end
 
+local AMS_DEF = WeaponDefNames["ams"] 
+local AMS_ID = WeaponDefNames["ams"].id
+local amsPros = {}
+
 function gadget:ProjectileCreated(proID, proOwnerID, weaponID)
 	--Spring.Echo("PC", proID, proOwnerID, weaponID)
 	local wd = WeaponDefs[weaponID]
@@ -173,17 +177,31 @@ function gadget:ProjectileCreated(proID, proOwnerID, weaponID)
 			Spring.DeleteProjectile(proID)
 		end
 	end
-	
+	if weaponID == AMS_ID then
+		amsPros[proID] = true
+	end
 	if weapons[weaponID] then
 		projectiles[proID] = true
 		SendToUnsynced("lupsProjectiles_AddProjectile", proID, proOwnerID, weaponID)
 	end
 end	
 
+local SetProjectileCollision = Spring.SetProjectileCollision
+local GetProjectilesInRectangle = Spring.GetProjectilesInRectangle
+local GetProjectilePosition = Spring.GetProjectilePosition
+
 function gadget:ProjectileDestroyed(proID)
 	tracking[proID] = nil
 	arrows[proID] = nil
 	contTAG[proID] = nil
+	if amsPros[proID] then
+		local x,y,z = GetProjectilePosition(proID)
+		local radius = AMS_DEF.damageAreaOfEffect
+		local nearPros = GetProjectilesInRectangle(x - radius, z-radius, x+radius, z+ radius, false, true)
+		for i, pro in pairs(nearPros) do
+			SetProjectileCollision(pro, true)
+		end
+	end
 	if projectiles[proID] then
 		SendToUnsynced("lupsProjectiles_RemoveProjectile", proID)
 		projectiles[proID] = nil
