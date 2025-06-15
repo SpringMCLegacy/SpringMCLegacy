@@ -345,7 +345,7 @@ function Drop()
 		--Turn(cargoDoor1, z_axis, math.rad(-90), DOOR_SPEED)
 		--Turn(cargoDoor2, z_axis, math.rad(90), DOOR_SPEED)
 		local vertSpeed = 4
-		local wantedHeight = GY + 5
+		local wantedHeight = GY + 15
 		local dist = select(2, Spring.GetUnitPosition(unitID)) - GY
 		while (dist > 0) do
 			Spring.MoveCtrl.SetRelativeVelocity(unitID, 0, -math.max(2, vertSpeed * dist/300), 0)
