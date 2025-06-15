@@ -239,34 +239,25 @@ function TakeOff(bugOut)
 			dist = wantedHeight - select(2, Spring.GetUnitPosition(unitID))
 		end
 	end
-		-- Cargo is down, close the doors!
-	PlaySound("dropship_doorclose")
-	local LEG_SPEED = math.rad(15)
-	for i = 1, 2 do
-		Turn(piece("leg_" .. i), z_axis, -math.rad(65), LEG_SPEED * 4)
-		Turn(piece("foot_" .. i), z_axis, -math.rad(25), LEG_SPEED * 2)
-	end
-	for i = 3, 4 do
-		Turn(piece("leg_" .. i), z_axis, math.rad(65), LEG_SPEED * 4)
-		Turn(piece("foot_" .. i), z_axis, math.rad(25), LEG_SPEED * 2)
-	end
-	--[[if booms[2] then
-		for i = 2, 3 do
-			Move(booms[i], y_axis, 0, BOOM_SPEED * 2)
+	if not cargo[1] then -- Cargo is down, close the doors!
+		PlaySound("dropship_doorclose")
+		local LEG_SPEED = math.rad(15)
+		for i = 1, 2 do
+			Turn(piece("leg_" .. i), z_axis, -math.rad(65), LEG_SPEED * 4)
+			Turn(piece("foot_" .. i), z_axis, -math.rad(25), LEG_SPEED * 2)
 		end
-		WaitForMove(booms[3], y_axis)]]
-		local engine1, engine2, engine3, engine4 = piece("engine1", "engine2", "engine3", "engine4")
-		Turn(engine1, x_axis, math.rad(0), DOOR_SPEED/2)
-		Turn(engine2, x_axis, math.rad(0), DOOR_SPEED/2)
-		Turn(engine3, x_axis, math.rad(0), DOOR_SPEED/2)
-		Turn(engine4, x_axis, math.rad(0), DOOR_SPEED/2)
-		WaitForTurn(engine1, z_axis)
-	--[[end
-	if cargoDoor1 then
-		Turn(cargoDoor1, z_axis, 0, DOOR_SPEED)
-		Turn(cargoDoor2, z_axis, 0, DOOR_SPEED)
-		WaitForTurn(cargoDoor2, z_axis)
-	end]]
+		for i = 3, 4 do
+			Turn(piece("leg_" .. i), z_axis, math.rad(65), LEG_SPEED * 4)
+			Turn(piece("foot_" .. i), z_axis, math.rad(25), LEG_SPEED * 2)
+		end
+	end
+	local engine1, engine2, engine3, engine4 = piece("engine1", "engine2", "engine3", "engine4")
+	Turn(engine1, x_axis, math.rad(0), DOOR_SPEED/2)
+	Turn(engine2, x_axis, math.rad(0), DOOR_SPEED/2)
+	Turn(engine3, x_axis, math.rad(0), DOOR_SPEED/2)
+	Turn(engine4, x_axis, math.rad(0), DOOR_SPEED/2)
+	WaitForTurn(engine1, z_axis)
+
 	-- Take off!
 	PlaySound("dropship_liftoff")
 	stage = 4
@@ -389,6 +380,7 @@ function UnloadCargo()
 	--WaitForTurn(piece("leg_4"), z_axis)
 	if Spring.ValidUnitID(cargoID) and not Spring.GetUnitIsDead(cargoID) then -- might be empty on /give testing
 		Spring.UnitScript.DropUnit(cargoID)
+		cargo[1] = nil
 		PlaySound("stomp")
 		for i = 1, 5 do
 			SpawnCEG("mech_jump_dust", TX,TY,TZ)
