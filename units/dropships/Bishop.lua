@@ -3,11 +3,12 @@ local Bishop = DropShip:New{
 	description         = "Cargo Lander",
 	objectName        	= "Dropship/Bishop.s3o", -- TODO: remove once faction textured models are available
 	iconType			= "drost",
-	corpse				= "<NAME>_x",
+	corpse				= "Bishop_x",
 	category 			= "ground notbeacon",
 	maxDamage           = 6000,
 	mass                = 6000,
 	usePieceCollisionVolumes = true,
+	explodeAs          	= "mechexplode",
 	
 	--Makes unit use weapon from /weapons folder
 	weapons	= {	

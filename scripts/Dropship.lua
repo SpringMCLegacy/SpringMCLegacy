@@ -331,6 +331,7 @@ function script.HitByWeapon(x, z, weaponID, damage)
 			--Signal(1)
 			--Signal(fx)
 			Spring.MoveCtrl.Enable(unitID)
+			Spring.MoveCtrl.SetRelativeVelocity(unitID, 0, 0, unitDef.customParams.dropship == "mech" and 0 or 3)
 			Spring.MoveCtrl.SetGravity(unitID, 1.4 * GRAVITY)	
 			Spring.MoveCtrl.SetCollideStop(unitID, true)
 			Spring.MoveCtrl.SetTrackGround(unitID, true)
@@ -347,14 +348,7 @@ function script.Killed()
 		Spring.SpawnCEG("dropship_heavy_dust", x,y,z)
 	end
 	Spring.SpawnCEG("mech_jump_dust", x,y,z)
-	--Sleep(900) -- needed for some reason?
-	-- TODO: this awful hack no longer works, and always visible still doesn't work either, yay.
-	-- This is a really awful hack , built on top of another hack. 
-	-- There's some issue with alwaysVisible not working (http://springrts.com/mantis/view.php?id=4483)
-	-- So instead make the owner the decal unit spawned by the teams starting beacon, as it can never die
-	local ownerID = Spring.GetTeamUnitsByDefs(teamID, UnitDefNames["decal_beacon"].id)[1] --or unitID
-	local nukeID = Spring.SpawnProjectile(WeaponDefNames["meltdown"].id, {pos = {x,y,z}, owner = ownerID, team = teamID, ttl = 20})
-	Spring.SetProjectileAlwaysVisible(nukeID, true)
+	
 	Explode(piece("hull") or piece("body"), SFX.SHATTER)
 	for _, turret in pairs(turrets) do
 		Explode(turret, SFX.FIRE + SFX.FALL + SFX.RECURSIVE)	
@@ -366,8 +360,18 @@ function script.Killed()
 			Explode(gear.door, SFX.FIRE + SFX.FALL + SFX.RECURSIVE)	
 		end
 	end
+	
 	if unitDef.customParams.dropship == "mech" then
+		-- TODO: this awful hack no longer works, and always visible still doesn't work either, yay.
+		-- This is a really awful hack , built on top of another hack. 
+		-- There's some issue with alwaysVisible not working (http://springrts.com/mantis/view.php?id=4483)
+		-- So instead make the owner the decal unit spawned by the teams starting beacon, as it can never die
+		local ownerID = Spring.GetTeamUnitsByDefs(teamID, UnitDefNames["decal_beacon"].id)[1] --or unitID
+		local nukeID = Spring.SpawnProjectile(WeaponDefNames["meltdown"].id, {pos = {x,y,z}, owner = ownerID, team = teamID, ttl = 20})
+		Spring.SetProjectileAlwaysVisible(nukeID, true)
 		GG.NotifyDropshipDied(teamID) -- let flagManager know you screwed up, Mechcommander
+		return 0 -- no corpse if you were just atomised in a fusion explosion
 	end
-	return 0
+	
+	return 1
 end

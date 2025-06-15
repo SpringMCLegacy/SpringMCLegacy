@@ -31,23 +31,19 @@ function Setup()
 end
 
 function Crashed()
+	stage = 3
+	StartThread(fx)
 	local x,y,z = Spring.GetUnitPosition(unitID)
 	for i = 1, 5 do
 		Spring.SpawnCEG("dropship_heavy_dust", x,y,z)
 	end
 	Spring.SpawnCEG("mech_jump_dust", x,y,z)
 	Sleep(3000)
-	-- This is a really awful hack , built on top of another hack. 
-	-- There's some issue with alwaysVisible not working (http://springrts.com/mantis/view.php?id=4483)
-	-- So instead make the owner the decal unit spawned by the teams starting beacon, as it can never die
-	local ownerID = Spring.GetTeamUnitsByDefs(teamID, UnitDefNames["decal_beacon"].id)[1] or unitID
-	local nukeID = Spring.SpawnProjectile(WeaponDefNames["meltdown"].id, {pos = {x,y,z}, owner = ownerID, team = teamID, ttl = 20})
-	Sleep(500)
 	local engine1, engine2, engine3, engine4 = piece("engine1", "engine2", "engine3", "engine4")
-	Explode(engine1, SFX.FIRE + SFX.FALL)
-	Explode(engine2, SFX.FIRE + SFX.FALL)
-	Explode(engine3, SFX.FIRE + SFX.FALL)
-	Explode(engine4, SFX.FIRE + SFX.FALL)
+	Explode(engine1, SFX.SHATTER)
+	Explode(engine2, SFX.SHATTER)
+	Explode(engine3, SFX.SHATTER)
+	Explode(engine4, SFX.SHATTER)
 	Explode(body, SFX.SHATTER)
 	-- delay next dropship by extra 60 seconds
 	Spring.DestroyUnit(unitID, true, false)
