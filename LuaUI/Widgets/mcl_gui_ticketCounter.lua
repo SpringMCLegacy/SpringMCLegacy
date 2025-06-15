@@ -67,6 +67,7 @@ local ticketWidth = 0
 local cBillsText = "C-Bills: " .. colors.grey .. 0
 local salvageText = "Salvage: " .. colors.slategray .. 0
 local tonnageText= "Tonnage: " .. colors.yellow .. 0
+local c3Text = "C3 Bandwidth:" .. colors.white .. 0
 local gameTime = "Time: 0:00:00"
 local dropTime = "Dropship: 00:00"
 local artyTime = ""
@@ -219,6 +220,10 @@ function widget:GameFrame(n)
 		maxTonnage = floor(maxTonnage) 
 		tonnage = floor(maxTonnage - (tonnage))
 		tonnageText = "Tonnage: " .. colors.yellow .. tonnage .. colors.white .. " / " .. colors.yellow .. maxTonnage
+		
+		local maxC3 = (GetTeamRulesParam(MY_TEAM_ID, "LANCES") or 1) * 4
+		local c3 = maxC3 - (GetTeamRulesParam(MY_TEAM_ID, "TEAM_SLOTS_REMAINING") or 4)
+		c3Text = "C3 Bandwidth: " .. colors.white .. c3 .. colors.white .. " / " .. colors.white .. maxC3
 		TicketText()
 	end
 end
@@ -233,12 +238,13 @@ end
 
 function widget:DrawScreen()
 	btFont:Begin()
-		btFont:Print(cBillsText, xMax * 0.25, yMax - 32, 16, "od")
-		btFont:Print(salvageText, xMax * 0.25, yMax - 48, 16, "od")
+		btFont:Print(cBillsText, xMax * 0.30, yMax - 32, 16, "od")
+		btFont:Print(salvageText, xMax * 0.30, yMax - 48, 16, "od")
 		btFont:Print(tonnageText, xMax * 0.45, yMax - 32, 16, "od")
+		btFont:Print(c3Text, xMax * 0.45, yMax - 48, 16, "od")
 		btFont:Print(dropTime, xMax * 0.75, yMax - 32, 16, "odr")
 		if (haveArty or 0) > 0 then
-			btFont:Print(artyTime, xMax * 0.75, yMax - 48, 16, "odr")
+			btFont:Print(artyTime, xMax * 0.55, yMax - 48, 16, "odr")
 		end
 		btFont:Print("Tickets:", xMax - 58, yMax - 32, 16, "odr")
 		for allyTeam, ticketText in pairs(allyTicketTexts) do

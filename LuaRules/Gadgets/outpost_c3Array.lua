@@ -36,6 +36,7 @@ local function TeamSlotsRemaining(teamID)
 		-- we only want to consider slots in lances we actively control
 		slots = slots + ((teamSlots[teamID][i].active and math.floor(teamSlots[teamID][i].available)) or 0)
 	end
+	Spring.SetTeamRulesParam(teamID, "TEAM_SLOTS_REMAINING", slots)
 	return slots
 end
 GG.TeamSlotsRemaining = TeamSlotsRemaining
@@ -182,6 +183,7 @@ function LanceControl(teamID, unitID, add)
 		-- cleanup the C3 itself
 		C3Status[unitID] = nil
 	end
+	TeamSlotsRemaining(teamID)
 end
 GG.LanceControl = LanceControl
 
@@ -203,7 +205,7 @@ local function UpdateTeamSlots(teamID, unitID, unitDefID, add)
 		local lance = unitLances[unitID]
 		AssignLance(unitID, unitDefID, teamID, -1, lance)
 	end
-	Spring.SetTeamRulesParam(teamID, "TEAM_SLOTS_REMAINING", TeamSlotsRemaining(teamID))
+	TeamSlotsRemaining(teamID)
 end
 
 function gadget:AllowCommand(unitID, unitDefID, teamID, cmdID, cmdParams, cmdOptions, cmdTag, synced)
