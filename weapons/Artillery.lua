@@ -24,7 +24,7 @@ local Artillery_Class = Weapon:New{
 		default = 2000, --100 dps
 	},
 	customparams = {
-		heatgenerated		= 20,
+		heatgenerated		= 8,
 		cegflare			= "ARTILLERY_MUZZLEFLASH",
 		weaponclass			= "projectile",
 		ammotype			= "sniper",
@@ -48,6 +48,21 @@ local Thumper = Artillery_Class:New{
 	},
 		customparams = {
 		heatgenerated		= 6,
+    },
+}
+
+local LongTom = Artillery_Class:New{
+	name                    = "Long tom Artillery Cannon",
+	range                   = 13000,
+	weaponVelocity          = 850,
+	areaOfEffect            = 650,
+	accuracy                = 200,
+	reloadtime              = 15,
+	damage = {
+		default = 3000, --
+	},
+		customparams = {
+		heatgenerated		= 10,
     },
 }
 
