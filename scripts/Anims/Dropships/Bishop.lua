@@ -38,7 +38,7 @@ function Crashed()
 		Spring.SpawnCEG("dropship_heavy_dust", x,y,z)
 	end
 	Spring.SpawnCEG("mech_jump_dust", x,y,z)
-	Sleep(3000)
+	--Sleep(3000)
 	local engine1, engine2, engine3, engine4 = piece("engine1", "engine2", "engine3", "engine4")
 	Explode(engine1, SFX.SHATTER)
 	Explode(engine2, SFX.SHATTER)
@@ -378,6 +378,12 @@ function UnloadCargo()
 		Spring.UnitScript.DropUnit(cargoID)
 		cargo[1] = nil
 		PlaySound("stomp")
+		local nearCorpses = Spring.GetFeaturesInCylinder(TX, TZ, 50)
+		for i, fID in pairs(nearCorpses) do
+			local fx,fy,fz = Spring.GetFeaturePosition(fID)
+			SpawnCEG("he_medium", fx, fy, fz)
+			Spring.DestroyFeature(fID)
+		end
 		for i = 1, 5 do
 			SpawnCEG("mech_jump_dust", TX,TY,TZ)
 			Sleep(60)
