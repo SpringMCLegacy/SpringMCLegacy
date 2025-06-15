@@ -167,8 +167,8 @@ local function Outpost(beaconID, teamID)
 	if not unitID then -- set as starting beacon if not given
 		unitID = GG.dropZoneBeaconIDs[teamID]
 	end
-	if beaconOutpostCounts[beaconID] == 3 or not GG.beaconOutpostPointIDs[beaconID] then -- fully outposted or beacon's not deployed yet
-		--Spring.Echo("Outpost 1 (return false, full count) BID:", beaconID, "TID:", teamID, beaconOutpostCounts[beaconID], GG.beaconOutpostPointIDs[beaconID])
+	if not GG.beaconOutpostPointIDs[beaconID] or beaconOutpostCounts[beaconID] == #(GG.beaconOutpostPointIDs[beaconID]) then -- beacon's not deployed yet or fully outposted
+		--Spring.Echo("Outpost 1 (return false, full count) BID:", beaconID, "TID:", teamID, beaconOutpostCounts[beaconID], #(GG.beaconOutpostPointIDs[beaconID]))
 		return false 
 	end 
 	if not dropZoneIDs[teamID] then -- no dropzone left!
@@ -196,13 +196,13 @@ local function Outpost(beaconID, teamID)
 					return true
 				end
 			end
-			--Spring.Echo("Outpost 5 (return false no free slot) BID:", beaconID, "TID:", teamID, beaconOutpostCounts[beaconID], GG.beaconOutpostPointIDs[beaconID])
+			--Spring.Echo("Outpost 5 (return false no free slot) BID:", beaconID, "TID:", teamID, beaconOutpostCounts[beaconID], #(GG.beaconOutpostPointIDs[beaconID]))
 			return false
 		end
-		--Spring.Echo("Outpost 6 (return false not enough c-bill) BID:", beaconID, "TID:", teamID, beaconOutpostCounts[beaconID], GG.beaconOutpostPointIDs[beaconID])
+		--Spring.Echo("Outpost 6 (return false not enough c-bill) BID:", beaconID, "TID:", teamID, beaconOutpostCounts[beaconID], #(GG.beaconOutpostPointIDs[beaconID]))
 		return false
 	end
-	--Spring.Echo("Outpost 7 (nothing happened) BID:", beaconID, "TID:", teamID, beaconOutpostCounts[beaconID], GG.beaconOutpostPointIDs[beaconID])
+	--Spring.Echo("Outpost 7 (nothing happened) BID:", beaconID, "TID:", teamID, beaconOutpostCounts[beaconID], #(GG.beaconOutpostPointIDs[beaconID]))
 end
 
 local function SendOrder(teamID)
