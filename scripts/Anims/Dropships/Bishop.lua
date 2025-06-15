@@ -243,10 +243,12 @@ function TakeOff(bugOut)
 	PlaySound("dropship_doorclose")
 	local LEG_SPEED = math.rad(15)
 	for i = 1, 2 do
-		Turn(piece("leg_" .. i), z_axis, -math.rad(60), LEG_SPEED)
+		Turn(piece("leg_" .. i), z_axis, -math.rad(65), LEG_SPEED * 4)
+		Turn(piece("foot_" .. i), z_axis, -math.rad(25), LEG_SPEED * 2)
 	end
 	for i = 3, 4 do
-		Turn(piece("leg_" .. i), z_axis, math.rad(60), LEG_SPEED)
+		Turn(piece("leg_" .. i), z_axis, math.rad(65), LEG_SPEED * 4)
+		Turn(piece("foot_" .. i), z_axis, math.rad(25), LEG_SPEED * 2)
 	end
 	--[[if booms[2] then
 		for i = 2, 3 do
@@ -254,10 +256,10 @@ function TakeOff(bugOut)
 		end
 		WaitForMove(booms[3], y_axis)]]
 		local engine1, engine2, engine3, engine4 = piece("engine1", "engine2", "engine3", "engine4")
-		Turn(engine1, x_axis, math.rad(0), DOOR_SPEED/3)
-		Turn(engine2, x_axis, math.rad(0), DOOR_SPEED/3)
-		Turn(engine3, x_axis, math.rad(0), DOOR_SPEED/3)
-		Turn(engine4, x_axis, math.rad(0), DOOR_SPEED/3)
+		Turn(engine1, x_axis, math.rad(0), DOOR_SPEED/2)
+		Turn(engine2, x_axis, math.rad(0), DOOR_SPEED/2)
+		Turn(engine3, x_axis, math.rad(0), DOOR_SPEED/2)
+		Turn(engine4, x_axis, math.rad(0), DOOR_SPEED/2)
 		WaitForTurn(engine1, z_axis)
 	--[[end
 	if cargoDoor1 then
@@ -271,11 +273,11 @@ function TakeOff(bugOut)
 	Spring.MoveCtrl.SetVelocity(unitID, 0, 0, 0)
 	Spring.MoveCtrl.SetRelativeVelocity(unitID, 0, 0, 5)
 	Spring.MoveCtrl.SetGravity(unitID, -0.75 * GRAVITY)
-	Turn(body, x_axis, math.rad(-30), math.rad(10))
+	Turn(body, x_axis, math.rad(-30), math.rad(20))
 	WaitForTurn(body, x_axis)
-	Turn(body, x_axis, math.rad(-70), math.rad(15))
+	Turn(body, x_axis, math.rad(-70), math.rad(30))
 	WaitForTurn(body, x_axis)
-	Turn(body, x_axis, math.rad(-80), math.rad(5))
+	Turn(body, x_axis, math.rad(-80), math.rad(10))
 	WaitForTurn(body, x_axis)
 	Spring.MoveCtrl.SetGravity(unitID, -4 * GRAVITY)
 	stage = 5
@@ -319,10 +321,10 @@ function Drop()
 		Spring.MoveCtrl.SetRotation(unitID, 0, newAngle + math.pi, 0)
 		if (y - TY) < 4 * HOVER_HEIGHT and stage == 0 then
 			stage = 1
-			Turn(piece("engine1"), x_axis, -math.rad(89), DOOR_SPEED/2)
-			Turn(piece("engine2"), x_axis, -math.rad(89), DOOR_SPEED/2)
-			Turn(piece("engine3"), x_axis, -math.rad(89), DOOR_SPEED/2)
-			Turn(piece("engine4"), x_axis, -math.rad(89), DOOR_SPEED/2)
+			Turn(piece("engine1"), x_axis, -math.rad(89), DOOR_SPEED/1)
+			Turn(piece("engine2"), x_axis, -math.rad(89), DOOR_SPEED/1)
+			Turn(piece("engine3"), x_axis, -math.rad(89), DOOR_SPEED/1)
+			Turn(piece("engine4"), x_axis, -math.rad(89), DOOR_SPEED/1)
 			StartThread(fx)
 		elseif (y - TY) < 3 * HOVER_HEIGHT and stage == 1 then
 			stage = 2
@@ -331,7 +333,7 @@ function Drop()
 	end
 	-- Descent complete, move over the target
 	PlaySound("dropship_rumble")
-	Turn(body, x_axis, 0, math.rad(3.5))
+	Turn(body, x_axis, 0, math.rad(8))
 	Spring.MoveCtrl.SetVelocity(unitID, 0, 0, 0)
 	Spring.MoveCtrl.SetGravity(unitID, 0)
 	local dist = GetUnitDistanceToPoint(unitID, TX, 0, TZ, false)
