@@ -26,6 +26,7 @@ GG.hoverMap = hoverMap
 local modOptions = Spring.GetModOptions()
 local GAIA_TEAM_ID = Spring.GetGaiaTeamID()
 local BASE_DELAY = tonumber((modOptions and modOptions.vehicle_delay) or "30") * 30 -- base line delay, may be +{0,10}s
+local CLAN_DELAY_MULT = 1.5
 local DEATH_DELAY = 60 * 30 -- delay next one by extra 1 minute if the last one died
 local BEACON_ID = UnitDefNames["beacon"].id
 local VPAD_ID = (not hoverMap) and UnitDefNames["outpost_vehiclepad"].id or -1
@@ -50,6 +51,11 @@ local unitSquads = {} -- unitSquads[unitID] = squadNum
 local teamSquadCounts = {} -- teamSquadCounts[teamID] = numberOfSquads
 local teamSquadSpots = {} -- teamSquadSpots[teamID][squadNum] = spotNum
 local teamSquads = {}
+local teamSideMults = {}
+
+local clanSides = {
+	["wf"] = true,
+}
 
 local classes = {"vtol", "apc", "arty", "regular"}
 local weights = {"light", "medium", "heavy", "assault",} -- TODO: this is repeated elsewhere
@@ -70,12 +76,20 @@ function gadget:Initialize()
 			vehiclesDefCache[unitDefID] = 1 --unitDef.customParams.squadsize or 1
 		end
 	end
+end
+
+function gadget:GameStart()
+	-- needs to be here so that GG.teamSide is properly populated by game_spawn
+	-- If we switch to per-faction unitdefs for outposts, it can all go back in Initialize
 	for _, teamID in pairs(Spring.GetTeamList()) do
 		if teamID ~= GAIA_TEAM_ID then
 			teamSquadSpots[teamID] = {}
+			local teamSide = GG.teamSide[teamID]
+			teamSideMults[teamID] = clanSides[teamSide] and CLAN_DELAY_MULT or 1
 		end
 	end
 end
+
 
 local delays = {
 	[1] = BASE_DELAY,
@@ -241,7 +255,7 @@ end
 
 function LCLeft(beaconID, vPadID, teamID, died) -- called by LC once it has left, to start countdown
 	if Spring.ValidUnitID(vPadID) and (not Spring.GetUnitIsDead(vPadID)) and (teamID == Spring.GetUnitTeam(vPadID)) then
-		GG.Delay.DelayCall(Deliver, {vPadID, teamID}, (died and DEATH_DELAY or 0) + delays[padLevels[vPadID]] + math.random(10) * 30)
+		GG.Delay.DelayCall(Deliver, {vPadID, teamID}, (died and DEATH_DELAY or 0) + delays[padLevels[vPadID]] * teamSideMults[teamID] + math.random(10) * 30)
 	end
 end
 GG.LCLeft = LCLeft
@@ -362,7 +376,7 @@ end
 
 function gadget:UnitGiven(unitID, unitDefID, newTeam, oldTeam)
 	if SPAWN_DEF_IDS[unitDefID] then
-		GG.Delay.DelayCall(Deliver, {unitID, newTeam}, delays[padLevels[unitID]] + math.floor(math.random(10) * 30))
+		GG.Delay.DelayCall(Deliver, {unitID, newTeam}, delays[padLevels[unitID]] * teamSideMults[teamID] + math.floor(math.random(10) * 30))
 		spawnPads[unitID] = Spring.GetGameFrame()
 	end
 end

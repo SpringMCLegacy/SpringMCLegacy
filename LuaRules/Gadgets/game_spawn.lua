@@ -155,19 +155,20 @@ end
 function gadget:GameStart()
 	local existingTeams = Spring.GetTeamList()
 	for i, teamID in pairs(existingTeams) do
-		if teamID == Spring.GetGaiaTeamID() then
-			--teamStarts[teamID] = nil
-		elseif not teamStarts[teamID] then
-			local x,y,z = Spring.GetTeamStartPosition(teamID)
-			teamStarts[teamID] = {
-				["x"] = x,
-				["y"] = y,
-				["z"] = z,
-			}
-			--Spring.Echo("teamStarts", teamID, x, y, z)
-		else
-			teamStarts[teamID].y = Spring.GetGroundHeight(teamStarts[teamID].x,teamStarts[teamID].z)
-		end	
+		if teamID ~= Spring.GetGaiaTeamID() then
+			if not teamStarts[teamID] then -- no profile, ask engine
+				local x,y,z = Spring.GetTeamStartPosition(teamID)
+				teamStarts[teamID] = {
+					["x"] = x,
+					["y"] = y,
+					["z"] = z,
+				}
+				--Spring.Echo("teamStarts", teamID, x, y, z)
+			else
+				teamStarts[teamID].y = Spring.GetGroundHeight(teamStarts[teamID].x,teamStarts[teamID].z)
+			end
+		end
+		sideStartUnits[teamID] = GetStartUnit(teamID)
 	end
 	local numTeamStarts = #teamStarts
 	if numTeamStarts > #existingTeams - 1 then
@@ -190,7 +191,6 @@ local function DeploySpawnBeacons(skip)
 		local teamID = teams[i]
 		-- don't spawn a start unit for the Gaia team
 		if (teamID ~= gaiaTeamID) then
-			sideStartUnits[teamID] = GetStartUnit(teamID)
 			SpawnStartUnit(teamID)
 		end
 	end
