@@ -255,7 +255,7 @@ end
 
 function LCLeft(beaconID, vPadID, teamID, died) -- called by LC once it has left, to start countdown
 	if Spring.ValidUnitID(vPadID) and (not Spring.GetUnitIsDead(vPadID)) and (teamID == Spring.GetUnitTeam(vPadID)) then
-		GG.Delay.DelayCall(Deliver, {vPadID, teamID}, (died and DEATH_DELAY or 0) + delays[padLevels[vPadID]] * teamSideMults[teamID] + math.random(10) * 30)
+		GG.Delay.DelayCall(Deliver, {vPadID, teamID}, (died and DEATH_DELAY or 0) + delays[padLevels[vPadID]] * (teamSideMults[teamID] or 1) + math.random(10) * 30)
 	end
 end
 GG.LCLeft = LCLeft
@@ -376,7 +376,7 @@ end
 
 function gadget:UnitGiven(unitID, unitDefID, newTeam, oldTeam)
 	if SPAWN_DEF_IDS[unitDefID] then
-		GG.Delay.DelayCall(Deliver, {unitID, newTeam}, delays[padLevels[unitID]] * teamSideMults[teamID] + math.floor(math.random(10) * 30))
+		GG.Delay.DelayCall(Deliver, {unitID, newTeam}, delays[padLevels[unitID]] * (teamSideMults[teamID] or 1) + math.floor(math.random(10) * 30))
 		spawnPads[unitID] = Spring.GetGameFrame()
 	end
 end
