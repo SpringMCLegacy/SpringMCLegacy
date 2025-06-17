@@ -228,19 +228,17 @@ function gadget:GamePreload()
 				end
 			end
 		end
-		EXPECTED_FLAGS = #flagSpots + #teams - 1
 	else
-		for i=1,20 do
-			Spring.Echo("NO MAP PROFILE FOUND FOR " .. Game.mapName)
-		end
+		Spring.Echo("NO MAP PROFILE FOUND FOR " .. Game.mapName, "FALLING BACK TO USING START POSITIONS")
 		Map = {}
 		Map.configFile = "maps/" .. Game.mapName .. ".smd"
 		local mh = VFS.Include("maphelper/mapinfo.lua")
+
 		for t = #teams - 1, #(mh.teams) do -- start beyond spawned teams
 			table.insert(flagSpots, mh.teams[t]["startpos"])
 		end
-		EXPECTED_FLAGS = #flagSpots
 	end
+	EXPECTED_FLAGS = #flagSpots + #teams - 1
 	flagTypeSpots["beacon"] = flagSpots 
 	temps.ambient = temps.ambient or 20
 	temps.water = temps.water or 10
@@ -378,6 +376,7 @@ function gadget:GameFrame(n)
 				local flagAllyTeamCounts = {} -- flagAllyTeamCounts[teamID] = number
 				-- First check if there are any friendly (ally) units here -> flag is defended
 				local unitsAtFlag = GetUnitsInCylinder(currSpot.x, currSpot.z, currSpot.radius)
+				Spring.Echo("spotNum", spotNum, "of numFlags", numFlags[flagType], "size unitsOfFlag", #unitsAtFlag)
 				StripUnits(unitsAtFlag) -- strips table (in place) of ignored unitdefs
 				
 				for i, unitID in ipairs(unitsAtFlag) do
