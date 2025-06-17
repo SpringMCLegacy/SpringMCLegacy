@@ -376,7 +376,6 @@ function gadget:GameFrame(n)
 				local flagAllyTeamCounts = {} -- flagAllyTeamCounts[teamID] = number
 				-- First check if there are any friendly (ally) units here -> flag is defended
 				local unitsAtFlag = GetUnitsInCylinder(currSpot.x, currSpot.z, currSpot.radius)
-				Spring.Echo("spotNum", spotNum, "of numFlags", numFlags[flagType], "size unitsOfFlag", #unitsAtFlag)
 				StripUnits(unitsAtFlag) -- strips table (in place) of ignored unitdefs
 				
 				for i, unitID in ipairs(unitsAtFlag) do
