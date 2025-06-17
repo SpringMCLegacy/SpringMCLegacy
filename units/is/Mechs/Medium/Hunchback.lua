@@ -103,7 +103,7 @@ local HBK5S = Hunchback:New{
     },
 }
 
-local HBK5M = Hunchback:New{
+local HBK5N = Hunchback:New{
 	description         = "Medium Juggernaut",
 	weapons	= {	
 		[1] = {
@@ -134,11 +134,17 @@ local HBK5M = Hunchback:New{
 
 return lowerkeys({
 	["FS_Hunchback_HBK4G"] = HBK4G:New(),
-	--["FS_Hunchback_HBK4P"] = HBK4P:New(),
+	["FS_Hunchback_HBK4P"] = HBK4P:New(),
+	
 	["DC_Hunchback_HBK4G"] = HBK4G:New(),
+	["DC_Hunchback_HBK4P"] = HBK4P:New(),
+	
 	["CC_Hunchback_HBK4G"] = HBK4G:New(),
 	["CC_Hunchback_HBK4P"] = HBK4P:New(),
+	
+	["LA_Hunchback_HBK4P"] = HBK4P:New(),
 	["LA_Hunchback_HBK5S"] = HBK5S:New(),
-	["FW_Hunchback_HBK5M"] = HBK5M:New(),
-	--["FW_Hunchback_HBK4P"] = HBK4P:New(),
+	
+	["FW_Hunchback_HBK4P"] = HBK4P:New(),
+	["FW_Hunchback_HBK5N"] = HBK5M:New(),
 })
