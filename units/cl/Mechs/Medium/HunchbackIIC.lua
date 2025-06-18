@@ -1,6 +1,12 @@
 local HunchbackIIC = Medium:New{
 	name				= "Hunchback IIC",
 
+	leaveTracks			= true,	
+	trackType			= "Hunchback",
+	trackOffset			= 6,
+	trackWidth			= 36,
+	trackStretch 		= 2,
+	
 	customparams = {
 		tonnage			= 50,
 		cockpitheight	= 9.3,
@@ -16,12 +22,14 @@ local Mk1 = HunchbackIIC:New{
 		},
 		[2] = {
 			name	= "UAC20",
+			SlaveTo = 1,
 		},
 		[3] = {
-			name	= "MBL",
+			name	= "CERMBL",
 		},
 		[4] = {
-			name	= "MBL",
+			name	= "CERMBL",
+			SlaveTo = 3,
 		},
 	},
 		
@@ -37,8 +45,55 @@ local Mk1 = HunchbackIIC:New{
     },
 }
 
+local Mk2 = HunchbackIIC:New{
+	description         = "Medium Striker",
+	weapons	= {	
+		[1] = {
+			name	= "HLBL",
+			OnlyTargetCategory = "ground",
+		},
+		[2] = {
+			name	= "HLBL",
+			SlaveTo = 1,
+		},
+		[3] = {
+			name	= "HLBL",
+			SlaveTo = 1,
+		},
+		[4] = {
+			name	= "HLBL",
+			OnlyTargetCategory = "ground",
+		},
+		[5] = {
+			name	= "HLBL",
+			SlaveTo = 4,
+		},
+		[6] = {
+			name	= "HLBL",
+			SlaveTo = 4,
+		},
+		[7] = {
+			name	= "CMPL",
+		},
+		[8] = {
+			name	= "CMPL",
+			SlaveTo = 7,
+		},
+	},
+		
+	customparams = {
+		variant			= "Mk 2",
+		speed			= 60,
+		price			= 18690,
+		heatlimit 		= 29, --19 double
+		armor			= 6,
+		jumpjets		= 4,
+    },
+}
+
 return lowerkeys({
 	["WF_HunchbackIIC_Mk1"] = Mk1:New(),
+	["WF_HunchbackIIC_Mk2"] = Mk2:New(),
 	--["HH_HunchbackIIC_Mk1"] = Mk1:New(),
 	--["GB_HunchbackIIC_Mk1"] = Mk1:New(),
 	--["JF_HunchbackIIC_Mk1"] = Mk1:New(),
