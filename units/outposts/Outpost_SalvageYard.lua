@@ -1,5 +1,5 @@
 local Outpost_SalvageYard = Outpost:New{
-	name              	= "Salvage Yard (Upgrade)",
+	name              	= "Salvage Yard (Modify)",
 	description         = "Salvage & Recovery outpost",
 	maxDamage           = 10000,
 	mass                = 9000,
@@ -16,5 +16,5 @@ local Outpost_SalvageYard = Outpost:New{
 }
 
 return lowerkeys({ 
---["outpost_SalvageYard"] = Outpost_SalvageYard 
+	["outpost_SalvageYard"] = Outpost_SalvageYard 
 })

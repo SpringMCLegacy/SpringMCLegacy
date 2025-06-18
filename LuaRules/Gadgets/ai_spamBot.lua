@@ -34,6 +34,7 @@ local AI_OUTPOST_OPTIONS = {
 	"OUTPOST_UPLINK",
 	"OUTPOST_EWAR",
 	"OUTPOST_MECHBAY",
+	"OUTPOST_SALVAGEYARD",
 }
 
 local AI_OUTPOST_DEFS = {}
@@ -49,9 +50,9 @@ local PERK_JUMP_RANGE = GG.CustomCommands.GetCmdID("PERK_JUMP_EFFICIENCY")
 local desired = {"CMD_SEND_ORDER", "CMD_DROPZONE", -- mech purchasing
 				"CMD_DROPZONE_2", "CMD_DROPZONE_3", -- dropship upgrading
 				"CMD_JUMP", "CMD_MASC", -- mech behaviour
-				 "CMD_OUTPOST_C3ARRAY", "CMD_OUTPOST_VEHICLEPAD", "CMD_OUTPOST_EWAR", "CMD_OUTPOST_GARRISON", "CMD_OUTPOST_UPLINK", -- outposts (can already use)
-				 "CMD_OUTPOST_MECHBAY", "CMD_OUTPOST_TURRETCONTROL", -- outposts (maybe soon)
-				 "CMD_OUTPOST_SEISMIC", --"CMD_OUTPOST_SALVAGEYARD" -- outposts (not a priority)
+				 "CMD_OUTPOST_C3ARRAY", "CMD_OUTPOST_VEHICLEPAD", "CMD_OUTPOST_EWAR", "CMD_OUTPOST_GARRISON", "CMD_OUTPOST_UPLINK",
+				 "CMD_OUTPOST_MECHBAY", "CMD_OUTPOST_SALVAGEYARD", 
+				 --"CMD_OUTPOST_TURRETCONTROL",	 "CMD_OUTPOST_SEISMIC", 
 				 }
 local AI_CMDS = {}
 for _, cmd in pairs(desired) do

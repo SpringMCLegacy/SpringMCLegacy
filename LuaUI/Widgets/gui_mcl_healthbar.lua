@@ -235,7 +235,7 @@ local function GenerateUnitGraphics(uid, udid, getAuras)
 			local currSalvage, maxSalvage = Spring.GetUnitHarvestStorage(uid) -- TODO: cache BRVs
 			if currSalvage then
 				bars.salvage = {}
-				bars.salvage.color = {0.625, 0.625, 0.625, 0.8}
+				bars.salvage.color = {0.77647, 0.88627, 1, 0.8} --198\226\255
 			end	
 
         end

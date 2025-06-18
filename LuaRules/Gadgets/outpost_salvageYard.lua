@@ -6,7 +6,7 @@ function gadget:GetInfo()
 		date		= "22/08/13",
 		license 	= "GNU GPL v2",
 		layer		= 0,
-		enabled	= false	--	loaded by default?
+		enabled		= true,
 	}
 end
 
@@ -34,7 +34,8 @@ local DelayCall				 = GG.Delay.DelayCall
 -- Constants
 local GAIA_TEAM_ID = Spring.GetGaiaTeamID()
 local BEACON_ID = UnitDefNames["beacon"].id
-local BRV_ID = UnitDefNames["brv"].id -- TODO: support multiple brv types
+local BRV_ID = UnitDefNames["salvager"].id -- TODO: support multiple brv types
+GG.SALVAGER_ID = BRV_ID
 local SALVAGEYARD_ID = UnitDefNames["outpost_salvageyard"] and UnitDefNames["outpost_salvageyard"].id or nil
 
 local SALVAGE_RANGE = 1000
@@ -109,7 +110,7 @@ local function SpawnBRV(yardID, teamID)
 	-- TODO: change depending on level? or via buildmenu
 	local x, y, z = Spring.GetUnitPosition(yardID)
 	yardPos[yardID] = {["x"] = x, ["y"] = y, ["z"] = z}
-	local brvID = Spring.CreateUnit("brv", x,y,z, 0, teamID)
+	local brvID = Spring.CreateUnit(BRV_ID, x,y,z, 0, teamID)
 	if brvID then
 		salvagerYards[brvID] = yardID
 		yardSalvagers[yardID] = brvID
@@ -194,8 +195,10 @@ function gadget:CommandFallback(unitID, unitDefID, teamID, cmdID, cmdParams, cmd
 		local yardID = salvagerYards[unitID]
 		local dist = Spring.GetUnitSeparation(unitID, yardID)
 		if dist and dist < 50 then
-			--Spring.Echo("Made it back, have " .. Spring.GetUnitHarvestStorage(unitID) .. " CBills!")
-			Spring.AddTeamResource(teamID, "metal", Spring.GetUnitHarvestStorage(unitID))
+			local salvage = math.floor(Spring.GetUnitHarvestStorage(unitID) / 100)
+			--Spring.Echo("Made it back, have " .. salvage .. " Salvage!")
+			--Spring.AddTeamResource(teamID, "metal", Spring.GetUnitHarvestStorage(unitID))
+			GG.ChangeTeamSalvage(teamID, salvage)
 			Spring.SetUnitHarvestStorage(unitID, 0)
 			local pos = yardPos[yardID]
 			GG.Delay.DelayCall(Spring.GiveOrderToUnit, {unitID, CMD.RECLAIM, {pos.x, pos.y, pos.z, SALVAGE_RANGE}, {}}, 1) -- TODO: range change

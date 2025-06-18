@@ -372,8 +372,14 @@ end
 function gadget:ProjectileCreated(proID, proOwnerID, weaponID)
 	--local name = Spring.GetProjectileName(proID)
 	local weap, piece = Spring.GetProjectileType(proID)
-	if piece and GG.mechCache[Spring.GetUnitDefID(proOwnerID)] --[[and names[name]] then pieces[proID] = true end
 	--Spring.Echo("PC", proID, proOwnerID, weaponID, name, defID, weap, piece)
+	if Spring.ValidUnitID(proOwnerID) and piece then
+		local unitDefID = Spring.GetUnitDefID(proOwnerID)
+		local ud = UnitDefs[unitDefID]
+		if (GG.mechCache[unitDefID] or unitDefID == GG.SALVAGER_ID)--[[and names[name]] then 
+			pieces[proID] = true 
+		end
+	end
 end
 	
 function gadget:ProjectileDestroyed(proID)

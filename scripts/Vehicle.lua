@@ -747,8 +747,29 @@ if unitDef.isBuilder then -- BRVS
 	end
 	
 	function script.StopBuilding()
+		--Spring.Echo("StopBuilding!")
 		SetUnitValue(COB.INBUILDSTANCE, 0)
 		-- TODO: fold up anim
+		Turn(piece("crane_claw2"), x_axis, 0, CRANE_Y)
+		Turn(piece("crane_claw1"), x_axis, 0, CRANE_Y)
+		Turn(piece("crane_wrist2"), z_axis, 0, CRANE_Y * 3)
+		Move(piece("crane_arm2"), z_axis, 0, CRANE_Y * 30)
+		WaitForTurn(piece("crane_wrist2"), z_axis)
+		Turn(piece("crane_sleeve"), x_axis, math.rad(130), CRANE_Y * 3)
+		WaitForTurn(piece("crane_sleeve"), x_axis)
+		Turn(piece("crane_sleeve"), x_axis, 0, CRANE_Y * 3)
+		WaitForTurn(piece("crane_sleeve"), x_axis)
+		Turn(piece("crane_turret"), y_axis, 0, CRANE_Y * 3)
+		Turn(piece("crane_base"), x_axis, 0, CRANE_Y)
+		Turn(piece("crane_arm1"), x_axis, 0, CRANE_Y * 3)
+		WaitForTurn(piece("crane_turret"), y_axis)
+		WaitForTurn(piece("crane_arm1"), x_axis)
+	end
+	
+	function GenSalvage(amount)
+		for i = 1, amount do
+			Explode(piece("crane_base"), SFX.FIRE + SFX.SMOKE)
+		end
 	end
 end
 
@@ -771,5 +792,11 @@ function script.Killed(recentDamage, maxHealth)
 	--	Explode(body, math.bit_or({SFX.FALL, SFX.SMOKE, SFX.FIRE, SFX.EXPLODE_ON_HIT, SFX.BITMAP1}))
 	--	return 3
 	--end
+	if unitDef.isBuilder then
+		local attackerID = Spring.GetUnitLastAttacker(unitID)
+		local numSalvage = math.floor(Spring.GetUnitHarvestStorage(unitID) / 100) * GG.PinataLevel(attackerID) + 1 -- always produce at least 1
+		GenSalvage(numSalvage)
+	end
+	
 	return 1
 end

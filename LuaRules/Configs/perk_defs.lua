@@ -622,7 +622,7 @@ return {
 				tooltip = 'Unlocks Heavy Battlemech Recovery Vehicle, allowing recovery of mechs over 60 tons',
 				texture = 'bitmaps/ui/upgrade.png',	
 			},
-			valid = function (unitDefID) return UnitDefs[unitDefID].name == "outpost_salvageyard" end,
+			valid = function (unitDefID) return end,--UnitDefs[unitDefID].name == "outpost_salvageyard" end,
 			applyPerk = function (unitID)
 				--GG.SetMechBayLevel(unitID, 2)
 			end,
@@ -638,7 +638,7 @@ return {
 				tooltip = 'Adds a VTOL Recovery Vehicle that picks up salvage and recovers dead mechs',
 				texture = 'bitmaps/ui/upgrade.png',	
 			},
-			valid = function (unitDefID) return UnitDefs[unitDefID].name == "outpost_salvageyard" end,
+			valid = function (unitDefID) return end,--UnitDefs[unitDefID].name == "outpost_salvageyard" end,
 			applyPerk = function (unitID)
 				--GG.SetMechBayLevel(unitID, 3)
 			end,
