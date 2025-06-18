@@ -75,3 +75,30 @@
    count=1;
    }
 }
+
+
+[HEAVYLASER_MUZZLEFLASH] //THANKS TO ME
+{
+   [BitmapMuzzleFlame]
+   {
+   class = CBitmapMuzzleFlame;
+
+   [properties]
+         {
+            dir = dir;
+            colorMap= 1.0 1.0 0.0 0.01   1.0 1.0 0.0 0.01   0 0 0 0.01;
+             size=6;
+             length=12;
+             sizeGrowth=1;
+             ttl=2;
+             frontOffset=0.05;
+             sideTexture=shot;
+             frontTexture=empty;
+         }
+   water=1;
+   air=1;
+   underwater=1;
+   ground=1;
+   count=1;
+   }
+}

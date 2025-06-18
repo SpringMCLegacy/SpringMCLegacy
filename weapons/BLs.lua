@@ -178,6 +178,30 @@ local CERLBL = ERLBL:New{
 	},
 }
 
+local HLBL = BeamLaser_Class:New{
+	name                    = "Heavy LLaser",
+	soundStart           	= [[LBL_Fire]],
+	beamBurst 				= false,
+	largeBeasmLaser			= true,
+	sweepFire 				= true,
+	range                   = 1500,
+	accuracy                = 350,
+	reloadtime              = 5,
+	thickness				= 2,
+	coreThickness			= 0.5,
+	beamTime           		= 1.5,
+	beamTTL           		= 3,
+	beamDecay				= 0.5,
+	rgbcolor				= [[1.0 1.0 0.2]],
+	damage = {
+		default = 320,
+	},
+	customparams = {
+		heatgenerated		= 6,
+		cegflare			= "HEAVYLASER_MUZZLEFLASH",
+    },
+}
+
 return lowerkeys({ 
 	Sight = Sight,
 	TAG = TAG,
@@ -190,4 +214,5 @@ return lowerkeys({
 	LBL = LBL,
 	ERLBL = ERLBL,
 	CERLBL = CERLBL,
+	HLBL = HLBL,
 })
