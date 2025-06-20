@@ -247,12 +247,14 @@ function gadget:AllowCommand(unitID, unitDefID, teamID, cmdID, cmdParams, cmdOpt
 		if cmdParams[1] == 2 then
 			--Spring.Echo("Engage stealth armour!")
 			Spring.SetUnitSensorRadius(unitID, "radarJammer", 10)
+			Spring.SetUnitRulesParam(unitID, "FXOFF", 1)
 			Spring.SetUnitStealth(unitID, true)
 			GG.stealthActive[unitID] = true
 		else
 			Spring.SetUnitSensorRadius(unitID, "radarJammer", UnitDefs[unitDefID].jammerRadius) -- TODO: respect mods
 			Spring.SetUnitStealth(unitID, false)
 			GG.stealthActive[unitID] = false
+			Spring.SetUnitRulesParam(unitID, "FXOFF", 0)
 		end
 		GG.onOffCmdDesc.params[1] = cmdParams[1]
 		GG.stealthParams[1] = cmdParams[1]
