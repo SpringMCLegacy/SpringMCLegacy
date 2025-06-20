@@ -4,7 +4,7 @@ local Hunchback = Medium:New{
 	leaveTracks			= true,	
 	trackType			= "Hunchback",
 	trackOffset			= 6,
-	trackWidth			= 36,
+	trackWidth			= 26,
 	trackStretch 		= 2,
 	
 	customparams = {
