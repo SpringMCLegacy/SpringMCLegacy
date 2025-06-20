@@ -246,7 +246,7 @@ local function CoolOff()
 			local depth = min(4, GetGroundHeight(x, z) / -10)
 			coolRate = baseCoolRate * waterCoolRate * depth
 		end
-		--if GG.stealthActive[unitID] then coolRate = 0 end
+		if GG.stealthActive[unitID] then coolRate = coolRate * 0.75 end
 		if currHeatLevel > heatCriticalLimit then 
 			if not heatCritical then -- either elevated->critical or normal->critical
 				heatElevated = false
