@@ -70,7 +70,7 @@ local TAG = BeamLaser_Class:New{
 local SBL = BeamLaser_Class:New{
 	name                    = "SLaser",
 	soundStart           	= [[SBL_Fire]],
-	range                   = 300,
+	range                   = 600,
 	--accuracy                = 150,	
 	reloadtime              = 2.5,
 	thickness				= 1,
@@ -90,7 +90,7 @@ local SBL = BeamLaser_Class:New{
 
 local ERSBL = SBL:New{
 	name                    = "ERSLaser",
-	range                   = 500,
+	range                   = 800,
 	customparams = {
 		heatgenerated		= 0.5,--0.2/sec
     },
@@ -98,7 +98,7 @@ local ERSBL = SBL:New{
 
 local CERSBL = ERSBL:New{
 	name                    = "CERSLaser",
-	range                   = 600,
+	range                   = 900,
 	damage = {
 		default = 12.5--x 10 (burst) x 4 times per 10 seconds = 500 damage
 	},
