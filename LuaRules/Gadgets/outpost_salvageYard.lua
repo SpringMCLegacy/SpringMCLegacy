@@ -38,13 +38,18 @@ local BRV_ID = UnitDefNames["salvager"].id -- TODO: support multiple brv types
 GG.SALVAGER_ID = BRV_ID
 local SALVAGEYARD_ID = UnitDefNames["outpost_salvageyard"] and UnitDefNames["outpost_salvageyard"].id or nil
 
-local SALVAGE_RANGE = 1000
+local SALVAGE_RANGE = 4000
+local CONVERSION_RATE = 40 -- 1000 metal / this = 25
+local RATE_PER_TICK = 1
+local TIME_PER_TICK = 30 * 60 -- 1 minute
 local CMD_DEPOSIT = GG.CustomCommands.GetCmdID("CMD_DEPOSIT")
 
 -- Variables
 local yardLevels = {} -- yardLevels[yardID] = 1, 2 or 3
 local yardQueues = {} -- yardQueues[yardID] = {{dist = number, id = featureID}, ...}, from furthest to closest
 local yardPos = {} -- yardPos[yardID] = {x = x, y = y, z = z}
+local yardRaws = {} -- yardRaws[yardID] = metalInHarvestStorage
+local yardTeams = {} -- yardTeams[yardID] = teamID
 
 local salvagerYards = {} -- salvagerYards[salvagerID] = yardID
 local yardSalvagers = {} -- for now; yardSalvagers[yardID] = salvagerID
@@ -126,6 +131,8 @@ function gadget:UnitCreated(unitID, unitDefID, teamID, builderID)
 	if unitDefID == SALVAGEYARD_ID then
 		yardLevels[unitID] = 1
 		yardQueues[unitID] = {}
+		yardRaws[unitID] = 0
+		yardTeams[unitID] = teamID
 	elseif unitDefID == BRV_ID then-- TODO: support multiple types of brv
 		InsertUnitCmdDesc(unitID, depositCmdDesc)
 	end
@@ -195,10 +202,13 @@ function gadget:CommandFallback(unitID, unitDefID, teamID, cmdID, cmdParams, cmd
 		local yardID = salvagerYards[unitID]
 		local dist = Spring.GetUnitSeparation(unitID, yardID)
 		if dist and dist < 50 then
-			local salvage = math.floor(Spring.GetUnitHarvestStorage(unitID) / 100)
+			local raw = Spring.GetUnitHarvestStorage(unitID)
+			local salvage = math.floor(raw / CONVERSION_RATE)
 			--Spring.Echo("Made it back, have " .. salvage .. " Salvage!")
 			--Spring.AddTeamResource(teamID, "metal", Spring.GetUnitHarvestStorage(unitID))
-			GG.ChangeTeamSalvage(teamID, salvage)
+			--GG.ChangeTeamSalvage(teamID, salvage)
+			yardRaws[yardID] = yardRaws[yardID] + raw
+			Spring.SetUnitHarvestStorage(yardID, yardRaws[yardID])
 			Spring.SetUnitHarvestStorage(unitID, 0)
 			local pos = yardPos[yardID]
 			GG.Delay.DelayCall(Spring.GiveOrderToUnit, {unitID, CMD.RECLAIM, {pos.x, pos.y, pos.z, SALVAGE_RANGE}, {}}, 1) -- TODO: range change
@@ -220,6 +230,22 @@ function gadget:Initialize()
 		local teamID = Spring.GetUnitTeam(unitID)
 		local unitDefID = Spring.GetUnitDefID(unitID)
 		gadget:UnitCreated(unitID, unitDefID, teamID)
+	end
+end
+
+function gadget:GameFrame(n)
+	if n % TIME_PER_TICK == 5 then
+		for yardID, teamID in pairs(yardTeams) do
+			-- turn water into wine
+			local totalRaw = yardRaws[yardID]
+			local totalSalvage = math.floor(totalRaw / CONVERSION_RATE)
+			local rawAvailable = math.min(CONVERSION_RATE, totalRaw)
+			local salvageAvailable = math.min(rawAvailable/CONVERSION_RATE, RATE_PER_TICK)
+			GG.ChangeTeamSalvage(teamID, salvageAvailable * yardLevels[yardID])
+			-- consume the raw
+			yardRaws[yardID] = yardRaws[yardID] - rawAvailable
+			Spring.SetUnitHarvestStorage(yardID, yardRaws[yardID])
+		end
 	end
 end
 

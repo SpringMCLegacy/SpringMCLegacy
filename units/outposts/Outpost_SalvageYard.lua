@@ -10,6 +10,8 @@ local Outpost_SalvageYard = Outpost:New{
 	transportMass		= 10000,
 	loadingradius		= 100,
 	
+	harvestStorage		= 20000,
+	
 	sounds = {
 		select = "salvageyard",
 	}
