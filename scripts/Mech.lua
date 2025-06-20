@@ -829,9 +829,10 @@ function script.EndBurst(weaponID)
 	local weapDef = WeaponDefs[unitDef.weapons[weaponID].weaponDef]
 	if spinSpeeds[weaponID] then
 		StartThread(SpinBarrels, weaponID, false)
-	elseif weaponsToReset[weaponID] then
+	end
+	if weaponsToReset[weaponID] then
 		Spring.SetUnitWeaponState(unitID, weaponID, "accuracy", weapDef.accuracy)
-		Spring.SetUnitWeaponState(unitID, weaponID, "projectileSpeed", weapDef.weaponVelocity or 0)
+		Spring.SetUnitWeaponState(unitID, weaponID, "projectileSpeed", weapDef.projectilespeed or 100)
 	end
 	
 end

@@ -10,7 +10,6 @@ local BeamLaser_Class = Weapon:New{
 	turret                  = true,
 	targetMoveError			= 0.1,
 	areaOfEffect            = 5,
-	weaponVelocity          = 2000,
 	laserFlareSize			= 0.1,
 	minIntensity			= 1,
 	intensity				= 0.75,
