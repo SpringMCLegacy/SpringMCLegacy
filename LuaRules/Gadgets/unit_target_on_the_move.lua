@@ -283,6 +283,12 @@ if gadgetHandler:IsSyncedCode() then
 
 	--------------------------------------------------------------------------------
 	-- Command Tracking
+	
+	-- if the user has settarget, disallow engine generated attack commands
+	function gadget:AllowWeaponTargetCheck(attackerID, attackerWeaponNum, attackerWeaponDefID)
+		local hasSetTarget = unitTargets[attackerID]
+		return hasSetTarget, not hasSetTarget
+	end
 
 	local function processCommand(unitID, unitDefID, teamID, cmdID, cmdParams, cmdOptions)
 		if cmdID == CMD_UNIT_SET_TARGET_NO_GROUND or cmdID == CMD_UNIT_SET_TARGET or cmdID == CMD_UNIT_SET_TARGET_RECTANGLE then

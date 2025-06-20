@@ -759,6 +759,11 @@ function script.BlockShot(weaponID, targetID, userTarget)
 end
 
 function script.TargetWeight(weaponID, targetID)
+	local setTarget = Spring.GetUnitRulesParam(unitID, "targetID")
+	--Spring.Echo("Karen says I've reached my TargetWeight", weaponID, targetID, "setTarget", setTarget)
+	if setTarget and setTarget ~= "" and setTarget ~= -1 then
+		return targetID == setTarget and 0.01 or 100
+	end
 	local targetDefID = Spring.GetUnitDefID(targetID)
 	if not targetDefID then return 1 end
 	local weapDef = WeaponDefs[unitDef.weapons[weaponID].weaponDef]
