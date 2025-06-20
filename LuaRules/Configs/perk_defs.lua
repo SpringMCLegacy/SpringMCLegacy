@@ -1065,7 +1065,7 @@ return {
 				id = GetCmdID('MOD_STEALTH_ARMOUR'),
 				action = 'modstealtharmour',
 				name = GG.Pad("Stealth", "Armour"),
-				tooltip = 'Invisible to enemy sensors, including Beagle Active Probes, can not be targeted by lock-on weapons, and any unit that shoots at it will suffer 25% accuracy reduction. However, prevents dissapation of heat.',
+				tooltip = 'Invisible to enemy sensors, including Beagle Active Probes, can not be targeted by lock-on weapons, and any unit that shoots at it will suffer 25% accuracy reduction. However, disables Mechs own sensors.',
 				texture = 'bitmaps/ui/perkgreen.png',	
 			},
 			valid = isMechBay,
