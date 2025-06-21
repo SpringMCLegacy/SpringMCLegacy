@@ -719,7 +719,7 @@ function script.BlockShot(weaponID, targetID, userTarget)
 	local jammable = jammableIDs[weaponID]
 	if jammable then
 		if targetID then
-			if GG.stealthActive[unitID] then return true end -- Can't fire guided weapons in stealth mode
+			if GG.stealthActive[unitID] or not activated then return true end -- Can't fire guided weapons in stealth mode
 			local jammed = (GetUnitUnderJammer(targetID) -- under the effects of ECM
 				or GG.stealthActive[targetID]) -- OR stealth armour
 				and (not IsUnitNARCed(targetID)) and (not IsUnitTAGed(targetID)) -- AND not TAGed or NARCed
