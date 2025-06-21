@@ -25,11 +25,12 @@ local GetActiveCommand		= Spring.GetActiveCommand
 local GetSelectedUnits		= Spring.GetSelectedUnits
 
 local AttackRed = {1.0, 0.2, 0.2, 0.7}
-local BuildGreen = {0.3, 1.0, 0.3, 0.5} -- doesn't match engine for some reason so make less opaque
+--local BuildGreen = {0.3, 1.0, 0.3, 0.5} -- doesn't match engine for some reason so make less opaque
+local SalvageBlue = {0.77647, 0.88627, 1, 0.5}
 
 local minRanges = {} -- minRange[unitDefID] = {weapName = range, ...}
 local maxRanges = {}
-local buildRanges = {} -- buildRange[unitDefID] = minRange
+local salvageRanges = {} -- salvageRange[unitDefID] = minRange
 
 local maxRangesToDraw = {} -- maxRangesToDraw[unitDefID] = {range = string}
 local minRangesToDraw = {} -- minRangesToDraw[unitDefID] = {range = string}
@@ -58,9 +59,9 @@ function widget:Initialize()
 			end
 		end
 		maxRanges[unitDefID] = weaponTypes
-		local buildRange = unitDef.customParams.minbuildrange or nil
-		if buildRange then
-			buildRanges[unitDefID] = buildRange
+		local salvageRange = unitDef.customParams.salvagerange or nil
+		if salvageRange then
+			salvageRanges[unitDefID] = salvageRange
 		end
 		-- now loop over min and max and build the strings
 		maxRangesToDraw[unitDefID] = {}
@@ -117,15 +118,15 @@ function widget:DrawWorldPreUnit()
 					gl.PopMatrix()
 				end
 			end
-		--[[elseif UnitDefNames[select(4, GetActiveCommand())] then -- command is a valid unitname i.e. build command
-			rangesToDraw = buildRanges[unitDefID]
+		else
+			rangesToDraw = salvageRanges[unitDefID]
 			if rangesToDraw then
 				local x, y, z = GetUnitPosition(unitID)
-				glColor(BuildGreen)
+				glColor(SalvageBlue)
 				gl.PushMatrix()
 					glDrawGroundCircle(x,y,z, rangesToDraw,24)
 				gl.PopMatrix()
-			end--]]
+			end
 		end
 		glColor(1,1,1,1)
 	end

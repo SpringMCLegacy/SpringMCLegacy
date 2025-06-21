@@ -14,7 +14,10 @@ local Outpost_SalvageYard = Outpost:New{
 	
 	sounds = {
 		select = "salvageyard",
-	}
+	},
+	customParams = {
+		salvagerange = 4000, -- actually salvage range
+	},
 }
 
 return lowerkeys({ 
