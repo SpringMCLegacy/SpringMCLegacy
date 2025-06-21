@@ -244,7 +244,7 @@ function widget:DrawScreen()
 		btFont:Print(c3Text, xMax * 0.45, yMax - 48, 16, "od")
 		btFont:Print(dropTime, xMax * 0.75, yMax - 32, 16, "odr")
 		if (haveArty or 0) > 0 then
-			btFont:Print(artyTime, xMax * 0.55, yMax - 48, 16, "odr")
+			btFont:Print(artyTime, xMax * 0.75, yMax - 48, 16, "odr")
 		end
 		btFont:Print("Tickets:", xMax - 58, yMax - 32, 16, "odr")
 		for allyTeam, ticketText in pairs(allyTicketTexts) do
