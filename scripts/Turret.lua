@@ -134,8 +134,10 @@ end
 
 function RealBoy()
 	StartThread(SmokeUnit, {base, turret})
-	noFiring = false
-	Spring.SetUnitNeutral(unitID, false)
+	if Spring.GetUnitTeam(unitID) ~= GAIA_TEAM_ID then
+		noFiring = false
+		Spring.SetUnitNeutral(unitID, false)
+	end
 	Spring.SetUnitStealth(unitID, false)
 	Spring.SetUnitSensorRadius(unitID, "los", unitDef.losRadius)
 	Spring.SetUnitSensorRadius(unitID, "los", unitDef.airLosRadius)
