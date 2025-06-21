@@ -141,6 +141,8 @@ end
 function gadget:UnitDestroyed(unitID, unitDefID, teamID)
 	yardLevels[unitID] = nil
 	yardQueues[unitID] = nil
+	yardRaws[unitID] = nil
+	yardTeams[unitID] = nil
 	salvagerYards[unitID] = nil
 	yardSalvagers[unitID] = nil
 	idleSalvagers[unitID] = nil
@@ -238,13 +240,15 @@ function gadget:GameFrame(n)
 		for yardID, teamID in pairs(yardTeams) do
 			-- turn water into wine
 			local totalRaw = yardRaws[yardID]
-			local totalSalvage = math.floor(totalRaw / CONVERSION_RATE)
-			local rawAvailable = math.min(CONVERSION_RATE, totalRaw)
-			local salvageAvailable = math.min(rawAvailable/CONVERSION_RATE, RATE_PER_TICK)
-			GG.ChangeTeamSalvage(teamID, salvageAvailable * yardLevels[yardID])
-			-- consume the raw
-			yardRaws[yardID] = yardRaws[yardID] - rawAvailable
-			Spring.SetUnitHarvestStorage(yardID, yardRaws[yardID])
+			if totalRaw and totalRaw > 0 then
+				local totalSalvage = math.floor(totalRaw / CONVERSION_RATE)
+				local rawAvailable = math.min(CONVERSION_RATE, totalRaw)
+				local salvageAvailable = math.min(rawAvailable/CONVERSION_RATE, RATE_PER_TICK)
+				GG.ChangeTeamSalvage(teamID, salvageAvailable * yardLevels[yardID])
+				-- consume the raw
+				yardRaws[yardID] = yardRaws[yardID] - rawAvailable
+				Spring.SetUnitHarvestStorage(yardID, yardRaws[yardID])
+			end
 		end
 	end
 end
