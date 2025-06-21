@@ -33,7 +33,7 @@ local MAX_BUILD_RANGE = UnitDefs[TURRETCONTROL_ID].buildDistance
 local towerDefIDs = {} -- towerDefIDs[unitDefID] = "turret" or "energy" or "ranged"
 local buildLimits = {} -- buildLimits[unitID] = {turret = 4, ...}
 local towerOwners = {} -- towerOwners[towerID] = outpostID
-local ownedTowers = {} -- ownedTowers[outpostID] = {towerID = true, ...}
+local ownedLimits = {} -- ownedLimits[outpostID] = {type = number, ...}
 
 
 -- Called by the outpost.lua script for the beacon it is associated with
@@ -67,7 +67,7 @@ end
 -- TOWERS
 function LimitTowerType(unitID, teamID, towerType, increase)	
 	local towersRemaining = buildLimits[unitID][towerType]
-	if increase then -- giving slots back
+	if increase and increase > ownedLimits[unitID][towerType] then -- giving slots back
 		buildLimits[unitID][towerType] = towersRemaining + increase
 		for tDefID, tType in pairs(towerDefIDs) do
 			if tType == towerType then
@@ -77,6 +77,8 @@ function LimitTowerType(unitID, teamID, towerType, increase)
 				end
 			end
 		end
+		local x, _, z = Spring.GetUnitPosition(unitID)
+		LinkCheck(x, z, unitID, teamID) -- check if this allows to control any link lost
 	elseif towersRemaining == 0 then 
 		Spring.SendMessageToTeam(teamID, "Limit reached for " .. towerType)
 		return false 
@@ -89,6 +91,7 @@ function LimitTowerType(unitID, teamID, towerType, increase)
 				end
 			end
 		end
+		ownedLimits[unitID][towerType] = ownedLimits[unitID][towerType] + 1
 		return true
 	end
 end
@@ -99,14 +102,13 @@ function gadget:UnitCreated(unitID, unitDefID, teamID, builderID)
 	local cp = unitDef.customParams
 	if unitDefID == TURRETCONTROL_ID then
 		buildLimits[unitID] = {["turret"] = 2, ["energy"] = 1, ["ranged"] = 1}
-		ownedTowers[unitID] = {}
+		ownedLimits[unitID] = {["turret"] = 0, ["energy"] = -1, ["ranged"] = -1}
 		LimitTowerType(unitID, teamID, "energy") -- reduce to 0 so we get the BP greyed out
 		LimitTowerType(unitID, teamID, "ranged") -- reduce to 0 so we get the BP greyed out
 	elseif cp and cp.baseclass == "tower" then
 		-- track creation of turrets and their originating beacons so we can give back slots if a turret dies
 		if builderID then -- ignore /give turrets
 			towerOwners[unitID] = builderID
-			ownedTowers[builderID][unitID] = true
 		end
 	end
 end
@@ -117,18 +119,20 @@ function gadget:UnitDestroyed(unitID, unitDefID, teamID, attackerID, attackerDef
 		local towerType = towerDefIDs[unitDefID]
 		LimitTowerType(towerOwnerID, teamID, towerType, 1) -- increase limit
 		towerOwners[unitID] = nil
-		if ownedTowers[towerOwnerID] then -- can be nil if control died, as this does not delete towerOwners
-			ownedTowers[towerOwnerID][unitID] = nil
+		if ownedLimits[towerOwnerID] then -- can be nil if control died, as this does not delete towerOwners
+			ownedLimits[towerOwnerID][towerType] = ownedLimits[towerOwnerID][towerType] - 1
 		end
 	elseif unitDefID == TURRETCONTROL_ID then -- turret control died, kill link and disable
-		for towerID in pairs(ownedTowers[unitID]) do
-			GG.ToggleLink(towerID, teamID, true)
-			local env = Spring.UnitScript.GetScriptEnv(towerID)
-			Spring.UnitScript.CallAsUnit(towerID, env.TeamChange, GAIA_TEAM_ID) -- toggle firing
-			DelayCall(TransferUnit, {towerID, GAIA_TEAM_ID}, 1)
-			DelayCall(SetUnitNeutral,{towerID, true}, 1)
+		for towerID, controllerID in pairs(towerOwners) do
+			if controllerID == unitID then
+				GG.ToggleLink(towerID, teamID, true)
+				local env = Spring.UnitScript.GetScriptEnv(towerID)
+				Spring.UnitScript.CallAsUnit(towerID, env.TeamChange, GAIA_TEAM_ID) -- toggle firing
+				DelayCall(TransferUnit, {towerID, GAIA_TEAM_ID}, 1)
+				DelayCall(SetUnitNeutral,{towerID, true}, 1)
+			end
 		end
-		ownedTowers[unitID] = nil
+		ownedLimits[unitID] = nil
 	end
 end
 
@@ -162,6 +166,35 @@ function gadget:AllowCommand(unitID, unitDefID, teamID, cmdID, cmdParams, cmdOpt
 	end
 	return true
 end
+
+
+function gadget:UnitGiven(unitID, unitDefID, teamID, oldTeamID)
+	if oldTeamID == GAIA_TEAM_ID and towerOwners[unitID] then -- a lost-link turret
+		GG.ToggleLink(unitID, teamID, false)
+		local env = Spring.UnitScript.GetScriptEnv(unitID)
+		Spring.UnitScript.CallAsUnit(unitID, env.TeamChange, teamID) -- toggle firing
+		LimitTowerType(towerOwners[unitID], teamID, towerDefIDs[unitDefID])
+	end
+end
+
+function LinkCheck(x, z, controllerID, teamID)
+	local nearUnits = Spring.GetUnitsInCylinder(x, z, MAX_BUILD_RANGE)
+	for _, unitID in pairs(nearUnits) do
+		local owner = towerOwners[unitID]
+		if owner and not ownedLimits[owner] then -- it is a turret but its owner is dead
+			if Spring.GetUnitRulesParam(unitID, "LOST_LINK") == 1 then -- make double sure 
+				--Spring.Echo("Hey there baby wanna hook up?", UnitDefs[Spring.GetUnitDefID(unitID)].name)
+				local towerType = towerDefIDs[Spring.GetUnitDefID(unitID)]
+				if buildLimits[controllerID][towerType] > 0 then
+					DelayCall(TransferUnit, {unitID, teamID}, 1)
+					DelayCall(SetUnitNeutral,{unitID, false}, 1)
+					towerOwners[unitID] = controllerID
+				end
+			end
+		end
+	end
+end
+GG.LinkCheck = LinkCheck
 
 function gadget:Initialize()
 	gadget:GamePreload()

@@ -564,6 +564,7 @@ function Unpack()
 		-- use our own location, not beaconID
 		local x, y, z = Spring.GetUnitPosition(unitID)
 		GG.BuildMaskCircle(x, z, 460 * 1.5, 2)
+		GG.LinkCheck(x, z, unitID, teamID)
 	elseif name == "outpost_ewar" then
 		local console2 = piece("console2")
 		Move(console2, z_axis, 7, CRATE_SPEED)

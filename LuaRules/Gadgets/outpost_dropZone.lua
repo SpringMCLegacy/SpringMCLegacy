@@ -81,7 +81,7 @@ local ignoredCmdDescs = {[CMD_SEND_ORDER] = true, [CMD_RUNNING_TOTAL] = true, [C
 local typeStrings = {"fast", "cqb", "flexible", "ranged"}
 local typeStringAliases = { -- whitespace is to try and equalise resulting font size
 	["fast"] 		= GG.Pad(10,"Recon", "EWAR"),-- "&", "Skirmisher"), 
-	["cqb"] 		= GG.Pad(10,"Short", "Range"),--, "&", "Juggernaut"), 
+	["cqb"] 		= GG.Pad(10,"Close", "Range"),--, "&", "Juggernaut"), 
 	["flexible"] 	= GG.Pad(12,"Multi", "Role"),-- "&", "Multirole"),
 	["ranged"] 		= GG.Pad(10,"Long","Range"), --"Sniper", "&", "Missile", "Boat "),
 }
