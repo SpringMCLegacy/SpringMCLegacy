@@ -162,6 +162,7 @@ if gadgetHandler:IsSyncedCode() then
 			spSetUnitRulesParam(unitID, "targetCoordY", targetData.target[2])
 			spSetUnitRulesParam(unitID, "targetCoordZ", targetData.target[3])
 		end
+		--Spring.Echo("Setting Target", targetData.target)
 		return true
 	end
 
@@ -286,8 +287,18 @@ if gadgetHandler:IsSyncedCode() then
 	
 	-- if the user has settarget, disallow engine generated attack commands
 	function gadget:AllowWeaponTargetCheck(attackerID, attackerWeaponNum, attackerWeaponDefID)
-		local hasSetTarget = unitTargets[attackerID]
-		return hasSetTarget, not hasSetTarget
+		--Spring.Echo("AllowWeaponTargetCheck", attackerID, attackerWeaponNum, attackerWeaponDefID, UnitDefs[Spring.GetUnitDefID(attackerID)].name)
+		local setTargetID = unitTargets[attackerID] and unitTargets[attackerID].targets[1].target
+		return setTargetID ~= nil, setTargetID == nil
+	end
+	
+	function gadget:AllowWeaponTarget(attackerID, targetID, attackerWeaponNum, attackerWeaponDefID, defPriority)
+		local setTargetID = unitTargets[attackerID] and unitTargets[attackerID].targets[1].target
+		--Spring.Echo("AllowWeaponTarget attackerID", attackerID, "targetID", targetID, "weapNum", attackerWeaponNum, "setTargetID", setTargetID)
+		if setTargetID then 
+			return setTargetID == targetID, 0.01
+		end
+		return true, 1--defPriority
 	end
 
 	local function processCommand(unitID, unitDefID, teamID, cmdID, cmdParams, cmdOptions)
@@ -461,8 +472,9 @@ if gadgetHandler:IsSyncedCode() then
 			return true
 		elseif cmdID == CMD.ATTACK then
 			-- direct attack commands override the set-target to avoid conflicting behavior
+			--Spring.Echo("yo bruv I got a CMD.ATTACK")
 			if unitTargets[unitID] then
-				removeUnit(unitID)
+				--removeUnit(unitID)
 			end
 			return false
 		end
@@ -641,8 +653,10 @@ else	-- UNSYNCED
 	end
 
 	function handleTargetListEvent(_, unitID, index, alwaysSeen, ignoreStop, userTarget, targetA, targetB, targetC)
+		--Spring.Echo("handleTargetListEvent", 0)
 		if index == 0 then
 			targetList[unitID] = nil
+			--Spring.Echo("handleTargetListEvent", 1)
 			return
 		end
 		targetList[unitID] = targetList[unitID] or {}
@@ -655,6 +669,7 @@ else	-- UNSYNCED
 			userTarget = userTarget,
 			target = (not tonumber(targetB) and targetA) or { targetA, targetB, targetC },
 		}
+		--Spring.Echo("handleTargetListEvent", 2)
 	end
 
 	function handleTargetIndexEvent(_, unitID, index)
@@ -688,11 +703,12 @@ else	-- UNSYNCED
 	--end
 
 	local function drawTargetCommand(targetData, myTeam, myAllyTeam)
-
+	--Spring.Echo("drawTargetCommand", 0)
 		if targetData then
-
+			--Spring.Echo("drawTargetCommand", 1)
 			if targetData.userTarget and tonumber(targetData.target) and spValidUnitID(targetData.target) then
 				--single unit target
+				--Spring.Echo("drawTargetCommand", 2)
 				if fullview then
 					local _, _, _, _, _, _, x2, y2, z2 = spGetUnitPosition(targetData.target, true, true)
 					glVertex(x2, y2, z2)

@@ -213,6 +213,7 @@ function gadget:Initialize()
 		Script.SetWatchWeapon(weaponID, true)
 	end
 	for id, wd in pairs(WeaponDefs) do
+		if wd.name ~= "sight" then Script.SetWatchAllowTarget(id, true) end
 		if wd.customParams and (wd.customParams.projectilelups or wd.customParams.weaponclass == "lbx") or wd.name == "gauss" then
 			Script.SetWatchWeapon(id, true) -- we can't call SWW outside of synced so do it here
 			if wd.customParams.weaponclass == "lbx" then -- don't include the cluster munuitions themselves or we end up with circular bs
