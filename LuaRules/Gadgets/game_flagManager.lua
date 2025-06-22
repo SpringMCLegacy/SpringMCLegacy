@@ -136,7 +136,7 @@ function DecrementTickets(allyTeam)
 		--Spring.Echo("AllyTeam " .. allyTeam .. "[".. beaconsPerAllyTeam[allyTeam] .. "] lost 1 ticket (" .. tickets[allyTeam] .. ")")
 		SetGameRulesParam("tickets" .. allyTeam, tickets[allyTeam], {public = true})
 	end
-	if tickets[allyTeam] == 0 then
+	if tickets[allyTeam] <= 0 then
 		if allyTeamAlive[allyTeam] then
 			local teams = Spring.GetTeamList(allyTeam)
 			for i = 1, #teams do
@@ -489,7 +489,7 @@ function NotifyDropshipDied(teamID)
 	local allyTeam = select(6, Spring.GetTeamInfo(teamID))
 	local teamsInAlliance = Spring.GetTeamList(allyTeam)
 	local numTeams = #teamsInAlliance
-	SetTickets(allyTeam, (numTeams - 1)/numTeams * tickets[allyTeam] + 1)
+	SetTickets(allyTeam, math.floor((numTeams - 1)/numTeams * tickets[allyTeam] + 1))
 	if numTeams > 1 then
 		local alliedTeams = {}
 		-- inform allied teams

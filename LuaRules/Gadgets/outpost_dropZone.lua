@@ -319,7 +319,7 @@ end
 local function SendCommandFallback(cost, weight, unitID, unitDefID, teamID)
 	--Spring.Echo("SendCommandFallback", unitID, unitDefID, teamID, cost, weight, Spring.GetGameFrame())
 	if (not Spring.ValidUnitID(unitID)) or Spring.GetUnitIsDead(unitID) or not teamDropZones[teamID] or orderStatus[teamID] == 0 then 
-		-- dropZone died, I'm not sure this is reachable now?
+		-- dropZone died, I'm not sure this is reachable now? Somehow, it is! Possibly only when eggs come back from the dead though
 		Spring.Echo("FLOZi logic fail? outpost_dropZone.lua L321")
 		return false
 	end 
