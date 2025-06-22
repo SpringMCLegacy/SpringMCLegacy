@@ -1530,7 +1530,7 @@ return {
 				texture = 'bitmaps/ui/perkyellow.png',	
 			},
 			valid = isMechBay,
-			applyTo = function (unitDefID) return hasWeaponClass(unitDefID, "lrm") end,
+			applyTo = function (unitDefID) return hasWeaponClass(unitDefID, "lrm") and isFaction(unitDefID, "fw") end,
 			applyPerk = function (unitID, level, invert)
 				GG.EnableAmmo(unitID, not invert, "lrm", "homing")				
 			end,
