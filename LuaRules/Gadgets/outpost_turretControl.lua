@@ -120,10 +120,12 @@ function gadget:UnitDestroyed(unitID, unitDefID, teamID, attackerID, attackerDef
 	if towerOwnerID then -- unit was a turret with owning beacon, open the slot back up
 		local towerType = towerDefIDs[unitDefID]
 		towerOwners[unitID] = nil
-		if ownedLimits[towerOwnerID] then -- can be nil if control died, as this does not delete towerOwners
-			ownedLimits[towerOwnerID][towerType] = ownedLimits[towerOwnerID][towerType] - 1
+		if Spring.ValidUnitID(towerOwnerID) and not Spring.GetUnitIsDead(towerOwnerID) then
+			if ownedLimits[towerOwnerID] then -- can be nil if control died, as this does not delete towerOwners
+				ownedLimits[towerOwnerID][towerType] = ownedLimits[towerOwnerID][towerType] - 1
+			end
+			LimitTowerType(towerOwnerID, teamID, towerType, 1) -- increase limit
 		end
-		LimitTowerType(towerOwnerID, teamID, towerType, 1) -- increase limit
 	elseif unitDefID == TURRETCONTROL_ID then -- turret control died, kill link and disable
 		for towerID, controllerID in pairs(towerOwners) do
 			if controllerID == unitID then
