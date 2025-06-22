@@ -50,7 +50,8 @@ local SRM_Guided = SRM_Class:New{
 
 local ASRM2 = SRM2:New{
 	name                    = "Artemis SRM-2",
-	turnRate				= 4000,
+	turnRate				= 2400,
+	sprayangle				= 800,
 }
 
 local InfSRM = SRM_Class:New{
