@@ -67,7 +67,8 @@ end
 -- TOWERS
 function LimitTowerType(unitID, teamID, towerType, increase)	
 	local towersRemaining = buildLimits[unitID][towerType]
-	if increase and increase > ownedLimits[unitID][towerType] then -- giving slots back
+	--Spring.Echo("LimitTowerType", towerType, increase, ownedLimits[unitID][towerType], towersRemaining) -- 1,1,0
+	if increase then -- giving slots back
 		buildLimits[unitID][towerType] = towersRemaining + increase
 		for tDefID, tType in pairs(towerDefIDs) do
 			if tType == towerType then
@@ -92,6 +93,7 @@ function LimitTowerType(unitID, teamID, towerType, increase)
 			end
 		end
 		ownedLimits[unitID][towerType] = ownedLimits[unitID][towerType] + 1
+		--Spring.Echo("Added tower", towerType, ownedLimits[unitID][towerType])
 		return true
 	end
 end
@@ -117,11 +119,11 @@ function gadget:UnitDestroyed(unitID, unitDefID, teamID, attackerID, attackerDef
 	local towerOwnerID = towerOwners[unitID]
 	if towerOwnerID then -- unit was a turret with owning beacon, open the slot back up
 		local towerType = towerDefIDs[unitDefID]
-		LimitTowerType(towerOwnerID, teamID, towerType, 1) -- increase limit
 		towerOwners[unitID] = nil
 		if ownedLimits[towerOwnerID] then -- can be nil if control died, as this does not delete towerOwners
 			ownedLimits[towerOwnerID][towerType] = ownedLimits[towerOwnerID][towerType] - 1
 		end
+		LimitTowerType(towerOwnerID, teamID, towerType, 1) -- increase limit
 	elseif unitDefID == TURRETCONTROL_ID then -- turret control died, kill link and disable
 		for towerID, controllerID in pairs(towerOwners) do
 			if controllerID == unitID then
