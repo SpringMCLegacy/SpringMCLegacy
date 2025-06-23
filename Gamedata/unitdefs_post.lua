@@ -382,36 +382,39 @@ for name, ud in pairs(UnitDefs) do
 	-- Automatically build dropship buildmenus
 	local side = name:sub(1, 2)
 	
-	if (cp.baseclass == "mech" or cp.baseclass == "vehicle" or cp.baseclass == "vtol") and VALID_SIDES[side] then
+	if (cp.baseclass == "mech" or cp.baseclass == "vehicle" or cp.baseclass == "vtol" or cp.baseclass == "outpost") then
 		ud.category = ud.category .. " narctag"
-		if not ud.canfly and not ud.movestate then
-			ud.movestate = 0 -- Set default move state to Hold Position, unless already specified
-		end
-		if cp.baseclass == "mech" then -- add only mechs to Dropship buildoptions
-			table.insert(DROPZONE_BUILDOPTIONS[side], name)
-		else -- a vehicle
-			ud.icontype = "vehicle" .. cp.weightclass
-			local startTier = ((cp.weightclass == "light" or cp.weightclass == "medium") and 1) or (cp.weightclass == "heavy" and 2) or 3
-			local hover = ud.movementclass == "HOVER"
-			local vtol = cp.baseclass == "vtol"
-			local class = (ud.transportcapacity and "apc") or (cp.artillery and "arty") or (vtol and "vtol") or "regular"
-			if cp.replaces then
-				if hover or vtol then
-					HPAD_HOUSE_REMOVE[side][class][cp.weightclass][cp.replaces] = true
-				else
-					VPAD_HOUSE_REMOVE[side][class][cp.weightclass][cp.replaces] = true
-				end
+		if VALID_SIDES[side] then
+			if not ud.canfly and not ud.movestate then
+				ud.movestate = 0 -- Set default move state to Hold Position, unless already specified
 			end
-			for i = startTier, 3 do
-				if hover or vtol then
-					table.insert(HPAD_SPAWNOPTIONS[side][i][class][cp.weightclass], name)
-				else
-					table.insert(VPAD_SPAWNOPTIONS[side][i][class][cp.weightclass], name)
+			if cp.baseclass == "mech" then -- add only mechs to Dropship buildoptions
+				table.insert(DROPZONE_BUILDOPTIONS[side], name)
+			else -- a vehicle
+				ud.icontype = "vehicle" .. cp.weightclass
+				local startTier = ((cp.weightclass == "light" or cp.weightclass == "medium") and 1) or (cp.weightclass == "heavy" and 2) or 3
+				local hover = ud.movementclass == "HOVER"
+				local vtol = cp.baseclass == "vtol"
+				local class = (ud.transportcapacity and "apc") or (cp.artillery and "arty") or (vtol and "vtol") or "regular"
+				if cp.replaces then
+					if hover or vtol then
+						HPAD_HOUSE_REMOVE[side][class][cp.weightclass][cp.replaces] = true
+					else
+						VPAD_HOUSE_REMOVE[side][class][cp.weightclass][cp.replaces] = true
+					end
 				end
+				for i = startTier, 3 do
+					if hover or vtol then
+						table.insert(HPAD_SPAWNOPTIONS[side][i][class][cp.weightclass], name)
+					else
+						table.insert(VPAD_SPAWNOPTIONS[side][i][class][cp.weightclass], name)
+					end
+				end
+				ud.maxdamage = ud.maxdamage * 0.5
 			end
-			ud.maxdamage = ud.maxdamage * 0.5
 		end
 	elseif cp.baseclass == "tower" and not name:find("garrison") then
+		ud.category = ud.category .. " narctag"
 		table.insert(TCONTROL_BUILDOPTIONS, name)
 		ud.levelground = false
 	end
