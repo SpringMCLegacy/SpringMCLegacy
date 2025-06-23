@@ -296,9 +296,10 @@ if gadgetHandler:IsSyncedCode() then
 		local setTargetID = unitTargets[attackerID] and unitTargets[attackerID].targets[1].target
 		--Spring.Echo("AllowWeaponTarget attackerID", attackerID, "targetID", targetID, "weapNum", attackerWeaponNum, "setTargetID", setTargetID)
 		if setTargetID then 
-			return setTargetID == targetID, 0.01
+			return setTargetID == targetID, 0.001
 		end
-		return true, 1--defPriority
+		--Spring.Echo("AWTattacker", attackerID and UnitDefs[Spring.GetUnitDefID(attackerID)].name, "vs", targetID and UnitDefs[Spring.GetUnitDefID(targetID)].name, attackerWeaponDefID and attackerWeaponDefID > 0 and WeaponDefs[attackerWeaponDefID].name, defPriority)
+		return true, defPriority or 1
 	end
 
 	local function processCommand(unitID, unitDefID, teamID, cmdID, cmdParams, cmdOptions)
