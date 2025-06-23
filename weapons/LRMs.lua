@@ -25,6 +25,7 @@ local LRM_Class = Weapon:New{
 	reloadtime              = 10,
 	burstrate				= 0.1,
 	model					= "Weapons/LargeMissile.s3o",
+	proximityPriority		= -1, -- prefer distant targets
 	damage = {
 		default = 100,--10 DPS
 	},

@@ -758,7 +758,7 @@ function script.BlockShot(weaponID, targetID, userTarget)
 	return false
 end
 
-function script.TargetWeight(weaponID, targetID)
+--[[function script.TargetWeight(weaponID, targetID)
 	local setTarget = Spring.GetUnitRulesParam(unitID, "targetID")
 	--Spring.Echo("Karen says I've reached my TargetWeight", weaponID, targetID, "setTarget", setTarget)
 	if setTarget and setTarget ~= "" and setTarget ~= -1 then
@@ -788,7 +788,7 @@ function script.TargetWeight(weaponID, targetID)
 		end
 	end
 	return 1
-end
+end]]
 
 function script.FireWeapon(weaponID)
 	ChangeHeat(firingHeats[weaponID])
