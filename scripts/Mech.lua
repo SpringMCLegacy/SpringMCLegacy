@@ -657,7 +657,7 @@ end
 GG.WeaponCanFire = WeaponCanFire
 
 function script.AimWeapon(weaponID, heading, pitch)
-	if running then return false end
+	if running or playerDisabled[weaponID] then return false end
 	Signal(2 ^ weaponID) -- 2 'to the power of' weapon ID
 	SetSignalMask(2 ^ weaponID)
 
