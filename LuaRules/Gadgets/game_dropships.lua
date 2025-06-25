@@ -17,6 +17,7 @@ if gadgetHandler:IsSyncedCode() then
 local SetUnitRulesParam		= Spring.SetUnitRulesParam
 --SyncedRead
 local GetUnitPosition		= Spring.GetUnitPosition
+local GetUnitTeam			= Spring.GetUnitTeam
 --SyncedCtrl
 local CreateUnit			= Spring.CreateUnit
 local DestroyUnit			= Spring.DestroyUnit
@@ -95,6 +96,12 @@ function BeaconNextQueueItem(beaconID, teamID)
 end
 
 function BeaconEnqueueDropship(beaconID, beaconPointID, teamID, info, priority)
+	-- Check the beacon is still on the requesting team
+	local beaconTeam = GetUnitTeam(beaconID)
+	if beaconTeam ~= teamID then 
+		Spring.AddTeamResource(teamID, "metal", info.cost)
+		return 
+	end
 	if not beaconDropshipQueue[beaconID] then beaconDropshipQueue[beaconID] = {} end -- TODO: move to unitcreated?
 	if priority then -- go to the top of the list, or just after currently active drop
 		table.insert(beaconDropshipQueue[beaconID], beaconActive[beaconID] and 2 or 1, info)
