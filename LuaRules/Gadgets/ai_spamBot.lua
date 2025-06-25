@@ -675,30 +675,27 @@ function gadget:UnitDestroyed(unitID, unitDefID, teamID, attackerID, attackerDef
 end
 
 function gadget:UnitGiven(unitID, unitDefID, newTeam, oldTeam)
-	if AI_TEAMS[newTeam] then
-		if unitDefID == BEACON_ID then
-			beaconIDs[unitID] = newTeam
-			table.insert(teamBeacons[newTeam], unitID)
-			beaconOutpostCounts[unitID] = 0
-			-- TODO: not sure if I need to be so careful here or can remove during the loop?
-			local toRemove = 0
-			for i, beaconID in ipairs(teamBeacons[oldTeam]) do
-				if beaconID == unitID then
-					toRemove = i
-				end
+	if unitDefID == BEACON_ID then
+		beaconIDs[unitID] = newTeam
+		table.insert(teamBeacons[newTeam], unitID)
+		beaconOutpostCounts[unitID] = 0
+		-- TODO: not sure if I need to be so careful here or can remove during the loop?
+		local toRemove = 0
+		for i, beaconID in ipairs(teamBeacons[oldTeam]) do
+			if beaconID == unitID then
+				toRemove = i
 			end
-			if toRemove > 0 then
-				table.remove(teamBeacons[oldTeam], i)
-			end
+		end
+		if toRemove > 0 then
+			table.remove(teamBeacons[oldTeam], i)
+		end
+		if AI_TEAMS[newTeam] then
 			Outpost(unitID, newTeam)
-			--Outpost(unitID, newTeam)
-			--Outpost(unitID, newTeam)
 			Spam(newTeam)
 		end
-		if GG.outpostDefs[unitDefID] then
-			gadget:UnitDestroyed(unitID, unitDefID, oldTeam)
-			gadget:UnitUnloaded(unitID, unitDefID, newTeam)
-		end
+	elseif GG.outpostDefs[unitDefID] then
+		gadget:UnitDestroyed(unitID, unitDefID, oldTeam)
+		gadget:UnitUnloaded(unitID, unitDefID, newTeam)
 	end
 end
 
