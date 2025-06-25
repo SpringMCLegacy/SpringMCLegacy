@@ -289,7 +289,7 @@ if gadgetHandler:IsSyncedCode() then
 	function gadget:AllowWeaponTargetCheck(attackerID, attackerWeaponNum, attackerWeaponDefID)
 		--Spring.Echo("AllowWeaponTargetCheck", attackerID, attackerWeaponNum, attackerWeaponDefID, UnitDefs[Spring.GetUnitDefID(attackerID)].name)
 		local setTargetID = unitTargets[attackerID] and unitTargets[attackerID].targets[1].target
-		return setTargetID ~= nil, setTargetID ~= nil
+		return setTargetID ~= nil, setTargetID == nil
 	end
 	
 	function gadget:AllowWeaponTarget(attackerID, targetID, attackerWeaponNum, attackerWeaponDefID, defPriority)
