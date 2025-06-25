@@ -335,6 +335,7 @@ function gadget:AllowCommand(unitID, unitDefID, teamID, cmdID, cmdParams, cmdOpt
 					ChangeTeamSalvage(teamID, -cost)
 					local x,y,z = Spring.GetUnitPosition(unitID)
 					local newID = Spring.CreateUnit(-cmdID, x,y,z, 0, teamID, false, false)
+					Spring.UseTeamResource(teamID, "energy", UnitDefs[-cmdID].customParams.tonnage)
 					Spring.SetUnitExperience(newID, Spring.GetUnitExperience(transporting[1]))
 					GG.CloneMechApps(transporting[1], newID)
 					env = Spring.UnitScript.GetScriptEnv(unitID)
