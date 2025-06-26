@@ -36,6 +36,14 @@ local PPC_Class = Weapon:New{
     },
 }
 
+local PPC_fx = Weapon:New{
+	weaponType				= "LightningCannon",
+	rgbcolor				= "0.55 0.65 1.0",
+	damage 					= {
+		default					= 1,
+	}
+}
+
 local PPC = PPC_Class:New{
 	name                    = "PPC",
 	customparams = {
@@ -129,4 +137,5 @@ return lowerkeys({
 	SnubNosePPC = SnubNosePPC,
 	CERPPC = CERPPC,
 	NPPC = NPPC,
+	PPC_fx = PPC_fx,
 })

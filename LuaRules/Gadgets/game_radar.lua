@@ -378,6 +378,20 @@ function gadget:UnitPreDamaged(unitID, unitDefID, unitTeam, damage, paralyzer, w
 		return 0
 	elseif PPC_IDS[weaponID] then
 		ApplyPPC(unitID)
+		if attackerID and projectileID then 
+			--Spring.Echo("Let there be light")
+			local x,y,z = Spring.GetProjectilePosition(projectileID)
+			local ox, oy, oz = Spring.GetUnitPosition(attackerID)
+			local params = {
+				["pos"]={ox,oy+5,oz}, 
+				["end"] = {x,y,z}, 
+				["owner"] = attackerID,
+				["ttl"] = 3,
+			}
+			for i = 1, 3 do
+				Spring.SpawnProjectile(WeaponDefNames["ppc_fx"].id, params)
+			end
+		end
 	end
 
 	if GG.dropShipCache[unitDefID] == "mech" then
