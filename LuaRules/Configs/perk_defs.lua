@@ -1142,7 +1142,7 @@ return {
 				GG.EnableArtemis(unitID, "lrm", not invert)
 			end,
 			costFunction = deductSalvage,
-			price = 20,
+			price = 10,
 			incompatible = {"ammolrmextended", "ammolrminferno", "ammolrmmagpulse", "ammolrmthunder", "ammolrmarad", "ammolrmhoming"},
 		},
 		{
@@ -1401,17 +1401,28 @@ return {
 			cmdDesc = {
 				id = GetCmdID('MOD_AMMO_LRM_EXTENDED'),
 				action = 'modammolrmextended',
-				name = GG.Pad("LRM", "Extended", "Range"),
-				tooltip = 'LRMs only. Increases LRM range by 50%, but reduces ammo by 25%.',
+				name = GG.Pad("Extended", "Range", "LRM"),
+				tooltip = 'Applies to LRMs only. Increases LRM range by 50%, but reduces ammo by 50%.',
 				texture = 'bitmaps/ui/perkyellow.png',	
 			},
 			valid = isMechBay,
 			applyTo = function (unitDefID) return hasWeaponClass(unitDefID, "lrm") end,
 			applyPerk = function (unitID, level, invert)
-				GG.EnableAmmo(unitID, not invert, "lrm", "extended")				
+				-- increase range by 50%
+				local effect = 1.5
+				effect = (invert and 1/effect) or effect
+				
+				local changed = setWeaponClassAttribute(unitID, "lrm", "range", effect)
+				-- reduce max ammo by 50%
+				effect = 0.5
+				effect = (invert and 1/effect) or effect
+				env = Spring.UnitScript.GetScriptEnv(unitID)
+				env.maxAmmo["lrm"] = env.maxAmmo["lrm"] * effect
+				env.currAmmo["lrm"] = env.maxAmmo["lrm"]
+				Spring.SetUnitRulesParam(unitID, "ammo_lrm", 100)
 			end,
 			costFunction = deductSalvage,
-			price = 15,
+			price = 10,
 			incompatible = {"artemislrm", "ammolrminferno", "ammolrmmagpulse", "ammolrmthunder", "ammolrmarad", "ammolrmhoming"},
 		},
 		{
