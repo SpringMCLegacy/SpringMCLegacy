@@ -165,12 +165,12 @@ function gadget:GamePreload()
 end
 
 local function Outpost(beaconID, teamID)
+	if not beaconID then -- set as starting beacon if not given
+		beaconID = GG.dropZoneBeaconIDs[teamID]
+	end
 	local beaconTeam = Spring.GetUnitTeam(beaconID)
 	if not AI_TEAMS[teamID] or beaconTeam ~= teamID then
 		return false
-	end
-	if not unitID then -- set as starting beacon if not given
-		unitID = GG.dropZoneBeaconIDs[teamID]
 	end
 	if not GG.beaconOutpostPointIDs[beaconID] or beaconOutpostCounts[beaconID] == #(GG.beaconOutpostPointIDs[beaconID]) then -- beacon's not deployed yet or fully outposted
 		--Spring.Echo("Outpost 1 (return false, full count) BID:", beaconID, "TID:", teamID, beaconOutpostCounts[beaconID], #(GG.beaconOutpostPointIDs[beaconID]))
