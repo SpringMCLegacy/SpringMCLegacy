@@ -70,13 +70,14 @@ local GET_OUT_POSITION = START_POSITION
 local SELL_POSITION = START_POSITION + 1
 local SCRAP_POSITION = START_POSITION + 2
 
-local typeStrings = {"ammo", "mobility", "tactical", "offensive", "defensive", "omni"}
+local typeStrings = {"ammo", "structural", "mobility", "tactical", "offensive", "defensive", "omni"}
 local typeStringAliases = {
-	["ammo"] 		= GG.Pad(10,"Ammo", "Mods"),
-	["mobility"] 	= GG.Pad(10,"Mobility", "Mods"), 
-	["tactical"] 	= GG.Pad(10,"Tactical", "Mods"), 
-	["offensive"] 	= GG.Pad(10,"Offense", "Mods"),
-	["defensive"] 	= GG.Pad(10,"Defense", "Mods"),
+	["ammo"] 		= GG.Pad(10,"Special", "Ammo"),
+	["mobility"] 	= GG.Pad(10,"Engine", "Mods"), 
+	["tactical"] 	= GG.Pad(10,"System", "Mods"), 
+	["offensive"] 	= GG.Pad(10,"Weapon", "Mods"),
+	["defensive"] 	= GG.Pad(10,"Armour", "Types"),
+	["structural"] 	= GG.Pad(10,"Chassis", "Mods"),
 	["omni"]		= GG.Pad(10, "Omni", "Configs"),
 }
 

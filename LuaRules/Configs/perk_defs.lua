@@ -649,10 +649,10 @@ return {
 	},
 	-- Mods -------------------------------------------------------------------------
 	mods = {
-		-- Mobility
+		-- Structural (CHASSIS)
 		{
 			name = "aes",
-			menu = "mobility",
+			menu = "structural",
 			cmdDesc = {
 				id = GetCmdID('MOD_AES'),
 				action = 'modaes',
@@ -671,8 +671,73 @@ return {
 				env.ELEVATION_SPEED = env.ELEVATION_SPEED * effect
 			end,
 			costFunction = deductSalvage,
+			price = 10,
+		},
+		{
+			name = "protectedactuators",
+			menu = "structural",
+			cmdDesc = {
+				id = GetCmdID('MOD_PROTECTED_ACTUATORS'),
+				action = 'modprotectedactuators',
+				name = GG.Pad("Protected", "Actuators"),
+				tooltip = 'Increases limb health by 25%.',
+				texture = 'bitmaps/ui/perkgreen.png',	
+			},
+			valid = isMechBay,
+			applyTo = isNotOmni,
+			applyPerk = function (unitID, level, invert)
+				local effect = 1.25
+				effect = (invert and 1/effect) or effect
+				
+				env = Spring.UnitScript.GetScriptEnv(unitID)
+				Spring.UnitScript.CallAsUnit(unitID, env.SetLimbMaxHP, effect)
+			end,
+			costFunction = deductSalvage,
 			price = 5,
 		},
+		{
+			name = "reinforcedlegs",
+			menu = "structural",
+			cmdDesc = {
+				id = GetCmdID('MOD_REINFORCED_LEGS'),
+				action = 'modreinforcedlegs',
+				name = GG.Pad("Reinforced", "Legs"),
+				tooltip = 'Damage taken by executing Death from Above attacks reduced by half.',
+				texture = 'bitmaps/ui/perkgreen.png',	
+			},
+			valid = isMechBay,
+			applyTo = function (unitDefID) return hasJumpjets(unitDefID) and isNotOmni(unitDefID) end,
+			applyPerk = function (unitID, level, invert)
+				GG.SetUnitReinforcedLegs(unitID, not invert)
+			end,
+			costFunction = deductSalvage,
+			price = 8,
+		},
+		{
+			name = "doubleheatsinks",
+			menu = "structural",
+			cmdDesc = {
+				id = GetCmdID('MOD_DOUBLE_HEATSINKS'),
+				action = 'moddoubleheatsinks',
+				name = GG.Pad("Double", "Heatsinks"),
+				tooltip = "Advanced Heatsinks that doubles a Mech's maximum heat threshold and heat dissipation.",
+				texture = 'bitmaps/ui/perkbgability.png',	
+			},
+			valid = isMechBay,
+			applyTo = isNotOmni,
+			applyPerk = function (unitID, level, invert) 
+				local effect = 2
+				effect = (invert and 1/effect) or effect
+				
+				env = Spring.UnitScript.GetScriptEnv(unitID)
+				env.baseCoolRate = env.baseCoolRate * effect
+				env.heatLimit = env.heatLimit * effect
+				Spring.SetUnitRulesParam(unitID, "heatLimit", env.heatLimit)
+			end,
+			costFunction = deductSalvage,
+			price = 30,
+		},
+		-- Mobility (ENGINE)
 		{
 			name = "supercharger",
 			menu = "mobility",
@@ -690,7 +755,7 @@ return {
 				Spring.UnitScript.CallAsUnit(unitID, env.EnableSuperCharger, not invert)
 			end,
 			costFunction = deductSalvage,
-			price = 5,
+			price = 10,
 		},
 		{
 			name = "directionalthrusters",
@@ -699,7 +764,7 @@ return {
 				id = GetCmdID('MOD_DIRECTIONAL_THRUSTERS'),
 				action = 'moddirectionalthrusters',
 				name = GG.Pad("Directional", "Thrusters"),
-				tooltip = 'Allows Mechs to adjust their heading mid-air after a jump, removing the need to turn and face its jump location.',
+				tooltip = 'Allows Mechs to adjust their heading mid-air after a jump instead of turning before the jump.',
 				texture = 'bitmaps/ui/perkorange.png',	
 			},
 			valid = isMechBay,
@@ -708,8 +773,8 @@ return {
 				GG.SetUnitJumpInstant(unitID, not invert)
 			end,
 			costFunction = deductSalvage,
-			price = 5,
-			incompatible = {"mechanicaljumpsystem", "improvedjumpjets"},
+			price = 10,
+			incompatible = {"improvedjumpjets"},
 		},
 		{
 			name = "improvedjumpjets",
@@ -727,91 +792,10 @@ return {
 				GG.SetUnitImprovedJumpjets(unitID, not invert)
 			end,
 			costFunction = deductSalvage,
-			price = 5,
-			incompatible = {"directionalthrusters", "mechanicaljumpsystem"},
+			price = 15,
+			incompatible = {"directionalthrusters"},
 		},
-		{
-			name = "mechanicaljumpsystem",
-			menu = "mobility",
-			cmdDesc = {
-				id = GetCmdID('MOD_MECHANICAL_JUMP_SYSTEM'),
-				action = 'modmechanicaljumpsystem',
-				name = GG.Pad("Mechanical", "Jump", "System"),
-				tooltip = 'Replaces the jet-propelled jump system of a Mech with a mechanical system. Removes the need to recharge after a jump, but halves jump distance, and damage to legs will make the system inoperable.',
-				texture = 'bitmaps/ui/perkorange.png',	
-			},
-			valid = isMechBay,
-			applyTo = function (unitDefID) return hasJumpjets(unitDefID) and isNotOmni(unitDefID) end,
-			applyPerk = function (unitID, level, invert)
-				GG.SetUnitMechanicalJump(unitID, not invert)
-			end,
-			costFunction = deductSalvage,
-			price = 10,
-			incompatible = {"directionalthrusters", "improvedjumpjets"},
-		},
-		-- Tactical
-		{
-			name = "doubleheatsinks",
-			menu = "tactical",
-			cmdDesc = {
-				id = GetCmdID('MOD_DOUBLE_HEATSINKS'),
-				action = 'moddoubleheatsinks',
-				name = GG.Pad("Double", "Heatsinks"),
-				tooltip = "Advanced Heatsinks that improves a Mech's maximum heat threshold. Though they are twice as effective as regular heatsink, they are three times the size, so the increase is 50% rather than actually double.",
-				texture = 'bitmaps/ui/perkbgability.png',	
-			},
-			valid = isMechBay,
-			applyTo = isNotOmni,
-			applyPerk = function (unitID, level, invert) 
-				local effect = 1.5
-				effect = (invert and 1/effect) or effect
-				
-				env = Spring.UnitScript.GetScriptEnv(unitID)
-				env.baseCoolRate = env.baseCoolRate * effect
-				env.heatLimit = env.heatLimit * effect
-				Spring.SetUnitRulesParam(unitID, "heatLimit", env.heatLimit)
-			end,
-			costFunction = deductSalvage,
-			price = 10,
-		},
-		{
-			name = "coolantpods",
-			menu = "tactical",
-			cmdDesc = {
-				id = GetCmdID('MOD_COOLANT_PODS'),
-				action = 'modcoolantpods',
-				name = GG.Pad("Coolant", "Pods"),
-				tooltip = 'Gives Mechs the "Coolant Flush" ability.',-- with 5 charges.',
-				texture = 'bitmaps/ui/perkbgability.png',	
-			},
-			valid = isMechBay,
-			applyTo = isNotOmni,
-			applyPerk = function (unitID, level, invert)
-				GG.EnableCoolantFlush(unitID, not invert)
-				GG.EnableAutoCoolant(unitID, not invert)
-			end,
-			costFunction = deductSalvage,
-			price = 5,
-		},
-		--[[{
-			name = "emergencycoolantsystem",
-			menu = "tactical",
-			cmdDesc = {
-				id = GetCmdID('MOD_EMERGENCY_COOLANT_SYSTEM'),
-				action = 'modemergencycoolantsystem',
-				name = GG.Pad("Emergency", "Coolant", "System"),
-				tooltip = 'A further upgrade for Coolant Pods, this system will automatically trigger a coolant flush when the Mech reaches high heat levels.',
-				texture = 'bitmaps/ui/perkbgability.png',	
-			},
-			valid = isMechBay,
-			applyTo = isNotOmni,
-			applyPerk = function (unitID, level, invert)
-				GG.EnableAutoCoolant(unitID, not invert)
-			end,
-			costFunction = deductSalvage,
-			requires = "coolantpods",
-			price = 10,
-		},--]]
+		-- Tactical (TECH)
 		{
 			name = "improvedsensors",
 			menu = "tactical",
@@ -842,6 +826,25 @@ return {
 			price = 10,
 		},
 		{
+			name = "coolantpods",
+			menu = "tactical",
+			cmdDesc = {
+				id = GetCmdID('MOD_COOLANT_PODS'),
+				action = 'modcoolantpods',
+				name = GG.Pad("Coolant", "Pods"),
+				tooltip = 'Gives Mechs the "Coolant Flush" ability.',-- with 5 charges.',
+				texture = 'bitmaps/ui/perkbgability.png',	
+			},
+			valid = isMechBay,
+			applyTo = isNotOmni,
+			applyPerk = function (unitID, level, invert)
+				GG.EnableCoolantFlush(unitID, not invert)
+				GG.EnableAutoCoolant(unitID, not invert)
+			end,
+			costFunction = deductSalvage,
+			price = 5,
+		},
+		{
 			name = "disruptionfieldbooster",
 			menu = "tactical",
 			cmdDesc = {
@@ -858,6 +861,27 @@ return {
 				effect = (invert and 1/effect) or effect
 				
 				GG.SetUnitECMRadius(unitID, effect)
+			end,
+			costFunction = deductSalvage,
+			price = 10,
+		},
+		{
+			name = "particlefielddamper",
+			menu = "tactical",
+			cmdDesc = {
+				id = GetCmdID('MOD_PARTICLE_FIELD_DAMPER'),
+				action = 'modparticlefielddamper',
+				name = GG.Pad("Particle", "Field", "Damper"),
+				tooltip = 'Reduces the amount of time electronics are affected by "PPC effect" from PPC hits.',
+				texture = 'bitmaps/ui/perkgreen.png',	
+			},
+			valid = isMechBay,
+			applyTo = function (unitDefID) return (isNotOmni(unitDefID) and hasECM(unitDefID)) end,
+			applyPerk = function (unitID, level, invert)
+				local effect = 0.5
+				effect = (invert and 1/effect) or effect
+				
+				Spring.SetUnitRulesParam(unitID, "insulation", effect)
 			end,
 			costFunction = deductSalvage,
 			price = 10,
@@ -885,68 +909,7 @@ return {
 			costFunction = deductSalvage,
 			price = 10,
 		},]]
-		-- Defensive
-		{
-			name = "protectedactuators",
-			menu = "defensive",
-			cmdDesc = {
-				id = GetCmdID('MOD_PROTECTED_ACTUATORS'),
-				action = 'modprotectedactuators',
-				name = GG.Pad("Protected", "Actuators"),
-				tooltip = 'Increases limb health by 25%.',
-				texture = 'bitmaps/ui/perkgreen.png',	
-			},
-			valid = isMechBay,
-			applyTo = isNotOmni,
-			applyPerk = function (unitID, level, invert)
-				local effect = 1.25
-				effect = (invert and 1/effect) or effect
-				
-				env = Spring.UnitScript.GetScriptEnv(unitID)
-				Spring.UnitScript.CallAsUnit(unitID, env.SetLimbMaxHP, effect)
-			end,
-			costFunction = deductSalvage,
-			price = 5,
-		},
-		{
-			name = "particlefielddamper",
-			menu = "defensive",
-			cmdDesc = {
-				id = GetCmdID('MOD_PARTICLE_FIELD_DAMPER'),
-				action = 'modparticlefielddamper',
-				name = GG.Pad("Particle", "Field", "Damper"),
-				tooltip = 'Reduces the amount of time electronics are affected by "PPC effect" from PPC hits.',
-				texture = 'bitmaps/ui/perkgreen.png',	
-			},
-			valid = isMechBay,
-			applyTo = function (unitDefID) return (isNotOmni(unitDefID) and hasECM(unitDefID)) end,
-			applyPerk = function (unitID, level, invert)
-				local effect = 0.5
-				effect = (invert and 1/effect) or effect
-				
-				Spring.SetUnitRulesParam(unitID, "insulation", effect)
-			end,
-			costFunction = deductSalvage,
-			price = 10,
-		},
-		{
-			name = "reinforcedlegs",
-			menu = "defensive",
-			cmdDesc = {
-				id = GetCmdID('MOD_REINFORCED_LEGS'),
-				action = 'modreinforcedlegs',
-				name = GG.Pad("Reinforced", "Legs"),
-				tooltip = 'Damage taken by executing Death from Above attacks reduced by half.',
-				texture = 'bitmaps/ui/perkgreen.png',	
-			},
-			valid = isMechBay,
-			applyTo = function (unitDefID) return hasJumpjets(unitDefID) and isNotOmni(unitDefID) end,
-			applyPerk = function (unitID, level, invert)
-				GG.SetUnitReinforcedLegs(unitID, not invert)
-			end,
-			costFunction = deductSalvage,
-			price = 7,
-		},
+		-- Defensive (ARMOUR)
 		{
 			name = "ferrofibrousarmour",
 			menu = "defensive",
@@ -1077,8 +1040,8 @@ return {
 			price = 10,
 			incompatible = {"ferrofibrousarmour", "hardenedarmour", "heatarmour", "reactivearmour", "reflecarmour"},
 		},
-		-- Offensive
-		{
+		-- Offensive (WEAPONS)
+		--[[{
 			name = "aatargetingcomputer",
 			menu = "offensive",
 			cmdDesc = {
@@ -1106,7 +1069,7 @@ return {
 			costFunction = deductSalvage,
 			price = 10,
 			incompatible = {"targetingcomputer"},
-		},
+		},--]]
 		{
 			name = "targetingcomputer",
 			menu = "offensive",
@@ -1114,7 +1077,7 @@ return {
 				id = GetCmdID('MOD_TARGETING_COMPUTER'),
 				action = 'modtargetingcomputer',
 				name = GG.Pad("Targeting", "Computer"),
-				tooltip = 'Increases the accuracy of all ballistic and energy direct-fire weapons by 25%, except weapons which fire in bursts.',
+				tooltip = 'Increases the accuracy of all ballistic and energy direct-fire weapons by 25%.',
 				texture = 'bitmaps/ui/perkbgfaction.png',	
 			},
 			valid = isMechBay,
@@ -1136,8 +1099,8 @@ return {
 				setWeaponClassAttribute(unitID, "energy", "accuracy", effect, "soundTrigger", true, true)
 			end,
 			costFunction = deductSalvage,
-			price = 10,
-			incompatible = {"aatargetingcomputer"},
+			price = 20,
+			--incompatible = {"aatargetingcomputer"},
 		},
 		{
 			name = "apollofcs",
@@ -1160,7 +1123,7 @@ return {
 				setWeaponClassAttribute(unitID, "mrm", "sprayAngle", effect)
 			end,
 			costFunction = deductSalvage,
-			price = 10,
+			price = 15,
 		},
 		{
 			name = "artemislrm",
@@ -1179,38 +1142,8 @@ return {
 				GG.EnableArtemis(unitID, "lrm", not invert)
 			end,
 			costFunction = deductSalvage,
-			price = 10,
-			incompatible = {"extendedrangelrm", "ammolrminferno", "ammolrmmagpulse", "ammolrmthunder", "ammolrmarad", "ammolrmhoming"},
-		},
-		{
-			name = "extendedrangelrm",
-			menu = "offensive",
-			cmdDesc = {
-				id = GetCmdID('MOD_EXTENDED_RANGE_LRM'),
-				action = 'modextendedrangelrm',
-				name = GG.Pad("Extended", "Range", "LRM"),
-				tooltip = 'Applies to LRMs only. Increases LRM range by 50%, but reduces ammo by 50%.',
-				texture = 'bitmaps/ui/perkbgfaction.png',	
-			},
-			valid = isMechBay,
-			applyTo = function (unitDefID) return isNotOmni(unitDefID) and hasWeaponClass(unitDefID, "lrm") end,
-			applyPerk = function (unitID, level, invert)
-				-- increase range by 50%
-				local effect = 1.5
-				effect = (invert and 1/effect) or effect
-				
-				local changed = setWeaponClassAttribute(unitID, "lrm", "range", effect)
-				-- reduce max ammo by 50%
-				effect = 0.5
-				effect = (invert and 1/effect) or effect
-				env = Spring.UnitScript.GetScriptEnv(unitID)
-				env.maxAmmo["lrm"] = env.maxAmmo["lrm"] * effect
-				env.currAmmo["lrm"] = env.maxAmmo["lrm"]
-				Spring.SetUnitRulesParam(unitID, "ammo_lrm", 100)
-			end,
-			costFunction = deductSalvage,
-			price = 10,
-			incompatible = {"artemislrm", "ammolrminferno", "ammolrmmagpulse", "ammolrmthunder", "ammolrmarad", "ammolrmhoming"},
+			price = 20,
+			incompatible = {"ammolrmextended", "ammolrminferno", "ammolrmmagpulse", "ammolrmthunder", "ammolrmarad", "ammolrmhoming"},
 		},
 		{
 			name = "artemissrm",
@@ -1237,8 +1170,8 @@ return {
 			cmdDesc = {
 				id = GetCmdID('MOD_IMPROVED_HEAVY_GAUSS'),
 				action = 'modimprovedheavygauss',
-				name = GG.Pad("Improved", "Heavy", "Gauss"),
-				tooltip = 'Heavy Gauss only. Shots do consistent damage (1900) at all ranges, increasing damage at long ranges but decreasing it at close range.',
+				name = GG.Pad("HGauss", "Hybrid", "Armature"),
+				tooltip = 'Heavy Gauss only. Replaces electromagnetic propulsion with hybrid armature to fire explosive-tipped shells that deal consistent damage at all ranges.',
 				texture = 'bitmaps/ui/perkbgfaction.png',	
 			},
 			valid = isMechBay,
@@ -1260,7 +1193,7 @@ return {
 			cmdDesc = {
 				id = GetCmdID('MOD_PPC_CAPACITORS'),
 				action = 'modppccapacitors',
-				name = GG.Pad("PPC", "Capacitors"),
+				name = GG.Pad("PPC", "Enhanced", "Accelerator"),
 				tooltip = 'Applies to PPCs (all variations) only. Increases damage of PPCs by 25% but increases heat generated by 50%.',
 				texture = 'bitmaps/ui/perkbgfaction.png',	
 			},
@@ -1289,7 +1222,7 @@ return {
 			cmdDesc = {
 				id = GetCmdID('MOD_QUICK_CHARGING_CAPACITORS'),
 				action = 'modquickchargingcapacitors',
-				name = GG.Pad("Quick", "Charging", "Capacitors"),
+				name = GG.Pad("Gauss", "Advanced", "Capacitors"),
 				tooltip = 'Gauss-based weapons only. Rate of fire increased by 25%, but generates heat similar to a PPC.',
 				texture = 'bitmaps/ui/perkbgfaction.png',	
 			},
@@ -1316,7 +1249,7 @@ return {
 			cmdDesc = {
 				id = GetCmdID('MOD_SILVER_BULLET'),
 				action = 'modsilverbullet',
-				name = GG.Pad("Silver", "Bullet", "Gauss"),
+				name = GG.Pad("Gauss", "Silver", "Bullet"),
 				tooltip = 'Regular Gauss Rifle only. Transforms the Gauss into an LBX-like weapon that fires 15 flechette rounds.',
 				texture = 'bitmaps/ui/perkbgfaction.png',	
 			},
@@ -1460,7 +1393,26 @@ return {
 			end,
 			costFunction = deductSalvage,
 			price = 5,
-			incompatible = {"extendedrangelrm", "artemislrm", "ammolrmmagpulse", "ammolrmthunder", "ammolrmarad", "ammolrmhoming"},
+			incompatible = {"ammolrmextended", "artemislrm", "ammolrmmagpulse", "ammolrmthunder", "ammolrmarad", "ammolrmhoming"},
+		},
+		{
+			name = "ammolrmextended",
+			menu = "ammo",
+			cmdDesc = {
+				id = GetCmdID('MOD_AMMO_LRM_EXTENDED'),
+				action = 'modammolrmextended',
+				name = GG.Pad("LRM", "Extended", "Range"),
+				tooltip = 'LRMs only. Increases LRM range by 50%, but reduces ammo by 25%.',
+				texture = 'bitmaps/ui/perkyellow.png',	
+			},
+			valid = isMechBay,
+			applyTo = function (unitDefID) return hasWeaponClass(unitDefID, "lrm") end,
+			applyPerk = function (unitID, level, invert)
+				GG.EnableAmmo(unitID, not invert, "lrm", "extended")				
+			end,
+			costFunction = deductSalvage,
+			price = 15,
+			incompatible = {"artemislrm", "ammolrminferno", "ammolrmmagpulse", "ammolrmthunder", "ammolrmarad", "ammolrmhoming"},
 		},
 		{
 			name = "ammolrmmagpulse",
@@ -1479,7 +1431,7 @@ return {
 			end,
 			costFunction = deductSalvage,
 			price = 5,
-			incompatible = {"extendedrangelrm", "artemislrm", "ammolrminferno", "ammolrmthunder", "ammolrmarad", "ammolrmhoming"},
+			incompatible = {"ammolrmextended", "artemislrm", "ammolrminferno", "ammolrmthunder", "ammolrmarad", "ammolrmhoming"},
 		},
 		{
 			name = "ammolrmarad",
@@ -1497,8 +1449,8 @@ return {
 				GG.EnableAmmo(unitID, not invert, "lrm", "arad")				
 			end,
 			costFunction = deductSalvage,
-			price = 5,
-			incompatible = {"extendedrangelrm", "artemislrm", "ammolrminferno", "ammolrmthunder", "ammolrmmagpulse", "ammolrmhoming"},
+			price = 10,
+			incompatible = {"ammolrmextended", "artemislrm", "ammolrminferno", "ammolrmthunder", "ammolrmmagpulse", "ammolrmhoming"},
 		},
 		{
 			name = "ammolrmthunder",
@@ -1516,8 +1468,8 @@ return {
 				GG.EnableAmmo(unitID, not invert, "lrm", "thunder")				
 			end,
 			costFunction = deductSalvage,
-			price = 5,
-			incompatible = {"extendedrangelrm", "artemislrm", "ammolrminferno", "ammolrmmagpulse", "ammolrmarad", "ammolrmhoming"},
+			price = 15,
+			incompatible = {"ammolrmextended", "artemislrm", "ammolrminferno", "ammolrmmagpulse", "ammolrmarad", "ammolrmhoming"},
 		},
 		{
 			name = "ammolrmhoming",
@@ -1535,8 +1487,8 @@ return {
 				GG.EnableAmmo(unitID, not invert, "lrm", "homing")				
 			end,
 			costFunction = deductSalvage,
-			price = 5,
-			incompatible = {"extendedrangelrm", "artemislrm", "ammolrminferno", "ammolrmmagpulse", "ammolrmarad", "ammolrmthunder"},
+			price = 25,
+			incompatible = {"ammolrmextended", "artemislrm", "ammolrminferno", "ammolrmmagpulse", "ammolrmarad", "ammolrmthunder"},
 		},
 		{
 			name = "ammonarrowhoming",
@@ -1554,7 +1506,7 @@ return {
 				GG.EnableAmmo(unitID, not invert, "arrowiv", "homing")				
 			end,
 			costFunction = deductSalvage,
-			price = 5,
+			price = 25,
 		},
 		{
 			name = "ammosrminferno",
@@ -1572,7 +1524,7 @@ return {
 				GG.EnableAmmo(unitID, not invert, "srm", "inferno")				
 			end,
 			costFunction = deductSalvage,
-			price = 5,
+			price = 8,
 			incompatible = {"ammosrmtandem"},
 		},
 		{
