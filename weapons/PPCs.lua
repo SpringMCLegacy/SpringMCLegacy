@@ -38,7 +38,7 @@ local PPC_Class = Weapon:New{
 
 local PPC_fx = Weapon:New{
 	weaponType				= "LightningCannon",
-	rgbcolor				= "0.55 0.65 1.0",
+	rgbcolor				= "0.15 0.88 1.0",
 	damage 					= {
 		default					= 1,
 	}

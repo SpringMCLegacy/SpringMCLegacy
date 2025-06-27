@@ -386,10 +386,10 @@ function gadget:UnitPreDamaged(unitID, unitDefID, unitTeam, damage, paralyzer, w
 				["pos"]={ox,oy+5,oz}, 
 				["end"] = {x,y,z}, 
 				["owner"] = attackerID,
-				["ttl"] = 3,
+				["ttl"] = 1,
 			}
-			for i = 1, 3 do
-				Spring.SpawnProjectile(WeaponDefNames["ppc_fx"].id, params)
+			for i = 1, 6 do
+				GG.Delay.DelayCall(Spring.SpawnProjectile, {WeaponDefNames["ppc_fx"].id, params}, (i-1) * 2)
 			end
 		end
 	end
