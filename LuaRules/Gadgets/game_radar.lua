@@ -314,7 +314,7 @@ function gadget:UnitPreDamaged(unitID, unitDefID, unitTeam, damage, paralyzer, w
 			damage = damage * 1.25
 		elseif specialAmmo == "magpulse" then
 			damage = 0
-			heatDamage = 2.5
+			heatDamage = 1
 			ApplyPPC(unitID)
 		elseif specialAmmo == "thunder" then
 			damage = damage * 0.75

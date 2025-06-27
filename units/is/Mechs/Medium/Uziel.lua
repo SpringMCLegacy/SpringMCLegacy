@@ -1,6 +1,12 @@
 local Uziel = Medium:New{
 	name				= "Uziel",
 	
+	leaveTracks			= true,	
+	trackType			= "Uziel",
+	trackOffset			= 6,
+	trackWidth			= 36,
+	trackStretch 		= 2,
+	
 	customparams = {
 		cockpitheight	= 1,
 		tonnage			= 50,
@@ -8,7 +14,7 @@ local Uziel = Medium:New{
 }
 
 local UZL2S = Uziel:New{
-	description         = "Medium Skirmisher",
+	description         = "Medium Striker",
 	weapons	= {	
 		[1] = {
 			name	= "PPC",
@@ -31,7 +37,7 @@ local UZL2S = Uziel:New{
 		variant			= "UZL-2S",
 		speed			= 90,
 		price			= 13520,
-		heatlimit 		= 13,--10 double
+		heatlimit 		= 10,--10 double
 		armor			= 8,
 		jumpjets		= 6,
 		maxammo 		= {srm = 1},
@@ -53,13 +59,13 @@ local UZL3S = Uziel:New{
 			name	= "SRM6",
 		},
 		[4] = {
-			name	= "ERSBL",
+			name	= "ERMBL",
 		},
 		[5] = {
 			name	= "ERSBL",
 		},
 		[6] = {
-			name	= "ERMBL",
+			name	= "ERSBL",
 		},
 	},
 
@@ -67,7 +73,7 @@ local UZL3S = Uziel:New{
 		variant			= "UZL-2S",
 		speed			= 90,
 		price			= 11890,
-		heatlimit 		= 13,--10 double
+		heatlimit 		= 11,--11 double
 		armor			= 8,
 		jumpjets		= 6,
 		maxammo 		= {srm = 1, ac2 = 1},
@@ -78,5 +84,5 @@ local UZL3S = Uziel:New{
 
 return lowerkeys({ 
 	["LA_Uziel_UZL2S"] = UZL2S:New(),
-	--["LA_Uziel_UZL3S"] = UZL3S:New(),
+	["LA_Uziel_UZL3S"] = UZL3S:New(),
 })
