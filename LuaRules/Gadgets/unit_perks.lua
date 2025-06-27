@@ -73,7 +73,7 @@ for i, appDef in ipairs(appInclude.mods) do
 	if appDef.incompatible then
 		local conflicts = ""
 		for _, modName in pairs(appDef.incompatible) do
-			Spring.Echo(appDef.name, modName, appDefNames[modName])
+			--Spring.Echo(appDef.name, modName, appDefNames[modName])
 			conflicts = conflicts .. appDefNames[modName].cmdDesc.name:gsub("\n", ""):gsub("%s+", " ") .. ","
 		end
 		appDef.cmdDesc.tooltip = appDef.cmdDesc.tooltip .. "\n{ Incompatible with" .. conflicts .. "}"

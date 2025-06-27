@@ -33,7 +33,8 @@ numWeapons = info.numWeapons - 1 -- remove sight
 heatLimit = info.heatLimit
 baseCoolRate = info.coolRate
 runHeat = math.sqrt(unitDef.customParams.tonnage) * 0.02
-firingHeats = info.firingHeats -- fire discipline perk, PPC capacitor mod
+firingHeats = {}
+table.copy(info.firingHeats, firingHeats) -- fire discipline perk, PPC capacitor mod need to modify this so copy don't reference
 TORSO_SPEED = info.torsoTurnSpeed -- AES mod
 ELEVATION_SPEED = info.elevationSpeed -- AES mod
 maxAmmo = {} -- Extended Range LRM mod
