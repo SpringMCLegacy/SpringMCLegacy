@@ -83,6 +83,9 @@ local B = Adder:New{
 		[4] = {
 			name	= "CERMBL",
 		},
+		[5] = {
+			name	= "Flamer",
+		},
 	},
 	customparams = {
 		variant         = "B",
