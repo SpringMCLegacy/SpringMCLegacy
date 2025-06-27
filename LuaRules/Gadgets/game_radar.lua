@@ -391,6 +391,7 @@ function gadget:UnitPreDamaged(unitID, unitDefID, unitTeam, damage, paralyzer, w
 			for i = 1, 6 do
 				GG.Delay.DelayCall(Spring.SpawnProjectile, {WeaponDefNames["ppc_fx"].id, params}, (i-1) * 2)
 			end
+			GG.PlaySoundAtUnit(unitID, "sounds/ppc_connect.wav", 5, x - ox, y - oy, z - oz, "sfx")
 		end
 	end
 
