@@ -33,7 +33,7 @@ weaponDef = {
 		heatgenerated		= 0.035,--0.1/s
 		cegflare			= "flamethrowerrange500",
 		heatdamage			= 0.15, --0.075,
-		weaponclass			= "energy",
+		weaponclass			= "flame",
 		flareonshot 		= true,
 		projectilelups		= {"flameHeat"},
     },

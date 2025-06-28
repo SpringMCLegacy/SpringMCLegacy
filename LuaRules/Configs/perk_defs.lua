@@ -1031,7 +1031,7 @@ return {
 				id = GetCmdID('MOD_REFLEC_ARMOUR'),
 				action = 'modreflecarmour',
 				name = GG.Pad("Reflec", "Armour"),
-				tooltip = '25% increased defense against damage from energy weapons - Lasers, PPCs and Plasma weapons.',
+				tooltip = '25% increased defense against damage from laser weapons',
 				texture = 'bitmaps/ui/perkgreen.png',	
 			},
 			valid = isMechBay,

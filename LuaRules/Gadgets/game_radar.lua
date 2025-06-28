@@ -340,7 +340,7 @@ function gadget:UnitPreDamaged(unitID, unitDefID, unitTeam, damage, paralyzer, w
 	elseif unitArmours[unitID] == "hard" then
 		damage = damage * 0.75
 	elseif unitArmours[unitID] == "reflec" then
-		local energy = weaponDef.customParams.weaponclass == "ppc" or weaponDef.customParams.weaponclass == "energy"
+		local energy = weaponDef.customParams.weaponclass == "energy"
 		if energy then
 			damage = damage * 0.75
 		end
