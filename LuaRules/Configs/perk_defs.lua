@@ -1105,20 +1105,19 @@ return {
 			valid = isMechBay,
 			applyTo = function (unitDefID) 
 				return isNotOmni(unitDefID)
-				and (hasWeaponClass(unitDefID, "autocannon", "salvoSize", true, 1) 
-				or hasWeaponClass(unitDefID, "gauss", "salvoSize", true, 1) 
-				or hasWeaponClass(unitDefID, "ppc", "salvoSize", true, 1) 
-				or hasWeaponClass(unitDefID, "energy", "soundTrigger", true, true)) 
+				and (hasWeaponClass(unitDefID, "autocannon")--, "salvoSize", true, 1) 
+				or hasWeaponClass(unitDefID, "gauss")--, "salvoSize", true, 1) 
+				or hasWeaponClass(unitDefID, "ppc") --, "salvoSize", true, 1) 
+				or hasWeaponClass(unitDefID, "energy"))--, "soundTrigger", true, true)) 
 			end,
 			applyPerk = function (unitID, level, invert)
-				--Spring.Echo("Missile range selected") 
 				local effect = 0.75 -- smaller accuracy is better, 25% reduction
 				effect = (invert and 1/effect) or effect
 				
-				setWeaponClassAttribute(unitID, "autocannon", "accuracy", effect, "salvoSize", true, 1)
-				setWeaponClassAttribute(unitID, "gauss", "accuracy", effect, "salvoSize", true, 1)
-				setWeaponClassAttribute(unitID, "ppc", "accuracy", effect, "salvoSize", true, 1)
-				setWeaponClassAttribute(unitID, "energy", "accuracy", effect, "soundTrigger", true, true)
+				setWeaponClassAttribute(unitID, "autocannon", "accuracy", effect)--, "salvoSize", true, 1)
+				setWeaponClassAttribute(unitID, "gauss", "accuracy", effect)--, "salvoSize", true, 1)
+				setWeaponClassAttribute(unitID, "ppc", "accuracy", effect)--, "salvoSize", true, 1)
+				setWeaponClassAttribute(unitID, "energy", "accuracy", effect)--, "soundTrigger", true, true)
 			end,
 			costFunction = deductSalvage,
 			price = 20,
