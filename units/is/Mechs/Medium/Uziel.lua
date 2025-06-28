@@ -50,7 +50,7 @@ local UZL3S = Uziel:New{
 	description         = "Medium Skirmisher",
 	weapons	= {	
 		[1] = {
-			name	= "AC2",
+			name	= "LBX2",
 		},
 		[2] = {
 			name	= "LPL",
@@ -70,7 +70,7 @@ local UZL3S = Uziel:New{
 	},
 
 	customparams = {
-		variant			= "UZL-2S",
+		variant			= "UZL-3S",
 		speed			= 90,
 		price			= 11890,
 		heatlimit 		= 11,--11 double
