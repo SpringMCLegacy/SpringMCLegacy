@@ -197,7 +197,6 @@ local function RemoveMod(unitID, appDef, applierID)
 end
 
 local function ApplyAppToUnit(unitID, appType, appDef, cmdID, applierID, free)
-	applierID = applierID or unitID -- default to unitID
 	if not currentApps[unitID][appType] then currentApps[unitID][appType] = {} end -- create current aps for mods in mechbay
 	if appDef.requires and not currentApps[unitID][appType][appDef.requires] then return false end
 	local level = currentApps[unitID][appType][appDef.name] or 0
@@ -214,8 +213,7 @@ local function ApplyAppToUnit(unitID, appType, appDef, cmdID, applierID, free)
 	elseif appType == "perks" then
 		GG.PlaySoundForTeam(Spring.GetUnitTeam(unitID), "bb_battlemech_perked", 1)
 	elseif appType == "mods" then
-		-- Special case to add to mech's 'View Mods' menu page, don't play the sound
-		if not applierID then
+		if not applierID then -- Special case to add to mech's 'View Mods' menu page, don't play the sound
 			-- need to make a copy that is hidden by default as it is added after unit_mechCommands sorts out the menu...
 			local desc = appDef.cmdDesc
 			desc.hidden = true
@@ -230,6 +228,7 @@ local function ApplyAppToUnit(unitID, appType, appDef, cmdID, applierID, free)
 		end
 	end
 	if cmdID then
+		applierID = applierID or unitID -- default to unitID
 		if level == (appDef.levels or 1) then -- fully trained
 			local complete = completeTexts[appType]
 			EditUnitCmdDesc(applierID, FindUnitCmdDesc(applierID, cmdID), {name = appDef.cmdDesc.name .."\n  (" .. complete .. ")", disabled = false})
