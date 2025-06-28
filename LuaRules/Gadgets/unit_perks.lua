@@ -96,7 +96,11 @@ local function UpdateRemaining(unitID, appType, newLevel, applierID)
 					if (newLevel < price) 
 					or (appDef.requires and not currentApps[unitID][appType][appDef.requires]) 
 					or incompatible[unitID] and incompatible[unitID][appDef.name] then
-						EditUnitCmdDesc(applierID, FindUnitCmdDesc(applierID, appCmdID), {disabled = true})
+						if appType == "mods" then
+							EditUnitCmdDesc(applierID, FindUnitCmdDesc(applierID, appCmdID), {name = appDef.cmdDesc.name .."\n  (Conflict)"})
+						else
+							EditUnitCmdDesc(applierID, FindUnitCmdDesc(applierID, appCmdID), {disabled = true,})
+						end
 					elseif appType == "mods" then -- reset name if no longer applied
 						EditUnitCmdDesc(applierID, FindUnitCmdDesc(applierID, appCmdID), {disabled = false, name = appDef.cmdDesc.name})
 					else
@@ -121,7 +125,7 @@ local function UpdateUnitApps(unitID, appType)
 		local newLevel
 		if appType == "perks" then
 			newLevel = Spring.GetUnitExperience(unitID)
-			Spring.SetUnitRulesParam(unitID, "perk_xp", math.min(100, 100 * newLevel / 1)) -- TODO: refers to PERK_UNIT_COST from include :(
+			Spring.SetUnitRulesParam(unitID, "perk_xp", math.min(100, 100 * newLevel / GG.PERK_XP_COST))
 		elseif appType == "mods" then
 			newLevel = GG.GetTeamSalvage(teamID)
 			applierID = unitID
@@ -176,6 +180,21 @@ function gadget:GameFrame(n)
 	end
 end
 
+local function RemoveMod(unitID, appDef, applierID)
+	if not currentApps[unitID]["mods"][appDef.name] then
+		return false -- mod is not installed
+	else
+		currentApps[unitID]["mods"][appDef.name] = nil
+		appDef.costFunction(unitID, -appDef.price)
+		appDef.applyPerk(unitID, 0, true) -- invert
+		for _, modName in pairs(appDef.incompatible or EMPTY_TABLE) do -- assumes only mods can be incompatible
+			incompatible[unitID][modName] = nil -- assumes if A and B are incompatible with C, then A and B are incompatible
+		end
+		UpdateUnitApps(applierID, "mods")
+		return true
+	end
+end
+
 local function ApplyAppToUnit(unitID, appType, appDef, cmdID, applierID, free)
 	applierID = applierID or unitID -- default to unitID
 	if not currentApps[unitID][appType] then currentApps[unitID][appType] = {} end -- create current aps for mods in mechbay
@@ -200,12 +219,15 @@ local function ApplyAppToUnit(unitID, appType, appDef, cmdID, applierID, free)
 			desc.hidden = true
 			InsertUnitCmdDesc(unitID, desc)
 		else -- mechbay
-			GG.PlaySoundForTeam(Spring.GetUnitTeam(unitID), "bb_battlemech_modded", 1)
+			-- Update any conflicts with the new mod
+			local conflicted = false
+			for _, modName in pairs(appDef.incompatible or EMPTY_TABLE) do -- assumes only mods can be incompatible
+				incompatible[unitID][modName] = true
+				RemoveMod(unitID, appDefNames[modName], applierID)
+				conflicted = true
+			end
+			GG.PlaySoundForTeam(Spring.GetUnitTeam(unitID), conflicted and "bb_battlemech_modded_conflicted" or "bb_battlemech_modded", 1)
 		end
-	end
-	-- Update any conflicts with the new mod
-	for _, modName in pairs(appDef.incompatible or EMPTY_TABLE) do -- assumes only mods can be incompatible
-		incompatible[unitID][modName] = true
 	end
 	if cmdID then
 		if level == (appDef.levels or 1) then -- fully trained
@@ -221,21 +243,6 @@ local function ApplyAppToUnit(unitID, appType, appDef, cmdID, applierID, free)
 		UpdateUnitApps(applierID, appType) -- update here too to prevent pause cheating
 	end
 end		
-
-local function RemoveMod(unitID, appDef, applierID)
-	if not currentApps[unitID]["mods"][appDef.name] then
-		return false -- mod is not installed
-	else
-		currentApps[unitID]["mods"][appDef.name] = nil
-		appDef.costFunction(unitID, -appDef.price)
-		appDef.applyPerk(unitID, 0, true) -- invert
-		for _, modName in pairs(appDef.incompatible or EMPTY_TABLE) do -- assumes only mods can be incompatible
-			incompatible[unitID][modName] = nil -- assumes if A and B are incompatible with C, then A and B are incompatible
-		end
-		UpdateUnitApps(applierID, "mods")
-		return true
-	end
-end
 
 
 local function CloneMechApps(oldID, newID)
