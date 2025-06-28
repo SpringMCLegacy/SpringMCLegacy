@@ -17,6 +17,7 @@ local MechExplode = Death_Class:New{
 
 local MeltDown = Death_Class:New{
 	name                    = "Fusion Core Meltdown",
+	soundHit             	= "Meltdown_Boom",
 	explosionGenerator    	= "custom:meltdown",
 	areaOfEffect            = 500,
 	damage = {
