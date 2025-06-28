@@ -256,7 +256,7 @@ function gadget:UnitCreated(unitID, unitDefID, teamID, builderID)
 		InsertUnitCmdDesc(unitID, SELL_POSITION, sellMechCmdDesc)
 		InsertUnitCmdDesc(unitID, SCRAP_POSITION, scrapMechCmdDesc)
 		SetMechBayLevel(unitID, 1)
-		--ShowModsByType(unitID, "none", nil) -- don't show any mods until the ability is unlocked
+		ShowModsByType(unitID, "none", nil) -- don't show any mods until a mech gets in
 	elseif GG.mechCache[unitDefID] then -- a mech
 		unitPinataLevels[unitID] = 0
 	end

@@ -213,18 +213,16 @@ local function ApplyAppToUnit(unitID, appType, appDef, cmdID, applierID, free)
 		GG.PlaySoundForTeam(Spring.GetUnitTeam(unitID), "bb_battlemech_perked", 1)
 	elseif appType == "mods" then
 		-- Special case to add to mech's 'View Mods' menu page, don't play the sound
-		if GG.mechCache[Spring.GetUnitDefID(unitID)] then
+		if not applierID then
 			-- need to make a copy that is hidden by default as it is added after unit_mechCommands sorts out the menu...
 			local desc = appDef.cmdDesc
 			desc.hidden = true
 			InsertUnitCmdDesc(unitID, desc)
 		else -- mechbay
-			-- Update any conflicts with the new mod
 			local conflicted = false
 			for _, modName in pairs(appDef.incompatible or EMPTY_TABLE) do -- assumes only mods can be incompatible
 				incompatible[unitID][modName] = true
-				RemoveMod(unitID, appDefNames[modName], applierID)
-				conflicted = true
+				conflicted = conflicted or RemoveMod(unitID, appDefNames[modName], applierID)
 			end
 			GG.PlaySoundForTeam(Spring.GetUnitTeam(unitID), conflicted and "bb_battlemech_modded_conflicted" or "bb_battlemech_modded", 1)
 		end
