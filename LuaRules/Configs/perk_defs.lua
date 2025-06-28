@@ -739,6 +739,24 @@ return {
 		},
 		-- Mobility (ENGINE)
 		{
+			name = "masc",
+			menu = "mobility",
+			cmdDesc = {
+				id = GetCmdID('MOD_MASC'),
+				action = 'modmasc',
+				name = GG.Pad("MASC"),
+				tooltip = 'Accelerates myomer circuits, increasing running speed by 50%. However, damages legs with prolonged use. Stackable with Super Charger.',
+				texture = 'bitmaps/ui/perkorange.png',	
+			},
+			valid = isMechBay,
+			applyTo = isNotOmni,
+			applyPerk = function (unitID, level, invert)
+				GG.AddMASC(unitID, invert)
+			end,
+			costFunction = deductSalvage,
+			price = 10,
+		},
+		{
 			name = "supercharger",
 			menu = "mobility",
 			cmdDesc = {

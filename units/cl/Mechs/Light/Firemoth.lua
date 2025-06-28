@@ -4,7 +4,7 @@ local Firemoth = Light:New{
 	customparams = {
 		tonnage			= 20,
 		cockpitheight	= 0.3,
-		mods			= {"ferrofibrousarmour", "doubleheatsinks"},
+		mods			= {"ferrofibrousarmour", "doubleheatsinks", "masc"},
 		omni			= true,
     },
 }
@@ -34,7 +34,6 @@ local Prime = Firemoth:New{
 		heatlimit 		= 13,
 		armor			= 2,
 		maxammo 		= {srm = 2},
-		masc 			= true,
     },
 }
 
@@ -60,7 +59,6 @@ local A = Firemoth:New{
 		heatlimit 		= 13,
 		armor			= 2,
 		maxammo 		= {srm = 1},
-		masc 			= true,
 		bap				= true,
     },
 }
@@ -87,7 +85,6 @@ local C = Firemoth:New{
 		heatlimit 		= 13,--10 double
 		armor			= 2,
 		maxammo 		= {lrm = 2},
-		masc 			= true,
     },
 }
 

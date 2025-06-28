@@ -5,7 +5,7 @@ function gadget:GetInfo()
 		author = "FLOZi (C. Lawrence)",
 		date = "01/08/2014",
 		license = "GNU GPL v2",
-		layer = -5,
+		layer = 5,
 		enabled = true
 	}
 end
@@ -29,8 +29,8 @@ local FindUnitCmdDesc		= Spring.FindUnitCmdDesc
 -- Constants
 
 local CMD_MASC = GG.CustomCommands.GetCmdID("CMD_MASC")
-local mascUnitDefs = {}
-GG.mascUnitDefs = mascUnitDefs
+local mascUnits = {}
+GG.mascUnits = mascUnits
 
 local MascCmdDesc = {
 	params	= {0, GG.Pad("MASC Off"), GG.Pad("MASC On")},
@@ -125,7 +125,7 @@ function gadget:AllowCommand(unitID, unitDefID, teamID, cmdID, cmdParams, cmdOpt
 			--SpeedChange(unitID, unitDefID, 1)
 			return true
 		elseif cmdID == CMD_MASC then
-			if mascUnitDefs[unitDefID] then
+			if mascUnits[unitID] then
 				env = Spring.UnitScript.GetScriptEnv(unitID)
 				if cmdParams[1] == 1 and not activeMASCs[unitID] then -- toggle on
 					--[[if (Spring.GetUnitRulesParam(unitID, "excess_heat") or 0) > 0 then
@@ -154,23 +154,13 @@ function gadget:AllowCommand(unitID, unitDefID, teamID, cmdID, cmdParams, cmdOpt
 	return true
 end
 
-function gadget:UnitCreated(unitID, unitDefID, teamID, builderID)
-	local ud = UnitDefs[unitDefID]
-	local cp = ud.customParams
-	if cp and cp.masc then
-		--InsertUnitCmdDesc(unitID, MascCmdDesc)
-		Spring.SetUnitRulesParam(unitID, "masc", 100)
-		mascUnitDefs[unitDefID] = true
-	end
-	if GG.mechCache[unitDefID] then
-		--InsertUnitCmdDesc(unitID, CoolantCmdDesc)
-		Spring.SetUnitRulesParam(unitID, "ammo_coolant", 100)
-	end
+local function AddMASC(unitID, invert)
+	if invert == nil then invert = false end -- blargh!
+	Spring.SetUnitRulesParam(unitID, "masc", invert and "" or 100)
+	mascUnits[unitID] = not invert
+	EditUnitCmdDesc(unitID, FindUnitCmdDesc(unitID, CMD_MASC), { hidden = invert })
 end
-
-function gadget:UnitDestroyed(unitID, unitDefID, teamID)
-	
-end
+GG.AddMASC = AddMASC
 
 else
 

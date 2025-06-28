@@ -133,16 +133,6 @@ local patrolCmdDesc = {
 	name   = GG.Pad(10,"Patrol")
 	--tooltip = "",
 }
-
--- CMD_FLUSH
---[[local flushCmdDesc = {
-	id = GG.CustomCommands.GetCmdID("CMD_FLUSH"),
-	action = 'flush',
-	name = GG.Pad(10,"Flush","Coolant"),
-	tooltip = 'Rapidly cool down the unit',
-	queueing = false,
-	disabled = true,
-}]]
 -- CMD_JUMP
 local jumpCmdDesc = {
   id      = GG.CustomCommands.GetCmdID("CMD_JUMP"),
@@ -161,6 +151,7 @@ local mascCmdDesc = {
 	type	= CMDTYPE.ICON_MODE,
 	params	= {0, GG.Pad(10,"MASC Off"), GG.Pad(10,"MASC On")},
 	cursor	= "run",
+	hidden = true,
 }
 
 -- CMD_UNIT_SET_TARGET
@@ -181,18 +172,6 @@ local unitCancelTargetCmdDesc = {
 	action = 'canceltarget',
 	tooltip = 'Removes top priority target, if set',
 	hidden = false,
-}
-	
--- CMD_BLANK
-local blankCmdDesc = {
-  id      = GG.CustomCommands.GetCmdID("CMD_BLANK"),
-  type    = CMDTYPE.ICON,
-  tooltip = 'This space intentionally left blank',
-}
-local blank2CmdDesc = {
-  id      = GG.CustomCommands.GetCmdID("CMD_BLANK2"),
-  type    = CMDTYPE.ICON,
-  tooltip = 'This space intentionally left blank',
 }
 
 -- CMD_PERK_1..N
@@ -229,7 +208,6 @@ local CMD_DESCS_TO_ADD = {
 	moveCmdDesc, turnCmdDesc, stopCmdDesc,
 	attackCmdDesc, unitSetTargetCircleCmdDesc, unitCancelTargetCmdDesc,
 	fightCmdDesc, guardCmdDesc, patrolCmdDesc,
-	--flushCmdDesc, -- this is to be removed eventually
 	jumpCmdDesc,
 	mascCmdDesc,
 }
@@ -262,6 +240,9 @@ local function ShowMechMenu(unitID, unitDefID, menuType)
 			local hide = not lookup[unitDefID][menuType][cmdDesc.id]
 			if menuType == "viewmods" then
 				hide = not cmdDesc.action:find("mod")
+			elseif menuType == "issueorder" and cmdDesc.id == mascCmdDesc.id then -- Kinda gross exception
+				hide = not GG.mascUnits[unitID]
+				Spring.Echo("Hey is that MASC?", hide)
 			end
 			EditUnitCmdDesc(unitID, i, {hidden = hide})
 		end
@@ -293,7 +274,7 @@ function gadget:UnitCreated(unitID, unitDefID, teamID)
 				end
 			end
 			lookup[unitDefID]["issueorder"][jumpCmdDesc.id] = GG.jumpers[unitDefID]
-			lookup[unitDefID]["issueorder"][mascCmdDesc.id] = GG.mascUnitDefs[unitDefID]
+			lookup[unitDefID]["issueorder"][mascCmdDesc.id] = false--true --GG.mascUnitDefs[unitDefID]
 		end
 		-- then show the order menu
 		ShowMechMenu(unitID, unitDefID, "issueorder")

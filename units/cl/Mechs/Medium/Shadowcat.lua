@@ -4,7 +4,7 @@ local Shadowcat = Medium:New{
 	customparams = {
 		tonnage			= 45,
 		cockpitheight	= 1.4,
-		mods			= {"ferrofibrousarmour", "doubleheatsinks"},
+		mods			= {"ferrofibrousarmour", "doubleheatsinks", "masc"},
 		omni			= true,
     },
 }
@@ -31,7 +31,6 @@ local Prime = Shadowcat:New{
 		heatlimit 		= 13,
 		armor			= 7,
 		maxammo 		= {gauss = 2},
-		masc			= true,
 		bap				= true,
 		jumpjets		= 6,
     },
@@ -59,7 +58,6 @@ local A = Shadowcat:New{
 		heatlimit 		= 17,
 		armor			= 7,
 		maxammo 		= {srm = 2},
-		masc			= true,
 		bap				= true,
 		jumpjets		= 6,
     },
@@ -90,7 +88,6 @@ local B = Shadowcat:New{
 		heatlimit 		= 13,
 		armor			= 7,
 		maxammo 		= {lrm = 4},
-		masc			= true,
 		bap				= true,
 		jumpjets		= 6,
     },

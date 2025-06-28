@@ -165,7 +165,7 @@ local LCT1L = Locust:New{
 		price			= 4320,
 		heatlimit 		= 10,
 		armor			= 4,
-		masc			= true,
+		mods			= {"masc"},
     },
 }
 
