@@ -32,10 +32,6 @@ local CMD_MASC = GG.CustomCommands.GetCmdID("CMD_MASC")
 local mascUnits = {}
 GG.mascUnits = mascUnits
 
-local MascCmdDesc = {
-	params	= {0, GG.Pad("MASC Off"), GG.Pad("MASC On")},
-}
-
 local CMD_FLUSH = GG.CustomCommands.GetCmdID("CMD_FLUSH")
 local coolantUnitDefs = {}
 local coolantUnits = {}
@@ -125,7 +121,9 @@ function gadget:AllowCommand(unitID, unitDefID, teamID, cmdID, cmdParams, cmdOpt
 			--SpeedChange(unitID, unitDefID, 1)
 			return true
 		elseif cmdID == CMD_MASC then
-			if mascUnits[unitID] then
+			local super = Spring.GetUnitRulesParam(unitID, "supercharger")
+			local masc = Spring.GetUnitRulesParam(unitID, "masc")
+			if super or masc then
 				env = Spring.UnitScript.GetScriptEnv(unitID)
 				if cmdParams[1] == 1 and not activeMASCs[unitID] then -- toggle on
 					--[[if (Spring.GetUnitRulesParam(unitID, "excess_heat") or 0) > 0 then
@@ -137,8 +135,11 @@ function gadget:AllowCommand(unitID, unitDefID, teamID, cmdID, cmdParams, cmdOpt
 					activeMASCs[unitID] = false
 					Spring.UnitScript.CallAsUnit(unitID, env.EnableMASC, false)
 				end
-				MascCmdDesc.params[1] = cmdParams[1]
-				EditUnitCmdDesc(unitID, FindUnitCmdDesc(unitID, CMD_MASC), { params = MascCmdDesc.params})
+				local paramsToUse = ((super and masc) and GG.superMASCParams) 
+							or (super and GG.superChargerParams)
+							or (masc and GG.mascParams)
+				paramsToUse[1] = cmdParams[1]
+				EditUnitCmdDesc(unitID, FindUnitCmdDesc(unitID, CMD_MASC), { params = paramsToUse})
 				return true
 			else 
 				return false 
@@ -158,7 +159,6 @@ local function AddMASC(unitID, invert)
 	if invert == nil then invert = false end -- blargh!
 	Spring.SetUnitRulesParam(unitID, "masc", invert and "" or 100)
 	mascUnits[unitID] = not invert
-	EditUnitCmdDesc(unitID, FindUnitCmdDesc(unitID, CMD_MASC), { hidden = invert })
 end
 GG.AddMASC = AddMASC
 

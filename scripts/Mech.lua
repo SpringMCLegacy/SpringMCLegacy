@@ -49,6 +49,7 @@ local mascActive = false
 local mascDamage = 1
 local superCharger = false
 local superChargerHeat = 0.1
+local superChargerDamage = 5
 
 local missileWeaponIDs = info.missileWeaponIDs
 local flareOnShots = info.flareOnShots
@@ -460,34 +461,37 @@ end
 
 local SIG_RUN = maxAmmo
 
-local function RunHeat()
+
+local function RunDamage()
 	Signal(SIG_RUN)
 	SetSignalMask(SIG_RUN)
-	local heat = (mascActive and superChargerHeat) or (superCharger and superChargerHeat + runHeat) or runHeat
 	while moving and running do
+		if mascActive then
+			--Spring.Echo("In mascdamage loop")
+			limbHPControl("left_leg", mascDamage, "llowerleg")
+			limbHPControl("right_leg", mascDamage, "rlowerleg")
+			if lostLegs > 0 then
+				--Spring.Echo("Owww, my hammy")
+				-- SIG_ANIMATE is just an empty table, don't create a new one just for empty command options
+				Spring.GiveOrderToUnit(unitID, GG.CustomCommands.GetCmdID("CMD_MASC"), {0}, SIG_ANIMATE) 
+				Run(false)
+				return
+			end
+		end
+		if superCharger then
+			Spring.AddUnitDamage(unitID, superChargerDamage)
+			local health, maxHealth = Spring.GetUnitHealth(unitID)
+			if health/maxHealth < 0.25 then
+				Run(false)
+				return
+			end
+		end
+		local heat = (mascActive and superCharger and superChargerHeat) or (superCharger and superChargerHeat + runHeat) or runHeat
 		ChangeHeat(heat)
 		if excessHeat > 0 then
 			--Spring.Echo("Overheating! Slow down")
 			-- SIG_ANIMATE is just an empty table, don't create a new one just for empty command options
 			--Spring.GiveOrderToUnit(unitID, GG.CustomCommands.GetCmdID("CMD_MASC"), {0}, SIG_ANIMATE) 
-			Run(false)
-			return
-		end
-		Sleep(100)
-	end
-end
-
-local function MASCDamage()
-	Signal(SIG_RUN)
-	SetSignalMask(SIG_RUN)
-	while moving and running and mascActive do
-		--Spring.Echo("In mascdamage loop")
-		limbHPControl("left_leg", mascDamage, "llowerleg")
-		limbHPControl("right_leg", mascDamage, "rlowerleg")
-		if lostLegs > 0 then
-			--Spring.Echo("Owww, my hammy")
-			-- SIG_ANIMATE is just an empty table, don't create a new one just for empty command options
-			Spring.GiveOrderToUnit(unitID, GG.CustomCommands.GetCmdID("CMD_MASC"), {0}, SIG_ANIMATE) 
 			Run(false)
 			return
 		end
@@ -525,12 +529,7 @@ function Run(activate)
 	StartThread(SpeedChangeCheck)
 	if activate then 
 		StartThread(RestoreAfterDelay, 1)
-		if mascActive then
-			StartThread(MASCDamage)
-		end
-		if superCharger or not mascActive then
-			StartThread(RunHeat)
-		end
+		StartThread(RunDamage)
 	end
 end
 

@@ -191,6 +191,7 @@ local function RemoveMod(unitID, appDef, applierID)
 			incompatible[unitID][modName] = nil -- assumes if A and B are incompatible with C, then A and B are incompatible
 		end
 		UpdateUnitApps(applierID, "mods")
+		Spring.SetUnitRulesParam(unitID, appDef.name, false)
 		return true
 	end
 end
@@ -204,6 +205,7 @@ local function ApplyAppToUnit(unitID, appType, appDef, cmdID, applierID, free)
 	level = level + 1
 	currentApps[unitID][appType][appDef.name] = level
 	appDef.applyPerk(unitID, level)
+	Spring.SetUnitRulesParam(unitID, appDef.name, true)
 	-- Play sounds
 	if appDef.sound then
 		GG.PlaySoundForTeam(Spring.GetUnitTeam(unitID), appDef.sound, 1)

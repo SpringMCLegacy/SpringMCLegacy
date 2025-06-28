@@ -1,6 +1,6 @@
 -- Use the automatic CMD ID generator
 local GetCmdID = GG.CustomCommands.GetCmdID
-
+local EMPTY = {}
 local modOptions = Spring.GetModOptions()
 
 local NUM_DAMAGE_TYPES = 0
@@ -752,6 +752,8 @@ return {
 			applyTo = isNotOmni,
 			applyPerk = function (unitID, level, invert)
 				GG.AddMASC(unitID, invert)
+				GG.Delay.DelayCall(Spring.GiveOrderToUnit, {unitID, GG.CustomCommands.IDs.CMD_MASC, {1}, EMPTY}, 1) -- set to on and refresh params
+				GG.Delay.DelayCall(GG.ShowMechMenu, {unitID, Spring.GetUnitDefID(unitID), "issueorder"}, 2) -- refresh menu
 			end,
 			costFunction = deductSalvage,
 			price = 10,
@@ -771,6 +773,8 @@ return {
 			applyPerk = function (unitID, level, invert)
 				env = Spring.UnitScript.GetScriptEnv(unitID)
 				Spring.UnitScript.CallAsUnit(unitID, env.EnableSuperCharger, not invert)
+				GG.Delay.DelayCall(Spring.GiveOrderToUnit, {unitID, GG.CustomCommands.IDs.CMD_MASC, {1}, EMPTY}, 1) -- set to on and refresh params
+				GG.Delay.DelayCall(GG.ShowMechMenu, {unitID, Spring.GetUnitDefID(unitID), "issueorder"}, 2) -- refresh menu
 			end,
 			costFunction = deductSalvage,
 			price = 10,

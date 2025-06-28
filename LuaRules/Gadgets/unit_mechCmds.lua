@@ -153,6 +153,11 @@ local mascCmdDesc = {
 	cursor	= "run",
 	hidden = true,
 }
+GG.mascParams = mascCmdDesc.params
+local superChargerParams = {0, GG.Pad(10,"Super", "Charger", "Off"), GG.Pad(10,"Super", "Charger", "On")}
+GG.superChargerParams = superChargerParams
+local superMASCParams = {0, GG.Pad(10,"Super", "MASC", "Off"), GG.Pad(10,"Super", "MASC", "On")}
+GG.superMASCParams = superMASCParams
 
 -- CMD_UNIT_SET_TARGET
 local unitSetTargetCircleCmdDesc = {
@@ -241,13 +246,13 @@ local function ShowMechMenu(unitID, unitDefID, menuType)
 			if menuType == "viewmods" then
 				hide = not cmdDesc.action:find("mod")
 			elseif menuType == "issueorder" and cmdDesc.id == mascCmdDesc.id then -- Kinda gross exception
-				hide = not GG.mascUnits[unitID]
-				Spring.Echo("Hey is that MASC?", hide)
+				hide = not (GG.mascUnits[unitID] or Spring.GetUnitRulesParam(unitID, "supercharger"))
 			end
 			EditUnitCmdDesc(unitID, i, {hidden = hide})
 		end
 	end
 end
+GG.ShowMechMenu = ShowMechMenu
 
 function gadget:UnitCreated(unitID, unitDefID, teamID)
 	if GG.mechCache[unitDefID] then
@@ -274,7 +279,7 @@ function gadget:UnitCreated(unitID, unitDefID, teamID)
 				end
 			end
 			lookup[unitDefID]["issueorder"][jumpCmdDesc.id] = GG.jumpers[unitDefID]
-			lookup[unitDefID]["issueorder"][mascCmdDesc.id] = false--true --GG.mascUnitDefs[unitDefID]
+			lookup[unitDefID]["issueorder"][mascCmdDesc.id] = false
 		end
 		-- then show the order menu
 		ShowMechMenu(unitID, unitDefID, "issueorder")
