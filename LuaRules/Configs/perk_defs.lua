@@ -64,6 +64,7 @@ end
 
 -- Common apply() functions
 local function setWeaponClassAttribute(unitID, className, attrib, multiplier, tag, with, value)
+	if not unitID then return end
 	local weapons = UnitDefs[Spring.GetUnitDefID(unitID)].weapons
 	local changed = {}
 	for weapNum, weapTable in pairs(weapons) do
@@ -119,6 +120,16 @@ local function deductSalvage(unitID, amount)
 	local teamID = Spring.GetUnitTeam(unitID)
 	GG.ChangeTeamSalvage(teamID, Spring.IsNoCostEnabled() and 0 or -amount)
 end
+
+local function WeaponTypeCount(unitID, weaponType)
+	local changed = setWeaponClassAttribute(unitID, weaponType, "range", 1)
+	if changed then return #changed else return 0 end
+end
+
+local function deductPerWeaponType(unitID, weaponType, amount)
+	return WeaponTypeCount(unitID, weaponType) * amount
+end
+
 
 return {
 	-- Mech Experience Perks -------------------------------------------------------------------------
@@ -1120,7 +1131,14 @@ return {
 				setWeaponClassAttribute(unitID, "energy", "accuracy", effect)--, "soundTrigger", true, true)
 			end,
 			costFunction = deductSalvage,
-			price = 20,
+			priceFunction = function(unitID)
+				local AMOUNT_PER_WEAPON = 5
+				local runningTotal = deductPerWeaponType(unitID, "autocannon", AMOUNT_PER_WEAPON)
+				runningTotal = runningTotal + deductPerWeaponType(unitID, "gauss", AMOUNT_PER_WEAPON)
+				runningTotal = runningTotal + deductPerWeaponType(unitID, "ppc", AMOUNT_PER_WEAPON)
+				runningTotal = runningTotal + deductPerWeaponType(unitID, "energy", AMOUNT_PER_WEAPON)
+				return runningTotal
+			end,
 			--incompatible = {"aatargetingcomputer"},
 		},
 		{

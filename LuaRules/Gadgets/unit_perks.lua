@@ -52,16 +52,29 @@ local incompatible = {} -- [unitID][modName] = true
 -- dropzone perks need to be persistent -- TODO: make 'persistent' an appDef property so Aero & Avenger can be persistent too
 local dropZoneUpgrades = {} -- dropZoneUpgrades[teamID] = {perk1 = true, perk2 = true, ...}
 
+
+local function BuildToolTip(appType, appDef, unitID)
+	local currency = appType == "upgrades" and "C-Bills" or appType == "mods" and "Salvage" or nil -- TODO: would be nice to read cost function name?
+	local tooltip = appDef.cmdDesc.tooltip
+	if currency then
+		local price = appDef.price
+		if price then
+			tooltip = tooltip .. "\n( " .. currency .. " cost: " .. price .. " )"
+		elseif unitID and appDef.priceFunction then -- only triggered if there is a unitID
+			price = appDef.priceFunction(unitID)
+			tooltip = tooltip .. "\n( " .. currency .. " cost: " .. price .. " )"
+		end
+	end
+	if appDef.requires then -- assumes prerequisite upgrades are defined first
+		tooltip = tooltip .. "\n[ Requires" .. appDefNames[appDef.requires].cmdDesc.name:gsub("\n", ""):gsub("%s+", " ") .. "]"
+	end
+	return tooltip
+end
+
 local appInclude = VFS.Include("LuaRules/Configs/perk_defs.lua")
 for appType, defs in pairs(appInclude) do
 	for i, appDef in ipairs(defs) do
-		local currency = appType == "upgrades" and "C-Bills" or appType == "mods" and "Salvage" or nil -- TODO: would be nice to read cost function name?
-		if currency then
-			appDef.cmdDesc.tooltip = appDef.cmdDesc.tooltip .. "\n( " .. currency .. " cost: " .. (Spring.IsNoCostEnabled() and 0 or appDef.price) .. " )"
-		end
-		if appDef.requires then -- assumes prerequisite upgrades are defined first
-			appDef.cmdDesc.tooltip = appDef.cmdDesc.tooltip .. "\n[ Requires" .. appDefNames[appDef.requires].cmdDesc.name:gsub("\n", ""):gsub("%s+", " ") .. "]"
-		end
+		appDef.cmdDesc.tooltip = BuildToolTip(appType, appDef)
 		appDefs[appDef.cmdDesc.id] = appDef
 		appDefTypes[appDef.cmdDesc.id] = appType
 		appDefNames[appDef.name] = appDef
@@ -92,17 +105,19 @@ local function UpdateRemaining(unitID, appType, newLevel, applierID)
 				if (not currentApps[unitID][appType][appDef.name] or currentApps[unitID][appType][appDef.name] < (appDef.levels or 1)) 
 				and validApps[Spring.GetUnitDefID(applierID)][appType][appCmdID] then
 					appRemaining = true
-					local price = Spring.IsNoCostEnabled() and 0 or appDef.price
+					local price = Spring.IsNoCostEnabled() and 0 or appDef.price or appDef.priceFunction(unitID)
+					if appDef.priceFunction then
+						EditUnitCmdDesc(applierID, FindUnitCmdDesc(applierID, appCmdID), {tooltip = BuildToolTip(appType, appDef, unitID)})
+					end
 					if (newLevel < price) 
-					or (appDef.requires and not currentApps[unitID][appType][appDef.requires]) 
-					or incompatible[unitID] and incompatible[unitID][appDef.name] then
-						if appType == "mods" then
+					or (appDef.requires and not currentApps[unitID][appType][appDef.requires]) then
+						EditUnitCmdDesc(applierID, FindUnitCmdDesc(applierID, appCmdID), {disabled = true,})
+					elseif appType == "mods" then -- reset name if no longer applied
+						if incompatible[unitID] and incompatible[unitID][appDef.name] then
 							EditUnitCmdDesc(applierID, FindUnitCmdDesc(applierID, appCmdID), {name = appDef.cmdDesc.name .."\n  (Conflict)"})
 						else
-							EditUnitCmdDesc(applierID, FindUnitCmdDesc(applierID, appCmdID), {disabled = true,})
+							EditUnitCmdDesc(applierID, FindUnitCmdDesc(applierID, appCmdID), {disabled = false, name = appDef.cmdDesc.name})
 						end
-					elseif appType == "mods" then -- reset name if no longer applied
-						EditUnitCmdDesc(applierID, FindUnitCmdDesc(applierID, appCmdID), {disabled = false, name = appDef.cmdDesc.name})
 					else
 						EditUnitCmdDesc(applierID, FindUnitCmdDesc(applierID, appCmdID), {disabled = false,})
 					end
@@ -237,7 +252,8 @@ local function ApplyAppToUnit(unitID, appType, appDef, cmdID, applierID, free)
 			EditUnitCmdDesc(applierID, FindUnitCmdDesc(applierID, cmdID), {name = nameString})
 		end
 		if not free then
-			appDef.costFunction(unitID, appDef.price)
+			local price = Spring.IsNoCostEnabled() and 0 or appDef.price or appDef.priceFunction(unitID)
+			appDef.costFunction(unitID, price)
 		end
 		UpdateUnitApps(applierID, appType) -- update here too to prevent pause cheating
 	end
