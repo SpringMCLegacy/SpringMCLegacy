@@ -381,17 +381,19 @@ function gadget:UnitPreDamaged(unitID, unitDefID, unitTeam, damage, paralyzer, w
 		if attackerID and projectileID then 
 			--Spring.Echo("Let there be light")
 			local x,y,z = Spring.GetProjectilePosition(projectileID)
-			local ox, oy, oz = Spring.GetUnitPosition(attackerID)
-			local params = {
-				["pos"]={ox,oy+5,oz}, 
-				["end"] = {x,y,z}, 
-				["owner"] = attackerID,
-				["ttl"] = 1,
-			}
-			for i = 1, 6 do
-				GG.Delay.DelayCall(Spring.SpawnProjectile, {WeaponDefNames["ppc_fx"].id, params}, (i-1) * 2)
+			if x then -- can be nil sometimes?
+				local ox, oy, oz = Spring.GetUnitPosition(attackerID)
+				local params = {
+					["pos"]={ox,oy+5,oz}, 
+					["end"] = {x,y,z}, 
+					["owner"] = attackerID,
+					["ttl"] = 1,
+				}
+				for i = 1, 6 do
+					GG.Delay.DelayCall(Spring.SpawnProjectile, {WeaponDefNames["ppc_fx"].id, params}, (i-1) * 2)
+				end
+				GG.PlaySoundAtUnit(unitID, "sounds/ppc_connect.wav", 5, x - ox, y - oy, z - oz, "sfx")
 			end
-			GG.PlaySoundAtUnit(unitID, "sounds/ppc_connect.wav", 5, x - ox, y - oy, z - oz, "sfx")
 		end
 	end
 
