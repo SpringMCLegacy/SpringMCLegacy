@@ -67,20 +67,24 @@ local function setWeaponClassAttribute(unitID, className, attrib, multiplier, ta
 	if not unitID then return end
 	local weapons = UnitDefs[Spring.GetUnitDefID(unitID)].weapons
 	local changed = {}
+	local numChanged = 0
 	for weapNum, weapTable in pairs(weapons) do
 		local wd = WeaponDefs[weapTable["weaponDef"]]
 		if className == "all" or (wd.customParams["weaponclass"] == className) then
 			if not tag
 			or with and wd[tag] and wd[tag] == value
 			or not with and not (wd[tag] == value) then
-				local currAttrib = Spring.GetUnitWeaponState(unitID, weapNum, attrib)
-				--Spring.Echo("Current " .. attrib .. ": ", currAttrib, weapNum, WeaponDefs[weapTable["weaponDef"]].name)
-				Spring.SetUnitWeaponState(unitID, weapNum, attrib, currAttrib * multiplier)
+				if multiplier ~= 1 then
+					local currAttrib = Spring.GetUnitWeaponState(unitID, weapNum, attrib)
+					--Spring.Echo("Current " .. attrib .. ": ", currAttrib, weapNum, WeaponDefs[weapTable["weaponDef"]].name)
+					Spring.SetUnitWeaponState(unitID, weapNum, attrib, currAttrib * multiplier)
+				end
 				changed[weapNum] = wd
+				numChanged = numChanged + 1
 			end
 		end
 	end
-	return changed
+	return changed, numChanged
 end
 
 local function setWeaponClassDamage(unitID, className, multiplier, tag, with, value)
@@ -122,8 +126,8 @@ local function deductSalvage(unitID, amount)
 end
 
 local function WeaponTypeCount(unitID, weaponType)
-	local changed = setWeaponClassAttribute(unitID, weaponType, "range", 1)
-	if changed then return #changed else return 0 end
+	local changed, numChanged = setWeaponClassAttribute(unitID, weaponType, "range", 1)
+	return numChanged
 end
 
 local function deductPerWeaponType(unitID, weaponType, amount)
@@ -1162,7 +1166,10 @@ return {
 				setWeaponClassAttribute(unitID, "mrm", "sprayAngle", effect)
 			end,
 			costFunction = deductSalvage,
-			price = 15,
+			priceFunction = function(unitID)
+				local AMOUNT_PER_WEAPON = 5
+				return deductPerWeaponType(unitID, "mrm", AMOUNT_PER_WEAPON)
+			end,
 		},
 		{
 			name = "artemislrm",
@@ -1181,7 +1188,10 @@ return {
 				GG.EnableArtemis(unitID, "lrm", not invert)
 			end,
 			costFunction = deductSalvage,
-			price = 10,
+			priceFunction = function(unitID)
+				local AMOUNT_PER_WEAPON = 5
+				return deductPerWeaponType(unitID, "lrm", AMOUNT_PER_WEAPON)
+			end,
 			incompatible = {"ammolrmextended", "ammolrminferno", "ammolrmmagpulse", "ammolrmthunder", "ammolrmarad", "ammolrmhoming"},
 		},
 		{
@@ -1201,7 +1211,10 @@ return {
 				GG.EnableArtemis(unitID, "srm", not invert)
 			end,
 			costFunction = deductSalvage,
-			price = 10,
+			priceFunction = function(unitID)
+				local AMOUNT_PER_WEAPON = 5
+				return deductPerWeaponType(unitID, "srm", AMOUNT_PER_WEAPON)
+			end,
 		},
 		{
 			name = "improvedheavygauss",
