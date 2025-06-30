@@ -132,7 +132,7 @@ local function FinishPPC(unitID)
 		end
 		ppcUnits[unitID] = nil
 		SetUnitRulesParam(unitID, "PPC_HIT", -1, {inlos = true})
-		SetUnitRulesParam(unitID, "FXOFF", 0, {public = true})
+		SetUnitRulesParam(unitID, "FXOFF", GG.stealthActive[unitID] and 1 or 0, {public = true})
 	end
 end
 
