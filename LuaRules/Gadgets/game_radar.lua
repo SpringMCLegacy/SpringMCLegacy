@@ -350,7 +350,7 @@ function gadget:UnitPreDamaged(unitID, unitDefID, unitTeam, damage, paralyzer, w
 	if weaponID == NARC_ID then
 		-- Don't allow dropships to be NARCed
 		if UnitDefs[unitDefID].customParams.dropship then return 0 end
-		if speedChange then -- Bola Pod
+		if speedChange and GG.mechCache[unitDefID] then -- Bola Pod
 			--Spring.Echo("speed change now", Spring.GetGameFrame())
 			GG.SpeedChange(unitID, unitDefID, 0.1)
 			DelayCall(GG.SpeedChange, {unitID, unitDefID, 1}, 5*30)
