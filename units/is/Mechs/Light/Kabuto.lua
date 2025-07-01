@@ -24,6 +24,7 @@ local KBO7A = Kabuto:New{
 		heatlimit 		= 10,
 		armor			= 4.5,
 		maxammo 		= {srm = 2},
+		mods 			= {"xlengine", "endosteel"},
     },
 }
 

@@ -155,7 +155,7 @@ local HBK5S = Hunchback:New{
 		jumpjets		= 4,
 		maxammo 		= {ac20 = 4},
 		barrelrecoildist = {[1] = 3},
-		mods			= {"doubleheatsinks", "endosteel"},
+		mods			= {"doubleheatsinks", "endosteel", "lightengine", "case"},
     },
 }
 

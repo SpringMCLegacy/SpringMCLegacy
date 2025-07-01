@@ -31,11 +31,11 @@ local ZEU9S = Zeus:New{
 		variant			= "ZEU-9S",
 		speed			= 60,
 		price			= 16390,
-		heatlimit 		= 23,--17 double
+		heatlimit 		= 17,--17 double
 		armor			= 11,
 		maxammo 		= {lrm = 1},
 		barrelrecoildist = {[1] = 3},
-		mods			= {"ferrofibrousarmour", "doubleheatsinks"},
+		mods			= {"ferrofibrousarmour", "doubleheatsinks", "case"},
     },
 }
 
@@ -60,15 +60,15 @@ local ZEU9S2 = Zeus:New{
 		variant			= "ZEU-9S2",
 		speed			= 60,
 		price			= 18580,
-		heatlimit 		= 16,--12 double
+		heatlimit 		= 12,--12 double
 		armor			= 11,
 		maxammo 		= {gauss = 3, lrm = 3},
 		barrelrecoildist = {[1] = 5},
-		mods			= {"ferrofibrousarmour", "doubleheatsinks"},
+		mods			= {"ferrofibrousarmour", "doubleheatsinks", "case", "xlengine"},
     },
 }
 
 return lowerkeys({
-	--LA_Zeus_ZEU9S = ZEU9S:New(),
+	LA_Zeus_ZEU9S = ZEU9S:New(),
 	LA_Zeus_ZEU9S2 = ZEU9S2:New(),
 })

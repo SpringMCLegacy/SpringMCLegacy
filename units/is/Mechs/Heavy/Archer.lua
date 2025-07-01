@@ -105,10 +105,10 @@ local ARC4M = Archer:New{
 		variant			= "ARC-4M",
 		speed			= 60,
 		price			= 13680,
-		heatlimit 		= 1, --10 double
+		heatlimit 		= 10, --10 double
 		armor			= 13.5,
 		maxammo 		= {lrm = 4},
-		mods			= {"artemislrm", "doubleheatsinks"},
+		mods			= {"artemislrm", "doubleheatsinks", "endosteel", "case"},
     },
 }
 
@@ -155,7 +155,7 @@ local ARC5S = Archer:New{
 		heatlimit 		= 10,--10 double
 		armor			= 13,
 		maxammo 		= {lrm = 4, narc = 1, srm = 1},
-		mods			= {"doubleheatsinks"},
+		mods			= {"doubleheatsinks", "case", "xlengine"},
     },
 }
 
@@ -185,7 +185,8 @@ local ARC7L = Archer:New{
 		armor			= 13.5,
 		maxammo 		= {lrm = 6},
 		ecm				= true,
-		mods			= {"doubleheatsinks", "stealtharmour"},
+		mods			= {"doubleheatsinks", "stealtharmour", "case"},
+		jumpjets		= 3,
     },
 }
 

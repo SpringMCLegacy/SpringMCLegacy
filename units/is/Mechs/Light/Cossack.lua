@@ -32,6 +32,7 @@ local CSK1 = Cossack:New{
 		armor			= 3,
 		maxammo 		= {srm = 1},
 		jumpjets		= 6,
+		mods 			= {"endosteel"},
     },
 }
 

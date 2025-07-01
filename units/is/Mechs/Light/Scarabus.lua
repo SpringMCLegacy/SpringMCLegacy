@@ -40,7 +40,7 @@ local SCB9A = Scarabus:New{
 		heatlimit 		= 10,--10 single
 		armor			= 5.5,
 		ecm 			= true,
-		mods 			= {"ferrofibrousarmour"},
+		mods 			= {"ferrofibrousarmour", "xlengine", "endosteel"},
     },
 }
 

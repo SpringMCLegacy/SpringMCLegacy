@@ -40,7 +40,7 @@ local CPLTC1 = Catapult:New{
 		variant			= "CPLT-C1",
 		speed			= 60,
 		price			= 13990,
-		heatlimit 		= 15,
+		heatlimit 		= 15,--15 single
 		armor			= 10,
 		maxammo 		= {lrm = 2},
 		jumpjets		= 4,
@@ -68,11 +68,11 @@ local CPLTC2 = Catapult:New{
 		variant			= "CPLT-C2",
 		speed			= 60,
 		price			= 13460,
-		heatlimit 		= 15,
+		heatlimit 		= 10,--10 double
 		armor			= 11.5,
 		maxammo 		= {lrm = 4, ac2 = 1},
 		jumpjets		= 4,
-		mods			= {"artemislrm"},
+		mods			= {"artemislrm", "doubleheatsinks", "endosteel", "xlengine"},
     },
 }
 
@@ -100,7 +100,7 @@ local CPLTC3 = Catapult:New{
 		variant			= "CPLT-C3",
 		speed			= 60,
 		price			= 13680,
-		heatlimit 		= 15,
+		heatlimit 		= 15,--15 single
 		armor			= 10,
 		maxammo 		= {arrow = 1},
 		jumpjets		= 4,
@@ -128,7 +128,7 @@ local CPLTC4 = Catapult:New{
 		variant			= "CPLT-C4",
 		speed			= 60,
 		price			= 13580,
-		heatlimit 		= 10,
+		heatlimit 		= 10,--10 single
 		armor			= 10,
 		maxammo 		= {lrm = 4},
 		jumpjets		= 4,
@@ -162,7 +162,7 @@ local CPLTK2 = Catapult:New{
 		variant			= "CPLT-K2",
 		speed			= 60,
 		price			= 13190,
-		heatlimit 		= 20,
+		heatlimit 		= 20,--20 single
 		armor			= 11,
     },
 }
@@ -188,11 +188,11 @@ local CPLTK5 = Catapult:New{
 		variant			= "CPLT-K5",
 		speed			= 60,
 		price			= 14570,
-		heatlimit 		= 16,--12 double
+		heatlimit 		= 12,--12 double
 		armor			= 12.5,
 		maxammo 		= {mrm = 4},
 		jumpjets		= 4,
-		mods			= {"doubleheatsinks"},
+		mods			= {"doubleheatsinks", "endosteel", "xlengine", "case"},
     },
 }
 

@@ -37,7 +37,7 @@ local RZK9S = Razorback:New{
 		heatlimit 		= 10,--10 double
 		armor			= 6,
 		maxammo 		= {srm = 1},
-		mods 			= {"ferrofibrousarmour", "doubleheatsinks"},
+		mods 			= {"ferrofibrousarmour", "doubleheatsinks", "lightengine", "endosteel", "case"},
     },
 }
 

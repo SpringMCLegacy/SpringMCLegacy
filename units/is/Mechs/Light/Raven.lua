@@ -37,7 +37,7 @@ local RVN3L = Raven:New{
 		bap				= true,
 		ecm				= true,
 		maxammo 		= {narc = 2, srm = 1},
-		mods 			= {"ferrofibrousarmour"},
+		mods 			= {"ferrofibrousarmour", "xlengine", "case"},
     },
 }
 
@@ -71,7 +71,7 @@ local RVN4L = Raven:New{
 		bap				= true,
 		ecm				= true,
 		maxammo 		= {narc = 1, srm = 1},
-		mods			= {"doubleheatsinks", "stealtharmour"},
+		mods			= {"doubleheatsinks", "stealtharmour", "xlengine"},
     },
 }
 
@@ -105,7 +105,7 @@ local RVN3M = Raven:New{
 		heatlimit 		= 10,--10 single
 		armor			= 3.5,
 		maxammo 		= {narc = 2, lrm = 2},
-		mods 			= {"ferrofibrousarmour"},
+		mods 			= {"ferrofibrousarmour", "xlengine", "case"},
     },
 }
 

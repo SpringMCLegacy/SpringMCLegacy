@@ -34,7 +34,7 @@ local JR7K = Jenner:New{
 		armor			= 3.5,
 		maxammo 		= {srm = 1},
 		jumpjets		= 5,
-		mods 			= {"ferrofibrousarmour"},
+		mods 			= {"ferrofibrousarmour", "case"},
     },
 }
 

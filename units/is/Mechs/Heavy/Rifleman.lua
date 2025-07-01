@@ -34,9 +34,9 @@ local RFL5D = Rifleman:New{
 		variant			= "RFL-5D",
 		speed			= 60,
 		price			= 13950,
-		heatlimit 		= 23,--17 double
+		heatlimit 		= 17,--17 double
 		armor			= 9,
-		mods			= {"doubleheatsinks"},
+		mods			= {"doubleheatsinks", "xlengine"},
     },
 }
 
@@ -67,11 +67,11 @@ local RFL5M = Rifleman:New{
 		variant			= "RFL-5M",
 		speed			= 60,
 		price			= 12270,
-		heatlimit 		= 16,--12 double
+		heatlimit 		= 12,--12 double
 		armor			= 8.5,
 		maxammo 		= {ac5 = 1},
 		barrelrecoildist = {[1] = 5, [2] = 5},
-		mods			= {"doubleheatsinks"},
+		mods			= {"doubleheatsinks", "xlengine", "case"},
     },
 }
 
@@ -102,11 +102,11 @@ local RFL6X = Rifleman:New{
 		variant			= "RFL-6X",
 		speed			= 80,
 		price			= 14640,
-		heatlimit 		= 13,--10 double
+		heatlimit 		= 10,--10 double
 		armor			= 11.5,
 		maxammo 		= {ac10 = 4},
 		barrelrecoildist = {[1] = 5, [2] = 5},
-		mods			= {"doubleheatsinks"},
+		mods			= {"doubleheatsinks", "endosteel", "xlengine", "case"},
     },
 }
 
@@ -143,19 +143,19 @@ local RFL7M = Rifleman:New{
 		variant			= "RFL-7M",
 		speed			= 60,
 		price			= 15210,
-		heatlimit 		= 15,--11 double
+		heatlimit 		= 11,--11 double
 		armor			= 11.5,
 		maxammo 		= {ltgauss = 2},
 		barrelrecoildist = {[1] = 5, [2] = 5},
 		ecm				= true,
-		mods			= {"doubleheatsinks"},
+		mods			= {"doubleheatsinks", "endosteel", "xlengine"},
     },
 }
 
 return lowerkeys({ 
-	--["FS_Rifleman_RFL5D"] = RFL5D:New(),
-	--["FS_Rifleman_RFL6X"] = RFL6X:New(),
-	--["LA_Rifleman_RFL5M"] = RFL5M:New(),
-	--["FW_Rifleman_RFL5M"] = RFL5M:New(),
+	["FS_Rifleman_RFL5D"] = RFL5D:New(),
+	["FS_Rifleman_RFL6X"] = RFL6X:New(),
+	["LA_Rifleman_RFL5M"] = RFL5M:New(),
+	["FW_Rifleman_RFL5M"] = RFL5M:New(),
 	["FW_Rifleman_RFL7M"] = RFL7M:New(),
 })

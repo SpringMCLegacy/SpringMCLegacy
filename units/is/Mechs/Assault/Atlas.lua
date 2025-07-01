@@ -38,7 +38,7 @@ local AS7D = Atlas:New{
 		variant			= "AS7-D",
 		speed			= 50,
 		price			= 18970,
-		heatlimit 		= 20,
+		heatlimit 		= 20,--20 single
 		armor			= 19,
 		maxammo 		= {ac20 = 2, lrm = 2, srm = 1},
 		barrelrecoildist = {[1] = 5},
@@ -77,10 +77,11 @@ local AS7K = Atlas:New{
 		variant			= "AS7-K",
 		speed			= 50,
 		price			= 21750,
-		heatlimit 		= 20,
+		heatlimit 		= 20,--20 single
 		armor			= 19,
 		maxammo 		= {gauss = 2, lrm = 2},
 		barrelrecoildist = {[1] = 5},
+		mods			= {"xlengine", "case"},
     },
 }
 
@@ -119,7 +120,7 @@ local AS7S = Atlas:New{
 		variant			= "AS7-S",
 		speed			= 50,
 		price			= 19290,
-		heatlimit 		= 10,--15 double
+		heatlimit 		= 15,--15 double
 		armor			= 19,
 		maxammo 		= {ac20 = 3, lrm = 2, srm = 2},
 		barrelrecoildist = {[1] = 5},
@@ -148,12 +149,12 @@ local AS7S2 = Atlas:New{
 		variant			= "AS7-S2",
 		speed			= 50,
 		price			= 19290,
-		heatlimit 		= 20,--15 double
+		heatlimit 		= 16,--16 double
 		armor			= 19,
 		maxammo 		= {hvgauss = 4, lrm = 2, srm = 2},
 		ecm				= true,
 		barrelrecoildist = {[1] = 5},
-		mods			= {"artemislrm", "doubleheatsinks"},
+		mods			= {"artemislrm", "doubleheatsinks", "lightengine", "case"},
     },
 }
 

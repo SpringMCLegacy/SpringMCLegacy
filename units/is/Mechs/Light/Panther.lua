@@ -26,7 +26,7 @@ local PNT10K = Panther:New{
 		jumpjets		= 4,
 		armor			= 6.5,
 		maxammo 		= {srm = 2},
-		mods 			= {"artemissrm", "ferrofibrousarmour"},
+		mods 			= {"artemissrm", "ferrofibrousarmour", "endosteel", "case"},
     },
 }
 

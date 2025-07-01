@@ -38,7 +38,7 @@ local STY3C = Starslayer:New{
 		armor			= 9.5,
 		jumpjets		= 5,
 		maxammo 		= {srm = 1},
-		mods			= {"ferrofibrousarmour", "doubleheatsinks", "endosteel"},
+		mods			= {"ferrofibrousarmour", "doubleheatsinks", "endosteel", "case"},
     },
 }
 

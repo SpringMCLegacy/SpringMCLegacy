@@ -27,7 +27,7 @@ local TLN5W = Talon:New{
 		price			= 11750,
 		heatlimit 		= 11,--11 double
 		armor			= 7.5,
-		mods			= {"doubleheatsinks"},
+		mods			= {"doubleheatsinks", "xlengine"},
     },
 }
 
@@ -48,7 +48,7 @@ local TLN5Z = Talon:New{
 		price			= 11680,
 		heatlimit 		= 10,--10 double
 		armor			= 7,
-		mods			= {"doubleheatsinks", "ferrofibrousarmour"},
+		mods			= {"doubleheatsinks", "ferrofibrousarmour", "endosteel", "lightengine", "c3slave"},
     },
 }
 

@@ -55,7 +55,7 @@ local COM5S = Commando:New{
 		heatlimit 		= 10,
 		armor			= 3,
 		maxammo 		= {srm = 2},
-		mods 			= {"artemissrm", "ferrofibrousarmour"},
+		mods 			= {"artemissrm", "ferrofibrousarmour", "endosteel", "case"},
     },
 }
 
@@ -83,7 +83,7 @@ local COM7S = Commando:New{
 		heatlimit 		= 10, --10 double
 		armor			= 3.5,
 		maxammo 		= {srm = 2},
-		mods 			= {"artemissrm", "doubleheatsinks"},
+		mods 			= {"artemissrm", "doubleheatsinks", "endosteel", "case", "lightengine"},
     },
 }
 

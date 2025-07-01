@@ -40,10 +40,10 @@ local LGB7V = Longbow:New{
 		variant			= "LGB-7V",
 		speed			= 50,
 		price			= 18160,
-		heatlimit 		= 19,--14 double
+		heatlimit 		= 14,--14 double
 		armor			= 16,
 		maxammo 		= {lrm = 6},
-		mods			= {"artemislrm", "doubleheatsinks"},
+		mods			= {"artemislrm", "doubleheatsinks", "xlengine", "case"},
     },
 }
 
@@ -77,10 +77,10 @@ local LGB12C = Longbow:New{
 		variant			= "LGB-12C",
 		speed			= 50,
 		price			= 16860,
-		heatlimit 		= 16,--12 double
+		heatlimit 		= 12,--12 double
 		armor			= 12.5,
 		maxammo 		= {lrm = 9},
-		mods			= {"artemislrm", "doubleheatsinks"},
+		mods			= {"artemislrm", "doubleheatsinks", "xlengine", "case"},
     },
 }
 
@@ -108,10 +108,10 @@ local LGB8V = Longbow:New{
 		variant			= "LGB-8V",
 		speed			= 50,
 		price			= 18080,
-		heatlimit 		= 11,--16 double
+		heatlimit 		= 10,--10 double
 		armor			= 12.5,
 		maxammo 		= {arrow = 4},
-		mods			= {"doubleheatsinks"},
+		mods			= {"doubleheatsinks", "xlengine", "case"},
     },
 }
 	

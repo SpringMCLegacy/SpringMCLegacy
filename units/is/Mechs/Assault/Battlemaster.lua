@@ -6,51 +6,6 @@ local Battlemaster = Assault:New{
     },
 }
 
-local BLRK3 = Battlemaster:New{
-	description         = "Assault Brawler",
-	weapons 		= {	
-		[1] = {
-			name	= "ERPPC",
-		},
-		[2] = {
-			name	= "ERLBL",
-			OnlyTargetCategory = "ground",
-		},
-		[3] = {
-			name	= "ERLBL",
-			OnlyTargetCategory = "ground",
-		},
-		[4] = {
-			name	= "MBL",
-			OnlyTargetCategory = "ground",
-		},
-		[5] = {
-			name	= "MBL",
-			OnlyTargetCategory = "ground",
-		},
-		[6] = {
-			name	= "MBL",
-			OnlyTargetCategory = "ground",
-		},
-		[7] = {
-			name	= "MBL",
-			OnlyTargetCategory = "ground",
-		},
-		[8] = {
-			name	= "SSRM6",
-		},
-	},
-    customparams = {
-		variant			= "BLR-K3",
-		speed			= 60,
-		price			= 18510,
-		heatlimit 		= 24,--18 double
-		armor			= 16,
-		maxammo 		= {srm = 1},
-		mods			= {"doubleheatsinks"},
-    },
-}
-
 local BLR1G = Battlemaster:New{
 	description         = "Assault Brawler",
 	weapons 		= {	
@@ -95,9 +50,54 @@ local BLR1G = Battlemaster:New{
 		variant			= "BLR-1G",
 		speed			= 60,
 		price			= 15190,
-		heatlimit 		= 36,
+		heatlimit 		= 18,--18 single
 		armor			= 14.5,
 		maxammo 		= {srm = 1},
+    },
+}
+
+local BLRK3 = Battlemaster:New{
+	description         = "Assault Brawler",
+	weapons 		= {	
+		[1] = {
+			name	= "ERPPC",
+		},
+		[2] = {
+			name	= "ERLBL",
+			OnlyTargetCategory = "ground",
+		},
+		[3] = {
+			name	= "ERLBL",
+			OnlyTargetCategory = "ground",
+		},
+		[4] = {
+			name	= "MBL",
+			OnlyTargetCategory = "ground",
+		},
+		[5] = {
+			name	= "MBL",
+			OnlyTargetCategory = "ground",
+		},
+		[6] = {
+			name	= "MBL",
+			OnlyTargetCategory = "ground",
+		},
+		[7] = {
+			name	= "MBL",
+			OnlyTargetCategory = "ground",
+		},
+		[8] = {
+			name	= "SSRM6",
+		},
+	},
+    customparams = {
+		variant			= "BLR-K3",
+		speed			= 60,
+		price			= 18510,
+		heatlimit 		= 18,--18 double
+		armor			= 16,
+		maxammo 		= {srm = 1},
+		mods			= {"doubleheatsinks", "xlengine", "case", "c3master"},
     },
 }
 
@@ -142,10 +142,10 @@ local BLR3M = Battlemaster:New{
 		variant			= "BLR-3M",
 		speed			= 60,
 		price			= 16790,
-		heatlimit 		= 24,--18 double
+		heatlimit 		= 18,--18 double
 		armor			= 14.5,
 		maxammo 		= {srm = 1},
-		mods			= {"doubleheatsinks"},
+		mods			= {"doubleheatsinks", "case"},
     },
 }
 
@@ -187,7 +187,7 @@ local BLR5M = Battlemaster:New{
 		variant			= "BLR-5M",
 		speed			= 60,
 		price			= 17660,
-		heatlimit 		= 19,--14 double
+		heatlimit 		= 14,--14 double
 		armor			= 14.5,
 		maxammo 		= {ltgauss = 1},
 		barrelrecoildist = {[1] = 3},
@@ -239,11 +239,11 @@ local BLR4S = Battlemaster:New{
 		variant			= "BLR-4S",
 		speed			= 60,
 		price			= 20180,
-		heatlimit 		= 17,--13 double
+		heatlimit 		= 13,--13 double
 		armor			= 13.5,
 		maxammo 		= {gauss = 3, srm = 2},
 		barrelrecoildist = {[1] = 3},
-		mods			= {"ferrofibrousarmour", "artemissrm", "doubleheatsinks"},
+		mods			= {"ferrofibrousarmour", "artemissrm", "doubleheatsinks", "lightengine", "case"},
     },
 }
 

@@ -95,7 +95,7 @@ local TBT9K = Trebuchet:New{
 		armor			= 9,
 		jumpjets		= 5,
 		maxammo 		= {mrm = 3},
-		mods			= {"doubleheatsinks", "endosteel"},
+		mods			= {"doubleheatsinks", "endosteel", "xlengine", "case", "c3slave"},
     },
 }
 

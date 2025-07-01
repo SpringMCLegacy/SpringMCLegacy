@@ -31,11 +31,11 @@ local ON1MA = Orion:New{
 		variant			= "ON-1MA",
 		speed			= 60,
 		price			= 15020,
-		heatlimit 		= 15,--11 double
+		heatlimit 		= 11,--11 double
 		armor			= 14,
 		maxammo 		= {ac10 = 2, lrm = 2, srm = 2},
 		barrelrecoildist = {[1] = 3},
-		mods			= {"artemissrm", "doubleheatsinks"},
+		mods			= {"artemissrm", "artemislrm", "doubleheatsinks", "xlengine", "case"},
     },
 }
 		
@@ -66,11 +66,11 @@ local ON1MB = Orion:New{
 		variant			= "ON-1MB",
 		speed			= 60,
 		price			= 15020,
-		heatlimit 		= 15,--11 doble
+		heatlimit 		= 11,--11 double
 		armor			= 14,
 		maxammo 		= {ltgauss = 1, lrm = 2, srm = 2, narc = 2},
 		barrelrecoildist = {[1] = 3},
-		mods			= {"doubleheatsinks"},
+		mods			= {"doubleheatsinks", "xlengine", "case"},
     },
 }
 

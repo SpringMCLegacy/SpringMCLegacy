@@ -26,7 +26,7 @@ local VLKQD = Valkyrie:New{
 		armor			= 6,
 		jumpjets		= 5,
 		maxammo 		= {lrm = 1},
-		mods 			= {"artemislrm", "ferrofibrousarmour"}
+		mods 			= {"artemislrm", "ferrofibrousarmour", "endosteel", "case"}
     },
 }
 

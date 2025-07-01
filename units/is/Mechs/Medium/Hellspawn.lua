@@ -42,7 +42,7 @@ local HSN7D = Hellspawn:New{
 		jumpjets		= 6,
 		maxammo 		= {lrm = 2},
 		ecm				= true,
-		mods			= {"doubleheatsinks", "endosteel"},
+		mods			= {"doubleheatsinks", "endosteel", "xlengine"},
     },
 }
 

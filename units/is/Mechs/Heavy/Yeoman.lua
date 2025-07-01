@@ -31,7 +31,7 @@ local YMN6Y = Yeoman:New{
 		heatlimit 		= 13,--10 double
 		armor			= 8.5,
 		maxammo 		= {lrm = 6},
-		mods			= {"ferrofibrousarmour", "doubleheatsinks"},
+		mods			= {"ferrofibrousarmour", "doubleheatsinks", "endosteel", "case"},
     },
 }
 

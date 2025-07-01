@@ -103,7 +103,7 @@ local BJ4 = Blackjack:New{
 		armor			= 8,--should be light ferro
 		maxammo 		= {ac5 = 4},
 		barrelrecoildist = {[1] = 5, [2] = 5},
-		mods			= {"ferrofibrousarmour", "targetingcomputer", "doubleheatsinks"},
+		mods			= {"ferrofibrousarmour", "targetingcomputer", "doubleheatsinks", "lightengine", "case"},
     },
 }
 

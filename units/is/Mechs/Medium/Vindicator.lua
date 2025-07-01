@@ -29,7 +29,7 @@ local VND3L = Vindicator:New{
 		armor			= 9,
 		jumpjets		= 4,
 		maxammo 		= {lrm = 1},
-		mods			= {"doubleheatsinks"},
+		mods			= {"doubleheatsinks", "case"},
     },
 }
 

@@ -29,7 +29,7 @@ local ENF6M = EnforcerIII:New{
 		armor			= 10,
 		jumpjets		= 5,
 		maxammo 		= {ac10 = 2},
-		mods			= {"doubleheatsinks", "endosteel"},
+		mods			= {"doubleheatsinks", "endosteel", "xlengine"},
     },
 }
 

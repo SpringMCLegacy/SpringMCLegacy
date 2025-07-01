@@ -36,13 +36,14 @@ local FS9S = Firestarter:New{
 	},
 		
 	customparams = {
-		variant         = "FS-9S",
+		variant         = "FS9-S",
 		speed			= 90,
 		price			= 7540,
 		heatlimit 		= 10, --10 single
 		armor			= 5.5,
 		bap 			= true,
 		jumpjets		= 6,
+		mods			= {"endosteel"},
     },
 }
 

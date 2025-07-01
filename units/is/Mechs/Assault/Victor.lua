@@ -27,7 +27,7 @@ local VTR9B = Victor:New{
 		variant			= "VTR-9B",
 		speed			= 60,
 		price			= 13780,
-		heatlimit 		= 15,
+		heatlimit 		= 15,--15 single
 		armor			= 11.5,
 		maxammo 		= {ac20 = 3, srm = 1},
 		barrelrecoildist = {[1] = 5},
@@ -56,10 +56,11 @@ local VTR9D = Victor:New{
 		variant			= "VTR-9D",
 		speed			= 60,
 		price			= 17170,
-		heatlimit 		= 15,
+		heatlimit 		= 15,--15 single
 		armor			= 12.5,
 		maxammo 		= {gauss = 2, srm = 1},
 		barrelrecoildist = {[1] = 5},
+		mods			= {"endosteel"},
 		jumpjets		= 4,
     },
 }
@@ -89,6 +90,7 @@ local VTR9K = Victor:New{
 		armor			= 12.5,
 		maxammo 		= {gauss = 2, srm = 1},
 		barrelrecoildist = {[1] = 5},
+		mods			= {"endosteel"},
 		jumpjets		= 4,
     },
 }
@@ -143,12 +145,12 @@ local VTR10D = Victor:New{
 		variant			= "VTR-10D",
 		speed			= 60,
 		price			= 18940,
-		heatlimit 		= 16,--12 double
+		heatlimit 		= 12,--12 double
 		armor			= 13,
 		maxammo 		= {ac20 = 6, srm = 1},
 		barrelrecoildist = {[1] = 5},
 		jumpjets		= 4,
-		mods			= {"doubleheatsinks"},
+		mods			= {"doubleheatsinks", "case", "endosteel"},
     },
 }
 
@@ -173,13 +175,13 @@ local VTR10L = Victor:New{
 		variant			= "VTR-10L",
 		speed			= 60,
 		price			= 23200,
-		heatlimit 		= 16,--12 double
+		heatlimit 		= 10,--10 double
 		armor			= 15.5,
 		maxammo 		= {gauss = 3, srm = 1},
 		barrelrecoildist = {[1] = 5},
 		ecm 			= true,
 		jumpjets		= 4,
-		mods			= {"doubleheatsinks", "stealtharmour"},
+		mods			= {"doubleheatsinks", "stealtharmour", "endosteel", "case"},
     },
 }
 
@@ -204,12 +206,12 @@ local VTR11D = Victor:New{
 		variant			= "VTR-11D",
 		speed			= 60,
 		price			= 20210,
-		heatlimit 		= 20, --15 double
+		heatlimit 		= 15, --15 double
 		armor			= 14.5,
 		maxammo 		= {ac5 = 3, srm = 1},
 		barrelrecoildist = {[1] = 5},
 		jumpjets		= 4,
-		mods			= {"doubleheatsinks"},
+		mods			= {"doubleheatsinks", "endosteel", "lightengine", "c3slave"},
     },
 }
 

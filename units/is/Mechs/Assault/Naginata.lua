@@ -28,10 +28,10 @@ local NGC3A = Naginata:New{
 		variant			= "NG-C3A",
 		speed			= 50,
 		price			= 19540,
-		heatlimit 		= 20,--15 double
+		heatlimit 		= 15,--15 double
 		armor			= 14,
 		maxammo 		= {lrm = 6},
-		mods			= {"artemislrm", "doubleheatsinks"},
+		mods			= {"artemislrm", "doubleheatsinks", "case", "c3master"},
     },
 }
 

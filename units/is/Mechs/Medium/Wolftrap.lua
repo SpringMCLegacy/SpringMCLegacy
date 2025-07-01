@@ -31,6 +31,7 @@ local WFT1 = Wolftrap:New{
 		heatlimit 		= 10,--10 single
 		armor			= 7.5,
 		maxammo 		= {ac10 = 2, lrm = 1},
+		mods			= {"xlengine", "endosteel", "case"},
     },
 }
 

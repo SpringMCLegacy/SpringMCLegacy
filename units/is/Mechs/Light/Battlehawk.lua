@@ -34,7 +34,7 @@ local BHK305 = Battlehawk:New{
 		armor			= 5.5,
 		jumpjets		= 5,
 		maxammo 		= {srm = 2},
-		mods			= {"ferrofibrousarmour", "doubleheatsinks"},
+		mods			= {"ferrofibrousarmour", "doubleheatsinks", "xlengine"},
     },
 }
 

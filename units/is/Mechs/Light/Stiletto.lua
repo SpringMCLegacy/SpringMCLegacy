@@ -29,7 +29,7 @@ local STO4A = Stiletto:New{
 		armor			= 6,
 		ecm 			= true,
 		maxammo 		= {lrm = 1, srm = 1},
-		mods 			= {"ferrofibrousarmour", "doubleheatsinks"},
+		mods 			= {"ferrofibrousarmour", "doubleheatsinks", "endosteel", "lightengine", "case"},
     },
 }
 

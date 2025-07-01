@@ -28,7 +28,7 @@ local NTK2Q = Nighthawk:New{
 		price			= 9970,
 		heatlimit 		= 12,--12 double
 		armor			= 7,
-		mods			= {"doubleheatsinks"},
+		mods			= {"doubleheatsinks", "xlengine"},
     },
 }
 
@@ -51,7 +51,7 @@ local NTK2S = Nighthawk:New{
 		armor			= 7,
 		bap				= true,
 		ecm				= true,
-		mods			= {"doubleheatsinks"},
+		mods			= {"doubleheatsinks", "xlengine"},
     },
 }
 

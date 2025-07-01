@@ -32,6 +32,7 @@ local CDA3M = Cicada:New{
 		armor			= 4,
 		maxammo 		= {ac5 = 1},
 		barrelrecoildist = {[1] = 3},
+		mods			= {"xlengine", "case"},
     },
 }
 

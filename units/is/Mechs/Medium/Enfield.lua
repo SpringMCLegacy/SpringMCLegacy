@@ -34,7 +34,7 @@ local END6Q = Enfield:New{
 		heatlimit 		= 11,--11 double
 		armor			= 11,
 		maxammo 		= {ac10 = 2},
-		mods			= {"doubleheatsinks", "endosteel"},
+		mods			= {"doubleheatsinks", "endosteel", "xlengine", "case"},
     },
 }
 

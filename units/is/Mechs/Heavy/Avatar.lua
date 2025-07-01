@@ -4,7 +4,7 @@ local Avatar = Heavy:New{
 	customparams = {
 		cockpitheight	= 9.4,
 		tonnage			= 70,
-		mods			= {"doubleheatsinks"},
+		mods			= {"doubleheatsinks", "xlengine", "case"},
 		omni			= true,
 	},
 }
@@ -45,11 +45,11 @@ local AV1OP = Avatar:New{
 		variant			= "AV1-O (Prime)",
 		speed			= 60,
 		price			= 13950,
-		heatlimit 		= 13,--10 double
+		heatlimit 		= 10,--10 double
 		armor			= 12,
 		maxammo 		= {ac10 = 2, lrm = 3},
 		barrelrecoildist = {[1] = 5},
-		mods			= {"artemislrm", "doubleheatsinks"},
+		mods			= {"artemislrm"},
     },
 }
 
@@ -81,7 +81,7 @@ local AV1OA = Avatar:New{
 		variant			= "AV1-O (Cfg A)",
 		speed			= 60,
 		price			= 14810,
-		heatlimit 		= 13,--10 double
+		heatlimit 		= 10,--10 double
 		armor			= 12,
 		maxammo 		= {ac20 = 3, srm = 2},
 		barrelrecoildist = {[1] = 4},
@@ -117,10 +117,10 @@ local AV1OB = Avatar:New{
 		variant			= "AV1-O (Cfg B)",
 		speed			= 60,
 		price			= 14960,
-		heatlimit 		= 13,--10 double
+		heatlimit 		= 10,--10 double
 		armor			= 12,
 		maxammo 		= {lrm = 6},
-		mods			= {"artemislrm", "doubleheatsinks"},
+		mods			= {"artemislrm"},
     },
 }
 

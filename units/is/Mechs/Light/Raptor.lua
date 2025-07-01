@@ -3,7 +3,7 @@ local Raptor = Light:New{
 	customparams = {
 		cockpitheight	= 2.9,
 		tonnage 		= 25,
-		mods			= {"doubleheatsinks"},
+		mods			= {"doubleheatsinks", "xlengine", "endosteel"},
 		omni			= true,
     },
 }

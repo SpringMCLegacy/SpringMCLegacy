@@ -35,13 +35,13 @@ local TNS4S = Thanatos:New{
 		variant			= "TNS-4S",
 		speed			= 80,
 		price			= 18440,
-		heatlimit 		= 21,--16 double
+		heatlimit 		= 16,--16 double
 		armor			= 13,
 		maxammo 		= {mrm = 2},
 		barrelrecoildist = {[1] = 4},
 		ecm 			= true,
 		jumpjets		= 5,
-		mods			= {"doubleheatsinks"},
+		mods			= {"doubleheatsinks", "endosteel", "xlengine"},
     },
 }
 

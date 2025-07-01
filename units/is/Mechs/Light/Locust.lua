@@ -43,7 +43,7 @@ local LCT3M = Locust:New{
 		price			= 5220,
 		heatlimit 		= 10,
 		armor			= 3,
-		mods 			= {"ferrofibrousarmour"},
+		mods 			= {"ferrofibrousarmour", "endosteel"},
     },
 }
 
@@ -78,7 +78,7 @@ local LCT5M = Locust:New{
 		price			= 7190,
 		heatlimit 		= 10,
 		armor			= 4,
-		mods 			= {"ferrofibrousarmour"},
+		mods 			= {"ferrofibrousarmour", "endosteel", "xlengine"},
     },
 }
 
@@ -102,7 +102,7 @@ local LCT3D = Locust:New{
 		heatlimit 		= 10,
 		armor			= 2.5,
 		maxammo 		= {lrm = 1},
-		mods 			= {"ferrofibrousarmour"},
+		mods 			= {"ferrofibrousarmour", "endosteel"},
     },
 }
 
@@ -130,7 +130,7 @@ local LCT3S = Locust:New{
 		heatlimit 		= 10,
 		armor			= 2.5,
 		maxammo 		= {srm = 1},
-		mods 			= {"ferrofibrousarmour"},
+		mods 			= {"ferrofibrousarmour", "endosteel"},
     },
 }
 

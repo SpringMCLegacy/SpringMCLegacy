@@ -34,7 +34,7 @@ local WHM6D = Warhammer:New{
 		variant			= "WHM-6D",
 		speed			= 60,
 		price			= 14710,
-		heatlimit 		= 20,
+		heatlimit 		= 20,--20 single
 		armor			= 14,
     },
 }
@@ -69,7 +69,7 @@ local WHM6K = Warhammer:New{
 		variant			= "WHM-6K",
 		speed			= 60,
 		price			= 13050,
-		heatlimit 		= 20,
+		heatlimit 		= 20,--20 single
 		armor			= 10,
 		maxammo 		= {srm = 1},
     },
@@ -108,7 +108,7 @@ local WHM7S = Warhammer:New{
 		variant			= "WHM-7S",
 		speed			= 60,
 		price			= 14770,
-		heatlimit 		= 24,--16 double
+		heatlimit 		= 18,--18 double
 		armor			= 10,
 		maxammo 		= {srm = 1},
 		mods			= {"doubleheatsinks"},
@@ -145,7 +145,7 @@ local WHM7M = Warhammer:New{
 		variant			= "WHM-7M",
 		speed			= 60,
 		price			= 14870,
-		heatlimit 		= 24,--18 double
+		heatlimit 		= 18,--18 double
 		armor			= 10,
 		maxammo 		= {srm = 1},
 		mods			= {"doubleheatsinks"},
@@ -182,11 +182,11 @@ local WHM4L = Warhammer:New{
 		variant			= "WHM-4L",
 		speed			= 60,
 		price			= 18200,
-		heatlimit 		= 24,--18 double
+		heatlimit 		= 16,--16 double
 		armor			= 13.5,
 		maxammo 		= {srm = 1},
 		ecm 			= true,
-		mods			= {"doubleheatsinks", "stealtharmour"},
+		mods			= {"doubleheatsinks", "stealtharmour", "xlengine", "case"},
     },
 }
 		

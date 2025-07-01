@@ -34,11 +34,11 @@ local MAD5D = Marauder:New{
 		variant			= "MAD-5D",
 		speed			= 60,
 		price			= 17870,
-		heatlimit 		= 21,--16 double
+		heatlimit 		= 16,--16 double
 		armor			= 14,
 		jumpjets		= 4,
 		maxammo 		= {srm = 1},
-		mods			= {"doubleheatsinks"},
+		mods			= {"doubleheatsinks", "xlengine", "case"},
     },
 }
 
@@ -66,11 +66,11 @@ local MAD7D = Marauder:New{
 		variant			= "MAD-7D",
 		speed			= 60,
 		price			= 19860,
-		heatlimit 		= 21,--16 double
+		heatlimit 		= 16,--16 double
 		armor			= 14,
 		maxammo 		= {ac5 = 2},
 		ecm				= true,
-		mods			= {"doubleheatsinks"},
+		mods			= {"doubleheatsinks", "xlengine", "case", "targetingcomputer"},
     },
 }
 
@@ -98,11 +98,11 @@ local MAD5S = Marauder:New{
 		variant			= "MAD-5S",
 		speed			= 60,
 		price			= 17990,
-		heatlimit 		= 21,--16 double
+		heatlimit 		= 16,--16 double
 		armor			= 11.5,
 		maxammo 		= {gauss = 1},
 		barrelrecoildist = {[1] = 5},
-		mods			= {"doubleheatsinks"},
+		mods			= {"doubleheatsinks", "xlengine", "case"},
     },
 }
 
@@ -133,13 +133,13 @@ local MAD9S = Marauder:New{
 		variant			= "MAD-9S",
 		speed			= 60,
 		price			= 17860,
-		heatlimit 		= 19,--14 double
+		heatlimit 		= 14,--14 double
 		armor			= 13,
 		maxammo 		= {ac10 = 2},
 		ecm				= true,
 		bap				= true,
 		barrelrecoildist = {[1] = 5},
-		mods			= {"doubleheatsinks"},
+		mods			= {"doubleheatsinks", "endosteel", "lightengine", "case"},
     },
 }
 
@@ -167,10 +167,10 @@ local MAD5L = Marauder:New{
 		variant			= "MAD-5L",
 		speed			= 60,
 		price			= 22860,
-		heatlimit 		= 24,--18 double
+		heatlimit 		= 18,--18 double
 		armor			= 14,
 		barrelrecoildist = {[1] = 5},
-		mods			= {"doubleheatsinks"},--"stealtharmour"
+		mods			= {"doubleheatsinks", "stealtharmour", "tsm"},
     },
 }
 
@@ -198,11 +198,12 @@ local MAD5M = Marauder:New{
 		variant			= "MAD-5M",
 		speed			= 60,
 		price			= 14710,
-		heatlimit 		= 21,--16 double
+		heatlimit 		= 16,--16 double
 		armor			= 11.5,
 		maxammo 		= {ac10 = 1},
 		barrelrecoildist = {[1] = 5},
-		mods			= {"doubleheatsinks"},
+		mods			= {"doubleheatsinks", "xlengine", "case"},
+		jumpjets		= 4,
     },
 }
 
@@ -236,23 +237,23 @@ local MAD9M = Marauder:New{
 		variant			= "MAD-9M",
 		speed			= 60,
 		price			= 17040,
-		heatlimit 		= 21,--16 double
+		heatlimit 		= 16,--16 double
 		armor			= 12.5,
 		maxammo 		= {srm = 2},
 		barrelrecoildist = {[1] = 5},
 		ecm				= true,
-		mods			= {"ferrofibrousarmour", "doubleheatsinks"},
+		mods			= {"ferrofibrousarmour", "doubleheatsinks", "xlengine"},
     },
 }
 
 
 return lowerkeys({
-	--["FS_Marauder_MAD5D"] = MAD5D:New(),
-	--["FS_Marauder_MAD7D"] = MAD7D:New(),
-	--["DC_Marauder_MAD5D"] = MAD5D:New(),
+	["FS_Marauder_MAD5D"] = MAD5D:New(),
+	["FS_Marauder_MAD7D"] = MAD7D:New(),
+	["DC_Marauder_MAD5D"] = MAD5D:New(),
 	["LA_Marauder_MAD5S"] = MAD5S:New(),
-	--["LA_Marauder_MAD9S"] = MAD9S:New(),
-	--["FW_Marauder_MAD5M"] = MAD5M:New(),
-	--["FW_Marauder_MAD9M"] = MAD9M:New(),
-	--["CC_Marauder_MAD5L"] = MAD5L:New(),
+	["LA_Marauder_MAD9S"] = MAD9S:New(),
+	["FW_Marauder_MAD5M"] = MAD5M:New(),
+	["FW_Marauder_MAD9M"] = MAD9M:New(),
+	["CC_Marauder_MAD5L"] = MAD5L:New(),
 })

@@ -29,7 +29,7 @@ local D9G9 = DuanGung:New{
 		armor			= 4,
 		jumpjets		= 6,
 		maxammo 		= {lrm = 1},
-		mods 			= {"doubleheatsinks"},
+		mods 			= {"doubleheatsinks", "endosteel", "xlengine"},
     },
 }
 

@@ -31,6 +31,7 @@ local ALM9D = Fireball:New{
 		heatlimit 		= 10,
 		armor			= 4.5,
 		maxammo 		= {srm = 1},
+		mods			= {"endosteel", "xlengine"},
     },
 }
 

@@ -23,7 +23,7 @@ local BZKF3 = Hollander:New{
 		armor			= 4,
 		maxammo 		= {gauss = 2},
 		barrelrecoildist = {[1] = 5},
-		mods 			= {"ferrofibrousarmour"},
+		mods 			= {"ferrofibrousarmour", "endosteel"},
     },
 }
 
@@ -50,7 +50,7 @@ local BZKG1 = Hollander:New{
 		armor			= 6,
 		maxammo 		= {ac10 = 2},
 		barrelrecoildist = {[1] = 5},
-		mods 			= {"ferrofibrousarmour"},
+		mods 			= {"ferrofibrousarmour", "endosteel"},
     },	
 }
 
