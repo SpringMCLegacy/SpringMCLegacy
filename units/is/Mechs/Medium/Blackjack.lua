@@ -35,7 +35,7 @@ local BJ2 = Blackjack:New{
 		variant			= "BJ-2",
 		speed			= 60,
 		price			= 11480,
-		heatlimit 		= 15,--11 double
+		heatlimit 		= 11,--11 double
 		jumpjets		= 4,
 		armor			= 8.5,
 		maxammo 		= {srm = 1},
@@ -70,7 +70,7 @@ local BJ3 = Blackjack:New{
 		variant			= "BJ-3",
 		speed			= 60,
 		price			= 12710,
-		heatlimit 		= 13,--10 double
+		heatlimit 		= 10,--10 double
 		jumpjets		= 4,
 		armor			= 8.5,
 		mods			= {"doubleheatsinks"},
@@ -98,7 +98,7 @@ local BJ4 = Blackjack:New{
 		variant			= "BJ-4",
 		speed			= 60,
 		price			= 10630,
-		heatlimit 		= 13,--10 double
+		heatlimit 		= 10,--10 double
 		jumpjets		= 4,
 		armor			= 8,--should be light ferro
 		maxammo 		= {ac5 = 4},

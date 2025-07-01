@@ -23,7 +23,7 @@ local BZKF7 = HollanderII:New{
 		armor			= 5.5,
 		maxammo 		= {hvgauss = 3},
 		barrelrecoildist = {[1] = 4},
-		mods			= {"ferrofibrousarmour"},
+		mods			= {"ferrofibrousarmour", "endosteel"},
     },
 }
 

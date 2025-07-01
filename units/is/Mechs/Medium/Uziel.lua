@@ -42,7 +42,7 @@ local UZL2S = Uziel:New{
 		jumpjets		= 6,
 		maxammo 		= {srm = 1},
 		bap				= true,
-		mods			= {"doubleheatsinks"},
+		mods			= {"doubleheatsinks", "endosteel"},
     },
 }
 
@@ -78,7 +78,7 @@ local UZL3S = Uziel:New{
 		jumpjets		= 6,
 		maxammo 		= {srm = 1, ac2 = 1},
 		barrelrecoildist = {[1] = 4},
-		mods			= {"doubleheatsinks"},
+		mods			= {"doubleheatsinks", "endosteel"},
     },
 }
 

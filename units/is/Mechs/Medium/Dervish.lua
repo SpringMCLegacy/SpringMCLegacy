@@ -34,7 +34,7 @@ local DV6M = Dervish:New{
 		variant			= "DV-6M",
 		speed			= 80,
 		price			= 11460,
-		heatlimit 		= 10,
+		heatlimit 		= 10,--10 single
 		armor			= 7.5,
 		jumpjets		= 5,
 		maxammo 		= {srm = 2, lrm = 2},
@@ -68,11 +68,11 @@ local DV7D = Dervish:New{
 		variant			= "DV-7D",
 		speed			= 80,
 		price			= 14120,
-		heatlimit 		= 20,
+		heatlimit 		= 10, --10 double
 		armor			= 8,
 		jumpjets		= 5,
 		maxammo 		= {srm = 2, lrm = 2},
-		mods			= {"ferrofibrousarmour"},
+		mods			= {"ferrofibrousarmour", "doubleheatsinks", "endosteel"},
     },
 }
 
@@ -80,10 +80,10 @@ local DV8D = Dervish:New{
 	description         = "Medium Missile Boat",
 	weapons = {	
 		[1] = {
-			name	= "ALRM15",
+			name	= "LRM15",
 		},
 		[2] = {
-			name	= "ALRM15",
+			name	= "LRM15",
 		},
 		[3] = {
 			name	= "ERMBL",
@@ -103,16 +103,16 @@ local DV8D = Dervish:New{
 		variant			= "DV-8D",
 		speed			= 80,
 		price			= 17650,
-		heatlimit 		= 20,
+		heatlimit 		= 10,--10 double
 		armor			= 10.5,
 		jumpjets		= 5,
 		maxammo 		= {lrm = 4},
-		mods			= {"artemislrm"},
+		mods			= {"artemislrm", "doubleheatsinks", "endosteel"},
     },
 }
 
 return lowerkeys({ 
 	["FW_Dervish_DV6M"] = DV6M:New(),
-	--["FS_Dervish_DV8D"] = DV8D:New(),
 	["FS_Dervish_DV7D"] = DV7D:New(),
+	["FS_Dervish_DV8D"] = DV8D:New(),
 })

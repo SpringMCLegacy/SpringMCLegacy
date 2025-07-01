@@ -5,6 +5,7 @@ local Strider = Medium:New{
 		cockpitheight	= 3.1,
 		tonnage			= 40,
 		omni			= true,
+		mods			= {"endosteel"},
     },
 }
 

@@ -37,12 +37,12 @@ local HSN7D = Hellspawn:New{
 		variant			= "HSN-7D",
 		speed			= 90,
 		price			= 12200,
-		heatlimit 		= 13,--10 double
+		heatlimit 		= 10,--10 double
 		armor			= 6.5,
 		jumpjets		= 6,
 		maxammo 		= {lrm = 2},
 		ecm				= true,
-		mods			= {"doubleheatsinks"},
+		mods			= {"doubleheatsinks", "endosteel"},
     },
 }
 

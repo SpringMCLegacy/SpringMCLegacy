@@ -25,14 +25,13 @@ local CDA3M = Cicada:New{
 	},
 
 	customparams = {
-		variant			= "CMA-1S",
+		variant			= "CDA-3M",
 		speed			= 120,
 		price			= 8120,
-		heatlimit 		= 13,--10 double
+		heatlimit 		= 10,--10 dsingle
 		armor			= 4,
 		maxammo 		= {ac5 = 1},
 		barrelrecoildist = {[1] = 3},
-		mods			= {"doubleheatsinks"},
     },
 }
 

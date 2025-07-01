@@ -34,11 +34,11 @@ local STY3C = Starslayer:New{
 		variant			= "STY-3C",
 		speed			= 80,
 		price			= 15080,
-		heatlimit 		= 15,--11 double
+		heatlimit 		= 11,--11 double
 		armor			= 9.5,
 		jumpjets		= 5,
 		maxammo 		= {srm = 1},
-		mods			= {"ferrofibrousarmour", "doubleheatsinks"},
+		mods			= {"ferrofibrousarmour", "doubleheatsinks", "endosteel"},
     },
 }
 
@@ -66,14 +66,14 @@ local STY3D = Starslayer:New{
 		variant			= "STY-3D",
 		speed			= 80,
 		price			= 15930,
-		heatlimit 		= 16,--12 single
+		heatlimit 		= 12,--12 single
 		armor			= 9.5,
 		jumpjets		= 5,
-		mods			= {"ferrofibrousarmour", "doubleheatsinks"},
+		mods			= {"ferrofibrousarmour", "doubleheatsinks", "endosteel"},
     },
 }
 
 return lowerkeys({ 
-	--["FS_Starslayer_STY3D"] = STY3D:New(),
+	["FS_Starslayer_STY3D"] = STY3D:New(),
 	["LA_Starslayer_STY3C"] = STY3C:New(),
 })
