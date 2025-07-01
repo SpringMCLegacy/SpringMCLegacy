@@ -33,7 +33,7 @@ local FLE17 = Flea:New{
 		variant         = "FLE-17",
 		speed			= 90,
 		price			= 5100,
-		heatlimit 		= 10,
+		heatlimit 		= 10, --10 single
 		armor			= 3,
 		mods			= {"masc"},
     },

@@ -22,7 +22,7 @@ local VLKQD = Valkyrie:New{
 		variant         = "VLK-QD",
 		speed			= 80,
 		price			= 8070,
-		heatlimit 		= 10,
+		heatlimit 		= 10,--10 single
 		armor			= 6,
 		jumpjets		= 5,
 		maxammo 		= {lrm = 1},

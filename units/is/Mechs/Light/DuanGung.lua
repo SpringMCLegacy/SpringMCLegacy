@@ -25,10 +25,11 @@ local D9G9 = DuanGung:New{
 		variant         = "D9-G9",
 		speed			= 110,
 		price			= 7370,
-		heatlimit 		= 10,
+		heatlimit 		= 10,--10 double
 		armor			= 4,
 		jumpjets		= 6,
 		maxammo 		= {lrm = 1},
+		mods 			= {"doubleheatsinks"},
     },
 }
 

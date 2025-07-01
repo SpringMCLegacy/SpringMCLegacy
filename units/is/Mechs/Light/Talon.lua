@@ -25,7 +25,7 @@ local TLN5W = Talon:New{
 		variant         = "TLN-5W",
 		speed			= 120,
 		price			= 11750,
-		heatlimit 		= 15,--11 double
+		heatlimit 		= 11,--11 double
 		armor			= 7.5,
 		mods			= {"doubleheatsinks"},
     },
@@ -46,14 +46,14 @@ local TLN5Z = Talon:New{
 		variant         = "TLN-5Z",
 		speed			= 110,
 		price			= 11680,
-		heatlimit 		= 13,--10 double
-		armor			= 7.5,
-		mods			= {"doubleheatsinks"},
+		heatlimit 		= 10,--10 double
+		armor			= 7,
+		mods			= {"doubleheatsinks", "ferrofibrousarmour"},
     },
 }
 
 return lowerkeys({
-	--["LA_Talon_TLN5W"] = TLN5W:New(),
-	--["FS_Talon_TLN5Z"] = TLN5Z:New(),
-	--["DC_Talon_TLN5Z"] = TLN5Z:New(),
+	["LA_Talon_TLN5W"] = TLN5W:New(),
+	["FS_Talon_TLN5Z"] = TLN5Z:New(),
+	["DC_Talon_TLN5Z"] = TLN5Z:New(),
 })

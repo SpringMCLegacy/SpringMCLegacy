@@ -22,11 +22,11 @@ local PNT10K = Panther:New{
 		variant         = "PNT-10K",
 		speed			= 60,
 		price			= 8380,
-		heatlimit 		= 13,
+		heatlimit 		= 13, --13 single
 		jumpjets		= 4,
 		armor			= 6.5,
 		maxammo 		= {srm = 2},
-		mods 			= {"artemissrm","ferrofibrousarmour"},
+		mods 			= {"artemissrm", "ferrofibrousarmour"},
     },
 }
 

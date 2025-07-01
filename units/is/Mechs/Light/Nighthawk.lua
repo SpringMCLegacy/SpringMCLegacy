@@ -26,7 +26,7 @@ local NTK2Q = Nighthawk:New{
 		variant         = "NTK-2Q",
 		speed			= 90,
 		price			= 9970,
-		heatlimit 		= 16,--12 double
+		heatlimit 		= 12,--12 double
 		armor			= 7,
 		mods			= {"doubleheatsinks"},
     },
@@ -47,7 +47,7 @@ local NTK2S = Nighthawk:New{
 		variant         = "NTK-2S",
 		speed			= 90,
 		price			= 10170,
-		heatlimit 		= 15,--11 double
+		heatlimit 		= 11,--11 double
 		armor			= 7,
 		bap				= true,
 		ecm				= true,

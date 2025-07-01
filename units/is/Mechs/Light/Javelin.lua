@@ -13,30 +13,6 @@ local Javelin = Light:New{
     },
 }
 
-local JVN11B = Javelin:New{
-	description         = "Light Scout",
-	weapons	= {	
-		[1] = {
-			name	= "SRM4",
-		},
-		[2] = {
-			name	= "SRM4",
-		},
-	},
-		
-	customparams = {
-		variant         = "JVN-11B",
-		speed			= 90,
-		price			= 6780,
-		heatlimit 		= 13,--10 double
-		armor			= 5,
-		bap 			= true,
-		ecm				= true,
-		maxammo 		= {srm = 2},
-		mods 			= {"ferrofibrousarmour", "doubleheatsinks"},
-    },
-}
-
 local JVN10P = Javelin:New{
 	description         = "Light Striker",
 	weapons	= {	
@@ -52,9 +28,32 @@ local JVN10P = Javelin:New{
 		variant         = "JVN-10P",
 		speed			= 90,
 		price			= 5900,
-		heatlimit 		= 13,--10 double
+		heatlimit 		= 10,--10 single
 		armor			= 5,
 		jumpjets		= 6,
+		maxammo 		= {srm = 2},
+    },
+}
+
+local JVN11B = Javelin:New{
+	description         = "Light Scout",
+	weapons	= {	
+		[1] = {
+			name	= "SRM4",
+		},
+		[2] = {
+			name	= "SRM4",
+		},
+	},
+		
+	customparams = {
+		variant         = "JVN-11B",
+		speed			= 90,
+		price			= 6780,
+		heatlimit 		= 10,--10 double
+		armor			= 5,
+		bap 			= true,
+		ecm				= true,
 		maxammo 		= {srm = 2},
 		mods 			= {"ferrofibrousarmour", "doubleheatsinks"},
     },
@@ -62,5 +61,5 @@ local JVN10P = Javelin:New{
 
 return lowerkeys({
 	["FS_Javelin_JVN11B"] = JVN11B:New(),
-	--["FS_Javelin_JVN10P"] = JVN10P:New(),
+	["FS_Javelin_JVN10P"] = JVN10P:New(),
 })

@@ -19,7 +19,7 @@ local BZKF3 = Hollander:New{
 		variant         = "BZK-F3",
 		speed			= 80,
 		price			= 9530,
-		heatlimit 		= 10,
+		heatlimit 		= 10, --10 single
 		armor			= 4,
 		maxammo 		= {gauss = 2},
 		barrelrecoildist = {[1] = 5},
@@ -46,7 +46,7 @@ local BZKG1 = Hollander:New{
 		variant         = "BZK-G1",
 		speed			= 80,
 		price			= 9730,
-		heatlimit 		= 10,
+		heatlimit 		= 10, --10 single
 		armor			= 6,
 		maxammo 		= {ac10 = 2},
 		barrelrecoildist = {[1] = 5},

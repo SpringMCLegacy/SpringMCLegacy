@@ -30,14 +30,14 @@ local BHK305 = Battlehawk:New{
 		variant         = "BH-K305",
 		speed			= 80,
 		price			= 7710,
-		heatlimit 		= 15,--11 double
+		heatlimit 		= 11,--11 double
 		armor			= 5.5,
 		jumpjets		= 5,
 		maxammo 		= {srm = 2},
-		mods			= {"ferrofibrousarmour","doubleheatsinks"},
+		mods			= {"ferrofibrousarmour", "doubleheatsinks"},
     },
 }
 
 return lowerkeys({
-	--["LA_Battlehawk_BHK305"] = BHK305:New(),
+	["LA_Battlehawk_BHK305"] = BHK305:New(),
 })

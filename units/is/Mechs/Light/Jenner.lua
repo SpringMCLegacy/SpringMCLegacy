@@ -30,7 +30,7 @@ local JR7K = Jenner:New{
 		variant         = "JR7-K",
 		speed			= 110,
 		price			= 8890,
-		heatlimit 		= 10,
+		heatlimit 		= 10, --10 single
 		armor			= 3.5,
 		maxammo 		= {srm = 1},
 		jumpjets		= 5,
@@ -39,5 +39,5 @@ local JR7K = Jenner:New{
 }
 
 return lowerkeys({
-	--["DC_Jenner_JR7K"] = JR7K:New(),
+	["DC_Jenner_JR7K"] = JR7K:New(),
 })
