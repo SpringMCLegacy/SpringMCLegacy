@@ -7,7 +7,7 @@ function gadget:GetInfo()
 		author = "KingRaptor (L.J. Lim)",
 		date = "2013-06-28",
 		license = "GNU GPL, v2 or later",
-		layer = 1,
+		layer = 4, -- after game_radar
 		enabled = true
 	}
 end
@@ -45,6 +45,9 @@ if (gadgetHandler:IsSyncedCode()) then
 local projectiles = {}
 local tracking = {}
 local lbx = {}
+local ppc = {}
+local ppcEmits = {}
+GG.ppcEmits = ppcEmits -- uhoh, spaghettification inbound
 local silverBulletUnits = {}
 local function EnableSilverBullet(unitID, tOrF)
 	silverBulletUnits[unitID] = tOrF
@@ -119,6 +122,9 @@ local amsPros = {}
 function gadget:ProjectileCreated(proID, proOwnerID, weaponID)
 	--Spring.Echo("PC", proID, proOwnerID, weaponID)
 	local wd = WeaponDefs[weaponID]
+	if weaponDefID == MELTDOWN_WDID then
+		Spring.SetProjectileAlwaysVisible(proID, true)
+	end
 	if proOwnerID and GG.mechCache[Spring.GetUnitDefID(proOwnerID)] then
 		if wd and wd.name == "arrowiv" then
 			if GG.unitSpecialAmmos[proOwnerID]["arrowiv"] == "homing" then
@@ -176,8 +182,10 @@ function gadget:ProjectileCreated(proID, proOwnerID, weaponID)
 			end
 			Spring.DeleteProjectile(proID)
 		end
-	end
-	if weaponID == AMS_ID then
+	elseif ppc[weaponID] then
+		local x,y,z = Spring.GetProjectilePosition(proID)
+		ppcEmits[proID] = {x, y , z}
+	elseif weaponID == AMS_ID then
 		amsPros[proID] = true
 	end
 	if weapons[weaponID] then
@@ -194,6 +202,7 @@ function gadget:ProjectileDestroyed(proID)
 	tracking[proID] = nil
 	arrows[proID] = nil
 	contTAG[proID] = nil
+	ppcEmits[proID] = nil -- layer must be set to after game_radar
 	if amsPros[proID] then
 		local x,y,z = GetProjectilePosition(proID)
 		local radius = AMS_DEF.damageAreaOfEffect
@@ -214,9 +223,12 @@ function gadget:Initialize()
 	end
 	for id, wd in pairs(WeaponDefs) do
 		if wd.name ~= "sight" then Script.SetWatchAllowTarget(id, true) end
-		if wd.customParams and (wd.customParams.projectilelups or wd.customParams.weaponclass == "lbx") or wd.name == "gauss" then
+		local cp = wd.customParams
+		local weaponClass = cp and cp.weaponclass
+		if cp and (cp.projectilelups or weaponClass == "lbx") or wd.name == "gauss" then
 			Script.SetWatchWeapon(id, true) -- we can't call SWW outside of synced so do it here
-			if wd.customParams.weaponclass == "lbx" then -- don't include the cluster munuitions themselves or we end up with circular bs
+			
+			if weaponClass == "lbx" then -- don't include the cluster munuitions themselves or we end up with circular bs
 				local clusterName = wd.name .. "_cluster"
 				local clusterDef = WeaponDefNames[clusterName]
 				lbx[id] = {
@@ -224,6 +236,8 @@ function gadget:Initialize()
 					math.asin(clusterDef.sprayAngle) * 140, -- a rough reproduction of engine spray 
 					clusterDef.range,
 				}
+			elseif weaponClass == "ppc" then
+				ppc[id] = true
 			end
 		end
 	end

@@ -541,12 +541,6 @@ function gadget:MoveCtrlNotify(unitID, unitDefID, unitTeam, data)
 	end
 end
 
-function gadget:ProjectileCreated(proID, proOwnerID, weaponDefID)
-	if weaponDefID == MELTDOWN_WDID then
-		Spring.SetProjectileAlwaysVisible(proID, true)
-	end
-end
-
 else
 
 -- UNSYNCED

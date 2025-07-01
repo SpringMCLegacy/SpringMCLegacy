@@ -382,7 +382,7 @@ function gadget:UnitPreDamaged(unitID, unitDefID, unitTeam, damage, paralyzer, w
 			--Spring.Echo("Let there be light")
 			local x,y,z = Spring.GetProjectilePosition(projectileID)
 			if x then -- can be nil sometimes?
-				local ox, oy, oz = Spring.GetUnitPosition(attackerID)
+				local ox, oy, oz = unpack(GG.ppcEmits[projectileID])
 				local params = {
 					["pos"]={ox,oy+5,oz}, 
 					["end"] = {x,y,z}, 
