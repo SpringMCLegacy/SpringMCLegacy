@@ -10,7 +10,7 @@ local Direwolf = Assault:New{
 	customparams = {
 		tonnage			= 100,
 		cockpitheight	= 8.2,
-		mods			= {"doubleheatsinks"},
+		mods			= {"doubleheatsinks", "xlengine"},
 		omni			= true,
     },	
 }
@@ -202,7 +202,7 @@ local C = Direwolf:New{
 		jumpjets		= 3,
 		ecm				= true,
 		maxammo 		= {atm = 2},
-		mods			= {"targetingcomputer"},
+		mods			= {"jumpjets", "guardian", "targetingcomputer"},
     },
 }
 

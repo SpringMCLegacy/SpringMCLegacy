@@ -4,7 +4,7 @@ local Cougar = Light:New{
 	customparams = {
 		tonnage			= 35,
 		cockpitheight	= 7.2,
-		mods			= {"ferrofibrousarmour", "doubleheatsinks"},
+		mods			= {"ferrofibrousarmour", "doubleheatsinks", "endosteel", "xlengine"},
 		omni			= true,
     },
 }
@@ -31,7 +31,7 @@ local Prime = Cougar:New{
 		variant         = "Prime",
 		speed			= 80,
 		price			= 14850,
-		heatlimit 		= 13,--10 double
+		heatlimit 		= 10,--10 double
 		armor			= 5.5,
 		maxammo 		= {lrm = 2},
     },
@@ -62,7 +62,7 @@ local A = Cougar:New{
 		variant         = "A",
 		speed			= 80,
 		price			= 16970,
-		heatlimit 		= 13,
+		heatlimit 		= 10,
 		armor			= 5.5,
 		maxammo 		= {lrm = 4},
     },
@@ -87,7 +87,7 @@ local B = Cougar:New{
 		variant         = "B",
 		speed			= 80,
 		price			= 16970,
-		heatlimit 		= 21,--16 double
+		heatlimit 		= 16,--16 double
 		armor			= 5.5,
 		barrelrecoildist = {[1] = 5, [2] = 5},
     },

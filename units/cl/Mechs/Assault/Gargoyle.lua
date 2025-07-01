@@ -4,7 +4,7 @@ local Gargoyle = Assault:New{
     customparams = {
 		cockpitheight	= 10.5,
 		tonnage			= 80,
-		mods			= {"ferrofibrousarmour", "doubleheatsinks"},
+		mods			= {"ferrofibrousarmour", "doubleheatsinks", "xlengine"},
 		omni			= true,
     },
 }
@@ -30,7 +30,7 @@ local Prime = Gargoyle:New{
 		variant			= "Prime",
 		speed			= 80,
 		price			= 15370,
-		heatlimit 		= 21,
+		heatlimit 		= 16,
 		armor			= 11,
 		maxammo 		= {ac5 = 3, srm = 2},
 		barrelrecoildist = {[1] = 5, [2] = 5},
@@ -68,7 +68,7 @@ local A = Gargoyle:New{
 		variant			= "A",
 		speed			= 80,
 		price			= 26890,
-		heatlimit 		= 21,
+		heatlimit 		= 16,
 		armor			= 11,
 		maxammo 		= {srm = 1},
 		barrelrecoildist = {[1] = 5, [2] = 5},
@@ -110,10 +110,11 @@ local C = Gargoyle:New{
 		variant			= "C",
 		speed			= 80,
 		price			= 24170,
-		heatlimit 		= 21,
+		heatlimit 		= 16,
 		armor			= 11,
 		maxammo 		= {ac20 = 3},
 		barrelrecoildist = {[1] = 2},
+		mods			= {"apods"},
     },
 }
 

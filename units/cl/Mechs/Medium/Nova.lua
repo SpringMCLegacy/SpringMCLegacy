@@ -4,7 +4,7 @@ local Nova = Medium:New{
 	customparams = {
 		tonnage		= 50,
 		cockpitheight	= 12,
-		mods			= {"ferrofibrousarmour", "doubleheatsinks"},
+		mods			= {"jumpjets", "doubleheatsinks", "xlengine"},
 		omni			= true,
     },
 }
@@ -20,7 +20,7 @@ local Prime = Nova:New{
 		variant         = "Prime",
 		speed			= 80,
 		price			= 26630,
-		heatlimit 		= 24,
+		heatlimit 		= 18,
 		armor			= 10,
 		jumpjets		= 5,
     },

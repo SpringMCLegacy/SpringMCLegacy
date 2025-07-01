@@ -3,7 +3,7 @@ local LocustIIC = Light:New{
 	customparams = {
 		tonnage			= 25,
 		cockpitheight	= 1.6,
-		mods			= {"ferrofibrousarmour", "doubleheatsinks"},
+		mods			= {"ferrofibrousarmour", "doubleheatsinks", "endosteel"},
     },
 }
 
@@ -25,7 +25,7 @@ local Mk2 = LocustIIC:New{
 		variant         = "Mk 2",
 		speed			= 120,
 		price			= 9370,
-		heatlimit 		= 13,
+		heatlimit 		= 10,
 		armor			= 4,
 		maxammo 		= {srm = 1},
     },
@@ -49,7 +49,7 @@ local Mk3 = LocustIIC:New{
 		variant         = "Mk 3",
 		speed			= 120,
 		price			= 9800,
-		heatlimit 		= 13,
+		heatlimit 		= 10,
 		armor			= 4,
     },
 }
@@ -72,7 +72,7 @@ local Mk5 = LocustIIC:New{
 		variant         = "Mk 5",
 		speed			= 120,
 		price			= 8780,
-		heatlimit 		= 13,
+		heatlimit 		= 10,
 		armor			= 4,
 		maxammo 		= {atm = 2},
     },

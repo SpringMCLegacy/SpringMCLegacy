@@ -10,7 +10,7 @@ local Phantom = Medium:New{
 	customparams = {
 		tonnage			= 45,
 		cockpitheight	= 10.7,
-		mods			= {"ferrofibrousarmour", "doubleheatsinks"},
+		mods			= {"ferrofibrousarmour", "doubleheatsinks", "endosteel", "xlengine"},
 		omni			= true,
     },
 }
@@ -41,6 +41,7 @@ local Prime = Phantom:New{
 		maxammo 		= {lrm = 1},
 		bap				= true,
 		ecm				= true,
+		mods			= {"beagle", "guardian"},
     },
 }
 
@@ -111,6 +112,7 @@ local B = Phantom:New{
 		armor			= 6,
 		maxammo 		= {srm = 2},
 		bap				= true,
+		mods			= {"beagle"},
     },
 }
 
@@ -160,6 +162,7 @@ local C = Phantom:New{
 		price			= 15900,
 		heatlimit 		= 12,
 		armor			= 6,
+		mods			= {"targetingcomputer"},
     },
 }
 

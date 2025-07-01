@@ -4,6 +4,7 @@ local Timberwolf = Heavy:New{
     customparams = {
 		cockpitheight	= 9.6,
 		tonnage			= 75,
+		mods			= {"ferrofibrousarmour", "doubleheatsinks", "xlengine", "endosteel"},
 		omni			= true,
     },
 }
@@ -44,10 +45,9 @@ local Prime = Timberwolf:New{
 		variant			= "Prime",
 		speed			= 80,
 		price			= 27370,
-		heatlimit 		= 34,
+		heatlimit 		= 17,
 		armor			= 12,
 		maxammo 		= {lrm = 2},
-		mods			= {"ferrofibrousarmour"},
     },
 }
 
@@ -79,10 +79,9 @@ local A = Timberwolf:New{
 		variant			= "A",
 		speed			= 80,
 		price			= 28540,
-		heatlimit 		= 40,
+		heatlimit 		= 20,
 		armor			= 12,
 		maxammo 		= {srm = 1},
-		mods			= {"ferrofibrousarmour"},
     },
 }
 
@@ -110,10 +109,9 @@ local E = Timberwolf:New{
 		variant			= "E",
 		speed			= 80,
 		price			= 24440,
-		heatlimit 		= 36,
+		heatlimit 		= 18,
 		armor			= 12,
 		maxammo 		= {atm = 6},
-		mods			= {"ferrofibrousarmour"},
     },
 }
 

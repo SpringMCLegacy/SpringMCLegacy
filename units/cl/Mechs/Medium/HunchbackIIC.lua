@@ -10,7 +10,7 @@ local HunchbackIIC = Medium:New{
 	customparams = {
 		tonnage			= 50,
 		cockpitheight	= 9.3,
-		mods			= {"doubleheatsinks"},
+		mods			= {"jumpjets", "doubleheatsinks", "endosteel", "xlengine"},
     },	
 }
 
@@ -37,7 +37,7 @@ local Mk1 = HunchbackIIC:New{
 		variant			= "Mk 1",
 		speed			= 60,
 		price			= 16790,
-		heatlimit 		= 16,
+		heatlimit 		= 12,--12 double
 		armor			= 6,
 		maxammo 		= {ac20 = 2},
 		jumpjets		= 4,
@@ -85,7 +85,7 @@ local Mk2 = HunchbackIIC:New{
 		variant			= "Mk 2",
 		speed			= 60,
 		price			= 18690,
-		heatlimit 		= 29, --19 double
+		heatlimit 		= 19, --19 double
 		armor			= 6,
 		jumpjets		= 4,
     },

@@ -4,7 +4,8 @@ local Mistlynx = Light:New{
 	customparams = {
 		tonnage			= 25,
 		cockpitheight	= 3,
-		mods			= {"ferrofibrousarmour", "doubleheatsinks"},
+		bap				= true,
+		mods			= {"beagle", "jumpjets", "ferrofibrousarmour", "doubleheatsinks", "endosteel", "xlengine"},
 		omni			= true,
     },
 }
@@ -31,11 +32,11 @@ local Prime = Mistlynx:New{
 		variant         = "Prime",
 		speed			= 110,
 		price			= 8710,
-		heatlimit 		= 13,
+		heatlimit 		= 10,
 		armor			= 3.5,
 		maxammo 		= {lrm = 1, srm = 1},
 		jumpjets		= 6,
-		bap				= true,
+
     },
 }
 
@@ -64,11 +65,10 @@ local B = Mistlynx:New{
 		variant         = "B",
 		speed			= 110,
 		price			= 12090,
-		heatlimit 		= 13,
+		heatlimit 		= 10,
 		armor			= 3.5,
 		maxammo 		= {srm = 2},
 		jumpjets		= 6,
-		bap				= true,
     },
 }
 
@@ -91,12 +91,12 @@ local C = Mistlynx:New{
 		variant         = "C",
 		speed			= 110,
 		price			= 13200,
-		heatlimit 		= 13,
+		heatlimit 		= 10,
 		armor			= 3.5,
 		maxammo 		= {srm = 2},
 		jumpjets		= 6,
-		bap				= true,
 		ecm				= true,
+		mods			= {"guardian"},
     },
 }
 
@@ -125,11 +125,10 @@ local E = Mistlynx:New{
 		variant         = "E",
 		speed			= 110,
 		price			= 9970,
-		heatlimit 		= 13,
+		heatlimit 		= 10,
 		armor			= 3.5,
 		maxammo 		= {atm = 2},
 		jumpjets		= 6,
-		bap				= true,
     },
 }
 

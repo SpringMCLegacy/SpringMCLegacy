@@ -4,7 +4,7 @@ local Iceferret = Medium:New{
 	customparams = {
 		tonnage			= 45,
 		cockpitheight	= 6,
-		mods			= {"ferrofibrousarmour", "doubleheatsinks"},
+		mods			= {"ferrofibrousarmour", "doubleheatsinks", "endosteel", "xlengine"},
 		omni			= true,
     },
 }
@@ -26,7 +26,7 @@ local Prime = Iceferret:New{
 		variant         = "Prime",
 		speed			= 120,
 		price			= 16780,
-		heatlimit 		= 16,
+		heatlimit 		= 12,
 		armor			= 7.5,
 		maxammo 		= {srm = 1},
 		bap				= true,
@@ -50,7 +50,7 @@ local B = Iceferret:New{
 		variant         = "B",
 		speed			= 120,
 		price			= 14610,
-		heatlimit 		= 16,
+		heatlimit 		= 12,
 		armor			= 7.5,
 		maxammo 		= {srm = 2},
     },
@@ -79,7 +79,7 @@ local D = Iceferret:New{
 		variant         = "D",
 		speed			= 120,
 		price			= 16530,
-		heatlimit 		= 16,
+		heatlimit 		= 12,
 		armor			= 7.5,
     },
 }

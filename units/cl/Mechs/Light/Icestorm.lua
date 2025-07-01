@@ -29,6 +29,7 @@ local Mk1 = Icestorm:New{
 		heatlimit 		= 10,
 		armor			= 3.5,
 		maxammo 		= {srm = 1},
+		mods			= {"xlengine"},
     },
 }
 

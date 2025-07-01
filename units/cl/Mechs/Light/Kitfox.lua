@@ -4,7 +4,7 @@ local Kitfox = Light:New{
 	customparams = {
 		tonnage			= 30,
 		cockpitheight	= 7.1,
-		mods			= {"ferrofibrousarmour", "doubleheatsinks"},
+		mods			= {"ferrofibrousarmour", "doubleheatsinks", "endosteel", "xlengine"},
 		omni			= true,
     },
 
@@ -32,7 +32,7 @@ local Prime = Kitfox:New{
 		variant         = "Prime",
 		speed			= 90,
 		price			= 10850,
-		heatlimit 		= 13,--10 double
+		heatlimit 		= 10,--10 double
 		armor			= 4,
 		maxammo 		= {ac5 = 1, srm = 1},
     },
@@ -57,7 +57,7 @@ local A = Kitfox:New{
 		variant         = "A",
 		speed			= 90,
 		price			= 13100,
-		heatlimit 		= 13,--10 double
+		heatlimit 		= 10,--10 double
 		armor			= 4,
 		maxammo 		= {gauss = 2},
     },
@@ -97,7 +97,7 @@ local C = Kitfox:New{
 		variant         = "C",
 		speed			= 90,
 		price			= 11470,
-		heatlimit 		= 13,--10 double
+		heatlimit 		= 10,--10 double
 		armor			= 4,
 		bap				= true,
 		ecm				= true,

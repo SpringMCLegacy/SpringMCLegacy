@@ -4,7 +4,7 @@ local MarauderIIC = Assault:New{
 	customparams = {
 		tonnage			= 85,
 		cockpitheight	= 4.5,
-		mods			= {"ferrofibrousarmour", "doubleheatsinks"},
+		mods			= {"ferrofibrousarmour", "doubleheatsinks", "endosteel"},
     },	
 }
 
@@ -44,7 +44,7 @@ local Mk1 = MarauderIIC:New{
 		variant			= "Mk 1",
 		speed			= 60,
 		price			= 26800,
-		heatlimit 		= 28,
+		heatlimit 		= 21,
 		armor			= 11.5,
 		barrelrecoildist = {[1] = 4},
     },
