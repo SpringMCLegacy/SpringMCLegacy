@@ -24,26 +24,34 @@ end
 
 local roleSensors = {
 	["scout"] 			= {radar = 1500,	sector = 80},
+	["ewar"] 			= {radar = 1500,	sector = 80},
 	["skirmisher"] 		= {radar = 1500,	sector = 65},
 	["striker"] 		= {radar = 1500,	sector = 70},
 	["juggernaut"] 		= {radar = 1500,	sector = 70},
-	["brawler"] 		= {radar = 1500,	sector = 55},
+	["ambusher"] 		= {radar = 1500,	sector = 70},
+	["brawler"] 		= {radar = 1500,	sector = 70},
 	["multirole"] 		= {radar = 1500,	sector = 55},
+	["generalist"] 		= {radar = 1500,	sector = 55},
 	["sniper"]			= {radar = 1500,	sector = 45},
+	["missile support"]	= {radar = 1500,	sector = 45},
 	["missile boat"]	= {radar = 1500,	sector = 45},
 }
 
 local menuRoleAlias = {
 	["scout"]			= "fast",
 	["skirmisher"]		= "fast",
+	["ewar"]			= "fast",
 	
 	["striker"]			= "cqb",
 	["juggernaut"]		= "cqb",
+	["ambusher"]		= "cqb",	
+	["brawler"]			= "cqb",
 	
-	["brawler"]			= "flexible",
 	["multirole"] 		= "flexible",
+	["generalist"] 		= "flexible",
 	
 	["sniper"]			= "ranged",
+	["missile support"]	= "ranged",
 	["missile boat"]	= "ranged",
 }
 
