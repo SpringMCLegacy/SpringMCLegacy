@@ -125,13 +125,21 @@ local function deductSalvage(unitID, amount)
 	GG.ChangeTeamSalvage(teamID, Spring.IsNoCostEnabled() and 0 or -amount)
 end
 
-local function WeaponTypeCount(unitID, weaponType)
-	local changed, numChanged = setWeaponClassAttribute(unitID, weaponType, "range", 1)
-	return numChanged
+local function WeaponTypeCount(unitDefID, className)
+	local weapons = UnitDefs[unitDefID].weapons
+	local count = 0
+	for weapNum, weapTable in pairs(weapons) do
+		local wd = WeaponDefs[weapTable["weaponDef"]]
+		if className == "all" or (wd.customParams["weaponclass"] == className) then
+			count = count + 1
+		end
+	end
+	--Spring.Echo("WeaponTypeCount", UnitDefs[unitDefID].name, className, count)
+	return count
 end
 
-local function deductPerWeaponType(unitID, weaponType, amount)
-	return WeaponTypeCount(unitID, weaponType) * amount
+local function deductPerWeaponType(unitDefID, weaponType, amount)
+	return WeaponTypeCount(unitDefID, weaponType) * amount
 end
 
 
@@ -1135,12 +1143,12 @@ return {
 				setWeaponClassAttribute(unitID, "energy", "accuracy", effect)--, "soundTrigger", true, true)
 			end,
 			costFunction = deductSalvage,
-			priceFunction = function(unitID)
+			priceFunction = function(unitDefID)
 				local AMOUNT_PER_WEAPON = 5
-				local runningTotal = deductPerWeaponType(unitID, "autocannon", AMOUNT_PER_WEAPON)
-				runningTotal = runningTotal + deductPerWeaponType(unitID, "gauss", AMOUNT_PER_WEAPON)
-				runningTotal = runningTotal + deductPerWeaponType(unitID, "ppc", AMOUNT_PER_WEAPON)
-				runningTotal = runningTotal + deductPerWeaponType(unitID, "energy", AMOUNT_PER_WEAPON)
+				local runningTotal = deductPerWeaponType(unitDefID, "autocannon", AMOUNT_PER_WEAPON)
+				runningTotal = runningTotal + deductPerWeaponType(unitDefID, "gauss", AMOUNT_PER_WEAPON)
+				runningTotal = runningTotal + deductPerWeaponType(unitDefID, "ppc", AMOUNT_PER_WEAPON)
+				runningTotal = runningTotal + deductPerWeaponType(unitDefID, "energy", AMOUNT_PER_WEAPON)
 				return runningTotal
 			end,
 			--incompatible = {"aatargetingcomputer"},
@@ -1166,9 +1174,9 @@ return {
 				setWeaponClassAttribute(unitID, "mrm", "sprayAngle", effect)
 			end,
 			costFunction = deductSalvage,
-			priceFunction = function(unitID)
+			priceFunction = function(unitDefID)
 				local AMOUNT_PER_WEAPON = 5
-				return deductPerWeaponType(unitID, "mrm", AMOUNT_PER_WEAPON)
+				return deductPerWeaponType(unitDefID, "mrm", AMOUNT_PER_WEAPON)
 			end,
 		},
 		{
@@ -1188,9 +1196,9 @@ return {
 				GG.EnableArtemis(unitID, "lrm", not invert)
 			end,
 			costFunction = deductSalvage,
-			priceFunction = function(unitID)
+			priceFunction = function(unitDefID)
 				local AMOUNT_PER_WEAPON = 5
-				return deductPerWeaponType(unitID, "lrm", AMOUNT_PER_WEAPON)
+				return deductPerWeaponType(unitDefID, "lrm", AMOUNT_PER_WEAPON)
 			end,
 			incompatible = {"ammolrmextended", "ammolrminferno", "ammolrmmagpulse", "ammolrmthunder", "ammolrmarad", "ammolrmhoming"},
 		},
@@ -1211,9 +1219,9 @@ return {
 				GG.EnableArtemis(unitID, "srm", not invert)
 			end,
 			costFunction = deductSalvage,
-			priceFunction = function(unitID)
+			priceFunction = function(unitDefID)
 				local AMOUNT_PER_WEAPON = 5
-				return deductPerWeaponType(unitID, "srm", AMOUNT_PER_WEAPON)
+				return deductPerWeaponType(unitDefID, "srm", AMOUNT_PER_WEAPON)
 			end,
 		},
 		{

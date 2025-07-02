@@ -265,7 +265,7 @@ end
 function gadget:UnitLoaded(unitID, unitDefID, unitTeam, transportID, transportTeam)
 	if mechBays[transportID] and mechBays[transportID] >= 1 then
 		-- update mod status for this mech
-		GG.UpdateUnitApps(transportID, "mods")
+		GG.UpdateUnitApps(transportID, unitDefID, "mods")
 		ShowModsByType(transportID, currMenu[unitID], unitID)
 		-- hide irrelevant mods
 		for cmdID in pairs(hiddenMods[unitDefID]) do
@@ -279,7 +279,7 @@ end
 function gadget:UnitUnloaded(unitID, unitDefID, unitTeam, transportID, transportTeam)
 	if mechBays[transportID] and mechBays[transportID] >= 1 then
 		-- reset menu
-		GG.UpdateUnitApps(transportID, "mods")
+		GG.UpdateUnitApps(transportID, unitDefID, "mods")
 		ShowModsByType(transportID, "none", unitID)
 		ShowOmniMenu(transportID, false)
 	end
@@ -336,12 +336,13 @@ function gadget:AllowCommand(unitID, unitDefID, teamID, cmdID, cmdParams, cmdOpt
 					ChangeTeamSalvage(teamID, -cost)
 					local x,y,z = Spring.GetUnitPosition(unitID)
 					local newID = Spring.CreateUnit(-cmdID, x,y,z, 0, teamID, false, false)
+					local oldID = transporting[1]
 					Spring.UseTeamResource(teamID, "energy", UnitDefs[-cmdID].customParams.tonnage)
-					Spring.SetUnitExperience(newID, Spring.GetUnitExperience(transporting[1]))
-					GG.CloneMechApps(transporting[1], newID)
+					Spring.SetUnitExperience(newID, Spring.GetUnitExperience(oldID))
+					GG.CloneMechApps(oldID, Spring.GetUnitDefID(oldID), newID, -cmdID)
 					env = Spring.UnitScript.GetScriptEnv(unitID)
 					Spring.UnitScript.CallAsUnit(unitID, env.script.TransportDrop, transporting[1])
-					Spring.DestroyUnit(transporting[1], false, true)
+					Spring.DestroyUnit(oldID, false, true)
 					Spring.UnitScript.CallAsUnit(unitID, env.script.TransportPickup, newID)
 					ShowModsByType(unitID, currMenu[unitID], newID)
 					CheckOmniOptions(unitID, teamID, cmdID)

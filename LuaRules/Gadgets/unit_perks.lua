@@ -53,15 +53,15 @@ local incompatible = {} -- [unitID][modName] = true
 local dropZoneUpgrades = {} -- dropZoneUpgrades[teamID] = {perk1 = true, perk2 = true, ...}
 
 
-local function BuildToolTip(appType, appDef, unitID)
+local function BuildToolTip(appType, appDef, unitDefID)
 	local currency = appType == "upgrades" and "C-Bills" or appType == "mods" and "Salvage" or nil -- TODO: would be nice to read cost function name?
 	local tooltip = appDef.cmdDesc.tooltip
 	if currency then
 		local price = appDef.price
 		if price then
 			tooltip = tooltip .. "\n( " .. currency .. " cost: " .. price .. " )"
-		elseif unitID and appDef.priceFunction then -- only triggered if there is a unitID
-			price = appDef.priceFunction(unitID)
+		elseif unitDefID and appDef.priceFunction then -- only triggered if there is a unitDefID
+			price = appDef.priceFunction(unitDefID)
 			tooltip = tooltip .. "\n( " .. currency .. " cost: " .. price .. " )"
 		end
 	end
@@ -94,7 +94,7 @@ for i, appDef in ipairs(appInclude.mods) do
 end
 
 -- Checks if apps are affordable and disables those that are not
-local function UpdateRemaining(unitID, appType, newLevel, applierID)
+local function UpdateRemaining(unitID, unitDefID, appType, newLevel, applierID)
 	applierID = applierID or unitID
 	local appRemaining = false
 	for appCmdID, appDef in pairs(appDefs) do
@@ -105,9 +105,9 @@ local function UpdateRemaining(unitID, appType, newLevel, applierID)
 				if (not currentApps[unitID][appType][appDef.name] or currentApps[unitID][appType][appDef.name] < (appDef.levels or 1)) 
 				and validApps[Spring.GetUnitDefID(applierID)][appType][appCmdID] then
 					appRemaining = true
-					local price = Spring.IsNoCostEnabled() and 0 or appDef.price or appDef.priceFunction(unitID)
+					local price = Spring.IsNoCostEnabled() and 0 or appDef.price or appDef.priceFunction(unitDefID)
 					if appDef.priceFunction then
-						EditUnitCmdDesc(applierID, FindUnitCmdDesc(applierID, appCmdID), {tooltip = BuildToolTip(appType, appDef, unitID)})
+						EditUnitCmdDesc(applierID, FindUnitCmdDesc(applierID, appCmdID), {tooltip = BuildToolTip(appType, appDef, unitDefID)})
 					end
 					if (newLevel < price) 
 					or (appDef.requires and not currentApps[unitID][appType][appDef.requires]) then
@@ -133,7 +133,7 @@ local function UpdateRemaining(unitID, appType, newLevel, applierID)
 	end
 end
 
-local function UpdateUnitApps(unitID, appType)
+local function UpdateUnitApps(unitID, unitDefID, appType)
 	local teamID, _, dead = Spring.GetUnitTeam(unitID)
 	local applierID
 	if not dead then
@@ -145,10 +145,11 @@ local function UpdateUnitApps(unitID, appType)
 			newLevel = GG.GetTeamSalvage(teamID)
 			applierID = unitID
 			unitID = (Spring.GetUnitIsTransporting(unitID) or EMPTY_TABLE)[1]
+			if unitID then unitDefID = Spring.GetUnitDefID(unitID) end -- does this mean it was all a wasted effort anyway?
 		elseif appType == "upgrades" then
 			newLevel = select(1, Spring.GetTeamResources(teamID, "metal"))
 		end
-		UpdateRemaining(unitID, appType, newLevel, applierID)
+		UpdateRemaining(unitID, unitDefID, appType, newLevel, applierID)
 	end
 end
 GG.UpdateUnitApps = UpdateUnitApps
@@ -189,13 +190,15 @@ function gadget:GameFrame(n)
 	if n % 15 == 0 then
 		for unitID, unitAppTypes in pairs(appUnits) do
 			for appType in pairs(unitAppTypes) do
-				UpdateUnitApps(unitID, appType)
+				-- TODO: for goodness sake cache this somehow!!!!
+				local unitDefID = Spring.GetUnitDefID(unitID)
+				UpdateUnitApps(unitID, unitDefID, appType)
 			end
 		end
 	end
 end
 
-local function RemoveMod(unitID, appDef, applierID)
+local function RemoveMod(unitID, unitDefID, appDef, applierID)
 	if not currentApps[unitID]["mods"][appDef.name] then
 		return false -- mod is not installed
 	else
@@ -205,13 +208,13 @@ local function RemoveMod(unitID, appDef, applierID)
 		for _, modName in pairs(appDef.incompatible or EMPTY_TABLE) do -- assumes only mods can be incompatible
 			incompatible[unitID][modName] = nil -- assumes if A and B are incompatible with C, then A and B are incompatible
 		end
-		UpdateUnitApps(applierID, "mods")
+		UpdateUnitApps(applierID, unitDefID, "mods")
 		Spring.SetUnitRulesParam(unitID, appDef.name, false)
 		return true
 	end
 end
 
-local function ApplyAppToUnit(unitID, appType, appDef, cmdID, applierID, free)
+local function ApplyAppToUnit(unitID, unitDefID, appType, appDef, cmdID, applierID, free)
 	if not currentApps[unitID][appType] then currentApps[unitID][appType] = {} end -- create current aps for mods in mechbay
 	if appDef.requires and not currentApps[unitID][appType][appDef.requires] then return false end
 	local level = currentApps[unitID][appType][appDef.name] or 0
@@ -224,7 +227,7 @@ local function ApplyAppToUnit(unitID, appType, appDef, cmdID, applierID, free)
 	if appDef.sound then
 		GG.PlaySoundForTeam(Spring.GetUnitTeam(unitID), appDef.sound, 1)
 	elseif appType == "upgrades" then
-		GG.PlaySoundForTeam(Spring.GetUnitTeam(unitID), "bb_" .. UnitDefs[Spring.GetUnitDefID(unitID)].name .. "_upgraded", 1)
+		GG.PlaySoundForTeam(Spring.GetUnitTeam(unitID), "bb_" .. UnitDefs[unitDefID].name .. "_upgraded", 1)
 	elseif appType == "perks" then
 		GG.PlaySoundForTeam(Spring.GetUnitTeam(unitID), "bb_battlemech_perked", 1)
 	elseif appType == "mods" then
@@ -237,7 +240,7 @@ local function ApplyAppToUnit(unitID, appType, appDef, cmdID, applierID, free)
 			local conflicted = false
 			for _, modName in pairs(appDef.incompatible or EMPTY_TABLE) do -- assumes only mods can be incompatible
 				incompatible[unitID][modName] = true
-				conflicted = conflicted or RemoveMod(unitID, appDefNames[modName], applierID)
+				conflicted = conflicted or RemoveMod(unitID, unitDefID, appDefNames[modName], applierID)
 			end
 			GG.PlaySoundForTeam(Spring.GetUnitTeam(unitID), conflicted and "bb_battlemech_modded_conflicted" or "bb_battlemech_modded", 1)
 		end
@@ -252,26 +255,26 @@ local function ApplyAppToUnit(unitID, appType, appDef, cmdID, applierID, free)
 			EditUnitCmdDesc(applierID, FindUnitCmdDesc(applierID, cmdID), {name = nameString})
 		end
 		if not free then
-			local price = Spring.IsNoCostEnabled() and 0 or appDef.price or appDef.priceFunction(unitID)
+			local price = Spring.IsNoCostEnabled() and 0 or appDef.price or appDef.priceFunction(unitDefID)
 			appDef.costFunction(unitID, price)
 		end
-		UpdateUnitApps(applierID, appType) -- update here too to prevent pause cheating
+		UpdateUnitApps(applierID, unitDefID, appType) -- update here too to prevent pause cheating
 	end
 end		
 
 
-local function CloneMechApps(oldID, newID)
+local function CloneMechApps(oldID, oldUnitDefID, newID, newUnitDefID)
 	-- clone perks
 	for name, level in pairs(currentApps[oldID]["perks"]) do
 		local appDef = appDefNames[name]
 		for i = 1, level do
-			ApplyAppToUnit(newID, "perks", appDef, appDef.cmdDesc.id, nil, true)
+			ApplyAppToUnit(newID, newUnitDefID, "perks", appDef, appDef.cmdDesc.id, nil, true)
 		end
 	end
 	-- remove and refund mods
 	for name, level in pairs(currentApps[oldID]["mods"]) do
 		if name:find("ammo") then -- don't remove e.g. doubleheatsinks
-			RemoveMod(oldID, appDefNames[name], Spring.GetUnitTransporter(oldID))
+			RemoveMod(oldID, oldUnitDefID, appDefNames[name], Spring.GetUnitTransporter(oldID))
 		end
 	end
 end
@@ -293,10 +296,10 @@ function gadget:AllowCommand(unitID, unitDefID, teamID, cmdID, cmdParams, cmdOpt
 			unitID = (Spring.GetUnitIsTransporting(unitID) or EMPTY_TABLE)[1]
 			if not unitID then return false end
 			if rightClick then -- removing mod
-				return RemoveMod(unitID, appDef, applierID)
+				return RemoveMod(unitID, unitDefID, appDef, applierID)
 			end
 		end
-		local success = ApplyAppToUnit(unitID, appType, appDef, cmdID, applierID)
+		local success = ApplyAppToUnit(unitID, unitDefID, appType, appDef, cmdID, applierID)
 		-- return false for mechs (so command queue is not changed), true otherwise (to clear stack for dropzone?)
 		return success and appType ~= "perks"
 	end
@@ -334,7 +337,7 @@ function gadget:UnitCreated(unitID, unitDefID, teamID, builderID)
 			-- install pre-loaded mods
 			local mods = table.unserialize(cp.mods)
 			for i, modName in pairs(mods) do
-				ApplyAppToUnit(unitID, "mods", appDefNames[modName])
+				ApplyAppToUnit(unitID, unitDefID, "mods", appDefNames[modName])
 			end
 		else
 		-- outposts handled here, mechs handed in unit_mechCommands.lua
