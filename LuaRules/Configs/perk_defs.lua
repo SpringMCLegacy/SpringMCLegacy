@@ -142,6 +142,12 @@ local function deductPerWeaponType(unitDefID, weaponType, amount)
 	return WeaponTypeCount(unitDefID, weaponType) * amount
 end
 
+local function deductPerUnitDefTag(unitDefID, custom, tag, amount)
+	local ud = UnitDefs[unitDefID]
+	local cp = ud.customParams
+	return (custom and cp[tag] or ud[tag] or 0) * amount
+end
+
 
 return {
 	-- Mech Experience Perks -------------------------------------------------------------------------
@@ -758,7 +764,9 @@ return {
 				Spring.SetUnitRulesParam(unitID, "heatLimit", env.heatLimit)
 			end,
 			costFunction = deductSalvage,
-			price = 30,
+			priceFunction = function (unitDefID)
+				return deductPerUnitDefTag(unitDefID, true, "heatlimit", 1)
+			end,
 		},
 		-- Mobility (ENGINE)
 		{
