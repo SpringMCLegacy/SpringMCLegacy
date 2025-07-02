@@ -8,7 +8,7 @@ local Argus = Heavy:New{
 }
 
 local AGS4D = Argus:New{
-	description         = "Heavy Skirmisher",
+	description         = "Heavy Striker",
 	weapons = {	
 		[1] = {
 			name	= "RAC5",
@@ -38,7 +38,7 @@ local AGS4D = Argus:New{
 		bap				= true,
 		maxammo 		= {ac5 = 2, lrm = 2},
 		barrelrecoildist = {[1] = 4},
-		mods			= {"targetingcomputer", "doubleheatsinks", "endosteel", "case", "xlengine"},
+		mods			= {"beagle", "targetingcomputer", "doubleheatsinks", "endosteel", "case", "xlengine"},
     },
 }
 

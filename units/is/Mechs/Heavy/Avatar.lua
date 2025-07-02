@@ -10,7 +10,7 @@ local Avatar = Heavy:New{
 }
 
 local AV1OP = Avatar:New{
-	description         = "Heavy Brawler",
+	description         = "Heavy Generalist",
 	weapons	= {	
 		[1] = {
 			name	= "LBX10",
@@ -54,7 +54,7 @@ local AV1OP = Avatar:New{
 }
 
 local AV1OA = Avatar:New{
-	description         = "Heavy Juggernaut",
+	description         = "Heavy Brawler",
 	
 	weapons 		= {	
 		[1] = {

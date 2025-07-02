@@ -38,7 +38,7 @@ local TBT5N = Trebuchet:New{
 }
 
 local TBT5S = Trebuchet:New{
-	description         = "Medium Striker",
+	description         = "Medium Skirmisher",
 	weapons = {	
 		[1] = {
 			name	= "SRM6",
@@ -68,7 +68,7 @@ local TBT5S = Trebuchet:New{
 }
 
 local TBT9K = Trebuchet:New{
-	description         = "Medium Skirmisher",
+	description         = "Medium Generalist",
 	weapons = {	
 		[1] = {
 			name	= "MRM20",
@@ -95,7 +95,7 @@ local TBT9K = Trebuchet:New{
 		armor			= 9,
 		jumpjets		= 5,
 		maxammo 		= {mrm = 3},
-		mods			= {"doubleheatsinks", "endosteel", "xlengine", "case", "c3slave"},
+		mods			= {"jumpjets", "doubleheatsinks", "endosteel", "xlengine", "case", "c3slave"},
     },
 }
 

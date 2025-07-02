@@ -38,6 +38,7 @@ local DV6M = Dervish:New{
 		armor			= 7.5,
 		jumpjets		= 5,
 		maxammo 		= {srm = 2, lrm = 2},
+		mods			= {"jumpjets"},
     },
 }
 
@@ -72,7 +73,7 @@ local DV7D = Dervish:New{
 		armor			= 8,
 		jumpjets		= 5,
 		maxammo 		= {srm = 2, lrm = 2},
-		mods			= {"ferrofibrousarmour", "doubleheatsinks", "endosteel", "case"},
+		mods			= {"jumpjets", "ferrofibrousarmour", "doubleheatsinks", "endosteel", "case"},
     },
 }
 
@@ -107,7 +108,7 @@ local DV8D = Dervish:New{
 		armor			= 10.5,
 		jumpjets		= 5,
 		maxammo 		= {lrm = 4},
-		mods			= {"artemislrm", "doubleheatsinks", "endosteel", "xlengine", "case"},
+		mods			= {"jumpjets", "artemislrm", "doubleheatsinks", "endosteel", "xlengine", "case"},
     },
 }
 

@@ -44,6 +44,7 @@ local CPLTC1 = Catapult:New{
 		armor			= 10,
 		maxammo 		= {lrm = 2},
 		jumpjets		= 4,
+		mods			= {"jumpjets"}, 
     },
 }
 
@@ -72,12 +73,12 @@ local CPLTC2 = Catapult:New{
 		armor			= 11.5,
 		maxammo 		= {lrm = 4, ac2 = 1},
 		jumpjets		= 4,
-		mods			= {"artemislrm", "doubleheatsinks", "endosteel", "xlengine"},
+		mods			= {"jumpjets", "artemislrm", "doubleheatsinks", "endosteel", "xlengine"},
     },
 }
 
 local CPLTC3 = Catapult:New{
-	description         = "Heavy Missile Boat (Artillery)",
+	description         = "Heavy Artillery Missile Boat",
 	weapons	= {	
 		[1] = {
 			name	= "ArrowIV",
@@ -104,6 +105,7 @@ local CPLTC3 = Catapult:New{
 		armor			= 10,
 		maxammo 		= {arrow = 1},
 		jumpjets		= 4,
+		mods			= {"jumpjets"}, 
     },
 }
 
@@ -132,11 +134,12 @@ local CPLTC4 = Catapult:New{
 		armor			= 10,
 		maxammo 		= {lrm = 4},
 		jumpjets		= 4,
+		mods			= {"jumpjets"}, 
     },
 }
 	
 local CPLTK2 = Catapult:New{
-	description         = "Heavy Brawler",
+	description         = "Heavy Generalist",
 	weapons 		= {	
 		[1] = {
 			name	= "PPC",
@@ -168,7 +171,7 @@ local CPLTK2 = Catapult:New{
 }
 
 local CPLTK5 = Catapult:New{
-	description         = "Heavy Skirmisher",
+	description         = "Heavy Striker",
 	weapons 		= {	
 		[1] = {
 			name	= "MRM30",
@@ -192,7 +195,7 @@ local CPLTK5 = Catapult:New{
 		armor			= 12.5,
 		maxammo 		= {mrm = 4},
 		jumpjets		= 4,
-		mods			= {"doubleheatsinks", "endosteel", "xlengine", "case"},
+		mods			= {"jumpjets", "doubleheatsinks", "endosteel", "xlengine", "case"},
     },
 }
 

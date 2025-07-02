@@ -39,7 +39,7 @@ local ABS3L = Anubis:New{
 		armor			= 5.5,
 		maxammo 		= {lrm = 1},
 		ecm 			= true,
-		mods			= {"doubleheatsinks", "stealtharmour", "endosteel", "xlengine"},
+		mods			= {"guardian", "doubleheatsinks", "stealtharmour", "endosteel", "xlengine"},
     },
 }
 
@@ -69,7 +69,7 @@ local ABS3T = Anubis:New{
 		heatlimit 		= 12,--12 double
 		armor			= 5.5,
 		ecm 			= true,
-		mods			= {"doubleheatsinks", "stealtharmour", "endosteel", "xlengine"},
+		mods			= {"guardian", "doubleheatsinks", "stealtharmour", "endosteel", "xlengine"},
     },
 }
 

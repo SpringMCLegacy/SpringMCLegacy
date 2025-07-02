@@ -8,7 +8,7 @@ local Akuma = Assault:New{
 }
 
 local AKUX1 = Akuma:New{
-	description         = "Assault Brawler",
+	description         = "Assault Generalist",
 	weapons = {	
 		[1] = {
 			name	= "LBX10",

@@ -78,7 +78,7 @@ local JM6DG = Jagermech:New{
 }
 
 local JM7D = Jagermech:New{
-	description         = "Heavy Brawler",
+	description         = "Heavy Generalist",
 	weapons = {	
 		[1] = {
 			name	= "UAC5",
@@ -114,7 +114,7 @@ local JM7D = Jagermech:New{
 }
 
 local JM7F = Jagermech:New{
-	description         = "Heavy Juggernaut",
+	description         = "Heavy Generalist",
 	weapons = {	
 		[1] = {
 			name	= "RAC5",
@@ -139,7 +139,7 @@ local JM7F = Jagermech:New{
 		armor			= 11,
 		maxammo 		= {ac5 = 4},
 		ecm 			= true,
-		mods			= {"ferrofibrousarmour", "doubleheatsinks", "xlengine", "case", "targetingcomputer"},
+		mods			= {"guardian", "ferrofibrousarmour", "doubleheatsinks", "xlengine", "case", "targetingcomputer"},
     },
 }
 

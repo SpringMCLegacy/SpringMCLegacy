@@ -7,7 +7,7 @@ local Victor = Assault:New{
 }
 
 local VTR9B = Victor:New{
-	description         = "Assault Juggernaut",
+	description         = "Assault Brawler",
 	weapons 		= {	
 		[1] = {
 			name	= "AC20",
@@ -36,7 +36,7 @@ local VTR9B = Victor:New{
 }
 
 local VTR9D = Victor:New{
-	description         = "Assault Brawler",
+	description         = "Assault Generalist",
 	weapons 		= {	
 		[1] = {
 			name	= "Gauss",
@@ -66,7 +66,7 @@ local VTR9D = Victor:New{
 }
 
 local VTR9K = Victor:New{
-	description         = "Assault Brawler",
+	description         = "Assault Generalist",
 	weapons 		= {	
 		[1] = {
 			name	= "Gauss",
@@ -96,7 +96,7 @@ local VTR9K = Victor:New{
 }
 
 local VTR9S = Victor:New{
-	description         = "Assault Juggernaut",
+	description         = "Assault Brawler",
 	weapons 		= {	
 		[1] = {
 			name	= "AC20",
@@ -125,7 +125,7 @@ local VTR9S = Victor:New{
 }
 
 local VTR10D = Victor:New{
-	description         = "Assault Juggernaut",
+	description         = "Assault Brawler",
 	weapons 		= {	
 		[1] = {
 			name	= "UAC20",
@@ -155,7 +155,7 @@ local VTR10D = Victor:New{
 }
 
 local VTR10L = Victor:New{
-	description         = "Assault Sniper",
+	description         = "Assault Generalist",
 	weapons 		= {	
 		[1] = {
 			name	= "Gauss",
@@ -181,12 +181,12 @@ local VTR10L = Victor:New{
 		barrelrecoildist = {[1] = 5},
 		ecm 			= true,
 		jumpjets		= 4,
-		mods			= {"doubleheatsinks", "stealtharmour", "endosteel", "case"},
+		mods			= {"guardian", "doubleheatsinks", "stealtharmour", "endosteel", "case"},
     },
 }
 
 local VTR11D = Victor:New{
-	description         = "Assault Brawler",
+	description         = "Assault Generalist",
 	weapons 		= {	
 		[1] = {
 			name	= "RAC5",
@@ -218,11 +218,11 @@ local VTR11D = Victor:New{
 return lowerkeys({
 	CC_Victor_VTR9B = VTR9B:New(),
 	CC_Victor_VTR10L = VTR10L:New(),
-	--DC_Victor_VTR9B = VTR9B:New(),
-	--DC_Victor_VTR9K = VTR9K:New(),
+	DC_Victor_VTR9B = VTR9B:New(),
+	DC_Victor_VTR9K = VTR9K:New(),
 	FS_Victor_VTR9B = VTR9B:New(),
-	--FS_Victor_VTR9D = VTR9D:New(),
-	--FS_Victor_VTR10D = VTR10D:New(),
+	FS_Victor_VTR9D = VTR9D:New(),
+	FS_Victor_VTR10D = VTR10D:New(),
 	FS_Victor_VTR11D = VTR11D:New(),
 	LA_Victor_VTR9S = VTR9S:New(),
 })

@@ -8,7 +8,7 @@ local Vindicator = Medium:New{
 }
 
 local VND3L = Vindicator:New{
-	description         = "Medium Sniper",
+	description         = "Medium Generalist",
 	weapons	= {	
 		[1] = {
 			name	= "ERPPC",
@@ -29,7 +29,7 @@ local VND3L = Vindicator:New{
 		armor			= 9,
 		jumpjets		= 4,
 		maxammo 		= {lrm = 1},
-		mods			= {"doubleheatsinks", "case"},
+		mods			= {"jumpjets", "doubleheatsinks", "case"},
     },
 }
 

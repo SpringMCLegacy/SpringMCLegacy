@@ -8,7 +8,7 @@ local ShaYu = Medium:New{
 }
 
 local SYU2B = ShaYu:New{
-	description         = "Medium Scout",
+	description         = "Medium Sniper",
 	weapons	= {	
 		[1] = {
 			name	= "ERLBL",
@@ -34,7 +34,7 @@ local SYU2B = ShaYu:New{
 		heatlimit 		= 13,--13 double
 		armor			= 6.5,
 		ecm				= true,
-		mods			= {"doubleheatsinks", "stealtharmour", "endosteel", "xlengine"},
+		mods			= {"guardian", "doubleheatsinks", "stealtharmour", "endosteel", "xlengine"},
     },
 }
 

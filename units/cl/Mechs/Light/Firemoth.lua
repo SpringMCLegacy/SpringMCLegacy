@@ -65,7 +65,7 @@ local A = Firemoth:New{
 }
 
 local C = Firemoth:New{
-	description         = "Light Ranged",
+	description         = "Light Missile Scout",
 
 	weapons = {	
 		[1] = {

@@ -51,7 +51,7 @@ local NTK2S = Nighthawk:New{
 		armor			= 7,
 		bap				= true,
 		ecm				= true,
-		mods			= {"doubleheatsinks", "xlengine"},
+		mods			= {"beagle", "guardian", "doubleheatsinks", "xlengine"},
     },
 }
 

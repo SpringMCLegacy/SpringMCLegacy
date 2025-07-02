@@ -185,7 +185,7 @@ local ARC7L = Archer:New{
 		armor			= 13.5,
 		maxammo 		= {lrm = 6},
 		ecm				= true,
-		mods			= {"doubleheatsinks", "stealtharmour", "case"},
+		mods			= {"guardian", "jumpjets", "doubleheatsinks", "stealtharmour", "case"},
 		jumpjets		= 3,
     },
 }

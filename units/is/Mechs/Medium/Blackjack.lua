@@ -9,7 +9,7 @@ local Blackjack = Medium:New{
 }
 
 local BJ2 = Blackjack:New{
-	description         = "Medium Brawler",
+	description         = "Medium Generalist",
 	weapons	= {	
 		[1] = {
 			name	= "ERLBL",
@@ -39,12 +39,12 @@ local BJ2 = Blackjack:New{
 		jumpjets		= 4,
 		armor			= 8.5,
 		maxammo 		= {srm = 1},
-		mods			= {"doubleheatsinks"},
+		mods			= {"jumpjets", "doubleheatsinks"},
     },
 }
 
 local BJ3 = Blackjack:New{
-	description         = "Medium Brawler",
+	description         = "Medium Generalist",
 	weapons	= {	
 		[1] = {
 			name	= "PPC",
@@ -73,12 +73,12 @@ local BJ3 = Blackjack:New{
 		heatlimit 		= 10,--10 double
 		jumpjets		= 4,
 		armor			= 8.5,
-		mods			= {"doubleheatsinks"},
+		mods			= {"jumpjets", "doubleheatsinks"},
     },
 }
 
 local BJ4 = Blackjack:New{
-	description         = "Medium Sniper",
+	description         = "Medium Generalist",
 	weapons	= {	
 		[1] = {
 			name	= "AC5", -- should be light AC/5
@@ -103,7 +103,7 @@ local BJ4 = Blackjack:New{
 		armor			= 8,--should be light ferro
 		maxammo 		= {ac5 = 4},
 		barrelrecoildist = {[1] = 5, [2] = 5},
-		mods			= {"ferrofibrousarmour", "targetingcomputer", "doubleheatsinks", "lightengine", "case"},
+		mods			= {"jumpjets", "ferrofibrousarmour", "targetingcomputer", "doubleheatsinks", "lightengine", "case"},
     },
 }
 

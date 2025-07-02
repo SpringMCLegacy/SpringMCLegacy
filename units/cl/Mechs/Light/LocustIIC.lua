@@ -32,7 +32,7 @@ local Mk2 = LocustIIC:New{
 }
 
 local Mk3 = LocustIIC:New{
-	description         = "Light Ranged",
+	description         = "Light Sniper",
 	weapons = {	
 		[1] = {
 			name	= "CERLBL",

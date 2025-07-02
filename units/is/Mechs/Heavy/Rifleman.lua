@@ -76,7 +76,7 @@ local RFL5M = Rifleman:New{
 }
 
 local RFL6X = Rifleman:New{
-	description         = "Heavy Brawler",
+	description         = "Heavy Striker",
 	weapons = {	
 		[1] = {
 			name	= "LBX10",
@@ -148,7 +148,7 @@ local RFL7M = Rifleman:New{
 		maxammo 		= {ltgauss = 2},
 		barrelrecoildist = {[1] = 5, [2] = 5},
 		ecm				= true,
-		mods			= {"doubleheatsinks", "endosteel", "xlengine"},
+		mods			= {"guardian", "doubleheatsinks", "endosteel", "xlengine"},
     },
 }
 

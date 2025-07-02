@@ -43,7 +43,7 @@ local FS9S = Firestarter:New{
 		armor			= 5.5,
 		bap 			= true,
 		jumpjets		= 6,
-		mods			= {"endosteel"},
+		mods			= {"jumpjets", "beagle", "endosteel"},
     },
 }
 

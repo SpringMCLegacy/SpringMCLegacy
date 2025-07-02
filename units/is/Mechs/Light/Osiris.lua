@@ -46,7 +46,7 @@ local OSR3D = Osiris:New{
 		armor			= 4.5,
 		jumpjets		= 4,
 		maxammo 		= {srm = 1},
-		mods 			= {"ferrofibrousarmour", "doubleheatsinks", "endosteel", "xlengine"},
+		mods 			= {"jumpjets", "ferrofibrousarmour", "doubleheatsinks", "endosteel", "xlengine"},
     },
 }
 

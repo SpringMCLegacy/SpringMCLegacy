@@ -8,7 +8,7 @@ local Marauder = Heavy:New{
 }
 
 local MAD5D = Marauder:New{
-	description         = "Heavy Sniper",
+	description         = "Heavy Generalist",
 	weapons = {	
 		[1] = {
 			name	= "LPL",
@@ -38,12 +38,12 @@ local MAD5D = Marauder:New{
 		armor			= 14,
 		jumpjets		= 4,
 		maxammo 		= {srm = 1},
-		mods			= {"doubleheatsinks", "xlengine", "case"},
+		mods			= {"jumpjets", "doubleheatsinks", "xlengine", "case"},
     },
 }
 
 local MAD7D = Marauder:New{
-	description         = "Heavy Brawler",
+	description         = "Heavy Generalist",
 	weapons = {	
 		[1] = {
 			name	= "RAC5",
@@ -70,7 +70,7 @@ local MAD7D = Marauder:New{
 		armor			= 14,
 		maxammo 		= {ac5 = 2},
 		ecm				= true,
-		mods			= {"doubleheatsinks", "xlengine", "case", "targetingcomputer"},
+		mods			= {"guardian", "doubleheatsinks", "xlengine", "case", "targetingcomputer"},
     },
 }
 
@@ -107,7 +107,7 @@ local MAD5S = Marauder:New{
 }
 
 local MAD9S = Marauder:New{
-	description         = "Heavy Brawler",
+	description         = "Heavy Generalist",
 	weapons = {	
 		[1] = {
 			name	= "LBX10",
@@ -139,7 +139,7 @@ local MAD9S = Marauder:New{
 		ecm				= true,
 		bap				= true,
 		barrelrecoildist = {[1] = 5},
-		mods			= {"doubleheatsinks", "endosteel", "lightengine", "case"},
+		mods			= {"guardian", "beagle", "doubleheatsinks", "endosteel", "lightengine", "case"},
     },
 }
 
@@ -169,13 +169,14 @@ local MAD5L = Marauder:New{
 		price			= 22860,
 		heatlimit 		= 18,--18 double
 		armor			= 14,
+		ecm				= true,
 		barrelrecoildist = {[1] = 5},
-		mods			= {"doubleheatsinks", "stealtharmour", "tsm"},
+		mods			= {"guardian", "doubleheatsinks", "stealtharmour", "tsm"},
     },
 }
 
 local MAD5M = Marauder:New{
-	description         = "Heavy Brawler",
+	description         = "Heavy Generalist",
 	weapons = {	
 		[1] = {
 			name	= "AC10",
@@ -202,13 +203,13 @@ local MAD5M = Marauder:New{
 		armor			= 11.5,
 		maxammo 		= {ac10 = 1},
 		barrelrecoildist = {[1] = 5},
-		mods			= {"doubleheatsinks", "xlengine", "case"},
+		mods			= {"jumpjets", "doubleheatsinks", "xlengine", "case"},
 		jumpjets		= 4,
     },
 }
 
 local MAD9M = Marauder:New{
-	description         = "Heavy Brawler",
+	description         = "Heavy Generalist",
 	weapons = {	
 		[1] = {
 			name	= "ERLBL",

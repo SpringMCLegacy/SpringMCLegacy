@@ -7,7 +7,7 @@ local Battlehawk = Light:New{
 }
 
 local BHK305 = Battlehawk:New{
-	description         = "Light Striker",
+	description         = "Light Brawler",
 	weapons = {	
 		[1] = {
 			name	= "MPL",
@@ -34,7 +34,7 @@ local BHK305 = Battlehawk:New{
 		armor			= 5.5,
 		jumpjets		= 5,
 		maxammo 		= {srm = 2},
-		mods			= {"ferrofibrousarmour", "doubleheatsinks", "xlengine"},
+		mods			= {"jumpjets", "ferrofibrousarmour", "doubleheatsinks", "xlengine"},
     },
 }
 

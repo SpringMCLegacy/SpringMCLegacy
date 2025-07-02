@@ -32,11 +32,12 @@ local JVN10P = Javelin:New{
 		armor			= 5,
 		jumpjets		= 6,
 		maxammo 		= {srm = 2},
+		mods			= {"jumpjets"},
     },
 }
 
 local JVN11B = Javelin:New{
-	description         = "Light Scout",
+	description         = "Light EWAR Support",
 	weapons	= {	
 		[1] = {
 			name	= "SRM4",
@@ -55,7 +56,7 @@ local JVN11B = Javelin:New{
 		bap 			= true,
 		ecm				= true,
 		maxammo 		= {srm = 2},
-		mods 			= {"ferrofibrousarmour", "doubleheatsinks"},
+		mods 			= {"beagle", "guardian", "ferrofibrousarmour", "doubleheatsinks"},
     },
 }
 

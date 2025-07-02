@@ -8,7 +8,7 @@ local Starslayer = Medium:New{
 }
 
 local STY3C = Starslayer:New{
-	description         = "Medium Brawler",
+	description         = "Medium Generalist",
 	weapons	= {	
 		[1] = {
 			name	= "LBL",
@@ -38,12 +38,12 @@ local STY3C = Starslayer:New{
 		armor			= 9.5,
 		jumpjets		= 5,
 		maxammo 		= {srm = 1},
-		mods			= {"ferrofibrousarmour", "doubleheatsinks", "endosteel", "case"},
+		mods			= {"jumpjets", "ferrofibrousarmour", "doubleheatsinks", "endosteel", "case"},
     },
 }
 
 local STY3D = Starslayer:New{
-	description         = "Medium Brawler",
+	description         = "Medium Generalist",
 	weapons	= {	
 		[1] = {
 			name	= "ERPPC",
@@ -69,7 +69,7 @@ local STY3D = Starslayer:New{
 		heatlimit 		= 12,--12 single
 		armor			= 9.5,
 		jumpjets		= 5,
-		mods			= {"ferrofibrousarmour", "doubleheatsinks", "endosteel"},
+		mods			= {"jumpjets", "ferrofibrousarmour", "doubleheatsinks", "endosteel"},
     },
 }
 

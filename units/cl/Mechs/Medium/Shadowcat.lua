@@ -4,13 +4,14 @@ local Shadowcat = Medium:New{
 	customparams = {
 		tonnage			= 45,
 		cockpitheight	= 1.4,
+		bap				= true,
 		mods			= {"jumpjets", "beagle", "ferrofibrousarmour", "doubleheatsinks", "masc"},
 		omni			= true,
     },
 }
 	
 local Prime = Shadowcat:New{
-	description         = "Medium Ranged",
+	description         = "Medium Sniper",
 
 	weapons = {	
 		[1] = {
@@ -31,7 +32,6 @@ local Prime = Shadowcat:New{
 		heatlimit 		= 10,
 		armor			= 7,
 		maxammo 		= {gauss = 2},
-		bap				= true,
 		jumpjets		= 6,
     },
 }
@@ -58,20 +58,19 @@ local A = Shadowcat:New{
 		heatlimit 		= 13,
 		armor			= 7,
 		maxammo 		= {srm = 2},
-		bap				= true,
 		jumpjets		= 6,
     },
 }
 
 local B = Shadowcat:New{
-	description         = "Medium Ranged",
+	description         = "Medium EWAR Missile Boat",
 
 	weapons = {	
 		[1] = {
-			name	= "ALRM15",
+			name	= "LRM15",
 		},
 		[2] = {
-			name	= "ALRM15",
+			name	= "LRM15",
 		},
 		[3] = {
 			name	= "CERMBL",
@@ -88,7 +87,6 @@ local B = Shadowcat:New{
 		heatlimit 		= 10,
 		armor			= 7,
 		maxammo 		= {lrm = 4},
-		bap				= true,
 		ecm				= true,
 		mods			= {"guardian", "artemislrm"},
 		jumpjets		= 6,

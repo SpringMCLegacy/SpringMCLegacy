@@ -69,7 +69,7 @@ local A = Adder:New{
 }
 
 local B = Adder:New{
-	description         = "Light Striker",
+	description         = "Light Multirole",
 	weapons 		= {	
 		[1] = {
 			name	= "LBX5",

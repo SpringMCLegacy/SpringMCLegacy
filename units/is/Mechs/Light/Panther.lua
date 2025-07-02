@@ -8,7 +8,7 @@ local Panther = Light:New{
 }
 
 local PNT10K = Panther:New{
-	description         = "Light Brawler",
+	description         = "Light Generalist",
 	weapons	= {	
 		[1] = {
 			name	= "ERPPC",
@@ -26,7 +26,7 @@ local PNT10K = Panther:New{
 		jumpjets		= 4,
 		armor			= 6.5,
 		maxammo 		= {srm = 2},
-		mods 			= {"artemissrm", "ferrofibrousarmour", "endosteel", "case"},
+		mods 			= {"jumpjets", "artemissrm", "ferrofibrousarmour", "endosteel", "case"},
     },
 }
 

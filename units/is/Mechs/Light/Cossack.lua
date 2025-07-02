@@ -8,7 +8,7 @@ local Cossack = Light:New{
 }
 
 local CSK1 = Cossack:New{
-	description         = "Light Striker",
+	description         = "Light Skirmisher",
 	weapons	= {	
 		[1] = {
 			name	= "SRM6",
@@ -32,7 +32,7 @@ local CSK1 = Cossack:New{
 		armor			= 3,
 		maxammo 		= {srm = 1},
 		jumpjets		= 6,
-		mods 			= {"endosteel"},
+		mods 			= {"jumpjets", "endosteel"},
     },
 }
 

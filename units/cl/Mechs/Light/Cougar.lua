@@ -10,7 +10,7 @@ local Cougar = Light:New{
 }
 	
 local Prime = Cougar:New{
-	description         = "Light Multirole",
+	description         = "Light Generalist",
 	
 	weapons 		= {	
 		[1] = {
@@ -38,7 +38,7 @@ local Prime = Cougar:New{
 }
 
 local A = Cougar:New{
-	description         = "Light Ranged",
+	description         = "Light Missile Boat",
 	
 	weapons 		= {	
 		[1] = {
@@ -69,7 +69,7 @@ local A = Cougar:New{
 }
 
 local B = Cougar:New{
-	description         = "Light Ranged",
+	description         = "Light Sniper",
 	
 	weapons 		= {	
 		[1] = {

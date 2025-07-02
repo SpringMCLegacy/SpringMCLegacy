@@ -48,7 +48,7 @@ local MAL1R = Mauler:New{
 }
 
 local MAL3R = Mauler:New{
-	description         = "Assault Brawler",
+	description         = "Assault Generalist",
 	weapons	= {	
 		[1] = {
 			name	= "LBX10",
@@ -76,7 +76,7 @@ local MAL3R = Mauler:New{
 		maxammo 		= {lrm = 4, ac10 = 4},
 		jumpjets		= 3,
 		barrelrecoildist = {[1] = 5, [2] = 5},
-		mods			= {"ferrofibrousarmour", "doubleheatsinks", "xlengine"},
+		mods			= {"jumpjets", "ferrofibrousarmour", "doubleheatsinks", "xlengine"},
     },
 }
 	

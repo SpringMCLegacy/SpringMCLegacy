@@ -8,7 +8,7 @@ local Spider = Light:New{
 }
 
 local SDR7K = Spider:New{
-	description         = "Light Scout",
+	description         = "Light Skirmisher",
 	weapons = {	
 		[1] = {
 			name	= "MPL",
@@ -25,7 +25,7 @@ local SDR7K = Spider:New{
 		heatlimit 		= 10,--10 Double
 		armor			= 5.5,
 		jumpjets		= 8,
-		mods 			= {"ferrofibrousarmour", "doubleheatsinks", "endosteel", "lightengine"},
+		mods 			= {"jumpjets", "ferrofibrousarmour", "doubleheatsinks", "endosteel", "lightengine"},
     },
 }
 
@@ -47,7 +47,7 @@ local SDR7M = Spider:New{
 		heatlimit 		= 10,--10 single
 		armor			= 3,
 		jumpjets		= 8,
-		mods 			= {"ferrofibrousarmour", "endosteel"},
+		mods 			= {"jumpjets", "ferrofibrousarmour", "endosteel"},
     },
 }
 

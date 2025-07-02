@@ -7,7 +7,7 @@ local Atlas = Assault:New{
 }
 
 local AS7D = Atlas:New{
-	description         = "Assault Juggernaut",
+	description         = "Assault Brawler",
 	weapons 		= {	
 		[1] = {
 			name	= "AC20",
@@ -46,7 +46,7 @@ local AS7D = Atlas:New{
 }
 
 local AS7K = Atlas:New{
-	description         = "Assault Brawler",
+	description         = "Assault Generalist",
 	weapons 		= {	
 		[1] = {
 			name	= "Gauss",
@@ -86,7 +86,7 @@ local AS7K = Atlas:New{
 }
 
 local AS7S = Atlas:New{
-	description         = "Assault Juggernaut",
+	description         = "Assault Brawler",
 	weapons 		= {	
 		[1] = {
 			name	= "AC20",
@@ -154,7 +154,7 @@ local AS7S2 = Atlas:New{
 		maxammo 		= {hvgauss = 4, lrm = 2, srm = 2},
 		ecm				= true,
 		barrelrecoildist = {[1] = 5},
-		mods			= {"artemislrm", "doubleheatsinks", "lightengine", "case"},
+		mods			= {"guardian", "artemislrm", "doubleheatsinks", "lightengine", "case"},
     },
 }
 

@@ -7,7 +7,7 @@ local Zeus = Assault:New{
 }
 
 local ZEU9S = Zeus:New{
-	description         = "Assault Sniper",
+	description         = "Assault Generalist",
 	weapons 		= {	
 		[1] = {
 			name	= "ERPPC",

@@ -73,7 +73,7 @@ local Prime = Direwolf:New{
 }
 
 local A = Direwolf:New{
-	description         = "Assault Juggernaut",
+	description         = "Assault Brawler",
 	weapons	= {	
 		[1] = {
 			name	= "Gauss",
@@ -112,7 +112,7 @@ local A = Direwolf:New{
 }
 
 local B = Direwolf:New{
-	description         = "Assault Brawler",
+	description         = "Assault Sniper",
 	weapons	= {	
 		[1] = {
 			name	= "CERPPC",
@@ -161,7 +161,7 @@ local B = Direwolf:New{
 }
 
 local C = Direwolf:New{
-	description         = "Assault Brawler",
+	description         = "Assault EWAR Multirole",
 	weapons	= {	
 		[1] = {
 			name	= "CERPPC",

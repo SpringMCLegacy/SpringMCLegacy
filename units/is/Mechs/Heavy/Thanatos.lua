@@ -41,7 +41,7 @@ local TNS4S = Thanatos:New{
 		barrelrecoildist = {[1] = 4},
 		ecm 			= true,
 		jumpjets		= 5,
-		mods			= {"doubleheatsinks", "endosteel", "xlengine"},
+		mods			= {"jumpjets", "guardian", "doubleheatsinks", "endosteel", "xlengine"},
     },
 }
 

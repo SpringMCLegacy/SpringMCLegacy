@@ -64,7 +64,7 @@ local A = Kitfox:New{
 }
 
 local C = Kitfox:New{
-	description         = "Light Scout",
+	description         = "Light EWAR Skirmisher",
 	
 	weapons = {	
 		[1] = {

@@ -14,7 +14,7 @@ local Hunchback = Medium:New{
 }
 
 local HBK4G = Hunchback:New{
-	description         = "Medium Juggernaut",
+	description         = "Medium Brawler",
 	weapons	= {	
 		[1] = {
 			name	= "AC20",
@@ -129,7 +129,7 @@ local HBK4J = Hunchback:New{
 }
 
 local HBK5S = Hunchback:New{
-	description         = "Medium Juggernaut",
+	description         = "Medium Brawler",
 	weapons	= {	
 		[1] = {
 			name	= "LBX20",
@@ -155,12 +155,12 @@ local HBK5S = Hunchback:New{
 		jumpjets		= 4,
 		maxammo 		= {ac20 = 4},
 		barrelrecoildist = {[1] = 3},
-		mods			= {"doubleheatsinks", "endosteel", "lightengine", "case"},
+		mods			= {"jumpjets", "doubleheatsinks", "endosteel", "lightengine", "case"},
     },
 }
 
 local HBK5N = Hunchback:New{
-	description         = "Medium Juggernaut",
+	description         = "Medium Brawler",
 	weapons	= {	
 		[1] = {
 			name	= "AC20",

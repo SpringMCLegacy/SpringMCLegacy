@@ -8,7 +8,7 @@ local Devastator = Assault:New{
 }
 
 local DVS2 = Devastator:New{
-	description         = "Assault Brawler",
+	description         = "Assault Generalist",
 	weapons = {	
 		[1] = {
 			name	= "Gauss",

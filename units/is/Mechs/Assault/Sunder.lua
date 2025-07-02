@@ -9,7 +9,7 @@ local Sunder = Assault:New{
 }
 
 local SD1OP = Sunder:New{
-	description         = "Assault Juggernaut",
+	description         = "Assault Brawler",
 	weapons 		= {	
 		[1] = {
 			name	= "AC20",
@@ -51,7 +51,7 @@ local SD1OP = Sunder:New{
 }
 
 local SD1OA = Sunder:New{
-	description         = "Assault Brawler",
+	description         = "Assault Generalist",
 	weapons 		= {	
 		[1] = {
 			name	= "Gauss",
@@ -126,7 +126,7 @@ local SD1OB = Sunder:New{
 }
 
 local SD1OC = Sunder:New{
-	description         = "Assault Skirmisher",
+	description         = "Assault Striker",
 	weapons 		= {	
 		[1] = {
 			name	= "MRM40",

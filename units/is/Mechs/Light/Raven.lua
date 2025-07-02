@@ -8,7 +8,7 @@ local Raven = Light:New{
 }
 
 local RVN3L = Raven:New{
-	description         = "Light Scout",
+	description         = "Light EWAR Support",
 	weapons	= {	
 		[1] = {
 			name	= "MBL",
@@ -37,12 +37,12 @@ local RVN3L = Raven:New{
 		bap				= true,
 		ecm				= true,
 		maxammo 		= {narc = 2, srm = 1},
-		mods 			= {"ferrofibrousarmour", "xlengine", "case"},
+		mods 			= {"beagle", "guardian", "ferrofibrousarmour", "xlengine", "case"},
     },
 }
 
 local RVN4L = Raven:New{
-	description         = "Light Scout",
+	description         = "Light EWAR Support",
 	weapons = {	
 		[1] = {
 			name	= "ERMBL",
@@ -71,7 +71,7 @@ local RVN4L = Raven:New{
 		bap				= true,
 		ecm				= true,
 		maxammo 		= {narc = 1, srm = 1},
-		mods			= {"doubleheatsinks", "stealtharmour", "xlengine"},
+		mods			= {"beagle", "guardian", "doubleheatsinks", "stealtharmour", "xlengine"},
     },
 }
 

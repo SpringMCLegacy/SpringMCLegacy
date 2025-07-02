@@ -38,7 +38,7 @@ local CMA1S = Chimera:New{
 		armor			= 7,
 		jumpjets		= 6,
 		maxammo 		= {mrm = 2},
-		mods			= {"doubleheatsinks", "endosteel", "xlengine"},
+		mods			= {"jumpjets", "doubleheatsinks", "endosteel", "xlengine"},
     },
 }
 

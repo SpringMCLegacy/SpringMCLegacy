@@ -8,7 +8,7 @@ local Orion = Heavy:New{
 }
 
 local ON1MA = Orion:New{
-	description         = "Heavy Striker",
+	description         = "Heavy Generalist",
 	weapons = {	
 		[1] = {
 			name	= "LBX10",
@@ -40,7 +40,7 @@ local ON1MA = Orion:New{
 }
 		
 local ON1MB = Orion:New{
-	description         = "Heavy Brawler",
+	description         = "Heavy Sniper",
 	weapons = {	
 		[1] = {
 			name	= "LightGauss",

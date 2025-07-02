@@ -11,11 +11,12 @@ local Urbanmech = Light:New{
 		cockpitheight	= 8,
 		tonnage			= 30,
 		torsoturnspeed	= 210,
+		mods 			= {"jumpjets"},
     },
 }
 
 local UMR60 = Urbanmech:New{
-	description         = "Light Brawler",
+	description         = "Light Ambusher",
 	weapons = {	
 		[1] = {
 			name	= "AC10",
@@ -38,7 +39,7 @@ local UMR60 = Urbanmech:New{
 }
 
 local UMR60L = Urbanmech:New{
-	description         = "Light Juggernaut",
+	description         = "Light Ambusher",
 	weapons = {	
 		[1] = {
 			name	= "AC20",
@@ -61,7 +62,7 @@ local UMR60L = Urbanmech:New{
 }
 
 local UMR63 = Urbanmech:New{
-	description         = "Light Juggernaut",
+	description         = "Light Ambusher",
 	weapons = {	
 		[1] = {
 			name	= "LBX10",
@@ -87,7 +88,7 @@ local UMR63 = Urbanmech:New{
 }
 
 local UMR68 = Urbanmech:New{
-	description         = "Light Skirmisher",
+	description         = "Light Ambusher",
 	weapons = {	
 		[1] = {
 			name	= "MRM30",
@@ -112,7 +113,7 @@ local UMR68 = Urbanmech:New{
 }
 
 local UMR69 = Urbanmech:New{
-	description         = "Light Brawler",
+	description         = "Light Ambusher",
 	weapons = {	
 		[1] = {
 			name	= "UAC10",
@@ -138,7 +139,7 @@ local UMR69 = Urbanmech:New{
 }
 
 local UMR70 = Urbanmech:New{
-	description         = "Light Brawler",
+	description         = "Light Ambusher",
 	weapons = {	
 		[1] = {
 			name	= "RAC5",

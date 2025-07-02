@@ -15,7 +15,7 @@ local UrbanmechIIC = Light:New{
 }
 
 local Mk1 = UrbanmechIIC:New{
-	description         = "Light Brawler",
+	description         = "Light Ambusher",
 	weapons = {	
 		[1] = {
 			name	= "UAC10",

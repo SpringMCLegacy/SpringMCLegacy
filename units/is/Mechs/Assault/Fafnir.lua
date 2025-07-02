@@ -8,7 +8,7 @@ local Fafnir = Assault:New{
 }
 
 local FNR5 = Fafnir:New{
-	description         = "Assault Juggernaut",
+	description         = "Assault Brawler",
 	weapons = {	
 		[1] = {
 			name	= "HeavyGauss",
@@ -41,7 +41,7 @@ local FNR5 = Fafnir:New{
 		maxammo 		= {hvgauss = 8},
 		barrelrecoildist = {[1] = 5, [2] = 5},
 		ecm 			= true,
-		mods			= {"doubleheatsinks", "endosteel"},
+		mods			= {"guardian", "doubleheatsinks", "endosteel"},
     },
 }
 

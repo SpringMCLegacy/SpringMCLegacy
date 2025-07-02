@@ -8,7 +8,7 @@ local Razorback = Light:New{
 }
 
 local RZK9S = Razorback:New{
-	description         = "Light Brawler",
+	description         = "Light Generalist",
 	weapons = {	
 		[1] = {
 			name	= "ERLBL",

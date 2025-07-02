@@ -7,7 +7,7 @@ local Jenner = Light:New{
 }
 
 local JR7K = Jenner:New{
-	description         = "Light Striker",
+	description         = "Light Skirmisher",
 	weapons	= {	
 		[1] = {
 			name	= "MBL",
@@ -34,7 +34,7 @@ local JR7K = Jenner:New{
 		armor			= 3.5,
 		maxammo 		= {srm = 1},
 		jumpjets		= 5,
-		mods 			= {"ferrofibrousarmour", "case"},
+		mods 			= {"jumpjets", "ferrofibrousarmour", "case"},
     },
 }
 

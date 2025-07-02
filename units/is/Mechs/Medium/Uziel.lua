@@ -14,7 +14,7 @@ local Uziel = Medium:New{
 }
 
 local UZL2S = Uziel:New{
-	description         = "Medium Striker",
+	description         = "Medium Sniper",
 	weapons	= {	
 		[1] = {
 			name	= "PPC",
@@ -42,7 +42,7 @@ local UZL2S = Uziel:New{
 		jumpjets		= 6,
 		maxammo 		= {srm = 1},
 		bap				= true,
-		mods			= {"doubleheatsinks", "endosteel", "xlengine"},
+		mods			= {"jumpjets", "beagle", "doubleheatsinks", "endosteel", "xlengine"},
     },
 }
 
@@ -78,7 +78,7 @@ local UZL3S = Uziel:New{
 		jumpjets		= 6,
 		maxammo 		= {srm = 1, ac2 = 1},
 		barrelrecoildist = {[1] = 4},
-		mods			= {"doubleheatsinks", "endosteel", "xlengine"},
+		mods			= {"jumpjets", "doubleheatsinks", "endosteel", "xlengine"},
     },
 }
 
