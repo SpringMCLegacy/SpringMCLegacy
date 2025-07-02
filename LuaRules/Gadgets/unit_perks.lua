@@ -270,11 +270,11 @@ local function CloneMechApps(oldID, oldUnitDefID, newID, newUnitDefID)
 			ApplyAppToUnit(newID, newUnitDefID, "perks", appDef, appDef.cmdDesc.id, nil, true)
 		end
 	end
-	-- remove and refund mods
+	-- remove and refund ALL mods
 	for name, level in pairs(currentApps[oldID]["mods"]) do
-		if name:find("ammo") then -- don't remove e.g. doubleheatsinks
+		--if name:find("ammo") then -- don't remove e.g. doubleheatsinks
 			RemoveMod(oldID, oldUnitDefID, appDefNames[name], Spring.GetUnitTransporter(oldID))
-		end
+		--end
 	end
 end
 GG.CloneMechApps = CloneMechApps
