@@ -270,6 +270,9 @@ for name, ud in pairs(UnitDefs) do
 			if cp.masc then
 				ud.description = ud.description .. " \255\128\026\179[MASC]"
 			end
+			if cp.omni then
+				cp.omniswapcost = math.floor(ud.buildCostMetal / 500)
+			end
 		elseif cp.baseclass == "infantry" then
 			ud.radardistance = 1000 -- no sensors
 			ud.power = 1

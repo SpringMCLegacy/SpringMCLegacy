@@ -202,7 +202,7 @@ local function RemoveMod(unitID, unitDefID, appDef, applierID)
 		return false -- mod is not installed
 	else
 		currentApps[unitID]["mods"][appDef.name] = nil
-		appDef.costFunction(unitID, -appDef.price)
+		appDef.costFunction(unitID, -(appDef.price or appDef.priceFunction(unitDefID)))
 		appDef.applyPerk(unitID, 0, true) -- invert
 		for _, modName in pairs(appDef.incompatible or EMPTY_TABLE) do -- assumes only mods can be incompatible
 			incompatible[unitID][modName] = nil -- assumes if A and B are incompatible with C, then A and B are incompatible
