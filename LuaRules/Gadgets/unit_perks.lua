@@ -46,6 +46,7 @@ local validApps = {} -- [unitDefID][appType] = {appCmdID = true, etc}
 local orderedApps = {} -- unitDefID = {cmdDesc1, cmdDesc2, ...} -- TODO: get rid of need for this by just using the include directly which is already in order
 local currentApps = {} --[unitID][appType] = {app1 = true, app2 = true, ...}}
 local appUnits = {} -- [unitID][appType] = true
+local appUnitDefIDs = {} -- [unitID] = unitDefID
 
 local incompatible = {} -- [unitID][modName] = true
 
@@ -190,9 +191,7 @@ function gadget:GameFrame(n)
 	if n % 15 == 0 then
 		for unitID, unitAppTypes in pairs(appUnits) do
 			for appType in pairs(unitAppTypes) do
-				-- TODO: for goodness sake cache this somehow!!!!
-				local unitDefID = Spring.GetUnitDefID(unitID)
-				UpdateUnitApps(unitID, unitDefID, appType)
+				UpdateUnitApps(unitID, appUnitDefIDs[unitID], appType)
 			end
 		end
 	end
@@ -215,6 +214,7 @@ local function RemoveMod(unitID, unitDefID, appDef, applierID)
 end
 
 local function ApplyAppToUnit(unitID, unitDefID, appType, appDef, cmdID, applierID, free)
+	Spring.Echo("ApplyAppToUnit",unitID, unitDefID, appType, appDef, cmdID, applierID, free)
 	if not currentApps[unitID][appType] then currentApps[unitID][appType] = {} end -- create current aps for mods in mechbay
 	if appDef.requires and not currentApps[unitID][appType][appDef.requires] then return false end
 	local level = currentApps[unitID][appType][appDef.name] or 0
@@ -310,6 +310,7 @@ end
 function AddApps(unitID, unitDefID)
 	currentApps[unitID] = {}
 	appUnits[unitID] = {}
+	appUnitDefIDs[unitID] = unitDefID
 	for i, appType in ipairs(desiredOrder) do
 		if validApps[unitDefID][appType] then
 			currentApps[unitID][appType] = {}
@@ -337,7 +338,9 @@ function gadget:UnitCreated(unitID, unitDefID, teamID, builderID)
 			-- install pre-loaded mods
 			local mods = table.unserialize(cp.mods)
 			for i, modName in pairs(mods) do
-				ApplyAppToUnit(unitID, unitDefID, "mods", appDefNames[modName])
+				if appDefNames[modName] then -- only accept existing mod, some are in defs for future implementation
+					ApplyAppToUnit(unitID, unitDefID, "mods", appDefNames[modName])
+				end
 			end
 		else
 		-- outposts handled here, mechs handed in unit_mechCommands.lua
@@ -361,6 +364,7 @@ function gadget:UnitDestroyed(unitID, unitDefID, teamID)
 	end
 	currentApps[unitID] = nil
 	appUnits[unitID] = nil
+	appUnitDefIDs[unitID] = nil
 end
 
 else
