@@ -214,7 +214,6 @@ local function RemoveMod(unitID, unitDefID, appDef, applierID)
 end
 
 local function ApplyAppToUnit(unitID, unitDefID, appType, appDef, cmdID, applierID, free)
-	Spring.Echo("ApplyAppToUnit",unitID, unitDefID, appType, appDef, cmdID, applierID, free)
 	if not currentApps[unitID][appType] then currentApps[unitID][appType] = {} end -- create current aps for mods in mechbay
 	if appDef.requires and not currentApps[unitID][appType][appDef.requires] then return false end
 	local level = currentApps[unitID][appType][appDef.name] or 0
