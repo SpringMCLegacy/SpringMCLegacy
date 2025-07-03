@@ -1636,7 +1636,7 @@ return {
 			end,
 			costFunction = deductSalvage,
 			price = 8,
-			incompatible = {"ammosrmtandem"},
+			incompatible = {"ammosrmtandem", "ammosrmmagpulse"},
 		},
 		{
 			name = "ammosrmtandem",
@@ -1662,7 +1662,26 @@ return {
 			end,
 			costFunction = deductSalvage,
 			price = 5,
-			incompatible = {"ammosrminferno"},
+			incompatible = {"ammosrminferno", "ammosrmmagpulse"},
+		},
+		{
+			name = "ammosrmmagpulse",
+			menu = "ammo",
+			cmdDesc = {
+				id = GetCmdID('MOD_AMMO_SRM_MAG_PULSE'),
+				action = 'modammosrmmagpulse',
+				name = GG.Pad("SRM", "Mag", "Pulse"),
+				tooltip = 'SRMs only. Mag-Pulse Warheads effectively deal the heat and electronic disruption effect of PPC hits, but no damage.',
+				texture = 'bitmaps/ui/perkyellow.png',	
+			},
+			valid = isMechBay,
+			applyTo = function (unitDefID) return hasWeaponClass(unitDefID, "srm") and isFaction(unitDefID, "fw") end,
+			applyPerk = function (unitID, level, invert)
+				GG.EnableAmmo(unitID, not invert, "srm", "magpulse")				
+			end,
+			costFunction = deductSalvage,
+			price = 5,
+			incompatible = {"ammosrmtandem", "ammosrminferno"},
 		},
 		{
 			name = "ammonarcexplosive",
