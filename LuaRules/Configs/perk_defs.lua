@@ -1366,7 +1366,43 @@ return {
 			end,
 			costFunction = deductSalvage,
 			price = 5,
-			incompatible = {"ammoarmourpiercing", "ammocaseless"},
+			incompatible = {"ammoarmourpiercing", "ammocaseless", "ammohypervelocity"},
+		},
+		{
+			name = "ammohypervelocity",
+			menu = "ammo",
+			cmdDesc = {
+				id = GetCmdID('MOD_AMMO_HYPERVELOCITY'),
+				action = 'modammohypervelocity',
+				name = GG.Pad("Autocannon", "Hyper", "Velocity"),
+				tooltip = 'Autocannons only. Increases range of autocannons by 25%, but with 50% reduction in ammunition.',
+				texture = 'bitmaps/ui/perkyellow.png',	
+			},
+			valid = isMechBay,
+			applyTo = function (unitDefID) return hasWeaponClass(unitDefID, "autocannon") and isFaction(unitDefID, "cc") end,
+			applyPerk = function (unitID, level, invert)
+				-- increase range by 25%
+				effect = 1.25
+				effect = (invert and 1/effect) or effect
+				setWeaponClassAttribute(unitID, "autocannon", "range", effect)
+				-- reduce max ammo by 50%
+				effect = 0.5
+				effect = (invert and 1/effect) or effect
+				env = Spring.UnitScript.GetScriptEnv(unitID)
+				local ammoCache = {}
+				for weapNum, wd in pairs(changed) do
+					local ammoType = wd.customParams.ammotype
+					if not ammoCache[ammoType] then -- only once per ammotype
+						ammoCache[ammoType] = true
+						env.maxAmmo[ammoType] = env.maxAmmo[ammoType] * effect
+						env.currAmmo[ammoType] = env.maxAmmo[ammoType]
+						Spring.SetUnitRulesParam(unitID, "ammo_" .. ammoType, 100)
+					end
+				end
+			end,
+			costFunction = deductSalvage,
+			price = 5,
+			incompatible = {"ammoprecision", "ammoarmourpiercing", "ammocaseless"},
 		},
 		{
 			name = "ammoarmourpiercing",
@@ -1405,7 +1441,7 @@ return {
 			end,
 			costFunction = deductSalvage,
 			price = 10,
-			incompatible = {"ammoprecision", "ammocaseless"},
+			incompatible = {"ammoprecision", "ammocaseless", "ammohypervelocity"},
 		},
 		{
 			name = "ammocaseless",
@@ -1438,7 +1474,7 @@ return {
 			end,
 			costFunction = deductSalvage,
 			price = 5,
-			incompatible = {"ammoprecision", "ammoarmourpiercing"},
+			incompatible = {"ammoprecision", "ammoarmourpiercing", "ammohypervelocity"},
 		},
 		{
 			name = "ammolrminferno",
