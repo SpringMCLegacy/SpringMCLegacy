@@ -1339,16 +1339,12 @@ return {
 				id = GetCmdID('MOD_AMMO_PRECISION'),
 				action = 'modammoprecision',
 				name = GG.Pad("Autocannon", "Precision"),
-				tooltip = 'Autocannons only. Increases range and accuracy of autocannons by 25%, but with 50% reduction in ammunition.',
+				tooltip = 'Autocannons only. Increases accuracy of autocannons by 25%, but with 50% reduction in ammunition.',
 				texture = 'bitmaps/ui/perkyellow.png',	
 			},
 			valid = isMechBay,
 			applyTo = function (unitDefID) return hasWeaponClass(unitDefID, "autocannon") and isFaction(unitDefID, "fs") end,
 			applyPerk = function (unitID, level, invert)
-				-- increase range, accuracy by 25%
-				local effect = 1.25
-				effect = (invert and 1/effect) or effect
-				local changed = setWeaponClassAttribute(unitID, "autocannon", "range", effect)
 				-- increase accuracy by 25%, lower is better
 				effect = 0.75
 				effect = (invert and 1/effect) or effect
