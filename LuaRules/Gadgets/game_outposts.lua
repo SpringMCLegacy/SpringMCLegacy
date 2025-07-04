@@ -163,6 +163,8 @@ function gadget:UnitDamaged(unitID, unitDefID, teamID, damage)
 		if lastDamagedFrame < currFrame - MIN_LAST_DAMAGED then
 			lastDamaged[unitID] = currFrame
 			GG.PlaySoundForTeam(teamID, "bb_" .. name .. "_underattack", 1)
+			local x,y,z = Spring.GetUnitPosition(unitID)
+			CallAsTeam(teamID, Spring.MarkerAddPoint, x, y, z, "", true)
 		end
 	end
 end

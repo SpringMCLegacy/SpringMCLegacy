@@ -334,6 +334,8 @@ local function FlagCapChange(flagID, flagTeamID, allyTeamID, teamID, change)
 		and flagCapStatuses[flagID][allyTeamID].cap <  math.floor(0.25 * CAP_THRESHOLD) + 1 then -- dropped to 75%, inform player
 		if change > 0 then
 			GG.PlaySoundForTeam(flagTeamID, "bb_beacon_underattack", 1)
+			local x,y,z = Spring.GetUnitPosition(flagID) -- TODO: use spotNum?
+			CallAsTeam(flagTeamID, Spring.MarkerAddPoint, x, y, z, "", true)
 		end
 	elseif flagCapStatuses[flagID][allyTeamID].cap > CAP_THRESHOLD and teamID ~= flagTeamID then -- capped or neutralised
 		TransferFlag(flagID, flagTeamID, teamID)
