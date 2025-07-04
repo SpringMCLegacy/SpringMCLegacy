@@ -36,7 +36,7 @@ local VTR9B = Victor:New{
 }
 
 local VTR9D = Victor:New{
-	description         = "Assault Generalist",
+	description         = "Assault Vanguard",
 	weapons 		= {	
 		[1] = {
 			name	= "Gauss",
@@ -66,7 +66,7 @@ local VTR9D = Victor:New{
 }
 
 local VTR9K = Victor:New{
-	description         = "Assault Generalist",
+	description         = "Assault Vanguard",
 	weapons 		= {	
 		[1] = {
 			name	= "Gauss",
@@ -155,7 +155,7 @@ local VTR10D = Victor:New{
 }
 
 local VTR10L = Victor:New{
-	description         = "Assault Generalist",
+	description         = "Assault Vanguard",
 	weapons 		= {	
 		[1] = {
 			name	= "Gauss",
@@ -186,7 +186,7 @@ local VTR10L = Victor:New{
 }
 
 local VTR11D = Victor:New{
-	description         = "Assault Generalist",
+	description         = "Assault Vanguard",
 	weapons 		= {	
 		[1] = {
 			name	= "RAC5",

@@ -8,7 +8,7 @@ local Marauder = Heavy:New{
 }
 
 local MAD5D = Marauder:New{
-	description         = "Heavy Generalist",
+	description         = "Heavy Vanguard",
 	weapons = {	
 		[1] = {
 			name	= "LPL",
@@ -43,7 +43,7 @@ local MAD5D = Marauder:New{
 }
 
 local MAD7D = Marauder:New{
-	description         = "Heavy Generalist",
+	description         = "Heavy Vanguard",
 	weapons = {	
 		[1] = {
 			name	= "RAC5",
@@ -107,7 +107,7 @@ local MAD5S = Marauder:New{
 }
 
 local MAD9S = Marauder:New{
-	description         = "Heavy Generalist",
+	description         = "Heavy Vanguard",
 	weapons = {	
 		[1] = {
 			name	= "LBX10",
@@ -176,7 +176,7 @@ local MAD5L = Marauder:New{
 }
 
 local MAD5M = Marauder:New{
-	description         = "Heavy Generalist",
+	description         = "Heavy Vanguard",
 	weapons = {	
 		[1] = {
 			name	= "AC10",
@@ -209,7 +209,7 @@ local MAD5M = Marauder:New{
 }
 
 local MAD9M = Marauder:New{
-	description         = "Heavy Generalist",
+	description         = "Heavy Vanguard",
 	weapons = {	
 		[1] = {
 			name	= "ERLBL",

@@ -8,7 +8,7 @@ local Warhammer = Heavy:New{
 }
 
 local WHM6D = Warhammer:New{
-	description         = "Heavy Generalist",
+	description         = "Heavy Vanguard",
 	weapons = {	
 		[1] = {
 			name	= "PPC",
@@ -40,7 +40,7 @@ local WHM6D = Warhammer:New{
 }
 
 local WHM6K = Warhammer:New{
-	description         = "Heavy Generalist",
+	description         = "Heavy Vanguard",
 	weapons = {	
 		[1] = {
 			name	= "PPC",
@@ -76,7 +76,7 @@ local WHM6K = Warhammer:New{
 }
 
 local WHM7S = Warhammer:New{
-	description         = "Heavy Generalist",
+	description         = "Heavy Vanguard",
 	weapons = {	
 		[1] = {
 			name	= "ERPPC",
@@ -116,7 +116,7 @@ local WHM7S = Warhammer:New{
 }
 
 local WHM7M = Warhammer:New{
-	description         = "Heavy Generalist",
+	description         = "Heavy Vanguard",
 	weapons = {	
 		[1] = {
 			name	= "ERPPC",
@@ -153,7 +153,7 @@ local WHM7M = Warhammer:New{
 }
 
 local WHM4L = Warhammer:New{
-	description         = "Heavy Generalist",
+	description         = "Heavy Vanguard",
 	weapons = {	
 		[1] = {
 			name	= "ERPPC",

@@ -78,7 +78,7 @@ local JM6DG = Jagermech:New{
 }
 
 local JM7D = Jagermech:New{
-	description         = "Heavy Generalist",
+	description         = "Heavy Vanguard",
 	weapons = {	
 		[1] = {
 			name	= "UAC5",
@@ -114,7 +114,7 @@ local JM7D = Jagermech:New{
 }
 
 local JM7F = Jagermech:New{
-	description         = "Heavy Generalist",
+	description         = "Heavy Vanguard",
 	weapons = {	
 		[1] = {
 			name	= "RAC5",

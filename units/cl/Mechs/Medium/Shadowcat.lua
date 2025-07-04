@@ -37,7 +37,7 @@ local Prime = Shadowcat:New{
 }
 
 local A = Shadowcat:New{
-	description         = "Medium Multirole",
+	description         = "Medium Vanguard",
 
 	weapons = {	
 		[1] = {

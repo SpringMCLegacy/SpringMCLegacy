@@ -42,7 +42,7 @@ local RVN3L = Raven:New{
 }
 
 local RVN4L = Raven:New{
-	description         = "Light EWAR Support",
+	description         = "Light EWAR Skirmisher",
 	weapons = {	
 		[1] = {
 			name	= "ERMBL",
@@ -76,7 +76,7 @@ local RVN4L = Raven:New{
 }
 
 local RVN3M = Raven:New{
-	description         = "Light Missile Boat",
+	description         = "Light Missile Scout",
 	weapons	= {	
 		[1] = {
 			name	= "LRM15",

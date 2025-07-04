@@ -37,7 +37,7 @@ local JVN10P = Javelin:New{
 }
 
 local JVN11B = Javelin:New{
-	description         = "Light EWAR Support",
+	description         = "Light EWAR Scout",
 	weapons	= {	
 		[1] = {
 			name	= "SRM4",

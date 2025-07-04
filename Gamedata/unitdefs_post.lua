@@ -32,6 +32,7 @@ local roleSensors = {
 	["brawler"] 		= {radar = 1500,	sector = 70},
 	["multirole"] 		= {radar = 1500,	sector = 55},
 	["generalist"] 		= {radar = 1500,	sector = 55},
+	["vanguard"] 		= {radar = 1500,	sector = 55},
 	["sniper"]			= {radar = 1500,	sector = 45},
 	["missile support"]	= {radar = 1500,	sector = 45},
 	["missile boat"]	= {radar = 1500,	sector = 45},
@@ -49,6 +50,7 @@ local menuRoleAlias = {
 	
 	["multirole"] 		= "flexible",
 	["generalist"] 		= "flexible",
+	["vanguard"] 		= "flexible",
 	
 	["sniper"]			= "ranged",
 	["missile support"]	= "ranged",

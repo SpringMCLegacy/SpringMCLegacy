@@ -68,7 +68,7 @@ local TBT5S = Trebuchet:New{
 }
 
 local TBT9K = Trebuchet:New{
-	description         = "Medium Generalist",
+	description         = "Medium Vanguard",
 	weapons = {	
 		[1] = {
 			name	= "MRM20",

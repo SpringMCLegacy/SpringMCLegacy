@@ -48,7 +48,7 @@ local MAL1R = Mauler:New{
 }
 
 local MAL3R = Mauler:New{
-	description         = "Assault Generalist",
+	description         = "Assault Vanguard",
 	weapons	= {	
 		[1] = {
 			name	= "LBX10",

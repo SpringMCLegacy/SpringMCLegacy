@@ -8,7 +8,7 @@ local Vindicator = Medium:New{
 }
 
 local VND3L = Vindicator:New{
-	description         = "Medium Generalist",
+	description         = "Medium Vanguard",
 	weapons	= {	
 		[1] = {
 			name	= "ERPPC",

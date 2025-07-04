@@ -51,7 +51,7 @@ local SD1OP = Sunder:New{
 }
 
 local SD1OA = Sunder:New{
-	description         = "Assault Generalist",
+	description         = "Assault Vanguard",
 	weapons 		= {	
 		[1] = {
 			name	= "Gauss",

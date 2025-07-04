@@ -11,7 +11,7 @@ local Kitfox = Light:New{
 }
 
 local Prime = Kitfox:New{
-	description         = "Light Multirole",
+	description         = "Light Vanguard",
 	
 	weapons = {	
 		[1] = {

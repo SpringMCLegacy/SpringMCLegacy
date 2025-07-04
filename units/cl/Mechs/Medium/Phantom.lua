@@ -46,7 +46,7 @@ local Prime = Phantom:New{
 }
 
 local A = Phantom:New{
-	description         = "Medium Multirole",
+	description         = "Medium Vanguard",
 	weapons	= {	
 		[1] = {
 			name	= "LRM5",

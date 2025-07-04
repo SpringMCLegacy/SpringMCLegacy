@@ -10,7 +10,7 @@ local Cougar = Light:New{
 }
 	
 local Prime = Cougar:New{
-	description         = "Light Generalist",
+	description         = "Light Vanguard",
 	
 	weapons 		= {	
 		[1] = {

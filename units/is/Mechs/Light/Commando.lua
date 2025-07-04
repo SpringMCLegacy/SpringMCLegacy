@@ -1,35 +1,59 @@
 local Commando = Light:New{
 	name              	= "Commando",
 	
+	leaveTracks			= true,	
+	trackType			= "Commando",
+	trackOffset			= 6,
+	trackWidth			= 20,
+	trackStretch 		= 2,
+	
 	customparams = {
 		cockpitheight	= 7.1,
 		tonnage 		= 25,
     },
 }
 
-local COM3A = Commando:New{
-	description         = "Light Skirmisher",
+local COM1D = Commando:New{
+	description         = "Light Sniper",
+	weapons	= {	
+		[1] = {
+			name	= "LBL",
+		},
+		[2] = {
+			name	= "SRM6",
+		},
+	},
+		
+	customparams = {
+		variant         = "COM-2D",
+		speed			= 90,
+		price			= 5580,
+		heatlimit 		= 10,
+		armor			= 3,
+		maxammo 		= {srm = 1},
+    },
+}
+
+local COM2D = Commando:New{
+	description         = "Light Striker",
 	weapons	= {	
 		[1] = {
 			name	= "SRM6",
 		},
 		[2] = {
-			name	= "SRM6",
+			name	= "SRM4",
 		},
 		[3] = {
 			name	= "MBL",
 		},
-		[4] = {
-			name	= "Flamer",
-		},
 	},
 		
 	customparams = {
-		variant         = "COM-3A",
+		variant         = "COM-2D",
 		speed			= 90,
-		price			= 5400,
+		price			= 5410,
 		heatlimit 		= 10,
-		armor			= 3,
+		armor			= 4,
 		maxammo 		= {srm = 2},
     },
 }
@@ -73,6 +97,7 @@ local COM7S = Commando:New{
 		},
 		[4] = {
 			name	= "MBL",
+			SlaveTo = 3,
 		},
 	},
 		
@@ -88,7 +113,8 @@ local COM7S = Commando:New{
 }
 
 return lowerkeys({
-	--["LA_Commando_COM3A"] = COM3A:New(),
+	["LA_Commando_COM1D"] = COM1D:New(),
+	["LA_Commando_COM2D"] = COM2D:New(),
 	["LA_Commando_COM5S"] = COM5S:New(),
 	["LA_Commando_COM7S"] = COM7S:New(),
 })

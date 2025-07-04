@@ -46,7 +46,7 @@ local AS7D = Atlas:New{
 }
 
 local AS7K = Atlas:New{
-	description         = "Assault Generalist",
+	description         = "Assault Vanguard",
 	weapons 		= {	
 		[1] = {
 			name	= "Gauss",

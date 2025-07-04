@@ -83,7 +83,7 @@ local LCT5M = Locust:New{
 }
 
 local LCT3D = Locust:New{
-	description         = "Light Scout",
+	description         = "Light Missile Scout",
 	weapons	= {	
 		[1] = {
 			name	= "LRM5",

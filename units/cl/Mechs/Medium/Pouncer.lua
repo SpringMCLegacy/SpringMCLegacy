@@ -36,7 +36,7 @@ local Prime = Pouncer:New{
 }
 
 local B = Pouncer:New{
-	description         = "Medium Multirole",
+	description         = "Medium Vanguard",
 	
 	weapons = {	
 		[1] = {
