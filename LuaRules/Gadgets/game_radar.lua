@@ -104,8 +104,10 @@ end
 local narcUnits = {}
 
 local PPC_DURATION = 5 * 30 -- 5 seconds
+local PPC_ACCURACY = 1.75 -- 75% less accuracy, oof!
 local sensorTypes = {"radarJammer"} -- "radar", "seismic", 
 local unitSensorRadii = {} -- unitSensorRadii[unitID] = {radar = a, seismic = b ...}
+local unitWeaponAccuracies = {} -- unitWeaponAccuracys[unitID] = {[1] = a, [2] = b, ...}
 local ppcUnits = {} -- ppcUnits[unitID] = gameframe
 local bapUnits = {} -- bapUnits[unitID] = {gameframe, allyTeam}
 local ecmUnits = {} -- ecmUnits[unitID] = {gameframe, allyTeam}
@@ -130,19 +132,29 @@ local function FinishPPC(unitID)
 		for _, sensorType in pairs(sensorTypes) do
 			Spring.SetUnitSensorRadius(unitID, sensorType, unitSensorRadii[unitID][sensorType])
 		end
+		for weapNum, accuracy in pairs(unitWeaponAccuracies[unitID]) do
+			Spring.SetUnitWeaponState(unitID, weapNum, "accuracy", accuracy)
+		end
 		ppcUnits[unitID] = nil
 		SetUnitRulesParam(unitID, "PPC_HIT", -1, {inlos = true})
 		SetUnitRulesParam(unitID, "FXOFF", GG.stealthActive[unitID] and 1 or 0, {public = true})
+		unitSensorRadii[unitID] = nil
+		unitWeaponAccuracies[unitID] = nil
 	end
 end
 
-local function ApplyPPC(unitID)
+local function ApplyPPC(unitID, unitDefID)
 	if not ppcUnits[unitID] then -- not yet under PPC effects
 		unitSensorRadii[unitID] = {}
 		for _, sensorType in pairs(sensorTypes) do
 			-- perks change radii so can't rely on unitdef values
 			unitSensorRadii[unitID][sensorType] = Spring.GetUnitSensorRadius(unitID, sensorType)
 			Spring.SetUnitSensorRadius(unitID, sensorType, 0) -- ECM disabled altogether
+		end
+		unitWeaponAccuracies[unitID] = {}
+		local unitWeapons = UnitDefs[unitDefID].weapons
+		for weapNum, info in pairs(unitWeapons) do
+			unitWeaponAccuracies[unitID][weapNum] = Spring.GetUnitWeaponState(unitID, weapNum, "accuracy") * PPC_ACCURACY
 		end
 	end
 	local delay = (GetUnitRulesParam(unitID, "insulation") or 1) * PPC_DURATION
@@ -315,7 +327,7 @@ function gadget:UnitPreDamaged(unitID, unitDefID, unitTeam, damage, paralyzer, w
 		elseif specialAmmo == "magpulse" then
 			damage = 0
 			heatDamage = 1
-			ApplyPPC(unitID)
+			ApplyPPC(unitID, unitDefID)
 		elseif specialAmmo == "thunder" then
 			damage = damage * 0.75
 		elseif specialAmmo == "bola" then
@@ -377,7 +389,7 @@ function gadget:UnitPreDamaged(unitID, unitDefID, unitTeam, damage, paralyzer, w
 		end
 		return 0
 	elseif PPC_IDS[weaponID] then
-		ApplyPPC(unitID)
+		ApplyPPC(unitID, unitDefID)
 		if attackerID and projectileID then 
 			--Spring.Echo("Let there be light")
 			local x,y,z = Spring.GetProjectilePosition(projectileID)
