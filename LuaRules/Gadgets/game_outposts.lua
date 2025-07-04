@@ -165,6 +165,7 @@ function gadget:UnitDamaged(unitID, unitDefID, teamID, damage)
 			GG.PlaySoundForTeam(teamID, "bb_" .. name .. "_underattack", 1)
 			local x,y,z = Spring.GetUnitPosition(unitID)
 			CallAsTeam(teamID, Spring.MarkerAddPoint, x, y, z, "", true)
+			GG.Delay.DelayCall(CallAsTeam, {teamID, Spring.MarkerErasePosition, x, y, z}, 30 * 60)
 		end
 	end
 end

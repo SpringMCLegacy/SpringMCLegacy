@@ -404,12 +404,14 @@ function gadget:UnitPreDamaged(unitID, unitDefID, unitTeam, damage, paralyzer, w
 			GG.PlaySoundForTeam(unitTeam, "bb_dropship_damaged", 1)
 			local x,y,z = Spring.GetUnitPosition(unitID)
 			CallAsTeam(unitTteam, Spring.MarkerAddPoint, x, y, z, "", true)
+			GG.Delay.DelayCall(CallAsTeam, {unitTeam, Spring.MarkerErasePosition, x, y, z}, 30 * 60)
 			firstTime75[unitID] = true
 		elseif not firstTime50[unitID] and (health-damage) / maxHealth <= 0.50 and (health-damage) / maxHealth >= 0.475 then
 			--Spring.Echo("YO YO DROPSHIP IS DAMAGED 50%")
 			GG.PlaySoundForTeam(unitTeam, "bb_dropship_damaged", 1) -- for now the same sound, but maybe a more severe warning later
 			local x,y,z = Spring.GetUnitPosition(unitID)
-			CallAsTeam(unitTteam, Spring.MarkerAddPoint, x, y, z, "", true)
+			CallAsTeam(unitTeam, Spring.MarkerAddPoint, x, y, z, "", true)
+			GG.Delay.DelayCall(CallAsTeam, {unitTeam, Spring.MarkerErasePosition, x, y, z}, 30 * 60)
 			firstTime50[unitID] = true
 		end
 	end
