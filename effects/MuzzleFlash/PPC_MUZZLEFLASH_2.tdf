@@ -13,7 +13,7 @@
              sizeGrowth=1.5;
              ttl=15;
              frontOffset=0.05;
-             sideTexture=ppcmuzzle;
+             sideTexture=ppcmuzzle2;
              frontTexture=empty;
          }
    water=1;
