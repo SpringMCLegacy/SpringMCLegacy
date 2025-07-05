@@ -332,7 +332,7 @@ local function FlagCapChange(flagID, flagTeamID, allyTeamID, teamID, change)
 		SetUnitRulesParam(flagID, "secure", 0, {public = true})
 	elseif 	flagCapStatuses[flagID][allyTeamID].cap >= math.floor(0.25 * CAP_THRESHOLD) 
 		and flagCapStatuses[flagID][allyTeamID].cap <  math.floor(0.25 * CAP_THRESHOLD) + 1 then -- dropped to 75%, inform player
-		if change > 0 then
+		if change > 0 and flagTeamID ~= GAIA_TEAM_ID then
 			GG.PlaySoundForTeam(flagTeamID, "bb_beacon_underattack", 1)
 			local x,y,z = Spring.GetUnitPosition(flagID) -- TODO: use spotNum?
 			CallAsTeam(flagTeamID, Spring.MarkerAddPoint, x, y, z, "", true)
