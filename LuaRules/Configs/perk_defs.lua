@@ -43,17 +43,21 @@ local function hasWeaponName(unitDefID, weapName)
 	return false
 end
 
-local function hasWeaponClass(unitDefID, className, tag, with, value) -- projectile, energy, missile
+local function hasWeaponClass(unitDefID, className, tag, with, value, custom) -- projectile, energy, missile
 	local weapons = UnitDefs[unitDefID].weapons
 	for weapNum, weapTable in pairs(weapons) do 
 		local wd = WeaponDefs[weapTable["weaponDef"]]
 		if wd.customParams["weaponclass"] == className then 
 			if not tag then
-				return true 
-			elseif with and wd[tag] and wd[tag] == value then
+				return true
+			elseif tag and wd[tag] and not value then -- has tag, not looking for a value
+				return true
+			elseif tag and custom and wd.customParams[tag] then -- has customParam, not looking for a value
+				return true				
+			elseif with and wd[tag] and wd[tag] == value then -- has tag with specific value
 				--Spring.Echo(UnitDefs[unitDefID].name, "has weapon class", className, "(", wd.name, ") with", tag, "value", value)
 				return true
-			elseif not with and not (wd[tag] == value) then
+			elseif not with and not (wd[tag] == value) then -- has tag WITHOUT specific value
 				--Spring.Echo(UnitDefs[unitDefID].name, "has weapon class", className, "(", wd.name, ") without", tag, "value", value)
 				return true
 			end
@@ -63,7 +67,7 @@ local function hasWeaponClass(unitDefID, className, tag, with, value) -- project
 end	
 
 -- Common apply() functions
-local function setWeaponClassAttribute(unitID, className, attrib, multiplier, tag, with, value)
+local function setWeaponClassAttribute(unitID, className, attrib, multiplier, tag, with, value, custom)
 	if not unitID then return end
 	local weapons = UnitDefs[Spring.GetUnitDefID(unitID)].weapons
 	local changed = {}
@@ -72,6 +76,7 @@ local function setWeaponClassAttribute(unitID, className, attrib, multiplier, ta
 		local wd = WeaponDefs[weapTable["weaponDef"]]
 		if className == "all" or (wd.customParams["weaponclass"] == className) then
 			if not tag
+			or with and custom and wd.customParams[tag] 
 			or with and wd[tag] and wd[tag] == value
 			or not with and not (wd[tag] == value) then
 				if multiplier ~= 1 then
@@ -1283,6 +1288,28 @@ return {
 			end,
 			costFunction = deductSalvage,
 			price = 10,
+		},
+		{
+			name = "ppcinhibitoroverride",
+			menu = "offensive",
+			cmdDesc = {
+				id = GetCmdID('MOD_PPC_INHIBITOROVERRIDE'),
+				action = 'modppcinhibitoroverride',
+				name = GG.Pad("PPC", "Inhibitor", "Override"),
+				tooltip = 'Applies to PPCs with a minimum range only. Allows firing within minimum range, but will also apply PPC effects to the firer.',
+				texture = 'bitmaps/ui/perkbgfaction.png',	
+			},
+			valid = isMechBay,
+			applyTo = function (unitDefID) return (isNotOmni(unitDefID) and hasWeaponClass(unitDefID, "ppc", "minrange", nil, nil, true)) end,
+			applyPerk = function (unitID, level, invert)
+				local changed = setWeaponClassAttribute(unitID, "ppc", "range", 1, "minrange", true, nil, true)
+				env = Spring.UnitScript.GetScriptEnv(unitID)
+				for weapNum in pairs(changed) do
+					env.inhibitors[weapNum] = not invert
+				end
+			end,
+			costFunction = deductSalvage,
+			price = 5,
 		},
 		{
 			name = "quickchargingcapacitors",

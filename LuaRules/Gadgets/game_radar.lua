@@ -156,6 +156,8 @@ local function ApplyPPC(unitID, unitDefID)
 		for weapNum, info in pairs(unitWeapons) do
 			unitWeaponAccuracies[unitID][weapNum] = Spring.GetUnitWeaponState(unitID, weapNum, "accuracy") * PPC_ACCURACY
 		end
+		--local x,y,z = Spring.GetUnitPosition(unitID, true)
+		--Spring.SpawnCEG("PPC", x,y,z)
 	end
 	local delay = (GetUnitRulesParam(unitID, "insulation") or 1) * PPC_DURATION
 	ppcUnits[unitID] = Spring.GetGameFrame() + delay
@@ -163,6 +165,7 @@ local function ApplyPPC(unitID, unitDefID)
 	SetUnitRulesParam(unitID, "FXOFF", 1, {public = true})
 	GG.Delay.DelayCall(FinishPPC, {unitID}, delay)
 end
+GG.ApplyPPC = ApplyPPC -- for inhbitor removal self own
 
 local function GetUnitUnderJammer(unitID)
 	return (GetUnitRulesParam(unitID, "FRIENDLY_ECM") or 0) + FRAME_FUDGE >= GetGameFrame() 

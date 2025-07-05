@@ -40,6 +40,7 @@ ELEVATION_SPEED = info.elevationSpeed -- AES mod
 maxAmmo = {} -- Extended Range LRM mod
 table.copy(info.maxAmmo, maxAmmo) -- need our own local copy or the lus helper one is overriden
 currAmmo = {}  -- Extended Range LRM mod
+inhibitors = {} -- PPC inhibitor mod
 
 local coolRate = baseCoolRate
 local inWater = false
@@ -713,7 +714,12 @@ function script.BlockShot(weaponID, targetID, userTarget)
 		end
 		if distance and distance < minRange then
 			--Spring.Echo("Can't fire weapon " .. weaponID .. " as target is within minimum range")
-			return true 
+			if not inhibitors[weaponID] then
+				return true 
+			else
+				GG.ApplyPPC(unitID, unitDefID)
+				return false
+			end
 		end
 	end
 	local jammable = jammableIDs[weaponID]
