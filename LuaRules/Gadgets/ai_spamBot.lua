@@ -165,8 +165,9 @@ function gadget:GamePreload()
 end
 
 local function Outpost(beaconID, teamID)
-	if not beaconID then -- set as starting beacon if not given
-		beaconID = GG.dropZoneBeaconIDs[teamID]
+	beaconID = beaconID or GG.dropZoneBeaconIDs[teamID]
+	if not beaconID then 
+		return false
 	end
 	local beaconTeam = Spring.GetUnitTeam(beaconID)
 	if not AI_TEAMS[teamID] or beaconTeam ~= teamID then
