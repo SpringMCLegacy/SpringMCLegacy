@@ -154,7 +154,9 @@ local function ApplyPPC(unitID, unitDefID)
 		unitWeaponAccuracies[unitID] = {}
 		local unitWeapons = UnitDefs[unitDefID].weapons
 		for weapNum, info in pairs(unitWeapons) do
-			unitWeaponAccuracies[unitID][weapNum] = Spring.GetUnitWeaponState(unitID, weapNum, "accuracy") * PPC_ACCURACY
+			local currAccuracy = Spring.GetUnitWeaponState(unitID, weapNum, "accuracy")
+			unitWeaponAccuracies[unitID][weapNum] = currAccuracy
+			Spring.SetUnitWeaponState(unitID, weapNum, "accuracy", currAccuracy * PPC_ACCURACY)
 		end
 		--local x,y,z = Spring.GetUnitPosition(unitID, true)
 		--Spring.SpawnCEG("PPC", x,y,z)

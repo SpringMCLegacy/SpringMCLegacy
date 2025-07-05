@@ -29,7 +29,7 @@ local PPC_Class = Weapon:New{
 	},
 	customparams = {
 		heatgenerated		= 5,
-		cegflare			= "ccssfxexpand",--PPC_MUZZLEFLASH",
+		cegflare			= "PPC_MUZZLEFLASH_2",
 		heatdamage			= 1,
 		weaponclass			= "ppc",
 		projectilelups		= {"ppcTail"},

@@ -1,0 +1,25 @@
+[PPC_MUZZLEFLASH_2] //THANKS TO ME
+{
+   [BitmapMuzzleFlame]
+   {
+   class = CBitmapMuzzleFlame;
+
+   [properties]
+         {
+            dir = dir;
+            colorMap= 1.0 1.0 1.0 0.01   1.0 1.0 1.0 0.01   0 0 0 0.01;
+             size=3;
+             length=15;
+             sizeGrowth=1.5;
+             ttl=15;
+             frontOffset=0.05;
+             sideTexture=ppcmuzzle;
+             frontTexture=empty;
+         }
+   water=1;
+   air=1;
+   underwater=1;
+   ground=1;
+   count=1;
+   }
+}
