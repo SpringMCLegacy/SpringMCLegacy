@@ -1236,6 +1236,7 @@ return {
 				local AMOUNT_PER_WEAPON = 5
 				return deductPerWeaponType(unitDefID, "srm", AMOUNT_PER_WEAPON)
 			end,
+			incompatible = {"ammosrmtandem", "ammosrminferno", "ammosrmmagpulse"},
 		},
 		{
 			name = "improvedheavygauss",
@@ -1663,7 +1664,7 @@ return {
 			end,
 			costFunction = deductSalvage,
 			price = 8,
-			incompatible = {"ammosrmtandem", "ammosrmmagpulse"},
+			incompatible = {"ammosrmtandem", "ammosrmmagpulse", "artemissrm"},
 		},
 		{
 			name = "ammosrmtandem",
@@ -1689,7 +1690,7 @@ return {
 			end,
 			costFunction = deductSalvage,
 			price = 5,
-			incompatible = {"ammosrminferno", "ammosrmmagpulse"},
+			incompatible = {"ammosrminferno", "ammosrmmagpulse", "artemissrm"},
 		},
 		{
 			name = "ammosrmmagpulse",
@@ -1708,7 +1709,7 @@ return {
 			end,
 			costFunction = deductSalvage,
 			price = 5,
-			incompatible = {"ammosrmtandem", "ammosrminferno"},
+			incompatible = {"ammosrmtandem", "ammosrminferno", "artemissrm"},
 		},
 		{
 			name = "ammonarcexplosive",
