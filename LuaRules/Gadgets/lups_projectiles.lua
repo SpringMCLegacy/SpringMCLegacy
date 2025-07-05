@@ -136,7 +136,7 @@ function gadget:ProjectileCreated(proID, proOwnerID, weaponID)
 			end
 		elseif wd and wd.customParams.weaponclass == "srm" then
 			if GG.artemisUnits[proOwnerID] and GG.artemisUnits[proOwnerID]["srm"] then
-				ChangeMissile(proID, proOwnerID, WeaponDefNames["srm_guided"])
+				ChangeMissile(proID, proOwnerID, WeaponDefNames["srm_guided"], GG.artemisUnits[proOwnerID] and GG.artemisUnits[proOwnerID]["srm"])
 			end
 		elseif wd and wd.name == "gauss" and proOwnerID and silverBulletUnits[proOwnerID] then
 			local clusterWD = WeaponDefNames["silverbullet"]
