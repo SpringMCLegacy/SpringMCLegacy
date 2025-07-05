@@ -80,6 +80,8 @@ GG.allyJammers = allyJammers
 local allyBAPs = {} -- allyBAPs[allyTeam][unitID] = radius
 GG.allyBAPs = allyBAPs
 
+local jammerCache = {} -- unitID = true
+GG.jammerCache = jammerCache
 local allyTeams = Spring.GetAllyTeamList()
 local numAllyTeams = #allyTeams
 local teamsInAllyTeams = {}
@@ -215,6 +217,7 @@ local function SetUnitECMRadius(unitID, mult, absolute, pieceNum)
 	local allyTeam = Spring.GetUnitAllyTeam(unitID)
 	local newValue = absolute or ((allyJammers[allyTeam][unitID] or 500) * (mult or 1))
 	allyJammers[allyTeam][unitID] = newValue
+	jammerCache[unitID] = true
 	Spring.SetUnitSensorRadius(unitID, "radarJammer", newValue)
 	--GG.ECMBubble(unitID, pieceNum or 1, newValue) -- TODO: disabled as luarules lups does not follow unit visibility
 	Spring.SetUnitRulesParam(unitID, "FXOFF", 0, {public = true})
@@ -509,6 +512,7 @@ function gadget:UnitDestroyed(unitID, unitDefID, teamID)
 	ppcUnits[unitID] = nil
 	bapUnits[unitID] = nil
 	ecmUnits[unitID] = nil
+	jammerCache[unitID] = nil
 	allyTeamMechs[Spring.GetUnitAllyTeam(unitID)][unitID] = nil
 	SetUnitRulesParam(unitID, "FRIENDLY_ECM", 0)
 	-- armour

@@ -729,14 +729,9 @@ function script.BlockShot(weaponID, targetID, userTarget)
 			local jammed = (GetUnitUnderJammer(targetID) -- under the effects of ECM
 				or GG.stealthActive[targetID]) -- OR stealth armour
 				and (not IsUnitNARCed(targetID)) and (not IsUnitTAGed(targetID)) -- AND not TAGed or NARCed
-			
-			local ARAD = weapDef.customParams.weaponclass == "lrm"	 -- an ECM targeted by ARAD missile
-						and GG.unitSpecialAmmos[unitID]["lrm"] == "arad" 
-			if ARAD then
-				if targetDef.jammerRadius > 0 then return false end
-				Spring.SetUnitWeaponState(unitID, weaponID, "accuracy", weapDef.accuracy * 0.5)
-				weaponsToReset[weaponID] = true
-			end
+			local weaponClass = weapDef.customParams.weaponclass
+			local ARAD = GG.unitSpecialAmmos[unitID][weaponClass] == "arad" 
+			if ARAD and targetDef.jammerRadius > 0 then return false end
 			if jammed then
 				--Spring.Echo("Can't fire weapon " .. weaponID .. " as target is jammed")
 				Spring.SetUnitRulesParam(unitID, "MISSILE_TARGET_JAMMED", Spring.GetGameFrame(), {inlos = true})

@@ -1630,7 +1630,7 @@ return {
 			incompatible = {"ammolrmextended", "artemislrm", "ammolrminferno", "ammolrmmagpulse", "ammolrmarad", "ammolrmthunder"},
 		},
 		{
-			name = "ammonarrowhoming",
+			name = "ammoarrowhoming",
 			menu = "ammo",
 			cmdDesc = {
 				id = GetCmdID('MOD_AMMO_ARROW_HOMING'),
@@ -1646,6 +1646,26 @@ return {
 			end,
 			costFunction = deductSalvage,
 			price = 25,
+			incompatible = {"ammoarrowarad"},
+		},
+		{
+			name = "ammoarrowarad",
+			menu = "ammo",
+			cmdDesc = {
+				id = GetCmdID('MOD_AMMO_ARROW_ARAD'),
+				action = 'modammolrmarad',
+				name = GG.Pad("Arrow IV", "Anti", "Radiation"),
+				tooltip = 'Arrow Artillery missile only. Anti-Radiation warheads that can fire at units with ECM, though not at other units inside ECM, but have poorer tracking against non-ECM targets.',
+				texture = 'bitmaps/ui/perkyellow.png',	
+			},
+			valid = isMechBay,
+			applyTo = function (unitDefID) return hasWeaponName(unitDefID, "arrowiv") and isFaction(unitDefID, "fw") end,
+			applyPerk = function (unitID, level, invert)
+				GG.EnableAmmo(unitID, not invert, "arrowiv", "arad")
+			end,
+			costFunction = deductSalvage,
+			price = 10,
+			incompatible = {"ammoarrowhoming"},
 		},
 		{
 			name = "ammosrminferno",

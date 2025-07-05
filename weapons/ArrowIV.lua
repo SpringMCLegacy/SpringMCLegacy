@@ -36,7 +36,7 @@ local ArrowIV = Weapon:New{
 		heatgenerated		= 10,--10/sec
 		cegflare			= "ARROW_MUZZLEFLASH",
 		projectilelups		= {"missileEngineLarge"},
-		weaponclass			= "missile",
+		weaponclass			= "arrowiv",
 		ammotype			= "arrow",
 		shockwave			= true,
     },

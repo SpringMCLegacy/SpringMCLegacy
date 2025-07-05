@@ -62,7 +62,8 @@ local function SetMissileTarget(proID, info)
     and info.ownerID and Spring.ValidUnitID(info.ownerID) and not Spring.GetUnitIsDead(info.ownerID) then -- owner is alive
 		--Spring.Echo("SetMissileTarget", proID, UnitDefs(Spring.GetUnitDefID(info.targetID)].name, UnitDefs[Spring.GetUnitDefID(info.ownerID)].name, info.weaponclass, info.artemisOnly)
 		if ((GG.IsUnitNARCed(info.targetID) or GG.IsUnitTAGed(info.targetID)) and not info.artemisOnly)
-		or (info.artemisOnly and GG.IsTargetArtemised(info.ownerID, info.targetID, info.weaponclass)) then
+		or (info.artemisOnly and GG.IsTargetArtemised(info.ownerID, info.targetID, info.weaponclass)) 
+		or (info.arad) then
 			--Spring.Echo("Target is tagged", info.weaponclass, contTAG[proID] and "continuous lock" or "lock reaquired!")
 			contTAG[proID] = true -- re-establish TAG if lost
 			--Spring.SetProjectileTarget(proID, targetID)
@@ -84,8 +85,11 @@ end
 local function ChangeMissile(proID, proOwnerID, wd, artemisOnly)
 		local targetType, targetID = Spring.GetProjectileTarget(proID)
 		if targetType == string.byte('u') then -- unit target, info is ID
+			local weaponClass = wd.customParams.weaponclass
+			local arad = GG.jammerCache[targetID] and GG.unitSpecialAmmos[proOwnerID][weaponClass] == "arad"
 			if ((GG.IsUnitNARCed(targetID) or GG.IsUnitTAGed(targetID)) and not artemisOnly) 
-			or (artemisOnly and GG.IsTargetArtemised(proOwnerID, targetID, wd.customParams.weaponclass)) then
+			or (artemisOnly and GG.IsTargetArtemised(proOwnerID, targetID, weaponClass)) 
+			or arad then
 				local x,y,z = Spring.GetProjectilePosition(proID)
 				local vx, vy, vz = Spring.GetProjectileVelocity(proID)
 				local _,_,_, _,_,_,tx, ty, tz = Spring.GetUnitPosition(targetID, true, true)
@@ -106,6 +110,7 @@ local function ChangeMissile(proID, proOwnerID, wd, artemisOnly)
 					["ownerID"] = proOwnerID,
 					["weaponclass"] = wd.customParams.weaponclass,
 					["artemisOnly"] = artemisOnly,
+					["arad"] = arad
 				}
 				arrows[newProID] = info
 				SetMissileTarget(newProID, info)
@@ -127,11 +132,14 @@ function gadget:ProjectileCreated(proID, proOwnerID, weaponID)
 	end
 	if proOwnerID and GG.mechCache[Spring.GetUnitDefID(proOwnerID)] then
 		if wd and wd.name == "arrowiv" then
-			if GG.unitSpecialAmmos[proOwnerID]["arrowiv"] == "homing" then
+			if GG.unitSpecialAmmos[proOwnerID]["arrowiv"] == "homing" 
+			or GG.unitSpecialAmmos[proOwnerID]["arrowiv"] == "arad" then
 				ChangeMissile(proID, proOwnerID, WeaponDefNames["arrowiv_guided"])
 			end
 		elseif wd and wd.customParams.weaponclass == "lrm" then
-			if GG.unitSpecialAmmos[proOwnerID]["lrm"] == "homing" or (GG.artemisUnits[proOwnerID] and GG.artemisUnits[proOwnerID]["lrm"]) then
+			if GG.unitSpecialAmmos[proOwnerID]["lrm"] == "homing" 
+			or GG.unitSpecialAmmos[proOwnerID]["lrm"] == "arad"
+			or (GG.artemisUnits[proOwnerID] and GG.artemisUnits[proOwnerID]["lrm"]) then
 				ChangeMissile(proID, proOwnerID, WeaponDefNames["lrm_guided"], GG.artemisUnits[proOwnerID] and GG.artemisUnits[proOwnerID]["lrm"])
 			end
 		elseif wd and wd.customParams.weaponclass == "srm" then
