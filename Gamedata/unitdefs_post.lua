@@ -23,19 +23,19 @@ end
 
 
 local roleSensors = {
-	["scout"] 			= {radar = 1500,	sector = 80},
-	["ewar"] 			= {radar = 1500,	sector = 80},
-	["skirmisher"] 		= {radar = 1500,	sector = 65},
-	["striker"] 		= {radar = 1500,	sector = 70},
-	["juggernaut"] 		= {radar = 1500,	sector = 70},
-	["ambusher"] 		= {radar = 1500,	sector = 70},
-	["brawler"] 		= {radar = 1500,	sector = 70},
-	["multirole"] 		= {radar = 1500,	sector = 55},
-	["generalist"] 		= {radar = 1500,	sector = 55},
-	["vanguard"] 		= {radar = 1500,	sector = 55},
-	["sniper"]			= {radar = 1500,	sector = 45},
-	["missile support"]	= {radar = 1500,	sector = 45},
-	["missile boat"]	= {radar = 1500,	sector = 45},
+	["scout"] 			= {radar = 1200,	sector = 80},
+	["ewar"] 			= {radar = 1200,	sector = 80},
+	["skirmisher"] 		= {radar = 1200,	sector = 65},
+	["striker"] 		= {radar = 1200,	sector = 70},
+	["juggernaut"] 		= {radar = 1200,	sector = 70},
+	["ambusher"] 		= {radar = 1200,	sector = 70},
+	["brawler"] 		= {radar = 1200,	sector = 70},
+	["multirole"] 		= {radar = 1200,	sector = 55},
+	["generalist"] 		= {radar = 1200,	sector = 55},
+	["vanguard"] 		= {radar = 1200,	sector = 55},
+	["sniper"]			= {radar = 1200,	sector = 45},
+	["missile support"]	= {radar = 1200,	sector = 45},
+	["missile boat"]	= {radar = 1200,	sector = 45},
 }
 
 local menuRoleAlias = {
@@ -59,11 +59,11 @@ local menuRoleAlias = {
 
 local function GetSpeedColoured(speed)
 	local speedString = "\nSpeed: "
-	if speed < 60 then -- red
+	if speed < 50 then -- red
 		speedString = speedString .. "\255\255\001\001"
-	elseif speed < 80 then -- orange
+	elseif speed < 70 then -- orange
 		speedString = speedString .. "\255\255\128\001"
-	elseif speed < 110 then -- yellow
+	elseif speed < 90 then -- yellow
 		speedString = speedString .. "\255\255\255\001"
 	else -- green
 		speedString = speedString .. "\255\001\255\001"
@@ -254,7 +254,7 @@ for name, ud in pairs(UnitDefs) do
 		if cp.maxammo then
 			for ammoType, tons in pairs(cp.maxammo) do
 				if ammoPerTon[ammoType] then
-					cp.maxammo[ammoType] = tons * ammoPerTon[ammoType] / (modOptions.reloadmult or 1)
+					cp.maxammo[ammoType] = tons * ammoPerTon[ammoType] * (modOptions.ammomult or 1)
 				else
 					Spring.Echo("ERROR: unitdefs_post.lua; unknown ammoType (" .. ammoType .. ") for " .. ud.name)
 				end

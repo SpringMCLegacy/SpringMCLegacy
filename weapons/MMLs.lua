@@ -9,19 +9,20 @@ local MML_Class = Weapon:New{
 	collideFriendly			= true,
 	noSelfDamage            = true,
 	turret                  = true,
-	range                   = 2700,
+	range                   = 1620,--2700*0.6
 	accuracy                = 500,
 	sprayangle				= 1000,
 	wobble					= 1000,
-	dance 					= 100,
+	dance 					= 150,
 	trajectoryHeight		= 0.5,
 	tracks					= true,
 	turnRate				= 2000,
 	flightTime				= 10,
 	weaponTimer				= 20,
 	areaOfEffect            = 20,
-	startVelocity			= 1000,
-	weaponVelocity          = 1000,
+	startVelocity			= 200,
+	weaponVelocity          = 800,
+	weaponAcceleration 		= 500,
 	reloadtime              = 10,
 	burstrate				= 0.1,
 	model					= "Weapons/Missile.s3o",
@@ -36,6 +37,25 @@ local MML_Class = Weapon:New{
 		projectilelups		= {"missileEngine"},
 		weaponclass			= "missile",
 		ammotype			= "mml",
+    },
+}
+
+local MML_Short = MML_Class:New{
+	range                   = 540,--900*0.6
+	trajectoryHeight		= 0,
+	damage = {
+		default = 200,--20 DPS
+	},
+}
+
+local MML_Long = MML_Class:New{
+	range                   = 1620,--2700*0.6
+	trajectoryHeight		= 1,
+	damage = {
+		default = 100,--10 DPS
+	},
+	customparams = {
+		minrange              = 540,--900*0.6
     },
 }
 
@@ -76,4 +96,6 @@ return lowerkeys({
 	MML5 = MML5,
 	MML7 = MML7,
 	MML9 = MML9,
+	MML_Short = MML_Short,
+	MML_Long = MML_Long,
 })

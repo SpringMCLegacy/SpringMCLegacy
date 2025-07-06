@@ -86,7 +86,7 @@ local maxAlpha = 0.45
 local losAlpha = 0.15
 
 local modOptions = Spring.GetModOptions()
-local RADAR = (modOptions and modOptions.sectorrange or 1500)
+local RADAR = (modOptions and modOptions.sectorrange or 1000)
 local LOS = (modOptions and modOptions.mechsight or 400)
 
 

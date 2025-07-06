@@ -24,7 +24,7 @@ local PulseLaser_Class = Weapon:New{
 local SPL = PulseLaser_Class:New{
 	name                    = "SPulseLaser",
 	soundStart           	= [[SPL_Fire]],
-	range                   = 300,
+	range                   = 300,--unchanged
 	--accuracy                = 10,
 	reloadtime              = 0.1,
 	laserFlareSize			= 0.075,
@@ -43,7 +43,7 @@ local SPL = PulseLaser_Class:New{
 
 local CSPL = SPL:New{
 	name                    = "CSPulseLaser",
-	range                   = 600,
+	range                   = 450,--600,
 }
 
 local MicroSPL = SPL:New{
@@ -58,7 +58,7 @@ local MicroSPL = SPL:New{
 local MPL = PulseLaser_Class:New{
 	name                    = "MPulseLaser",
 	soundStart           	= [[MPL_Fire]],
-	range                   = 600,
+	range                   = 450,--600,
 	--accuracy                = 25,
 	reloadtime              = 0.1,
 	thickness				= 1.5,
@@ -76,7 +76,7 @@ local MPL = PulseLaser_Class:New{
 
 local CMPL = MPL:New{
 	name                    = "CMPulseLaser",
-	range                   = 1200,
+	range                   = 720,--1200*0.6
 	damage = {
 		default = 14,--42.4, --x 5 (burst) x 3.3 shots per 10 seconds = 700 damage
 	},
@@ -85,7 +85,7 @@ local CMPL = MPL:New{
 local LPL = PulseLaser_Class:New{
 	name                    = "LPulseLaser",
 	soundStart           	= [[LPL_Fire]],
-	range                   = 1000,
+	range                   = 600,--1000*0.6
 	--accuracy                = 50,
 	areaOfEffect            = 10,
 	reloadtime              = 0.1,
@@ -104,7 +104,7 @@ local LPL = PulseLaser_Class:New{
 
 local CLPL = LPL:New{
 	name                    = "CLPulseLaser",
-	range                   = 2000,
+	range                   = 1200,--2000*0.6
 	damage = {
 		default = 20,--77, --x 5 (burst) x 2.6 shots per 10 seconds = 1000 damage
 	},

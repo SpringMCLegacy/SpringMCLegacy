@@ -8,7 +8,7 @@ local LRM_Class = Weapon:New{
 	collideFriendly			= true,
 	noSelfDamage            = true,
 	turret                  = true,
-	range                   = 2100,--2100*0.6
+	range                   = 1260,--2100*0.6
 	accuracy                = 2000,
 	sprayangle				= 100,
 	wobble					= 10,
@@ -34,7 +34,7 @@ local LRM_Class = Weapon:New{
 		projectilelups		= {"missileEngine"},
 		weaponclass			= "lrm",
 		ammotype			= "lrm",
-		minrange			= 600,--600*0.6
+		minrange			= 360,--600*0.6
     },
 }
 

@@ -8,7 +8,7 @@ local PPC_Class = Weapon:New{
 	collideFriendly			= true,
 	noSelfDamage            = true,
 	turret                  = true,
-	range                   = 1800,
+	range                   = 1080,--1800*0.6
 	accuracy                = 400,
 	targetMoveError			= 0.05,
 	movingAccuracy			= 600,
@@ -47,14 +47,14 @@ local PPC_fx = Weapon:New{
 local PPC = PPC_Class:New{
 	name                    = "PPC",
 	customparams = {
-		minrange			= 300,
+		minrange			= 200,
     },
 }
 
 local ERPPC = PPC_Class:New{
 	name                    = "ERPPC",
 	accuracy                = 300,
-	range                   = 2300,
+	range                   = 1380,--2300*0.6
 	customparams = {
 		heatgenerated		= 7.5,
 		minrange			= 200,
@@ -70,7 +70,7 @@ local HeavyPPC = PPC_Class:New{
 	},
 	customparams = {
 		heatgenerated		= 7.5,
-		minrange			= 300,
+		minrange			= 200,
     },
 }
 
@@ -83,13 +83,13 @@ local LightPPC = PPC_Class:New{
 	},
 	customparams = {
 		heatgenerated		= 2.5,
-		minrange			= 300,
+		minrange			= 200,
     },
 }
 
 local SnubNosePPC = PPC_Class:New{
 	name                    = "Snub-Nose PPC",
-	range					= 1200,
+	range					= 720,--1200*0.6
 	accuracy                = 200,
 	targetMoveError			= 0.02,
 	movingAccuracy			= 300,
@@ -101,7 +101,7 @@ local SnubNosePPC = PPC_Class:New{
 local CERPPC = PPC_Class:New{
 	name                    = "CERPPC",
 	heightBoostFactor		= 0,
-	range                   = 2300,
+	range                   = 1380,--2300*0.6
 	DynDamageExp			= 1,
 	DynDamageMin			= 450,--1/2
 	damage = {

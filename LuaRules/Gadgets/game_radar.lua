@@ -34,7 +34,7 @@ local SetUnitLosState 	= Spring.SetUnitLosState
 -- Constants
 
 local FRAME_FUDGE = 16
-local SECTOR_RADIUS = modOptions and modOptions.sectorrange or 1500
+local SECTOR_RADIUS = 1000
 local BEACON_ID = UnitDefNames["beacon"].id
 local BEACON_POINT_ID = UnitDefNames["beacon_point"].id
 local NARC_ID = WeaponDefNames["narc"].id

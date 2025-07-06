@@ -22,7 +22,7 @@ local LBX_Class = Weapon:New{
 	collisionSize			= 100,
 	weaponVelocity          = 2000,
 	size					= 0.8,
-	range					= 500,
+	range					= 400,--500,
 	rgbcolor				= "1.0 0.6 0", -- slightly more orange for visual differentiation
 	soundHit              	= "AC2_Hit", -- TODO: Need a distinct sound really
 	sprayAngle				= 300, -- 800
@@ -41,7 +41,7 @@ local AC2 = AC_Class:New{
 	explosionGenerator    	= "custom:HE_XSMALL",
 	soundHit              	= "AC2_Hit",
 	soundStart            	= "AC2_Fire",
-	range                   = 2400,
+	range                   = 1440,--2400,
 	accuracy                = 300,
 	impactOnly				= true,
 	weaponVelocity          = 4000,
@@ -59,7 +59,7 @@ local AC2 = AC_Class:New{
 
 local RAC2 = AC2:New{
 	name                    = "Rotary AC/2",
-	range                   = 1800,
+	range                   = 1080,--1800,
 	sprayangle				= 75,
 	weaponVelocity          = 2000,
 	burst					= 6,
@@ -74,14 +74,14 @@ local RAC2 = AC2:New{
 
 local UAC2 = AC2:New{
 	name                    = "Ultra AC/2",
-	range					= 2500,
+	range					= 1500,--2500,
 	reloadtime              = 0.25,
 }
 
 local LBX2 = AC2:New{
 	name                    = "LBX/2",
 	soundStart            	= "AC2_Fire",
-	range                   = 2700,
+	range                   = 1620,--2700,
 	--accuracy                = 100,
 	reloadtime              = 2,
 	
@@ -93,7 +93,7 @@ local LBX2 = AC2:New{
 
 local LBX2_Cluster = LBX2:New(LBX_Class):New{
 	--sprayAngle				= 700,
-	range 					= 700,
+	range 					= 400,
 	projectiles				= 2,
 	dynDamageMin			= 100,
 	
@@ -127,7 +127,7 @@ local AC5 = AC_Class:New{
 	explosionGenerator    	= "custom:HE_SMALL",
 	soundHit              	= "AC5_Hit",
 	soundStart            	= "AC5_Fire",
-	range                   = 1800,
+	range                   = 1080,--1800,
 	accuracy                = 400,
 	impactOnly				= true,
 	weaponVelocity          = 2000,
@@ -162,7 +162,7 @@ local AC5_AA = AC5:New{
 
 local RAC5 = AC5:New{
 	name                    = "Rotary AC/5",
-	range                   = 1500,
+	range                   = 900,--1500,
 	--accuracy                = 550,
 	sprayangle				= 250,
 	weaponVelocity          = 1750,
@@ -179,7 +179,7 @@ local RAC5 = AC5:New{
 
 local UAC5 = AC5:New{
 	name                    = "Ultra AC/5",
-	range                   = 2000,
+	range                   = 1200,--2000,
 	--accuracy                = 100,
 	reloadtime              = 1,
 	customparams = {
@@ -190,7 +190,7 @@ local UAC5 = AC5:New{
 local LBX5 = AC5:New{
 	name                    = "LBX/5",
 	soundStart            	= "LBX5_Fire",
-	range                   = 1400,
+	range                   = 840,--1400,
 	--accuracy                = 100,
 	reloadtime              = 2,
 	
@@ -202,7 +202,7 @@ local LBX5 = AC5:New{
 
 local LBX5_Cluster = LBX5:New(LBX_Class):New{
 	--sprayAngle				= 700,
-	range 					= 700,
+	range 					= 400,
 	projectiles				= 5,
 	dynDamageMin			= 100,
 	
@@ -217,7 +217,7 @@ local AC10 = AC_Class:New{
 	explosionGenerator    	= "custom:HE_MEDIUM",
 	soundHit              	= "AC10_Hit",
 	soundStart            	= "AC10_Fire",
-	range                   = 1500,
+	range                   = 900,--1500,
 	accuracy                = 500,
 	areaOfEffect            = 25,
 	weaponVelocity          = 2000,
@@ -236,14 +236,14 @@ local AC10 = AC_Class:New{
 
 local UAC10 = AC10:New{
 	name                    = "Ultra AC/10",
-	range					= 1800,
+	range					= 1080,--1800,
 	reloadtime              = 2,
 }
 
 local LBX10 = AC10:New{
 	name                    = "LBX/10",
 	soundStart            	= "LBX10_Fire",
-	range                   = 1200,
+	range                   = 780,--1200,
 	--accuracy                = 200,
 	reloadtime              = 4,
 
@@ -255,7 +255,7 @@ local LBX10 = AC10:New{
 
 local LBX10_Cluster = LBX10:New(LBX_Class):New{
 	--sprayAngle				= 600,
-	range					= 600,
+	range					= 400,
 	projectiles				= 10,
 	dynDamageMin			= 100,
 	
@@ -270,7 +270,7 @@ local AC20 = AC_Class:New{
 	explosionGenerator    	= "custom:HE_LARGE",
 	soundHit             	= "AC20_Hit",
 	soundStart           	= "AC20_Fire",
-	range                   = 900,
+	range                   = 540,--900,
 	accuracy                = 600,
 	areaOfEffect            = 50,
 	weaponVelocity          = 2000,
@@ -291,20 +291,20 @@ local AC20 = AC_Class:New{
 
 local UAC20 = AC20:New{
 	name                    = "Ultra AC/20",
-	range                   = 1000,
+	range                   = 600,--1000,
 	reloadtime              = 2.5,
 }
 
 local AirAC20 = AC20:New{
 	name                    = "AC/20",
-	range                   = 1500,
+	range                   = 900,--1500,
 	reloadtime              = 3.5,
 }
 
 local LBX20 = AC20:New{
 	name                    = "LBX/20",
 	soundStart            	= "LBX20_Fire",
-	range                   = 800,
+	range                   = 480,--800,
 	--accuracy                = 150,
 	reloadtime              = 5,
 	customparams = {

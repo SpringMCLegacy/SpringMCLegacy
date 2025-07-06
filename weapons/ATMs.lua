@@ -9,7 +9,7 @@ local ATM_Class = Weapon:New{
 	collideFriendly			= true,
 	noSelfDamage            = true,
 	turret                  = true,
-	range                   = 2700,--2700*0.6
+	range                   = 1620,--2700*0.6
 	accuracy                = 2000,
 	sprayangle				= 1000,
 	wobble					= 1000,
@@ -42,7 +42,7 @@ local ATM_Class = Weapon:New{
 }
 
 local ATM_Short = ATM_Class:New{
-	range                   = 600,
+	range                   = 480,--800*0.6
 	trajectoryHeight		= 0,
 	damage = {
 		default = 300,--30 DPS
@@ -50,24 +50,24 @@ local ATM_Short = ATM_Class:New{
 }
 
 local ATM_Mid = ATM_Class:New{
-	range                   = 1500,
+	range                   = 900,--1500*.6
 	trajectoryHeight		= 0.5,
 	damage = {
 		default = 200,--30 DPS
 	},
 	customparams = {
-		minrange			= 600,
+		minrange			= 480,--800*0.6
     },
 }
 
 local ATM_Long = ATM_Class:New{
-	range                   = 2700,
+	range                   = 1620,--2700*0.6
 	trajectoryHeight		= 1,
 	damage = {
 		default = 100,--30 DPS
 	},
 	customparams = {
-		minrange			= 1500,
+		minrange			= 900,--1500*.6
     },
 }
 

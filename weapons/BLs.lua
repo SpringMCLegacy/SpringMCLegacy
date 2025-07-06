@@ -21,7 +21,7 @@ local BeamLaser_Class = Weapon:New{
 }
 
 local Sight = BeamLaser_Class:New{
-	range = 1500, -- set to radar range
+	range = 1000, -- set to radar range
 	commandFire = true, -- don't let the wepaon auto generate targets
 	avoidFriendly = false, -- don't let friendly mechs block LOS calcs
 	collideFriendly = false,
@@ -45,7 +45,7 @@ local TAG = BeamLaser_Class:New{
 	explosionGenerator    	= "custom:Nothing",
 	soundStart           	= [[TAG_Fire]],
 	canAttackGround			= false,
-	range                   = 1500,
+	range                   = 900,--1500,
 	accuracy                = 50,
 	reloadtime              = 0.1,
 	thickness				= 0.75,
@@ -69,7 +69,7 @@ local TAG = BeamLaser_Class:New{
 local SBL = BeamLaser_Class:New{
 	name                    = "SLaser",
 	soundStart           	= [[SBL_Fire]],
-	range                   = 600,
+	range                   = 360,--600,
 	--accuracy                = 150,	
 	reloadtime              = 2.5,
 	thickness				= 1,
@@ -89,7 +89,7 @@ local SBL = BeamLaser_Class:New{
 
 local ERSBL = SBL:New{
 	name                    = "ERSLaser",
-	range                   = 800,
+	range                   = 480,--800,
 	customparams = {
 		heatgenerated		= 0.5,--0.2/sec
     },
@@ -97,7 +97,7 @@ local ERSBL = SBL:New{
 
 local CERSBL = ERSBL:New{
 	name                    = "CERSLaser",
-	range                   = 900,
+	range                   = 540,--900,
 	damage = {
 		default = 12.5--x 10 (burst) x 4 times per 10 seconds = 500 damage
 	},
@@ -106,7 +106,7 @@ local CERSBL = ERSBL:New{
 local MBL = BeamLaser_Class:New{
 	name                    = "MLaser",
 	soundStart           	= [[MBL_Fire]],
-	range                   = 900,
+	range                   = 540,--900,
 	accuracy                = 400,
 	reloadtime              = 3.3,
 	thickness				= 1.5,
@@ -126,7 +126,7 @@ local MBL = BeamLaser_Class:New{
 
 local ERMBL = MBL:New{
 	name                    = "ERMLaser",
-	range                   = 1200,
+	range                   = 720,--1200,
 	customparams = {
 		heatgenerated		= 1,--0.5/sec
     },
@@ -134,7 +134,7 @@ local ERMBL = MBL:New{
 
 local CERMBL = ERMBL:New{
 	name                    = "CERMLaser",
-	range                   = 1500,
+	range                   = 900,--1500,
 	damage = {
 		default = 23.3,-- x 10 (burst) x 3 shots per second = 700 damage
 	},
@@ -143,7 +143,7 @@ local CERMBL = ERMBL:New{
 local LBL = BeamLaser_Class:New{
 	name                    = "LLaser",
 	soundStart           	= [[LBL_Fire]],
-	range                   = 1500,
+	range                   = 900,--1500,
 	accuracy                = 350,
 	reloadtime              = 5,
 	thickness				= 2,
@@ -163,7 +163,7 @@ local LBL = BeamLaser_Class:New{
 
 local ERLBL = LBL:New{
 	name                    = "ERLLaser",
-	range                   = 1900,
+	range                   = 1140,--1900,
 	customparams = {
 		heatgenerated		= 6,--1.2/sec
     },
@@ -171,7 +171,7 @@ local ERLBL = LBL:New{
 
 local CERLBL = ERLBL:New{
 	name                    = "CERLLaser",
-	range                   = 2500,
+	range                   = 1500,--2500,
 	damage = {
 		default = 37,--33.3, --x 15 (burst) x 2 shots per 10 seconds = 1000 damage
 	},
@@ -183,7 +183,7 @@ local HLBL = BeamLaser_Class:New{
 	beamBurst 				= false,
 	largeBeamLaser			= true,
 	sweepFire 				= true,
-	range                   = 1500,
+	range                   = 900,--1500,
 	accuracy                = 350,
 	reloadtime              = 5,
 	thickness				= 2,
