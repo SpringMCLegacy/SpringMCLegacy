@@ -594,6 +594,7 @@ function script.StopMoving()
 	Spring.SetUnitRulesParam(unitID, "running", 0)
 	StartThread(anim_Reset)
 	moving = false
+	running = false
 end
 
 function script.Create()
