@@ -8,7 +8,7 @@ local LRM_Class = Weapon:New{
 	collideFriendly			= true,
 	noSelfDamage            = true,
 	turret                  = true,
-	range                   = 2100,
+	range                   = 2100,--2100*0.6
 	accuracy                = 2000,
 	sprayangle				= 100,
 	wobble					= 10,
@@ -19,8 +19,8 @@ local LRM_Class = Weapon:New{
 	flightTime				= 10,
 	weaponTimer				= 20,
 	areaOfEffect            = 20,
-	startVelocity			= 80,
-	weaponVelocity          = 1200,
+	startVelocity			= 100,
+	weaponVelocity          = 800,
 	weaponAcceleration 		= 500,
 	reloadtime              = 10,
 	burstrate				= 0.1,
@@ -34,12 +34,13 @@ local LRM_Class = Weapon:New{
 		projectilelups		= {"missileEngine"},
 		weaponclass			= "lrm",
 		ammotype			= "lrm",
-		minrange			= 600,
+		minrange			= 600,--600*0.6
     },
 }
 
 local LRM_Guided = LRM_Class:New{
-	turnRate				= 40000,
+	turnRate				= 2000,
+	dance 					= 125,
 }
 
 local LRM5 = LRM_Class:New{
