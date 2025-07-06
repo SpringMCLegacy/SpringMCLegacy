@@ -1,25 +1,25 @@
 return {
-	ammoTypes = {
-		LRM			= 96,--24/ton
-		SRM			= 100,--50/ton
-		InfSRM		= 2,--1/ton
-		ATM			= 80,--20/ton
-		MRM			= 96,--24/ton
-		Arrow		= 6,--5/ton
-		Narc		= 12,--6/ton
-		MML			= 132,--33-40/ton
+	ammoTypes = { -- BT shots/ton * 10 / MCL reloadtime =
+		LRM			= 120,
+		SRM			= 100,
+		InfSRM		= 2,
+		ATM			= 60,
+		MRM			= 240,
+		Arrow		= 5,
+		Narc		= 12,
+		MML			= 120,
 
-		AC2			= 180,--45/ton
-		AC5			= 80,--20/ton
-		AC10 		= 25,--10/ton
-		AC20		= 10,--5/ton
-		Thumper		= 20,--15/ton ???
-		Sniper		= 10,--10/ton ???
-		LongTom		= 5,--5/ton ???
+		AC2			= 180,
+		AC5			= 80,
+		AC10 		= 25,
+		AC20		= 10,
+		Thumper		= 20,
+		Sniper		= 10,
+		LongTom		= 5,
 
-		Gauss		= 13,--8/ton
-		LtGauss		= 40,--16/ton
-		HvGauss		= 4,--4/ton
+		Gauss		= 13,
+		LtGauss		= 40,
+		HvGauss		= 5,
 	
 		Bomb		= 1,
 	},
