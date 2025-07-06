@@ -511,19 +511,19 @@ function Run(activate)
 	if lostLegs > 0 then
 		return -- do not allow running at all if you have a damaged leg
 	end
-	if not activate then
+	if not activate then -- not running, return to normal
 		speedMod = 1
 		Spring.SetUnitRulesParam(unitID, "running", 0)
-	else
+	else -- running
 		Spring.SetUnitRulesParam(unitID, "running", 1)
 		if mascActive then
 			speedMod = 2
 		else
 			speedMod = 1.5
 		end
-	end
-	if superCharger then -- supercharger stacks
-		speedMod = speedMod * 1.5
+		if superCharger then -- supercharger stacks so separate if
+			speedMod = speedMod * 1.5
+		end
 	end
 	speedMod = speedMod * (GG.modOptions and GG.modOptions.speed or 1.0) -- respect modoption
 	running = activate
