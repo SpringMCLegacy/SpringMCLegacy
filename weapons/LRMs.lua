@@ -15,11 +15,11 @@ local LRM_Class = Weapon:New{
 	dance 					= 200,
 	trajectoryHeight		= 1,
 	tracks					= true,
-	turnRate				= 2000,
+	turnRate				= 3000,
 	flightTime				= 10,
-	weaponTimer				= 20,
+	--weaponTimer				= 20,
 	areaOfEffect            = 20,
-	startVelocity			= 100,
+	startVelocity			= 400,
 	weaponVelocity          = 800,
 	weaponAcceleration 		= 500,
 	reloadtime              = 10,
@@ -39,7 +39,7 @@ local LRM_Class = Weapon:New{
 }
 
 local LRM_Guided = LRM_Class:New{
-	turnRate				= 2000,
+	turnRate				= 10000,
 	dance 					= 125,
 }
 
