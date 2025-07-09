@@ -203,7 +203,8 @@ local function DropZoneUpgrade(teamID)
 		local newDefID = UnitDefNames[side .. "_dropship_" .. dropZoneLevels[newTier]].id
 		teamDropZoneLevels[teamID] = {def = newDefID, tier = newTier}
 		local maxTonnage = math.floor(UnitDefs[newDefID].customParams.maxtonnage * tonnageMult)
-		local tonnageIncrease = maxTonnage - math.floor(UnitDefs[oldDefID].customParams.maxtonnage * tonnageMult)
+		local _, currMaxTonnage = Spring.GetTeamResources(teamID, "energy")
+		local tonnageIncrease = maxTonnage - currMaxTonnage --math.floor(UnitDefs[oldDefID].customParams.maxtonnage * tonnageMult)
 		Spring.SetTeamResource(teamID, "es", maxTonnage)
 		Spring.AddTeamResource(teamID, "e", tonnageIncrease)
 		-- first upgrade unlocks heavy and assault mechs
@@ -214,9 +215,11 @@ local function DropZoneUpgrade(teamID)
 end
 GG.DropZoneUpgrade = DropZoneUpgrade
 
-local L = {"L"}
-local C = {"C"}
-local T = {"T"}
+
+
+local L = {"\255\255\255\255L"}
+local C = {"\255\160\160\160C"}
+local T = {"\255\255\255\001T"}
 
 local function CheckBuildOptions(unitID, teamID, cmdID)
 	local money = GetTeamResources(teamID, "metal")
@@ -237,15 +240,15 @@ local function CheckBuildOptions(unitID, teamID, cmdID)
 				tCost = 0
 			end
 			if buildDefID < 0 
-			and (currParam == "C" or currParam == "" or currParam == "L")
+			and (currParam == C[1] or currParam == "" or currParam == L[1])
 			and (GG.TeamSlotsRemaining(teamID) - (orderSizes[unitID] or 0))	< 1 then -- builder order but no team slots left
 				EditUnitCmdDesc(unitID, cmdDescID, {disabled = true, params = L})
-			elseif cCost > money and (currParam == "" or currParam == "C") then
+			elseif cCost > money and (currParam == "" or currParam == C[1]) then
 				EditUnitCmdDesc(unitID, cmdDescID, {disabled = true, params = C})
-			elseif tCost > weightLeft and (currParam == "" or currParam == "T") then
+			elseif tCost > weightLeft and (currParam == "" or currParam == T[1]) then
 				EditUnitCmdDesc(unitID, cmdDescID, {disabled = true, params = T})
 			else
-				if cmdDesc.disabled and (currParam == "C" or currParam == "T" or currParam == "L") then
+				if cmdDesc.disabled and (currParam == C[1] or currParam == T[1] or currParam == L[1]) then
 					EditUnitCmdDesc(unitID, cmdDescID, {disabled = false, params = EMPTY_TABLE})
 				end
 			end
