@@ -69,6 +69,27 @@ end
 local turrets = {}
 local mantlets = {}
 
+-- Sniper pieces
+local barrel_1, breach, hydraulic = piece ("barrel_1", "breach", "hydraulic")
+
+local legs = {}
+for i = 1, 4 do
+	legs[i] = piece("leg" .. i)
+end
+
+local screws = {}
+for i = 1, 4 do
+	screws[i] = piece("screw" .. i)
+end
+
+local screwheads = {}
+for i = 1, 4 do
+	screwheads[i] = piece("screwhead" .. i)
+end
+
+-- Tactical Missile Launcher pieces
+local launcher, launchdoor1, launchdoor2, gantry, gantryarm1, gantryarm2, projectile = piece ("launcher", "launchdoor1", "launchdoor2", "gantry", "gantryarm1", "gantryarm2", "projectile")
+
 for i = 1,#unitDef.weapons do
 	turrets[i] = piece("turret_" .. i)
 	mantlets[i] = piece("mantlet_" .. i)
@@ -125,6 +146,52 @@ function TAG()
 	Spring.SetUnitRulesParam(unitID, "weapon_2", "active")
 end
 
+function Artillery()
+	for i = 1,4 do
+		Turn(legs[i], z_axis, 0, CRATE_SPEED * 4)
+	end
+	WaitForTurn(legs[4], z_axis)
+	Sleep(200)
+	for i = 1,4 do
+		Spin(screwheads[i], y_axis, math.rad(200), math.rad(25))
+	end
+	for i = 1,4 do	
+		Move(screws[i], y_axis, -10, CRATE_SPEED * 12)
+	end
+	PlaySound("Drill")
+	Sleep(2500)
+	for i = 1,4 do
+		StopSpin(screwheads[i], y_axis, math.rad(100))
+	end
+	Sleep(500)
+	Move(barrel_1, z_axis, 0, CRATE_SPEED * 30)
+	WaitForMove(barrel_1, z_axis)
+	noFiring = false
+	Spring.SetUnitRulesParam(unitID, "weapon_1", "active")
+end
+
+function MissileLauncher()
+	for i = 1,4 do
+		Turn(legs[i], z_axis, 0, CRATE_SPEED * 4)
+	end
+	WaitForTurn(legs[4], z_axis)
+	Sleep(200)
+	for i = 1,4 do
+		Spin(screwheads[i], y_axis, math.rad(200), math.rad(25))
+	end
+	for i = 1,4 do	
+		Move(screws[i], y_axis, -10, CRATE_SPEED * 12)
+	end
+	PlaySound("Drill")
+	Sleep(2500)
+	for i = 1,4 do
+		StopSpin(screwheads[i], y_axis, math.rad(100))
+	end
+	Sleep(500)
+	noFiring = false
+	Spring.SetUnitRulesParam(unitID, "weapon_1", "active")
+end
+
 -- Garrison weapons
 function script.AimWeapon(weaponID, heading, pitch)
 	if noFiring then return false end
@@ -132,10 +199,14 @@ function script.AimWeapon(weaponID, heading, pitch)
 	SetSignalMask(2 ^ weaponID)
 
 	if turrets[weaponID] then
-		Turn(turrets[weaponID], y_axis, heading, CRATE_SPEED * 10)
+		Turn(turrets[weaponID], y_axis, heading, CRATE_SPEED / 4)
 		WaitForTurn(turrets[weaponID], y_axis)
-		Turn(mantlets[weaponID], x_axis, -pitch, CRATE_SPEED * 5)
+		Turn(mantlets[weaponID], x_axis, -pitch, CRATE_SPEED / 4)
 		WaitForTurn(mantlets[weaponID], x_axis)
+	elseif 	name == "outpost_launcher" then
+		Show(projectile)
+		Move(launchdoor1, x_axis, 7, CRATE_SPEED * 8)
+		Move(launchdoor2, x_axis, -7, CRATE_SPEED * 8)
 	else
 		Turn(flares[weaponID], y_axis, heading)
 		Turn(flares[weaponID], x_axis, -pitch)
@@ -145,6 +216,16 @@ end
 
 function script.Shot(weaponID)
 	EmitSfx(flares[weaponID], SFX.CEG + weaponID)
+	if name == "outpost_artillery" then
+		Move(barrel_1, z_axis, -25, CRATE_SPEED * 150)
+		Sleep(500)
+		Move(barrel_1, z_axis, 0, CRATE_SPEED * 10)
+	elseif 	name == "outpost_launcher" then
+		Hide(projectile)
+		Sleep(1500)
+		Move(launchdoor1, x_axis, 0, CRATE_SPEED * 2)
+		Move(launchdoor2, x_axis, 0, CRATE_SPEED * 2)	
+	end
 end
 
 function script.AimFromWeapon(weaponID) 
@@ -203,6 +284,17 @@ function script.Create()
 		Turn(tagstand1, z_axis, math.rad(90))
 		Turn(tagbase2, z_axis, math.rad(-90))
 		Turn(tagstand2, z_axis, math.rad(-90))
+	elseif name == "outpost_artillery" then
+		for i = 1, 2 do
+			Turn(legs[i], z_axis, math.rad(-90))
+		end
+		for i = 3, 4 do
+			Turn(legs[i], z_axis, math.rad(90))
+		end
+		for i = 1, 4 do
+			Move(screws[i], y_axis, 10)
+		end
+		Move(barrel_1, z_axis, -40)	
 	end
 	Sleep(100) -- wait a few frames
 	if not Spring.GetUnitTransporter(unitID) then
@@ -575,6 +667,10 @@ function Unpack()
 		WaitForTurn(bapmantlet, x_axis)
 		WaitForMove(console2, z_axis)
 		StartThread(BAP)
+	elseif name == "outpost_artillery" then
+		StartThread(Artillery)
+	elseif name == "outpost_launcher" then
+		StartThread(MissileLauncher)
 	end
 	Spring.UnitScript.SetUnitValue(COB.ACTIVATION, 1)
 	-- Let the sands of time cover the crate

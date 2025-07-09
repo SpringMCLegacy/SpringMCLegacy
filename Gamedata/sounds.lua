@@ -228,6 +228,15 @@ local Sounds = {
 			maxdist = 6000,
 			rolloff = 2.0,
 		},
+		Drill = {
+			file = "sounds/outpost/drill.wav",
+			maxconcurrent = 12,
+			gainmod = 0.75,
+			pitchmod = 0.1,
+			priority = -0.1,
+			maxdist = 10000,
+			rolloff = 5.0,
+		},
 		--- weapons/explosions
 		
 		Meltdown = {

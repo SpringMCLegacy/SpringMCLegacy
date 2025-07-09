@@ -1,5 +1,5 @@
 local Outpost_Uplink = Outpost:New{
-	name              	= "Orbital Uplink (Bombard)",
+	name              	= "Orbital Uplink (Callins)",
 	description         = "Allows control over orbital bombardment assets",
 	iconType			= "outpost_uplink",
 	maxDamage           = 5500,
