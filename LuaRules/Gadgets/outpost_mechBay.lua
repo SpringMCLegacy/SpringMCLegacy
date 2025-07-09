@@ -145,7 +145,7 @@ local function ChangeTeamSalvage(teamID, delta)
 end
 GG.ChangeTeamSalvage = ChangeTeamSalvage
 
-local S = {"S"}
+local S = {"\255\198\226\255S"}
 local EMPTY_TABLE = {}
 
 local function CheckOmniOptions(unitID, teamID, cmdID)
@@ -161,10 +161,10 @@ local function CheckOmniOptions(unitID, teamID, cmdID)
 				sCost = Spring.IsNoCostEnabled() and 0 or tonumber(UnitDefs[-buildDefID].customParams.omniswapcost or 5)
 			end
 			if buildDefID < 0 
-			and sCost > salvage and (currParam == "" or currParam == "S") then
+			and sCost > salvage and (currParam == "" or currParam == S[1]) then
 				EditUnitCmdDesc(unitID, cmdDescID, {disabled = true, params = S})
 			else
-				if cmdDesc.disabled and currParam == "S" then
+				if cmdDesc.disabled and currParam == S[1] then
 					EditUnitCmdDesc(unitID, cmdDescID, {disabled = false, params = EMPTY_TABLE})
 				end
 			end
