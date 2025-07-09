@@ -120,14 +120,56 @@ local function ChangeMissile(proID, proOwnerID, wd, artemisOnly)
 		end
 end
 
+local function SpawnCluster(proID, proOwnerID, clusterWD, spray, sprayMult, vMult, down)
+	local x,y,z = Spring.GetProjectilePosition(proID)
+	local vx, vy, vz = Spring.GetProjectileVelocity(proID)
+	if down then
+		vx, vy, vz = Spring.GetProjectileDirection(proID)
+		vx = vx * 10
+		vy = -10
+		vz = vz * 10
+	end
+	spray = math.ceil((spray or math.asin(clusterWD.sprayAngle) * 140) * (sprayMult or 1))
+	vMult = vMult or 0.5
+	local teamID = Spring.GetUnitTeam(proOwnerID)
+	-- spawn the cluster munuitions
+	for i = 1, clusterWD.projectiles do
+		Spring.SpawnProjectile(clusterWD.id, {
+			pos = {x,y,z},
+			speed = {(vx+math.random(-spray,spray))*vMult, (vy-math.random(spray))*vMult, (vz+math.random(-spray,spray))*vMult},
+			owner = proOwnerID,
+			team = teamID,
+		})
+	end	
+	-- delete the original projectile
+	Spring.DeleteProjectile(proID)
+end
+
 local AMS_DEF = WeaponDefNames["ams"] 
 local AMS_ID = WeaponDefNames["ams"].id
 local amsPros = {}
 
+local SILVERBULLET_DEF = WeaponDefNames["silverbullet"]
+local GAUSS_ID = WeaponDefNames["gauss"].id
+
+function RangeToTarget(proID, proOwnerID, clusterWD, tx, tz, range2)
+	if tracking[proID] then
+		local x, _, z = Spring.GetProjectilePosition(proID)
+		local dist2 = (x-tx)^2 + (z-tz)^2
+		Spring.Echo("RangeToTarget", dist2, range2)
+		if dist2 < range2 then
+			SpawnCluster(proID, proOwnerID, clusterWD, nil, 0.5, 0.5, true)
+		else
+			GG.Delay.DelayCall(RangeToTarget, {proID, proOwnerID, clusterWD, tx, tz, range2}, 15)
+		end
+	end
+end
+
+
 function gadget:ProjectileCreated(proID, proOwnerID, weaponID)
 	--Spring.Echo("PC", proID, proOwnerID, weaponID)
 	local wd = WeaponDefs[weaponID]
-	if weaponDefID == MELTDOWN_WDID then
+	if weaponID == MELTDOWN_WDID then
 		Spring.SetProjectileAlwaysVisible(proID, true)
 	end
 	if proOwnerID and GG.mechCache[Spring.GetUnitDefID(proOwnerID)] then
@@ -135,6 +177,20 @@ function gadget:ProjectileCreated(proID, proOwnerID, weaponID)
 			if GG.unitSpecialAmmos[proOwnerID]["arrowiv"] == "homing" 
 			or GG.unitSpecialAmmos[proOwnerID]["arrowiv"] == "arad" then
 				ChangeMissile(proID, proOwnerID, WeaponDefNames["arrowiv_guided"])
+			elseif nil then -- disabled for now
+				local vx, vy, vz = Spring.GetProjectileVelocity(proID)
+				Spring.SetProjectileVelocity(proID, vx, vy * 2.5, vz)
+				local targetType, info = Spring.GetProjectileTarget(proID)
+				local tx,ty,tz
+				if targetType == string.byte('u') then -- unit target, info is ID
+					tx,ty,tz = Spring.GetUnitPosition(info)
+				else -- TODO: assuming ground, but engine gives all 0s for the pos table :(
+					--Spring.Echo(targetType, string.byte("g"), info, more)
+					tx,ty,tz = unpack(info)
+					--for k,v in pairs(info) do Spring.Echo(k,v) end
+				end
+				tracking[proID] = true
+				RangeToTarget(proID, proOwnerID, WeaponDefNames["cluster"], tx, tz, 1000^2)
 			end
 		elseif wd and wd.customParams.weaponclass == "lrm" then
 			if GG.unitSpecialAmmos[proOwnerID]["lrm"] == "homing" 
@@ -146,23 +202,12 @@ function gadget:ProjectileCreated(proID, proOwnerID, weaponID)
 			if GG.artemisUnits[proOwnerID] and GG.artemisUnits[proOwnerID]["srm"] then
 				ChangeMissile(proID, proOwnerID, WeaponDefNames["srm_guided"], GG.artemisUnits[proOwnerID] and GG.artemisUnits[proOwnerID]["srm"])
 			end
-		elseif wd and wd.name == "gauss" and proOwnerID and silverBulletUnits[proOwnerID] then
-			local clusterWD = WeaponDefNames["silverbullet"]
-			local x,y,z = Spring.GetProjectilePosition(proID)
-			local vx, vy, vz = Spring.GetProjectileVelocity(proID)
-			local spray = math.asin(clusterWD.sprayAngle) * 140
-			for i = 1, clusterWD.projectiles do
-				Spring.SpawnProjectile(clusterWD.id, {
-					pos = {x,y,z},
-					speed = {(vx+math.random(-spray,spray))/2, (vy-math.random(spray))/2, (vz+math.random(-spray,spray))/2}, -- TODO: remove halving?
-					owner = proOwnerID,
-					team = Spring.GetUnitTeam(proOwnerID),
-				})
-			end
-			Spring.DeleteProjectile(proID)
+		elseif weaponID == GAUSS_ID and proOwnerID and silverBulletUnits[proOwnerID] then
+			SpawnCluster(proID, proOwnerID, SILVERBULLET_DEF)
 		end
 	end
-	if lbx[weaponID] then -- vehicles might have LBX
+	local lbxInfo = lbx[weaponID]
+	if lbxInfo then -- vehicles might have LBX
 		--Spring.Echo("LBX Fired!")
 		local targetType, info = Spring.GetProjectileTarget(proID)
 		local tx,ty,tz
@@ -173,22 +218,10 @@ function gadget:ProjectileCreated(proID, proOwnerID, weaponID)
 			tx,ty,tz = unpack(info)
 			--for k,v in pairs(info) do Spring.Echo(k,v) end
 		end
-		if GG.GetUnitDistanceToPoint(proOwnerID, tx, ty, tz) < lbx[weaponID][3] then
+		if GG.GetUnitDistanceToPoint(proOwnerID, tx, ty, tz) < lbxInfo[3] then
 			--Spring.Echo("Close range, switch to cluster!")
 			-- delete old projectile and fire cluster instead
-			local clusterWD = WeaponDefNames[lbx[weaponID][1]]
-			local x,y,z = Spring.GetProjectilePosition(proID)
-			local vx, vy, vz = Spring.GetProjectileVelocity(proID)
-			local spray = lbx[weaponID][2]
-			for i = 1, clusterWD.projectiles do
-				Spring.SpawnProjectile(clusterWD.id, {
-						pos = {x,y,z},
-						speed = {(vx+math.random(-spray,spray))/2, (vy-math.random(spray))/2, (vz+math.random(-spray,spray))/2}, -- TODO: remove halving?
-						owner = proOwnerID,
-						team = Spring.GetUnitTeam(proOwnerID),
-					})
-			end
-			Spring.DeleteProjectile(proID)
+			SpawnCluster(proID, proOwnerID, lbxInfo[1], lbxInfo[2])
 		end
 	elseif ppc[weaponID] then
 		local x,y,z = Spring.GetProjectilePosition(proID)
@@ -240,7 +273,7 @@ function gadget:Initialize()
 				local clusterName = wd.name .. "_cluster"
 				local clusterDef = WeaponDefNames[clusterName]
 				lbx[id] = {
-					clusterName,
+					clusterDef,
 					math.asin(clusterDef.sprayAngle) * 140, -- a rough reproduction of engine spray 
 					clusterDef.range,
 				}

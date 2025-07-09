@@ -9,35 +9,18 @@ local Bomb = BombClass:New{
 	},
 }
 
--- PTAB "Antitank Aviation Bomb" (RUS)
-local PTAB = BombClass:New{
-	areaOfEffect			= 240,
-	burst					= 36,
-	burstrate				= 0.1,
-	weaponType				= "Cannon",
-	turret					= true,
-	tolerance				= 5000,
-	edgeEffectiveness		= 0.5,
-	explosionGenerator		= "custom:HE_large",
-	model					= "Weapons/ArrowIV.s3o",
-	weaponVelocity			= 600,
-	leadlimit				= 100,
-	name					= "Bombs",
-	range					= 500,
-	soundHitDry				= "GEN_Explode4",
-	sprayangle				= 10000,--7000,
-	customparams = {
-
-	},
+local Cluster = Bomb:New{
+	model					= "Weapons/Bomblet.s3o",
+	projectiles			= 200,
+	sprayangle			= 600,
 	damage = {
-		default            = 1000,
+		default            = 3000,
 	},
 }
-
   
 
 -- Return only the full weapons
 return lowerkeys({
   Bomb = Bomb,
-  PTAB = PTAB,
+  Cluster = Cluster,
 })
