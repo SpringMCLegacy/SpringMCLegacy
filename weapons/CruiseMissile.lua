@@ -1,7 +1,7 @@
 local CruiseMissile = Weapon:New{
 	name                    = "Cruise Missile",
 	weaponType              = "StarburstLauncher",
-	explosionGenerator    	= "custom:HE_XLARGE",
+	explosionGenerator    	= "custom:HE_XXXLARGE",
 	cegTag					= "ArrowIVTrail",
 	smokeTrail				= false,
 	soundHit              	= [[Arrow_Hit]],

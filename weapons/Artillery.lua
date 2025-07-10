@@ -1,6 +1,6 @@
 local Artillery_Class = Weapon:New{
 	weaponType              = "Cannon",
-	explosionGenerator    	= "custom:HE_XLARGE",
+	explosionGenerator    	= "custom:HE_XXLARGE",
 	soundHit             	= [[Sniper_Hit]],
 	soundStart           	= [[Sniper_Fire]],
 	burnblow				= false, 	--Bullets explode at range limit.
@@ -38,6 +38,7 @@ local Sniper = Artillery_Class:New{
 
 local Thumper = Artillery_Class:New{
 	name                    = "Thumper Artillery Cannon",
+	explosionGenerator    	= "custom:HE_XLARGE",
 	range                   = 2500,
 	weaponVelocity          = 550,
 	areaOfEffect            = 300,
