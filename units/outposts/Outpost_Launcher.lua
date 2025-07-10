@@ -4,7 +4,7 @@ local Outpost_Launcher = Outpost:New{
 	iconType			= "outpost_launcher",
 	maxDamage           = 6000,
 	mass                = 4000,
-	buildCostMetal      = 20000,
+	buildCostMetal      = 50000,
 	
 	weapons = {
 		[1] = {
