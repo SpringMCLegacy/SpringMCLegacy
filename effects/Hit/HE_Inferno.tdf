@@ -1,0 +1,162 @@
+[HE_Inferno] {
+	usedefaultexplosions=0;
+	[fire] {
+    class=CSimpleParticleSystem;
+    [properties]{
+      sizeGrowth=6 r6;
+      sizeMod=0.5;
+      pos=0, 0, 0;
+      emitVector=0, 1, 0;
+      gravity=0, 0.5, 0;
+      colorMap=1 1 1 0.25  0.025 0.025 0.025 0.25  0 0 0 0;
+      Texture=flameball;
+      airdrag=0.75;
+      particleLife=64;
+      particleLifeSpread=24;
+      numParticles=2;
+      particleSpeed=3;
+      particleSpeedSpread=1;
+      particleSize=0.5;
+      particleSizeSpread=0.4;
+      emitRot=0;
+      emitRotSpread=90;
+      directional=0;
+      alwaysVisible=0;
+    }
+    air=1;
+    water=1;
+    ground=1;
+    count=2;
+  }
+  
+  [napalm_splash] {
+    class=CSimpleParticleSystem;
+    [properties]
+    {
+      sizeGrowth=0;
+      sizeMod=1.0;
+      pos=0, 1, 0;
+      emitVector=dir;
+      gravity=0, -0.5, 0;
+      colorMap=1 0.75 0.5 0.01   1 0.75 0.5 0.01   0 0 0 0;
+      Texture=flameball;
+      airdrag=1;
+      particleLife=36;
+      particleLifeSpread=12;
+      numParticles=60;
+      particleSpeed=5;
+      particleSpeedSpread=2;
+      particleSize=3;
+      particleSizeSpread=2;
+      emitRot=0;
+      emitRotSpread=180;
+      directional=1;
+    }
+    unit=1;
+    ground=1;
+    count=4;
+  }
+  
+	[napalm_goo] 
+	{
+	    class=CExpGenSpawner;
+		[properties]
+		{
+		pos=0, 0, 0;
+		delay=0;
+		explosionGenerator=custom:napalmgoo;
+		}
+	air=1;
+	water=1;
+	ground=1;
+	count=5;
+	}
+	
+	[napalm_burning_1] 
+	{
+	    class=CExpGenSpawner;
+		[properties]
+		{
+		pos=0, 0, 0;
+		delay=2;
+		explosionGenerator=custom:Flamethrower;
+		}
+	air=1;
+	water=1;
+	ground=1;
+	count=1;
+	}
+	
+	[napalm_burning_2] 
+	{
+	    class=CExpGenSpawner;
+		[properties]
+		{
+		pos=0, 0, 0;
+		delay=4;
+		explosionGenerator=custom:Flamethrower;
+		}
+	air=1;
+	water=1;
+	ground=1;
+	count=1;
+	}
+	
+	[napalm_burning_3] 
+	{
+	    class=CExpGenSpawner;
+		[properties]
+		{
+		pos=0, 0, 0;
+		delay=6;
+		explosionGenerator=custom:Flamethrower;
+		}
+	air=1;
+	water=1;
+	ground=1;
+	count=1;
+	}
+	
+	[napalm_burning_4] 
+	{
+	    class=CExpGenSpawner;
+		[properties]
+		{
+		pos=0, 0, 0;
+		delay=8;
+		explosionGenerator=custom:Flamethrower;
+		}
+	air=1;
+	water=1;
+	ground=1;
+	count=1;
+	}
+	
+	[napalm_burning_5] 
+	{
+	    class=CExpGenSpawner;
+		[properties]
+		{
+		pos=0, 0, 0;
+		delay=10;
+		explosionGenerator=custom:Flamethrower;
+		}
+	air=1;
+	water=1;
+	ground=1;
+	count=1;
+	}
+	
+	
+	
+	
+	
+	[groundflash] {
+		flashsize=64;
+		flashalpha=1;
+		circlegrowth=10;
+		circlealpha=0;
+		ttl=8;
+		color=1,0.75,0.5;
+	}
+}
