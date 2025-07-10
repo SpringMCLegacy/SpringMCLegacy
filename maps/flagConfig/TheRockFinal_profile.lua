@@ -153,12 +153,11 @@ local starts = {
 		x = 452,
 		z = 2206,
 		alwaysbeacon = 1,
-
+	},
 	[5] = { -- teamID 6
 		x = 5275,
 		z = 506,
 		alwaysbeacon = 1,
-	},
 	},
 }
 
