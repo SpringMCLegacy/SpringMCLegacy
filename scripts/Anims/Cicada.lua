@@ -1,7 +1,7 @@
 --piece defines
 -- NB. local here means main script can't read them, may want to change that for e.g. Killed (or put Killed in here for per-unit death anims! But then other pieces need to be none-local)
 local pelvis, torso, lupperleg, llowerleg, rupperleg, rlowerleg, lfronttoes, rfronttoes, rfoot, lfoot = piece ("pelvis", "torso", "lupperleg", "llowerleg", "rupperleg", "rlowerleg", "lfronttoes", "rfronttoes", "rfoot", "lfoot")
-local rlowerarm, llowerarm = piece ("rlowerarm", "llowerarm")
+local rupperarm, lupperarm = piece ("rupperarm", "lupperarm")
 
 --Turning/Movement Locals
 local LEG_SPEED = rad(350) 
@@ -291,8 +291,8 @@ function anim_Reset()
 	Turn(rlowerleg, x_axis, rad(0), LEG_SPEED * 2)
 	Turn(rfronttoes, x_axis, rad(0), LEG_SPEED * 2)
 	Turn(rfoot, x_axis, rad(0), LEG_SPEED * 2)
-	Move(llowerarm, y_axis, 0, LEG_SPEED * 2)
-	Move(rlowerarm, y_axis, 0, LEG_SPEED * 2)
+	Move(lupperarm, y_axis, 0, LEG_SPEED * 2)
+	Move(rupperarm, y_axis, 0, LEG_SPEED * 2)
 	PlaySound("stomp")
 	Sleep(100)
 end
