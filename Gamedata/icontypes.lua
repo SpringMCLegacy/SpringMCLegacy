@@ -94,6 +94,16 @@ local iconTypes = {
 		size			=	3,
 		distance	=	2.2,	
 	},
+	outpost_artillery = {
+		bitmap		=	"icons/outpost_artillery.png",
+		size			=	3,
+		distance	=	2.2,	
+	},
+	outpost_launcher = {
+		bitmap		=	"icons/outpost_launcher.png",
+		size			=	3,
+		distance	=	2.2,	
+	},
 	turret = {
 		bitmap		=	"icons/turret.png",
 		size			=	2,
