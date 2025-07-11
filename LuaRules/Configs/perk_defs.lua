@@ -1646,7 +1646,26 @@ return {
 			end,
 			costFunction = deductSalvage,
 			price = 25,
-			incompatible = {"ammoarrowarad"},
+			incompatible = {"ammoarrowarad", "ammoarrowcluster"},
+		},
+		{
+			name = "ammoarrowcluster",
+			menu = "ammo",
+			cmdDesc = {
+				id = GetCmdID('MOD_AMMO_ARROW_CLUSTER'),
+				action = 'modammoarrowcluster',
+				name = GG.Pad("Arrow IV", "Cluster"),
+				tooltip = 'Arrow Artillery missile only. Replaces the artillery warhead with 96 cluster munitions to saturate an area.',
+				texture = 'bitmaps/ui/perkyellow.png',	
+			},
+			valid = isMechBay,
+			applyTo = function (unitDefID) return hasWeaponName(unitDefID, "arrowiv") end,
+			applyPerk = function (unitID, level, invert)
+				GG.EnableAmmo(unitID, not invert, "arrowiv", "cluster")				
+			end,
+			costFunction = deductSalvage,
+			price = 25,
+			incompatible = {"ammoarrowarad", "ammoarrowhoming"},
 		},
 		{
 			name = "ammoarrowarad",
@@ -1665,7 +1684,7 @@ return {
 			end,
 			costFunction = deductSalvage,
 			price = 10,
-			incompatible = {"ammoarrowhoming"},
+			incompatible = {"ammoarrowhoming", "ammoarrowcluster"},
 		},
 		{
 			name = "ammosrminferno",

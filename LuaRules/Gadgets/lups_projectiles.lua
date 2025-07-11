@@ -183,7 +183,7 @@ function gadget:ProjectileCreated(proID, proOwnerID, weaponID)
 			if GG.unitSpecialAmmos[proOwnerID]["arrowiv"] == "homing" 
 			or GG.unitSpecialAmmos[proOwnerID]["arrowiv"] == "arad" then
 				ChangeMissile(proID, proOwnerID, WeaponDefNames["arrowiv_guided"])
-			elseif nil then -- CHANGE TO 'elseif true then' TO ENABLE
+			elseif GG.unitSpecialAmmos[proOwnerID]["arrowiv"] == "cluster" then
 				local vx, vy, vz = Spring.GetProjectileVelocity(proID)
 				local targetType, info = Spring.GetProjectileTarget(proID)
 				local tx,ty,tz

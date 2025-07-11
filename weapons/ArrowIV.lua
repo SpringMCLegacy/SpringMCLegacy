@@ -72,6 +72,7 @@ local ADArrow = ArrowIV:New{
 
 local ArrowIV_Cluster = ArrowIV:New{
 	model					= "Weapons/ArrowIV_Cluster.s3o",
+	explosionGenerator    	= "custom:HE_SMALL",
 	damage = {
 		default = 100, -- all the bewm bewm is gone
 	},
