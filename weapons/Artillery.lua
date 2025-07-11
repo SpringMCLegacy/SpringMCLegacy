@@ -34,11 +34,11 @@ local Artillery_Class = Weapon:New{
 }
 
 local Sniper = Artillery_Class:New{
-	name                    = "Sniper Artillery Cannon",
+	name                    = "Sniper Cannon",
 }
 
 local Thumper = Artillery_Class:New{
-	name                    = "Thumper Artillery Cannon",
+	name                    = "Thumper Cannon",
 	explosionGenerator    	= "custom:HE_XLARGE",
 	soundHit             	= [[Thumper_Hit]],
 	soundStart           	= [[Thumper_Fire]],
@@ -56,7 +56,7 @@ local Thumper = Artillery_Class:New{
 }
 
 local LongTom = Artillery_Class:New{
-	name                    = "Long Tom Artillery Cannon",
+	name                    = "Long Tom Cannon",
 	explosionGenerator    	= "custom:HE_XXLARGE",
 	soundHit             	= [[LongTom_Hit]],
 	soundStart           	= [[LongTom_Fire]],
