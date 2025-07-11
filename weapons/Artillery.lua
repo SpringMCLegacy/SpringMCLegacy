@@ -1,13 +1,13 @@
 local Artillery_Class = Weapon:New{
 	weaponType              = "Cannon",
-	explosionGenerator    	= "custom:HE_XXLARGE",
+	explosionGenerator    	= "custom:HE_XLARGE",
 	soundHit             	= [[Sniper_Hit]],
 	soundStart           	= [[Sniper_Fire]],
 	burnblow				= false, 	--Bullets explode at range limit.
 	collideFriendly			= true,
 	noSelfDamage            = true,
 	turret                  = true,
-	range                   = 7000,
+	range                   = 4500,
 	accuracy                = 350,
 	tolerance				= 1000,
 	areaOfEffect            = 400,
@@ -20,6 +20,7 @@ local Artillery_Class = Weapon:New{
 --	AlphaDecay				= 0.05, 		--How much a plasma particle is more transparent than the previous particle. 
 	rgbcolor				= "1 0.8 0",
 	intensity				= 0.5,
+	explosionScar			= true,
 	damage = {
 		default = 2000, --100 dps
 	},
@@ -39,6 +40,8 @@ local Sniper = Artillery_Class:New{
 local Thumper = Artillery_Class:New{
 	name                    = "Thumper Artillery Cannon",
 	explosionGenerator    	= "custom:HE_XLARGE",
+	soundHit             	= [[Thumper_Hit]],
+	soundStart           	= [[Thumper_Fire]],
 	range                   = 2500,
 	weaponVelocity          = 550,
 	areaOfEffect            = 300,
@@ -53,9 +56,12 @@ local Thumper = Artillery_Class:New{
 }
 
 local LongTom = Artillery_Class:New{
-	name                    = "Long tom Artillery Cannon",
-	range                   = 13000,
-	weaponVelocity          = 850,
+	name                    = "Long Tom Artillery Cannon",
+	explosionGenerator    	= "custom:HE_XXLARGE",
+	soundHit             	= [[LongTom_Hit]],
+	soundStart           	= [[LongTom_Fire]],
+	range                   = 7500,
+	weaponVelocity          = 950,
 	areaOfEffect            = 650,
 	accuracy                = 200,
 	reloadtime              = 15,
@@ -70,4 +76,5 @@ local LongTom = Artillery_Class:New{
 return lowerkeys({ 
 	Sniper = Sniper,
 	Thumper = Thumper,
+	LongTom = LongTom,
 })
