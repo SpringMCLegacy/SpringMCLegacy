@@ -179,7 +179,7 @@ local CERLBL = ERLBL:New{
 
 local HLBL = BeamLaser_Class:New{
 	name                    = "Heavy LLaser",
-	soundStart           	= [[LBL_Fire]],
+	soundStart           	= [[HeavyLBL_Fire]],
 	beamBurst 				= false,
 	largeBeamLaser			= true,
 	sweepFire 				= true,
