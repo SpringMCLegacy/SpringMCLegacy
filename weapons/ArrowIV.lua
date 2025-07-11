@@ -39,6 +39,7 @@ local ArrowIV = Weapon:New{
 		weaponclass			= "arrowiv",
 		ammotype			= "arrow",
 		shockwave			= true,
+		minrange			= 720,
     },
 }
 

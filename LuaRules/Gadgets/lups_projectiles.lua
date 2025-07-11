@@ -125,9 +125,9 @@ local function SpawnCluster(proID, proOwnerID, clusterWD, spray, sprayMult, vMul
 	local vx, vy, vz = Spring.GetProjectileVelocity(proID)
 	if down then
 		vx, vy, vz = Spring.GetProjectileDirection(proID)
-		vx = vx * 10
-		vy = -10
-		vz = vz * 10
+		vx = vx * 15
+		vy = -25
+		vz = vz * 15
 	end
 	spray = math.ceil((spray or math.asin(clusterWD.sprayAngle) * 140) * (sprayMult or 1))
 	vMult = vMult or 0.5
@@ -177,9 +177,8 @@ function gadget:ProjectileCreated(proID, proOwnerID, weaponID)
 			if GG.unitSpecialAmmos[proOwnerID]["arrowiv"] == "homing" 
 			or GG.unitSpecialAmmos[proOwnerID]["arrowiv"] == "arad" then
 				ChangeMissile(proID, proOwnerID, WeaponDefNames["arrowiv_guided"])
-			elseif nil then -- disabled for now
+			elseif nil then --true then -- CHANGE TO ENABLE
 				local vx, vy, vz = Spring.GetProjectileVelocity(proID)
-				Spring.SetProjectileVelocity(proID, vx, vy * 2.5, vz)
 				local targetType, info = Spring.GetProjectileTarget(proID)
 				local tx,ty,tz
 				if targetType == string.byte('u') then -- unit target, info is ID
@@ -190,7 +189,10 @@ function gadget:ProjectileCreated(proID, proOwnerID, weaponID)
 					--for k,v in pairs(info) do Spring.Echo(k,v) end
 				end
 				tracking[proID] = true
-				RangeToTarget(proID, proOwnerID, WeaponDefNames["cluster"], tx, tz, 1000^2)
+				local x,y,z = Spring.GetProjectilePosition(proID)
+				local dist = GG.Vector.DistanceBetween(x, y, z, tx, ty, tz)
+				Spring.SetProjectileVelocity(proID, vx, vy * (3500000/dist^1.75), vz)
+				RangeToTarget(proID, proOwnerID, WeaponDefNames["cluster"], tx, tz, 500^2)
 			end
 		elseif wd and wd.customParams.weaponclass == "lrm" then
 			if GG.unitSpecialAmmos[proOwnerID]["lrm"] == "homing" 
