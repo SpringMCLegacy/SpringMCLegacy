@@ -70,8 +70,16 @@ local ADArrow = ArrowIV:New{
 	weaponVelocity          = 1500,
 }
 
+local ArrowIV_Cluster = ArrowIV:New{
+	model					= "Weapons/ArrowIV_Cluster.s3o",
+	damage = {
+		default = 100, -- all the bewm bewm is gone
+	},
+}
+
 return lowerkeys({ 
 	ArrowIV = ArrowIV,
 	ArrowIV_Guided = ArrowIV_Guided,
 	ADArrow = ADArrow,
+	ArrowIV_Cluster = ArrowIV_Cluster,
 	})

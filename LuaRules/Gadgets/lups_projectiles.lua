@@ -120,17 +120,26 @@ local function ChangeMissile(proID, proOwnerID, wd, artemisOnly)
 		end
 end
 
+local ARROW_CLUSTER_ID = WeaponDefNames["arrowiv_cluster"].id
+
 local function SpawnCluster(proID, proOwnerID, clusterWD, spray, sprayMult, vMult, down)
 	local x,y,z = Spring.GetProjectilePosition(proID)
 	local vx, vy, vz = Spring.GetProjectileVelocity(proID)
+	local teamID = Spring.GetUnitTeam(proOwnerID)
 	if down then
 		vx = vx * 0.5
-		vy = vy * 0.75
+		vy = vy * 0.5
 		vz = vz * 0.5
+		local newProID = Spring.SpawnProjectile(ARROW_CLUSTER_ID, { -- TODO: unhardcode the name
+			pos = {x,y,z},
+			speed = {vx, vy * 0.1, vz},
+			owner = proOwnerID,
+			team = teamID,
+		})
 	end
+	Spring.DeleteProjectile(proID)
 	spray = math.ceil((spray or math.asin(clusterWD.sprayAngle) * 140) * (sprayMult or 1))
 	vMult = vMult or 0.5
-	local teamID = Spring.GetUnitTeam(proOwnerID)
 	-- spawn the cluster munuitions
 	for i = 1, clusterWD.projectiles do
 		Spring.SpawnProjectile(clusterWD.id, {
@@ -140,8 +149,6 @@ local function SpawnCluster(proID, proOwnerID, clusterWD, spray, sprayMult, vMul
 			team = teamID,
 		})
 	end	
-	-- delete the original projectile
-	Spring.DeleteProjectile(proID)
 end
 
 local AMS_DEF = WeaponDefNames["ams"] 
@@ -157,7 +164,7 @@ function RangeToTarget(proID, proOwnerID, clusterWD, tx, tz, range2)
 		local dist2 = (x-tx)^2 + (z-tz)^2
 		--Spring.Echo("RangeToTarget", dist2, range2)
 		if dist2 < range2 then
-			SpawnCluster(proID, proOwnerID, clusterWD, nil, 0.5, 0.5, true)
+			SpawnCluster(proID, proOwnerID, clusterWD, nil, 2.5, 0.25, true)
 		else
 			GG.Delay.DelayCall(RangeToTarget, {proID, proOwnerID, clusterWD, tx, tz, range2}, 15)
 		end
@@ -188,7 +195,7 @@ function gadget:ProjectileCreated(proID, proOwnerID, weaponID)
 					--for k,v in pairs(info) do Spring.Echo(k,v) end
 				end
 				tracking[proID] = true
-				RangeToTarget(proID, proOwnerID, WeaponDefNames["cluster"], tx, tz, 500^2)
+				RangeToTarget(proID, proOwnerID, WeaponDefNames["cluster"], tx, tz, 650^2)
 			end
 		elseif wd and wd.customParams.weaponclass == "lrm" then
 			if GG.unitSpecialAmmos[proOwnerID]["lrm"] == "homing" 

@@ -11,7 +11,7 @@ local Bomb = BombClass:New{
 
 local Cluster = Bomb:New{
 	model					= "Weapons/Bomblet.s3o",
-	projectiles			= 200,
+	projectiles			= 96, -- https://www.sarna.net/wiki/File:Arrow4_Cluster.jpg
 	sprayangle			= 600,
 	damage = {
 		default            = 3000,
