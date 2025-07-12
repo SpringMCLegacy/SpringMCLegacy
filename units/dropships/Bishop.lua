@@ -9,6 +9,7 @@ local Bishop = DropShip:New{
 	mass                = 6000,
 	usePieceCollisionVolumes = true,
 	explodeAs          	= "mechexplode",
+	canFly				= true,
 	
 	--Makes unit use weapon from /weapons folder
 	weapons	= {	

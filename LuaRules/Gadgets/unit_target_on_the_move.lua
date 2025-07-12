@@ -292,12 +292,25 @@ if gadgetHandler:IsSyncedCode() then
 		return setTargetID ~= nil, setTargetID == nil
 	end
 	
+	local ARROW_ID = WeaponDefNames["arrowiv"].id
+	
 	function gadget:AllowWeaponTarget(attackerID, targetID, attackerWeaponNum, attackerWeaponDefID, defPriority)
 		local setTargetID = unitTargets[attackerID] and unitTargets[attackerID].targets[1].target
-		--Spring.Echo("AllowWeaponTarget attackerID", attackerID, "targetID", targetID, "weapNum", attackerWeaponNum, "setTargetID", setTargetID)
-		if setTargetID then 
+		local targetDef = targetID and UnitDefs[Spring.GetUnitDefID(targetID)]
+		local attackerDef = attackerID and UnitDefs[Spring.GetUnitDefID(attackerID)]
+		local weapDef = attackerWeaponDefID and WeaponDefs[attackerWeaponDefID]
+		--Spring.Echo("AllowWeaponTarget", attackerDef and attackerDef.name, "target", targetDef and targetDef.name, 
+		--			"weapNum", attackerWeaponNum, weapDef and weapDef.name, "setTargetID", setTargetID)
+		if setTargetID then
 			--return setTargetID == targetID, 0.001
+		elseif attackerWeaponDefID == ARROW_ID then
+			if targetDef and targetDef.canFly 
+			or targetID and Spring.GetUnitTransporter(targetID) then 
+				--Spring.Echo("Arrow IV trying to target", targetDef.name)
+				return false
+			end
 		end
+		
 		--Spring.Echo("AWTattacker", attackerID and UnitDefs[Spring.GetUnitDefID(attackerID)].name, "vs", targetID and UnitDefs[Spring.GetUnitDefID(targetID)].name, attackerWeaponDefID and attackerWeaponDefID > 0 and WeaponDefs[attackerWeaponDefID].name, defPriority)
 		return true, setTargetID == targetID and 0.0001 or (setTargetID and setTargetID ~= targetID and 100 * (defPriority or 100))  or (defPriority or 1)
 	end
