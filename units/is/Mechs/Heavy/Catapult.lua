@@ -105,7 +105,7 @@ local CPLTC3 = Catapult:New{
 		armor			= 10,
 		maxammo 		= {arrow = 1},
 		jumpjets		= 4,
-		mods			= {"jumpjets", "ammoarrowhoming"}, 
+		mods			= {"jumpjets"}, 
     },
 }
 

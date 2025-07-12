@@ -111,7 +111,7 @@ local LGB8V = Longbow:New{
 		heatlimit 		= 10,--10 double
 		armor			= 12.5,
 		maxammo 		= {arrow = 4},
-		mods			= {"doubleheatsinks", "xlengine", "case", "ammoarrowhoming"},
+		mods			= {"doubleheatsinks", "xlengine", "case"},
     },
 }
 	
