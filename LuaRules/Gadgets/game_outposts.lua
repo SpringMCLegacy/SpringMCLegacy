@@ -51,9 +51,11 @@ GG.beaconOutpostPointIDs = beaconOutpostPointIDs -- for AI
 --local BEACON_POINT_DIST = 400
 --local NUM_BEACON_POINTS = tonumber(modOptions.beaconpoints) or 3
 
-local function BeaconPoints(beaconID, teamID, x, y, z, radius, numPoints)
+local function BeaconPoints(beaconID, teamID, x, y, z, radius, numPoints, spotNum)
 	beaconOutpostPointIDs[beaconID] = {}
 	radius = radius - 60
+	local spot = GG.beaconSpots[spotNum]
+	local unitsToSpawn = spot and spot.gaiaoutposts or {}
 	for i = 0, numPoints - 1 do
 		local angle = i * 2 * math.pi / numPoints
 		local dx, dz = math.sin(angle) * radius, math.cos(angle) * radius
@@ -62,6 +64,10 @@ local function BeaconPoints(beaconID, teamID, x, y, z, radius, numPoints)
 		Spring.SetUnitBlocking(outpostPointID, false, false, false) -- blocking, solid objects, projectiles
 		outpostPointBeaconIDs[outpostPointID] = beaconID
 		beaconOutpostPointIDs[beaconID][i+1] = outpostPointID
+		if unitsToSpawn[i+1] then
+			local outpostID = Spring.CreateUnit(unitsToSpawn[i+1], x + dx, y, z + dz, "s", teamID)
+			outpostIDs[outpostPointID] = outpostID
+		end
 	end
 end
 GG.BeaconPoints = BeaconPoints

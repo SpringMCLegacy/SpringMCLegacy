@@ -56,7 +56,8 @@ function TouchDown()
 	GG.SpawnDecal("decal_beacon", X, GY + 1, Z, teamID, true)
 	local myRadius = Spring.GetUnitRulesParam(unitID, "BEACON_CAP_RADIUS")
 	local myNumPoints = Spring.GetUnitRulesParam(unitID, "BEACON_NUM_POINTS")
-	GG.BeaconPoints(unitID, teamID, X, GY+1, Z, myRadius, myNumPoints)
+	local mySpotNum = Spring.GetUnitRulesParam(unitID, "BEACON_SPOT_NUM")
+	GG.BeaconPoints(unitID, teamID, X, GY+1, Z, myRadius, myNumPoints, mySpotNum)
 end
 
 function ChangeType(outpost)

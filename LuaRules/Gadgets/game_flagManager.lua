@@ -174,7 +174,7 @@ function FlagSpecialBehaviour(action, flagType, flagID, flagTeamID, teamID)
 end
 
 
-function PlaceFlag(spot, flagType, newFlag)
+function PlaceFlag(spot, flagType, newFlag, spotNum)
 	if DEBUG then
 		Spring.Echo("{")
 		Spring.Echo("	x = " .. spot.x .. ",")
@@ -207,7 +207,9 @@ function PlaceFlag(spot, flagType, newFlag)
 	spot.radius = spot.radius or CAP_RADIUS * (spot.radiusmult or 1)
 	SetUnitRulesParam(newFlag, "BEACON_CAP_RADIUS", spot.radius, {public = true})
 	spot.points = spot.points or tonumber(modOptions.beaconpoints) or 3
+	spot.spotNum = spotNum
 	SetUnitRulesParam(newFlag, "BEACON_NUM_POINTS", spot.points, {public = true})
+	SetUnitRulesParam(newFlag, "BEACON_SPOT_NUM", spotNum, {public = true})
 end
 
 function gadget:GamePreload()
@@ -239,7 +241,8 @@ function gadget:GamePreload()
 		end
 	end
 	EXPECTED_FLAGS = #flagSpots + #teams - 1
-	flagTypeSpots["beacon"] = flagSpots 
+	flagTypeSpots["beacon"] = flagSpots
+	GG.beaconSpots = flagSpots
 	temps.ambient = temps.ambient or 20
 	temps.water = temps.water or 10
 	GG.MapTemperatures = temps
@@ -263,7 +266,7 @@ local function DeployBeacons(skip)
 	for _, flagType in pairs(flagTypes) do
 		if DEBUG then Spring.Echo("-- flagType is " .. flagType) end
 		for i = 1, #flagTypeSpots[flagType] do
-			PlaceFlag(flagTypeSpots[flagType][i], flagType)
+			PlaceFlag(flagTypeSpots[flagType][i], flagType, nil, i)
 		end
 		GG[flagType .. "s"] = flags[flagType] -- nicer to have GG.flags rather than GG.flag
 	end
@@ -455,7 +458,7 @@ function gadget:UnitCreated(unitID, unitDefID, unitTeam, builderID)
 		local x,_, z = Spring.GetUnitPosition(unitID)
 		local newSpot = {["x"] = x, ["z"] = z}
 		table.insert(flagTypeSpots["beacon"], newSpot)
-		PlaceFlag(newSpot, "beacon", unitID)
+		PlaceFlag(newSpot, "beacon", unitID, #flagTypeSpots["beacon"])
 		UpdateBeacons(unitTeam, 1)
 		if #flagTypeSpots["beacon"] == EXPECTED_FLAGS then
 			beaconsDeployed = Spring.GetGameFrame() + 5
