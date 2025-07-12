@@ -159,6 +159,7 @@ function gadget:GameFrame(n)
 end
 
 local function GetUnitDistanceToPoint(unitID, tx, ty, tz, bool3D)
+	if not (tx and tz) then return 0 end
 	local x,y,z = GetUnitPosition(unitID)
 	local dy = (bool3D and ty and (ty - y)^2) or 0
 	local distanceSquared = (tx - x)^2 + (tz - z)^2 + dy
