@@ -1646,7 +1646,7 @@ return {
 			end,
 			costFunction = deductSalvage,
 			price = 25,
-			incompatible = {"ammoarrowarad", "ammoarrowcluster"},
+			incompatible = {"ammoarrowarad", "ammoarrowcluster", "ammoarrowthunder"},
 		},
 		{
 			name = "ammoarrowcluster",
@@ -1665,7 +1665,26 @@ return {
 			end,
 			costFunction = deductSalvage,
 			price = 25,
-			incompatible = {"ammoarrowarad", "ammoarrowhoming"},
+			incompatible = {"ammoarrowarad", "ammoarrowhoming", "ammoarrowthunder"},
+		},
+		{
+			name = "ammoarrowthunder",
+			menu = "ammo",
+			cmdDesc = {
+				id = GetCmdID('MOD_AMMO_ARROW_THUNDER'),
+				action = 'modammoarrowthunder',
+				name = GG.Pad("Arrow IV", "Thunder"),
+				tooltip = 'Arrow Artillery missile only. Replaces the artillery warhead with 96 mines scattered over an area.',
+				texture = 'bitmaps/ui/perkyellow.png',	
+			},
+			valid = isMechBay,
+			applyTo = function (unitDefID) return hasWeaponName(unitDefID, "arrowiv") and isFaction(unitDefID, "cc") end,
+			applyPerk = function (unitID, level, invert)
+				GG.EnableAmmo(unitID, not invert, "arrowiv", "thunder")				
+			end,
+			costFunction = deductSalvage,
+			price = 25,
+			incompatible = {"ammoarrowarad", "ammoarrowhoming", "ammoarrowcluster"},
 		},
 		{
 			name = "ammoarrowarad",
@@ -1684,7 +1703,7 @@ return {
 			end,
 			costFunction = deductSalvage,
 			price = 10,
-			incompatible = {"ammoarrowhoming", "ammoarrowcluster"},
+			incompatible = {"ammoarrowhoming", "ammoarrowcluster", "ammoarrowthunder"},
 		},
 		{
 			name = "ammosrminferno",

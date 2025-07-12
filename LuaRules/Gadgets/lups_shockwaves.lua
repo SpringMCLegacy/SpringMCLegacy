@@ -20,12 +20,17 @@ if (gadgetHandler:IsSyncedCode()) then
     local wd = WeaponDefs[i]
     if (wd.customParams.shockwave) then
         Script.SetWatchWeapon(wd.id,true)
+	elseif wd.name == "thunder" then
+		Script.SetWatchWeapon(wd.id, true)
     end
   end
-
+ 
   function gadget:Explosion(weaponID, px, py, pz, ownerID)
     local wd = WeaponDefs[weaponID]
-	if GG.unitSpecialAmmos[ownerID] and GG.unitSpecialAmmos[ownerID]["lrm"] and GG.unitSpecialAmmos[ownerID]["lrm"] == "thunder" then
+	local specialAmmo = GG.unitSpecialAmmos[ownerID]
+	local lrmThunder = specialAmmo and specialAmmo.lrm and specialAmmo.lrm == "thunder"
+	local arrowThunder = wd.name == "thunder"
+	if lrmThunder or arrowThunder then
 		if py == Spring.GetGroundHeight(px, pz) then
 			Spring.CreateUnit("mine", px,py,pz, "s", Spring.GetUnitTeam(ownerID))
 			return true

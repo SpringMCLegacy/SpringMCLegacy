@@ -19,10 +19,19 @@ local Cluster = Bomb:New{
 		default            = 500,
 	},
 }
-  
+ 
+local Thunder = Cluster:New{
+	model					= "Mine.s3o",
+	explosionGenerator    	= "custom:MG_HIT",
+	areaOfEffect            = 1,
+	damage = {
+		default            	= 1,
+	},
+} 
 
 -- Return only the full weapons
 return lowerkeys({
   Bomb = Bomb,
   Cluster = Cluster,
+  Thunder = Thunder,
 })

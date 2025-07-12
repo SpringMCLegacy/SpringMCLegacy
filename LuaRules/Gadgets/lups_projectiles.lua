@@ -180,10 +180,12 @@ function gadget:ProjectileCreated(proID, proOwnerID, weaponID)
 	end
 	if proOwnerID and GG.mechCache[Spring.GetUnitDefID(proOwnerID)] then
 		if wd and wd.name == "arrowiv" then
-			if GG.unitSpecialAmmos[proOwnerID]["arrowiv"] == "homing" 
-			or GG.unitSpecialAmmos[proOwnerID]["arrowiv"] == "arad" then
+			local ammoType = GG.unitSpecialAmmos[proOwnerID]["arrowiv"]
+			if ammoType == "homing" 
+			or ammoType == "arad" then
 				ChangeMissile(proID, proOwnerID, WeaponDefNames["arrowiv_guided"])
-			elseif GG.unitSpecialAmmos[proOwnerID]["arrowiv"] == "cluster" then
+			elseif ammoType == "cluster" 
+			or ammoType == "thunder" then
 				local vx, vy, vz = Spring.GetProjectileVelocity(proID)
 				local targetType, info = Spring.GetProjectileTarget(proID)
 				local tx,ty,tz
@@ -195,7 +197,7 @@ function gadget:ProjectileCreated(proID, proOwnerID, weaponID)
 					--for k,v in pairs(info) do Spring.Echo(k,v) end
 				end
 				tracking[proID] = true
-				RangeToTarget(proID, proOwnerID, WeaponDefNames["cluster"], tx, tz, 650^2)
+				RangeToTarget(proID, proOwnerID, WeaponDefNames[ammoType], tx, tz, 650^2)
 			end
 		elseif wd and wd.customParams.weaponclass == "lrm" then
 			if GG.unitSpecialAmmos[proOwnerID]["lrm"] == "homing" 
