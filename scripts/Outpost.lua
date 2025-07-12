@@ -69,8 +69,10 @@ end
 local turrets = {}
 local mantlets = {}
 
--- Sniper pieces
-local barrel_1, breach, hydraulic = piece ("barrel_1", "breach", "hydraulic")
+-- Artillery pieces
+local barrel_1, barrelend, breechblock, hydraulic, casing = piece ("barrel_1", "barrelend", "breechblock", "hydraulic", "casing")
+local rammoarm, rammorail, rammobin, rammo, rammotray, rram = piece ("rammoarm", "rammorail", "rammobin", "rammo", "rammotray", "rram")
+local lammoarm, lammorail, lammobin, lammo, lammotray, lram = piece ("lammoarm", "lammorail", "lammobin", "lammo", "lammotray", "lram")
 
 local legs = {}
 for i = 1, 4 do
@@ -88,7 +90,7 @@ for i = 1, 4 do
 end
 
 -- Tactical Missile Launcher pieces
-local launcher, launchdoor1, launchdoor2, gantry, gantryarm1, gantryarm2, projectile = piece ("launcher", "launchdoor1", "launchdoor2", "gantry", "gantryarm1", "gantryarm2", "projectile")
+local launcher, launchdoor1, launchdoor2, gantry, projectile = piece ("launcher", "launchdoor1", "launchdoor2", "gantry", "projectile")
 
 for i = 1,#unitDef.weapons do
 	turrets[i] = piece("turret_" .. i)
@@ -147,13 +149,22 @@ function TAG()
 end
 
 function Artillery()
-	for i = 1,4 do
-		Turn(legs[i], z_axis, 0, CRATE_SPEED * 4)
+	Show(rammoarm)
+	Show(lammoarm)
+	Show(rammorail)
+	Show(lammorail)
+	PlaySound("Clicks")
+	for i = 1, 2 do
+		Turn(legs[i], z_axis, math.rad(90), CRATE_SPEED * 4)
 	end
-	WaitForTurn(legs[4], z_axis)
-	Sleep(200)
+	for i = 3, 4 do
+		Turn(legs[i], z_axis, math.rad(-90), CRATE_SPEED * 4)
+	end
+	Sleep(400)
+	PlaySound("Thunk")
+	Sleep(500)
 	for i = 1,4 do
-		Spin(screwheads[i], y_axis, math.rad(200), math.rad(25))
+		Spin(screwheads[i], x_axis, math.rad(200), math.rad(25))
 	end
 	for i = 1,4 do	
 		Move(screws[i], y_axis, -10, CRATE_SPEED * 12)
@@ -161,23 +172,110 @@ function Artillery()
 	PlaySound("Drill")
 	Sleep(2500)
 	for i = 1,4 do
-		StopSpin(screwheads[i], y_axis, math.rad(100))
+		StopSpin(screwheads[i], x_axis, math.rad(100))
 	end
 	Sleep(500)
-	Move(barrel_1, z_axis, 0, CRATE_SPEED * 30)
-	WaitForMove(barrel_1, z_axis)
+	PlaySound("Whir")
+	Move(barrelend, z_axis, 0, CRATE_SPEED * 15)
+	WaitForMove(barrelend, z_axis)
 	noFiring = false
 	Spring.SetUnitRulesParam(unitID, "weapon_1", "active")
 end
 
-function MissileLauncher()
-	for i = 1,4 do
-		Turn(legs[i], z_axis, 0, CRATE_SPEED * 4)
-	end
-	WaitForTurn(legs[4], z_axis)
+function ArtilleryReload()
+	--RELOAD anim
+	--Pull out trays
+	Move(lammotray, z_axis, -17, CRATE_SPEED * 20)
+	Move(rammotray, z_axis, -17, CRATE_SPEED * 20)
+	PlaySound("Gear_Small")
+	WaitForMove(lammotray, z_axis)
+	WaitForMove(rammotray, z_axis)
 	Sleep(200)
+	Turn(breechblock, x_axis, rad(90), CRATE_SPEED * 4)
+	PlaySound("Breech_Open")
+	WaitForTurn(breechblock, x_axis)
+	Explode(piece("casing"), SFX.SMOKE + SFX.FALL)
+	Sleep(100)
+	--Right Tray projectile
+	PlaySound("Whir_Small")
+	Turn(rammoarm, y_axis, rad(-90), CRATE_SPEED * 4)
+	Turn(rammorail, y_axis, rad(90), CRATE_SPEED * 4)
+	WaitForTurn(rammoarm, y_axis)
+	Turn(rammoarm, y_axis, rad(-180), CRATE_SPEED * 4)
+	Turn(rammorail, y_axis, rad(180), CRATE_SPEED * 4)
+	WaitForTurn(rammoarm, y_axis)
+	Move(rram, z_axis, 10, CRATE_SPEED * 10)
+	PlaySound("Hydraulic_Click")
+	WaitForMove(rram, z_axis)
+	Hide(rammo)
+	Sleep(500)
+	Move(rram, z_axis, 0, CRATE_SPEED * 10)
+	PlaySound("Hydraulic")
+	WaitForMove(rram, z_axis)
+	Sleep(200)
+	PlaySound("Whir_Small")
+	Turn(rammoarm, y_axis, rad(-90), CRATE_SPEED * 4)
+	Turn(rammorail, y_axis, rad(90), CRATE_SPEED * 4)
+	WaitForTurn(rammoarm, y_axis)
+	Turn(rammoarm, y_axis, rad(0), CRATE_SPEED * 4)
+	Turn(rammorail, y_axis, rad(0), CRATE_SPEED * 4)
+	WaitForTurn(rammoarm, y_axis)
+	Sleep(200)
+	
+	--Left Tray, Propellant
+	PlaySound("Whir_Small")
+	Turn(lammoarm, y_axis, rad(90), CRATE_SPEED * 4)
+	Turn(lammorail, y_axis, rad(-90), CRATE_SPEED * 4)
+	WaitForTurn(lammoarm, y_axis)
+	Turn(lammoarm, y_axis, rad(180), CRATE_SPEED * 4)
+	Turn(lammorail, y_axis, rad(-180), CRATE_SPEED * 4)
+	WaitForTurn(lammoarm, y_axis)
+	Move(lram, z_axis, 10, CRATE_SPEED * 10)
+	PlaySound("Hydraulic_Click")
+	WaitForMove(lram, z_axis)
+	Hide(lammo)
+	Sleep(500)
+	Move(lram, z_axis, 0, CRATE_SPEED * 10)
+	PlaySound("Hydraulic")
+	WaitForMove(lram, z_axis)
+	Sleep(200)
+	PlaySound("Whir_Small")
+	Turn(lammoarm, y_axis, rad(90), CRATE_SPEED * 4)
+	Turn(lammorail, y_axis, rad(-90), CRATE_SPEED * 4)
+	WaitForTurn(lammoarm, y_axis)
+	Turn(lammoarm, y_axis, rad(0), CRATE_SPEED * 4)
+	Turn(lammorail, y_axis, rad(0), CRATE_SPEED * 4)
+	WaitForTurn(lammoarm, y_axis)
+	Sleep(200)
+	--END RELOAD anim
+	
+	Turn(breechblock, x_axis, rad(0), CRATE_SPEED * 4)
+	PlaySound("Breech_Close")
+	Sleep(100)
+	Move(lammotray, z_axis, 0, CRATE_SPEED * 20)
+	Move(rammotray, z_axis, 0, CRATE_SPEED * 20)
+	PlaySound("Gear_Small")
+	WaitForMove(lammotray, z_axis)
+	WaitForMove(rammotray, z_axis)
+	Show(rammo)
+	Show(lammo)
+	WaitForTurn(breechblock, x_axis)
+	Sleep(500)
+end
+
+function MissileLauncher()
+	PlaySound("Clicks")
+	for i = 1, 2 do
+		Turn(legs[i], z_axis, math.rad(90), CRATE_SPEED * 4)
+	end
+	for i = 3, 4 do
+		Turn(legs[i], z_axis, math.rad(-90), CRATE_SPEED * 4)
+	end
+	Sleep(400)
+	PlaySound("Thunk")
+	Sleep(500)
 	for i = 1,4 do
-		Spin(screwheads[i], y_axis, math.rad(200), math.rad(25))
+		Spin(screwheads[i], x_axis, math.rad(200), math.rad(25))
 	end
 	for i = 1,4 do	
 		Move(screws[i], y_axis, -10, CRATE_SPEED * 12)
@@ -185,28 +283,57 @@ function MissileLauncher()
 	PlaySound("Drill")
 	Sleep(2500)
 	for i = 1,4 do
-		StopSpin(screwheads[i], y_axis, math.rad(100))
+		StopSpin(screwheads[i], x_axis, math.rad(100))
 	end
 	Sleep(500)
 	noFiring = false
 	Spring.SetUnitRulesParam(unitID, "weapon_1", "active")
 end
+
+function LauncherOpen()
+	Move(launchdoor1, x_axis, 7, CRATE_SPEED * 8)
+	Move(launchdoor2, x_axis, -7, CRATE_SPEED * 8)
+	PlaySound("Hydraulic_Click")
+	WaitForMove(launchdoor1, x_axis)
+	WaitForMove(launchdoor2, x_axis)
+	Move(gantry, y_axis, 10, CRATE_SPEED * 8)
+	PlaySound("Whir")
+	WaitForMove(gantry, y_axis)
+	Sleep(500)
+end	
+
+function LauncherClose()
+	Move(gantry, y_axis, 0, CRATE_SPEED * 8)
+	PlaySound("Whir")
+	WaitForMove(gantry, y_axis)
+	Move(launchdoor1, x_axis, 0, CRATE_SPEED * 8)
+	Move(launchdoor2, x_axis, 0, CRATE_SPEED * 8)
+	PlaySound("Hydraulic_Click")
+	WaitForMove(launchdoor1, x_axis)
+	WaitForMove(launchdoor2, x_axis)
+	Sleep(500)
+	Show(projectile)
+end	
 
 -- Garrison weapons
 function script.AimWeapon(weaponID, heading, pitch)
 	if noFiring then return false end
 	Signal(2 ^ weaponID) -- 2 'to the power of' weapon ID
 	SetSignalMask(2 ^ weaponID)
-
 	if turrets[weaponID] then
 		Turn(turrets[weaponID], y_axis, heading, CRATE_SPEED / 4)
 		WaitForTurn(turrets[weaponID], y_axis)
 		Turn(mantlets[weaponID], x_axis, -pitch, CRATE_SPEED / 4)
 		WaitForTurn(mantlets[weaponID], x_axis)
 	elseif 	name == "outpost_launcher" then
-		Show(projectile)
 		Move(launchdoor1, x_axis, 7, CRATE_SPEED * 8)
 		Move(launchdoor2, x_axis, -7, CRATE_SPEED * 8)
+		PlaySound("Hydraulic_Click")
+		WaitForMove(launchdoor1, x_axis)
+		WaitForMove(launchdoor2, x_axis)
+		Move(gantry, y_axis, 10, CRATE_SPEED * 8)
+		PlaySound("Whir")
+		WaitForMove(gantry, y_axis)
 	else
 		Turn(flares[weaponID], y_axis, heading)
 		Turn(flares[weaponID], x_axis, -pitch)
@@ -217,14 +344,14 @@ end
 function script.Shot(weaponID)
 	EmitSfx(flares[weaponID], SFX.CEG + weaponID)
 	if name == "outpost_artillery" then
-		Move(barrel_1, z_axis, -25, CRATE_SPEED * 150)
-		Sleep(500)
-		Move(barrel_1, z_axis, 0, CRATE_SPEED * 10)
+		Move(barrel_1, z_axis, -30, CRATE_SPEED * 150)
+		WaitForMove(barrel_1, z_axis)
+		Move(barrel_1, z_axis, 0, CRATE_SPEED * 20)
+		ArtilleryReload()
 	elseif 	name == "outpost_launcher" then
 		Hide(projectile)
-		Sleep(1500)
-		Move(launchdoor1, x_axis, 0, CRATE_SPEED * 2)
-		Move(launchdoor2, x_axis, 0, CRATE_SPEED * 2)	
+		Sleep(1000)
+		LauncherClose()
 	end
 end
 
@@ -285,16 +412,12 @@ function script.Create()
 		Turn(tagbase2, z_axis, math.rad(-90))
 		Turn(tagstand2, z_axis, math.rad(-90))
 	elseif name == "outpost_artillery" then
-		for i = 1, 2 do
-			Turn(legs[i], z_axis, math.rad(-90))
-		end
-		for i = 3, 4 do
-			Turn(legs[i], z_axis, math.rad(90))
-		end
-		for i = 1, 4 do
-			Move(screws[i], y_axis, 10)
-		end
-		Move(barrel_1, z_axis, -40)	
+		Move(barrelend, z_axis, -30)
+		Hide(casing)
+		Hide(rammoarm)
+		Hide(lammoarm)
+		Hide(rammorail)
+		Hide(lammorail)
 	end
 	Sleep(100) -- wait a few frames
 	if not Spring.GetUnitTransporter(unitID) then
