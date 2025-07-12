@@ -298,7 +298,6 @@ local unitSpecialAmmos = {} -- [unitID][weaponType] = ammoName
 GG.unitSpecialAmmos = unitSpecialAmmos -- for Thunder spawning
 local function EnableAmmo(unitID, apply, weaponType, ammoName, weapNum)
 	unitSpecialAmmos[unitID] = unitSpecialAmmos[unitID] or {}
-	unitSpecialAmmos[unitID][weaponType] = unitSpecialAmmos[unitID][weaponType] or {}
 	unitSpecialAmmos[unitID][weaponType] = apply and ammoName or nil
 end
 GG.EnableAmmo = EnableAmmo

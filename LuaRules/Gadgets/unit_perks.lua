@@ -208,6 +208,7 @@ local function RemoveMod(unitID, unitDefID, appDef, applierID)
 			incompatible[unitID][modName] = nil -- assumes if A and B are incompatible with C, then A and B are incompatible
 		end
 		UpdateUnitApps(applierID, unitDefID, "mods")
+		Spring.RemoveUnitCmdDesc(unitID, FindUnitCmdDesc(unitID, appDef.cmdDesc.id)) -- remove from 'View Mods' panel
 		Spring.SetUnitRulesParam(unitID, appDef.name, false)
 		return true
 	end
@@ -218,10 +219,6 @@ local function ApplyAppToUnit(unitID, unitDefID, appType, appDef, cmdID, applier
 	if appDef.requires and not currentApps[unitID][appType][appDef.requires] then return false end
 	local level = currentApps[unitID][appType][appDef.name] or 0
 	if level == (appDef.levels or 1) then return false end -- in case it was issued when multiple were selected
-	level = level + 1
-	currentApps[unitID][appType][appDef.name] = level
-	appDef.applyPerk(unitID, level)
-	Spring.SetUnitRulesParam(unitID, appDef.name, true)
 	-- Play sounds
 	if appDef.sound then
 		GG.PlaySoundForTeam(Spring.GetUnitTeam(unitID), appDef.sound, 1)
@@ -230,20 +227,23 @@ local function ApplyAppToUnit(unitID, unitDefID, appType, appDef, cmdID, applier
 	elseif appType == "perks" then
 		GG.PlaySoundForTeam(Spring.GetUnitTeam(unitID), "bb_battlemech_perked", 1)
 	elseif appType == "mods" then
-		if not applierID then -- Special case to add to mech's 'View Mods' menu page, don't play the sound
-			-- need to make a copy that is hidden by default as it is added after unit_mechCommands sorts out the menu...
-			local desc = appDef.cmdDesc
-			desc.hidden = true
-			InsertUnitCmdDesc(unitID, desc)
-		else -- mechbay
-			local conflicted = false
-			for _, modName in pairs(appDef.incompatible or EMPTY_TABLE) do -- assumes only mods can be incompatible
-				incompatible[unitID][modName] = true
-				conflicted = conflicted or RemoveMod(unitID, unitDefID, appDefNames[modName], applierID)
-			end
+		local conflicted = false
+		for _, modName in pairs(appDef.incompatible or EMPTY_TABLE) do -- assumes only mods can be incompatible
+			incompatible[unitID][modName] = true
+			conflicted = conflicted or RemoveMod(unitID, unitDefID, appDefNames[modName], applierID)
+		end
+		-- need to make a copy that is hidden by default as it is added after unit_mechCommands sorts out the menu...
+		local desc = appDef.cmdDesc
+		desc.hidden = true
+		InsertUnitCmdDesc(unitID, desc)
+		if applierID then -- Special case to add to mech's 'View Mods' menu page, don't play the sound
 			GG.PlaySoundForTeam(Spring.GetUnitTeam(unitID), conflicted and "bb_battlemech_modded_conflicted" or "bb_battlemech_modded", 1)
 		end
 	end
+	level = level + 1
+	currentApps[unitID][appType][appDef.name] = level
+	appDef.applyPerk(unitID, level) -- needs to come after any incompatible mods are removed so ammo switches work
+	Spring.SetUnitRulesParam(unitID, appDef.name, true)
 	if cmdID then
 		applierID = applierID or unitID -- default to unitID
 		if level == (appDef.levels or 1) then -- fully trained
