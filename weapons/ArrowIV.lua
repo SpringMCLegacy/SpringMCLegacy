@@ -76,6 +76,9 @@ local ArrowIV_Cluster = ArrowIV:New{
 	damage = {
 		default = 100, -- all the bewm bewm is gone
 	},
+	customparams = {
+		shockwave			= false,
+	},
 }
 
 return lowerkeys({ 
