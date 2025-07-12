@@ -12,5 +12,14 @@ function ChangeType(outpost)
 	end
 end
 
+function script.Create()
+	if unitDef.name == "mine" then
+		local TIME_TO_LIVE = 300
+		local VARIATION = math.floor(TIME_TO_LIVE/30)
+		TIME_TO_LIVE = TIME_TO_LIVE + math.random(-VARIATION, VARIATION)
+		GG.Delay.DelayCall(Spring.DestroyUnit, {unitID, false, true}, TIME_TO_LIVE * 30)
+	end
+end
+
 function script.Killed(recentDamage, maxHealth)
 end
