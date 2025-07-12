@@ -311,9 +311,14 @@ GG.InvincibleUnit = InvincibleUnit
 local firstTime75 = {}
 local firstTime50 = {}
 
+local MINE_ID = WeaponDefNames["mine"].id
+local MINE_DEF_ID = UnitDefNames["mine"].id
+
 function gadget:UnitPreDamaged(unitID, unitDefID, unitTeam, damage, paralyzer, weaponID, projectileID, attackerID, attackerDefID, attackerTeam)
 	-- Don't allow any damage to beacons or dropzones
 	if InvincibleUnit(unitDefID) then return 0 end
+	 -- disallow mines blowing up mines
+	if weaponID == MINE_ID then	return unitDefID == MINE_DEF_ID and 0 or damage end
 	-- ignore none weapons
 	if not attackerID then return damage end
 	
