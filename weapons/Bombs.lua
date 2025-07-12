@@ -10,11 +10,13 @@ local Bomb = BombClass:New{
 }
 
 local Cluster = Bomb:New{
-	model					= "Weapons/Bomblet.s3o",
+	model				= "Weapons/Bomblet.s3o",
+	explosionGenerator    	= "custom:HE_MEDIUM",
 	projectiles			= 96, -- https://www.sarna.net/wiki/File:Arrow4_Cluster.jpg
 	sprayangle			= 600,
+	areaOfEffect            = 200,
 	damage = {
-		default            = 3000,
+		default            = 500,
 	},
 }
   
