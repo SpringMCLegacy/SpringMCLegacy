@@ -1,6 +1,6 @@
 local SRMCarrier = LightTank:New{
 	name              	= "SRM Carrier",
-	description         = "Heavy Missile Support",
+	description         = "Heavy SRM Support",
 	trackWidth			= 23,--width to render the decal
 	weapons	= {	
 		[1] = {
@@ -65,9 +65,9 @@ local SRMCarrier = LightTank:New{
 }
 
 return lowerkeys({
-	--["CC_SRMCarrier"] = SRMCarrier:New(),
-	--["DC_SRMCarrier"] = SRMCarrier:New(),
-	--["FS_SRMCarrier"] = SRMCarrier:New(),
-	--["FW_SRMCarrier"] = SRMCarrier:New(),
-	--["LA_SRMCarrier"] = SRMCarrier:New(),
+	["CC_SRMCarrier"] = SRMCarrier:New(),
+	["DC_SRMCarrier"] = SRMCarrier:New(),
+	["FS_SRMCarrier"] = SRMCarrier:New(),
+	["FW_SRMCarrier"] = SRMCarrier:New(),
+	["LA_SRMCarrier"] = SRMCarrier:New(),
 })

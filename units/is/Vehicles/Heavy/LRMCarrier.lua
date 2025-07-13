@@ -1,6 +1,6 @@
 local LRMCarrier = LightTank:New{
 	name              	= "LRM Carrier",
-	description         = "HeavyMissile Support",
+	description         = "Heavy LRM Support",
 	trackWidth			= 23,--width to render the decal
 	weapons	= {	
 		[1] = {
@@ -10,10 +10,12 @@ local LRMCarrier = LightTank:New{
 		[2] = {
 			name	= "LRM20",
 			maxAngleDif = 60,
+			SlaveTo		= 1,
 		},
 		[3] = {
 			name	= "LRM20",
 			maxAngleDif = 60,
+			SlaveTo		= 1,
 		},
 	},
 	
