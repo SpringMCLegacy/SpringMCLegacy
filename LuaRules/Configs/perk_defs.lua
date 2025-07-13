@@ -81,7 +81,7 @@ local function setWeaponClassAttribute(unitID, className, attrib, multiplier, ta
 			or not with and not (wd[tag] == value) then
 				if multiplier ~= 1 then
 					local currAttrib = Spring.GetUnitWeaponState(unitID, weapNum, attrib)
-					--Spring.Echo("Current " .. attrib .. ": ", currAttrib, weapNum, WeaponDefs[weapTable["weaponDef"]].name)
+					Spring.Echo("Current " .. attrib .. ": ", currAttrib, weapNum, WeaponDefs[weapTable["weaponDef"]].name)
 					Spring.SetUnitWeaponState(unitID, weapNum, attrib, currAttrib * multiplier)
 				end
 				changed[weapNum] = wd
@@ -91,6 +91,7 @@ local function setWeaponClassAttribute(unitID, className, attrib, multiplier, ta
 	end
 	return changed, numChanged
 end
+GG.setWeaponClassAttribute = setWeaponClassAttribute
 
 local function setWeaponClassDamage(unitID, className, multiplier, tag, with, value)
 	local weapons = UnitDefs[Spring.GetUnitDefID(unitID)].weapons
@@ -1787,7 +1788,7 @@ return {
 			end,
 			costFunction = deductSalvage,
 			price = 5,
-			incompatible = {"ammonarcbola", "ammonarcthermite"},
+			incompatible = {"ammonarcbola", "ammonarcthermite", "ammonarchaywire"},
 		},
 		{
 			name = "ammonarcbola",
@@ -1806,7 +1807,7 @@ return {
 			end,
 			costFunction = deductSalvage,
 			price = 5,
-			incompatible = {"ammonarcexplosive", "ammonarcthermite"},
+			incompatible = {"ammonarcexplosive", "ammonarcthermite", "ammonarchaywire"},
 		},
 		{
 			name = "ammonarcthermite",
@@ -1825,7 +1826,26 @@ return {
 			end,
 			costFunction = deductSalvage,
 			price = 5,
-			incompatible = {"ammonarcexplosive", "ammonarcbola"},
+			incompatible = {"ammonarcexplosive", "ammonarcbola", "ammonarchaywire"},
+		},
+		{
+			name = "ammonarchaywire",
+			menu = "ammo",
+			cmdDesc = {
+				id = GetCmdID('MOD_AMMO_NARC_HAYWIRE'),
+				action = 'modammonarchaywire',
+				name = GG.Pad("NARC", "Haywire"),
+				tooltip = 'Narc only. Replaces standard Homing Pod fired by Narcs with a haywire pod which halves target accuracy for several seconds.',
+				texture = 'bitmaps/ui/perkyellow.png',	
+			},
+			valid = isMechBay,
+			applyTo = function (unitDefID) return hasWeaponName(unitDefID, "narc") end,
+			applyPerk = function (unitID, level, invert)
+				GG.EnableAmmo(unitID, not invert, "narc", "haywire")
+			end,
+			costFunction = deductSalvage,
+			price = 5,
+			incompatible = {"ammonarcexplosive", "ammonarcbola", "ammonarcthermite"},
 		},
 	},
 }

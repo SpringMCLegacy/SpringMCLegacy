@@ -167,7 +167,7 @@ local function ApplyPPC(unitID, unitDefID)
 	ppcUnits[unitID] = Spring.GetGameFrame() + delay
 	SetUnitRulesParam(unitID, "PPC_HIT", ppcUnits[unitID], {inlos = true})
 	SetUnitRulesParam(unitID, "FXOFF", 1, {public = true})
-	GG.Delay.DelayCall(FinishPPC, {unitID}, delay)
+	DelayCall(FinishPPC, {unitID}, delay)
 end
 GG.ApplyPPC = ApplyPPC -- for inhbitor removal self own
 
@@ -379,7 +379,6 @@ function gadget:UnitPreDamaged(unitID, unitDefID, unitTeam, damage, paralyzer, w
 			--Spring.Echo("speed change now", Spring.GetGameFrame())
 			GG.SpeedChange(unitID, unitDefID, 0.1)
 			DelayCall(GG.SpeedChange, {unitID, unitDefID, 1}, 5*30)
-			return 0
 		elseif specialAmmo == "explosivepod" then
 			return damage
 		elseif specialAmmo == "thermite" then
@@ -391,11 +390,13 @@ function gadget:UnitPreDamaged(unitID, unitDefID, unitTeam, damage, paralyzer, w
 				local fxInfo = {unitID, pieceNum, "sparks"}
 				-- lol this is silly
 				for i = 1, NARC_DURATION, 30 do
-					GG.Delay.DelayCall(Spring.UnitScript.CallAsUnit, info, i)
-					GG.Delay.DelayCall(GG.EmitSfxName, fxInfo, i)
+					DelayCall(Spring.UnitScript.CallAsUnit, info, i)
+					DelayCall(GG.EmitSfxName, fxInfo, i)
 				end
 			end
-			return 0
+		elseif specialAmmo == "haywire" then
+			GG.setWeaponClassAttribute(unitID, "all", "accuracy", 2)
+			DelayCall(GG.setWeaponClassAttribute, {unitID, "all", "accuracy", 0.5}, NARC_DURATION)
 		else -- regular NARC
 			--if GetUnitUnderJammer(unitID, unitTeam) then return 0 end
 			local allyTeam = select(6, GetTeamInfo(attackerTeam))
@@ -403,9 +404,9 @@ function gadget:UnitPreDamaged(unitID, unitDefID, unitTeam, damage, paralyzer, w
 			local duration = GetUnitRulesParam(attackerID, "NARC_DURATION") or NARC_DURATION
 			NARC(unitID, allyTeam, duration)
 			DelayCall(DeNARC, {unitID, allyTeam}, duration)
-			-- NARC does 0 damage
-			return 0
 		end
+		-- NARC does 0 damage
+		return 0
 	elseif weaponID == TAG_ID then
 		-- Don't allow dropships to be TAGed
 		if not UnitDefs[unitDefID].customParams.dropship then
@@ -427,7 +428,7 @@ function gadget:UnitPreDamaged(unitID, unitDefID, unitTeam, damage, paralyzer, w
 					["ttl"] = 1,
 				}
 				for i = 1, 6 do
-					GG.Delay.DelayCall(Spring.SpawnProjectile, {WeaponDefNames["ppc_fx"].id, params}, (i-1) * 2)
+					DelayCall(Spring.SpawnProjectile, {WeaponDefNames["ppc_fx"].id, params}, (i-1) * 2)
 				end
 				GG.PlaySoundAtUnit(unitID, "sounds/ppc_connect.wav", 5, x - ox, y - oy, z - oz, "sfx")
 			end
@@ -441,14 +442,14 @@ function gadget:UnitPreDamaged(unitID, unitDefID, unitTeam, damage, paralyzer, w
 			GG.PlaySoundForTeam(unitTeam, "bb_dropship_damaged", 1)
 			local x,y,z = Spring.GetUnitPosition(unitID)
 			CallAsTeam(unitTeam, Spring.MarkerAddPoint, x, y, z, "", true)
-			GG.Delay.DelayCall(CallAsTeam, {unitTeam, Spring.MarkerErasePosition, x, y, z}, 30 * 60)
+			DelayCall(CallAsTeam, {unitTeam, Spring.MarkerErasePosition, x, y, z}, 30 * 60)
 			firstTime75[unitID] = true
 		elseif not firstTime50[unitID] and (health-damage) / maxHealth <= 0.50 and (health-damage) / maxHealth >= 0.475 then
 			--Spring.Echo("YO YO DROPSHIP IS DAMAGED 50%")
 			GG.PlaySoundForTeam(unitTeam, "bb_dropship_damaged", 1) -- for now the same sound, but maybe a more severe warning later
 			local x,y,z = Spring.GetUnitPosition(unitID)
 			CallAsTeam(unitTeam, Spring.MarkerAddPoint, x, y, z, "", true)
-			GG.Delay.DelayCall(CallAsTeam, {unitTeam, Spring.MarkerErasePosition, x, y, z}, 30 * 60)
+			DelayCall(CallAsTeam, {unitTeam, Spring.MarkerErasePosition, x, y, z}, 30 * 60)
 			firstTime50[unitID] = true
 		end
 	end
@@ -465,8 +466,8 @@ function gadget:UnitEnteredRadar(unitID, unitTeam, allyTeam, unitDefID)
 		end]]
 	else
 		-- statics are perma-visible
-		GG.Delay.DelayCall(SetUnitLosState, {unitID, allyTeam, fullLOS}, 1)
-		GG.Delay.DelayCall(SetUnitLosMask, {unitID, allyTeam, fullLOS}, 1) -- don't let engine update any los status
+		DelayCall(SetUnitLosState, {unitID, allyTeam, fullLOS}, 1)
+		DelayCall(SetUnitLosMask, {unitID, allyTeam, fullLOS}, 1) -- don't let engine update any los status
 	end
 end
 
