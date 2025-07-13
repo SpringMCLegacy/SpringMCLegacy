@@ -328,9 +328,10 @@ function gadget:UnitPreDamaged(unitID, unitDefID, unitTeam, damage, paralyzer, w
 	local speedChange
 	-- Ammos
 	local specialAmmos = unitSpecialAmmos[attackerID]
+	local specialAmmo = nil
 	if specialAmmos then
 		local weaponType = weaponDef.customParams.weaponclass
-		local specialAmmo = specialAmmos[weaponType]
+		specialAmmo = specialAmmos[weaponType]
 		if specialAmmo == "inferno" then
 			damage = 0
 			heatDamage = 2
@@ -374,15 +375,27 @@ function gadget:UnitPreDamaged(unitID, unitDefID, unitTeam, damage, paralyzer, w
 	if weaponID == NARC_ID then
 		-- Don't allow dropships to be NARCed
 		if UnitDefs[unitDefID].customParams.dropship then return 0 end
-		if speedChange and GG.mechCache[unitDefID] then -- Bola Pod
+		if specialAmmo == "bola" then
 			--Spring.Echo("speed change now", Spring.GetGameFrame())
 			GG.SpeedChange(unitID, unitDefID, 0.1)
 			DelayCall(GG.SpeedChange, {unitID, unitDefID, 1}, 5*30)
-			--Spring.MoveCtrl.Enable(unitID)
-			--DelayCall(Spring.MoveCtrl.Disable, {unitID}, 5 * 30)
 			return 0
-		elseif damage == 400 then -- Explosive Pod
+		elseif specialAmmo == "explosivepod" then
 			return damage
+		elseif specialAmmo == "thermite" then
+			if unitArmours[unitID] == "heat" then return 0 end 
+			env = Spring.UnitScript.GetScriptEnv(unitID)
+			if env and env.ChangeHeat then -- dropships don't track heat
+				local info = {unitID, env.ChangeHeat, 0.5} -- only build the table once
+				local pieceNum = env.piece(Spring.GetUnitLastAttackedPiece(unitID) or "torso")
+				local fxInfo = {unitID, pieceNum, "sparks"}
+				-- lol this is silly
+				for i = 1, NARC_DURATION, 30 do
+					GG.Delay.DelayCall(Spring.UnitScript.CallAsUnit, info, i)
+					GG.Delay.DelayCall(GG.EmitSfxName, fxInfo, i)
+				end
+			end
+			return 0
 		else -- regular NARC
 			--if GetUnitUnderJammer(unitID, unitTeam) then return 0 end
 			local allyTeam = select(6, GetTeamInfo(attackerTeam))

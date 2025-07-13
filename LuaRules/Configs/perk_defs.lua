@@ -967,6 +967,7 @@ return {
 			costFunction = deductSalvage,
 			price = 10,
 		},]]
+		
 		-- Defensive (ARMOUR)
 		{
 			name = "ferrofibrousarmour",
@@ -1786,7 +1787,7 @@ return {
 			end,
 			costFunction = deductSalvage,
 			price = 5,
-			incompatible = {"ammonarcbola"},
+			incompatible = {"ammonarcbola", "ammonarcthermite"},
 		},
 		{
 			name = "ammonarcbola",
@@ -1805,7 +1806,26 @@ return {
 			end,
 			costFunction = deductSalvage,
 			price = 5,
-			incompatible = {"ammonarcexplosive"},
+			incompatible = {"ammonarcexplosive", "ammonarcthermite"},
+		},
+		{
+			name = "ammonarcthermite",
+			menu = "ammo",
+			cmdDesc = {
+				id = GetCmdID('MOD_AMMO_NARC_THERMITE'),
+				action = 'modammonarcthermite',
+				name = GG.Pad("NARC", "Thermite"),
+				tooltip = 'Narc only. Replaces standard Homing Pod fired by Narcs with a thermite charge that delivers heat for several seconds.',
+				texture = 'bitmaps/ui/perkyellow.png',	
+			},
+			valid = isMechBay,
+			applyTo = function (unitDefID) return hasWeaponName(unitDefID, "narc") end,
+			applyPerk = function (unitID, level, invert)
+				GG.EnableAmmo(unitID, not invert, "narc", "thermite")				
+			end,
+			costFunction = deductSalvage,
+			price = 5,
+			incompatible = {"ammonarcexplosive", "ammonarcbola"},
 		},
 	},
 }
