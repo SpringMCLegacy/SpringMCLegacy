@@ -1338,6 +1338,32 @@ return {
 			price = 15,
 			incompatible = {"quickchargingcapacitors"},
 		},
+		{
+			name = "poweramplifier",
+			menu = "offensive",
+			cmdDesc = {
+				id = GetCmdID('MOD_POWER_AMPLIFIER'),
+				action = 'modpoweramplifier',
+				name = GG.Pad("Power", "Amplifier"),
+				tooltip = 'Beamlasers only. Boosts damage by 10% for 10% extra heat.',
+				texture = 'bitmaps/ui/perkbgfaction.png',	
+			},
+			valid = isMechBay,
+			applyTo = function (unitDefID) return isNotOmni(unitDefID) and hasWeaponClass(unitDefID, "energy", "soundTrigger", true, true) end,
+			applyPerk = function (unitID, level, invert)
+				local effect = 1.1
+				effect = (invert and 1/effect) or effect
+				
+				local changed = setWeaponClassDamage(unitID, "energy", effect, "soundTrigger", true, true)
+				
+				env = Spring.UnitScript.GetScriptEnv(unitID)
+				for weapNum in pairs(changed) do
+					env.firingHeats[weapNum] = env.firingHeats[weapNum] * effect
+				end
+			end,
+			costFunction = deductSalvage,
+			price = 15,
+		},
 		-- Ammo
 		{
 			name = "ammoprecision",
