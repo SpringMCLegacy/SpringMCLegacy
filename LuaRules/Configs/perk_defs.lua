@@ -81,7 +81,7 @@ local function setWeaponClassAttribute(unitID, className, attrib, multiplier, ta
 			or not with and not (wd[tag] == value) then
 				if multiplier ~= 1 then
 					local currAttrib = Spring.GetUnitWeaponState(unitID, weapNum, attrib)
-					Spring.Echo("Current " .. attrib .. ": ", currAttrib, weapNum, WeaponDefs[weapTable["weaponDef"]].name)
+					--Spring.Echo("Current " .. attrib .. ": ", currAttrib, weapNum, WeaponDefs[weapTable["weaponDef"]].name)
 					Spring.SetUnitWeaponState(unitID, weapNum, attrib, currAttrib * multiplier)
 				end
 				changed[weapNum] = wd
@@ -945,29 +945,6 @@ return {
 			costFunction = deductSalvage,
 			price = 10,
 		},
-		--[[{
-			name = "inarc",
-			menu = "tactical",
-			cmdDesc = {
-				id = GetCmdID('MOD_I_NARC'),
-				action = 'modinarc',
-				name = GG.Pad("Improved", "NARC"),
-				tooltip = "Improved Narc Launcher. 50% range increase and Homing Pod duration. It also unlocks additional iNarc Pod upgrades (see Offensive upgrades section).",
-				texture = 'bitmaps/ui/perkbgability.png',	
-			},
-			valid = isMechBay,
-			applyTo = function (unitDefID) return allMechs(unitDefID) and hasWeaponName(unitDefID, "NARC") end,
-			applyPerk = function (unitID, level, invert) 
-				local effect = 1.5
-				effect = (invert and 1/effect) or effect
-				
-				local currDuration = Spring.GetUnitRulesParam(unitID, "NARC_DURATION") or Spring.GetGameRulesParam("NARC_DURATION")
-				Spring.SetUnitRulesParam(unitID, "NARC_DURATION", currDuration * effect)
-				setWeaponClassAttribute(unitID, "narc", "range", effect)
-			end,
-			costFunction = deductSalvage,
-			price = 10,
-		},]]
 		
 		-- Defensive (ARMOUR)
 		{
@@ -1770,6 +1747,31 @@ return {
 			costFunction = deductSalvage,
 			price = 5,
 			incompatible = {"ammosrmtandem", "ammosrminferno", "artemissrm"},
+		},
+		{
+			name = "ammoinarc",
+			menu = "ammo",
+			cmdDesc = {
+				id = GetCmdID('MOD_AMMO_I_NARC'),
+				action = 'modammoinarc',
+				name = GG.Pad("Improved", "NARC"),
+				tooltip = "Improved Narc Beacon. 50% range increase and 2x Homing Pod duration.",
+				texture = 'bitmaps/ui/perkyellow.png',	
+			},
+			valid = isMechBay,
+			applyTo = function (unitDefID) return allMechs(unitDefID) and hasWeaponName(unitDefID, "NARC") end,
+			applyPerk = function (unitID, level, invert) 
+				local effect = 1.5
+				effect = (invert and 1/effect) or effect
+				setWeaponClassAttribute(unitID, "narc", "range", effect)
+				
+				effect = 2
+				effect = (invert and 1/effect) or effect
+				local currDuration = Spring.GetUnitRulesParam(unitID, "NARC_DURATION") or Spring.GetGameRulesParam("NARC_DURATION")
+				Spring.SetUnitRulesParam(unitID, "NARC_DURATION", currDuration * effect)
+			end,
+			costFunction = deductSalvage,
+			price = 10,
 		},
 		{
 			name = "ammonarcexplosive",
