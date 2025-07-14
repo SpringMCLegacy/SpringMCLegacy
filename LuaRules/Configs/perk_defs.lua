@@ -105,7 +105,7 @@ local function setWeaponClassDamage(unitID, className, multiplier, tag, with, va
 				for i = 0, NUM_DAMAGE_TYPES do
 					local currAttrib = Spring.GetUnitWeaponDamages(unitID, weapNum, i)
 					Spring.SetUnitWeaponDamages(unitID, weapNum, i, currAttrib * multiplier)
-					changed[weapNum] = wf
+					changed[weapNum] = wd
 				end
 			end
 		end
@@ -134,24 +134,33 @@ end
 local function WeaponTypeCount(unitDefID, className)
 	local weapons = UnitDefs[unitDefID].weapons
 	local count = 0
+	local changed = {}
 	for weapNum, weapTable in pairs(weapons) do
 		local wd = WeaponDefs[weapTable["weaponDef"]]
 		if className == "all" or (wd.customParams["weaponclass"] == className) then
 			count = count + 1
+			changed[weapNum] = wd
 		end
 	end
 	--Spring.Echo("WeaponTypeCount", UnitDefs[unitDefID].name, className, count)
-	return count
+	return count, changed
 end
 
 local function deductPerWeaponType(unitDefID, weaponType, amount)
 	return WeaponTypeCount(unitDefID, weaponType) * amount
 end
 
-local function deductPerUnitDefTag(unitDefID, custom, tag, amount)
+local function deductPerUnitDefTag(unitDefID, custom, tag, amount, subtable)
 	local ud = UnitDefs[unitDefID]
 	local cp = ud.customParams
-	return (custom and cp[tag] or ud[tag] or 0) * amount
+	local value = (custom and cp[tag] or ud[tag] or 0)
+	-- cray stuff for customparams tables
+	--Spring.Echo("value 1", value, tag, subtable)
+	value = (custom and subtable and table.unserialize(value)) or value
+	--Spring.Echo("value 2", value, tag, subtable)
+	value = (type(value) == type(EMPTY) and value[subtable]) or value
+	--Spring.Echo("value 3", value, tag, subtable)
+	return value * amount
 end
 
 
@@ -1398,7 +1407,17 @@ return {
 				end
 			end,
 			costFunction = deductSalvage,
-			price = 5,
+			priceFunction = function(unitDefID)
+				local AMOUNT_PER_TON = 5
+				local _, changed = WeaponTypeCount(unitDefID, "autocannon")
+				local runningTotal = 0
+				for weapNum, wd in pairs(changed) do
+					local ammoType = wd.customParams.ammotype
+					local shotsPerTon = GG.GameConstants.ammoTypes[ammoType:upper()]
+					runningTotal = runningTotal + deductPerUnitDefTag(unitDefID, true, "maxammo", AMOUNT_PER_TON / shotsPerTon, ammoType)
+				end
+				return runningTotal
+			end,
 			incompatible = {"ammoarmourpiercing", "ammocaseless", "ammohypervelocity"},
 		},
 		{
@@ -1434,7 +1453,17 @@ return {
 				end
 			end,
 			costFunction = deductSalvage,
-			price = 5,
+			priceFunction = function(unitDefID)
+				local AMOUNT_PER_TON = 5
+				local _, changed = WeaponTypeCount(unitDefID, "autocannon")
+				local runningTotal = 0
+				for weapNum, wd in pairs(changed) do
+					local ammoType = wd.customParams.ammotype
+					local shotsPerTon = GG.GameConstants.ammoTypes[ammoType:upper()]
+					runningTotal = runningTotal + deductPerUnitDefTag(unitDefID, true, "maxammo", AMOUNT_PER_TON / shotsPerTon, ammoType)
+				end
+				return runningTotal
+			end,
 			incompatible = {"ammoprecision", "ammoarmourpiercing", "ammocaseless"},
 		},
 		{
@@ -1473,7 +1502,17 @@ return {
 				end
 			end,
 			costFunction = deductSalvage,
-			price = 10,
+			priceFunction = function(unitDefID)
+				local AMOUNT_PER_TON = 10
+				local _, changed = WeaponTypeCount(unitDefID, "autocannon")
+				local runningTotal = 0
+				for weapNum, wd in pairs(changed) do
+					local ammoType = wd.customParams.ammotype
+					local shotsPerTon = GG.GameConstants.ammoTypes[ammoType:upper()]
+					runningTotal = runningTotal + deductPerUnitDefTag(unitDefID, true, "maxammo", AMOUNT_PER_TON / shotsPerTon, ammoType)
+				end
+				return runningTotal
+			end,
 			incompatible = {"ammoprecision", "ammocaseless", "ammohypervelocity"},
 		},
 		{
@@ -1506,7 +1545,17 @@ return {
 				end
 			end,
 			costFunction = deductSalvage,
-			price = 5,
+			priceFunction = function(unitDefID)
+				local AMOUNT_PER_TON = 5
+				local _, changed = WeaponTypeCount(unitDefID, "autocannon")
+				local runningTotal = 0
+				for weapNum, wd in pairs(changed) do
+					local ammoType = wd.customParams.ammotype
+					local shotsPerTon = GG.GameConstants.ammoTypes[ammoType:upper()]
+					runningTotal = runningTotal + deductPerUnitDefTag(unitDefID, true, "maxammo", AMOUNT_PER_TON / shotsPerTon, ammoType)
+				end
+				return runningTotal
+			end,
 			incompatible = {"ammoprecision", "ammoarmourpiercing", "ammohypervelocity"},
 		},
 		{
@@ -1525,7 +1574,10 @@ return {
 				GG.EnableAmmo(unitID, not invert, "lrm", "inferno")				
 			end,
 			costFunction = deductSalvage,
-			price = 5,
+			priceFunction = function(unitDefID)
+				local AMOUNT_PER_TON = 5 / GG.GameConstants.ammoTypes.LRM
+				return deductPerUnitDefTag(unitDefID, true, "maxammo", AMOUNT_PER_TON, "lrm")
+			end,
 			incompatible = {"ammolrmextended", "artemislrm", "ammolrmmagpulse", "ammolrmthunder", "ammolrmarad", "ammolrmhoming"},
 		},
 		{
@@ -1555,7 +1607,10 @@ return {
 				Spring.SetUnitRulesParam(unitID, "ammo_lrm", 100)
 			end,
 			costFunction = deductSalvage,
-			price = 10,
+			priceFunction = function(unitDefID)
+				local AMOUNT_PER_TON = 10 / GG.GameConstants.ammoTypes.LRM
+				return deductPerUnitDefTag(unitDefID, true, "maxammo", AMOUNT_PER_TON, "lrm")
+			end,
 			incompatible = {"artemislrm", "ammolrminferno", "ammolrmmagpulse", "ammolrmthunder", "ammolrmarad", "ammolrmhoming"},
 		},
 		{
@@ -1574,7 +1629,10 @@ return {
 				GG.EnableAmmo(unitID, not invert, "lrm", "magpulse")				
 			end,
 			costFunction = deductSalvage,
-			price = 5,
+			priceFunction = function(unitDefID)
+				local AMOUNT_PER_TON = 5 / GG.GameConstants.ammoTypes.LRM
+				return deductPerUnitDefTag(unitDefID, true, "maxammo", AMOUNT_PER_TON, "lrm")
+			end,
 			incompatible = {"ammolrmextended", "artemislrm", "ammolrminferno", "ammolrmthunder", "ammolrmarad", "ammolrmhoming"},
 		},
 		{
@@ -1593,7 +1651,10 @@ return {
 				GG.EnableAmmo(unitID, not invert, "lrm", "arad")				
 			end,
 			costFunction = deductSalvage,
-			price = 10,
+			priceFunction = function(unitDefID)
+				local AMOUNT_PER_TON = 10 / GG.GameConstants.ammoTypes.LRM
+				return deductPerUnitDefTag(unitDefID, true, "maxammo", AMOUNT_PER_TON, "lrm")
+			end,
 			incompatible = {"ammolrmextended", "artemislrm", "ammolrminferno", "ammolrmthunder", "ammolrmmagpulse", "ammolrmhoming"},
 		},
 		{
@@ -1612,7 +1673,10 @@ return {
 				GG.EnableAmmo(unitID, not invert, "lrm", "thunder")				
 			end,
 			costFunction = deductSalvage,
-			price = 15,
+			priceFunction = function(unitDefID)
+				local AMOUNT_PER_TON = 15 / GG.GameConstants.ammoTypes.LRM
+				return deductPerUnitDefTag(unitDefID, true, "maxammo", AMOUNT_PER_TON, "lrm")
+			end,
 			incompatible = {"ammolrmextended", "artemislrm", "ammolrminferno", "ammolrmmagpulse", "ammolrmarad", "ammolrmhoming"},
 		},
 		{
@@ -1631,7 +1695,10 @@ return {
 				GG.EnableAmmo(unitID, not invert, "lrm", "homing")				
 			end,
 			costFunction = deductSalvage,
-			price = 25,
+			priceFunction = function(unitDefID)
+				local AMOUNT_PER_TON = 25 / GG.GameConstants.ammoTypes.LRM
+				return deductPerUnitDefTag(unitDefID, true, "maxammo", AMOUNT_PER_TON, "lrm")
+			end,
 			incompatible = {"ammolrmextended", "artemislrm", "ammolrminferno", "ammolrmmagpulse", "ammolrmarad", "ammolrmthunder"},
 		},
 		{
@@ -1650,7 +1717,10 @@ return {
 				GG.EnableAmmo(unitID, not invert, "arrowiv", "homing")				
 			end,
 			costFunction = deductSalvage,
-			price = 25,
+			priceFunction = function(unitDefID)
+				local AMOUNT_PER_TON = 25 / GG.GameConstants.ammoTypes.Arrow
+				return deductPerUnitDefTag(unitDefID, true, "maxammo", AMOUNT_PER_TON, "arrow")
+			end,
 			incompatible = {"ammoarrowarad", "ammoarrowcluster", "ammoarrowthunder"},
 		},
 		{
@@ -1669,7 +1739,10 @@ return {
 				GG.EnableAmmo(unitID, not invert, "arrowiv", "cluster")				
 			end,
 			costFunction = deductSalvage,
-			price = 25,
+			priceFunction = function(unitDefID)
+				local AMOUNT_PER_TON = 25 / GG.GameConstants.ammoTypes.Arrow
+				return deductPerUnitDefTag(unitDefID, true, "maxammo", AMOUNT_PER_TON, "arrow")
+			end,
 			incompatible = {"ammoarrowarad", "ammoarrowhoming", "ammoarrowthunder"},
 		},
 		{
@@ -1688,7 +1761,10 @@ return {
 				GG.EnableAmmo(unitID, not invert, "arrowiv", "thunder")				
 			end,
 			costFunction = deductSalvage,
-			price = 25,
+			priceFunction = function(unitDefID)
+				local AMOUNT_PER_TON = 25 / GG.GameConstants.ammoTypes.Arrow
+				return deductPerUnitDefTag(unitDefID, true, "maxammo", AMOUNT_PER_TON, "arrow")
+			end,
 			incompatible = {"ammoarrowarad", "ammoarrowhoming", "ammoarrowcluster"},
 		},
 		{
@@ -1707,7 +1783,10 @@ return {
 				GG.EnableAmmo(unitID, not invert, "arrowiv", "arad")
 			end,
 			costFunction = deductSalvage,
-			price = 10,
+			priceFunction = function(unitDefID)
+				local AMOUNT_PER_TON = 10 / GG.GameConstants.ammoTypes.Arrow
+				return deductPerUnitDefTag(unitDefID, true, "maxammo", AMOUNT_PER_TON, "arrow")
+			end,
 			incompatible = {"ammoarrowhoming", "ammoarrowcluster", "ammoarrowthunder"},
 		},
 		{
@@ -1726,7 +1805,11 @@ return {
 				GG.EnableAmmo(unitID, not invert, "srm", "inferno")				
 			end,
 			costFunction = deductSalvage,
-			price = 8,
+			priceFunction = function(unitDefID)
+				local AMOUNT_PER_TON = 8 / GG.GameConstants.ammoTypes.SRM
+				Spring.Echo("inferno")
+				return deductPerUnitDefTag(unitDefID, true, "maxammo", AMOUNT_PER_TON, "srm")
+			end,
 			incompatible = {"ammosrmtandem", "ammosrmmagpulse", "artemissrm"},
 		},
 		{
@@ -1752,7 +1835,10 @@ return {
 				Spring.SetUnitRulesParam(unitID, "ammo_srm", 100)
 			end,
 			costFunction = deductSalvage,
-			price = 5,
+			priceFunction = function(unitDefID)
+				local AMOUNT_PER_TON = 5 / GG.GameConstants.ammoTypes.SRM
+				return deductPerUnitDefTag(unitDefID, true, "maxammo", AMOUNT_PER_TON, "srm")
+			end,
 			incompatible = {"ammosrminferno", "ammosrmmagpulse", "artemissrm"},
 		},
 		{
@@ -1771,7 +1857,10 @@ return {
 				GG.EnableAmmo(unitID, not invert, "srm", "magpulse")				
 			end,
 			costFunction = deductSalvage,
-			price = 5,
+			priceFunction = function(unitDefID)
+				local AMOUNT_PER_TON = 5 / GG.GameConstants.ammoTypes.SRM
+				return deductPerUnitDefTag(unitDefID, true, "maxammo", AMOUNT_PER_TON, "srm")
+			end,
 			incompatible = {"ammosrmtandem", "ammosrminferno", "artemissrm"},
 		},
 		{
@@ -1797,7 +1886,11 @@ return {
 				Spring.SetUnitRulesParam(unitID, "NARC_DURATION", currDuration * effect)
 			end,
 			costFunction = deductSalvage,
-			price = 10,
+			priceFunction = function(unitDefID)
+				local AMOUNT_PER_TON = 5 / GG.GameConstants.ammoTypes.Narc
+				return deductPerUnitDefTag(unitDefID, true, "maxammo", AMOUNT_PER_TON, "narc")
+			end,
+			incompatible = {"ammonarcbola", "ammonarcthermite", "ammonarchaywire", "ammonarcexplosive"},
 		},
 		{
 			name = "ammonarcexplosive",
@@ -1815,8 +1908,11 @@ return {
 				GG.EnableAmmo(unitID, not invert, "narc", "explosivepod")				
 			end,
 			costFunction = deductSalvage,
-			price = 5,
-			incompatible = {"ammonarcbola", "ammonarcthermite", "ammonarchaywire"},
+			priceFunction = function(unitDefID)
+				local AMOUNT_PER_TON = 5 / GG.GameConstants.ammoTypes.Narc
+				return deductPerUnitDefTag(unitDefID, true, "maxammo", AMOUNT_PER_TON, "narc")
+			end,
+			incompatible = {"ammonarcbola", "ammonarcthermite", "ammonarchaywire", "ammoinarc"},
 		},
 		{
 			name = "ammonarcbola",
@@ -1834,8 +1930,11 @@ return {
 				GG.EnableAmmo(unitID, not invert, "narc", "bola")				
 			end,
 			costFunction = deductSalvage,
-			price = 5,
-			incompatible = {"ammonarcexplosive", "ammonarcthermite", "ammonarchaywire"},
+			priceFunction = function(unitDefID)
+				local AMOUNT_PER_TON = 5 / GG.GameConstants.ammoTypes.Narc
+				return deductPerUnitDefTag(unitDefID, true, "maxammo", AMOUNT_PER_TON, "narc")
+			end,
+			incompatible = {"ammonarcexplosive", "ammonarcthermite", "ammonarchaywire", "ammoinarc"},
 		},
 		{
 			name = "ammonarcthermite",
@@ -1853,8 +1952,11 @@ return {
 				GG.EnableAmmo(unitID, not invert, "narc", "thermite")				
 			end,
 			costFunction = deductSalvage,
-			price = 5,
-			incompatible = {"ammonarcexplosive", "ammonarcbola", "ammonarchaywire"},
+			priceFunction = function(unitDefID)
+				local AMOUNT_PER_TON = 5 / GG.GameConstants.ammoTypes.Narc
+				return deductPerUnitDefTag(unitDefID, true, "maxammo", AMOUNT_PER_TON, "narc")
+			end,
+			incompatible = {"ammonarcexplosive", "ammonarcbola", "ammonarchaywire", "ammoinarc"},
 		},
 		{
 			name = "ammonarchaywire",
@@ -1872,8 +1974,11 @@ return {
 				GG.EnableAmmo(unitID, not invert, "narc", "haywire")
 			end,
 			costFunction = deductSalvage,
-			price = 5,
-			incompatible = {"ammonarcexplosive", "ammonarcbola", "ammonarcthermite"},
+			priceFunction = function(unitDefID)
+				local AMOUNT_PER_TON = 5 / GG.GameConstants.ammoTypes.Narc
+				return deductPerUnitDefTag(unitDefID, true, "maxammo", AMOUNT_PER_TON, "narc")
+			end,
+			incompatible = {"ammonarcexplosive", "ammonarcbola", "ammonarcthermite", "ammoinarc"},
 		},
 	},
 }

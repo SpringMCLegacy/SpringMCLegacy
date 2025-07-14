@@ -106,8 +106,9 @@ local function UpdateRemaining(unitID, unitDefID, appType, newLevel, applierID)
 				if (not currentApps[unitID][appType][appDef.name] or currentApps[unitID][appType][appDef.name] < (appDef.levels or 1)) 
 				and validApps[Spring.GetUnitDefID(applierID)][appType][appCmdID] then
 					appRemaining = true
-					local price = Spring.IsNoCostEnabled() and 0 or appDef.price or appDef.priceFunction(unitDefID)
-					if appDef.priceFunction then
+					local price = Spring.IsNoCostEnabled() and 0 or appDef.price or -1
+					if appDef.applyTo and appDef.applyTo(unitDefID) and appDef.priceFunction then
+						price = Spring.IsNoCostEnabled() and 0 or appDef.priceFunction(unitDefID)
 						EditUnitCmdDesc(applierID, FindUnitCmdDesc(applierID, appCmdID), {tooltip = BuildToolTip(appType, appDef, unitDefID)})
 					end
 					if (newLevel < price) 
