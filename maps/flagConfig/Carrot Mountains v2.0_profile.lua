@@ -1,93 +1,66 @@
 local resources = {
-	{
-		x = 6240, 
-		z = 6023,
+	{ -- center
+		x = 6234, 
+		z = 6076,
 		feature = nil,
+		radiusmult = 1.25,
 	},
-	{
-		x = 6278, 
-		z = 644,
+	{ -- center radius NE
+		x = 7340, 
+		z = 3462,
 		feature = nil,
+		points = 6,	
+		radius = 300,
 	},
-	{
-		x = 3543, 
-		z = 1995,
+	{ -- center radius SE
+		x = 8376, 
+		z = 6680,
 		feature = nil,
+		points = 6,	
+		radius = 300,
 	},
-	{
-		x = 8006, 
-		z = 1549,
+	{ -- center radius SW
+		x = 4797, 
+		z = 8053,
 		feature = nil,
+		points = 6,	
+		radius = 300,
 	},
-	{
-		x = 7359, 
-		z = 3470,
+	{ -- center radius NW
+		x = 4752, 
+		z = 4260,
 		feature = nil,
+		points = 6,	
+		radius = 300,
 	},
-	{
-		x = 4754, 
-		z = 4271,
+	{ -- plateau E
+		x = 10147, 
+		z = 5512,
 		feature = nil,
+		points = 0,
+		radius = 250,
 	},
-	{
-		x = 1316, 
-		z = 3691,
+	{ -- plateau W
+		x = 1866, 
+		z = 5436,
 		feature = nil,
+		points = 0,
+		radius = 250,
 	},
-	{
-		x = 9633, 
-		z = 4259,
+	{ -- south floor
+		x = 6035, 
+		z = 10878,
 		feature = nil,
+		radiusmult = 2,
+		points = 0,
 	},
-	{
-		x = 11162, 
-		z = 3466,
+	{ -- north hill
+		x = 6355, 
+		z = 939,
 		feature = nil,
-	},
-	{
-		x = 2417, 
-		z = 7261,
-		feature = nil,
-	},
-	{
-		x = 4807, 
-		z = 8061,
-		feature = nil,
-	},
-	{
-		x = 8375, 
-		z = 6672,
-		feature = nil,
-	},
-	{
-		x = 10709, 
-		z = 7310,
-		feature = nil,
-	},
-	{
-		x = 9844, 
-		z = 10044,
-		feature = nil,
-	},
-	{
-		x = 6231, 
-		z = 9420,
-		feature = nil,
-	},
-	{
-		x = 1056, 
-		z = 8820,
-		feature = nil,
-	},
-	{
-		x = 3425, 
-		z = 10717,
-		feature = nil,
-	},
-	{
-		x = 7787, 
-		z = 11976,
-		feature = nil,
+		radiusmult = 
+		2,
+		points = 0,
 	},
 }
 
@@ -100,18 +73,24 @@ local starts = {
 	[0] = { -- teamID 1
 		x = 841,
 		z = 1520,
+		points = 6,	
 	},
 	[1] = { -- teamID 2
-		x = 11943,
-		z = 11794,
+		x = 11106,
+		z = 10855,
+		points = 6,	
 	},
 	[2] = { -- teamID 3
-		x = 11026,
-		z = 1370,
+		x = 11022,
+		z = 1413,
+		alwaysbeacon = 1,
+		points = 6,	
 	},
 	[3] = { -- teamID 4
-		x = 498,
-		z = 10740,
+		x = 523,
+		z = 10702,
+		alwaysbeacon = 1,
+		points = 6,	
 	},
 }
 
