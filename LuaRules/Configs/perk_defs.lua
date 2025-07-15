@@ -803,6 +803,7 @@ return {
 			end,
 			costFunction = deductSalvage,
 			price = 10,
+			incompatible = {"triplestrengthmyomer"},
 		},
 		{
 			name = "supercharger",
@@ -824,6 +825,26 @@ return {
 			end,
 			costFunction = deductSalvage,
 			price = 10,
+		},
+		{
+			name = "triplestrengthmyomer",
+			menu = "mobility",
+			cmdDesc = {
+				id = GetCmdID('MOD_TSM'),
+				action = 'modtriplestrengthmyomer',
+				name = GG.Pad("Triple", "Strength", "Myomer"),
+				tooltip = 'Replaces mech joints with TSM, increasing running speed based on current heat level up to an extra 50%. Stackable with Super Charger.',
+				texture = 'bitmaps/ui/perkorange.png',	
+			},
+			valid = isMechBay,
+			applyTo = isNotOmni,
+			applyPerk = function (unitID, level, invert)
+				env = Spring.UnitScript.GetScriptEnv(unitID)
+				Spring.UnitScript.CallAsUnit(unitID, env.EnableTSM, not invert)
+			end,
+			costFunction = deductSalvage,
+			price = 10,
+			incompatible = {"masc"},
 		},
 		{
 			name = "directionalthrusters",

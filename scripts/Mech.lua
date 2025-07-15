@@ -51,6 +51,7 @@ local mascDamage = 1
 local superCharger = false
 local superChargerHeat = 0.1
 local superChargerDamage = 5
+local tsmActive = false
 
 local missileWeaponIDs = info.missileWeaponIDs
 local flareOnShots = info.flareOnShots
@@ -291,6 +292,10 @@ local function CoolOff()
 			heatElevated = false
 			excessHeat = 0 -- if we managed to return to normal heat, remove all excess
 		end
+		if tsmActive then
+			speedMod = 1.5 * (1 + currHeatLevel/heatLimit * 0.5) * (superCharger and 1.5 or 1)
+			SpeedChangeCheck()
+		end
 		ChangeHeat(-coolRate)
 		--[[if hasEcm and not moving then
 			AddUnitSeismicPing(unitID, 20)
@@ -518,6 +523,8 @@ function Run(activate)
 		Spring.SetUnitRulesParam(unitID, "running", 1)
 		if mascActive then
 			speedMod = 2
+		elseif tsmActive then -- extra 50% increase at full heat
+			speedMod = 1.5 * (1 + currHeatLevel/heatLimit * 0.5)
 		else
 			speedMod = 1.5
 		end
@@ -544,6 +551,10 @@ function EnableSuperCharger(enable)
 	Run(running)
 end
 
+function EnableTSM(enable)
+	tsmActive = enable
+	Run(running)
+end
 function PreJump(delay, turn, lineDist)
 	StartThread(anim_PreJump)
 end
