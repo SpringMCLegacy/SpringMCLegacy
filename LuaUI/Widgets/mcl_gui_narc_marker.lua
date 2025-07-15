@@ -60,6 +60,7 @@ local spIsUnitVisible			= Spring.IsUnitVisible
 local spSendCommands			= Spring.SendCommands
 local GetUnitRulesParam			= Spring.GetUnitRulesParam
 local GetGameFrame				= Spring.GetGameFrame
+local IsGUIHidden				= Spring.IsGUIHidden
 local trackSlope  = true
  
 local circleLines  = 0
@@ -176,6 +177,7 @@ end
  end]]
  
 function widget:DrawWorldPreUnit()
+	if IsGUIHidden() then return end
 	glLineWidth(2.0)
 	glDepthTest(false)
 	glPolygonOffset(-50, -2)

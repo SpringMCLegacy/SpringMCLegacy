@@ -59,6 +59,7 @@ local glTexture = gl.Texture
 local glDrawListAtUnit = gl.DrawListAtUnit
 local glPolygonOffset = gl.PolygonOffset
 local glColor = gl.Color
+local IsGUIHidden = Spring.IsGUIHidden
 
 local GetVisibleUnits = Spring.GetVisibleUnits
 local GetUnitDefID = Spring.GetUnitDefID
@@ -118,6 +119,7 @@ end
 
 
 function widget:DrawWorldPreUnit()
+	if IsGUIHidden() then return end
 	-- TODO: Use local myDZ = Spring.GetTeamUnitsByDefs(Spring.GetMyUnitDefID instead, need to know 'my' side
 	local visibleUnits = GetVisibleUnits(Spring.GetMyTeamID())
 	local visibleFeatures = Spring.GetVisibleFeatures()

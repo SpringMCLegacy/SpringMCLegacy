@@ -21,6 +21,7 @@ local GetUnitRulesParam    = Spring.GetUnitRulesParam
 local GetTeamColor = Spring.GetTeamColor --cacheing not appreciably faster, if at all
 -- Unsynced Read
 local IsUnitVisible       = Spring.IsUnitVisible
+local IsGUIHidden = Spring.IsGUIHidden
 
 -- OpenGL
 local glCallList =  gl.CallList
@@ -95,6 +96,7 @@ function widget:Shutdown()
 end
 
 function widget:DrawWorldPreUnit()
+	if IsGUIHidden() then return end
   --glSmoothing(true, true, true)
 
   for i = 1, #teams do
