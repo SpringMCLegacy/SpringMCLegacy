@@ -23,19 +23,19 @@ end
 
 
 local roleSensors = {
-	["scout"] 			= {radar = 1200,	sector = 80},
-	["ewar"] 			= {radar = 1200,	sector = 80},
-	["skirmisher"] 		= {radar = 1200,	sector = 65},
-	["striker"] 		= {radar = 1200,	sector = 70},
-	["juggernaut"] 		= {radar = 1200,	sector = 70},
-	["ambusher"] 		= {radar = 1200,	sector = 70},
-	["brawler"] 		= {radar = 1200,	sector = 70},
-	["multirole"] 		= {radar = 1200,	sector = 55},
-	["generalist"] 		= {radar = 1200,	sector = 55},
-	["vanguard"] 		= {radar = 1200,	sector = 55},
-	["sniper"]			= {radar = 1200,	sector = 45},
-	["missile support"]	= {radar = 1200,	sector = 45},
-	["missile boat"]	= {radar = 1200,	sector = 45},
+	["scout"] 			= {radar = 1500,	sector = 80},
+	["ewar"] 			= {radar = 1500,	sector = 80},
+	["skirmisher"] 		= {radar = 1500,	sector = 65},
+	["striker"] 		= {radar = 1500,	sector = 70},
+	["juggernaut"] 		= {radar = 1500,	sector = 70},
+	["ambusher"] 		= {radar = 1500,	sector = 70},
+	["brawler"] 		= {radar = 1500,	sector = 70},
+	["multirole"] 		= {radar = 1500,	sector = 55},
+	["generalist"] 		= {radar = 1500,	sector = 55},
+	["vanguard"] 		= {radar = 1500,	sector = 55},
+	["sniper"]			= {radar = 1500,	sector = 45},
+	["missile support"]	= {radar = 1500,	sector = 45},
+	["missile boat"]	= {radar = 1500,	sector = 45},
 }
 
 local menuRoleAlias = {
