@@ -181,9 +181,11 @@ for unitName, ud in pairs(UnitDefs) do
 				--Spring.Echo("[WeaponDefs_post.lua]:" .. unitName .. " has no corpse!")
 			end
 			local weapString = "\t\t\255\255\255\255Weapons: "
+			local first = true
 			for weapName, count in pairs(table.unserialize(cp.weaponCounts)) do
 				if weapName:lower() ~= "sight" then
-					weapString = weapString .. WeaponColour(weapName) .. weapName .. " \255\255\255\255x" .. count .. ", "
+					weapString = (first and "" or ", ") .. weapString .. WeaponColour(weapName) .. weapName .. " \255\255\255\255x" .. count .. "\t"
+					first = first and false
 				end
 			end
 			ud.description = (ud.description or "") .. weapString
