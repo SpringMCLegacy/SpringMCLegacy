@@ -120,6 +120,7 @@ for unitName, ud in pairs(UnitDefs) do
 		table.insert(ud.sfxtypes.explosiongenerators, 1, "custom:heavy_jumpjet_trail_blue")
 		local cp = ud.customparams
 		if weapons then
+			local maxrange = 0
 			for weaponID = 1, #weapons - (cp.sectorangle and 1 or 0) do -- SFX.CEG + weaponID
 				local cegFlare = cegCache[string.lower(weapons[weaponID].name)]
 				if cegFlare then
@@ -128,7 +129,10 @@ for unitName, ud in pairs(UnitDefs) do
 						table.insert(ud.sfxtypes.explosiongenerators, weaponID + 1, "custom:" .. cegFlare)
 					--end
 				end
+				Spring.Echo(WeaponDefs, weapons[weaponID].name, WeaponDefs[string.lower(weapons[weaponID].name)])
+				maxrange = math.max(maxrange, WeaponDefs[string.lower(weapons[weaponID].name)].range or 0)
 			end
+			cp.maxrange = maxrange
 		end
 		if cp.baseclass == "mech" or cp.baseclass == "vehicle" or cp.baseclass == "vtol" or cp.baseclass == "aero" then
 			table.insert(ud.sfxtypes.explosiongenerators, "custom:HE_Large")

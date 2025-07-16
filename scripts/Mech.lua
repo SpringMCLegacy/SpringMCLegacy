@@ -609,6 +609,7 @@ function script.StopMoving()
 end
 
 function script.Create()
+	Spring.SetUnitMaxRange(unitID, unitDef.customParams.maxrange)
 	local x,y,z = Spring.GetUnitPiecePosition(unitID, torso)
 	Spring.SetUnitMidAndAimPos(unitID, x,y,z, x,y,z, true)
 	if info.builderID then script.StartMoving() end -- walk down ramp
