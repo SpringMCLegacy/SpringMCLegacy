@@ -160,10 +160,10 @@ function widget:DrawScreen()
 
   tooltip, mSub = tooltip:gsub(bland.."Me",   "\255\1\255\255Me")
   tooltip, eSub = tooltip:gsub(bland.."En", "  \255\255\255\1En")
-  --BTL specific substitutions
+  --MCL specific substitutions
   tooltip = tooltip:gsub("Metal", "\255\160\160\160C-Bills")
   tooltip = tooltip:gsub("Energy", "\255\255\255\001Tonnage")
-  --end of BTL specific substitutions
+  --end of MCL specific substitutions
   tooltip = tooltip:gsub("Hotkeys:", "\255\255\128\128Hotkeys:\255\128\192\255")
   tooptip = tooltip:gsub("a", "b")
   local unitTip = ((mSub + eSub) == 2)
@@ -176,8 +176,10 @@ function widget:DrawScreen()
   local i = 0
   for line in tooltip:gmatch("([^\n]*)\n?") do
     if (unitTip and (i == 0)) then
-      line = "\255\255\128\255" .. line
-    else
+      line = "\255\255\128\255" .. line -- first line colour
+    elseif i >= 3 then
+	  line = ""
+	else
       line = "\255\255\255\255" .. line
     end
 
