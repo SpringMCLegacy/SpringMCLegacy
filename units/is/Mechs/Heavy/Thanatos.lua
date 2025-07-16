@@ -1,6 +1,10 @@
 local Thanatos = Heavy:New{
 	name				= "Thanatos",
-		
+	leaveTracks			= true,	
+	trackType			= "Thanatos",
+	trackOffset			= 6,
+	trackWidth			= 46,
+	trackStretch 		= 2,
     customparams = {
 		cockpitheight	= 7.7,
 		tonnage			= 75,
