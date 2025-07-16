@@ -129,7 +129,7 @@ for unitName, ud in pairs(UnitDefs) do
 						table.insert(ud.sfxtypes.explosiongenerators, weaponID + 1, "custom:" .. cegFlare)
 					--end
 				end
-				Spring.Echo(WeaponDefs, weapons[weaponID].name, WeaponDefs[string.lower(weapons[weaponID].name)])
+				--Spring.Echo(WeaponDefs, weapons[weaponID].name, WeaponDefs[string.lower(weapons[weaponID].name)])
 				maxrange = math.max(maxrange, WeaponDefs[string.lower(weapons[weaponID].name)].range or 0)
 			end
 			cp.maxrange = maxrange
