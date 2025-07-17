@@ -14,6 +14,11 @@ local EFFECT = modOptions and modOptions.perkeffect or 5
 local PCENT_INC = (100+EFFECT)/100
 local PCENT_DEC = (100-EFFECT)/100
 
+local AmmoTypes = {}
+for k, v in pairs(GG.GameConstants.ammoTypes) do
+	AmmoTypes[string.lower(k)] = v
+end
+
 -- Common valid() functions
 local function allMechs(unitDefID) return (UnitDefs[unitDefID].customParams.baseclass == "mech") end
 local function hasJumpjets(unitDefID) return (UnitDefs[unitDefID].customParams.jumpjets or false) end
@@ -782,6 +787,53 @@ return {
 			priceFunction = function (unitDefID)
 				return deductPerUnitDefTag(unitDefID, true, "heatlimit", 1)
 			end,
+		},
+		{
+			name = "case",
+			menu = "structural",
+			cmdDesc = {
+				id = GetCmdID('MOD_CASE'),
+				action = 'modcase',
+				name = GG.Pad("CASE", "Ammo", "Bins"),
+				tooltip = "Cellular Ammunition Storage Equipment, reduces ammo loss on limb loss by 50% and prevents cookoff damage.",
+				texture = 'bitmaps/ui/perkbgability.png',	
+			},
+			valid = isMechBay,
+			applyTo = isNotOmni,
+			applyPerk = function (unitID, level, invert) 
+				env = Spring.UnitScript.GetScriptEnv(unitID)
+				env.case = not invert
+			end,
+			costFunction = deductSalvage,
+			price = 15,
+			incompatible = {"expandedbins"},
+		},
+		{
+			name = "expandedbins",
+			menu = "structural",
+			cmdDesc = {
+				id = GetCmdID('MOD_EXPANDED_BINS'),
+				action = 'modcase',
+				name = GG.Pad("Expanded", "Ammo", "Bins"),
+				tooltip = "Increases ammo capacity by 25% but doubles cookoff damage on limb loss",
+				texture = 'bitmaps/ui/perkbgability.png',	
+			},
+			valid = isMechBay,
+			applyTo = isNotOmni,
+			applyPerk = function (unitID, level, invert) 
+				env = Spring.UnitScript.GetScriptEnv(unitID)
+				env.expandedBins = not invert
+				local ammoCache = {}
+				local effect = 1.25
+				effect = (invert and 1/effect) or effect
+				
+				for ammoType in pairs(AmmoTypes) do
+					env.ChangeAmmo(ammoType, 0, effect) 
+				end
+			end,
+			costFunction = deductSalvage,
+			price = 15,
+			incompatible = {"case"},
 		},
 		-- Mobility (ENGINE)
 		{

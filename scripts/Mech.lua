@@ -41,6 +41,8 @@ maxAmmo = {} -- Extended Range LRM mod
 table.copy(info.maxAmmo, maxAmmo) -- need our own local copy or the lus helper one is overriden
 currAmmo = {}  -- Extended Range LRM mod
 inhibitors = {} -- PPC inhibitor mod
+case = false -- CASE mod
+expandedBins = false -- Expanded Ammo Bins mod
 
 local coolRate = baseCoolRate
 local inWater = false
@@ -158,8 +160,9 @@ local function RestoreAfterDelay(delay)
 	end
 end
 
--- non-local function called by gadgets/game_ammo.lua
-function ChangeAmmo(ammoType, amount) 
+-- non-local function called by gadgets/game_ammo.lua & Expanded Ammo Bins mod
+function ChangeAmmo(ammoType, amount, maxAmmoMult) 
+	if not currAmmo[ammoType] then return false end -- don't have this kind of ammo
 	local newAmmoLevel = (currAmmo[ammoType] or 0) + (amount or 0) -- amount is a -ve to deduct
 	if not amount then -- whut?
 		Spring.Echo("ChangeAmmo amount was nil", ammoType, unitDef.name)
@@ -167,6 +170,10 @@ function ChangeAmmo(ammoType, amount)
 	end
 	if amount > 0 then -- restocking, reset the indicator
 		SetUnitRulesParam(unitID, "outofammo", 0)
+	end
+	if maxAmmoMult then
+		maxAmmo[ammoType] = math.floor(maxAmmo[ammoType] * maxAmmoMult)
+		currAmmo[ammoType] = math.min(currAmmo[ammoType], maxAmmo[ammoType])
 	end
 	if not newAmmoLevel and maxAmmo[ammoType] then -- ERROR: somehow one of these can be wrong type / nil?
 		Spring.Echo("BUGREPORT: Mech.lua L168:", newAmmoLevel, maxAmmo[ammoType])
@@ -379,17 +386,28 @@ function hideLimbPieces(limb, hide)
 	if hide then
 		EmitSfx(rootPiece, SFX.CEG + numWeapons + 1)
 		Explode(rootPiece, SFX.FIRE + SFX.SMOKE + SFX.RECURSIVE)
+		local cookoffDamage = 0
 		for id, valid in pairs(limbWeapons) do
+			local damage = 0
 			if id and valid then
 				--local weapDef = WeaponDefs[unitDef.weapons[id].weaponDef]
 				--Spring.Echo(unitDef.humanName .. ": " .. weapDef.name .. " destroyed!")
 				ToggleWeapon(id, 1)
+				local weapDef = WeaponDefs[unitDef.weapons[id].weaponDef]
+				local ammoType = ammoTypes[id]
+				--Spring.Echo("Destroyed weapon", weapDef.name, "had ammo type", ammoType, "was 1 of", info.ammoTypeWeapCounts[ammoType], "mech had", currAmmo[ammoType], "/", maxAmmo[ammoType])
+				local ammoPCentLost = case and 0.25 or 0.5
+				local ammoLost = math.floor(currAmmo[ammoType] / info.ammoTypeWeapCounts[ammoType] * ammoPCentLost)
+				ChangeAmmo(ammoType, -ammoLost)
+				cookoffDamage = cookoffDamage + 1000
 			end
 		end
+		cookoffDamage = cookoffDamage * (case and 0 or expandedBins and 2 or 1)
+		if cookoffDamage > 0 then Spring.AddUnitDamage(unitID, cookoffDamage, nil, nil, -314) end
 	else
 		for id, valid in pairs(limbWeapons) do
 			if valid then
-				local weapDef = WeaponDefs[unitDef.weapons[id].weaponDef]
+				--local weapDef = WeaponDefs[unitDef.weapons[id].weaponDef]
 				ToggleWeapon(id, 2)
 			end
 		end		
@@ -435,6 +453,7 @@ function SetLimbMaxHP(mult)
 end
 
 function script.HitByWeapon(x, z, weaponID, damage, piece)
+	if weaponID == -314 then return end -- avoid infinite recursion in ammo cookoff
 	local wd = WeaponDefs[weaponID]
 	local hitPiece = piece or GetUnitLastAttackedPiece(unitID) or ""
 	--heat damage is now dealt in UnitPreDamaged of game_radar gadget (as it implements many mods, TODO: refactor to game_mods.lua)
