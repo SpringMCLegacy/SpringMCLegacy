@@ -1463,7 +1463,7 @@ return {
 				-- increase accuracy by 25%, lower is better
 				effect = 0.75
 				effect = (invert and 1/effect) or effect
-				setWeaponClassAttribute(unitID, "autocannon", "accuracy", effect)
+				local changed = setWeaponClassAttribute(unitID, "autocannon", "accuracy", effect)
 				-- reduce max ammo by 50%
 				effect = 0.5
 				effect = (invert and 1/effect) or effect
@@ -1473,9 +1473,7 @@ return {
 					local ammoType = wd.customParams.ammotype
 					if not ammoCache[ammoType] then -- only once per ammotype
 						ammoCache[ammoType] = true
-						env.maxAmmo[ammoType] = env.maxAmmo[ammoType] * effect
-						env.currAmmo[ammoType] = env.maxAmmo[ammoType]
-						Spring.SetUnitRulesParam(unitID, "ammo_" .. ammoType, 100)
+						env.ChangeAmmo(ammoType, 0, effect)
 					end
 				end
 			end,
@@ -1509,7 +1507,7 @@ return {
 				-- increase range by 25%
 				effect = 1.25
 				effect = (invert and 1/effect) or effect
-				setWeaponClassAttribute(unitID, "autocannon", "range", effect)
+				local changed = setWeaponClassAttribute(unitID, "autocannon", "range", effect)
 				-- reduce max ammo by 50%
 				effect = 0.5
 				effect = (invert and 1/effect) or effect
@@ -1519,9 +1517,7 @@ return {
 					local ammoType = wd.customParams.ammotype
 					if not ammoCache[ammoType] then -- only once per ammotype
 						ammoCache[ammoType] = true
-						env.maxAmmo[ammoType] = env.maxAmmo[ammoType] * effect
-						env.currAmmo[ammoType] = env.maxAmmo[ammoType]
-						Spring.SetUnitRulesParam(unitID, "ammo_" .. ammoType, 100)
+						env.ChangeAmmo(ammoType, 0, effect)
 					end
 				end
 			end,
@@ -1568,9 +1564,7 @@ return {
 					local ammoType = wd.customParams.ammotype
 					if not ammoCache[ammoType] then -- only once per ammotype
 						ammoCache[ammoType] = true
-						env.maxAmmo[ammoType] = env.maxAmmo[ammoType] * effect
-						env.currAmmo[ammoType] = env.maxAmmo[ammoType]
-						Spring.SetUnitRulesParam(unitID, "ammo_" .. ammoType, 100)
+						env.ChangeAmmo(ammoType, 0, effect)
 					end
 				end
 			end,
@@ -1611,9 +1605,7 @@ return {
 					local ammoType = wd.customParams.ammotype
 					if not ammoCache[ammoType] then -- only once per ammotype
 						ammoCache[ammoType] = true
-						env.maxAmmo[ammoType] = env.maxAmmo[ammoType] * effect
-						env.currAmmo[ammoType] = env.maxAmmo[ammoType]
-						Spring.SetUnitRulesParam(unitID, "ammo_" .. ammoType, 100)
+						env.ChangeAmmo(ammoType, 0, effect)
 					end
 				end
 			end,
@@ -1675,9 +1667,7 @@ return {
 				effect = 0.5
 				effect = (invert and 1/effect) or effect
 				env = Spring.UnitScript.GetScriptEnv(unitID)
-				env.maxAmmo["lrm"] = env.maxAmmo["lrm"] * effect
-				env.currAmmo["lrm"] = env.maxAmmo["lrm"]
-				Spring.SetUnitRulesParam(unitID, "ammo_lrm", 100)
+				env.ChangeAmmo("lrm", 0, effect)
 			end,
 			costFunction = deductSalvage,
 			priceFunction = function(unitDefID)
@@ -1903,9 +1893,7 @@ return {
 				local effect = 0.5
 				effect = (invert and 1/effect) or effect
 				env = Spring.UnitScript.GetScriptEnv(unitID)
-				env.maxAmmo["srm"] = env.maxAmmo["srm"] * effect
-				env.currAmmo["srm"] = env.maxAmmo["srm"]
-				Spring.SetUnitRulesParam(unitID, "ammo_srm", 100)
+				env.ChangeAmmo("srm", 0, effect)
 			end,
 			costFunction = deductSalvage,
 			priceFunction = function(unitDefID)
