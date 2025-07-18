@@ -2,7 +2,9 @@
 local base = piece ("base")
 local crate_base, crate_top, crate_right, crate_left, crate_front, crate_back = piece ("crate_base", "crate_top", "crate_right", "crate_left", "crate_front", "crate_back")
 -- C3 pieces
-local antennarot, antenna1, antenna2, antenna3, emitter, geo = piece ("antennarot", "antenna1", "antenna2", "antenna3", "emitter", "geo")
+local emitterbase1, emitter1, geo1, emitterbase2, emitter2, geo2 = piece ("emitterbase1", "emitter1", "geo1", "emitterbase2", "emitter2", "geo2")
+local door1a, door1b, door2a, door2b, gendoor1, gendoor2, generator1, generator2 = piece ("door1a", "door1b", "door2a", "door2b", "gendoor1", "gendoor2", "generator1", "generator2")
+local leg1, leg2, leg3, leg4, foot1, foot2, foot3, foot4 = piece ("leg1", "leg2", "leg3", "leg4", "foot1", "foot2", "foot3", "foot4")
 -- Mechbay pieces
 local rampr, rampl, ramprfoldrear, ramprfoldfront, ramplfoldrear, ramplfoldfront = piece ("rampr", "rampl", "ramprfoldrear", "ramprfoldfront", "ramplfoldrear", "ramplfoldfront")
 local supportrlower, supportllower, supportrupper, supportlupper = piece ("supportrlower", "supportllower", "supportrupper", "supportlupper")
@@ -146,6 +148,59 @@ function TAG()
 	noFiring = false
 	Spring.SetUnitRulesParam(unitID, "weapon_1", "active")
 	Spring.SetUnitRulesParam(unitID, "weapon_2", "active")
+end
+
+function C3Array()
+	PlaySound("Whir")
+	Move(leg1, x_axis, 12, CRATE_SPEED * 10)
+	Move(leg1, y_axis, -2, CRATE_SPEED * 3)
+	Move(leg2, x_axis, 12, CRATE_SPEED * 10)
+	Move(leg2, y_axis, -2, CRATE_SPEED * 3)
+	Move(leg3, x_axis, -12, CRATE_SPEED * 10)
+	Move(leg3, y_axis, -2, CRATE_SPEED * 3)
+	Move(leg4, x_axis, -12, CRATE_SPEED * 10)
+	Move(leg4, y_axis, -2, CRATE_SPEED * 3)
+	WaitForMove(leg1, x_axis)
+	WaitForMove(leg2, x_axis)
+	WaitForMove(leg3, x_axis)
+	WaitForMove(leg4, x_axis)
+	Turn(foot1, z_axis, math.rad(-90), CRATE_SPEED * 2)
+	Turn(foot2, z_axis, math.rad(-90), CRATE_SPEED * 2)
+	Turn(foot3, z_axis, math.rad(90), CRATE_SPEED * 2)
+	Turn(foot4, z_axis, math.rad(90), CRATE_SPEED * 2)
+	PlaySound("Thunk")
+	Sleep(1000)
+	Move(door1a, z_axis, 10, CRATE_SPEED * 20)
+	WaitForMove(door1a, z_axis)
+	Move(door1b, z_axis, 15, CRATE_SPEED * 20)
+	WaitForMove(door1b, z_axis)
+	Move(emitterbase1, y_axis, 15, CRATE_SPEED * 10)
+	WaitForMove(emitterbase1, y_axis)
+	Move(emitter1, y_axis, 11.5, CRATE_SPEED * 10)
+	WaitForMove(emitter1, y_axis)
+	Move(gendoor1, z_axis, -12, CRATE_SPEED * 8)
+	WaitForMove(gendoor1, z_axis)
+	Move(generator1, x_axis, 13, CRATE_SPEED * 8)
+	WaitForMove(generator1, x_axis)
+	Spin(geo1, y_axis, math.rad(100), math.rad(15))
+	Sleep(1000)
+end
+
+function C3_Upgrade()
+	Move(door2a, z_axis, -10, CRATE_SPEED * 20)
+	WaitForMove(door2a, z_axis)
+	Move(door2b, z_axis, -15, CRATE_SPEED * 20)
+	WaitForMove(door2b, z_axis)
+	Move(emitterbase2, y_axis, 15, CRATE_SPEED * 10)
+	WaitForMove(emitterbase2, y_axis)
+	Move(emitter2, y_axis, 11.5, CRATE_SPEED * 10)
+	WaitForMove(emitter2, y_axis)
+	Move(gendoor2, z_axis, 12, CRATE_SPEED * 8)
+	WaitForMove(gendoor2, z_axis)
+	Move(generator2, x_axis, -13, CRATE_SPEED * 8)
+	WaitForMove(generator2, x_axis)
+	Spin(geo2, y_axis, math.rad(100), math.rad(15))
+	Sleep(1000)
 end
 
 function Artillery()
@@ -325,6 +380,11 @@ function script.AimWeapon(weaponID, heading, pitch)
 		WaitForTurn(turrets[weaponID], y_axis)
 		Turn(mantlets[weaponID], x_axis, -pitch, CRATE_SPEED / 4)
 		WaitForTurn(mantlets[weaponID], x_axis)
+	elseif name == "outpost_artillery" then
+		Turn(turret_1, y_axis, heading, CRATE_SPEED / 4)
+		WaitForTurn(turret_1, y_axis)
+		Turn(mantlet_1, x_axis, pitch, CRATE_SPEED / 4)
+		WaitForTurn(mantlet_1, x_axis)
 	elseif 	name == "outpost_launcher" then
 		Move(launchdoor1, x_axis, 7, CRATE_SPEED * 8)
 		Move(launchdoor2, x_axis, -7, CRATE_SPEED * 8)
@@ -374,6 +434,8 @@ function Upgrade(level)
 		elseif level == 3 then
 			Show(flags)
 		end]]
+	elseif name == "outpost_c3array" then
+		StartThread(C3_Upgrade)
 	elseif name == "outpost_salvageyard" and level == 2 then
 		Show(foundation)
 		RecursiveHide(recoveryrail, false)
@@ -678,17 +740,7 @@ function Unpack()
 	-- Begin outpost-specific anims
 	GG.PlaySoundForTeam(Spring.GetUnitTeam(unitID), "bb_" .. name .. "_deployed", 1)
 	if name == "outpost_c3array" then
-		Move(emitter, y_axis, 30, CRATE_SPEED * 5)
-		Turn(antennarot, x_axis, rad(-90), CRATE_SPEED)
-		WaitForTurn(antennarot, x_axis)
-		Move(antenna1, z_axis, 20, CRATE_SPEED * 10)
-		Move(antenna2, z_axis, 20, CRATE_SPEED * 10)
-		Move(antenna3, z_axis, 20, CRATE_SPEED * 10)
-		WaitForMove(emitter, y_axis)
-		Spin(geo, y_axis, math.rad(20), math.rad(5))
-		-- We're deployed, grant the extra tonnage
-		local teamID = Spring.GetUnitTeam(unitID)
-		GG.LanceControl(teamID, unitID, true)
+		StartThread(C3Array)
 	elseif name == "outpost_mechbay" then
 		Spring.SetUnitBlocking(unitID, false, false) -- make it easy to get out
 		MechBayOpen()
@@ -797,8 +849,8 @@ function Unpack()
 	end
 	Spring.UnitScript.SetUnitValue(COB.ACTIVATION, 1)
 	-- Let the sands of time cover the crate
-	Sleep(2500)
-	Move(crate_base, y_axis, -5, CRATE_SPEED)
+	Sleep(1500)
+	Move(crate_base, y_axis, -5, CRATE_SPEED * 2)
 	Sleep (5000)
 	RecursiveHide(crate_base, true)
 end
