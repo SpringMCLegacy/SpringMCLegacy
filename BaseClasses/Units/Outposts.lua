@@ -3,6 +3,7 @@ local Outpost = Unit:New{
 	script				= "Outpost.lua",
 	iconType			= "outpost",
 	category 			= "structure ground notbeacon",
+	explodeAs          	= "outpostexplode",
 	activateWhenBuilt   = false,
 	footprintX			= 4,
 	footprintZ 			= 4,

@@ -8,8 +8,17 @@ local Death_Class = Weapon:New{
 
 local MechExplode = Death_Class:New{
 	name                    = "Mech Explosion",
-	explosionGenerator    	= "custom:ROACHPLOSION",
+	explosionGenerator    	= "custom:MechExplode",
 	areaOfEffect            = 100,
+	damage = {
+		default = 1000,
+	},
+}
+
+local OutpostExplode = Death_Class:New{
+	name                    = "Outpost Explosion",
+	explosionGenerator    	= "custom:OutpostExplode",
+	areaOfEffect            = 200,
 	damage = {
 		default = 1000,
 	},
@@ -46,6 +55,7 @@ local Mine = Death_Class:New{
 
 return lowerkeys({ 
 	MechExplode = MechExplode,
+	OutpostExplode = OutpostExplode,
 	MeltDown = MeltDown,
 	DFA = DFA,
 	Mine = Mine,
