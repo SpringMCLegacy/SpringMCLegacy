@@ -405,7 +405,7 @@ function script.Shot(weaponID)
 	EmitSfx(flares[weaponID], SFX.CEG + weaponID)
 	if name == "outpost_artillery" then
 		Move(barrel_1, z_axis, -25, CRATE_SPEED * 175)
-		GG.EmitSfxName(unitID, base, "mech_jump_dust")
+		GG.EmitSfxName(unitID, base, "dust_bloom_big")
 		WaitForMove(barrel_1, z_axis)
 		Move(barrel_1, z_axis, 0, CRATE_SPEED * 25)
 		StartThread(ArtilleryReload)
