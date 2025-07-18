@@ -206,6 +206,7 @@ function script.AimWeapon(weaponID, heading, pitch)
 		return true
 	end
 	-- use a weapon-specific turret if it exists
+	heading = math.abs(heading)
 	if trackEmitters[weaponID] then -- LBLs
 		Turn(trackEmitters[weaponID], y_axis, heading, TURRET_SPEED)
 		WaitForTurn(trackEmitters[weaponID], y_axis)

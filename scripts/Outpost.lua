@@ -375,16 +375,12 @@ function script.AimWeapon(weaponID, heading, pitch)
 	if noFiring then return false end
 	Signal(2 ^ weaponID) -- 2 'to the power of' weapon ID
 	SetSignalMask(2 ^ weaponID)
+	heading = math.abs(heading)
 	if turrets[weaponID] then
 		Turn(turrets[weaponID], y_axis, heading, CRATE_SPEED / 4)
 		WaitForTurn(turrets[weaponID], y_axis)
 		Turn(mantlets[weaponID], x_axis, -pitch, CRATE_SPEED / 4)
 		WaitForTurn(mantlets[weaponID], x_axis)
-	elseif name == "outpost_artillery" then
-		Turn(turret_1, y_axis, heading, CRATE_SPEED / 4)
-		WaitForTurn(turret_1, y_axis)
-		Turn(mantlet_1, x_axis, pitch, CRATE_SPEED / 4)
-		WaitForTurn(mantlet_1, x_axis)
 	elseif 	name == "outpost_launcher" then
 		Move(launchdoor1, x_axis, 7, CRATE_SPEED * 8)
 		Move(launchdoor2, x_axis, -7, CRATE_SPEED * 8)
