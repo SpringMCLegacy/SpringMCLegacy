@@ -299,7 +299,7 @@ function Drop()
 	Spring.MoveCtrl.Enable(unitID)
 	Spring.MoveCtrl.SetPosition(unitID, TX + UX, TY + DROP_HEIGHT, TZ + UZ)
 	local newAngle = math.atan2(UX, UZ)
-	Spring.MoveCtrl.SetRotation(unitID, 0, newAngle + math.pi, 0)
+	Spring.MoveCtrl.SetRotation(unitID, 0, ANGLE, 0)--newAngle + math.pi, 0)
 	--Spring.Echo(math.deg(newAngle), math.deg(newAngle + math.pi))
 	Turn(body, x_axis, math.rad(-50))
 	-- Begin the drop

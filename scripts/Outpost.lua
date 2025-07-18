@@ -379,7 +379,6 @@ function script.AimWeapon(weaponID, heading, pitch)
 	if noFiring then return false end
 	Signal(2 ^ weaponID) -- 2 'to the power of' weapon ID
 	SetSignalMask(2 ^ weaponID)
-	heading = math.abs(heading)
 	if turrets[weaponID] then
 		Turn(turrets[weaponID], y_axis, heading, CRATE_SPEED / 4)
 		WaitForTurn(turrets[weaponID], y_axis)

@@ -68,7 +68,7 @@ HEADING = facing * 16384 + math.random(-1820, 1820)
 RADIAL_DIST = unitDef.customParams.radialdist or 0
 ANGLE = math.rad(math.random(6)*60+30) --math.floor(unitID / 100)
 UX = math.cos(ANGLE) * RADIAL_DIST
-UZ = math.sin(ANGLE) * RADIAL_DIST
+UZ = -math.sin(ANGLE) * RADIAL_DIST
 
 -- Variables
 stage = 0
@@ -206,7 +206,6 @@ function script.AimWeapon(weaponID, heading, pitch)
 		return true
 	end
 	-- use a weapon-specific turret if it exists
-	heading = math.abs(heading)
 	if trackEmitters[weaponID] then -- LBLs
 		Turn(trackEmitters[weaponID], y_axis, heading, TURRET_SPEED)
 		WaitForTurn(trackEmitters[weaponID], y_axis)
