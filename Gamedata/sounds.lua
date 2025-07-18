@@ -291,8 +291,8 @@ local Sounds = {
 			maxdist = 7000,
 			rolloff = 5.0,
 		},
-		Hydraulic_Click = {
-			file = "sounds/outpost/Hydraulic_Click.wav",
+		Shell = {
+			file = "sounds/outpost/Shell.wav",
 			maxconcurrent = 12,
 			gainmod = 0.75,
 			pitchmod = 0.1,

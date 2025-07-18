@@ -1,0 +1,31 @@
+[barrelsmoke]
+{
+   [smoke] {
+		class=CSimpleParticleSystem;
+		[properties]{
+			sizeGrowth=1;
+			sizeMod=0.1;
+			emitVector=dir;
+			pos=0, 0, 0;
+			gravity=0, 0.5, 0;
+			colorMap=0.7 0.7 0.7 1  0.3 0.3 0.3 0.7  0 0 0 0  0 0 0 0;
+			Texture=smokesmall;
+			airdrag=0.5;
+			particleLife=64;
+			particleLifeSpread=12;
+			numParticles=5;
+			particleSpeed=0.25;
+			particleSpeedSpread=0.25;
+			particleSize=0.5;
+			particleSizeSpread=0.25;
+			emitRot=0;
+			emitRotSpread=20;
+			directional=1;
+			alwaysVisible=0;
+		}
+		air=1;
+		water=1;
+		ground=1;
+		count=5;
+	}
+}
