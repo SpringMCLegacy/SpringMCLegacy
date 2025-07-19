@@ -396,10 +396,12 @@ function hideLimbPieces(limb, hide)
 				local weapDef = WeaponDefs[unitDef.weapons[id].weaponDef]
 				local ammoType = ammoTypes[id]
 				--Spring.Echo("Destroyed weapon", weapDef.name, "had ammo type", ammoType, "was 1 of", info.ammoTypeWeapCounts[ammoType], "mech had", currAmmo[ammoType], "/", maxAmmo[ammoType])
-				local ammoPCentLost = case and 0.25 or 0.5
-				local ammoLost = math.floor(currAmmo[ammoType] / info.ammoTypeWeapCounts[ammoType] * ammoPCentLost)
-				ChangeAmmo(ammoType, -ammoLost)
-				cookoffDamage = cookoffDamage + 1000
+				if ammoType then
+					local ammoPCentLost = case and 0.25 or 0.5
+					local ammoLost = math.floor(currAmmo[ammoType] / info.ammoTypeWeapCounts[ammoType] * ammoPCentLost)
+					ChangeAmmo(ammoType, -ammoLost)
+					cookoffDamage = cookoffDamage + 1000
+				end
 			end
 		end
 		cookoffDamage = cookoffDamage * (case and 0 or expandedBins and 2 or 1)
