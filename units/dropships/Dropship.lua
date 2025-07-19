@@ -281,7 +281,7 @@ local Overlord = DropShip:New{
 	
 		weapons 		= {	
 		[1] = {
-			name	= "Sniper",
+			name	= "QuadERPPC",
 		},
 		[2] = {
 			name	= "UAC10",

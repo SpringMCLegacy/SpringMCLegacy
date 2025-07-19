@@ -59,6 +59,17 @@ local ERPPC = PPC_Class:New{
     },
 }
 
+local QuadERPPC = ERPPC:New{
+	name                    = "Quad ERPPC",
+	range                   = 1500,
+	burst					= 4,
+	burstrate				= 0.2,
+	customparams = {
+		heatgenerated		= 7.5,
+		minrange			= 200,
+    },
+}
+
 local HeavyPPC = PPC_Class:New{
 	name                    = "Heavy PPC",
 	DynDamageExp			= 1,
@@ -136,4 +147,5 @@ return lowerkeys({
 	CERPPC = CERPPC,
 	NPPC = NPPC,
 	PPC_fx = PPC_fx,
+	QuadERPPC = QuadERPPC,
 })

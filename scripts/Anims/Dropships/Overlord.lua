@@ -11,7 +11,7 @@ end
 
 function Setup()
 	-- Put pieces into starting pos
-	Move(piece("barrel_1"), z_axis, -58, 20)
+	--Move(piece("barrel_1"), z_axis, -58, 20)
 	Turn(vExhaustLarges[1], x_axis, math.rad(90), 0)
 	for i = 1, info.numVExhausts do
 		Turn(vExhausts[i], x_axis, math.rad(90), 0)
@@ -61,20 +61,20 @@ function LandingGearDown()
 end
 
 function DeployWeapons(out)
-	local mantlet = piece("mantlet_1")
-	local barrel = piece("barrel_1")
-	if not out then sniperCanFire = out end -- disable firing before retract
-	Move(mantlet, z_axis, out and 40 or 0, 20)
-	Move(barrel, z_axis, out and 0 or -58, 20)
-	WaitForMove(mantlet, z_axis)
-	WaitForMove(barrel, z_axis)
-	sniperCanFire = out
+	--local mantlet = piece("mantlet_1")
+	--local barrel = piece("barrel_1")
+	--if not out then sniperCanFire = out end -- disable firing before retract
+	--Move(mantlet, z_axis, out and 40 or 0, 20)
+	--Move(barrel, z_axis, out and 0 or -58, 20)
+	--WaitForMove(mantlet, z_axis)
+	--WaitForMove(barrel, z_axis)
+	--sniperCanFire = out
 end
 
 function LandingGearUp()
 	Turn(piece("missile_doors"), y_axis, 0, math.rad(4))
-	Move(piece("mantlet_1"), z_axis, 0, 20)
-	Move(piece("barrel_1"), z_axis, -58, 20)
+	--Move(piece("mantlet_1"), z_axis, 0, 20)
+	--Move(piece("barrel_1"), z_axis, -58, 20)
 	SPEED = math.rad(40)
 
 	for i = 1, numGears do -- joint lowers and unlocks
