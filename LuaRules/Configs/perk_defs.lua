@@ -707,7 +707,7 @@ return {
 				action = 'modaes',
 				name = GG.Pad("Actuator", "Enhance", "System"),
 				tooltip = 'Increases rotational speed of torso and arms by 50%.',
-				texture = 'bitmaps/ui/perkorange.png',	
+				texture = 'bitmaps/ui/perkgrey.png',	
 			},
 			valid = isMechBay,
 			applyTo = isNotOmni,
@@ -730,7 +730,7 @@ return {
 				action = 'modprotectedactuators',
 				name = GG.Pad("Protected", "Actuators"),
 				tooltip = 'Increases limb health by 25%.',
-				texture = 'bitmaps/ui/perkgreen.png',	
+				texture = 'bitmaps/ui/perkgrey.png',	
 			},
 			valid = isMechBay,
 			applyTo = isNotOmni,
@@ -752,7 +752,7 @@ return {
 				action = 'modreinforcedlegs',
 				name = GG.Pad("Reinforced", "Legs"),
 				tooltip = 'Damage taken by executing Death from Above attacks reduced by half.',
-				texture = 'bitmaps/ui/perkgreen.png',	
+				texture = 'bitmaps/ui/perkgrey.png',	
 			},
 			valid = isMechBay,
 			applyTo = function (unitDefID) return hasJumpjets(unitDefID) and isNotOmni(unitDefID) end,
@@ -770,7 +770,7 @@ return {
 				action = 'moddoubleheatsinks',
 				name = GG.Pad("Double", "Heatsinks"),
 				tooltip = "Advanced Heatsinks that doubles a Mech's maximum heat threshold and heat dissipation.",
-				texture = 'bitmaps/ui/perkbgability.png',	
+				texture = 'bitmaps/ui/perkgrey.png',	
 			},
 			valid = isMechBay,
 			applyTo = isNotOmni,
@@ -796,7 +796,7 @@ return {
 				action = 'modcase',
 				name = GG.Pad("CASE", "Ammo", "Bins"),
 				tooltip = "Cellular Ammunition Storage Equipment, reduces ammo loss on limb loss by 50% and prevents cookoff damage.",
-				texture = 'bitmaps/ui/perkbgability.png',	
+				texture = 'bitmaps/ui/perkgrey.png',	
 			},
 			valid = isMechBay,
 			applyTo = isNotOmni,
@@ -816,7 +816,7 @@ return {
 				action = 'modcase',
 				name = GG.Pad("Expanded", "Ammo", "Bins"),
 				tooltip = "Increases ammo capacity by 25% but doubles cookoff damage on limb loss",
-				texture = 'bitmaps/ui/perkbgability.png',	
+				texture = 'bitmaps/ui/perkgrey.png',	
 			},
 			valid = isMechBay,
 			applyTo = isNotOmni,
@@ -1450,10 +1450,11 @@ return {
 		{
 			name = "ammoprecision",
 			menu = "ammo",
+			noLimit = true,
 			cmdDesc = {
 				id = GetCmdID('MOD_AMMO_PRECISION'),
 				action = 'modammoprecision',
-				name = GG.Pad("Autocannon", "Precision"),
+				name = GG.Pad("AC", "Precision"),
 				tooltip = 'Autocannons only. Increases accuracy of autocannons by 25%, but with 50% reduction in ammunition.',
 				texture = 'bitmaps/ui/perkyellow.png',	
 			},
@@ -1494,10 +1495,11 @@ return {
 		{
 			name = "ammohypervelocity",
 			menu = "ammo",
+			noLimit = true,
 			cmdDesc = {
 				id = GetCmdID('MOD_AMMO_HYPERVELOCITY'),
 				action = 'modammohypervelocity',
-				name = GG.Pad("Autocannon", "Hyper", "Velocity"),
+				name = GG.Pad("AC", "Hyper", "Velocity"),
 				tooltip = 'Autocannons only. Increases range of autocannons by 25%, but with 50% reduction in ammunition.',
 				texture = 'bitmaps/ui/perkyellow.png',	
 			},
@@ -1538,10 +1540,11 @@ return {
 		{
 			name = "ammoarmourpiercing",
 			menu = "ammo",
+			noLimit = true,
 			cmdDesc = {
 				id = GetCmdID('MOD_AMMO_ARMOUR_PIERCING'),
 				action = 'modammoarmourpiercing',
-				name = GG.Pad("Autocannon", "Armour", "Piercing"),
+				name = GG.Pad("AC", "Armour", "Piercing"),
 				tooltip = 'Autocannons only. Increases damage of shells by 25%, but with 50% reduction in ammunition and 25% reduction in accuracy.',
 				texture = 'bitmaps/ui/perkyellow.png',	
 			},
@@ -1585,10 +1588,11 @@ return {
 		{
 			name = "ammocaseless",
 			menu = "ammo",
+			noLimit = true,
 			cmdDesc = {
 				id = GetCmdID('MOD_AMMO_CASELESS'),
 				action = 'modammocaseless',
-				name = GG.Pad("Autocannon", "Caseless"),
+				name = GG.Pad("AC", "Caseless"),
 				tooltip = 'Autocannons only.  Increases ammunition storage by 50%.',
 				texture = 'bitmaps/ui/perkyellow.png',	
 			},
@@ -1626,6 +1630,7 @@ return {
 		{
 			name = "ammolrminferno",
 			menu = "ammo",
+			noLimit = true,
 			cmdDesc = {
 				id = GetCmdID('MOD_AMMO_LRM_INFERNO'),
 				action = 'modammolrminferno',
@@ -1648,6 +1653,7 @@ return {
 		{
 			name = "ammolrmextended",
 			menu = "ammo",
+			noLimit = true,
 			cmdDesc = {
 				id = GetCmdID('MOD_AMMO_LRM_EXTENDED'),
 				action = 'modammolrmextended',
@@ -1679,6 +1685,7 @@ return {
 		{
 			name = "ammolrmmagpulse",
 			menu = "ammo",
+			noLimit = true,
 			cmdDesc = {
 				id = GetCmdID('MOD_AMMO_LRM_MAG_PULSE'),
 				action = 'modammolrmmagpulse',
@@ -1701,6 +1708,7 @@ return {
 		{
 			name = "ammolrmarad",
 			menu = "ammo",
+			noLimit = true,
 			cmdDesc = {
 				id = GetCmdID('MOD_AMMO_LRM_ARAD'),
 				action = 'modammolrmarad',
@@ -1723,6 +1731,7 @@ return {
 		{
 			name = "ammolrmthunder",
 			menu = "ammo",
+			noLimit = true,
 			cmdDesc = {
 				id = GetCmdID('MOD_AMMO_LRM_THUNDER'),
 				action = 'modammolrmthunder',
@@ -1745,6 +1754,7 @@ return {
 		{
 			name = "ammolrmhoming",
 			menu = "ammo",
+			noLimit = true,
 			cmdDesc = {
 				id = GetCmdID('MOD_AMMO_LRM_HOMING'),
 				action = 'modammolrmhoming',
@@ -1767,6 +1777,7 @@ return {
 		{
 			name = "ammoarrowhoming",
 			menu = "ammo",
+			noLimit = true,
 			cmdDesc = {
 				id = GetCmdID('MOD_AMMO_ARROW_HOMING'),
 				action = 'modammoarrowhoming',
@@ -1789,6 +1800,7 @@ return {
 		{
 			name = "ammoarrowcluster",
 			menu = "ammo",
+			noLimit = true,
 			cmdDesc = {
 				id = GetCmdID('MOD_AMMO_ARROW_CLUSTER'),
 				action = 'modammoarrowcluster',
@@ -1811,6 +1823,7 @@ return {
 		{
 			name = "ammoarrowthunder",
 			menu = "ammo",
+			noLimit = true,
 			cmdDesc = {
 				id = GetCmdID('MOD_AMMO_ARROW_THUNDER'),
 				action = 'modammoarrowthunder',
@@ -1833,6 +1846,7 @@ return {
 		{
 			name = "ammoarrowarad",
 			menu = "ammo",
+			noLimit = true,
 			cmdDesc = {
 				id = GetCmdID('MOD_AMMO_ARROW_ARAD'),
 				action = 'modammolrmarad',
@@ -1855,6 +1869,7 @@ return {
 		{
 			name = "ammosrminferno",
 			menu = "ammo",
+			noLimit = true,
 			cmdDesc = {
 				id = GetCmdID('MOD_AMMO_SRM_INFERNO'),
 				action = 'modammosrminferno',
@@ -1878,6 +1893,7 @@ return {
 		{
 			name = "ammosrmtandem",
 			menu = "ammo",
+			noLimit = true,
 			cmdDesc = {
 				id = GetCmdID('MOD_AMMO_SRM_TANDEM'),
 				action = 'modammosrmtandem',
@@ -1905,6 +1921,7 @@ return {
 		{
 			name = "ammosrmmagpulse",
 			menu = "ammo",
+			noLimit = true,
 			cmdDesc = {
 				id = GetCmdID('MOD_AMMO_SRM_MAG_PULSE'),
 				action = 'modammosrmmagpulse',
@@ -1927,6 +1944,7 @@ return {
 		{
 			name = "ammoinarc",
 			menu = "ammo",
+			noLimit = true,
 			cmdDesc = {
 				id = GetCmdID('MOD_AMMO_I_NARC'),
 				action = 'modammoinarc',
@@ -1956,6 +1974,7 @@ return {
 		{
 			name = "ammonarcexplosive",
 			menu = "ammo",
+			noLimit = true,
 			cmdDesc = {
 				id = GetCmdID('MOD_AMMO_NARC_EXPLOSIVE'),
 				action = 'modammonarcexplosive',
@@ -1978,6 +1997,7 @@ return {
 		{
 			name = "ammonarcbola",
 			menu = "ammo",
+			noLimit = true,
 			cmdDesc = {
 				id = GetCmdID('MOD_AMMO_NARC_BOLA'),
 				action = 'modammonarcbola',
@@ -2000,6 +2020,7 @@ return {
 		{
 			name = "ammonarcthermite",
 			menu = "ammo",
+			noLimit = true,
 			cmdDesc = {
 				id = GetCmdID('MOD_AMMO_NARC_THERMITE'),
 				action = 'modammonarcthermite',
@@ -2022,6 +2043,7 @@ return {
 		{
 			name = "ammonarchaywire",
 			menu = "ammo",
+			noLimit = true,
 			cmdDesc = {
 				id = GetCmdID('MOD_AMMO_NARC_HAYWIRE'),
 				action = 'modammonarchaywire',

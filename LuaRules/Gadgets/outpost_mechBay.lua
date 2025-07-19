@@ -76,7 +76,7 @@ local typeStringAliases = {
 	["mobility"] 	= GG.Pad(10,"Engine", "Mods"), 
 	["tactical"] 	= GG.Pad(10,"System", "Mods"), 
 	["offensive"] 	= GG.Pad(10,"Weapon", "Mods"),
-	["defensive"] 	= GG.Pad(10,"Armour", "Types"),
+	["defensive"] 	= GG.Pad(10,"Armour", "Mods"),
 	["structural"] 	= GG.Pad(10,"Chassis", "Mods"),
 	["omni"]		= GG.Pad(10, "Omni", "Configs"),
 }

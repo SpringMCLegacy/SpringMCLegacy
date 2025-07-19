@@ -45,6 +45,8 @@ GG.appDefTypes = appDefTypes
 local validApps = {} -- [unitDefID][appType] = {appCmdID = true, etc}
 local orderedApps = {} -- unitDefID = {cmdDesc1, cmdDesc2, ...} -- TODO: get rid of need for this by just using the include directly which is already in order
 local currentApps = {} --[unitID][appType] = {app1 = true, app2 = true, ...}}
+local currentModCounts = {} -- [unitID] = count
+local MAX_MODS = 6
 local appUnits = {} -- [unitID][appType] = true
 local appUnitDefIDs = {} -- [unitID] = unitDefID
 
@@ -119,7 +121,9 @@ local function UpdateRemaining(unitID, unitDefID, appType, newLevel, applierID)
 					or (appDef.requires and not currentApps[unitID][appType][appDef.requires]) then
 						EditUnitCmdDesc(applierID, FindUnitCmdDesc(applierID, appCmdID), {disabled = true,})
 					elseif appType == "mods" then -- reset name if no longer applied
-						if incompatible[unitID] and incompatible[unitID][appDef.name] then
+						if currentModCounts[unitID] == MAX_MODS and not appDef.noLimit then
+							EditUnitCmdDesc(applierID, FindUnitCmdDesc(applierID, appCmdID), {disabled = true, name = GG.Pad(10, "Fully", "Modded")})
+						elseif incompatible[unitID] and incompatible[unitID][appDef.name] then
 							EditUnitCmdDesc(applierID, FindUnitCmdDesc(applierID, appCmdID), {name = appDef.cmdDesc.name .."\n  (Conflict)"})
 						else
 							EditUnitCmdDesc(applierID, FindUnitCmdDesc(applierID, appCmdID), {disabled = false, name = appDef.cmdDesc.name})
@@ -207,6 +211,7 @@ local function RemoveMod(unitID, unitDefID, appDef, applierID)
 		return false -- mod is not installed
 	else
 		currentApps[unitID]["mods"][appDef.name] = nil
+		currentModCounts[unitID] = currentModCounts[unitID] - (appDef.noLimit and 0 or 1)
 		appDef.costFunction(unitID, -(appDef.price or appDef.priceFunction(unitDefID)))
 		appDef.applyPerk(unitID, 0, true) -- invert
 		for _, modName in pairs(appDef.incompatible or EMPTY_TABLE) do -- assumes only mods can be incompatible
@@ -222,6 +227,7 @@ end
 local function ApplyAppToUnit(unitID, unitDefID, appType, appDef, cmdID, applierID, free)
 	if not currentApps[unitID][appType] then currentApps[unitID][appType] = {} end -- create current aps for mods in mechbay
 	if appDef.requires and not currentApps[unitID][appType][appDef.requires] then return false end
+	if appType == "mods" and not appDef.noLimit and currentModCounts[unitID] == MAX_MODS then return false end
 	local level = currentApps[unitID][appType][appDef.name] or 0
 	if level == (appDef.levels or 1) then return false end -- in case it was issued when multiple were selected
 	-- Play sounds
@@ -244,6 +250,7 @@ local function ApplyAppToUnit(unitID, unitDefID, appType, appDef, cmdID, applier
 		if applierID then -- Special case to add to mech's 'View Mods' menu page, don't play the sound
 			GG.PlaySoundForTeam(Spring.GetUnitTeam(unitID), conflicted and "bb_battlemech_modded_conflicted" or "bb_battlemech_modded", 1)
 		end
+		currentModCounts[unitID] = (currentModCounts[unitID] or 0) + (appDef.noLimit and 0 or 1)
 	end
 	level = level + 1
 	currentApps[unitID][appType][appDef.name] = level

@@ -206,6 +206,9 @@ for name, ud in pairs(UnitDefs) do
 		ud.customparams = {}
 	end
 	local cp = ud.customparams
+	--[[if cp.mods then
+		Spring.Echo(name, "has", #(cp.mods), "mods")
+	end]]
 	-- override nochasecategories so units don't do anything.
 	--ud.category = (ud.category or "") .. " all"
 	--ud.nochasecategory = (ud.nochasecategory or "") .. " all"
