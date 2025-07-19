@@ -37,7 +37,7 @@ local AGS4D = Argus:New{
 		armor			= 12,
 		bap				= true,
 		maxammo 		= {ac5 = 2, lrm = 2},
-		mods			= {"beagle", "targetingcomputer", "doubleheatsinks", "endosteel", "case", "xlengine"},
+		mods			= {"endosteel", "xlengine", "beagle", "case", "targetingcomputer", "doubleheatsinks"},
     },
 }
 

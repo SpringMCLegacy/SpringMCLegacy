@@ -25,6 +25,7 @@ local function hasJumpjets(unitDefID) return (UnitDefs[unitDefID].customParams.j
 local function hasMASC(unitDefID) return (allMechs(unitDefID) and UnitDefs[unitDefID].customParams.masc or false) end
 local function hasECM(unitDefID) return (allMechs(unitDefID) and UnitDefs[unitDefID].customParams.ecm or false) end
 local function hasBAP(unitDefID) return (allMechs(unitDefID) and UnitDefs[unitDefID].customParams.bap or false) end
+local function hasPrebuilt(unitDefID, modName) return (allMechs(unitDefID) and string.find(UnitDefs[unitDefID].customParams.mods or "", modName) ~= nil) end
 local function isFaction(unitDefID, faction) return (allMechs(unitDefID) and UnitDefs[unitDefID].name:sub(1,2) == faction) end
 local function isOmni(unitDefID) return (allMechs(unitDefID) and UnitDefs[unitDefID].customParams.omni) end
 local function isNotOmni(unitDefID) return not isOmni(unitDefID) end
@@ -72,6 +73,8 @@ local function hasWeaponClass(unitDefID, className, tag, with, value, custom) --
 end	
 
 -- Common apply() functions
+local function noOp(unitID) end
+
 local function setWeaponClassAttribute(unitID, className, attrib, multiplier, tag, with, value, custom)
 	if not unitID then return end
 	local weapons = UnitDefs[Spring.GetUnitDefID(unitID)].weapons
@@ -700,6 +703,23 @@ return {
 	mods = {
 		-- Structural (CHASSIS)
 		{
+			name = "endosteel",
+			menu = "structural",
+			locked = true,
+			cmdDesc = {
+				id = GetCmdID('MOD_ENDO_STEEL'),
+				action = 'modendosteel',
+				name = GG.Pad("Endo", "Steel"),
+				tooltip = 'Pre-built with integrated Endo Steel chassis',
+				texture = 'bitmaps/ui/perkred.png',	
+			},
+			valid = isMechBay,
+			applyTo = function (unitDefID) return hasPrebuilt(unitDefID, "endosteel") end,
+			applyPerk = noOp,
+			costFunction = noOp,
+			price = 0,
+		},
+		{
 			name = "aes",
 			menu = "structural",
 			cmdDesc = {
@@ -836,6 +856,40 @@ return {
 			incompatible = {"case"},
 		},
 		-- Mobility (ENGINE)
+		{
+			name = "lightengine",
+			menu = "mobility",
+			locked = true,
+			cmdDesc = {
+				id = GetCmdID('MOD_LIGHT_ENGINE'),
+				action = 'modlightengine',
+				name = GG.Pad("Light", "Engine"),
+				tooltip = 'Pre-built with integrated Light Fusion Engine',
+				texture = 'bitmaps/ui/perkred.png',	
+			},
+			valid = isMechBay,
+			applyTo = function (unitDefID) return hasPrebuilt(unitDefID, "lightengine") end,
+			applyPerk = noOp,
+			costFunction = noOp,
+			price = 0,
+		},
+		{
+			name = "xlengine",
+			menu = "mobility",
+			locked = true,
+			cmdDesc = {
+				id = GetCmdID('MOD_XL_ENGINE'),
+				action = 'modxlengine',
+				name = GG.Pad("XL", "Engine"),
+				tooltip = 'Pre-built with integrated Extralight Fusion Engine',
+				texture = 'bitmaps/ui/perkred.png',	
+			},
+			valid = isMechBay,
+			applyTo = function (unitDefID) return hasPrebuilt(unitDefID, "xlengine") end,
+			applyPerk = noOp,
+			costFunction = noOp,
+			price = 0,
+		},
 		{
 			name = "masc",
 			menu = "mobility",
