@@ -79,6 +79,10 @@ local allyJammers = {} -- allyJammers[allyTeam][unitID] = radius
 GG.allyJammers = allyJammers
 local allyBAPs = {} -- allyBAPs[allyTeam][unitID] = radius
 GG.allyBAPs = allyBAPs
+local angels = {} -- angels[unitID] = true
+GG.angels = angels
+local bloodHounds ={}
+GG.bloodHounds = bloodHounds
 
 local jammerCache = {} -- unitID = true
 GG.jammerCache = jammerCache
@@ -531,6 +535,8 @@ function gadget:UnitDestroyed(unitID, unitDefID, teamID)
 	bapUnits[unitID] = nil
 	ecmUnits[unitID] = nil
 	jammerCache[unitID] = nil
+	angels[unitID] = nil
+	bloodHounds[unitID] = nil
 	allyTeamMechs[Spring.GetUnitAllyTeam(unitID)][unitID] = nil
 	SetUnitRulesParam(unitID, "FRIENDLY_ECM", 0)
 	-- armour
@@ -628,7 +634,7 @@ function gadget:GameFrame(n)
 							if unitAllyTeam == allyTeam then -- is an allied unit, including the ECM source itself
 								--Spring.Echo("nearby", UnitDefs[Spring.GetUnitDefID(nearbyUnits[i])].name)
 								SetUnitRulesParam(allyID, "FRIENDLY_ECM", n, {inlos = true})
-								ecmUnits[allyID] = {n, allyTeam}
+								ecmUnits[allyID] = {n, allyTeam, angels[unitID]}
 							end
 						end
 					end
@@ -644,19 +650,24 @@ function gadget:GameFrame(n)
 				for _, enemyID in pairs(nearbyUnits) do
 					local unitAllyTeam = Spring.GetUnitAllyTeam(enemyID)
 					if enemyID ~= unitID and unitAllyTeam ~= allyTeam then-- not an allied unit
+						local ecmInfo = ecmUnits[enemyID]
 					--and not sectorUnits[allyTeam][enemyID] then -- not already visible in sector
-						if allyJammers[unitAllyTeam][enemyID] and not GG.stealthActive[enemyID] then -- it is an enemy ECM emitter
+						if allyJammers[unitAllyTeam][enemyID] and not GG.stealthActive[enemyID] and not angels[enemyID] and not bloodHounds[unitID] then -- it is an enemy ECM emitter
 							if n % 30 == 0 then -- every second emit a ping
 								local ex, ey, ez = Spring.GetUnitPosition(enemyID)
 								Spring.SpawnCEG("ecm_ping", ex,ey,ez)
 							end
-						elseif ecmUnits[enemyID] then -- under enemy ECM (we already checked it is not allied unit)
+						elseif ecmInfo and (not bloodHounds[unitID] or ecmInfo[3]) then -- under enemy ECM (we already checked it is not allied unit)
 							-- nothing, should still be invisible to bap
-						elseif not sectorUnits[allyTeam][enemyID] and mobileUnits[enemyID] and not GetUnitIsActive(enemyID) then 
+						elseif mobileUnits[enemyID] then
+							if not sectorUnits[allyTeam][enemyID] and not GetUnitIsActive(enemyID) 
 							-- not in a sector, but under BAP radar, only consider radar-off mobile units (Engine handles radar-on)
-							bapUnits[enemyID] = {n, allyTeam}
-							SetUnitLosState(enemyID, allyTeam, losFalseRestTrue) 
-							SetUnitLosMask(enemyID, allyTeam, losFalseRestTrue)	-- let lua handle radar state for this unit
+							or ecmInfo and not ecmInfo[3] and bloodHounds[unitID] then
+							-- or is visible to bloodhound
+								bapUnits[enemyID] = {n, allyTeam}
+								SetUnitLosState(enemyID, allyTeam, losFalseRestTrue) 
+								SetUnitLosMask(enemyID, allyTeam, losFalseRestTrue)	-- let lua handle radar state for this unit
+							end
 						end
 					end
 				end

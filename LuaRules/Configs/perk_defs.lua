@@ -1043,6 +1043,42 @@ return {
 			price = 0,
 		},
 		{
+			name = "angel",
+			menu = "tactical",
+			cmdDesc = {
+				id = GetCmdID('MOD_ANGEL_ECM'),
+				action = 'modangelecm',
+				name = GG.Pad("Angel", "ECM"),
+				tooltip = 'Upgrade to Guardian ECM that removes BAP ECM pings and even the Bloodhound sensor suite',
+				texture = 'bitmaps/ui/perkbgability.png',	
+			},
+			valid = isMechBay,
+			applyTo = hasECM,
+			applyPerk = function(unitID, level, invert)
+				GG.angels[unitID] = not invert
+			end,
+			costFunction = deductSalvage,
+			price = 25,
+		},
+		{
+			name = "bloodhound",
+			menu = "tactical",
+			cmdDesc = {
+				id = GetCmdID('MOD_BLOODHOUND_AP'),
+				action = 'modangelecm',
+				name = GG.Pad("Blood", "Hound", "Probe"),
+				tooltip = 'Upgrade to Beagle Active Probe that can penetrate Guardian ECM, revealing the jammer and allies',
+				texture = 'bitmaps/ui/perkbgability.png',	
+			},
+			valid = isMechBay,
+			applyTo = hasBAP,
+			applyPerk = function(unitID, level, invert)
+				GG.bloodHounds[unitID] = not invert
+			end,
+			costFunction = deductSalvage,
+			price = 25,
+		},
+		{
 
 			name = "improvedsensors",
 			menu = "tactical",
@@ -1991,7 +2027,6 @@ return {
 			costFunction = deductSalvage,
 			priceFunction = function(unitDefID)
 				local AMOUNT_PER_TON = 8 / GG.GameConstants.ammoTypes.SRM
-				Spring.Echo("inferno")
 				return deductPerUnitDefTag(unitDefID, true, "maxammo", AMOUNT_PER_TON, "srm")
 			end,
 			incompatible = {"ammosrmtandem", "ammosrmmagpulse", "artemissrm"},
