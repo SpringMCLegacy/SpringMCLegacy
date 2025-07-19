@@ -891,6 +891,23 @@ return {
 			price = 0,
 		},
 		{
+			name = "jumpjets",
+			menu = "mobility",
+			locked = true,
+			cmdDesc = {
+				id = GetCmdID('MOD_JUMPJETS'),
+				action = 'modjumpjets',
+				name = GG.Pad("Jumpjets"),
+				tooltip = 'Pre-built with integrated Jumpjets',
+				texture = 'bitmaps/ui/perkred.png',	
+			},
+			valid = isMechBay,
+			applyTo = hasJumpjets,
+			applyPerk = noOp,
+			costFunction = noOp,
+			price = 0,
+		},
+		{
 			name = "masc",
 			menu = "mobility",
 			cmdDesc = {
@@ -992,6 +1009,41 @@ return {
 		},
 		-- Tactical (TECH)
 		{
+			name = "beagle",
+			menu = "tactical",
+			locked = true,
+			cmdDesc = {
+				id = GetCmdID('MOD_BEAGLE'),
+				action = 'modbeagle',
+				name = GG.Pad("Beagle", "Active", "Probe"),
+				tooltip = 'Pre-built with integrated Beagle Active Probe sensor suite',
+				texture = 'bitmaps/ui/perkred.png',	
+			},
+			valid = isMechBay,
+			applyTo = hasBAP,
+			applyPerk = noOp,
+			costFunction = noOp,
+			price = 0,
+		},
+		{
+			name = "guardian",
+			menu = "tactical",
+			locked = true,
+			cmdDesc = {
+				id = GetCmdID('MOD_GUARDIAN_ECM'),
+				action = 'modecm',
+				name = GG.Pad("Guardian", "ECM"),
+				tooltip = 'Pre-built with integrated Guardian ECM suite',
+				texture = 'bitmaps/ui/perkred.png',	
+			},
+			valid = isMechBay,
+			applyTo = hasECM,
+			applyPerk = noOp,
+			costFunction = noOp,
+			price = 0,
+		},
+		{
+
 			name = "improvedsensors",
 			menu = "tactical",
 			cmdDesc = {
