@@ -209,6 +209,9 @@ end
 local function RemoveMod(unitID, unitDefID, appDef, applierID)
 	if not currentApps[unitID]["mods"][appDef.name] then
 		return false -- mod is not installed
+	elseif appDef.locked then
+		GG.PlaySoundForTeam(Spring.GetUnitTeam(unitID), "bb_battlemech_mod_integrated", 1)
+		return false
 	else
 		currentApps[unitID]["mods"][appDef.name] = nil
 		currentModCounts[unitID] = currentModCounts[unitID] - (appDef.noLimit and 0 or 1)
@@ -220,6 +223,7 @@ local function RemoveMod(unitID, unitDefID, appDef, applierID)
 		UpdateUnitApps(applierID, unitDefID, "mods")
 		Spring.RemoveUnitCmdDesc(unitID, FindUnitCmdDesc(unitID, appDef.cmdDesc.id)) -- remove from 'View Mods' panel
 		Spring.SetUnitRulesParam(unitID, appDef.name, false)
+		GG.PlaySoundForTeam(Spring.GetUnitTeam(unitID), "bb_battlemech_mod_removed", 1)
 		return true
 	end
 end
