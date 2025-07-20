@@ -1,6 +1,6 @@
 local Outpost_Uplink = Outpost:New{
-	name              	= "Orbital Uplink",
-	description         = "Allows control over orbital bombardment assets",
+	name              	= "Orbital Comms Uplink",
+	description         = "An outpost for extraplanetary strategic attacks like aerostrikes and orbital bombardment",
 	iconType			= "outpost_uplink",
 	maxDamage           = 5500,
 	mass                = 5000,

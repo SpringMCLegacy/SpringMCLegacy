@@ -1,6 +1,6 @@
 local Outpost_Mechbay = Outpost:New{
-	name              	= "Field Mech Bay",
-	description         = "Deploys an outpost that can repair & restore & resupply mechs",
+	name              	= "Mech Bay",
+	description         = "An outpost that can repair, resupply & customize mechs",
 	iconType			= "outpost_mechbay",
 	maxDamage           = 5500,
 	mass                = 9000,

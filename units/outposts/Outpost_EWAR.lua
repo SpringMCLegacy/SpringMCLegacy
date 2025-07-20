@@ -1,6 +1,6 @@
 local Outpost_EWAR = Outpost:New{
-	name              	= "Electronic Warfare Station",
-	description         = "Deploys a Beagle Active Probe radar tower, ECM and TAG designator lasers",
+	name              	= "EWAR Station",
+	description         = "A powerful ECM outpost to jam enemy sensors",
 	iconType			= "outpost_ewar",
 	maxDamage           = 5000,
 	mass                = 5000,

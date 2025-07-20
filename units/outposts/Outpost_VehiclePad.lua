@@ -1,6 +1,6 @@
 local Outpost_VehiclePad = Outpost:New{
-	name              	= "Vehicle Pad",
-	description         = "Allows delivery of offensive vehicle support units",
+	name              	= "Vehicle Landing Pad",
+	description         = "A designated LZ for independent planetary militia forces",
 	iconType			= "outpost_vehiclepad",
 	maxDamage           = 5500,
 	mass                = 5000,

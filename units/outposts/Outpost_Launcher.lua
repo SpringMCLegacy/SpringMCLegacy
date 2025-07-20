@@ -1,6 +1,6 @@
 local Outpost_Launcher = Outpost:New{
 	name              	= "Cruise Missile Launcher",
-	description         = "Deploys a Tactical Missile Launcher platform for firing Cruise Missiles",
+	description         = "A tactical missile launching platform (cruise missiles sold separately)",
 	iconType			= "outpost_launcher",
 	maxDamage           = 6000,
 	mass                = 4000,

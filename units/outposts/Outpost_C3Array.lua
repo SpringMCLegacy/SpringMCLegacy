@@ -1,8 +1,8 @@
 
 
 local Outpost_C3Array = Outpost:New{
-	name              	= "C3 Network Relay",
-	description         = "Command & Control Capacity outpost",
+	name              	= "C3 Network Router",
+	description         = "A Command, Control & Communications facility to increase your Mech control capacity",
 	iconType			= "outpost_c3array",
 	maxDamage           = 5200,
 	mass                = 10000,

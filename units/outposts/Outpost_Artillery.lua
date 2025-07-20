@@ -1,6 +1,6 @@
 local Outpost_Artillery = Outpost:New{
-	name              	= "Heavy Artillery Platform",
-	description         = "Deploys a long-range heavy artillery platform",
+	name              	= "Longtom Artillery Platform",
+	description         = "A superheavy artillery platform for long-range bombardment",
 	iconType			= "outpost_artillery",
 	maxDamage           = 5000,
 	mass                = 5000,
