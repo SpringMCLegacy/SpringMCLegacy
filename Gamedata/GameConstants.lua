@@ -45,4 +45,10 @@ return {
 		aero	= {"body", "left_wing", "right_wing"},
 		vtol	= {"body", "rotor"},
 	},
+	colours = {
+		cbills = "\255\160\160\160",
+		tonnage = "\255\255\255\001",
+		salvage = "\255\198\226\255",
+		white = "\255\255\255\255",
+	}
 }

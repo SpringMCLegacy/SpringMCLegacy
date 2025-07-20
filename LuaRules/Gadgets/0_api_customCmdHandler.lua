@@ -15,6 +15,9 @@ end
 -- Note that loading order != execution order, which is what layer in GetInfo controls!
 
 -- Setup
+local GameConstants = VFS.Include("gamedata/GameConstants.lua", nil, VFS.ZIP)
+GG.GameConstants = GameConstants
+
 GG.CommandCosts = {} -- CommandCosts[cmdID] = cBillCost
 GG.CustomCommands = {}
 GG.CustomCommands.numCmds = 0

@@ -177,7 +177,7 @@ function widget:DrawScreen()
   for line in tooltip:gmatch("([^\n]*)\n?") do
     if (unitTip and (i == 0)) then
       line = "\255\255\128\255" .. line -- first line colour
-    elseif i >= 3 then
+    elseif i >= 5 then
 	  line = ""
 	else
       line = "\255\255\255\255" .. line

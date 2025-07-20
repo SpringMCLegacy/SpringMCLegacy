@@ -34,6 +34,7 @@ local BEACON_ID = UnitDefNames["beacon"].id
 GG.Beacons = {}
 local BEACON_POINT_ID = UnitDefNames["beacon_point"].id
 
+local COLOURS = GG.GameConstants.colours
 -- Variables
 local outpostDefs = {} -- outpostDefs[unitDefID] = {cmdDesc = {cmdDescTable}, cost = cost}
 GG.outpostDefs = outpostDefs -- make available to game_dropships for running AssociateOutpost
@@ -94,7 +95,7 @@ function gadget:GamePreload()
 				type   = CMDTYPE.ICON,
 				name   = GG.Pad(10,unpack(mysplit(unitDef.humanName))),
 				action = 'outpost',
-				tooltip = unitDef.tooltip .. " (C-Bills cost: " .. cBillCost .. ")",
+				tooltip = unitDef.tooltip .. "\n(" .. COLOURS.cbills .. "C-Bills cost: " .. cBillCost .. COLOURS.white .. ")",
 			}
 			outpostDefs[unitDefID] = {cmdDesc = outpostCmdDesc, cost = cBillCost}
 			outpostCMDs[outpostCmdDesc.id] = unitDefID
