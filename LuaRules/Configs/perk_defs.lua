@@ -1156,7 +1156,7 @@ return {
 				action = 'modparticlefielddamper',
 				name = GG.Pad("Particle", "Field", "Damper"),
 				tooltip = 'Reduces the amount of time electronics are affected by "PPC effect" from PPC hits.',
-				texture = 'bitmaps/ui/perkgreen.png',	
+				texture = 'bitmaps/ui/perkbgability.png',	
 			},
 			valid = isMechBay,
 			applyTo = function (unitDefID) return (isNotOmni(unitDefID) and hasECM(unitDefID)) end,
