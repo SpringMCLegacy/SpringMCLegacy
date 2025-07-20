@@ -1,6 +1,12 @@
 local Raven = Light:New{
 	name				= "Raven",
 
+	leaveTracks			= true,	
+	trackType			= "Raven",
+	trackOffset			= 6,
+	trackWidth			= 30,
+	trackStretch 		= 2,
+	
 	customparams = {
 		cockpitheight	= 2.1,
 		tonnage			= 35,
@@ -12,19 +18,20 @@ local RVN3L = Raven:New{
 	weapons	= {	
 		[1] = {
 			name	= "MBL",
-			OnlyTargetCategory = "ground",
 		},
 		[2] = {
 			name	= "MBL",
+			SlaveTo = 1,
 		},
 		[3] = {
-			name	= "NARC",
+			name	= "SRM6",
 		},
 		[4] = {
-			name	= "SRM6",
+			name	= "NARC",
 		},
 		[5] = {
 			name	= "TAG",
+			OnlyTargetCategory = "ground",
 		},
 	},
 		
@@ -42,23 +49,24 @@ local RVN3L = Raven:New{
 }
 
 local RVN4L = Raven:New{
-	description         = "Light EWAR Skirmisher",
+	description         = "Light EWAR Support",
 	weapons = {	
 		[1] = {
 			name	= "ERMBL",
-			OnlyTargetCategory = "ground",
 		},
 		[2] = {
 			name	= "ERMBL",
+			SlaveTo = 1,
 		},
 		[3] = {
-			name	= "NARC",
+			name	= "SRM6",
 		},
 		[4] = {
-			name	= "SRM6",
+			name	= "NARC",
 		},
 		[5] = {
 			name	= "TAG",
+			OnlyTargetCategory = "ground",
 		},
 	},
 
@@ -112,6 +120,7 @@ local RVN3M = Raven:New{
 return lowerkeys({
 	["DC_Raven_RVN3L"] = RVN3L:New(),
 	["CC_Raven_RVN3L"] = RVN3L:New(),
-	["FW_Raven_RVN3M"] = RVN3M:New(),
+	["CC_Raven_RVN4L"] = RVN3L:New(),
 	["FW_Raven_RVN3L"] = RVN3L:New(),
+	["FW_Raven_RVN3M"] = RVN3M:New(),
 })
