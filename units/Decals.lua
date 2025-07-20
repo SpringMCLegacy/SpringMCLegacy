@@ -23,7 +23,19 @@ local Decal_Drop = Decal:New{
 	buildingGroundDecalSizeY = 30,
 }
 
+local Narc_ECM = Decal:New{
+	useBuildingGroundDecal 	= false,
+	radarDistanceJam = 150,
+	sightDistance = 150,
+	
+	customParams = {
+		decal = nil,
+		ecm = true,
+	}
+}
+
 return lowerkeys({ 
 	["Decal_Beacon"] = Decal_Beacon,
 	["Decal_Drop"] = Decal_Drop,
+	["Narc_ECM"] = Narc_ECM,
 })

@@ -332,7 +332,7 @@ for name, ud in pairs(UnitDefs) do
 		end
 		if cp.ecm then
 			ud.radardistancejam	= ud.radardistancejam or 500
-			ud.description = ud.description .. " \255\128\128\128[ECM]"
+			ud.description = ud.description or "" .. " \255\128\128\128[ECM]"
 		end
 		if cp.bap then
 			ud.radaremitheight = 1000

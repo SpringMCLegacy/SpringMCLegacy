@@ -2110,7 +2110,7 @@ return {
 				local AMOUNT_PER_TON = 5 / GG.GameConstants.ammoTypes.Narc
 				return deductPerUnitDefTag(unitDefID, true, "maxammo", AMOUNT_PER_TON, "narc")
 			end,
-			incompatible = {"ammonarcbola", "ammonarcthermite", "ammonarchaywire", "ammonarcexplosive"},
+			incompatible = {"ammonarcbola", "ammonarcthermite", "ammonarchaywire", "ammonarcexplosive", "ammonarcecm"},
 		},
 		{
 			name = "ammonarcexplosive",
@@ -2133,7 +2133,7 @@ return {
 				local AMOUNT_PER_TON = 5 / GG.GameConstants.ammoTypes.Narc
 				return deductPerUnitDefTag(unitDefID, true, "maxammo", AMOUNT_PER_TON, "narc")
 			end,
-			incompatible = {"ammonarcbola", "ammonarcthermite", "ammonarchaywire", "ammoinarc"},
+			incompatible = {"ammonarcbola", "ammonarcthermite", "ammonarchaywire", "ammoinarc", "ammonarcecm"},
 		},
 		{
 			name = "ammonarcbola",
@@ -2156,7 +2156,7 @@ return {
 				local AMOUNT_PER_TON = 5 / GG.GameConstants.ammoTypes.Narc
 				return deductPerUnitDefTag(unitDefID, true, "maxammo", AMOUNT_PER_TON, "narc")
 			end,
-			incompatible = {"ammonarcexplosive", "ammonarcthermite", "ammonarchaywire", "ammoinarc"},
+			incompatible = {"ammonarcexplosive", "ammonarcthermite", "ammonarchaywire", "ammoinarc", "ammonarcecm"},
 		},
 		{
 			name = "ammonarcthermite",
@@ -2179,7 +2179,7 @@ return {
 				local AMOUNT_PER_TON = 5 / GG.GameConstants.ammoTypes.Narc
 				return deductPerUnitDefTag(unitDefID, true, "maxammo", AMOUNT_PER_TON, "narc")
 			end,
-			incompatible = {"ammonarcexplosive", "ammonarcbola", "ammonarchaywire", "ammoinarc"},
+			incompatible = {"ammonarcexplosive", "ammonarcbola", "ammonarchaywire", "ammoinarc", "ammonarcecm"},
 		},
 		{
 			name = "ammonarchaywire",
@@ -2202,7 +2202,30 @@ return {
 				local AMOUNT_PER_TON = 5 / GG.GameConstants.ammoTypes.Narc
 				return deductPerUnitDefTag(unitDefID, true, "maxammo", AMOUNT_PER_TON, "narc")
 			end,
-			incompatible = {"ammonarcexplosive", "ammonarcbola", "ammonarcthermite", "ammoinarc"},
+			incompatible = {"ammonarcexplosive", "ammonarcbola", "ammonarcthermite", "ammoinarc", "ammonarcecm"},
+		},
+		{
+			name = "ammonarcecm",
+			menu = "ammo",
+			noLimit = true,
+			cmdDesc = {
+				id = GetCmdID('MOD_AMMO_NARC_ECM'),
+				action = 'modammonarcecm',
+				name = GG.Pad("NARC", "ECM"),
+				tooltip = "Narc only. Replaces standard Homing Pod fired by Narcs with an ECM pod which scrambles the target's homing missile targeting.",
+				texture = 'bitmaps/ui/perkyellow.png',	
+			},
+			valid = isMechBay,
+			applyTo = function (unitDefID) return hasWeaponName(unitDefID, "narc") end,
+			applyPerk = function (unitID, level, invert)
+				GG.EnableAmmo(unitID, not invert, "narc", "ecm")
+			end,
+			costFunction = deductSalvage,
+			priceFunction = function(unitDefID)
+				local AMOUNT_PER_TON = 5 / GG.GameConstants.ammoTypes.Narc
+				return deductPerUnitDefTag(unitDefID, true, "maxammo", AMOUNT_PER_TON, "narc")
+			end,
+			incompatible = {"ammonarcexplosive", "ammonarcbola", "ammonarcthermite", "ammoinarc", "ammonarchaywire"},
 		},
 	},
 }

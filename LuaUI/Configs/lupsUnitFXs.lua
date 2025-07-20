@@ -35,12 +35,18 @@ local bigecm = {}
 table.copy(ecm, bigecm)
 bigecm[1].options.size = 1000
 bigecm[2].options.size = 1012
+local littleecm = {}
+table.copy(ecm, littleecm)
+littleecm[1].options.size = 150
+littleecm[2].options.size = 162
 
 for name, unitDef in pairs(UnitDefNames) do
 	if unitDef.customParams.ecm then -- and unitDef.canMove then -- mobiles
 		effectUnitDefs[name] = ecm
 		if name == "outpost_ewar" then
 			effectUnitDefs[name] = bigecm
+		elseif name == "narc_ecm" then
+			effectUnitDefs[name] = littleecm
 		end
 	end
 end

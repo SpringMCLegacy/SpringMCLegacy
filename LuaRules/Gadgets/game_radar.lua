@@ -362,6 +362,8 @@ function gadget:UnitPreDamaged(unitID, unitDefID, unitTeam, damage, paralyzer, w
 			speedChange = 0.01
 		elseif specialAmmo == "explosivepod" then
 			damage = 400
+		elseif specialAmmo == "ecm" then
+			damage = 0
 		elseif specialAmmo == "tandem" and not unitArmours[unitID] == "hard" then
 			damage = damage * 2
 		end
@@ -412,6 +414,14 @@ function gadget:UnitPreDamaged(unitID, unitDefID, unitTeam, damage, paralyzer, w
 		elseif specialAmmo == "haywire" then
 			GG.setWeaponClassAttribute(unitID, "all", "accuracy", 2)
 			DelayCall(GG.setWeaponClassAttribute, {unitID, "all", "accuracy", 0.5}, NARC_DURATION)
+		elseif specialAmmo == "ecm" then
+			local x,y,z = Spring.GetUnitPosition(unitID)
+			if x then
+				local ecmBeacon = Spring.CreateUnit("narc_ecm", x, y, z, 0, attackerTeam)
+				Spring.UnitAttach(unitID, ecmBeacon, 0)
+				SetUnitRulesParam(unitID, "ENEMY_ECM", Spring.GetGameFrame() + FRAME_FUDGE + NARC_DURATION)
+				DelayCall(Spring.DestroyUnit, {ecmBeacon}, NARC_DURATION)
+			end
 		else -- regular NARC
 			--if GetUnitUnderJammer(unitID, unitTeam) then return 0 end
 			local allyTeam = select(6, GetTeamInfo(attackerTeam))
