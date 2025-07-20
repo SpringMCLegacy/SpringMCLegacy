@@ -335,7 +335,9 @@ local function GenerateUnitGraphics(uid, udid, getAuras)
 		local missilelock = GetUnitRulesParam(uid, "ENEMY_MISSILE_LOCK") or 0
 		local nolock = GetUnitRulesParam(uid, "MISSILE_TARGET_JAMMED") or 0
 		local ecm = (GetUnitRulesParam(uid, "FRIENDLY_ECM") or 0) - n + 5
+		local eccm = (GetUnitRulesParam(uid, "ENEMY_ECM") or 0) - n + 5
 		local friendlyecm = ecm > 0 and friendlyUnit
+		local enemyeccm = eccm > 0 and friendlyUnit
 		local enemyecm = ecm > 0 and not friendlyUnit
 		local perk = (GetUnitRulesParam(uid, "perk_xp") or 0) == 100 and not GetUnitRulesParam(uid, "perk_fully")
 		if ((narc + tag + ppc + missilelock + nolock) > 0 or outofammo or running or perk or friendlyecm or enemyecm) then
@@ -370,6 +372,9 @@ local function GenerateUnitGraphics(uid, udid, getAuras)
 				},
 				["ecmprotection"] = {
 					value = friendlyecm and 1 or nil,
+				},
+				["eccm"] = {
+					value = enemyeccm and 1 or nil,
 				},
 				["ecmprotectionenemy"] = {
 					value = enemyecm and 1 or nil,

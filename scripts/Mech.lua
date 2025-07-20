@@ -20,6 +20,7 @@ local SpawnCEG 					= Spring.SpawnCEG
 -- localised GG functions
 local GetUnitDistanceToPoint = GG.GetUnitDistanceToPoint
 local GetUnitUnderJammer = GG.GetUnitUnderJammer
+local GetUnitUnderECCM = GG.GetUnitUnderECCM
 local IsUnitNARCed = GG.IsUnitNARCed
 local IsUnitTAGed = GG.IsUnitTAGed
 
@@ -760,7 +761,7 @@ function script.BlockShot(weaponID, targetID, userTarget)
 	if jammable then
 		if targetID then
 			if GG.stealthActive[unitID] or not activated then return true end -- Can't fire guided weapons in stealth mode
-			local jammed = (GetUnitUnderJammer(targetID) -- under the effects of ECM
+			local jammed = (GetUnitUnderECCM(unitID) or GetUnitUnderJammer(targetID) -- under the effects of ECM
 				or GG.stealthActive[targetID]) -- OR stealth armour
 				and (not IsUnitNARCed(targetID)) and (not IsUnitTAGed(targetID)) -- AND not TAGed or NARCed
 			local weaponClass = weapDef.customParams.weaponclass
