@@ -29,6 +29,7 @@ local SetUnitExperience		= Spring.SetUnitExperience
 
 -- Constants
 local EMPTY_TABLE = {}
+local COLOURS = GG.GameConstants.colours
 local completeTexts = {
 	["perks"] = "Trained",
 	["upgrades"] = "Installed",
@@ -57,7 +58,7 @@ local dropZoneUpgrades = {} -- dropZoneUpgrades[teamID] = {perk1 = true, perk2 =
 
 
 local function BuildToolTip(appType, appDef, unitDefPrice)
-	local currency = appType == "upgrades" and "C-Bills" or appType == "mods" and "Salvage" or nil -- TODO: would be nice to read cost function name?
+	local currency = appType == "upgrades" and (COLOURS.cbills .. "C-Bills") or appType == "mods" and (COLOURS.salvage .. "Salvage") or nil -- TODO: would be nice to read cost function name?
 	local tooltip = appDef.cmdDesc.tooltip
 	if appDef.requires then -- assumes prerequisite upgrades are defined first
 		tooltip = tooltip .. "\n[ Requires" .. appDefNames[appDef.requires].cmdDesc.name:gsub("\n", ""):gsub("%s+", " ") .. "]"
@@ -65,7 +66,7 @@ local function BuildToolTip(appType, appDef, unitDefPrice)
 	if currency then
 		local price = appDef.price or unitDefPrice
 		if not price then return tooltip end
-		tooltip = tooltip .. "\n( " .. currency .. " cost: " .. price .. " )"
+		tooltip = tooltip .. "\n( " .. currency .. " cost: " .. price .. COLOURS.white .. " )"
 	end
 	return tooltip
 end

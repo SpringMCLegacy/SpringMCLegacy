@@ -34,6 +34,7 @@ local UseTeamResource 		= Spring.UseTeamResource
 
 -- GG
 local DelayCall				 = GG.Delay.DelayCall
+local COLOURS = GG.GameConstants.colours
 
 -- Constants
 local GAIA_TEAM_ID = Spring.GetGaiaTeamID()
@@ -145,7 +146,7 @@ local function ChangeTeamSalvage(teamID, delta)
 end
 GG.ChangeTeamSalvage = ChangeTeamSalvage
 
-local S = {"\255\198\226\255S"}
+local S = {COLOURS.salvage .. "S"}
 local EMPTY_TABLE = {}
 
 local function CheckOmniOptions(unitID, teamID, cmdID)
@@ -439,7 +440,7 @@ function gadget:Initialize()
 			omniConfigs[name] = omniConfigs[name] or {}
 			omniConfigs[name][config] = {
 				id = -unitDef.id, 
-				tooltip = unitDef.humanName .. "\n" .. unitDef.tooltip .. "\nCost: " .. tonumber(unitDef.customParams.omniswapcost or 5) .. " Salvage", 
+				tooltip = unitDef.humanName .. "\n" .. unitDef.tooltip .. "\n" .. COLOURS.salvage .. "Salvage cost: " .. tonumber(unitDef.customParams.omniswapcost or 5), 
 				action = name..config
 			}
 		end

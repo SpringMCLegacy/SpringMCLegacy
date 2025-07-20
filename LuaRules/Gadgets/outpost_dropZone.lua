@@ -39,6 +39,7 @@ local DelayCall				 = GG.Delay.DelayCall
 
 -- Constants
 local EMPTY_TABLE = {} -- keep as empty
+local COLOURS = GG.GameConstants.colours
 local GAIA_TEAM_ID = Spring.GetGaiaTeamID()
 local BEACON_ID = UnitDefNames["beacon"].id
 local DROPZONE_IDS = {}
@@ -57,14 +58,14 @@ local CMD_RUNNING_TOTAL = GG.CustomCommands.GetCmdID("CMD_RUNNING_TOTAL")
 local runningTotalCmdDesc = {
 	id = CMD_RUNNING_TOTAL,
 	type   = CMDTYPE.ICON,
-	name   = "Order\n\255\160\160\160C-Bills: \n0",
+	name   = "Order\n" .. COLOURS.cbills .. "C-Bills: \n0",
 	disabled = true,
 }
 local CMD_RUNNING_TONS = GG.CustomCommands.GetCmdID("CMD_RUNNING_TONS")
 local runningTonsCmdDesc = {
 	id = CMD_RUNNING_TONS,
 	type   = CMDTYPE.ICON,
-	name   = "Order\n\255\255\255\001Tonnes: \n0",
+	name   = "Order\n" .. COLOURS.tonnage .. "Tonnes: \n0",
 	disabled = true,
 }
 local dropZoneCmdDesc = {
@@ -217,9 +218,9 @@ GG.DropZoneUpgrade = DropZoneUpgrade
 
 
 
-local L = {"\255\255\255\255L"}
-local C = {"\255\160\160\160C"}
-local T = {"\255\255\255\001T"}
+local L = {COLOURS.white .. "L"}
+local C = {COLOURS.cbills .. "C"}
+local T = {COLOURS.tonnage .. "T"}
 
 local function CheckBuildOptions(unitID, teamID, cmdID)
 	local money = GetTeamResources(teamID, "metal")
@@ -263,8 +264,8 @@ function UpdateButtons(teamID, arrived) -- Toggles Submit Order vs Order Sent
 	elseif orderStatus[teamID] == 0 then -- ready for new order
 		EditUnitCmdDesc(unitID, FindUnitCmdDesc(unitID, CMD_SEND_ORDER), {disabled = false, name = "Submit \nOrder "})
 		if orderSizes[teamID] == 0 then
-			EditUnitCmdDesc(unitID, FindUnitCmdDesc(unitID, CMD_RUNNING_TOTAL), {name = "Order\n\255\160\160\160C-Bills: \n0"})
-			EditUnitCmdDesc(unitID, FindUnitCmdDesc(unitID, CMD_RUNNING_TONS), {name = "Order\n\255\255\255\001Tonnes: \n0"})
+			EditUnitCmdDesc(unitID, FindUnitCmdDesc(unitID, CMD_RUNNING_TOTAL), {name = "Order\n" .. COLOURS.cbills .. "C-Bills: \n0"})
+			EditUnitCmdDesc(unitID, FindUnitCmdDesc(unitID, CMD_RUNNING_TONS), {name = "Order\n" .. COLOURS.tonnage .. "Tonnes: \n0"})
 		end
 	elseif orderStatus[teamID] >= 1 then -- order submitted
 		EditUnitCmdDesc(unitID, FindUnitCmdDesc(unitID, CMD_SEND_ORDER), {name = "Order \nSent "})
@@ -421,8 +422,8 @@ function gadget:AllowCommand(unitID, unitDefID, teamID, cmdID, cmdParams, cmdOpt
 					UseTeamResource(teamID, "metal", cost)
 					UseTeamResource(teamID, "energy", weight)
 					CheckBuildOptions(unitID, teamID, cmdID)
-					EditUnitCmdDesc(unitID, FindUnitCmdDesc(unitID, CMD_RUNNING_TOTAL), {name = "Order\n\255\160\160\160C-Bills: \n" .. newTotal})
-					EditUnitCmdDesc(unitID, FindUnitCmdDesc(unitID, CMD_RUNNING_TONS), {name = "Order\n\255\255\255\001Tonnes: \n" .. newTons})
+					EditUnitCmdDesc(unitID, FindUnitCmdDesc(unitID, CMD_RUNNING_TOTAL), {name = "Order\n" .. COLOURS.cbills .. "C-Bills: \n" .. newTotal})
+					EditUnitCmdDesc(unitID, FindUnitCmdDesc(unitID, CMD_RUNNING_TONS), {name = "Order\n" .. COLOURS.tonnage .. "Tonnes: \n" .. newTons})
 					return true
 				else
 					if cost > money then  -- not enough money
@@ -443,8 +444,8 @@ function gadget:AllowCommand(unitID, unitDefID, teamID, cmdID, cmdParams, cmdOpt
 					AddTeamResource(teamID, "energy", weight)
 					orderSizes[unitID] = runningSize - 1
 					CheckBuildOptions(unitID, teamID)
-					EditUnitCmdDesc(unitID, FindUnitCmdDesc(unitID, CMD_RUNNING_TOTAL), {name = "Order\n\255\160\160\160C-Bills: \n" .. runningTotal - cost})
-					EditUnitCmdDesc(unitID, FindUnitCmdDesc(unitID, CMD_RUNNING_TONS), {name = "Order\n\255\255\255\001Tonnes: \n" .. runningTons - weight})
+					EditUnitCmdDesc(unitID, FindUnitCmdDesc(unitID, CMD_RUNNING_TOTAL), {name = "Order\n" .. COLOURS.cbills .. "C-Bills: \n" .. runningTotal - cost})
+					EditUnitCmdDesc(unitID, FindUnitCmdDesc(unitID, CMD_RUNNING_TONS), {name = "Order\n" .. COLOURS.tonnage .. "Tonnes: \n" .. runningTons - weight})
 					return true
 				else
 					return false
