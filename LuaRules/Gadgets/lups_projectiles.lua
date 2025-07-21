@@ -45,7 +45,6 @@ if (gadgetHandler:IsSyncedCode()) then
 local projectiles = {}
 local tracking = {}
 local lbx = {}
-local ppc = {}
 local ppcEmits = {}
 GG.ppcEmits = ppcEmits -- uhoh, spaghettification inbound
 local silverBulletUnits = {}
@@ -230,7 +229,7 @@ function gadget:ProjectileCreated(proID, proOwnerID, weaponID)
 			-- delete old projectile and fire cluster instead
 			SpawnCluster(proID, proOwnerID, lbxInfo[1], lbxInfo[2])
 		end
-	elseif ppc[weaponID] then
+	elseif GG.PPC_IDS[weaponID] then
 		local x,y,z = Spring.GetProjectilePosition(proID)
 		ppcEmits[proID] = {x, y , z}
 	elseif weaponID == AMS_ID then
@@ -284,8 +283,6 @@ function gadget:Initialize()
 					math.asin(clusterDef.sprayAngle) * 140, -- a rough reproduction of engine spray 
 					clusterDef.range,
 				}
-			elseif weaponClass == "ppc" then
-				ppc[id] = true
 			end
 		end
 	end

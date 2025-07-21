@@ -54,6 +54,7 @@ for weaponDefID, weaponDef in pairs(WeaponDefs) do
 		PPC_IDS[weaponDefID] = true
 	end
 end
+GG.PPC_IDS = PPC_IDS
 
 local mobileUnitDefs = {}
 local mobileUnits = {}
