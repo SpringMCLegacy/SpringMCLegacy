@@ -214,13 +214,18 @@ function fx()
 end
 
 local function Refund()
-	Spring.AddTeamResource(teamID, "metal", UnitDefs[Spring.GetUnitDefID(cargo[1])].metalCost)
-	Spring.DestroyUnit(cargo[1], false, true)
-	GG.PlaySoundForTeam(teamID, "bb_outpost_refund", 1)
+	if cargo[1] and not Spring.GetUnitIsDead(cargo[1]) then
+		local cargoDefID = Spring.GetUnitDefID(cargo[1])
+		if cargoDefID then
+			Spring.AddTeamResource(teamID, "metal", UnitDefs[cargoDefID].metalCost)
+			Spring.DestroyUnit(cargo[1], false, true)
+			GG.PlaySoundForTeam(teamID, "bb_outpost_refund", 1)
+		end
+	end
 end
 
 function TakeOff(bugOut)
-	if stage > 3 then  -- in case we are told to BugOut, ignore it if already exiting
+	if stage > 3 and cargo[1] and not Spring.GetUnitIsDead(cargo[1]) then  -- in case we are told to BugOut, ignore it if already exiting
 		Refund()
 		return 
 	end
@@ -276,7 +281,7 @@ function TakeOff(bugOut)
 	--StopSpin(body, z_axis, math.rad(45))
 	Sleep(2000)
 	-- We're out of the atmosphere, bye bye!
-	if bugOut then
+	if bugOut and cargo[1] and not Spring.GetUnitIsDead(cargo[1]) then
 		Refund()
 	end
 	Spring.DestroyUnit(unitID, false, true)
@@ -319,20 +324,22 @@ function Drop()
 		Sleep(100)
 	end
 	-- Descent complete, move over the target
+	local bugOut = false
+	local cargoID = cargo[1]
 	PlaySound("dropship_rumble")
 	Turn(body, x_axis, 0, math.rad(8))
 	Spring.MoveCtrl.SetVelocity(unitID, 0, 0, 0)
 	Spring.MoveCtrl.SetGravity(unitID, 0)
 	local dist = GetUnitDistanceToPoint(unitID, TX, 0, TZ, false)
-	while dist > 10 do
+	while dist > 10 and not bugOut do
 		dist = GetUnitDistanceToPoint(unitID, TX, 0, TZ, false)
 		--Spring.Echo("dist", dist)
 		Spring.MoveCtrl.SetRelativeVelocity(unitID, 0, 0, math.max(dist/50, 2))
+		bugOut = cargoID and Spring.GetUnitIsDead(cargoID)
 		Sleep(30)
 	end
 	-- only proceed if the beacon is still ours and is secure
-	local bugOut = false
-	if beaconID and Spring.GetUnitTeam(beaconID) == teamID and Spring.GetUnitRulesParam(beaconID, "secure") == 1 then
+	if not bugOut and beaconID and Spring.GetUnitTeam(beaconID) == teamID and Spring.GetUnitRulesParam(beaconID, "secure") == 1 then
 		-- We're over the target area, reduce height!
 		PlaySound("dropship_rumble")
 		stage = 3
@@ -343,20 +350,19 @@ function Drop()
 		local vertSpeed = 4
 		local wantedHeight = GY + 15
 		local dist = select(2, Spring.GetUnitPosition(unitID)) - GY
-		while (dist > 0) do
+		while dist > 0 and not bugOut do
 			Spring.MoveCtrl.SetRelativeVelocity(unitID, 0, -math.max(2, vertSpeed * dist/300), 0)
 			Sleep(10)
 			dist = select(2, Spring.GetUnitPosition(unitID)) - wantedHeight
+			bugOut = (cargoID and Spring.GetUnitIsDead(cargoID)) or not (Spring.GetUnitTeam(beaconID) == teamID and Spring.GetUnitRulesParam(beaconID, "secure") == 1)
 		end
 		-- We're in place. Halt and lower the cargo!
 		Spring.MoveCtrl.SetRelativeVelocity(unitID, 0, 0, 0)
-		if Spring.GetUnitRulesParam(beaconID, "secure") == 1 then -- one last check
+		if not bugOut then -- one last check
 			-- We're in place. Halt and lower the cargo!
 			PlaySound("dropship_rumble")
 			UnloadCargo()
 		end
-	elseif cargo[1] then -- bugging out, refund
-		bugOut = true
 	end
 	-- Take off!
 	TakeOff(bugOut)

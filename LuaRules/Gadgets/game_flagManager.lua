@@ -287,7 +287,7 @@ local function StripUnits(unitsAtFlag)
 		local unitID = unitsAtFlag[i]
 		local unitDefID = Spring.GetUnitDefID(unitID)
 		 -- bad defs are cached, but also ignore any units currently being transported
-		if unitDefsToIgnore[unitDefID] then -- or Spring.GetUnitTransporter(unitID) then
+		if unitDefsToIgnore[unitDefID] or Spring.GetUnitTransporter(unitID) then
 			table.remove(unitsAtFlag, i)
 		end
 	end
