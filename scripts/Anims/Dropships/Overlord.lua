@@ -4,7 +4,7 @@ local numGears = #gears
 local sniperCanFire = false
 function WeaponCanFire(weaponID)
 	if missileWeaponIDs[weaponID] then return stage == 4
-	elseif weaponID == 1 then return sniperCanFire
+	--elseif weaponID == 1 then return sniperCanFire
 	else return true
 	end
 end

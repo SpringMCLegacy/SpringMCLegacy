@@ -132,6 +132,7 @@ ELEVATION_SPEED = math.rad(60)
 turrets = {}
 trackEmitters = {} 
 local flares = {}
+local multiFlares = {}
 
 local mantlets = {}
 local barrels = {}
@@ -155,6 +156,13 @@ for weaponID = 1, info.numWeapons do
 			end	
 		end
 	elseif weaponID then -- TODO: should just be else?
+		if weaponID == 1 and unitDef.name:find("overlord") then -- TODO: terrible, just terrible
+			multiFlares[weaponID] = {}
+			currPoints[weaponID] = 1
+			for i = 1, 4 do
+				multiFlares[weaponID][i] = piece("flare_" .. weaponID .. "_" .. i)
+			end
+		end
 		flares[weaponID] = piece ("flare_" .. weaponID)
 		if weaponID > 25 then
 			extraSignals[weaponID] = {}
@@ -284,7 +292,7 @@ function script.FireWeapon(weaponID)
 		WaitForMove(barrels[weaponID], z_axis)
 		Move(barrels[weaponID], z_axis, 0, 10)
 	end
-	if not missileWeaponIDs[weaponID] and not flareOnShots[weaponID] then
+	if not missileWeaponIDs[weaponID] and not flareOnShots[weaponID] and not multiFlares[weaponID] then
 		EmitSfx(flares[weaponID], SFX.CEG + weaponID)
 	end
 end
@@ -293,6 +301,11 @@ function script.Shot(weaponID)
 	if missileWeaponIDs[weaponID] and launchPoints[weaponID] then
 		EmitSfx(launchPoints[weaponID][currPoints[weaponID]], SFX.CEG + weaponID)
         currPoints[weaponID] = currPoints[weaponID] + 1
+        if currPoints[weaponID] > burstLengths[weaponID] then 
+			currPoints[weaponID] = 1
+        end
+	elseif multiFlares[weaponID] then
+		currPoints[weaponID] = currPoints[weaponID] + 1
         if currPoints[weaponID] > burstLengths[weaponID] then 
 			currPoints[weaponID] = 1
         end
@@ -310,6 +323,8 @@ end
 function script.QueryWeapon(weaponID) 
 	if missileWeaponIDs[weaponID] then
 		return launchPoints[weaponID] and launchPoints[weaponID][currPoints[weaponID]] or launchers[weaponID] or 1
+	elseif multiFlares[weaponID] then
+		return multiFlares[weaponID][currPoints[weaponID]] or 1
 	else
 		return flares[weaponID] or 1
 	end
