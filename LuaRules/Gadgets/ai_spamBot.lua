@@ -23,6 +23,7 @@ local sideMechs = {} -- sideMechs[sideShortName] = {mechDefID1, mechDefID2, ...}
 local sideJumpers = {} -- sideJumpers[sideShortName] = {jumperDefID1, jumperDefID2, ...}
 local sideAssaults = {} -- sideAssaults[sideShortName] = {assaultDefID1, assaultDefID2, ...}
 
+local EMPTY_TABLE = {}
 local AI_TEAMS = {}
 local BEACON_ID = UnitDefNames["beacon"].id
 local DROPZONE_IDS = GG.DROPZONE_IDS
@@ -260,7 +261,7 @@ local function Spam(teamID)
 						Spring.GetTeamResources(teamID, "energy"))
 			end
 			if buildID then
-				GG.Delay.DelayCall(Spring.GiveOrderToUnit, {unitID, -buildID, {}, {}}, 1)
+				GG.Delay.DelayCall(Spring.GiveOrderToUnit, {unitID, -buildID, EMPTY_TABLE, EMPTY_TABLE}, 1)
 				orderSizes[teamID] = orderSizes[teamID] + 1
 				--Spring.Echo("Adding to order;", orderSizes[teamID], UnitDefs[-buildID] and UnitDefs[-buildID].name or "wtf", GG.TeamSlotsRemaining(teamID))
 			elseif orderSizes[teamID] == 0 then 
@@ -276,7 +277,7 @@ local function Spam(teamID)
 							Spring.AddTeamResource(teamID, "metal", cost)
 						end
 						if Spring.GetTeamResources(teamID, "metal") > cost then
-							GG.Delay.DelayCall(Spring.GiveOrderToUnit, {unitID, AI_CMDS["CMD_DROPZONE_" .. nextLevel].id, {}, {}}, 1)
+							GG.Delay.DelayCall(Spring.GiveOrderToUnit, {unitID, AI_CMDS["CMD_DROPZONE_" .. nextLevel].id, EMPTY_TABLE, EMPTY_TABLE}, 1)
 							teamDropshipOutposts[teamID] = nextLevel
 						end
 					end
@@ -321,7 +322,7 @@ local function Perk(unitID, unitDefID, perkID, firstTime)
 	if perkID and ID then
 		availablePerks[unitID][ID] = false
 		availablePerkCounts[unitID] = count - 1
-		GG.Delay.DelayCall(Spring.GiveOrderToUnit, {unitID, perkID, {}, {}}, 1)
+		GG.Delay.DelayCall(Spring.GiveOrderToUnit, {unitID, perkID, EMPTY_TABLE, EMPTY_TABLE}, 1)
 	end
 end
 
@@ -356,7 +357,7 @@ local function Mod(unitID, mechbayID, salvage)
 	if modID and ID then -- TODO: lookup cost of mod, it's not in the cmdDesc but in the perkDef...
 		availableMods[unitID][ID] = false
 		availableModsCounts[unitID] = availableModsCounts[unitID] - 1
-		GG.Delay.DelayCall(Spring.GiveOrderToUnit, {mechbayID, modID, {}, {}}, 1)
+		GG.Delay.DelayCall(Spring.GiveOrderToUnit, {mechbayID, modID, EMPTY_TABLE, EMPTY_TABLE}, 1)
 	end
 end
 
@@ -501,7 +502,7 @@ local function Wander(unitID, cmd)
 	if Spring.ValidUnitID(unitID) then
 		--GG.Delay.DelayCall(Spring.GiveOrderToUnit, {unitID, CMD.MOVE_STATE, {2}, {}}, 1)
 		if cmd then
-			GG.Delay.DelayCall(Spring.GiveOrderToUnit, {unitID, cmd, {GetSpotTarget(_, false)}, {}}, 1)
+			GG.Delay.DelayCall(Spring.GiveOrderToUnit, {unitID, cmd, {GetSpotTarget(_, false)}, EMPTY_TABLE}, 1)
 		end
 		GG.Delay.DelayCall(Spring.GiveOrderToUnit, {unitID, CMD.FIGHT, {GetSpotTarget(_, false)}, {"shift"}}, 1)
 	end
@@ -516,7 +517,7 @@ local function CallStrike(unitID, cmd, func, param1, param2)
 		-- TODO: track enemy units rather than just spamming at beacons
 		-- in this case cmd should be passed
 		--Spring.Echo("CallStrike", unitID, cmd, func, params)
-		GG.Delay.DelayCall(Spring.GiveOrderToUnit, {unitID, cmd, {func(param1, param2)}, {}}, 1)
+		GG.Delay.DelayCall(Spring.GiveOrderToUnit, {unitID, cmd, {func(param1, param2)}, EMPTY_TABLE}, 1)
 	end
 end
 
@@ -662,7 +663,7 @@ function gadget:UnitDestroyed(unitID, unitDefID, teamID, attackerID, attackerDef
 			-- TODO: why doesn't it get auto-switched like it does for player? Presume it is a widget so isn't executed as unsynced?
 			local newBaseBeacon = next(teamBeacons[teamID])
 			if newBaseBeacon and Spring.ValidUnitID(newBaseBeacon) then
-				Spring.GiveOrderToUnit(newBaseBeacon, GG.CustomCommands.GetCmdID("CMD_DROPZONE"))
+				Spring.GiveOrderToUnit(newBaseBeacon, GG.CustomCommands.GetCmdID("CMD_DROPZONE"), EMPTY_TABLE, EMPTY_TABLE)
 			end
 		elseif UnitDefs[unitDefID].customParams.baseclass == "mech" then
 			teamMechCounts[teamID] = teamMechCounts[teamID] - 1
