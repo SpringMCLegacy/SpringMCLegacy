@@ -1,114 +1,171 @@
 local Blackjack = Medium:New{
 	name				= "Blackjack",
 
+	leaveTracks			= true,	
+	trackType			= "Blackjack",
+	trackOffset			= 6,
+	trackWidth			= 32,
+	trackStretch 		= 2,
+	
 	customparams = {
 		cockpitheight	= 10,
-		tonnage			= 45,
-		torsoscale		= 1.0,
+		tonnage			= 50,
+		speed			= 60,
+		heatlimit 		= 10,--10 double
+		omni			= true,
+		jumpjets		= 4,
+		armor			= 9.5,
+		mods			= {"endosteel", "jumpjets", "xlengine", "doubleheatsinks"},
     },	
 }
 
-local BJ2 = Blackjack:New{
+local BJ2OP = Blackjack:New{
 	description         = "Medium Vanguard",
 	weapons	= {	
 		[1] = {
-			name	= "ERLBL",
+			name	= "UAC5",
 		},
 		[2] = {
-			name	= "ERLBL",
-		},
-		[3] = {
-			name	= "SSRM2",
-		},
-		[4] = {
-			name	= "SSRM2",
-		},
-		[5] = {
-			name	= "SSRM2",
-		},
-		[6] = {
-			name	= "SSRM2",
-		},
-	},
-		
-	customparams = {
-		variant			= "BJ-2",
-		speed			= 60,
-		price			= 11480,
-		heatlimit 		= 11,--11 double
-		jumpjets		= 4,
-		armor			= 8.5,
-		maxammo 		= {srm = 1},
-		mods			= {"jumpjets", "doubleheatsinks"},
-    },
-}
-
-local BJ3 = Blackjack:New{
-	description         = "Medium Vanguard",
-	weapons	= {	
-		[1] = {
-			name	= "PPC",
-		},
-		[2] = {
-			name	= "PPC",
+			name	= "UAC5",
 		},
 		[3] = {
 			name	= "MBL",
+			SlaveTo = 1,
 		},
 		[4] = {
 			name	= "MBL",
+			SlaveTo = 1,
 		},
 		[5] = {
 			name	= "MBL",
+			SlaveTo = 2,
 		},
 		[6] = {
 			name	= "MBL",
+			SlaveTo = 2,
+		},
+		[7] = {
+			name	= "MG",
+		},
+		[8] = {
+			name	= "MG",
+			SlaveTo = 7,
+		},
+		[9] = {
+			name	= "MG",
+		},
+		[10] = {
+			name	= "MG",
+			SlaveTo = 9,
 		},
 	},
 		
 	customparams = {
-		variant			= "BJ-3",
-		speed			= 60,
-		price			= 12710,
-		heatlimit 		= 10,--10 double
-		jumpjets		= 4,
-		armor			= 8.5,
-		mods			= {"jumpjets", "doubleheatsinks"},
+		variant			= "BJ2-O Prime",
+		price			= 12010,
+		maxammo 		= {ac5 = 2},
     },
 }
 
-local BJ4 = Blackjack:New{
-	description         = "Medium Vanguard",
+local BJ2OA = Blackjack:New{
+	description         = "Medium Missile Boat",
 	weapons	= {	
 		[1] = {
-			name	= "AC5", -- should be light AC/5
+			name	= "LRM20",
 		},
 		[2] = {
-			name	= "AC5", -- should be light AC/5
+			name	= "LRM20",
 		},
 		[3] = {
-			name	= "ERMBL",
+			name	= "MBL",
 		},
 		[4] = {
-			name	= "ERMBL",
+			name	= "MBL",
+		},
+		[5] = {
+			name	= "SBL",
 		},
 	},
 		
 	customparams = {
-		variant			= "BJ-4",
-		speed			= 60,
-		price			= 10630,
-		heatlimit 		= 10,--10 double
-		jumpjets		= 4,
-		armor			= 8,--should be light ferro
-		maxammo 		= {ac5 = 4},
-		barrelrecoildist = {[1] = 5, [2] = 5},
-		mods			= {"jumpjets", "ferrofibrousarmour", "targetingcomputer", "doubleheatsinks", "lightengine", "case"},
+		variant			= "BJ2-O A",
+		price			= 13180,
+		maxammo 		= {lrm = 4},
+    },
+}
+
+local BJ2OB = Blackjack:New{
+	description         = "Medium Sniper",
+	weapons	= {	
+		[1] = {
+			name	= "Gauss",
+		},
+		[2] = {
+			name	= "LRM10",
+		},
+		[3] = {
+			name	= "SBL",
+		},
+	},
+		
+	customparams = {
+		variant			= "BJ2-O B",
+		price			= 13230,
+		maxammo 		= {gauss = 2, lrm = 2},
+		mods			= {"c3slave", "artemislrm"},
+    },
+}
+
+local BJ2OC = Blackjack:New{
+	description         = "Medium Brawler",
+	weapons	= {	
+		[1] = {
+			name	= "LBX10",
+		},
+		[2] = {
+			name	= "LBX10",
+		},
+		[3] = {
+			name	= "MBL",
+		},
+		[4] = {
+			name	= "MBL",
+		},
+		[5] = {
+			name	= "SBL",
+		},
+	},
+		
+	customparams = {
+		variant			= "BJ2-O C",
+		price			= 11890,
+		maxammo 		= {ac10 = 2},
     },
 }
 
 return lowerkeys({
-	--["FS_Blackjack_BJ2"] = BJ2:New(),
-	["CC_Blackjack_BJ3"] = BJ3:New(),
-	["FS_Blackjack_BJ4"] = BJ4:New(),
+	["CC_Blackjack_BJ2OP"] = BJ2OP:New(),
+	["CC_Blackjack_BJ2OA"] = BJ2OA:New(),
+	["CC_Blackjack_BJ2OB"] = BJ2OB:New(),
+	["CC_Blackjack_BJ2OC"] = BJ2OC:New(),
+	
+	["DC_Blackjack_BJ2OP"] = BJ2OP:New(),
+	["DC_Blackjack_BJ2OA"] = BJ2OA:New(),
+	["DC_Blackjack_BJ2OB"] = BJ2OB:New(),
+	["DC_Blackjack_BJ2OC"] = BJ2OC:New(),
+	
+	["FS_Blackjack_BJ2OP"] = BJ2OP:New(),
+	["FS_Blackjack_BJ2OA"] = BJ2OA:New(),
+	["FS_Blackjack_BJ2OB"] = BJ2OB:New(),
+	["FS_Blackjack_BJ2OC"] = BJ2OC:New(),
+	
+	["FW_Blackjack_BJ2OP"] = BJ2OP:New(),
+	["FW_Blackjack_BJ2OA"] = BJ2OA:New(),
+	["FW_Blackjack_BJ2OB"] = BJ2OB:New(),
+	["FW_Blackjack_BJ2OC"] = BJ2OC:New(),
+	
+	["LA_Blackjack_BJ2OP"] = BJ2OP:New(),
+	["LA_Blackjack_BJ2OA"] = BJ2OA:New(),
+	["LA_Blackjack_BJ2OB"] = BJ2OB:New(),
+	["LA_Blackjack_BJ2OC"] = BJ2OC:New(),
 })
