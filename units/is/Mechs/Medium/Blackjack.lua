@@ -64,6 +64,7 @@ local BJ2OP = Blackjack:New{
 		variant			= "BJ2-O Prime",
 		price			= 12010,
 		maxammo 		= {ac5 = 2},
+		barrelrecoildist = {[1] = 3, [2] = 3},
     },
 }
 
@@ -113,6 +114,7 @@ local BJ2OB = Blackjack:New{
 		price			= 13230,
 		maxammo 		= {gauss = 2, lrm = 2},
 		mods			= {"c3slave", "artemislrm"},
+		barrelrecoildist = {[1] = 3},
     },
 }
 
@@ -140,6 +142,7 @@ local BJ2OC = Blackjack:New{
 		variant			= "BJ2-O C",
 		price			= 11890,
 		maxammo 		= {ac10 = 2},
+		barrelrecoildist = {[1] = 3, [2] = 3},
     },
 }
 
