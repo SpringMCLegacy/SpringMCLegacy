@@ -170,6 +170,23 @@ function RangeToTarget(proID, proOwnerID, clusterWD, tx, tz, range2)
 	end
 end
 
+local CRUISE_MISSILE_ID = WeaponDefNames["cruisemissile"].id
+local CMs = {}
+function NukeIcon(proID, teamID, iconUnit)
+	if not iconUnit then
+		CMs[proID] = true
+		local x,y,z = Spring.GetProjectilePosition(proID)
+		iconUnit = Spring.CreateUnit("nuke_icon", x, y, z, 0, teamID)
+		Spring.MoveCtrl.Enable(iconUnit)
+	end
+	if CMs[proID] then
+		local x,y,z = Spring.GetProjectilePosition(proID)
+		local vx,vy,vz = Spring.GetProjectileVelocity(proID)
+		Spring.MoveCtrl.SetPosition(iconUnit, x,y,z)
+		Spring.MoveCtrl.SetVelocity(iconUnit, vx, vy, vz)
+		GG.Delay.DelayCall(NukeIcon, {proID, teamID, iconUnit}, 5)
+	end
+end
 
 function gadget:ProjectileCreated(proID, proOwnerID, weaponID)
 	--Spring.Echo("PC", proID, proOwnerID, weaponID)
@@ -239,6 +256,9 @@ function gadget:ProjectileCreated(proID, proOwnerID, weaponID)
 		projectiles[proID] = true
 		SendToUnsynced("lupsProjectiles_AddProjectile", proID, proOwnerID, weaponID)
 	end
+	if weaponID == CRUISE_MISSILE_ID then
+		NukeIcon(proID, Spring.GetUnitTeam(proOwnerID))
+	end
 end	
 
 local SetProjectileCollision = Spring.SetProjectileCollision
@@ -250,6 +270,7 @@ function gadget:ProjectileDestroyed(proID)
 	arrows[proID] = nil
 	contTAG[proID] = nil
 	ppcEmits[proID] = nil -- layer must be set to after game_radar
+	CMs[proID] = nil
 	if amsPros[proID] then
 		local x,y,z = GetProjectilePosition(proID)
 		local radius = AMS_DEF.damageAreaOfEffect
