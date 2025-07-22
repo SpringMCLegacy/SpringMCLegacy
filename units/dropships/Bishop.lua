@@ -4,7 +4,6 @@ local Bishop = DropShip:New{
 	objectName        	= "Dropship/Bishop.s3o", -- TODO: remove once faction textured models are available
 	iconType			= "drost",
 	corpse				= "Bishop_x",
-	category 			= "ground notbeacon",
 	maxDamage           = 6000,
 	mass                = 6000,
 	usePieceCollisionVolumes = true,

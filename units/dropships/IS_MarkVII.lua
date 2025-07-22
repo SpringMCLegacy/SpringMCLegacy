@@ -2,7 +2,6 @@ local IS_MarkVII = DropShip:New{
 	name              	= "Mark VII Landing Craft",
 	description         = "Cargo Landing Craft",
 	iconType			= "markvii",
-	category 			= "ground notbeacon",
 	maxDamage           = 10000,
 	mass                = 13000,
 	buildCostEnergy     = 0,
