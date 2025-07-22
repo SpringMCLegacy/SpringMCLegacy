@@ -66,7 +66,8 @@ HEADING = facing * 16384 + math.random(-1820, 1820)
 
 -- use ANGLE if you want the unit to fly in at a random angle
 RADIAL_DIST = unitDef.customParams.radialdist or 0
-ANGLE = math.rad(math.random(6)*60+30) --math.floor(unitID / 100)
+ANGLE = math.rad(math.random(6)*60+31)
+
 UX = math.cos(ANGLE) * RADIAL_DIST
 UZ = -math.sin(ANGLE) * RADIAL_DIST
 
