@@ -1937,7 +1937,7 @@ return {
 				local AMOUNT_PER_TON = 25 / GG.GameConstants.ammoTypes.Arrow
 				return deductPerUnitDefTag(unitDefID, true, "maxammo", AMOUNT_PER_TON, "arrow")
 			end,
-			incompatible = {"ammoarrowarad", "ammoarrowcluster", "ammoarrowthunder"},
+			incompatible = {"ammoarrowarad", "ammoarrowcluster", "ammoarrowthunder", "ammoarrowad"},
 		},
 		{
 			name = "ammoarrowcluster",
@@ -1960,7 +1960,7 @@ return {
 				local AMOUNT_PER_TON = 25 / GG.GameConstants.ammoTypes.Arrow
 				return deductPerUnitDefTag(unitDefID, true, "maxammo", AMOUNT_PER_TON, "arrow")
 			end,
-			incompatible = {"ammoarrowarad", "ammoarrowhoming", "ammoarrowthunder"},
+			incompatible = {"ammoarrowarad", "ammoarrowhoming", "ammoarrowthunder", "ammoarrowad"},
 		},
 		{
 			name = "ammoarrowthunder",
@@ -1983,7 +1983,30 @@ return {
 				local AMOUNT_PER_TON = 25 / GG.GameConstants.ammoTypes.Arrow
 				return deductPerUnitDefTag(unitDefID, true, "maxammo", AMOUNT_PER_TON, "arrow")
 			end,
-			incompatible = {"ammoarrowarad", "ammoarrowhoming", "ammoarrowcluster"},
+			incompatible = {"ammoarrowarad", "ammoarrowhoming", "ammoarrowcluster", "ammoarrowad"},
+		},
+		{
+			name = "ammoarrowad",
+			menu = "ammo",
+			noLimit = true,
+			cmdDesc = {
+				id = GetCmdID('MOD_AMMO_ARROW_AD'),
+				action = 'modammoarrowad',
+				name = GG.Pad("Arrow IV", "Air", "Defense"),
+				tooltip = 'Arrow Artillery missile only. Replaces the artillery warhead with an anti-air heat seeker.',
+				texture = 'bitmaps/ui/perkyellow.png',	
+			},
+			valid = isMechBay,
+			applyTo = function (unitDefID) return hasWeaponName(unitDefID, "arrowiv") and isFaction(unitDefID, "cc") end,
+			applyPerk = function (unitID, level, invert)
+				GG.EnableAmmo(unitID, not invert, "arrowiv", "ad")				
+			end,
+			costFunction = deductSalvage,
+			priceFunction = function(unitDefID)
+				local AMOUNT_PER_TON = 25 / GG.GameConstants.ammoTypes.Arrow
+				return deductPerUnitDefTag(unitDefID, true, "maxammo", AMOUNT_PER_TON, "arrow")
+			end,
+			incompatible = {"ammoarrowarad", "ammoarrowhoming", "ammoarrowcluster", "ammoarrowthunder"},
 		},
 		{
 			name = "ammoarrowarad",
@@ -2006,7 +2029,7 @@ return {
 				local AMOUNT_PER_TON = 10 / GG.GameConstants.ammoTypes.Arrow
 				return deductPerUnitDefTag(unitDefID, true, "maxammo", AMOUNT_PER_TON, "arrow")
 			end,
-			incompatible = {"ammoarrowhoming", "ammoarrowcluster", "ammoarrowthunder"},
+			incompatible = {"ammoarrowhoming", "ammoarrowcluster", "ammoarrowthunder", "ammoarrowad"},
 		},
 		{
 			name = "ammosrminferno",

@@ -55,6 +55,7 @@ GG.EnableSilverBullet = EnableSilverBullet
 
 local contTAG = {}
 local arrows = {}
+
 local function SetMissileTarget(proID, info)
 --	Spring.Echo("SetMissileTarget", proID, info.targetID, info.ownerID, info.weaponclass, info.artemisOnly)
 	if info.targetID and Spring.ValidUnitID(info.targetID) and not Spring.GetUnitIsDead(info.targetID) -- target is alive
@@ -62,7 +63,7 @@ local function SetMissileTarget(proID, info)
 		--Spring.Echo("SetMissileTarget", proID, UnitDefs(Spring.GetUnitDefID(info.targetID)].name, UnitDefs[Spring.GetUnitDefID(info.ownerID)].name, info.weaponclass, info.artemisOnly)
 		if ((GG.IsUnitNARCed(info.targetID) or GG.IsUnitTAGed(info.targetID)) and not info.artemisOnly)
 		or (info.artemisOnly and GG.IsTargetArtemised(info.ownerID, info.targetID, info.weaponclass)) 
-		or (info.arad) then
+		or (info.arad or info.ad) then
 			--Spring.Echo("Target is tagged", info.weaponclass, contTAG[proID] and "continuous lock" or "lock reaquired!")
 			contTAG[proID] = true -- re-establish TAG if lost
 			--Spring.SetProjectileTarget(proID, targetID)
@@ -86,9 +87,10 @@ local function ChangeMissile(proID, proOwnerID, wd, artemisOnly)
 		if targetType == string.byte('u') then -- unit target, info is ID
 			local weaponClass = wd.customParams.weaponclass
 			local arad = GG.jammerCache[targetID] and GG.unitSpecialAmmos[proOwnerID][weaponClass] == "arad"
+			local ad = GG.unitSpecialAmmos[proOwnerID][weaponClass] == "ad" and GG.airTargets[targetID]
 			if ((GG.IsUnitNARCed(targetID) or GG.IsUnitTAGed(targetID)) and not artemisOnly) 
 			or (artemisOnly and GG.IsTargetArtemised(proOwnerID, targetID, weaponClass)) 
-			or arad then
+			or (arad or ad) then
 				local x,y,z = Spring.GetProjectilePosition(proID)
 				local vx, vy, vz = Spring.GetProjectileVelocity(proID)
 				local _,_,_, _,_,_,tx, ty, tz = Spring.GetUnitPosition(targetID, true, true)
@@ -109,7 +111,8 @@ local function ChangeMissile(proID, proOwnerID, wd, artemisOnly)
 					["ownerID"] = proOwnerID,
 					["weaponclass"] = wd.customParams.weaponclass,
 					["artemisOnly"] = artemisOnly,
-					["arad"] = arad
+					["arad"] = arad,
+					["ad"] = ad,
 				}
 				arrows[newProID] = info
 				SetMissileTarget(newProID, info)
@@ -200,6 +203,11 @@ function gadget:ProjectileCreated(proID, proOwnerID, weaponID)
 			if ammoType == "homing" 
 			or ammoType == "arad" then
 				ChangeMissile(proID, proOwnerID, WeaponDefNames["arrowiv_guided"])
+			elseif	ammoType == "ad" then
+				local targetType, info = Spring.GetProjectileTarget(proID)
+				if GG.airTargets[info] then
+					ChangeMissile(proID, proOwnerID, WeaponDefNames["adarrow"])
+				end
 			elseif ammoType == "cluster" 
 			or ammoType == "thunder" then
 				local vx, vy, vz = Spring.GetProjectileVelocity(proID)
@@ -313,23 +321,6 @@ function gadget:GameFrame()
 	for proID, info in pairs(arrows) do
 		SetMissileTarget(proID, info)
 	end
-	--[[for id in pairs(tracking) do
-		local ydir = select(2,Spring.GetProjectileDirection(id))
-		Spring.Echo(id, "TTL:", Spring.GetProjectileTimeToLive(id), "DIR Y:",ydir)
-		if ydir < 0 then
-			local x,y,z = Spring.GetProjectilePosition(id)
-			local vx, vy, vz = Spring.GetProjectileVelocity(id)
-			Spring.DeleteProjectile(id)
-			for i = 1, 5 do
-				Spring.SpawnProjectile(WeaponDefNames["nac10"].id, {
-					pos = {x, y,z},
-					spread = {math.random(500), math.random(500), math.random(500)},
-					speed = {vx + math.random(50), 0, vz + math.random(50)},
-					gravity = -1,
-				})
-			end
-		end
-	end]]
 end
 
 function gadget:Shutdown()

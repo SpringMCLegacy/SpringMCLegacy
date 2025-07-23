@@ -304,11 +304,13 @@ if gadgetHandler:IsSyncedCode() then
 		if setTargetID then
 			--return setTargetID == targetID, 0.001
 		elseif attackerWeaponDefID == ARROW_ID then
-			if targetDef and targetDef.canFly 
-			or targetID and Spring.GetUnitTransporter(targetID) then 
-				--Spring.Echo("Arrow IV trying to target", targetDef.name)
-				return false
-			end
+			local ad = GG.unitSpecialAmmos[attackerID]["arrowiv"] == "ad"
+			local aircraft = GG.airTargets[targetID] ~= nil
+			
+			local allow = targetID and not Spring.GetUnitTransporter(targetID)
+			allow = allow and ((ad and aircraft) or (not ad and not aircraft))
+			--Spring.Echo("Arrow IV trying to target", targetDef.name, "ad?", ad, "aircraft?", aircraft)
+			return allow, defPriority or 1
 		end
 		
 		--Spring.Echo("AWTattacker", attackerID and UnitDefs[Spring.GetUnitDefID(attackerID)].name, "vs", targetID and UnitDefs[Spring.GetUnitDefID(targetID)].name, attackerWeaponDefID and attackerWeaponDefID > 0 and WeaponDefs[attackerWeaponDefID].name, defPriority)

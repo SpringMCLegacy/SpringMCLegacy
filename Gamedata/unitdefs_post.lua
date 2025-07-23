@@ -347,11 +347,15 @@ for name, ud in pairs(UnitDefs) do
 	end
 	local weapons = ud.weapons
 	local weaponCounts = {}
+	local firstNonTracker = 64
 	if weapons then
 		for i, weapon in pairs(weapons) do
 			local weapName = weapon.name
 			local weapNameL = weapName:lower()
 			weaponCounts[weapName] = (weaponCounts[weapName] or 0) + 1
+			if firstNonTracker > i and (not weapNameL:find("arrow") and not weapNameL:find("lrm")) then
+				firstNonTracker = i
+			end
 			if weapNameL == "ams" or weapNameL == "lams" then
 				weapon.maxangledif = 360
 				ud.description = ud.description .. " \255\230\160\016[AMS]"
@@ -369,8 +373,14 @@ for name, ud in pairs(UnitDefs) do
 					weapon.maxangledif = 179
 					end]]
 					if i ~= 1 and i ~= #weapons then -- don't slave primary or sight weapon
-						if not weapon.slaveto then -- don't overwrite unitdef
-							weapon.slaveto = 1
+						 -- don't overwrite unitdef, nor slave non-tracking weapons to tracking missiles
+						if not weapon.slaveto then
+							if i < firstNonTracker and (weapNameL:find("arrow") or weapNameL:find("lrm")) then
+								weapon.slaveto = 1
+							elseif i > firstNonTracker then
+								weapon.slaveto = firstNonTracker
+							end
+							--Spring.Echo(ud.name, "slave weapon", i, "to", weapon.slaveto)
 						end
 					end
 				elseif cp.baseclass == vehicle then

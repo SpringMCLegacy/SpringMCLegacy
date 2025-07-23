@@ -303,6 +303,8 @@ end
 
 local AATC = {}
 GG.AATC = AATC
+local airTargets = {}
+GG.airTargets = airTargets
 
 local unitArmours = {} -- unitID = true
 local function EnableArmour(unitID, apply, armourType)
@@ -531,6 +533,7 @@ function gadget:UnitCreated(unitID, unitDefID, teamID)
 		SetUnitLosMask(unitID, allyTeam, prevLosTrue)
 		SetUnitLosState(unitID, allyTeam, prevLosTrue)
 	end
+	airTargets[unitID] = ud.springCategories.air
 end
 
 function gadget:UnitDestroyed(unitID, unitDefID, teamID)
