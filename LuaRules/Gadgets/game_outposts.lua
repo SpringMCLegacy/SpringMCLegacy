@@ -133,6 +133,20 @@ local function AssociateOutpost(beaconID, targetID, cargoID)
 end
 GG.AssociateOutpost = AssociateOutpost
 
+-- TODO: worth moving to outpost_launcher.lua? Also need to do instant paying of Cbills...
+function gadget:StockpileChanged(unitID, unitDefID, unitTeam, weaponNum, oldCount, newCount)
+	--Spring.Echo("StockpileChanged", unitID, unitDefID, unitTeam, weaponNum, oldCount, newCount)
+	if newCount > oldCount then
+		GG.PlaySoundForTeam(unitTeam, "bb_outpost_launcher_ready", 1)
+	else -- launch
+		local teams = Spring.GetTeamList()
+		for i, teamID in pairs(teams) do
+			if teamID ~= unitTeam then
+				GG.PlaySoundForTeam(teamID, "bb_enemy_nuke_detected", 1)
+			end
+		end
+	end
+end
 
 function gadget:UnitCreated(unitID, unitDefID, teamID, builderID)
 	if unitDefID == BEACON_ID then
