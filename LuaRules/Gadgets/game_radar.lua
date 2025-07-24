@@ -469,15 +469,13 @@ function gadget:UnitPreDamaged(unitID, unitDefID, unitTeam, damage, paralyzer, w
 			--Spring.Echo("YO YO DROPSHIP IS DAMAGED 25%"
 			GG.PlaySoundForTeam(unitTeam, "bb_dropship_damaged", 1)
 			local x,y,z = Spring.GetUnitPosition(unitID)
-			CallAsTeam(unitTeam, Spring.MarkerAddPoint, x, y, z, "", true)
-			DelayCall(CallAsTeam, {unitTeam, Spring.MarkerErasePosition, x, y, z}, 30 * 60)
+			SendToUnsynced("MESSAGE", teamID, x,y,z)
 			firstTime75[unitID] = true
 		elseif not firstTime50[unitID] and (health-damage) / maxHealth <= 0.50 and (health-damage) / maxHealth >= 0.475 then
 			--Spring.Echo("YO YO DROPSHIP IS DAMAGED 50%")
 			GG.PlaySoundForTeam(unitTeam, "bb_dropship_damaged", 1) -- for now the same sound, but maybe a more severe warning later
 			local x,y,z = Spring.GetUnitPosition(unitID)
-			CallAsTeam(unitTeam, Spring.MarkerAddPoint, x, y, z, "", true)
-			DelayCall(CallAsTeam, {unitTeam, Spring.MarkerErasePosition, x, y, z}, 30 * 60)
+			SendToUnsynced("MESSAGE", teamID, x,y,z)
 			firstTime50[unitID] = true
 		end
 	end
@@ -497,8 +495,10 @@ function gadget:UnitEnteredRadar(unitID, unitTeam, allyTeam, unitDefID)
 		DelayCall(SetUnitLosMask, {unitID, allyTeam, fullLOS}, 1) -- don't let engine update any los status
 		local warning = warnings[unitDefID]
 		if warning then
+			local x,y,z = Spring.GetUnitPosition(unitID)
 			for i, teamID in pairs(Spring.GetTeamList(allyTeam)) do
 				GG.PlaySoundForTeam(teamID, warning, 1)
+				SendToUnsynced("MESSAGE", teamID, x,y,z)
 			end
 		end
 	end

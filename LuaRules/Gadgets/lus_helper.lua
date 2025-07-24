@@ -557,8 +557,15 @@ function PlayTeamSound(eventID, teamID, sound, volume)
 	end
 end
 
+function SetTeamMessage(eventID, teamID, x, y, z)
+	if teamID == Spring.GetMyTeamID() then
+		Spring.SetLastMessagePosition(x, y, z)
+	end
+end
+
 function gadget:Initialize()
 	gadgetHandler:AddSyncAction("SOUND", PlayTeamSound)
+	gadgetHandler:AddSyncAction("MESSAGE", SetTeamMessage)
 end
 
 end
