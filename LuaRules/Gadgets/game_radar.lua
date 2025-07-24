@@ -28,7 +28,6 @@ local GetUnitRulesParam		= Spring.GetUnitRulesParam
 local GetUnitSeparation		= Spring.GetUnitSeparation
 local GetUnitTeam			= Spring.GetUnitTeam
 local GetUnitTransporter	= Spring.GetUnitTransporter
-local GetUnitHealth			= Spring.GetUnitHealth
 local GetUnitsInCylinder	= Spring.GetUnitsInCylinder
 local GetUnitWeaponHaveFreeLineOfFire = Spring.GetUnitWeaponHaveFreeLineOfFire
 local ValidUnitID			= Spring.ValidUnitID
@@ -326,9 +325,6 @@ local function InvincibleUnit(unitDefID)
 end
 GG.InvincibleUnit = InvincibleUnit
 
-local firstTime75 = {}
-local firstTime50 = {}
-
 local MINE_ID = WeaponDefNames["mine"].id
 local MINE_DEF_ID = UnitDefNames["mine"].id
 
@@ -394,7 +390,7 @@ function gadget:UnitPreDamaged(unitID, unitDefID, unitTeam, damage, paralyzer, w
 	-- NARCs
 	if weaponID == NARC_ID then
 		-- Don't allow dropships to be NARCed
-		if UnitDefs[unitDefID].customParams.dropship then return 0 end
+		if GG.dropShipCache[unitDefID] then return 0 end
 		if specialAmmo == "bola" then
 			--Spring.Echo("speed change now", Spring.GetGameFrame())
 			GG.SpeedChange(unitID, unitDefID, 0.1)
@@ -437,7 +433,7 @@ function gadget:UnitPreDamaged(unitID, unitDefID, unitTeam, damage, paralyzer, w
 		return 0
 	elseif weaponID == TAG_ID then
 		-- Don't allow dropships to be TAGed
-		if not UnitDefs[unitDefID].customParams.dropship then
+		if not GG.dropShipCache[unitDefID] then
 			SetUnitRulesParam(unitID, "TAG", GetGameFrame(), {inlos = true})
 			--Spring.Echo("I AM BEING TAGGED!")
 		end
@@ -460,23 +456,6 @@ function gadget:UnitPreDamaged(unitID, unitDefID, unitTeam, damage, paralyzer, w
 				end
 				GG.PlaySoundAtUnit(unitID, "sounds/ppc_connect.wav", 5, x - ox, y - oy, z - oz, "sfx")
 			end
-		end
-	end
-
-	if GG.dropShipCache[unitDefID] == "mech" then
-		local health, maxHealth = GetUnitHealth(unitID)
-		if not firstTime75[unitID] and (health-damage) / maxHealth <= 0.75 then
-			--Spring.Echo("YO YO DROPSHIP IS DAMAGED 25%"
-			GG.PlaySoundForTeam(unitTeam, "bb_dropship_damaged", 1)
-			local x,y,z = Spring.GetUnitPosition(unitID)
-			SendToUnsynced("MESSAGE", teamID, x,y,z)
-			firstTime75[unitID] = true
-		elseif not firstTime50[unitID] and (health-damage) / maxHealth <= 0.50 and (health-damage) / maxHealth >= 0.475 then
-			--Spring.Echo("YO YO DROPSHIP IS DAMAGED 50%")
-			GG.PlaySoundForTeam(unitTeam, "bb_dropship_damaged", 1) -- for now the same sound, but maybe a more severe warning later
-			local x,y,z = Spring.GetUnitPosition(unitID)
-			SendToUnsynced("MESSAGE", teamID, x,y,z)
-			firstTime50[unitID] = true
 		end
 	end
 	return damage, 1

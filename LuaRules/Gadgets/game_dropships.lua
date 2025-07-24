@@ -16,6 +16,7 @@ if gadgetHandler:IsSyncedCode() then
 -- localisations
 local SetUnitRulesParam		= Spring.SetUnitRulesParam
 --SyncedRead
+local GetUnitHealth			= Spring.GetUnitHealth
 local GetUnitPosition		= Spring.GetUnitPosition
 local GetUnitTeam			= Spring.GetUnitTeam
 --SyncedCtrl
@@ -37,6 +38,9 @@ GG.dropShipCache = dropShipCache
 
 local activeDropships = {} -- activeDropships[dropshipID] = beaconID
 local teamDropShipHPs = {} -- teamDropShipHPs[teamID][unitDefID] = health
+local firstTime75 = {} -- firstTime75[unitID] = bool
+local firstTime50 = {} -- firstTime50[unitID] = bool
+
 local beaconActive = {} -- beaconActive[beaconID] = dropshipID
 local beaconDropshipQueue = {} -- beaconDropshipQueue[beaconID] = {info1 = {}, info2 = {}, ...}
 
@@ -175,6 +179,26 @@ end
 GG.BeaconDropshipBugOut = BeaconDropshipBugOut
 
 local REGEN = 10 -- how much HP per frame of being off-map
+
+function gadget:UnitPreDamaged(unitID, unitDefID, unitTeam, damage, paralyzer, weaponID, projectileID, attackerID, attackerDefID, attackerTeam)
+	if dropShipCache[unitDefID] == "mech" then
+		local health, maxHealth = GetUnitHealth(unitID)
+		if not firstTime75[unitID] and (health-damage) / maxHealth <= 0.75 then
+			--Spring.Echo("YO YO DROPSHIP IS DAMAGED 25%"
+			GG.PlaySoundForTeam(unitTeam, "bb_dropship_damaged", 1)
+			local x,y,z = GetUnitPosition(unitID)
+			SendToUnsynced("MESSAGE", teamID, x,y,z)
+			firstTime75[unitID] = true
+		elseif not firstTime50[unitID] and (health-damage) / maxHealth <= 0.50 and (health-damage) / maxHealth >= 0.475 then
+			--Spring.Echo("YO YO DROPSHIP IS DAMAGED 50%")
+			GG.PlaySoundForTeam(unitTeam, "bb_dropship_damaged", 1) -- for now the same sound, but maybe a more severe warning later
+			local x,y,z = GetUnitPosition(unitID)
+			SendToUnsynced("MESSAGE", teamID, x,y,z)
+			firstTime50[unitID] = true
+		end
+	end
+	return damage, 1
+end
 
 function gadget:UnitCreated(unitID, unitDefID, teamID)
 	if dropShipCache[unitDefID] == "mech" then -- TODO: Only tracking mech landers atm
