@@ -49,9 +49,6 @@ local outpostPointBeaconIDs = {} -- outpostPointBeaconIDs[outpostPointID] = beac
 local beaconOutpostPointIDs = {} -- beaconOutpostPointIDs[beaconID] = {outpostPointID1, outpostPointID2, outpostPointID3}
 GG.beaconOutpostPointIDs = beaconOutpostPointIDs -- for AI
 
---local BEACON_POINT_DIST = 400
---local NUM_BEACON_POINTS = tonumber(modOptions.beaconpoints) or 3
-
 local function BeaconPoints(beaconID, teamID, x, y, z, radius, numPoints, spotNum)
 	beaconOutpostPointIDs[beaconID] = {}
 	radius = radius - 60
@@ -133,31 +130,12 @@ local function AssociateOutpost(beaconID, targetID, cargoID)
 end
 GG.AssociateOutpost = AssociateOutpost
 
--- TODO: worth moving to outpost_launcher.lua? Also need to do instant paying of Cbills...
-local LAUNCHER_ID = UnitDefNames["outpost_launcher"].id
-
-local UseTeamResource 		= Spring.UseTeamResource
-function gadget:StockpileChanged(unitID, unitDefID, unitTeam, weaponNum, oldCount, newCount)
-	--Spring.Echo("StockpileChanged", unitID, unitDefID, unitTeam, weaponNum, oldCount, newCount)
-	if newCount > oldCount then
-		GG.PlaySoundForTeam(unitTeam, "bb_outpost_launcher_ready", 1)
-	else -- launch
-		local teams = Spring.GetTeamList()
-		for i, teamID in pairs(teams) do
-			if teamID ~= unitTeam then
-				GG.PlaySoundForTeam(teamID, "bb_enemy_nuke_detected", 1)
-			end
-		end
-	end
-end
 
 function gadget:UnitCreated(unitID, unitDefID, teamID, builderID)
 	if unitDefID == BEACON_ID then
 		GG.Beacons[unitID] = true
 	elseif unitDefID == BEACON_POINT_ID then
 		AddOutpostOptions(unitID)
-	elseif unitDefID == LAUNCHER_ID then
-		Spring.EditUnitCmdDesc(unitID, Spring.FindUnitCmdDesc(unitID, CMD.STOCKPILE), {tooltip = "Stockpile a cruise missile. " .. COLOURS.cbills .. "C-Bill cost: 10000"})
 	end
 end
 
@@ -228,18 +206,6 @@ function gadget:AllowCommand(unitID, unitDefID, teamID, cmdID, cmdParams, cmdOpt
 		else -- any other command or the beaconPoint is already outposted
 			return false
 		end	
-	elseif unitDefID == LAUNCHER_ID then --TODO: also move to outpost_launcher.lua
-		if cmdID == CMD.STOCKPILE then
-			if GetTeamResources(teamID, "metal") > 10000 then
-				UseTeamResource(teamID, "metal", 10000)
-				GG.PlaySoundForTeam(teamID, "bb_outpost_launcher_preparing", 1)
-				return true
-			else
-				GG.PlaySoundForTeam(teamID, "bb_insufficient_cbills", 1)
-				return false
-			end
-		end
-		return true
 	elseif UnitDefs[unitDefID].customParams.decal then
 		return false -- disallow all commands to decals
 	end
