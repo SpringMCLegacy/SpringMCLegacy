@@ -134,6 +134,9 @@ end
 GG.AssociateOutpost = AssociateOutpost
 
 -- TODO: worth moving to outpost_launcher.lua? Also need to do instant paying of Cbills...
+local LAUNCHER_ID = UnitDefNames["outpost_launcher"].id
+
+local UseTeamResource 		= Spring.UseTeamResource
 function gadget:StockpileChanged(unitID, unitDefID, unitTeam, weaponNum, oldCount, newCount)
 	--Spring.Echo("StockpileChanged", unitID, unitDefID, unitTeam, weaponNum, oldCount, newCount)
 	if newCount > oldCount then
@@ -153,6 +156,8 @@ function gadget:UnitCreated(unitID, unitDefID, teamID, builderID)
 		GG.Beacons[unitID] = true
 	elseif unitDefID == BEACON_POINT_ID then
 		AddOutpostOptions(unitID)
+	elseif unitDefID == LAUNCHER_ID then
+		Spring.EditUnitCmdDesc(unitID, Spring.FindUnitCmdDesc(unitID, CMD.STOCKPILE), {tooltip = "Stockpile a cruise missile. " .. COLOURS.cbills .. "C-Bill cost: 10000"})
 	end
 end
 
@@ -223,6 +228,18 @@ function gadget:AllowCommand(unitID, unitDefID, teamID, cmdID, cmdParams, cmdOpt
 		else -- any other command or the beaconPoint is already outposted
 			return false
 		end	
+	elseif unitDefID == LAUNCHER_ID then --TODO: also move to outpost_launcher.lua
+		if cmdID == CMD.STOCKPILE then
+			if GetTeamResources(teamID, "metal") > 10000 then
+				UseTeamResource(teamID, "metal", 10000)
+				GG.PlaySoundForTeam(teamID, "bb_outpost_launcher_preparing", 1)
+				return true
+			else
+				GG.PlaySoundForTeam(teamID, "bb_insufficient_cbills", 1)
+				return false
+			end
+		end
+		return true
 	elseif UnitDefs[unitDefID].customParams.decal then
 		return false -- disallow all commands to decals
 	end
