@@ -484,12 +484,23 @@ function gadget:UnitPreDamaged(unitID, unitDefID, unitTeam, damage, paralyzer, w
 	return damage, 1
 end
 
+local warnings = {
+	[UnitDefNames["outpost_launcher"].id] = "bb_enemy_launcher_detected",
+	[UnitDefNames["outpost_artillery"].id] = "bb_enemy_artillery_detected",
+}
+
 function gadget:UnitEnteredRadar(unitID, unitTeam, allyTeam, unitDefID)
 	--Spring.Echo("UERadar:", unitID, unitTeam, UnitDefs[unitDefID].name)
 	if not mobileUnitDefs[unitDefID] then
 		-- statics are perma-visible
 		DelayCall(SetUnitLosState, {unitID, allyTeam, fullLOS}, 1)
 		DelayCall(SetUnitLosMask, {unitID, allyTeam, fullLOS}, 1) -- don't let engine update any los status
+		local warning = warnings[unitDefID]
+		if warning then
+			for i, teamID in pairs(Spring.GetTeamList(allyTeam)) do
+				GG.PlaySoundForTeam(teamID, warning, 1)
+			end
+		end
 	end
 end
 
