@@ -6,7 +6,7 @@ function gadget:GetInfo()
 		date		= "10/08/20",
 		license 	= "GNU GPL v2",
 		layer		= 5, -- after perks
-		enabled	= true,
+		enabled		= true,
 	}
 end
 
@@ -18,8 +18,13 @@ local modOptions = Spring.GetModOptions()
 -- localisations
 --SyncedRead
 local GetGameFrame			= Spring.GetGameFrame
+local GetUnitCmdDescs 		= Spring.GetUnitCmdDescs
+local GetUnitDefID 			= Spring.GetUnitDefID
+local GetUnitIsTransporting	= Spring.GetUnitIsTransporting
 local GetUnitPosition		= Spring.GetUnitPosition
+local GetUnitTeam 			= Spring.GetUnitTeam
 local GetTeamResources		= Spring.GetTeamResources
+local IsNoCostEnabled 		= Spring.IsNoCostEnabled
 --SyncedCtrl
 local AddTeamResource 		= Spring.AddTeamResource
 local CreateUnit			= Spring.CreateUnit
@@ -28,36 +33,45 @@ local InsertUnitCmdDesc		= Spring.InsertUnitCmdDesc
 local EditUnitCmdDesc		= Spring.EditUnitCmdDesc
 local FindUnitCmdDesc		= Spring.FindUnitCmdDesc
 local RemoveUnitCmdDesc		= Spring.RemoveUnitCmdDesc
+local SetUnitExperience		= Spring.SetUnitExperience
+local SetUnitHealth 		= Spring.SetUnitHealth
 local SetUnitRulesParam		= Spring.SetUnitRulesParam
 local SetTeamRulesParam		= Spring.SetTeamRulesParam
 local UseTeamResource 		= Spring.UseTeamResource
+-- UnitScript
+-- localised in init so that unit_script has loaded
+local CallAsUnit
+local GetScriptEnv			
+
+-- UnsyncedCtrl
+local SendMessageToTeam		= Spring.SendMessageToTeam
 
 -- GG
-local DelayCall				 = GG.Delay.DelayCall
-local COLOURS = GG.GameConstants.colours
+local COLOURS 				= GG.GameConstants.colours
+local DelayCall				= GG.Delay.DelayCall
+local GetCmdID 				= GG.CustomCommands.GetCmdID
 
 -- Constants
 local GAIA_TEAM_ID = Spring.GetGaiaTeamID()
 local MECHBAY_ID = UnitDefNames["outpost_mechbay"].id
-local PICKUP_DIST = 100
 
 -- Command Descriptions
 local getOutCmdDesc = {
-	id 		= GG.CustomCommands.GetCmdID("CMD_MECHBAY_GETOUT"),
+	id 		= GetCmdID("CMD_MECHBAY_GETOUT"),
 	type	= CMDTYPE.ICON,
 	name 	= GG.Pad("Get","Out"),
 	action	= "mechbay_out",
 	tooltip = "Emergency unload",
 }
 local sellMechCmdDesc = {
-	id 		= GG.CustomCommands.GetCmdID("CMD_MECHBAY_SELLMECH"),
+	id 		= GetCmdID("CMD_MECHBAY_SELLMECH"),
 	type	= CMDTYPE.ICON,
 	name 	= GG.Pad("Sell","Mech","(+C)"),
 	action	= "mechbay_out",
 	tooltip = "Sells the mech for C-Bills",
 }
 local scrapMechCmdDesc = {
-	id 		= GG.CustomCommands.GetCmdID("CMD_MECHBAY_SCRAPMECH"),
+	id 		= GetCmdID("CMD_MECHBAY_SCRAPMECH"),
 	type	= CMDTYPE.ICON,
 	name 	= GG.Pad("Scrap","Mech", "(+S)"),
 	action	= "mechbay_out",
@@ -86,7 +100,7 @@ local currMenu = {}
 local menuCmdDescs = {}
 local menuCmdIDs = {}
 for i, typeString in ipairs(typeStrings) do
-	local cmdID = GG.CustomCommands.GetCmdID("CMD_MENU_" .. typeString:upper())
+	local cmdID = GetCmdID("CMD_MENU_" .. typeString:upper())
 	menuCmdDescs[i] = {
 		id     = cmdID,
 		type   = CMDTYPE.ICON,
@@ -97,7 +111,7 @@ for i, typeString in ipairs(typeStrings) do
 	menuCmdIDs[cmdID] = typeString
 end
 
-local CMD_MENU_OMNI = GG.CustomCommands.GetCmdID("CMD_MENU_OMNI")
+local CMD_MENU_OMNI = GetCmdID("CMD_MENU_OMNI")
 menuCmdDescs[5].tooltip = "Select omnimech weapon loadout configuration"
 menuCmdDescs[5].disabled = true
 menuCmdDescs[5].hidden = true
@@ -108,50 +122,17 @@ GG.mechBays = mechBays
 local hiddenMods = {} -- unitDefID = {[i] = true, etc}
 
 -- Omni
+local S = {COLOURS.salvage .. "S"}
+local EMPTY_TABLE = {}
+
 local omniCache = {} -- unitDefID = unitNameSansConfig
 local omniConfigs = {} -- [unitNameSansConfig]["a"] = true
 local omniOrder = {"p", "a", "b", "c", "d", "e", "f", "g", "h"} -- TODO: maybe autogen this
 
--- Salvage pickup
-local pieces = {}
-local names = {
-	["pelvis"] = true,
-	["lupperarm"] = true,
-	["rupperarm"] = true,
-	["turret"] = true,
-}
-
-local teamSalvages = {} -- teamID = salvageAmount
-local salvageSources = {} -- featureID = {x,z}
-local salvageCache = {} -- featureDefID = true
-local salvageArray = {} -- [1] = featureDefID1, ...
-local unitPinataLevels = {} -- unitID = 0 or 1 or 2 or 3
-
-local function PinataLevel(unitID, delta)
-	if delta then
-		unitPinataLevels[unitID] = unitPinataLevels[unitID] + delta
-	end
-	return unitPinataLevels[unitID] or 0 -- incase of non-mech killer
-end
-GG.PinataLevel = PinataLevel
-
-local function GetTeamSalvage(teamID)
-	return teamSalvages[teamID] or 0
-end
-GG.GetTeamSalvage = GetTeamSalvage
-
-local function ChangeTeamSalvage(teamID, delta)
-	teamSalvages[teamID] = (teamSalvages[teamID] or 0) + delta
-	Spring.SetTeamRulesParam(teamID, "SALVAGE", teamSalvages[teamID])
-end
-GG.ChangeTeamSalvage = ChangeTeamSalvage
-
-local S = {COLOURS.salvage .. "S"}
-local EMPTY_TABLE = {}
 
 local function CheckOmniOptions(unitID, teamID, cmdID)
-	local salvage = GetTeamSalvage(teamID)
-	local cmdDescs = Spring.GetUnitCmdDescs(unitID) or EMPTY_TABLE
+	local salvage = GG.GetTeamSalvage(teamID)
+	local cmdDescs = GetUnitCmdDescs(unitID) or EMPTY_TABLE
 	for cmdDescID = 1, #cmdDescs do
 		local buildDefID = cmdDescs[cmdDescID].id
 		local cmdDesc = cmdDescs[cmdDescID]
@@ -159,7 +140,7 @@ local function CheckOmniOptions(unitID, teamID, cmdID)
 			local currParam = cmdDesc.params[1] or ""
 			local sCost
 			if buildDefID < 0 then -- a build order
-				sCost = Spring.IsNoCostEnabled() and 0 or tonumber(UnitDefs[-buildDefID].customParams.omniswapcost or 5)
+				sCost = IsNoCostEnabled() and 0 or tonumber(UnitDefs[-buildDefID].customParams.omniswapcost or 5)
 			end
 			if buildDefID < 0 
 			and sCost > salvage and (currParam == "" or currParam == S[1]) then
@@ -174,7 +155,7 @@ local function CheckOmniOptions(unitID, teamID, cmdID)
 end
 
 local function ShowOmniMenu(unitID, tOrF)
-	for i, cmdDesc in ipairs(Spring.GetUnitCmdDescs(unitID)) do
+	for i, cmdDesc in ipairs(GetUnitCmdDescs(unitID)) do
 		if cmdDesc.id == CMD_MENU_OMNI then
 			EditUnitCmdDesc(unitID, i, {hidden = not tOrF})
 		elseif menuCmdIDs[cmdDesc.id] then
@@ -193,7 +174,7 @@ local function ShowOmniOptions(unitID, mechDefID, name, tOrF)
 				InsertUnitCmdDesc(unitID, cmdDesc)
 			end
 		end
-		CheckOmniOptions(unitID, Spring.GetUnitTeam(unitID))
+		CheckOmniOptions(unitID, GetUnitTeam(unitID))
 	else
 		for config, cmdDesc in pairs(omniConfigs[name]) do
 			local i = FindUnitCmdDesc(unitID, cmdDesc.id)
@@ -212,14 +193,13 @@ local function SetMechBayLevel(unitID, level)
 		for i, cmdDesc in ipairs(menuCmdDescs) do
 			InsertUnitCmdDesc(unitID, START_POSITION + 2 +i, cmdDesc)
 		end
-		local transporting = Spring.GetUnitIsTransporting(unitID)
+		local transporting = GetUnitIsTransporting(unitID)
 		local mechID = transporting and transporting[1]
 		local omni = false
 		if mechID then
-			omni = omniCache[Spring.GetUnitDefID(mechID)] ~= nil
+			omni = omniCache[GetUnitDefID(mechID)] ~= nil
 		end
 		ShowOmniMenu(unitID, omni)
-	--elseif level == 3 then
 		EditUnitCmdDesc(unitID, START_POSITION + 7, {disabled = false})
 	elseif level == 2 then -- Enable Sell
 		EditUnitCmdDesc(unitID, SELL_POSITION, {disabled = false})
@@ -230,9 +210,9 @@ end
 GG.SetMechBayLevel = SetMechBayLevel
 
 local function ShowModsByType(unitID, modType, mechID)
-	local cmdID = modType and GG.CustomCommands.GetCmdID("CMD_MENU_" .. modType:upper())
-	local mechDefID = mechID and Spring.GetUnitDefID(mechID)
-	for i, cmdDesc in ipairs(Spring.GetUnitCmdDescs(unitID)) do
+	local cmdID = modType and GetCmdID("CMD_MENU_" .. modType:upper())
+	local mechDefID = mechID and GetUnitDefID(mechID)
+	for i, cmdDesc in ipairs(GetUnitCmdDescs(unitID)) do
 		local cmdDescID = cmdDesc.id
 		if cmdDescID == cmdID then
 			EditUnitCmdDesc(unitID, i, {texture = 'bitmaps/ui/selected.png',})
@@ -258,8 +238,6 @@ function gadget:UnitCreated(unitID, unitDefID, teamID, builderID)
 		InsertUnitCmdDesc(unitID, SCRAP_POSITION, scrapMechCmdDesc)
 		SetMechBayLevel(unitID, 1)
 		ShowModsByType(unitID, "none", nil) -- don't show any mods until a mech gets in
-	elseif GG.mechCache[unitDefID] then -- a mech
-		unitPinataLevels[unitID] = 0
 	end
 end
 
@@ -289,22 +267,22 @@ end
 function gadget:AllowCommand(unitID, unitDefID, teamID, cmdID, cmdParams, cmdOptions)
 	if unitDefID == MECHBAY_ID then
 		if cmdID == getOutCmdDesc.id then
-			env = Spring.UnitScript.GetScriptEnv(unitID)
+			env = GetScriptEnv(unitID)
 			if env and env.script and env.script.TransportDrop then
-				local transporting = Spring.GetUnitIsTransporting(unitID)
+				local transporting = GetUnitIsTransporting(unitID)
 				if transporting then
-					Spring.UnitScript.CallAsUnit(unitID, env.script.TransportDrop, transporting[1])
+					CallAsUnit(unitID, env.script.TransportDrop, transporting[1])
 					return true
 				end
 			end
 			return false
 		elseif cmdID == sellMechCmdDesc.id then
-			local transporting = Spring.GetUnitIsTransporting(unitID)
+			local transporting = GetUnitIsTransporting(unitID)
 			if transporting[1] then
-				local cBills = UnitDefs[Spring.GetUnitDefID(transporting[1])].metalCost * (modOptions and modOptions.sell or 0.75)
-				env = Spring.UnitScript.GetScriptEnv(unitID)
-				Spring.UnitScript.CallAsUnit(unitID, env.script.TransportDrop, transporting[1])
-				Spring.DestroyUnit(transporting[1], false, true)
+				local cBills = UnitDefs[GetUnitDefID(transporting[1])].metalCost * (modOptions and modOptions.sell or 0.75)
+				env = GetScriptEnv(unitID)
+				CallAsUnit(unitID, env.script.TransportDrop, transporting[1])
+				DestroyUnit(transporting[1], false, true)
 				AddTeamResource(teamID, "m", cBills)
 				return true
 			end
@@ -312,44 +290,44 @@ function gadget:AllowCommand(unitID, unitDefID, teamID, cmdID, cmdParams, cmdOpt
 		elseif cmdID == scrapMechCmdDesc.id then
 			local transporting = Spring.GetUnitIsTransporting(unitID)
 			if transporting[1] then
-				local salvage = UnitDefs[Spring.GetUnitDefID(transporting[1])].customParams.tonnage * (modOptions and modOptions.scrap or 1)
-				env = Spring.UnitScript.GetScriptEnv(unitID)
-				Spring.UnitScript.CallAsUnit(unitID, env.script.TransportDrop, transporting[1])
-				Spring.DestroyUnit(transporting[1], false, true)
-				ChangeTeamSalvage(teamID, salvage)
+				local salvage = UnitDefs[GetUnitDefID(transporting[1])].customParams.tonnage * (modOptions and modOptions.scrap or 1)
+				env = GetScriptEnv(unitID)
+				CallAsUnit(unitID, env.script.TransportDrop, transporting[1])
+				DestroyUnit(transporting[1], false, true)
+				GG.ChangeTeamSalvage(teamID, salvage)
 				return true
 			end
 			return false
 		elseif menuCmdIDs[cmdID] then
-			env = Spring.UnitScript.GetScriptEnv(unitID)
+			env = GetScriptEnv(unitID)
 			env.autoGetOut = false or GG.AI_TEAMS[teamID] -- don't disable autoGetOut if it is on an AI team
 			currMenu[unitID] = menuCmdIDs[cmdID]
-			local mechID = (Spring.GetUnitIsTransporting(unitID) or {})[1]
+			local mechID = (GetUnitIsTransporting(unitID) or {})[1]
 			ShowModsByType(unitID, menuCmdIDs[cmdID], mechID)
-			if mechID and omniCache[Spring.GetUnitDefID(mechID)] then
-				--ShowOmniOptions(unitID, omniCache[Spring.GetUnitDefID(mechID)], cmdID == CMD_MENU_OMNI)
-			end
-		elseif cmdID < 0 then -- a omni config
-			local transporting = Spring.GetUnitIsTransporting(unitID)
+			--if mechID and omniCache[GetUnitDefID(mechID)] then
+				--ShowOmniOptions(unitID, omniCache[GetUnitDefID(mechID)], cmdID == CMD_MENU_OMNI)
+			--end
+		elseif cmdID < 0 then -- an omni config
+			local transporting = GetUnitIsTransporting(unitID)
 			if transporting[1] then
-				local cost = (Spring.IsNoCostEnabled() and 0) or tonumber(UnitDefs[-cmdID].customParams.omniswapcost or 5)
-				if GetTeamSalvage(teamID) >= cost then
-					ChangeTeamSalvage(teamID, -cost)
-					local x,y,z = Spring.GetUnitPosition(unitID)
-					local newID = Spring.CreateUnit(-cmdID, x,y,z, 0, teamID, false, false)
+				local cost = (IsNoCostEnabled() and 0) or tonumber(UnitDefs[-cmdID].customParams.omniswapcost or 5)
+				if GG.GetTeamSalvage(teamID) >= cost then
+					GG.ChangeTeamSalvage(teamID, -cost)
+					local x,y,z = GetUnitPosition(unitID)
+					local newID = CreateUnit(-cmdID, x,y,z, 0, teamID, false, false)
 					local oldID = transporting[1]
-					Spring.UseTeamResource(teamID, "energy", UnitDefs[-cmdID].customParams.tonnage)
-					Spring.SetUnitExperience(newID, Spring.GetUnitExperience(oldID))
-					Spring.SetUnitHealth(newID, Spring.GetUnitHealth(oldID))
+					UseTeamResource(teamID, "energy", UnitDefs[-cmdID].customParams.tonnage)
+					SetUnitExperience(newID, Spring.GetUnitExperience(oldID))
+					SetUnitHealth(newID, Spring.GetUnitHealth(oldID))
 					GG.CloneMechApps(oldID, Spring.GetUnitDefID(oldID), newID, -cmdID)
-					env = Spring.UnitScript.GetScriptEnv(unitID)
-					Spring.UnitScript.CallAsUnit(unitID, env.script.TransportDrop, transporting[1])
-					Spring.DestroyUnit(oldID, false, true)
-					Spring.UnitScript.CallAsUnit(unitID, env.script.TransportPickup, newID)
+					env = GetScriptEnv(unitID)
+					CallAsUnit(unitID, env.script.TransportDrop, transporting[1])
+					DestroyUnit(oldID, false, true)
+					CallAsUnit(unitID, env.script.TransportPickup, newID)
 					ShowModsByType(unitID, currMenu[unitID], newID)
 					CheckOmniOptions(unitID, teamID, cmdID)
 				else
-					Spring.SendMessageToTeam(teamID, "Insufficient salvage!")
+					SendMessageToTeam(teamID, "Insufficient salvage!")
 					GG.PlaySoundForTeam(teamID, "bb_insufficient_salvage", 1)
 				end
 			end
@@ -358,79 +336,23 @@ function gadget:AllowCommand(unitID, unitDefID, teamID, cmdID, cmdParams, cmdOpt
 	return true
 end
 
-function gadget:FeatureCreated(featureID, allyTeamID)
-	local amount = salvageCache[Spring.GetFeatureDefID(featureID)]
-	if amount then
-		local x,y,z = Spring.GetFeaturePosition(featureID)
-		salvageSources[featureID] = {
-			["x"] = x, 
-			["z"] = z,
-			["amount"] = amount * (modOptions.salvageperpile or 1),
-		}
-	end
-end
-
-function gadget:FeatureDestroyed(featureID)
-	salvageSources[featureID] = nil
-end
-
-function gadget:ProjectileCreated(proID, proOwnerID, weaponID)
-	--local name = Spring.GetProjectileName(proID)
-	local weap, piece = Spring.GetProjectileType(proID)
-	--Spring.Echo("PC", proID, proOwnerID, weaponID, name, defID, weap, piece)
-	if Spring.ValidUnitID(proOwnerID) and piece then
-		local unitDefID = Spring.GetUnitDefID(proOwnerID)
-		local ud = UnitDefs[unitDefID]
-		if (GG.mechCache[unitDefID] or unitDefID == GG.SALVAGER_ID)--[[and names[name]] then 
-			pieces[proID] = true 
-		end
-	end
-end
-	
-function gadget:ProjectileDestroyed(proID)
-	if pieces[proID] then
-		local x,_,z = Spring.GetProjectilePosition(proID)
-		Spring.CreateFeature(salvageArray[math.random(#salvageArray)], x,Spring.GetGroundHeight(x,z),z)
-		pieces[proID] = nil
-	end
-end
-
 function gadget:GameFrame(n)
-	if n % 10 == 0 then -- 3 times a second
-		for featureID, info in pairs(salvageSources) do
-			local units = Spring.GetUnitsInCylinder(info.x, info.z, PICKUP_DIST)
-			if units[1] then
-				local unitDefID = Spring.GetUnitDefID(units[1])
-				if GG.mechCache[unitDefID] then
-					local teamID = Spring.GetUnitTeam(units[1])
-					ChangeTeamSalvage(teamID, info.amount)
-					Spring.DestroyFeature(featureID)
-				end
-			end
-		end
+	if n % 30 == 5 then -- once a second
 		for mechBayID, level in pairs(mechBays) do
-			if level == 3 then
-				CheckOmniOptions(mechBayID, Spring.GetUnitTeam(mechBayID))
-			end
+			CheckOmniOptions(mechBayID, GetUnitTeam(mechBayID))
 		end
 	end
 end
 
 function gadget:Initialize()
-	Script.SetWatchWeapon(-1, true) -- pieces
+	GetScriptEnv = Spring.UnitScript.GetScriptEnv
+	CallAsUnit = Spring.UnitScript.CallAsUnit
 	for _,unitID in ipairs(Spring.GetAllUnits()) do
 		local teamID = Spring.GetUnitTeam(unitID)
 		local unitDefID = Spring.GetUnitDefID(unitID)
 		gadget:UnitCreated(unitID, unitDefID, teamID)
 	end
-	for featureDefID, featureDef in pairs(FeatureDefs) do
-		if featureDef.customParams.salvage then
-			salvageCache[featureDefID] = tonumber(featureDef.customParams.salvage)
-			table.insert(salvageArray, featureDefID)
-		end
-	end
 	local modInclude = VFS.Include("LuaRules/Configs/perk_defs.lua")["mods"]
-	--for unitDefID, unitDef in pairs(UnitDefs) do
 	for unitDefID in pairs(GG.mechCache) do
 		local unitDef = UnitDefs[unitDefID]
 		if unitDef.customParams.omni then

@@ -754,7 +754,7 @@ function Unpack()
 		UNLOAD_X = x + 150 * dx
 		UNLOAD_Z = z + 150 * dz
 	elseif name == "outpost_salvageyard" then
-		GG.SpawnBRV(unitID, teamID)
+		GG.SpawnSalvager(unitID, teamID)
 		Show(foundation)
 		Move(armature1, z_axis, 0, CRATE_SPEED * 2)
 		Move(armature2, z_axis, 0, CRATE_SPEED * 2)

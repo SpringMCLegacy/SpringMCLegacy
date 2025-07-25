@@ -14,30 +14,51 @@ if gadgetHandler:IsSyncedCode() then
 --	SYNCED
 
 -- localisations
+local modOptions = Spring.GetModOptions()
+
 --SyncedRead
-local GetGameFrame			= Spring.GetGameFrame
-local GetUnitPosition		= Spring.GetUnitPosition
-local GetTeamResources		= Spring.GetTeamResources
+local GetFeaturePosition		= Spring.GetFeaturePosition
+local GetGameFrame				= Spring.GetGameFrame
+local GetGroundHeight 			= Spring.GetGroundHeight
+local GetProjectilePosition		= Spring.GetProjectilePosition
+local GetProjectileType 		= Spring.GetProjectileType
+local GetUnitDefID				= Spring.GetUnitDefID
+local GetUnitFeatureSeparation 	= Spring.GetUnitFeatureSeparation
+local GetUnitHarvestStorage		= Spring.GetUnitHarvestStorage
+local GetUnitPosition			= Spring.GetUnitPosition
+local GetUnitSeparation 		= Spring.GetUnitSeparation
+local GetUnitTeam				= Spring.GetUnitTeam
+local GetUnitsInCylinder		= Spring.GetUnitsInCylinder
+local GetTeamResources			= Spring.GetTeamResources
+local ValidUnitID				= Spring.ValidUnitID
 --SyncedCtrl
-local CreateUnit			= Spring.CreateUnit
-local DestroyUnit			= Spring.DestroyUnit
-local InsertUnitCmdDesc		= Spring.InsertUnitCmdDesc
-local FindUnitCmdDesc		= Spring.FindUnitCmdDesc
-local RemoveUnitCmdDesc		= Spring.RemoveUnitCmdDesc
-local SetUnitRulesParam		= Spring.SetUnitRulesParam
-local SetTeamRulesParam		= Spring.SetTeamRulesParam
-local UseTeamResource 		= Spring.UseTeamResource
+local CreateFeature				= Spring.CreateFeature
+local CreateUnit				= Spring.CreateUnit
+local DestroyFeature			= Spring.DestroyFeature
+local DestroyUnit				= Spring.DestroyUnit
+local InsertUnitCmdDesc			= Spring.InsertUnitCmdDesc
+local FindUnitCmdDesc			= Spring.FindUnitCmdDesc
+local GetFeatureDefID 			= Spring.GetFeatureDefID
+local RemoveUnitCmdDesc			= Spring.RemoveUnitCmdDesc
+local SetUnitHarvestStorage 	= Spring.SetUnitHarvestStorage
+local SetUnitMoveGoal 			= Spring.SetUnitMoveGoal
+local SetUnitRulesParam			= Spring.SetUnitRulesParam
+local SetTeamRulesParam			= Spring.SetTeamRulesParam
+local UseTeamResource 			= Spring.UseTeamResource
+-- UnsyncedCtrl
+local GiveOrderToUnit			= Spring.GiveOrderToUnit
 
 -- GG
-local DelayCall				 = GG.Delay.DelayCall
+local DelayCall					 = GG.Delay.DelayCall
 
 -- Constants
 local GAIA_TEAM_ID = Spring.GetGaiaTeamID()
 local BEACON_ID = UnitDefNames["beacon"].id
-local BRV_ID = UnitDefNames["salvager"].id -- TODO: support multiple brv types
-GG.SALVAGER_ID = BRV_ID
+-- Mech pickup
+local PICKUP_DIST = 100
+-- Salvager
 local SALVAGEYARD_ID = UnitDefNames["outpost_salvageyard"] and UnitDefNames["outpost_salvageyard"].id or nil
-
+local SALVAGER_ID = UnitDefNames["salvager"].id
 local SALVAGE_RANGE = 4000
 local CONVERSION_RATE = 40 -- 1000 metal / this = 25
 local RATE_PER_TICK = 1
@@ -45,6 +66,22 @@ local TIME_PER_TICK = 30 * 60 -- 1 minute
 local CMD_DEPOSIT = GG.CustomCommands.GetCmdID("CMD_DEPOSIT")
 
 -- Variables
+-- Mech pickup
+local pieces = {}
+local names = {
+	["pelvis"] = true,
+	["lupperarm"] = true,
+	["rupperarm"] = true,
+	["turret"] = true,
+}
+
+local teamSalvages = {} -- teamID = salvageAmount
+local salvageSources = {} -- featureID = {x,z}
+local salvageCache = {} -- featureDefID = true
+local salvageArray = {} -- [1] = featureDefID1, ...
+local unitPinataLevels = {} -- unitID = 0 or 1 or 2 or 3
+
+-- Salvage yard
 local yardLevels = {} -- yardLevels[yardID] = 1, 2 or 3
 local yardQueues = {} -- yardQueues[yardID] = {{dist = number, id = featureID}, ...}, from furthest to closest
 local yardPos = {} -- yardPos[yardID] = {x = x, y = y, z = z}
@@ -64,66 +101,41 @@ local depositCmdDesc = {
 	cursor	= "Unload",
 }
 
---[[local function Strip(features)
-	for i = #features, 1, -1 do -- iterate over list in reverse so removing doesn't screw with index
-		local featureID = features[i]
-		local fDefID = Spring.GetFeatureDefID(featureID)
-		local fd = FeatureDefs[fDefID]
-		local cp = fd.customParams
-		if not (cp and cp.was) then
-			table.remove(features, i)
-		end
+local function PinataLevel(unitID, delta)
+	if delta then
+		unitPinataLevels[unitID] = unitPinataLevels[unitID] + delta
 	end
+	return unitPinataLevels[unitID] or 0 -- incase of non-mech killer
 end
+GG.PinataLevel = PinataLevel
 
-local function Pop(yardID)
-	local index = #yardQueues[yardID]
-	local item = yardQueues[yardID][index]
-	yardQueues[yardID][index] = nil
-	return item
+local function GetTeamSalvage(teamID)
+	return teamSalvages[teamID] or 0
 end
+GG.GetTeamSalvage = GetTeamSalvage
 
-local function OrderedPush(yardID, distance, corpseID)
-		local x,y,z = Spring.GetFeaturePosition(corpseID)
-		Spring.MarkerAddPoint(x,y,z, "Dist: " .. distance .. "   ID: " .. corpseID)
-		
-	local item = {["dist"] = distance, ["id"] = corpseID}
-	local i = #yardQueues[yardID]
-	while i > 1 and (yardQueues[yardID][i]["dist"] < distance) do
-		i = i - 1
-	end
-	table.insert(yardQueues[yardID], i+1, item)
+local function ChangeTeamSalvage(teamID, delta)
+	teamSalvages[teamID] = (teamSalvages[teamID] or 0) + delta
+	SetTeamRulesParam(teamID, "SALVAGE", teamSalvages[teamID])
 end
-
-local function PopulateQueue(yardID)
-	local x, _, z = Spring.GetUnitPosition(yardID)
-	local features = Spring.GetFeaturesInCylinder(x, z, SALVAGE_RANGE) -- TODO: allow for upgrading range
-	Strip(features)
-	for _, featureID in pairs(features) do
-		local dist = Spring.GetUnitFeatureSeparation(yardID, featureID, true)
-		OrderedPush(yardID, dist, featureID)
-	end
-end
-GG.PopulateQueue = PopulateQueue]]
+GG.ChangeTeamSalvage = ChangeTeamSalvage
 
 local function SYardoutpost(unitID, level)
 	yardLevels[unitID] = level
 end
 GG.SYardoutpost = SYardoutpost
 
-local function SpawnBRV(yardID, teamID)
-	-- TODO: change depending on level? or via buildmenu
-	local x, y, z = Spring.GetUnitPosition(yardID)
+local function SpawnSalvager(yardID, teamID)
+	local x, y, z = GetUnitPosition(yardID)
 	yardPos[yardID] = {["x"] = x, ["y"] = y, ["z"] = z}
-	local brvID = Spring.CreateUnit(BRV_ID, x,y,z, 0, teamID)
+	local brvID = CreateUnit(SALVAGER_ID, x,y,z, 0, teamID)
 	if brvID then
 		salvagerYards[brvID] = yardID
 		yardSalvagers[yardID] = brvID
-		--local item = Pop(yardID)
-		Spring.GiveOrderToUnit(brvID, CMD.RECLAIM, {x, y, z, SALVAGE_RANGE}, {}) -- item.id + game.maxUnits
+		GiveOrderToUnit(brvID, CMD.RECLAIM, {x, y, z, SALVAGE_RANGE}, {})
 	end
 end
-GG.SpawnBRV = SpawnBRV
+GG.SpawnSalvager = SpawnSalvager
 
 function gadget:UnitCreated(unitID, unitDefID, teamID, builderID)
 	local unitDef = UnitDefs[unitDefID]
@@ -133,8 +145,10 @@ function gadget:UnitCreated(unitID, unitDefID, teamID, builderID)
 		yardQueues[unitID] = {}
 		yardRaws[unitID] = 0
 		yardTeams[unitID] = teamID
-	elseif unitDefID == BRV_ID then-- TODO: support multiple types of brv
+	elseif unitDefID == SALVAGER_ID then-- TODO: support multiple types of brv
 		InsertUnitCmdDesc(unitID, depositCmdDesc)
+	elseif GG.mechCache[unitDefID] then -- a mech
+		unitPinataLevels[unitID] = 0
 	end
 end
 
@@ -149,22 +163,55 @@ function gadget:UnitDestroyed(unitID, unitDefID, teamID)
 end
 
 function gadget:FeatureCreated(featureID, allyTeamID)
-	local fd = FeatureDefs[Spring.GetFeatureDefID(featureID)]
+	local fdID = GetFeatureDefID(featureID)
+	local fd = FeatureDefs[fdID]
 	local cp = fd.customParams
-	if cp and cp.was then
-		--for yardID, yardQueue in pairs(yardQueues) do
+	local amount = salvageCache[fdID]
+	if amount then
+		local x,y,z = GetFeaturePosition(featureID)
+		--Spring.Echo("New pile!", amount, x,y,z)
+		salvageSources[featureID] = {
+			["x"] = x, 
+			["z"] = z,
+			["amount"] = amount * (modOptions.salvageperpile or 1),
+		}
+	elseif cp and cp.was then
 		for yardID, level in pairs(yardLevels) do
-			local dist = Spring.GetUnitFeatureSeparation(yardID, featureID, true)
+			local dist = GetUnitFeatureSeparation(yardID, featureID, true)
 			if dist and dist <= SALVAGE_RANGE then -- TODO: allow for upgrading range
-				--OrderedPush(yardID, dist, featureID)
 				local salvagerID = yardSalvagers[yardID]
 				--Spring.Echo("New corpse!", salvagerID, idleSalvagers[salvagerID])
 				if idleSalvagers[salvagerID] then
 					local pos = yardPos[yardID]
-					Spring.GiveOrderToUnit(salvagerID, CMD.RECLAIM, {pos.x, pos.y, pos.z, SALVAGE_RANGE}, {}) -- TODO: support multiple brv per yard
+					GiveOrderToUnit(salvagerID, CMD.RECLAIM, {pos.x, pos.y, pos.z, SALVAGE_RANGE}, {}) -- TODO: support multiple salvagers per yard?
 				end
 			end
 		end
+	end
+end
+
+function gadget:FeatureDestroyed(featureID)
+	salvageSources[featureID] = nil
+end
+
+function gadget:ProjectileCreated(proID, proOwnerID, weaponID)
+	--local name = Spring.GetProjectileName(proID) -- TODO: Removed in Recoil, waiting for it to be brought back so we can whitelist
+	local weap, piece = GetProjectileType(proID)
+	--Spring.Echo("PC", proID, proOwnerID, weaponID, name, defID, weap, piece)
+	if ValidUnitID(proOwnerID) and piece then
+		local unitDefID = GetUnitDefID(proOwnerID)
+		local ud = UnitDefs[unitDefID]
+		if (GG.mechCache[unitDefID] or unitDefID == GG.SALVAGER_ID)--[[and names[name]] then 
+			pieces[proID] = true 
+		end
+	end
+end
+	
+function gadget:ProjectileDestroyed(proID)
+	if pieces[proID] then
+		local x,_,z = GetProjectilePosition(proID)
+		CreateFeature(salvageArray[math.random(#salvageArray)], x,GetGroundHeight(x,z),z)
+		pieces[proID] = nil
 	end
 end
 
@@ -172,7 +219,7 @@ function gadget:UnitIdle(unitID, unitDefID, teamID)
 	local yardID = salvagerYards[unitID]
 	if yardID then -- is a BRV
 		--Spring.Echo("Yawn! Nought to do here boss")
-		local dist = Spring.GetUnitSeparation(unitID, yardID)
+		local dist = GetUnitSeparation(unitID, yardID)
 		if dist and dist > 50 then -- nothing else to salvage, force RTB
 			gadget:UnitHarvestStorageFull(unitID, unitDefID, teamID)
 		else
@@ -187,7 +234,7 @@ function gadget:AllowCommand(unitID, unitDefID, teamID, cmdID, cmdParams, cmdOpt
 		if isBRV then -- is a BRV
 			idleSalvagers[unitID] = false
 			local pos = yardPos[cmdParams[1]]
-			Spring.SetUnitMoveGoal(unitID, pos.x, pos.y, pos.z)
+			SetUnitMoveGoal(unitID, pos.x, pos.y, pos.z)
 			--Spring.Echo("Haulin' ass back to base!")
 			return true
 		else
@@ -202,18 +249,16 @@ end
 function gadget:CommandFallback(unitID, unitDefID, teamID, cmdID, cmdParams, cmdOptions)
 	if cmdID == CMD_DEPOSIT then
 		local yardID = salvagerYards[unitID]
-		local dist = Spring.GetUnitSeparation(unitID, yardID)
+		local dist = GetUnitSeparation(unitID, yardID)
 		if dist and dist < 50 then
-			local raw = Spring.GetUnitHarvestStorage(unitID)
+			local raw = GetUnitHarvestStorage(unitID)
 			local salvage = math.floor(raw / CONVERSION_RATE)
 			--Spring.Echo("Made it back, have " .. salvage .. " Salvage!")
-			--Spring.AddTeamResource(teamID, "metal", Spring.GetUnitHarvestStorage(unitID))
-			--GG.ChangeTeamSalvage(teamID, salvage)
 			yardRaws[yardID] = yardRaws[yardID] + raw
-			Spring.SetUnitHarvestStorage(yardID, yardRaws[yardID])
-			Spring.SetUnitHarvestStorage(unitID, 0)
+			SetUnitHarvestStorage(yardID, yardRaws[yardID])
+			SetUnitHarvestStorage(unitID, 0)
 			local pos = yardPos[yardID]
-			GG.Delay.DelayCall(Spring.GiveOrderToUnit, {unitID, CMD.RECLAIM, {pos.x, pos.y, pos.z, SALVAGE_RANGE}, {}}, 1) -- TODO: range change
+			DelayCall(GiveOrderToUnit, {unitID, CMD.RECLAIM, {pos.x, pos.y, pos.z, SALVAGE_RANGE}, {}}, 1) -- TODO: range change
 			return true, true
 		else -- not home yet, keep going
 			return true, false
@@ -224,10 +269,21 @@ end
 
 function gadget:UnitHarvestStorageFull(unitID, unitDefID, teamID)
 	--Spring.Echo("Oi vey! I'm full")
-	Spring.GiveOrderToUnit(unitID, CMD_DEPOSIT, {salvagerYards[unitID]}, {})
+	GiveOrderToUnit(unitID, CMD_DEPOSIT, {salvagerYards[unitID]}, {})
 end
 
 function gadget:Initialize()
+	Script.SetWatchWeapon(-1, true) -- pieces
+	for featureDefID, featureDef in pairs(FeatureDefs) do
+		if featureDef.customParams.salvage then
+			salvageCache[featureDefID] = tonumber(featureDef.customParams.salvage)
+			table.insert(salvageArray, featureDefID)
+		end
+	end
+	for _, featureID in ipairs(Spring.GetAllFeatures()) do
+		local allyTeam = Spring.GetFeatureAllyTeam(featureID)
+		gadget:UnitCreated(featureID, allyTeam)
+	end
 	for _,unitID in ipairs(Spring.GetAllUnits()) do
 		local teamID = Spring.GetUnitTeam(unitID)
 		local unitDefID = Spring.GetUnitDefID(unitID)
@@ -247,7 +303,20 @@ function gadget:GameFrame(n)
 				GG.ChangeTeamSalvage(teamID, salvageAvailable * yardLevels[yardID])
 				-- consume the raw
 				yardRaws[yardID] = yardRaws[yardID] - rawAvailable
-				Spring.SetUnitHarvestStorage(yardID, yardRaws[yardID])
+				SetUnitHarvestStorage(yardID, yardRaws[yardID])
+			end
+		end
+	end
+	if n % 10 == 5 then -- 3x a second
+		for featureID, info in pairs(salvageSources) do
+			local units = GetUnitsInCylinder(info.x, info.z, PICKUP_DIST)
+			if units[1] then
+				local unitDefID = GetUnitDefID(units[1])
+				if GG.mechCache[unitDefID] then
+					local teamID = GetUnitTeam(units[1])
+					ChangeTeamSalvage(teamID, info.amount)
+					DestroyFeature(featureID)
+				end
 			end
 		end
 	end
