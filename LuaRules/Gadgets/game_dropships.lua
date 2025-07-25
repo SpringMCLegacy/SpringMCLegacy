@@ -220,6 +220,8 @@ function gadget:UnitDestroyed(unitID, unitDefID, teamID, attackerID, attackerDef
 	if dropShipCache[unitDefID] == "mech" then  -- TODO: Only tracking mech landers atm
 		teamDropShipHPs[teamID][unitDefID] = {hp = Spring.GetUnitHealth(unitID), frame = Spring.GetGameFrame()}
 	end
+	firstTime75[unitID] = nil
+	firstTime50[unitID] = nil
 end
 
 function gadget:UnitGiven(unitID, unitDefID, newTeam, oldTeam)
