@@ -128,11 +128,11 @@ GG.SYardoutpost = SYardoutpost
 local function SpawnSalvager(yardID, teamID)
 	local x, y, z = GetUnitPosition(yardID)
 	yardPos[yardID] = {["x"] = x, ["y"] = y, ["z"] = z}
-	local brvID = CreateUnit(SALVAGER_ID, x,y,z, 0, teamID)
-	if brvID then
-		salvagerYards[brvID] = yardID
-		yardSalvagers[yardID] = brvID
-		GiveOrderToUnit(brvID, CMD.RECLAIM, {x, y, z, SALVAGE_RANGE}, {})
+	local salvagerID = CreateUnit(SALVAGER_ID, x,y,z, 0, teamID)
+	if salvagerID then
+		salvagerYards[salvagerID] = yardID
+		yardSalvagers[yardID] = salvagerID
+		GiveOrderToUnit(salvagerID, CMD.RECLAIM, {x, y, z, SALVAGE_RANGE}, {})
 	end
 end
 GG.SpawnSalvager = SpawnSalvager
@@ -145,7 +145,7 @@ function gadget:UnitCreated(unitID, unitDefID, teamID, builderID)
 		yardQueues[unitID] = {}
 		yardRaws[unitID] = 0
 		yardTeams[unitID] = teamID
-	elseif unitDefID == SALVAGER_ID then-- TODO: support multiple types of brv
+	elseif unitDefID == SALVAGER_ID then
 		InsertUnitCmdDesc(unitID, depositCmdDesc)
 	elseif GG.mechCache[unitDefID] then -- a mech
 		unitPinataLevels[unitID] = 0
@@ -217,7 +217,7 @@ end
 
 function gadget:UnitIdle(unitID, unitDefID, teamID)
 	local yardID = salvagerYards[unitID]
-	if yardID then -- is a BRV
+	if yardID then -- is a Salvager
 		--Spring.Echo("Yawn! Nought to do here boss")
 		local dist = GetUnitSeparation(unitID, yardID)
 		if dist and dist > 50 then -- nothing else to salvage, force RTB
@@ -229,9 +229,9 @@ function gadget:UnitIdle(unitID, unitDefID, teamID)
 end
 
 function gadget:AllowCommand(unitID, unitDefID, teamID, cmdID, cmdParams, cmdOptions)
-	local isBRV = salvagerYards[unitID]
+	local isSalvager = salvagerYards[unitID]
 	if cmdID == CMD_DEPOSIT then
-		if isBRV then -- is a BRV
+		if isSalvager then -- is a Salvager
 			idleSalvagers[unitID] = false
 			local pos = yardPos[cmdParams[1]]
 			SetUnitMoveGoal(unitID, pos.x, pos.y, pos.z)
@@ -240,7 +240,7 @@ function gadget:AllowCommand(unitID, unitDefID, teamID, cmdID, cmdParams, cmdOpt
 		else
 			return false
 		end
-	elseif cmdID == CMD.RECLAIM and isBRV then
+	elseif cmdID == CMD.RECLAIM and isSalvager then
 		idleSalvagers[unitID] = false
 	end
 	return true
