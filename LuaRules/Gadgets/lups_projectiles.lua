@@ -7,14 +7,14 @@ function gadget:GetInfo()
 		author = "KingRaptor (L.J. Lim)",
 		date = "2013-06-28",
 		license = "GNU GPL, v2 or later",
-		layer = 4, -- after game_radar
+		layer = 0,
 		enabled = true
 	}
 end
 --------------------------------------------------------------------------------
 --------------------------------------------------------------------------------
 local fxs = include("LuaRules/Configs/lups_projectile_fxs.lua")
-local weapons = {}
+local weaponsWithFX = {}
 
 for id, wd in pairs(WeaponDefs) do
 	if wd.customParams and wd.customParams.projectilelups then
@@ -30,7 +30,7 @@ for id, wd in pairs(WeaponDefs) do
 			for i, effect in pairs(effects) do
 				fxList[i] = fxs[effect]
 			end
-			weapons[id] = fxList
+			weaponsWithFX[id] = fxList
 		end
 	end
 end
@@ -43,228 +43,16 @@ if (gadgetHandler:IsSyncedCode()) then
 -- SYNCED
 --------------------------------------------------------------------------------
 local projectiles = {}
-local tracking = {}
-local lbx = {}
-local ppcEmits = {}
-GG.ppcEmits = ppcEmits -- uhoh, spaghettification inbound
-local silverBulletUnits = {}
-local function EnableSilverBullet(unitID, tOrF)
-	silverBulletUnits[unitID] = tOrF
-end
-GG.EnableSilverBullet = EnableSilverBullet
-
-local contTAG = {}
-local arrows = {}
-
-local function SetMissileTarget(proID, info)
---	Spring.Echo("SetMissileTarget", proID, info.targetID, info.ownerID, info.weaponclass, info.artemisOnly)
-	if info.targetID and Spring.ValidUnitID(info.targetID) and not Spring.GetUnitIsDead(info.targetID) -- target is alive
-    and info.ownerID and Spring.ValidUnitID(info.ownerID) and not Spring.GetUnitIsDead(info.ownerID) then -- owner is alive
-		--Spring.Echo("SetMissileTarget", proID, UnitDefs(Spring.GetUnitDefID(info.targetID)].name, UnitDefs[Spring.GetUnitDefID(info.ownerID)].name, info.weaponclass, info.artemisOnly)
-		if ((GG.IsUnitNARCed(info.targetID) or GG.IsUnitTAGed(info.targetID)) and not info.artemisOnly)
-		or (info.artemisOnly and GG.IsTargetArtemised(info.ownerID, info.targetID, info.weaponclass)) 
-		or (info.arad or info.ad) then
-			--Spring.Echo("Target is tagged", info.weaponclass, contTAG[proID] and "continuous lock" or "lock reaquired!")
-			contTAG[proID] = true -- re-establish TAG if lost
-			--Spring.SetProjectileTarget(proID, targetID)
-			local _,_,_,_,_,_,x,y,z = Spring.GetUnitPosition(info.targetID, true, true)
-			--Spring.Echo(x,y,z)
-			local vx, vy, vz = Spring.GetUnitVelocity(info.targetID)
-			Spring.SetProjectileTarget(proID, x+vx,y+vy+1.5,z+vz)
-		elseif contTAG[proID] then -- continuous TAG up to here
-			--Spring.Echo("Target TAG lost")
-			contTAG[proID] = false
-			local x,y,z = Spring.GetUnitPosition(info.targetID)
-			Spring.SetProjectileTarget(proID, x,y,z)
-		end
-	else -- target is dead, stop tracking altogether
-		arrows[proID] = nil
-	end
-end
-
-local function ChangeMissile(proID, proOwnerID, wd, artemisOnly)
-		local targetType, targetID = Spring.GetProjectileTarget(proID)
-		if targetType == string.byte('u') then -- unit target, info is ID
-			local weaponClass = wd.customParams.weaponclass
-			local arad = GG.jammerCache[targetID] and GG.unitSpecialAmmos[proOwnerID][weaponClass] == "arad"
-			local ad = GG.unitSpecialAmmos[proOwnerID][weaponClass] == "ad" and GG.airTargets[targetID]
-			if ((GG.IsUnitNARCed(targetID) or GG.IsUnitTAGed(targetID)) and not artemisOnly) 
-			or (artemisOnly and GG.IsTargetArtemised(proOwnerID, targetID, weaponClass)) 
-			or (arad or ad) then
-				local x,y,z = Spring.GetProjectilePosition(proID)
-				local vx, vy, vz = Spring.GetProjectileVelocity(proID)
-				local _,_,_, _,_,_,tx, ty, tz = Spring.GetUnitPosition(targetID, true, true)
-				--Spring.Echo("Arrow detected a TAG!", vx,vy,vz)
-				local newProID = Spring.SpawnProjectile(wd.id, {
-					pos = {x,y,z},
-					speed = {vx, vy, vz},
-					["error"] = {0, 0, 0},
-					spread = {0, 0, 0},
-					owner = proOwnerID,
-					team = Spring.GetUnitTeam(proOwnerID),
-					tracking = 8000, --?
-					ttl = 100,
-					["end"] = {tx, ty, tz},
-				})
-				local info = {
-					["targetID"] = targetID,
-					["ownerID"] = proOwnerID,
-					["weaponclass"] = wd.customParams.weaponclass,
-					["artemisOnly"] = artemisOnly,
-					["arad"] = arad,
-					["ad"] = ad,
-				}
-				arrows[newProID] = info
-				SetMissileTarget(newProID, info)
-				Spring.SetProjectileIgnoreTrackingError(newProID, true)
-				Spring.DeleteProjectile(proID)
-			end
-		end
-end
-
-local ARROW_CLUSTER_ID = WeaponDefNames["arrowiv_cluster"].id
-
-local function SpawnCluster(proID, proOwnerID, clusterWD, spray, sprayMult, vMult, down)
-	local x,y,z = Spring.GetProjectilePosition(proID)
-	local vx, vy, vz = Spring.GetProjectileVelocity(proID)
-	local teamID = Spring.GetUnitTeam(proOwnerID)
-	if down then
-		vx = vx * 0.5
-		vy = vy * 0.5
-		vz = vz * 0.5
-		local newProID = Spring.SpawnProjectile(ARROW_CLUSTER_ID, { -- TODO: unhardcode the name
-			pos = {x,y,z},
-			speed = {vx, vy * 0.1, vz},
-			owner = proOwnerID,
-			team = teamID,
-		})
-	end
-	Spring.DeleteProjectile(proID)
-	spray = math.ceil((spray or math.asin(clusterWD.sprayAngle) * 140) * (sprayMult or 1))
-	vMult = vMult or 0.5
-	-- spawn the cluster munuitions
-	for i = 1, clusterWD.projectiles do
-		Spring.SpawnProjectile(clusterWD.id, {
-			pos = {x,y,z},
-			speed = {(vx+math.random(-spray,spray))*vMult, (vy-math.random(spray))*vMult, (vz+math.random(-spray,spray))*vMult},
-			owner = proOwnerID,
-			team = teamID,
-		})
-	end	
-end
-
-local AMS_DEF = WeaponDefNames["ams"] 
-local AMS_ID = WeaponDefNames["ams"].id
-local amsPros = {}
-
-local SILVERBULLET_DEF = WeaponDefNames["silverbullet"]
-local GAUSS_ID = WeaponDefNames["gauss"].id
-
-function RangeToTarget(proID, proOwnerID, clusterWD, tx, tz, range2)
-	if tracking[proID] then
-		local x, _, z = Spring.GetProjectilePosition(proID)
-		local dist2 = (x-tx)^2 + (z-tz)^2
-		--Spring.Echo("RangeToTarget", dist2, range2)
-		if dist2 < range2 then
-			SpawnCluster(proID, proOwnerID, clusterWD, nil, 2.5, 0.25, true)
-		else
-			GG.Delay.DelayCall(RangeToTarget, {proID, proOwnerID, clusterWD, tx, tz, range2}, 15)
-		end
-	end
-end
 
 function gadget:ProjectileCreated(proID, proOwnerID, weaponID)
 	--Spring.Echo("PC", proID, proOwnerID, weaponID)
-	local wd = WeaponDefs[weaponID]
-	if weaponID == MELTDOWN_WDID then
-		Spring.SetProjectileAlwaysVisible(proID, true)
-	end
-	if proOwnerID and GG.mechCache[Spring.GetUnitDefID(proOwnerID)] then
-		if wd and wd.name == "arrowiv" then
-			local ammoType = GG.unitSpecialAmmos[proOwnerID]["arrowiv"]
-			if ammoType == "homing" 
-			or ammoType == "arad" then
-				ChangeMissile(proID, proOwnerID, WeaponDefNames["arrowiv_guided"])
-			elseif	ammoType == "ad" then
-				local targetType, info = Spring.GetProjectileTarget(proID)
-				if GG.airTargets[info] then
-					ChangeMissile(proID, proOwnerID, WeaponDefNames["adarrow"])
-				end
-			elseif ammoType == "cluster" 
-			or ammoType == "thunder" then
-				local vx, vy, vz = Spring.GetProjectileVelocity(proID)
-				local targetType, info = Spring.GetProjectileTarget(proID)
-				local tx,ty,tz
-				if targetType == string.byte('u') then -- unit target, info is ID
-					tx,ty,tz = Spring.GetUnitPosition(info)
-				else -- TODO: assuming ground, but engine gives all 0s for the pos table :(
-					--Spring.Echo(targetType, string.byte("g"), info, more)
-					tx,ty,tz = unpack(info)
-					--for k,v in pairs(info) do Spring.Echo(k,v) end
-				end
-				tracking[proID] = true
-				RangeToTarget(proID, proOwnerID, WeaponDefNames[ammoType], tx, tz, 650^2)
-			end
-		elseif wd and wd.customParams.weaponclass == "lrm" then
-			if GG.unitSpecialAmmos[proOwnerID]["lrm"] == "homing" 
-			or GG.unitSpecialAmmos[proOwnerID]["lrm"] == "arad"
-			or (GG.artemisUnits[proOwnerID] and GG.artemisUnits[proOwnerID]["lrm"]) then
-				ChangeMissile(proID, proOwnerID, WeaponDefNames["lrm_guided"], GG.artemisUnits[proOwnerID] and GG.artemisUnits[proOwnerID]["lrm"])
-			end
-		elseif wd and wd.customParams.weaponclass == "srm" then
-			if GG.artemisUnits[proOwnerID] and GG.artemisUnits[proOwnerID]["srm"] then
-				ChangeMissile(proID, proOwnerID, WeaponDefNames["srm_guided"], GG.artemisUnits[proOwnerID] and GG.artemisUnits[proOwnerID]["srm"])
-			end
-		elseif weaponID == GAUSS_ID and proOwnerID and silverBulletUnits[proOwnerID] then
-			SpawnCluster(proID, proOwnerID, SILVERBULLET_DEF)
-		end
-	end
-	local lbxInfo = lbx[weaponID]
-	if lbxInfo then -- vehicles might have LBX
-		--Spring.Echo("LBX Fired!")
-		local targetType, info = Spring.GetProjectileTarget(proID)
-		local tx,ty,tz
-		if targetType == string.byte('u') then -- unit target, info is ID
-			tx,ty,tz = Spring.GetUnitPosition(info)
-		else -- TODO: assuming ground, but engine gives all 0s for the pos table :(
-			--Spring.Echo(targetType, string.byte("g"), info, more)
-			tx,ty,tz = unpack(info)
-			--for k,v in pairs(info) do Spring.Echo(k,v) end
-		end
-		if GG.GetUnitDistanceToPoint(proOwnerID, tx, ty, tz) < lbxInfo[3] then
-			--Spring.Echo("Close range, switch to cluster!")
-			-- delete old projectile and fire cluster instead
-			SpawnCluster(proID, proOwnerID, lbxInfo[1], lbxInfo[2])
-		end
-	elseif GG.PPC_IDS[weaponID] then
-		local x,y,z = Spring.GetProjectilePosition(proID)
-		ppcEmits[proID] = {x, y , z}
-	elseif weaponID == AMS_ID then
-		amsPros[proID] = true
-	end
-	if weapons[weaponID] then
+	if weaponsWithFX[weaponID] then
 		projectiles[proID] = true
 		SendToUnsynced("lupsProjectiles_AddProjectile", proID, proOwnerID, weaponID)
 	end
 end	
 
-local SetProjectileCollision = Spring.SetProjectileCollision
-local GetProjectilesInRectangle = Spring.GetProjectilesInRectangle
-local GetProjectilePosition = Spring.GetProjectilePosition
-
 function gadget:ProjectileDestroyed(proID)
-	tracking[proID] = nil
-	arrows[proID] = nil
-	contTAG[proID] = nil
-	ppcEmits[proID] = nil -- layer must be set to after game_radar
-	if amsPros[proID] then
-		local x,y,z = GetProjectilePosition(proID)
-		local radius = AMS_DEF.damageAreaOfEffect
-		local nearPros = GetProjectilesInRectangle(x - radius, z-radius, x+radius, z+ radius, false, true)
-		for i, pro in pairs(nearPros) do
-			SetProjectileCollision(pro, true)
-		end
-	end
 	if projectiles[proID] then
 		SendToUnsynced("lupsProjectiles_RemoveProjectile", proID)
 		projectiles[proID] = nil
@@ -272,37 +60,13 @@ function gadget:ProjectileDestroyed(proID)
 end
 
 function gadget:Initialize()
-	for weaponID in pairs(weapons) do -- all cached defs with projectilelups
+	for weaponID in pairs(weaponsWithFX) do -- all cached defs with projectilelups
 		Script.SetWatchWeapon(weaponID, true)
-	end
-	for id, wd in pairs(WeaponDefs) do
-		if wd.name ~= "sight" then Script.SetWatchAllowTarget(id, true) end
-		local cp = wd.customParams
-		local weaponClass = cp and cp.weaponclass
-		if cp and (cp.projectilelups or weaponClass == "lbx") or wd.name == "gauss" then
-			Script.SetWatchWeapon(id, true) -- we can't call SWW outside of synced so do it here
-			
-			if weaponClass == "lbx" then -- don't include the cluster munuitions themselves or we end up with circular bs
-				local clusterName = wd.name .. "_cluster"
-				local clusterDef = WeaponDefNames[clusterName]
-				lbx[id] = {
-					clusterDef,
-					math.asin(clusterDef.sprayAngle) * 140, -- a rough reproduction of engine spray 
-					clusterDef.range,
-				}
-			end
-		end
-	end
-end
-
-function gadget:GameFrame()
-	for proID, info in pairs(arrows) do
-		SetMissileTarget(proID, info)
 	end
 end
 
 function gadget:Shutdown()
-	for weaponID in pairs(weapons) do
+	for weaponID in pairs(weaponsWithFX) do
 		Script.SetWatchWeapon(weaponID, false)
 	end
 end
@@ -323,7 +87,7 @@ local projectiles = {}
 local function AddProjectile(_, proID, proOwnerID, weaponID)
   if (not Lups) then Lups = GG['Lups']; LupsAddParticles = Lups.AddParticles end
   projectiles[proID] = {}
-  local def = weapons[weaponID]
+  local def = weaponsWithFX[weaponID]
   for i=1,#def do
     local fxTable = projectiles[proID]
     local fx = def[i]
