@@ -55,7 +55,7 @@ if (gadgetHandler:IsSyncedCode()) then
   end
 
 else
-
+-- UNSYNCED
   local function SpawnShockwave(_,px,py,pz, growth, life, strength, desintergrator)
     local Lups = GG['Lups']
     if (desintergrator) then

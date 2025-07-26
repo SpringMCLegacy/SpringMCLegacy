@@ -159,12 +159,10 @@ function gadget:CommandFallback(unitID, unitDefID, unitTeam, cmdID, cmdParams, c
 	return false
 end
 
+function gadget:Initialize()
+	Spring.SetCustomCommandDrawData(CMD_TURN, "Patrol", {0,1,0,.8})
+end
+
 else
 -- UNSYNCED
-
-function gadget:Initialize()
-	Spring.SetCustomCommandDrawData(SYNCED.CustomCommandIDs["CMD_TURN"], "Patrol", {0,1,0,.8})
-	--Spring.SendCommands({"bind r turn"})
-end
-
-end
+return false end

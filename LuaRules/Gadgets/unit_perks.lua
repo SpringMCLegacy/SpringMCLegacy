@@ -384,7 +384,5 @@ function gadget:UnitDestroyed(unitID, unitDefID, teamID)
 end
 
 else
-
 -- UNSYNCED
-
-end
+return false end

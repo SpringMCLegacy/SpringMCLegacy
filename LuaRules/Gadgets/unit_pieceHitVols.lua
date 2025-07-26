@@ -10,13 +10,6 @@ function gadget:GetInfo()
 	}
 end
 
-local accept = { 
-		mech = {pelvis = true, torso = true, rupperarm = true, rlowerarm = true, lupperarm = true, llowerarm = true, lupperleg = true, llowerleg = true, rupperleg = true, rlowerleg = true},
-		vehicle = {body = true, turret = true, launcher_1 = true, turret_2 = true, trackr = true, trackl = true},
-		aero = {lwing = true, rwing = true},
-		vtol = {body = true, rotory1 = true, rotory2 = true},
-	}
-
 if gadgetHandler:IsSyncedCode() then
 --	SYNCED
 
@@ -34,7 +27,14 @@ local HULL_SCALE = 0.8
 local TURRET_SCALE = 1.1
 local TRACK_SCALE = 1.0
 local WHEEL_SCALE = 1.1
-
+local accept = { 
+		mech = {pelvis = true, torso = true, rupperarm = true, rlowerarm = true, lupperarm = true, llowerarm = true, lupperleg = true, llowerleg = true, rupperleg = true, rlowerleg = true},
+		vehicle = {body = true, turret = true, launcher_1 = true, turret_2 = true, trackr = true, trackl = true},
+		aero = {lwing = true, rwing = true},
+		vtol = {body = true, rotory1 = true, rotory2 = true},
+	}
+	
+-- Variables
 local adjust = 0
 if not Script.IsEngineMinVersion(101, 0) then
 	adjust = 1
@@ -94,4 +94,4 @@ end
 
 else
 --	UNSYNCED
-end
+return false end

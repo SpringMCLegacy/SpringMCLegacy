@@ -32,7 +32,7 @@ local engineIsMin101 = (Script.IsEngineMinVersion and Script.IsEngineMinVersion(
 
 
 if (gadgetHandler:IsSyncedCode()) then
-  return
+  return false
 end
 
 --------------------------------------------------------------------------------

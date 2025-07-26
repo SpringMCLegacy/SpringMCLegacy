@@ -443,7 +443,5 @@ function gadget:TeamDied(teamID)
 end
 
 else
-
 -- UNSYNCED
-
-end
+return false end

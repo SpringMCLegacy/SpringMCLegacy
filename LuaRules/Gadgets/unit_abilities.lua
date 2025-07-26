@@ -163,7 +163,5 @@ end
 GG.AddMASC = AddMASC
 
 else
-
 -- UNSYNCED
-
-end
+return false end

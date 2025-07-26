@@ -290,4 +290,6 @@ function gadget:CommandFallback(unitID, unitDefID, unitTeam, cmdID, cmdParams, c
 	return false, false
 end
 
-end
+else
+-- UNSYNCED
+return false end
