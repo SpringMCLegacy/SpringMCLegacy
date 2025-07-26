@@ -225,6 +225,9 @@ for name, ud in pairs(UnitDefs) do
 				cp.normaltex = "unittextures/normals/" .. ud.name .. "_Normals.dds"
 			end
 		end
+		if cp.ignoreatbeacon then
+			ud.power = 9001 -- shutup about low power, Recoil
+		end
 	end
 	if cp and cp.baseclass then -- mech, vehicle, apc, vtol, infantry
 		local normalname = (cp.baseclass == "outpost" and name) or ud.name:gsub(" ", "")
