@@ -776,17 +776,7 @@ function script.BlockShot(weaponID, targetID, userTarget)
 			end
 		end
 	end
-	if targetDef and targetDef.canFly and GG.AATC[unitID] then
-		if (not (weapDef.salvoSize > 1) -- TODO: cache this mess
-		and (weapDef.customParams.weaponclass == "autocannon")
-		or (weapDef.customParams.weaponclass == "gauss")
-		or (weapDef.customParams.weaponclass == "ppc"))
-		or (weapDef.customParams.weaponclass == "energy" and weapDef.soundTrigger) then
-			Spring.SetUnitWeaponState(unitID, weaponID, "accuracy", weapDef.accuracy * 0.5)
-			Spring.SetUnitWeaponState(unitID, weaponID, "projectileSpeed", 8000)
-			weaponsToReset[weaponID] = true
-		end
-	elseif targetID and GG.stealthActive[targetID] then
+	if targetID and GG.stealthActive[targetID] then
 		Spring.SetUnitWeaponState(unitID, weaponID, "accuracy", weapDef.accuracy * 1.25)
 		weaponsToReset[weaponID] = true
 	end

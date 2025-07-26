@@ -40,8 +40,6 @@ local SetUnitLosState 		= Spring.SetUnitLosState
 
 local FRAME_FUDGE = 16
 local SECTOR_RADIUS = 1000
-local BEACON_ID = UnitDefNames["beacon"].id
-local BEACON_POINT_ID = UnitDefNames["beacon_point"].id
 local NARC_ID = WeaponDefNames["narc"].id
 local NARC_DURATION = 30 * 30 -- 30 seconds
 Spring.SetGameRulesParam("NARC_DURATION", NARC_DURATION)
@@ -293,8 +291,6 @@ function gadget:AllowCommand(unitID, unitDefID, teamID, cmdID, cmdParams, cmdOpt
 	return true
 end
 
-local AATC = {}
-GG.AATC = AATC
 local airTargets = {}
 GG.airTargets = airTargets
 
@@ -311,12 +307,6 @@ local function EnableAmmo(unitID, apply, weaponType, ammoName, weapNum)
 	unitSpecialAmmos[unitID][weaponType] = apply and ammoName or nil
 end
 GG.EnableAmmo = EnableAmmo
-
-local function InvincibleUnit(unitDefID)
-	if unitDefID == BEACON_ID or unitDefID == BEACON_POINT_ID or UnitDefs[unitDefID].name:find("dropzone") or UnitDefs[unitDefID].customParams.decal then return true end
-	return false
-end
-GG.InvincibleUnit = InvincibleUnit
 
 local MINE_ID = WeaponDefNames["mine"].id
 local MINE_DEF_ID = UnitDefNames["mine"].id
@@ -540,7 +530,6 @@ function gadget:UnitDestroyed(unitID, unitDefID, teamID)
 	-- armour
 	unitArmours[unitID] = nil
 	unitSpecialAmmos[unitID] = nil
-	AATC[unitID] = nil
 	GG.stealthActive[unitID] = nil
 	unitSectorRadii[unitID] = nil
 	hasStealthMod[unitID] = nil
