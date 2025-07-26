@@ -27,6 +27,7 @@ local UseTeamResource 		= Spring.UseTeamResource
 local COLOURS = GG.GameConstants.colours
 local CRUISE_MISSILE_COST = 10000
 local CRUISE_MISSILE_ID = WeaponDefNames["cruisemissile"].id
+local MELTDOWN_WDID = WeaponDefNames["meltdown"].id
 local LAUNCHER_ID = UnitDefNames["outpost_launcher"].id
 local CMD_STOCKPILE = CMD.STOCKPILE
 
@@ -90,12 +91,16 @@ end
 
 function gadget:ProjectileCreated(proID, proOwnerID, weaponID)
 	if weaponID == CRUISE_MISSILE_ID then
+		Spring.SetProjectileAlwaysVisible(proID, true)
 		NukeIcon(proID, Spring.GetUnitTeam(proOwnerID))
+	elseif weaponID == MELTDOWN_WDID then
+		Spring.SetProjectileAlwaysVisible(proID, true)
 	end
 end
 
 function gadget:Initialize()
 	Script.SetWatchProjectile(CRUISE_MISSILE_ID, true)
+	Script.SetWatchExplosion(MELTDOWN_WDID, true)
 	for _,unitID in ipairs(Spring.GetAllUnits()) do
 		local teamID = Spring.GetUnitTeam(unitID)
 		local unitDefID = Spring.GetUnitDefID(unitID)

@@ -517,7 +517,6 @@ function gadget:GamePreload()
 	GG.lusHelper.MINE_WDID = WeaponDefNames["mine"].id
 end
 
-local MELTDOWN_WDID = WeaponDefNames["meltdown"].id
 function gadget:Initialize()
 	gadget:GamePreload()
 	for _,unitID in ipairs(Spring.GetAllUnits()) do
@@ -525,7 +524,6 @@ function gadget:Initialize()
 		local unitDefID = Spring.GetUnitDefID(unitID)
 		gadget:UnitCreated(unitID, unitDefID, teamID)
 	end
-	Script.SetWatchWeapon(MELTDOWN_WDID, true)
 end
 
 local firstBeaconDeployed = false
