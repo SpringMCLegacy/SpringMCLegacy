@@ -49,6 +49,13 @@ local outpostPointBeaconIDs = {} -- outpostPointBeaconIDs[outpostPointID] = beac
 local beaconOutpostPointIDs = {} -- beaconOutpostPointIDs[beaconID] = {outpostPointID1, outpostPointID2, outpostPointID3}
 GG.beaconOutpostPointIDs = beaconOutpostPointIDs -- for AI
 
+-- TODO: Worth an outpost_ewarStation.lua? Await sesnor outpost redesigns
+local function EWARUpgrade(unitID, level)
+	env = Spring.UnitScript.GetScriptEnv(unitID)
+	Spring.UnitScript.CallAsUnit(unitID, env.Upgrade, level)
+end
+GG.EWARUpgrade = EWARUpgrade
+
 local function BeaconPoints(beaconID, teamID, x, y, z, radius, numPoints, spotNum)
 	beaconOutpostPointIDs[beaconID] = {}
 	radius = radius - 60
