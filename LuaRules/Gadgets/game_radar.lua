@@ -1,7 +1,7 @@
 function gadget:GetInfo()
 	return {
 		name = "Game - Radar",
-		desc = "Units in radar range become visible",
+		desc = "Controls unit sensors including LOS sectors, radar and jammers",
 		author = "FLOZi (C. Lawrence)",
 		date = "02/02/2011",
 		license = "GNU GPL v2",
@@ -17,45 +17,38 @@ if (gadgetHandler:IsSyncedCode()) then
 local DelayCall = GG.Delay.DelayCall
 local SetUnitRulesParam	= Spring.SetUnitRulesParam
 -- Synced Read
-local GetGameFrame 			= Spring.GetGameFrame
-local GetTeamInfo			= Spring.GetTeamInfo
-local GetTeamList			= Spring.GetTeamList
-local GetUnitAllyTeam		= Spring.GetUnitAllyTeam
-local GetUnitIsActive 		= Spring.GetUnitIsActive
-local GetUnitIsDead 		= Spring.GetUnitIsDead
-local GetUnitLosState		= Spring.GetUnitLosState
-local GetUnitRulesParam		= Spring.GetUnitRulesParam
-local GetUnitSeparation		= Spring.GetUnitSeparation
-local GetUnitTeam			= Spring.GetUnitTeam
-local GetUnitTransporter	= Spring.GetUnitTransporter
-local GetUnitsInCylinder	= Spring.GetUnitsInCylinder
-local GetUnitWeaponHaveFreeLineOfFire = Spring.GetUnitWeaponHaveFreeLineOfFire
-local ValidUnitID			= Spring.ValidUnitID
+local GetGameFrame 						= Spring.GetGameFrame
+local GetTeamInfo						= Spring.GetTeamInfo
+local GetTeamList						= Spring.GetTeamList
+local GetUnitAllyTeam					= Spring.GetUnitAllyTeam
+local GetUnitIsActive 					= Spring.GetUnitIsActive
+local GetUnitIsDead 					= Spring.GetUnitIsDead
+local GetUnitLosState					= Spring.GetUnitLosState
+local GetUnitPosition					= Spring.GetUnitPosition
+local GetUnitRulesParam					= Spring.GetUnitRulesParam
+local GetUnitTransporter				= Spring.GetUnitTransporter
+local GetUnitsInCylinder				= Spring.GetUnitsInCylinder
+local GetUnitWeaponHaveFreeLineOfFire 	= Spring.GetUnitWeaponHaveFreeLineOfFire
+local ValidUnitID						= Spring.ValidUnitID
 -- Synced Ctrl
-local SetUnitLosMask 		= Spring.SetUnitLosMask
-local SetUnitLosState 		= Spring.SetUnitLosState
-
+local EditUnitCmdDesc					= Spring.EditUnitCmdDesc
+local FindUnitCmdDesc 					= Spring.FindUnitCmdDesc
+local SetUnitLosMask 					= Spring.SetUnitLosMask
+local SetUnitLosState 					= Spring.SetUnitLosState
+local SetUnitRulesParam					= Spring.SetUnitRulesParam
+local SetUnitSensorRadius				= Spring.SetUnitSensorRadius
+local SetUnitStealth 					= Spring.SetUnitStealth
+local SpawnCEG 							= Spring.SpawnCEG
 -- Unsynced Ctrl
 -- Constants
 
 local FRAME_FUDGE = 16
 local SECTOR_RADIUS = 1000
-local NARC_ID = WeaponDefNames["narc"].id
-local NARC_DURATION = 30 * 30 -- 30 seconds
-Spring.SetGameRulesParam("NARC_DURATION", NARC_DURATION)
-
-local TAG_ID = WeaponDefNames["tag"].id
-local PPC_IDS = {}
-for weaponDefID, weaponDef in pairs(WeaponDefs) do
-	if weaponDef.name:find("ppc") then
-		PPC_IDS[weaponDefID] = true
-	end
-end
-GG.PPC_IDS = PPC_IDS
 
 local mobileUnitDefs = {}
 local mobileUnits = {}
 local visionCache = {} -- visionCache[unitDefID] = {x = sectorVectorX, z = sectorVectorZ, sight = lastWeaponNum}
+GG.visionCache = visionCache
 for unitDefID, unitDef in pairs(UnitDefs) do
 	local cp = unitDef.customParams
 	if cp.sectorangle then
@@ -76,20 +69,21 @@ end
 local modOptions = Spring.GetModOptions()
 local inRadarUnits = {}
 local outRadarUnits = {}
-
 local inAutoLos = {}
+
 local unitSectorRadii = {} -- unitSectorRadii[unitID] = length
+GG.unitSectorRadii = unitSectorRadii
 local allyJammers = {} -- allyJammers[allyTeam][unitID] = radius
 GG.allyJammers = allyJammers
 local allyBAPs = {} -- allyBAPs[allyTeam][unitID] = radius
 GG.allyBAPs = allyBAPs
+local jammerCache = {} -- unitID = true
+GG.jammerCache = jammerCache
 local angels = {} -- angels[unitID] = true
 GG.angels = angels
 local bloodHounds ={}
 GG.bloodHounds = bloodHounds
 
-local jammerCache = {} -- unitID = true
-GG.jammerCache = jammerCache
 local allyTeams = Spring.GetAllyTeamList()
 local numAllyTeams = #allyTeams
 local teamsInAllyTeams = {}
@@ -113,13 +107,6 @@ for i = 1, numAllyTeams do
 end
 
 local narcUnits = {}
-
-local PPC_DURATION = 5 * 30 -- 5 seconds
-local PPC_ACCURACY = 1.75 -- 75% less accuracy, oof!
-local sensorTypes = {"radarJammer"} -- "radar", "seismic", 
-local unitSensorRadii = {} -- unitSensorRadii[unitID] = {radar = a, seismic = b ...}
-local unitWeaponAccuracies = {} -- unitWeaponAccuracys[unitID] = {[1] = a, [2] = b, ...}
-local ppcUnits = {} -- ppcUnits[unitID] = gameframe
 local bapUnits = {} -- bapUnits[unitID] = {gameframe, allyTeam}
 local ecmUnits = {} -- ecmUnits[unitID] = {gameframe, allyTeam}
 local eccmUnits = {} -- eccmUnits[unitID] = {gameframe, allyTeam}
@@ -132,48 +119,6 @@ local losFalseRestTrue = {los = false, prevLos = true, radar = true, contRadar =
 local fullLOS = {los = true, prevLos = true, radar = true, contRadar = true}
 local engineControl = {los = false, prevLos = true, radar = false, contRadar = true}
 
-local function FinishPPC(unitID)
-	if ppcUnits[unitID] and ppcUnits[unitID] <= Spring.GetGameFrame() then
-		for _, sensorType in pairs(sensorTypes) do
-			Spring.SetUnitSensorRadius(unitID, sensorType, unitSensorRadii[unitID][sensorType])
-		end
-		for weapNum, accuracy in pairs(unitWeaponAccuracies[unitID]) do
-			Spring.SetUnitWeaponState(unitID, weapNum, "accuracy", accuracy)
-		end
-		ppcUnits[unitID] = nil
-		SetUnitRulesParam(unitID, "PPC_HIT", -1, {inlos = true})
-		SetUnitRulesParam(unitID, "FXOFF", GG.stealthActive[unitID] and 1 or 0, {public = true})
-		unitSensorRadii[unitID] = nil
-		unitWeaponAccuracies[unitID] = nil
-	end
-end
-
-local function ApplyPPC(unitID, unitDefID)
-	if not ppcUnits[unitID] then -- not yet under PPC effects
-		unitSensorRadii[unitID] = {}
-		for _, sensorType in pairs(sensorTypes) do
-			-- perks change radii so can't rely on unitdef values
-			unitSensorRadii[unitID][sensorType] = Spring.GetUnitSensorRadius(unitID, sensorType)
-			Spring.SetUnitSensorRadius(unitID, sensorType, 0) -- ECM disabled altogether
-		end
-		unitWeaponAccuracies[unitID] = {}
-		local unitWeapons = UnitDefs[unitDefID].weapons
-		for weapNum, info in pairs(unitWeapons) do
-			local currAccuracy = Spring.GetUnitWeaponState(unitID, weapNum, "accuracy")
-			unitWeaponAccuracies[unitID][weapNum] = currAccuracy
-			Spring.SetUnitWeaponState(unitID, weapNum, "accuracy", currAccuracy * PPC_ACCURACY)
-		end
-		--local x,y,z = Spring.GetUnitPosition(unitID, true)
-		--Spring.SpawnCEG("PPC", x,y,z)
-	end
-	local delay = (GetUnitRulesParam(unitID, "insulation") or 1) * PPC_DURATION
-	ppcUnits[unitID] = Spring.GetGameFrame() + delay
-	SetUnitRulesParam(unitID, "PPC_HIT", ppcUnits[unitID], {inlos = true})
-	SetUnitRulesParam(unitID, "FXOFF", 1, {public = true})
-	DelayCall(FinishPPC, {unitID}, delay)
-end
-GG.ApplyPPC = ApplyPPC -- for inhbitor removal self own
-
 local function GetUnitUnderJammer(unitID)
 	return (GetUnitRulesParam(unitID, "FRIENDLY_ECM") or 0) + FRAME_FUDGE >= GetGameFrame() 
 end
@@ -185,36 +130,6 @@ end
 GG.GetUnitUnderECCM = GetUnitUnderECCM
 
 -- helper functions for LUS
-local function IsUnitNARCed(unitID)
-	return (GetUnitRulesParam(unitID, "NARC") or 0) > 0
-end
-GG.IsUnitNARCed = IsUnitNARCed
-
-local function IsUnitTAGed(unitID)
-	return (GetUnitRulesParam(unitID, "TAG") or 0) + FRAME_FUDGE >= GetGameFrame()
-end
-GG.IsUnitTAGed = IsUnitTAGed
-
-local artemisUnits = {} -- [unitID][wepaonType] = true
-GG.artemisUnits = artemisUnits
-
-local targetsInUnitSector = {} -- [unitID][targetID] = true
-local function IsTargetArtemised(unitID, targetID, weaponType)
-	local info = visionCache[Spring.GetUnitDefID(unitID)]
-	if not info then return false end
-	local dist = Spring.GetUnitSeparation(unitID, targetID)
-	local rayTrace = Spring.GetUnitWeaponHaveFreeLineOfFire(unitID, info.sight, targetID) -- TODO: could try and cache this from the main loop, but not easy to nullify it correctly
-	--Spring.Echo("Is target artemised?", artemisUnits[unitID], dist,unitSectorRadii[unitID], rayTrace)
-	return artemisUnits[unitID] and artemisUnits[unitID][weaponType] and (dist and dist <= unitSectorRadii[unitID]) and rayTrace -- compare num with nil
-end
-GG.IsTargetArtemised = IsTargetArtemised
-
-local function EnableArtemis(unitID, weaponType, tOrF)
-	artemisUnits[unitID] = artemisUnits[unitID] or {}
-	artemisUnits[unitID][weaponType] = tOrF
-end
-GG.EnableArtemis = EnableArtemis
-
 local function SetUnitSectorRadius(unitID, mult)
 	unitSectorRadii[unitID] = unitSectorRadii[unitID] * mult
 	SetUnitRulesParam(unitID, "sectorradius", unitSectorRadii[unitID])
@@ -226,9 +141,9 @@ local function SetUnitECMRadius(unitID, mult, absolute, pieceNum)
 	local newValue = absolute or ((allyJammers[allyTeam][unitID] or 500) * (mult or 1))
 	allyJammers[allyTeam][unitID] = newValue
 	jammerCache[unitID] = true
-	Spring.SetUnitSensorRadius(unitID, "radarJammer", newValue)
+	SetUnitSensorRadius(unitID, "radarJammer", newValue)
 	--GG.ECMBubble(unitID, pieceNum or 1, newValue) -- TODO: disabled as luarules lups does not follow unit visibility
-	Spring.SetUnitRulesParam(unitID, "FXOFF", 0, {public = true})
+	SetUnitRulesParam(unitID, "FXOFF", 0, {public = true})
 end
 GG.SetUnitECMRadius = SetUnitECMRadius
 
@@ -249,6 +164,7 @@ local function NARC(unitID, allyTeam, duration)
 	-- Set rules param here so that widgets know the unit is NARCed, value points to the frame NARC runs out
 	SetUnitRulesParam(unitID, "NARC", narcFrame, {inlos = true})
 end
+GG.NARC = NARC
 
 local function DeNARC(unitID, allyTeam, force)
 	if not GetUnitIsDead(unitID) and narcUnits[unitID] and (narcUnits[unitID].frame <= GetGameFrame() + 1 or force) then
@@ -258,12 +174,13 @@ local function DeNARC(unitID, allyTeam, force)
 		ResetLosStates(unitID, allyTeam)
 	end
 end
+GG.DeNARC = DeNARC
 
 local hasStealthMod = {} -- unitID = true
 GG.stealthActive = {} -- unitID = true
 
 local function EnableStealth(unitID, tOrF)
-	Spring.EditUnitCmdDesc(unitID, Spring.FindUnitCmdDesc(unitID, CMD.ONOFF), { params = tOrF and GG.stealthParams or GG.onOffCmdDesc.params})
+	EditUnitCmdDesc(unitID, FindUnitCmdDesc(unitID, CMD.ONOFF), { params = tOrF and GG.stealthParams or GG.onOffCmdDesc.params})
 	hasStealthMod[unitID] = tOrF
 end
 GG.EnableStealth = EnableStealth
@@ -272,176 +189,23 @@ function gadget:AllowCommand(unitID, unitDefID, teamID, cmdID, cmdParams, cmdOpt
 	if GG.mechCache[unitDefID] and cmdID == CMD.ONOFF then
 		if cmdParams[1] == 2 then
 			--Spring.Echo("Engage stealth armour!")
-			Spring.SetUnitSensorRadius(unitID, "radarJammer", 10)
-			Spring.SetUnitRulesParam(unitID, "FXOFF", 1)
-			Spring.SetUnitStealth(unitID, true)
+			SetUnitSensorRadius(unitID, "radarJammer", 10)
+			SetUnitRulesParam(unitID, "FXOFF", 1)
+			SetUnitStealth(unitID, true)
 			GG.stealthActive[unitID] = true
 		else
-			Spring.SetUnitSensorRadius(unitID, "radarJammer", UnitDefs[unitDefID].jammerRadius) -- TODO: respect mods
-			Spring.SetUnitStealth(unitID, false)
+			SetUnitSensorRadius(unitID, "radarJammer", UnitDefs[unitDefID].jammerRadius) -- TODO: respect mods
+			SetUnitStealth(unitID, false)
 			GG.stealthActive[unitID] = false
-			Spring.SetUnitRulesParam(unitID, "FXOFF", 0)
+			SetUnitRulesParam(unitID, "FXOFF", 0)
 		end
 		GG.onOffCmdDesc.params[1] = cmdParams[1]
 		GG.stealthParams[1] = cmdParams[1]
 		local newParams = hasStealthMod[unitID] and GG.stealthParams or GG.onOffCmdDesc.params
-		Spring.EditUnitCmdDesc(unitID, Spring.FindUnitCmdDesc(unitID, CMD.ONOFF), { params = newParams})
+		EditUnitCmdDesc(unitID, FindUnitCmdDesc(unitID, CMD.ONOFF), { params = newParams})
 	end
 	-- everything else
 	return true
-end
-
-local airTargets = {}
-GG.airTargets = airTargets
-
-local unitArmours = {} -- unitID = true
-local function EnableArmour(unitID, apply, armourType)
-	unitArmours[unitID] = apply and armourType or nil
-end
-GG.EnableArmour = EnableArmour
-
-local unitSpecialAmmos = {} -- [unitID][weaponType] = ammoName
-GG.unitSpecialAmmos = unitSpecialAmmos -- for Thunder spawning
-local function EnableAmmo(unitID, apply, weaponType, ammoName, weapNum)
-	unitSpecialAmmos[unitID] = unitSpecialAmmos[unitID] or {}
-	unitSpecialAmmos[unitID][weaponType] = apply and ammoName or nil
-end
-GG.EnableAmmo = EnableAmmo
-
-local MINE_ID = WeaponDefNames["mine"].id
-local MINE_DEF_ID = UnitDefNames["mine"].id
-
-function gadget:UnitPreDamaged(unitID, unitDefID, unitTeam, damage, paralyzer, weaponID, projectileID, attackerID, attackerDefID, attackerTeam)
-	-- Don't allow any damage to beacons or dropzones
-	if InvincibleUnit(unitDefID) then return 0 end
-	 -- disallow mines blowing up mines
-	if weaponID == MINE_ID then	return unitDefID == MINE_DEF_ID and 0 or damage end
-	-- ignore none weapons
-	if not attackerID then return damage end
-	
-	-- Armour & Ammo Mods
-	local weaponDef = weaponID and WeaponDefs[weaponID]
-	local heatDamage = weaponDef and weaponDef.customParams.heatdamage
-	local speedChange
-	-- Ammos
-	local specialAmmos = unitSpecialAmmos[attackerID]
-	local specialAmmo = nil
-	if specialAmmos then
-		local weaponType = weaponDef.customParams.weaponclass
-		specialAmmo = specialAmmos[weaponType]
-		if specialAmmo == "inferno" then
-			damage = 0
-			heatDamage = 2
-		elseif specialAmmo == "armourpiercing" and not unitArmours[unitID] == "hard" then
-			damage = damage * 1.25
-		elseif specialAmmo == "magpulse" then
-			damage = 0
-			heatDamage = 1
-			ApplyPPC(unitID, unitDefID)
-		elseif specialAmmo == "thunder" then
-			damage = damage * 0.75
-		elseif specialAmmo == "bola" then
-			speedChange = 0.01
-		elseif specialAmmo == "explosivepod" then
-			damage = 400
-		elseif specialAmmo == "ecm" then
-			damage = 0
-		elseif specialAmmo == "tandem" and not unitArmours[unitID] == "hard" then
-			damage = damage * 2
-		end
-	end
-	-- Armours
-	if heatDamage and not (unitArmours[unitID] == "heat") then
-		env = Spring.UnitScript.GetScriptEnv(unitID)
-		if env and env.ChangeHeat then -- dropships don't track heat
-			Spring.UnitScript.CallAsUnit(unitID, env.ChangeHeat, heatDamage)
-		end
-	end
-	if unitArmours[unitID] == "reactive" and weaponDef.weaponType == "MissileLauncher" then
-		damage = damage * 0.75
-	elseif unitArmours[unitID] == "ferro" then
-		damage = damage * 0.88
-	elseif unitArmours[unitID] == "hard" then
-		damage = damage * 0.75
-	elseif unitArmours[unitID] == "reflec" then
-		local energy = weaponDef.customParams.weaponclass == "energy"
-		if energy then
-			damage = damage * 0.75
-		end
-	end
-	
-	-- NARCs
-	if weaponID == NARC_ID then
-		-- Don't allow dropships to be NARCed
-		if GG.dropShipCache[unitDefID] then return 0 end
-		if specialAmmo == "bola" then
-			--Spring.Echo("speed change now", Spring.GetGameFrame())
-			GG.SpeedChange(unitID, unitDefID, 0.1)
-			DelayCall(GG.SpeedChange, {unitID, unitDefID, 1}, 5*30)
-		elseif specialAmmo == "explosivepod" then
-			return damage
-		elseif specialAmmo == "thermite" then
-			if unitArmours[unitID] == "heat" then return 0 end 
-			env = Spring.UnitScript.GetScriptEnv(unitID)
-			if env and env.ChangeHeat then -- dropships don't track heat
-				local info = {unitID, env.ChangeHeat, 0.5} -- only build the table once
-				local pieceNum = env.piece(Spring.GetUnitLastAttackedPiece(unitID) or "torso")
-				local fxInfo = {unitID, pieceNum, "sparks"}
-				-- lol this is silly
-				for i = 1, NARC_DURATION, 30 do
-					DelayCall(Spring.UnitScript.CallAsUnit, info, i)
-					DelayCall(GG.EmitSfxName, fxInfo, i)
-				end
-			end
-		elseif specialAmmo == "haywire" then
-			GG.setWeaponClassAttribute(unitID, "all", "accuracy", 2)
-			DelayCall(GG.setWeaponClassAttribute, {unitID, "all", "accuracy", 0.5}, NARC_DURATION)
-		elseif specialAmmo == "ecm" then
-			local x,y,z = Spring.GetUnitPosition(unitID)
-			if x then
-				local ecmBeacon = Spring.CreateUnit("narc_ecm", x, y, z, 0, attackerTeam)
-				Spring.UnitAttach(unitID, ecmBeacon, 0)
-				SetUnitRulesParam(unitID, "ENEMY_ECM", Spring.GetGameFrame() + FRAME_FUDGE + NARC_DURATION)
-				DelayCall(Spring.DestroyUnit, {ecmBeacon}, NARC_DURATION)
-			end
-		else -- regular NARC
-			--if GetUnitUnderJammer(unitID, unitTeam) then return 0 end
-			local allyTeam = select(6, GetTeamInfo(attackerTeam))
-			-- do the NARC, delay the deNARC
-			local duration = GetUnitRulesParam(attackerID, "NARC_DURATION") or NARC_DURATION
-			NARC(unitID, allyTeam, duration)
-			DelayCall(DeNARC, {unitID, allyTeam}, duration)
-		end
-		-- NARC does 0 damage
-		return 0
-	elseif weaponID == TAG_ID then
-		-- Don't allow dropships to be TAGed
-		if not GG.dropShipCache[unitDefID] then
-			SetUnitRulesParam(unitID, "TAG", GetGameFrame(), {inlos = true})
-			--Spring.Echo("I AM BEING TAGGED!")
-		end
-		return 0
-	elseif PPC_IDS[weaponID] then
-		ApplyPPC(unitID, unitDefID)
-		if attackerID and projectileID then 
-			--Spring.Echo("Let there be light")
-			local x,y,z = Spring.GetProjectilePosition(projectileID)
-			if x then -- can be nil sometimes?
-				local ox, oy, oz = unpack(GG.ppcEmits[projectileID])
-				local params = {
-					["pos"]={ox,oy+5,oz}, 
-					["end"] = {x,y,z}, 
-					["owner"] = attackerID,
-					["ttl"] = 1,
-				}
-				for i = 1, 6 do
-					DelayCall(Spring.SpawnProjectile, {WeaponDefNames["ppc_fx"].id, params}, (i-1) * 2)
-				end
-				GG.PlaySoundAtUnit(unitID, "sounds/ppc_connect.wav", 5, x - ox, y - oy, z - oz, "sfx")
-			end
-		end
-	end
-	return damage, 1
 end
 
 local warnings = {
@@ -458,8 +222,8 @@ function gadget:UnitEnteredRadar(unitID, unitTeam, allyTeam, unitDefID)
 		DelayCall(SetUnitLosMask, {unitID, allyTeam, fullLOS}, 1) -- don't let engine update any los status
 		local warning = warnings[unitDefID]
 		if warning then
-			local x,y,z = Spring.GetUnitPosition(unitID)
-			for i, teamID in pairs(Spring.GetTeamList(allyTeam)) do
+			local x,y,z = GetUnitPosition(unitID)
+			for i, teamID in pairs(GetTeamList(allyTeam)) do
 				GG.PlaySoundForTeam(teamID, warning, 1)
 				SendToUnsynced("MESSAGE", teamID, x,y,z)
 			end
@@ -497,7 +261,6 @@ function gadget:UnitCreated(unitID, unitDefID, teamID)
 		mobileUnits[unitID] = true
 	end
 	if visionCache[unitDefID] then -- a mech!
-		unitSpecialAmmos[unitID] = {}
 		unitSectorRadii[unitID] = SECTOR_RADIUS
 		visionCache[unitDefID].cockpit = GG.lusHelper[unitDefID].cockpit
 		allyTeamMechs[GetUnitAllyTeam(unitID)][unitID] = visionCache[unitDefID]
@@ -507,7 +270,6 @@ function gadget:UnitCreated(unitID, unitDefID, teamID)
 		SetUnitLosMask(unitID, allyTeam, prevLosTrue)
 		SetUnitLosState(unitID, allyTeam, prevLosTrue)
 	end
-	airTargets[unitID] = ud.springCategories.air
 end
 
 function gadget:UnitDestroyed(unitID, unitDefID, teamID)
@@ -518,7 +280,6 @@ function gadget:UnitDestroyed(unitID, unitDefID, teamID)
 	end
 	mobileUnits[unitID] = nil
 	narcUnits[unitID] = nil
-	ppcUnits[unitID] = nil
 	bapUnits[unitID] = nil
 	ecmUnits[unitID] = nil
 	jammerCache[unitID] = nil
@@ -528,8 +289,6 @@ function gadget:UnitDestroyed(unitID, unitDefID, teamID)
 	SetUnitRulesParam(unitID, "FRIENDLY_ECM", 0)
 	SetUnitRulesParam(unitID, "ENEMY_ECM", 0)
 	-- armour
-	unitArmours[unitID] = nil
-	unitSpecialAmmos[unitID] = nil
 	GG.stealthActive[unitID] = nil
 	unitSectorRadii[unitID] = nil
 	hasStealthMod[unitID] = nil
@@ -562,7 +321,6 @@ function gadget:GameFrame(n)
 			eccmUnits[eccmed] = nil
 		end
 	end	
-	local GetUnitPosition 	= Spring.GetUnitPosition
 	for i = 1, numAllyTeams do
 		local allyTeam = allyTeams[i]
 		-- Firstly all sector mechs
@@ -607,7 +365,7 @@ function gadget:GameFrame(n)
 		-- Now deal with ECM units
 		for unitID, ecmRadius in pairs(allyJammers[allyTeam]) do
 			-- only active non-PPC'd units can utilise ECM
-			if not ppcUnits[unitID] and GetUnitIsActive(unitID) and not GetUnitTransporter(unitID) then
+			if not GG.ppcUnits[unitID] and GetUnitIsActive(unitID) and not GetUnitTransporter(unitID) then
 				for _, teamID in pairs(livingTeams) do 
 					if not deadTeams[teamID] then
 						local x, _, z = GetUnitPosition(unitID)
@@ -644,8 +402,8 @@ function gadget:GameFrame(n)
 					
 						if allyJammers[unitAllyTeam][enemyID] and not GG.stealthActive[enemyID] and not angels[enemyID] and not bloodHounds[unitID] then -- it is an enemy ECM emitter
 							if n % 30 == 0 then -- every second emit a ping
-								local ex, ey, ez = Spring.GetUnitPosition(enemyID)
-								Spring.SpawnCEG("ecm_ping", ex,ey,ez)
+								local ex, ey, ez = GetUnitPosition(enemyID)
+								SpawnCEG("ecm_ping", ex,ey,ez)
 							end
 						elseif ecmInfo and (not bloodHounds[unitID] or ecmInfo[3]) then -- under enemy ECM (we already checked it is not allied unit)
 							-- nothing, should still be invisible to bap

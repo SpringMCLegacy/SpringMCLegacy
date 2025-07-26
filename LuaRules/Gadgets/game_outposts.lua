@@ -56,13 +56,6 @@ local function EWARUpgrade(unitID, level)
 end
 GG.EWARUpgrade = EWARUpgrade
 
--- TODO: better here or in game_weapons? Could do with some better cacheing too
-local function InvincibleUnit(unitDefID)
-	if unitDefID == BEACON_ID or unitDefID == BEACON_POINT_ID or UnitDefs[unitDefID].name:find("dropzone") or UnitDefs[unitDefID].customParams.decal then return true end
-	return false
-end
-GG.InvincibleUnit = InvincibleUnit
-
 local function BeaconPoints(beaconID, teamID, x, y, z, radius, numPoints, spotNum)
 	beaconOutpostPointIDs[beaconID] = {}
 	radius = radius - 60
