@@ -457,6 +457,7 @@ end
 local warnings = {
 	[UnitDefNames["outpost_launcher"].id] = "bb_enemy_launcher_detected",
 	[UnitDefNames["outpost_artillery"].id] = "bb_enemy_artillery_detected",
+	[UnitDefNames["outpost_uplink"].id] = "bb_enemy_uplink_detected",
 }
 
 function gadget:UnitEnteredRadar(unitID, unitTeam, allyTeam, unitDefID)
