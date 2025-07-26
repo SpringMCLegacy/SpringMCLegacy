@@ -321,6 +321,27 @@ local Sounds = {
 			rolloff = 5.0,
 		},
 		
+		Dish_Deploy = {
+			file = "sounds/outpost/Dish_Deploy.wav",
+			maxconcurrent = 12,
+			gainmod = 0.7,
+			pitchmod = 0.1,
+			priority = -0.1,
+			maxdist = 7000,
+			rolloff = 5.0,
+		},
+		
+		Uplink_Whir = {
+			file = "sounds/outpost/Uplink_Whir.wav",
+			maxconcurrent = 12,
+			gainmod = 0.75,
+			pitchmod = 0.1,
+			priority = -0.1,
+			maxdist = 7000,
+			rolloff = 5.0,
+		},
+		
+		
 		--- weapons/explosions
 		
 		Meltdown = {
