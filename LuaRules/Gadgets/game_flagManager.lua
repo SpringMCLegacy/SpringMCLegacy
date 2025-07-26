@@ -129,6 +129,8 @@ function UpdateBeacons(teamID, num)
 	SendToUnsynced("BEACONUPDATE", allyTeam, beaconsPerAllyTeam[allyTeam])
 end
 
+
+local firstWarning = {}
 function DecrementTickets(allyTeam)
 	if allyTeam == GAIA_ALLY_ID then return end -- Gaia does not have tickets
 	if tickets[allyTeam] > 0 then
@@ -136,7 +138,23 @@ function DecrementTickets(allyTeam)
 		--Spring.Echo("AllyTeam " .. allyTeam .. "[".. beaconsPerAllyTeam[allyTeam] .. "] lost 1 ticket (" .. tickets[allyTeam] .. ")")
 		SetGameRulesParam("tickets" .. allyTeam, tickets[allyTeam], {public = true})
 	end
-	if tickets[allyTeam] <= 0 then
+	if tickets[allyTeam] <= 10 and not firstWarning[allyTeam] then
+		firstWarning[allyTeam] = true
+		local teams = Spring.GetTeamList(allyTeam)
+		for i = 1, #teams do
+			GG.PlaySoundForTeam(teams[i], "bb_tickets_low", 1)
+		end
+		local lastEnemyAllyTeam = #allyTeams - deadAllyTeams == 2
+		local sound = lastEnemyAllyTeam and "bb_tickets_leading" or "bb_tickets_enemy_low"
+		for i, otherAllyTeam in pairs(allyTeams) do
+			if otherAllyTeam ~= allyTeam and allyTeamAlive[otherAllyTeam] then
+				local teams = Spring.GetTeamList(otherAllyTeam)
+				for i = 1, #teams do
+					GG.PlaySoundForTeam(teams[i], sound, 1)
+				end
+			end
+		end		
+	elseif tickets[allyTeam] <= 0 then
 		if allyTeamAlive[allyTeam] then
 			local teams = Spring.GetTeamList(allyTeam)
 			for i = 1, #teams do
