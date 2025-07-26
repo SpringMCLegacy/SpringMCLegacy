@@ -62,5 +62,5 @@ local JVN11B = Javelin:New{
 
 return lowerkeys({
 	["FS_Javelin_JVN11B"] = JVN11B:New(),
-	["FS_Javelin_JVN10P"] = JVN10P:New(),
+	--["FS_Javelin_JVN10P"] = JVN10P:New(),
 })
