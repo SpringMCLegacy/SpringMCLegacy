@@ -34,6 +34,20 @@ local resources = {
 		points = 6,
 		radiusmult = 2,
 	},
+	{ -- northeast hill
+		x = 10668,
+		z = 4147,
+		feature = nil,
+		points = 6,
+		radiusmult = 2,
+	},
+	{ -- southwest hill
+		x = 1592,
+		z = 8111,
+		feature = nil,
+		points = 6,
+		radiusmult = 2,
+	},
 }
 
 local temps = {
