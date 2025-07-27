@@ -66,6 +66,7 @@ local SILVERBULLET_DEF = WeaponDefNames["silverbullet"]
 local TAG_ID = WeaponDefNames["tag"].id
 
 -- Variables
+local invincibleDefs = {}
 local tracking = {}
 local contTAG = {}
 local amsPros = {}
@@ -392,7 +393,7 @@ function gadget:UnitCreated(unitID, unitDefID, teamID)
 end
 
 local function InvincibleUnit(unitDefID) -- TODO: cache this better, single customparam?
-	return GG.unitDefsToIgnore[unitDefID]
+	return invincibleDefs[unitDefID]
 end
 GG.InvincibleUnit = InvincibleUnit
 
@@ -557,6 +558,10 @@ function gadget:Initialize()
 				}
 			end
 		end
+	end
+	for id, ud in pairs(UnitDefs) do
+		local cp = ud.customParams
+		invincibleDefs[id] = cp.invincible
 	end
 end
 

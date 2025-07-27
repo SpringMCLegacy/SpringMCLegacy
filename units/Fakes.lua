@@ -15,6 +15,7 @@ local Narc_ECM = Fake:New{
 	
 	customParams = {
 		ecm = true,
+		invincible = true,
 	}
 }
 
@@ -26,6 +27,7 @@ local Decal = Fake:New{
 	useBuildingGroundDecal 	= true,
 	customParams = {
 		decal = true,
+		invincible = true,
 	}
 }
 

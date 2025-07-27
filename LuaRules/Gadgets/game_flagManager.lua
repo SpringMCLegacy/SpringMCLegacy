@@ -59,7 +59,6 @@ local BEACON_ID = UnitDefNames["beacon"].id
 
 local unitCapStrengths = {} -- unitCapStrengths[unitID] = number or 1
 local unitDefsToIgnore = {}
-GG.unitDefsToIgnore = unitDefsToIgnore
 local flagTypes = {"beacon"}
 local flags = {} -- flags[flagType][index] == flagUnitID
 local numFlags = {} -- numFlags[flagType] == numberOfFlagsOfType

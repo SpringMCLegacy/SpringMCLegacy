@@ -31,6 +31,7 @@ local CRUISE_MISSILE_COST = 10000
 local CRUISE_MISSILE_ID = WeaponDefNames["cruisemissile"].id
 local MELTDOWN_WDID = WeaponDefNames["meltdown"].id
 local LAUNCHER_ID = UnitDefNames["outpost_launcher"].id
+local ICON_ID = UnitDefNames["nuke_icon"].id
 local CMD_STOCKPILE = CMD.STOCKPILE
 
 -- Variables
@@ -53,6 +54,8 @@ end
 function gadget:UnitCreated(unitID, unitDefID, teamID, builderID)
 	if unitDefID == LAUNCHER_ID then
 		EditUnitCmdDesc(unitID, FindUnitCmdDesc(unitID, CMD.STOCKPILE), {tooltip = "Stockpile a cruise missile. " .. COLOURS.cbills .. "C-Bill cost: " .. CRUISE_MISSILE_COST})
+	elseif unitDefID == ICON_ID then
+		Spring.SetUnitBlocking(unitID, false, false, false, false, false, false, false)
 	end
 end
 
@@ -98,6 +101,8 @@ function NukeIcon(proID, teamID, iconUnit)
 		Spring.MoveCtrl.SetPosition(iconUnit, x,y,z)
 		Spring.MoveCtrl.SetVelocity(iconUnit, vx, vy, vz)
 		GG.Delay.DelayCall(NukeIcon, {proID, teamID, iconUnit}, 5)
+	else -- Nuke went off, kill the unit
+		Spring.DestroyUnit(iconUnit)
 	end
 end
 
