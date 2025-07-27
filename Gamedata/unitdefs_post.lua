@@ -289,7 +289,7 @@ for name, ud in pairs(UnitDefs) do
 			ud.buildcostmetal = ud.buildcostmetal * (modOptions.outpostmult or 1)
 			ud.power = ud.buildcostmetal
 		else -- vehicle, vtol, apc?
-			ud.power = cp.tonnage or 100
+			ud.power = ud.power or cp.tonnage or 100
 		end
 	end
 	-- set maxvelocity by modoption

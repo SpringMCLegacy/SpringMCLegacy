@@ -62,6 +62,7 @@ end
 function gadget:AllowCommand(unitID, unitDefID, teamID, cmdID, cmdParams, cmdOptions)
 	if unitDefID == LAUNCHER_ID then
 		if cmdID == CMD_STOCKPILE then
+			if cmdOptions.shift or cmdOptions.ctrl then return false end -- otherwise we can (dramatically) circumvent costs
 			local price = Spring.IsNoCostEnabled() and 0 or CRUISE_MISSILE_COST
 			if not cmdOptions.right then -- ordering new
 				if GetTeamResources(teamID, "metal") >= price then
