@@ -99,6 +99,10 @@ function gadget:ProjectileCreated(proID, proOwnerID, weaponID)
 	end
 end
 
+function gadget:ProjectileDestroyed(proID)
+	CMs[proID] = nil
+end
+
 function gadget:Initialize()
 	Script.SetWatchProjectile(CRUISE_MISSILE_ID, true)
 	Script.SetWatchExplosion(MELTDOWN_WDID, true)
