@@ -57,8 +57,9 @@ end
 function gadget:AllowCommand(unitID, unitDefID, teamID, cmdID, cmdParams, cmdOptions)
 	if unitDefID == LAUNCHER_ID then
 		if cmdID == CMD_STOCKPILE then
-			if GetTeamResources(teamID, "metal") > CRUISE_MISSILE_COST then
-				UseTeamResource(teamID, "metal", CRUISE_MISSILE_COST)
+			local price = Spring.IsNoCostEnabled() and 0 or CRUISE_MISSILE_COST
+			if GetTeamResources(teamID, "metal") >= price then
+				UseTeamResource(teamID, "metal", price)
 				GG.PlaySoundForTeam(teamID, "bb_outpost_launcher_preparing", 1)
 				return true
 			else
