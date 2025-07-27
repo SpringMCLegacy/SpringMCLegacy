@@ -392,8 +392,7 @@ function gadget:UnitCreated(unitID, unitDefID, teamID)
 end
 
 local function InvincibleUnit(unitDefID) -- TODO: cache this better, single customparam?
-	if unitDefID == BEACON_ID or unitDefID == BEACON_POINT_ID or UnitDefs[unitDefID].name:find("dropzone") or UnitDefs[unitDefID].customParams.decal then return true end
-	return false
+	return GG.unitDefsToIgnore[unitDefID]
 end
 GG.InvincibleUnit = InvincibleUnit
 
