@@ -270,7 +270,6 @@ function gadget:GamePreload()
 	-- cache ignored unitDefIDs
 	for unitDefID, ud in pairs(UnitDefs) do
 		if ud.canFly or string.tobool(ud.customParams.ignoreatbeacon) then
-			Spring.Echo("PARP", ud.name)
 			unitDefsToIgnore[unitDefID] = true
 		end
 	end
