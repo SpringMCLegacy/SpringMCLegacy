@@ -5,10 +5,11 @@ function ChangeType(outpost)
 	if outpost then
 		stage = -1
 		Spring.SetUnitNoDraw(unitID, true)
+		Spring.SetUnitBlocking(unitID, false, false, false, false, false, false, false)
 	else
 		Spring.SetUnitNoDraw(unitID, false)
+		Spring.SetUnitBlocking(unitID, false, false, false, true, false, false, false)
 		stage = 0
-		--StartThread(fx)
 	end
 end
 
