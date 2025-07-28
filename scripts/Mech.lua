@@ -891,7 +891,16 @@ function script.Killed(recentDamage, maxHealth)
 		-- There's some issue with alwaysVisible not working (http://springrts.com/mantis/view.php?id=4483)
 		-- So instead make the owner the decal unit spawned by the teams starting beacon, as it can never die
 		--local ownerID = Spring.GetTeamUnitsByDefs(teamID, UnitDefNames["decal_beacon"].id)[1] or unitID
+		PlaySound("meltdown")
+		for i = 1, 30 * 5 do
+			GG.EmitSfxName(unitID, torso, "magnetar")
+			GG.EmitSfxName(unitID, torso, "magnetaraura")
+			--Spring.SpawnCEG("magnetar", x,y,z, 0,1,0, i * 10, 100)
+			--Spring.SpawnCEG("magnetaraura", x,y,z, 0,1,0, i * 10, 100)
+			Sleep(30)
+		end
 		local nukeID = Spring.SpawnProjectile(WeaponDefNames["meltdown"].id, {pos = {x,y,z}, owner = unitID, team = teamID, ttl = 20})
+		PlaySound("meltdown_boom")
 		Spring.SetProjectileAlwaysVisible(nukeID, true)
 		-- reward the attacker for the HP destroyed
 		local attackerID = Spring.GetUnitLastAttacker(unitID)
