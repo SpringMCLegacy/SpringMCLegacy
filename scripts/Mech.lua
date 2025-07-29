@@ -742,7 +742,7 @@ function script.BlockShot(weaponID, targetID, userTarget)
 			distance = GetUnitSeparation(unitID, targetID, true)
 		elseif userTarget then
 			local cmd = GetUnitCommands(unitID, 1)[1]
-			if cmd.id == CMD.ATTACK then
+			if cmd and cmd.id == CMD.ATTACK then
 				local tx,ty,tz = unpack(cmd.params)
 				distance = GetUnitDistanceToPoint(unitID, tx, ty, tz, false)
 			end
