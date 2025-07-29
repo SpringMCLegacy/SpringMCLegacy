@@ -509,7 +509,7 @@ function gadget:UnitPreDamaged(unitID, unitDefID, unitTeam, damage, paralyzer, w
 		return 0
 	elseif PPC_IDS[weaponID] then
 		ApplyPPC(unitID, unitDefID)
-		if attackerID and projectileID then 
+		if attackerID and projectileID and ppcEmits[projectileID] then 
 			--Spring.Echo("Let there be light")
 			local x,y,z = GetProjectilePosition(projectileID)
 			if x then -- can be nil sometimes?
