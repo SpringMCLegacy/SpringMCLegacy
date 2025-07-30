@@ -538,7 +538,7 @@ end
 
 local function LauncherCalls(teamID)
 	for unitID in pairs(teamOutpostIDs[teamID]["OUTPOST_LAUNCHER"]) do
-		Spring.Echo("ermergerd, found a cruisemissile launcher!")
+		--Spring.Echo("ermergerd, found a cruisemissile launcher!")
 		local ready, queued = Spring.GetUnitStockpile(unitID)
 		if ready > 0 then
 			-- attack
