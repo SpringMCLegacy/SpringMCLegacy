@@ -543,8 +543,8 @@ local function LauncherCalls(teamID)
 		if ready > 0 then
 			-- attack
 			--Spring.Echo("Nuke 'em!")
-			local x, z = GetSpotTarget(teamID, true)
-			Spring.GiveOrderToUnit(unitID, CMD.ATTACK, {x, 0, z}, EMPTY_TABLE)
+			local x,y,z = GetSpotTarget(teamID, true)
+			Spring.GiveOrderToUnit(unitID, CMD.ATTACK, {x, y, z}, EMPTY_TABLE)
 		elseif queued == 0 then
 			-- stockpile more
 			if difficulty > 1 then
