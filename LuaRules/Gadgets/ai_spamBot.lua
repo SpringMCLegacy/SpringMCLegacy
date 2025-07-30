@@ -537,17 +537,20 @@ local function CleanTeamOutPosts(teamID, outpostName, unitID)
 end
 
 local function LauncherCalls(teamID)
-	for unitID in pairs(teamOutpostIds[teamID]["OUTPOST_LAUNCHER"]) do
+	for unitID in pairs(teamOutpostIDs[teamID]["OUTPOST_LAUNCHER"]) do
+		Spring.Echo("ermergerd, found a cruisemissile launcher!")
 		local ready, queued = Spring.GetUnitStockpile(unitID)
 		if ready > 0 then
 			-- attack
+			--Spring.Echo("Nuke 'em!")
 			local x, z = GetSpotTarget(teamID, true)
 			Spring.GiveOrderToUnit(unitID, CMD.ATTACK, {x, 0, z}, EMPTY_TABLE)
 		elseif queued == 0 then
 			-- stockpile more
 			if difficulty > 1 then
-				AddTeamResource(teamID, "metal", 10000)
+				Spring.AddTeamResource(teamID, "metal", 10000)
 			end
+			--Spring.Echo("Try and stockpile bro!")
 			Spring.GiveOrderToUnit(unitID, CMD.STOCKPILE, EMPTY_TABLE, EMPTY_TABLE)
 		end
 	end
