@@ -536,6 +536,23 @@ local function CleanTeamOutPosts(teamID, outpostName, unitID)
 	end
 end
 
+local function LauncherCalls(teamID)
+	for unitID in pairs(teamOutpostIds[teamID]["OUTPOST_LAUNCHER"]) do
+		local ready, queued = Spring.GetUnitStockpile(unitID)
+		if ready > 0 then
+			-- attack
+			local x, z = GetSpotTarget(teamID, true)
+			Spring.GiveOrderToUnit(unitID, CMD.ATTACK, {x, 0, z}, EMPTY_TABLE)
+		elseif queued == 0 then
+			-- stockpile more
+			if difficulty > 1 then
+				AddTeamResource(teamID, "metal", 10000)
+			end
+			Spring.GiveOrderToUnit(unitID, CMD.STOCKPILE, EMPTY_TABLE, EMPTY_TABLE)
+		end
+	end
+end
+
 local function UplinkCalls(teamID)
 	if select(3, Spring.GetTeamInfo(teamID)) then -- Team is dead
 		--CleanTeamOutPosts(teamID, "OUTPOST_UPLINK")
@@ -725,6 +742,8 @@ function gadget:GameFrame(n)
 				Spam(teamID)
 				-- try and order artillery strikes
 				UplinkCalls(teamID)
+				-- try and order cruise missile strikes
+				LauncherCalls(teamID)
 				-- try and outpost any beacons
 				for i, unitID in pairs(teamBeacons[teamID]) do
 					Outpost(unitID, teamID)
