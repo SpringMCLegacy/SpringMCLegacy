@@ -23,6 +23,14 @@ local Nuke_Icon = Fake:New{
 	iconType = "nuke",
 }
 
+local Nuke_Meltdown = Fake:New{
+	sightDistance = 32,
+	airSightDistance = 32,
+	customParams = {
+		invincible = true,
+	}
+}
+
 local Decal = Fake:New{
 	useBuildingGroundDecal 	= true,
 	customParams = {
@@ -46,6 +54,7 @@ local Decal_Drop = Decal:New{
 return lowerkeys({ 
 	["Narc_ECM"] = Narc_ECM,
 	["Nuke_Icon"] = Nuke_Icon,
+	["Nuke_Meltdown"] = Nuke_Meltdown,
 	["Decal_Beacon"] = Decal_Beacon,
 	["Decal_Drop"] = Decal_Drop,
 })

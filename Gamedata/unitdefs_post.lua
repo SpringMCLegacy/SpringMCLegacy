@@ -331,7 +331,7 @@ for name, ud in pairs(UnitDefs) do
 		else -- everything but mechs
 			ud.seismicsignature = 0
 			ud.radardistance = ud.radardistance or 0
-			ud.airsightdistance = ud.radardistance
+			ud.airsightdistance = ud.airsightdistance or ud.radardistance
 		end
 		if cp.ecm then
 			ud.radardistancejam	= ud.radardistancejam or 500

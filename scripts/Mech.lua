@@ -912,51 +912,29 @@ function GenSalvage(amount)
 end
 
 function script.Killed(recentDamage, maxHealth)
-	if excessHeat >= heatLimit * 2 then
+	math.randomseed(unitID)
+	local stackpoleProb = excessHeat/(heatLimit*2)
+	local diceRoll = math.random()
+	--Spring.Echo("Will I nuke?", stackpoleProb, diceRoll, stackpoleProb > diceRoll)
+	if stackpoleProb > diceRoll then
 		--Spring.Echo("NUUUUUUUUUUUKKKKKE")
-		local x,y,z = Spring.GetUnitPosition(unitID)
-		-- This is a really awful hack , built on top of another hack. 
-		-- There's some issue with alwaysVisible not working (http://springrts.com/mantis/view.php?id=4483)
-		-- So instead make the owner the decal unit spawned by the teams starting beacon, as it can never die
-		--local ownerID = Spring.GetTeamUnitsByDefs(teamID, UnitDefNames["decal_beacon"].id)[1] or unitID
-		PlaySound("meltdown")
-		for i = 1, 30 * 5 do
-			GG.EmitSfxName(unitID, torso, "magnetar")
-			GG.EmitSfxName(unitID, torso, "magnetaraura")
-			--Spring.SpawnCEG("magnetar", x,y,z, 0,1,0, i * 10, 100)
-			--Spring.SpawnCEG("magnetaraura", x,y,z, 0,1,0, i * 10, 100)
-			Sleep(30)
-		end
-		local nukeID = Spring.SpawnProjectile(WeaponDefNames["meltdown"].id, {pos = {x,y,z}, owner = unitID, team = teamID, ttl = 20})
-		PlaySound("meltdown_boom")
-		Spring.SetProjectileAlwaysVisible(nukeID, true)
-		-- reward the attacker for the HP destroyed
-		local attackerID = Spring.GetUnitLastAttacker(unitID)
-		if attackerID then
-			local attackerTeam = Spring.GetUnitTeam(attackerID)
-			local hp = Spring.GetUnitHealth(unitID)
-			local payout = hp * Spring.GetGameRulesParam("damage_reward_mult")
-			Spring.AddTeamResource(attackerTeam, "metal", payout)
-		end
-	else
-		local attackerID = Spring.GetUnitLastAttacker(unitID)
-		local numSalvage = GG.PinataLevel(attackerID) + 1 -- always produce at least 1
-		GenSalvage(numSalvage)
+		local x,y,z = Spring.GetUnitBasePosition(unitID)
+		local DELAY_IN_SECONDS = 5
+		GG.Delay.DelayCall(Spring.CreateUnit,{"nuke_meltdown", x, y, z, 0, teamID}, 30 * DELAY_IN_SECONDS)
 	end
+	-- Salavage time
+	local attackerID = Spring.GetUnitLastAttacker(unitID)
+	local numSalvage = GG.PinataLevel(attackerID) + 1 -- always produce at least 1
+	GenSalvage(numSalvage)
+	-- Let Betty commemorate your sacrifice
 	local soundNum = math.random(2)
 	if not Spring.GetUnitTransporter(unitID) then
 		GG.PlaySoundForTeam(Spring.GetUnitTeam(unitID), "BB_BattleMech_destroyed_" .. soundNum, 1)
 	end
-	--local severity = recentDamage / maxHealth * 100
-	--if severity <= 25 then
-	--	Explode(body, math.bit_or({SFX.BITMAPONLY, SFX.BITMAP1}))
-	--	return 1
-	--elseif severity <= 50 then
-	--	Explode(body, math.bit_or({SFX.FALL, SFX.BITMAP1}))
-	--	return 2
-	--else
-	--	Explode(body, math.bit_or({SFX.FALL, SFX.SMOKE, SFX.FIRE, SFX.EXPLODE_ON_HIT, SFX.BITMAP1}))
-	--	return 3
-	--end
+	-- live fast, die young, leave a beautiful corpse
+	-- TODO: if left_arm_missing and right_arm_missing then CreateFeature(mechName .. "_x_both")
+	-- elseif left_arm_missing then CreateFeature(mechName .. "_x_left")
+	-- elseif right_arm_missing then CreateFeature(mechName .. "_x_right")
+	--else return 1 end
 	return 1
 end

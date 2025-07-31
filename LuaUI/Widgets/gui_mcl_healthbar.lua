@@ -201,8 +201,8 @@ local function GenerateUnitGraphics(uid, udid, getAuras)
 	if not Spring.ValidUnitID(uid) 
 	or Spring.GetUnitTransporter(uid)
 	or ud.name:find("beacon") -- TODO: cache IDs rather than string comp!
-	or ud.name:find("dropzone") then
-	--or (ud.customParams.ignoreatbeacon and ud.customParams.baseclass ~= "vehicle") then
+	or ud.name:find("dropzone")
+	or ud.customParams.invincible then
         return false
 	end
 
