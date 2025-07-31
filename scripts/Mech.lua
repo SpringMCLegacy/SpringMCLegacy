@@ -211,7 +211,10 @@ function ChangeHeat(amount)
 		excessHeat = excessHeat + currHeatLevel - heatLimit
 		currHeatLevel = heatLimit
 		if excessHeat >= heatLimit * 2 then
-			Spring.DestroyUnit(unitID, true)
+			--Spring.DestroyUnit(unitID, true)
+			if not shutdownRunning then
+				StartThread(ShutDown)
+			end
 		end
 	elseif currHeatLevel < 0 then
 		currHeatLevel = 0
@@ -310,6 +313,28 @@ local function CoolOff()
 		end]]
 		Sleep(1000) -- cools once per second
 	end
+end
+
+local shutdownRunning = false
+function ShutDown()
+	Signal() -- kill everything
+	StartThread(CoolOff) -- restart cooling
+	shutdownRunning = true
+	SetUnitRulesParam(unitID, "shutdown", 1)
+	-- weapons are dealt with in main CoolOff loop
+	-- turn off radar
+	Spring.UnitScript.SetUnitValue(COB.ACTIVATION, false)
+	-- prevent all movement
+	Spring.MoveCtrl.Enable(unitID)
+	while excessHeat > 0 do
+		GG.EmitLupsSfx(unitID, "dropship_horizontal_jitter_strong", torso, {repeatEffect = 2, emitVector = {0,1,0}})
+		Sleep(300)
+	end
+	-- reboot
+	Spring.UnitScript.SetUnitValue(COB.ACTIVATION, true)
+	Spring.MoveCtrl.Disable(unitID)
+	shutdownRunning = false
+	SetUnitRulesParam(unitID, "shutdown", 0)
 end
 
 function script.setSFXoccupy(terrainType)
@@ -528,6 +553,7 @@ local function RunDamage()
 end
 
 function SpeedChangeCheck()
+	if shutdownRunning then return false end
 	while jumping do -- don't trigger speed change until jump is finished
 		Sleep(100)
 	end
@@ -535,6 +561,7 @@ function SpeedChangeCheck()
 end
 
 function Run(activate)
+	if shutdownRunning then return false end
 	if lostLegs > 0 then
 		return -- do not allow running at all if you have a damaged leg
 	end
@@ -649,6 +676,7 @@ function script.Activate()
 end
 
 function script.Deactivate()
+Spring.Echo("Deactivate!")
 	Spring.SetUnitStealth(unitID, true)
 	activated = false
 end
@@ -693,7 +721,7 @@ end
 GG.WeaponCanFire = WeaponCanFire
 
 function script.AimWeapon(weaponID, heading, pitch)
-	if running or playerDisabled[weaponID] then return false end
+	if running or playerDisabled[weaponID] or shutdownRunning then return false end
 	Signal(2 ^ weaponID) -- 2 'to the power of' weapon ID
 	SetSignalMask(2 ^ weaponID)
 

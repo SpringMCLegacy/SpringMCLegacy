@@ -187,6 +187,7 @@ GG.EnableStealth = EnableStealth
 
 function gadget:AllowCommand(unitID, unitDefID, teamID, cmdID, cmdParams, cmdOptions)
 	if GG.mechCache[unitDefID] and cmdID == CMD.ONOFF then
+		if GetUnitRulesParam(unitID, "shutdown") == 1 then return false end
 		if cmdParams[1] == 2 then
 			--Spring.Echo("Engage stealth armour!")
 			SetUnitSensorRadius(unitID, "radarJammer", 10)
