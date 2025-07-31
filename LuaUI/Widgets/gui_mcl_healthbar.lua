@@ -326,7 +326,7 @@ local function GenerateUnitGraphics(uid, udid, getAuras)
 		local n = Spring.GetGameFrame()
 		local friendlyUnit = Spring.AreTeamsAllied(Spring.GetUnitTeam(uid), Spring.GetMyTeamID())
 		local heat = (GetUnitRulesParam(uid, "heat") or 0) > 50
-		local shutdown = (GetUnitRulesParam(uid, "shutdown") or 0
+		local shutdown = (GetUnitRulesParam(uid, "shutdown") or 0)
 		local damage = (GetUnitRulesParam(uid, "limblost") or 0) > 0
 		local outofammo = GetUnitRulesParam(uid, "outofammo") or 0
 		local running = GetUnitRulesParam(uid, "running") or 0
