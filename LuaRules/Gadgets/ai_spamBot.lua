@@ -77,6 +77,7 @@ local beaconOutpostCounts = {} -- beaconOutpostCounts[beaconID] = 3
 local beaconIDs = {}
 
 local teamMechCounts = {} -- teamMechCounts[myTeamID] = number
+local teamTargets = {} -- teamTargets[teamID] = {unitID = true, ...}
 
 local function CostSort(unitDefID1, unitDefID2)
 	return UnitDefs[unitDefID1].metalCost < UnitDefs[unitDefID2].metalCost
@@ -118,8 +119,18 @@ local function MechNeedsBay(unitID, teamID)
 	end
 end
 
+local function OutpostVisible(unitID, unitDefID, unitTeam, allyTeam)
+	for _, teamID in pairs(Spring.GetTeamList(allyTeam)) do
+		if AI_TEAMS[teamID] and teamID ~= unitTeam then
+			--Spring.Echo("Spotted an enemy", UnitDefs[unitDefID].name, "for team", teamID)
+			teamTargets[teamID][unitID] = UnitDefs[unitDefID].name -- TODO: instead make this a priority queue based on unitDefID?
+		end
+	end
+end
+
 function gadget:Initialize()
 	gadgetHandler:RegisterGlobal('MechNeedsBay', MechNeedsBay)
+	gadgetHandler:RegisterGlobal('OutpostVisible', OutpostVisible)
 end
 
 function gadget:GamePreload()
@@ -140,6 +151,7 @@ function gadget:GamePreload()
 		teamBeacons[t] = {}
 		teamMechsNeedingBays[t] = {}
 		teamMechCounts[t] = 0
+		teamTargets[t] = {}
 	end
 	GG.AI_TEAMS = AI_TEAMS
 	for unitDefID, unitDef in pairs(UnitDefs) do
@@ -494,8 +506,9 @@ end
 
 
 
-local function GetUnitTarget(unitID, range)
-	return Spring.GetUnitNearestEnemy(unitID, range or 9999999, true)
+local function GetUnitTarget(unitID, teamID, range)
+	local outpost = next(teamTargets[teamID])
+	return outpost or Spring.GetUnitNearestEnemy(unitID, range or 9999999, true)
 end
 
 local function Wander(unitID, cmd)
@@ -543,8 +556,8 @@ local function LauncherCalls(teamID)
 		if ready > 0 then
 			-- attack
 			--Spring.Echo("Nuke 'em!")
-			local x,y,z = GetSpotTarget(teamID, true)
-			Spring.GiveOrderToUnit(unitID, CMD.ATTACK, {x, y, z}, EMPTY_TABLE)
+			local targetID = GetUnitTarget(unitID, teamID)
+			Spring.GiveOrderToUnit(unitID, CMD.ATTACK, {targetID}, EMPTY_TABLE)
 		elseif queued == 0 then
 			-- stockpile more
 			if difficulty > 1 then
@@ -587,7 +600,7 @@ local function UplinkCalls(teamID)
 			if randPick > 1 and cBills > UPLINK_CMD_COSTS[randPick] then
 				local cmdDesc = Spring.GetUnitCmdDescs(unitID, randPick + 8)[1] -- skip irrelevant cmdDescs
 				if cmdDesc.type == CMDTYPE.ICON_UNIT then
-					CallStrike(unitID, cmdDesc.id, GetUnitTarget, unitID)
+					CallStrike(unitID, cmdDesc.id, GetUnitTarget, unitID, teamID)
 				else
 					CallStrike(unitID, cmdDesc.id, GetSpotTarget, teamID, true)
 				end
@@ -695,6 +708,9 @@ function gadget:UnitDestroyed(unitID, unitDefID, teamID, attackerID, attackerDef
 		if attackerID and not Spring.GetUnitIsDead(attackerID) and (UnitDefs[attackerDefID].customParams.baseclass == "mech") then 
 			Perk(attackerID, attackerDefID) 
 		end
+	end
+	for aiTeamID in pairs(AI_TEAMS) do
+		teamTargets[aiTeamID][unitID] = nil
 	end
 end
 
