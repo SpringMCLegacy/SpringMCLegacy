@@ -1,5 +1,12 @@
 local Kabuto = Light:New{
 	name              	= "Kabuto",
+	
+	leaveTracks			= true,	
+	trackType			= "Kabuto",
+	trackOffset			= 6,
+	trackWidth			= 24,
+	trackStretch 		= 2,
+	
 	customparams = {
 		cockpitheight	= 5.95,
 		tonnage 		= 20,
