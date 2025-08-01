@@ -341,11 +341,15 @@ local function GenerateUnitGraphics(uid, udid, getAuras)
 		local enemyeccm = eccm > 0 and friendlyUnit
 		local enemyecm = ecm > 0 and not friendlyUnit
 		local perk = (GetUnitRulesParam(uid, "perk_xp") or 0) == 100 and not GetUnitRulesParam(uid, "perk_fully")
-		if ((narc + tag + ppc + missilelock + nolock) > 0 or outofammo or running or perk or friendlyecm or enemyecm) then
+		if (shutdown + outofammo + running + narc + tag + ppc + missilelock + nolock) > 0 -- numerical
+		or (heat or damage or friendlyecm or enemyeccm or enemyecm or perk) then -- bools
 			unitAuras[uid] =
 			{
 				["heat"] = {
 					value = heat and 1 or nil,
+				},
+				["shutdown"] = {
+					value = shutdown,
 				},
 				["damage"] = {
 					value = damage and 1 or nil,
