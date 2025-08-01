@@ -156,7 +156,7 @@ local starts = {
 	},
 	[5] = { -- teamID 6
 		x = 5275,
-		z = 506,
+		z = 389,
 		alwaysbeacon = 1,
 	},
 }
