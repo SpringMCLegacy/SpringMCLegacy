@@ -184,6 +184,7 @@ function C3Array()
 	WaitForMove(generator1, x_axis)
 	Spin(geo1, y_axis, math.rad(100), math.rad(15))
 	Sleep(1000)
+	GG.LanceControl(teamID, unitID, true)
 end
 
 function C3_Upgrade()
