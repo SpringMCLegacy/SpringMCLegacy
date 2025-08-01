@@ -7,8 +7,8 @@
 		class=CSimpleParticleSystem;
 		[properties]
 		{
-			sizeGrowth=0;
-			sizeMod=1.0;
+			sizeGrowth=-0.1;
+			sizeMod=0.5;
 			pos=0, 0, 0;
 			emitVector=0, 1, 0;
 			gravity=0, 0, 0;
@@ -210,6 +210,38 @@
 			particleSizeSpread=75;
 			emitRot=0;
 			emitRotSpread=65;
+			directional=1;
+			alwaysVisible=0;
+		}
+		air=1;
+		unit=1;
+		water=1;
+		underwater=1;
+		ground=1;
+		count=1;
+	}
+	[spiker]
+	{
+		class=CSimpleParticleSystem;
+		[properties]
+		{
+			sizeGrowth=-5.0;
+			sizeMod=1.0;
+			pos=-3 r6, -3 r6, -3 r6; 
+			emitVector=0, 1, 0;
+		      gravity=0, 0.0, 0;  
+			colorMap=0 0 0 0.0   0.3 0.35 0.35 0.1   0.3 0.3 0.3 0.05  0.15 0.15 0.15 0.025 0 0 0 0.0;
+			Texture=spiker;
+			airdrag=0.91;
+			particleLife=40;
+			particleLifeSpread=10;
+			numParticles=r2;
+			particleSpeed=1;
+			particleSpeedSpread=0.5;
+			particleSize=75;
+			particleSizeSpread=150;
+			emitRot=0;
+			emitRotSpread=180;
 			directional=1;
 			alwaysVisible=0;
 		}
