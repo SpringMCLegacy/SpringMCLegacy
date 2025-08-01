@@ -97,6 +97,8 @@ else
 	end
 end
 
+local wakepoint = piece ("wakepoint")
+
 local flares = {}
 local turrets = {}
 local mantlets = {}
@@ -269,12 +271,7 @@ local function HoverWake(water)
 	SetSignalMask(SIG_WAKE)
 
 	while true do
-		if water then
-			GG.EmitSfxName(unitID, wakepoint, "hover_water")
-			EmitSfx(SFX.WAKE, wakepoint)
-		else
-			GG.EmitSfxName(unitID, wakepoint, "hover_dust")
-		end
+		GG.EmitSfxName(unitID, wakepoint, "hover_dust")
 		Sleep(100)
 	end
 end
@@ -437,7 +434,7 @@ local closeRange = unitDef.losRadius --WeaponDefs[unitDef.weapons[1].weaponDef].
 local function Wobble()
 	local angleX, angleZ
 	local ROCK_ANGLE = 4
-	local ROCK_SPEED = math.rad(1.0)
+	local ROCK_SPEED = math.rad(2.0)
 	while true do
 		angleX = math.rad(math.random(-ROCK_ANGLE, ROCK_ANGLE))
 		angleZ = math.rad(math.random(-ROCK_ANGLE, ROCK_ANGLE))
@@ -479,7 +476,7 @@ local function UnLoad(targetID)
 end
 
 function script.Create()
-	if hover then
+	if wakepoint then
 		local fxStages = { {1, "hovercraft", EMPTY}, }
 		GG.EmitLupsSfxArray(unitID, fxStages)
 		StartThread(Wobble)
