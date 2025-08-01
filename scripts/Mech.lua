@@ -916,9 +916,9 @@ function script.Killed(recentDamage, maxHealth)
 	local stackpoleProb = excessHeat/(heatLimit*2)
 	local diceRoll = math.random()
 	--Spring.Echo("Will I nuke?", stackpoleProb, diceRoll, stackpoleProb > diceRoll)
+	local x,y,z = Spring.GetUnitBasePosition(unitID)
 	if stackpoleProb > diceRoll then
 		--Spring.Echo("NUUUUUUUUUUUKKKKKE")
-		local x,y,z = Spring.GetUnitBasePosition(unitID)
 		local DELAY_IN_SECONDS = 5
 		GG.Delay.DelayCall(Spring.CreateUnit,{"nuke_meltdown", x, y, z, 0, teamID}, 30 * DELAY_IN_SECONDS)
 	end
@@ -932,9 +932,11 @@ function script.Killed(recentDamage, maxHealth)
 		GG.PlaySoundForTeam(Spring.GetUnitTeam(unitID), "BB_BattleMech_destroyed_" .. soundNum, 1)
 	end
 	-- live fast, die young, leave a beautiful corpse
-	-- TODO: if left_arm_missing and right_arm_missing then CreateFeature(mechName .. "_x_both")
-	-- elseif left_arm_missing then CreateFeature(mechName .. "_x_left")
-	-- elseif right_arm_missing then CreateFeature(mechName .. "_x_right")
-	--else return 1 end
-	return 1
+	local heading = Spring.GetUnitHeading(unitID)
+	local leftArmMissing = limbHPs["left_arm"] <= 0
+	local rightArmMissing = limbHPs["right_arm"] <= 0
+	if leftArmMissing and rightArmMissing then Spring.CreateFeature(unitDef.name .. "_x_both", x,y,z, heading, teamID)
+	elseif leftArmMissing then Spring.CreateFeature(unitDef.name .. "_x_left", x,y,z, heading, teamID)
+	elseif rightArmMissing then Spring.CreateFeature(unitDef.name .. "_x_right", x,y,z, heading, teamID)
+	else return 1 end
 end

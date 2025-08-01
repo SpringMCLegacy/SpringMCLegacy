@@ -142,43 +142,37 @@ for unitName, ud in pairs(UnitDefs) do
 				--Spring.Echo("[WeaponDefs_post.lua]:" .. unitName .. " has a corpse (" .. ud.corpse .. ")")
 				local modelPath = ud.objectname:sub(1, -(string.len(unitName .. ".s3o")+1))
 				-- First level corpse
-				--local corpseModel = cp.baseclass == "mech" and ud.objectname or modelPath .. "corpse/" .. unitName .. "_x.s3o"
-				local corpseModel = modelPath .. "corpse/" .. unitName .. "_x.s3o"
-				local corpseModelExists = VFS.FileExists("objects3d/" .. corpseModel          , VFS.ZIP)
-				corpseModel = corpseModelExists and corpseModel or ud.objectname
-				--Spring.Echo("corspeModel", corpseModel, corpseModelExists)
-				FeatureDefs[ud.corpse] = Feature:New{
-					damage = ud.maxdamage * 0.5,
-					description = "Wrecked " .. ud.name,
-					mass = ud.mass,
-					metal = (cp.price or 200) * 0.5,
-					featuredead = ud.corpse .. "x",
-					footprintx = ud.footprintx,
-					footprintz = ud.footprintz,
-					object = corpseModel,
-					customparams = {["was"] = ud.name},
-					reclaimable = true,
-					upright = cp.baseclass == "mech",
+				local corpseModelBase = modelPath .. "corpse/" .. unitName .. "_x"
+				local corpseModels = {
+					_x = corpseModelBase .. ".s3o",
 				}
-				-- Second level corpse
-				FeatureDefs[ud.corpse .. "x"] = Feature:New{
-					damage = ud.maxdamage * 0.5,
-					description = "Destroyed " .. ud.name,
-					mass = ud.mass,
-					metal = (cp.price or 200) * 0.25,
-					featuredead = "wreck_x",
-					footprintx = ud.footprintx,
-					footprintz = ud.footprintz,
-					object = corpseModel,
-					customparams = {["was"] = ud.name},
-					reclaimable = true,
-					upright = cp.baseclass == "mech",
-				}
-				if not VFS.FileExists("objects3d/" .. modelPath .. "corpse/" .. unitName .. "_x.s3o") then
-					--Spring.Echo("[WeaponDefs_post.lua]: Missing corpse object; " .. modelPath .. "corpse/" .. unitName .. "_x.s3o")
+				if cp.baseclass == "mech" then
+					corpseModels._x_both = corpseModelBase .. "_both.s3o"
+					corpseModels._x_left = corpseModelBase .. "_left.s3o"
+					corpseModels._x_right = corpseModelBase .. "_right.s3o"
+				end
+				-- check base corpse first
+				local corpseModelBaseExists = VFS.FileExists("objects3d/" .. corpseModels._x, VFS.ZIP)
+				for corpseType, path in pairs(corpseModels) do
+					local corpseModelExists = VFS.FileExists("objects3d/" .. path, VFS.ZIP)
+					corpseModel = (corpseModelExists and path) or (corpseModelBaseExists and corpseModels._x) or ud.objectname
+					--Spring.Echo("corspeModel", corpseType, path, corpseModel, corpseModelExists)
+					FeatureDefs[unitName .. corpseType] = Feature:New{
+						damage = ud.maxdamage * 0.5,
+						description = "Wrecked " .. ud.name,
+						mass = ud.mass,
+						metal = (cp.price or 200) * 0.5,
+						featuredead = "wreck_x",
+						footprintx = ud.footprintx,
+						footprintz = ud.footprintz,
+						object = corpseModel,
+						customparams = {["was"] = ud.name},
+						reclaimable = true,
+						upright = cp.baseclass == "mech",
+					}
 				end
 			else
-				--Spring.Echo("[WeaponDefs_post.lua]:" .. unitName .. " has no corpse!")
+				Spring.Echo("[WeaponDefs_post.lua]:" .. unitName .. " has no corpse!")
 			end
 			local weapString = "\t\t\255\255\255\255Weapons: "
 			local first = true
