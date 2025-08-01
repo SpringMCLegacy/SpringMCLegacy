@@ -919,7 +919,7 @@ function script.Killed(recentDamage, maxHealth)
 	if stackpoleProb > diceRoll then
 		--Spring.Echo("NUUUUUUUUUUUKKKKKE")
 		local x,y,z = Spring.GetUnitBasePosition(unitID)
-		local DELAY_IN_SECONDS = 5
+		local DELAY_IN_SECONDS = 0.1
 		GG.Delay.DelayCall(Spring.CreateUnit,{"nuke_meltdown", x, y, z, 0, teamID}, 30 * DELAY_IN_SECONDS)
 	end
 	-- Salavage time
