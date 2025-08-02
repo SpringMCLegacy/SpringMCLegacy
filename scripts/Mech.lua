@@ -913,7 +913,7 @@ end
 
 function script.Killed(recentDamage, maxHealth)
 	math.randomseed(unitID)
-	local stackpoleProb = excessHeat/(heatLimit*2)
+	local stackpoleProb = (currHeatLevel + excessHeat - heatLimit/2)/(heatLimit*2.5) * (superCharger and 2 or 1)
 	local diceRoll = math.random()
 	--Spring.Echo("Will I nuke?", stackpoleProb, diceRoll, stackpoleProb > diceRoll)
 	local x,y,z = Spring.GetUnitBasePosition(unitID)

@@ -161,10 +161,13 @@ function gadget:UnitDestroyed(unitID, unitDefID, teamID, builderID)
 	spawnPoints[unitID] = nil
 end
 
-local function ArtyShot(level, teamID, x,y,z)
+local function ArtyShot(unitID, teamID, x,y,z)
+	local level = uplinkLevels[unitID]
 	local projParams = {}
 	projParams.gravity = -3 + math.random()
 	projParams.pos = {x, y, z}
+	projParams.owner = unitID
+	projParams.team = teamID
 	SpawnProjectile(artyWeaponInfo[level].id, projParams)
 	GG.PlaySoundForTeam(teamID, artyWeaponInfo[level].sound, 1)
 end
@@ -195,7 +198,7 @@ local function ArtyStrike(unitID, teamID, x, y, z, cost)
 		dx = math.sin(angle) * length
 		dz = math.cos(angle) * length
 		lastDelay = math.random(150)
-		DelayCall(ArtyShot, {1, teamID, x + dx, y + ARTY_HEIGHT, z + dz}, weapInfo.delay + lastDelay)
+		DelayCall(ArtyShot, {unitID, teamID, x + dx, y + ARTY_HEIGHT, z + dz}, weapInfo.delay + lastDelay)
 	end
 	GG.PlaySoundForTeam(teamID, "bb_orbitalstrike_inbound", 1)
 	DelayCall(GG.PlaySoundForTeam, {teamID, "bb_orbitalstrike_available_in_60", 1}, weapInfo.delay + lastDelay + 30 * 8) -- fudge for time to fall from orbit after spawned
