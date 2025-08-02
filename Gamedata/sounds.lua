@@ -277,6 +277,15 @@ local Sounds = {
 			maxdist = 7000,
 			rolloff = 5.0,
 		},
+		ElectricDoor = {
+			file = "sounds/outpost/ElectricDoor.wav",
+			maxconcurrent = 12,
+			gainmod = 0.75,
+			pitchmod = 0.1,
+			priority = -0.1,
+			maxdist = 7000,
+			rolloff = 5.0,
+		},
 		Gear_Small = {
 			file = "sounds/outpost/Gear_Small.wav",
 			maxconcurrent = 12,
@@ -286,8 +295,27 @@ local Sounds = {
 			maxdist = 7000,
 			rolloff = 5.0,
 		},
+
+		HeavyLift = {
+			file = "sounds/outpost/HeavyLift.wav",
+			maxconcurrent = 12,
+			gainmod = 0.75,
+			pitchmod = 0.1,
+			priority = -0.1,
+			maxdist = 7000,
+			rolloff = 5.0,
+		},
 		Hydraulic = {
 			file = "sounds/outpost/Hydraulic.wav",
+			maxconcurrent = 12,
+			gainmod = 0.75,
+			pitchmod = 0.1,
+			priority = -0.1,
+			maxdist = 7000,
+			rolloff = 5.0,
+		},
+		Hydraulic_Click = {
+			file = "sounds/outpost/Hydraulic_Click.wav",
 			maxconcurrent = 12,
 			gainmod = 0.75,
 			pitchmod = 0.1,
