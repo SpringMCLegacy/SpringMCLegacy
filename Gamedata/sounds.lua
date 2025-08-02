@@ -197,6 +197,10 @@ local Sounds = {
 			file = "sounds/outpost/Uplink.wav",
 			in3d = "false",
 		},
+		Aircontrol = {
+			file = "sounds/outpost/Aircontrol.wav",
+			in3d = "false",
+		},
 		VehiclePad = {
 			file = "sounds/outpost/VehiclePad.wav",
 			in3d = "false",

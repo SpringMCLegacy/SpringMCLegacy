@@ -16,4 +16,4 @@ local Outpost_Seismic = Outpost:New{
 	}
 }
 
-return lowerkeys({ ["outpost_Seismic"] = Outpost_Seismic })
+--return lowerkeys({ ["outpost_Seismic"] = Outpost_Seismic })

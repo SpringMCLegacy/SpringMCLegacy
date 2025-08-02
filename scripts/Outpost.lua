@@ -51,8 +51,6 @@ for i = 1, 6 do
 end
 local base2 = piece("base2")
 local flags = piece("flags")
--- Seismic Sensor pieces
-local foot1, foot2, foot3, lifter, hammer, spike = piece ("foot1", "foot2", "foot3", "lifter", "hammer", "spike")
 -- Turret Control pieces
 local hatch = {}
 for i = 1, 4 do
@@ -62,19 +60,25 @@ local pole = {}
 for i = 1, 4 do
 	pole[i] = piece("pole" .. i)
 end
--- Garrison pieces
+
+-- Weapon pieces
 local flares = {}
-for i = 1, #unitDef.weapons do
-	flares[i] = piece("flare_" .. i)
-end
--- EWAR pieces
+local barrels = {}
 local turrets = {}
 local mantlets = {}
 
--- Artillery pieces
-local barrel_1, barrelend, breechblock, hydraulic, casing = piece ("barrel_1", "barrelend", "breechblock", "hydraulic", "casing")
-local rammoarm, rammorail, rammobin, rammo, rammotray, rram = piece ("rammoarm", "rammorail", "rammobin", "rammo", "rammotray", "rram")
-local lammoarm, lammorail, lammobin, lammo, lammotray, lram = piece ("lammoarm", "lammorail", "lammobin", "lammo", "lammotray", "lram")
+for i = 1, #unitDef.weapons do
+	flares[i] = piece("flare_" .. i)
+end
+
+for i = 1,#unitDef.weapons do
+	barrels[i] = piece("barrel_" .. i)
+end
+
+for i = 1,#unitDef.weapons do
+	turrets[i] = piece("turret_" .. i)
+	mantlets[i] = piece("mantlet_" .. i)
+end
 
 local legs = {}
 for i = 1, 4 do
@@ -89,14 +93,6 @@ end
 local screwheads = {}
 for i = 1, 4 do
 	screwheads[i] = piece("screwhead" .. i)
-end
-
--- Tactical Missile Launcher pieces
-local launcher, launchdoor1, launchdoor2, gantry, projectile = piece ("launcher", "launchdoor1", "launchdoor2", "gantry", "projectile")
-
-for i = 1,#unitDef.weapons do
-	turrets[i] = piece("turret_" .. i)
-	mantlets[i] = piece("mantlet_" .. i)
 end
 
 -- Constants
@@ -203,7 +199,21 @@ function C3_Upgrade()
 	Sleep(1000)
 end
 
+function ArtilleryCreate()
+	local barrelend, casing, rammoarm, lammoarm, rammorail, lammorail = piece ("barrelend", "casing", "rammoarm", "lammoarm", "rammorail", "lammorail")
+	Move(barrelend, z_axis, -30)
+	Hide(casing)
+	Hide(rammoarm)
+	Hide(lammoarm)
+	Hide(rammorail)
+	Hide(lammorail)
+end
+
 function Artillery()
+	local barrel_1, barrelend, breechblock, hydraulic, casing = piece ("barrel_1", "barrelend", "breechblock", "hydraulic", "casing")
+	local rammoarm, rammorail, rammobin, rammo, rammotray, rram = piece ("rammoarm", "rammorail", "rammobin", "rammo", "rammotray", "rram")
+	local lammoarm, lammorail, lammobin, lammo, lammotray, lram = piece ("lammoarm", "lammorail", "lammobin", "lammo", "lammotray", "lram")
+
 	Show(rammoarm)
 	Show(lammoarm)
 	Show(rammorail)
@@ -238,6 +248,9 @@ function Artillery()
 end
 
 function ArtilleryReload()
+	local barrel_1, barrelend, breechblock, hydraulic, casing = piece ("barrel_1", "barrelend", "breechblock", "hydraulic", "casing")
+	local rammoarm, rammorail, rammobin, rammo, rammotray, rram = piece ("rammoarm", "rammorail", "rammobin", "rammo", "rammotray", "rram")
+	local lammoarm, lammorail, lammobin, lammo, lammotray, lram = piece ("lammoarm", "lammorail", "lammobin", "lammo", "lammotray", "lram")
 	--RELOAD anim
 	Sleep(1000)
 	--Open breech and eject used casing
@@ -323,6 +336,8 @@ function ArtilleryReload()
 end
 
 function MissileLauncher()
+	local launcher, launchdoor1, launchdoor2, gantry, projectile = piece ("launcher", "launchdoor1", "launchdoor2", "gantry", "projectile")
+	
 	PlaySound("Clicks")
 	for i = 1, 2 do
 		Turn(legs[i], z_axis, math.rad(90), CRATE_SPEED * 4)
@@ -349,19 +364,9 @@ function MissileLauncher()
 	Spring.SetUnitRulesParam(unitID, "weapon_1", "active")
 end
 
-function LauncherOpen()
-	Move(launchdoor1, x_axis, 7, CRATE_SPEED * 8)
-	Move(launchdoor2, x_axis, -7, CRATE_SPEED * 8)
-	PlaySound("Whir_Small")
-	WaitForMove(launchdoor1, x_axis)
-	WaitForMove(launchdoor2, x_axis)
-	Move(gantry, y_axis, 10, CRATE_SPEED * 8)
-	PlaySound("Hydraulic")
-	WaitForMove(gantry, y_axis)
-	Sleep(500)
-end	
-
 function LauncherClose()
+	Hide(projectile)
+	Sleep(1000)
 	Move(gantry, y_axis, 0, CRATE_SPEED * 8)
 	PlaySound("Hydraulic")
 	WaitForMove(gantry, y_axis)
@@ -373,6 +378,42 @@ function LauncherClose()
 	Sleep(500)
 	Show(projectile)
 end	
+
+function AirCon()
+	local tower_mid, tower_top, ladder, antennadoor1, radardoor1, radardoor2 = piece ("tower_mid", "tower_top", "ladder", "antennadoor1", "radardoor1", "radardoor2")
+	local radar_mount, radar_spin, radar_arm1, radar_arm2, antennabase, antenna1_1, antenna1_2, antenna2_1, antenna2_2 = piece ("radar_mount", "radar_spin", "radar_arm1", "radar_arm2", "antennabase", "antenna1_1", "antenna1_2", "antenna2_1", "antenna2_2")
+	Move(tower_mid, y_axis, 8, CRATE_SPEED * 8)
+	WaitForMove(tower_mid, y_axis)
+	Move(tower_top, y_axis, 29, CRATE_SPEED * 12)
+	Turn(leg1, z_axis, rad(90), CRATE_SPEED * 2)
+	Move(leg1, x_axis, -11, CRATE_SPEED * 8)
+	Move(leg1, y_axis, 1, CRATE_SPEED * 8)
+	Turn(leg2, x_axis, rad(90), CRATE_SPEED * 2)
+	Move(leg2, z_axis, 11, CRATE_SPEED * 8)
+	Move(leg2, y_axis, 1, CRATE_SPEED * 8)
+	Turn(leg3, z_axis, rad(-90), CRATE_SPEED * 2)
+	Move(leg3, x_axis, 11, CRATE_SPEED * 8)
+	Move(leg3, y_axis, 1, CRATE_SPEED * 8)
+	Turn(leg4, x_axis, rad(-90), CRATE_SPEED * 2)
+	Move(leg4, z_axis, -11, CRATE_SPEED * 8)
+	Move(leg4, y_axis, 1, CRATE_SPEED * 8)
+	WaitForMove(tower_top, y_axis)
+	Move(radardoor1, z_axis, 8, CRATE_SPEED * 10)
+	Move(radardoor2, z_axis, -8, CRATE_SPEED * 10)
+	Move(antennadoor1, z_axis, -8, CRATE_SPEED * 14)
+	WaitForMove(radardoor1, z_axis)
+	Move(radar_mount, y_axis, 35, CRATE_SPEED * 18)
+	Move(antennabase, y_axis, 5, CRATE_SPEED * 12)
+	Move(antenna2_1, y_axis, 10, CRATE_SPEED * 12)
+	Move(antenna2_2, y_axis, 9, CRATE_SPEED * 8)
+	Move(antenna1_1, y_axis, 10, CRATE_SPEED * 10)
+	WaitForMove(radar_mount, y_axis)
+	Turn(radar_arm1, x_axis, rad(-90), CRATE_SPEED * 1)
+	Turn(radar_arm2, x_axis, rad(90), CRATE_SPEED * 1)
+	Spin(radar_spin, y_axis, math.rad(40), math.rad(10))
+	WaitForMove(antenna1_1, y_axis)
+	Move(antenna1_2, y_axis, 14, CRATE_SPEED * 12)
+end
 
 -- Garrison weapons
 function script.AimWeapon(weaponID, heading, pitch)
@@ -402,20 +443,18 @@ end
 
 function script.Shot(weaponID)
 	EmitSfx(flares[weaponID], SFX.CEG + weaponID)
-	if name == "outpost_artillery" then
-		Move(barrel_1, z_axis, -25, CRATE_SPEED * 175)
+	if name == "outpost_artillery" then 
+		Move(barrels[weaponID], z_axis, -25, CRATE_SPEED * 175)
 		GG.EmitSfxName(unitID, base, "dust_bloom_big")
-		WaitForMove(barrel_1, z_axis)
-		Move(barrel_1, z_axis, 0, CRATE_SPEED * 25)
+		WaitForMove(barrels[weaponID], z_axis)
+		Move(barrels[weaponID], z_axis, 0, CRATE_SPEED * 25)
 		StartThread(ArtilleryReload)
-		WaitForMove(barrel_1, z_axis)
+		WaitForMove(barrels[weaponID], z_axis)
 		for i = 1,25 do
 			GG.EmitSfxName(unitID, piece("flare_1"), "barrelsmoke")
 			Sleep(150)
 		end
 	elseif 	name == "outpost_launcher" then
-		Hide(projectile)
-		Sleep(1000)
 		LauncherClose()
 	end
 end
@@ -460,9 +499,6 @@ function script.Create()
 		end
 		--Hide(base2)
 		--Hide(flags)
-	elseif name == "outpost_seismic" then
-		Turn(foot2, y_axis, rad(-60), CRATE_SPEED * 10)
-		Turn(foot3, y_axis, rad(60), CRATE_SPEED * 10)
 	elseif name == "outpost_salvageyard" then
 		Hide(foundation)
 		--RecursiveHide(recoveryrail, true)
@@ -479,12 +515,7 @@ function script.Create()
 		Turn(tagbase2, z_axis, math.rad(-90))
 		Turn(tagstand2, z_axis, math.rad(-90))
 	elseif name == "outpost_artillery" then
-		Move(barrelend, z_axis, -30)
-		Hide(casing)
-		Hide(rammoarm)
-		Hide(lammoarm)
-		Hide(rammorail)
-		Hide(lammorail)
+		StartThread(ArtilleryCreate)
 	end
 	Sleep(100) -- wait a few frames
 	if not Spring.GetUnitTransporter(unitID) then
@@ -690,20 +721,7 @@ end
 seismicRange = unitDef.seismicRadius
 seismicDelay = 5000
 seismicDuration = 500
-function SeismicPings()
-	while true do
-		Move(hammer, y_axis, 0, CRATE_SPEED * 50)
-		WaitForMove(hammer, y_axis)
-		PlaySound("seismicstomp")
-		GG.EmitSfxName(unitID, spike, "mech_jump_dust")
-		Spring.SetUnitSensorRadius(unitID, "seismic", seismicRange)
-		Sleep(seismicDuration)
-		Move(hammer, y_axis, 7, CRATE_SPEED * 5)
-		WaitForMove(hammer, y_axis)
-		Spring.SetUnitSensorRadius(unitID, "seismic", 0)
-		Sleep(seismicDelay)
-	end
-end
+
 
 function BAP()
 	Sleep(2000)
@@ -805,21 +823,6 @@ function Unpack()
 		GG.LCLeft(nil, unitID, teamID) -- fake call, no dropship really left
 	elseif name == "outpost_garrison" then
 		-- nothing special
-	elseif name == "outpost_seismic" then
-		Turn(foot1, x_axis, rad(-90), CRATE_SPEED * 5)
-		Turn(foot2, x_axis, rad(90), CRATE_SPEED * 5)
-		Turn(foot3, x_axis, rad(90), CRATE_SPEED * 5)
-		Move(lifter, y_axis, 10, CRATE_SPEED * 5)
-		WaitForMove(lifter, y_axis)
-		for i = 1,3 do
-			Move(hammer, y_axis, 7, CRATE_SPEED * 5)
-			WaitForMove(hammer, y_axis)
-			Move(hammer, y_axis, 0, CRATE_SPEED * 50)
-			WaitForMove(hammer, y_axis)
-			PlaySound("seismicstomp")
-			GG.EmitSfxName(unitID, spike, "mech_jump_dust")
-		end
-		StartThread(SeismicPings)
 	elseif name == "outpost_turretcontrol" then
 		 for i = 1,4 do
 			local signX = i <= 2 and 1 or -1
@@ -853,6 +856,8 @@ function Unpack()
 		StartThread(Artillery)
 	elseif name == "outpost_launcher" then
 		StartThread(MissileLauncher)
+	elseif name == "outpost_aircon" then
+		StartThread(AirCon)
 	end
 	Spring.UnitScript.SetUnitValue(COB.ACTIVATION, 1)
 	-- Let the sands of time cover the crate
