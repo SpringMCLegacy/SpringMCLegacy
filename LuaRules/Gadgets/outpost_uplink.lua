@@ -38,6 +38,7 @@ local FramesToMinutesAndSeconds = GG.FramesToMinutesAndSeconds
 local DelayCall				 = GG.Delay.DelayCall
 
 -- Constants
+local COLOURS = GG.GameConstants.colours
 local GAIA_TEAM_ID = Spring.GetGaiaTeamID()
 local BEACON_ID = UnitDefNames["beacon"].id
 local UPLINK_ID = UnitDefNames["outpost_uplink"].id
@@ -45,19 +46,25 @@ local UPLINK_ID = UnitDefNames["outpost_uplink"].id
 local artyWeaponInfo = {
 	[1] = { -- NAC/10
 		id 			= WeaponDefNames["nac10"].id,
-		salvo 		= 8,
+		burst 		= 5,
+		reload		= 3 * 30,
+		salvo 		= 3,
 		cooldown	= 50 * 30,
 		delay		= 10 * 30,
-		spread		= 500,
+		spread		= 350,
 		sound 		= "sounds/" .. WeaponDefNames["nac10"].fireSound[1].name:lower() .. ".wav",
+		cost		= 8000,
 	},
 	[2] = { -- NPPC
 		id 			= WeaponDefNames["nppc"].id,
-		salvo 		= 8,
+		burst		= 4,
+		reload		= 3.5 * 30,
+		salvo 		= 4,
 		cooldown	= 75 * 30,
 		delay		= 10 * 30,
-		spread 		= 400,
+		spread 		= 250,
 		sound		= "sounds/" .. WeaponDefNames["nppc"].fireSound[1].name:lower() .. ".wav",
+		cost		= 12000,
 	},
 	[3] = { -- NAC/40
 		id 			= WeaponDefNames["nac40"].id,
@@ -66,6 +73,7 @@ local artyWeaponInfo = {
 		delay		= 15 * 30,
 		spread		= 400,
 		sound		= "sounds/" .. WeaponDefNames["nac40"].fireSound[1].name:lower() .. ".wav",
+		cost		= 16000,
 	}
 }
 
@@ -73,7 +81,6 @@ local uplinkLevels = {} -- uplinkLevels[uplinkID] = 1, 2 or 3
 GG.uplinkLevels = uplinkLevels
 
 -- ARTY
-local ARTY_COST = 8000
 local ARTY_HEIGHT = 10000
 local artyLastFired = {} -- artyLastFired[teamID] = gameFrame
 local artyCanFire = {} -- artyCanFire[teamID] = gameFrame
@@ -93,14 +100,33 @@ local targetVics = {} -- targetID = {id1, id2, id3}
 local ASSAULT_COST = 36000
 
 -- Variables
-local artyCmdDesc = {
-	id 		= GG.CustomCommands.GetCmdID("CMD_UPLINK_ARTILLERY", ARTY_COST),
+local nacCmdDesc = {
+	id 		= GG.CustomCommands.GetCmdID("CMD_UPLINK_NAC", artyWeaponInfo[1].cost),
 	type	= CMDTYPE.ICON_MAP, -- UNIT_OR_MAP?
-	name 	= GG.Pad("Orbital","Strike"),
-	action	= "uplink_arty",
-	tooltip = "C-Bill cost: " .. ARTY_COST,
+	name 	= GG.Pad("Naval AC","Strike"),
+	action	= "uplink_nac",
+	tooltip = "Area bombardment with heavy Naval AutoCannon. Explosive damage with large area of effect. " .. COLOURS.cbills .. "C-Bill cost: " .. artyWeaponInfo[1].cost,
 	cursor	= "Attack",
 }
+local nppcCmdDesc = {
+	id 		= GG.CustomCommands.GetCmdID("CMD_UPLINK_NPPCC", artyWeaponInfo[2].cost),
+	type	= CMDTYPE.ICON_MAP, -- UNIT_OR_MAP?
+	name 	= GG.Pad("Naval PPC","Strike"),
+	action	= "uplink_nppc",
+	tooltip = "Area bombardment with heavy Naval Particle Projector Cannon. Disrupts sensors and generates heat. " .. COLOURS.cbills .. "C-Bill cost: " .. artyWeaponInfo[2].cost,
+	cursor	= "Attack",
+	hidden	= true,
+}
+local nlCmdDesc = {
+	id 		= GG.CustomCommands.GetCmdID("CMD_UPLINK_NL", artyWeaponInfo[3].cost),
+	type	= CMDTYPE.ICON_MAP, -- UNIT_OR_MAP?
+	name 	= GG.Pad("Naval Laser","Strike"),
+	action	= "uplink_nl",
+	tooltip = "Point target removal with heavy Naval Laser. Sustained damage against point-targets " .. COLOURS.cbills .. "C-Bill cost: " .. artyWeaponInfo[3].cost,
+	cursor	= "Attack",
+	hidden	= true,
+}
+-- TODO: move to outpost_aircon
 local aeroCmdDesc = {
 	id 		= GG.CustomCommands.GetCmdID("CMD_UPLINK_AERO", AERO_COST),
 	type	= CMDTYPE.ICON_UNIT,
@@ -123,9 +149,11 @@ local assaultCmdDesc = {
 local function UplinkUpgrade(unitID, level)
 	uplinkLevels[unitID] = level
 	if level == 2 then
-		EditUnitCmdDesc(unitID, FindUnitCmdDesc(unitID, aeroCmdDesc.id), {hidden = false})
+		--EditUnitCmdDesc(unitID, FindUnitCmdDesc(unitID, aeroCmdDesc.id), {hidden = false})
+		EditUnitCmdDesc(unitID, FindUnitCmdDesc(unitID, nppcCmdDesc.id), {hidden = false})
 	elseif level == 3 then
-		EditUnitCmdDesc(unitID, FindUnitCmdDesc(unitID, assaultCmdDesc.id), {hidden = false})
+		--EditUnitCmdDesc(unitID, FindUnitCmdDesc(unitID, assaultCmdDesc.id), {hidden = false})
+		EditUnitCmdDesc(unitID, FindUnitCmdDesc(unitID, nlCmdDesc.id), {hidden = false})
 	end
 end
 GG.UplinkUpgrade = UplinkUpgrade
@@ -134,9 +162,11 @@ function gadget:UnitCreated(unitID, unitDefID, teamID, builderID)
 	local unitDef = UnitDefs[unitDefID]
 	local cp = unitDef.customParams
 	if unitDefID == UPLINK_ID then
-		InsertUnitCmdDesc(unitID, artyCmdDesc)
-		InsertUnitCmdDesc(unitID, aeroCmdDesc)
-		InsertUnitCmdDesc(unitID, assaultCmdDesc)
+		InsertUnitCmdDesc(unitID, nacCmdDesc)
+		InsertUnitCmdDesc(unitID, nppcCmdDesc)
+		InsertUnitCmdDesc(unitID, nlCmdDesc)
+		--InsertUnitCmdDesc(unitID, aeroCmdDesc)
+		--InsertUnitCmdDesc(unitID, assaultCmdDesc)
 		uplinkLevels[unitID] = 1
 	end
 end
@@ -161,21 +191,22 @@ function gadget:UnitDestroyed(unitID, unitDefID, teamID, builderID)
 	spawnPoints[unitID] = nil
 end
 
-local function ArtyShot(unitID, teamID, x,y,z)
-	local level = uplinkLevels[unitID]
+local function ArtyShot(strikeType, unitID, teamID, x,y,z)
 	local projParams = {}
 	projParams.gravity = -3 + math.random()
 	projParams.pos = {x, y, z}
+	--projParams["end"] = {x, y - ARTY_HEIGHT, z}
+	--projParams.ttl = 60
 	projParams.owner = unitID
 	projParams.team = teamID
-	SpawnProjectile(artyWeaponInfo[level].id, projParams)
-	GG.PlaySoundForTeam(teamID, artyWeaponInfo[level].sound, 1)
+	SpawnProjectile(artyWeaponInfo[strikeType].id, projParams)
+	GG.PlaySoundForTeam(teamID, artyWeaponInfo[strikeType].sound, 1)
 end
 
-local function ArtyStrike(unitID, teamID, x, y, z, cost)
+local function ArtyStrike(unitID, teamID, x, y, z, cost, strikeType)
 	local canFireFrame = artyCanFire[teamID]
 	local currFrame = GetGameFrame()
-	local weapInfo = artyWeaponInfo[uplinkLevels[unitID]]
+	local weapInfo = artyWeaponInfo[strikeType]
 	if canFireFrame and canFireFrame > currFrame then -- still cooling
 		local minutes, seconds = FramesToMinutesAndSeconds(canFireFrame - currFrame)
 		Spring.SendMessageToTeam(teamID, "Not yet! " .. minutes .. " min " .. seconds .. " seconds left")
@@ -193,12 +224,14 @@ local function ArtyStrike(unitID, teamID, x, y, z, cost)
 	local dx, dz
 	local lastDelay
 	for i = 1, weapInfo.salvo do
-		local angle = math.random(360)
-		local length = math.random(weapInfo.spread)
-		dx = math.sin(angle) * length
-		dz = math.cos(angle) * length
-		lastDelay = math.random(150)
-		DelayCall(ArtyShot, {unitID, teamID, x + dx, y + ARTY_HEIGHT, z + dz}, weapInfo.delay + lastDelay)
+		for j = 1, (weapInfo.burst or 1) do
+			local angle = math.random(360)
+			local length = math.random(weapInfo.spread)
+			dx = math.sin(angle) * length
+			dz = math.cos(angle) * length
+			lastDelay = math.random(15)
+			DelayCall(ArtyShot, {strikeType, unitID, teamID, x + dx, y + ARTY_HEIGHT, z + dz}, weapInfo.delay + (i-1) * (weapInfo.reload or 0) + lastDelay)
+		end
 	end
 	GG.PlaySoundForTeam(teamID, "bb_orbitalstrike_inbound", 1)
 	DelayCall(GG.PlaySoundForTeam, {teamID, "bb_orbitalstrike_available_in_60", 1}, weapInfo.delay + lastDelay + 30 * 8) -- fudge for time to fall from orbit after spawned
@@ -271,9 +304,12 @@ end
 
 function gadget:AllowCommand(unitID, unitDefID, teamID, cmdID, cmdParams, cmdOptions)
 	if unitDefID == UPLINK_ID then
-		if cmdID == artyCmdDesc.id then
+		if cmdID == nacCmdDesc.id then
 			local x,y,z = unpack(cmdParams)
-			return ArtyStrike(unitID, teamID, x, y, z, Spring.IsNoCostEnabled() and 0 or ARTY_COST)
+			return ArtyStrike(unitID, teamID, x, y, z, Spring.IsNoCostEnabled() and 0 or artyWeaponInfo[1].cost, 1)
+		elseif cmdID == nppcCmdDesc.id then
+			local x,y,z = unpack(cmdParams)
+			return ArtyStrike(unitID, teamID, x, y, z, Spring.IsNoCostEnabled() and 0 or artyWeaponInfo[2].cost, 2)
 		elseif cmdID == aeroCmdDesc.id and teamID then
 			local targetID = cmdParams[1]
 			local targetTeam = Spring.GetUnitTeam(targetID)

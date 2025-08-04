@@ -497,8 +497,8 @@ return {
 			cmdDesc = {
 				id = GetCmdID('PERK_UPLINK_2'),
 				action = 'perkuplink_2',
-				name = GG.Pad("Aero", "Sortie"),
-				tooltip = 'Unlock Aero fighter sorties',
+				name = GG.Pad("Naval", "PPC"),
+				tooltip = 'Unlock Naval PPC anti-sensor area bombardment.',
 				texture = 'unitpics/Sortie_Attack.png',	
 			},
 			valid = function (unitDefID) return UnitDefs[unitDefID].name == "outpost_uplink" end,
@@ -508,7 +508,7 @@ return {
 			costFunction = deductCBills,
 			price = 35000,
 		},
-		{
+		--[[{
 			name = "uplink_3",
 			cmdDesc = {
 				id = GetCmdID('PERK_UPLINK_3'),
@@ -524,7 +524,7 @@ return {
 			costFunction = deductCBills,
 			price = 52000,
 			requires = "uplink_2",
-		},
+		},--]]
 		-- Turret Control
 		{
 			name = "turretcontrol_2",
