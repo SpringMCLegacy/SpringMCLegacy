@@ -18,9 +18,12 @@ local KBO7A = Kabuto:New{
 	weapons	= {	
 		[1] = {
 			name	= "SSRM4",
+			OnlyTargetCategory = "ground",
 		},
 		[2] = {
 			name	= "SSRM4",
+			SlaveTo = 1,
+			OnlyTargetCategory = "ground",
 		},
 	},
 		

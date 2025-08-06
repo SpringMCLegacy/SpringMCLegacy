@@ -77,6 +77,7 @@ local HBK4P = Hunchback:New{
 		},
 		[9] = {
 			name	= "SBL",
+			OnlyTargetCategory = "ground",
 		},
 	},
 		
@@ -115,6 +116,7 @@ local HBK4J = Hunchback:New{
 		},
 		[7] = {
 			name	= "SBL",
+			OnlyTargetCategory = "ground",
 		},
 	},
 		
@@ -143,6 +145,7 @@ local HBK5S = Hunchback:New{
 		},
 		[4] = {
 			name	= "SBL",
+			OnlyTargetCategory = "ground",
 		},
 	},
 		
@@ -174,6 +177,7 @@ local HBK5N = Hunchback:New{
 		},
 		[4] = {
 			name	= "SBL",
+			OnlyTargetCategory = "ground",
 		},
 	},
 		
