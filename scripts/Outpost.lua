@@ -366,6 +366,7 @@ function MissileLauncher()
 end
 
 function LauncherClose()
+	local launcher, launchdoor1, launchdoor2, gantry, projectile = piece ("launcher", "launchdoor1", "launchdoor2", "gantry", "projectile")
 	Hide(projectile)
 	Sleep(1000)
 	Move(gantry, y_axis, 0, CRATE_SPEED * 8)
@@ -442,6 +443,7 @@ function script.AimWeapon(weaponID, heading, pitch)
 		Turn(mantlets[weaponID], x_axis, -pitch, CRATE_SPEED / 4)
 		WaitForTurn(mantlets[weaponID], x_axis)
 	elseif 	name == "outpost_launcher" then
+		local launcher, launchdoor1, launchdoor2, gantry, projectile = piece ("launcher", "launchdoor1", "launchdoor2", "gantry", "projectile")
 		Move(launchdoor1, x_axis, 7, CRATE_SPEED * 8)
 		Move(launchdoor2, x_axis, -7, CRATE_SPEED * 8)
 		PlaySound("Whir_Small")
