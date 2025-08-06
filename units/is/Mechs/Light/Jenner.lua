@@ -1,5 +1,12 @@
 local Jenner = Light:New{
 	name              	= "Jenner",
+	
+	leaveTracks			= true,	
+	trackType			= "Jenner",
+	trackOffset			= 6,
+	trackWidth			= 24,
+	trackStretch 		= 2,
+	
 	customparams = {
 		cockpitheight	= 3.9,
 		tonnage 		= 35,
@@ -14,15 +21,18 @@ local JR7K = Jenner:New{
 		},
 		[2] = {
 			name	= "MBL",
+			SlaveTo = 1,
 		},
 		[3] = {
 			name	= "MBL",
 		},
 		[4] = {
 			name	= "MBL",
+			SlaveTo = 3,
 		},
 		[5] = {
 			name	= "SRM4",
+			OnlyTargetCategory = "ground",
 		},
 	},
 		
