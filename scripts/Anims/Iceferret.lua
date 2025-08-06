@@ -29,6 +29,7 @@ function anim_Turn(clockwise)
 		WaitForTurn(lupperleg, x_axis)
 		WaitForTurn(llowerleg, x_axis)
 		PlaySound("stomp")
+		GG.EmitSfxName(unitID, lfoot, "stomp_dust")
 		--Right Leg Up...
 		Turn(pelvis, z_axis, rad(5), LEG_TURN_SPEED * speedMod/ 2)
 		Turn(rupperleg, x_axis, rad(-40), LEG_TURN_SPEED * speedMod/ 1.5)
@@ -46,6 +47,7 @@ function anim_Turn(clockwise)
 		WaitForTurn(rupperleg, x_axis)
 		WaitForTurn(rlowerleg, x_axis)
 		PlaySound("stomp")
+		GG.EmitSfxName(unitID, rfoot, "stomp_dust")
 	end
 end
 
@@ -231,6 +233,7 @@ function anim_Walk()
 		WaitForTurn(rlowerleg, x_axis)
 		WaitForTurn(rfoot, x_axis)
 		PlaySound("stomp")
+		GG.EmitSfxName(unitID, rfoot, "stomp_dust")
 		--Sleep(10)
 		--Spring.Echo("Step THREE")
 		--Arms & Torso--
@@ -354,6 +357,7 @@ function anim_Walk()
 		WaitForTurn(rlowerleg, x_axis)
 		WaitForTurn(rfoot, x_axis)
 		PlaySound("stomp")
+		GG.EmitSfxName(unitID, lfoot, "stomp_dust")
 		--Sleep(10)
 		--Spring.Echo("Step SIX")
 		--Arms & Torso--

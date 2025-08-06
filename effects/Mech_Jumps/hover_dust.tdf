@@ -30,7 +30,7 @@
 			emitRot=80;
 			emitRotSpread=5; 
 			directional=0; 
-			alwaysVisible=1;
+			alwaysVisible=0;
 
 			}
 		air=0;
@@ -68,7 +68,7 @@
 			emitRot=80;
 			emitRotSpread=5; 
 			directional=0; 
-			alwaysVisible=1;
+			alwaysVisible=0;
 
 			}
 		air=0;
@@ -106,7 +106,7 @@
 			emitRot=80;
 			emitRotSpread=5; 
 			directional=0; 
-			alwaysVisible=1;
+			alwaysVisible=0;
 
 			}
 		air=0;
@@ -144,7 +144,7 @@
 			emitRot=80;
 			emitRotSpread=5; 
 			directional=0; 
-			alwaysVisible=1;
+			alwaysVisible=0;
 
 			}
 		air=0;

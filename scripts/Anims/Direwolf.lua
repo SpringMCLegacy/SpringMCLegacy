@@ -37,6 +37,7 @@ function anim_Turn(clockwise)
 		WaitForTurn(lbacktoe, x_axis)
 		WaitForTurn(lfronttoe, x_axis)
 		PlaySound("stomp")
+		GG.EmitSfxName(unitID, lfoot, "stomp_dust")
 		--Right Leg Up...
 		Turn(pelvis, z_axis, rad(5), LEG_TURN_SPEED)
 		Turn(rupperleg, x_axis, rad(30), LEG_TURN_SPEED)
@@ -62,6 +63,7 @@ function anim_Turn(clockwise)
 		WaitForTurn(rbacktoe, x_axis)
 		WaitForTurn(rfronttoe, x_axis)
 		PlaySound("stomp")
+		GG.EmitSfxName(unitID, rfoot, "stomp_dust")
 	end
 end
 		
@@ -202,6 +204,7 @@ function anim_Walk()
 		WaitForTurn(llowerleg, x_axis)
 		WaitForTurn(lfoot, x_axis)
 		PlaySound("stomp")
+		GG.EmitSfxName(unitID, lfoot, "stomp_dust")
 		WaitForTurn(rupperleg, x_axis)
 		WaitForTurn(rlowerleg, x_axis)
 		WaitForTurn(rfoot, x_axis)
@@ -264,6 +267,7 @@ function anim_Walk()
 		WaitForTurn(rlowerleg, x_axis)
 		WaitForTurn(rfoot, x_axis)
 		PlaySound("stomp")
+		GG.EmitSfxName(unitID, rfoot, "stomp_dust")
 		
 		--STEP 5, Left Leg Moves Forward Slowly... - Halfway Point
 		--STEP 5, Right Leg Moves Back Slowly - Halfway Point
