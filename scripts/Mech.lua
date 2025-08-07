@@ -676,7 +676,6 @@ function script.Activate()
 end
 
 function script.Deactivate()
-Spring.Echo("Deactivate!")
 	Spring.SetUnitStealth(unitID, true)
 	activated = false
 end
