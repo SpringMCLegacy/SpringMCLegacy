@@ -45,13 +45,13 @@ local UPLINK_ID = UnitDefNames["outpost_uplink"].id
 
 local artyWeaponInfo = {
 	[1] = { -- NAC/10
-		id 			= WeaponDefNames["hlbl"].id,
+		id 			= WeaponDefNames["nac10"].id,
 		burst 		= 1,
-		reload		= 1,--3 * 30,
+		reload		= 3 * 30,
 		salvo 		= 300,
 		cooldown	= 50 * 30,
 		delay		= 10 * 30,
-		spread		= 1,--350,
+		spread		= 350,
 		sound 		= "sounds/" .. WeaponDefNames["nac10"].fireSound[1].name:lower() .. ".wav",
 		cost		= 8000,
 	},
@@ -69,7 +69,7 @@ local artyWeaponInfo = {
 	[3] = { -- NL45
 		id 			= UnitDefNames["naval_laser"].id,
 		cooldown	= 90 * 30,
-		delay		= 1,--15 * 30,
+		delay		= 10 * 30,
 		--sound		= "sounds/" .. WeaponDefNames["nac40"].fireSound[1].name:lower() .. ".wav",
 		cost		= 16000,
 	}
