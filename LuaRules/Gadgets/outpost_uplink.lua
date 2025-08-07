@@ -45,13 +45,13 @@ local UPLINK_ID = UnitDefNames["outpost_uplink"].id
 
 local artyWeaponInfo = {
 	[1] = { -- NAC/10
-		id 			= WeaponDefNames["nac10"].id,
-		burst 		= 5,
-		reload		= 3 * 30,
-		salvo 		= 3,
+		id 			= WeaponDefNames["hlbl"].id,
+		burst 		= 1,
+		reload		= 1,--3 * 30,
+		salvo 		= 300,
 		cooldown	= 50 * 30,
 		delay		= 10 * 30,
-		spread		= 350,
+		spread		= 1,--350,
 		sound 		= "sounds/" .. WeaponDefNames["nac10"].fireSound[1].name:lower() .. ".wav",
 		cost		= 8000,
 	},
@@ -66,13 +66,11 @@ local artyWeaponInfo = {
 		sound		= "sounds/" .. WeaponDefNames["nppc"].fireSound[1].name:lower() .. ".wav",
 		cost		= 12000,
 	},
-	[3] = { -- NAC/40
-		id 			= WeaponDefNames["nac40"].id,
-		salvo 		= 5,
+	[3] = { -- NL45
+		id 			= UnitDefNames["naval_laser"].id,
 		cooldown	= 90 * 30,
-		delay		= 15 * 30,
-		spread		= 400,
-		sound		= "sounds/" .. WeaponDefNames["nac40"].fireSound[1].name:lower() .. ".wav",
+		delay		= 1,--15 * 30,
+		--sound		= "sounds/" .. WeaponDefNames["nac40"].fireSound[1].name:lower() .. ".wav",
 		cost		= 16000,
 	}
 }
@@ -86,6 +84,7 @@ local artyLastFired = {} -- artyLastFired[teamID] = gameFrame
 local artyCanFire = {} -- artyCanFire[teamID] = gameFrame
 GG.artyCanFire = artyCanFire
 
+-- TODO: move to outpost_aircon
 -- AERO
 local AERO_COST = 16000
 local vicOffsets = {
@@ -195,8 +194,8 @@ local function ArtyShot(strikeType, unitID, teamID, x,y,z)
 	local projParams = {}
 	projParams.gravity = -3 + math.random()
 	projParams.pos = {x, y, z}
-	--projParams["end"] = {x, y - ARTY_HEIGHT, z}
-	--projParams.ttl = 60
+	projParams["end"] = {x, y - ARTY_HEIGHT, z}
+	--projParams.ttl = 600
 	projParams.owner = unitID
 	projParams.team = teamID
 	SpawnProjectile(artyWeaponInfo[strikeType].id, projParams)
@@ -222,16 +221,20 @@ local function ArtyStrike(unitID, teamID, x, y, z, cost, strikeType)
 	artyCanFire[teamID] = currFrame + weapInfo.cooldown
 	SetTeamRulesParam(teamID, "UPLINK_ARTILLERY", currFrame + weapInfo.cooldown) -- frame this team can fire arty again
 	local dx, dz
-	local lastDelay
-	for i = 1, weapInfo.salvo do
-		for j = 1, (weapInfo.burst or 1) do
-			local angle = math.random(360)
-			local length = math.random(weapInfo.spread)
-			dx = math.sin(angle) * length
-			dz = math.cos(angle) * length
-			lastDelay = math.random(15)
-			DelayCall(ArtyShot, {strikeType, unitID, teamID, x + dx, y + ARTY_HEIGHT, z + dz}, weapInfo.delay + (i-1) * (weapInfo.reload or 0) + lastDelay)
+	local lastDelay = 0
+	if strikeType < 3 then -- artillery style
+		for i = 1, weapInfo.salvo do
+			for j = 1, (weapInfo.burst or 1) do
+				local angle = math.random(360)
+				local length = math.random(weapInfo.spread)
+				dx = math.sin(angle) * length
+				dz = math.cos(angle) * length
+				lastDelay = math.random(15)
+				DelayCall(ArtyShot, {strikeType, unitID, teamID, x + dx, y + ARTY_HEIGHT, z + dz}, weapInfo.delay + (i-1) * (weapInfo.reload or 0) + lastDelay)
+			end
 		end
+	else -- spawn a fully armed and operational battle-station
+		DelayCall(Spring.CreateUnit, {weapInfo.id, x, y, z, 0, teamID, false, false}, weapInfo.delay)
 	end
 	GG.PlaySoundForTeam(teamID, "bb_orbitalstrike_inbound", 1)
 	DelayCall(GG.PlaySoundForTeam, {teamID, "bb_orbitalstrike_available_in_60", 1}, weapInfo.delay + lastDelay + 30 * 8) -- fudge for time to fall from orbit after spawned
@@ -310,7 +313,10 @@ function gadget:AllowCommand(unitID, unitDefID, teamID, cmdID, cmdParams, cmdOpt
 		elseif cmdID == nppcCmdDesc.id then
 			local x,y,z = unpack(cmdParams)
 			return ArtyStrike(unitID, teamID, x, y, z, Spring.IsNoCostEnabled() and 0 or artyWeaponInfo[2].cost, 2)
-		elseif cmdID == aeroCmdDesc.id and teamID then
+		elseif cmdID == nlCmdDesc.id then
+			local x,y,z = unpack(cmdParams)
+			return ArtyStrike(unitID, teamID, x, y, z, Spring.IsNoCostEnabled() and 0 or artyWeaponInfo[3].cost, 3)
+		--[[elseif cmdID == aeroCmdDesc.id and teamID then
 			local targetID = cmdParams[1]
 			local targetTeam = Spring.GetUnitTeam(targetID)
 			local targetDef = UnitDefs[Spring.GetUnitDefID(targetID)]
@@ -320,7 +326,7 @@ function gadget:AllowCommand(unitID, unitDefID, teamID, cmdID, cmdParams, cmdOpt
 			return AeroStrike(unitID, teamID, cmdParams[1], Spring.IsNoCostEnabled() and 0 or AERO_COST)
 		elseif cmdID == assaultCmdDesc.id then
 			local x,y,z = unpack(cmdParams)
-			return AssaultStrike(unitID, teamID, x, y, z, Spring.IsNoCostEnabled() and 0 or ASSAULT_COST)
+			return AssaultStrike(unitID, teamID, x, y, z, Spring.IsNoCostEnabled() and 0 or ASSAULT_COST)--]]
 		end
 	end
 	return true

@@ -21,5 +21,36 @@ function script.Create()
 		Spring.SetProjectileAlwaysVisible(nukeID, true)
 		Sleep(3000)
 		Spring.DestroyUnit(unitID)
+	elseif unitDef.name == "naval_laser" then
+		local TIME_TO_LIVE = 10
+		local LASER_HEIGHT = 5000
+		local MAX_SPEED = 15
+		local x,y,z = Spring.GetUnitBasePosition(unitID)
+		Spring.MoveCtrl.Enable(unitID)
+		Spring.MoveCtrl.SetPosition(unitID, x, y + LASER_HEIGHT, z)
+		local sign = (-1)^math.random(1,2)
+		Spring.MoveCtrl.SetVelocity(unitID, sign * MAX_SPEED * math.random(), 0, sign * MAX_SPEED * math.random())
+		GG.Delay.DelayCall(Spring.DestroyUnit, {unitID}, 30 * TIME_TO_LIVE)
 	end
+end
+
+
+function script.AimWeapon(weaponID, heading, pitch)
+	Signal(2^weaponID)
+	SetSignalMask(2^weaponID)
+	return true
+end
+
+function script.AimFromWeapon(weaponID)
+	return 1
+end
+
+function script.QueryWeapon(weaponID)
+	return 1
+end
+
+function script.TargetWeight(weaponID, targetID)
+	local targetDefID = Spring.GetUnitDefID(targetID)
+	local transported = Spring.GetUnitTransporter(targetID)
+	return transported and 1000000 or GG.outpostDefs[targetDefID] and 0.01 or GG.mechCache[targetDefID] and 100 or 10000
 end

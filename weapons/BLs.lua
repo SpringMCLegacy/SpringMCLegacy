@@ -201,6 +201,24 @@ local HLBL = BeamLaser_Class:New{
     },
 }
 
+local NL45 = HLBL:New{
+	explosionGenerator		= "custom:HE_XLARGE",
+	sweepfire				= false,
+	beamBurst				= true,
+	reloadTime				= 0.1,
+	accuracy				= 100,
+	thickness				= 9,
+	coreThickness			= 8.5,
+	beamTime				= 5,
+	beamTTL					= 6,
+	range					= 400000,
+	areaOfEffect			= 300,
+	
+	damage = {
+		default = 3200,
+	},
+}
+
 return lowerkeys({ 
 	Sight = Sight,
 	TAG = TAG,
@@ -214,4 +232,5 @@ return lowerkeys({
 	ERLBL = ERLBL,
 	CERLBL = CERLBL,
 	HLBL = HLBL,
+	NL45 = NL45,
 })

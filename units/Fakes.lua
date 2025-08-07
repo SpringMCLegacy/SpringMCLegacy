@@ -31,6 +31,16 @@ local Nuke_Meltdown = Fake:New{
 	}
 }
 
+local Naval_Laser = Nuke_Meltdown:New{ -- for invincible and minimal sight
+	weapons = {	
+		[1] = {
+			name	= "NL45",
+			OnlyTargetCategory = "notbeacon ground",
+			BadTargetCategory = "mech tank",
+		},
+	}
+}
+
 local Decal = Fake:New{
 	useBuildingGroundDecal 	= true,
 	customParams = {
@@ -55,6 +65,7 @@ return lowerkeys({
 	["Narc_ECM"] = Narc_ECM,
 	["Nuke_Icon"] = Nuke_Icon,
 	["Nuke_Meltdown"] = Nuke_Meltdown,
+	["Naval_Laser"] = Naval_Laser,
 	["Decal_Beacon"] = Decal_Beacon,
 	["Decal_Drop"] = Decal_Drop,
 })

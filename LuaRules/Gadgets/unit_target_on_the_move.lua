@@ -287,7 +287,12 @@ if gadgetHandler:IsSyncedCode() then
 	
 	-- if the user has settarget, disallow engine generated attack commands
 	function gadget:AllowWeaponTargetCheck(attackerID, attackerWeaponNum, attackerWeaponDefID)
-		--Spring.Echo("AllowWeaponTargetCheck", attackerID, attackerWeaponNum, attackerWeaponDefID, UnitDefs[Spring.GetUnitDefID(attackerID)].name)
+		local attackerDefID = Spring.GetUnitDefID(attackerID)
+		local attackerDef = attackerDefID and UnitDefs[attackerDefID]
+		if attackerDef and not GG.mechCache[attackerDefID] then -- pass non-mechs through normal engine checks
+			--Spring.Echo("AllowWeaponTargetCheck", attackerDef.name, attackerID, attackerWeaponNum, WeaponDefs[attackerWeaponDefID].name)
+			return false, true
+		end
 		local setTargetID = unitTargets[attackerID] and unitTargets[attackerID].targets[1].target
 		return setTargetID ~= nil, setTargetID == nil
 	end
@@ -300,7 +305,7 @@ if gadgetHandler:IsSyncedCode() then
 		local attackerDef = attackerID and UnitDefs[Spring.GetUnitDefID(attackerID)]
 		local weapDef = attackerWeaponDefID and WeaponDefs[attackerWeaponDefID]
 		--Spring.Echo("AllowWeaponTarget", attackerDef and attackerDef.name, "target", targetDef and targetDef.name, 
-		--			"weapNum", attackerWeaponNum, weapDef and weapDef.name, "setTargetID", setTargetID)
+		--		"weapNum", attackerWeaponNum, weapDef and weapDef.name, "setTargetID", setTargetID)
 		if setTargetID then
 			--return setTargetID == targetID, 0.001
 		elseif attackerWeaponDefID == ARROW_ID then

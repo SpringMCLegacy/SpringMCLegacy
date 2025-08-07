@@ -499,7 +499,7 @@ return {
 				action = 'perkuplink_2',
 				name = GG.Pad("Naval", "PPC"),
 				tooltip = 'Unlock Naval PPC anti-sensor area bombardment.',
-				texture = 'unitpics/Sortie_Attack.png',	
+				texture = 'bitmaps/ui/upgrade.png',	
 			},
 			valid = function (unitDefID) return UnitDefs[unitDefID].name == "outpost_uplink" end,
 			applyPerk = function (unitID)
@@ -508,14 +508,14 @@ return {
 			costFunction = deductCBills,
 			price = 35000,
 		},
-		--[[{
+		{
 			name = "uplink_3",
 			cmdDesc = {
 				id = GetCmdID('PERK_UPLINK_3'),
 				action = 'perkuplink_3',
-				name = GG.Pad("Assault", "Dropship"),
-				tooltip = 'Unlock Assault dropship attack run',
-				texture = 'unitpics/Dropship_Avenger.png',	
+				name = GG.Pad("Naval", "Laser"),
+				tooltip = 'Unlock Naval Laser point-target removal service.',
+				texture = 'bitmaps/ui/upgrade.png',	
 			},
 			valid = function (unitDefID) return UnitDefs[unitDefID].name == "outpost_uplink" end,
 			applyPerk = function (unitID)
@@ -524,7 +524,7 @@ return {
 			costFunction = deductCBills,
 			price = 52000,
 			requires = "uplink_2",
-		},--]]
+		},
 		-- Turret Control
 		{
 			name = "turretcontrol_2",
