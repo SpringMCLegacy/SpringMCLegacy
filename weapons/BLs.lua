@@ -211,7 +211,7 @@ local NL45 = HLBL:New{
 	coreThickness			= 8.5,
 	beamTime				= 5,
 	beamTTL					= 6,
-	range					= 400000,
+	range					= 5250, -- Decal.lua LASER_HEIGHT + some fudge
 	areaOfEffect			= 300,
 	
 	damage = {
