@@ -36,7 +36,7 @@ local Naval_Laser = Nuke_Meltdown:New{ -- for invincible and minimal sight
 	weapons = {	
 		[1] = {
 			name	= "NL45",
-			OnlyTargetCategory = "notbeacon ground",
+			OnlyTargetCategory = "ground",
 			BadTargetCategory = "mech tank",
 		},
 	}
