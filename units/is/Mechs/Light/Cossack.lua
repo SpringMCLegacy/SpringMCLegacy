@@ -1,6 +1,11 @@
 local Cossack = Light:New{
 	name              	= "Cossack",
 	
+	leaveTracks			= true,	
+	trackType			= "Cossack",
+	trackOffset			= 6,
+	trackWidth			= 20,
+	trackStretch 		= 2,
 	customparams = {
 		cockpitheight	= 7,
 		tonnage 		= 20,
@@ -32,7 +37,7 @@ local CSK1 = Cossack:New{
 		armor			= 3,
 		maxammo 		= {srm = 1},
 		jumpjets		= 6,
-		mods 			= {"jumpjets", "endosteel"},
+		mods 			= {"jumpjets", "endosteel", "xlengine"},
     },
 }
 
