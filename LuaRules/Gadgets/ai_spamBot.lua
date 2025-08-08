@@ -201,6 +201,7 @@ local function Outpost(beaconID, teamID)
 		-- C3 if we have more mechs than capacity, otherwise try just randomly picking
 		local randPick = teamMechCounts[teamID] > ((teamOutpostCounts[teamID][UnitDefNames["outpost_c3array"].id] + 1) * 4) and 1 or math.random(#AI_OUTPOST_OPTIONS)
 		local cmd = "CMD_" .. AI_OUTPOST_OPTIONS[randPick]
+		--Spring.Echo("AI team", teamID, "has", (teamOutpostCounts[teamID][UnitDefNames["outpost_c3array"].id] + 1) * 4, "slots and", teamMechCounts[teamID], "mechs. Choice is", cmd)
 		if difficulty > 1 then -- cheat the required resources in
 			Spring.AddTeamResource(teamID, "metal", AI_CMDS[cmd].cost)
 		end
