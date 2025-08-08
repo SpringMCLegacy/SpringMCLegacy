@@ -21,6 +21,7 @@ local Narc_ECM = Fake:New{
 
 local Nuke_Icon = Fake:New{
 	iconType = "nuke",
+	sightDistance = 0,
 }
 
 local Nuke_Meltdown = Fake:New{
