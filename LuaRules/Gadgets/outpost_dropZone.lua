@@ -305,7 +305,8 @@ function DropZoneCoolDown(teamID) -- called by Dropship once it has left, to ena
 		Spring.SetTeamRulesParam(teamID, "DROPSHIP_COOLDOWN", enableFrame) -- frame this team can call dropship again
 		GG.Delay.DelayCall(DropShipAvailable, {teamID}, tonumber(dropShipDef.customParams.cooldown))
 	else
-		Spring.Echo("FLOZi logic fail, a non-dead team seems to be missing teamDropZoneLevels?")
+		-- Somehow this can happen, but it doesn't cause any problems
+		--Spring.Echo("FLOZi logic fail, a non-dead team seems to be missing teamDropZoneLevels?")
 	end
 end
 
