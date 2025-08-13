@@ -1,3 +1,8 @@
+local yard = ""
+for i = 1, 16 do
+	yard = yard .. "y"
+end
+
 local Outpost_Aircon = Outpost:New{
 	name              	= "Aerofighter Control Tower",
 	description         = "A command hub for aerofighter assets deploying from orbit",
@@ -5,6 +10,12 @@ local Outpost_Aircon = Outpost:New{
 	maxDamage           = 7000,
 	mass                = 5000,
 	buildCostMetal      = 8500,
+	
+	-- Constructor stuff
+	builder				= true,
+	workerTime			= 10, -- ?	
+	showNanoSpray		= false,
+	yardmap				= yard,
 	
 	customparams = {
 		helptext		= "Ping Pong Potato",

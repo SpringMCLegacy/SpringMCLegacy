@@ -161,7 +161,7 @@ local spawnTable = {
 	},
 }
 					
--- DROPZONES & spawn pads
+-- DROPZONES, spawn pads & aero control
 local DROPZONE_UDS = {} --DZ_IDS = {shortSideName = unitDef}
 local DROPZONE_BUILDOPTIONS = {} -- D_B = {shortSideName = {unitname1, ...}}
 
@@ -172,6 +172,9 @@ local VPAD_HOUSE_REMOVE = {} -- V_R = {shortSideName = {oldUnitName = newUnitNam
 local HPAD_UD
 local HPAD_SPAWNOPTIONS = {} -- H_S = {shortSideName = {unitname1, ...}}
 local HPAD_HOUSE_REMOVE = {} -- H_R = {shortSideName = {oldUnitName = newUnitName}}
+
+local AEROCON_UD
+local AEROCON_BUILDOPTIONS = {}
 
 for i, sideName in pairs(Sides) do
 	DROPZONE_BUILDOPTIONS[sideName] = {}
@@ -446,6 +449,8 @@ for name, ud in pairs(UnitDefs) do
 		ud.category = ud.category .. " narctag"
 		table.insert(TCONTROL_BUILDOPTIONS, name)
 		ud.levelground = false
+	elseif name:find("sortie") then
+		table.insert(AEROCON_BUILDOPTIONS, name)
 	end
 	
 	if name:find("dropzone") then
@@ -458,6 +463,8 @@ for name, ud in pairs(UnitDefs) do
 			ud.canselfdestruct = false
 		elseif name == "outpost_turretcontrol" then
 			TCONTROL_UD = ud
+		elseif name == "outpost_aircon" then
+			AEROCON_UD = ud
 		elseif cp.dropship or name:find("dropzone") then
 			ud.canselfdestruct = false
 			ud.levelground = false
@@ -522,6 +529,8 @@ end
 
 table.sort(TCONTROL_BUILDOPTIONS)
 TCONTROL_UD["buildoptions"] = TCONTROL_BUILDOPTIONS
+table.sort(AEROCON_BUILDOPTIONS)
+AEROCON_UD["buildoptions"] = AEROCON_BUILDOPTIONS
 VPAD_UD.customparams.spawn = hoverMap and HPAD_SPAWNOPTIONS or VPAD_SPAWNOPTIONS
 --HPAD_UD.customparams.spawn = HPAD_SPAWNOPTIONS
 --table.echo(VPAD_UD.customparams.spawn)
