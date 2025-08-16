@@ -1,6 +1,12 @@
 local Devastator = Assault:New{
 	name				= "Devastator",
 	
+	leaveTracks			= true,	
+	trackType			= "Devastator",
+	trackOffset			= 6,
+	trackWidth			= 46,
+	trackStretch 		= 2,
+	
 	customparams = {
 		cockpitheight	= 9.4,
 		tonnage			= 100,

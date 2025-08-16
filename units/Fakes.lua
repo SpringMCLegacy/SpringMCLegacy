@@ -1,14 +1,3 @@
-local Fake = Unit:New{
-	objectName 				= "Decal.s3o",
-	script 					= "decal.lua",
-	hideDamage				= true,
-	maxDamage				= 10, -- hack to avoid showing healthbar, never actually takes damage
-	
-	customParams = {
-		ignoreatbeacon	= true,
-	}
-}
-
 local Narc_ECM = Fake:New{
 	radarDistanceJam = 150,
 	sightDistance = 150,

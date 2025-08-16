@@ -46,7 +46,8 @@ local beaconDropshipQueue = {} -- beaconDropshipQueue[beaconID] = {info1 = {}, i
 
 function SpawnCargo(beaconID, targetID, dropshipID, unitDefID, teamID)
 	local tx, ty, tz = GetUnitPosition(dropshipID)
-	local cargoID = CreateUnit(unitDefID, tx, ty, tz, "s", teamID)
+	local ty = Spring.GetGroundHeight(tx,tz)
+	local cargoID = CreateUnit(unitDefID, tx, ty, tz, "s", teamID, false, false)
 	env = Spring.UnitScript.GetScriptEnv(dropshipID)
 	Spring.UnitScript.CallAsUnit(dropshipID, env.LoadCargo, cargoID, targetID, beaconID)
 	-- extra behaviour to link outposts with beacons

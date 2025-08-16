@@ -1,10 +1,6 @@
 -- Common pieces
 local base = piece ("base")
 local crate_base, crate_top, crate_right, crate_left, crate_front, crate_back = piece ("crate_base", "crate_top", "crate_right", "crate_left", "crate_front", "crate_back")
--- C3 pieces
-local emitterbase1, emitter1, geo1, emitterbase2, emitter2, geo2 = piece ("emitterbase1", "emitter1", "geo1", "emitterbase2", "emitter2", "geo2")
-local door1a, door1b, door2a, door2b, gendoor1, gendoor2, generator1, generator2 = piece ("door1a", "door1b", "door2a", "door2b", "gendoor1", "gendoor2", "generator1", "generator2")
-local leg1, leg2, leg3, leg4, foot1, foot2, foot3, foot4 = piece ("leg1", "leg2", "leg3", "leg4", "foot1", "foot2", "foot3", "foot4")
 -- Mechbay pieces
 local rampr, rampl, ramprfoldrear, ramprfoldfront, ramplfoldrear, ramplfoldfront = piece ("rampr", "rampl", "ramprfoldrear", "ramprfoldfront", "ramplfoldrear", "ramplfoldfront")
 local supportrlower, supportllower, supportrupper, supportlupper = piece ("supportrlower", "supportllower", "supportrupper", "supportlupper")
@@ -104,6 +100,9 @@ local CRATE_SPEED = math.rad(50)
 local RANDOM_ROT = math.random(-180, 180)
 local UNLOAD_X, UNLOAD_Z
 
+---------------------------------------------------------------------
+-- Common functions
+---------------------------------------------------------------------
 pointID = nil
 beaconID = nil
 function ParentBeacon(callingPointID, parentBeaconID)
@@ -111,93 +110,159 @@ function ParentBeacon(callingPointID, parentBeaconID)
 	beaconID = parentBeaconID
 end
 
-local function Blinks()
-	local i = 1
-	while true do
-		EmitSfx(blinks[i], SFX.CEG)
-		Sleep(500)
-		i = i + 1
-		if i == 7 then i = 1 end
+function Upgrade(level)
+	if name == "outpost_vehiclepad" or name == "outpost_hoverpad" then
+		--[[if level == 2 then
+			Show(base2)
+			Hide(base)
+			for i = 1,6 do
+				Hide(ramps[i])
+			end
+		elseif level == 3 then
+			Show(flags)
+		end]]
+	elseif name == "outpost_c3array" then
+		StartThread(C3_Upgrade)
+	elseif name == "outpost_salvageyard" and level == 2 then
+		Show(foundation)
+		RecursiveHide(recoveryrail, false)
+	elseif name == "outpost_ewar" then
+		if level == 2 then
+			StartThread(ECM)
+		elseif level == 3 then
+			StartThread(TAG)
+		end
 	end
 end
 
-function ECM()
-	local ecm, ecmdoor1, ecmdoor2, console1 = piece("ecm", "ecmdoor1", "ecmdoor2", "console1")
-	Move(console1, z_axis, -7, CRATE_SPEED)
-	Move(ecmdoor1, x_axis, 5, CRATE_SPEED)
-	Move(ecmdoor2, x_axis, -5, CRATE_SPEED)
-	WaitForMove(ecmdoor2, x_axis)
-	Move(ecm, y_axis, 11, CRATE_SPEED)
-	WaitForMove(ecm, y_axis)
-	GG.SetUnitECMRadius(unitID, nil, 1000)
-end
+---------------------------------------------------------------------
+-- Individualised functions
+---------------------------------------------------------------------
+if name == "outpost_aircon" then
+	-- AirCon pieces
+	local tower_mid, tower_top, ladder, antennadoor1, radardoor1, radardoor2 = piece ("tower_mid", "tower_top", "ladder", "antennadoor1", "radardoor1", "radardoor2")
+	local radar_mount, radar_spin, radar_arm1, radar_arm2, antennabase, antenna1_1, antenna1_2, antenna2_1, antenna2_2 = piece ("radar_mount", "radar_spin", "radar_arm1", "radar_arm2", "antennabase", "antenna1_1", "antenna1_2", "antenna2_1", "antenna2_2")
+	
+	-- AirCon unpack anim
+	function AirCon()
+		Move(tower_mid, y_axis, 8, CRATE_SPEED * 8)
+		PlaySound("HeavyLift")
+		WaitForMove(tower_mid, y_axis)
+		Move(tower_top, y_axis, 29, CRATE_SPEED * 12)
+		Turn(legs[1], z_axis, rad(90), CRATE_SPEED * 2)
+		Move(legs[1], x_axis, -11, CRATE_SPEED * 8)
+		Move(legs[1], y_axis, 1, CRATE_SPEED * 8)
+		Turn(legs[2], x_axis, rad(90), CRATE_SPEED * 2)
+		Move(legs[2], z_axis, 11, CRATE_SPEED * 8)
+		Move(legs[2], y_axis, 1, CRATE_SPEED * 8)
+		Turn(legs[3], z_axis, rad(-90), CRATE_SPEED * 2)
+		Move(legs[3], x_axis, 11, CRATE_SPEED * 8)
+		Move(legs[3], y_axis, 1, CRATE_SPEED * 8)
+		Turn(legs[4], x_axis, rad(-90), CRATE_SPEED * 2)
+		Move(legs[4], z_axis, -11, CRATE_SPEED * 8)
+		Move(legs[4], y_axis, 1, CRATE_SPEED * 8)
+		PlaySound("Hydraulic_Click")
+		WaitForMove(tower_top, y_axis)
+		Move(radardoor1, z_axis, 8, CRATE_SPEED * 10)
+		Move(radardoor2, z_axis, -8, CRATE_SPEED * 10)
+		Move(antennadoor1, z_axis, -8, CRATE_SPEED * 14)
+		PlaySound("ElectricDoor")
+		Sleep(50)
+		PlaySound("ElectricDoor")
+		WaitForMove(radardoor1, z_axis)
+		Move(radar_mount, y_axis, 35, CRATE_SPEED * 18)
+		Move(antennabase, y_axis, 5, CRATE_SPEED * 12)
+		Move(antenna2_1, y_axis, 10, CRATE_SPEED * 12)
+		PlaySound("Uplink_Whir")
+		Sleep(100)
+		PlaySound("Whir_Small")
+		Move(antenna2_2, y_axis, 9, CRATE_SPEED * 8)
+		Move(antenna1_1, y_axis, 10, CRATE_SPEED * 10)
+		WaitForMove(radar_mount, y_axis)
+		PlaySound("Whir_Small")
+		Turn(radar_arm1, x_axis, rad(-90), CRATE_SPEED * 1)
+		Turn(radar_arm2, x_axis, rad(90), CRATE_SPEED * 1)
+		PlaySound("Hydraulic_Click")
+		Sleep(50)
+		Spin(radar_spin, y_axis, math.rad(40), math.rad(10))
+		Sleep(100)
+		Move(ladder, y_axis, -26, CRATE_SPEED * 32)
+		PlaySound("Gear_Small")
+		WaitForMove(antenna1_1, y_axis)
+		Move(antenna1_2, y_axis, 14, CRATE_SPEED * 12)
+		PlaySound("Whir_Small")
+		-- Now we are deployed, allow to build
+		Spring.SetUnitNanoPieces(unitID, {1})
+		SetUnitValue(COB.INBUILDSTANCE, 1)
+	end
+	
+	-- AirCon is a factory, allow it to build sorties
+	function script.QueryBuildInfo()
+		return 1
+	end
+	
+elseif name == "outpost_c3array" then
+	 -- C3 Pieces
+	local emitterbase1, emitter1, geo1, emitterbase2, emitter2, geo2 = piece ("emitterbase1", "emitter1", "geo1", "emitterbase2", "emitter2", "geo2")
+	local door1a, door1b, door2a, door2b, gendoor1, gendoor2, generator1, generator2 = piece ("door1a", "door1b", "door2a", "door2b", "gendoor1", "gendoor2", "generator1", "generator2")
+	local leg1, leg2, leg3, leg4, foot1, foot2, foot3, foot4 = piece ("leg1", "leg2", "leg3", "leg4", "foot1", "foot2", "foot3", "foot4")
+	
+	-- C3 unpack anim
+	function C3Array()
+		PlaySound("Whir")
+		Move(leg1, x_axis, 12, CRATE_SPEED * 10)
+		Move(leg1, y_axis, -2, CRATE_SPEED * 3)
+		Move(leg2, x_axis, 12, CRATE_SPEED * 10)
+		Move(leg2, y_axis, -2, CRATE_SPEED * 3)
+		Move(leg3, x_axis, -12, CRATE_SPEED * 10)
+		Move(leg3, y_axis, -2, CRATE_SPEED * 3)
+		Move(leg4, x_axis, -12, CRATE_SPEED * 10)
+		Move(leg4, y_axis, -2, CRATE_SPEED * 3)
+		WaitForMove(leg1, x_axis)
+		WaitForMove(leg2, x_axis)
+		WaitForMove(leg3, x_axis)
+		WaitForMove(leg4, x_axis)
+		Turn(foot1, z_axis, math.rad(-90), CRATE_SPEED * 2)
+		Turn(foot2, z_axis, math.rad(-90), CRATE_SPEED * 2)
+		Turn(foot3, z_axis, math.rad(90), CRATE_SPEED * 2)
+		Turn(foot4, z_axis, math.rad(90), CRATE_SPEED * 2)
+		PlaySound("Thunk")
+		Sleep(1000)
+		Move(door1a, z_axis, 10, CRATE_SPEED * 20)
+		WaitForMove(door1a, z_axis)
+		Move(door1b, z_axis, 15, CRATE_SPEED * 20)
+		WaitForMove(door1b, z_axis)
+		Move(emitterbase1, y_axis, 15, CRATE_SPEED * 10)
+		WaitForMove(emitterbase1, y_axis)
+		Move(emitter1, y_axis, 11.5, CRATE_SPEED * 10)
+		WaitForMove(emitter1, y_axis)
+		Move(gendoor1, z_axis, -12, CRATE_SPEED * 8)
+		WaitForMove(gendoor1, z_axis)
+		Move(generator1, x_axis, 13, CRATE_SPEED * 8)
+		WaitForMove(generator1, x_axis)
+		Spin(geo1, y_axis, math.rad(100), math.rad(15))
+		Sleep(1000)
+		GG.LanceControl(teamID, unitID, true)
+	end
 
-noFiring = true
-function TAG()
-	local tagbase1, tagstand1, tagbase2, tagstand2 = piece("tagbase1", "tagstand1", "tagbase2", "tagstand2")
-	Turn(tagbase1, z_axis, 0, CRATE_SPEED)
-	Turn(tagbase2, z_axis, 0, CRATE_SPEED)
-	WaitForTurn(tagbase2, z_axis)
-	Turn(tagstand1, z_axis, 0, CRATE_SPEED)
-	Turn(tagstand2, z_axis, 0, CRATE_SPEED)
-	WaitForTurn(tagstand2, z_axis)
-	noFiring = false
-	Spring.SetUnitRulesParam(unitID, "weapon_1", "active")
-	Spring.SetUnitRulesParam(unitID, "weapon_2", "active")
-end
+	-- C3 upgrade anim
+	function C3_Upgrade()
+		Move(door2a, z_axis, -10, CRATE_SPEED * 20)
+		WaitForMove(door2a, z_axis)
+		Move(door2b, z_axis, -15, CRATE_SPEED * 20)
+		WaitForMove(door2b, z_axis)
+		Move(emitterbase2, y_axis, 15, CRATE_SPEED * 10)
+		WaitForMove(emitterbase2, y_axis)
+		Move(emitter2, y_axis, 11.5, CRATE_SPEED * 10)
+		WaitForMove(emitter2, y_axis)
+		Move(gendoor2, z_axis, 12, CRATE_SPEED * 8)
+		WaitForMove(gendoor2, z_axis)
+		Move(generator2, x_axis, -13, CRATE_SPEED * 8)
+		WaitForMove(generator2, x_axis)
+		Spin(geo2, y_axis, math.rad(100), math.rad(15))
+		Sleep(1000)
+	end
 
-function C3Array()
-	PlaySound("Whir")
-	Move(leg1, x_axis, 12, CRATE_SPEED * 10)
-	Move(leg1, y_axis, -2, CRATE_SPEED * 3)
-	Move(leg2, x_axis, 12, CRATE_SPEED * 10)
-	Move(leg2, y_axis, -2, CRATE_SPEED * 3)
-	Move(leg3, x_axis, -12, CRATE_SPEED * 10)
-	Move(leg3, y_axis, -2, CRATE_SPEED * 3)
-	Move(leg4, x_axis, -12, CRATE_SPEED * 10)
-	Move(leg4, y_axis, -2, CRATE_SPEED * 3)
-	WaitForMove(leg1, x_axis)
-	WaitForMove(leg2, x_axis)
-	WaitForMove(leg3, x_axis)
-	WaitForMove(leg4, x_axis)
-	Turn(foot1, z_axis, math.rad(-90), CRATE_SPEED * 2)
-	Turn(foot2, z_axis, math.rad(-90), CRATE_SPEED * 2)
-	Turn(foot3, z_axis, math.rad(90), CRATE_SPEED * 2)
-	Turn(foot4, z_axis, math.rad(90), CRATE_SPEED * 2)
-	PlaySound("Thunk")
-	Sleep(1000)
-	Move(door1a, z_axis, 10, CRATE_SPEED * 20)
-	WaitForMove(door1a, z_axis)
-	Move(door1b, z_axis, 15, CRATE_SPEED * 20)
-	WaitForMove(door1b, z_axis)
-	Move(emitterbase1, y_axis, 15, CRATE_SPEED * 10)
-	WaitForMove(emitterbase1, y_axis)
-	Move(emitter1, y_axis, 11.5, CRATE_SPEED * 10)
-	WaitForMove(emitter1, y_axis)
-	Move(gendoor1, z_axis, -12, CRATE_SPEED * 8)
-	WaitForMove(gendoor1, z_axis)
-	Move(generator1, x_axis, 13, CRATE_SPEED * 8)
-	WaitForMove(generator1, x_axis)
-	Spin(geo1, y_axis, math.rad(100), math.rad(15))
-	Sleep(1000)
-	GG.LanceControl(teamID, unitID, true)
-end
-
-function C3_Upgrade()
-	Move(door2a, z_axis, -10, CRATE_SPEED * 20)
-	WaitForMove(door2a, z_axis)
-	Move(door2b, z_axis, -15, CRATE_SPEED * 20)
-	WaitForMove(door2b, z_axis)
-	Move(emitterbase2, y_axis, 15, CRATE_SPEED * 10)
-	WaitForMove(emitterbase2, y_axis)
-	Move(emitter2, y_axis, 11.5, CRATE_SPEED * 10)
-	WaitForMove(emitter2, y_axis)
-	Move(gendoor2, z_axis, 12, CRATE_SPEED * 8)
-	WaitForMove(gendoor2, z_axis)
-	Move(generator2, x_axis, -13, CRATE_SPEED * 8)
-	WaitForMove(generator2, x_axis)
-	Spin(geo2, y_axis, math.rad(100), math.rad(15))
-	Sleep(1000)
 end
 
 function ArtilleryCreate()
@@ -381,56 +446,6 @@ function LauncherClose()
 	Show(projectile)
 end	
 
-function AirCon()
-	local tower_mid, tower_top, ladder, antennadoor1, radardoor1, radardoor2 = piece ("tower_mid", "tower_top", "ladder", "antennadoor1", "radardoor1", "radardoor2")
-	local radar_mount, radar_spin, radar_arm1, radar_arm2, antennabase, antenna1_1, antenna1_2, antenna2_1, antenna2_2 = piece ("radar_mount", "radar_spin", "radar_arm1", "radar_arm2", "antennabase", "antenna1_1", "antenna1_2", "antenna2_1", "antenna2_2")
-	Move(tower_mid, y_axis, 8, CRATE_SPEED * 8)
-	PlaySound("HeavyLift")
-	WaitForMove(tower_mid, y_axis)
-	Move(tower_top, y_axis, 29, CRATE_SPEED * 12)
-	Turn(leg1, z_axis, rad(90), CRATE_SPEED * 2)
-	Move(leg1, x_axis, -11, CRATE_SPEED * 8)
-	Move(leg1, y_axis, 1, CRATE_SPEED * 8)
-	Turn(leg2, x_axis, rad(90), CRATE_SPEED * 2)
-	Move(leg2, z_axis, 11, CRATE_SPEED * 8)
-	Move(leg2, y_axis, 1, CRATE_SPEED * 8)
-	Turn(leg3, z_axis, rad(-90), CRATE_SPEED * 2)
-	Move(leg3, x_axis, 11, CRATE_SPEED * 8)
-	Move(leg3, y_axis, 1, CRATE_SPEED * 8)
-	Turn(leg4, x_axis, rad(-90), CRATE_SPEED * 2)
-	Move(leg4, z_axis, -11, CRATE_SPEED * 8)
-	Move(leg4, y_axis, 1, CRATE_SPEED * 8)
-	PlaySound("Hydraulic_Click")
-	WaitForMove(tower_top, y_axis)
-	Move(radardoor1, z_axis, 8, CRATE_SPEED * 10)
-	Move(radardoor2, z_axis, -8, CRATE_SPEED * 10)
-	Move(antennadoor1, z_axis, -8, CRATE_SPEED * 14)
-	PlaySound("ElectricDoor")
-	Sleep(50)
-	PlaySound("ElectricDoor")
-	WaitForMove(radardoor1, z_axis)
-	Move(radar_mount, y_axis, 35, CRATE_SPEED * 18)
-	Move(antennabase, y_axis, 5, CRATE_SPEED * 12)
-	Move(antenna2_1, y_axis, 10, CRATE_SPEED * 12)
-	PlaySound("Uplink_Whir")
-	Sleep(100)
-	PlaySound("Whir_Small")
-	Move(antenna2_2, y_axis, 9, CRATE_SPEED * 8)
-	Move(antenna1_1, y_axis, 10, CRATE_SPEED * 10)
-	WaitForMove(radar_mount, y_axis)
-	PlaySound("Whir_Small")
-	Turn(radar_arm1, x_axis, rad(-90), CRATE_SPEED * 1)
-	Turn(radar_arm2, x_axis, rad(90), CRATE_SPEED * 1)
-	PlaySound("Hydraulic_Click")
-	Sleep(50)
-	Spin(radar_spin, y_axis, math.rad(40), math.rad(10))
-	Sleep(100)
-	Move(ladder, y_axis, -26, CRATE_SPEED * 32)
-	PlaySound("Gear_Small")
-	WaitForMove(antenna1_1, y_axis)
-	Move(antenna1_2, y_axis, 14, CRATE_SPEED * 12)
-	PlaySound("Whir_Small")
-end
 
 -- Garrison weapons
 function script.AimWeapon(weaponID, heading, pitch)
@@ -485,29 +500,41 @@ function script.QueryWeapon(weaponID)
 	return flares[weaponID]
 end
 
-function Upgrade(level)
-	if name == "outpost_vehiclepad" or name == "outpost_hoverpad" then
-		--[[if level == 2 then
-			Show(base2)
-			Hide(base)
-			for i = 1,6 do
-				Hide(ramps[i])
-			end
-		elseif level == 3 then
-			Show(flags)
-		end]]
-	elseif name == "outpost_c3array" then
-		StartThread(C3_Upgrade)
-	elseif name == "outpost_salvageyard" and level == 2 then
-		Show(foundation)
-		RecursiveHide(recoveryrail, false)
-	elseif name == "outpost_ewar" then
-		if level == 2 then
-			StartThread(ECM)
-		elseif level == 3 then
-			StartThread(TAG)
-		end
+
+
+local function Blinks()
+	local i = 1
+	while true do
+		EmitSfx(blinks[i], SFX.CEG)
+		Sleep(500)
+		i = i + 1
+		if i == 7 then i = 1 end
 	end
+end
+
+function ECM()
+	local ecm, ecmdoor1, ecmdoor2, console1 = piece("ecm", "ecmdoor1", "ecmdoor2", "console1")
+	Move(console1, z_axis, -7, CRATE_SPEED)
+	Move(ecmdoor1, x_axis, 5, CRATE_SPEED)
+	Move(ecmdoor2, x_axis, -5, CRATE_SPEED)
+	WaitForMove(ecmdoor2, x_axis)
+	Move(ecm, y_axis, 11, CRATE_SPEED)
+	WaitForMove(ecm, y_axis)
+	GG.SetUnitECMRadius(unitID, nil, 1000)
+end
+
+noFiring = true
+function TAG()
+	local tagbase1, tagstand1, tagbase2, tagstand2 = piece("tagbase1", "tagstand1", "tagbase2", "tagstand2")
+	Turn(tagbase1, z_axis, 0, CRATE_SPEED)
+	Turn(tagbase2, z_axis, 0, CRATE_SPEED)
+	WaitForTurn(tagbase2, z_axis)
+	Turn(tagstand1, z_axis, 0, CRATE_SPEED)
+	Turn(tagstand2, z_axis, 0, CRATE_SPEED)
+	WaitForTurn(tagstand2, z_axis)
+	noFiring = false
+	Spring.SetUnitRulesParam(unitID, "weapon_1", "active")
+	Spring.SetUnitRulesParam(unitID, "weapon_2", "active")
 end
 
 function script.Create()
@@ -542,8 +569,8 @@ function script.Create()
 	end
 end
 
-function Unloaded()
-	StartThread(Unpack)
+function Unloaded(ry)
+	StartThread(Unpack, ry)
 end
 
 local BAY_RESTORE = 5000 -- 5 seconds
@@ -753,7 +780,13 @@ function BAP()
 	end
 end
 
-function Unpack()
+
+function Unpack(ry)
+	if name == "outpost_aircon" then
+		-- AirCon is an actual structure with yardmap as it needs factory buildoptions
+		-- Engine forces it to grid on unload, so turn model instead
+		Turn(1, y_axis, ry or 0)
+	end
 	-- Wait for delivery van to bug out
 	Sleep(2000)
 	-- Unpack the crate

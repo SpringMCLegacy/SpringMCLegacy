@@ -381,8 +381,6 @@ function UnloadCargo()
 	end
 	--WaitForTurn(piece("leg_4"), z_axis)
 	if Spring.ValidUnitID(cargoID) and not Spring.GetUnitIsDead(cargoID) then -- might be empty on /give testing
-		Spring.UnitScript.DropUnit(cargoID)
-		cargo[1] = nil
 		PlaySound("stomp")
 		local nearCorpses = Spring.GetFeaturesInCylinder(TX, TZ, 50)
 		for i, fID in pairs(nearCorpses) do
@@ -394,11 +392,13 @@ function UnloadCargo()
 			SpawnCEG("mech_jump_dust", TX,TY,TZ)
 			Sleep(60)
 		end
+		Spring.UnitScript.DropUnit(cargoID)
+		cargo[1] = nil
 		Spring.SetUnitBlocking(cargoID, true, true, true, true, true, true, true)
 		-- Let the cargo know it is unloaded
 		env = Spring.UnitScript.GetScriptEnv(cargoID)
 		if env then
-			Spring.UnitScript.CallAsUnit(cargoID, env.Unloaded)
+			Spring.UnitScript.CallAsUnit(cargoID, env.Unloaded, ANGLE)
 			-- Let the beacon know outpost is ready
 			env = Spring.UnitScript.GetScriptEnv(callerID)
 			if env then -- there was a crash here, beacon point died by DFA, should not happen now but just in case!

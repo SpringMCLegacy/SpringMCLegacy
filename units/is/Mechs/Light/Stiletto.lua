@@ -1,6 +1,12 @@
 local Stiletto = Light:New{
 	name				= "Stiletto",
 	
+	leaveTracks			= true,	
+	trackType			= "Stiletto",
+	trackOffset			= 6,
+	trackWidth			= 24,
+	trackStretch 		= 2.5,
+	
 	customparams = {
 		cockpitheight	= 2.6,
 		tonnage			= 35,
