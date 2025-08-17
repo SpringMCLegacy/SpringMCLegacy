@@ -225,7 +225,7 @@ local autoReload = {enabled = false, vssrc = "", fssrc = "", lastUpdate = Spring
 
 -- Indicates wether the first round of getting units should grab all instead of delta
 local manualReload = autoReload.enabled or false
-local debugmode = false
+local debugmode = true--false
 local perfdebug = false
 
 -- These 4 things are for the UnitViewportAPI
@@ -533,6 +533,7 @@ end
 ------------------------- SHADERS                   ----------------------
 ------------------------- LOADING OLD CUS MATERIALS ----------------------
 
+VFS.Include("modules/graphics/init.lua").Init(gl)
 local LuaShader = gl.LuaShader
 
 local engineUniformBufferDefs = LuaShader.GetEngineUniformBufferDefs()
