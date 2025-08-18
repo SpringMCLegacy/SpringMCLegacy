@@ -15,6 +15,7 @@ GL_DECR_WRAP = 0x8508
 --//=============================================================================
 
 function unpack4(t)
+  if not t then return 0,0,0,0 end
   return t[1], t[2], t[3], t[4]
 end
 
