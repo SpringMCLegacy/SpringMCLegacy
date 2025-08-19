@@ -254,95 +254,6 @@ local function GetUniformBinID(objectDefID, reason)
 	end
 end
 
-local uniformBins = {}
-
-do --save a ton of locals
-	local OPTION_SHADOWMAPPING    = 1
-	local OPTION_NORMALMAPPING    = 2
-	local OPTION_SHIFT_RGBHSV     = 4 -- userDefined[2].rgb (gl.SetUnitBufferUniforms(unitID, {math.random(),math.random()-0.5,math.random()-0.5}, 8) -- shift Hue, saturation, valence )
-	local OPTION_VERTEX_AO        = 8
-	local OPTION_FLASHLIGHTS      = 16
-	local OPTION_TREADS_ARM      = 32
-	local OPTION_TREADS_CORE     = 64
-	local OPTION_HEALTH_TEXTURING = 128
-	local OPTION_HEALTH_DISPLACE  = 256
-	local OPTION_HEALTH_TEXRAPTORS = 512
-	local OPTION_MODELSFOG        = 1024
-	local OPTION_TREEWIND         = 2048
-	local OPTION_PBROVERRIDE      = 4096
-	local OPTION_TREADS_LEG       = 8192
-
-	local defaultBitShaderOptions = OPTION_SHADOWMAPPING + OPTION_NORMALMAPPING  + OPTION_MODELSFOG
-
-	uniformBins = {
-		armunit = {
-			bitOptions = defaultBitShaderOptions + OPTION_VERTEX_AO + OPTION_FLASHLIGHTS + OPTION_TREADS_ARM + OPTION_HEALTH_TEXTURING + OPTION_HEALTH_DISPLACE,
-			baseVertexDisplacement = 0.0,
-			brightnessFactor = 1.5,
-		},
-		corunit = {
-			bitOptions = defaultBitShaderOptions + OPTION_VERTEX_AO + OPTION_FLASHLIGHTS + OPTION_TREADS_CORE + OPTION_HEALTH_TEXTURING + OPTION_HEALTH_DISPLACE,
-			baseVertexDisplacement = 0.0,
-			brightnessFactor = 1.5,
-		},
-		legunit = {
-			bitOptions = defaultBitShaderOptions + OPTION_VERTEX_AO + OPTION_FLASHLIGHTS + OPTION_TREADS_LEG + OPTION_HEALTH_TEXTURING + OPTION_HEALTH_DISPLACE,
-			baseVertexDisplacement = 0.0,
-			brightnessFactor = 1.5,
-		},
-		armscavenger = {
-			bitOptions = defaultBitShaderOptions + OPTION_VERTEX_AO + OPTION_FLASHLIGHTS + OPTION_TREADS_ARM + OPTION_HEALTH_TEXTURING + OPTION_HEALTH_DISPLACE,
-			baseVertexDisplacement = 0.4,
-			brightnessFactor = 1.5,
-		},
-		corscavenger = {
-			bitOptions = defaultBitShaderOptions + OPTION_VERTEX_AO + OPTION_FLASHLIGHTS + OPTION_TREADS_CORE + OPTION_HEALTH_TEXTURING + OPTION_HEALTH_DISPLACE,
-			baseVertexDisplacement = 0.4,
-			brightnessFactor = 1.5,
-		},
-		legscavenger = {
-			bitOptions = defaultBitShaderOptions + OPTION_VERTEX_AO + OPTION_FLASHLIGHTS + OPTION_TREADS_LEG + OPTION_HEALTH_TEXTURING + OPTION_HEALTH_DISPLACE,
-			baseVertexDisplacement = 0.4,
-			brightnessFactor = 1.5,
-		},
-		raptor = {
-			bitOptions = defaultBitShaderOptions + OPTION_VERTEX_AO + OPTION_FLASHLIGHTS  + OPTION_HEALTH_DISPLACE + OPTION_HEALTH_TEXRAPTORS + OPTION_TREEWIND + OPTION_SHIFT_RGBHSV,
-			baseVertexDisplacement = 0.0,
-			brightnessFactor = 1.5,
-		},
-		otherunit = {
-			bitOptions = defaultBitShaderOptions,
-			baseVertexDisplacement = 0.0,
-			brightnessFactor = 1.1,--1.5,
-		},
-		feature = {
-			bitOptions = defaultBitShaderOptions + OPTION_PBROVERRIDE,
-			baseVertexDisplacement = 0.0,
-			brightnessFactor = 1.3,
-		},
-		featurepbr = {
-			bitOptions = defaultBitShaderOptions,
-			baseVertexDisplacement = 0.0,
-			brightnessFactor = 1.3,
-		},
-		treepbr = {
-			bitOptions = defaultBitShaderOptions + OPTION_TREEWIND + OPTION_PBROVERRIDE,
-			baseVertexDisplacement = 0.0,
-			brightnessFactor = 1.3,
-		},
-		tree = {
-			bitOptions = defaultBitShaderOptions + OPTION_TREEWIND + OPTION_PBROVERRIDE,
-			baseVertexDisplacement = 0.0,
-			brightnessFactor = 1.3,
-		},
-		wreck = {
-			bitOptions = defaultBitShaderOptions,
-			baseVertexDisplacement = 0.0,
-			brightnessFactor = 1.3,
-		},
-	} -- maps uniformbins to a table of uniform names/values
-end
-
 local overrideDrawFlags = {
 	[0]  = true , --SO_OPAQUE_FLAG = 1, deferred hack
 	[1]  = true , --SO_OPAQUE_FLAG = 1,
@@ -411,6 +322,7 @@ local cusFeatureIDtoDrawFlag = {} -- {featureID = drawFlag,...}, this remains po
 	-- numobjects = 0,  -- a 'pointer to the end'
 -- }
 
+local uniformBins = VFS.Include("LuaRules/Configs/cus_defs.lua", nil, VFS.ZIP)
 local unitDrawBins = nil -- this also controls wether cusgl4 is on at all!
 
 local objectIDtoDefID = {}
@@ -835,27 +747,6 @@ local function GenFastTextureKey(objectDefID, objectDef, normaltexpath, texturet
 	return fastTextureKeyCache[strkey]
 end
 
-local wreckAtlases = {
-	["arm"] = { -- these are only here for posterity
-		"unittextures/Arm_wreck_color.dds",
-		"unittextures/Arm_wreck_other.dds",
-		"unittextures/Arm_wreck_color_normal.dds",
-	},
-	["cor"] = { 
-		"unittextures/cor_color_wreck.dds",
-		"unittextures/cor_other_wreck.dds",
-		"unittextures/cor_color_wreck_normal.dds",
-	},
-	["leg"] = {
-		"unittextures/leg_wreck_color.dds",
-		"unittextures/leg_wreck_shader.dds",
-		"unittextures/leg_wreck_normal.dds",
-	},
-	["raptor"] = {
-		"luaui/images/lavadistortion.png",
-	}
-}
-
 local brdfLUT = "modelmaterials_gl4/brdf_0.png"
 
 local existingfilecache = {} -- this speeds up the VFS calls
@@ -902,8 +793,9 @@ local function GetNormal(unitDef, featureDef)
 				existingfilecache[normaltex] = normaltex
 			end
 			return normaltex
-		else
-			if featureDef.model.textures.tex1 == "Arm_wreck_color.dds" then 
+		-- FLOZiTODO: probably best to let games decide how to fallback the cp and just assign blank_normal?
+		else 
+			--[[if featureDef.model.textures.tex1 == "Arm_wreck_color.dds" then 
 				return unittextures.."Arm_wreck_color_normal.dds"
 			end
 			
@@ -913,7 +805,7 @@ local function GetNormal(unitDef, featureDef)
 
 			if featureDef.model.textures.tex1 == "leg_wreck_color.dds" then
 				return unittextures.."leg_wreck_normal.dds"
-			end
+			end]]
 			-- try to search for an appropriate normal
 			normalMap = tex1:gsub("%.","_normals.")
 			-- Spring.Echo(normalMap)
@@ -936,7 +828,7 @@ end
 -- 
 -- %34:1 = unitDef 34 s3o tex2 (:0->tex1,:1->tex2)
 -- %-102:0 = featureDef 102 s3o tex1 
--- The problem here being hat tex1 and tex2 dont participate in texture key hashing.
+-- The problem here being that tex1 and tex2 dont participate in texture key hashing.
 -- so e.g. raptors may have been drawn with incorrect textures all along, due to them being keyed 
 
 
@@ -965,14 +857,14 @@ local function initBinsAndTextures()
 
 			objectDefToUniformBin[-1 * featureDefID] = 'feature'
 
-			if featureDef.name:find("raptor_egg", nil, true) then
+			if featureDef.name:find("raptor_egg", nil, true) then -- FLOZiTODO: remove this
 				objectDefToUniformBin[-1 * featureDefID] = 'wreck'
 				--featuresDefsWithAlpha[-1 * featureDefID] = "yes"
 			elseif (featureDef.customParams and featureDef.customParams.treeshader == 'yes')
 				or knowntrees[featureDef.name] then
 				objectDefToUniformBin[-1 * featureDefID] = 'tree'
 				featuresDefsWithAlpha[-1 * featureDefID] = "yes"
-			elseif featureDef.name:find("_dead", nil, true) or featureDef.name:find("_heap", nil, true) then
+			elseif featureDef.name:find("_dead", nil, true) or featureDef.name:find("_heap", nil, true) then -- FLOZiTODO: support a game defined 'WRECK_SUFFIX'
 				objectDefToUniformBin[-1 * featureDefID] = 'wreck'
 			elseif featureDef.name:find("pilha_crystal", nil, true) or (featureDef.customParams and featureDef.customParams.cuspbr) then
 				objectDefToUniformBin[-1 * featureDefID] = 'featurepbr'
@@ -995,7 +887,7 @@ local function initBinsAndTextures()
 			local lowercasenormaltex = string.lower(normalTex or "")
 
 			-- bin units according to what faction's texture they use
-			local factionBinTag = lowercasetex1:sub(1,3)
+			local factionBinTag = lowercasetex1:sub(1,3) -- FLOZiTODO: The big one, faction binning is not going to generalise to all games, rather tex1(+tex2?) binning
 
 			objectDefToUniformBin[unitDefID] = "otherunit"
 			if factionBinTag == 'arm' then
@@ -1021,7 +913,7 @@ local function initBinsAndTextures()
 				[10] = noisetex3dcube,
 			}
 
-			local wreckTex1 =
+			local wreckTex1 = -- FLOZiTODO: support game-defined WRECK_SUFFIX
 					(lowercasetex1:find("arm_color", nil, true) and "unittextures/Arm_wreck_color.dds") or
 					(lowercasetex1:find("cor_color", nil, true) and "unittextures/cor_color_wreck.dds") or
 					(lowercasetex1:find("leg_color", nil, true) and "unittextures/leg_wreck_color.dds") or
@@ -1029,7 +921,7 @@ local function initBinsAndTextures()
 			if wreckTex1 and existingfilecache[wreckTex1] then -- this part is what ensures that these textures dont get loaded separately, but instead use ones provided by featuredefs
 				wreckTex1 = existingfilecache[wreckTex1]
 			end
-			local wreckTex2 =
+			local wreckTex2 = -- FLOZiTODO: ditto
 					(lowercasetex2:find("arm_other", nil, true) and "unittextures/Arm_wreck_other.dds") or
 					(lowercasetex2:find("cor_other", nil, true) and "unittextures/cor_other_wreck.dds") or
 					(lowercasetex2:find("leg_shader", nil, true) and "unittextures/leg_wreck_shader.dds") or
@@ -1037,13 +929,13 @@ local function initBinsAndTextures()
 			if wreckTex2 and existingfilecache[wreckTex2] then  -- this part is what ensures that these textures dont get loaded separately, but instead use ones provided by featuredefs
 				wreckTex2 = existingfilecache[wreckTex2]
 			end
-			local wreckNormalTex =
+			local wreckNormalTex = -- FLOZiTODO: ditto 
 					(lowercasenormaltex:find("arm_normal") and "unittextures/Arm_wreck_color_normal.dds") or
 					(lowercasenormaltex:find("cor_normal") and "unittextures/cor_color_wreck_normal.dds") or
 					(lowercasenormaltex:find("leg_normal") and "unittextures/leg_wreck_normal.dds") or
 					false
-
-			if unitDef.name:find("_scav", nil, true) then -- it better be a scavenger unit, or ill kill you
+			-- FLOZiTODO: Remove these, just hardcoding stuff into bins. Might need to support some override in the include
+			--[[if unitDef.name:find("_scav", nil, true) then -- it better be a scavenger unit, or ill kill you
 				textureTable[3] = wreckTex1
 				textureTable[4] = wreckTex2
 				textureTable[5] = wreckNormalTex
@@ -1055,11 +947,11 @@ local function initBinsAndTextures()
 					objectDefToUniformBin[unitDefID] = 'legscavenger'
 				end
 			elseif unitDef.name:find("raptor", nil, true) or unitDef.name:find("raptor_hive", nil, true) then
-				textureTable[5] = wreckAtlases['raptor'][1]
+				textureTable[5] = "luaui/images/lavadistortion.png",
 				objectDefToUniformBin[unitDefID] = 'raptor'
 				--Spring.Echo("Raptorwreck", textureTable[5])
-			elseif wreckTex1 and wreckTex2 then -- just a true unit:
-				textureTable[3] = wreckTex1
+			else]]if wreckTex1 and wreckTex2 then -- just a true unit:
+				textureTable[3] = wreckTex1 -- FLOZiTODO: why not just set each if it exists, why check for 1 and 2?
 				textureTable[4] = wreckTex2
 				textureTable[5] = wreckNormalTex
 			end
@@ -1081,7 +973,7 @@ local function initBinsAndTextures()
 end
 
 local preloadedTextures = false
-local function PreloadTextures()
+local function PreloadTextures() -- FLOZiTODO: Figure out which, if any need pre-load in general. Specify in the include?
 	Spring.Echo("[CUS GL4] Cache Textures")
 	-- init the arm and core wrecks, and wreck normals
 	gl.Texture(0, "unittextures/Arm_wreck_color_normal.dds")
@@ -1102,7 +994,9 @@ local function PreloadTextures()
 	gl.Texture(0, false)
 	preloadedTextures = true
 end
-
+--------------------------------------------------------------------
+-- No more FLOZiTODO after this comment
+--------------------------------------------------------------------
 local function GetObjectDefName(objectID)
 	if objectID == nil then
 		return "Failed to GetObjectDefName(objectID): " .. tostring(objectID)
