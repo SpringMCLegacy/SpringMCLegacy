@@ -395,7 +395,7 @@ for id = 1, #FeatureDefs do
 			end
 
 		elseif metallic then
-			local fromUnit = featureDef.name:find("_dead") or featureDef.name:find("_heap")
+			local fromUnit = featureDef.name:find("_dead") or featureDef.name:find("_heap") -- FLOZiTODO: maybe stick the wreckCache in GG for here?
 
 			if fromUnit then
 				Spring.PreloadFeatureDefModel(id)
@@ -408,7 +408,7 @@ for id = 1, #FeatureDefs do
 				end
 
 				local wreckNormalTex = featureDef.model.textures.tex1  and
-					((lowercasetex1:find("arm_wreck") and "unittextures/Arm_wreck_color_normal.dds") or
+					((lowercasetex1:find("arm_wreck") and "unittextures/Arm_wreck_color_normal.dds") or -- FLOZiTODO: Oh come on
 					(lowercasetex1:find("arm_color") and "unittextures/Arm_normal.dds") or -- for things like dead dragons claw armclaw
 					(lowercasetex1:find("cor_color.dds",1,true) and "unittextures/cor_normal.dds") or -- for things like dead dragons maw cormaw
 					(lowercasetex1:find("cor_color_wreck") and "unittextures/cor_color_wreck_normal.dds"))

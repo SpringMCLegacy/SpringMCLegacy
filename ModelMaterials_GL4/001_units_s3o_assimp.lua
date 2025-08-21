@@ -65,7 +65,7 @@ local mySetMaterialUniform = {
 	[true]  = Spring.UnitRendering.SetDeferredMaterialUniform,
 }
 
-local armTanks = {}
+local armTanks = {} -- FLOZiTODO: just Tanks
 local corTanks = {}
 local raptorUnits = {}
 local otherUnits = {}
@@ -223,7 +223,7 @@ end
 ---------------------------------------------------
 
 local materials = {
-	unitsNormalMapArmTanks = table.merge(unitsNormalMapTemplate, {
+	unitsNormalMapArmTanks = table.merge(unitsNormalMapTemplate, { -- FLOZiTODO: Just Tanks
 		texUnits  = {
 			[3] = "%TEXW1",
 			[4] = "%TEXW2",
@@ -281,7 +281,7 @@ local materials = {
 
 		UnitDamaged = UnitDamaged,
 	}),
-	unitsNormalMapOthers = table.merge(unitsNormalMapTemplate, {
+	unitsNormalMapOthers = table.merge(unitsNormalMapTemplate, { -- FLOZiTODO: check over this vs uniformBins
 		shaderOptions = {
 			normalmapping = true,
 			flashlights = false,
@@ -306,7 +306,7 @@ local materials = {
 
 		--UnitDamaged = UnitDamaged,
 	}),
-	unitsNormalMapRaptors = table.merge(unitsNormalMapTemplate, {
+	unitsNormalMapRaptors = table.merge(unitsNormalMapTemplate, { -- FLOZiTODO: generalise to skinning?
 		shaderOptions = {
 			normalmapping = true,
 			flashlights = false,
@@ -346,7 +346,7 @@ local materials = {
 local cusUnitMaterials = GG.CUS.unitMaterialDefs
 local unitMaterials = {}
 
-local wreckAtlases = {
+local wreckAtlases = {	-- FLOZiTODO: what is even the purpose of these?
 	["arm"] = {
 		"unittextures/Arm_wreck_color.dds",
 		"unittextures/Arm_wreck_other.dds",
@@ -387,7 +387,7 @@ for id = 1, #UnitDefs do
 
 		local wreckAtlas = wreckAtlases[facName]
 
-		if udef.modCategories["tank"] then
+		if udef.modCategories["tank"] then  -- FLOZiTODO: best way to detect tanks?
 			if facName == "arm" then
 				unitMaterials[id] = {"unitsNormalMapArmTanks", NORMALTEX = normalTex, TEXW1 = wreckAtlas[1], TEXW2 = wreckAtlas[2], NORMALTEX2 = wreckAtlas[3]}
 			elseif facName == "cor" then
