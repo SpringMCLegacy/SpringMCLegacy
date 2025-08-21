@@ -225,7 +225,7 @@ local autoReload = {enabled = false, vssrc = "", fssrc = "", lastUpdate = Spring
 
 -- Indicates wether the first round of getting units should grab all instead of delta
 local manualReload = autoReload.enabled or false
-local debugmode = true--false
+local debugmode = false
 local perfdebug = false
 
 -- These 4 things are for the UnitViewportAPI
@@ -250,7 +250,7 @@ local function GetUniformBinID(objectDefID, reason)
 		if debugmode then
 			Spring.Echo("Failed to find a uniform bin id for objectDefID", objectDefID, reason)
 		end
-		return 'otherunit'
+		return 'defaultunit'
 	end
 end
 
@@ -793,34 +793,9 @@ local function GetNormal(unitDef, featureDef)
 				existingfilecache[normaltex] = normaltex
 			end
 			return normaltex
-		-- FLOZiTODO: probably best to let games decide how to fallback the cp and just assign blank_normal?
-		else 
-			--[[if featureDef.model.textures.tex1 == "Arm_wreck_color.dds" then 
-				return unittextures.."Arm_wreck_color_normal.dds"
-			end
-			
-			if featureDef.model.textures.tex1 == "cor_color_wreck.dds" then 
-				return unittextures.."cor_color_wreck_normal.dds"
-			end
-
-			if featureDef.model.textures.tex1 == "leg_wreck_color.dds" then
-				return unittextures.."leg_wreck_normal.dds"
-			end]]
-			-- try to search for an appropriate normal
-			normalMap = tex1:gsub("%.","_normals.")
-			-- Spring.Echo(normalMap)
-			if (existingfilecache[normalMap] or FileExists(normalMap)) then
-				existingfilecache[normalMap] = true
-				return normalMap
-			end
-			normalMap = tex1:gsub("%.","_normal.")
-			-- Spring.Echo(normalMap)
-			if (existingfilecache[normalMap] or FileExists(normalMap)) then
-				existingfilecache[normalMap] = true
-				return normalMap
-			end
 		end
 	end
+	-- if the customparam is not set, just fallback to blank, let games decide how to do fallback with the cp itself
 	return blankNormalMap
 end
 -- BIG TODO:
@@ -835,6 +810,20 @@ end
 
 local knowntrees = VFS.Include("modelmaterials_gl4/known_feature_trees.lua")
 local function initBinsAndTextures()
+	-- First cache all features that are referenced in a unitDef.corpse to ensure they go in uniformBins.wrecks
+	local wreckCache = {}
+	for unitDefID, unitDef in pairs(UnitDefs) do
+		local wreck = unitDef.corpse:lower()
+		local wreckDef = FeatureDefNames[wreck]
+		if wreck and wreckDef then -- specified and exists
+			wreckCache[wreckDef.id] = true
+		end
+	end
+	-- Do the same for all features which are the deathFeature of another feature
+	for featureDefID, featureDef in pairs(FeatureDefs) do
+		local wreckDefID = featureDef.deathFeatureID
+		if wreckDefID then wreckCache[wreckDefID] = true end
+	end
 	
 	-- init features first, to gain access to stored wreck textures!
 	Spring.Echo("[CUS GL4] Init Feature bins")
@@ -854,52 +843,42 @@ local function initBinsAndTextures()
 				[9] = brdfLUT,
 				[10] = noisetex3dcube,
 			}
-
+			--Spring.Echo("Assigned normal map to", featureDef.name, normalTex)
+			
 			objectDefToUniformBin[-1 * featureDefID] = 'feature'
 
-			if featureDef.name:find("raptor_egg", nil, true) then -- FLOZiTODO: remove this
-				objectDefToUniformBin[-1 * featureDefID] = 'wreck'
-				--featuresDefsWithAlpha[-1 * featureDefID] = "yes"
-			elseif (featureDef.customParams and featureDef.customParams.treeshader == 'yes')
+			if (featureDef.customParams and featureDef.customParams.treeshader == 'yes')
 				or knowntrees[featureDef.name] then
 				objectDefToUniformBin[-1 * featureDefID] = 'tree'
 				featuresDefsWithAlpha[-1 * featureDefID] = "yes"
-			elseif featureDef.name:find("_dead", nil, true) or featureDef.name:find("_heap", nil, true) then -- FLOZiTODO: support a game defined 'WRECK_SUFFIX'
+			elseif wreckCache[featureDefID] 
+				or featureDef.name:find("_x", nil, true) or featureDef.name:find("_dead", nil, true) or featureDef.name:find("_heap", nil, true) then
 				objectDefToUniformBin[-1 * featureDefID] = 'wreck'
 			elseif featureDef.name:find("pilha_crystal", nil, true) or (featureDef.customParams and featureDef.customParams.cuspbr) then
 				objectDefToUniformBin[-1 * featureDefID] = 'featurepbr'
 			end
-			--Spring.Echo("Assigned normal map to", featureDef.name, normalTex)
-
+			local binOverride = featureDef.customParams and featureDef.customParams.uniformbin or objectDefToUniformBin[-1 * featureDefID]
+			objectDefToUniformBin[-1 * featureDefID] = binOverride
+			--Spring.Echo("Assigned feature", featureDef.name, "to uniformBin", binOverride)
 			local texKeyFast = GenFastTextureKey(-1 * featureDefID, featureDef, normalTex, textureTable)
 			if textureKeytoSet[texKeyFast] == nil then
 				textureKeytoSet[texKeyFast] = textureTable
 			end
 		end
 	end
-	--if true then return end
+
 	Spring.Echo("[CUS GL4] Init Unit bins")
 	for unitDefID, unitDef in pairs(UnitDefs) do
 		if unitDef.model then
 			local lowercasetex1 = string.lower(unitDef.model.textures.tex1 or "")
 			local lowercasetex2 = string.lower(unitDef.model.textures.tex2 or "")
+
 			local normalTex = GetNormal(unitDef, nil)
-			local lowercasenormaltex = string.lower(normalTex or "")
 
-			-- bin units according to what faction's texture they use
-			local factionBinTag = lowercasetex1:sub(1,3) -- FLOZiTODO: The big one, faction binning is not going to generalise to all games, rather tex1(+tex2?) binning
-
-			objectDefToUniformBin[unitDefID] = "otherunit"
-			if factionBinTag == 'arm' then
-				objectDefToUniformBin[unitDefID] = 'armunit'
-			elseif factionBinTag == 'cor' then
-				objectDefToUniformBin[unitDefID] = 'corunit'
-			elseif factionBinTag == 'leg' then
-				objectDefToUniformBin[unitDefID] = 'legunit'
-			end
+			objectDefToUniformBin[unitDefID] = unitDef.customParams and unitDef.customParams.uniformbin or "defaultunit"
 
 			local textureTable = {
-				--%-102:0 = featureDef 102 s3o tex1
+				--%102:0 = unitDef 102 s3o tex1
 				[0] = string.format("%%%s:%i", unitDefID, 0),
 				[1] = string.format("%%%s:%i", unitDefID, 1),
 				[2] = normalTex,
@@ -912,53 +891,32 @@ local function initBinsAndTextures()
 				[9] = GG.GetBrdfTexture(), --brdfLUT,
 				[10] = noisetex3dcube,
 			}
-
-			local wreckTex1 = -- FLOZiTODO: support game-defined WRECK_SUFFIX
-					(lowercasetex1:find("arm_color", nil, true) and "unittextures/Arm_wreck_color.dds") or
-					(lowercasetex1:find("cor_color", nil, true) and "unittextures/cor_color_wreck.dds") or
-					(lowercasetex1:find("leg_color", nil, true) and "unittextures/leg_wreck_color.dds") or
-					false
-			if wreckTex1 and existingfilecache[wreckTex1] then -- this part is what ensures that these textures dont get loaded separately, but instead use ones provided by featuredefs
-				wreckTex1 = existingfilecache[wreckTex1]
-			end
-			local wreckTex2 = -- FLOZiTODO: ditto
-					(lowercasetex2:find("arm_other", nil, true) and "unittextures/Arm_wreck_other.dds") or
-					(lowercasetex2:find("cor_other", nil, true) and "unittextures/cor_other_wreck.dds") or
-					(lowercasetex2:find("leg_shader", nil, true) and "unittextures/leg_wreck_shader.dds") or
-					false
-			if wreckTex2 and existingfilecache[wreckTex2] then  -- this part is what ensures that these textures dont get loaded separately, but instead use ones provided by featuredefs
-				wreckTex2 = existingfilecache[wreckTex2]
-			end
-			local wreckNormalTex = -- FLOZiTODO: ditto 
-					(lowercasenormaltex:find("arm_normal") and "unittextures/Arm_wreck_color_normal.dds") or
-					(lowercasenormaltex:find("cor_normal") and "unittextures/cor_color_wreck_normal.dds") or
-					(lowercasenormaltex:find("leg_normal") and "unittextures/leg_wreck_normal.dds") or
-					false
-			-- FLOZiTODO: Remove these, just hardcoding stuff into bins. Might need to support some override in the include
-			--[[if unitDef.name:find("_scav", nil, true) then -- it better be a scavenger unit, or ill kill you
-				textureTable[3] = wreckTex1
-				textureTable[4] = wreckTex2
-				textureTable[5] = wreckNormalTex
-				if factionBinTag == 'arm' then
-					objectDefToUniformBin[unitDefID] = 'armscavenger'
-				elseif factionBinTag == 'cor' then
-					objectDefToUniformBin[unitDefID] = 'corscavenger'
-				elseif factionBinTag == 'leg' then
-					objectDefToUniformBin[unitDefID] = 'legscavenger'
+			local wreckDef = unitDef.wreckName and FeatureDefNames[unitDef.wreckName:lower()]
+			local wreckTex1 = (wreckDef and wreckDef.model and string.format("%%-%s:%i", wreckDef.id, 0)) or false
+			if wreckTex1 then
+				if existingfilecache[wreckTex1] then -- this part is what ensures that these textures dont get loaded separately, but instead use ones provided by featuredefs
+					wreckTex1 = existingfilecache[wreckTex1]
 				end
-			elseif unitDef.name:find("raptor", nil, true) or unitDef.name:find("raptor_hive", nil, true) then
-				textureTable[5] = "luaui/images/lavadistortion.png",
-				objectDefToUniformBin[unitDefID] = 'raptor'
-				--Spring.Echo("Raptorwreck", textureTable[5])
-			else]]if wreckTex1 and wreckTex2 then -- just a true unit:
-				textureTable[3] = wreckTex1 -- FLOZiTODO: why not just set each if it exists, why check for 1 and 2?
+				textureTable[3] = wreckTex1
+			end
+			local wreckTex2 = (wreckDef and wreckDef.model and string.format("%%-%s:%i", wreckDef.id, 1)) or false
+			if wreckTex2 then
+				if existingfilecache[wreckTex2] then  -- this part is what ensures that these textures dont get loaded separately, but instead use ones provided by featuredefs
+					wreckTex2 = existingfilecache[wreckTex2]
+				end
 				textureTable[4] = wreckTex2
+			end
+			local wreckNormalTex = GetNormal(nil, wreckDef)
+			if wreckNormalTex then
+				if existingfilecache[wreckNormalTex] then
+					wreckNormalTex = existingfilecache[wreckNormalTex]
+				end
 				textureTable[5] = wreckNormalTex
 			end
 			
 			if unitDef.customParams and unitDef.customParams.useskinning then 
 				unitDefsUseSkinning[unitDefID] = true
-				objectDefToUniformBin[unitDefID]  = 'otherunit' -- This will temporarily disable raptor shader
+				objectDefToUniformBin[unitDefID]  = 'defaultunit' -- This will temporarily disable raptor shader
 			end
 			
 			local texKeyFast = GenFastTextureKey(unitDefID, unitDef, normalTex, textureTable)
@@ -1042,7 +1000,7 @@ local function AssignObjectToBin(objectID, objectDefID, flag, shader, textures, 
 	if (texKey == nil or uniformBinID == nil) then
 		if badassigns[objectID] == nil then
 			Spring.Echo("[CUS GL4]Failure to assign to ", objectID, objectDefID, flag, shader, textures, texKey, uniformBinID, calledfrom)
-			Spring.Echo("REPORT THIS TO BEHERITH: bad object:", GetObjectDefName(objectID))
+			Spring.Echo("REPORT THIS TO GAME DEV: bad object:", GetObjectDefName(objectID))
 			badassigns[objectID] = true
 		end
 		return
