@@ -138,7 +138,7 @@ for unitName, ud in pairs(UnitDefs) do
 			table.insert(ud.sfxtypes.explosiongenerators, "custom:HE_Large")
 			table.insert(ud.sfxtypes.explosiongenerators, "custom:BlackSmoke")
 			table.insert(ud.sfxtypes.explosiongenerators, "custom:Sparks")
-			if ud.corpse then
+			if ud.corpse and not FeatureDefs[ud.corpse] then -- don't override existing corpses e.g. Bishop
 				--Spring.Echo("[WeaponDefs_post.lua]:" .. unitName .. " has a corpse (" .. ud.corpse .. ")")
 				local modelPath = ud.objectname:sub(1, -(string.len(unitName .. ".s3o")+1))
 				-- First level corpse
@@ -166,7 +166,10 @@ for unitName, ud in pairs(UnitDefs) do
 						footprintx = ud.footprintx,
 						footprintz = ud.footprintz,
 						object = corpseModel,
-						customparams = {["was"] = ud.name},
+						customparams = {
+							["was"] = ud.name,
+							["normaltex"] = cp.normaltex,
+						},
 						reclaimable = true,
 						upright = cp.baseclass == "mech",
 					}
