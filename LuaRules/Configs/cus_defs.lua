@@ -66,4 +66,17 @@ local uniformBins = {
 	},
 } -- maps uniformbins to a table of uniform names/values
 
-return uniformBins
+local texToPreload = {
+	-- only preload textures not loaded by engine e.g. normals or custom wreckTex
+	--[[ BAR example
+	"unittextures/Arm_wreck_color_normal.dds",
+	"unittextures/Arm_normal.dds",
+	"unittextures/cor_color_wreck_normal.dds",
+	"unittextures/cor_normal.dds",--]]
+}
+-- BAR example of changing based on ModOption
+--[[if Spring.GetModOptions().experimentallegionfaction then
+	table.insert(texToPreload, "unittextures/leg_wreck_normal.dds")
+end--]]
+
+return uniformBins, texToPreload

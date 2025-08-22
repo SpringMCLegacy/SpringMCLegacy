@@ -322,7 +322,7 @@ local cusFeatureIDtoDrawFlag = {} -- {featureID = drawFlag,...}, this remains po
 	-- numobjects = 0,  -- a 'pointer to the end'
 -- }
 
-local uniformBins = VFS.Include("LuaRules/Configs/cus_defs.lua", nil, VFS.ZIP)
+local uniformBins, texToPreload = VFS.Include("LuaRules/Configs/cus_defs.lua", nil, VFS.ZIP)
 local unitDrawBins = nil -- this also controls wether cusgl4 is on at all!
 
 local objectIDtoDefID = {}
@@ -931,29 +931,16 @@ local function initBinsAndTextures()
 end
 
 local preloadedTextures = false
-local function PreloadTextures() -- FLOZiTODO: Figure out which, if any need pre-load in general. Specify in the include?
+local function PreloadTextures()
 	Spring.Echo("[CUS GL4] Cache Textures")
-	-- init the arm and core wrecks, and wreck normals
-	gl.Texture(0, "unittextures/Arm_wreck_color_normal.dds")
-	--gl.Texture(0, "unittextures/Arm_wreck_color.dds")
-	--gl.Texture(0, "unittextures/Arm_wreck_other.dds")
-	gl.Texture(0, "unittextures/Arm_normal.dds")
-	--gl.Texture(0, "unittextures/Arm_color.dds") -- these absolutely never need to be loaded like this
-	--gl.Texture(0, "unittextures/Arm_other.dds")
-	gl.Texture(0, "unittextures/cor_normal.dds")
-	--gl.Texture(0, "unittextures/cor_other.dds")
-	--gl.Texture(0, "unittextures/cor_color.dds")
-	--gl.Texture(0, "unittextures/cor_other_wreck.dds")
-	--gl.Texture(0, "unittextures/cor_color_wreck.dds")
-	gl.Texture(0, "unittextures/cor_color_wreck_normal.dds")
-	if Spring.GetModOptions().experimentallegionfaction then
-		gl.Texture(0, "unittextures/leg_wreck_normal.dds")
+	for texName in pairs(texToPreload) do
+		gl.Texture(0, texName)
 	end
 	gl.Texture(0, false)
 	preloadedTextures = true
 end
 --------------------------------------------------------------------
--- No more FLOZiTODO after this comment
+-- No changes from BAR after this comment
 --------------------------------------------------------------------
 local function GetObjectDefName(objectID)
 	if objectID == nil then
