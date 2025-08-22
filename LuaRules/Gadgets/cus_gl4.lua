@@ -892,21 +892,26 @@ local function initBinsAndTextures()
 				[10] = noisetex3dcube,
 			}
 			local wreckDef = unitDef.wreckName and FeatureDefNames[unitDef.wreckName:lower()]
-			local wreckTex1 = (wreckDef and wreckDef.model and string.format("%%-%s:%i", wreckDef.id, 0)) or false
+			local wreckTex1 = unitDef.customParams and unitDef.customParams.wrecktex1
+				or (wreckDef and wreckDef.model and string.format("%%-%s:%i", wreckDef.id, 0)) 
+				or false
 			if wreckTex1 then
 				if existingfilecache[wreckTex1] then -- this part is what ensures that these textures dont get loaded separately, but instead use ones provided by featuredefs
 					wreckTex1 = existingfilecache[wreckTex1]
 				end
 				textureTable[3] = wreckTex1
 			end
-			local wreckTex2 = (wreckDef and wreckDef.model and string.format("%%-%s:%i", wreckDef.id, 1)) or false
+			local wreckTex2 = unitDef.customParams and unitDef.customParams.wrecktex2
+				or (wreckDef and wreckDef.model and string.format("%%-%s:%i", wreckDef.id, 1)) 
+				or false
 			if wreckTex2 then
 				if existingfilecache[wreckTex2] then  -- this part is what ensures that these textures dont get loaded separately, but instead use ones provided by featuredefs
 					wreckTex2 = existingfilecache[wreckTex2]
 				end
 				textureTable[4] = wreckTex2
 			end
-			local wreckNormalTex = GetNormal(nil, wreckDef)
+			local wreckNormalTex = unitDef.customParams and unitDef.customParams.wrecktexn
+				or GetNormal(nil, wreckDef)
 			if wreckNormalTex then
 				if existingfilecache[wreckNormalTex] then
 					wreckNormalTex = existingfilecache[wreckNormalTex]
