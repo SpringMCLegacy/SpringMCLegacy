@@ -123,20 +123,19 @@ local defaultMaterialTemplate = {
 
 		vertex_ao         = false,
 		flashlights       = false,
-		shift_rgbhsv    = false,
+		shift_rgbhsv      = false,
 
-		treads_arm       = false,
-		treads_core      = false,
+		treads            = false,
 
-		health_displace  = false,
-		health_texturing = false,
+		health_displace   = false,
+		health_texturing  = false,
 		health_texraptors = false,
 
-		modelsfog        = true,
+		modelsfog         = true,
 
-		treewind         = false,
+		treewind          = false,
 
-		shadowsQuality   = 2,
+		shadowsQuality    = 2,
 
 	},
 
@@ -146,10 +145,9 @@ local defaultMaterialTemplate = {
 
 		vertex_ao        = false,
 		flashlights      = false,
-		shift_rgbhsv   = false,
+		shift_rgbhsv     = false,
 
-		treads_arm      = false,
-		treads_core     = false,
+		treads           = false,
 
 		modelsfog        = true,
 

@@ -27,6 +27,7 @@ local Tank = Vehicle:New{
 	trackOffset			= 10,
 	customparams = {
 		hasturnbutton	= "1",
+		uniformbin		= "treads",
     },
 }
 
@@ -39,6 +40,9 @@ local LightTank = Tank:New{
 local Hover = LightTank:New{
 	movementClass   = "HOVER",
 	leaveTracks		= false,
+	customparams = {
+		uniformbin			= nil,
+	},
 }
 
 return {

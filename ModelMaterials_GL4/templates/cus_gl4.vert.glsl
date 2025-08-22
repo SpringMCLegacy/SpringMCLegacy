@@ -69,8 +69,8 @@ layout(std140, binding=1) readonly buffer UniformsBuffer {
 #define OPTION_VERTEX_AO 3
 #define OPTION_FLASHLIGHTS 4
 
-#define OPTION_TREADS_ARM 5
-#define OPTION_TREADS_CORE 6
+#define OPTION_TREADS_U 5
+#define OPTION_TREADS_V 6
 
 #define OPTION_HEALTH_TEXTURING 7
 #define OPTION_HEALTH_DISPLACE 8
@@ -79,8 +79,6 @@ layout(std140, binding=1) readonly buffer UniformsBuffer {
 #define OPTION_MODELSFOG 10
 
 #define OPTION_TREEWIND 11
-
-#define OPTION_TREADS_LEG 13
 
 %%GLOBAL_OPTIONS%%
 
@@ -111,7 +109,11 @@ vec3 cameraDir = -1.0 * vec3(cameraView[0].z,cameraView[1].z,cameraView[2].z);
 //[3]-tracks speed = floor(4 * speed + 0.5) / 4
 uniform float baseVertexDisplacement = 0.0; // this is for the scavengers,
 const float vertexDisplacement = 6.0; // Strength of vertex displacement on health change
-const float treadsvelocity = 0.5;
+
+uniform sampler2D texture1;
+uniform vec4 treadRect;
+uniform float treadSpeedMult = 1;
+uniform float treadLinkWidth;
 #line 10200
 
 uniform int bitOptions;
@@ -591,8 +593,9 @@ void main(void)
 		%%VERTEX_UV_TRANSFORM%%
 
 		#ifdef ENABLE_OPTION_TREADS
-		if (BITMASK_FIELD(bitOptions, OPTION_TREADS_ARM) || BITMASK_FIELD(bitOptions, OPTION_TREADS_CORE) || BITMASK_FIELD(bitOptions, OPTION_TREADS_LEG)) {
-			#define ATLAS_SIZE 4096.0
+		if (BITMASK_FIELD(bitOptions, OPTION_TREADS_U) || BITMASK_FIELD(bitOptions, OPTION_TREADS_V)) {
+			vec2 tex1Size = vec2(textureSize(texture1, 0));
+			#define ATLAS_SIZE tex1Size.x
 			#define PX_TO_UV(x) (float(x) / ATLAS_SIZE)
 			#define IN_PIXEL_RECT(uv, left, top, width, height) (all(bvec4(	uv.x >= PX_TO_UV(left),         uv.y <= 1.f - PX_TO_UV(top),  uv.x <= PX_TO_UV(left + width), uv.y >= 1.f - PX_TO_UV(top + height) 	)))
 
@@ -616,49 +619,24 @@ void main(void)
 			float loopingFrameCount = mod(simFrame, 8.0); // Greatest Common Factor (12, 20, 56, ...) = 4
 			float baseOffset = loopingFrameCount * unitSpeed;
 
-			// ################# ARMADA ##################
-			if (BITMASK_FIELD(bitOptions, OPTION_TREADS_ARM)) {
-				const float texSpeedMult = 4.0;
-				if (IN_PIXEL_RECT(uvCoords.xy, 2573, 1548, 498, 82)) {
-					// Arm small (top) width 12px
-					uvCoords.x += PX_TO_UV(mod(baseOffset * texSpeedMult, 12.0));
-				} else if (IN_PIXEL_RECT(uvCoords.xy, 2572, 1631, 500, 132)) {
-					// Arm big (bot) width 20px
-					uvCoords.x += PX_TO_UV(mod(baseOffset * texSpeedMult, 20.0));
+			// ################# HORIZONTAL SCROLL ##################
+			if (BITMASK_FIELD(bitOptions, OPTION_TREADS_U)) { 
+				if (IN_PIXEL_RECT(uvCoords.xy, treadRect.x, treadRect.y, treadRect.z, treadRect.w)) {
+					uvCoords.x += PX_TO_UV(mod(baseOffset * treadSpeedMult, treadLinkWidth));
 				}
 			}
 
-			// ################# CORTEX ##################
-			if (BITMASK_FIELD(bitOptions, OPTION_TREADS_CORE)) {
-				const float texSpeedMult = -6.0;
-				const float texSpeedMult2 = 3.0;
-
-				if (IN_PIXEL_RECT(uvCoords.xy, 3042, 3839, (ATLAS_SIZE - 3042), (ATLAS_SIZE - 3839))) {
-					// tracks are right up against the bottom right of the texture
-					// Cor big (right bot) width 56px
-					uvCoords.x += PX_TO_UV(mod(baseOffset * texSpeedMult, 56.0));
-				} else if (IN_PIXEL_RECT(uvCoords.xy, 192, 636, 511, 68)) {
-					// Cor small (top) width 24px
-					uvCoords.x += PX_TO_UV(mod(baseOffset * texSpeedMult2, 24.0));
-				} else if (IN_PIXEL_RECT(uvCoords.xy, 189, 705, 506, 94)) {
-					// Cor small (bot) width 28px
-					uvCoords.x += PX_TO_UV(mod(baseOffset * texSpeedMult2, 28.0));
-				}
-			}
-
-			// ################# LEGION ##################
-			if (BITMASK_FIELD(bitOptions, OPTION_TREADS_LEG)) {
-				const float texSpeedMult = -6.0;
-
-				if (IN_PIXEL_RECT(uvCoords.xy, 2613, 768, 660, 404)) {
-					// Legion Rubber and Steel tracks (top right) width 55px
-					uvCoords.x += PX_TO_UV(mod(baseOffset * texSpeedMult, 55.0));
+			// ################# VERTICAL SCROLL ##################
+			else if (BITMASK_FIELD(bitOptions, OPTION_TREADS_V)) {
+				if (IN_PIXEL_RECT(uvCoords.xy, treadRect.x, treadRect.y, treadRect.z, treadRect.w)) {
+					uvCoords.y += PX_TO_UV(mod(baseOffset * treadSpeedMult, treadLinkWidth));
 				}
 			}
 
 			#undef ATLAS_SIZE
 			#undef IN_PIXEL_RECT
 			#undef PIXELS_TO_UV
+			#undef IN_UV_RECT
 		}
 		#endif
 

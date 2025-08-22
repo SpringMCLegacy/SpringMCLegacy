@@ -435,6 +435,8 @@ local function SetShaderUniforms(drawPass, shaderID, uniformBinID)
 	for uniformLocationName, uniformValue in pairs(uniformBins[uniformBinID]) do
 		if uniformLocationName == 'bitOptions' then
 			gl.UniformInt(gl.GetUniformLocation(shaderID, uniformLocationName), uniformValue)
+		elseif uniformLocationName == 'treadRect' then
+			gl.Uniform(gl.GetUniformLocation(shaderID, uniformLocationName), uniformValue[1], uniformValue[2], uniformValue[3], uniformValue[4])
 		else
 			gl.Uniform(gl.GetUniformLocation(shaderID, uniformLocationName), uniformValue)
 		end
