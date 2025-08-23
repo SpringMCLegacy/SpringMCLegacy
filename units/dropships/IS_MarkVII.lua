@@ -68,6 +68,7 @@ local IS_MarkVII = DropShip:New{
 		hoverheight		= 43 + 12,
 		radialdist		= 2500,
 		ignoreatbeacon	= true,
+		normaltex		= "unittextures/normals/MarkVII_Normals.dds"
     },
 	sounds = {
 		underattack        = "Dropship_Alarm",

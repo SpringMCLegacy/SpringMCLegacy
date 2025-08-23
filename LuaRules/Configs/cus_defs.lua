@@ -25,13 +25,6 @@ local uniformBins = {
 	--		baseVertexDisplacement = 0.0,
 	--		brightnessFactor = 1.5,
 	-- },
-	
-	defaultunit = {
-		-- by default gadget will assign these options to every unit texture set bin
-		bitOptions = defaultUnitBitShaderOptions,
-		baseVertexDisplacement = 0.0,
-		brightnessFactor = 1.1,
-	},
 	treads = {
 		-- MCL track textures are top-bottom so use OPTION_TREADS_V
 		bitOptions = defaultUnitBitShaderOptions + OPTION_TREADS_V,
@@ -41,7 +34,13 @@ local uniformBins = {
 		treadLinkWidth = 22, -- single track link width in Pixels
 		treadSpeedMult = 4.0, -- TODO: double check with Behe what the point of texSpeedMult was
 	},
-		
+	-- DEFAULT UNIFORM BINS
+	defaultunit = {
+		-- by default gadget will assign these options to every unit texture set bin
+		bitOptions = defaultUnitBitShaderOptions,
+		baseVertexDisplacement = 0.0,
+		brightnessFactor = 1.1,
+	},
 	-- These are the default featureDef uniformBins, you probably don't want to mess with them unless you really know what you're doing
 	feature = {
 		-- by default gadget will assign these options to every (non-wreck, non-tree) feature texture set bin

@@ -201,6 +201,10 @@ for unitName, ud in pairs(UnitDefs) do
 		ud.sfxtypes = { explosiongenerators = {} }
 		table.insert(ud.sfxtypes.explosiongenerators, "custom:beacon")
 	end
+	if not ud.corpse then
+		ud.customparams.wrecktex1 = "unittextures/wreck.dds"
+		--Spring.Echo(unitName, "using defalt wreck.dds")
+	end
 end
 
 local function isModelOK(fd)
