@@ -1,4 +1,4 @@
-local OPTION_SHADOWMAPPING		= 1		
+local OPTION_SHADOWMAPPING		= 1		-- Self shadowing
 local OPTION_NORMALMAPPING		= 2		-- Applies normalmapping
 local OPTION_SHIFT_RGBHSV		= 4 	-- userDefined[2].rgb (gl.SetUnitBufferUniforms(unitID, {math.random(),math.random()-0.5,math.random()-0.5}, 8) -- shift Hue, saturation, valence )
 local OPTION_VERTEX_AO			= 8		-- Per vertex Ambient Occlusion
@@ -16,7 +16,8 @@ local defaultBitShaderOptions = OPTION_SHADOWMAPPING + OPTION_NORMALMAPPING + OP
 local defaultUnitBitShaderOptions = defaultBitShaderOptions + OPTION_VERTEX_AO + OPTION_HEALTH_TEXTURING + OPTION_HEALTH_DISPLACE
 
 local uniformBins = {
-	-- Special overriding uniformBins go here, i.e. so that you can set different bitOptions, baseVertexDisplacement & brightnessFactor
+	-- Special overriding uniformBins go here, i.e. so that you can set different:
+		-- bitOptions, baseVertexDisplacement, brightnessFactor, treadRect, treadLinkWidth, treadSpeedMult
 	-- To force a unit or feature into any uniformBin, assign customParams.uniformbin = binName,
 	-- this method is preferred to the mix of BAR customparams which are kept for backwards compat
 	
