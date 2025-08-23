@@ -163,7 +163,7 @@ function widget:Initialize()
 			GLSLRenderer = false
 			widgetHandler:RemoveWidget()
 		else
-			fragSrc = VFS.LoadFile("shaders\\deferred_lighting.glsl", VFS.ZIP)
+			fragSrc = VFS.LoadFile("luaui/shaders/deferred_lighting.glsl", VFS.ZIP)
 			--Spring.Echo('gfx_deferred_rendering.lua: Shader code:', fragSrc)
 			depthPointShader = glCreateShader({
 				vertex = vertSrc,
