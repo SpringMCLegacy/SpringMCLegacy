@@ -61,6 +61,7 @@ local SRMCarrier = LightTank:New{
 		armor			= 2,
 		maxammo 		= {srm = 4},
 		squadsize 		= 1,
+		normaltex		= "unittextures/normals/LRMCarrier_Normals.dds",
     },
 }
 

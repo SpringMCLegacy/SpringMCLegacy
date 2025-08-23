@@ -234,7 +234,7 @@ for name, ud in pairs(UnitDefs) do
 	end
 	if cp and cp.baseclass then -- mech, vehicle, apc, vtol, infantry
 		local normalname = (cp.baseclass == "outpost" and name) or ud.name:gsub(" ", "")
-		cp.normaltex = "unittextures/normals/" .. normalname .. "_Normals.dds"
+		cp.normaltex = cp.normaltex or "unittextures/normals/" .. normalname .. "_Normals.dds"
 		if not VFS.FileExists(cp.normaltex) then cp.normaltex = nil end
 		ud.name = ud.name .. " " .. (cp.variant or "") -- concatenate variant code to name
 		cp.infocard = {}
