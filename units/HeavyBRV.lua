@@ -20,5 +20,5 @@ local HeavyBRV = Tank:New{
 }
 
 return lowerkeys({
-	["HeavyBRV"] = HeavyBRV:New(),
+	--["HeavyBRV"] = HeavyBRV:New(),
 })
