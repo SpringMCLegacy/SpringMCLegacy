@@ -636,7 +636,6 @@ void main(void)
 			#undef ATLAS_SIZE
 			#undef IN_PIXEL_RECT
 			#undef PIXELS_TO_UV
-			#undef IN_UV_RECT
 		}
 		#endif
 

@@ -117,54 +117,6 @@ local defaultMaterialTemplate = {
 		SLERPQUATERIONS,
 	},
 
-	shaderOptions = {
-		shadowmapping     = true,
-		normalmapping     = false,
-
-		vertex_ao         = false,
-		flashlights       = false,
-		shift_rgbhsv      = false,
-
-		treads            = false,
-
-		health_displace   = false,
-		health_texturing  = false,
-		health_texraptors = false,
-
-		modelsfog         = true,
-
-		treewind          = false,
-
-		shadowsQuality    = 2,
-
-	},
-
-	deferredOptions = {
-		shadowmapping    = true,
-		normalmapping    = false,
-
-		vertex_ao        = false,
-		flashlights      = false,
-		shift_rgbhsv     = false,
-
-		treads           = false,
-
-		modelsfog        = true,
-
-		health_displace  = false,
-		health_texturing = false,
-		health_texraptors = false,
-
-		treewind         = false,
-
-		shadowsQuality   = 0,
-		materialIndex    = 0,
-	},
-
-	shadowOptions = {
-		treewind         = false,
-	},
-
 	feature = false,
 
 	texUnits = {
