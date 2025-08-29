@@ -1,6 +1,6 @@
 local OPTION_SHADOWMAPPING		= 1		-- Self shadowing
 local OPTION_NORMALMAPPING		= 2		-- Applies normalmapping
-local OPTION_SHIFT_RGBHSV		= 4 	-- userDefined[2].rgb (gl.SetUnitBufferUniforms(unitID, {math.random(),math.random()-0.5,math.random()-0.5}, 8) -- shift Hue, saturation, valence )
+local OPTION_SHIFT_RGBHSV		= 4 	-- currently a No-op due to performance concerns
 local OPTION_VERTEX_AO			= 8		-- Per vertex Ambient Occlusion
 local OPTION_FLASHLIGHTS		= 16	-- All emissive (tex2.red) will strobe in brightness
 local OPTION_TREADS_U     	 	= 32	-- Treads that scroll left-right (texture U coord)
@@ -16,8 +16,14 @@ local defaultBitShaderOptions = OPTION_SHADOWMAPPING + OPTION_NORMALMAPPING + OP
 local defaultUnitBitShaderOptions = defaultBitShaderOptions + OPTION_VERTEX_AO + OPTION_HEALTH_TEXTURING + OPTION_HEALTH_DISPLACE
 
 local uniformBins = {
-	-- Special overriding uniformBins go here, i.e. so that you can set different:
-		-- bitOptions, baseVertexDisplacement, brightnessFactor, treadRect, treadLinkWidth, treadSpeedMult
+	-- Special overriding uniformBins go here, i.e. so that you can set different uniforms:
+		-- bitOptions				- Determines which of the above options are enabled for units assigned to this uniformBin
+		-- baseVertexDisplacement	- If using OPTION_HEALTH_DISPLACE and OPTION_HEALTH_TEXTURING determines the starting distortion
+		-- brightnessFactor			- How bright the units in this uniformBin will appear
+		-- treadRect				- Defines the region (in pixels) on the texture that the tank treads belong to; left, top, width, height
+		-- treadLinkWidth, 			- Defines the width (in pixels) of a single track link on the texture
+		-- treadSpeedMult			- Allows to speed up or reverse direction (with negative values) tank tread 
+		
 	-- To force a unit or feature into any uniformBin, assign customParams.uniformbin = binName,
 	-- this method is preferred to the mix of BAR customparams which are kept for backwards compat
 	
@@ -31,9 +37,9 @@ local uniformBins = {
 		bitOptions = defaultUnitBitShaderOptions + OPTION_TREADS_V,
 		baseVertexDisplacement = 0.0,
 		brightnessFactor = 1.1,
-		treadRect = {933, 0, 1024 - 933, 1024}, -- Pixels; left, top, width, height
-		treadLinkWidth = 22, -- single track link width in Pixels
-		treadSpeedMult = 4.0, -- TODO: double check with Behe what the point of texSpeedMult was
+		treadRect = {933, 0, 1024 - 933, 1024}, 
+		treadLinkWidth = 22,
+		treadSpeedMult = 4.0,
 	},
 	-- DEFAULT UNIFORM BINS
 	defaultunit = {
