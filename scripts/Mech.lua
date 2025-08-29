@@ -460,6 +460,11 @@ function limbHPControl(limb, damage, piece)
 			SetUnitRulesParam(unitID, "limblost", limbsLost)
 		else
 			if (newHP/info.limbHPs[limb] * 100) <= 66 and (currHP/info.limbHPs[limb] * 100) > 66 and piece then
+				if limb == "left_arm" then
+					piece = "lupperarm"
+				elseif limb == "right_arm" then
+					piece = "rupperarm"
+				end
 				StartThread(SmokeLimb, limb, piece)
 			end
 		end
