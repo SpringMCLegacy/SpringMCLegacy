@@ -44,6 +44,9 @@ local Bashkir = Aero:New{
 		armor			= 2,
 		squadsize 		= 2,
 		maxammo 		= {srm = 2},
+		
+		entryDelay 		= 5,
+		prepDelay 		= 10,
     },
 }
 

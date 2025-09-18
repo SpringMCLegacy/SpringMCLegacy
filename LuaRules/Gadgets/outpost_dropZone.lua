@@ -32,6 +32,7 @@ local DestroyUnit			= Spring.DestroyUnit
 local EditUnitCmdDesc		= Spring.EditUnitCmdDesc
 local FindUnitCmdDesc		= Spring.FindUnitCmdDesc
 local InsertUnitCmdDesc		= Spring.InsertUnitCmdDesc
+local RemoveUnitCmdDesc		= Spring.RemoveUnitCmdDesc
 local UseTeamResource 		= Spring.UseTeamResource
 
 -- GG
@@ -77,6 +78,7 @@ local dropZoneCmdDesc = {
 }
 
 local ignoredCmdDescs = {[CMD_SEND_ORDER] = true, [CMD_RUNNING_TOTAL] = true, [CMD_RUNNING_TONS] = true}
+GG.ignoredCmdDescs = ignoredCmdDescs
 
 -- Variables
 local typeStrings = {"fast", "cqb", "flexible", "ranged"}
@@ -87,11 +89,11 @@ local typeStringAliases = { -- whitespace is to try and equalise resulting font 
 	["ranged"] 		= GG.Pad(10,"Long","Range"), --"Sniper", "&", "Missile", "Boat "),
 }
 
-local menuCmdDescs = {}
+local mechMenuCmdDescs = {}
 local menuCmdIDs = {}
 for i, typeString in ipairs(typeStrings) do
 	local cmdID = GG.CustomCommands.GetCmdID("CMD_MENU_" .. typeString:upper())
-	menuCmdDescs[i] = {
+	mechMenuCmdDescs[i] = {
 		id     = cmdID,
 		type   = CMDTYPE.ICON,
 		name   = typeStringAliases[typeString],
@@ -100,7 +102,6 @@ for i, typeString in ipairs(typeStrings) do
 		texture = 'bitmaps/ui/filter.png',
 	}
 	menuCmdIDs[cmdID] = typeString
-	ignoredCmdDescs[cmdID] = 1
 end
 
 local mechCache = {} -- mechCache[unitDefID] = "fast"/"cqb"/"flexible"/"ranged" from typeStrings
@@ -113,7 +114,7 @@ local locked = {} -- unitDefID = true
 local orderCosts = {} -- orderCosts[unitID] = cost
 local orderTons = {} -- orderTons[unitID] = totalTonnage
 local orderSizes = {} -- orderSizes[unitID] = size
-local orderStatus = {} -- orderStatus[teamID] = number, where 0 = Ready for a new order, 1 = order submitted, 2 = dropship in play?
+local orderStatus = {} -- orderStatus[unitID] = number, where 0 = Ready for a new order, 1 = order submitted, 2 = dropship in play?
 GG.orderStatus = orderStatus
 -- Dropzones
 local dropZones = {} -- dropZones[unitID] = teamID
@@ -128,7 +129,7 @@ GG.dropZoneCoolDowns = dropZoneCoolDowns
 local teamDropZoneLevels = {} -- teamDropZoneLevels[teamID] = {tier = 1 or 2 or 3, def = unitDefID}
 local dropZoneLevels = {"leopard", "union", "overlord"}
 
-local function GetWeight(mass) -- still used by spamBot fore 'DireBolical' difficulty
+local function GetWeight(mass) -- still used by spamBot for 'DireBolical' difficulty
 	local light = mass < 40 * 100
 	local medium = not light and mass < 60 * 100
 	local heavy = not light and not medium and mass < 80 * 100
@@ -138,7 +139,7 @@ local function GetWeight(mass) -- still used by spamBot fore 'DireBolical' diffi
 end
 GG.GetWeight = GetWeight
 
-local function AddBuildMenu(unitID)
+local function AddBuildMenu(unitID, menuCmdDescs)
 	InsertUnitCmdDesc(unitID, sendOrderCmdDesc)
 	InsertUnitCmdDesc(unitID, runningTotalCmdDesc)
 	InsertUnitCmdDesc(unitID, runningTonsCmdDesc)
@@ -146,30 +147,42 @@ local function AddBuildMenu(unitID)
 		InsertUnitCmdDesc(unitID, cmdDesc)
 	end
 end
+GG.AddBuildMenu = AddBuildMenu
 
-local function ClearBuildOptions(unitID, everything)
-	for i, cmdDesc in ipairs(Spring.GetUnitCmdDescs(unitID)) do
-		if cmdDesc.id < 0 or everything then
-			EditUnitCmdDesc(unitID, i, {hidden = true})
+local function ClearCmdDescs(unitID)
+	local toDelete = {}
+	for i, cmdDesc in pairs(Spring.GetUnitCmdDescs(unitID)) do
+		if not (cmdDesc.id < 0 or menuCmdIDs[cmdDesc.id]) then -- not a build option or menu
+			toDelete[cmdDesc.id] = true
 		end
 	end
+	for cmdID in pairs(toDelete) do -- have to use cmdIDs as each time we Remove, positions shuffle
+		local i = FindUnitCmdDesc(unitID, cmdID)
+		local cmdDesc = Spring.GetUnitCmdDescs(unitID)[i]
+		--Spring.Echo("ClearCmdDescs: RemoveUnitCmdDesc", i, cmdDesc.id, cmdDesc.name)
+		RemoveUnitCmdDesc(unitID, FindUnitCmdDesc(unitID, cmdID))
+	end
 end
+GG.ClearCmdDescs = ClearCmdDescs
 
-local function ShowBuildOptionsByType(unitID, unitType)
-	currMenu[unitID] = unitType
-	local cmdID = unitType and GG.CustomCommands.GetCmdID("CMD_MENU_" .. unitType:upper())
-	for i, cmdDesc in ipairs(Spring.GetUnitCmdDescs(unitID)) do
+local function ShowBuildOptionsByType(unitID, menuType, menuCache, menuIDs)
+	currMenu[unitID] = menuType
+	local cmdID = menuType and GG.CustomCommands.GetCmdID("CMD_MENU_" .. menuType:upper())
+	for i, cmdDesc in pairs(Spring.GetUnitCmdDescs(unitID)) do
 		if cmdDesc.id == cmdID then
 			EditUnitCmdDesc(unitID, i, {texture = 'bitmaps/ui/selected.png',})
-		elseif cmdDesc.id < 0 then
+		elseif cmdDesc.id < 0 then --  buildoption
 			-- Order matters here... nil or false = false, false or nil = nil, thanks lua
-			local hide = locked[-cmdDesc.id] or mechCache[-cmdDesc.id] ~= unitType
+			local hide = locked[-cmdDesc.id] or menuCache[-cmdDesc.id] ~= menuType
 			EditUnitCmdDesc(unitID, i, {hidden = hide})
-		elseif ignoredCmdDescs[cmdDesc.id] == 1 then 
+		elseif menuCache[cmdDesc.id] then -- a button other than a buildoption which belongs to a particular menu
+			EditUnitCmdDesc(unitID, i, {hidden = menuCache[cmdDesc.id] ~= menuType})
+		elseif menuIDs[cmdDesc.id] then -- an actual menu button
 			EditUnitCmdDesc(unitID, i, {texture = 'bitmaps/ui/filter.png',})
 		end
 	end
 end
+GG.ShowBuildOptionsByType = ShowBuildOptionsByType
 
 local function ResetBuildQueue(unitID)
 	local orderQueue = Spring.GetFactoryCommands(unitID, -1)
@@ -192,7 +205,7 @@ local function 	LockHeavy(dropZone, lock)
 		end
 	end
 	-- show only the currently selected menu
-	ShowBuildOptionsByType(dropZone, currMenu[dropZone])
+	ShowBuildOptionsByType(dropZone, currMenu[dropZone], mechCache, menuCmdIDs)
 end
 GG.LockHeavy = LockHeavy
 
@@ -217,57 +230,47 @@ end
 GG.DropZoneUpgrade = DropZoneUpgrade
 
 
-
 local L = {COLOURS.white .. "L"}
 local C = {COLOURS.cbills .. "C"}
 local T = {COLOURS.tonnage .. "T"}
 
-local function CheckBuildOptions(unitID, teamID, cmdID)
+local function CheckBuildOptions(unitID, teamID, slotsLeft, cmdID)
 	local money = GetTeamResources(teamID, "metal")
 	local weightLeft = GetTeamResources(teamID, "energy")
 	
-	local cmdDescs = GetUnitCmdDescs(unitID) or EMPTY_TABLE
-	for cmdDescID = 1, #cmdDescs do
-		local buildDefID = cmdDescs[cmdDescID].id
-		local cmdDesc = cmdDescs[cmdDescID]
-		if cmdDesc.id ~= cmdID and not ignoredCmdDescs[cmdDesc.id] then
-			local currParam = cmdDesc.params[1] or ""
-			local cCost, tCost
-			if buildDefID < 0 then -- a build order
-				cCost = UnitDefs[-buildDefID].metalCost
-				tCost = UnitDefs[-buildDefID].energyCost
-			else
-				cCost = GG.CommandCosts[buildDefID] or 0 -- TODO: the intention was to disable e.g. Orbital Strike if you can't afford it
-				tCost = 0
-			end
-			if buildDefID < 0 
-			and (currParam == C[1] or currParam == "" or currParam == L[1])
-			and (GG.TeamSlotsRemaining(teamID) - (orderSizes[unitID] or 0))	< 1 then -- builder order but no team slots left
-				EditUnitCmdDesc(unitID, cmdDescID, {disabled = true, params = L})
-			elseif cCost > money and (currParam == "" or currParam == C[1]) then
-				EditUnitCmdDesc(unitID, cmdDescID, {disabled = true, params = C})
-			elseif tCost > weightLeft and (currParam == "" or currParam == T[1]) then
-				EditUnitCmdDesc(unitID, cmdDescID, {disabled = true, params = T})
-			else
-				if cmdDesc.disabled and (currParam == C[1] or currParam == T[1] or currParam == L[1]) then
-					EditUnitCmdDesc(unitID, cmdDescID, {disabled = false, params = EMPTY_TABLE})
-				end
+	for i, cmdDesc in pairs(GetUnitCmdDescs(unitID)) do
+		local cmdDescID = cmdDesc.id -- localise
+		if cmdDescID < 0 and cmdDescID ~= cmdID then
+			local currParam = cmdDesc.params[1]
+			local cCost = UnitDefs[-cmdDescID].metalCost
+			local tCost = UnitDefs[-cmdDescID].energyCost
+			local limitLeft = slotsLeft - (orderSizes[unitID] or 0)
+			if type(tonumber(currParam)) == "number" then
+				-- units are queued, don't do anything
+			elseif limitLeft < 1 then
+				EditUnitCmdDesc(unitID, i, {disabled = true, params = L})
+			elseif tCost > weightLeft then
+				EditUnitCmdDesc(unitID, i, {disabled = true, params = T})
+			elseif cCost > money then
+				EditUnitCmdDesc(unitID, i, {disabled = true, params = C})
+			elseif cmdDesc.disabled then
+				EditUnitCmdDesc(unitID, i, {disabled = false, params = EMPTY_TABLE})
 			end
 		end
 	end
 end
+GG.CheckBuildOptions = CheckBuildOptions
 
-function UpdateButtons(teamID, arrived) -- Toggles Submit Order vs Order Sent
-	local unitID = teamDropZones[teamID]
+function UpdateButtons(unitID, teamID, arrived) -- Toggles Submit Order vs Order Sent
 	if arrived then
 		EditUnitCmdDesc(unitID, FindUnitCmdDesc(unitID, CMD_SEND_ORDER), {disabled = true, name = "Dropship \nArrived "})
-	elseif orderStatus[teamID] == 0 then -- ready for new order
+	elseif orderStatus[unitID] == 0 then -- ready for new order
 		EditUnitCmdDesc(unitID, FindUnitCmdDesc(unitID, CMD_SEND_ORDER), {disabled = false, name = "Submit \nOrder "})
 		if orderSizes[teamID] == 0 then
 			EditUnitCmdDesc(unitID, FindUnitCmdDesc(unitID, CMD_RUNNING_TOTAL), {name = "Order\n" .. COLOURS.cbills .. "C-Bills: \n0"})
 			EditUnitCmdDesc(unitID, FindUnitCmdDesc(unitID, CMD_RUNNING_TONS), {name = "Order\n" .. COLOURS.tonnage .. "Tonnes: \n0"})
 		end
-	elseif orderStatus[teamID] >= 1 then -- order submitted
+	elseif orderStatus[unitID] >= 1 then -- order submitted
 		EditUnitCmdDesc(unitID, FindUnitCmdDesc(unitID, CMD_SEND_ORDER), {name = "Order \nSent "})
 	end
 end
@@ -278,22 +281,28 @@ function OrderFinished(unitID, teamID)
 	orderTons[unitID] = 0
 	orderSizes[unitID] = 0
 end
+GG.OrderFinished = OrderFinished
 
 local function DropShipAvailable(teamID)
-	if orderStatus[teamID] == 0 then -- only play this sound if no new order is queued
+	if orderStatus[unitID] == 0 then -- only play this sound if no new order is queued
 		GG.PlaySoundForTeam(teamID, "bb_reinforcements_available", 1)
 	end
 end
+
+local function CleanupOrder(unitID, teamID)
+	orderStatus[unitID] = 0 -- ready for new order
+	UpdateButtons(unitID, teamID)
+end
+GG.CleanupOrder = CleanupOrder
 
 function DropZoneCoolDown(teamID) -- called by Dropship once it has left, to enable "Submit Order"
 	local dead = select(3, Spring.GetTeamInfo(teamID))
 	if dead then return end
 	if not dead and teamID and teamDropZoneLevels[teamID] then
 		local unitID = teamDropZones[teamID]
-		local beaconID = GG.dropZoneBeaconIDs[teamID]
-		orderStatus[teamID] = 0 -- ready for new order
+		local beaconID = GG.dropZoneBeaconIDs[teamID]	
 		if unitID then -- dropzone might have died in the meantime
-			UpdateButtons(teamID)
+			CleanupOrder(unitID, teamID)
 		end
 		-- Dropship is no longer ACTIVE, it is entering COOLDOWN
 		--GG.PlaySoundForTeam(teamID, "bb_reinforcements_inbound_eta_30", 1)
@@ -323,7 +332,7 @@ end
 -- Factories can't implement gadget:CommandFallback, so fake it ourselves
 local function SendCommandFallback(cost, weight, unitID, unitDefID, teamID)
 	--Spring.Echo("SendCommandFallback", unitID, unitDefID, teamID, cost, weight, Spring.GetGameFrame())
-	if (not Spring.ValidUnitID(unitID)) or Spring.GetUnitIsDead(unitID) or not teamDropZones[teamID] or orderStatus[teamID] == 0 then 
+	if (not Spring.ValidUnitID(unitID)) or Spring.GetUnitIsDead(unitID) or not teamDropZones[teamID] or orderStatus[unitID] == 0 then 
 		-- dropZone died, yes future self, this is still reachable
 		return false
 	end 
@@ -350,8 +359,8 @@ local function SendCommandFallback(cost, weight, unitID, unitDefID, teamID)
 			Spring.SendMessageToTeam(teamID, "Order cancelled, queue is empty")
 			dropZoneStatus[teamID] = 0
 			SetTeamRulesParam(teamID, "STATUS", 0)
-			orderStatus[teamID] = 0
-			UpdateButtons(teamID)
+			orderStatus[unitID] = 0
+			UpdateButtons(unitID, teamID)
 		end
 		-- clean up (regardless of whether or not order was fulfilled or cancelled)
 		OrderFinished(unitID, teamID)
@@ -372,7 +381,7 @@ local function SetDropZone(beaconID, teamID)
 	local side = GG.teamSide[teamID]
 	if not side then return end -- a weird bug to avoid here, maybe due to dead team?
 	local dropZoneID = CreateUnit(side .. "_dropzone", x,y,z, "s", teamID)
-	ShowBuildOptionsByType(dropZoneID, "fast")
+	ShowBuildOptionsByType(dropZoneID, "fast", mechCache, menuCmdIDs)
 	dropZones[dropZoneID] = teamID
 	teamDropZones[teamID] = dropZoneID
 	dropZoneBeaconIDs[teamID] = beaconID
@@ -387,95 +396,100 @@ local function SetDropZone(beaconID, teamID)
 	end
 end
 
+local function PurchaseOrders(unitID, unitDefID, teamID, cmdID, cmdOptions, completionFunc, menuCache, menuIDs, slotsLeft)
+	local typeString = menuIDs[cmdID]
+	local rightClick = cmdOptions.right
+	if typeString then
+		ShowBuildOptionsByType(unitID, typeString, menuCache, menuIDs)
+		return true
+	elseif cmdID < 0 then
+		local unitDef = UnitDefs[-cmdID]
+		local cost = unitDef.metalCost
+		local weight = unitDef.energyCost
+		local runningTotal = orderCosts[unitID] or 0
+		local runningTons = orderTons[unitID] or 0
+		local runningSize = orderSizes[unitID] or 0
+		local money = GetTeamResources(teamID, "metal")
+		local tonnage = GetTeamResources(teamID, "energy")
+		if not rightClick then
+			if cmdOptions.shift or cmdOptions.ctrl then return false end -- otherwise we can (dramatically) circumvent unit limits
+			if (slotsLeft - runningSize) < 1 then  -- not enough C3 bandwidth
+				GG.PlaySoundForTeam(teamID, "bb_insufficient_c3bandwidth", 1)
+				return false 
+			end
+			local newTotal = runningTotal + cost
+			local newTons = runningTons + weight
+			if  cost <= money and weight <= tonnage then -- check we can afford it
+				--Spring.SendMessageToTeam(teamID, "Running C-Bills: " .. newTotal)
+				--Spring.SendMessageToTeam(teamID, "Running Tonnage: " .. newTons)
+				orderCosts[unitID] = newTotal
+				orderTons[unitID] = newTons
+				orderSizes[unitID] = runningSize + 1
+				-- Take the costs upfront, can be reimbursed
+				UseTeamResource(teamID, "metal", cost)
+				UseTeamResource(teamID, "energy", weight)
+				CheckBuildOptions(unitID, teamID, slotsLeft, cmdID)
+				EditUnitCmdDesc(unitID, FindUnitCmdDesc(unitID, CMD_RUNNING_TOTAL), {name = "Order\n" .. COLOURS.cbills .. "C-Bills: \n" .. newTotal})
+				EditUnitCmdDesc(unitID, FindUnitCmdDesc(unitID, CMD_RUNNING_TONS), {name = "Order\n" .. COLOURS.tonnage .. "Tonnes: \n" .. newTons})
+				return true
+			else
+				if cost > money then  -- not enough money
+					GG.PlaySoundForTeam(teamID, "bb_insufficient_cbills", 1)
+				elseif weight > tonnage then  -- not enough tonnage
+					GG.PlaySoundForTeam(teamID, "bb_insufficient_tonnage", 1)
+				end
+				return false
+			end
+		elseif runningSize > 0 then  -- only allow removal if order contains units (prevent -ve running totals!)
+			local cmdDesc = GetUnitCmdDescs(unitID, FindUnitCmdDesc(unitID, cmdID))[1] -- TODO: This is just awful
+			local currNumber = tonumber(cmdDesc.params[1]) or 0
+			if currNumber > 0 then -- only allow if more than 1 of **this** unit currently on order
+				orderCosts[unitID] = runningTotal - cost
+				orderTons[unitID] = runningTons - weight
+				-- reimburse the costs
+				AddTeamResource(teamID, "metal", cost)
+				AddTeamResource(teamID, "energy", weight)
+				orderSizes[unitID] = runningSize - 1
+				CheckBuildOptions(unitID, teamID, slotsLeft)
+				EditUnitCmdDesc(unitID, FindUnitCmdDesc(unitID, CMD_RUNNING_TOTAL), {name = "Order\n" .. COLOURS.cbills .. "C-Bills: \n" .. runningTotal - cost})
+				EditUnitCmdDesc(unitID, FindUnitCmdDesc(unitID, CMD_RUNNING_TONS), {name = "Order\n" .. COLOURS.tonnage .. "Tonnes: \n" .. runningTons - weight})
+				return true
+			else
+				return false
+			end
+		end	
+	elseif cmdID == CMD_SEND_ORDER then
+		if rightClick then
+			if orderStatus[unitID] > 0 then
+				-- cancelling the order, update the buttons
+				orderStatus[unitID] = 0
+				UpdateButtons(unitID, teamID)
+				return true
+			else return false end
+		elseif orderStatus[unitID] >= 1 then
+			Spring.SendMessageToTeam(teamID, "Cannot submit order, there is already an order pending!", orderStatus[unitID])
+			return false -- we already have submitted an order and not cancelled it
+		end
+		if (orderSizes[unitID] or 0) == 0 then  -- don't allow empty orders
+			Spring.SendMessageToTeam(teamID, "Cannot submit order, queue is empty!")
+			return false 
+		end
+		orderStatus[unitID] = Spring.GetGameFrame() --1
+		UpdateButtons(unitID, teamID)
+		if dropZoneStatus[teamID] ~= 0 then -- check here so it only plays once rather than every fallback
+			GG.PlaySoundForTeam(teamID, "bb_reinforcements_queued", 1)
+		end
+		GG.Delay.DelayCall(completionFunc, {orderCosts[unitID], orderTons[unitID], unitID, unitDefID, teamID}, 16)
+		return true
+	end
+	return true
+end
+GG.PurchaseOrders = PurchaseOrders
+
 function gadget:AllowCommand(unitID, unitDefID, teamID, cmdID, cmdParams, cmdOptions, cmdTag, synced)
 	-- DROPZONE PURCHASE ORDERS
 	if dropZones[unitID] then
-		local typeString = menuCmdIDs[cmdID]
-		local rightClick = cmdOptions.right
-		if typeString then
-			ClearBuildOptions(unitID)
-			ShowBuildOptionsByType(unitID, typeString)
-			return true
-		elseif cmdID < 0 then
-			local unitDef = UnitDefs[-cmdID]
-			local cost = unitDef.metalCost
-			local weight = unitDef.energyCost
-			local runningTotal = orderCosts[unitID] or 0
-			local runningTons = orderTons[unitID] or 0
-			local runningSize = orderSizes[unitID] or 0
-			local money = GetTeamResources(teamID, "metal")
-			local tonnage = GetTeamResources(teamID, "energy")
-			if not rightClick then
-				if cmdOptions.shift or cmdOptions.ctrl then return false end -- otherwise we can (dramatically) circumvent unit limits
-				if (GG.TeamSlotsRemaining(teamID) - runningSize) < 1 then  -- not enough C3 bandwidth
-					GG.PlaySoundForTeam(teamID, "bb_insufficient_c3bandwidth", 1)
-					return false 
-				end
-				local newTotal = runningTotal + cost
-				local newTons = runningTons + weight
-				if  cost <= money and weight <= tonnage then -- check we can afford it
-					--Spring.SendMessageToTeam(teamID, "Running C-Bills: " .. newTotal)
-					--Spring.SendMessageToTeam(teamID, "Running Tonnage: " .. newTons)
-					orderCosts[unitID] = newTotal
-					orderTons[unitID] = newTons
-					orderSizes[unitID] = runningSize + 1
-					-- Take the costs upfront, can be reimbursed
-					UseTeamResource(teamID, "metal", cost)
-					UseTeamResource(teamID, "energy", weight)
-					CheckBuildOptions(unitID, teamID, cmdID)
-					EditUnitCmdDesc(unitID, FindUnitCmdDesc(unitID, CMD_RUNNING_TOTAL), {name = "Order\n" .. COLOURS.cbills .. "C-Bills: \n" .. newTotal})
-					EditUnitCmdDesc(unitID, FindUnitCmdDesc(unitID, CMD_RUNNING_TONS), {name = "Order\n" .. COLOURS.tonnage .. "Tonnes: \n" .. newTons})
-					return true
-				else
-					if cost > money then  -- not enough money
-						GG.PlaySoundForTeam(teamID, "bb_insufficient_cbills", 1)
-					elseif weight > tonnage then  -- not enough tonnage
-						GG.PlaySoundForTeam(teamID, "bb_insufficient_tonnage", 1)
-					end
-					return false
-				end
-			elseif runningSize > 0 then  -- only allow removal if order contains units (prevent -ve running totals!)
-				local cmdDesc = GetUnitCmdDescs(unitID, FindUnitCmdDesc(unitID, cmdID))[1] -- TODO: This is just awful
-				local currNumber = tonumber(cmdDesc.params[1]) or 0
-				if currNumber > 0 then -- only allow if more than 1 of **this** unit currently on order
-					orderCosts[unitID] = runningTotal - cost
-					orderTons[unitID] = runningTons - weight
-					-- reimburse the costs
-					AddTeamResource(teamID, "metal", cost)
-					AddTeamResource(teamID, "energy", weight)
-					orderSizes[unitID] = runningSize - 1
-					CheckBuildOptions(unitID, teamID)
-					EditUnitCmdDesc(unitID, FindUnitCmdDesc(unitID, CMD_RUNNING_TOTAL), {name = "Order\n" .. COLOURS.cbills .. "C-Bills: \n" .. runningTotal - cost})
-					EditUnitCmdDesc(unitID, FindUnitCmdDesc(unitID, CMD_RUNNING_TONS), {name = "Order\n" .. COLOURS.tonnage .. "Tonnes: \n" .. runningTons - weight})
-					return true
-				else
-					return false
-				end
-			end	
-		elseif cmdID == CMD_SEND_ORDER then
-			if rightClick then
-				if orderStatus[teamID] > 0 then
-					-- cancelling the order, update the buttons
-					orderStatus[teamID] = 0
-					UpdateButtons(teamID)
-					return true
-				else return false end
-			elseif orderStatus[teamID] >= 1 then
-				Spring.SendMessageToTeam(teamID, "Cannot submit order, there is already an order pending!", orderStatus[teamID])
-				return false -- we already have submitted an order and not cancelled it
-			end
-			if (orderSizes[unitID] or 0) == 0 then  -- don't allow empty orders
-				Spring.SendMessageToTeam(teamID, "Cannot submit order, queue is empty!")
-				return false 
-			end
-			orderStatus[teamID] = Spring.GetGameFrame() --1
-			UpdateButtons(teamID)
-			if dropZoneStatus[teamID] ~= 0 then -- check here so it only plays once rather than every fallback
-				GG.PlaySoundForTeam(teamID, "bb_reinforcements_queued", 1)
-			end
-			GG.Delay.DelayCall(SendCommandFallback, {orderCosts[unitID], orderTons[unitID], unitID, unitDefID, teamID}, 16)
-			return true
-		end
+		return PurchaseOrders(unitID, unitDefID, teamID, cmdID, cmdOptions, SendCommandFallback, mechCache, menuCmdIDs, GG.TeamSlotsRemaining(teamID))
 	-- DROPZONE PLACEMENT ORDERS
 	elseif unitDefID == BEACON_ID then
 		if cmdID == dropZoneCmdDesc.id then
@@ -492,20 +506,13 @@ function gadget:AllowCommand(unitID, unitDefID, teamID, cmdID, cmdParams, cmdOpt
 				end
 				-- TODO: this will allow the command otherwise which is also dangerous, as dropship can be 'ACTIVE' without being in play
 				-- TODO: Solution is probably to make a new dropship state and have ACTIVE only the case when it is on map
-			elseif GG.orderStatus[teamID] > 0 and GG.teamDropZones[teamID] then
+			elseif GG.teamDropZones[teamID] and GG.orderStatus[GG.teamDropZones[teamID]] > 0 then
 				Spring.SendMessageToTeam(teamID, "Cannot establish dropzone - Order pending!")
 				GG.PlaySoundForTeam(teamID, "bb_dropzone_reassign_blocked", 1)
 				return false 
 			end
 			SetDropZone(unitID, teamID)
 		end
-	end
-	return true
-end
-
-function gadget:AllowResourceTransfer(oldTeamID, newTeamID, res, amount) -- TODO: move to purchasing
-	if res == "e" then 
-		return false 
 	end
 	return true
 end
@@ -531,8 +538,9 @@ function gadget:UnitCreated(unitID, unitDefID, teamID)
 	if unitDefID == BEACON_ID then
 		InsertUnitCmdDesc(unitID, dropZoneCmdDesc)
 	elseif DROPZONE_IDS[unitDefID] then
-		ClearBuildOptions(unitID, true)
-		AddBuildMenu(unitID)
+		ClearCmdDescs(unitID, true)
+		--ClearCmdDescs(unitID, true)
+		AddBuildMenu(unitID, mechMenuCmdDescs)
 		dropZones[unitID] = teamID
 		teamDropZones[teamID] = unitID
 		SetTeamRulesParam(teamID, "STATUS", 0)
@@ -543,20 +551,21 @@ function gadget:UnitCreated(unitID, unitDefID, teamID)
 		if teamDropZoneLevels[teamID].tier == 1 then
 			LockHeavy(unitID, true)
 		end
+		orderStatus[unitID] = 0
 	elseif GG.dropShipCache[unitDefID] == "mech" then
-		UpdateButtons(teamID, true)
+		UpdateButtons(teamDropZones[teamID], teamID, true)
 	end
 end
 
 function gadget:UnitDestroyed(unitID, unitDefID, teamID, attackerID, attackerDefID, attackerTeam)
 	if dropZones[unitID] then -- dropZone switched
 		--Spring.Echo("UnitDestroyed dropZone uID", unitID, "tID", teamID) 
-		--Spring.Echo("orderStatus", orderStatus[teamID], "orderCosts", orderCosts[unitID], "orderTons", orderTons[unitID], "orderSizes",orderSizes[unitID])
+		--Spring.Echo("orderStatus", orderStatus[unitID], "orderCosts", orderCosts[unitID], "orderTons", orderTons[unitID], "orderSizes",orderSizes[unitID])
 		-- Refund & clear order
 		Refund(teamID, orderCosts[unitID], orderTons[unitID])
 		OrderFinished(unitID, teamID)
 		-- clearup the dropzone
-		orderStatus[teamID] = 0
+		orderStatus[unitID] = 0
 		teamDropZones[teamID] = nil
 		dropZones[unitID] = nil
 		Spring.SetUnitNoSelect(dropZoneBeaconIDs[teamID], false)
@@ -595,7 +604,7 @@ function gadget:GamePreload()
 	end
 	for _, teamID in pairs(Spring.GetTeamList()) do
 		dropZoneStatus[teamID] = 0
-		orderStatus[teamID] = 0
+		--orderStatus[unitID] = 0
 	end
 	GG.DROPZONE_IDS = DROPZONE_IDS
 end
@@ -605,7 +614,7 @@ function gadget:GameFrame(n)
 	if n > 0 and n % 30 == 0 then -- once a second
 		-- check if orders are still too expensive
 		for unitID, teamID in pairs(dropZones) do
-			CheckBuildOptions(unitID, teamID)
+			CheckBuildOptions(unitID, teamID, GG.TeamSlotsRemaining(teamID, unitType))
 		end
 		-- reduce cooldown timers
 		for teamID, enableFrame in pairs(dropZoneCoolDowns) do

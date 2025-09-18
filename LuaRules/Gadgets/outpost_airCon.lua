@@ -5,7 +5,7 @@ function gadget:GetInfo()
 	author    = "Evil4Zerggin, Adapted by FLOZi",
 	date      = "13 February 2008, Adapted 12/08/25",
 	license   = "GNU GPL v2",
-	layer     = -5,
+	layer     = 5, -- must be after outpost_dropZone.lua
 	enabled   = true  --  loaded by default?
   }
 end
@@ -15,7 +15,7 @@ if not gadgetHandler:IsSyncedCode() then return false end
 local sqrt = math.sqrt
 local max, sin, cos, atan2 = math.max, math.sin, math.cos, math.atan2
 
-local airfieldCapacity = 10
+local airfieldCapacity = 6
 
 local CMD_PLANES = GG.CustomCommands.GetCmdID("CMD_PLANES") --34400
 local PATROL_DISTANCE = 1000
@@ -78,8 +78,6 @@ local GiveOrderToUnit = Spring.GiveOrderToUnit
 local mapSizeX, mapSizeZ = Game.mapSizeX, Game.mapSizeZ
 local mapX, mapY = Game.mapX, Game.mapY
 
-local CMDTYPE_ICON_MAP = CMDTYPE.ICON_MAP
-local CMDTYPE_ICON_UNIT_OR_MAP = CMDTYPE.ICON_UNIT_OR_MAP
 local CMD_IDLEMODE = CMD.IDLEMODE
 local CMD_AUTOREPAIRLEVEL = CMD.AUTOREPAIRLEVEL
 local CMD_MOVE = CMD.MOVE
@@ -88,20 +86,39 @@ local CMD_PATROL = CMD.PATROL
 local CMD_ATTACK = CMD.ATTACK
 local CMD_OPT_SHIFT = CMD.OPT_SHIFT
 
-----------------------------------------------------------------
---cmds
-----------------------------------------------------------------
---sortieUnitName = info
-local sortieInclude = VFS.Include("LuaRules/Configs/sortie_defs.lua")
+-- Menus
+local typeStrings = {"order", "deploy", "support"}
+local typeStringAliases = { 
+	["order"] 	= GG.Pad(10,"Order", "Aeros"),
+	["deploy"] 	= GG.Pad(10,"Deploy", "Sorties"), 
+	["support"] = GG.Pad(10,"Support", "VTOL"), 
+}
 
---sortieUnitDefID = sortie
+local aeroMenuCmdDescs = {}
+local menuCmdIDs = {}
+for i, typeString in ipairs(typeStrings) do
+	local cmdID = GG.CustomCommands.GetCmdID("CMD_MENU_" .. typeString:upper())
+	aeroMenuCmdDescs[i] = {
+		id     = cmdID,
+		type   = CMDTYPE.ICON,
+		name   = typeStringAliases[typeString],
+		action = 'menu' .. typeString,
+		tooltip = "Switch menu to " .. typeStringAliases[typeString]:gsub("%s+\n", " "),
+		texture = 'bitmaps/ui/filter.png',
+	}
+	menuCmdIDs[cmdID] = typeString
+end
+local menuTypeCache = {}
+
+-- Sorties
+local AIRCON_UD = UnitDefNames["outpost_aircon"]
+
+local sideSortieCmdDescs = {}
 local sortieDefs = {}
+local sortieCmdIDs = {} --cmdID = { unitDefID, unitDefID... name, units, delay, cmdDesc }
 
---cmdID = sortie
---sortie = { unitDefID, unitDefID... name, units, delay, cmdDesc }
-local sortieCmdIDs = {}
-
---build sortie info
+local teamSorties = {} -- [teamID][unitDefID] = {active = number, offscreen = number} -- offscreen = ordered + returning + inbound
+local teamAvailableSortieSlots = {} -- teamID = number
 
 local function GetDefaultTooltip(sortie, sortieUnitDef)
 	local planeList = {}
@@ -122,77 +139,118 @@ local function GetDefaultTooltip(sortie, sortieUnitDef)
 	end
 
 	local result = "Call " .. sortieUnitDef.humanName .. " - " .. sortieUnitDef.tooltip .. "\n"
-		.. "Delay " .. (sortie.delay or 0) .. "s\n"
+		.. "Delay " .. (sortie.entryDelay or 0) .. "s\n"
 		.. "Duration " .. (duration or "Permanent") .. "s"
 
 	return result
 end
 
-local currCmdID = CMD_PLANES
+local function GenerateSortie(unitDefID)
+	local unitDef = UnitDefs[unitDefID]
+	local cp = unitDef.customParams
+	local sortie = {}
+	local newLine = unitDef.description:find("\n")
+	sortie.name = unitDef.description:sub(1, newLine and newLine-1 or unitDef.description:len())
+	
+	local cmdID = GG.CustomCommands.GetCmdID("CMD_PLANES_" .. unitDefID)
+	menuTypeCache[cmdID] = "deploy"
 
-for sortieUnitName, sortie in pairs(sortieInclude) do
-	local sortieUnitDef = UnitDefNames[sortieUnitName]
-	if sortieUnitDef then
-		local sortieUnitDefID = sortieUnitDef.id
-		currCmdID = GG.CustomCommands.GetCmdID("CMD_PLANES_" .. sortieUnitDefID)
+	sortie.members = {unitDef.name} -- TODO: get rid of this?
+	sortie.weight = cp.weight or 1 -- TODO: and this?
+	
+	sortie.entryDelay = cp.entrydelay or 15
+	sortie.prepDelay = cp.prepdelay or 15
+	sortie.groundOnly = cp.groundonly
+	sortie.alwaysAttack = cp.alwaysattack
+	sortie.spawnAtTarget = cp.spawnattarget
+	sortie.cmdDesc = {
+		id = cmdID,
+		action = "sortie_" .. unitDef.name,
+		name = "0\n ",
+		disabled = true,
+		cursor = "Attack",
+		tooltip = GetDefaultTooltip(sortie, unitDef),
+		texture = "unitpics/" .. unitDef.buildpicname,
+		type = sortie.groundOnly and CMDTYPE.ICON_MAP or CMDTYPE.ICON_UNIT_OR_MAP,
+	}
+	sortieCmdIDs[cmdID] = sortie
+	sortieDefs[unitDefID] = sortie
+	local side = unitDef.name:sub(1,2)
+	sideSortieCmdDescs[side] = sideSortieCmdDescs[side] or {}
+	sideSortieCmdDescs[side][unitDefID] = sortie.cmdDesc
+end
 
-		local cmdDesc = {
-			id = currCmdID,
-			action = sortieUnitName,
-			name = "0 Ready",
-			disabled = true,
-			cursor = sortie.cursor or "Attack",
-			tooltip = sortie.tooltip or GetDefaultTooltip(sortie, sortieUnitDef),
-			texture = sortie.texture or "unitpics/" .. sortieUnitDef.buildpicname,
+
+local planeStates = {} --unitID = state
+local radios = {} --teamID = { unitID = true, unitID = true, unitID = true... }
+
+local statusText = {
+	active = "Active   ",
+	prep = "Prepping",
+	inbound = "Inbound ",
+	ready = "Ready   ",
+	none = "",
+}
+
+local function UpdateCMDs(teamID, sortie, stockpile, status)
+	local cmdID = sortie.cmdDesc.id
+	--local rulesParamName = "game_planes.stockpile" .. cmdID
+	--local stockpile = GetTeamRulesParam(teamID, rulesParamName) or 0
+	--local stockpile = teamSorties[teamID][-cmdID][status] or 0
+	local disabled = status ~= "ready"
+	if stockpile and stockpile > 0 then 
+		status = status or "active" -- TODO: assumes there's other active if one dies...
+	end 
+	local editTable = {
+		name = stockpile .. "\n" .. statusText[status],
+		disabled = disabled,
+	}
+
+	for unitID, _ in pairs(radios[teamID]) do
+		local cmdDescs = GetUnitCmdDescs(unitID)
+		for i = 1, #cmdDescs do
+			local cmdDesc = cmdDescs[i]
+			if cmdDesc.id == cmdID then
+				EditUnitCmdDesc(unitID, i, editTable)
+			end
+		end
+	end
+end
+
+local function GetStockPile(teamID, sortie, status)
+	local cmdID = sortie.cmdDesc.id
+	--local rulesParamName = "game_planes.stockpile" .. cmdID
+	--return GetTeamRulesParam(teamID, rulesParamName) or 0
+	return teamSorties[teamID][-cmdID][status] or 0
+end
+
+local function ModifyStockpile(teamID, sortie, amount, oldState, newState)
+	--local stockpile = GetStockPile(teamID, sortie)
+	--stockpile = stockpile + amount
+	
+	local cmdID = sortie.cmdDesc.id
+	--local rulesParamName = "game_planes.stockpile" .. cmdID
+	--SetTeamRulesParam(teamID, rulesParamName, stockpile)
+	--teamSorties = {} -- [teamID][unitDefID] = {active = number, offscreen = number}
+	if oldState then -- may be brand spankin' new
+		teamSorties[teamID][-cmdID][oldState] = teamSorties[teamID][-cmdID][oldState] - amount
+	else -- first time, setup
+		teamSorties[teamID][-cmdID] = {
+			active = 0,
+			prep = 0,
+			inbound = 0,
+			ready = 0,
 		}
-
-		if sortie.groundOnly then
-			cmdDesc.type = CMDTYPE_ICON_MAP
-		else
-			cmdDesc.type = CMDTYPE_ICON_UNIT_OR_MAP
-		end
-
-		sortie.cmdDesc = cmdDesc
-		sortie.name = sortieUnitDef.humanName
-		sortie.weight = sortie.weight or 0
-		sortieCmdIDs[currCmdID] = sortie
-		sortieDefs[sortieUnitDefID] = sortie
-
+		teamAvailableSortieSlots[teamID] = teamAvailableSortieSlots[teamID] - amount
+	end
+	if newState then -- not dieing
+		teamSorties[teamID][-cmdID][newState] = teamSorties[teamID][-cmdID][newState] + amount
 	else
-		Spring.Log('planes gadget', 'error', "no UnitDef found for " .. sortieUnitName)
+		teamAvailableSortieSlots[teamID] = teamAvailableSortieSlots[teamID] + amount
 	end
+	UpdateCMDs(teamID, sortie, teamSorties[teamID][-cmdID][newState], newState)
 end
 
---radioUnitID = { sortieCmdDesc, sortieCmdDesc, sortieCmdDesc ...}
-local radioDefs = {}
-
-for unitDefID, unitDef in pairs(UnitDefs) do
-	local buildOptions = unitDef.buildOptions
-
-	local sortieCmdDescs = {}
-
-	for i=1, #buildOptions do
-		local buildDefID = buildOptions[i]
-		local sortie = sortieDefs[buildDefID]
-		if sortie then
-			sortieCmdDescs[#sortieCmdDescs+1] = sortie.cmdDesc
-		end
-	end
-
-	if #sortieCmdDescs > 0 then
-		radioDefs[unitDefID] = sortieCmdDescs
-	end
-end
-
---unitID = state
-local planeStates = {}
-
---teamID = { unitID = true, unitID = true, unitID = true... }
-local radios = {}
--- unitID = teamID
-local radars = {}
--- allyTeamID = numberOfRadars
-local allyRadarCounts = {}
 ----------------------------------------------------------------
 --spawning
 ----------------------------------------------------------------
@@ -290,7 +348,7 @@ local function GetFormationOffsets(numUnits, rotation)
 	return result
 end
 
-local function SpawnFlight(teamID, sortie, sx, sy, sz, cmdParams)
+local function SpawnFlight(teamID, sortie, sx, sy, sz, cmdParams, stockpile)
 	local tx, ty, tz
 	if #cmdParams == 1 then
 		tx, ty, tz = GetUnitPosition(cmdParams[1])
@@ -306,39 +364,42 @@ local function SpawnFlight(teamID, sortie, sx, sy, sz, cmdParams)
 	local rotation = atan2(dx, dz)
 
 	local sortieMembers = sortie.members
-	local offsets = GetFormationOffsets(#sortieMembers, rotation)
+	local offsets = GetFormationOffsets(stockpile, rotation)
 	if sortie.spawnAtTarget then
-		for i=1, #sortieMembers do
-			SpawnPlane(teamID, sortieMembers[i], tx, ty, tz, cmdParams, dx, dy, dz, rotation, nil, i, sortie.alwaysAttack, true)	
+		Spring.Echo("SPAWN AT TARGET")
+		for i=1, stockpile do --#sortieMembers do
+			SpawnPlane(teamID, sortieMembers[1], tx, ty, tz, cmdParams, dx, dy, dz, rotation, nil, i, sortie.alwaysAttack, true)	
 		end
 	elseif dist >= PATROL_DISTANCE then
 		local wbx, wbz = sx + (dist - PATROL_DISTANCE) * dx, sz + (dist - PATROL_DISTANCE) * dz
-		for i=1, #sortieMembers do
+		for i=1, stockpile do --#sortieMembers do
 			local offset = offsets[i]
 			local waypoint = {}
 			waypoint[1], waypoint[2], waypoint[3] = offset[1] + wbx, 0, offset[3] + wbz
 			local ux, uz = offset[1] + sx, offset[3] + sz
 			local uy = GetGroundHeight(ux, uz)
-			local unitname = sortieMembers[i]
+			local unitname = sortieMembers[1]
 			SpawnPlane(teamID, unitname, ux, uy, uz, cmdParams, dx, dy, dz, rotation, waypoint, i, sortie.alwaysAttack)
 		end
 	else
-		for i=1, #sortieMembers do
+		for i=1, stockpile do --#sortieMembers do
 			local offset = offsets[i]
 			local ux, uz = offset[1] + sx, offset[3] + sz
 			local uy = GetGroundHeight(ux, uz)
-			local unitname = sortieMembers[i]
+			local unitname = sortieMembers[1]
 			SpawnPlane(teamID, unitname, ux, uy, uz, cmdParams, dx, dy, dz, rotation, waypoint, i, sortie.alwaysAttack)
 		end
 	end
 
 	SendMessageToTeam(teamID, sortie.name .. " arrived.")
+	ModifyStockpile(teamID, sortie, stockpile, "inbound", "active")
+	
 	if not sortie.silent then
 		local allyTeam = select(6, Spring.GetTeamInfo(teamID))
 		for _, alliance in ipairs(Spring.GetAllyTeamList()) do
 			if alliance ~= allyTeam then
 				-- assumes all aircraft in a sortie are the same
-				Spring.SendMessageToAllyTeam(alliance, "\255\255\001\001Enemy " .. UnitDefNames[sortieMembers[1]].humanName .. " aircraft spotted overhead!")
+				--Spring.SendMessageToAllyTeam(alliance, "\255\255\001\001Enemy " .. UnitDefNames[sortieMembers[1]].humanName .. " aircraft spotted overhead!")
 			end
 		end
 	end
@@ -354,53 +415,8 @@ end
 ----------------------------------------------------------------
 --callins
 ----------------------------------------------------------------
-local function GetStockpile(teamID, sortie)
-	local cmdID = sortie.cmdDesc.id
-	local rulesParamName = "game_planes.stockpile" .. cmdID
-	return GetTeamRulesParam(teamID, rulesParamName) or 0
-end
 
-local function ModifyWeight(teamID, sortie, amount)
-	local rulesParamName = "game_planes.weight"
-	local weight = GetTeamRulesParam(teamID, rulesParamName) or 0
-	weight = weight + amount * sortie.weight
-	SetTeamRulesParam(teamID, "game_planes.weight", weight)
-end
-
-local function UpdateCMDs(teamID, sortie)
-	local cmdID = sortie.cmdDesc.id
-	local rulesParamName = "game_planes.stockpile" .. cmdID
-	local stockpile = GetTeamRulesParam(teamID, rulesParamName) or 0
-	local disabled = (stockpile <= 0)
-
-	local editTable = {
-		name = stockpile .. " Ready",
-		disabled = disabled,
-	}
-
-	for unitID, _ in pairs(radios[teamID]) do
-		local cmdDescs = GetUnitCmdDescs(unitID)
-		for i = 1, #cmdDescs do
-			local cmdDesc = cmdDescs[i]
-			if cmdDesc.id == cmdID then
-				EditUnitCmdDesc(unitID, i, editTable)
-			end
-		end
-	end
-end
-
-local function ModifyStockpile(teamID, sortie, amount)
-	local cmdID = sortie.cmdDesc.id
-	local rulesParamName = "game_planes.stockpile" .. cmdID
-	local stockpile = GetTeamRulesParam(teamID, rulesParamName) or 0
-	stockpile = stockpile + amount
-	SetTeamRulesParam(teamID, rulesParamName, stockpile)
-
-	ModifyWeight(teamID, sortie, amount)
-
-	UpdateCMDs(teamID, sortie)
-
-end
+local sideAeroDefs = {}
 
 function gadget:Initialize()
 	vNormalized = GG.Vector.Normalized
@@ -411,11 +427,35 @@ function gadget:Initialize()
 
 	DelayCall = GG.Delay.DelayCall
 
-	local allTeams = Spring.GetTeamList()
-	for i=1, #allTeams do
-		radios[allTeams[i]] = {}
+	for _, teamID in pairs(Spring.GetTeamList()) do
+		radios[teamID] = {}
+		teamSorties[teamID] = {}
+		teamAvailableSortieSlots[teamID] = 6
 	end
 
+	for unitDefID, unitDef in pairs(UnitDefs) do
+		local cp = unitDef.customParams
+		if cp.baseclass and cp.baseclass == "aero" then
+			local side = unitDef.name:sub(1,2)
+			--Spring.Echo("Init: found an aero", side, unitDef.name)
+			sideAeroDefs[side] = sideAeroDefs[side] or {}
+			sideAeroDefs[side][unitDefID] = true
+			GenerateSortie(unitDefID)
+		end
+	end
+
+	for i, buildDefID in pairs(AIRCON_UD.buildOptions) do
+		menuTypeCache[buildDefID] = "order"
+		--[[local sortie = sortieDefs[buildDefID]
+		if sortie then
+			sortieCmdDescs[#sortieCmdDescs+1] = sortie.cmdDesc
+		end
+
+		if #sortieCmdDescs > 0 then
+			radioDefs[AIRCON_UD.id] = sortieCmdDescs
+		end]]
+	end
+	-- support /luarules reload
 	local allUnits = Spring.GetAllUnits()
 	for i=1, #allUnits do
 		local unitID = allUnits[i]
@@ -426,40 +466,58 @@ function gadget:Initialize()
 end
 
 function gadget:UnitCreated(unitID, unitDefID, teamID)
-	local sortie = sortieDefs[unitDefID]
-	if sortie then
-		ModifyWeight(teamID, sortie, 1)
-		return
-	end
-	local sortieCmdDescs = radioDefs[unitDefID]
-
-	if not sortieCmdDescs then return end
-
+	if unitDefID ~= AIRCON_UD.id then return end
+	
+	-- It's an aircon, initialize it
 	radios[teamID][unitID] = true
-
-	for i=1,#sortieCmdDescs do
-		local sortieCmdDesc = sortieCmdDescs[i]
-		local stockpile = GetTeamRulesParam(teamID, "game_planes.stockpile" .. sortieCmdDesc.id) or 0
-		sortieCmdDesc.name = stockpile .. " Ready"
-		sortieCmdDesc.disabled = not (stockpile > 0)
-		InsertUnitCmdDesc(unitID, sortieCmdDesc)
+	GG.ClearCmdDescs(unitID, true)
+	GG.AddBuildMenu(unitID, aeroMenuCmdDescs)
+	GG.orderStatus[unitID] = 0
+	-- Remove all aero units that do not belong to the team's side
+	local side = GG.teamSide[teamID]
+	local toDelete = {}
+	for i, cmdDesc in pairs(Spring.GetUnitCmdDescs(unitID)) do
+		if cmdDesc.id < 0 then
+			if not (sideAeroDefs[side][-cmdDesc.id]) then -- or sortieDefs[-cmdDesc.id]) then
+				toDelete[cmdDesc.id] = true
+			else
+				-- add in the deploy sortie cmddescs
+				local sortieCmdDesc = sideSortieCmdDescs[side][-cmdDesc.id]
+				local stockpile = GetTeamRulesParam(teamID, "game_planes.stockpile" .. sortieCmdDesc.id) or 0
+				sortieCmdDesc.name = stockpile .. "\nReady   " -- TODO: assuming only aircon atm
+				sortieCmdDesc.disabled = not (stockpile > 0)
+				InsertUnitCmdDesc(unitID, sortieCmdDesc)				
+			end
+		end
 	end
+	for cmdID in pairs(toDelete) do
+		Spring.RemoveUnitCmdDesc(unitID, Spring.FindUnitCmdDesc(unitID, cmdID))
+	end
+	GG.ShowBuildOptionsByType(unitID, "order", menuTypeCache, menuCmdIDs)
 end
 
-function gadget:UnitFinished(unitID, unitDefID, teamID)
-	if radioDefs[unitDefID] then -- unit is a radio
-		if UnitDefs[unitDefID].name:find("radar") then -- is it a radar specifically? only allies with radars get warnings
-			local allyTeam = select(6, Spring.GetTeamInfo(teamID))
-			allyRadarCounts[allyTeam] = (allyRadarCounts[allyTeam] or 0) + 1
-		end
-		return
+
+local function SendPurchaseOrder(cost, weight, unitID, unitDefID, teamID)
+	local orderQueue = Spring.GetFullBuildQueue(unitID)
+	if not orderQueue then 
+		return 
 	end
-
-	local sortie = sortieDefs[unitDefID]
-	if not sortie then return end
-
-	ModifyStockpile(teamID, sortie, 1)
-	DestroyUnit(unitID, false, true)
+	if #orderQueue > 0 then -- proceed with order
+		Spring.SendMessageToTeam(teamID, "Sending purchase order for the following:")
+		for i, order in ipairs(orderQueue) do
+			for orderDefID, count in pairs(order) do
+				Spring.SendMessageToTeam(teamID, UnitDefs[orderDefID].humanName .. ":\t" .. count) -- TODO: play a sound
+				local sortie = sortieDefs[orderDefID]
+				ModifyStockpile(teamID, sortie, count, nil, "prep")
+				GG.Delay.DelayCall(ModifyStockpile, {teamID, sortie, count, "prep", "ready"}, sortie.prepDelay * 30)
+			end
+		end
+	else -- cancelled
+		Spring.SendMessageToTeam(teamID, "Order cancelled, queue is empty")
+	end
+	-- clean up (regardless of whether or not order was fulfilled or cancelled)
+	GG.OrderFinished(unitID, teamID)
+	GG.CleanupOrder(unitID, teamID)
 end
 
 function gadget:AllowCommand(unitID, unitDefID, teamID, cmdID, cmdParams, cmdOptions)
@@ -468,40 +526,42 @@ function gadget:AllowCommand(unitID, unitDefID, teamID, cmdID, cmdParams, cmdOpt
 	if planeState == PLANE_STATE_RETREAT or (planeState and cmdID == CMD_IDLEMODE) then
 		return false
 	end
-
-	-- check if command is a sortie
-	local sortie = sortieCmdIDs[cmdID]
-	if not sortie then
-		return true
-	end
 	
 	-- check if unit is a radio
 	if not radios[teamID][unitID] then
 		return true
 	end
+	
+	-- check if command is a sortie
+	local sortie = sortieCmdIDs[cmdID]
+	if not sortie then
+		return GG.PurchaseOrders(unitID, unitDefID, teamID, cmdID, cmdOptions, SendPurchaseOrder, menuTypeCache, menuCmdIDs, teamAvailableSortieSlots[teamID])
+	end
+	
 	local _, _, inBuild = GetUnitIsStunned(unitID)
-
 	if inBuild then
 	  -- can't order
 	else
-		local stockpile = GetStockpile(teamID, sortie)
+		local stockpile = teamSorties[teamID][-cmdID].ready-- GetStockpile(teamID, sortie, "ready")
 		if stockpile > 0 then
-			ModifyStockpile(teamID, sortie, -1)
+			ModifyStockpile(teamID, sortie, stockpile, "ready", "inbound")
 			local sx, sy, sz = GetSpawnPoint(teamID, #sortie.members)
-			DelayCall(SpawnFlight, {teamID, sortie, sx, sy, sz, cmdParams}, sortie.delay * 30)
-			SendMessageToTeam(teamID, sortie.name .. " ordered. ETE " .. (sortie.delay or 0) .. "s.")
+			DelayCall(SpawnFlight, {teamID, sortie, sx, sy, sz, cmdParams, stockpile}, sortie.entryDelay * 30)
+			SendMessageToTeam(teamID, sortie.name .. " sortie ordered. ETA " .. (sortie.entryDelay or 0) .. "s.")
 			local allyTeam = select(6, Spring.GetTeamInfo(teamID))
 			for _, alliance in ipairs(Spring.GetAllyTeamList()) do
-				if alliance ~= allyTeam and sortie.weight > 0 and not sortie.silent and (allyRadarCounts[alliance] or 0) > 0 then
-					Spring.SendMessageToAllyTeam(alliance, "\255\255\001\001Incoming enemy aircraft on radar, arriving in " .. sortie.delay .. " seconds")
+				if alliance ~= allyTeam and sortie.weight > 0 and not sortie.silent then
+					Spring.SendMessageToAllyTeam(alliance, "\255\255\001\001Incoming enemy aircraft on radar, arriving in " .. sortie.entryDelay .. " seconds")
 				end
 			end
+			return true
 		else
 			SendMessageToTeam(teamID, "Sortie not available.")
+			return false
 		end
 	end
 
-	return false
+	return true --false
 end
 
 function gadget:GameFrame(n)
@@ -510,7 +570,7 @@ function gadget:GameFrame(n)
 		local unitDef = UnitDefs[unitDefID]
 		local teamID = GetUnitTeam(unitID)
 		local fuel = GetUnitRulesParam(unitID, "fuel")
-		if state == PLANE_STATE_ACTIVE then
+		if fuel and state and state == PLANE_STATE_ACTIVE then -- TODO: why is avenger breaking this?
 			if fuel < 1 and (tonumber(unitDef.customParams.maxfuel) or DEFAULT_FUEL) > 0 then
 				SetUnitNoSelect(unitID, true)
 				-- give fuel back so that it can fly to map border
@@ -526,7 +586,7 @@ function gadget:GameFrame(n)
 			else
 				SetUnitRulesParam(unitID, "fuel", max(0, fuel - 0.033))
 			end
-		elseif state == PLANE_STATE_RETREAT then
+		elseif fuel and state and state == PLANE_STATE_RETREAT then
 			-- check that it has enough fuel for return at all times
 			if fuel < 2 and (tonumber(unitDef.customParams.maxfuel) or DEFAULT_FUEL) > 0 then
 				SetUnitRulesParam(unitID, "fuel", (tonumber(unitDef.customParams.maxfuel) or DEFAULT_FUEL))
@@ -534,75 +594,63 @@ function gadget:GameFrame(n)
 			local ux, uy, uz = GetUnitPosition(unitID)
 			if vDistanceToMapEdge(ux, uy, uz) <= RETREAT_TOLERANCE then
 				local hpLeft, totalHp = GetUnitHealth(unitID)
-				local deposit = (unitDef.customParams.deposit or DEPOSIT_AMOUNT) * unitDef.metalCost
-				local depositReturn = (hpLeft / totalHp) * deposit
-				AddTeamResource(teamID, "m", depositReturn)
+				--local deposit = (unitDef.customParams.deposit or DEPOSIT_AMOUNT) * unitDef.metalCost
+				--local depositReturn = (hpLeft / totalHp) * deposit
+				--AddTeamResource(teamID, "m", depositReturn)
 				planeStates[unitID] = nil --this looks redundant, but needs to happen so that you actually get your bonus.
+				local sortie = sortieDefs[unitDefID]
+				ModifyStockpile(teamID, sortie, 1, "active", "prep")
+				GG.Delay.DelayCall(ModifyStockpile, {teamID, sortie, 1, "prep", "ready"}, sortie.prepDelay * 30)
 				DestroyUnit(unitID, false, true)
+			end
+		end
+	end
+	if n > 0 and n % 30 == 0 then -- once a second
+		-- check if orders are still too expensive
+		for teamID, list in pairs(radios) do
+			for unitID in pairs(list) do
+				GG.CheckBuildOptions(unitID, teamID, teamAvailableSortieSlots[teamID])
 			end
 		end
 	end
 end
 
 function gadget:UnitDestroyed(unitID, unitDefID, teamID)
-	local sortie = sortieDefs[unitDefID]
-	if sortie then
-		ModifyWeight(teamID, sortie, -1)
-		return
-	end
-	if planeStates[unitID] then
-		local unitDef = UnitDefs[unitDefID]
-		local curCommand = GetTeamResources(teamID, "metal")
-		local penalty = math.min((unitDef.customParams.penalty or PENALTY_AMOUNT) * unitDef.metalCost, curCommand)
-		UseTeamResource(teamID, "m", penalty)
+	if planeStates[unitID] then -- aircraft was killed, not retreating
+		--local unitDef = UnitDefs[unitDefID]
+		--local curCommand = GetTeamResources(teamID, "metal")
+		--local penalty = math.min((unitDef.customParams.penalty or PENALTY_AMOUNT) * unitDef.metalCost, curCommand)
+		--UseTeamResource(teamID, "m", penalty)s
+		--teamAvailableSortieSlots[teamID] = teamAvailableSortieSlots[teamID] + 1
+		local sortie = sortieDefs[unitDefID]
+		ModifyStockpile(teamID, sortie, 1, "active", nil)
 	end
 	planeStates[unitID] = nil
 	radios[teamID][unitID] = nil
-	radars[unitID] = nil
-
-	if UnitDefs[unitDefID].name:find("radar") then
-		local allyTeam = select(6, Spring.GetTeamInfo(teamID))
-		allyRadarCounts[allyTeam] = (allyRadarCounts[allyTeam] or 1) - 1 -- should never actually be nil
-	end
 end
 
 function gadget:AllowUnitBuildStep(builderID, builderTeam, unitID, unitDefID, part)
-	if not radars[builderID] then return true end -- early out non-radars, inc HQ
-	local sortie = sortieDefs[unitDefID]
-	if not sortie or sortie.weight <= 0 then return true end
-
-	local rulesParamName = "game_planes.weight"
-	local weight = GetTeamRulesParam(builderTeam, rulesParamName) or 0
-
-	if weight > airfieldCapacity then
+	if radios[builderTeam][builderID] then
 		return false
 	end
-
 	return true
 end
 
-function TransferStockpiles(oldTeamID, newTeamID)
+--[[function TransferStockpiles(oldTeamID, newTeamID) -- TODO
 	for _, sortie in pairs(sortieDefs) do
 		local cmdID = sortie.cmdDesc.id
 		local rulesParamName = "game_planes.stockpile" .. cmdID
 		local stockpile = GetTeamRulesParam(oldTeamID, rulesParamName) or 0
 		ModifyStockpile(oldTeamID, sortie, -stockpile)
 		ModifyStockpile(newTeamID, sortie, stockpile)
-		UpdateCMDs(newTeamID, sortie)
 	end
-end
+end]]
 
 function gadget:UnitGiven(unitID, unitDefID, newTeam, oldTeam)
-	local sortie = sortieDefs[unitDefID]
-	if sortie then
-		ModifyWeight(oldTeam, sortie, -1)
-		return
-	end
-
 	if radios[oldTeam][unitID] then
 		radios[oldTeam][unitID] = nil
 		if next(radios[oldTeam]) == nil then
-			TransferStockpiles(oldTeam, newTeam)
+			--TransferStockpiles(oldTeam, newTeam)
 		end
 	end
 end
@@ -612,10 +660,9 @@ function gadget:UnitTaken(unitID, unitDefID, oldTeam, newTeam)
 	if inBuild then
 		gadget:UnitCreated(unitID, unitDefID, newTeam)
 	else
-		local sortieCmdDescs = radioDefs[unitDefID]
-		if sortieCmdDescs then
+		if unitDefID == AIRCON_UD.id then
 			radios[newTeam][unitID] = true
 		end
-		gadget:UnitFinished(unitID, unitDefID, newTeam)
+		gadget:UnitCreated(unitID, unitDefID, newTeam)
 	end
 end

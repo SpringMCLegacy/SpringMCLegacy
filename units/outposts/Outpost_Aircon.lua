@@ -16,6 +16,8 @@ local Outpost_Aircon = Outpost:New{
 	workerTime			= 10, -- ?	
 	showNanoSpray		= false,
 	yardmap				= yard,
+	canAttack			= false,
+	
 	
 	customparams = {
 		helptext		= "Ping Pong Potato",

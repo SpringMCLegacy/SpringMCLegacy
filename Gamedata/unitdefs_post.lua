@@ -77,7 +77,7 @@ local function GetRole(roleString)
 			return role
 		end
 	end
-	return 
+	return
 end
 
 local modOptions = Spring.GetModOptions()
@@ -449,7 +449,7 @@ for name, ud in pairs(UnitDefs) do
 		ud.category = ud.category .. " narctag"
 		table.insert(TCONTROL_BUILDOPTIONS, name)
 		ud.levelground = false
-	elseif name:find("sortie") then
+	elseif cp.baseclass == "aero" then
 		table.insert(AEROCON_BUILDOPTIONS, name)
 	end
 	

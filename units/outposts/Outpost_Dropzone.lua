@@ -22,6 +22,14 @@ local Outpost_Dropzone = Outpost:New{
 	footprintZ 			= footPrint,
 	yardMap				= yardMapString,
 	levelGround			= false,
+	canMove = false,
+	canAttack = false,
+	canFight = false,
+	canPatrol = false,
+	canGuard = false,
+	canRepeat = false,
+	canSelfDestruct = false,
+	fireState = -1,
 
 	-- Constructor stuff
 	builder				= true,

@@ -191,14 +191,6 @@ if name == "outpost_aircon" then
 		WaitForMove(antenna1_1, y_axis)
 		Move(antenna1_2, y_axis, 14, CRATE_SPEED * 12)
 		PlaySound("Whir_Small")
-		-- Now we are deployed, allow to build
-		Spring.SetUnitNanoPieces(unitID, {1})
-		SetUnitValue(COB.INBUILDSTANCE, 1)
-	end
-	
-	-- AirCon is a factory, allow it to build sorties
-	function script.QueryBuildInfo()
-		return 1
 	end
 	
 elseif name == "outpost_c3array" then

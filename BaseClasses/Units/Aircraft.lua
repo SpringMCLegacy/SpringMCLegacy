@@ -21,9 +21,12 @@ local Aero = Aircraft:New{
 	noChaseCategory		= "beacon ground",
 	cruiseAlt			= 300,
 	canLoopbackAttack 	= true,
+	airSightDistance	= 1500,
 	
 	customparams = {
 		baseclass			= "aero",
+		entryDelay 			= 15,
+		prepDelay 			= 15,
 	},
 }
 
