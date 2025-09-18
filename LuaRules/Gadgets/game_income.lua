@@ -53,6 +53,13 @@ function gadget:UnitDestroyed(unitID, unitDefID, teamID, attackerID, attackerDef
 	end
 end
 
+function gadget:AllowResourceTransfer(oldTeamID, newTeamID, res, amount)
+	if res == "e" then 
+		return false 
+	end
+	return true
+end
+
 function gadget:GameFrame(n)
 	if n > 0 and n % 30 == 0 then -- once a second
 		-- Beacon Income
