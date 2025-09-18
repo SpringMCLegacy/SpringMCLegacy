@@ -1,17 +1,22 @@
 local Corsair = Aero:New{
 	name              	= "Corsair",
-	description         = "Air Superiority",
-	turnRadius		= 1000,
-	maxAcc			= 0.5,
-	maxBank			= 0.01,
-	maxPitch		= 0.007,
-	maxAileron		= 0.007,
-	maxElevator		= 0.007,
-	maxRudder		= 0.007,
-	wingAngle		= 0.2,
-	wingDrag		= 0.1,
-	myGravity		= 0.5,
-	speedToFront	= 0.01,
+	description         = "Medium Fighter Bomber",
+	buildCostMetal	= 16000,
+	buildPic			= "fs_corsair.png", -- TODO: remove in future
+	
+	acceleration       = 0.35,
+	maxAcc             = 0.9,
+	turnRadius         = 110,
+	wingDrag           = 0.065,
+	wingAngle          = 0.075,
+	crashDrag          = 0.005,
+	maxBank            = 0.65,
+	maxPitch           = 0.5,
+	verticalSpeed      = 3.2,
+	maxAileron         = 0.010,
+	maxElevator        = 0.010,
+	maxRudder          = 0.0018,
+
 	radardistance	= 1500,
 	
 	weapons = {	
@@ -55,7 +60,7 @@ local Corsair = Aero:New{
 	customparams = {
 		tonnage			= 50,
 		variant         = "CSR-V14",
-		speed			= 700,
+		speed			= 6 * 60,
 		price			= 9450,
 		heatlimit 		= 32,
 		armor			= 2,

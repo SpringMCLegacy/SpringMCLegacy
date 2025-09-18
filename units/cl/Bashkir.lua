@@ -1,9 +1,7 @@
-local Sparrowhawk = Aero:New{
-	name              	= "Sparrowhawk",
+local Bashkir = Aero:New{
+	name              	= "Bashkir",
 	description         = "Light Interceptor",
 	buildCostMetal 	= 1600,
-	objectName = "aero/fs_sparrowhawk.s3o", -- TODO: duplicate models
-	buildPic			= "fs_sparrowhawk.png", -- TODO: remove in future
 	
 	acceleration       = 0.42,
 	maxAcc             = 1.2,
@@ -14,43 +12,42 @@ local Sparrowhawk = Aero:New{
 	maxBank            = 0.72,
 	maxPitch           = 0.6,
 	verticalSpeed      = 4.0,
-	maxAileron         = 0.026,--13,
-	maxElevator        = 0.026,--13,
-	maxRudder          = 0.0044,--22,
+	maxAileron         = 0.013,
+	maxElevator        = 0.013,
+	maxRudder          = 0.0022,
 	
 	weapons = {	
 		[1] = {
-			name	= "MPL",
+			name	= "CERMBL",
 			maxAngleDif = 35,
 		},
 		[2] = {
-			name	= "MPL",
+			name	= "CERMBL",
 			maxAngleDif = 35,
 		},
 		[3] = {
-			name	= "ERMBL",
+			name	= "CERSBL",
 			maxAngleDif = 35,
 		},
 		[4] = {
-			name	= "ERMBL",
+			name	= "SSRM4", -- should be 2?
 			maxAngleDif = 35,
 		},
 	},
 	
 	customparams = {
 		tonnage			= 30,
-		variant         = "SPR-7D",
-		speed			= 10 * 60,
+		variant         = "Prime",
+		speed			= 13 * 60,
 		price			= 9450,
 		heatlimit 		= 20,
 		armor			= 2,
 		squadsize 		= 2,
+		maxammo 		= {srm = 2},
     },
 }
 
 aeros = {}
-for i, sideName in pairs(Sides) do
-	aeros[sideName .. "_sparrowhawk"] = Sparrowhawk:New{}
-end
-aeros["wf_sparrowhawk"] = nil -- Sparrowhawk is IS only!
+
+aeros["wf_bashkir_p"] = Bashkir:New{}
 return lowerkeys(aeros)
