@@ -178,14 +178,12 @@ for unitName, ud in pairs(UnitDefs) do
 				Spring.Echo("[WeaponDefs_post.lua]:" .. unitName .. " has no corpse!")
 			end
 			local weapString = "\t\t\255\255\255\255Weapons: "
-			local first = true
 			for weapName, count in pairs(table.unserialize(cp.weaponCounts)) do
 				if weapName:lower() ~= "sight" then
-					weapString = (first and "" or ", ") .. weapString .. WeaponColour(weapName) .. weapName .. " \255\255\255\255x" .. count .. "\t"
-					first = first and false
+					weapString = weapString .. WeaponColour(weapName) .. weapName .. " \255\255\255\255x" .. count .. ",\t"
 				end
 			end
-			ud.description = (ud.description or "") .. weapString
+			ud.description = (ud.description or "") .. weapString:sub(1, -3)
 		end
 		--[[Spring.Echo("UNIT: " .. unitName)
 		for _, i in pairs(ud.sfxtypes.explosiongenerators) do
