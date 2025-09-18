@@ -205,11 +205,11 @@ function Drop()
 	Spring.MoveCtrl.SetVelocity(unitID, 0, 0, 0)
 	Spring.MoveCtrl.SetGravity(unitID, 0)
 	Spring.GiveOrderToUnit(unitID, CMD.FIGHT, {TX, 0, TZ}, {})
-	local DOOR_SPEED = math.rad(60)
+	--[[local DOOR_SPEED = math.rad(60)
 	PlaySound("dropship_dooropen")
 	Turn(cargoDoor1, z_axis, math.rad(-90), DOOR_SPEED)
 	Turn(cargoDoor2, z_axis, math.rad(90), DOOR_SPEED)
-	bayOpen = true
+	bayOpen = true]]
 	local dist = GetUnitDistanceToPoint(unitID, TX, 0, TZ, false)
 	while dist > 10 do
 		dist = GetUnitDistanceToPoint(unitID, TX, 0, TZ, false)
@@ -217,14 +217,14 @@ function Drop()
 		Spring.MoveCtrl.SetRelativeVelocity(unitID, 0, 0, math.max(dist/200, 10))
 		Sleep(30)
 	end
-	Sleep(4500)
+	--[[Sleep(4500)
 	PlaySound("dropship_dooropen")
 	Turn(cargoDoor1, z_axis, 0, DOOR_SPEED)
 	Turn(cargoDoor2, z_axis, 0, DOOR_SPEED)
-	bayOpen = false
+	bayOpen = false--]]
 	Spring.MoveCtrl.Disable(unitID)
 	Sleep(20000)
-	Spring.MoveCtrl.Enable(unitID)
+	--Spring.MoveCtrl.Enable(unitID)
 	--[[Spring.Echo("POWPOWPOWPOW")
 	for i = 5, 0 do
 		Spring.Echo(i)
@@ -233,5 +233,5 @@ function Drop()
 		Sleep(2500)
 	end
 	Sleep(500)]]
-	TakeOff()
+	--TakeOff()
 end
