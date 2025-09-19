@@ -266,7 +266,7 @@ function UpdateButtons(unitID, teamID, arrived) -- Toggles Submit Order vs Order
 		EditUnitCmdDesc(unitID, FindUnitCmdDesc(unitID, CMD_SEND_ORDER), {disabled = true, name = "Dropship \nArrived "})
 	elseif orderStatus[unitID] == 0 then -- ready for new order
 		EditUnitCmdDesc(unitID, FindUnitCmdDesc(unitID, CMD_SEND_ORDER), {disabled = false, name = "Submit \nOrder "})
-		if orderSizes[teamID] == 0 then
+		if orderSizes[unitID] == 0 then
 			EditUnitCmdDesc(unitID, FindUnitCmdDesc(unitID, CMD_RUNNING_TOTAL), {name = "Order\n" .. COLOURS.cbills .. "C-Bills: \n0"})
 			EditUnitCmdDesc(unitID, FindUnitCmdDesc(unitID, CMD_RUNNING_TONS), {name = "Order\n" .. COLOURS.tonnage .. "Tonnes: \n0"})
 		end

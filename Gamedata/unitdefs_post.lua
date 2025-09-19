@@ -269,7 +269,7 @@ for name, ud in pairs(UnitDefs) do
 				end
 			end
 		end
-		if cp.baseclass == "mech" then
+		if cp.baseclass == "mech" or cp.baseclass == "aero" then
 			ud.buildCostEnergy = (cp.tonnage or 0)
 			-- scale prices by a multiplier from an origin of 4000
 			local priceMult = modOptions and modOptions.pricemult or 1

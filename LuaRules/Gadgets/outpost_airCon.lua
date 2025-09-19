@@ -185,11 +185,11 @@ local planeStates = {} --unitID = state
 local radios = {} --teamID = { unitID = true, unitID = true, unitID = true... }
 
 local statusText = {
-	active = "Active   ",
-	prep = "Prepping",
-	inbound = "Inbound ",
-	ready = "Ready   ",
-	none = "",
+	active 	= "Active    ",
+	prep 	= "Prepping ",
+	inbound = "Inbound  ",
+	ready 	= "Ready    ",
+	none 	= "Available",
 }
 
 local function UpdateCMDs(teamID, sortie, stockpile, status)
@@ -199,7 +199,9 @@ local function UpdateCMDs(teamID, sortie, stockpile, status)
 	--local stockpile = teamSorties[teamID][-cmdID][status] or 0
 	local disabled = status ~= "ready"
 	if stockpile and stockpile > 0 then 
-		status = status or "active" -- TODO: assumes there's other active if one dies...
+		status = status == "none" and "active" or status
+	else
+		stockpile = 0
 	end 
 	local editTable = {
 		name = stockpile .. "\n" .. statusText[status],
@@ -248,7 +250,7 @@ local function ModifyStockpile(teamID, sortie, amount, oldState, newState)
 	else
 		teamAvailableSortieSlots[teamID] = teamAvailableSortieSlots[teamID] + amount
 	end
-	UpdateCMDs(teamID, sortie, teamSorties[teamID][-cmdID][newState], newState)
+	UpdateCMDs(teamID, sortie, teamSorties[teamID][-cmdID][newState] or teamSorties[teamID][-cmdID][oldState], newState or "none")
 end
 
 ----------------------------------------------------------------
@@ -484,7 +486,7 @@ function gadget:UnitCreated(unitID, unitDefID, teamID)
 				-- add in the deploy sortie cmddescs
 				local sortieCmdDesc = sideSortieCmdDescs[side][-cmdDesc.id]
 				local stockpile = GetTeamRulesParam(teamID, "game_planes.stockpile" .. sortieCmdDesc.id) or 0
-				sortieCmdDesc.name = stockpile .. "\nReady   " -- TODO: assuming only aircon atm
+				sortieCmdDesc.name = stockpile .. "\n" .. statusText.none -- TODO: assuming only aircon atm
 				sortieCmdDesc.disabled = not (stockpile > 0)
 				InsertUnitCmdDesc(unitID, sortieCmdDesc)				
 			end
@@ -617,7 +619,8 @@ end
 
 function gadget:UnitDestroyed(unitID, unitDefID, teamID)
 	if planeStates[unitID] then -- aircraft was killed, not retreating
-		--local unitDef = UnitDefs[unitDefID]
+		local unitDef = UnitDefs[unitDefID]
+		AddTeamResource(teamID, "e", unitDef.energyCost)
 		--local curCommand = GetTeamResources(teamID, "metal")
 		--local penalty = math.min((unitDef.customParams.penalty or PENALTY_AMOUNT) * unitDef.metalCost, curCommand)
 		--UseTeamResource(teamID, "m", penalty)s
