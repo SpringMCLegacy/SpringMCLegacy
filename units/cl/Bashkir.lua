@@ -1,7 +1,6 @@
 local Bashkir = Aero:New{
 	name              	= "Bashkir",
 	description         = "Light Interceptor",
-	buildCostMetal 	= 1600,
 	
 	acceleration       = 0.42,
 	maxAcc             = 1.2,
@@ -39,10 +38,9 @@ local Bashkir = Aero:New{
 		tonnage			= 30,
 		variant         = "Prime",
 		speed			= 13 * 60,
-		price			= 9450,
+		price			= 5450,
 		heatlimit 		= 20,
 		armor			= 2,
-		squadsize 		= 2,
 		maxammo 		= {srm = 2},
 		
 		entryDelay 		= 5,

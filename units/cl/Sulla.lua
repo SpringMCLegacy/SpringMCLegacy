@@ -49,10 +49,9 @@ local Sulla = Aero:New{
 		tonnage			= 45,
 		variant         = "Prime",
 		speed			= 9 * 60,
-		price			= 9450,
+		price			= 10450,
 		heatlimit 		= 32,
 		armor			= 2,
-		squadsize 		= 2,
 		maxammo 		= {bomb = 2},
     },
 }

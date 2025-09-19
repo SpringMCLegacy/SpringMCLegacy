@@ -1,7 +1,7 @@
 local Corsair = Aero:New{
 	name              	= "Corsair",
 	description         = "Medium Fighter Bomber",
-	buildCostMetal	= 16000,
+	
 	buildPic			= "fs_corsair.png", -- TODO: remove in future
 	
 	acceleration       = 0.35,

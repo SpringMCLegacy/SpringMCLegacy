@@ -1,8 +1,8 @@
 local Sparrowhawk = Aero:New{
 	name              	= "Sparrowhawk",
 	description         = "Light Interceptor",
-	buildCostMetal 	= 1600,
-	objectName = "aero/fs_sparrowhawk.s3o", -- TODO: duplicate models
+	
+	objectName			= "aero/fs_sparrowhawk.s3o", -- TODO: duplicate models
 	buildPic			= "fs_sparrowhawk.png", -- TODO: remove in future
 	
 	acceleration       = 0.42,
@@ -41,7 +41,7 @@ local Sparrowhawk = Aero:New{
 		tonnage			= 30,
 		variant         = "SPR-7D",
 		speed			= 10 * 60,
-		price			= 9450,
+		price			= 4500,
 		heatlimit 		= 20,
 		armor			= 2,
 		
