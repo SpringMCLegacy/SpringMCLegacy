@@ -171,6 +171,7 @@ local Union = DropShip:New{
 		maxtonnage		= 250,
 		cooldown		= 30 * 30, -- 30s, time before the dropship has regained orbit, refuelled etc ready to drop again
 		-- droptime
+		normaltex		= "unittextures/normals/Union_Normals.dds",
 	},
 }
 
