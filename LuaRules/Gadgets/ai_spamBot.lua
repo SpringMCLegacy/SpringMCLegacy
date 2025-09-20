@@ -33,6 +33,7 @@ local AI_OUTPOST_OPTIONS = {
 	"OUTPOST_VEHICLEPAD",
 	"OUTPOST_GARRISON",
 	"OUTPOST_UPLINK",
+	"OUTPOST_AIRCON",
 	"OUTPOST_EWAR",
 	"OUTPOST_MECHBAY",
 	"OUTPOST_SALVAGEYARD",
@@ -53,9 +54,10 @@ local PERK_JUMP_RANGE = GG.CustomCommands.GetCmdID("PERK_JUMP_EFFICIENCY")
 local desired = {"CMD_SEND_ORDER", "CMD_DROPZONE", -- mech purchasing
 				"CMD_DROPZONE_2", "CMD_DROPZONE_3", -- dropship upgrading
 				"CMD_JUMP", "CMD_MASC", -- mech behaviour
-				 "CMD_OUTPOST_C3ARRAY", "CMD_OUTPOST_VEHICLEPAD", "CMD_OUTPOST_EWAR", "CMD_OUTPOST_GARRISON", "CMD_OUTPOST_UPLINK",
-				 "CMD_OUTPOST_MECHBAY", "CMD_OUTPOST_SALVAGEYARD", "CMD_OUTPOST_ARTILLERY", "CMD_OUTPOST_LAUNCHER",
-				 --"CMD_OUTPOST_TURRETCONTROL",	 "CMD_OUTPOST_SEISMIC", 
+				 "CMD_OUTPOST_C3ARRAY", "CMD_OUTPOST_MECHBAY", 
+				 "CMD_OUTPOST_VEHICLEPAD", "CMD_OUTPOST_EWAR", "CMD_OUTPOST_GARRISON", "CMD_OUTPOST_SALVAGEYARD", "CMD_OUTPOST_ARTILLERY", 
+				 "CMD_OUTPOST_UPLINK", "CMD_OUTPOST_AIRCON", "CMD_OUTPOST_LAUNCHER",
+				 --"CMD_OUTPOST_TURRETCONTROL", 
 				 }
 local AI_CMDS = {}
 for _, cmd in pairs(desired) do
@@ -128,9 +130,17 @@ local function OutpostVisible(unitID, unitDefID, unitTeam, allyTeam)
 	end
 end
 
+local teamSortiesStack = {}
+local function SortieReady(teamID, cmdID)
+	if AI_TEAMS[teamID] then
+		table.insert(teamSortiesStack[teamID], cmdID)
+	end
+end
+
 function gadget:Initialize()
 	gadgetHandler:RegisterGlobal('MechNeedsBay', MechNeedsBay)
 	gadgetHandler:RegisterGlobal('OutpostVisible', OutpostVisible)
+	gadgetHandler:RegisterGlobal('SortieReady', SortieReady)
 end
 
 function gadget:GamePreload()
@@ -147,6 +157,7 @@ function gadget:GamePreload()
 		end
 		if Spring.GetTeamLuaAI(t) ==  name then
 			AI_TEAMS[t] = true
+			teamSortiesStack[t] = {}
 		end
 		teamBeacons[t] = {}
 		teamMechsNeedingBays[t] = {}
@@ -570,6 +581,54 @@ local function LauncherCalls(teamID)
 	end
 end
 
+local function AirconCalls(teamID)
+	if select(3, Spring.GetTeamInfo(teamID)) then -- Team is dead
+		return
+	end
+	for unitID in pairs(teamOutpostIDs[teamID]["OUTPOST_AIRCON"]) do
+		if not Spring.ValidUnitID(unitID) or Spring.GetUnitIsDead(unitID) then -- Aircon is dead
+			-- no-op
+		else
+			-- buy more aero if we have slots
+			local slots = GG.teamAvailableSortieSlots[teamID] or 0
+			local desiredOrderSize = math.random(0, slots)
+			local cmdDescs = Spring.GetUnitCmdDescs(unitID)
+			local orderToSend
+			while desiredOrderSize > 0 do
+				local buildID
+				if difficulty > 1 then
+					Spring.AddTeamResource(teamID, "metal", 2500)
+				end
+				for i, cmdDesc in pairs(cmdDescs) do
+					if cmdDesc.id < 0 then
+						local unitDef = UnitDefs[-cmdDesc.id]
+						if unitDef.metalCost < (Spring.GetTeamResources(teamID, "metal") * math.random(5, 95)/100) then
+							buildID = cmdDesc.id
+							break
+						end
+					end
+				end
+				if buildID then
+					GG.Delay.DelayCall(Spring.GiveOrderToUnit, {unitID, buildID, EMPTY_TABLE, EMPTY_TABLE}, 1)
+					--Spring.Echo("AI ordered an aero")
+					desiredOrderSize = desiredOrderSize - 1
+					orderToSend = true
+				else -- none found, don't keep trying to order
+					desiredOrderSize = 0
+				end
+			end
+			if orderToSend then
+				GG.Delay.DelayCall(Spring.GiveOrderToUnit, {unitID, AI_CMDS["CMD_SEND_ORDER"].id, {}, {}}, 2)
+			end
+			-- order sorties if we have them ready
+			if #(teamSortiesStack[teamID]) >  0 then
+				--Spring.Echo("AI has a sortie ready and could totally use it!")
+				CallStrike(unitID, table.remove(teamSortiesStack[teamID]), GetSpotTarget, teamID, true)
+			end
+		end
+	end
+end
+
 local function UplinkCalls(teamID)
 	if select(3, Spring.GetTeamInfo(teamID)) then -- Team is dead
 		--CleanTeamOutPosts(teamID, "OUTPOST_UPLINK")
@@ -762,6 +821,8 @@ function gadget:GameFrame(n)
 				Spam(teamID)
 				-- try and order artillery strikes
 				UplinkCalls(teamID)
+				-- try and order aeros & sorties
+				AirconCalls(teamID)
 				-- try and order cruise missile strikes
 				LauncherCalls(teamID)
 				-- try and outpost any beacons

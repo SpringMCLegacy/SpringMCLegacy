@@ -119,6 +119,7 @@ local sortieCmdIDs = {} --cmdID = { unitDefID, unitDefID... name, units, delay, 
 
 local teamSorties = {} -- [teamID][unitDefID] = {active = number, offscreen = number} -- offscreen = ordered + returning + inbound
 local teamAvailableSortieSlots = {} -- teamID = number
+GG.teamAvailableSortieSlots = teamAvailableSortieSlots
 
 local function GetDefaultTooltip(sortie, sortieUnitDef)
 	local planeList = {}
@@ -227,13 +228,7 @@ local function GetStockPile(teamID, sortie, status)
 end
 
 local function ModifyStockpile(teamID, sortie, amount, oldState, newState)
-	--local stockpile = GetStockPile(teamID, sortie)
-	--stockpile = stockpile + amount
-	
 	local cmdID = sortie.cmdDesc.id
-	--local rulesParamName = "game_planes.stockpile" .. cmdID
-	--SetTeamRulesParam(teamID, rulesParamName, stockpile)
-	--teamSorties = {} -- [teamID][unitDefID] = {active = number, offscreen = number}
 	if oldState then -- may be brand spankin' new
 		teamSorties[teamID][-cmdID][oldState] = teamSorties[teamID][-cmdID][oldState] - amount
 	else -- first time, setup
@@ -247,6 +242,9 @@ local function ModifyStockpile(teamID, sortie, amount, oldState, newState)
 	end
 	if newState then -- not dieing
 		teamSorties[teamID][-cmdID][newState] = teamSorties[teamID][-cmdID][newState] + amount
+		if newState == "ready" then
+			Script.LuaRules.SortieReady(teamID, cmdID) -- let AI know
+		end
 	else
 		teamAvailableSortieSlots[teamID] = teamAvailableSortieSlots[teamID] + amount
 	end
@@ -550,12 +548,12 @@ function gadget:AllowCommand(unitID, unitDefID, teamID, cmdID, cmdParams, cmdOpt
 			local sx, sy, sz = GetSpawnPoint(teamID, #sortie.members)
 			DelayCall(SpawnFlight, {teamID, sortie, sx, sy, sz, cmdParams, stockpile}, sortie.entryDelay * 30)
 			SendMessageToTeam(teamID, sortie.name .. " sortie ordered. ETA " .. (sortie.entryDelay or 0) .. "s.")
-			local allyTeam = select(6, Spring.GetTeamInfo(teamID))
+			--[[local allyTeam = select(6, Spring.GetTeamInfo(teamID))
 			for _, alliance in ipairs(Spring.GetAllyTeamList()) do
 				if alliance ~= allyTeam and sortie.weight > 0 and not sortie.silent then
 					Spring.SendMessageToAllyTeam(alliance, "\255\255\001\001Incoming enemy aircraft on radar, arriving in " .. sortie.entryDelay .. " seconds")
 				end
-			end
+			end]]
 			return true
 		else
 			SendMessageToTeam(teamID, "Sortie not available.")
