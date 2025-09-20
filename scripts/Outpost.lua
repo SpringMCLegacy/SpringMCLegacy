@@ -777,7 +777,7 @@ function Unpack(ry)
 	if name == "outpost_aircon" then
 		-- AirCon is an actual structure with yardmap as it needs factory buildoptions
 		-- Engine forces it to grid on unload, so turn model instead
-		Turn(1, y_axis, ry or 0)
+		Turn(1, y_axis, ry - math.pi/2 or 0)
 	end
 	-- Wait for delivery van to bug out
 	Sleep(2000)

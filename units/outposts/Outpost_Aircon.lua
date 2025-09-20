@@ -1,6 +1,6 @@
 local yard = ""
 for i = 1, 16 do
-	yard = yard .. "y"
+	yard = yard .. "o"
 end
 
 local Outpost_Aircon = Outpost:New{
