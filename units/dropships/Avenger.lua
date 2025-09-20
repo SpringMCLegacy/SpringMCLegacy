@@ -195,6 +195,7 @@ maxRudder          = 0.0015,
 		spawnAtTarget	= true,
 		speed			= 4.5 * 60,
 		price      		= 36000,
+		maxfuel = 30,
     },
 }
 
