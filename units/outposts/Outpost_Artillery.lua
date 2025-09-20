@@ -19,7 +19,8 @@ local Outpost_Artillery = Outpost:New{
 		helptext		= "A big artillery",
 		--maxammo 		= {sniper = 20},
 		barrelrecoildist = {[1] = 6},
-    },
+		normaltex		= "unittextures/normals/Outpost_Weapon_Normals.dds",
+	},
 	sounds = {
 		select = "Seismic",
 	}

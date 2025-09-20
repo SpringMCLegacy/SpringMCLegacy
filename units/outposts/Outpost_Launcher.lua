@@ -14,6 +14,7 @@ local Outpost_Launcher = Outpost:New{
 	
 	customparams = {
 		helptext		= "A BIGGER artillery",
+		normaltex		= "unittextures/normals/Outpost_Weapon_Normals.dds",
     },
 	sounds = {
 		select = "Seismic",
