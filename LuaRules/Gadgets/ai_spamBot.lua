@@ -590,40 +590,42 @@ local function AirconCalls(teamID)
 			-- no-op
 		else
 			-- buy more aero if we have slots
-			local slots = GG.teamAvailableSortieSlots[teamID] or 0
-			local desiredOrderSize = math.random(0, slots)
-			local cmdDescs = Spring.GetUnitCmdDescs(unitID)
-			local orderToSend
-			while desiredOrderSize > 0 do
-				local buildID
-				if difficulty > 1 then
-					Spring.AddTeamResource(teamID, "metal", 2500)
-				end
-				for i, cmdDesc in pairs(cmdDescs) do
-					if cmdDesc.id < 0 then
-						local unitDef = UnitDefs[-cmdDesc.id]
-						if unitDef.metalCost < (Spring.GetTeamResources(teamID, "metal") * math.random(5, 95)/100) then
-							buildID = cmdDesc.id
-							break
+			local slots = GG.teamAvailableSortieSlots[teamID]
+			if slots and slots > 0 then
+				local desiredOrderSize = math.random(0, slots)
+				local cmdDescs = Spring.GetUnitCmdDescs(unitID)
+				local orderToSend
+				while desiredOrderSize > 0 do
+					local buildID
+					if difficulty > 1 then
+						Spring.AddTeamResource(teamID, "metal", 2500)
+					end
+					for i, cmdDesc in pairs(cmdDescs) do
+						if cmdDesc.id < 0 then
+							local unitDef = UnitDefs[-cmdDesc.id]
+							if unitDef.metalCost < (Spring.GetTeamResources(teamID, "metal") * math.random(5, 95)/100) then
+								buildID = cmdDesc.id
+								break
+							end
 						end
 					end
+					if buildID then
+						GG.Delay.DelayCall(Spring.GiveOrderToUnit, {unitID, buildID, EMPTY_TABLE, EMPTY_TABLE}, 1)
+						--Spring.Echo("AI ordered an aero")
+						desiredOrderSize = desiredOrderSize - 1
+						orderToSend = true
+					else -- none found, don't keep trying to order
+						desiredOrderSize = 0
+					end
 				end
-				if buildID then
-					GG.Delay.DelayCall(Spring.GiveOrderToUnit, {unitID, buildID, EMPTY_TABLE, EMPTY_TABLE}, 1)
-					--Spring.Echo("AI ordered an aero")
-					desiredOrderSize = desiredOrderSize - 1
-					orderToSend = true
-				else -- none found, don't keep trying to order
-					desiredOrderSize = 0
+				if orderToSend then
+					GG.Delay.DelayCall(Spring.GiveOrderToUnit, {unitID, AI_CMDS["CMD_SEND_ORDER"].id, {}, {}}, 2)
 				end
-			end
-			if orderToSend then
-				GG.Delay.DelayCall(Spring.GiveOrderToUnit, {unitID, AI_CMDS["CMD_SEND_ORDER"].id, {}, {}}, 2)
 			end
 			-- order sorties if we have them ready
 			if #(teamSortiesStack[teamID]) >  0 then
 				--Spring.Echo("AI has a sortie ready and could totally use it!")
-				CallStrike(unitID, table.remove(teamSortiesStack[teamID]), GetSpotTarget, teamID, true)
+				CallStrike(unitID, table.remove(teamSortiesStack[teamID]), GetUnitTarget, unitID, teamID)--, true)
 			end
 		end
 	end

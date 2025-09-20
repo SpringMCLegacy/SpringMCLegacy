@@ -17,7 +17,7 @@ local max, sin, cos, atan2 = math.max, math.sin, math.cos, math.atan2
 
 local airfieldCapacity = 6
 
-local CMD_PLANES = GG.CustomCommands.GetCmdID("CMD_PLANES") --34400
+local CMD_PLANES = GG.CustomCommands.GetCmdID("CMD_PLANES")
 local PATROL_DISTANCE = 1000
 local FORMATION_SEPARATION = 128
 local DIAG_FORMATION_SEPARATION = FORMATION_SEPARATION * sqrt(2)
@@ -366,7 +366,6 @@ local function SpawnFlight(teamID, sortie, sx, sy, sz, cmdParams, stockpile)
 	local sortieMembers = sortie.members
 	local offsets = GetFormationOffsets(stockpile, rotation)
 	if sortie.spawnAtTarget then
-		Spring.Echo("SPAWN AT TARGET")
 		for i=1, stockpile do --#sortieMembers do
 			SpawnPlane(teamID, sortieMembers[1], tx, ty, tz, cmdParams, dx, dy, dz, rotation, nil, i, sortie.alwaysAttack, true)	
 		end
