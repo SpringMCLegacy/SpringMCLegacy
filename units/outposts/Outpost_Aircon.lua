@@ -18,6 +18,9 @@ local Outpost_Aircon = Outpost:New{
 	yardmap				= yard,
 	canAttack			= false,
 	
+	collisionVolumeOffsets = [[0 -14 0]],
+	collisionVolumeScales = [[70 88 70]],
+	collisionVolumeType = "cylY",
 	
 	customparams = {
 		helptext		= "Ping Pong Potato",
