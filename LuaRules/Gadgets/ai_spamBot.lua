@@ -39,6 +39,7 @@ local AI_OUTPOST_OPTIONS = {
 	"OUTPOST_SALVAGEYARD",
 	"OUTPOST_ARTILLERY",
 	"OUTPOST_LAUNCHER",
+	"OUTPOST_TURRETCONTROL",
 }
 
 local AI_OUTPOST_DEFS = {}
@@ -54,10 +55,9 @@ local PERK_JUMP_RANGE = GG.CustomCommands.GetCmdID("PERK_JUMP_EFFICIENCY")
 local desired = {"CMD_SEND_ORDER", "CMD_DROPZONE", -- mech purchasing
 				"CMD_DROPZONE_2", "CMD_DROPZONE_3", -- dropship upgrading
 				"CMD_JUMP", "CMD_MASC", -- mech behaviour
-				 "CMD_OUTPOST_C3ARRAY", "CMD_OUTPOST_MECHBAY", 
-				 "CMD_OUTPOST_VEHICLEPAD", "CMD_OUTPOST_EWAR", "CMD_OUTPOST_GARRISON", "CMD_OUTPOST_SALVAGEYARD", "CMD_OUTPOST_ARTILLERY", 
-				 "CMD_OUTPOST_UPLINK", "CMD_OUTPOST_AIRCON", "CMD_OUTPOST_LAUNCHER",
-				 --"CMD_OUTPOST_TURRETCONTROL", 
+				"CMD_OUTPOST_C3ARRAY", "CMD_OUTPOST_MECHBAY", 
+				"CMD_OUTPOST_VEHICLEPAD", "CMD_OUTPOST_EWAR", "CMD_OUTPOST_GARRISON", "CMD_OUTPOST_SALVAGEYARD", "CMD_OUTPOST_ARTILLERY", 
+				"CMD_OUTPOST_UPLINK", "CMD_OUTPOST_AIRCON", "CMD_OUTPOST_LAUNCHER", "CMD_OUTPOST_TURRETCONTROL", 
 				 }
 local AI_CMDS = {}
 for _, cmd in pairs(desired) do
@@ -561,6 +561,41 @@ local function CleanTeamOutPosts(teamID, outpostName, unitID)
 	end
 end
 
+local TC_RANGE = UnitDefs[AI_OUTPOST_DEFS["OUTPOST_TURRETCONTROL"]].buildDistance
+
+local function TurretControlCalls(teamID)
+	local cBills = Spring.GetTeamResources(teamID, "metal")
+	local runningTotal = 0
+	for unitID in pairs(teamOutpostIDs[teamID]["OUTPOST_TURRETCONTROL"]) do
+		local likeToBuy = {}
+		local cmdDescs = Spring.GetUnitCmdDescs(unitID)
+		for i, cmdDesc in pairs(cmdDescs) do
+			if not cmdDesc.disabled and cmdDesc.id < 0 then
+				local unitDef = UnitDefs[-cmdDesc.id]
+				if unitDef.metalCost < cBills + runningTotal then
+					runningTotal = runningTotal + unitDef.metalCost
+					table.insert(likeToBuy, cmdDesc.id)
+				end
+			end
+		end
+		if #likeToBuy > 0 then
+			local buildID
+			if #likeToBuy == 1 then
+				buildID = likeToBuy[1]
+			else
+				buildID = likeToBuy[math.random(1,#likeToBuy)]
+			end
+			local cx, cy, cz = Spring.GetUnitPosition(unitID)
+			local params = {cx + math.random(50, TC_RANGE), cy, cz + math.random(50, TC_RANGE)}
+			Spring.GiveOrderToUnit(unitID, buildID, params, EMPTY_TABLE)
+		else -- nothing to build, try upgrading
+			Perk(unitID, AI_OUTPOST_DEFS["OUTPOST_TURRETCONTROL"])
+		end
+	--GG.turretDefIDs
+	--GG.turretBuildLimits
+	end
+end
+
 local function LauncherCalls(teamID)
 	for unitID in pairs(teamOutpostIDs[teamID]["OUTPOST_LAUNCHER"]) do
 		--Spring.Echo("ermergerd, found a cruisemissile launcher!")
@@ -582,9 +617,10 @@ local function LauncherCalls(teamID)
 end
 
 local function AirconCalls(teamID)
-	if select(3, Spring.GetTeamInfo(teamID)) then -- Team is dead
+	--[[if select(3, Spring.GetTeamInfo(teamID)) then -- Team is dead
 		return
-	end
+	end]]
+	local cBills = Spring.GetTeamResources(teamID, "metal")
 	for unitID in pairs(teamOutpostIDs[teamID]["OUTPOST_AIRCON"]) do
 		if not Spring.ValidUnitID(unitID) or Spring.GetUnitIsDead(unitID) then -- Aircon is dead
 			-- no-op
@@ -603,7 +639,7 @@ local function AirconCalls(teamID)
 					for i, cmdDesc in pairs(cmdDescs) do
 						if cmdDesc.id < 0 then
 							local unitDef = UnitDefs[-cmdDesc.id]
-							if unitDef.metalCost < (Spring.GetTeamResources(teamID, "metal") * math.random(5, 95)/100) then
+							if unitDef.metalCost < (cBills * math.random(5, 95)/100) then
 								buildID = cmdDesc.id
 								break
 							end
@@ -632,10 +668,10 @@ local function AirconCalls(teamID)
 end
 
 local function UplinkCalls(teamID)
-	if select(3, Spring.GetTeamInfo(teamID)) then -- Team is dead
+	--[[if select(3, Spring.GetTeamInfo(teamID)) then -- Team is dead
 		--CleanTeamOutPosts(teamID, "OUTPOST_UPLINK")
 		return
-	end
+	end]]
 	local artyFrame = GG.artyCanFire[teamID]
 	--Spring.Echo("UplinkCalls", teamID, artyFrame, GG.artyCanFire)
 	if not artyFrame then return end -- don't bother going any further
@@ -703,6 +739,9 @@ end
 local OUTPOST_FUNCTION_ALIASES = {
 	[AI_OUTPOST_DEFS["OUTPOST_UPLINK"]] = UplinkCalls,
 	[AI_OUTPOST_DEFS["OUTPOST_C3ARRAY"]] = Spam,
+	[AI_OUTPOST_DEFS["OUTPOST_LAUNCHER"]] = LauncherCalls,
+	[AI_OUTPOST_DEFS["OUTPOST_AIRCON"]] = AirconCalls,
+	[AI_OUTPOST_DEFS["OUTPOST_TURRETCONTROL"]] = TurretControlCalls,
 }
 
 function gadget:UnitUnloaded(unitID, unitDefID, teamID, transportID, transportTeam)
@@ -827,6 +866,8 @@ function gadget:GameFrame(n)
 				AirconCalls(teamID)
 				-- try and order cruise missile strikes
 				LauncherCalls(teamID)
+				-- try and order turrets
+				TurretControlCalls(teamID)
 				-- try and outpost any beacons
 				for i, unitID in pairs(teamBeacons[teamID]) do
 					Outpost(unitID, teamID)
