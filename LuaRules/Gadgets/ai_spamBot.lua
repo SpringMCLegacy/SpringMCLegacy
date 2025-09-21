@@ -385,53 +385,6 @@ local function Mod(unitID, mechbayID, salvage)
 	end
 end
 
-function gadget:UnitLoaded(unitID, unitDefID, unitTeam, transportID, transportTeam)
-	--if teamMechbayIDs[transportTeam][transportID] then
-	if teamOutpostIDs[transportTeam]["OUTPOST_MECHBAY"][transportID] then
-		Mod(unitID, transportID, GG.GetTeamSalvage(teamID))
-	end
-end
-
-function gadget:UnitCreated(unitID, unitDefID, teamID)
-	if unitDefID == BEACON_ID then
-		local x,_,z = Spring.GetUnitPosition(unitID)
-		table.insert(flagSpots, {x = x, z = z})
-		table.insert(teamBeacons[teamID], unitID)
-		beaconOutpostCounts[unitID] = 0
-		beaconIDs[unitID] = teamID
-	end
-	if AI_TEAMS[teamID] then
-		local unitDef = UnitDefs[unitDefID]
-		if unitDef.name:find("dropzone") then
-			dropZoneIDs[teamID] = unitID	
-			Spam(teamID)
-			Outpost(nil, teamID)
-			Outpost(nil, teamID)
-			Outpost(nil, teamID)
-			teamDropshipOutposts[teamID] = 1
-			GG.Delay.DelayCall(Outpost, {nil, teamID}, 1)
-			if difficulty > 1 then -- loadsa money!
-				Perk(unitID, unitDefID, nil, true)
-			end
-			--table.insert(teamOutpostIDs[teamID], unitID)
-		elseif unitDef.customParams.baseclass == "mech" then
-			local closeRange = WeaponDefs[unitDef.weapons[1].weaponDef].range * 0.7
-			-- set engagement range to weapon 1 range
-			Spring.SetUnitMaxRange(unitID, closeRange)
-			teamMechCounts[teamID] = teamMechCounts[teamID] + 1
-		elseif GG.outpostDefs[unitDefID] then
-			--table.insert(teamOutpostIDs[teamID], unitID)
-			if difficulty > 1 then -- loadsa money!
-				Perk(unitID, unitDefID, nil, true)
-			end
-		end
-		if difficulty > 2 then -- harder AI tonnage cheats, needs storage to do so
-			Spring.SetTeamResource(teamID, "es", 1000000)
-			Spring.AddTeamResource(teamID, "energy", 1000000)
-		end
-	end
-end
-
 local function RunAndJump(unitID, unitDefID, cmdID, spotNum, replace)
 	--Spring.Echo(UnitDefs[unitDefID].name .. [[ "Run And Jump!"]])
 	if not Spring.ValidUnitID(unitID) or Spring.GetUnitIsDead(unitID) then return end
@@ -744,13 +697,61 @@ local OUTPOST_FUNCTION_ALIASES = {
 	[AI_OUTPOST_DEFS["OUTPOST_TURRETCONTROL"]] = TurretControlCalls,
 }
 
+function gadget:UnitLoaded(unitID, unitDefID, unitTeam, transportID, transportTeam)
+	--if teamMechbayIDs[transportTeam][transportID] then
+	if teamOutpostIDs[transportTeam]["OUTPOST_MECHBAY"][transportID] then
+		Mod(unitID, transportID, GG.GetTeamSalvage(teamID))
+	end
+end
+
+function gadget:UnitCreated(unitID, unitDefID, teamID)
+	if unitDefID == BEACON_ID then
+		local x,_,z = Spring.GetUnitPosition(unitID)
+		table.insert(flagSpots, {x = x, z = z})
+		table.insert(teamBeacons[teamID], unitID)
+		beaconOutpostCounts[unitID] = 0
+		beaconIDs[unitID] = teamID
+	end
+	if AI_TEAMS[teamID] then
+		local unitDef = UnitDefs[unitDefID]
+		if unitDef.name:find("dropzone") then
+			dropZoneIDs[teamID] = unitID	
+			Spam(teamID)
+			Outpost(nil, teamID)
+			Outpost(nil, teamID)
+			Outpost(nil, teamID)
+			teamDropshipOutposts[teamID] = 1
+			GG.Delay.DelayCall(Outpost, {nil, teamID}, 1)
+			if difficulty > 1 then -- loadsa money!
+				Perk(unitID, unitDefID, nil, true)
+			end
+			--table.insert(teamOutpostIDs[teamID], unitID)
+		elseif unitDef.customParams.baseclass == "mech" then
+			local closeRange = WeaponDefs[unitDef.weapons[1].weaponDef].range * 0.7
+			-- set engagement range to weapon 1 range
+			Spring.SetUnitMaxRange(unitID, closeRange)
+			teamMechCounts[teamID] = teamMechCounts[teamID] + 1
+		elseif GG.outpostDefs[unitDefID] then
+			if AI_OUTPOST_DEFS[unitDef.name:upper()] then
+				teamOutpostCounts[teamID][unitDefID] = teamOutpostCounts[teamID][unitDefID] + 1
+			end
+			--table.insert(teamOutpostIDs[teamID], unitID)
+			if difficulty > 1 then -- loadsa money!
+				Perk(unitID, unitDefID, nil, true)
+			end
+		end
+		if difficulty > 2 then -- harder AI tonnage cheats, needs storage to do so
+			Spring.SetTeamResource(teamID, "es", 1000000)
+			Spring.AddTeamResource(teamID, "energy", 1000000)
+		end
+	end
+end
+
 function gadget:UnitUnloaded(unitID, unitDefID, teamID, transportID, transportTeam)
 	if AI_TEAMS[teamID] then
 		local ud = UnitDefs[unitDefID]
 		local cp = ud.customParams
 		if AI_OUTPOST_DEFS[ud.name:upper()] then
-			--Spring.Echo("team", teamID, "deployed a", ud.name)
-			teamOutpostCounts[teamID][unitDefID] = teamOutpostCounts[teamID][unitDefID] + 1
 			-- TODO: really this should be updated here, but creates an even worse race condition than having it upon ordering
 			--[[local beaconID = Spring.GetUnitRulesParam(unitID, "beaconID")
 			if beaconID then
