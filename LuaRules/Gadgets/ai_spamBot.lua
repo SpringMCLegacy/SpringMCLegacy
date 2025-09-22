@@ -455,13 +455,15 @@ local function GetSpotTarget(teamID, filter)
 			end
 		end
 		if #enemyBeacons > 0 then
+			spot = {}
 			local targetID = enemyBeacons[math.random(1, #enemyBeacons)]
 			--Spring.Echo("GetSpotTarget2", teamID, Spring.GetUnitTeam(targetID), filter, #enemyBeacons, targetID)
-			return Spring.GetUnitPosition(targetID)
+			spot.x, _, spot.z = Spring.GetUnitPosition(targetID)
 		end
+	else
+		-- any flag, ours or theirs
+		spot = flagSpots[math.random(1, #flagSpots)]
 	end
-	-- any flag, ours or theirs
-	spot = flagSpots[math.random(1, #flagSpots)]
 	local offsetX = math.random(50, 150)
 	local offsetZ = math.random(50, 150)
 	offsetX = offsetX * -1 ^ (offsetX % 2)

@@ -228,6 +228,9 @@ local function GetStockPile(teamID, sortie, status)
 end
 
 local function ModifyStockpile(teamID, sortie, amount, oldState, newState)
+	if select(3, Spring.GetTeamInfo(teamID)) then -- Team is dead
+		return
+	end
 	local cmdID = sortie.cmdDesc.id
 	if oldState then -- may be brand spankin' new
 		teamSorties[teamID][-cmdID][oldState] = teamSorties[teamID][-cmdID][oldState] - amount

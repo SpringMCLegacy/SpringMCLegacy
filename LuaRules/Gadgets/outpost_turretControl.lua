@@ -66,6 +66,7 @@ end
 
 -- TOWERS
 function LimitTowerType(unitID, teamID, towerType, increase)	
+	if not unitID or unitID and Spring.GetUnitIsDead(unitID) then return false end
 	local towersRemaining = buildLimits[unitID][towerType]
 	--Spring.Echo("LimitTowerType", towerType, increase, ownedLimits[unitID][towerType], towersRemaining) -- 1,1,0
 	if increase then -- giving slots back
