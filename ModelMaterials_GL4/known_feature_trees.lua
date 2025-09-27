@@ -456,6 +456,7 @@ local knowntrees = {
 	treetype13 = 'tree',
 	treetype14 = 'tree',
 	treetype15 = 'tree',
+	ad0_pine_3_xl = 'treePine',
 }
 
 return knowntrees
