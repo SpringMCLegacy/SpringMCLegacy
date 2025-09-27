@@ -193,7 +193,7 @@ maxRudder          = 0.0015,
 		entryDelay 		= 45,
 		prepDelay 		= 60,
 		spawnAtTarget	= true,
-		speed			= 252 * 1.5, -- 2520
+		speed			= 252 * 1.75, -- 2520
 		price      		= 36000,
 		maxfuel = 30,
     },
