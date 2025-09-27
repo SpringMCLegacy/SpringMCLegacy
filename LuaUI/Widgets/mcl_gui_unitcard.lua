@@ -105,7 +105,7 @@ local ammoNameCache		= {}
 local dangerZONE	= false
 local phase			= 0
 
-local maxWeaponCount = 12;
+local maxWeaponCount = 32;
 
 -- because concatination creates strings in mem that can flood the garbage collector
 -- we are going to use this lookuptable to mittigate the string building

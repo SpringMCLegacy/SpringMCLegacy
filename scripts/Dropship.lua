@@ -313,7 +313,9 @@ function script.Shot(weaponID)
 	elseif 	missileWeaponIDs[weaponID] then
 		EmitSfx(launchers[weaponID], SFX.CEG + weaponID)
 	elseif flareOnShots[weaponID] then
-		EmitSfx(flares[weaponID], SFX.CEG + weaponID)
+		if not flares[weaponID] then Spring.Echo("script Dropship.lua, no flare for weapon", weaponID) else
+			EmitSfx(flares[weaponID], SFX.CEG + weaponID)
+		end
 	end
 end
 

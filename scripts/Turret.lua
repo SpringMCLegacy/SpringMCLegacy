@@ -98,7 +98,7 @@ local DROP_HEIGHT = 10000
 local GRAVITY = 120/Game.gravity
 local X, _, Z = Spring.GetUnitPosition(unitID)
 local GY = Spring.GetGroundHeight(X, Z)
-local FACING
+local FACING = 0
 
 -- Variables
 local stage = 1
@@ -127,7 +127,7 @@ end
 local SPEED = math.rad(150)
 function TouchDown()
 	stage = 3
-	FACING = select(2, Spring.UnitScript.GetPieceRotation(base)) or 0 -- TODO: Discover how this can be nil?
+	FACING = select(2, Spring.UnitScript.GetPieceRotation(base)) or 0
 	GG.EmitSfxName(unitID, turret, "mech_jump_dust")
 	PlaySound("stomp")
 end

@@ -172,9 +172,9 @@ maxRudder          = 0.0015,
 		[22] = {
 			name 	= "bomb",
 		},
-		[23] = {
-			name 	= "sight",
-		},
+		--[23] = {
+		--	name 	= "sight",
+		--},
 	},
 	sfxtypes = {
 		explosiongenerators = {
@@ -193,7 +193,7 @@ maxRudder          = 0.0015,
 		entryDelay 		= 45,
 		prepDelay 		= 60,
 		spawnAtTarget	= true,
-		speed			= 4.5 * 60,
+		speed			= 252 * 1.5, -- 2520
 		price      		= 36000,
 		maxfuel = 30,
     },
