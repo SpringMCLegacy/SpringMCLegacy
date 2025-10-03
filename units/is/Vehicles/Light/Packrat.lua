@@ -1,5 +1,7 @@
 local Packrat = LightTank:New{
 	name              	= "Packrat",
+	description			= "Light Recon",
+	
 	trackWidth			= 16,--width to render the decal
 	
 	weapons 		= {	
