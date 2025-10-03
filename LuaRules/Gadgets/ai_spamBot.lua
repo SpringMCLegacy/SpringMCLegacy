@@ -104,8 +104,12 @@ GG.AI.TeamResourceChange = TeamResourceChange
 
 local teamMechsNeedingBays = {}
 
-local function MechNeedsBay(unitID, teamID)
+local function MechNeedsBay(unitID, teamID, longRangeWeapon)
 	--Spring.Echo("Mech", unitID, "from team", teamID, "needs a mechbay")
+	if longRangeWeapon then
+		--Spring.Echo("Oh noes, I am out of ammos, setting maxrange to half")
+		Spring.SetUnitMaxRange(unitID, longRangeWeapon / 2)
+	end
 	teamMechsNeedingBays[unitID] = true
 	for mechbayID in pairs(teamOutpostIDs[teamID]["OUTPOST_MECHBAY"]) do
 		--Spring.Echo("team", teamID, "totally has a mechbay is it empty?", Spring.GetUnitIsTransporting(mechbayID)[1])
@@ -777,6 +781,7 @@ function gadget:UnitUnloaded(unitID, unitDefID, teamID, transportID, transportTe
 			--Spring.Echo("MECH!")
 			Perk(unitID, unitDefID, nil, true)
 			Wander(unitID, tonumber(cp.tonnage) <= 35 and CMD.MOVE)
+			Spring.SetUnitMaxRange(unitID, ud.customParams.maxrange)
 		end
 	end
 end

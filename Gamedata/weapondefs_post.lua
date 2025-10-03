@@ -130,7 +130,10 @@ for unitName, ud in pairs(UnitDefs) do
 					--end
 				end
 				--Spring.Echo(WeaponDefs, weapons[weaponID].name, WeaponDefs[string.lower(weapons[weaponID].name)])
-				maxrange = math.max(maxrange, WeaponDefs[string.lower(weapons[weaponID].name)].range or 0)
+				if (WeaponDefs[string.lower(weapons[weaponID].name)].range or 0) > maxrange then
+					maxrange = WeaponDefs[string.lower(weapons[weaponID].name)].range
+					cp.maxrangeid = weaponID
+				end
 			end
 			cp.maxrange = maxrange
 		end

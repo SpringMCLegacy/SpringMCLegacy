@@ -703,7 +703,7 @@ function WeaponCanFire(weaponID)
 			StartThread(SpinBarrels, weaponID, false)
 		end
 		SetUnitRulesParam(unitID, "outofammo", 1)
-		Script.LuaRules.MechNeedsBay(unitID, teamID) -- let AI know
+		Script.LuaRules.MechNeedsBay(unitID, teamID, weaponID == tonumber(unitDef.customParams.maxrangeid) and unitDef.customParams.maxrange or nil) -- let AI know
 		return false
 	elseif spinSpeeds[weaponID] then 
 		if spinPiecesState[weaponID] < 1 then
