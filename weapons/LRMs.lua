@@ -75,36 +75,39 @@ local LRM20 = LRM_Class:New{
     },
 }
 
-local ALRM5 = LRM_Class:New{
-	name                    = "A.LRM-5",
+local ALRM_Class = LRM_Class:New{
 	turnRate				= 4000,
+	customparams = {
+		minrange		= 0,
+	},
+}
+
+local ALRM5 = ALRM_Class:New{
+	name                    = "A.LRM-5",
 	burst					= 5,
 	customparams = {
 		heatgenerated		= 3,
 	},
 }
 
-local ALRM10 = LRM_Class:New{
+local ALRM10 = ALRM_Class:New{
 	name                    = "A.LRM-10",
-	turnRate				= 4000,
 	burst					= 10,
 	customparams = {
 		heatgenerated		= 6,
     },
 }	
 
-local ALRM15 = LRM_Class:New{
+local ALRM15 = ALRM_Class:New{
 	name                    = "A.LRM-15",
-	turnRate				= 4000,
 	burst					= 15,
 	customparams = {
 		heatgenerated		= 7.5,
     },
 }
 
-local ALRM20 = LRM_Class:New{
+local ALRM20 = ALRM_Class:New{
 	name                    = "A.LRM-20",
-	turnRate				= 4000,
 	burst					= 20,
 	customparams = {
 		heatgenerated		= 9,
