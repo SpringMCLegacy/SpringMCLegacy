@@ -44,6 +44,8 @@ local TURRET_SPEED = info.turretTurnSpeed
 local ELEVATION_SPEED = info.elevationSpeed
 local BARREL_SPEED = info.barrelRecoilSpeed
 local RESTORE_DELAY = Spring.UnitScript.GetLongestReloadTime(unitID) * 2
+local AMMO_RESTORE_AMOUNT = unitDef.customParams.ammorestoreamount or 1
+local AMMO_RESTORE_WAIT = unitDef.customParams.ammorestorewait or 60 * 1000 -- 1 min
 
 local currLaunchPoint = 1
 local noFiring = true
@@ -142,6 +144,7 @@ function RealBoy()
 	Spring.SetUnitSensorRadius(unitID, "los", unitDef.losRadius)
 	Spring.SetUnitSensorRadius(unitID, "los", unitDef.airLosRadius)
 	Spring.SetUnitSensorRadius(unitID, "radar", unitDef.radarRadius)
+	StartThread(Restock)
 end
 
 function fx()
@@ -309,6 +312,14 @@ function ChangeAmmo(ammoType, amount)
 		return true -- Ammo was changed
 	end
 	return false -- Ammo was not changed
+end
+
+function Restock()
+	local ammoType = ammoTypes[1] -- assumes only weapon 1 ammo type is relevant
+	while true do
+		ChangeAmmo(ammoType, AMMO_RESTORE_AMOUNT)
+		Sleep(AMMO_RESTORE_WAIT)
+	end
 end
 
 local function WeaponCanFire(weaponID)
