@@ -99,7 +99,11 @@ function gadget:Initialize()
 	Spring.SendCommands({"bind r onoff"})
 	Spring.SendCommands({"bind y settarget"})
 	Spring.SendCommands({"bind w wait"})
-	
+	Spring.SendCommands({"bind alt+t track"})
+	Spring.SendCommands({"unbindkeyset ctrl+c"})
+	Spring.SendCommands({"bind ctrl+c select AllMap+_NameContain_Dropzone+_ClearSelection_SelectOne+'"})
+	Spring.SendCommands({"unbindkeyset ctrl+s"})
+	Spring.SendCommands({"bind ctrl+s submit_order"})
 	--Spring.AssignMouseCursor("run", "cursorrun", true, false)
 	--Spring.SetCustomCommandDrawData(CMD_RUN, "run", {1,0.5,0,.8})
 end
