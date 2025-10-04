@@ -60,14 +60,16 @@ local runningTotalCmdDesc = {
 	id = CMD_RUNNING_TOTAL,
 	type   = CMDTYPE.ICON,
 	name   = "Order\n" .. COLOURS.cbills .. "C-Bills: \n0",
-	disabled = true,
+	--disabled = true,
+	action = "menuprevious",
 }
 local CMD_RUNNING_TONS = GG.CustomCommands.GetCmdID("CMD_RUNNING_TONS")
 local runningTonsCmdDesc = {
 	id = CMD_RUNNING_TONS,
 	type   = CMDTYPE.ICON,
 	name   = "Order\n" .. COLOURS.tonnage .. "Tonnes: \n0",
-	disabled = true,
+	--disabled = true,
+	action = "menunext",
 }
 local dropZoneCmdDesc = {
 	id     = GG.CustomCommands.GetCmdID("CMD_DROPZONE", 0), -- dropzone is free
@@ -82,6 +84,11 @@ GG.ignoredCmdDescs = ignoredCmdDescs
 
 -- Variables
 local typeStrings = {"fast", "cqb", "flexible", "ranged"}
+local typeStringIndex = {}
+for i, v in ipairs(typeStrings) do
+	typeStringIndex[v] = i
+end
+
 local typeStringAliases = { -- whitespace is to try and equalise resulting font size
 	["fast"] 		= GG.Pad(10,"Recon", "EWAR"),-- "&", "Skirmisher"), 
 	["cqb"] 		= GG.Pad(10,"Close", "Range"),--, "&", "Juggernaut"), 
@@ -103,12 +110,16 @@ for i, typeString in ipairs(typeStrings) do
 	}
 	menuCmdIDs[cmdID] = typeString
 end
+menuCmdIDs[CMD_RUNNING_TOTAL] = "previous"
+menuCmdIDs[CMD_RUNNING_TONS] = "next"
+menuCmdIDs.n = #typeStrings
 
 local mechCache = {} -- mechCache[unitDefID] = "fast"/"cqb"/"flexible"/"ranged" from typeStrings
 GG.mechCache = mechCache 
 
 -- Menu
 local currMenu = {} -- [dropzoneID] = unitType
+local currMenuIndex = {}
 local locked = {} -- unitDefID = true
 -- Orders
 local orderCosts = {} -- orderCosts[unitID] = cost
@@ -165,8 +176,9 @@ local function ClearCmdDescs(unitID)
 end
 GG.ClearCmdDescs = ClearCmdDescs
 
-local function ShowBuildOptionsByType(unitID, menuType, menuCache, menuIDs)
+local function ShowBuildOptionsByType(unitID, menuType, menuCache, menuIDs, typeStringIndex)
 	currMenu[unitID] = menuType
+	currMenuIndex[unitID] = typeStringIndex[menuType]
 	local cmdID = menuType and GG.CustomCommands.GetCmdID("CMD_MENU_" .. menuType:upper())
 	for i, cmdDesc in pairs(Spring.GetUnitCmdDescs(unitID)) do
 		if cmdDesc.id == cmdID then
@@ -178,7 +190,9 @@ local function ShowBuildOptionsByType(unitID, menuType, menuCache, menuIDs)
 		elseif menuCache[cmdDesc.id] then -- a button other than a buildoption which belongs to a particular menu
 			EditUnitCmdDesc(unitID, i, {hidden = menuCache[cmdDesc.id] ~= menuType})
 		elseif menuIDs[cmdDesc.id] then -- an actual menu button
-			EditUnitCmdDesc(unitID, i, {texture = 'bitmaps/ui/filter.png',})
+			if not (menuIDs[cmdDesc.id] == "next" or menuIDs[cmdDesc.id] == "previous") then
+				EditUnitCmdDesc(unitID, i, {texture = 'bitmaps/ui/filter.png',})
+			end
 		end
 	end
 end
@@ -205,7 +219,7 @@ local function 	LockHeavy(dropZone, lock)
 		end
 	end
 	-- show only the currently selected menu
-	ShowBuildOptionsByType(dropZone, currMenu[dropZone], mechCache, menuCmdIDs)
+	ShowBuildOptionsByType(dropZone, currMenu[dropZone], mechCache, menuCmdIDs, typeStringIndex)
 end
 GG.LockHeavy = LockHeavy
 
@@ -381,7 +395,7 @@ local function SetDropZone(beaconID, teamID)
 	local side = GG.teamSide[teamID]
 	if not side then return end -- a weird bug to avoid here, maybe due to dead team?
 	local dropZoneID = CreateUnit(side .. "_dropzone", x,y,z, "s", teamID)
-	ShowBuildOptionsByType(dropZoneID, "fast", mechCache, menuCmdIDs)
+	ShowBuildOptionsByType(dropZoneID, "fast", mechCache, menuCmdIDs, typeStringIndex)
 	dropZones[dropZoneID] = teamID
 	teamDropZones[teamID] = dropZoneID
 	dropZoneBeaconIDs[teamID] = beaconID
@@ -396,11 +410,21 @@ local function SetDropZone(beaconID, teamID)
 	end
 end
 
-local function PurchaseOrders(unitID, unitDefID, teamID, cmdID, cmdOptions, completionFunc, menuCache, menuIDs, slotsLeft)
+local function PurchaseOrders(unitID, unitDefID, teamID, cmdID, cmdOptions, completionFunc, menuCache, menuIDs, typeStrings, typeStringIndex, slotsLeft)
 	local typeString = menuIDs[cmdID]
 	local rightClick = cmdOptions.right
 	if typeString then
-		ShowBuildOptionsByType(unitID, typeString, menuCache, menuIDs)
+		currMenuIndex[unitID] = currMenuIndex[unitID] or 1
+		if typeString == "next" then
+			local newIndex = currMenuIndex[unitID]+1
+			if newIndex > menuIDs.n then newIndex = 1 end
+			typeString = typeStrings[newIndex]
+		elseif	typeString == "previous" then
+			local newIndex = currMenuIndex[unitID]-1
+			if newIndex < 1 then newIndex = menuIDs.n end
+			typeString = typeStrings[newIndex]
+		end
+		ShowBuildOptionsByType(unitID, typeString, menuCache, menuIDs, typeStringIndex)
 		return true
 	elseif cmdID < 0 then
 		local unitDef = UnitDefs[-cmdID]
@@ -489,7 +513,7 @@ GG.PurchaseOrders = PurchaseOrders
 function gadget:AllowCommand(unitID, unitDefID, teamID, cmdID, cmdParams, cmdOptions, cmdTag, synced)
 	-- DROPZONE PURCHASE ORDERS
 	if dropZones[unitID] then
-		return PurchaseOrders(unitID, unitDefID, teamID, cmdID, cmdOptions, SendCommandFallback, mechCache, menuCmdIDs, GG.TeamSlotsRemaining(teamID))
+		return PurchaseOrders(unitID, unitDefID, teamID, cmdID, cmdOptions, SendCommandFallback, mechCache, menuCmdIDs, typeStrings, typeStringIndex, GG.TeamSlotsRemaining(teamID))
 	-- DROPZONE PLACEMENT ORDERS
 	elseif unitDefID == BEACON_ID then
 		if cmdID == dropZoneCmdDesc.id then

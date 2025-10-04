@@ -88,6 +88,10 @@ local CMD_OPT_SHIFT = CMD.OPT_SHIFT
 
 -- Menus
 local typeStrings = {"order", "deploy", "support"}
+local typeStringIndex = {}
+for i, v in ipairs(typeStrings) do
+	typeStringIndex[v] = i
+end
 local typeStringAliases = { 
 	["order"] 	= GG.Pad(10,"Order", "Aeros"),
 	["deploy"] 	= GG.Pad(10,"Deploy", "Sorties"), 
@@ -108,6 +112,9 @@ for i, typeString in ipairs(typeStrings) do
 	}
 	menuCmdIDs[cmdID] = typeString
 end
+menuCmdIDs[GG.CustomCommands.GetCmdID("CMD_RUNNING_TOTAL")] = "previous"
+menuCmdIDs[GG.CustomCommands.GetCmdID("CMD_RUNNING_TONS")] = "next"
+menuCmdIDs.n = #typeStrings
 local menuTypeCache = {}
 
 -- Sorties
@@ -233,7 +240,7 @@ local function ModifyStockpile(teamID, sortie, amount, oldState, newState)
 	end
 	local cmdID = sortie.cmdDesc.id
 	if oldState then -- may be brand spankin' new
-		teamSorties[teamID][-cmdID][oldState] = teamSorties[teamID][-cmdID][oldState] - amount
+		teamSorties[teamID][-cmdID][oldState] = teamSorties[teamID][-cmdID][oldState] - amount -- attempt to index nil
 	else -- first time, setup
 		teamSorties[teamID][-cmdID] = {
 			active = 0,
@@ -495,7 +502,7 @@ function gadget:UnitCreated(unitID, unitDefID, teamID)
 	for cmdID in pairs(toDelete) do
 		Spring.RemoveUnitCmdDesc(unitID, Spring.FindUnitCmdDesc(unitID, cmdID))
 	end
-	GG.ShowBuildOptionsByType(unitID, "order", menuTypeCache, menuCmdIDs)
+	GG.ShowBuildOptionsByType(unitID, "order", menuTypeCache, menuCmdIDs, typeStringIndex)
 end
 
 
@@ -537,7 +544,7 @@ function gadget:AllowCommand(unitID, unitDefID, teamID, cmdID, cmdParams, cmdOpt
 	-- check if command is a sortie
 	local sortie = sortieCmdIDs[cmdID]
 	if not sortie then
-		return GG.PurchaseOrders(unitID, unitDefID, teamID, cmdID, cmdOptions, SendPurchaseOrder, menuTypeCache, menuCmdIDs, teamAvailableSortieSlots[teamID])
+		return GG.PurchaseOrders(unitID, unitDefID, teamID, cmdID, cmdOptions, SendPurchaseOrder, menuTypeCache, menuCmdIDs, typeStrings, typeStringIndex, teamAvailableSortieSlots[teamID])
 	end
 	
 	local _, _, inBuild = GetUnitIsStunned(unitID)
