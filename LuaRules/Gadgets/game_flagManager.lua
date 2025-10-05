@@ -290,7 +290,8 @@ local function DeployBeacons(skip)
 	end
 end
 
-local skip = modOptions.skip_briefing == nil and true or modOptions.skip_briefing
+local skip = modOptions and modOptions.skip_briefing
+if skip == nil then skip = true end
 GG.skip = skip
 
 function gadget:GameStart()
