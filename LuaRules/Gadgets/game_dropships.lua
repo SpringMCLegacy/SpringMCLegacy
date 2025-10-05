@@ -179,7 +179,7 @@ function BeaconDropshipBugOut(beaconID, teamID, outpostID)
 end	
 GG.BeaconDropshipBugOut = BeaconDropshipBugOut
 
-local REGEN = 10 -- how much HP per frame of being off-map
+local REGEN = 1 -- how much HP per frame of being off-map
 
 function gadget:UnitPreDamaged(unitID, unitDefID, unitTeam, damage, paralyzer, weaponID, projectileID, attackerID, attackerDefID, attackerTeam)
 	if dropShipCache[unitDefID] == "mech" then
