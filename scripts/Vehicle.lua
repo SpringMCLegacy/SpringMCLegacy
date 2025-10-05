@@ -505,14 +505,28 @@ function script.Create()
 	end
 end
 
+local SIG_SOUNDS = 2^15
+function VehicleSFX()
+	Signal(SIG_SOUNDS)
+	SetSignalMask(SIG_SOUNDS)
+	while moving do
+		PlaySound("vehicle_moving")
+		Sleep(2003) -- file is 2s 3ms
+	end
+end
+
 function script.StartMoving()
 	for i = 1, #wheels do
 		Spin(wheels[i], x_axis, WHEEL_SPEED, WHEEL_ACCEL)
 	end
 	moving = true
+	if not vtol and not aero then
+		StartThread(VehicleSFX)
+	end
 end
 
 function script.StopMoving()
+	Signal(SIG_SOUNDS)
 	for i = 1, #wheels do
 		StopSpin(wheels[i], x_axis, WHEEL_ACCEL)
 	end

@@ -373,7 +373,27 @@ local Sounds = {
 			rolloff = 5.0,
 		},
 		
-		
+		vehicle_engine = {
+			file = "sounds/unit/vehicle_engine.wav",
+			maxconcurrent = 12,
+			gainmod = 1.0,
+			pitchmod = 0.1,
+			priority = 0.2,
+			maxdist = 8000,
+			rolloff = 0.2,
+			--looptime = 10000,
+			gain = 0.7,
+		},
+		vehicle_moving = {
+			file = "sounds/unit/vehicle_moving.wav",
+			maxconcurrent = 1,
+			gainmod = 1.0,
+			pitchmod = 0.1,
+			priority = -0.2,
+			maxdist = 8000,
+			rolloff = 5.0,
+			gain = 0.3,
+		},
 		--- weapons/explosions
 		
 		Meltdown = {
