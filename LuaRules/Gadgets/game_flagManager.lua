@@ -291,8 +291,7 @@ local function DeployBeacons(skip)
 end
 
 local skip = modOptions and modOptions.skip_briefing
-if skip == nil then skip = true end
-Spring.Echo("skip test", modOptions and modOptions.skip_briefing, skip)
+if skip == nil or skip == 1 then skip = true elseif skip == 0 then skip = false end -- modoption bools passed as 0 and 1, but 0 is true in lua. Thanks, lua!
 GG.skip = skip
 
 function gadget:GameStart()
