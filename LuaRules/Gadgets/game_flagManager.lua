@@ -291,6 +291,7 @@ local function DeployBeacons(skip)
 end
 
 local skip = modOptions and modOptions.skip_briefing
+Spring.Echo("skip check", skip, type(skip), skip and skip == 0)
 if skip == nil or skip == 1 then skip = true elseif skip == 0 then skip = false end -- modoption bools passed as 0 and 1, but 0 is true in lua. Thanks, lua!
 GG.skip = skip
 
