@@ -292,6 +292,7 @@ end
 
 local skip = modOptions and modOptions.skip_briefing
 if skip == nil then skip = true end
+Spring.Echo("skip test", modOptions and modOptions.skip_briefing, skip)
 GG.skip = skip
 
 function gadget:GameStart()
