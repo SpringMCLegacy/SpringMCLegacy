@@ -409,7 +409,7 @@ function gadget:UnitPreDamaged(unitID, unitDefID, unitTeam, damage, paralyzer, w
 		--Spring.Echo("We got DFA", damage)
 		if attackerID == unitID or AreTeamsAllied(attackerTeam, unitTeam) then return 0 end -- don't deal self damage via the engine
 		local attackerDef = UnitDefs[attackerDefID]
-		local applied = damage * attackerDef.health * 0.1 * unitDFADamages[attackerID] -- 10% of max HP
+		local applied = damage * attackerDef.health * 0.2 * unitDFADamages[attackerID] -- 20% of max HP
 		local self = applied / (unitReinforcedLegs[attackerID] and 4 or 2)
 		--Spring.Echo("We got DFA applied", damage, applied, self)
 		local env = Spring.UnitScript.GetScriptEnv(attackerID)
@@ -433,7 +433,7 @@ function gadget:Initialize()
   for unitDefID, unitDef in pairs(UnitDefs) do
 	local jumpjets = unitDef.customParams.jumpjets
     if jumpjets then
-		jumpers[unitDefID] = {range = 100 * jumpjets, height = 33 * jumpjets, speed = 6, reload = BASE_RELOAD}
+		jumpers[unitDefID] = {range = 150 * jumpjets, height = 33 * jumpjets, speed = 6, reload = BASE_RELOAD}
 	end
   end
   GG.jumpDefs = jumpers

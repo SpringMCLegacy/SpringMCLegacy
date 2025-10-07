@@ -39,6 +39,7 @@ local DFA = Death_Class:New{
 	soundHit             	= "dropship_stomp",
 	explosionGenerator    	= "custom:mech_jump_dust",
 	areaOfEffect			= 100,
+	edgeEffectiveness 		= 0.98,
 	damage = {
 		default = 100,
 	},	
