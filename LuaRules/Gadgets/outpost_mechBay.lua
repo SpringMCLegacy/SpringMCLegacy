@@ -316,7 +316,6 @@ function gadget:AllowCommand(unitID, unitDefID, teamID, cmdID, cmdParams, cmdOpt
 					local x,y,z = GetUnitPosition(unitID)
 					local newID = CreateUnit(-cmdID, x,y,z, 0, teamID, false, false)
 					local oldID = transporting[1]
-					UseTeamResource(teamID, "energy", UnitDefs[-cmdID].customParams.tonnage)
 					SetUnitExperience(newID, Spring.GetUnitExperience(oldID))
 					SetUnitHealth(newID, Spring.GetUnitHealth(oldID))
 					GG.CloneMechApps(oldID, Spring.GetUnitDefID(oldID), newID, -cmdID)
@@ -325,6 +324,7 @@ function gadget:AllowCommand(unitID, unitDefID, teamID, cmdID, cmdParams, cmdOpt
 					DestroyUnit(oldID, false, true)
 					CallAsUnit(unitID, env.script.TransportPickup, newID)
 					ShowModsByType(unitID, currMenu[unitID], newID)
+					UseTeamResource(teamID, "energy", UnitDefs[-cmdID].customParams.tonnage)
 					CheckOmniOptions(unitID, teamID, cmdID)
 				else
 					SendMessageToTeam(teamID, "Insufficient salvage!")
