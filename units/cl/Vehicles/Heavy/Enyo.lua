@@ -34,5 +34,6 @@ local Enyo = LightTank:New{
 }
 
 return lowerkeys({
-	["WF_Enyo"] = Enyo:New(),
+	--["JF_Enyo"] = Enyo:New(),
+	--["HH_Enyo"] = Enyo:New(),
 })

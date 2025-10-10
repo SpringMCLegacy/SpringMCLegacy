@@ -33,11 +33,11 @@ local sidedata = {
 		name = "Clan Jade Falcon",
 		shortName = "JF",
 		startUnit = "beacon",
-	},
+	},--]]
 	{
 		name = "Clan Smoke Jaguar",
 		shortName = "SJ",
 		startUnit = "beacon",
-	},]]	
+	},
 }
 return sidedata

@@ -38,4 +38,5 @@ local Hachiman = LightTank:New{
 
 return lowerkeys({
 	["WF_Hachiman"] = Hachiman:New(),
+	["SJ_Hachiman"] = Hachiman:New(),
 })

@@ -32,4 +32,5 @@ local Mithras = LightTank:New{
 
 return lowerkeys({
 	["WF_Mithras"] = Mithras:New(),
+	["SJ_Mithras"] = Mithras:New(),
 })

@@ -31,4 +31,5 @@ local Ku = LightTank:New{
 
 return lowerkeys({
 	["WF_Ku"] = Ku:New(),
+	["SJ_Ku"] = Ku:New(),
 })

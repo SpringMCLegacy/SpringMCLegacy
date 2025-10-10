@@ -208,7 +208,11 @@ local C = Direwolf:New{
 
 return lowerkeys({
 	["WF_Direwolf_P"] = Prime:New(),
+	["SJ_Direwolf_P"] = Prime:New(),
 	["WF_Direwolf_A"] = A:New(),
+	["SJ_Direwolf_A"] = A:New(),
 	["WF_Direwolf_B"] = B:New(),
+	["SJ_Direwolf_B"] = B:New(),
 	["WF_Direwolf_C"] = C:New(),
+	["SJ_Direwolf_C"] = C:New(),
 })

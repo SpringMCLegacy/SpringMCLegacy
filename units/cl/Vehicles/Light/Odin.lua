@@ -36,4 +36,5 @@ local Odin = LightTank:New{
 
 return lowerkeys({
 	["WF_Odin"] = Odin:New(),
+	["SJ_Odin"] = Odin:New(),
 })

@@ -27,4 +27,5 @@ local Zorya = LightTank:New{
 
 return lowerkeys({
 	["WF_Zorya"] = Zorya:New(),
+	["SJ_Zorya"] = Zorya:New(),
 })

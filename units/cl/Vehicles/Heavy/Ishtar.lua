@@ -43,4 +43,5 @@ local Ishtar = Tank:New{
 
 return lowerkeys({
 	["WF_Ishtar"] = Ishtar:New(),
+	["SJ_Ishtar"] = Ishtar:New(),
 })

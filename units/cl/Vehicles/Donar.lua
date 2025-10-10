@@ -33,4 +33,5 @@ local Donar = VTOL:New{
 
 return lowerkeys({
 	["WF_Donar"] = Donar:New{},
+	["SJ_Donar"] = Donar:New{},
 })

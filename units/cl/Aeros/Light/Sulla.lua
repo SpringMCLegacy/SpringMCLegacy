@@ -59,4 +59,5 @@ local Sulla = Aero:New{
 
 aeros = {}
 aeros["wf_sulla"] = Sulla:New{}
+aeros["sj_sulla"] = Sulla:New{}
 return lowerkeys(aeros)

@@ -32,4 +32,5 @@ local Oro = Tank:New{
 
 return lowerkeys({
 	["WF_Oro"] = Oro:New(),
+	["SJ_Oro"] = Oro:New(),
 })

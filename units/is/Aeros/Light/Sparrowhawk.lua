@@ -54,5 +54,7 @@ aeros = {}
 for i, sideName in pairs(Sides) do
 	aeros[sideName .. "_sparrowhawk"] = Sparrowhawk:New{}
 end
-aeros["wf_sparrowhawk"] = nil -- Sparrowhawk is IS only!
+-- Sparrowhawk is IS only!
+aeros["wf_sparrowhawk"] = nil
+aeros["sj_sparrowhawk"] = nil
 return lowerkeys(aeros)

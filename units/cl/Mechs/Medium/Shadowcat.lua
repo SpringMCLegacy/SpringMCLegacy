@@ -94,7 +94,7 @@ local B = Shadowcat:New{
 }
 
 return lowerkeys({
-	--["WF_Shadowcat_Prime"] = Prime:New(),
-	--["WF_Shadowcat_A"] = A:New(),
-	--["WF_Shadowcat_B"] = B:New(),
+	["SJ_Shadowcat_P"] = Prime:New(),
+	["SJ_Shadowcat_A"] = A:New(),
+	["SJ_Shadowcat_B"] = B:New(),
 })

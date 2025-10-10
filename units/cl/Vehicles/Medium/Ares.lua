@@ -32,4 +32,5 @@ local Ares = LightTank:New{
 
 return lowerkeys({
 	["WF_Ares"] = Ares:New(),
+	["SJ_Ares"] = Ares:New(),
 })

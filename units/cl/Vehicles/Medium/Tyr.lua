@@ -31,5 +31,7 @@ local Tyr = Hover:New{
 }
 
 return lowerkeys({
-	["WF_Tyr"] = Tyr:New(),
+	["WF_Tyr"] = Tyr:New(), -- shouldn't really be
+	--["GB_Tyr"] = Tyr:New()
+	--["HH_Tyr"] = Tyr:New()
 })

@@ -65,4 +65,5 @@ local Mars = Tank:New{
 
 return lowerkeys({
 	["WF_Mars"] = Mars:New(),
+	["SJ_Mars"] = Mars:New(),
 })

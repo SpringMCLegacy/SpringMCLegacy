@@ -32,5 +32,5 @@ local Nacon = LightTank:New{
 }
 
 return lowerkeys({
-	["WF_Nacon"] = Nacon:New(),
+	--["JF_Nacon"] = Nacon:New(), -- 3080s
 })

@@ -51,4 +51,5 @@ local Bashkir = Aero:New{
 aeros = {}
 
 aeros["wf_bashkir_p"] = Bashkir:New{}
+aeros["sj_bashkir_p"] = Bashkir:New{}
 return lowerkeys(aeros)
