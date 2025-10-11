@@ -80,4 +80,5 @@ local Mk5 = LocustIIC:New{
 
 return lowerkeys({
 	["WF_LocustIIC_Mk5"] = Mk5:New(),
+	["sj_LocustIIC_Mk3"] = Mk3:New(),
 })
