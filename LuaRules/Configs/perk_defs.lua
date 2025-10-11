@@ -76,8 +76,10 @@ end
 local function noOp(unitID) end
 
 local function setWeaponClassAttribute(unitID, className, attrib, multiplier, tag, with, value, custom)
-	if not unitID then return end
-	local weapons = UnitDefs[Spring.GetUnitDefID(unitID)].weapons
+	if not unitID or not Spring.ValidUnitID(unitID) or Spring.GetUnitIsDead(unitID) then return end
+	local unitDefID = Spring.GetUnitDefID(unitID)
+	if not unitDefID then return end
+	local weapons = UnitDefs[].weapons
 	local changed = {}
 	local numChanged = 0
 	for weapNum, weapTable in pairs(weapons) do
