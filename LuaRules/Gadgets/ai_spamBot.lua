@@ -641,7 +641,7 @@ local function UplinkCalls(teamID)
 			-- always try arty first as well as others
 			local cBills = Spring.GetTeamResources(teamID, "metal")
 			local randPick = math.random(GG.uplinkLevels[unitID]) 
-			local artyCmdDesc = Spring.GetUnitCmdDescs(unitID, 1 + 8)[1]
+			local artyCmdDesc = Spring.GetUnitCmdDescs(unitID, randPick + 8)[1]
 			if difficulty > 1 then -- cheat the required resources in
 				Spring.AddTeamResource(teamID, "metal", UPLINK_CMD_COSTS[1])
 				Spring.AddTeamResource(teamID, "metal", UPLINK_CMD_COSTS[randPick])
@@ -654,14 +654,14 @@ local function UplinkCalls(teamID)
 					GG.Delay.DelayCall(CallStrike, {unitID, artyCmdDesc.id, GetSpotTarget, teamID, true}, artyFrame - currFrame)
 				end	
 			end
-			if randPick > 1 and cBills > UPLINK_CMD_COSTS[randPick] then
+			--[[if randPick > 1 and cBills > UPLINK_CMD_COSTS[randPick] then
 				local cmdDesc = Spring.GetUnitCmdDescs(unitID, randPick + 8)[1] -- skip irrelevant cmdDescs
 				if cmdDesc.type == CMDTYPE.ICON_UNIT then
 					CallStrike(unitID, cmdDesc.id, GetUnitTarget, unitID, teamID)
 				else
 					CallStrike(unitID, cmdDesc.id, GetSpotTarget, teamID, true)
 				end
-			end
+			end--]]
 		end
 	end
 end

@@ -377,7 +377,7 @@ local function SpawnFlight(teamID, sortie, sx, sy, sz, cmdParams, stockpile)
 	local offsets = GetFormationOffsets(stockpile, rotation)
 	if sortie.spawnAtTarget then
 		for i=1, stockpile do --#sortieMembers do
-			SpawnPlane(teamID, sortieMembers[1], tx, ty, tz, cmdParams, dx, dy, dz, rotation, nil, i, sortie.alwaysAttack, true)	
+			SpawnPlane(teamID, sortieMembers[1], tx+math.random(100), ty, tz+math.random(100), cmdParams, dx, dy, dz, rotation, nil, i, sortie.alwaysAttack, true)	
 		end
 	elseif dist >= PATROL_DISTANCE then
 		local wbx, wbz = sx + (dist - PATROL_DISTANCE) * dx, sz + (dist - PATROL_DISTANCE) * dz

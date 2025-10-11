@@ -306,6 +306,7 @@ function ChangeAmmo(ammoType, amount)
 	if amount > 0 then -- restocking, reset the indicator
 		SetUnitRulesParam(unitID, "outofammo", 0)
 	end
+	if not ammoType then Spring.Echo("debug report turret.lua L309", unitDef.name) return false end
 	if newAmmoLevel <= maxAmmo[ammoType] then -- TODO: somehow one of these can be wrong type / nil?
 		currAmmo[ammoType] = newAmmoLevel
 		SetUnitRulesParam(unitID, "ammo_" .. ammoType, 100 * newAmmoLevel / maxAmmo[ammoType])
@@ -316,7 +317,7 @@ end
 
 function Restock()
 	local ammoType = ammoTypes[1] -- assumes only weapon 1 ammo type is relevant
-	while true do
+	while ammoType do
 		ChangeAmmo(ammoType, AMMO_RESTORE_AMOUNT)
 		Sleep(AMMO_RESTORE_WAIT)
 	end
