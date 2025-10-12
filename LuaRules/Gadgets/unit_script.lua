@@ -25,7 +25,7 @@ To do:
 
 function gadget:GetInfo()
 	return {
-		name      = "Lua unit script framework",
+		name      = "LUS - Lua Unit Script framework",
 		desc      = "Manages Lua unit scripts",
 		author    = "Tobi Vollebregt",
 		date      = "2 September 2009",

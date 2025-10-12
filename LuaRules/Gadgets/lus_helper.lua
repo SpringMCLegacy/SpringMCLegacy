@@ -123,40 +123,6 @@ local function RecursiveHide(unitID, pieceNum, hide)
 end
 GG.RecursiveHide = RecursiveHide
 
-local function PlaySoundAtUnit(unitID, sound, volume, sx, sy, sz, channel)
-	local x,y,z = GetUnitPosition(unitID)
-	local ud = UnitDefs[Spring.GetUnitDefID(unitID)]
-	volume = volume or (ud and ud.customParams.tonnage or 5)
-	channel = channel or "sfx"
-	PlaySoundFile(sound, volume, x, y, z, sx, sy, sz, channel)
-end
-GG.PlaySoundAtUnit = PlaySoundAtUnit
-
-local unsyncedBuffer = {}
-local function PlaySoundForTeam(teamID, sound, volume, enemy)
-	sound = sound:lower()
-	local exists = GG.Sounds.SoundItems[sound]
-	if exists then -- To check for missing sounds, remove this
-		if not enemy then
-			table.insert(unsyncedBuffer, {teamID, sound, volume})
-		else -- play for enemy teams only
-			for _, enemyTeamID in pairs(GetTeamList()) do
-				if not AreTeamsAllied(teamID, enemyTeamID) then
-					table.insert(unsyncedBuffer, {enemyTeamID, sound, volume})
-				end
-			end
-		end
-	end
-end
-GG.PlaySoundForTeam = PlaySoundForTeam
-
-function gadget:GameFrame(n)
-	for _, callInfo in pairs(unsyncedBuffer) do
-		SendToUnsynced("SOUND", callInfo[1], callInfo[2], callInfo[3])
-	end
-	unsyncedBuffer = {}
-end
-
 local function GetUnitDistanceToPoint(unitID, tx, ty, tz, bool3D)
 	if not (tx and tz) then return 0 end
 	local x,y,z = GetUnitPosition(unitID)
@@ -545,26 +511,5 @@ function gadget:MoveCtrlNotify(unitID, unitDefID, unitTeam, data)
 end
 
 else
-
 -- UNSYNCED
-
-local PlaySoundFile	= Spring.PlaySoundFile
-
-function PlayTeamSound(eventID, teamID, sound, volume)
-	if teamID == Spring.GetMyTeamID() then
-		PlaySoundFile(sound, volume, "ui")
-	end
-end
-
-function SetTeamMessage(eventID, teamID, x, y, z)
-	if teamID == Spring.GetMyTeamID() then
-		Spring.SetLastMessagePosition(x, y, z)
-	end
-end
-
-function gadget:Initialize()
-	gadgetHandler:AddSyncAction("SOUND", PlayTeamSound)
-	gadgetHandler:AddSyncAction("MESSAGE", SetTeamMessage)
-end
-
-end
+return false end
