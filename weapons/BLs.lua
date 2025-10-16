@@ -182,7 +182,7 @@ local HLBL = BeamLaser_Class:New{
 	soundStart           	= [[HeavyLBL_Fire]],
 	beamBurst 				= false,
 	largeBeamLaser			= true,
-	sweepFire 				= true,
+	--sweepFire 				= true,
 	range                   = 900,--1500,
 	accuracy                = 350,
 	reloadtime              = 5,
@@ -203,20 +203,27 @@ local HLBL = BeamLaser_Class:New{
 
 local NL45 = HLBL:New{
 	explosionGenerator		= "custom:HE_XLARGE",
-	sweepfire				= false,
-	beamBurst				= true,
-	reloadTime				= 0.1,
+	sweepFire				= false,
+	--beamBurst				= true,
+	reloadTime				= 0.3,
 	accuracy				= 100,
 	thickness				= 9,
 	coreThickness			= 8.5,
-	beamTime				= 5,
+	beamTime				= 4,
 	beamTTL					= 6,
 	range					= 5250, -- Decal.lua LASER_HEIGHT + some fudge
-	areaOfEffect			= 300,
+	areaOfEffect			= 900,
+	edgeEffectiveness=0.999,
+	impactOnly = false,
+	noExplode = true,
+	collideFriendly = true,
 	
 	damage = {
-		default = 3200,
+		default = 3200 * 2,
 	},
+	customparams = {
+		--shockwave = true,
+    },
 }
 
 return lowerkeys({ 

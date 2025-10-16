@@ -94,7 +94,9 @@ for weapName, wd in pairs(WeaponDefs) do
 			--Spring.Echo(weapName .. " is a jammable missile")
 		end
 	elseif (wd.weapontype ~= nil) and (string.lower(wd.weapontype) == "beamlaser" or cp and cp.ammotype == "gauss") then -- lasers and gauss are impactOnly
-		wd.impactonly = true
+		if wd.impactonly == nil then -- explicitly check for nil as we don't want to override false
+			wd.impactOnly = true
+		end
 		wd.minintensity = 1.0
 	end
 	cp.textcolour = WeaponColour(weapName)
