@@ -556,6 +556,22 @@ function gadget:UnitGiven(unitID, unitDefID, newTeam, oldTeam)
 	DelayCall(CheckAllyTeamUnits, {oldTeam}, 1)
 end
 
+local firstBeaconDeployed = false
+function gadget:MoveCtrlNotify(unitID, unitDefID, unitTeam, data)
+	-- check for tower drops too
+	local unitDef = UnitDefs[unitDefID]
+	local cp = unitDef.customParams
+	env = Spring.UnitScript.GetScriptEnv(unitID)
+	if env.TouchDown then
+		Spring.UnitScript.CallAsUnit(unitID, env.TouchDown)
+		Spring.MoveCtrl.Disable(unitID)
+	end
+	if not firstBeaconDeployed and unitDef.name == "beacon" and not GG.skip then
+		GG.DeploySpawnBeacons()
+		firstBeaconDeployed = true
+	end
+end
+
 function gadget:Initialize()
 	if Spring.GetGameFrame() >  1 then
 		gadget:GamePreload()

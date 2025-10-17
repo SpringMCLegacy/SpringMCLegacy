@@ -14,14 +14,22 @@ if gadgetHandler:IsSyncedCode() then
 --	SYNCED
 
 -- localisations
+-- SyncedRead
+local GetTeamResources 		= Spring.GetTeamResources
+local GetUnitIsDead			= Spring.GetUnitIsDead
+local GetUnitRulesParam		= Spring.GetUnitRulesParam
+local GetUnitsInCylinder	= Spring.GetUnitsInCylinder
+local ValidUnitID 			= Spring.ValidUnitID
+
 --SyncedCtrl
+local CreateUnit			= Spring.CreateUnit
 local EditUnitCmdDesc		= Spring.EditUnitCmdDesc
 local FindUnitCmdDesc		= Spring.FindUnitCmdDesc
 local TransferUnit			= Spring.TransferUnit
 local SetUnitNeutral		= Spring.SetUnitNeutral
+local SetSquareBuildingMask = Spring.SetSquareBuildingMask
 
 -- GG
-local GetUnitDistanceToPoint = GG.GetUnitDistanceToPoint
 local DelayCall				 = GG.Delay.DelayCall
 
 -- Constants
@@ -45,7 +53,7 @@ function BuildMaskCircle(cx, cz, r, mask)
 		for x = -lineLength, lineLength, step do
 			local squareX, squareZ = (cx + x)/step, (cz + z - r)/step
 			if squareX > 0 and squareZ > 0 and squareX < Game.mapSizeX/step and squareZ < Game.mapSizeZ/step then
-				Spring.SetSquareBuildingMask(squareX, squareZ, mask)
+				SetSquareBuildingMask(squareX, squareZ, mask)
 				--Spring.MarkerAddPoint((cx + x), 0, (cz + z - r))
 			end
 		end
@@ -121,7 +129,7 @@ function gadget:UnitDestroyed(unitID, unitDefID, teamID, attackerID, attackerDef
 	if towerOwnerID then -- unit was a turret with owning beacon, open the slot back up
 		local towerType = towerDefIDs[unitDefID]
 		towerOwners[unitID] = nil
-		if Spring.ValidUnitID(towerOwnerID) and not Spring.GetUnitIsDead(towerOwnerID) then
+		if ValidUnitID(towerOwnerID) and not GetUnitIsDead(towerOwnerID) then
 			if ownedLimits[towerOwnerID] then -- can be nil if control died, as this does not delete towerOwners
 				ownedLimits[towerOwnerID][towerType] = ownedLimits[towerOwnerID][towerType] - 1
 			end
@@ -148,20 +156,20 @@ function gadget:AllowCommand(unitID, unitDefID, teamID, cmdID, cmdParams, cmdOpt
 			if not towerType then return false end
 			
 			local tx, ty, tz = unpack(cmdParams)
-			local dist = GetUnitDistanceToPoint(unitID, tx, ty, tz, false)
+			local dist = GG.GetUnitDistanceToPoint(unitID, tx, ty, tz, false)
 			-- check for max range, although limited via unit script to only build inside beacon radius... 
 			-- ...need to ensure it is within the beacon radius we are built at!
 			if dist > MAX_BUILD_RANGE then
 				Spring.SendMessageToTeam(teamID, "Too far from Turret Control!")
 				GG.PlaySoundForTeam(teamID, "bb_turret_toofar", 1)
 			-- check we have the resources
-			elseif Spring.GetTeamResources(teamID, "metal") < UnitDefs[-cmdID].metalCost then
+			elseif GetTeamResources(teamID, "metal") < UnitDefs[-cmdID].metalCost then
 				GG.PlaySoundForTeam(teamID, "bb_insufficient_cbills", 1)
 				Spring.SendMessageToTeam(teamID, "Not enough C-Bills for tower deployment!")	
 			end
 			-- check we have the slots
 			if LimitTowerType(unitID, teamID, towerType) then
-				local success = Spring.CreateUnit(-cmdID, tx, ty, tz, 1, teamID, false, false, nil, unitID)
+				local success = CreateUnit(-cmdID, tx, ty, tz, 1, teamID, false, false, nil, unitID)
 				--Spring.Echo("Yo make a turret!", -cmdID, UnitDefs[-cmdID].name, success)
 			end
 			return false -- don't let the engine build it itself whether we passed the conditions or not
@@ -183,11 +191,11 @@ function gadget:UnitGiven(unitID, unitDefID, teamID, oldTeamID)
 end
 
 function LinkCheck(x, z, controllerID, teamID)
-	local nearUnits = Spring.GetUnitsInCylinder(x, z, MAX_BUILD_RANGE)
+	local nearUnits = GetUnitsInCylinder(x, z, MAX_BUILD_RANGE)
 	for _, unitID in pairs(nearUnits) do
 		local owner = towerOwners[unitID]
 		if owner and not ownedLimits[owner] then -- it is a turret but its owner is dead
-			if Spring.GetUnitRulesParam(unitID, "LOST_LINK") == 1 then -- make double sure 
+			if GetUnitRulesParam(unitID, "LOST_LINK") == 1 then -- make double sure 
 				--Spring.Echo("Hey there baby wanna hook up?", UnitDefs[Spring.GetUnitDefID(unitID)].name)
 				local towerType = towerDefIDs[Spring.GetUnitDefID(unitID)]
 				if buildLimits[controllerID][towerType] > 0 then
