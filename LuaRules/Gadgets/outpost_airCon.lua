@@ -474,7 +474,20 @@ function gadget:Initialize()
 	end
 end
 
+local toRemove = {CMD.IDLEMODE, CMD.AUTOREPAIRLEVEL}
+		
 function gadget:UnitCreated(unitID, unitDefID, teamID)
+	local ud = UnitDefs[unitDefID]
+	-- Remove aircraft land and repairlevel buttons
+	if ud.canFly then
+		Spring.GiveOrderToUnit(unitID, CMD.IDLEMODE, {0}, {})
+		for _, cmdID in pairs(toRemove) do
+			local cmdDescID = Spring.FindUnitCmdDesc(unitID, cmdID)
+			if cmdDescID then
+				Spring.RemoveUnitCmdDesc(unitID, cmdDescID)
+			end
+		end
+	end
 	if unitDefID ~= AIRCON_UD.id then return end
 	
 	-- It's an aircon, initialize it

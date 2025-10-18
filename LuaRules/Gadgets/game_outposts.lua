@@ -137,12 +137,29 @@ local function AssociateOutpost(beaconID, targetID, cargoID)
 end
 GG.AssociateOutpost = AssociateOutpost
 
+local function RemoveCmdDescs(unitID, unitDefID)
+	local ud = UnitDefs[unitDefID]
+	local toRemove = {CMD.MOVE_STATE, CMD.WAIT, CMD.REPEAT}
+	if not ud.weapons[1] then 
+		table.insert(toRemove, CMD.FIRE_STATE, CMD.STOP)
+	end
+	for _, cmdID in pairs(toRemove) do
+		local cmdDescID = Spring.FindUnitCmdDesc(unitID, cmdID)
+		if cmdDescID then
+			Spring.RemoveUnitCmdDesc(unitID, cmdDescID)
+		end
+	end
+end
 
 function gadget:UnitCreated(unitID, unitDefID, teamID, builderID)
 	if unitDefID == BEACON_ID then
 		GG.Beacons[unitID] = true
+		RemoveCmdDescs(unitID, unitDefID)
 	elseif unitDefID == BEACON_POINT_ID then
 		AddOutpostOptions(unitID)
+		RemoveCmdDescs(unitID, unitDefID)
+	elseif outpostDefs[unitDefID] then
+		RemoveCmdDescs(unitID, unitDefID)
 	end
 end
 

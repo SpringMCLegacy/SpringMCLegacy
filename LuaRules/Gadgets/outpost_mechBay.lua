@@ -233,6 +233,13 @@ end
 
 function gadget:UnitCreated(unitID, unitDefID, teamID, builderID)
 	if unitDefID == MECHBAY_ID then
+		local toRemove = {CMD.LOAD_UNITS, CMD.UNLOAD_UNITS}
+		for _, cmdID in pairs(toRemove) do
+			local cmdDescID = Spring.FindUnitCmdDesc(unitID, cmdID)
+			if cmdDescID then
+				Spring.RemoveUnitCmdDesc(unitID, cmdDescID)
+			end
+		end
 		InsertUnitCmdDesc(unitID, GET_OUT_POSITION, getOutCmdDesc)
 		InsertUnitCmdDesc(unitID, SELL_POSITION, sellMechCmdDesc)
 		InsertUnitCmdDesc(unitID, SCRAP_POSITION, scrapMechCmdDesc)

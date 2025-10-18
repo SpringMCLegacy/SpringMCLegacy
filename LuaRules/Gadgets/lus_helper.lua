@@ -191,9 +191,8 @@ function gadget:UnitCreated(unitID, unitDefID, teamID, builderID)
 			info.leftArmMasterID = GetArmMasterWeapon(leftArmIDs)
 			info.rightArmIDs = rightArmIDs
 			info.leftArmIDs = leftArmIDs
-		end
-		info.cockpit = pieceMap["cockpit"]
-		--elseif cp.baseclass == "dropship" then
+			info.cockpit = pieceMap["cockpit"]
+		elseif cp.dropship then
 			info.trackEmitterIDs = trackEmitterIDs
 			info.numHExhausts = numHExhausts
 			info.numHExhaustLarges = numHExhaustLarges
@@ -203,7 +202,7 @@ function gadget:UnitCreated(unitID, unitDefID, teamID, builderID)
 			info.numDusts = numDusts
 			info.numBooms = numBooms
 			info.numCargoPieces = numCargoPieces
-		--end
+		end
 
 		info.progenitorMap = progenitorMap
 		info.weaponProgenitors = weaponProgenitors
@@ -220,41 +219,6 @@ function gadget:UnitCreated(unitID, unitDefID, teamID, builderID)
 		end
 		info.numRotors = numRotors
 		info.jumpjets = numJets
-	end
-	
-	
-	-- Remove aircraft land and repairlevel buttons
-	if ud.canFly then
-		Spring.GiveOrderToUnit(unitID, CMD.IDLEMODE, {0}, {})
-		local toRemove = {CMD.IDLEMODE, CMD.AUTOREPAIRLEVEL}
-		for _, cmdID in pairs(toRemove) do
-			local cmdDescID = Spring.FindUnitCmdDesc(unitID, cmdID)
-			if cmdDescID then
-				Spring.RemoveUnitCmdDesc(unitID, cmdDescID)
-			end
-		end
-	-- Remove load/unload buttons from all transports
-	elseif ud.transportCapacity and ud.name:find("mechbay") then
-		local toRemove = {CMD.LOAD_UNITS, CMD.UNLOAD_UNITS}
-		for _, cmdID in pairs(toRemove) do
-			local cmdDescID = Spring.FindUnitCmdDesc(unitID, cmdID)
-			if cmdDescID then
-				Spring.RemoveUnitCmdDesc(unitID, cmdDescID)
-			end
-		end
-	end
-	-- remove Wait / Firestate / Movestate / Repeat / Stop from everything other than mechs
-	if cp.baseclass ~= "mech" then
-		local toRemove = {CMD.MOVE_STATE, CMD.WAIT, CMD.REPEAT}
-		if not ud.weapons[1] then 
-			table.insert(toRemove, CMD.FIRE_STATE, CMD.STOP)
-		end
-		for _, cmdID in pairs(toRemove) do
-			local cmdDescID = Spring.FindUnitCmdDesc(unitID, cmdID)
-			if cmdDescID then
-				Spring.RemoveUnitCmdDesc(unitID, cmdDescID)
-			end
-		end				
 	end
 end
 
