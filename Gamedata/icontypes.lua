@@ -59,6 +59,11 @@ local iconTypes = {
 		size			=	3,
 		distance	=	2.2,	
 	},
+	outpost_salvageyard = {
+		bitmap		=	"icons/outpost_salvageyard.png",
+		size			=	3,
+		distance	=	2.2,	
+	},
 	outpost_sensors = {
 		bitmap		=	"icons/outpost_sensors.png",
 		size			=	3,

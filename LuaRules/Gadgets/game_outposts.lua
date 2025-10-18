@@ -97,9 +97,10 @@ function gadget:GamePreload()
 			local outpostCmdDesc = {
 				id     = GG.CustomCommands.GetCmdID("CMD_" .. name:upper(), cBillCost),
 				type   = CMDTYPE.ICON,
-				name   = GG.Pad(10,unpack(mysplit(unitDef.humanName))),
+				--name   = GG.Pad(10,unpack(mysplit(unitDef.humanName))),
 				action = 'outpost',
-				tooltip = unitDef.tooltip .. "\n(" .. COLOURS.cbills .. "C-Bills cost: " .. cBillCost .. COLOURS.white .. ")",
+				tooltip = 'Build: ' .. unitDef.humanName .. "\n" .. unitDef.tooltip .. "\n(" .. COLOURS.cbills .. "C-Bills cost: " .. cBillCost .. COLOURS.white .. ")",
+				texture = 'unitpics/' .. name .. '.png',
 			}
 			outpostDefs[unitDefID] = {cmdDesc = outpostCmdDesc, cost = cBillCost}
 			outpostCMDs[outpostCmdDesc.id] = unitDefID
