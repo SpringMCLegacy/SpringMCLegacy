@@ -12,6 +12,7 @@ local Outpost_Artillery = Outpost:New{
 	weapons = {
 		[1] = {
 			name	= "LongTom",
+			badTargetCategory = "mech tank air",
 		},
 	},
 	
