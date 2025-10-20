@@ -63,7 +63,7 @@ function SpawnDecal(decalType, x, y, z, teamID, alwaysVisible, delay, duration)
 	if delay then
 		GG.Delay.DelayCall(SpawnDecal, {decalType, x, y, z, teamID, nil, duration}, delay)
 	else
-		local decalID = Spring.CreateUnit(decalType, x, y + 1, z, 0, teamID, false, false)
+		local decalID = Spring.CreateUnit(decalType, x+4, y + 1, z+4, 0, teamID, false, false)
 		if decalID then -- can fail if e.g. team just died
 			Spring.SetUnitAlwaysVisible(decalID, alwaysVisible or false)
 			Spring.SetUnitNoSelect(decalID, true)
