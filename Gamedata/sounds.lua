@@ -419,7 +419,7 @@ local Sounds = {
 		},
 		
 		NAC10_Hit = {
-			file = "sounds/NAC10_Hit.wav",
+			file = "sounds/weapons/NAC10_Hit.wav",
 			gainmod = 0.25,
 			pitchmod = 0.25,
 			priority = -0.1,
@@ -427,7 +427,7 @@ local Sounds = {
 			rolloff = 0.2,
 		},
 		NAC40_Hit = {
-			file = "sounds/NAC40_Hit.wav",
+			file = "sounds/weapons/NAC40_Hit.wav",
 			gainmod = 0.25,
 			pitchmod = 0.25,
 			priority = -0.1,
@@ -435,7 +435,7 @@ local Sounds = {
 			rolloff = 0.2,
 		},
 		NPPC_Hit = {
-			file = "sounds/NPPC_Hit.wav",
+			file = "sounds/weapons/NPPC_Hit.wav",
 			gainmod = 0.25,
 			pitchmod = 0.25,
 			priority = -0.1,
@@ -469,5 +469,20 @@ for _, fileName in pairs(voiceFiles) do
 	}
 end
 	
+----WEAPONS----
+local weapPath = "sounds/weapons/"
+local weapFiles = VFS.DirList(weapPath)
+for _, fileName in pairs(weapFiles) do
+	local name = "" .. fileName:sub(weapPath:len() + 1,-5)
+	--Spring.Echo("Adding SoundItem: " .. name)
+	Sounds.SoundItems[name] = Sounds.SoundItems[name] or {
+		file = fileName,
+		in3d = true,
+		gain = 10,
+		gainmod = 0.5,
+		pitchmod = 0.25,
+		rolloff = 0.6,
+	}
+end
 
 return Sounds
