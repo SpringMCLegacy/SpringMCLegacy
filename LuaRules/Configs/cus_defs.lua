@@ -75,8 +75,8 @@ local uniformBins = {
 	},
 	wreck = {
 		-- any feature referenced in a unitDef.corpse, or featureDef.featureDead or with '_x', '_dead' or '_heap' in the name
-		bitOptions = defaultBitShaderOptions + OPTION_VERTEX_AO,
-		baseVertexDisplacement = 0.0,
+		bitOptions = defaultBitShaderOptions + OPTION_VERTEX_AO + OPTION_HEALTH_DISPLACE,
+		baseVertexDisplacement = 0.80,
 		brightnessFactor = 1.3,
 	},
 } -- maps uniformbins to a table of uniform names/values

@@ -557,15 +557,18 @@ local function initMaterials()
 	featuresNormalMapTemplate = appendShaderDefinitionsToTemplate(defaultMaterialTemplate, {
 		shaderDefinitions = {
 			"#define USE_LOSMAP",
+			"#define ENABLE_OPTION_HEALTH_DISPLACE 1",
 		},
 		deferredDefinitions = {
 			"#define USE_LOSMAP",
+			"#define ENABLE_OPTION_HEALTH_DISPLACE 1",
 		},
 		shadowDefinitions = {
 			--"#define HASALPHASHADOWS",
 		},
 		reflectionDefinitions = {
 			"#define USE_LOSMAP",
+			"#define ENABLE_OPTION_HEALTH_DISPLACE 1",
 		},
 	})
 
