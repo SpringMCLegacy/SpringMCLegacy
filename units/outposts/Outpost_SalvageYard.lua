@@ -1,5 +1,6 @@
 local Outpost_SalvageYard = Outpost:New{
 	name              	= "Salvage Yard",
+	iconType			= "outpost_salvageyard",
 	description         = "A facility for processing battlefield salvage via automated Salvagers",
 	maxDamage           = 10000,
 	mass                = 9000,
