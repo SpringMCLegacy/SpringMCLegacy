@@ -147,7 +147,7 @@ for unitName, ud in pairs(UnitDefs) do
 				--Spring.Echo("[WeaponDefs_post.lua]:" .. unitName .. " has a corpse (" .. ud.corpse .. ")")
 				local modelPath = ud.objectname:sub(1, -(string.len(unitName .. ".s3o")+1))
 				-- First level corpse
-				local corpseModelBase = modelPath .. "corpse/" .. unitName .. "_x"
+				local corpseModelBase = modelPath .. "corpse/" .. unitName:sub(4,-1) .. "_x"
 				local corpseModels = {
 					_x = corpseModelBase .. ".s3o",
 				}
@@ -158,6 +158,9 @@ for unitName, ud in pairs(UnitDefs) do
 				end
 				-- check base corpse first
 				local corpseModelBaseExists = VFS.FileExists("objects3d/" .. corpseModels._x, VFS.ZIP)
+				if not corpseModelBaseExists then
+					--Spring.Echo("[WeaponDefs_post.lua]:" .. unitName .. " has a corpse but the base model does not exist!")
+				end
 				for corpseType, path in pairs(corpseModels) do
 					local corpseModelExists = VFS.FileExists("objects3d/" .. path, VFS.ZIP)
 					corpseModel = (corpseModelExists and path) or (corpseModelBaseExists and corpseModels._x) or ud.objectname
@@ -180,7 +183,7 @@ for unitName, ud in pairs(UnitDefs) do
 					}
 				end
 			else
-				Spring.Echo("[WeaponDefs_post.lua]:" .. unitName .. " has no corpse!")
+				--Spring.Echo("[WeaponDefs_post.lua]:" .. unitName .. " has no corpse!")
 			end
 			local weapString = "\t\t\255\255\255\255Weapons: "
 			for weapName, count in pairs(table.unserialize(cp.weaponCounts)) do
