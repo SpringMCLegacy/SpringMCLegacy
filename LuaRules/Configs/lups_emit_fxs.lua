@@ -249,7 +249,7 @@ local effects = {
 			--repeatEffect   = true,
 			--length = 120,
 			--file = "sounds/fire-flame-burner.wav",
-			file = "sounds/spray.wav",
+			file = "sounds/unit/spray.wav",
 		},
 	},
 	land_sound = {
