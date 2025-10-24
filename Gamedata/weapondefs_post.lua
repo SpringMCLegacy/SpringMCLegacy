@@ -118,7 +118,7 @@ for unitName, ud in pairs(UnitDefs) do
 		if not ud.sfxtypes then
 			ud.sfxtypes = { explosiongenerators = {} }
 		end
-		-- for now all untis have jumpjet CEG as 1 (SFX.CEG)
+		-- for now all units have jumpjet CEG as 1 (SFX.CEG)
 		table.insert(ud.sfxtypes.explosiongenerators, 1, "custom:heavy_jumpjet_trail_blue")
 		local cp = ud.customparams
 		if weapons then

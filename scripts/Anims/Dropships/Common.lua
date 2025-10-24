@@ -5,7 +5,7 @@ local fxStages = {
 		{1, "dropship_hull_heat", {count = 90, pos = {0,0,0}, repeatEffect = 3, delay = 10}},
 		{1, "dropship_hull_heat", {count = 90, pos = {0,0,0}, repeatEffect = 3, delay = 20}},
 		{vExhausts, "dropship_vertical_exhaust",  {id = "smallExhaustJets", repeatEffect = true, width = 30, length = 150}},
-		{vExhaustlarges, "dropship_vertical_exhaust",  {id = "largeExhaustJet", repeatEffect = true, width = 190, length = 250}},
+		{vExhaustLarges, "dropship_vertical_exhaust",  {id = "largeExhaustJet", repeatEffect = true, width = 190, length = 250}},
 	},
 	[2] = {
 		--{1, "engine_sound"},
@@ -28,11 +28,11 @@ local fxStages = {
 	[5] = {
 		{1, "exhaust_ground_winds", {pos = {0,0,0}, repeatEffect = false}},
 		{1, "exhaust_ground_winds", {pos = {0,0,0}, repeatEffect = false, delay = 80}},
-		--{exhaustlarge, "plume", {worldpos=true}},
-		--{exhaustlarge, "plume", {worldpos=true}},
-		--{exhaustlarge, "plume", {worldpos=true}},
-		--{exhaustlarge, "plume", {worldpos=true}},
-		--{exhaustlarge, "plume", {worldpos=true}},
+		{exhaustlarge, "plume", {worldpos=true}},
+		{exhaustlarge, "plume", {worldpos=true}},
+		{exhaustlarge, "plume", {worldpos=true}},
+		{exhaustlarge, "plume", {worldpos=true}},
+		{exhaustlarge, "plume", {worldpos=true}},
 	},
 }
 
@@ -68,6 +68,8 @@ function fx()
 		if up then
 			EmitSfx(vExhaustLarges[1], CEG + 1)
 			EmitSfx(vExhaustLarges[1], CEG + 3)
+			GG.EmitSfxName(unitID, vExhaustLarges[1], "dropship_main_engine_stage2")
+			GG.EmitSfxName(unitID, vExhaustLarges[1], "heavy_jet_trail")
 		end
 		Sleep(32)
 	end
@@ -111,8 +113,12 @@ function fx()
 		up = true
 	end
 	while stage == 5 do
-		EmitSfx(vExhaustLarges[1], CEG + 2)
-		EmitSfx(vExhaustLarges[1], CEG + 3)
+		for _, exhaust in ipairs(vExhaustLarges) do
+			EmitSfx(exhaust, CEG + 2)
+			EmitSfx(exhaust, CEG + 3)
+			GG.EmitSfxName(unitID, exhaust, "dropship_main_engine_stage2")
+			GG.EmitSfxName(unitID, exhaust, "heavy_jet_trail")
+		end
 		Sleep(32)
 	end
 end
