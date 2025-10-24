@@ -470,7 +470,7 @@ function gadget:UnitPreDamaged(unitID, unitDefID, unitTeam, damage, paralyzer, w
 			if unitArmours[unitID] == "heat" then return 0 end 
 			env = Spring.UnitScript.GetScriptEnv(unitID)
 			if env and env.ChangeHeat then -- dropships don't track heat
-				local info = {unitID, env.ChangeHeat, 0.5} -- only build the table once
+				local info = {unitID, env.ChangeHeat, 0.1} -- only build the table once
 				local pieceNum = env.piece(GetUnitLastAttackedPiece(unitID) or "torso")
 				local fxInfo = {unitID, pieceNum, "sparks"}
 				-- lol this is silly
