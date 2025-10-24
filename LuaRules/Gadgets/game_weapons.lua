@@ -523,7 +523,7 @@ function gadget:UnitPreDamaged(unitID, unitDefID, unitTeam, damage, paralyzer, w
 				for i = 1, 6 do
 					DelayCall(SpawnProjectile, {WeaponDefNames["ppc_fx"].id, params}, (i-1) * 2)
 				end
-				GG.PlaySoundAtUnit(unitID, "sounds/ppc_connect.wav", 5, x - ox, y - oy, z - oz, "sfx")
+				GG.PlaySoundAtUnit(unitID, "sounds/weapons/ppc_connect.wav", 5, x - ox, y - oy, z - oz, "sfx")
 			end
 		end
 	end
