@@ -168,7 +168,7 @@ function fx()
 		GG.RemoveLupsSfx(unitID, "vExhaustsJets")
 	end
 	while stage == 5 do
-		for _, exhaust in ipairs(hExhaustlarges) do
+		for _, exhaust in ipairs(hExhaustLarges) do
 			EmitSfx(exhaust, CEG + 2)
 			EmitSfx(exhaust, CEG + 3)
 		end
