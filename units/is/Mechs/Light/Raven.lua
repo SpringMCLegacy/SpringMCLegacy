@@ -120,7 +120,7 @@ local RVN3M = Raven:New{
 return lowerkeys({
 	["DC_Raven_RVN3L"] = RVN3L:New(),
 	["CC_Raven_RVN3L"] = RVN3L:New(),
-	["CC_Raven_RVN4L"] = RVN3L:New(),
+	["CC_Raven_RVN4L"] = RVN4L:New(),
 	["FW_Raven_RVN3L"] = RVN3L:New(),
 	["FW_Raven_RVN3M"] = RVN3M:New(),
 })
