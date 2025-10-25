@@ -70,7 +70,6 @@ local A = Gargoyle:New{
 		price			= 26890,
 		heatlimit 		= 16,
 		armor			= 11,
-		maxammo 		= {srm = 1},
 		barrelrecoildist = {[1] = 5, [2] = 5},
     },
 }

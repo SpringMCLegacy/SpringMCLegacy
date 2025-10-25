@@ -15,7 +15,7 @@ local Prime = Mistlynx:New{
 	
 	weapons = {	
 		[1] = {
-			name	= "LRM10",
+			name	= "ALRM10",
 		},
 		[2] = {
 			name	= "SSRM4",

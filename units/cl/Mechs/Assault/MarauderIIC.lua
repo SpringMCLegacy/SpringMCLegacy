@@ -55,5 +55,5 @@ return lowerkeys({
 	--["HH_MarauderIIC_Mk1"] = Mk1:New(),
 	--["GB_MarauderIIC_Mk1"] = Mk1:New(),
 	--["JF_MarauderIIC_Mk1"] = Mk1:New(),
-	--["SJ_MarauderIIC_Mk1"] = Mk1:New(),
+	["SJ_MarauderIIC_Mk1"] = Mk1:New(),
 })

@@ -20,10 +20,10 @@ local Prime = Cougar:New{
 			name	= "CLPL",
 		},
 		[3] = {
-			name	= "LRM10",
+			name	= "ALRM10",
 		},
 		[4] = {
-			name	= "LRM10",
+			name	= "ALRM10",
 		},
 	},
 	
@@ -42,10 +42,10 @@ local A = Cougar:New{
 	
 	weapons 		= {	
 		[1] = {
-			name	= "LRM20",
+			name	= "ALRM20",
 		},
 		[2] = {
-			name	= "LRM20",
+			name	= "ALRM20",
 		},
 		[3] = {
 			name	= "CERMBL",
@@ -94,7 +94,7 @@ local B = Cougar:New{
 }
 
 return lowerkeys({
-	--["WF_Cougar_Prime"] = Prime:New(),
-	--["WF_Cougar_A"] = A:New(),
-	--["WF_Cougar_B"] = B:New(),
+	["SJ_Cougar_P"] = Prime:New(),
+	["SJ_Cougar_A"] = A:New(),
+	["SJ_Cougar_B"] = B:New(),
 })

@@ -34,10 +34,10 @@ local Prime = Timberwolf:New{
 			name	= "MG",
 		},
 		[8] = {
-			name	= "LRM20",
+			name	= "ALRM20",
 		},
 		[9] = {
-			name	= "LRM20",
+			name	= "ALRM20",
 		},
 	},
 		

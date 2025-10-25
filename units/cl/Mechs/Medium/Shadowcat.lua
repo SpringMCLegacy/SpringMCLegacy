@@ -67,10 +67,10 @@ local B = Shadowcat:New{
 
 	weapons = {	
 		[1] = {
-			name	= "LRM15",
+			name	= "ALRM15",
 		},
 		[2] = {
-			name	= "LRM15",
+			name	= "ALRM15",
 		},
 		[3] = {
 			name	= "CERMBL",
