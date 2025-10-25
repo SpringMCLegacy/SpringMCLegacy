@@ -81,17 +81,11 @@ local function GetRole(roleString)
 end
 
 local modOptions = Spring.GetModOptions()
-if not modOptions.startmetal then -- load via file
+if not modOptions.startcbills then -- load via file
 	local raw = VFS.Include("modoptions.lua", nil, VFS.ZIP)
 	for i, v in ipairs(raw) do
 		if v.type ~= "section" then
 			modOptions[v.key] = v.def
-		end
-	end
-	raw = VFS.Include("engineoptions.lua", nil, VFS.ZIP)
-	for i, v in ipairs(raw) do
-		if v.type ~= "section" then
-			modOptions[v.key:lower()] = v.def
 		end
 	end
 end
@@ -274,9 +268,9 @@ for name, ud in pairs(UnitDefs) do
 		end
 		if cp.baseclass == "mech" or cp.baseclass == "aero" then
 			ud.buildCostEnergy = (cp.tonnage or 0)
-			-- scale prices by a multiplier from an origin of 4000
-			local priceMult = modOptions and modOptions.pricemult or 1
-			ud.buildCostMetal = ((cp.price or 0) * priceMult - (4000 * (priceMult - 1)))
+			-- scale prices by a multiplier -- from an origin of 4000
+			local priceMult = modOptions.pricemult
+			ud.buildCostMetal = (cp.price or 0) * priceMult -- (4000 * (priceMult - 1)))
 			ud.power = ud.buildCostMetal * ud.buildCostEnergy
 			if cp.jumpjets then
 				ud.description = ud.description .. " \255\001\179\214[JUMP]"

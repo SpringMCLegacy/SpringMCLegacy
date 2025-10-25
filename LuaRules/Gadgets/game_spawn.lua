@@ -35,17 +35,11 @@ end
 --------------------------------------------------------------------------------
 
 local modOptions = Spring.GetModOptions()
-if not modOptions.startmetal then -- load via file
+if not modOptions.startcbills then -- load via file
 	local raw = VFS.Include("modoptions.lua", nil, VFS.ZIP)
 	for i, v in ipairs(raw) do
 		if v.type ~= "section" then
 			modOptions[v.key] = v.def
-		end
-	end
-	raw = VFS.Include("engineoptions.lua", nil, VFS.ZIP)
-	for i, v in ipairs(raw) do
-		if v.type ~= "section" then
-			modOptions[v.key:lower()] = v.def
 		end
 	end
 end
@@ -120,8 +114,8 @@ local function SpawnStartUnit(teamID)
 
 	-- set start resources, either from mod options or custom team keys
 	local teamOptions = select(7, Spring.GetTeamInfo(teamID))
-	local m = --[[teamOptions.startmetal  or ]]modOptions.startmetal  or 5000
-	local e = --[[teamOptions and teamOptions.startenergy or ]]modOptions.startenergy or 150 -- TODO: should be based on cp.maxtonnage of leopard?
+	local m = modOptions.startcbills
+	local e = modOptions.starttonnage * modOptions.tonnagemult
 
 	-- using SetTeamResource to get rid of any existing resource without affecting stats
 	-- using AddTeamResource to add starting resource and counting it as income

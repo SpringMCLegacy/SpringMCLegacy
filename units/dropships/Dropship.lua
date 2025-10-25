@@ -1,3 +1,115 @@
+local modOptions = Spring.GetModOptions()
+if not modOptions.startcbills then -- load via file
+	local raw = VFS.Include("modoptions.lua", nil, VFS.ZIP)
+	for i, v in ipairs(raw) do
+		if v.type ~= "section" then
+			modOptions[v.key] = v.def
+		end
+	end
+end
+local START_TONNAGE	 = modOptions.starttonnage
+local TONNAGE_MULT = modOptions.tonnagemult
+
+local Leopard = DropShip:New{
+	name				= "Leopard",
+	iconType			= "leopard",
+	maxDamage			= 20000,
+
+	weapons 		= {	
+		-- turret
+		[1] = {
+			name	= "PPC",
+			maxAngleDif = 280,
+		},
+		[2] = {
+			name	= "PPC",
+			maxAngleDif = 280,
+			SlaveTo = 1,
+		},
+		[3] = {
+			name	= "LBL",
+			maxAngleDif = 280,
+			SlaveTo = 1,
+		},
+		[4] = {
+			name	= "LBL",
+			maxAngleDif = 280,
+			SlaveTo = 1,
+		},
+		-- nose
+		[5] = {
+			name	= "LBL",
+			maxAngleDif = 45,
+		},
+		[6] = {
+			name	= "MBL",
+			maxAngleDif = 45,
+		},
+		[7] = {
+			name	= "MBL",
+			maxAngleDif = 45,
+		},
+		-- right wing
+		[8] = {
+			name	= "LBL",
+			maxAngleDif = 45,
+		},
+		[9] = {
+			name	= "ERMBL",
+			maxAngleDif = 45,
+		},
+		--left wing
+		[10] = {
+			name	= "LBL",
+			maxAngleDif = 45,
+		},
+		[11] = {
+			name	= "ERMBL",
+			maxAngleDif = 45,
+		},
+		--rear
+		[12] = {
+			name	= "MBL",
+			mainDir = "0 0 -1",
+			maxAngleDif = 45,
+		},
+		[13] = {
+			name	= "MBL",
+			mainDir = "0 0 -1",
+			maxAngleDif = 45,
+		},
+		--lrms
+		[14] = {
+			name	= "LRM20",
+			mainDir = "0 0 1",
+			maxAngleDif = 45,
+		},
+		[15] = {
+			name	= "LRM20",
+			mainDir = "0 0 1",
+			maxAngleDif = 45,
+		},
+		[16] = { -- turret
+			name	= "LRM20",
+			mainDir = "0 0 1",
+			maxAngleDif = 280,
+			SlaveTo = 1,
+		},
+	},
+		
+	customparams = {
+		radialdist		= 3000,
+		maxtonnage		= START_TONNAGE * TONNAGE_MULT,
+		cooldown		= 20 * 30,
+		minpitches		= {
+			[1]				= -math.rad(7),
+			[2]				= -math.rad(7),
+			[3]				= 0,
+			[4]				= 0,
+		},
+	},	
+}
+
 local Union = DropShip:New{
 	name              	= "Union Class Dropship",
 	iconType			= "union",
@@ -168,111 +280,11 @@ local Union = DropShip:New{
 	},
 	
 	customparams = {
-		maxtonnage		= 250,
+		maxtonnage		= (START_TONNAGE + 350) * TONNAGE_MULT,
 		cooldown		= 30 * 30, -- 30s, time before the dropship has regained orbit, refuelled etc ready to drop again
 		-- droptime
 		normaltex		= "unittextures/normals/Union_Normals.dds",
 	},
-}
-
-local Leopard = DropShip:New{
-	name				= "Leopard",
-	iconType			= "leopard",
-	maxDamage			= 20000,
-
-	weapons 		= {	
-		-- turret
-		[1] = {
-			name	= "PPC",
-			maxAngleDif = 280,
-		},
-		[2] = {
-			name	= "PPC",
-			maxAngleDif = 280,
-			SlaveTo = 1,
-		},
-		[3] = {
-			name	= "LBL",
-			maxAngleDif = 280,
-			SlaveTo = 1,
-		},
-		[4] = {
-			name	= "LBL",
-			maxAngleDif = 280,
-			SlaveTo = 1,
-		},
-		-- nose
-		[5] = {
-			name	= "LBL",
-			maxAngleDif = 45,
-		},
-		[6] = {
-			name	= "MBL",
-			maxAngleDif = 45,
-		},
-		[7] = {
-			name	= "MBL",
-			maxAngleDif = 45,
-		},
-		-- right wing
-		[8] = {
-			name	= "LBL",
-			maxAngleDif = 45,
-		},
-		[9] = {
-			name	= "ERMBL",
-			maxAngleDif = 45,
-		},
-		--left wing
-		[10] = {
-			name	= "LBL",
-			maxAngleDif = 45,
-		},
-		[11] = {
-			name	= "ERMBL",
-			maxAngleDif = 45,
-		},
-		--rear
-		[12] = {
-			name	= "MBL",
-			mainDir = "0 0 -1",
-			maxAngleDif = 45,
-		},
-		[13] = {
-			name	= "MBL",
-			mainDir = "0 0 -1",
-			maxAngleDif = 45,
-		},
-		--lrms
-		[14] = {
-			name	= "LRM20",
-			mainDir = "0 0 1",
-			maxAngleDif = 45,
-		},
-		[15] = {
-			name	= "LRM20",
-			mainDir = "0 0 1",
-			maxAngleDif = 45,
-		},
-		[16] = { -- turret
-			name	= "LRM20",
-			mainDir = "0 0 1",
-			maxAngleDif = 280,
-			SlaveTo = 1,
-		},
-	},
-		
-	customparams = {
-		radialdist		= 3000,
-		maxtonnage		= 150,
-		cooldown		= 20 * 30,
-		minpitches		= {
-			[1]				= -math.rad(7),
-			[2]				= -math.rad(7),
-			[3]				= 0,
-			[4]				= 0,
-		},
-	},	
 }
 
 local Overlord = DropShip:New{
@@ -511,7 +523,7 @@ local Overlord = DropShip:New{
 	},
 	
 	customparams = {
-		maxtonnage		= 400,
+		maxtonnage		= (START_TONNAGE + 650) * TONNAGE_MULT,
 		cooldown		= 50 * 30,
 		barrelrecoildist = 	{[1] = 50, -- Sniper
 							 [2] = 5, -- AC10
