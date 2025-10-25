@@ -209,6 +209,9 @@ for name, ud in pairs(UnitDefs) do
 		ud.customparams = {}
 	end
 	local cp = ud.customparams
+	local buildPic = VFS.FileExists("unitpics/" .. name .. ".png", VFS.ZIP)
+	if cp.baseclass == "mech" and not buildPic and not ud.buildPic then Spring.Echo("[UnitDefs_post.lua]:" .. name .. " has no buildpic file!") end
+
 	--[[if cp.mods then
 		Spring.Echo(name, "has", #(cp.mods), "mods")
 	end]]

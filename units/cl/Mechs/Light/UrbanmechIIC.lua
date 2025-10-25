@@ -41,4 +41,5 @@ local Mk1 = UrbanmechIIC:New{
 
 return lowerkeys({
 	["WF_UrbanmechIIC_Mk1"] = Mk1:New(),
+	["SJ_UrbanmechIIC_Mk1"] = Mk1:New(),
 })
