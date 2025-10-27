@@ -184,6 +184,7 @@ maxRudder          = 0.0015,
 		},
 	},
 	customparams = {
+		dropship		= "assault", -- for script info
 		hoverheight		= 150,--300,
 		radialdist		= 5000, --2500,
 		ignoreatbeacon	= true,
