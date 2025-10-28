@@ -1,5 +1,7 @@
 **Getting Started As A Player**
+
 Have a look at the wiki! https://github.com/SpringMCLegacy/SpringMCLegacy/wiki
+
 
 **MechCommander: Legacy Credits**
 
