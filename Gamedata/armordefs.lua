@@ -28,7 +28,11 @@ for unitName, unitDef in pairs(DEFS.unitDefs) do
 	elseif basicType then
 		typeString = basicType
 	elseif cp.dropship then
-		typeString = "dropship"
+		if cp.dropship == "vehicle" then 
+			typeString = "aero"
+		else
+			typeString = "dropship"
+		end
 	end
 	--Spring.Echo(unitName, typeString)
 	if typeString then

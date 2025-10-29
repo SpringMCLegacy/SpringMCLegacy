@@ -64,7 +64,6 @@ local IS_MarkVII = DropShip:New{
 	},
 	customparams = {
 		helptext		= "A Dropship",
-		baseclass		= "aero", -- for armourdefs
 		dropship		= "vehicle",
 		hoverheight		= 43 + 12,
 		radialdist		= 2500,
