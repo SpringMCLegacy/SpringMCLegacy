@@ -17,11 +17,11 @@ local IS_MarkVII = DropShip:New{
 	--Makes unit use weapon from /weapons folder
 	weapons	= {	
 		[1] = {
-			name	= "MBL",
+			name	= "SBL",
 			maxAngleDif = 10,
 		},
 		[2] = {
-			name	= "MBL",
+			name	= "SBL",
 			maxAngleDif = 10,
 		},
 		[3] = {
@@ -45,12 +45,12 @@ local IS_MarkVII = DropShip:New{
 			--mainDir = [[1 0 0]],
 		},
 		[7] = {
-			name	= "SBL",
+			name	= "MBL",
 			maxAngleDif = 10,
 			mainDir = [[0 0 -1]],
 		},
 		[8] = {
-			name	= "SBL",
+			name	= "MBL",
 			maxAngleDif = 10,
 			mainDir = [[0 0 -1]],
 		},
