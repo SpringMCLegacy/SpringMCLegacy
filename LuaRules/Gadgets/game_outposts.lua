@@ -88,6 +88,11 @@ local function mysplit (inputstr, sep)
         return t
 end
 
+local outpostDefsSorteds = {}
+local function AlphaNameSort(a, b)
+	return UnitDefs[a].humanName < UnitDefs[b].humanName
+end
+
 function gadget:GamePreload()
 	for unitDefID, unitDef in pairs(UnitDefs) do
 		local name = unitDef.name
@@ -104,15 +109,19 @@ function gadget:GamePreload()
 			}
 			outpostDefs[unitDefID] = {cmdDesc = outpostCmdDesc, cost = cBillCost}
 			outpostCMDs[outpostCmdDesc.id] = unitDefID
+			table.insert(outpostDefsSorteds, unitDefID)
 		end
 	end
+	-- sort the defs for a static order
+	table.sort(outpostDefsSorteds, AlphaNameSort)
 end
 
 -- REGULAR OUTPOSTS
 
 local function AddOutpostOptions(unitID)
 	if not Spring.ValidUnitID(unitID) then return end
-	for outpostDefID, outpostInfo in pairs(outpostDefs) do
+	for i, outpostDefID in ipairs(outpostDefsSorteds) do
+		local outpostInfo = outpostDefs[outpostDefID]
 		InsertUnitCmdDesc(unitID, outpostInfo.cmdDesc)
 	end
 end
