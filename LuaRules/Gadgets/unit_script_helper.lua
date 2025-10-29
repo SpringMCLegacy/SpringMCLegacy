@@ -192,7 +192,8 @@ function gadget:UnitCreated(unitID, unitDefID, teamID, builderID)
 			info.rightArmIDs = rightArmIDs
 			info.leftArmIDs = leftArmIDs
 			info.cockpit = pieceMap["cockpit"]
-		elseif cp.dropship then
+		end
+		--elseif cp.dropship then
 			info.trackEmitterIDs = trackEmitterIDs
 			info.numHExhausts = numHExhausts
 			info.numHExhaustLarges = numHExhaustLarges
@@ -202,7 +203,7 @@ function gadget:UnitCreated(unitID, unitDefID, teamID, builderID)
 			info.numDusts = numDusts
 			info.numBooms = numBooms
 			info.numCargoPieces = numCargoPieces
-		end
+		--end
 
 		info.progenitorMap = progenitorMap
 		info.weaponProgenitors = weaponProgenitors
