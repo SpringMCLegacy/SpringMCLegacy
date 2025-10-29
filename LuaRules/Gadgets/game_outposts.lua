@@ -138,6 +138,31 @@ local function AssociateOutpost(beaconID, targetID, cargoID)
 end
 GG.AssociateOutpost = AssociateOutpost
 
+local C = "\n\n\n" .. COLOURS.cbills .. "C          "
+
+local function CheckOutpostOptions(unitID, teamID)
+	if not Spring.ValidUnitID(unitID) then return end
+	if outpostIDs[unitID] then return end -- don't override ToggleOutpostOptions
+	local money = GetTeamResources(teamID, "metal")
+		
+	for outpostDefID, outpostInfo in pairs(outpostDefs) do
+		if outpostInfo.cost > money then
+			EditUnitCmdDesc(unitID, FindUnitCmdDesc(unitID, outpostInfo.cmdDesc.id), {disabled = true, name = C})
+		else
+			EditUnitCmdDesc(unitID, FindUnitCmdDesc(unitID, outpostInfo.cmdDesc.id), {disabled = false, name = ""})
+		end
+	end
+end
+
+function gadget:GameFrame(n)
+	if n > 0 and n % 30 == 0 then -- once a second
+		-- check if orders are still too expensive
+		for unitID in pairs(outpostPointBeaconIDs) do
+			CheckOutpostOptions(unitID, Spring.GetUnitTeam(unitID))
+		end
+	end
+end
+
 local function RemoveCmdDescs(unitID, unitDefID)
 	local ud = UnitDefs[unitDefID]
 	local toRemove = {CMD.MOVE_STATE, CMD.WAIT, CMD.REPEAT}
