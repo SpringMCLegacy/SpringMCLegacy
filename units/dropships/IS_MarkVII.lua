@@ -17,41 +17,41 @@ local IS_MarkVII = DropShip:New{
 	--Makes unit use weapon from /weapons folder
 	weapons	= {	
 		[1] = {
-			name	= "ERMBL",
-			maxAngleDif = 100,
+			name	= "MBL",
+			maxAngleDif = 10,
 		},
 		[2] = {
-			name	= "ERMBL",
-			maxAngleDif = 100,
+			name	= "MBL",
+			maxAngleDif = 10,
 		},
 		[3] = {
-			name	= "ERMBL",
-			maxAngleDif = 100,
+			name	= "MBL",
+			maxAngleDif = 10,
 			--mainDir = [[-1 0 0]],
 		},
 		[4] = {
-			name	= "ERMBL",
-			maxAngleDif = 100,
+			name	= "MBL",
+			maxAngleDif = 10,
 			--mainDir = [[-1 0 0]],
 		},
 		[5] = {
-			name	= "ERMBL",
-			maxAngleDif = 100,
+			name	= "MBL",
+			maxAngleDif = 10,
 			--mainDir = [[1 0 0]],
 		},
 		[6] = {
-			name	= "ERMBL",
+			name	= "MBL",
 			maxAngleDif = 100,
 			--mainDir = [[1 0 0]],
 		},
 		[7] = {
-			name	= "ERMBL",
-			maxAngleDif = 100,
+			name	= "SBL",
+			maxAngleDif = 10,
 			mainDir = [[0 0 -1]],
 		},
 		[8] = {
-			name	= "ERMBL",
-			maxAngleDif = 100,
+			name	= "SBL",
+			maxAngleDif = 10,
 			mainDir = [[0 0 -1]],
 		},
 	},
@@ -64,6 +64,7 @@ local IS_MarkVII = DropShip:New{
 	},
 	customparams = {
 		helptext		= "A Dropship",
+		baseclass		= "aero", -- for armourdefs
 		dropship		= "vehicle",
 		hoverheight		= 43 + 12,
 		radialdist		= 2500,
