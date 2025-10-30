@@ -256,6 +256,12 @@ end
 function LCLeft(beaconID, vPadID, teamID, died) -- called by LC once it has left, to start countdown
 	if Spring.ValidUnitID(vPadID) and (not Spring.GetUnitIsDead(vPadID)) and (teamID == Spring.GetUnitTeam(vPadID)) then
 		GG.Delay.DelayCall(Deliver, {vPadID, teamID}, (died and DEATH_DELAY or 0) + delays[padLevels[vPadID]] * (teamSideMults[teamID] or 1) + math.random(10) * 30)
+		if died then
+			env = Spring.UnitScript.GetScriptEnv(vPadID)
+			if env then 
+				Spring.UnitScript.CallAsUnit(vPadID, env.Close, DEATH_DELAY)
+			end
+		end
 	end
 end
 GG.LCLeft = LCLeft
