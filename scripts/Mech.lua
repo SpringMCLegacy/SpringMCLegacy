@@ -798,7 +798,7 @@ function script.BlockShot(weaponID, targetID, userTarget)
 				and (not IsUnitNARCed(targetID)) and (not IsUnitTAGed(targetID)) -- AND not TAGed or NARCed
 			local weaponClass = weapDef.customParams.weaponclass
 			local ARAD = GG.unitSpecialAmmos[unitID][weaponClass] == "arad" 
-			if ARAD and targetDef.jammerRadius > 0 then return false end
+			if ARAD and GG.jammerCache[targetID] then return false end
 			if jammed then
 				--Spring.Echo("Can't fire weapon " .. weaponID .. " as target is jammed")
 				Spring.SetUnitRulesParam(unitID, "MISSILE_TARGET_JAMMED", Spring.GetGameFrame(), {inlos = true})
