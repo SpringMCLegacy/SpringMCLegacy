@@ -1832,7 +1832,7 @@ return {
 				texture = 'bitmaps/ui/perkyellow.png',	
 			},
 			valid = isMechBay,
-			applyTo = function (unitDefID) return hasWeaponClass(unitDefID, "lrm") and isFaction(unitDefID, "fw") end,
+			applyTo = function (unitDefID) return hasWeaponClass(unitDefID, "lrm") and (isFaction(unitDefID, "fw") or isFaction(unitDefID, "sj")) end,
 			applyPerk = function (unitID, level, invert)
 				GG.EnableAmmo(unitID, not invert, "lrm", "arad")				
 			end,
@@ -1993,7 +1993,7 @@ return {
 				texture = 'bitmaps/ui/perkyellow.png',	
 			},
 			valid = isMechBay,
-			applyTo = function (unitDefID) return hasWeaponName(unitDefID, "arrowiv") and isFaction(unitDefID, "fw") end,
+			applyTo = function (unitDefID) return hasWeaponName(unitDefID, "arrowiv") and (isFaction(unitDefID, "fw") or isFaction(unitDefID, "sj")) end,
 			applyPerk = function (unitID, level, invert)
 				GG.EnableAmmo(unitID, not invert, "arrowiv", "arad")
 			end,
