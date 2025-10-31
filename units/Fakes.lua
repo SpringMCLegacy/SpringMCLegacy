@@ -40,7 +40,7 @@ local Decal = Fake:New{
 }
 
 local Decal_Beacon = Decal:New{
-	buildingGroundDecalType = "Decals/Scorch.png",
+	buildingGroundDecalType = "Decals/01_Scorch.dds",
 	buildingGroundDecalSizeX = 8,
 	buildingGroundDecalSizeY = 8,
 }
