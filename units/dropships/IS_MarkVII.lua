@@ -2,8 +2,8 @@ local IS_MarkVII = DropShip:New{
 	name              	= "Mark VII Landing Craft",
 	description         = "Cargo Landing Craft",
 	iconType			= "markvii",
-	maxDamage           = 10000,
-	mass                = 13000,
+	maxDamage 			= 150 / 10 + 13 * 1000,-- cp.tonnage / 10 + cp.armor * 1000
+	mass                = 15000,
 	buildCostEnergy     = 0,
 	buildCostMetal      = 0,
 	canMove				= true,
@@ -27,22 +27,18 @@ local IS_MarkVII = DropShip:New{
 		[3] = {
 			name	= "MBL",
 			maxAngleDif = 10,
-			--mainDir = [[-1 0 0]],
 		},
 		[4] = {
 			name	= "MBL",
 			maxAngleDif = 10,
-			--mainDir = [[-1 0 0]],
 		},
 		[5] = {
 			name	= "MBL",
 			maxAngleDif = 10,
-			--mainDir = [[1 0 0]],
 		},
 		[6] = {
 			name	= "MBL",
 			maxAngleDif = 100,
-			--mainDir = [[1 0 0]],
 		},
 		[7] = {
 			name	= "MBL",
@@ -63,12 +59,13 @@ local IS_MarkVII = DropShip:New{
 		},
 	},
 	customparams = {
-		helptext		= "A Dropship",
+		baseclass		= "aero",
 		dropship		= "vehicle",
 		hoverheight		= 43 + 12,
 		radialdist		= 2500,
 		ignoreatbeacon	= true,
-		normaltex		= "unittextures/normals/MarkVII_Normals.dds"
+		normaltex		= "unittextures/normals/MarkVII_Normals.dds",
+		armor			= 13,
     },
 	sounds = {
 		underattack        = "Dropship_Alarm",

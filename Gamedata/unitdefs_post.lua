@@ -218,11 +218,11 @@ for name, ud in pairs(UnitDefs) do
 	end
 	if cp then
 		if not ud.objectname then
-			if cp.baseclass then
-				ud.objectname = cp.baseclass .. "/" .. (cp.baseclass == "mech" and (ud.name:gsub(" ", "") .. "/") or "") .. name .. ".s3o"
-			else -- dropship, for now
+			if cp.dropship then
 				ud.objectname = "dropship/" .. name .. ".s3o"
 				cp.normaltex = cp.normaltex or "unittextures/normals/" .. ud.name .. "_Normals.dds"
+			elseif cp.baseclass then
+				ud.objectname = cp.baseclass .. "/" .. (cp.baseclass == "mech" and (ud.name:gsub(" ", "") .. "/") or "") .. name .. ".s3o"
 			end
 		end
 		if cp.ignoreatbeacon then

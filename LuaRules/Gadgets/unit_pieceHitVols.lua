@@ -53,7 +53,7 @@ end
 function gadget:UnitCreated(unitID, unitDefID, teamID, builderID)
 	local ud = UnitDefs[unitDefID]
 	local cp = ud.customParams
-	if (ud.speed > 0 or ud.canFly) and not cp.dropship then 
+	if (ud.speed > 0 or ud.canFly) and cp.baseclass then --not cp.dropship then 
 		local pieces = Spring.GetUnitPieceList(unitID)
 		local unitType = cp.baseclass
 		if accept[unitType] then
