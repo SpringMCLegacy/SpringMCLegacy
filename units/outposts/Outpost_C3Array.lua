@@ -10,10 +10,9 @@ local Outpost_C3Array = Outpost:New{
 	istargetingoutpost 	= true,
 
 	customparams = {
-		helptext		= "Adds additional control slots for your forces",
     },
 	sounds = {
-	select = "C3Array",
+		select = "C3Array",
 	}
 }
 

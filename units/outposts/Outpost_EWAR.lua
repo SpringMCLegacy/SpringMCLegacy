@@ -23,7 +23,6 @@ local Outpost_EWAR = Outpost:New{
 	},
 	
 	customparams = {
-		helptext		= "Ping Pong Potato",
 		bap				= true,
 		ecm				= true,
     },

@@ -25,7 +25,6 @@ local Turret_AC2 = Tower:New{
 		},
 	},
 	customparams = {
-		helptext		= "A defensive turret for beacons.",
 		barrelrecoildist = {2, 2, 2, 2},
 		maxammo 		= {ac2 = 2},
 		turretturnspeed = 450,

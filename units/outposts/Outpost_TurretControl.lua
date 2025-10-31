@@ -14,7 +14,6 @@ local Outpost_TurretControl = Outpost:New{
 	showNanoSpray		= false,
 	
 	customparams = {
-		helptext		= "Ping Pong Potato",
     },
 	sounds = {
 		select = "TurretControl",

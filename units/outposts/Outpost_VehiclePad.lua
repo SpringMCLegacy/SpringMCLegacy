@@ -11,7 +11,6 @@ local Outpost_VehiclePad = Outpost:New{
 	collisionVolumeType = "cylY",
 
 	customparams = {
-		helptext		= "Grants access to friendly vehicle support.",
     },
 	sounds = {
 	select = "VehiclePad",

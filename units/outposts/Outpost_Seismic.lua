@@ -9,7 +9,6 @@ local Outpost_Seismic = Outpost:New{
 	seismicdistance 	= 5000,
 	
 	customparams = {
-		helptext		= "Ping Pong Potato",
     },
 	sounds = {
 		select = "Seismic",

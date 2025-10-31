@@ -34,7 +34,6 @@ local BattleArmor = Light:New{
 	turnRadius		= 100,
 	
 	customparams = {
-		helptext		= "Armament: Small Pulse Laser, SRM-2, Microlaser",
 		heatlimit		= 20,
 		speed			= 120,
 		torsoturnspeed	= 380,

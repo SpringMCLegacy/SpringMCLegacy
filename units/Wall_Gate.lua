@@ -24,9 +24,6 @@ local Wall_Gate = {
 	maxSlope			= 100,
 
 	customparams = {
-		ammosupplier	= "0",
-		supplyradius	= "0",
-		helptext		= "A Wall",
 		wall			= true,
     },
 }

@@ -14,8 +14,6 @@ local Outpost_Uplink = Outpost:New{
 	showNanoSpray		= false,
 	
 	customparams = {
-		helptext		= "Grants access to various abilities and outposts.",
-		hasbap			= true,
     },
 	sounds = {
 		select = "Uplink",

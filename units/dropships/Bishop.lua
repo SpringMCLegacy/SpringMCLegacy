@@ -1,7 +1,7 @@
 local Bishop = DropShip:New{
 	name              	= "Bishop Aerocrane",
 	description         = "Cargo Lander",
-	objectName        	= "Dropship/Bishop.s3o", -- TODO: remove once faction textured models are available
+	objectName        	= "Dropship/Bishop.s3o", -- TODO: automatically look for non-faction models too
 	iconType			= "drost",
 	corpse				= "Bishop_x",
 	maxDamage           = 6000,
@@ -14,7 +14,6 @@ local Bishop = DropShip:New{
 	weapons	= {	
 	},
 	customparams = {
-		helptext		= "A Dropship",
 		dropship		= "outpost",
 		hoverheight		= 300,
 		radialdist		= 2500,

@@ -32,7 +32,6 @@ local IS_DroST = DropShip:New{
 		},
 	},
 	customparams = {
-		helptext		= "A Dropship",
 		dropship		= "outpost",
 		hoverheight		= 300,
 		radialdist		= 2500,

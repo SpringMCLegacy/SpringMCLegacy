@@ -23,7 +23,6 @@ local Outpost_Aircon = Outpost:New{
 	collisionVolumeType = "cylY",
 	
 	customparams = {
-		helptext		= "Ping Pong Potato",
     },
 	sounds = {
 		select = "AirControl",

@@ -40,7 +40,6 @@ local Outpost_Dropzone = Outpost:New{
 	},]]
 	
 	customparams = {
-		helptext		= "Primary Drop Zone",
 		ignoreatbeacon	= true,
 		baseclass		= "beacons", -- don't want to end up in beacon point build menu
 		invincible		= true,
