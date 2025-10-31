@@ -247,7 +247,7 @@ local notTrees = {
 }
 
 for featureName, fd in pairs(FeatureDefs) do
-	fd.customparams = fd.customparams or {}
+	fd.customparams = fd.customparams or fd.customParams or {}
 	local cp = fd.customparams
 	if not (cp and cp.was) then
 		fd.reclaimable = false -- force all non corpses to be non salvageable
