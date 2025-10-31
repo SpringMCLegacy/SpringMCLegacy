@@ -464,9 +464,13 @@ function widget:DrawWorld()
 	
 						if ICON_TYPE[udid] and alpha > 0.3 then
 							glColor(r,g,b,alpha)
+							if IsUnitSelected(uid) then
+								glColor(1,1,1,alpha)
+							end
 							glTex(ICON_TYPE[udid])
 							glTexRect(radius*-0.65-(16 * heightscale), -8*heightscale, radius*-0.65, 8*heightscale)
 							glTex(false)
+							glColor(r,g,b,alpha)
 						end
 				end
 				if display then
