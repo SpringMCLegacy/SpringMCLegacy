@@ -512,7 +512,7 @@ local function CloseAnim(delay)
 		Turn(ramps[i], x_axis, 0, CRATE_SPEED)
 	end
 	WaitForTurn(ramps[6], x_axis)
-	Sleep(delay * 1000) -- convert seconds to milliseconds
+	Sleep(delay * 1000 / 30) -- convert frame-seconds to milliseconds
 	for i = 1, 6 do
 		Turn(ramps[i], x_axis, rad(-115), CRATE_SPEED)
 	end
