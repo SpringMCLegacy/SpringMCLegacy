@@ -13,6 +13,7 @@ local IS_MarkVII = DropShip:New{
 	moveState			= 0,
 	levelGround			= false,
 	usePieceCollisionVolumes = true,
+	category			= "air",
 
 	--Makes unit use weapon from /weapons folder
 	weapons	= {	
