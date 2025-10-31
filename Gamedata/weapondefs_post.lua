@@ -236,7 +236,18 @@ local function isModelOK(fd)
  	    or VFS.FileExists(modelPath .. ".3do", VFS.ZIP)
  end
  
+ 
+local trees = {
+	"pine",
+	"oak",
+	"palm"
+}
+local notTrees = {
+	"street"
+}
+
 for featureName, fd in pairs(FeatureDefs) do
+	fd.customparams = fd.customparams or {}
 	local cp = fd.customparams
 	if not (cp and cp.was) then
 		fd.reclaimable = false -- force all non corpses to be non salvageable
@@ -245,4 +256,15 @@ for featureName, fd in pairs(FeatureDefs) do
  		Spring.Log("weapondefs_post.lua", LOG.WARNING, "Removing feature def", featureName, "for having invalid model that would crash the engine", fd.object)
  		FeatureDefs[featureName] = nil
  	end
+	Spring.Echo("PARP", featureName, fd.description:lower())
+	for i, whiteList in pairs(trees) do
+		if featureName:find(whiteList) or fd.description:lower():find(whiteList) then
+			fd.customparams.uniformbin = "tree"
+		end
+	end
+	for i, blackList in pairs(notTrees) do
+		if (featureName:find(blackList) or fd.description:lower():find(blackList)) and fd.customparams.uniformbin == "tree" then
+			fd.customparams.uniformbin = "feature"
+		end
+	end
 end

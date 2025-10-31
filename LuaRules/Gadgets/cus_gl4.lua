@@ -855,7 +855,6 @@ local function initBinsAndTextures()
 			if (featureDef.customParams and featureDef.customParams.treeshader == 'yes')
 				or knowntrees[featureDef.name] then
 				objectDefToUniformBin[-1 * featureDefID] = 'tree'
-				featuresDefsWithAlpha[-1 * featureDefID] = "yes"
 			elseif wreckCache[featureDefID] 
 				or featureDef.name:find("_x", nil, true) or featureDef.name:find("_dead", nil, true) or featureDef.name:find("_heap", nil, true) then
 				objectDefToUniformBin[-1 * featureDefID] = 'wreck'
@@ -864,6 +863,9 @@ local function initBinsAndTextures()
 			end
 			local binOverride = featureDef.customParams and featureDef.customParams.uniformbin or objectDefToUniformBin[-1 * featureDefID]
 			objectDefToUniformBin[-1 * featureDefID] = binOverride
+			if binOverride == "tree" then
+				featuresDefsWithAlpha[-1 * featureDefID] = "yes"
+			end
 			--Spring.Echo("Assigned feature", featureDef.name, "to uniformBin", binOverride)
 			local texKeyFast = GenFastTextureKey(-1 * featureDefID, featureDef, normalTex, textureTable)
 			if textureKeytoSet[texKeyFast] == nil then
