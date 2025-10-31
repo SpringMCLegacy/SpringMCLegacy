@@ -256,7 +256,6 @@ for featureName, fd in pairs(FeatureDefs) do
  		Spring.Log("weapondefs_post.lua", LOG.WARNING, "Removing feature def", featureName, "for having invalid model that would crash the engine", fd.object)
  		FeatureDefs[featureName] = nil
  	end
-	Spring.Echo("PARP", featureName, fd.description:lower())
 	for i, whiteList in pairs(trees) do
 		if featureName:find(whiteList) or fd.description:lower():find(whiteList) then
 			fd.customparams.uniformbin = "tree"

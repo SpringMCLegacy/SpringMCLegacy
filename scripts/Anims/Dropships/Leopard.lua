@@ -248,13 +248,14 @@ function UnloadMech(i)
 	end
 	local currUnitDef = UnitDefs[Spring.GetUnitDefID(cargo[i])]
 	local moveSpeed = currUnitDef.speed * 1.2
+	local pieceNum = (i-1) % 4 +1
 	-- Move to the ramp
-	Spring.UnitScript.AttachUnit(cargoPieces[i], cargo[i])
-	Move(links[i], x_axis, (i <= 2 and 1 or -1) * 50, moveSpeed)
-	WaitForMove(links[i], x_axis)
+	Spring.UnitScript.AttachUnit(cargoPieces[pieceNum], cargo[i])
+	Move(links[pieceNum], x_axis, (i <= 2 and 1 or -1) * 50, moveSpeed)
+	WaitForMove(links[pieceNum], x_axis)
 	-- We already moved to the edge, proceed down the ramp
-	Move(cargoPieces[i], z_axis, (i <= 2 and -1 or 1) and 75, moveSpeed) -- 65
-	WaitForMove(cargoPieces[i], z_axis)
+	Move(cargoPieces[pieceNum], z_axis, (i <= 2 and -1 or 1) and 75, moveSpeed) -- 65
+	WaitForMove(cargoPieces[pieceNum], z_axis)
 	Spring.UnitScript.DropUnit(cargo[i])
 	Spring.SetUnitBlocking(cargo[i], true, true, true, true, true, true, true)
 	-- TODO: change bugout depending on side of leopard
@@ -266,9 +267,11 @@ function UnloadMech(i)
 	--Spring.MarkerAddPoint(UNLOAD_X, 0, UNLOAD_Z)
 	cargoLeft = cargoLeft - 1
 	Sleep(1000)
+	Move(cargoPieces[pieceNum], z_axis, 0)
+	Move(links[pieceNum], x_axis, 0)
 	PlaySound("dropship_doorclose")
-	Turn(doors[i], z_axis, 0, DOOR_SPEED/3)
-	WaitForTurn(doors[i], z_axis)
+	Turn(doors[pieceNum], z_axis, 0, DOOR_SPEED/3)
+	WaitForTurn(doors[pieceNum], z_axis)
 	if cargoLeft == 0 then -- This was the last mech out
 		Sleep(2000)
 		TakeOff()
@@ -288,7 +291,7 @@ function UnloadCargo()
 		Turn(links[i], x_axis, math.rad(25))
 		Turn(cargoPieces[i], x_axis, -math.rad(25))
 	end
-	for i = 1, numCargoAnim do
+	for i = 1, numCargo do
 		StartThread(UnloadMech, i)
 	end	
 end
