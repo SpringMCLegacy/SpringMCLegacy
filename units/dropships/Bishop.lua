@@ -1,6 +1,7 @@
 local Bishop = DropShip:New{
 	name              	= "Bishop Aerocrane",
 	description         = "Cargo Lander",
+	buildPic			= "Dropship_Bishop.png", -- TODO: remove in future
 	objectName        	= "Dropship/Bishop.s3o", -- TODO: automatically look for non-faction models too
 	iconType			= "drost",
 	corpse				= "Bishop_x",
