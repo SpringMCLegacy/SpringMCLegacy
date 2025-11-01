@@ -1,4 +1,3 @@
--- USEFUL FUNCTIONS & INCLUDES
 VFS.Include("LuaRules/Includes/utilities.lua", nil, VFS.ZIP)
 
 local PROFILE_PATH 
@@ -446,7 +445,7 @@ for name, ud in pairs(UnitDefs) do
 		ud.category = ud.category .. " narctag"
 		table.insert(TCONTROL_BUILDOPTIONS, name)
 		ud.levelground = false
-	elseif cp.baseclass == "aero" then
+	elseif cp.baseclass == "aero" and not cp.dropship then
 		table.insert(AEROCON_BUILDOPTIONS, name)
 	end
 	
