@@ -248,6 +248,7 @@ local notTrees = {
 
 for featureName, fd in pairs(FeatureDefs) do
 	fd.customparams = fd.customparams or fd.customParams or {}
+	fd.description = fd.description or ""
 	local cp = fd.customparams
 	if not (cp and cp.was) then
 		fd.reclaimable = false -- force all non corpses to be non salvageable
@@ -257,7 +258,7 @@ for featureName, fd in pairs(FeatureDefs) do
  		FeatureDefs[featureName] = nil
  	end
 	for i, whiteList in pairs(trees) do
-		if featureName:find(whiteList) or fd.description:lower():find(whiteList) then
+		if featureName:find(whiteList) and fd.description:lower():find(whiteList) then
 			fd.customparams.uniformbin = "tree"
 		end
 	end
