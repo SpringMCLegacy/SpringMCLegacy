@@ -153,9 +153,10 @@ local function CheckOutpostOptions(unitID, teamID)
 	if not Spring.ValidUnitID(unitID) then return end
 	if outpostIDs[unitID] then return end -- don't override ToggleOutpostOptions
 	local money = GetTeamResources(teamID, "metal")
-		
+	local noCost = Spring.IsNoCostEnabled()
+	
 	for outpostDefID, outpostInfo in pairs(outpostDefs) do
-		if outpostInfo.cost > money then
+		if not noCost and outpostInfo.cost > money then
 			EditUnitCmdDesc(unitID, FindUnitCmdDesc(unitID, outpostInfo.cmdDesc.id), {disabled = true, name = C})
 		else
 			EditUnitCmdDesc(unitID, FindUnitCmdDesc(unitID, outpostInfo.cmdDesc.id), {disabled = false, name = ""})
