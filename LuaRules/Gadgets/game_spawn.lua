@@ -26,13 +26,10 @@ end
 --------------------------------------------------------------------------------
 --------------------------------------------------------------------------------
 
--- synced only
-if (not gadgetHandler:IsSyncedCode()) then
-	return false
-end
 
---------------------------------------------------------------------------------
---------------------------------------------------------------------------------
+if gadgetHandler:IsSyncedCode() then
+--	SYNCED
+
 
 local modOptions = Spring.GetModOptions()
 if not modOptions.startcbills then -- load via file
@@ -54,6 +51,7 @@ end
 GG.SideNames = SideNames
 GG.ValidSides = ValidSides
 
+local startPosType = Game.startPosType -- 0 (in order), 1 (random), 2 (choose ingame), 3 (choose before game)
 local teamStarts
 local PROFILE_PATH = "maps/flagConfig/" .. Game.mapName .. "_profile.lua"
 if VFS.FileExists(PROFILE_PATH) then
@@ -94,17 +92,9 @@ local function SpawnStartUnit(teamID)
 		-- spawn the specified start unit
 		local startPos = teamStarts[teamID]
 		local x,y,z
-		--if startPos then
-			x = startPos.x
-			y = startPos.y
-			z = startPos.z
-			--y = Spring.GetGroundHeight(x,z)
-		--else
-			--x,y,z = Spring.GetTeamStartPosition(teamID)
-		--end
-		-- snap to 16x16 grid
-		--x, z = 16*math.floor((x+8)/16), 16*math.floor((z+8)/16)
-		--y = Spring.GetGroundHeight(x, z)
+		x = startPos.x
+		y = startPos.y
+		z = startPos.z
 		-- facing toward map center
 		local facing=math.abs(Game.mapSizeX/2 - x) > math.abs(Game.mapSizeZ/2 - z)
 			and ((x>Game.mapSizeX/2) and "west" or "east")
@@ -152,12 +142,15 @@ function gadget:GameStart()
 		if teamID ~= Spring.GetGaiaTeamID() then
 			if not teamStarts[teamID] then -- no profile, ask engine
 				local x,y,z = Spring.GetTeamStartPosition(teamID)
+				--[[local mapStarts = Spring.GetMapStartPositions()
+				local mapStart = mapStarts[teamID+1]
+				local x2, y2, z2 = unpack(mapStart or {-1, -1, -1})]]
 				teamStarts[teamID] = {
 					["x"] = x,
 					["y"] = y,
 					["z"] = z,
 				}
-				--Spring.Echo("teamStarts", teamID, x, y, z)
+				--Spring.Echo("teamID", teamID, "teamStarts", x, y, z, "vs mapStarts", x2, y2, z2)
 			else
 				teamStarts[teamID].y = Spring.GetGroundHeight(teamStarts[teamID].x,teamStarts[teamID].z)
 			end
@@ -190,3 +183,13 @@ local function DeploySpawnBeacons(skip)
 	end
 end
 GG.DeploySpawnBeacons = DeploySpawnBeacons
+
+else
+-- UNSYNCED
+
+	function gadget:GameSetup(label, ready, playerStates)
+		-- some optional delay here
+		return true, true
+	end
+	
+end
