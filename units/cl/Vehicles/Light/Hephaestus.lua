@@ -31,4 +31,6 @@ local Hephaestus = Hover:New{
 
 return lowerkeys({
 	--["HH_Hephaestus"] = Hephaestus:New(),
+	["WF_Hephaestus"] = Hephaestus:New(),
+	["SJ_Hephaestus"] = Hephaestus:New(),
 })
