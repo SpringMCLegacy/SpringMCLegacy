@@ -33,7 +33,7 @@ local function AutoAdd(subDir, map, filter)
 		local path, key, ext = fullPath:match("bitmaps/(.*/(.*)%.(.*))")
 		local subTable = resources["graphics"][subDir] or {}
 		resources["graphics"][subDir] = subTable
-		if (not filter or filter == ext) and (not path:find("_norm")) then
+		if (not filter or filter == ext) then
 			if not map then
 				Spring.Echo("adding resource texture", subDir, path)
 				table.insert(subTable, path)
@@ -44,9 +44,9 @@ local function AutoAdd(subDir, map, filter)
 	end
 end
 
--- Add mod projectiletextures
-AutoAdd("projectiletextures", true) 
-AutoAdd("decals", false)
 
-for k, v in pairs(resources.graphics.decals) do Spring.Echo("hello badosu", k, v) end
+AutoAdd("scars", false)
+AutoAdd("decals", false)
+AutoAdd("projectiletextures", true) 
+
 return resources
