@@ -31,31 +31,9 @@ local Naval_Laser = Nuke_Meltdown:New{ -- for invincible and minimal sight
 	}
 }
 
-local Decal = Fake:New{
-	useBuildingGroundDecal 	= true,
-	customParams = {
-		decal = true,
-		invincible = true,
-	}
-}
-
-local Decal_Beacon = Decal:New{
-	buildingGroundDecalType = "Decals/01_Scorch.dds",
-	buildingGroundDecalSizeX = 8,
-	buildingGroundDecalSizeY = 8,
-}
-
-local Decal_Drop = Decal:New{
-	buildingGroundDecalType = "Decals/Scorch2.png",
-	buildingGroundDecalSizeX = 30,
-	buildingGroundDecalSizeY = 30,
-}
-
 return lowerkeys({ 
 	["Narc_ECM"] = Narc_ECM,
 	["Nuke_Icon"] = Nuke_Icon,
 	["Nuke_Meltdown"] = Nuke_Meltdown,
 	["Naval_Laser"] = Naval_Laser,
-	["Decal_Beacon"] = Decal_Beacon,
-	["Decal_Drop"] = Decal_Drop,
 })

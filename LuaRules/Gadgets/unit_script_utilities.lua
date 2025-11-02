@@ -59,11 +59,21 @@ function RemoveGrassCircle(cx, cz, r)
 end
 GG.RemoveGrassCircle = RemoveGrassCircle
 
+local decalAlias = {
+	decal_beacon = 1,
+	decal_drop = 3,
+}
+local decalSizes = {
+	decal_beacon = 64,
+	decal_drop = 256,
+}
+
 function SpawnDecal(decalType, x, y, z, teamID, alwaysVisible, delay, duration)
 	if delay then
-		GG.Delay.DelayCall(SpawnDecal, {decalType, x, y, z, teamID, nil, duration}, delay)
+		GG.Delay.DelayCall(SpawnDecal, {decalType, x, y, z, teamID, alwaysVisible, nil, duration}, delay)
 	else
-		local decalID = Spring.CreateUnit(decalType, x+4, y + 1, z+4, 0, teamID, false, false)
+		SendToUnsynced("SPAWNDECAL", decalAlias[decalType], x, z, decalSizes[decalType], duration)
+		--[[local decalID = Spring.CreateUnit(decalType, x+4, y + 1, z+4, 0, teamID, false, false)
 		if decalID then -- can fail if e.g. team just died
 			Spring.SetUnitAlwaysVisible(decalID, alwaysVisible or false)
 			Spring.SetUnitNoSelect(decalID, true)
@@ -71,7 +81,7 @@ function SpawnDecal(decalType, x, y, z, teamID, alwaysVisible, delay, duration)
 			if duration then
 				GG.Delay.DelayCall(Spring.DestroyUnit, {decalID, false, true}, duration)
 			end
-		end
+		end]]
 	end
 end
 GG.SpawnDecal = SpawnDecal
@@ -111,4 +121,44 @@ GG.GetUnitDistanceToPoint = GetUnitDistanceToPoint
 
 else
 -- UNSYNCED
-return false end
+
+local function Fade(decalID, duration, out)
+	for i = out and 1 or duration, out and duration or 1, out and 1 or -1 do
+		GG.Delay.DelayCall(Spring.SetGroundDecalAlpha, {decalID, 1.0 - i/duration, 0.0}, out and i or duration - i)	
+	end
+	if not out then
+		Spring.SetGroundDecalAlpha(decalID, 0.0, 0.0)
+	else
+		GG.Delay.DelayCall(Spring.DestroyGroundDecal, {decalID}, duration)
+	end
+end
+
+local function SpawnDecal(eventID, decalNum, x, z, decalSize, duration)
+	local decalID = Spring.CreateGroundDecal()
+	if decalID then
+		-- Random size
+		decalSize = math.floor(decalSize * math.random(85, 115)/100)
+		Spring.SetGroundDecalPosAndDims(decalID, x, z, decalSize, decalSize)
+
+		-- Random Rotation
+		local angle = math.random() * 2 * math.pi
+		Spring.SetGroundDecalRotation(decalID, angle)
+
+		Spring.SetGroundDecalTexture(decalID, "maindecal_" .. decalNum, true)
+		Spring.SetGroundDecalTexture(decalID, "normdecal_" .. decalNum, false)
+		-- Random tint
+		local tintFactor = math.random(15,85)/100
+		--Spring.SetGroundDecalAlpha(decalID, 1.0, 0.0)
+		--Spring.SetGroundDecalTint(decalID, tintFactor, tintFactor, tintFactor, tintFactor)
+		if duration then
+			Fade(decalID, 75, false)
+			GG.Delay.DelayCall(Fade, {decalID, duration, true}, 75 + 90)
+		end
+	end
+end
+
+function gadget:Initialize()
+	gadgetHandler:AddSyncAction("SPAWNDECAL", SpawnDecal)
+end
+
+end
