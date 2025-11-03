@@ -52,12 +52,13 @@ function TouchDown()
 	if startUnit then -- Place dropzone
 		Spring.GiveOrderToUnit(unitID, GG.CustomCommands.GetCmdID("CMD_DROPZONE"), {}, {})
 	end
-	GG.RemoveGrassSquare(X, Z, 64)
-	GG.SpawnDecal("decal_beacon", X, GY + 1, Z, teamID, true)
 	local myRadius = Spring.GetUnitRulesParam(unitID, "BEACON_CAP_RADIUS")
 	local myNumPoints = Spring.GetUnitRulesParam(unitID, "BEACON_NUM_POINTS")
 	local mySpotNum = Spring.GetUnitRulesParam(unitID, "BEACON_SPOT_NUM")
 	GG.BeaconPoints(unitID, teamID, X, GY+1, Z, myRadius, myNumPoints, mySpotNum)
+	GG.RemoveGrassSquare(X, Z, 64)
+	GG.SpawnDecal("decal_beacon", X, GY + 1, Z, teamID, true)
+	GG.SpawnDecal("decal_beacon_zone", X, GY + 1, Z, teamID, true, nil, nil, myRadius)
 end
 
 function ChangeType(outpost)

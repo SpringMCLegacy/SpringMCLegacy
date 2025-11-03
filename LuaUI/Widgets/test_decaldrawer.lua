@@ -17,8 +17,8 @@ end
 for k,v in pairs(Spring.GetGroundDecalTextures()) do Spring.Echo("[Decal Drawer] maindecal",k,v) end
 for k,v in pairs(Spring.GetGroundDecalTextures(nil,false)) do Spring.Echo("[Decal Drawer] normdecal",k,v) end
 
-local decalTexture = "maindecal_1"
-local decalTextureNormal = "normdecal_1"
+local decalTexture = "maindecal_4"
+local decalTextureNormal = "normdecal_4"
 local decalSize = 85
 
 local decalIDs = {}
