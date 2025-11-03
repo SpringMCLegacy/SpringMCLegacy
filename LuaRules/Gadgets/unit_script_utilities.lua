@@ -59,34 +59,6 @@ function RemoveGrassCircle(cx, cz, r)
 end
 GG.RemoveGrassCircle = RemoveGrassCircle
 
-local decalDefs = {
-	decal_beacon = {
-		alias 	= 1,
-		size 	= 64, 
-		vary	= true,
-	},
-	decal_drop = {
-		alias	= 3,
-		size 	= 256,
-		vary 	= true,
-	},
-	decal_beacon_zone = {
-		alias	= 4,
-		vary	= false,
-		alpha	= 0.2,
-	},
-}
-
-function SpawnDecal(decalType, x, y, z, teamID, alwaysVisible, delay, duration, size)
-	if delay then
-		GG.Delay.DelayCall(SpawnDecal, {decalType, x, y, z, teamID, alwaysVisible, nil, duration}, delay)
-	else
-		local decalInfo = decalDefs[decalType]
-		SendToUnsynced("SPAWNDECAL", decalInfo.alias, x, z, size or decalInfo.size, duration, decalInfo.vary, decalInfo.alpha)
-	end
-end
-GG.SpawnDecal = SpawnDecal
-
 function EmitSfxName(unitID, pieceName, effectName)
 	if not pieceName then Spring.Echo("Bug report unit_script_utilities L79", UnitDefs[Spring.GetUnitDefID(unitID)].name) return end
 	local x,y,z,dx,dy,dz = GetUnitPiecePosDir(unitID, pieceName)
@@ -120,20 +92,51 @@ local function GetUnitDistanceToPoint(unitID, tx, ty, tz, bool3D)
 end
 GG.GetUnitDistanceToPoint = GetUnitDistanceToPoint
 
+
+function SpawnDecal(decalName, x, z, delay, duration, size)
+	if delay then
+		GG.Delay.DelayCall(SpawnDecal, {decalName, x, z, nil, duration, size}, delay)
+	else
+		SendToUnsynced("SPAWNDECAL", decalName, x, z, size, duration)
+	end
+end
+GG.SpawnDecal = SpawnDecal
+
 else
 -- UNSYNCED
 
-local function SpawnDecal(eventID, decalNum, x, z, decalSize, duration, vary, alpha)
+local decalDefs = {
+	decal_beacon = {
+		alias 	= 1,
+		size 	= 64, 
+		vary	= true,
+	},
+	decal_drop = {
+		alias	= 3,
+		size 	= 256,
+		vary 	= true,
+	},
+	decal_beacon_zone = {
+		alias	= 4,
+		vary	= false,
+		alpha	= 0.2,
+	},
+}
+
+local function SpawnDecal(eventID, decalName, x, z, decalSize, duration)
+	--Spring.Echo("UNSYNCED SpawnDecal", eventID, decalName, x, z, decalSize, duration)
 	local decalID = Spring.CreateGroundDecal()
 	if decalID then
+		local decalInfo = decalDefs[decalName]
+		decalSize = decalSize or decalInfo.size
 		-- Initialize textures
-		Spring.SetGroundDecalTexture(decalID, "maindecal_" .. decalNum, true)
-		Spring.SetGroundDecalTexture(decalID, "normdecal_" .. decalNum, false)
+		Spring.SetGroundDecalTexture(decalID, "maindecal_" .. decalInfo.alias, true)
+		Spring.SetGroundDecalTexture(decalID, "normdecal_" .. decalInfo.alias, false)
 		Spring.SetGroundDecalPosAndDims(decalID, x, z, decalSize, decalSize)
-		if alpha then
-			Spring.SetGroundDecalAlpha(decalID, alpha, 0.0)
+		if decalInfo.alpha then
+			Spring.SetGroundDecalAlpha(decalID, decalInfo.alpha, 0.0)
 		end
-		if vary then
+		if decalInfo.vary then
 			-- Variation
 			decalSize = math.floor(decalSize * math.random(85, 115)/100)
 			Spring.SetGroundDecalPosAndDims(decalID, x, z, decalSize, decalSize)

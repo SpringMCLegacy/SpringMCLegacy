@@ -109,7 +109,7 @@ function fx()
 		end
 
 		GG.RemoveGrassCircle(TX, TZ, 230)
-		GG.SpawnDecal("decal_drop", TX, GY + 1, TZ, teamID, false, 0, 30 * 120)
+		GG.SpawnDecal("decal_drop", TX, TZ, nil, 30 * 120)
 		up = true
 	end
 	while stage == 5 do
