@@ -58,7 +58,7 @@ function TouchDown()
 	GG.BeaconPoints(unitID, teamID, X, GY+1, Z, myRadius, myNumPoints, mySpotNum)
 	GG.RemoveGrassSquare(X, Z, 64)
 	GG.SpawnDecal("decal_beacon", X, Z)
-	GG.SpawnDecal("decal_beacon_zone", X, Z, nil, nil, myRadius)
+	GG.SpawnDecal("decal_beacon_zone", X, Z, myRadius)
 end
 
 function ChangeType(outpost)

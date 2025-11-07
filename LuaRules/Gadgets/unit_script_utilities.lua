@@ -93,11 +93,11 @@ end
 GG.GetUnitDistanceToPoint = GetUnitDistanceToPoint
 
 
-function SpawnDecal(decalName, x, z, delay, duration, size)
+function SpawnDecal(decalName, x, z, size, angle, delay, duration)
 	if delay then
-		GG.Delay.DelayCall(SpawnDecal, {decalName, x, z, nil, duration, size}, delay)
+		GG.Delay.DelayCall(SpawnDecal, {decalName, x, z, size, angle, duration}, delay)
 	else
-		SendToUnsynced("SPAWNDECAL", decalName, x, z, size, duration)
+		SendToUnsynced("SPAWNDECAL", decalName, x, z, size, angle, duration)
 	end
 end
 GG.SpawnDecal = SpawnDecal
@@ -109,22 +109,51 @@ local decalDefs = {
 	decal_beacon = {
 		alias 	= 1,
 		size 	= 64, 
-		vary	= true,
+		vary 	= {
+			tintMax		= 85,
+			tintMin		= 15,
+			sizeMax		= 115,
+			sizeMin		= 85,
+		},
+	},
+	decal_foot = {
+		alias 	= 5,
+		size 	= 85, 
+		--[[vary 	= {
+			tintMax		= 85,
+			tintMin		= 15,
+			sizeMax		= 100,
+			sizeMin		= 100,
+		},]]
+		duration	= {
+			fadeIn		= 0.5,
+			stable		= 30,
+			fadeOut		= 240,
+		},
 	},
 	decal_drop = {
 		alias	= 3,
 		size 	= 256,
-		vary 	= true,
+		vary 	= {
+			tintMax		= 65,
+			tintMin		= 45,
+			sizeMax		= 120,
+			sizeMin		= 95,
+		},
+		duration	= {
+			fadeIn		= 1.5,
+			stable		= 3,
+			fadeOut		= 120,
+		},
 	},
 	decal_beacon_zone = {
 		alias	= 4,
-		vary	= false,
 		alpha	= 0.2,
 	},
 }
 
-local function SpawnDecal(eventID, decalName, x, z, decalSize, duration)
-	--Spring.Echo("UNSYNCED SpawnDecal", eventID, decalName, x, z, decalSize, duration)
+local function SpawnDecal(eventID, decalName, x, z, decalSize, angle)
+	--Spring.Echo("UNSYNCED SpawnDecal", eventID, decalName, x, z, decalSize)
 	local decalID = Spring.CreateGroundDecal()
 	if decalID then
 		local decalInfo = decalDefs[decalName]
@@ -136,22 +165,33 @@ local function SpawnDecal(eventID, decalName, x, z, decalSize, duration)
 		if decalInfo.alpha then
 			Spring.SetGroundDecalAlpha(decalID, decalInfo.alpha, 0.0)
 		end
-		if decalInfo.vary then
+		if angle then
+			Spring.SetGroundDecalRotation(decalID, angle)
+		end
+		local variation = decalInfo.vary
+		if variation then
 			-- Variation
-			decalSize = math.floor(decalSize * math.random(85, 115)/100)
+			decalSize = math.floor(decalSize * math.random(variation.sizeMin or 100, variation.sizeMax or 100)/100)
 			Spring.SetGroundDecalPosAndDims(decalID, x, z, decalSize, decalSize)
 			local angle = math.random() * 2 * math.pi
 			Spring.SetGroundDecalRotation(decalID, angle)
-			local tintFactor = math.random(15,85)/100
+			local tintFactor = math.random(variation.tintMin, variation.tintMax)/100
 			Spring.SetGroundDecalTint(decalID, tintFactor, tintFactor, tintFactor, tintFactor)
 		end
-		
+		local duration = decalInfo.duration
 		if duration then
 			-- fade in
-			Spring.SetGroundDecalAlpha(decalID, 0, -1/1.5)
+			if duration.fadeIn then
+				Spring.SetGroundDecalAlpha(decalID, 0, -1/duration.fadeIn)
+				GG.Delay.DelayCall(Spring.SetGroundDecalAlpha, {decalID, 1, 0}, math.floor(duration.fadeIn*30))
+			else
+				Spring.SetGroundDecalAlpha(decalID, 1, 0)
+			end
 			-- schedule a fade out
-			GG.Delay.DelayCall(Spring.SetGroundDecalAlpha, {decalID, 1, 30/duration}, 75 + 90)
-			GG.Delay.DelayCall(Spring.DestroyGroundDecal, {decalID}, 75 + 90 + duration)
+			GG.Delay.DelayCall(Spring.SetGroundDecalAlpha, {decalID, 1, 1/duration.fadeOut}, ((duration.fadeIn or 0) + duration.stable)*30)
+			--GG.Delay.DelayCall(Spring.Echo, {"SetGroundDecalAlpha"}, ((duration.fadeIn or 0) + duration.stable)*30)
+			GG.Delay.DelayCall(Spring.DestroyGroundDecal, {decalID}, ((duration.fadeIn or 0) + duration.stable + duration.fadeOut)*30)
+			--GG.Delay.DelayCall(Spring.Echo,  {"DestroyGroundDecal"}, ((duration.fadeIn or 0) + duration.stable + duration.fadeOut)*30)
 		end
 	end
 end

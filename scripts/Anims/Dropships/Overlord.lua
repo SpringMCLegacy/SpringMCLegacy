@@ -1,27 +1,17 @@
 -- Custom anims & functions for Overlord
-local numGears = #gears
-
-local sniperCanFire = false
-function WeaponCanFire(weaponID)
-	if missileWeaponIDs[weaponID] then return stage == 4
-	--elseif weaponID == 1 then return sniperCanFire
-	else return true
-	end
-end
 
 function Setup()
 	-- Put pieces into starting pos
-	--Move(piece("barrel_1"), z_axis, -58, 20)
 	Turn(vExhaustLarges[1], x_axis, math.rad(90), 0)
 	for i = 1, info.numVExhausts do
 		Turn(vExhausts[i], x_axis, math.rad(90), 0)
 	end
 	-- Legs Setup
-
 	for i = 1,info.numGears do
 		local angle = i < 5 and i * rad(45) or (8 - i) * rad(45)
 		local angleDir = i < 4 and -angle or angle
 		local angle2 = rad(80)
+		gearAngles[i] = -angleDir
 		Turn(gears[i].door, y_axis, angleDir)
 		Turn(gears[i].door, x_axis, angle2)
 		Turn(gears[i].joint, y_axis, angleDir)
@@ -39,36 +29,25 @@ function LandingGearDown()
 	-- anims are similar to Union, numGears easily parameterised but...
 	-- but angles and speeds differ as well
 	SPEED = math.rad(40)
-	for i = 1, numGears do -- Doors open
+	for i = 1, info.numGears do -- Doors open
 		Turn(gears[i].door, x_axis, math.rad(1), SPEED * 5)
 	end
-	WaitForTurn(gears[numGears].door, x_axis)
+	WaitForTurn(gears[info.numGears].door, x_axis)
 	Sleep(2000)
-	for i = 1, numGears do -- feet into deploy position
+	for i = 1, info.numGears do -- feet into deploy position
 		Turn(gears[i].joint, x_axis, math.rad(5), SPEED)
 	end
-	WaitForTurn(gears[numGears].joint, x_axis)
-	for i = 1, numGears do -- joint and feet rotate out
+	WaitForTurn(gears[info.numGears].joint, x_axis)
+	for i = 1, info.numGears do -- joint and feet rotate out
 		Turn(gears[i].joint, x_axis, math.rad(90), SPEED)
 		Turn(gears[i].gear, x_axis, math.rad(-110), SPEED)
 	end
-	WaitForTurn(gears[numGears].joint, x_axis)
-	for i = 1, numGears do -- joint raises and locks into position
+	WaitForTurn(gears[info.numGears].joint, x_axis)
+	for i = 1, info.numGears do -- joint raises and locks into position
 		Move(gears[i].joint, y_axis, -5, 15)
 	end
-	WaitForMove(gears[numGears].joint, y_axis)
+	WaitForMove(gears[info.numGears].joint, y_axis)
 	Turn(piece("missile_doors"), y_axis, math.rad(16), math.rad(4))
-end
-
-function DeployWeapons(out)
-	--local mantlet = piece("mantlet_1")
-	--local barrel = piece("barrel_1")
-	--if not out then sniperCanFire = out end -- disable firing before retract
-	--Move(mantlet, z_axis, out and 40 or 0, 20)
-	--Move(barrel, z_axis, out and 0 or -58, 20)
-	--WaitForMove(mantlet, z_axis)
-	--WaitForMove(barrel, z_axis)
-	--sniperCanFire = out
 end
 
 function LandingGearUp()
@@ -77,25 +56,25 @@ function LandingGearUp()
 	--Move(piece("barrel_1"), z_axis, -58, 20)
 	SPEED = math.rad(40)
 
-	for i = 1, numGears do -- joint lowers and unlocks
+	for i = 1, info.numGears do -- joint lowers and unlocks
 		Move(gears[i].joint, y_axis, 0, 15)
 		--Turn(gears[i].joint, x_axis, math.rad(-80), SPEED)
 		--Turn(gears[i].gear, x_axis, math.rad(50), SPEED)
 	end
 	--WaitForTurn(gears[7].gear, x_axis)
-	WaitForMove(gears[numGears].joint, y_axis)
-	for i = 1, numGears do -- joint and feet rotate in
+	WaitForMove(gears[info.numGears].joint, y_axis)
+	for i = 1, info.numGears do -- joint and feet rotate in
 		Turn(gears[i].joint, x_axis, math.rad(5), SPEED)
 		Turn(gears[i].gear, x_axis, 0, SPEED)
 	end
-	WaitForTurn(gears[numGears].joint, x_axis)
-	for i = 1, numGears do -- feet into stowed position
+	WaitForTurn(gears[info.numGears].joint, x_axis)
+	for i = 1, info.numGears do -- feet into stowed position
 		Turn(gears[i].joint, x_axis, 0, SPEED)
 	end	
-	for i = 1, numGears do -- Doors close
+	for i = 1, info.numGears do -- Doors close
 		Turn(gears[i].door, x_axis, math.rad(80), SPEED)
 	end
-	WaitForTurn(gears[numGears].door, x_axis)
+	WaitForTurn(gears[info.numGears].door, x_axis)
 	--Spring.Echo("ROCKET FULL ASCENT BURN NOW!")
 	Spring.MoveCtrl.SetGravity(unitID, -4 * GRAVITY)
 end

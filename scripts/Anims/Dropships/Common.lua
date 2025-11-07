@@ -90,15 +90,15 @@ function fx()
 		local RETURN = 6
 		local hull = piece("hull")
 		Move(hull, y_axis, -REST, 2 * REST)
-		for i = 1, 4 do
+		for i = 1, info.numGears do
 			Move(gears[i].joint, y_axis, REST, 2 * REST)
 		end
-		WaitForMove(gears[4].joint, y_axis)
+		WaitForMove(gears[info.numGears].joint, y_axis)
 		Move(hull, y_axis, -RETURN, RETURN)
-		for i = 1, 4 do
+		for i = 1, info.numGears do
 			Move(gears[i].joint, y_axis, RETURN, RETURN)
 		end
-		WaitForMove(gears[4].joint, y_axis)
+		WaitForMove(gears[info.numGears].joint, y_axis)
 		StartThread(UnloadCargo)
 	end
 	if stage == 5 then -- blast off
@@ -109,7 +109,7 @@ function fx()
 		end
 
 		GG.RemoveGrassCircle(TX, TZ, 230)
-		GG.SpawnDecal("decal_drop", TX, TZ, nil, 30 * 120)
+		GG.SpawnDecal("decal_drop", TX, TZ)
 		up = true
 	end
 	while stage == 5 do
@@ -123,6 +123,17 @@ function fx()
 	end
 end
 
+function WeaponCanFire(weaponID)
+	-- same for both now there is no sniper cannon
+	if missileWeaponIDs[weaponID] then return stage == 4
+	else return true
+	end
+end
+
+function DeployWeapons(out)
+	-- no-op for both now there is no sniper cannon
+end
+
 function TouchDown()
 	landed = true
 	PlaySound("dropship_stomp")
@@ -133,7 +144,13 @@ function TouchDown()
 	else -- safely down
 		stage = 4
 		for i = 1, info.numDusts do
-			GG.EmitSfxName(unitID, piece("dust" .. i), "mech_jump_dust")
+			local pieceNum = piece("dust" .. i)
+			GG.EmitSfxName(unitID, pieceNum, "mech_jump_dust")
+			local px, _, pz, dx2, _, dz2 = Spring.GetUnitPiecePosDir(unitID, pieceNum) -- position of dust
+			local _, _, _, dx, _, dz = Spring.GetUnitPiecePosDir(unitID, gears[i].joint) -- angle of the joint piece which faces outwards
+			local front, up, right = Spring.GetUnitVectors(unitID)
+			--GG.SpawnDecal("decal_foot", px, pz, nil, (2*(i+1) +1)*math.pi/4 - math.atan2(front[1], front[3]))
+			GG.SpawnDecal("decal_foot", px, pz, nil, gearAngles[i] - math.atan2(front[1], front[3]))
 		end
 		local victims = Spring.GetUnitsInCylinder(TX, TZ, 180)
 		for i, victimID in pairs(victims) do

@@ -11,6 +11,7 @@ deg, rad = math.deg, math.rad
 
 -- Landing Gear Pieces
 gears = {}
+gearAngles = {}
 for i = 1,info.numGears do
 	gears[i] = {
 		door  = piece("gear" .. i .. "_door"),
