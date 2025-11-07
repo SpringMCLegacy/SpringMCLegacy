@@ -117,19 +117,7 @@ local decalDefs = {
 			angleMax	= 360,
 		},
 	},
-	decal_foot = {
-		alias 	= 5,
-		size 	= 85, 
-		vary 	= {
-			tintMax		= 80,
-			tintMin		= 20,
-		},
-		duration	= {
-			fadeIn		= 0.5,
-			stable		= 30,
-			fadeOut		= 240,
-		},
-	},
+	-- decal_beacon_normal
 	decal_drop = {
 		alias	= 3,
 		size 	= 256,
@@ -150,6 +138,37 @@ local decalDefs = {
 		alias	= 4,
 		alpha	= 0.2,
 	},
+	decal_foot = {
+		alias 	= 5,
+		size 	= 85, 
+		vary 	= {
+			tintMax		= 80,
+			tintMin		= 20,
+		},
+		duration	= {
+			fadeIn		= 0.5,
+			stable		= 30,
+			fadeOut		= 240,
+		},
+	},
+	-- decal_foot_normal
+	decal_outpost = {
+		alias 	= 7,
+		size 	= 80, 
+		alpha 	= 0.2,
+		vary 	= {
+			tintMax		= 55,
+			tintMin		= 45,
+			sizeMax		= 110,
+			sizeMin		= 90,
+		},
+		duration	= {
+			fadeIn		= 0.8,
+			stable		= 10,
+			fadeOut		= 60,
+		},
+	},
+	-- decal_outpost_normal
 }
 
 local function SpawnDecal(eventID, decalName, x, z, decalSize, angle)

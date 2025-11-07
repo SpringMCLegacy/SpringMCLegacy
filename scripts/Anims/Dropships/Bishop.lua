@@ -388,6 +388,8 @@ function UnloadCargo()
 			SpawnCEG("he_medium", fx, fy, fz)
 			Spring.DestroyFeature(fID)
 		end
+		local front, up, right = Spring.GetUnitVectors(unitID)
+		GG.SpawnDecal("decal_outpost", TX, TZ, nil, ANGLE)--math.atan2(front[1], front[3]))
 		for i = 1, 5 do
 			SpawnCEG("mech_jump_dust", TX,TY,TZ)
 			Sleep(60)
