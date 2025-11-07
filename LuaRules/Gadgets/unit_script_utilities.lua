@@ -114,17 +114,16 @@ local decalDefs = {
 			tintMin		= 15,
 			sizeMax		= 115,
 			sizeMin		= 85,
+			angleMax	= 360,
 		},
 	},
 	decal_foot = {
 		alias 	= 5,
 		size 	= 85, 
-		--[[vary 	= {
-			tintMax		= 85,
-			tintMin		= 15,
-			sizeMax		= 100,
-			sizeMin		= 100,
-		},]]
+		vary 	= {
+			tintMax		= 80,
+			tintMin		= 20,
+		},
 		duration	= {
 			fadeIn		= 0.5,
 			stable		= 30,
@@ -139,6 +138,7 @@ local decalDefs = {
 			tintMin		= 45,
 			sizeMax		= 120,
 			sizeMin		= 95,
+			angleMax	= 360,
 		},
 		duration	= {
 			fadeIn		= 1.5,
@@ -171,12 +171,18 @@ local function SpawnDecal(eventID, decalName, x, z, decalSize, angle)
 		local variation = decalInfo.vary
 		if variation then
 			-- Variation
-			decalSize = math.floor(decalSize * math.random(variation.sizeMin or 100, variation.sizeMax or 100)/100)
-			Spring.SetGroundDecalPosAndDims(decalID, x, z, decalSize, decalSize)
-			local angle = math.random() * 2 * math.pi
-			Spring.SetGroundDecalRotation(decalID, angle)
-			local tintFactor = math.random(variation.tintMin, variation.tintMax)/100
-			Spring.SetGroundDecalTint(decalID, tintFactor, tintFactor, tintFactor, tintFactor)
+			local varySize = (variation.sizeMin or variation.sizeMax) and math.floor(decalSize * math.random(variation.sizeMin or 0, variation.sizeMax or 100)/100)
+			if varySize then
+				Spring.SetGroundDecalPosAndDims(decalID, x, z, varySize, varySize)
+			end
+			local varyAngle = (variation.angleMin or variation.angleMax) and math.rad(math.random(variation.angleMin or 0, variation.angleMax or 360))
+			if varyAngle then
+				Spring.SetGroundDecalRotation(decalID, varyAngle)
+			end
+			local varyTint = (variation.tintMin or variation.tintMax) and math.random(variation.tintMin or 0, variation.tintMax or 100)/100
+			if varyTint then
+				Spring.SetGroundDecalTint(decalID, varyTint, varyTint, varyTint, varyTint)
+			end
 		end
 		local duration = decalInfo.duration
 		if duration then
