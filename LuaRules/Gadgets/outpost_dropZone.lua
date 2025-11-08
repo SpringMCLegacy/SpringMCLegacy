@@ -425,6 +425,7 @@ local function PurchaseOrders(unitID, unitDefID, teamID, cmdID, cmdOptions, comp
 			typeString = typeStrings[newIndex]
 		end
 		ShowBuildOptionsByType(unitID, typeString, menuCache, menuIDs, typeStringIndex)
+		Spring.PlaySoundFile("IncomingChat", 1.0, nil,nil,nil, nil,nil,nil, "ui")
 		return true
 	elseif cmdID < 0 then
 		local unitDef = UnitDefs[-cmdID]

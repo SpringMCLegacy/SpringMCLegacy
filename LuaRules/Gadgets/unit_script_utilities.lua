@@ -60,7 +60,7 @@ end
 GG.RemoveGrassCircle = RemoveGrassCircle
 
 function EmitSfxName(unitID, pieceName, effectName)
-	if not pieceName then Spring.Echo("Bug report unit_script_utilities L79", UnitDefs[Spring.GetUnitDefID(unitID)].name) return end
+	if not pieceName then Spring.Echo("Bug report unit_script_utilities L63", UnitDefs[Spring.GetUnitDefID(unitID)].name) return end
 	local x,y,z,dx,dy,dz = GetUnitPiecePosDir(unitID, pieceName)
 	SpawnCEG(effectName, x,y,z, dx, dy, dz)
 end
