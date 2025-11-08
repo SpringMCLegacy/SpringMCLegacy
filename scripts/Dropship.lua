@@ -385,8 +385,7 @@ function script.Killed()
 		-- This is a really awful hack , built on top of another hack. 
 		-- There's some issue with alwaysVisible not working (http://springrts.com/mantis/view.php?id=4483)
 		-- So instead make the owner the decal unit spawned by the teams starting beacon, as it can never die
-		local ownerID = Spring.GetTeamUnitsByDefs(teamID, UnitDefNames["decal_beacon"].id)[1] --or unitID
-		local nukeID = Spring.SpawnProjectile(WeaponDefNames["meltdown"].id, {pos = {x,y,z}, owner = ownerID, team = teamID, ttl = 20})
+		local nukeID = Spring.SpawnProjectile(WeaponDefNames["meltdown"].id, {pos = {x,y,z}, owner = unitID, team = teamID, ttl = 20})
 		Spring.SetProjectileAlwaysVisible(nukeID, true)
 		GG.NotifyDropshipDied(teamID) -- let flagManager know you screwed up, Mechcommander
 		return 0 -- no corpse if you were just atomised in a fusion explosion
