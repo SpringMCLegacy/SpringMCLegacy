@@ -14,31 +14,33 @@ end
 -- Use `/dumpatlas decal` to get an output of the actual decal atlas
 
 -- This is just debug code so that we can see what decals are in the index (outputs to infolog)
-for k,v in pairs(Spring.GetGroundDecalTextures()) do Spring.Echo("[Decal Drawer] maindecal",k,v) end
-for k,v in pairs(Spring.GetGroundDecalTextures(nil,false)) do Spring.Echo("[Decal Drawer] normdecal",k,v) end
+--for k,v in pairs(Spring.GetGroundDecalTextures()) do Spring.Echo("[Decal Drawer] maindecal",k,v) end
+--for k,v in pairs(Spring.GetGroundDecalTextures(nil,false)) do Spring.Echo("[Decal Drawer] normdecal",k,v) end
 
-local decalTexture = "maindecal_4"
+local decalTexture = "maindecal_10"
 local decalTextureNormal = "normdecal_4"
-local decalSize = 85
+local decalSizeX = 1536 *0.55
+local decalSizeZ = 1024 * 0.55
 
 local decalIDs = {}
 
 function widget:Initialize()
 
-	local decalID = Spring.CreateGroundDecal()
-	if decalID then
-		Spring.SetGroundDecalPosAndDims(decalID, 100, 100, decalSize, decalSize)
+	for i = 1, 1 do
+		local decalID = Spring.CreateGroundDecal()
+		if decalID then
+			Spring.SetGroundDecalPosAndDims(decalID, 4000, 3600, decalSizeX, decalSizeZ)
+	
+			--Random Rotation
+			--local angle = math.random() * 2 * math.pi
+			--Spring.SetGroundDecalRotation(decalID, angle)
 
-		--Random Rotation
-		--local angle = math.random() * 2 * math.pi
-		--Spring.SetGroundDecalRotation(decalID, angle)
-
-		Spring.SetGroundDecalTexture(decalID, decalTexture, true)
-		Spring.SetGroundDecalTexture(decalID, decalTextureNormal, false)
-		Spring.SetGroundDecalAlpha(decalID, 1.0, 0.0)
-		Spring.SetGroundDecalTint(decalID, 0.5, 0.5, 0.5, 0.5) -- neutral tint
-		table.insert(decalIDs, decalID)
-
+			Spring.SetGroundDecalTexture(decalID, decalTexture, true)
+			--Spring.SetGroundDecalTexture(decalID, decalTextureNormal, false)
+			Spring.SetGroundDecalAlpha(decalID, 1.0, 0.0)
+			Spring.SetGroundDecalTint(decalID, 0.5, 0.5, 0.5, 0.5) -- neutral tint
+			table.insert(decalIDs, decalID)
+		end
 	end
 end
 
