@@ -127,7 +127,7 @@ local function GetTempColour(temp)
 	return RGBtoString(r, g, b)
 end
 
-function widget:GamePreload()
+function widget:GameStart()--Preload()
 	local ambTemp = GetGameRulesParam("MAP_TEMP_AMBIENT")
 	local watTemp = GetGameRulesParam("MAP_TEMP_WATER")
 	tempAmbient = "Ambient: " .. GetTempColour(ambTemp) .. ambTemp .. colors.white .. " \'C"

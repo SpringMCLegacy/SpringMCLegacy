@@ -137,8 +137,10 @@ function gadget:GamePreload()
 end
 
 function gadget:GameStart()
-	local existingTeams = Spring.GetTeamList()
+	local existingTeams = Spring.GetTeamList() -- i = teamID
+	local activeTeams = {} -- teamID = true
 	for i, teamID in pairs(existingTeams) do
+		activeTeams[teamID] = true
 		if teamID ~= Spring.GetGaiaTeamID() then
 			if not teamStarts[teamID] then -- no profile, ask engine
 				local x,y,z = Spring.GetTeamStartPosition(teamID)
@@ -157,10 +159,9 @@ function gadget:GameStart()
 		end
 		sideStartUnits[teamID] = GetStartUnit(teamID)
 	end
-	local numTeamStarts = #teamStarts
-	if numTeamStarts > #existingTeams - 1 then
-		for teamID = #existingTeams - 1, numTeamStarts do
-			--Spring.Echo("remove team start", teamID)
+	-- strip any profile teamstarts not used by an active team
+	for teamID, info in pairs(teamStarts) do
+		if not activeTeams[teamID] then
 			teamStarts[teamID] = nil
 		end
 	end

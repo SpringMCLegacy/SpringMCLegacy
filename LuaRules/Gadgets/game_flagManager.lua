@@ -230,20 +230,18 @@ function PlaceFlag(spot, flagType, newFlag, spotNum)
 	SetUnitRulesParam(newFlag, "BEACON_SPOT_NUM", spotNum, {public = true})
 end
 
-function gadget:GamePreload()
-	if DEBUG then Spring.Echo(PROFILE_PATH) end
+local function LoadProfile()
 	local flagSpots = {}
-	local temps = {}
 	local startPos = {}
 	-- CHECK FOR PROFILES
 	if VFS.FileExists(PROFILE_PATH) then
-		flagSpots, temps, startPos = VFS.Include(PROFILE_PATH)
+		flagSpots, _, startPos = VFS.Include(PROFILE_PATH)
 		if #flagSpots > 0 then 
 			Spring.Echo("Map Beacon Profile found. Loading " .. (#flagSpots or 0) .. " Beacon positions...")
 		end
-		if startPos and #startPos > #teams - 1 then
-			for t = #teams - 1, #startPos do
-				if startPos[t].alwaysbeacon then
+		if startPos then
+			for i, t in pairs(teams) do
+				if not GG.teamStarts[t] and startPos[t].alwaysbeacon then
 					table.insert(flagSpots, startPos[t])
 				end
 			end
@@ -261,6 +259,15 @@ function gadget:GamePreload()
 	EXPECTED_FLAGS = #flagSpots + #teams - 1
 	flagTypeSpots["beacon"] = flagSpots
 	GG.beaconSpots = flagSpots
+end
+
+function gadget:GamePreload()
+	if DEBUG then Spring.Echo(PROFILE_PATH) end
+	local temps = {}
+	-- CHECK FOR PROFILES
+	if VFS.FileExists(PROFILE_PATH) then
+		_, temps, _ = VFS.Include(PROFILE_PATH)
+	end
 	temps.ambient = temps.ambient or 20
 	temps.water = temps.water or 10
 	GG.MapTemperatures = temps
@@ -295,6 +302,7 @@ if skip == nil or skip == '1' then skip = true elseif skip == '0' then skip = fa
 GG.skip = skip
 
 function gadget:GameStart()
+	LoadProfile()
 	if skip then
 		DeployBeacons(skip)
 	end
