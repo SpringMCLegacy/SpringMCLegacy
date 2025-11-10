@@ -230,7 +230,7 @@ function PlaceFlag(spot, flagType, newFlag, spotNum)
 	SetUnitRulesParam(newFlag, "BEACON_SPOT_NUM", spotNum, {public = true})
 end
 
-local function LoadProfile()--gadget:GamePreload()
+function gadget:GamePreload()
 	if DEBUG then Spring.Echo(PROFILE_PATH) end
 	local flagSpots = {}
 	local temps = {}
@@ -241,9 +241,9 @@ local function LoadProfile()--gadget:GamePreload()
 		if #flagSpots > 0 then 
 			Spring.Echo("Map Beacon Profile found. Loading " .. (#flagSpots or 0) .. " Beacon positions...")
 		end
-		if startPos then
-			for i, t in pairs(teams) do
-				if not GG.teamStarts[t] and startPos[t].alwaysbeacon then
+		if startPos and #startPos > #teams - 1 then
+			for t = #teams - 1, #startPos do
+				if startPos[t].alwaysbeacon then
 					table.insert(flagSpots, startPos[t])
 				end
 			end
@@ -295,7 +295,6 @@ if skip == nil or skip == '1' then skip = true elseif skip == '0' then skip = fa
 GG.skip = skip
 
 function gadget:GameStart()
-	LoadProfile()
 	if skip then
 		DeployBeacons(skip)
 	end
