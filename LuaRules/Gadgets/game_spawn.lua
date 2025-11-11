@@ -140,6 +140,7 @@ function gadget:GameStart()
 	local existingTeams = Spring.GetTeamList() -- i = teamID
 	local activeTeams = {} -- teamID = true
 	for i, teamID in pairs(existingTeams) do
+		Spring.Echo("[Game_Spawn.lua] team", i, "has teamID", teamID)
 		activeTeams[teamID] = true
 		if teamID ~= Spring.GetGaiaTeamID() then
 			if not teamStarts[teamID] then -- no profile, ask engine
