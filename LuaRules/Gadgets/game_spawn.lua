@@ -30,6 +30,14 @@ end
 if gadgetHandler:IsSyncedCode() then
 --	SYNCED
 
+local startPosType = Game.startPosType -- 0 (in order), 1 (random), 2 (choose ingame), 3 (choose before game)
+local teamStarts
+local PROFILE_PATH = "maps/flagConfig/" .. Game.mapName .. "_profile.lua"
+if VFS.FileExists(PROFILE_PATH) then
+	_, _, teamStarts = VFS.Include(PROFILE_PATH)
+end
+teamStarts = teamStarts or {}
+local sideStartUnits = {}
 
 local modOptions = Spring.GetModOptions()
 if not modOptions.startcbills then -- load via file
@@ -39,6 +47,7 @@ if not modOptions.startcbills then -- load via file
 			modOptions[v.key] = v.def
 		end
 	end
+	startPosType = 1 -- randomise when testing via spring.exe
 end
 -- Need the raw sidedata for short names
 local sideData = VFS.Include("gamedata/sidedata.lua", nil, VFS.ZIP)
@@ -50,15 +59,6 @@ for sideNum, data in pairs(sideData) do
 end
 GG.SideNames = SideNames
 GG.ValidSides = ValidSides
-
-local startPosType = Game.startPosType -- 0 (in order), 1 (random), 2 (choose ingame), 3 (choose before game)
-local teamStarts
-local PROFILE_PATH = "maps/flagConfig/" .. Game.mapName .. "_profile.lua"
-if VFS.FileExists(PROFILE_PATH) then
-	_, _, teamStarts = VFS.Include(PROFILE_PATH)
-end
-teamStarts = teamStarts or {}
-local sideStartUnits = {}
 
 function gadget:GameID(id)
 	math.randomseed(tonumber(id,16))
@@ -136,29 +136,47 @@ function gadget:GamePreload()
 	Spring.PlaySoundFile("bb_startup_all_systems_nominal", 1, "ui")
 end
 
+local function shuffle(t)
+    local n = #t  -- this gives the highest consecutive key starting at 1
+    -- teamID starts at 0, treat array as size n+1
+    local start = 0
+    local stop = n
+
+    for i = stop, start + 1, -1 do
+        local j = math.random(start, i)
+        t[i], t[j] = t[j], t[i]
+    end
+end
+
 function gadget:GameStart()
 	local existingTeams = Spring.GetTeamList() -- i = teamID
 	local activeTeams = {} -- teamID = true
-	for i, teamID in pairs(existingTeams) do
-		Spring.Echo("[Game_Spawn.lua] team", i, "has teamID", teamID)
-		activeTeams[teamID] = true
-		if teamID ~= Spring.GetGaiaTeamID() then
-			if not teamStarts[teamID] then -- no profile, ask engine
-				local x,y,z = Spring.GetTeamStartPosition(teamID)
-				--[[local mapStarts = Spring.GetMapStartPositions()
-				local mapStart = mapStarts[teamID+1]
-				local x2, y2, z2 = unpack(mapStart or {-1, -1, -1})]]
-				teamStarts[teamID] = {
-					["x"] = x,
-					["y"] = y,
-					["z"] = z,
-				}
-				--Spring.Echo("teamID", teamID, "teamStarts", x, y, z, "vs mapStarts", x2, y2, z2)
-			else
-				teamStarts[teamID].y = Spring.GetGroundHeight(teamStarts[teamID].x,teamStarts[teamID].z)
+	if startPosType <= 1 then -- Fixed or random, no player selection
+		--Spring.Echo("[Game_Spawn.lua]", #teamStarts+1, "profile starts &", #(Spring.GetMapStartPositions()), "map defined starts")
+		for i, teamID in pairs(existingTeams) do
+			--Spring.Echo("[Game_Spawn.lua] team", i, "has teamID", teamID)
+			activeTeams[teamID] = true
+			if teamID ~= Spring.GetGaiaTeamID() then
+				if not teamStarts[teamID] then -- no profile, ask engine
+					local x,y,z = Spring.GetTeamStartPosition(teamID)
+					--[[local mapStarts = Spring.GetMapStartPositions()
+					local mapStart = mapStarts[teamID+1]
+					local x2, y2, z2 = unpack(mapStart or {-1, -1, -1})]]
+					teamStarts[teamID] = {
+						["x"] = x,
+						["y"] = y,
+						["z"] = z,
+					}
+					--Spring.Echo("teamID", teamID, "teamStarts", x, y, z, "vs mapStarts", x2, y2, z2)
+				else
+					teamStarts[teamID].y = Spring.GetGroundHeight(teamStarts[teamID].x,teamStarts[teamID].z)
+				end
 			end
+			sideStartUnits[teamID] = GetStartUnit(teamID)
 		end
-		sideStartUnits[teamID] = GetStartUnit(teamID)
+		if startPosType == 1 then -- Random
+			shuffle(teamStarts)
+		end
 	end
 	-- strip any profile teamstarts not used by an active team
 	for teamID, info in pairs(teamStarts) do
