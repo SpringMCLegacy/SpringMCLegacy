@@ -497,6 +497,7 @@ function gadget:UnitCreated(unitID, unitDefID, teamID)
 	GG.orderStatus[unitID] = 0
 	-- Remove all aero units that do not belong to the team's side
 	local side = GG.teamSide[teamID]
+	if not side then return end -- presume team is dead
 	local toDelete = {}
 	for i, cmdDesc in pairs(Spring.GetUnitCmdDescs(unitID)) do
 		if cmdDesc.id < 0 then
