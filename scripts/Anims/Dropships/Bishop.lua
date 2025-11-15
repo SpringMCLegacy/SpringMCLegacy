@@ -295,7 +295,9 @@ function Drop()
 	Spring.MoveCtrl.Enable(unitID)
 	Spring.MoveCtrl.SetPosition(unitID, TX + UX, TY + DROP_HEIGHT, TZ + UZ)
 	Sleep(60)
-	Spring.UnitScript.AttachUnit(cargoPieces[1], cargo[1])
+	local cargoID = cargo[1]
+	if not cargoID then return end -- weird bug at endgame
+	Spring.UnitScript.AttachUnit(cargoPieces[1], cargoID)
 	local newAngle = math.atan2(UX, UZ)
 	Spring.MoveCtrl.SetRotation(unitID, 0, newAngle + math.pi, 0)
 	Turn(body, x_axis, math.rad(-50))
@@ -325,7 +327,6 @@ function Drop()
 	end
 	-- Descent complete, move over the target
 	local bugOut = false
-	local cargoID = cargo[1]
 	PlaySound("dropship_rumble")
 	Turn(body, x_axis, 0, math.rad(8))
 	Spring.MoveCtrl.SetVelocity(unitID, 0, 0, 0)
