@@ -155,6 +155,7 @@ function gadget:GameStart()
 	local gaiaTeamID = Spring.GetGaiaTeamID()
 	Spring.Echo("Gaia ID is", gaiaTeamID)
 	local activeTeams = {} -- teamID = true
+	local numActiveTeams = 0
 	if startPosType <= 1 or startPosType == 3 then -- Fixed or random, no player selection
 		--Spring.Echo("[Game_Spawn.lua]", #teamStarts+1, "profile starts &", #(Spring.GetMapStartPositions()), "map defined starts")
 		local usingProfile = (startPosType == 3 and lockToProfileStarts) -- choose before game with restriction
@@ -163,6 +164,7 @@ function gadget:GameStart()
 			Spring.Echo("[Game_Spawn.lua] team", i, "has teamID", teamID)
 			if teamID ~= gaiaTeamID then
 				activeTeams[teamID] = true
+				numActiveTeams = numActiveTeams + 1
 				-- ask engine in these cases
 				if not usingProfile then 
 					local x,y,z = Spring.GetTeamStartPosition(teamID)
@@ -184,6 +186,7 @@ function gadget:GameStart()
 						--local teamPlayers = Spring.GetPlayerList(teamID)
 						Spring.KillTeam(teamID)
 						activeTeams[teamID] = nil
+						numActiveTeams = numActiveTeams - 1
 					end
 				end
 				sideStartUnits[teamID] = activeTeams[teamID] and GetStartUnit(teamID)
@@ -199,6 +202,7 @@ function gadget:GameStart()
 			teamStarts[teamID] = nil
 		end
 	end
+	GG.numActiveTeams = numActiveTeams
 	GG.teamStarts = teamStarts
 end
 

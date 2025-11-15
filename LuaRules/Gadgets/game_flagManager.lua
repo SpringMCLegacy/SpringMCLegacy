@@ -256,7 +256,7 @@ local function LoadProfile()
 			table.insert(flagSpots, mh.teams[t]["startpos"])
 		end
 	end
-	EXPECTED_FLAGS = #flagSpots + #teams - 1
+	EXPECTED_FLAGS = #flagSpots + GG.numActiveTeams - 1
 	flagTypeSpots["beacon"] = flagSpots
 	GG.beaconSpots = flagSpots
 end
