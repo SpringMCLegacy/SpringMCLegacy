@@ -148,16 +148,23 @@ local function shuffle(t)
     end
 end
 
+local lockToProfileStarts = false
+
 function gadget:GameStart()
 	local existingTeams = Spring.GetTeamList() -- i = teamID
+	local gaiaTeamID = Spring.GetGaiaTeamID()
+	Spring.Echo("Gaia ID is", gaiaTeamID)
 	local activeTeams = {} -- teamID = true
-	if startPosType <= 1 then -- Fixed or random, no player selection
+	if startPosType <= 1 or startPosType == 3 then -- Fixed or random, no player selection
 		--Spring.Echo("[Game_Spawn.lua]", #teamStarts+1, "profile starts &", #(Spring.GetMapStartPositions()), "map defined starts")
+		local usingProfile = (startPosType == 3 and lockToProfileStarts) -- choose before game with restriction
+							or (startPosType <=1 and teamStarts[0]) -- fixed /random starts and profile exists
 		for i, teamID in pairs(existingTeams) do
-			--Spring.Echo("[Game_Spawn.lua] team", i, "has teamID", teamID)
-			activeTeams[teamID] = true
-			if teamID ~= Spring.GetGaiaTeamID() then
-				if not teamStarts[teamID] then -- no profile, ask engine
+			Spring.Echo("[Game_Spawn.lua] team", i, "has teamID", teamID)
+			if teamID ~= gaiaTeamID then
+				activeTeams[teamID] = true
+				-- ask engine in these cases
+				if not usingProfile then 
 					local x,y,z = Spring.GetTeamStartPosition(teamID)
 					--[[local mapStarts = Spring.GetMapStartPositions()
 					local mapStart = mapStarts[teamID+1]
@@ -167,12 +174,20 @@ function gadget:GameStart()
 						["y"] = y,
 						["z"] = z,
 					}
-					--Spring.Echo("teamID", teamID, "teamStarts", x, y, z, "vs mapStarts", x2, y2, z2)
-				else
-					teamStarts[teamID].y = Spring.GetGroundHeight(teamStarts[teamID].x,teamStarts[teamID].z)
+					Spring.Echo("teamID", teamID, "teamStarts", x, y, z, "vs mapStarts", x2, y2, z2)
+				else -- using profile positions
+					local numProfileSpots = #teamStarts + 1 -- need to +1 to account for teamID 0
+					if teamID < numProfileSpots then
+						teamStarts[teamID].y = Spring.GetGroundHeight(teamStarts[teamID].x,teamStarts[teamID].z)
+					else
+						Spring.Echo("More teams than map profile allows, (",numProfileSpots, ") forcing", teamID, "to spectator")
+						--local teamPlayers = Spring.GetPlayerList(teamID)
+						Spring.KillTeam(teamID)
+						activeTeams[teamID] = nil
+					end
 				end
+				sideStartUnits[teamID] = activeTeams[teamID] and GetStartUnit(teamID)
 			end
-			sideStartUnits[teamID] = GetStartUnit(teamID)
 		end
 		if startPosType == 1 then -- Random
 			shuffle(teamStarts)
@@ -208,8 +223,13 @@ else
 -- UNSYNCED
 
 	function gadget:GameSetup(label, ready, playerStates)
+		--Spring.Echo("gadget:GameSetup", label, ready, playerStates)
 		-- some optional delay here
 		return true, true
 	end
 	
+	function gadget:AllowStartPosition(playerID, teamID, readyState, x, y, z)
+		--Spring.Echo("gadget:AllowStartPosition", playerID, teamID, readyState, x, y, z)
+		return true
+	end
 end

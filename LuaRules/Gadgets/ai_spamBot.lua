@@ -159,6 +159,7 @@ function gadget:GamePreload()
 		for name, id in pairs(AI_OUTPOST_DEFS) do
 			teamOutpostCounts[t][id] = 0
 		end
+		Spring.Echo("PARP", t, name, Spring.GetTeamLuaAI(t), select(4, Spring.GetTeamInfo(t)))
 		if Spring.GetTeamLuaAI(t) ==  name then
 			AI_TEAMS[t] = true
 			teamSortiesStack[t] = {}

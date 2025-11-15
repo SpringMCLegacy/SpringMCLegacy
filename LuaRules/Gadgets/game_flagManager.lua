@@ -241,7 +241,7 @@ local function LoadProfile()
 		end
 		if startPos then
 			for i, t in pairs(teams) do
-				if not GG.teamStarts[t] and startPos[t].alwaysbeacon then
+				if not GG.teamStarts[t] and startPos[t] and startPos[t].alwaysbeacon then
 					table.insert(flagSpots, startPos[t])
 				end
 			end
