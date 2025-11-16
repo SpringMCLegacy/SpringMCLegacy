@@ -148,12 +148,13 @@ local function shuffle(t)
     end
 end
 
-local lockToProfileStarts = false
+local lockToProfileStarts = modOptions.locktoprofile == '1'
+local DistBetween = GG.Vector.DistanceBetween 
 
 function gadget:GameStart()
 	local existingTeams = Spring.GetTeamList() -- i = teamID
 	local gaiaTeamID = Spring.GetGaiaTeamID()
-	Spring.Echo("Gaia ID is", gaiaTeamID)
+	--Spring.Echo("Gaia ID is", gaiaTeamID)
 	local activeTeams = {} -- teamID = true
 	local numActiveTeams = 0
 	if startPosType <= 1 or startPosType == 3 then -- Fixed or random, no player selection
@@ -161,7 +162,7 @@ function gadget:GameStart()
 		local usingProfile = (startPosType == 3 and lockToProfileStarts) -- choose before game with restriction
 							or (startPosType <=1 and teamStarts[0]) -- fixed /random starts and profile exists
 		for i, teamID in pairs(existingTeams) do
-			Spring.Echo("[Game_Spawn.lua] team", i, "has teamID", teamID)
+			--Spring.Echo("[Game_Spawn.lua] team", i, "has teamID", teamID)
 			if teamID ~= gaiaTeamID then
 				activeTeams[teamID] = true
 				numActiveTeams = numActiveTeams + 1
@@ -176,7 +177,7 @@ function gadget:GameStart()
 						["y"] = y,
 						["z"] = z,
 					}
-					Spring.Echo("teamID", teamID, "teamStarts", x, y, z, "vs mapStarts", x2, y2, z2)
+					--Spring.Echo("teamID", teamID, "teamStarts", x, y, z, "vs mapStarts", x2, y2, z2)
 				else -- using profile positions
 					local numProfileSpots = #teamStarts + 1 -- need to +1 to account for teamID 0
 					if teamID < numProfileSpots then
@@ -191,6 +192,33 @@ function gadget:GameStart()
 				end
 				sideStartUnits[teamID] = activeTeams[teamID] and GetStartUnit(teamID)
 			end
+		end
+		if startPosType == 3 and lockToProfileStarts then -- todo: or 4
+			-- at this point teamStarts is populated by the correct profile positions
+			local sortedStarts = {}
+			local unSelectedTeams = {}
+			table.copy(activeTeams, unSelectedTeams)
+			for posID, pos in pairs(teamStarts) do
+				local shortest = math.huge
+				local closeTeamID
+				for teamID in pairs(unSelectedTeams) do
+					local rx, ry, rz = Spring.GetTeamStartPosition(teamID)
+					--Spring.Echo("PARP", posID, pos, teamID, rx, ry, rz)
+					local dist = DistBetween(rx, ry, rz, pos.x, pos.y, pos.z)
+					if dist < shortest then
+						shortest = dist
+						closeTeamID = teamID
+					end
+				end
+				unSelectedTeams[closeTeamID] = nil
+				--Spring.Echo("StartPos", posID, "selects teamID", closeTeamID)
+				sortedStarts[closeTeamID] = {
+					["x"] = pos.x,
+					["y"] = pos.y,
+					["z"] = pos.z,
+				}
+			end
+			teamStarts = sortedStarts
 		end
 		if startPosType == 1 then -- Random
 			shuffle(teamStarts)

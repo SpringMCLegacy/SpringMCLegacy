@@ -39,6 +39,14 @@ local options = {
 		section	= '1start',
 	},
 	{
+		key		= "locktoprofile",
+		name 	= "Lock To Profile Starts (Choose Before / In Game)",
+		desc 	= "Snaps all starting positions to those defined in the map profile. Also enforces the number of starts as the maximum number of teams.",
+		type	= "bool",
+		def		= true,
+		section	= '1start',
+	},
+	{
 		key		= "start_tickets",
 		name	= "Tickets",
 		desc	= "Starting Tickets",
