@@ -255,13 +255,14 @@ else
 -- UNSYNCED
 
 	function gadget:GameSetup(label, ready, playerStates)
-		--Spring.Echo("gadget:GameSetup", label, ready, playerStates)
+		Spring.Echo("gadget:GameSetup", label, ready, playerStates)
+		for k,v in pairs(playerStates) do Spring.Echo("playerStates", k, v) end
 		-- some optional delay here
 		return true, true
 	end
 	
 	function gadget:AllowStartPosition(playerID, teamID, readyState, x, y, z)
-		--Spring.Echo("gadget:AllowStartPosition", playerID, teamID, readyState, x, y, z)
+		Spring.Echo("gadget:AllowStartPosition", playerID, teamID, readyState, x, y, z)
 		return true
 	end
 end
