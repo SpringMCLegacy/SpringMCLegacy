@@ -226,6 +226,7 @@ function PlaceFlag(spot, flagType, newFlag, spotNum)
 	SetUnitRulesParam(newFlag, "BEACON_CAP_RADIUS", spot.radius, {public = true})
 	spot.points = spot.points or tonumber(modOptions.beaconpoints) or 3
 	spot.spotNum = spotNum
+	--Spring.MarkerAddPoint(spot.x, spot.y, spot.z, spotNum)
 	SetUnitRulesParam(newFlag, "BEACON_NUM_POINTS", spot.points, {public = true})
 	SetUnitRulesParam(newFlag, "BEACON_SPOT_NUM", spotNum, {public = true})
 end
@@ -240,9 +241,9 @@ local function LoadProfile()
 			Spring.Echo("Map Beacon Profile found. Loading " .. (#flagSpots or 0) .. " Beacon positions...")
 		end
 		if startPos then
-			for i, t in pairs(teams) do
-				if not GG.teamStarts[t] and startPos[t] and startPos[t].alwaysbeacon then
-					table.insert(flagSpots, startPos[t])
+			for t, start in pairs(startPos) do
+				if not GG.teamStarts[t] and start.alwaysbeacon then
+					table.insert(flagSpots, start)
 				end
 			end
 		end
@@ -407,6 +408,11 @@ function gadget:GameFrame(n)
 				local flagTeamCounts = {} -- flagTeamCounts[teamID] = number
 				local flagAllyTeamCounts = {} -- flagAllyTeamCounts[teamID] = number
 				-- First check if there are any friendly (ally) units here -> flag is defended
+				if not currSpot.radius then
+					--Spring.Echo("DERPADERPRA no radius on spotNum", spotNum, "(",currSpot.x, currSpot.z,")")
+					--Spring.MarkerAddPoint(currSpot.x, 0, currSpot.z)
+					currSpot.radius = CAP_RADIUS * (currSpot.radiusmult or 1)
+				end
 				local unitsAtFlag = GetUnitsInCylinder(currSpot.x, currSpot.z, currSpot.radius)
 				StripUnits(unitsAtFlag) -- strips table (in place) of ignored unitdefs
 				

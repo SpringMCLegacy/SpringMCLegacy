@@ -157,9 +157,9 @@ function gadget:GameStart()
 	--Spring.Echo("Gaia ID is", gaiaTeamID)
 	local activeTeams = {} -- teamID = true
 	local numActiveTeams = 0
-	if startPosType <= 1 or startPosType == 3 then -- Fixed or random, no player selection
+	if true then--startPosType <= 1 or startPosType == 3 then -- Fixed or random, no player selection
 		--Spring.Echo("[Game_Spawn.lua]", #teamStarts+1, "profile starts &", #(Spring.GetMapStartPositions()), "map defined starts")
-		local usingProfile = (startPosType == 3 and lockToProfileStarts) -- choose before game with restriction
+		local usingProfile = ((startPosType == 3 or startPosType == 2) and lockToProfileStarts) -- choose before game with restriction
 							or (startPosType <=1 and teamStarts[0]) -- fixed /random starts and profile exists
 		for i, teamID in pairs(existingTeams) do
 			--Spring.Echo("[Game_Spawn.lua] team", i, "has teamID", teamID)
@@ -182,6 +182,7 @@ function gadget:GameStart()
 					local numProfileSpots = #teamStarts + 1 -- need to +1 to account for teamID 0
 					if teamID < numProfileSpots then
 						teamStarts[teamID].y = Spring.GetGroundHeight(teamStarts[teamID].x,teamStarts[teamID].z)
+						--Spring.Echo("teamID", teamID, "teamStarts", teamStarts[teamID].x, teamStarts[teamID].y, teamStarts[teamID].z)
 					else
 						Spring.Echo("More teams than map profile allows, (",numProfileSpots, ") forcing", teamID, "to spectator")
 						--local teamPlayers = Spring.GetPlayerList(teamID)
@@ -193,26 +194,27 @@ function gadget:GameStart()
 				sideStartUnits[teamID] = activeTeams[teamID] and GetStartUnit(teamID)
 			end
 		end
-		if startPosType == 3 and lockToProfileStarts then -- todo: or 4
+		if (startPosType == 3 or startPosType == 2) and lockToProfileStarts then
 			-- at this point teamStarts is populated by the correct profile positions
 			local sortedStarts = {}
-			local unSelectedTeams = {}
-			table.copy(activeTeams, unSelectedTeams)
-			for posID, pos in pairs(teamStarts) do
+			local unSelectedStarts = {}
+			table.copy(teamStarts, unSelectedStarts)
+			for teamID in pairs(activeTeams) do
 				local shortest = math.huge
-				local closeTeamID
-				for teamID in pairs(unSelectedTeams) do
-					local rx, ry, rz = Spring.GetTeamStartPosition(teamID)
-					--Spring.Echo("PARP", posID, pos, teamID, rx, ry, rz)
-					local dist = DistBetween(rx, ry, rz, pos.x, pos.y, pos.z)
+				local closePosID
+				local rx, ry, rz = Spring.GetTeamStartPosition(teamID)
+				for posID, pos in pairs(unSelectedStarts) do
+					--Spring.Echo("Inner Loop", teamID, rx, ry, rz, posID, pos.x, pos.y, pos.z)
+					local dist = DistBetween(rx, ry, rz, pos.x, pos.y or 0, pos.z)
 					if dist < shortest then
 						shortest = dist
-						closeTeamID = teamID
+						closePosID = posID
 					end
 				end
-				unSelectedTeams[closeTeamID] = nil
-				--Spring.Echo("StartPos", posID, "selects teamID", closeTeamID)
-				sortedStarts[closeTeamID] = {
+				unSelectedStarts[closePosID] = nil
+				--Spring.Echo("Outer Loop", teamID, "closest position was ", closePosID, shortest)
+				local pos = teamStarts[closePosID]
+				sortedStarts[teamID] = {
 					["x"] = pos.x,
 					["y"] = pos.y,
 					["z"] = pos.z,
@@ -227,11 +229,17 @@ function gadget:GameStart()
 	-- strip any profile teamstarts not used by an active team
 	for teamID, info in pairs(teamStarts) do
 		if not activeTeams[teamID] then
+			--Spring.Echo("Stripping team", teamID, "from teamStarts")
 			teamStarts[teamID] = nil
 		end
 	end
 	GG.numActiveTeams = numActiveTeams
 	GG.teamStarts = teamStarts
+end
+
+function gadget:AllowStartPosition(playerID, teamID, readyState, x, y, z)
+	Spring.Echo("gadget:AllowStartPosition", playerID, teamID, readyState, x, y, z)
+	return true
 end
 
 local function DeploySpawnBeacons(skip)
@@ -255,14 +263,10 @@ else
 -- UNSYNCED
 
 	function gadget:GameSetup(label, ready, playerStates)
-		Spring.Echo("gadget:GameSetup", label, ready, playerStates)
-		for k,v in pairs(playerStates) do Spring.Echo("playerStates", k, v) end
+		--Spring.Echo("gadget:GameSetup", label, ready, playerStates)
+		--for k,v in pairs(playerStates) do Spring.Echo("playerStates", k, v) end
 		-- some optional delay here
-		return true, true
+		return ready, ready
 	end
 	
-	function gadget:AllowStartPosition(playerID, teamID, readyState, x, y, z)
-		Spring.Echo("gadget:AllowStartPosition", playerID, teamID, readyState, x, y, z)
-		return true
-	end
 end
