@@ -284,6 +284,9 @@ end
 
 local beaconsDeployed = math.huge
 local function DeployBeacons(skip) 
+	if Game.startPosType == 2 then
+		GG.KillDecals("decal_start")
+	end
 	if not skip then
 		Spring.SendCommands("toggleoverview")
 		Spring.PlaySoundFile("bb_startup_beacon_deploying", 1, "ui")

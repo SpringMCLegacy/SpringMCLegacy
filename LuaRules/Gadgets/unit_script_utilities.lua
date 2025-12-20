@@ -102,6 +102,11 @@ function SpawnDecal(decalName, x, z, size, angle, delay, duration)
 end
 GG.SpawnDecal = SpawnDecal
 
+function KillDecals(killCode)
+	SendToUnsynced("KILLDECAL", killCode)
+end
+GG.KillDecals = KillDecals
+
 else
 -- UNSYNCED
 
@@ -169,11 +174,21 @@ local decalDefs = {
 		},
 	},
 	-- decal_outpost_normal
+	decal_start = {
+		alias = 11,
+		size = 200,
+	}
 }
 
-local function SpawnDecal(eventID, decalName, x, z, decalSize, angle)
+local killCodes = {} -- killCode = {decalID1, ...}
+
+local function SpawnDecal(eventID, decalName, x, z, decalSize, angle, killCode)
 	--Spring.Echo("UNSYNCED SpawnDecal", eventID, decalName, x, z, decalSize)
 	local decalID = Spring.CreateGroundDecal()
+	killCode = killCode or decalName
+	killCodes[killCode] = killCodes[killCode] or {} 
+	table.insert(killCodes[killCode], decalID)
+	
 	if decalID then
 		local decalInfo = decalDefs[decalName]
 		decalSize = decalSize or decalInfo.size
@@ -221,8 +236,21 @@ local function SpawnDecal(eventID, decalName, x, z, decalSize, angle)
 	end
 end
 
+local function KillDecals(eventID, killCode)
+	local toKill = killCode and killCodes[killCode]
+	if toKill then
+		for i, decalID in pairs(toKill) do
+			Spring.DestroyGroundDecal(decalID)
+		end
+		killCodes[killCode] = nil
+	else
+		Spring.Echo("[unit_script_utilities] L244 invalid killCode")
+	end
+end
+
 function gadget:Initialize()
 	gadgetHandler:AddSyncAction("SPAWNDECAL", SpawnDecal)
+	gadgetHandler:AddSyncAction("KILLDECAL", KillDecals)
 end
 
 end

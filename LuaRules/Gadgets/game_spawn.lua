@@ -134,6 +134,11 @@ end
 
 function gadget:GamePreload()
 	Spring.PlaySoundFile("bb_startup_all_systems_nominal", 1, "ui")
+	if startPosType == 2 then
+		for id, pos in pairs(teamStarts) do
+			GG.SpawnDecal("decal_start", pos.x, pos.z)
+		end
+	end
 end
 
 local function shuffle(t)
@@ -238,7 +243,7 @@ function gadget:GameStart()
 end
 
 function gadget:AllowStartPosition(playerID, teamID, readyState, x, y, z)
-	Spring.Echo("gadget:AllowStartPosition", playerID, teamID, readyState, x, y, z)
+	--Spring.Echo("gadget:AllowStartPosition", playerID, teamID, readyState, x, y, z)
 	return true
 end
 
