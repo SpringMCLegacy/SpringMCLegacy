@@ -164,8 +164,9 @@ function gadget:GameStart()
 	local numActiveTeams = 0
 	if true then--startPosType <= 1 or startPosType == 3 then -- Fixed or random, no player selection
 		--Spring.Echo("[Game_Spawn.lua]", #teamStarts+1, "profile starts &", #(Spring.GetMapStartPositions()), "map defined starts")
-		local usingProfile = ((startPosType == 3 or startPosType == 2) and lockToProfileStarts) -- choose before game with restriction
-							or (startPosType <=1 and teamStarts[0]) -- fixed /random starts and profile exists
+		local usingProfile = teamStarts[0] and -- it exist
+							(((startPosType == 3 or startPosType == 2) and lockToProfileStarts) -- choose before game with restriction
+							or (startPosType <=1)) -- fixed /random starts and profile exists
 		for i, teamID in pairs(existingTeams) do
 			--Spring.Echo("[Game_Spawn.lua] team", i, "has teamID", teamID)
 			if teamID ~= gaiaTeamID then

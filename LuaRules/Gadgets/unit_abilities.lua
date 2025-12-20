@@ -73,7 +73,7 @@ end
 
 function SpeedChange(unitID, unitDefID, mult, values)
 	env = Spring.UnitScript.GetScriptEnv(unitID)
-	if Spring.ValidUnitID(unitID) and not Spring.GetUnitIsDead(unitID) and env and not env.jumping then
+	if Spring.ValidUnitID(unitID) and not Spring.GetUnitIsDead(unitID) and env and not env.jumping and UnitDefs[unitDefID].speed > 0 then
 		-- It shouldn't happen, but, to really nail it:
 		Spring.MoveCtrl.Disable(unitID)
 		--Spring.Echo("debug SpeedChange:", UnitDefs[unitDefID].name)
