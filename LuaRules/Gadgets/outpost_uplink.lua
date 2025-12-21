@@ -84,17 +84,6 @@ local artyLastFired = {} -- artyLastFired[teamID] = gameFrame
 local artyCanFire = {} -- artyCanFire[teamID] = gameFrame
 GG.artyCanFire = artyCanFire
 
--- TODO: move to outpost_aircon
--- AERO
-local AERO_COST = 16000
-local vicOffsets = {
-	[1] = {0, 0, 0},
-	[2] = {-150, 0, -150},
-	[3] = {150, 0, -150},
-}
-local spawnPoints = {} -- unitID = {x,y,z}
-local targetVics = {} -- targetID = {id1, id2, id3}
-
 -- ASSAULT
 local ASSAULT_COST = 36000
 
@@ -118,31 +107,12 @@ local nppcCmdDesc = {
 }
 local nlCmdDesc = {
 	id 		= GG.CustomCommands.GetCmdID("CMD_UPLINK_NL", artyWeaponInfo[3].cost),
-	type	= CMDTYPE.ICON_MAP, -- UNIT_OR_MAP?
+	type	= CMDTYPE.ICON_FRONT,--MAP, -- UNIT_OR_MAP?
 	name 	= GG.Pad("Naval Laser","Strike"),
 	action	= "uplink_nl",
 	tooltip = "Point target removal with heavy Naval Laser. Sustained damage against point-targets " .. COLOURS.cbills .. "C-Bill cost: " .. artyWeaponInfo[3].cost,
 	cursor	= "Attack",
 	hidden	= true,
-}
--- TODO: move to outpost_aircon
-local aeroCmdDesc = {
-	id 		= GG.CustomCommands.GetCmdID("CMD_UPLINK_AERO", AERO_COST),
-	type	= CMDTYPE.ICON_UNIT,
-	name 	= GG.Pad("Aero","Sortie"),
-	action	= "uplink_aero",
-	tooltip = "C-Bill cost: " .. AERO_COST,
-	cursor	= "Attack",
-	hidden 	= true,
-}
-local assaultCmdDesc = {
-	id 		= GG.CustomCommands.GetCmdID("CMD_UPLINK_ASSAULT", ASSAULT_COST),
-	type	= CMDTYPE.ICON_MAP, -- UNIT_OR_MAP?
-	name 	= GG.Pad("Assault","Dropship"),
-	action	= "uplink_assault",
-	tooltip = "C-Bill cost: " .. ASSAULT_COST,
-	cursor	= "Attack",
-	hidden 	= true,
 }
 
 local function UplinkUpgrade(unitID, level)
@@ -176,20 +146,6 @@ function gadget:UnitUnloaded(unitID, unitDefID, teamID, transportID, transportTe
 	end
 end
 
-function gadget:UnitDestroyed(unitID, unitDefID, teamID, builderID)
-	local vic = targetVics[unitID]
-	if vic then -- unit was the target of an aero attack, tell the team to bug out
-		-- can't assume all of them made it
-		for i = 1, #vic do
-			if Spring.ValidUnitID(vic[i]) and not Spring.GetUnitIsDead(vic[i]) then
-				Spring.GiveOrderToUnit(vic[i], CMD.MOVE, spawnPoints[vic[i]], {})
-			end
-		end
-		targetVics[unitID] = nil
-	end
-	spawnPoints[unitID] = nil
-end
-
 local function ArtyShot(strikeType, unitID, teamID, x,y,z)
 	local projParams = {}
 	projParams.gravity = -3 + math.random()
@@ -202,7 +158,14 @@ local function ArtyShot(strikeType, unitID, teamID, x,y,z)
 	GG.PlaySoundForTeam(teamID, artyWeaponInfo[strikeType].sound, 1)
 end
 
-local function ArtyStrike(unitID, teamID, x, y, z, cost, strikeType)
+local function SpawnLaser(defID, teamID, x, y, z, dx, dy, dz)
+	local laserID = Spring.CreateUnit(defID, x, y, z, 0, teamID, false, false)
+	env = Spring.UnitScript.GetScriptEnv(laserID)
+	--Spring.Echo("Laser spawned", laserID, "dx", dx, "dy", dy, "dz", dz)
+	Spring.UnitScript.CallAsUnit(laserID, env.SetDir, dx, dy, dz)
+end
+
+local function ArtyStrike(unitID, teamID, x, y, z, cost, strikeType, dx, dy, dz)
 	local canFireFrame = artyCanFire[teamID]
 	local currFrame = GetGameFrame()
 	local weapInfo = artyWeaponInfo[strikeType]
@@ -220,7 +183,6 @@ local function ArtyStrike(unitID, teamID, x, y, z, cost, strikeType)
 	UseTeamResource(teamID, "metal", cost)
 	artyCanFire[teamID] = currFrame + weapInfo.cooldown
 	SetTeamRulesParam(teamID, "UPLINK_ARTILLERY", currFrame + weapInfo.cooldown) -- frame this team can fire arty again
-	local dx, dz
 	local lastDelay = 0
 	if strikeType < 3 then -- artillery style
 		for i = 1, weapInfo.salvo do
@@ -234,7 +196,7 @@ local function ArtyStrike(unitID, teamID, x, y, z, cost, strikeType)
 			end
 		end
 	else -- spawn a fully armed and operational battle-station
-		DelayCall(Spring.CreateUnit, {weapInfo.id, x, y, z, 0, teamID, false, false}, weapInfo.delay)
+		DelayCall(SpawnLaser, {weapInfo.id, teamID, x, y, z, dx, dy, dz}, weapInfo.delay)
 	end
 	GG.PlaySoundForTeam(teamID, "bb_orbitalstrike_inbound", 1)
 	DelayCall(GG.PlaySoundForTeam, {teamID, "bb_orbitalstrike_available_in_60", 1}, weapInfo.delay + lastDelay + 30 * 8) -- fudge for time to fall from orbit after spawned
@@ -242,67 +204,6 @@ local function ArtyStrike(unitID, teamID, x, y, z, cost, strikeType)
 	-- let all enemies know
 	GG.PlaySoundForTeam(teamID, "bb_Enemy_Orbital_Inbound", 1, true)
 	return true
-end
-
-local function SpawnVic(teamID, targetID)
-	local facing = math.random(0,3)
-	local sx, sy, sz
-	if facing % 2 == 0 then -- N/S
-		sx = math.random(0, Game.mapSizeX)
-		sz = facing == 0 and 150 or Game.mapSizeZ - 150
-	else -- E/W
-		sz = math.random(0, Game.mapSizeZ)
-		sx = facing == 1 and 150 or Game.mapSizeX - 150
-	end
-	local side = GG.teamSide[teamID]
-	if not side then return end -- implies team died
-	local vic = {}
-	for i = 1, 3 do
-		local ox, oy, oz = unpack(vicOffsets[i])
-		ox, oy, oz = GG.Vector.RotateY(ox, oy, oz, math.rad(facing * 90))
-		local aero = side == "wf" and side .. "_sulla" or side .. "_corsair"
-		vic[i] = Spring.CreateUnit(aero, sx+ox, 500, sz+oz, facing, teamID)
-		spawnPoints[vic[i]] = {sx+ox, 500, sz+oz}
-		SendToUnsynced("TOGGLE_SELECT", vic[i], teamID, false)
-	end
-	targetVics[targetID] = vic
-	Spring.GiveOrderToUnitArray(vic, CMD.ATTACK, {targetID}, {})
-end
-
-local function AeroStrike(unitID, teamID, targetID, cost)
-	local money = GetTeamResources(teamID, "metal")
-	if money < cost then
-		GG.PlaySoundForTeam(teamID, "bb_insufficient_cbills", 1)
-		Spring.SendMessageToTeam(teamID, "Not enough C-Bills for aero fighter strike!")
-		return false 
-	end	
-	UseTeamResource(teamID, "metal", cost)
-	SpawnVic(teamID, targetID)
-	-- only let target team know
-	GG.PlaySoundForTeam(GetUnitTeam(targetID), "bb_Enemy_Aero_Inbound", 1)
-	return true
-end
-
-
-local function AssaultStrike(unitID, teamID, tx, ty, tz, cost)
-	local money = GetTeamResources(teamID, "metal")
-	if money < cost then
-		GG.PlaySoundForTeam(teamID, "bb_insufficient_cbills", 1)
-		Spring.SendMessageToTeam(teamID, "Not enough C-Bills for assault dropship strike!")
-		return false 
-	end	
-	UseTeamResource(teamID, "metal", cost)
-	local avenger = Spring.CreateUnit("is_avenger", tx, ty, tz, "s", teamID)
-	SendToUnsynced("TOGGLE_SELECT", avenger, teamID, false)
-	return true
-end
-
-function gadget:UnitCmdDone(unitID, unitDefID, unitTeam, cmdID, cmdParams, cmdOpts, cmdTag)
-	if spawnPoints[unitID] then
-		if cmdID == CMD.MOVE then
-			DelayCall(DestroyUnit, {unitID, false, true}, 30 * 5) -- 5 seconds
-		end
-	end
 end
 
 function gadget:AllowCommand(unitID, unitDefID, teamID, cmdID, cmdParams, cmdOptions)
@@ -314,19 +215,10 @@ function gadget:AllowCommand(unitID, unitDefID, teamID, cmdID, cmdParams, cmdOpt
 			local x,y,z = unpack(cmdParams)
 			return ArtyStrike(unitID, teamID, x, y, z, Spring.IsNoCostEnabled() and 0 or artyWeaponInfo[2].cost, 2)
 		elseif cmdID == nlCmdDesc.id then
-			local x,y,z = unpack(cmdParams)
-			return ArtyStrike(unitID, teamID, x, y, z, Spring.IsNoCostEnabled() and 0 or artyWeaponInfo[3].cost, 3)
-		--[[elseif cmdID == aeroCmdDesc.id and teamID then
-			local targetID = cmdParams[1]
-			local targetTeam = Spring.GetUnitTeam(targetID)
-			local targetDef = UnitDefs[Spring.GetUnitDefID(targetID)]
-			if targetTeam and Spring.AreTeamsAllied(teamID, targetTeam) or targetTeam == GAIA_TEAM_ID or targetDef.modCategories["beacon"] then
-				return false
-			end
-			return AeroStrike(unitID, teamID, cmdParams[1], Spring.IsNoCostEnabled() and 0 or AERO_COST)
-		elseif cmdID == assaultCmdDesc.id then
-			local x,y,z = unpack(cmdParams)
-			return AssaultStrike(unitID, teamID, x, y, z, Spring.IsNoCostEnabled() and 0 or ASSAULT_COST)--]]
+			local x,y,z,x2,y2,z2 = unpack(cmdParams)
+			local dx, dy, dz = GG.Vector.Normalized(x-x2, y-y2, z-z2)
+			dx, dy, dz = GG.Vector.RotateY(dx, dy, dz, -math.pi/2)
+			return ArtyStrike(unitID, teamID, x, y, z, Spring.IsNoCostEnabled() and 0 or artyWeaponInfo[3].cost, 3, dx, dy, dz)
 		end
 	end
 	return true

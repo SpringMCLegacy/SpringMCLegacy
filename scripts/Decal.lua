@@ -28,12 +28,16 @@ function script.Create()
 		local x,y,z = Spring.GetUnitBasePosition(unitID)
 		Spring.MoveCtrl.Enable(unitID)
 		Spring.MoveCtrl.SetPosition(unitID, x, y + LASER_HEIGHT, z)
-		local sign = (-1)^math.random(1,2)
-		Spring.MoveCtrl.SetVelocity(unitID, sign * MAX_SPEED * math.random(), 0, sign * MAX_SPEED * math.random())
+		--local sign = (-1)^math.random(1,2)
+		--Spring.MoveCtrl.SetVelocity(unitID, sign * MAX_SPEED * math.random(), 0, sign * MAX_SPEED * math.random())
 		GG.Delay.DelayCall(Spring.DestroyUnit, {unitID}, 30 * TIME_TO_LIVE)
 	end
 end
 
+function SetDir(dx, dy, dz)
+	local MAX_SPEED = 5
+	Spring.MoveCtrl.SetVelocity(unitID, dx * MAX_SPEED, 0, dz * MAX_SPEED)
+end
 
 function script.AimWeapon(weaponID, heading, pitch)
 	Signal(2^weaponID)
