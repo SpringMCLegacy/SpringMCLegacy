@@ -204,6 +204,8 @@ function PlaceFlag(spot, flagType, newFlag, spotNum)
 		for teamID, startPos in pairs(GG.teamStarts) do
 			startPos.y = startPos.y or Spring.GetGroundHeight(startPos.x, startPos.z)
 			if GG.Vector.DistanceBetween(spot.x, spot.y, spot.z, startPos.x, startPos.y, startPos.z) < 1.5 * CAP_RADIUS then
+				--Spring.Echo("Uhhhhh, deleting a flag, spotNum", spotNum)
+				flagTypeSpots[flagType][spotNum] = nil
 				return
 			end
 		end
@@ -211,7 +213,8 @@ function PlaceFlag(spot, flagType, newFlag, spotNum)
 	end
 	numFlags[flagType] = numFlags[flagType] + 1
 	totalFlags = totalFlags + 1
-	flags[flagType][numFlags[flagType]] = newFlag
+	--flags[flagType][numFlags[flagType]] = newFlag
+	flags[flagType][spotNum] = newFlag
 	flagCapStatuses[newFlag] = {}
 	
 	SetUnitNeutral(newFlag, true)
@@ -401,8 +404,8 @@ function gadget:GameFrame(n)
 	-- FLAG CONTROL
 	if n > beaconsDeployed and n % 30 == 5 then -- every second with a 5 frame offset
 		for _, flagType in pairs(flagTypes) do
-			--for spotNum, flagID in pairs(flags[flagType]) do
-			for spotNum = 1, numFlags[flagType] do -- WARNING: Assumes flags are placed in order they exist in flags[flagType]
+			for spotNum, flagID in pairs(flags[flagType]) do
+			--for spotNum = 1, numFlags[flagType] do -- WARNING: Assumes flags are placed in order they exist in flags[flagType]
 				local flagID = flags[flagType][spotNum]
 				local flagTeamID = GetUnitTeam(flagID)
 				local flagAllyTeam = select(6, Spring.GetTeamInfo(flagTeamID))
@@ -493,6 +496,7 @@ function gadget:UnitCreated(unitID, unitDefID, unitTeam, builderID)
 		local x,_, z = Spring.GetUnitPosition(unitID)
 		local newSpot = {["x"] = x, ["z"] = z}
 		table.insert(flagTypeSpots["beacon"], newSpot)
+		Spring.Echo("Oh mai, new beacon, teamID", teamID, "spotNum", #flagTypeSpots["beacon"])
 		PlaceFlag(newSpot, "beacon", unitID, #flagTypeSpots["beacon"])
 		UpdateBeacons(unitTeam, 1)
 		if #flagTypeSpots["beacon"] == EXPECTED_FLAGS then
