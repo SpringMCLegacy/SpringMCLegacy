@@ -132,9 +132,12 @@ function gadget:Initialize()
 	GG.teamSide = {}
 end
 
+local lockToProfileStarts = modOptions.locktoprofile == '1'
+local DistBetween = GG.Vector.DistanceBetween 
+
 function gadget:GamePreload()
 	Spring.PlaySoundFile("bb_startup_all_systems_nominal", 1, "ui")
-	if startPosType == 2 then
+	if startPosType == 2 and lockToProfileStarts then
 		for id, pos in pairs(teamStarts) do
 			GG.SpawnDecal("decal_start", pos.x, pos.z)
 		end
@@ -152,9 +155,6 @@ local function shuffle(t)
         t[i], t[j] = t[j], t[i]
     end
 end
-
-local lockToProfileStarts = modOptions.locktoprofile == '1'
-local DistBetween = GG.Vector.DistanceBetween 
 
 function gadget:GameStart()
 	local existingTeams = Spring.GetTeamList() -- i = teamID
