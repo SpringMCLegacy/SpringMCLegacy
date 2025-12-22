@@ -35,7 +35,7 @@ local function AutoAdd(subDir, map, filter)
 		resources["graphics"][subDir] = subTable
 		if (not filter or filter == ext) then
 			if not map then
-				Spring.Echo("adding resource texture", subDir, path)
+				--Spring.Echo("adding resource texture", subDir, path)
 				table.insert(subTable, path)
 			else -- a mapped subtable
 				subTable[key] = path
