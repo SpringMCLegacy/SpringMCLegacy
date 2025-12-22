@@ -303,7 +303,7 @@ local function CoolOff()
 			heatElevated = false
 			excessHeat = 0 -- if we managed to return to normal heat, remove all excess
 		end
-		if tsmActive then
+		if running and tsmActive then
 			speedMod = 1.5 * (1 + currHeatLevel/heatLimit * 0.5) * (superCharger and 1.5 or 1)
 			SpeedChangeCheck()
 		end
