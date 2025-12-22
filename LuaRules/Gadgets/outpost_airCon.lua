@@ -241,7 +241,7 @@ local function ModifyStockpile(teamID, sortie, amount, oldState, newState)
 	local cmdID = sortie.cmdDesc.id
 	if oldState then -- may be brand spankin' new
 		teamSorties[teamID][-cmdID][oldState] = teamSorties[teamID][-cmdID][oldState] - amount -- attempt to index nil
-	else -- first time, setup
+	elseif not teamSorties[teamID][-cmdID] then  -- first time, setup
 		teamSorties[teamID][-cmdID] = {
 			active = 0,
 			prep = 0,
