@@ -303,8 +303,8 @@ local function CoolOff()
 			heatElevated = false
 			excessHeat = 0 -- if we managed to return to normal heat, remove all excess
 		end
-		if running and tsmActive then
-			speedMod = 1.5 * (1 + currHeatLevel/heatLimit * 0.5) * (superCharger and 1.5 or 1)
+		if tsmActive and (currHeatLevel/heatLimit > 0.33) then
+			speedMod = (running and 1.5 * 1.3 or 1.2) * (superCharger and 1.25 or 1)
 			SpeedChangeCheck()
 		end
 		ChangeHeat(-coolRate)
@@ -544,7 +544,7 @@ local function RunDamage()
 				return
 			end
 		end
-		local heat = (mascActive and superCharger and superChargerHeat) or (superCharger and superChargerHeat + runHeat) or runHeat
+		local heat = superCharger and superChargerHeat or runHeat
 		ChangeHeat(heat)
 		if excessHeat > 0 then
 			--Spring.Echo("Overheating! Slow down")
@@ -556,6 +556,7 @@ local function RunDamage()
 		Sleep(100)
 	end
 end
+
 
 function SpeedChangeCheck()
 	if shutdownRunning then return false end
@@ -571,19 +572,19 @@ function Run(activate)
 		return -- do not allow running at all if you have a damaged leg
 	end
 	if not activate then -- not running, return to normal
-		speedMod = 1
+		speedMod = (tsmActive and (currHeatLevel/heatLimit > 0.33) and 1.2) or 1
 		Spring.SetUnitRulesParam(unitID, "running", 0)
 	else -- running
 		Spring.SetUnitRulesParam(unitID, "running", 1)
 		if mascActive then
 			speedMod = 2
-		elseif tsmActive then -- extra 50% increase at full heat
-			speedMod = 1.5 * (1 + currHeatLevel/heatLimit * 0.5)
+		elseif tsmActive then -- extra 30% increase at >1/3rd heat
+			speedMod = (currHeatLevel/heatLimit > 0.33) and 1.3 * 1.5 or 1.5
 		else
 			speedMod = 1.5
 		end
 		if superCharger then -- supercharger stacks so separate if
-			speedMod = speedMod * 1.5
+			speedMod = speedMod * 1.25
 		end
 	end
 	speedMod = speedMod * (GG.modOptions and GG.modOptions.speed or 1.0) -- respect modoption
