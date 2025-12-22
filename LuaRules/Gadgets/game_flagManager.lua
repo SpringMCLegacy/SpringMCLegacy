@@ -297,8 +297,10 @@ local function DeployBeacons(skip)
 	-- FLAG PLACEMENT
 	for _, flagType in pairs(flagTypes) do
 		if DEBUG then Spring.Echo("-- flagType is " .. flagType) end
-		for i = 1, #flagTypeSpots[flagType] do
-			PlaceFlag(flagTypeSpots[flagType][i], flagType, nil, i)
+		--for i = 1, #flagTypeSpots[flagType] do
+		for spotNum, spot in pairs(flagTypeSpots[flagType]) do
+			--PlaceFlag(flagTypeSpots[flagType][i], flagType, nil, i)
+			PlaceFlag(spot, flagType, nil, spotNum)
 		end
 		GG[flagType .. "s"] = flags[flagType] -- nicer to have GG.flags rather than GG.flag
 	end
@@ -495,9 +497,10 @@ function gadget:UnitCreated(unitID, unitDefID, unitTeam, builderID)
 	if unitDefID == BEACON_ID and unitTeam ~= GAIA_TEAM_ID then
 		local x,_, z = Spring.GetUnitPosition(unitID)
 		local newSpot = {["x"] = x, ["z"] = z}
+		local spotNum = #flagTypeSpots["beacon"] + 1
 		table.insert(flagTypeSpots["beacon"], newSpot)
-		Spring.Echo("Oh mai, new beacon, teamID", teamID, "spotNum", #flagTypeSpots["beacon"])
-		PlaceFlag(newSpot, "beacon", unitID, #flagTypeSpots["beacon"])
+		--Spring.Echo("Oh mai, new beacon, teamID", teamID, "spotNum", spotNum)
+		PlaceFlag(newSpot, "beacon", unitID, spotNum)
 		UpdateBeacons(unitTeam, 1)
 		if #flagTypeSpots["beacon"] == EXPECTED_FLAGS then
 			beaconsDeployed = Spring.GetGameFrame() + 5
