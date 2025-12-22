@@ -73,6 +73,7 @@ local names = {
 	["lupperarm"] = true,
 	["rupperarm"] = true,
 	["turret"] = true,
+	["crane_base"] = true,
 }
 
 local teamSalvages = {} -- teamID = salvageAmount
@@ -195,14 +196,18 @@ function gadget:FeatureDestroyed(featureID)
 end
 
 function gadget:ProjectileCreated(proID, proOwnerID, weaponID)
-	--local name = Spring.GetProjectileName(proID) -- TODO: Removed in Recoil, waiting for it to be brought back so we can whitelist
 	local weap, piece = GetProjectileType(proID)
 	--Spring.Echo("PC", proID, proOwnerID, weaponID, name, defID, weap, piece)
 	if ValidUnitID(proOwnerID) and piece then
-		local unitDefID = GetUnitDefID(proOwnerID)
-		local ud = UnitDefs[unitDefID]
-		if (GG.mechCache[unitDefID] or unitDefID == GG.SALVAGER_ID)--[[and names[name]] then 
-			pieces[proID] = true 
+		if Spring.GetPieceProjectileName then
+			local name = Spring.GetPieceProjectileName(proID) -- TODO: Removed in Recoil, waiting for it to be brought back so we can whitelist
+			pieces[proID] = names[name or ""]
+		else
+			local unitDefID = GetUnitDefID(proOwnerID)
+			local ud = UnitDefs[unitDefID]
+			if (GG.mechCache[unitDefID] or unitDefID == GG.SALVAGER_ID) then 
+				pieces[proID] = true 
+			end
 		end
 	end
 end
