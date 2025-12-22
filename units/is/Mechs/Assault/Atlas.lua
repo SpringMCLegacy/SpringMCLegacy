@@ -151,7 +151,7 @@ local AS7S2 = Atlas:New{
 		price			= 19290,
 		heatlimit 		= 16,--16 double
 		armor			= 19,
-		maxammo 		= {hvgauss = 4, lrm = 2, srm = 2},
+		maxammo 		= {hvgauss = 4, lrm = 2},
 		ecm				= true,
 		barrelrecoildist = {[1] = 5},
 		mods			= {"guardian", "artemislrm", "doubleheatsinks", "lightengine", "case"},
