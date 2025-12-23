@@ -61,7 +61,7 @@ local SALVAGEYARD_ID = UnitDefNames["outpost_salvageyard"] and UnitDefNames["out
 local SALVAGER_ID = UnitDefNames["salvager"].id
 local SALVAGE_RANGE = 4000
 local CONVERSION_RATE = 40 -- 1000 metal / this = 25
-local RATE_PER_TICK = 1
+local RATE_PER_TICK = modOptions and modOptions.salvagepertick or 1
 local TIME_PER_TICK = 30 * 60 -- 1 minute
 local CMD_DEPOSIT = GG.CustomCommands.GetCmdID("CMD_DEPOSIT")
 
