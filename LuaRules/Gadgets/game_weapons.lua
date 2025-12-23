@@ -425,7 +425,7 @@ function gadget:UnitPreDamaged(unitID, unitDefID, unitTeam, damage, paralyzer, w
 			heatDamage = 1
 			ApplyPPC(unitID, unitDefID)
 		elseif specialAmmo == "thunder" then
-			damage = damage * 0.75
+			damage = unitDefID == MINE_DEF_ID and 0 or damage * 0.75
 		elseif specialAmmo == "bola" then
 			speedChange = 0.01
 		elseif specialAmmo == "explosivepod" then
