@@ -216,6 +216,11 @@ function gadget:AllowCommand(unitID, unitDefID, teamID, cmdID, cmdParams, cmdOpt
 			return ArtyStrike(unitID, teamID, x, y, z, Spring.IsNoCostEnabled() and 0 or artyWeaponInfo[2].cost, 2)
 		elseif cmdID == nlCmdDesc.id then
 			local x,y,z,x2,y2,z2 = unpack(cmdParams)
+			if not x2 then -- front was not defined, randomise
+				x2 = math.random() * 50
+				y2 = 0
+				z2 = math.random()* 50
+			end
 			local dx, dy, dz = GG.Vector.Normalized(x-x2, y-y2, z-z2)
 			dx, dy, dz = GG.Vector.RotateY(dx, dy, dz, -math.pi/2)
 			return ArtyStrike(unitID, teamID, x, y, z, Spring.IsNoCostEnabled() and 0 or artyWeaponInfo[3].cost, 3, dx, dy, dz)
