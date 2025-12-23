@@ -8,6 +8,7 @@ for damageType in pairs(GG.GameConstants.damageMults) do
 	NUM_DAMAGE_TYPES = NUM_DAMAGE_TYPES + 1
 end
 
+local MOD_COST_MULT = modOptions and modOptions.modcostmult or 1.0
 local PERK_XP_COST = 1.0 -- 1.5
 GG.PERK_XP_COST = PERK_XP_COST
 local EFFECT = modOptions and modOptions.perkeffect or 5
@@ -742,7 +743,7 @@ return {
 				env.ELEVATION_SPEED = env.ELEVATION_SPEED * effect
 			end,
 			costFunction = deductSalvage,
-			price = 10,
+			price = 10 * MOD_COST_MULT,
 		},
 		{
 			name = "protectedactuators",
@@ -764,7 +765,7 @@ return {
 				Spring.UnitScript.CallAsUnit(unitID, env.SetLimbMaxHP, effect)
 			end,
 			costFunction = deductSalvage,
-			price = 5,
+			price = 5 * MOD_COST_MULT,
 		},
 		{
 			name = "reinforcedlegs",
@@ -782,7 +783,7 @@ return {
 				GG.SetUnitReinforcedLegs(unitID, not invert)
 			end,
 			costFunction = deductSalvage,
-			price = 8,
+			price = 8 * MOD_COST_MULT,
 		},
 		{
 			name = "doubleheatsinks",
@@ -807,7 +808,7 @@ return {
 			end,
 			costFunction = deductSalvage,
 			priceFunction = function (unitDefID)
-				return deductPerUnitDefTag(unitDefID, true, "heatlimit", 1)
+				return deductPerUnitDefTag(unitDefID, true, "heatlimit", 1) * MOD_COST_MULT
 			end,
 		},
 		{
@@ -827,7 +828,7 @@ return {
 				env.case = not invert
 			end,
 			costFunction = deductSalvage,
-			price = 15,
+			price = 15 * MOD_COST_MULT,
 			incompatible = {"expandedbins"},
 		},
 		{
@@ -854,7 +855,7 @@ return {
 				end
 			end,
 			costFunction = deductSalvage,
-			price = 15,
+			price = 15 * MOD_COST_MULT,
 			incompatible = {"case"},
 		},
 		-- Mobility (ENGINE)
@@ -927,7 +928,7 @@ return {
 				GG.Delay.DelayCall(GG.ShowMechMenu, {unitID, Spring.GetUnitDefID(unitID), "issueorder"}, 2) -- refresh menu
 			end,
 			costFunction = deductSalvage,
-			price = 10,
+			price = 10 * MOD_COST_MULT,
 			incompatible = {"triplestrengthmyomer"},
 		},
 		{
@@ -949,7 +950,7 @@ return {
 				GG.Delay.DelayCall(GG.ShowMechMenu, {unitID, Spring.GetUnitDefID(unitID), "issueorder"}, 2) -- refresh menu
 			end,
 			costFunction = deductSalvage,
-			price = 10,
+			price = 10 * MOD_COST_MULT,
 		},
 		{
 			name = "triplestrengthmyomer",
@@ -968,7 +969,7 @@ return {
 				Spring.UnitScript.CallAsUnit(unitID, env.EnableTSM, not invert)
 			end,
 			costFunction = deductSalvage,
-			price = 10,
+			price = 10 * MOD_COST_MULT,
 			incompatible = {"masc"},
 		},
 		{
@@ -987,7 +988,7 @@ return {
 				GG.SetUnitJumpInstant(unitID, not invert)
 			end,
 			costFunction = deductSalvage,
-			price = 10,
+			price = 10 * MOD_COST_MULT,
 			incompatible = {"improvedjumpjets"},
 		},
 		{
@@ -1006,7 +1007,7 @@ return {
 				GG.SetUnitImprovedJumpjets(unitID, not invert)
 			end,
 			costFunction = deductSalvage,
-			price = 15,
+			price = 15 * MOD_COST_MULT,
 			incompatible = {"directionalthrusters"},
 		},
 		-- Tactical (TECH)
@@ -1060,7 +1061,7 @@ return {
 				GG.angels[unitID] = not invert
 			end,
 			costFunction = deductSalvage,
-			price = 25,
+			price = 25 * MOD_COST_MULT,
 		},
 		{
 			name = "bloodhound",
@@ -1078,7 +1079,7 @@ return {
 				GG.bloodHounds[unitID] = not invert
 			end,
 			costFunction = deductSalvage,
-			price = 25,
+			price = 25 * MOD_COST_MULT,
 		},
 		{
 
@@ -1108,7 +1109,7 @@ return {
 				end
 			end,
 			costFunction = deductSalvage,
-			price = 10,
+			price = 10 * MOD_COST_MULT,
 		},
 		{
 			name = "coolantpods",
@@ -1127,7 +1128,7 @@ return {
 				GG.EnableAutoCoolant(unitID, not invert)
 			end,
 			costFunction = deductSalvage,
-			price = 5,
+			price = 5 * MOD_COST_MULT,
 		},
 		{
 			name = "disruptionfieldbooster",
@@ -1148,7 +1149,7 @@ return {
 				GG.SetUnitECMRadius(unitID, effect)
 			end,
 			costFunction = deductSalvage,
-			price = 10,
+			price = 10 * MOD_COST_MULT,
 		},
 		{
 			name = "particlefielddamper",
@@ -1169,7 +1170,7 @@ return {
 				Spring.SetUnitRulesParam(unitID, "insulation", effect)
 			end,
 			costFunction = deductSalvage,
-			price = 10,
+			price = 10 * MOD_COST_MULT,
 		},
 		
 		-- Defensive (ARMOUR)
@@ -1189,7 +1190,7 @@ return {
 				GG.EnableArmour(unitID, not invert, "ferro")
 			end,
 			costFunction = deductSalvage,
-			price = 7,
+			price = 7 * MOD_COST_MULT,
 			incompatible = {"hardenedarmour", "heatarmour", "reactivearmour", "reflecarmour", "stealtharmour"},
 		},
 		{
@@ -1224,7 +1225,7 @@ return {
 				env.speedMod = env.speedMod * effect
 			end,
 			costFunction = deductSalvage,
-			price = 10,
+			price = 10 * MOD_COST_MULT,
 			incompatible = {"ferrofibrousarmour", "heatarmour", "reactivearmour", "reflecarmour", "stealtharmour"},
 		},
 		{
@@ -1243,7 +1244,7 @@ return {
 				GG.EnableArmour(unitID, not invert, "heat")
 			end,
 			costFunction = deductSalvage,
-			price = 5,
+			price = 5 * MOD_COST_MULT,
 			incompatible = {"ferrofibrousarmour", "hardenedarmour", "reactivearmour", "reflecarmour", "stealtharmour"},
 		},
 		{
@@ -1262,7 +1263,7 @@ return {
 				GG.EnableArmour(unitID, not invert, "reactive")
 			end,
 			costFunction = deductSalvage,
-			price = 10,
+			price = 10 * MOD_COST_MULT,
 			incompatible = {"ferrofibrousarmour", "hardenedarmour", "heatarmour", "reflecarmour", "stealtharmour"},
 		},
 		{
@@ -1281,7 +1282,7 @@ return {
 				GG.EnableArmour(unitID, not invert, "reflec")
 			end,
 			costFunction = deductSalvage,
-			price = 10,
+			price = 10 * MOD_COST_MULT,
 			incompatible = {"ferrofibrousarmour", "hardenedarmour", "heatarmour", "reactivearmour", "stealtharmour"},
 		},
 		{
@@ -1300,7 +1301,7 @@ return {
 				GG.EnableStealth(unitID, not invert)
 			end,
 			costFunction = deductSalvage,
-			price = 10,
+			price = 10 * MOD_COST_MULT,
 			incompatible = {"ferrofibrousarmour", "hardenedarmour", "heatarmour", "reactivearmour", "reflecarmour"},
 		},
 		-- Offensive (WEAPONS)
@@ -1338,7 +1339,7 @@ return {
 				runningTotal = runningTotal + deductPerWeaponType(unitDefID, "gauss", AMOUNT_PER_WEAPON)
 				runningTotal = runningTotal + deductPerWeaponType(unitDefID, "ppc", AMOUNT_PER_WEAPON)
 				runningTotal = runningTotal + deductPerWeaponType(unitDefID, "energy", AMOUNT_PER_WEAPON)
-				return runningTotal
+				return runningTotal * MOD_COST_MULT
 			end,
 			--incompatible = {"aatargetingcomputer"},
 		},
@@ -1365,7 +1366,7 @@ return {
 			costFunction = deductSalvage,
 			priceFunction = function(unitDefID)
 				local AMOUNT_PER_WEAPON = 5
-				return deductPerWeaponType(unitDefID, "mrm", AMOUNT_PER_WEAPON)
+				return deductPerWeaponType(unitDefID, "mrm", AMOUNT_PER_WEAPON) * MOD_COST_MULT
 			end,
 		},
 		{
@@ -1387,7 +1388,7 @@ return {
 			costFunction = deductSalvage,
 			priceFunction = function(unitDefID)
 				local AMOUNT_PER_WEAPON = 5
-				return deductPerWeaponType(unitDefID, "lrm", AMOUNT_PER_WEAPON)
+				return deductPerWeaponType(unitDefID, "lrm", AMOUNT_PER_WEAPON) * MOD_COST_MULT
 			end,
 			incompatible = {"ammolrmextended", "ammolrminferno", "ammolrmmagpulse", "ammolrmthunder", "ammolrmarad", "ammolrmhoming"},
 		},
@@ -1410,7 +1411,7 @@ return {
 			costFunction = deductSalvage,
 			priceFunction = function(unitDefID)
 				local AMOUNT_PER_WEAPON = 5
-				return deductPerWeaponType(unitDefID, "srm", AMOUNT_PER_WEAPON)
+				return deductPerWeaponType(unitDefID, "srm", AMOUNT_PER_WEAPON) * MOD_COST_MULT
 			end,
 			incompatible = {"ammosrmtandem", "ammosrminferno", "ammosrmmagpulse"},
 		},
@@ -1434,7 +1435,7 @@ return {
 				end
 			end,
 			costFunction = deductSalvage,
-			price = 10,
+			price = 10 * MOD_COST_MULT,
 			incompatible = {"quickchargingcapacitors"},
 		},
 		{
@@ -1464,7 +1465,7 @@ return {
 				end
 			end,
 			costFunction = deductSalvage,
-			price = 10,
+			price = 10 * MOD_COST_MULT,
 		},
 		{
 			name = "ppcinhibitoroverride",
@@ -1486,7 +1487,7 @@ return {
 				end
 			end,
 			costFunction = deductSalvage,
-			price = 5,
+			price = 5 * MOD_COST_MULT,
 		},
 		{
 			name = "quickchargingcapacitors",
@@ -1512,7 +1513,7 @@ return {
 				end
 			end,
 			costFunction = deductSalvage,
-			price = 10,
+			price = 10 * MOD_COST_MULT,
 			incompatible = {"improvedheavygauss", "silverbullet"},
 		},
 		{
@@ -1532,7 +1533,7 @@ return {
 				GG.EnableSilverBullet(unitID, not invert)
 			end,
 			costFunction = deductSalvage,
-			price = 15,
+			price = 15 * MOD_COST_MULT,
 			incompatible = {"quickchargingcapacitors"},
 		},
 		{
@@ -1559,7 +1560,7 @@ return {
 				end
 			end,
 			costFunction = deductSalvage,
-			price = 15,
+			price = 15 * MOD_COST_MULT,
 		},
 		-- Ammo
 		{
@@ -1603,7 +1604,7 @@ return {
 					local shotsPerTon = GG.GameConstants.ammoTypes[ammoType:upper()]
 					runningTotal = runningTotal + deductPerUnitDefTag(unitDefID, true, "maxammo", AMOUNT_PER_TON / shotsPerTon, ammoType)
 				end
-				return runningTotal
+				return runningTotal * MOD_COST_MULT
 			end,
 			incompatible = {"ammoarmourpiercing", "ammocaseless", "ammohypervelocity"},
 		},
@@ -1648,7 +1649,7 @@ return {
 					local shotsPerTon = GG.GameConstants.ammoTypes[ammoType:upper()]
 					runningTotal = runningTotal + deductPerUnitDefTag(unitDefID, true, "maxammo", AMOUNT_PER_TON / shotsPerTon, ammoType)
 				end
-				return runningTotal
+				return runningTotal * MOD_COST_MULT
 			end,
 			incompatible = {"ammoprecision", "ammoarmourpiercing", "ammocaseless"},
 		},
@@ -1696,7 +1697,7 @@ return {
 					local shotsPerTon = GG.GameConstants.ammoTypes[ammoType:upper()]
 					runningTotal = runningTotal + deductPerUnitDefTag(unitDefID, true, "maxammo", AMOUNT_PER_TON / shotsPerTon, ammoType)
 				end
-				return runningTotal
+				return runningTotal * MOD_COST_MULT
 			end,
 			incompatible = {"ammoprecision", "ammocaseless", "ammohypervelocity"},
 		},
@@ -1738,7 +1739,7 @@ return {
 					local shotsPerTon = GG.GameConstants.ammoTypes[ammoType:upper()]
 					runningTotal = runningTotal + deductPerUnitDefTag(unitDefID, true, "maxammo", AMOUNT_PER_TON / shotsPerTon, ammoType)
 				end
-				return runningTotal
+				return runningTotal * MOD_COST_MULT
 			end,
 			incompatible = {"ammoprecision", "ammoarmourpiercing", "ammohypervelocity"},
 		},
@@ -1761,7 +1762,7 @@ return {
 			costFunction = deductSalvage,
 			priceFunction = function(unitDefID)
 				local AMOUNT_PER_TON = 5 / GG.GameConstants.ammoTypes.LRM
-				return deductPerUnitDefTag(unitDefID, true, "maxammo", AMOUNT_PER_TON, "lrm")
+				return deductPerUnitDefTag(unitDefID, true, "maxammo", AMOUNT_PER_TON, "lrm") * MOD_COST_MULT
 			end,
 			incompatible = {"ammolrmextended", "artemislrm", "ammolrmmagpulse", "ammolrmthunder", "ammolrmarad", "ammolrmhoming"},
 		},
@@ -1793,7 +1794,7 @@ return {
 			costFunction = deductSalvage,
 			priceFunction = function(unitDefID)
 				local AMOUNT_PER_TON = 10 / GG.GameConstants.ammoTypes.LRM
-				return deductPerUnitDefTag(unitDefID, true, "maxammo", AMOUNT_PER_TON, "lrm")
+				return deductPerUnitDefTag(unitDefID, true, "maxammo", AMOUNT_PER_TON, "lrm") * MOD_COST_MULT
 			end,
 			incompatible = {"artemislrm", "ammolrminferno", "ammolrmmagpulse", "ammolrmthunder", "ammolrmarad", "ammolrmhoming"},
 		},
@@ -1816,7 +1817,7 @@ return {
 			costFunction = deductSalvage,
 			priceFunction = function(unitDefID)
 				local AMOUNT_PER_TON = 5 / GG.GameConstants.ammoTypes.LRM
-				return deductPerUnitDefTag(unitDefID, true, "maxammo", AMOUNT_PER_TON, "lrm")
+				return deductPerUnitDefTag(unitDefID, true, "maxammo", AMOUNT_PER_TON, "lrm") * MOD_COST_MULT
 			end,
 			incompatible = {"ammolrmextended", "artemislrm", "ammolrminferno", "ammolrmthunder", "ammolrmarad", "ammolrmhoming"},
 		},
@@ -1839,7 +1840,7 @@ return {
 			costFunction = deductSalvage,
 			priceFunction = function(unitDefID)
 				local AMOUNT_PER_TON = 10 / GG.GameConstants.ammoTypes.LRM
-				return deductPerUnitDefTag(unitDefID, true, "maxammo", AMOUNT_PER_TON, "lrm")
+				return deductPerUnitDefTag(unitDefID, true, "maxammo", AMOUNT_PER_TON, "lrm") * MOD_COST_MULT
 			end,
 			incompatible = {"ammolrmextended", "artemislrm", "ammolrminferno", "ammolrmthunder", "ammolrmmagpulse", "ammolrmhoming"},
 		},
@@ -1862,7 +1863,7 @@ return {
 			costFunction = deductSalvage,
 			priceFunction = function(unitDefID)
 				local AMOUNT_PER_TON = 15 / GG.GameConstants.ammoTypes.LRM
-				return deductPerUnitDefTag(unitDefID, true, "maxammo", AMOUNT_PER_TON, "lrm")
+				return deductPerUnitDefTag(unitDefID, true, "maxammo", AMOUNT_PER_TON, "lrm") * MOD_COST_MULT
 			end,
 			incompatible = {"ammolrmextended", "artemislrm", "ammolrminferno", "ammolrmmagpulse", "ammolrmarad", "ammolrmhoming"},
 		},
@@ -1885,7 +1886,7 @@ return {
 			costFunction = deductSalvage,
 			priceFunction = function(unitDefID)
 				local AMOUNT_PER_TON = 25 / GG.GameConstants.ammoTypes.LRM
-				return deductPerUnitDefTag(unitDefID, true, "maxammo", AMOUNT_PER_TON, "lrm")
+				return deductPerUnitDefTag(unitDefID, true, "maxammo", AMOUNT_PER_TON, "lrm") * MOD_COST_MULT
 			end,
 			incompatible = {"ammolrmextended", "artemislrm", "ammolrminferno", "ammolrmmagpulse", "ammolrmarad", "ammolrmthunder"},
 		},
@@ -1908,7 +1909,7 @@ return {
 			costFunction = deductSalvage,
 			priceFunction = function(unitDefID)
 				local AMOUNT_PER_TON = 25 / GG.GameConstants.ammoTypes.Arrow
-				return deductPerUnitDefTag(unitDefID, true, "maxammo", AMOUNT_PER_TON, "arrow")
+				return deductPerUnitDefTag(unitDefID, true, "maxammo", AMOUNT_PER_TON, "arrow") * MOD_COST_MULT
 			end,
 			incompatible = {"ammoarrowarad", "ammoarrowcluster", "ammoarrowthunder", "ammoarrowad"},
 		},
@@ -1931,7 +1932,7 @@ return {
 			costFunction = deductSalvage,
 			priceFunction = function(unitDefID)
 				local AMOUNT_PER_TON = 25 / GG.GameConstants.ammoTypes.Arrow
-				return deductPerUnitDefTag(unitDefID, true, "maxammo", AMOUNT_PER_TON, "arrow")
+				return deductPerUnitDefTag(unitDefID, true, "maxammo", AMOUNT_PER_TON, "arrow") * MOD_COST_MULT
 			end,
 			incompatible = {"ammoarrowarad", "ammoarrowhoming", "ammoarrowthunder", "ammoarrowad"},
 		},
@@ -1954,7 +1955,7 @@ return {
 			costFunction = deductSalvage,
 			priceFunction = function(unitDefID)
 				local AMOUNT_PER_TON = 25 / GG.GameConstants.ammoTypes.Arrow
-				return deductPerUnitDefTag(unitDefID, true, "maxammo", AMOUNT_PER_TON, "arrow")
+				return deductPerUnitDefTag(unitDefID, true, "maxammo", AMOUNT_PER_TON, "arrow") * MOD_COST_MULT
 			end,
 			incompatible = {"ammoarrowarad", "ammoarrowhoming", "ammoarrowcluster", "ammoarrowad"},
 		},
@@ -1977,7 +1978,7 @@ return {
 			costFunction = deductSalvage,
 			priceFunction = function(unitDefID)
 				local AMOUNT_PER_TON = 25 / GG.GameConstants.ammoTypes.Arrow
-				return deductPerUnitDefTag(unitDefID, true, "maxammo", AMOUNT_PER_TON, "arrow")
+				return deductPerUnitDefTag(unitDefID, true, "maxammo", AMOUNT_PER_TON, "arrow") * MOD_COST_MULT
 			end,
 			incompatible = {"ammoarrowarad", "ammoarrowhoming", "ammoarrowcluster", "ammoarrowthunder"},
 		},
@@ -2000,7 +2001,7 @@ return {
 			costFunction = deductSalvage,
 			priceFunction = function(unitDefID)
 				local AMOUNT_PER_TON = 10 / GG.GameConstants.ammoTypes.Arrow
-				return deductPerUnitDefTag(unitDefID, true, "maxammo", AMOUNT_PER_TON, "arrow")
+				return deductPerUnitDefTag(unitDefID, true, "maxammo", AMOUNT_PER_TON, "arrow") * MOD_COST_MULT
 			end,
 			incompatible = {"ammoarrowhoming", "ammoarrowcluster", "ammoarrowthunder", "ammoarrowad"},
 		},
@@ -2023,7 +2024,7 @@ return {
 			costFunction = deductSalvage,
 			priceFunction = function(unitDefID)
 				local AMOUNT_PER_TON = 8 / GG.GameConstants.ammoTypes.SRM
-				return deductPerUnitDefTag(unitDefID, true, "maxammo", AMOUNT_PER_TON, "srm")
+				return deductPerUnitDefTag(unitDefID, true, "maxammo", AMOUNT_PER_TON, "srm") * MOD_COST_MULT
 			end,
 			incompatible = {"ammosrmtandem", "ammosrmmagpulse", "artemissrm"},
 		},
@@ -2051,7 +2052,7 @@ return {
 			costFunction = deductSalvage,
 			priceFunction = function(unitDefID)
 				local AMOUNT_PER_TON = 5 / GG.GameConstants.ammoTypes.SRM
-				return deductPerUnitDefTag(unitDefID, true, "maxammo", AMOUNT_PER_TON, "srm")
+				return deductPerUnitDefTag(unitDefID, true, "maxammo", AMOUNT_PER_TON, "srm") * MOD_COST_MULT
 			end,
 			incompatible = {"ammosrminferno", "ammosrmmagpulse", "artemissrm"},
 		},
@@ -2074,7 +2075,7 @@ return {
 			costFunction = deductSalvage,
 			priceFunction = function(unitDefID)
 				local AMOUNT_PER_TON = 5 / GG.GameConstants.ammoTypes.SRM
-				return deductPerUnitDefTag(unitDefID, true, "maxammo", AMOUNT_PER_TON, "srm")
+				return deductPerUnitDefTag(unitDefID, true, "maxammo", AMOUNT_PER_TON, "srm") * MOD_COST_MULT
 			end,
 			incompatible = {"ammosrmtandem", "ammosrminferno", "artemissrm"},
 		},
@@ -2104,7 +2105,7 @@ return {
 			costFunction = deductSalvage,
 			priceFunction = function(unitDefID)
 				local AMOUNT_PER_TON = 5 / GG.GameConstants.ammoTypes.Narc
-				return deductPerUnitDefTag(unitDefID, true, "maxammo", AMOUNT_PER_TON, "narc")
+				return deductPerUnitDefTag(unitDefID, true, "maxammo", AMOUNT_PER_TON, "narc") * MOD_COST_MULT
 			end,
 			incompatible = {"ammonarcbola", "ammonarcthermite", "ammonarchaywire", "ammonarcexplosive", "ammonarcecm"},
 		},
@@ -2127,7 +2128,7 @@ return {
 			costFunction = deductSalvage,
 			priceFunction = function(unitDefID)
 				local AMOUNT_PER_TON = 5 / GG.GameConstants.ammoTypes.Narc
-				return deductPerUnitDefTag(unitDefID, true, "maxammo", AMOUNT_PER_TON, "narc")
+				return deductPerUnitDefTag(unitDefID, true, "maxammo", AMOUNT_PER_TON, "narc") * MOD_COST_MULT
 			end,
 			incompatible = {"ammonarcbola", "ammonarcthermite", "ammonarchaywire", "ammoinarc", "ammonarcecm"},
 		},
@@ -2150,7 +2151,7 @@ return {
 			costFunction = deductSalvage,
 			priceFunction = function(unitDefID)
 				local AMOUNT_PER_TON = 5 / GG.GameConstants.ammoTypes.Narc
-				return deductPerUnitDefTag(unitDefID, true, "maxammo", AMOUNT_PER_TON, "narc")
+				return deductPerUnitDefTag(unitDefID, true, "maxammo", AMOUNT_PER_TON, "narc") * MOD_COST_MULT
 			end,
 			incompatible = {"ammonarcexplosive", "ammonarcthermite", "ammonarchaywire", "ammoinarc", "ammonarcecm"},
 		},
@@ -2173,7 +2174,7 @@ return {
 			costFunction = deductSalvage,
 			priceFunction = function(unitDefID)
 				local AMOUNT_PER_TON = 5 / GG.GameConstants.ammoTypes.Narc
-				return deductPerUnitDefTag(unitDefID, true, "maxammo", AMOUNT_PER_TON, "narc")
+				return deductPerUnitDefTag(unitDefID, true, "maxammo", AMOUNT_PER_TON, "narc") * MOD_COST_MULT
 			end,
 			incompatible = {"ammonarcexplosive", "ammonarcbola", "ammonarchaywire", "ammoinarc", "ammonarcecm"},
 		},
@@ -2196,7 +2197,7 @@ return {
 			costFunction = deductSalvage,
 			priceFunction = function(unitDefID)
 				local AMOUNT_PER_TON = 5 / GG.GameConstants.ammoTypes.Narc
-				return deductPerUnitDefTag(unitDefID, true, "maxammo", AMOUNT_PER_TON, "narc")
+				return deductPerUnitDefTag(unitDefID, true, "maxammo", AMOUNT_PER_TON, "narc") * MOD_COST_MULT
 			end,
 			incompatible = {"ammonarcexplosive", "ammonarcbola", "ammonarcthermite", "ammoinarc", "ammonarcecm"},
 		},
@@ -2219,7 +2220,7 @@ return {
 			costFunction = deductSalvage,
 			priceFunction = function(unitDefID)
 				local AMOUNT_PER_TON = 5 / GG.GameConstants.ammoTypes.Narc
-				return deductPerUnitDefTag(unitDefID, true, "maxammo", AMOUNT_PER_TON, "narc")
+				return deductPerUnitDefTag(unitDefID, true, "maxammo", AMOUNT_PER_TON, "narc") * MOD_COST_MULT
 			end,
 			incompatible = {"ammonarcexplosive", "ammonarcbola", "ammonarcthermite", "ammoinarc", "ammonarchaywire"},
 		},

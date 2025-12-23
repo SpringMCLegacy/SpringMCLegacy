@@ -197,6 +197,17 @@ local options = {
 		step	= 1,
 		section	= '2income',
 	},
+	{
+		key		= "modcostmult",
+		name	= "Mod costs (multiplier)",
+		desc	= "Multiplier for the salvage cost of mods",
+		type	= "number",
+		def		= 1,
+		min		= 1,
+		max		= 100,
+		step	= 1,
+		section	= '2income',
+	},
 	----------------------------------------------------------------------------
 	{
 		key		= '3game',
