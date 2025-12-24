@@ -262,6 +262,7 @@ local function ApplyAppToUnit(unitID, unitDefID, appType, appDef, cmdID, applier
 	appDef.applyPerk(unitID, level) -- needs to come after any incompatible mods are removed so ammo switches work
 	Spring.SetUnitRulesParam(unitID, appDef.name, true)
 	if cmdID then
+		local mechDefID = Spring.GetUnitDefID(unitID)
 		applierID = applierID or unitID -- default to unitID
 		if level == (appDef.levels or 1) then -- fully trained
 			local complete = completeTexts[appType]
@@ -271,7 +272,7 @@ local function ApplyAppToUnit(unitID, unitDefID, appType, appDef, cmdID, applier
 			EditUnitCmdDesc(applierID, FindUnitCmdDesc(applierID, cmdID), {name = nameString})
 		end
 		if not free then
-			local price = Spring.IsNoCostEnabled() and 0 or appDef.price or appDef.priceFunction(unitDefID)
+			local price = (Spring.IsNoCostEnabled() and 0) or modCostsPerUnitDef[appDef.name][mechDefID]
 			appDef.costFunction(unitID, price)
 		end
 		UpdateUnitApps(applierID, unitDefID, appType) -- update here too to prevent pause cheating
