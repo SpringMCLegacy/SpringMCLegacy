@@ -303,7 +303,7 @@ local function CoolOff()
 			heatElevated = false
 			excessHeat = 0 -- if we managed to return to normal heat, remove all excess
 		end
-		if tsmActive and (currHeatLevel/heatLimit > 0.33) then
+		if lostlegs == 0 and tsmActive and (currHeatLevel/heatLimit > 0.33) then
 			speedMod = (running and 1.5 * 1.3 or 1.2) * (superCharger and 1.25 or 1)
 			SpeedChangeCheck()
 		end
@@ -360,14 +360,16 @@ function ToggleWeapon(weaponID, code)
 end
 
 function SmokeLimb(limb, hitPiece)
+	Signal(hitPiece)
+	SetSignalMask(hitPiece)
 	local maxHealth = info.limbHPs[limb] / 100
-	while true do
-		local health = limbHPs[limb]/maxHealth
-		if (health <= 66) then -- only smoke if less then 2/3rd limb maxhealth left
-			EmitSfx(piece(hitPiece), SFX.CEG + numWeapons + 2)
-			EmitSfx(piece(hitPiece), SFX.CEG + numWeapons + 3)
-		end
+	local health = limbHPs[limb]/maxHealth
+	while health <= 66 do
+		health = limbHPs[limb]/maxHealth
+		EmitSfx(piece(hitPiece), SFX.CEG + numWeapons + 2)
+		EmitSfx(piece(hitPiece), SFX.CEG + numWeapons + 3)
 		Sleep(20*health + 150)
+		--Spring.Echo("SmokeLimb", hitPiece)
 	end
 end
 
@@ -390,7 +392,7 @@ function hideLimbPieces(limb, hide)
 			Explode(side, SFX.FIRE + SFX.SHATTER + SFX.RECURSIVE)
 			lostLegs = lostLegs + 1
 			--Spring.Echo("Lost a leg! halving move speed")
-			speedMod = speedMod / 2
+			speedMod = 1 / (2^lostLegs)
 			StartThread(SpeedChangeCheck)
 			-- disable jumpjets
 			if GG.unitMechanicalJumps[unitID] and info.jumpjets > 0 then
@@ -399,7 +401,7 @@ function hideLimbPieces(limb, hide)
 		else -- leg is restored
 			lostLegs = lostLegs - 1
 			--Spring.Echo("Regained a leg! doubling move speed")
-			speedMod = speedMod * 2
+			speedMod = 1 / (2^lostLegs)
 			StartThread(SpeedChangeCheck)
 			if GG.unitMechanicalJumps[unitID] and lostLegs == 0 and info.jumpjets > 0 then -- enable jumpjets
 				Spring.EditUnitCmdDesc(unitID, Spring.FindUnitCmdDesc(unitID, CMD_JUMP), {disabled = false})
@@ -459,7 +461,7 @@ function limbHPControl(limb, damage, piece)
 			limbsLost = limbsLost - 1
 			SetUnitRulesParam(unitID, "limblost", limbsLost)
 		else
-			if (newHP/info.limbHPs[limb] * 100) <= 66 and (currHP/info.limbHPs[limb] * 100) > 66 and piece then
+			if (newHP/info.limbHPs[limb] * 100) <= 66 and piece then --and (currHP/info.limbHPs[limb] * 100) > 66 and piece then
 				if limb == "left_arm" then
 					piece = "lupperarm"
 				elseif limb == "right_arm" then
