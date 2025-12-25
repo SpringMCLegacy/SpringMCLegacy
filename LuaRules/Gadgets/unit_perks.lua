@@ -46,7 +46,7 @@ GG.appDefTypes = appDefTypes
 local validApps = {} -- [unitDefID][appType] = {appCmdID = true, etc}
 local orderedApps = {} -- unitDefID = {cmdDesc1, cmdDesc2, ...} -- TODO: get rid of need for this by just using the include directly which is already in order
 local currentApps = {} --[unitID][appType] = {app1 = true, app2 = true, ...}}
-local currentModCounts = {} -- [unitID] = count
+local currentModCounts = {} -- [unitID] = count 
 local MAX_MODS = 6
 local appUnits = {} -- [unitID][appType] = true
 local appUnitDefIDs = {} -- [unitID] = unitDefID
@@ -110,7 +110,9 @@ local function UpdateRemaining(unitID, unitDefID, appType, newLevel, applierID)
 				and validApps[Spring.GetUnitDefID(applierID)][appType][appCmdID] then
 					appRemaining = true
 					local price = Spring.IsNoCostEnabled() and 0 or appDef.price
-					if unitDefID and appDef.applyTo and appDef.applyTo(unitDefID) and appDef.priceFunction then
+					if price and appDef.applyTo and appDef.applyTo(unitDefID) then
+						modCostsPerUnitDef[appDef.name][unitDefID] = price
+					elseif unitDefID and appDef.applyTo and appDef.applyTo(unitDefID) and appDef.priceFunction then
 						price = Spring.IsNoCostEnabled() and 0 or modCostsPerUnitDef[appDef.name][unitDefID]
 						if not price then -- first time for this unitDefID
 							price = appDef.priceFunction(unitDefID)
