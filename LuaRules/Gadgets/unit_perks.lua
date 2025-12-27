@@ -274,7 +274,7 @@ local function ApplyAppToUnit(unitID, unitDefID, appType, appDef, cmdID, applier
 			EditUnitCmdDesc(applierID, FindUnitCmdDesc(applierID, cmdID), {name = nameString})
 		end
 		if not free then
-			local price = (Spring.IsNoCostEnabled() and 0) or modCostsPerUnitDef[appDef.name][mechDefID]
+			local price = (Spring.IsNoCostEnabled() and 0) or appDef.price or modCostsPerUnitDef[appDef.name][mechDefID]
 			appDef.costFunction(unitID, price)
 		end
 		UpdateUnitApps(applierID, unitDefID, appType) -- update here too to prevent pause cheating
