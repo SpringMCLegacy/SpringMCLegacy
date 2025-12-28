@@ -68,6 +68,7 @@ local ADArrow = ArrowIV:New{
 	startVelocity			= 100,
 	weaponAcceleration 		= 700,
 	weaponVelocity          = 1500,
+	model					= "Weapons/ArrowIV_AD.s3o",
 }
 
 local ArrowIV_Cluster = ArrowIV:New{

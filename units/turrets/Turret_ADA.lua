@@ -1,4 +1,4 @@
-local Turret_Arrow = Tower:New{
+local Turret_ADA = Tower:New{
 	description         = "Air Defense Arrow",
 	buildCostMetal      = 7300,
 	maxDamage           = 2000,
@@ -23,5 +23,5 @@ local Turret_Arrow = Tower:New{
 }
 
 return lowerkeys({
-	["Turret_Arrow"] = Turret_Arrow,
+	["Turret_ADA"] = Turret_ADA,
 })
