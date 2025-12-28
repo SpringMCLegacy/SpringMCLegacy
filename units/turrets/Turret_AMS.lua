@@ -1,16 +1,13 @@
 local Turret_AMS = Tower:New{
-	description         = "Anti-Missile System",
+	description         = "Heavy Anti-Missile System",
 	buildCostMetal      = 3300,
 	airSightDistance 		= 1500,
 	maxDamage           = 1000,
 
 	weapons = {	
 		[1] = {
-			name	= "AMS",
+			name	= "HAMS",
 		},
-		--[2] = {
-		--	name	= "AMS_Shield",
-		--},
 	},
 	customparams = {
 		turretturnspeed = 9000,

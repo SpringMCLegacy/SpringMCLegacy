@@ -1,4 +1,4 @@
-weaponDef = {
+local AMS = Weapon:New{
 	name                    = "AMS",
 	weaponType              = "Cannon",
 	explosionGenerator    	= "custom:MG_Hit",
@@ -9,9 +9,9 @@ weaponDef = {
 	collideFriendly			= false,
 	noSelfDamage            = true,
 	turret                  = true,
-	range                   = 1000,
+	range                   = 750,
 	--accuracy                = 100,
-	areaOfEffect            = 200,
+	areaOfEffect            = 75,
 	weaponVelocity          = 2400,
 	reloadtime              = 0.1,
 	burst					= 5,
@@ -26,7 +26,7 @@ weaponDef = {
 	
 	collisionsize = 5,
 	interceptor = 1,
-	coverage = 1000,
+	coverage = 750,
 	interceptsolo = false,
 	proximitypriority = 2000,
 	predictboost = 50000,
@@ -41,4 +41,11 @@ weaponDef = {
     },
 }
 
-return lowerkeys({ AMS = weaponDef })
+return lowerkeys({ 
+	AMS = AMS,
+	HAMS = AMS:New{
+		areaOfEffect 	= 200,
+		coverage		= 1000,
+		range			= 1000,
+	},
+})

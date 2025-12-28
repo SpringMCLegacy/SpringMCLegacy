@@ -47,7 +47,13 @@ local DelayCall							= GG.Delay.DelayCall
 -- Constants
 local ARROW_CLUSTER_ID = WeaponDefNames["arrowiv_cluster"].id
 local AMS_DEF = WeaponDefNames["ams"] 
-local AMS_ID = WeaponDefNames["ams"].id
+local HAMS_DEF = WeaponDefNames["hams"] 
+
+local AMS_IDS = {
+	[AMS_DEF.id] = AMS_DEF.damageAreaOfEffect,
+	[HAMS_DEF.id] = HAMS_DEF.damageAreaOfEffect,
+}
+
 local FRAME_FUDGE = 16
 local GAUSS_ID = WeaponDefNames["gauss"].id
 local NARC_ID = WeaponDefNames["narc"].id
@@ -337,6 +343,7 @@ function gadget:ProjectileCreated(proID, proOwnerID, weaponID)
 	end
 	-- LBX cluster shot
 	local lbxInfo = lbx[weaponID]
+	local amsInfo = AMS_IDS[weaponID]
 	if lbxInfo then -- vehicles might have LBX
 		--Spring.Echo("LBX Fired!")
 		local targetType, info = GetProjectileTarget(proID)
@@ -357,8 +364,8 @@ function gadget:ProjectileCreated(proID, proOwnerID, weaponID)
 		local x,y,z = GetProjectilePosition(proID)
 		ppcEmits[proID] = {x, y, z}
 	-- AMS tracking for lua'd burnBlow & AoE
-	elseif weaponID == AMS_ID then
-		amsPros[proID] = true
+	elseif amsInfo then
+		amsPros[proID] = amsInfo
 	end
 end	
 
@@ -368,11 +375,10 @@ function gadget:ProjectileDestroyed(proID)
 	arrows[proID] = nil
 	contTAG[proID] = nil
 	ppcEmits[proID] = nil -- layer must be set to after game_radar
-	
-	if amsPros[proID] then
+	local radius = amsPros[proID]
+	if radius then
 		-- implement a rough approximation of burnBlow tag vs projectiles
 		local x,y,z = GetProjectilePosition(proID)
-		local radius = AMS_DEF.damageAreaOfEffect
 		local nearPros = GetProjectilesInRectangle(x - radius, z-radius, x+radius, z+ radius, false, true)
 		for i, pro in pairs(nearPros) do
 			SetProjectileCollision(pro, true)
