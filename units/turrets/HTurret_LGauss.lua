@@ -27,7 +27,7 @@ local HTurret_LGauss = HeavyTurret:New{
 		barrelrecoildist = {5, 5, 5, 5},
 		turretturnspeed = 100,
 		elevationspeed  = 150,
-		chainfiredelays = {250, 0, 250, 0}
+		chainfiredelays = {250, 0, 250, 0},
 		maxammo 		= {ltgauss = 2},
 		faction			= "fw",
     },
