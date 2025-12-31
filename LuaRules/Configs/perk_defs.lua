@@ -482,7 +482,7 @@ return {
 				tooltip = 'Adds additional armour (+100% damage resistance)',
 				texture = 'bitmaps/ui/upgrade.png',	
 			},
-			valid = function (unitDefID) return UnitDefs[unitDefID].name:find("garrison") end,
+			valid = function (unitDefID) return UnitDefs[unitDefID].name == "outpost_garrison" end,
 			applyPerk = function (unitID)
 				--local x,y,z = Spring.GetUnitPosition(unitID)
 				--local faction = GG.teamSide[Spring.GetUnitTeam(unitID)]

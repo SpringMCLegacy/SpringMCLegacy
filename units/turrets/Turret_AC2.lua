@@ -1,4 +1,4 @@
-local Turret_AC2 = Tower:New{
+local Turret_AC2 = Turret:New{
 	description         = "Quad AC/2",
 	buildCostMetal      = 2200,
 	maxDamage           = 1500,
@@ -32,9 +32,6 @@ local Turret_AC2 = Tower:New{
 		chainfiredelays = {[2] = 100, [3] = 200, [4] = 300},
 		turrettype = "turret",
     },
-	sounds = {
-		select = "Turret",
-	}
 }
 
 return lowerkeys({

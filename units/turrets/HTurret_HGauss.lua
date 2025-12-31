@@ -1,4 +1,4 @@
-local Garrison_HGauss = Tower:New{
+local HTurret_HGauss = HeavyTurret:New{
 	description         = "Dual Heavy Gauss",
 	buildCostMetal      = 20000,
 
@@ -17,12 +17,11 @@ local Garrison_HGauss = Tower:New{
 		barrelrecoildist = {5, 5},
 		turretturnspeed = 100,
 		elevationspeed  = 150,
+		maxammo 		= {hvgauss = 2},
+		faction			= "la",
     },
-	sounds = {
-	select = "TurretHeavy",
-	}
 }
 
 return lowerkeys({
-	["Garrison_LA"] = Garrison_HGauss,
+	["HTurret_LA"] = HTurret_HGauss,
 })

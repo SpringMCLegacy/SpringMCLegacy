@@ -1,38 +1,33 @@
-local Garrison_LRM = Tower:New{
-	description         = "Quad LRM-20",
-	buildCostMetal      = 20000,
+local HTurret_PPCMRM = HeavyTurret:New{
+	description         = "Dual ERPPC & MRM-30",
+	buildCostMetal      = 15000,
 
 	weapons	= {	
 		[1] = {
-			name	= "LRM20",
+			name	= "ERPPC",
 			OnlyTargetCategory = "notbeacon",
 		},
 		[2] = {
-			name	= "LRM20",
+			name	= "ERPPC",
 			OnlyTargetCategory = "notbeacon",
 			SlaveTo = 1,
 		},
 		[3] = {
-			name	= "LRM20",
-			OnlyTargetCategory = "notbeacon",
-			SlaveTo = 1,
-		},
-		[4] = {
-			name	= "LRM20",
+			name	= "MRM30",
 			OnlyTargetCategory = "notbeacon",
 			SlaveTo = 1,
 		},
 	},
 	customparams = {
 		--barrelrecoildist = {[1] = 5},
+		chainfiredelays = {[2] = 200},
 		turretturnspeed = 100,
 		elevationspeed  = 150,
+		maxammo 		= {mrm = 2},
+		faction			= "dc",
     },
-	sounds = {
-	select = "TurretHeavy",
-	}
 }
 
 return lowerkeys({
-	["Garrison_CC"] = Garrison_LRM,
+	["HTurret_DC"] = HTurret_PPCMRM,
 })

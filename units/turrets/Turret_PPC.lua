@@ -1,4 +1,4 @@
-local Turret_PPC = Tower:New{
+local Turret_PPC = Turret:New{
 	description         = "Dual PPC",
 	buildCostMetal      = 3500,
 	maxDamage           = 2000,
@@ -17,9 +17,6 @@ local Turret_PPC = Tower:New{
 		barrelrecoildist = {[1] = 5},
 		turrettype = "energy",
     },
-	sounds = {
-		select = "Turret",
-	}
 }
 
 return lowerkeys({

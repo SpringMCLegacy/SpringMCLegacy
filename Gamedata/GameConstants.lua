@@ -34,7 +34,7 @@ return {
 		vehicle		= 1.25,
 		aero		= 1.25, 
 		vtol		= 1.25,
-		tower		= 1,
+		turret		= 1,
 		walls		= 1,
 		outpost		= 1,
 	},

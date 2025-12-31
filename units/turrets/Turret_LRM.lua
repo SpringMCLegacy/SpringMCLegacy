@@ -1,4 +1,4 @@
-local Turret_LRM = Tower:New{
+local Turret_LRM = Turret:New{
 	description         = "LRM-20",
 	buildCostMetal      = 4200,
 	maxDamage           = 2000,
@@ -15,9 +15,6 @@ local Turret_LRM = Tower:New{
 		elevationspeed  = 200,
 		turrettype = "ranged",
     },
-	sounds = {
-		select = "Turret",
-	}
 }
 
 return lowerkeys({

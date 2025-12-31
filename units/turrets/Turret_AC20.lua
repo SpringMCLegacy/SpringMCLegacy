@@ -1,4 +1,4 @@
-local Turret_AC20 = Tower:New{
+local Turret_AC20 = Turret:New{
 	description         = "Ultra Autocannon/20",
 	buildCostMetal      = 4200,
 	maxDamage           = 2000,
@@ -16,9 +16,6 @@ local Turret_AC20 = Tower:New{
 		elevationspeed  = 150,
 		turrettype = "turret",
     },
-	sounds = {
-		select = "Turret",
-	}
 }
 
 return lowerkeys({

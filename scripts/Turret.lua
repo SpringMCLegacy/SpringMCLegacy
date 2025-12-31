@@ -119,7 +119,7 @@ local legs = {}
 local breaks = {}
 local exhausts = {}
 local extend = piece("extend")
-local sam = piece("missile_1")
+local largeTurret = tonumber(unitDef.customParams.slotcost) == 2
 for i = 1, 6 do
 	legs[i] = piece("leg_" .. i)
 	breaks[i] = piece("break_" .. i)
@@ -169,7 +169,7 @@ function fx()
 		Sleep(1000)
 		PlaySound("turret_deploy")
 		for i = 1,#legs do
-			if extend or sam then
+			if largeTurret then
 				Turn(legs[i], x_axis, math.rad(90), SPEED)
 			else
 				local axis = (i % 2 == 0 and z_axis) or x_axis -- even use z, odd use x
@@ -177,8 +177,10 @@ function fx()
 				Turn(legs[i], axis, math.rad(dir * 83), SPEED)
 			end
 		end
-		WaitForTurn(legs[4], z_axis)
-		if not extend and not sam then
+		if legs[4] then -- TODO; shouldn't be needed on the new large turrets, here for garrison versions
+			WaitForTurn(legs[4], z_axis)
+		end
+		if not largeTurret then
 			for i = 1,#legs do
 				local axis = (i % 2 == 0 and z_axis) or x_axis -- even use z, odd use x
 				local dir = (i == 1 or i == 4) and -1 or 1
@@ -208,21 +210,24 @@ function fx()
 end
 
 function script.Create()
-	if unitDef.name:find("garrison") then
-		TouchDown()
-		RealBoy()
-	else
+	if unitDef.name == "garrison_cc" then --turret_faction_cc" then
+		for i = 1, info.numWeapons do
+			GG.EnableAmmo(unitID, true, "lrm", "thunder", i)
+		end
+	elseif unitDef.name == "turret_arrow" then
+		for i = 1, info.numWeapons do
+			GG.EnableAmmo(unitID, true, "arrowiv", "homing", i)
+		end
+	end
+	--else]]
 	-- Pre-setup
 	if mantlets[1] then 
 		Turn(mantlets[1], x_axis, math.rad(-90))
 	end
-	if extend then
-		Move(barrels[1], z_axis, -10)
-		for i = 1, #exhausts do
-			Turn(exhausts[i], y_axis, math.rad(-60 * (i-1)-30))
-			Turn(legs[i], y_axis, math.rad(-60 * (i-1)-30))
+	if largeTurret then
+		if extend then
+			Move(barrels[1], z_axis, -10)
 		end
-	elseif sam then
 		for i = 1, #exhausts do
 			Turn(exhausts[i], y_axis, math.rad(-60 * (i-1)-30))
 			Turn(legs[i], y_axis, math.rad(-60 * (i-1)-30))
@@ -280,7 +285,7 @@ function script.Create()
 		Spring.MoveCtrl.SetVelocity(unitID, 0, sy * 0.8, 0)
 	end	
 	Spring.MoveCtrl.SetGravity(unitID, -0.01 * GRAVITY)
-	end
+	--end
 end
 
 local function SpinBarrels(weaponID, start)

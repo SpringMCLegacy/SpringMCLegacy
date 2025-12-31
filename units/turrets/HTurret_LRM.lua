@@ -1,24 +1,24 @@
-local Garrison_RAC = Tower:New{
-	description         = "Quad RAC/5",
-	buildCostMetal      = 19000,
+local HTurret_LRM = HeavyTurret:New{
+	description         = "Quad Thunder LRM-20",
+	buildCostMetal      = 20000,
 
 	weapons	= {	
 		[1] = {
-			name	= "RAC5",
+			name	= "LRM20",
 			OnlyTargetCategory = "notbeacon",
 		},
 		[2] = {
-			name	= "RAC5",
+			name	= "LRM20",
 			OnlyTargetCategory = "notbeacon",
 			SlaveTo = 1,
 		},
 		[3] = {
-			name	= "RAC5",
+			name	= "LRM20",
 			OnlyTargetCategory = "notbeacon",
 			SlaveTo = 1,
 		},
 		[4] = {
-			name	= "RAC5",
+			name	= "LRM20",
 			OnlyTargetCategory = "notbeacon",
 			SlaveTo = 1,
 		},
@@ -27,12 +27,11 @@ local Garrison_RAC = Tower:New{
 		--barrelrecoildist = {[1] = 5},
 		turretturnspeed = 100,
 		elevationspeed  = 150,
+		maxammo 		= {lrm = 2},
+		faction			= "cc",
     },
-	sounds = {
-	select = "TurretHeavy",
-	}
 }
 
 return lowerkeys({
-	["Garrison_FS"] = Garrison_RAC,
+	["HTurret_CC"] = HTurret_LRM,
 })

@@ -390,7 +390,7 @@ for name, ud in pairs(UnitDefs) do
 						weapon.onlytargetcategory = "ground"
 					end
 					cpwheelspeed = ud.maxvelocity * 166
-				--elseif cp.baseclass == tower then
+				--elseif cp.baseclass == turret then
 				--	if not weapon.onlytargetcategory then
 				--		weapon.onlytargetcategory = "notbeacon"
 				--	end
@@ -441,7 +441,7 @@ for name, ud in pairs(UnitDefs) do
 				ud.maxdamage = ud.maxdamage * 0.5
 			end
 		end
-	elseif cp.baseclass == "tower" and not name:find("garrison") then
+	elseif cp.baseclass == "turret" and not name:find("garrison") then
 		ud.category = ud.category .. " narctag"
 		table.insert(TCONTROL_BUILDOPTIONS, name)
 		ud.levelground = false

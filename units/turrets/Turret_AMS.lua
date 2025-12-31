@@ -1,4 +1,4 @@
-local Turret_AMS = Tower:New{
+local Turret_AMS = Turret:New{
 	description         = "Heavy Anti-Missile System",
 	buildCostMetal      = 3300,
 	airSightDistance 		= 1500,
@@ -14,9 +14,6 @@ local Turret_AMS = Tower:New{
 		elevationspeed  = 9000,
 		turrettype = "turret",
     },
-	sounds = {
-		select = "Turret",
-	}
 }
 
 return lowerkeys({

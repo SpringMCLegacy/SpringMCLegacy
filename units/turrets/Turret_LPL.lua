@@ -1,4 +1,4 @@
-local Turret_LPL = Tower:New{
+local Turret_LPL = Turret:New{
 	description         = "Quad Large Pulse Laser",
 	buildCostMetal      = 3500,
 	maxDamage           = 2500,
@@ -26,9 +26,6 @@ local Turret_LPL = Tower:New{
 		elevationspeed  = 250,
 		turrettype = "energy",
     },
-	sounds = {
-		select = "Turret",
-	}
 }
 
 return lowerkeys({

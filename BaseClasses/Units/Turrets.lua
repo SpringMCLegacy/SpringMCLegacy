@@ -1,5 +1,5 @@
 -- Towers ----
-local Tower = Unit:New{
+local Turret = Unit:New{
 	name              	= "Weapon Emplacement", -- overwritten by ecm & bap
 	script				= "Turret.lua",
 	category 			= "structure notbeacon ground",
@@ -20,10 +20,31 @@ local Tower = Unit:New{
 
 	customparams = {
 		ignoreatbeacon = true,
-		baseclass		= "tower",
-	}
+		baseclass		= "turret",
+		slotcost		= 1,
+	},
+	
+	sounds = {
+		select = "Turret",
+	},
+}
+
+local HeavyTurret = Turret:New{
+	footprintX			= 5,
+	footprintZ 			= 5,
+	maxDamage           = 8000,
+	
+	customparams = {
+		slotcost		= 2,
+		turrettype		= "ranged", -- TODO: remove
+	},
+	
+	sounds = {
+		select = "TurretHeavy",
+	},
 }
 
 return {
-	Tower = Tower,
+	Turret = Turret,
+	HeavyTurret = HeavyTurret,
 }

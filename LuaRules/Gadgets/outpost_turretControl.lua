@@ -66,7 +66,7 @@ function gadget:GamePreload()
 		local name = unitDef.name
 		local cp = unitDef.customParams
 		-- automatically build table of towers
-		if cp and cp.baseclass == "tower" and not name:find("garrison") then -- TODO: remove the old garrison turret unitdefs
+		if cp and cp.baseclass == "turret" and not name:find("garrison") then -- TODO: remove the old garrison turret unitdefs
 			towerDefIDs[unitDefID] = cp.turrettype or "turret"
 		end
 	end
@@ -96,8 +96,9 @@ function LimitTowerType(unitID, teamID, towerType, increase)
 		buildLimits[unitID][towerType] = towersRemaining - 1
 		if towersRemaining == 1 then
 			for tDefID, tType in pairs(towerDefIDs) do
-				if tType == towerType then
-					EditUnitCmdDesc(unitID, FindUnitCmdDesc(unitID, -tDefID), {disabled = true, params = {"L"}})
+				local place = FindUnitCmdDesc(unitID, -tDefID)
+				if place and tType == towerType then
+					EditUnitCmdDesc(unitID, place, {disabled = true, params = {"L"}})
 				end
 			end
 		end
@@ -112,6 +113,22 @@ function gadget:UnitCreated(unitID, unitDefID, teamID, builderID)
 	local unitDef = UnitDefs[unitDefID]
 	local cp = unitDef.customParams
 	if unitDefID == TURRETCONTROL_ID then
+		-- Remove all faction turrets that do not belong to the team's side
+		local side = GG.teamSide[teamID]
+		if not side then return end -- presume team is dead
+		local toDelete = {}
+		for i, cmdDesc in pairs(Spring.GetUnitCmdDescs(unitID)) do
+			if cmdDesc.id < 0 then
+				local turretDef = UnitDefs[-cmdDesc.id]
+				local faction = turretDef and turretDef.customParams.faction
+				if faction and faction ~= side then
+					toDelete[cmdDesc.id] = true
+				end
+			end
+		end
+		for cmdID in pairs(toDelete) do
+			Spring.RemoveUnitCmdDesc(unitID, Spring.FindUnitCmdDesc(unitID, cmdID))
+		end
 		buildLimits[unitID] = {["turret"] = 2, ["energy"] = 1, ["ranged"] = 1}
 		ownedLimits[unitID] = {["turret"] = 0, ["energy"] = -1, ["ranged"] = -1}
 		LimitTowerType(unitID, teamID, "energy") -- reduce to 0 so we get the BP greyed out
