@@ -210,11 +210,11 @@ function fx()
 end
 
 function script.Create()
-	if unitDef.name == "garrison_cc" then --turret_faction_cc" then
+	if unitDef.name == "hturret_cc" then
 		for i = 1, info.numWeapons do
 			GG.EnableAmmo(unitID, true, "lrm", "thunder", i)
 		end
-	elseif unitDef.name == "turret_arrow" then
+	elseif unitDef.name == "hturret_arrow" then
 		for i = 1, info.numWeapons do
 			GG.EnableAmmo(unitID, true, "arrowiv", "homing", i)
 		end

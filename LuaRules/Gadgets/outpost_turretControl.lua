@@ -66,7 +66,7 @@ function gadget:GamePreload()
 		local name = unitDef.name
 		local cp = unitDef.customParams
 		-- automatically build table of towers
-		if cp and cp.baseclass == "turret" and not name:find("garrison") then -- TODO: remove the old garrison turret unitdefs
+		if cp and cp.baseclass == "turret" then
 			towerDefIDs[unitDefID] = cp.turrettype or "turret"
 		end
 	end

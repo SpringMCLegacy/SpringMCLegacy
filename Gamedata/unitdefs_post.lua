@@ -441,7 +441,7 @@ for name, ud in pairs(UnitDefs) do
 				ud.maxdamage = ud.maxdamage * 0.5
 			end
 		end
-	elseif cp.baseclass == "turret" and not name:find("garrison") then
+	elseif cp.baseclass == "turret" then
 		ud.category = ud.category .. " narctag"
 		table.insert(TCONTROL_BUILDOPTIONS, name)
 		ud.levelground = false
