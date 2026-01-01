@@ -96,7 +96,7 @@ GG.LockHeavyTurrets = LockHeavyTurrets
 
 function LimitTurretType(unitID, teamID, delta)	 -- TODO: rename to UpdateTurretSlots
 	if not unitID or unitID and Spring.GetUnitIsDead(unitID) then return false end
-	remainingSlots[unitID] = remainingSlots[unitID] or 0 + delta 
+	remainingSlots[unitID] = (remainingSlots[unitID] or 0) + delta 
 	if delta > 0 then -- regaining slots, check for linklost
 		local x, _, z = Spring.GetUnitPosition(unitID)
 		LinkCheck(x, z, unitID, teamID)
@@ -205,7 +205,7 @@ function gadget:GameFrame(n)
 	if n > 0 and n % 30 == 0 then -- once a second
 		-- check if orders are still too expensive
 		for tcID, teamID in pairs(tcTeams) do
-			GG.CheckBuildOptions(tcID, teamID, remainingSlots[tcID] or 0 + 1, nil, turretDefIDs)
+			GG.CheckBuildOptions(tcID, teamID, (remainingSlots[tcID] or 0) + 1, nil, turretDefIDs)
 		end
 	end
 end
