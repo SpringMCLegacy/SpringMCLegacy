@@ -556,7 +556,7 @@ return {
 			},
 			valid = function (unitDefID) return UnitDefs[unitDefID].name == "outpost_turretcontrol" end,
 			applyPerk = function (unitID)
-				GG.LimitTurretType(unitID, Spring.GetUnitTeam(unitID), 4)
+				GG.UpdateTurretSlots(unitID, Spring.GetUnitTeam(unitID), 4)
 			end,
 			costFunction = deductCBills,
 			price = 12000,

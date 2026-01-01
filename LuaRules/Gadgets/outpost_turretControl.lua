@@ -94,7 +94,7 @@ local function LockHeavyTurrets(tcID, lock)
 end
 GG.LockHeavyTurrets = LockHeavyTurrets
 
-function LimitTurretType(unitID, teamID, delta)	 -- TODO: rename to UpdateTurretSlots
+function UpdateTurretSlots(unitID, teamID, delta)
 	if not unitID or unitID and Spring.GetUnitIsDead(unitID) then return false end
 	remainingSlots[unitID] = (remainingSlots[unitID] or 0) + delta 
 	if delta > 0 then -- regaining slots, check for linklost
@@ -103,7 +103,7 @@ function LimitTurretType(unitID, teamID, delta)	 -- TODO: rename to UpdateTurret
 	end
 	GG.CheckBuildOptions(unitID, teamID, remainingSlots[unitID] + 1, nil, turretDefIDs) -- +1 here as we want to specify slots to deduct
 end
-GG.LimitTurretType = LimitTurretType -- for outpost_turretcontrol perk
+GG.UpdateTurretSlots = UpdateTurretSlots -- for outpost_turretcontrol perk
 
 function gadget:UnitCreated(unitID, unitDefID, teamID, builderID)
 	local unitDef = UnitDefs[unitDefID]
@@ -142,7 +142,7 @@ function gadget:UnitDestroyed(unitID, unitDefID, teamID, attackerID, attackerDef
 	if turretOwnerID then -- unit was a turret with owning beacon, open the slot back up
 		turretOwners[unitID] = nil
 		if ValidUnitID(turretOwnerID) and not GetUnitIsDead(turretOwnerID) then
-			LimitTurretType(turretOwnerID, teamID, turretDefIDs[unitDefID]) -- increase limit
+			UpdateTurretSlots(turretOwnerID, teamID, turretDefIDs[unitDefID]) -- increase limit
 		end
 	elseif unitDefID == TURRETCONTROL_ID then -- turret control died, kill link and disable
 		tcTeams[unitID] = nil
@@ -178,7 +178,7 @@ function gadget:AllowCommand(unitID, unitDefID, teamID, cmdID, cmdParams, cmdOpt
 			end
 			-- check we have the slots
 			if remainingSlots[unitID] >= turretDefIDs[-cmdID] then -- Shouldn't be needed but, bolts and braces
-				LimitTurretType(unitID, teamID, -slotCost)
+				UpdateTurretSlots(unitID, teamID, -slotCost)
 				local success = CreateUnit(-cmdID, tx, ty, tz, 1, teamID, false, false, nil, unitID)
 				--Spring.Echo("Yo make a turret!", -cmdID, UnitDefs[-cmdID].name, success)
 			end
@@ -196,7 +196,7 @@ function gadget:UnitGiven(unitID, unitDefID, teamID, oldTeamID)
 		GG.ToggleLink(unitID, teamID, false)
 		local env = Spring.UnitScript.GetScriptEnv(unitID)
 		Spring.UnitScript.CallAsUnit(unitID, env.TeamChange, teamID) -- toggle firing
-		LimitTurretType(turretOwners[unitID], teamID, turretDefIDs[unitDefID])
+		UpdateTurretSlots(turretOwners[unitID], teamID, turretDefIDs[unitDefID])
 	end
 end
 
