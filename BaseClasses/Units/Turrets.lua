@@ -1,6 +1,6 @@
 -- Towers ----
 local Turret = Unit:New{
-	name              	= "Weapon Emplacement", -- overwritten by ecm & bap
+	name              	= "Weapon Emplacement",
 	script				= "Turret.lua",
 	category 			= "structure notbeacon ground",
 	iconType			= "turret",
@@ -36,7 +36,6 @@ local HeavyTurret = Turret:New{
 	
 	customparams = {
 		slotcost		= 2,
-		turrettype		= "ranged", -- TODO: remove
 	},
 	
 	sounds = {

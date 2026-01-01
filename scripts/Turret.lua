@@ -196,9 +196,11 @@ function fx()
 				Sleep(50)
 			end
 		end
-		if mantlets[1] then 
-			Turn(mantlets[1], x_axis, 0, SPEED)
-			WaitForTurn(mantlets[1], x_axis)
+		for weaponID, mantlet in pairs(mantlets) do
+			Turn(mantlet, x_axis, 0, SPEED)
+		end
+		for weaponID, mantlet in pairs(mantlets) do
+			WaitForTurn(mantlet, x_axis)
 		end
 		if extend then
 			Move(barrels[1], z_axis, 0, 10)
@@ -221,8 +223,8 @@ function script.Create()
 	end
 	--else]]
 	-- Pre-setup
-	if mantlets[1] then 
-		Turn(mantlets[1], x_axis, math.rad(-90))
+	for weaponID, mantlet in pairs(mantlets) do
+		Turn(mantlet, x_axis, math.rad(-90))
 	end
 	if largeTurret then
 		if extend then
