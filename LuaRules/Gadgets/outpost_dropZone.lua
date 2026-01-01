@@ -248,7 +248,7 @@ local L = {COLOURS.white .. "L"}
 local C = {COLOURS.cbills .. "C"}
 local T = {COLOURS.tonnage .. "T"}
 
-local function CheckBuildOptions(unitID, teamID, slotsLeft, cmdID)
+local function CheckBuildOptions(unitID, teamID, slotsLeft, cmdID, slotCosts)
 	local money = GetTeamResources(teamID, "metal")
 	local weightLeft = GetTeamResources(teamID, "energy")
 	
@@ -258,7 +258,7 @@ local function CheckBuildOptions(unitID, teamID, slotsLeft, cmdID)
 			local currParam = cmdDesc.params[1]
 			local cCost = UnitDefs[-cmdDescID].metalCost
 			local tCost = UnitDefs[-cmdDescID].energyCost
-			local limitLeft = slotsLeft - (orderSizes[unitID] or 0)
+			local limitLeft = slotsLeft - (orderSizes[unitID] or (slotCosts and slotCosts[-cmdDescID]) or 0)
 			if type(tonumber(currParam)) == "number" then
 				-- units are queued, don't do anything
 			elseif limitLeft < 1 then

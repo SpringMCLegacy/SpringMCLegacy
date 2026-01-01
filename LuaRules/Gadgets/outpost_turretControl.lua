@@ -16,6 +16,7 @@ if gadgetHandler:IsSyncedCode() then
 -- localisations
 -- SyncedRead
 local GetTeamResources 		= Spring.GetTeamResources
+local GetUnitCmdDescs		= Spring.GetUnitCmdDescs
 local GetUnitIsDead			= Spring.GetUnitIsDead
 local GetUnitRulesParam		= Spring.GetUnitRulesParam
 local GetUnitsInCylinder	= Spring.GetUnitsInCylinder
@@ -25,6 +26,7 @@ local ValidUnitID 			= Spring.ValidUnitID
 local CreateUnit			= Spring.CreateUnit
 local EditUnitCmdDesc		= Spring.EditUnitCmdDesc
 local FindUnitCmdDesc		= Spring.FindUnitCmdDesc
+local RemoveUnitCmdDesc		= Spring.RemoveUnitCmdDesc
 local TransferUnit			= Spring.TransferUnit
 local SetUnitNeutral		= Spring.SetUnitNeutral
 local SetSquareBuildingMask = Spring.SetSquareBuildingMask
@@ -38,11 +40,10 @@ local TURRETCONTROL_ID = UnitDefNames["outpost_turretcontrol"].id
 local MAX_BUILD_RANGE = UnitDefs[TURRETCONTROL_ID].buildDistance
 
 -- Variables
-local towerDefIDs = {} -- towerDefIDs[unitDefID] = "turret" or "energy" or "ranged"
-local buildLimits = {} -- buildLimits[unitID] = {turret = 4, ...}
-local towerOwners = {} -- towerOwners[towerID] = outpostID
-local ownedLimits = {} -- ownedLimits[outpostID] = {type = number, ...}
-
+local turretDefIDs = {} -- turretDefIDs[unitDefID] = slotCost
+local remainingSlots = {} -- remainingSlots[unitID] = numberOfSlots
+local turretOwners = {} -- turretOwners[turretID] = tcID
+local tcTeams = {} -- tcTeams[tcID] = teamID
 
 -- Called by the outpost.lua script for the beacon it is associated with
 function BuildMaskCircle(cx, cz, r, mask)
@@ -65,59 +66,55 @@ function gadget:GamePreload()
 	for unitDefID, unitDef in pairs(UnitDefs) do
 		local name = unitDef.name
 		local cp = unitDef.customParams
-		-- automatically build table of towers
+		-- automatically build table of turrets
 		if cp and cp.baseclass == "turret" then
-			towerDefIDs[unitDefID] = cp.turrettype or "turret"
+			turretDefIDs[unitDefID] = tonumber(cp.slotcost) or 1
 		end
 	end
 end
 
--- TOWERS
-function LimitTowerType(unitID, teamID, towerType, increase)	
-	if not unitID or unitID and Spring.GetUnitIsDead(unitID) then return false end
-	local towersRemaining = buildLimits[unitID][towerType]
-	--Spring.Echo("LimitTowerType", towerType, increase, ownedLimits[unitID][towerType], towersRemaining) -- 1,1,0
-	if increase then -- giving slots back
-		buildLimits[unitID][towerType] = towersRemaining + increase
-		for tDefID, tType in pairs(towerDefIDs) do
-			if tType == towerType then
-				local cmdDescID = FindUnitCmdDesc(unitID, -tDefID)
-				if cmdDescID then
-					EditUnitCmdDesc(unitID, cmdDescID, {disabled = false, params = {}})
-				end
+-- TURRETS
+
+-- TODO: this is copy pasta from L208 outpost_dropZone.lua LockHeavy function, generalise it?
+local locked = {} -- unitDefID = true
+
+local function LockHeavyTurrets(tcID, lock) 
+	local cmdDescs = GetUnitCmdDescs(tcID)
+	for i = 1, #cmdDescs do
+		local defID = cmdDescs[i].id
+		if defID < 0 then
+			local class = turretDefIDs[-defID]
+			if class == 2 then
+				--Spring.Echo("Hiding", UnitDefs[-defID].name, class)
+				locked[-defID] = lock
+				EditUnitCmdDesc(tcID, i, {hidden = lock})		
 			end
 		end
-		local x, _, z = Spring.GetUnitPosition(unitID)
-		LinkCheck(x, z, unitID, teamID) -- check if this allows to control any link lost
-	elseif towersRemaining == 0 then 
-		Spring.SendMessageToTeam(teamID, "Limit reached for " .. towerType)
-		return false 
-	else -- we have the slots
-		buildLimits[unitID][towerType] = towersRemaining - 1
-		if towersRemaining == 1 then
-			for tDefID, tType in pairs(towerDefIDs) do
-				local place = FindUnitCmdDesc(unitID, -tDefID)
-				if place and tType == towerType then
-					EditUnitCmdDesc(unitID, place, {disabled = true, params = {"L"}})
-				end
-			end
-		end
-		ownedLimits[unitID][towerType] = ownedLimits[unitID][towerType] + 1
-		--Spring.Echo("Added tower", towerType, ownedLimits[unitID][towerType])
-		return true
 	end
 end
-GG.LimitTowerType = LimitTowerType -- for outpost_turretcontrol perk
+GG.LockHeavyTurrets = LockHeavyTurrets
+
+function LimitTurretType(unitID, teamID, delta)	 -- TODO: rename to UpdateTurretSlots
+	if not unitID or unitID and Spring.GetUnitIsDead(unitID) then return false end
+	remainingSlots[unitID] = remainingSlots[unitID] or 0 + delta 
+	if delta > 0 then -- regaining slots, check for linklost
+		local x, _, z = Spring.GetUnitPosition(unitID)
+		LinkCheck(x, z, unitID, teamID)
+	end
+	GG.CheckBuildOptions(unitID, teamID, remainingSlots[unitID] + 1, nil, turretDefIDs) -- +1 here as we want to specify slots to deduct
+end
+GG.LimitTurretType = LimitTurretType -- for outpost_turretcontrol perk
 
 function gadget:UnitCreated(unitID, unitDefID, teamID, builderID)
 	local unitDef = UnitDefs[unitDefID]
 	local cp = unitDef.customParams
 	if unitDefID == TURRETCONTROL_ID then
+		tcTeams[unitID] = teamID
 		-- Remove all faction turrets that do not belong to the team's side
 		local side = GG.teamSide[teamID]
 		if not side then return end -- presume team is dead
 		local toDelete = {}
-		for i, cmdDesc in pairs(Spring.GetUnitCmdDescs(unitID)) do
+		for i, cmdDesc in pairs(GetUnitCmdDescs(unitID)) do
 			if cmdDesc.id < 0 then
 				local turretDef = UnitDefs[-cmdDesc.id]
 				local faction = turretDef and turretDef.customParams.faction
@@ -127,50 +124,45 @@ function gadget:UnitCreated(unitID, unitDefID, teamID, builderID)
 			end
 		end
 		for cmdID in pairs(toDelete) do
-			Spring.RemoveUnitCmdDesc(unitID, Spring.FindUnitCmdDesc(unitID, cmdID))
+			RemoveUnitCmdDesc(unitID, FindUnitCmdDesc(unitID, cmdID))
 		end
-		buildLimits[unitID] = {["turret"] = 2, ["energy"] = 1, ["ranged"] = 1}
-		ownedLimits[unitID] = {["turret"] = 0, ["energy"] = -1, ["ranged"] = -1}
-		LimitTowerType(unitID, teamID, "energy") -- reduce to 0 so we get the BP greyed out
-		LimitTowerType(unitID, teamID, "ranged") -- reduce to 0 so we get the BP greyed out
-	elseif cp and cp.baseclass == "tower" then
+		-- hide heavy turrets at first
+		LockHeavyTurrets(unitID, true) 
+		-- N.B. limits are initialised to 4 in the script when mast is deployed
+	elseif cp and cp.baseclass == "turret" then
 		-- track creation of turrets and their originating beacons so we can give back slots if a turret dies
 		if builderID then -- ignore /give turrets
-			towerOwners[unitID] = builderID
+			turretOwners[unitID] = builderID
 		end
 	end
 end
 
 function gadget:UnitDestroyed(unitID, unitDefID, teamID, attackerID, attackerDefID, attackerTeam)
-	local towerOwnerID = towerOwners[unitID]
-	if towerOwnerID then -- unit was a turret with owning beacon, open the slot back up
-		local towerType = towerDefIDs[unitDefID]
-		towerOwners[unitID] = nil
-		if ValidUnitID(towerOwnerID) and not GetUnitIsDead(towerOwnerID) then
-			if ownedLimits[towerOwnerID] then -- can be nil if control died, as this does not delete towerOwners
-				ownedLimits[towerOwnerID][towerType] = ownedLimits[towerOwnerID][towerType] - 1
-			end
-			LimitTowerType(towerOwnerID, teamID, towerType, 1) -- increase limit
+	local turretOwnerID = turretOwners[unitID]
+	if turretOwnerID then -- unit was a turret with owning beacon, open the slot back up
+		turretOwners[unitID] = nil
+		if ValidUnitID(turretOwnerID) and not GetUnitIsDead(turretOwnerID) then
+			LimitTurretType(turretOwnerID, teamID, turretDefIDs[unitDefID]) -- increase limit
 		end
 	elseif unitDefID == TURRETCONTROL_ID then -- turret control died, kill link and disable
-		for towerID, controllerID in pairs(towerOwners) do
+		tcTeams[unitID] = nil
+		for turretID, controllerID in pairs(turretOwners) do
 			if controllerID == unitID then
-				GG.ToggleLink(towerID, teamID, true)
-				local env = Spring.UnitScript.GetScriptEnv(towerID)
-				Spring.UnitScript.CallAsUnit(towerID, env.TeamChange, GAIA_TEAM_ID) -- toggle firing
-				DelayCall(TransferUnit, {towerID, GAIA_TEAM_ID}, 1)
-				DelayCall(SetUnitNeutral,{towerID, true}, 1)
+				GG.ToggleLink(turretID, teamID, true)
+				local env = Spring.UnitScript.GetScriptEnv(turretID)
+				Spring.UnitScript.CallAsUnit(turretID, env.TeamChange, GAIA_TEAM_ID) -- toggle firing
+				DelayCall(TransferUnit, {turretID, GAIA_TEAM_ID}, 1)
+				DelayCall(SetUnitNeutral,{turretID, true}, 1)
 			end
 		end
-		ownedLimits[unitID] = nil
 	end
 end
 
 function gadget:AllowCommand(unitID, unitDefID, teamID, cmdID, cmdParams, cmdOptions)
 	if unitDefID == TURRETCONTROL_ID then
 		if cmdID < 0 then
-			local towerType = towerDefIDs[-cmdID]
-			if not towerType then return false end
+			local slotCost = turretDefIDs[-cmdID]
+			if not slotCost then return false end
 			
 			local tx, ty, tz = unpack(cmdParams)
 			local dist = GG.GetUnitDistanceToPoint(unitID, tx, ty, tz, false)
@@ -182,10 +174,11 @@ function gadget:AllowCommand(unitID, unitDefID, teamID, cmdID, cmdParams, cmdOpt
 			-- check we have the resources
 			elseif GetTeamResources(teamID, "metal") < UnitDefs[-cmdID].metalCost then
 				GG.PlaySoundForTeam(teamID, "bb_insufficient_cbills", 1)
-				Spring.SendMessageToTeam(teamID, "Not enough C-Bills for tower deployment!")	
+				Spring.SendMessageToTeam(teamID, "Not enough C-Bills for turret deployment!")	
 			end
 			-- check we have the slots
-			if LimitTowerType(unitID, teamID, towerType) then
+			if remainingSlots[unitID] >= turretDefIDs[-cmdID] then -- Shouldn't be needed but, bolts and braces
+				LimitTurretType(unitID, teamID, -slotCost)
 				local success = CreateUnit(-cmdID, tx, ty, tz, 1, teamID, false, false, nil, unitID)
 				--Spring.Echo("Yo make a turret!", -cmdID, UnitDefs[-cmdID].name, success)
 			end
@@ -199,26 +192,35 @@ end
 
 
 function gadget:UnitGiven(unitID, unitDefID, teamID, oldTeamID)
-	if oldTeamID == GAIA_TEAM_ID and towerOwners[unitID] then -- a lost-link turret
+	if oldTeamID == GAIA_TEAM_ID and turretOwners[unitID] then -- a lost-link turret
 		GG.ToggleLink(unitID, teamID, false)
 		local env = Spring.UnitScript.GetScriptEnv(unitID)
 		Spring.UnitScript.CallAsUnit(unitID, env.TeamChange, teamID) -- toggle firing
-		LimitTowerType(towerOwners[unitID], teamID, towerDefIDs[unitDefID])
+		LimitTurretType(turretOwners[unitID], teamID, turretDefIDs[unitDefID])
+	end
+end
+
+
+function gadget:GameFrame(n)
+	if n > 0 and n % 30 == 0 then -- once a second
+		-- check if orders are still too expensive
+		for tcID, teamID in pairs(tcTeams) do
+			GG.CheckBuildOptions(tcID, teamID, remainingSlots[tcID] or 0 + 1, nil, turretDefIDs)
+		end
 	end
 end
 
 function LinkCheck(x, z, controllerID, teamID)
 	local nearUnits = GetUnitsInCylinder(x, z, MAX_BUILD_RANGE)
 	for _, unitID in pairs(nearUnits) do
-		local owner = towerOwners[unitID]
-		if owner and not ownedLimits[owner] then -- it is a turret but its owner is dead
-			if GetUnitRulesParam(unitID, "LOST_LINK") == 1 then -- make double sure 
+		if turretOwners[unitID] then -- it is a turret
+			if GetUnitRulesParam(unitID, "LOST_LINK") == 1 then -- it is lost link
 				--Spring.Echo("Hey there baby wanna hook up?", UnitDefs[Spring.GetUnitDefID(unitID)].name)
-				local towerType = towerDefIDs[Spring.GetUnitDefID(unitID)]
-				if buildLimits[controllerID][towerType] > 0 then
+				local slotCost = turretDefIDs[Spring.GetUnitDefID(unitID)]
+				if remainingSlots[controllerID] >= slotCost then
 					DelayCall(TransferUnit, {unitID, teamID}, 1)
 					DelayCall(SetUnitNeutral,{unitID, false}, 1)
-					towerOwners[unitID] = controllerID
+					turretOwners[unitID] = controllerID
 				end
 			end
 		end
