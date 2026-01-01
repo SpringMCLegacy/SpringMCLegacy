@@ -301,8 +301,9 @@ end
 function gadget:ProjectileCreated(proID, proOwnerID, weaponID)
 	--Spring.Echo("PC", proID, proOwnerID, weaponID)
 	local wd = WeaponDefs[weaponID]
+	local unitDefID = proOwnerID and GetUnitDefID(proOwnerID)
 	-- Mech only Special Ammos
-	if proOwnerID and GG.mechCache[GetUnitDefID(proOwnerID)] then
+	if unitDefID and (GG.mechCache[unitDefID] or GG.turretDefIDs[unitDefID]) then
 		if wd and wd.name == "arrowiv" then
 			local ammoType = unitSpecialAmmos[proOwnerID]["arrowiv"]
 			if ammoType == "homing" 

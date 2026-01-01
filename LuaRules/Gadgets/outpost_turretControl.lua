@@ -41,6 +41,7 @@ local MAX_BUILD_RANGE = UnitDefs[TURRETCONTROL_ID].buildDistance
 
 -- Variables
 local turretDefIDs = {} -- turretDefIDs[unitDefID] = slotCost
+GG.turretDefIDs = turretDefIDs
 local remainingSlots = {} -- remainingSlots[unitID] = numberOfSlots
 local turretOwners = {} -- turretOwners[turretID] = tcID
 local tcTeams = {} -- tcTeams[tcID] = teamID
