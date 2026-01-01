@@ -170,7 +170,7 @@ function fx()
 		PlaySound("turret_deploy")
 		for i = 1,#legs do
 			if largeTurret then
-				Turn(legs[i], x_axis, math.rad(90), SPEED)
+				Turn(legs[i], x_axis, math.rad(-90), SPEED)
 			else
 				local axis = (i % 2 == 0 and z_axis) or x_axis -- even use z, odd use x
 				local dir = (i == 1 or i == 4) and -1 or 1
