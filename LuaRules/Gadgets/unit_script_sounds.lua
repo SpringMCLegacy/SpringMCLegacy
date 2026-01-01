@@ -39,7 +39,7 @@ GG.PlaySoundAtUnit = PlaySoundAtUnit
 
 local unsyncedBuffer = {}
 local function PlaySoundForTeam(teamID, sound, volume, enemy)
-	sound = sound:lower()
+	--sound = sound:lower()
 	local exists = GG.Sounds.SoundItems[sound]
 	if exists then -- To check for missing sounds, remove this
 		if not enemy then
@@ -51,6 +51,8 @@ local function PlaySoundForTeam(teamID, sound, volume, enemy)
 				end
 			end
 		end
+	else
+		Spring.Echo("[unit_script_sounds.lua] Requested sound", sound, "does not exist")
 	end
 end
 GG.PlaySoundForTeam = PlaySoundForTeam

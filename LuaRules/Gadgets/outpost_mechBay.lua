@@ -291,6 +291,7 @@ function gadget:AllowCommand(unitID, unitDefID, teamID, cmdID, cmdParams, cmdOpt
 				CallAsUnit(unitID, env.script.TransportDrop, transporting[1])
 				DestroyUnit(transporting[1], false, true)
 				AddTeamResource(teamID, "m", cBills)
+				GG.PlaySoundForTeam(teamID, "Chaching", 10)
 				return true
 			end
 			return false

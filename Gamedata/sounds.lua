@@ -232,6 +232,10 @@ local Sounds = {
 			maxdist = 6000,
 			rolloff = 2.0,
 		},
+		Chaching = {
+			file = "sounds/outpost/Chaching.wav",
+			in3d = "false",
+		},
 		Drill = {
 			file = "sounds/outpost/drill.wav",
 			maxconcurrent = 12,
