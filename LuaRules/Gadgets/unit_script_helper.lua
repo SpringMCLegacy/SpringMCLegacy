@@ -73,6 +73,7 @@ function gadget:UnitCreated(unitID, unitDefID, teamID, builderID)
 		
 		-- mech, vehicle or dropship
 		local launcherIDs = {}
+		local numLaunchers = 0
 		local barrelIDs = {}
 		
 		-- vehicle or dropship
@@ -91,6 +92,11 @@ function gadget:UnitCreated(unitID, unitDefID, teamID, builderID)
 		local leftArmIDs = {}
 		local rightArmIDs = {}
 		local numJets = 0
+		
+		-- HTurret only
+		local missileIDs = {} -- visible missile models i.e. Arrow / ADA
+		local numMissiles = 0
+		local launcherDoorIDs = {} -- missile launcher doors
 		
 		-- dropship only
 		local numVExhausts = 0
@@ -116,6 +122,12 @@ function gadget:UnitCreated(unitID, unitDefID, teamID, builderID)
 			-- Find launcher pieces
 			if pieceName:find("launcher_") then
 				launcherIDs[weaponNum] = true
+				numLaunchers = numLaunchers + 1
+			elseif pieceName:find("launcherdoor_") then
+				launcherDoorIDs[weaponNum] = true
+			elseif pieceName:find("missile_") then
+				missileIDs[weaponNum] = true
+				numMissiles = numMissiles + 1
 			-- Find turret pieces
 			elseif pieceName:find("turret_") then
 				turretIDs[weaponNum] = true
@@ -208,6 +220,15 @@ function gadget:UnitCreated(unitID, unitDefID, teamID, builderID)
 		info.progenitorMap = progenitorMap
 		info.weaponProgenitors = weaponProgenitors
 		info.launcherIDs = launcherIDs
+		info.launcherDoorIDs = launcherDoorIDs
+		info.missileIDs = missileIDs
+		if numMissiles > 0 then
+			info.numMissiles = numMissiles
+			for weaponID in pairs(launcherIDs) do
+				-- overwrite weapon burstLength if we have visible missile pieces
+				info.burstLengths[weaponID] = numMissiles / numLaunchers -- can't use #launchers as will give highest weaponID, not size
+			end
+		end
 		info.turretIDs = turretIDs
 		info.mainTurretIDs = mainTurretIDs
 		info.turretOnTurretIDs = turretOnTurretIDs

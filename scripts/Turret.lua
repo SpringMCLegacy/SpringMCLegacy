@@ -22,6 +22,7 @@ local missileWeaponIDs = info.missileWeaponIDs
 local flareOnShots = info.flareOnShots
 local jammableIDs = info.jammableIDs
 local launcherIDs = info.launcherIDs
+local launcherDoorIDs = info.launcherDoorIDs
 local barrelRecoils = info.barrelRecoilDist
 local burstLengths = info.burstLengths
 local firingHeats = info.firingHeats
@@ -44,8 +45,8 @@ local TURRET_SPEED = info.turretTurnSpeed
 local ELEVATION_SPEED = info.elevationSpeed
 local BARREL_SPEED = info.barrelRecoilSpeed
 local RESTORE_DELAY = Spring.UnitScript.GetLongestReloadTime(unitID) * 2
-local AMMO_RESTORE_AMOUNT = unitDef.customParams.ammorestoreamount or 1
-local AMMO_RESTORE_WAIT = unitDef.customParams.ammorestorewait or 60 * 1000 -- 1 min
+local AMMO_RESTORE_AMOUNT = tonumber(unitDef.customParams.ammorestoreamount) or 1
+local AMMO_RESTORE_WAIT = tonumber(unitDef.customParams.ammorestorewait) or 60 * 1000 -- 1 min
 
 local currLaunchPoint = 1
 local noFiring = true
@@ -58,7 +59,10 @@ local flares = {}
 local mantlets = {}
 local barrels = {}
 local launchers = {}
+local launcherDoors = {}
 local launchPoints = {}
+local missiles = {}
+local numMissiles = info.numMissiles
 local currPoints = {}
 local spinPieces = {}
 local spinPiecesState = {}
@@ -68,11 +72,16 @@ for weaponID = 1, info.numWeapons do
 	if missileWeaponIDs[weaponID] then
 		if launcherIDs[weaponID] then
 			launchers[weaponID] = piece("launcher_" .. weaponID)
+			if launcherDoorIDs[weaponID] then
+				launcherDoors[weaponID] = piece("launcherdoor_" .. weaponID)
+			end
 		end
 		launchPoints[weaponID] = {}
+		missiles[weaponID] = {}
 		currPoints[weaponID] = 1
 		for i = 1, burstLengths[weaponID] do
 			launchPoints[weaponID][i] = piece("launchpoint_" .. weaponID .. "_" .. i)
+			missiles[weaponID][i] = piece("missile_" .. weaponID .. "_" .. i)
 		end	
 	elseif weaponID then
 		flares[weaponID] = piece ("flare_" .. weaponID)
@@ -359,6 +368,14 @@ local function WeaponCanFire(weaponID)
 	end
 end
 		
+local function RestoreAfterDelay(delay, weaponID)
+	Sleep(delay)
+	if launcherDoors[weaponID] then
+		local dir = (-1)^weaponID
+		Turn(launcherDoors[weaponID], y_axis, 0, dir * TURRET_SPEED * 5)
+	end
+end
+
 function script.AimWeapon(weaponID, heading, pitch)
 	if noFiring then return false end
 	Signal(2 ^ weaponID) -- 2 'to the power of' weapon ID
@@ -371,11 +388,9 @@ function script.AimWeapon(weaponID, heading, pitch)
 	elseif missileWeaponIDs[weaponID] then -- yeah it happens if, in this case, launchpoint_1_# are attached to launcher_1 but launchpoint_2_# and 3 are attached to launcher_1 as well
 		if launchers[weaponID] then
 			Turn(launchers[weaponID], x_axis, -pitch, ELEVATION_SPEED)
-			-- TODO: tidy this up
-			local door_1 = piece("door_1")
-			if door_1 then
-				Turn(door_1, y_axis, math.pi, TURRET_SPEED * 5)
-				Turn(piece("door_2"), y_axis, -math.pi, TURRET_SPEED * 5)
+			if launcherDoors[weaponID] then
+				local dir = (-1)^(weaponID-1)
+				Turn(launcherDoors[weaponID], y_axis, dir * (math.pi+0.0001), dir * TURRET_SPEED * 5)
 			end
 		elseif weaponID > 1 and launchers[1] then
 			Turn(launchers[1], x_axis, -pitch, ELEVATION_SPEED)
@@ -393,12 +408,11 @@ function script.AimWeapon(weaponID, heading, pitch)
 	end
 	if launchers[weaponID] then
 		WaitForTurn(launchers[weaponID], x_axis)
-		local door_1 = piece("door_1")
-		if door_1 then
-			WaitForTurn(door_1, y_axis)
+		if launcherDoors[weaponID] then
+			WaitForTurn(launcherDoors[weaponID], y_axis)
 		end
 	end
-	--StartThread(RestoreAfterDelay)
+	StartThread(RestoreAfterDelay, RESTORE_DELAY, weaponID)
 	return WeaponCanFire(weaponID)
 end
 
@@ -438,6 +452,20 @@ function script.BlockShot(weaponID, targetID, userTarget)
 	return false
 end
 
+
+local function AwaitRestock()
+	noFiring = true
+	-- TODO: show some status icon?
+	--Spring.Echo("AwaitRestock", AMMO_RESTORE_AMOUNT, AMMO_RESTORE_WAIT, AMMO_RESTORE_WAIT * AMMO_RESTORE_AMOUNT)
+	Sleep(AMMO_RESTORE_WAIT * AMMO_RESTORE_AMOUNT)
+	for weaponID, weaponMissiles in pairs(missiles) do
+		for i, missilePiece in pairs(weaponMissiles) do
+			Show(missilePiece)
+		end
+	end
+	noFiring = false
+end
+
 function script.FireWeapon(weaponID)
 	if barrels[weaponID] and barrelRecoils[weaponID] then
 		Move(barrels[weaponID], z_axis, -barrelRecoils[weaponID], BARREL_SPEED)
@@ -457,7 +485,7 @@ function script.FireWeapon(weaponID)
 	end
 	local ammoType = ammoTypes[weaponID]
 	if ammoType then
-		ChangeAmmo(ammoType, -burstLengths[weaponID])
+		ChangeAmmo(ammoType, -burstLengths[weaponID]) -- NB. modified burstlength is why I needed to give it 4x as much ammo
 	end
 	if not missileWeaponIDs[weaponID] and not flareOnShots[weaponID] then
 		EmitSfx(flares[weaponID], SFX.CEG + weaponID)
@@ -467,9 +495,13 @@ end
 function script.Shot(weaponID)
 	if missileWeaponIDs[weaponID] then
 		EmitSfx(launchPoints[weaponID][currPoints[weaponID]] or launchPoints[weaponID][1], SFX.CEG + weaponID)
+		if numMissiles > 0 then
+			Hide(missiles[weaponID][currPoints[weaponID]])
+		end
         currPoints[weaponID] = currPoints[weaponID] + 1
         if currPoints[weaponID] > burstLengths[weaponID] then 
 			currPoints[weaponID] = 1
+			StartThread(AwaitRestock)
         end
 	elseif flareOnShots[weaponID] and flares[weaponID] then
 		EmitSfx(flares[weaponID], SFX.CEG + weaponID)
