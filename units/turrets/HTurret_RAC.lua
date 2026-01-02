@@ -27,7 +27,7 @@ local HTurret_RAC = HeavyTurret:New{
 		--barrelrecoildist = {[1] = 5},
 		turretturnspeed = 100,
 		elevationspeed  = 150,
-		maxammo 		= {ac5 = 2},
+		maxammo 		= {ac5 = 4},
 		faction			= "fs",
     },
 }

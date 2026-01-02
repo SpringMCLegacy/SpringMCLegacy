@@ -23,7 +23,7 @@ local HTurret_PPCMRM = HeavyTurret:New{
 		chainfiredelays = {[2] = 200},
 		turretturnspeed = 100,
 		elevationspeed  = 150,
-		maxammo 		= {mrm = 2},
+		maxammo 		= {mrm = 3},
 		faction			= "dc",
     },
 }

@@ -17,7 +17,7 @@ local HTurret_HGauss = HeavyTurret:New{
 		barrelrecoildist = {5, 5},
 		turretturnspeed = 100,
 		elevationspeed  = 150,
-		maxammo 		= {hvgauss = 2},
+		maxammo 		= {hvgauss = 3},
 		faction			= "la",
     },
 }

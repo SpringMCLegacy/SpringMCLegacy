@@ -5,12 +5,17 @@ local HTurret_ADA = HeavyTurret:New{
 
 	weapons	= {	
 		[1] = {
-			name	= "ADArrow",
+			name	= "ADArrow_Turret",
 			onlyTargetCategory = "air",
+		},
+		[2] = {
+			name	= "ADArrow_Turret",
+			onlyTargetCategory = "air",
+			SlaveTo = 1,
 		},
 	},
 	customparams = {
-		maxammo 		= {arrow = 1},
+		maxammo 		= {arrow = 1.2},
 		turretturnspeed = 90,
 		elevationspeed  = 90,
     },

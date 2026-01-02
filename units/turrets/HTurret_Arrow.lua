@@ -5,16 +5,17 @@ local HTurret_Arrow = HeavyTurret:New{
 
 	weapons	= {	
 		[1] = {
-			name	= "ArrowIV",
+			name	= "ArrowIV_Turret",
 		},
-		--[[[2] = {
-			name	= "ArrowIV",
-		},]]
+		[2] = {
+			name	= "ArrowIV_Turret",
+			SlaveTo = 1,
+		},
 	},
 	customparams = {
-		maxammo 		= {arrow = 2},
-		turretturnspeed = 90,
-		elevationspeed  = 90,
+		maxammo 		= {arrow = 1.6},
+		turretturnspeed = 50,
+		elevationspeed  = 50,
     },
 }
 
