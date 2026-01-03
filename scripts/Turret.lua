@@ -36,6 +36,9 @@ for k,v in pairs(maxAmmo) do
 	SetUnitRulesParam(unitID, "ammo_" .. k, 100)
 end
 
+local largeTurret = tonumber(unitDef.customParams.slotcost) == 2
+
+
 -- Sniper artillery drum setting
 local drumNum = 0
 local drum = piece("drum")
@@ -45,8 +48,7 @@ local TURRET_SPEED = info.turretTurnSpeed
 local ELEVATION_SPEED = info.elevationSpeed
 local BARREL_SPEED = info.barrelRecoilSpeed
 local RESTORE_DELAY = Spring.UnitScript.GetLongestReloadTime(unitID) * 2
-local AMMO_RESTORE_AMOUNT = tonumber(unitDef.customParams.ammorestoreamount) or 1
-local AMMO_RESTORE_WAIT = tonumber(unitDef.customParams.ammorestorewait) or 60 * 1000 -- 1 min
+local AMMO_RESTORE_WAIT = tonumber(unitDef.customParams.ammorestorewait) or (largeTurret and 25 or 10) * 1000 -- 10 seconds
 
 local currLaunchPoint = 1
 local noFiring = true
@@ -128,7 +130,7 @@ local legs = {}
 local breaks = {}
 local exhausts = {}
 local extend = piece("extend")
-local largeTurret = tonumber(unitDef.customParams.slotcost) == 2
+
 for i = 1, 6 do
 	legs[i] = piece("leg_" .. i)
 	breaks[i] = piece("break_" .. i)
@@ -153,7 +155,6 @@ function RealBoy()
 	Spring.SetUnitSensorRadius(unitID, "los", unitDef.losRadius)
 	Spring.SetUnitSensorRadius(unitID, "los", unitDef.airLosRadius)
 	Spring.SetUnitSensorRadius(unitID, "radar", unitDef.radarRadius)
-	StartThread(Restock)
 end
 
 function fx()
@@ -264,7 +265,7 @@ function script.Create()
 		--Spin(exhausts[i], z_axis, math.rad(360)) -- doesn't seem to be working?
 	end
 
-	Spin(base, y_axis, 10)
+	Spin(base, y_axis, math.random(5,15))
 	Spring.MoveCtrl.SetGravity(unitID, GRAVITY)
 	Spring.MoveCtrl.SetCollideStop(unitID, true)
 	Spring.MoveCtrl.SetTrackGround(unitID, true)
@@ -331,12 +332,19 @@ function ChangeAmmo(ammoType, amount)
 	return false -- Ammo was not changed
 end
 
-function Restock()
-	local ammoType = ammoTypes[1] -- assumes only weapon 1 ammo type is relevant
-	while ammoType do
-		ChangeAmmo(ammoType, AMMO_RESTORE_AMOUNT)
-		Sleep(AMMO_RESTORE_WAIT)
+local function AwaitRestock()
+	noFiring = true
+	-- TODO: show some status icon?
+	Sleep(AMMO_RESTORE_WAIT)
+	for weaponID, weaponMissiles in pairs(missiles) do
+		for i, missilePiece in pairs(weaponMissiles) do
+			Show(missilePiece)
+		end
 	end
+	for ammoType, amount in pairs(maxAmmo) do
+		ChangeAmmo(ammoType, amount) 
+	end
+	noFiring = false
 end
 
 local function WeaponCanFire(weaponID)
@@ -358,6 +366,7 @@ local function WeaponCanFire(weaponID)
 			StartThread(SpinBarrels, weaponID, false)
 		end
 		SetUnitRulesParam(unitID, "outofammo", 1)
+		StartThread(AwaitRestock)
 		return false
 	else
 		if spinSpeeds[weaponID] and not spinPiecesState[weaponID] then
@@ -452,20 +461,6 @@ function script.BlockShot(weaponID, targetID, userTarget)
 	return false
 end
 
-
-local function AwaitRestock()
-	noFiring = true
-	-- TODO: show some status icon?
-	--Spring.Echo("AwaitRestock", AMMO_RESTORE_AMOUNT, AMMO_RESTORE_WAIT, AMMO_RESTORE_WAIT * AMMO_RESTORE_AMOUNT)
-	Sleep(AMMO_RESTORE_WAIT * AMMO_RESTORE_AMOUNT)
-	for weaponID, weaponMissiles in pairs(missiles) do
-		for i, missilePiece in pairs(weaponMissiles) do
-			Show(missilePiece)
-		end
-	end
-	noFiring = false
-end
-
 function script.FireWeapon(weaponID)
 	if barrels[weaponID] and barrelRecoils[weaponID] then
 		Move(barrels[weaponID], z_axis, -barrelRecoils[weaponID], BARREL_SPEED)
@@ -495,13 +490,12 @@ end
 function script.Shot(weaponID)
 	if missileWeaponIDs[weaponID] then
 		EmitSfx(launchPoints[weaponID][currPoints[weaponID]] or launchPoints[weaponID][1], SFX.CEG + weaponID)
-		if numMissiles > 0 then
+		if numMissiles then
 			Hide(missiles[weaponID][currPoints[weaponID]])
 		end
         currPoints[weaponID] = currPoints[weaponID] + 1
         if currPoints[weaponID] > burstLengths[weaponID] then 
 			currPoints[weaponID] = 1
-			StartThread(AwaitRestock)
         end
 	elseif flareOnShots[weaponID] and flares[weaponID] then
 		EmitSfx(flares[weaponID], SFX.CEG + weaponID)

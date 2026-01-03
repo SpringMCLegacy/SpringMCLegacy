@@ -16,7 +16,6 @@ local HTurret_ADA = HeavyTurret:New{
 	},
 	customparams = {
 		maxammo 			= {arrow = 1.2 * 3}, -- needs to be multiplied by fake burstLength for the script
-		ammorestoreamount	= 3,
 		turretturnspeed	 	= 90,
 		elevationspeed  	= 90,
     },

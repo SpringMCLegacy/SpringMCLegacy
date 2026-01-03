@@ -303,7 +303,7 @@ function gadget:ProjectileCreated(proID, proOwnerID, weaponID)
 	local wd = WeaponDefs[weaponID]
 	local unitDefID = proOwnerID and GetUnitDefID(proOwnerID)
 	-- Mech only Special Ammos
-	if unitDefID and (GG.mechCache[unitDefID] or GG.turretDefIDs[unitDefID]) then
+	if unitDefID and (GG.mechCache[unitDefID] or GG.turretDefIDs[unitDefID]) and unitSpecialAmmos[proOwnerID] then
 		if wd and wd.name == "arrowiv" then
 			local ammoType = unitSpecialAmmos[proOwnerID]["arrowiv"]
 			if ammoType == "homing" 

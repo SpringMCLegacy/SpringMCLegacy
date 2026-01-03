@@ -14,7 +14,6 @@ local HTurret_Arrow = HeavyTurret:New{
 	},
 	customparams = {
 		maxammo 			= {arrow = 1.6 * 4}, -- needs to be multiplied by fake burstLength for the script
-		ammorestoreamount	= 4,
 		turretturnspeed 	= 50,
 		elevationspeed  	= 50,
     },
