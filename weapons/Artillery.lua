@@ -33,6 +33,34 @@ local Artillery_Class = Weapon:New{
     },
 }
 
+local Mortar = Artillery_Class:New{
+	name                    = "Auto-Mortar",
+	explosionGenerator    	= "custom:HE_MEDIUM",
+	soundHit              	= "AC10_Hit",
+	soundStart            	= "AC10_Fire",
+	highTrajectory			= 1,
+	size					= 2,
+	sizeDecay				= 0,
+	separation				= 1.5,
+	--burst					= 3,
+	--burstrate				= 0.5,
+	areaOfEffect            = 150,
+	range                   = 1500,
+	reloadtime              = 5,
+	accuracy                = 100,
+	weaponVelocity          = 450,
+	damage = {
+		default = 500,
+	},
+	customparams = {
+		heatgenerated		= 2,
+		cegflare			= "AC5_MUZZLEFLASH",
+		weaponclass			= "projectile",
+		ammotype			= "mortar",
+		shockwave			= false,
+    },
+}
+
 local Sniper = Artillery_Class:New{
 	name                    = "Sniper Cannon",
 }
@@ -74,6 +102,7 @@ local LongTom = Artillery_Class:New{
 }
 
 return lowerkeys({ 
+	Mortar = Mortar,
 	Sniper = Sniper,
 	Thumper = Thumper,
 	LongTom = LongTom,
