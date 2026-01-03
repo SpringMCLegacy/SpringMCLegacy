@@ -30,7 +30,7 @@ include ("anims/" .. unitDef.name:sub(4, (unitDef.name:find("_", 4) or 0) - 1) .
 
 -- Info from lusHelper gadget
 -- non-local so perks can change them (flagrant lack of encapsulation!)
-numWeapons = info.numWeapons - 1 -- remove sight
+numWeapons = info.numWeapons
 heatLimit = info.heatLimit
 baseCoolRate = info.coolRate
 runHeat = math.sqrt(unitDef.customParams.tonnage) * 0.02
@@ -118,7 +118,7 @@ local spinPieces = {}
 local spinPiecesState = {}
 
 local playerDisabled = {}
-for weaponID = 1, info.numWeapons - 1 do
+for weaponID = 1, numWeapons do
 	if missileWeaponIDs[weaponID] then
 		if launcherIDs[weaponID] then
 			launchers[weaponID] = piece("launcher_" .. weaponID)

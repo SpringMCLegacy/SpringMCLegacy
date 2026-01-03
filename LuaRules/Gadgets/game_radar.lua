@@ -264,7 +264,7 @@ function gadget:UnitCreated(unitID, unitDefID, teamID)
 	if mobileUnitDefs[unitDefID] then
 		mobileUnits[unitID] = true
 	end
-	if visionCache[unitDefID] then -- a mech!
+	if visionCache[unitDefID] then -- a mech or hturret... something with a sector!
 		unitSectorRadii[unitID] = SECTOR_RADIUS
 		visionCache[unitDefID].cockpit = GG.lusHelper[unitDefID].cockpit
 		allyTeamMechs[GetUnitAllyTeam(unitID)][unitID] = visionCache[unitDefID]

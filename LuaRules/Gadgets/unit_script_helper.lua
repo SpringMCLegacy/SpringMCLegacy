@@ -203,8 +203,8 @@ function gadget:UnitCreated(unitID, unitDefID, teamID, builderID)
 			info.leftArmMasterID = GetArmMasterWeapon(leftArmIDs)
 			info.rightArmIDs = rightArmIDs
 			info.leftArmIDs = leftArmIDs
-			info.cockpit = pieceMap["cockpit"]
 		end
+			info.cockpit = pieceMap["cockpit"]
 		--elseif cp.dropship then
 			info.trackEmitterIDs = trackEmitterIDs
 			info.numHExhausts = numHExhausts
@@ -302,7 +302,7 @@ function gadget:GamePreload()
 		-- UnitDef Level Info
 		-- General
 		info.hasEcm = string.tobool(cp.hasecm)
-		info.numWeapons = #weapons
+		info.numWeapons = #weapons - (cp.sectorangle and 1 or 0)
 		info.maxAmmo = table.unserialize(cp.maxammo)
 		info.minpitches = table.unserialize(cp.minpitches)
 		-- Temperatures

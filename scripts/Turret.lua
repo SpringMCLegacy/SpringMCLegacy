@@ -17,6 +17,7 @@ local IsUnitTAGed = GG.IsUnitTAGed
 include "smokeunit.lua"
 
 -- Info from lusHelper gadget
+local numWeapons = info.numWeapons
 local amsIDs = info.amsIDs
 local missileWeaponIDs = info.missileWeaponIDs
 local flareOnShots = info.flareOnShots
@@ -38,11 +39,6 @@ end
 
 local largeTurret = tonumber(unitDef.customParams.slotcost) == 2
 
-
--- Sniper artillery drum setting
-local drumNum = 0
-local drum = piece("drum")
-
 --Turning/Movement Locals
 local TURRET_SPEED = info.turretTurnSpeed
 local ELEVATION_SPEED = info.elevationSpeed
@@ -56,6 +52,11 @@ local GAIA_TEAM_ID = Spring.GetGaiaTeamID()
 
 --piece defines
 local base, turret = piece ("base", "turret")
+local cockpit = piece ("cockpit")
+
+-- Sniper artillery drum setting
+local drumNum = 0
+local drum = piece("drum")
 
 local flares = {}
 local mantlets = {}
@@ -153,7 +154,7 @@ function RealBoy()
 	end
 	Spring.SetUnitStealth(unitID, false)
 	Spring.SetUnitSensorRadius(unitID, "los", unitDef.losRadius)
-	Spring.SetUnitSensorRadius(unitID, "los", unitDef.airLosRadius)
+	Spring.SetUnitSensorRadius(unitID, "airLos", unitDef.airLosRadius)
 	Spring.SetUnitSensorRadius(unitID, "radar", unitDef.radarRadius)
 end
 
@@ -265,7 +266,7 @@ function script.Create()
 		--Spin(exhausts[i], z_axis, math.rad(360)) -- doesn't seem to be working?
 	end
 
-	Spin(base, y_axis, math.random(5,15))
+	Spin(base, y_axis, math.random(5,11))
 	Spring.MoveCtrl.SetGravity(unitID, GRAVITY)
 	Spring.MoveCtrl.SetCollideStop(unitID, true)
 	Spring.MoveCtrl.SetTrackGround(unitID, true)
@@ -348,7 +349,7 @@ local function AwaitRestock()
 end
 
 local function WeaponCanFire(weaponID)
-	if playerDisabled[weaponID] then
+	if playerDisabled[weaponID] or weaponID == numWeapons + 1 then
 		return false
 	end
 	--[[if mainTurretIDs[weaponID] and limbHPs["turret"] <= 0 then
@@ -509,13 +510,13 @@ function script.EndBurst(weaponID)
 end
 
 function script.AimFromWeapon(weaponID) 
-	return turret
+	return weaponID == numWeapons + 1 and cockpit or turret
 end
 
 function script.QueryWeapon(weaponID) 
 	if missileWeaponIDs[weaponID] then
 		return launchPoints[weaponID][currPoints[weaponID]] or launchPoints[weaponID][1]
-	elseif weaponID == info.numWeapons + 1 then -- Sight
+	elseif weaponID == numWeapons + 1 then -- Sight
 		return cockpit
 	else
 		return flares[weaponID] or flares[1]

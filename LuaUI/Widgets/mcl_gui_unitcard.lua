@@ -191,7 +191,7 @@ local function FillCardStats()
 		local health, maxHealth	= spGetUnitHealth(currentUnitId)
 		local currentDef		= UnitDefs[currentUnitDefId]
 		local weapons			= currentDef.weapons
-		if currentDef.customParams.baseclass == "mech" then
+		if currentDef.customParams.sectorangle then
 			weapons[#weapons] = nil -- remove special 'Sight' weapon
 		end
 		colortable				= green
