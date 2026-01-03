@@ -39,8 +39,11 @@ GG.PlaySoundAtUnit = PlaySoundAtUnit
 
 local unsyncedBuffer = {}
 local function PlaySoundForTeam(teamID, sound, volume, enemy)
-	--sound = sound:lower()
-	local exists = GG.Sounds.SoundItems[sound]
+	local exists = GG.Sounds.SoundItems[sound] 
+	if not exists then
+		sound = sound:lower()
+		exists = GG.Sounds.SoundItems[sound]
+	end
 	if exists then -- To check for missing sounds, remove this
 		if not enemy then
 			table.insert(unsyncedBuffer, {teamID, sound, volume})
