@@ -135,6 +135,8 @@ function gadget:UnitCreated(unitID, unitDefID, teamID, builderID)
 		if builderID then -- ignore /give turrets
 			turretOwners[unitID] = builderID
 		end
+		-- hide all commands
+		GG.ClearCmdDescs(unitID, true)
 	end
 end
 
@@ -159,7 +161,7 @@ function gadget:UnitDestroyed(unitID, unitDefID, teamID, attackerID, attackerDef
 	end
 end
 
-function gadget:AllowCommand(unitID, unitDefID, teamID, cmdID, cmdParams, cmdOptions)
+function gadget:AllowCommand(unitID, unitDefID, teamID, cmdID, cmdParams, cmdOptions, cmdTag, playerID, synced, fromLua)
 	if unitDefID == TURRETCONTROL_ID then
 		if cmdID < 0 then
 			local slotCost = turretDefIDs[-cmdID]
@@ -185,8 +187,8 @@ function gadget:AllowCommand(unitID, unitDefID, teamID, cmdID, cmdParams, cmdOpt
 			end
 			return false -- don't let the engine build it itself whether we passed the conditions or not
 		end
-	elseif UnitDefs[unitDefID].customParams.decal then
-		return false -- disallow all commands to decals
+	elseif turretDefIDs[unitDefID] then
+		return false -- disallow all commands to turrets
 	end
 	return true
 end
