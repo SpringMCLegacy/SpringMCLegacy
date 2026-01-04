@@ -5,11 +5,11 @@ local HTurret_ADA = HeavyTurret:New{
 
 	weapons	= {	
 		[1] = {
-			name	= "ADArrow_Turret",
+			name	= "ADArrow",
 			onlyTargetCategory = "air",
 		},
 		[2] = {
-			name	= "ADArrow_Turret",
+			name	= "ADArrow",
 			onlyTargetCategory = "air",
 			SlaveTo = 1,
 		},

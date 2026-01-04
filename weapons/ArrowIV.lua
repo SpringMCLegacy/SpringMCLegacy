@@ -54,10 +54,6 @@ local ArrowIV_Guided = ArrowIV:New{
     },
 }
 
-local ArrowIV_Turret = ArrowIV:New{
-	reloadtime              = 3,
-}
-
 local ADArrow = ArrowIV:New{
 	name                    = "ADA Missile",
 	canAttackGround 		= false,
@@ -73,10 +69,6 @@ local ADArrow = ArrowIV:New{
 	weaponAcceleration 		= 700,
 	weaponVelocity          = 1500,
 	model					= "Weapons/ArrowIV_AD.s3o",
-}
-
-local ADArrow_Turret = ADArrow:New{
-	reloadtime              = 3,
 }
 
 local ArrowIV_Cluster = ArrowIV:New{
@@ -95,6 +87,4 @@ return lowerkeys({
 	ArrowIV_Guided = ArrowIV_Guided,
 	ADArrow = ADArrow,
 	ArrowIV_Cluster = ArrowIV_Cluster,
-	ArrowIV_Turret = ArrowIV_Turret,
-	ADArrow_Turret = ADArrow_Turret
 	})

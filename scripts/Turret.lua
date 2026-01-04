@@ -224,15 +224,17 @@ end
 
 function script.Create()
 	if unitDef.name == "hturret_cc" then
-		for i = 1, info.numWeapons do
-			GG.EnableAmmo(unitID, true, "lrm", "thunder", i)
-		end
+		GG.EnableAmmo(unitID, true, "lrm", "thunder")
 	elseif unitDef.name == "hturret_arrow" then
-		for i = 1, info.numWeapons do
-			GG.EnableAmmo(unitID, true, "arrowiv", "homing", i)
+		GG.EnableAmmo(unitID, true, "arrowiv", "homing")
+		for i = 1, numWeapons do
+			Spring.SetUnitWeaponState(unitID, i, "reloadTime", 3)
+		end
+	elseif unitDef.name == "hturret_ada" then
+		for i = 1, numWeapons do
+			Spring.SetUnitWeaponState(unitID, i, "reloadTime", 3)
 		end
 	end
-	--else]]
 	-- Pre-setup
 	for weaponID, mantlet in pairs(mantlets) do
 		Turn(mantlet, x_axis, math.rad(-90))
@@ -455,6 +457,9 @@ function script.BlockShot(weaponID, targetID, userTarget)
 				return true 
 			else
 				Spring.SetUnitRulesParam(targetID, "ENEMY_MISSILE_LOCK", Spring.GetGameFrame(), {inlos = true})
+			end
+			if largeTurret and unitDef.name == "hturret_arrow" then
+				return not (IsUnitNARCed(targetID) or IsUnitTAGed(targetID))
 			end
 		end
 	end

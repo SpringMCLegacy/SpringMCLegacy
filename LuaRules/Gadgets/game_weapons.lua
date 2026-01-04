@@ -185,10 +185,10 @@ GG.ApplyPPC = ApplyPPC -- for inhbitor removal self own
 -- Homing missiles (Smart LRM, Homing Arrow, ARAD LRM, AD Arrow)
 -----------------------------------------
 local function SetMissileTarget(proID, info)
---	Spring.Echo("SetMissileTarget", proID, info.targetID, info.ownerID, info.weaponclass, info.artemisOnly)
+	--Spring.Echo("SetMissileTarget", proID, info.targetID, info.ownerID, info.weaponclass, info.artemisOnly)
 	if info.targetID and ValidUnitID(info.targetID) and not GetUnitIsDead(info.targetID) -- target is alive
     and info.ownerID and ValidUnitID(info.ownerID) and not GetUnitIsDead(info.ownerID) then -- owner is alive
-		--Spring.Echo("SetMissileTarget", proID, UnitDefs(GetUnitDefID(info.targetID)].name, UnitDefs[GetUnitDefID(info.ownerID)].name, info.weaponclass, info.artemisOnly)
+		--Spring.Echo("SetMissileTarget", proID, UnitDefs[GetUnitDefID(info.targetID)].name, UnitDefs[GetUnitDefID(info.ownerID)].name, info.weaponclass, info.artemisOnly)
 		if ((IsUnitNARCed(info.targetID) or IsUnitTAGed(info.targetID)) and not info.artemisOnly)
 		or (info.artemisOnly and IsTargetArtemised(info.ownerID, info.targetID, info.weaponclass)) 
 		or (info.arad or info.ad) then
@@ -299,15 +299,17 @@ end
 
 
 function gadget:ProjectileCreated(proID, proOwnerID, weaponID)
-	--Spring.Echo("PC", proID, proOwnerID, weaponID)
 	local wd = WeaponDefs[weaponID]
 	local unitDefID = proOwnerID and GetUnitDefID(proOwnerID)
+	--Spring.Echo("PC", proID, proOwnerID, weaponID, unitDefID, GG.mechCache[unitDefID], GG.turretDefIDs[unitDefID], unitSpecialAmmos[proOwnerID])
 	-- Mech only Special Ammos
 	if unitDefID and (GG.mechCache[unitDefID] or GG.turretDefIDs[unitDefID]) and unitSpecialAmmos[proOwnerID] then
 		if wd and wd.name == "arrowiv" then
+			--Spring.Echo("ProjectileCreated found an arrow")
 			local ammoType = unitSpecialAmmos[proOwnerID]["arrowiv"]
 			if ammoType == "homing" 
 			or ammoType == "arad" then
+				--Spring.Echo("ProjectileCreated found a homing arrow")
 				ChangeMissile(proID, proOwnerID, WeaponDefNames["arrowiv_guided"])
 			elseif	ammoType == "ad" then
 				local targetType, info = GetProjectileTarget(proID)

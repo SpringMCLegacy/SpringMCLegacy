@@ -5,10 +5,10 @@ local HTurret_Arrow = HeavyTurret:New{
 
 	weapons	= {	
 		[1] = {
-			name	= "ArrowIV_Turret",
+			name	= "ArrowIV",
 		},
 		[2] = {
-			name	= "ArrowIV_Turret",
+			name	= "ArrowIV",
 			SlaveTo = 1,
 		},
 	},
