@@ -52,7 +52,7 @@ local artyWeaponInfo = {
 		cooldown	= 50 * 30,
 		delay		= 10 * 30,
 		spread		= 350,
-		sound 		= "sounds/" .. WeaponDefNames["nac10"].fireSound[1].name:lower() .. ".wav",
+		sound 		= "sounds/weapons/" .. WeaponDefNames["nac10"].fireSound[1].name:lower() .. ".wav",
 		cost		= 8000,
 	},
 	[2] = { -- NPPC
@@ -63,14 +63,14 @@ local artyWeaponInfo = {
 		cooldown	= 75 * 30,
 		delay		= 10 * 30,
 		spread 		= 250,
-		sound		= "sounds/" .. WeaponDefNames["nppc"].fireSound[1].name:lower() .. ".wav",
+		sound		= "sounds/weapons/" .. WeaponDefNames["nppc"].fireSound[1].name:lower() .. ".wav",
 		cost		= 12000,
 	},
 	[3] = { -- NL45
 		id 			= UnitDefNames["naval_laser"].id,
 		cooldown	= 90 * 30,
 		delay		= 10 * 30,
-		--sound		= "sounds/" .. WeaponDefNames["nac40"].fireSound[1].name:lower() .. ".wav",
+		--sound		= "sounds/weapons/" .. WeaponDefNames["nac40"].fireSound[1].name:lower() .. ".wav",
 		cost		= 16000,
 	}
 }
