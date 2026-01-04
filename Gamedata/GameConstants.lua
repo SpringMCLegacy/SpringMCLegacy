@@ -13,7 +13,7 @@ return {
 		AC5			= 80,
 		AC10 		= 25,
 		AC20		= 10,
-		Mortar		= 10,
+		Mortar		= 30,
 		Thumper		= 20,
 		Sniper		= 10,
 		LongTom		= 5,

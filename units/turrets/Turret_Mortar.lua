@@ -22,7 +22,7 @@ local Turret_Mortar = Turret:New{
 	customparams = {
 		barrelrecoildist = {[1] = 3, [2] = 3, [3] = 3},
 		turrettype = "turret",
-		maxammo 		= {mortar = 2},
+		maxammo 		= {mortar = 1},
 		chainfiredelays = {[2] = 200, [3] = 400},
     },
 }

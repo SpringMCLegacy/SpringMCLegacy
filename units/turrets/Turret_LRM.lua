@@ -10,7 +10,7 @@ local Turret_LRM = Turret:New{
 		},
 	},
 	customparams = {
-		maxammo 		= {lrm = 2},
+		maxammo 		= {lrm = 1},
 		turretturnspeed = 100,
 		elevationspeed  = 200,
 		turrettype = "ranged",

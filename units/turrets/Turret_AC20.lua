@@ -11,7 +11,7 @@ local Turret_AC20 = Turret:New{
 	},
 	customparams = {
 		barrelrecoildist = {[1] = 5},
-		maxammo 		= {ac20 = 2},
+		maxammo 		= {ac20 = 1},
 		turretturnspeed = 100,
 		elevationspeed  = 150,
 		turrettype = "turret",
