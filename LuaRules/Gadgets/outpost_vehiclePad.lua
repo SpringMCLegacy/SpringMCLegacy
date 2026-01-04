@@ -364,7 +364,8 @@ end
 
 function gadget:UnitUnloaded(unitID, unitDefID, teamID, transportID, transportTeam)
 	if vehiclesDefCache[unitDefID] then -- a vehicle
-		SendToUnsynced("TOGGLE_SELECT", unitID, teamID, false)
+		GG.ClearCmdDescs(unitID, true)
+		--SendToUnsynced("TOGGLE_SELECT", unitID, teamID, false)
 		local ud = UnitDefs[unitDefID]
 		if ud.canFly then
 			--Spring.Echo("VTOL!")
@@ -387,6 +388,13 @@ function gadget:UnitGiven(unitID, unitDefID, newTeam, oldTeam)
 	end
 end
 
+function gadget:AllowCommand(unitID, unitDefID, teamID, cmdID, cmdParams, cmdOptions, cmdTag, playerID, synced, fromLua)
+	if vehiclesDefCache[unitDefID] then
+		--Spring.Echo("Vehicle AllowCommand", UnitDefs[unitDefID].name, CMD[cmdID], playerID, synced, fromLua)
+		return fromLua
+	end
+	return true
+end
 
 else
 --	UNSYNCED
