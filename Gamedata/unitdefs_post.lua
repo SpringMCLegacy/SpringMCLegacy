@@ -335,8 +335,8 @@ for name, ud in pairs(UnitDefs) do
 			cp.sectorangle = (cp.sectorangle or roleSensors["hturret"].sector) * modOptions.sectorangle
 		else -- everything but mechs
 			ud.seismicsignature = 0
+			ud.airsightdistance = ud.airsightdistance or ud.radardistance or ud.sightdistance
 			ud.radardistance = ud.radardistance or 0
-			ud.airsightdistance = ud.airsightdistance or ud.radardistance
 		end
 		if cp.ecm then
 			ud.radardistancejam	= ud.radardistancejam or 500
