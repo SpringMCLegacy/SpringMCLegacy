@@ -232,7 +232,7 @@ function script.AimWeapon(weaponID, heading, pitch)
 		if info.minpitches[weaponID] and pitch < info.minpitches[weaponID] then 
 			return false 
 		end
-		Turn(mantlets[weaponID], x_axis, pitch, ELEVATION_SPEED)
+		Turn(mantlets[weaponID], x_axis, -pitch, ELEVATION_SPEED)
 	elseif missileWeaponIDs[weaponID] then -- yeah it happens if, in this case, launchpoint_1_# are attached to launcher_1 but launchpoint_2_# and 3 are attached to launcher_1 as well
 		if launchers[weaponID] then
 			Turn(launchers[weaponID], x_axis, -pitch, ELEVATION_SPEED)
