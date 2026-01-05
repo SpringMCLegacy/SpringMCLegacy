@@ -288,7 +288,7 @@ local Union = DropShip:New{
 }
 
 local Overlord = DropShip:New{
-	objectName        	= "Dropship_Overlord.s3o",
+	name              	= "Overlord Class Dropship",
 	iconType			= "overlord",
 	maxDamage			= 60000,
 	
@@ -532,6 +532,7 @@ local Overlord = DropShip:New{
 							 [5] = 5, -- AC10
 							},
 		-- droptime
+		normaltex		= "unittextures/normals/Overlord_Normals.dds",
 	},	
 }
 
