@@ -298,23 +298,23 @@ local Overlord = DropShip:New{
 		},
 		[2] = {
 			name	= "UAC10",
-			mainDir = "-1 0 1",
+			mainDir = "1 0 1",
 			maxAngleDif = 170,
 		},
 		[3] = {
 			name	= "UAC10",
-			mainDir = "-1 0 1",
+			mainDir = "1 0 1",
 			maxAngleDif = 170,
 			slaveTo = 2,
 		},
 		[4] = {
 			name	= "UAC10",
-			mainDir = "1 0 -1",
+			mainDir = "-1 0 -1",
 			maxAngleDif = 170,
 		},
 		[5] = {
 			name	= "UAC10",
-			mainDir = "1 0 -1",
+			mainDir = "-1 0 -1",
 			maxAngleDif = 170,
 			slaveTo = 4,
 		},
@@ -345,24 +345,24 @@ local Overlord = DropShip:New{
 		-- emitter 10
 		[10] = {
 			name	= "LBL",
-			mainDir = "-1 0 0",
+			mainDir = "1 0 0",
 			maxAngleDif = 90,
 		},
 		[11] = {
 			name	= "LBL",
-			mainDir = "-1 0 0",
+			mainDir = "1 0 0",
 			maxAngleDif = 90,
 			slaveTo =10,
 		},
 		[12] = {
 			name	= "LBL",
-			mainDir = "-1 0 0",
+			mainDir = "1 0 0",
 			maxAngleDif = 90,
 			slaveTo =10,
 		},
 		[13] = {
 			name	= "LBL",
-			mainDir = "-1 0 0",
+			mainDir = "1 0 0",
 			maxAngleDif = 90,
 			slaveTo =10,
 		},
@@ -393,24 +393,24 @@ local Overlord = DropShip:New{
 		-- emitter 18
 		[18] = {
 			name	= "LBL",
-			mainDir = "1 0 0",
+			mainDir = "-1 0 0",
 			maxAngleDif = 90,
 		},
 		[19] = {
 			name	= "LBL",
-			mainDir = "1 0 0",
+			mainDir = "-1 0 0",
 			maxAngleDif = 90,
 			slaveTo =18,
 		},
 		[20] = {
 			name	= "LBL",
-			mainDir = "1 0 0",
+			mainDir = "-1 0 0",
 			maxAngleDif = 90,
 			slaveTo =18,
 		},
 		[21] = {
 			name	= "LBL",
-			mainDir = "1 0 0",
+			mainDir = "-1 0 0",
 			maxAngleDif = 90,
 			slaveTo =18,
 		},
@@ -421,7 +421,7 @@ local Overlord = DropShip:New{
 		},
 		[23] = {
 			name	= "LRM20",
-			mainDir = "1 0 0",
+			mainDir = "-1 0 0",
 			maxAngleDif = 120,
 		},
 		[24] = {
@@ -431,7 +431,7 @@ local Overlord = DropShip:New{
 		},
 		[25] = {
 			name	= "LRM20",
-			mainDir = "-1 0 0",
+			mainDir = "1 0 0",
 			maxAngleDif = 120,
 		},
 		-- front blister [[x y 1]] WORKING
@@ -442,7 +442,7 @@ local Overlord = DropShip:New{
 		},
 		[27] = { -- left
 			name	= "MPL",
-			mainDir = "-1 0 1",
+			mainDir = "1 0 1",
 			maxAngleDif = 120,
 		},
 		[28] = { -- bottom
@@ -452,30 +452,30 @@ local Overlord = DropShip:New{
 		},
 		[29] = { -- right
 			name	= "MPL",
-			mainDir = "1 0 1",
+			mainDir = "-1 0 1",
 			maxAngleDif = 120,
 		},
 		-- left blister [[-1 y z]] WORKING
 		[30] = { -- top
 			name	= "MPL",
-			mainDir = "-1 1 0",
+			mainDir = "1 1 0",
 			maxAngleDif = 120,
 		},
 		[31] = { -- rear
 			name	= "MPL",
-			mainDir = "-1 0 -1",
+			mainDir = "1 0 -1",
 			maxAngleDif = 120,
 		},
 		[32] = { -- bottom
 			name	= "MPL",
-			mainDir = "-1 -1 0",
+			mainDir = "1 -1 0",
 			maxAngleDif = 120,
 		},
 		-- Limit is currently 32 weapons so SOL for now :(
 		-- Could comment them out here but would still need to rename model pieces, not worth it
 		[33] = { -- front
 			name	= "MPL",
-			mainDir = "-1 0 1",
+			mainDir = "1 0 1",
 			maxAngleDif = 120,
 		},
 		-- rear blister [[x y -1]]
@@ -486,7 +486,7 @@ local Overlord = DropShip:New{
 		},
 		[35] = { -- left
 			name	= "MPL",
-			mainDir = "1 0 -1",
+			mainDir = "-1 0 -1",
 			maxAngleDif = 120,
 		},
 		[36] = { -- bottom
@@ -496,28 +496,28 @@ local Overlord = DropShip:New{
 		},
 		[37] = { -- right
 			name	= "MPL",
-			mainDir = "-1 0 -1",
+			mainDir = "1 0 -1",
 			maxAngleDif = 120,
 		},
 		-- right blister [[1 y z]]
 		[38] = { -- top
 			name	= "MPL",
-			mainDir = "1 1 0",
+			mainDir = "-1 1 0",
 			maxAngleDif = 120,
 		},
 		[39] = { -- rear
 			name	= "MPL",
-			mainDir = "1 0 -1",
+			mainDir = "-1 0 -1",
 			maxAngleDif = 120,
 		},
 		[40] = { -- bottom
 			name	= "MPL",
-			mainDir = "1 -1 0",
+			mainDir = "-1 -1 0",
 			maxAngleDif = 120,
 		},
 		[41] = { -- front
 			name	= "MPL",
-			mainDir = "1 0 1",
+			mainDir = "-1 0 1",
 			maxAngleDif = 120,
 		},
 	},
