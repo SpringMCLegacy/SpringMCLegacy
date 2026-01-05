@@ -125,7 +125,7 @@ function gadget:UnitCreated(unitID, unitDefID, teamID, builderID)
 				numLaunchers = numLaunchers + 1
 			elseif pieceName:find("launcherdoor_") then
 				launcherDoorIDs[weaponNum] = true
-			elseif pieceName:find("missile_") then
+			elseif pieceName:find("missile_%d") then
 				missileIDs[weaponNum] = true
 				numMissiles = numMissiles + 1
 			-- Find turret pieces
