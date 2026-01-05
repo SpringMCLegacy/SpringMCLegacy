@@ -47,11 +47,11 @@ function LandingGearDown()
 		Move(gears[i].joint, y_axis, -5, 15)
 	end
 	WaitForMove(gears[info.numGears].joint, y_axis)
-	Turn(piece("missile_doors"), y_axis, math.rad(16), math.rad(4))
+	Turn(piece("missile_doors"), y_axis, math.rad(32), math.rad(8))
 end
 
 function LandingGearUp()
-	Turn(piece("missile_doors"), y_axis, 0, math.rad(4))
+	Turn(piece("missile_doors"), y_axis, 0, math.rad(8))
 	--Move(piece("mantlet_1"), z_axis, 0, 20)
 	--Move(piece("barrel_1"), z_axis, -58, 20)
 	SPEED = math.rad(40)
