@@ -171,7 +171,7 @@ local iconTypes = {
 	},
 	aero = {
 		bitmap		=	"icons/aero.png",
-		size			=	2.5,
+		size			=	2,
 		distance	=	1.0,
 	},
 	
