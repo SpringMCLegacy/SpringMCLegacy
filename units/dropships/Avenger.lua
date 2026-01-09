@@ -59,11 +59,11 @@ maxRudder          = 0.0015,
 		},
 		[2] = {
 			name	= "AC5",
-			slaveTo = 1,
+			--slaveTo = 1,
 		},
 		[3] = {
 			name	= "AC5",
-			slaveTo = 1,
+			slaveTo = 2,
 		},
 		-- Left Cheek Turret
 		[4] = {
@@ -185,7 +185,7 @@ maxRudder          = 0.0015,
 	},
 	customparams = {
 		--dropship		= "assault", -- for script info
-		hoverheight		= 150,--300,
+		hoverheight		= 350,--300,
 		radialdist		= 5000, --2500,
 		ignoreatbeacon	= true,
 		--sectorangle		= 30,
@@ -195,7 +195,7 @@ maxRudder          = 0.0015,
 		spawnAtTarget	= true,
 		speed			= 252 * 1.75, -- 2520
 		price      		= 36000,
-		maxfuel = 30,
+		maxfuel 		= 45,
     },
 }
 
