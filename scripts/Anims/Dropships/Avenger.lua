@@ -238,7 +238,7 @@ function Drop()
 	local dx, dy, dz = Spring.GetUnitDirection(unitID)
 	dx, dy, dz = GG.Vector.Normalized(dx, dy, dz)
 	Spring.SetUnitVelocity(unitID, FINAL_SPEED * dx, FINAL_SPEED * dy, FINAL_SPEED * dz)
-	Sleep(20000)
+	--Sleep(20000)
 	--Spring.MoveCtrl.Enable(unitID)
 	--[[Spring.Echo("POWPOWPOWPOW")
 	for i = 5, 0 do

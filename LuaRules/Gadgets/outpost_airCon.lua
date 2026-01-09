@@ -609,13 +609,13 @@ function gadget:GameFrame(n)
 		if fuel and state and state == PLANE_STATE_ACTIVE then -- TODO: why is avenger breaking this?
 			if fuel < 1 and (tonumber(unitDef.customParams.maxfuel) or DEFAULT_FUEL) > 0 then
 				SetUnitNoSelect(unitID, true)
+				-- give fuel back so that it can fly to map border
+				SetUnitRulesParam(unitID, "fuel", (tonumber(unitDef.customParams.maxfuel) or DEFAULT_FUEL))
 				-- check if we can rocket out
 				env = Spring.UnitScript.GetScriptEnv(unitID)
 				if env.TakeOffThread then
 					Spring.UnitScript.CallAsUnit(unitID, env.TakeOffThread) -- TakeOff will call RetreatPlane
 				else
-					-- give fuel back so that it can fly to map border
-					SetUnitRulesParam(unitID, "fuel", (tonumber(unitDef.customParams.maxfuel) or DEFAULT_FUEL))
 					local ex, ey, ez = GetSpawnPoint(teamID)
 					GiveOrderToUnit(unitID, CMD_MOVE, {ex, ey, ez}, {})
 					planeStates[unitID] = PLANE_STATE_RETREAT	
