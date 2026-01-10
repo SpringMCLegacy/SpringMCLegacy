@@ -2,7 +2,6 @@ local Sparrowhawk = Aero:New{
 	name              	= "Sparrowhawk SPR-7D",
 	description         = "Light Interceptor",
 	
-	objectName			= "aero/fs_sparrowhawk.s3o", -- TODO: duplicate models
 	buildPic			= "fs_sparrowhawk.png", -- TODO: remove in future
 	
 	acceleration       = 0.42,
