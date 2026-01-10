@@ -59,11 +59,11 @@ maxRudder          = 0.0015,
 		},
 		[2] = {
 			name	= "AC5",
-			slaveTo = 1,
+			--slaveTo = 1,
 		},
 		[3] = {
 			name	= "AC5",
-			slaveTo = 1,
+			slaveTo = 2,
 		},
 		-- Left Cheek Turret
 		[4] = {
@@ -74,66 +74,66 @@ maxRudder          = 0.0015,
 		},
 		[5] = {
 			name	= "ERMBL",
-			mainDir = "0 0 1",
+			mainDir = "0 -1 1",
 			maxAngleDif = 40, --20,
 			slaveTo = 4,
 		},
 		-- Right Cheek Turret
 		[6] = {
 			name	= "LBL",
-			mainDir = "0 0 1",
+			mainDir = "0 -1 1",
 			maxAngleDif = 40, --20,
 		},
 		[7] = {
 			name	= "ERMBL",
-			mainDir = "0 0 1",
+			mainDir = "0 -1 1",
 			maxAngleDif = 40, --20,
 			slaveTo = 6,
 		},
 		-- Left Wing AC5s
 		[8] = {
 			name	= "AC5",
-			mainDir = "0 0 1",
+			mainDir = "0 -1 1",
 			maxAngleDif = 40, --20,
 		},
 		[9] = {
 			name	= "AC5",
-			mainDir = "0 0 1",
+			mainDir = "0 -1 1",
 			maxAngleDif = 40, --20,
 			slaveTo = 8,
 		},
 		-- Right Wing AC5s
 		[10] = {
 			name	= "AC5",
-			mainDir = "0 0 1",
+			mainDir = "0 -1 1",
 			maxAngleDif = 40, --20,
 		},
 		[11] = {
 			name	= "AC5",
-			mainDir = "0 0 1",
+			mainDir = "0 -1 1",
 			maxAngleDif = 40, --20,
 			slaveTo = 10,
 		},
 		--Left Wing
 		[12] = {
 			name	= "ERMBL",
-			mainDir = "0 0 1",
+			mainDir = "0 -1 1",
 			maxAngleDif = 45,
 		},
 		[13] = {
 			name	= "PPC",
-			mainDir = "0 0 1",
+			mainDir = "0 -1 1",
 			maxAngleDif = 40,--20,
 		},
 		--Right Wing
 		[14] = {
 			name	= "ERMBL",
-			mainDir = "0 0 1",
+			mainDir = "0 -1 1",
 			maxAngleDif = 45,
 		},
 		[15] = {
 			name	= "PPC",
-			mainDir = "0 0 1",
+			mainDir = "0 -1 1",
 			maxAngleDif = 40, --20,
 		},
 		--Rear
@@ -185,7 +185,7 @@ maxRudder          = 0.0015,
 	},
 	customparams = {
 		--dropship		= "assault", -- for script info
-		hoverheight		= 150,--300,
+		hoverheight		= 350,--300,
 		radialdist		= 5000, --2500,
 		ignoreatbeacon	= true,
 		--sectorangle		= 30,
@@ -195,7 +195,7 @@ maxRudder          = 0.0015,
 		spawnAtTarget	= true,
 		speed			= 252 * 1.75, -- 2520
 		price      		= 36000,
-		maxfuel = 30,
+		maxfuel 		= 45,
     },
 }
 

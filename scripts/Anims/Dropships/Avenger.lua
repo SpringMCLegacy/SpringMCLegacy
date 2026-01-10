@@ -150,6 +150,11 @@ function TakeOff()
 	stage = 4
 	PlaySound("dropship_liftoff")
 	--Spring.MoveCtrl.SetRelativeVelocity(unitID, 0, 0, 5)
+	local heading = Spring.GetUnitHeading(unitID)
+	local ry = heading / 65536 * 2 * math.pi
+	Spring.MoveCtrl.Enable(unitID)
+	Spring.MoveCtrl.SetRotation(unitID, 0, ry, 0)
+	Spring.MoveCtrl.SetVelocity(unitID, 0, 0, 0)
 	Spring.MoveCtrl.SetRelativeVelocity(unitID, 0, 0, 15)
 	Spring.MoveCtrl.SetGravity(unitID, -0.75 * GRAVITY)
 	Turn(body, x_axis, math.rad(-30), math.rad(10))
@@ -167,7 +172,12 @@ function TakeOff()
 	StopSpin(body, z_axis, math.rad(45))
 	Sleep(2000)
 	-- We're out of the atmosphere, bye bye!
-	Spring.DestroyUnit(unitID, false, true)
+	--Spring.DestroyUnit(unitID, false, true)
+	GG.RetreatPlane(unitID, unitDefID, teamID)
+end
+
+function TakeOffThread()
+	StartThread(TakeOff)
 end
 
 function Drop()
@@ -175,7 +185,7 @@ function Drop()
 	SetSignalMask(Drop)
 	-- Move us up to the drop position
 	Spring.MoveCtrl.Enable(unitID)
-	Spring.MoveCtrl.SetPosition(unitID, TX + UX, TY + DROP_HEIGHT, TZ + UZ)
+	Spring.MoveCtrl.SetPosition(unitID, TX + UX, GY + DROP_HEIGHT, TZ + UZ)
 	local newAngle = math.atan2(UX, UZ)
 	Spring.MoveCtrl.SetRotation(unitID, 0, newAngle + math.pi, 0)
 	Turn(body, x_axis, math.rad(-50))
@@ -187,8 +197,9 @@ function Drop()
 	Spring.MoveCtrl.SetRelativeVelocity(unitID, 0, 0, 10)
 	Spring.MoveCtrl.SetGravity(unitID, -3.78 * GRAVITY)
 	local x, y, z = Spring.GetUnitPosition(unitID)
-	while y - TY > 150 + HOVER_HEIGHT do
+	while y - GY > 150 + HOVER_HEIGHT do
 		x, y, z = Spring.GetUnitPosition(unitID)
+		--Spring.Echo("height", y - GY)
 		local newAngle = math.atan2(x - TX, z - TZ)
 		Spring.MoveCtrl.SetRotation(unitID, 0, newAngle + math.pi, 0)
 		if (y - TY) < 4 * HOVER_HEIGHT and stage == 0 then
@@ -197,7 +208,7 @@ function Drop()
 		elseif (y - TY) < 3 * HOVER_HEIGHT and stage == 1 then
 			stage = 2
 		end
-		Sleep(100)
+		Sleep(30)
 	end
 	-- Descent complete, move over the target
 	PlaySound("dropship_rumble")
@@ -210,11 +221,12 @@ function Drop()
 	Turn(cargoDoor1, z_axis, math.rad(-90), DOOR_SPEED)
 	Turn(cargoDoor2, z_axis, math.rad(90), DOOR_SPEED)
 	bayOpen = true]]
-	local dist = GetUnitDistanceToPoint(unitID, TX, 0, TZ, false)
-	while dist > 10 do
-		dist = GetUnitDistanceToPoint(unitID, TX, 0, TZ, false)
+	local dist = GetUnitDistanceToPoint(unitID, TX, GY, TZ, false)
+	local FINAL_SPEED = 15
+	while dist > 250 do
+		dist = GetUnitDistanceToPoint(unitID, TX, GY, TZ, false)
 		--Spring.Echo("dist", dist)
-		Spring.MoveCtrl.SetRelativeVelocity(unitID, 0, 0, math.max(dist/200, 10))
+		Spring.MoveCtrl.SetRelativeVelocity(unitID, 0, 0, math.max(dist/200, FINAL_SPEED))
 		Sleep(30)
 	end
 	--[[Sleep(4500)
@@ -223,7 +235,10 @@ function Drop()
 	Turn(cargoDoor2, z_axis, 0, DOOR_SPEED)
 	bayOpen = false--]]
 	Spring.MoveCtrl.Disable(unitID)
-	Sleep(20000)
+	local dx, dy, dz = Spring.GetUnitDirection(unitID)
+	dx, dy, dz = GG.Vector.Normalized(dx, dy, dz)
+	Spring.SetUnitVelocity(unitID, FINAL_SPEED * dx, FINAL_SPEED * dy, FINAL_SPEED * dz)
+	--Sleep(20000)
 	--Spring.MoveCtrl.Enable(unitID)
 	--[[Spring.Echo("POWPOWPOWPOW")
 	for i = 5, 0 do

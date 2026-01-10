@@ -587,6 +587,19 @@ function gadget:AllowCommand(unitID, unitDefID, teamID, cmdID, cmdParams, cmdOpt
 	return true --false
 end
 
+local function RetreatPlane(unitID, unitDefID, teamID)
+	local hpLeft, totalHp = GetUnitHealth(unitID)
+	--local deposit = (unitDef.customParams.deposit or DEPOSIT_AMOUNT) * unitDef.metalCost
+	--local depositReturn = (hpLeft / totalHp) * deposit
+	--AddTeamResource(teamID, "m", depositReturn)
+	planeStates[unitID] = nil --this looks redundant, but needs to happen so that you actually get your bonus.
+	local sortie = sortieDefs[unitDefID]
+	ModifyStockpile(teamID, sortie, 1, "active", "prep")
+	GG.Delay.DelayCall(ModifyStockpile, {teamID, sortie, 1, "prep", "ready"}, sortie.prepDelay * 30)
+	DestroyUnit(unitID, false, true)
+end
+GG.RetreatPlane = RetreatPlane -- called by Avenger on a rocket burn out
+
 function gadget:GameFrame(n)
 	for unitID, state in pairs(planeStates) do
 		local unitDefID = GetUnitDefID(unitID)
@@ -598,9 +611,15 @@ function gadget:GameFrame(n)
 				SetUnitNoSelect(unitID, true)
 				-- give fuel back so that it can fly to map border
 				SetUnitRulesParam(unitID, "fuel", (tonumber(unitDef.customParams.maxfuel) or DEFAULT_FUEL))
-				local ex, ey, ez = GetSpawnPoint(teamID)
-				GiveOrderToUnit(unitID, CMD_MOVE, {ex, ey, ez}, {})
-				planeStates[unitID] = PLANE_STATE_RETREAT
+				-- check if we can rocket out
+				env = Spring.UnitScript.GetScriptEnv(unitID)
+				if env.TakeOffThread then
+					Spring.UnitScript.CallAsUnit(unitID, env.TakeOffThread) -- TakeOff will call RetreatPlane
+				else
+					local ex, ey, ez = GetSpawnPoint(teamID)
+					GiveOrderToUnit(unitID, CMD_MOVE, {ex, ey, ez}, {})
+					planeStates[unitID] = PLANE_STATE_RETREAT	
+				end
 				-- make it say something
 				if unitDef.customParams.planevoice then
 					local env = Spring.UnitScript.GetScriptEnv(unitID)
@@ -616,15 +635,7 @@ function gadget:GameFrame(n)
 			end
 			local ux, uy, uz = GetUnitPosition(unitID)
 			if vDistanceToMapEdge(ux, uy, uz) <= RETREAT_TOLERANCE then
-				local hpLeft, totalHp = GetUnitHealth(unitID)
-				--local deposit = (unitDef.customParams.deposit or DEPOSIT_AMOUNT) * unitDef.metalCost
-				--local depositReturn = (hpLeft / totalHp) * deposit
-				--AddTeamResource(teamID, "m", depositReturn)
-				planeStates[unitID] = nil --this looks redundant, but needs to happen so that you actually get your bonus.
-				local sortie = sortieDefs[unitDefID]
-				ModifyStockpile(teamID, sortie, 1, "active", "prep")
-				GG.Delay.DelayCall(ModifyStockpile, {teamID, sortie, 1, "prep", "ready"}, sortie.prepDelay * 30)
-				DestroyUnit(unitID, false, true)
+				RetreatPlane(unitID)
 			end
 		end
 	end
