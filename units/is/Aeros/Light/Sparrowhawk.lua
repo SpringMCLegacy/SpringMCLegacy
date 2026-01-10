@@ -1,5 +1,5 @@
 local Sparrowhawk = Aero:New{
-	name              	= "Sparrowhawk",
+	name              	= "Sparrowhawk SPR-7D",
 	description         = "Light Interceptor",
 	
 	objectName			= "aero/fs_sparrowhawk.s3o", -- TODO: duplicate models
