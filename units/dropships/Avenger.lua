@@ -74,66 +74,66 @@ maxRudder          = 0.0015,
 		},
 		[5] = {
 			name	= "ERMBL",
-			mainDir = "0 0 1",
+			mainDir = "0 -1 1",
 			maxAngleDif = 40, --20,
 			slaveTo = 4,
 		},
 		-- Right Cheek Turret
 		[6] = {
 			name	= "LBL",
-			mainDir = "0 0 1",
+			mainDir = "0 -1 1",
 			maxAngleDif = 40, --20,
 		},
 		[7] = {
 			name	= "ERMBL",
-			mainDir = "0 0 1",
+			mainDir = "0 -1 1",
 			maxAngleDif = 40, --20,
 			slaveTo = 6,
 		},
 		-- Left Wing AC5s
 		[8] = {
 			name	= "AC5",
-			mainDir = "0 0 1",
+			mainDir = "0 -1 1",
 			maxAngleDif = 40, --20,
 		},
 		[9] = {
 			name	= "AC5",
-			mainDir = "0 0 1",
+			mainDir = "0 -1 1",
 			maxAngleDif = 40, --20,
 			slaveTo = 8,
 		},
 		-- Right Wing AC5s
 		[10] = {
 			name	= "AC5",
-			mainDir = "0 0 1",
+			mainDir = "0 -1 1",
 			maxAngleDif = 40, --20,
 		},
 		[11] = {
 			name	= "AC5",
-			mainDir = "0 0 1",
+			mainDir = "0 -1 1",
 			maxAngleDif = 40, --20,
 			slaveTo = 10,
 		},
 		--Left Wing
 		[12] = {
 			name	= "ERMBL",
-			mainDir = "0 0 1",
+			mainDir = "0 -1 1",
 			maxAngleDif = 45,
 		},
 		[13] = {
 			name	= "PPC",
-			mainDir = "0 0 1",
+			mainDir = "0 -1 1",
 			maxAngleDif = 40,--20,
 		},
 		--Right Wing
 		[14] = {
 			name	= "ERMBL",
-			mainDir = "0 0 1",
+			mainDir = "0 -1 1",
 			maxAngleDif = 45,
 		},
 		[15] = {
 			name	= "PPC",
-			mainDir = "0 0 1",
+			mainDir = "0 -1 1",
 			maxAngleDif = 40, --20,
 		},
 		--Rear
