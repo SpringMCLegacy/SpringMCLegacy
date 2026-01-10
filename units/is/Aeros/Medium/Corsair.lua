@@ -1,5 +1,5 @@
 local Corsair = Aero:New{
-	name              	= "Corsair",
+	name              	= "Corsair CSR-V14",
 	description         = "Medium Fighter Bomber",
 	
 	buildPic			= "fs_corsair.png", -- TODO: remove in future
@@ -21,19 +21,19 @@ local Corsair = Aero:New{
 	
 	weapons = {	
 		[1] = {
-			name	= "LBL",
+			name	= "ERLBL",
 			maxAngleDif = 35,
 		},
 		[2] = {
-			name	= "LBL",
+			name	= "ERLBL",
 			maxAngleDif = 35,
 		},
 		[3] = {
-			name	= "ERMBL",
+			name	= "MBL",
 			maxAngleDif = 35,
 		},
 		[4] = {
-			name	= "ERMBL",
+			name	= "MBL",
 			maxAngleDif = 35,
 		},
 		[5] = {
