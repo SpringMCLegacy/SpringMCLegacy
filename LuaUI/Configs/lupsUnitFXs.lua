@@ -1,28 +1,5 @@
 effectUnitDefs = {
-	-- Aero
-	is_sparrowhawk = {
-		{class='AirJet',	options={color={1,0.5,0.0,0.75},	width =  2, length=35, piece="exhaust1", onActive=true}},
-		{class='AirJet',	options={color={1,0.5,0.0,0.75},	width =  2, length=35, piece="exhaust2", onActive=true}},
-		{class='AirJet',	options={color={1,0.5,0.0,0.75},	width =  1, length=15, piece="exhaust3", onActive=true}},
-		{class='AirJet',	options={color={1,0.5,0.0,0.75},	width =  1, length=15, piece="exhaust4", onActive=true}},
-		{class='Ribbon',	options={width=1, size=8, piece="lwingtip"}},
-		{class='Ribbon',	options={width=1, size=8, piece="rwingtip"}},
-	},
 
-	cl_bashkir = {
-		{class='AirJet',	options={color={1,0.5,0.0,0.75},	width =  2, length=35, piece="exhaust1", onActive=true}},
-		{class='AirJet',	options={color={1,0.5,0.0,0.75},	width =  2, length=35, piece="exhaust2", onActive=true}},
-		--{class='Ribbon',	options={width=1, size=8, piece="lwingtip"}},
-		--{class='Ribbon',	options={width=1, size=8, piece="rwingtip"}},
-	},	
-	is_avenger = {
-		{class='Ribbon',	options={width=4, size=12, piece="fin1"}},
-		{class='Ribbon',	options={width=4, size=12, piece="fin2"}},
-		{class='Ribbon',	options={width=2, size=8, piece="fin3"}},
-		{class='Ribbon',	options={width=2, size=8, piece="fin4"}},
-		{class='Ribbon',	options={width=6, size=6, piece="root1"}},
-		{class='Ribbon',	options={width=6, size=6, piece="root2"}},
-	},
  }
 
 ecm =  {
@@ -60,25 +37,84 @@ leopard = {
 	{class='Ribbon',	options={width=6, size=6, piece="nose22"}},
 }
 
-corsair = {
-	{class='AirJet',	options={color={1,0.5,0.0,0.75},	width =  2, length=35, piece="exhaust1", onActive=true}},
-	{class='AirJet',	options={color={1,0.5,0.0,0.75},	width =  2, length=35, piece="exhaust2", onActive=true}},
-	{class='AirJet',	options={color={1,0.5,0.0,0.75},	width =  2, length=35, piece="exhaust3", onActive=true}},
-	{class='AirJet',	options={color={1,0.5,0.0,0.75},	width =  1, length=15, piece="exhaust4", onActive=true}},
-	{class='AirJet',	options={color={1,0.5,0.0,0.75},	width =  1, length=15, piece="exhaust5", onActive=true}},
-	{class='Ribbon',	options={width=1, size=8, piece="lwingtip"}},
-	{class='Ribbon',	options={width=1, size=8, piece="rwingtip"}},
+avenger = {
+	{class='Ribbon',	options={width=4, size=12, piece="fin1"}},
+	{class='Ribbon',	options={width=4, size=12, piece="fin2"}},
+	{class='Ribbon',	options={width=2, size=8, piece="fin3"}},
+	{class='Ribbon',	options={width=2, size=8, piece="fin4"}},
+	{class='Ribbon',	options={width=6, size=6, piece="root1"}},
+	{class='Ribbon',	options={width=6, size=6, piece="root2"}},
 }
 
+local AERO = {
+	exhausts = {
+		small = {class='AirJet',	options={color={1,0.5,0.0,0.75},	width =  1, length=15, onActive=true}},
+		big = {class='AirJet',	options={color={1,0.5,0.0,0.75},	width =  2, length=35, onActive=true}},
+	},
+	tip = {class='Ribbon',	options={width=1, size=8}},
+}
+
+local numExhausts = { -- TODO: can we access model data in this context?
+	corsair = {
+		big = 3,
+		small = 2,
+	},
+	sparrowhawk = {
+		big = 2,
+		small = 2,
+	},
+	bashkir_p = {
+		big = 2,
+		small = 0,
+	},
+	sulla = {
+		big = 2,
+		small = 0,
+	},
+}
+
+local tips = {
+	"lwingtip",
+	"rwingtip",
+}
+
+local function BuildTable(unitName)
+	local newTable = {}
+	for exhaustSize, data in pairs(AERO.exhausts) do
+		for i = 1, numExhausts[unitName][exhaustSize] do
+			local exhaustTable = {}
+			table.copy(data, exhaustTable)
+			exhaustTable.options.piece = "exhaust" .. i + (exhaustSize == "small" and numExhausts[unitName]["big"] or 0) -- eww
+			table.insert(newTable, exhaustTable)
+		end
+	end
+	for _, tipPiece in pairs(tips) do
+		local tipTable = {}
+		table.copy(AERO.tip, tipTable)
+		tipTable.options.piece = tipPiece
+		table.insert(newTable, tipTable)
+	end
+	--Spring.Echo("lupsUnitFXs Table~~~~~~~~~~~~~~~~~~~~~~~~~~~~~")
+	--table.echo(newTable)
+	return newTable
+end
+	
 local sideData = VFS.Include("gamedata/sidedata.lua", {})
 local Sides = {}
 for sideNum, data in pairs(sideData) do
-	Sides[sideNum] = data.shortName:lower()
+	Sides[data.shortName:lower()] = data.techBase
 end
 
-for i, sideName in pairs(Sides) do
+for sideName, techBase in pairs(Sides) do
 	effectUnitDefs[sideName .. "_dropship_leopard"] = leopard
-	effectUnitDefs[sideName .. "_corsair"] = corsair
+	if techBase == "IS" then
+		effectUnitDefs[sideName .. "_avenger"] = avenger
+		effectUnitDefs[sideName .. "_corsair"] = BuildTable("corsair")
+		effectUnitDefs[sideName .. "_sparrowhawk"] = BuildTable("sparrowhawk")
+	elseif techBase == "CL" then
+		effectUnitDefs[sideName .. "_bashkir_p"] = BuildTable("bashkir_p")
+		effectUnitDefs[sideName .. "_sulla"] = BuildTable("sulla")
+	end
 end
 	
 effectUnitDefsXmas = {
