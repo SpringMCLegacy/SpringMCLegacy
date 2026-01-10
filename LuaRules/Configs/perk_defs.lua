@@ -386,6 +386,23 @@ return {
 			requires = "union",
 			sound = 'bb_dropship_upgraded',
 		},
+		-- aircon
+		{
+			name = "airconassault",
+			cmdDesc = {
+				id = GetCmdID('PERK_AIRCON_2'),
+				action = 'perkairconassault',
+				name = GG.Pad("Assault", "Dropship"),
+				tooltip = 'Unlocks the Avenger Assault Dropship sortie.',
+				texture = 'bitmaps/ui/upgrade.png',	
+			},
+			valid = function (unitDefID) return UnitDefs[unitDefID].name:find("aircon") end,
+			applyPerk = function (unitID)
+				GG.LockAssault(unitID, false)
+			end,
+			costFunction = deductCBills,
+			price = 12000,
+		},
 		-- vehicle pad
 		{
 			name = "vpadheavy",

@@ -153,6 +153,24 @@ local function GetDefaultTooltip(sortie, sortieUnitDef)
 	return result
 end
 
+-- TODO: this is copy pasta from L208 outpost_dropZone.lua LockHeavy function, generalise it?
+local locked = {} -- unitDefID = true
+
+local function LockAssault(acID, lock) 
+	local cmdDescs = GetUnitCmdDescs(acID)
+	for i = 1, #cmdDescs do
+		local defID = cmdDescs[i].id
+		local class = (defID < 0 and tonumber(UnitDefs[-defID].customParams.unlocklevel or 0)) or (sortieCmdIDs[defID] and tonumber(sortieCmdIDs[defID].unlockLevel or 0))
+		if class == 2 then
+			--Spring.Echo("Hiding", defID, lock)
+			locked[math.abs(defID)] = lock
+			EditUnitCmdDesc(acID, i, {hidden = lock})		
+		end
+	end
+	GG.ShowBuildOptionsByType(acID, "order", menuTypeCache, menuCmdIDs, typeStringIndex, locked)
+end
+GG.LockAssault = LockAssault
+
 local function GenerateSortie(unitDefID)
 	local unitDef = UnitDefs[unitDefID]
 	local cp = unitDef.customParams
@@ -171,6 +189,10 @@ local function GenerateSortie(unitDefID)
 	sortie.groundOnly = cp.groundonly
 	sortie.alwaysAttack = cp.alwaysattack
 	sortie.spawnAtTarget = cp.spawnattarget
+	sortie.unlockLevel = cp.unlocklevel
+	if sortie.unlockLevel then
+		locked[cmdID] = true
+	end
 	sortie.cmdDesc = {
 		id = cmdID,
 		action = "sortie_" .. unitDef.name,
@@ -509,14 +531,14 @@ function gadget:UnitCreated(unitID, unitDefID, teamID)
 				local stockpile = GetTeamRulesParam(teamID, "game_planes.stockpile" .. sortieCmdDesc.id) or 0
 				sortieCmdDesc.name = stockpile .. "\n" .. statusText.none -- TODO: assuming only aircon atm
 				sortieCmdDesc.disabled = not (stockpile > 0)
-				InsertUnitCmdDesc(unitID, sortieCmdDesc)				
+				GG.Delay.DelayCall(InsertUnitCmdDesc,{unitID, sortieCmdDesc}, 1) -- so that unit-perks populates upgrades first
 			end
 		end
 	end
 	for cmdID in pairs(toDelete) do
 		Spring.RemoveUnitCmdDesc(unitID, Spring.FindUnitCmdDesc(unitID, cmdID))
 	end
-	GG.ShowBuildOptionsByType(unitID, "order", menuTypeCache, menuCmdIDs, typeStringIndex)
+	GG.Delay.DelayCall(LockAssault, {unitID, true}, 1) -- ditto
 end
 
 
@@ -558,7 +580,7 @@ function gadget:AllowCommand(unitID, unitDefID, teamID, cmdID, cmdParams, cmdOpt
 	-- check if command is a sortie
 	local sortie = sortieCmdIDs[cmdID]
 	if not sortie then
-		return GG.PurchaseOrders(unitID, unitDefID, teamID, cmdID, cmdOptions, SendPurchaseOrder, menuTypeCache, menuCmdIDs, typeStrings, typeStringIndex, teamAvailableSortieSlots[teamID])
+		return GG.PurchaseOrders(unitID, unitDefID, teamID, cmdID, cmdOptions, SendPurchaseOrder, menuTypeCache, menuCmdIDs, typeStrings, typeStringIndex, teamAvailableSortieSlots[teamID], locked)
 	end
 	
 	local _, _, inBuild = GetUnitIsStunned(unitID)

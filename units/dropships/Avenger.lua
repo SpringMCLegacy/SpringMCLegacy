@@ -196,6 +196,7 @@ maxRudder          = 0.0015,
 		speed			= 252 * 1.75, -- 2520
 		price      		= 36000,
 		maxfuel 		= 45,
+		unlocklevel 	= 2,
     },
 }
 

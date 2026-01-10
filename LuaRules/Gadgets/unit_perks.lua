@@ -5,7 +5,7 @@ function gadget:GetInfo()
 		author = "FLOZi (C. Lawrence)",
 		date = "31/03/2013",
 		license = "GNU GPL v2",
-		layer = 4, -- run after game_radar & unit_purchasing
+		layer = 6, -- run after game_radar & outpost_dropZone & outpost_airCon
 		enabled = true
 	}
 end

@@ -176,16 +176,17 @@ local function ClearCmdDescs(unitID)
 end
 GG.ClearCmdDescs = ClearCmdDescs
 
-local function ShowBuildOptionsByType(unitID, menuType, menuCache, menuIDs, typeStringIndex)
+local function ShowBuildOptionsByType(unitID, menuType, menuCache, menuIDs, typeStringIndex, lockedDescs)
+	local lockedDescs = lockedDescs or locked -- TODO: remove this crap when LockHeavy is generalised
 	currMenu[unitID] = menuType
 	currMenuIndex[unitID] = typeStringIndex[menuType]
 	local cmdID = menuType and GG.CustomCommands.GetCmdID("CMD_MENU_" .. menuType:upper())
 	for i, cmdDesc in pairs(Spring.GetUnitCmdDescs(unitID)) do
 		if cmdDesc.id == cmdID then
 			EditUnitCmdDesc(unitID, i, {texture = 'bitmaps/ui/selected.png',})
-		elseif cmdDesc.id < 0 then --  buildoption
+		elseif cmdDesc.id < 0 or lockedDescs[cmdDesc.id] then --  buildoption
 			-- Order matters here... nil or false = false, false or nil = nil, thanks lua
-			local hide = locked[-cmdDesc.id] or menuCache[-cmdDesc.id] ~= menuType
+			local hide = lockedDescs[math.abs(cmdDesc.id)] or menuCache[-cmdDesc.id] ~= menuType
 			EditUnitCmdDesc(unitID, i, {hidden = hide})
 		elseif menuCache[cmdDesc.id] then -- a button other than a buildoption which belongs to a particular menu
 			EditUnitCmdDesc(unitID, i, {hidden = menuCache[cmdDesc.id] ~= menuType})
@@ -410,7 +411,7 @@ local function SetDropZone(beaconID, teamID)
 	end
 end
 
-local function PurchaseOrders(unitID, unitDefID, teamID, cmdID, cmdOptions, completionFunc, menuCache, menuIDs, typeStrings, typeStringIndex, slotsLeft)
+local function PurchaseOrders(unitID, unitDefID, teamID, cmdID, cmdOptions, completionFunc, menuCache, menuIDs, typeStrings, typeStringIndex, slotsLeft, lockedDescs)
 	local typeString = menuIDs[cmdID]
 	local rightClick = cmdOptions.right
 	if typeString then
@@ -424,7 +425,7 @@ local function PurchaseOrders(unitID, unitDefID, teamID, cmdID, cmdOptions, comp
 			if newIndex < 1 then newIndex = menuIDs.n end
 			typeString = typeStrings[newIndex]
 		end
-		ShowBuildOptionsByType(unitID, typeString, menuCache, menuIDs, typeStringIndex)
+		ShowBuildOptionsByType(unitID, typeString, menuCache, menuIDs, typeStringIndex, lockedDescs)
 		GG.PlaySoundForTeam(teamID, "IncomingChat", 1)
 		return true
 	elseif cmdID < 0 then
