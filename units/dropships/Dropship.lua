@@ -531,6 +531,9 @@ local Overlord = DropShip:New{
 							 [4] = 5, -- AC10
 							 [5] = 5, -- AC10
 							},
+		minpitches		= {
+			[1]				= -math.rad(70),
+		},
 		-- droptime
 		normaltex		= "unittextures/normals/Overlord_Normals.dds",
 	},	
