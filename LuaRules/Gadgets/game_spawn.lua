@@ -53,11 +53,14 @@ end
 local sideData = VFS.Include("gamedata/sidedata.lua", nil, VFS.ZIP)
 local SideNames = {}
 local ValidSides = {}
+local SideTechBases = {}
 for sideNum, data in pairs(sideData) do
 	SideNames[data.name:lower()] = data.shortName:lower()
+	SideTechBases[data.name:lower()] = data.techBase:lower()
 	ValidSides[data.shortName:lower()] = true
 end
 GG.SideNames = SideNames
+GG.SideTechBases = SideTechBases
 GG.ValidSides = ValidSides
 
 function gadget:GameID(id)

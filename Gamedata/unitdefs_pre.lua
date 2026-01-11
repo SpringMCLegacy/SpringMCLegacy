@@ -50,8 +50,10 @@ end
 -- Make sides available to all def files
 local sideData = VFS.Include("gamedata/sidedata.lua", VFS.ZIP)
 Sides = {}
+SideTechBases = {}
 for sideNum, data in pairs(sideData) do
 	Sides[sideNum] = data.shortName:lower()
+	SideTechBases[data.shortName:lower()] = data.techBase:lower()
 end
 
 -- Root Classes
@@ -108,6 +110,7 @@ Weapon = Def:New{
 -- This is where the magic happens
 local sharedEnv = {
 	Sides = Sides,
+	SideTechBases = SideTechBases,
 	Def = Def,
 	Unit = Unit,
 	Feature = Feature,
