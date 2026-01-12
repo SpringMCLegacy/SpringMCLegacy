@@ -375,15 +375,15 @@ function gadget:UnitUnloaded(unitID, unitDefID, teamID, transportID, transportTe
 			for _, spot in pairs(flagSpots) do
 				GG.Delay.DelayCall(Spring.GiveOrderToUnit, {unitID, CMD.PATROL, {spot.x, 0, spot.z}, {"shift"}}, 30)
 			end
-		elseif callerID then --(padLevels[callerID or -1] or -1) == 2 then -- unloaded by a MarkVII on a level 2 pad
+		elseif (padLevels[callerID or -1] or -1) == 2 then -- unloaded by a MarkVII on a level 2 pad
 			-- inherit orders
-			Spring.Echo("Hey there, I found a callerID!", callerID, ud.name)
+			--Spring.Echo("Hey there, I found a callerID!", callerID, ud.name)
 			local cmd = Spring.GetUnitCommands(callerID, 1)[1]
 			Spring.Echo(cmd)
 			--for k,v in pairs(cmd) do Spring.Echo(k,v) end
 			--cmd = cmd[1]
 			if cmd then
-				Spring.Echo("Hey there, I found a command!", CMD[cmd.id], ud.name)
+				--Spring.Echo("Hey there, I found a command!", CMD[cmd.id], ud.name)
 				Spring.GiveOrderToUnit(unitID, cmd.id, cmd.params, cmd.options)
 			else
 				Wander(unitID)
