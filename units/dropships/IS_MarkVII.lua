@@ -2,6 +2,7 @@ local IS_MarkVII = DropShip:New{
 	name              	= "Mark VII Landing Craft",
 	description         = "Cargo Landing Craft",
 	iconType			= "markvii",
+	buildPic			= "Dropship_MarkVII.png", 
 	maxDamage 			= 150 / 10 + 13 * 1000,-- cp.tonnage / 10 + cp.armor * 1000
 	mass                = 15000,
 	buildCostEnergy     = 0,

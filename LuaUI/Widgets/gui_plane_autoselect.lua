@@ -1,7 +1,7 @@
 
 function widget:GetInfo()
   return {
-    name      = "1944 Aircraft Selection Buttons",
+    name      = "MC:L - Aircraft Selection Buttons",
     desc      = "Automatically creates selection buttons for newly entered aircraft.",
     author    = "Ray Modified by Godde, Szunti, kmar",
     date      = "Sep 6, 2011",
@@ -121,7 +121,7 @@ local activePress = false
 local function IsPlane(unitID)
 	local udef = GetUnitDefID(unitID)
 	local ud = UnitDefs[udef]
-	if ud.canFly == true then  --- can fly
+	if ud.canFly == true or ud.customParams.dropship then  --- can fly
 		return true
     end
 	return false

@@ -14,6 +14,7 @@ local Leopard = DropShip:New{
 	name				= "Leopard",
 	iconType			= "leopard",
 	maxDamage			= 20000,
+	buildPic			= "Dropship_Leopard.png", 
 
 	weapons 		= {	
 		-- turret
@@ -114,6 +115,7 @@ local Union = DropShip:New{
 	name              	= "Union Class Dropship",
 	iconType			= "union",
 	maxDamage			= 40000,
+	buildPic			= "Dropship_Union.png", 
 
 	weapons 		= {	
 		-- LBLs
@@ -291,6 +293,7 @@ local Overlord = DropShip:New{
 	name              	= "Overlord Class Dropship",
 	iconType			= "overlord",
 	maxDamage			= 60000,
+	buildPic			= "Dropship_Overlord.png", 
 	
 		weapons 		= {	
 		[1] = {
