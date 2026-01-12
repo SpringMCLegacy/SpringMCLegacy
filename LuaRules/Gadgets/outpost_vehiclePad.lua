@@ -5,7 +5,7 @@ function gadget:GetInfo()
 		author		= "FLOZi (C. Lawrence)",
 		date		= "16/08/14",
 		license 	= "GNU GPL v2",
-		layer		= 10, -- must be after game_spawn
+		layer		= 3, -- must be after game_spawn, before unit_perks
 		enabled	= true,	--	loaded by default?
 	}
 end
@@ -53,8 +53,9 @@ local teamSquadSpots = {} -- teamSquadSpots[teamID][squadNum] = spotNum
 local teamSquads = {}
 local teamSideMults = {}
 
-local clanSides = {
+local clanSides = { -- TODO: use SideTechBases instead
 	["wf"] = true,
+	["sj"] = true,
 }
 
 local classes = {"vtol", "apc", "arty", "regular"}
@@ -122,9 +123,9 @@ local chances = {
 			},
 			weights = {
 				light = 0.0,
-				medium = 0.5,
-				heavy = 0.5,
-				assault = 0.0,
+				medium = 0.4,
+				heavy = 0.4,
+				assault = 0.2,
 			},
 		},
 		[3] = { -- Tier 3: assault
@@ -292,6 +293,7 @@ function gadget:UnitCreated(unitID, unitDefID, teamID)
 		spawnPads[unitID] = Spring.GetGameFrame()	
 		padLevels[unitID] = 1 -- default level
 		vehiclePadSides[unitID] = GG.teamSide[teamID]
+		GG.ClearCmdDescs(unitID)
 	elseif cp.dropship and cp.dropship == "vehicle" then
 		NewSquad(unitID, teamID)
 	end
@@ -367,12 +369,26 @@ function gadget:UnitUnloaded(unitID, unitDefID, teamID, transportID, transportTe
 		GG.ClearCmdDescs(unitID, true)
 		--SendToUnsynced("TOGGLE_SELECT", unitID, teamID, false)
 		local ud = UnitDefs[unitDefID]
+		local callerID = GG.dropshipCallers[transportID]
 		if ud.canFly then
 			--Spring.Echo("VTOL!")
 			for _, spot in pairs(flagSpots) do
 				GG.Delay.DelayCall(Spring.GiveOrderToUnit, {unitID, CMD.PATROL, {spot.x, 0, spot.z}, {"shift"}}, 30)
 			end
-		else
+		elseif callerID then --(padLevels[callerID or -1] or -1) == 2 then -- unloaded by a MarkVII on a level 2 pad
+			-- inherit orders
+			Spring.Echo("Hey there, I found a callerID!", callerID, ud.name)
+			local cmd = Spring.GetUnitCommands(callerID, 1)[1]
+			Spring.Echo(cmd)
+			--for k,v in pairs(cmd) do Spring.Echo(k,v) end
+			--cmd = cmd[1]
+			if cmd then
+				Spring.Echo("Hey there, I found a command!", CMD[cmd.id], ud.name)
+				Spring.GiveOrderToUnit(unitID, cmd.id, cmd.params, cmd.options)
+			else
+				Wander(unitID)
+			end
+		else 
 			--Spring.Echo("VEHICLE!")
 			Wander(unitID)
 		end

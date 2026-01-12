@@ -172,7 +172,7 @@ function Unloaded(ry)
 end
 
 function Unpack(ry)
-	if name == "outpost_aircon" then
+	if unitDef.isFactory then
 		-- AirCon is an actual structure with yardmap as it needs factory buildoptions
 		-- Engine forces it to grid on unload, so turn model instead
 		Turn(1, y_axis, (ry and ry - math.pi/2) or 0)

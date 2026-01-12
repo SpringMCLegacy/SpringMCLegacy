@@ -475,15 +475,17 @@ for name, ud in pairs(UnitDefs) do
 		elseif name:find("hoverpad") then
 			HPAD_UD = ud
 		end
-		ud.canmove = false
+		ud.canattack = ud.canattack or ud.weapons or false
+		ud.canmove = ud.canmove or false
+		ud.canpatrol = ud.canpatrol or false
+		ud.canguard = ud.canguard or false
+		ud.canfight = ud.canfight or false
+		ud.canrepeat = ud.canrepeat or false
+		
 		ud.canrepair = false
 		ud.canrestore = false
-		ud.canpatrol = false
-		ud.canguard = false
-		ud.canreclaim = false
-		ud.canfight = false
 		ud.canassist = false
-		ud.canrepeat = false
+		ud.canreclaim = false
 	end
 end
 

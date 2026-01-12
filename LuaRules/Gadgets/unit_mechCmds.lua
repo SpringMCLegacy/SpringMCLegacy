@@ -216,19 +216,32 @@ local CMD_DESCS_TO_ADD = {
 	jumpCmdDesc,
 	mascCmdDesc,
 }
+
+local VPAD_CMD_DESCS_TO_ADD = {
+	moveCmdDesc, 
+	fightCmdDesc, guardCmdDesc, patrolCmdDesc,
+}
+
 local wantedCmdDescs = {}
 for i, cmdDesc in ipairs(CMD_DESCS_TO_ADD) do
 	wantedCmdDescs[cmdDesc.id] = true
 end
 
-local function AddMechMenu(unitID)
-	for i, cmdDesc in ipairs(menuCmdDescs) do
-		InsertUnitCmdDesc(unitID, cmdDesc)
-	end
-	for i, cmdDesc in ipairs(CMD_DESCS_TO_ADD) do
+local function AddCmdDescs(unitID, list)
+	for i, cmdDesc in ipairs(list) do
 		InsertUnitCmdDesc(unitID, cmdDesc)
 	end
 end
+
+local function AddMechMenu(unitID)
+	AddCmdDescs(unitID, menuCmdDescs)
+	AddCmdDescs(unitID, CMD_DESCS_TO_ADD)
+end
+
+local function AddVpadCmds(unitID)
+	AddCmdDescs(unitID, VPAD_CMD_DESCS_TO_ADD)
+end
+GG.AddVpadCmds = AddVpadCmds
 
 local lookup = {}
 

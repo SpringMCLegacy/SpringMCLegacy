@@ -410,7 +410,7 @@ return {
 				id = GetCmdID('PERK_VPAD_2'),
 				action = 'perkvpadheavy',
 				name = GG.Pad("Heavy", "Units"),
-				tooltip = 'Adds heavy units to the militia, increases chance of medium units',
+				tooltip = 'Adds heavy & assault units to the militia. Also increases chance of medium units.',
 				texture = 'bitmaps/ui/upgrade.png',	
 			},
 			valid = function (unitDefID) return (not GG.hoverMap) and UnitDefs[unitDefID].name:find("vehiclepad") end,
@@ -421,17 +421,18 @@ return {
 			price = 8000,
 		},
 		{
-			name = "vpadhouse",
+			name = "vpaddirector",
 			cmdDesc = {
 				id = GetCmdID('PERK_VPAD_3'),
-				action = 'perkvpadhouse',
-				name = GG.Pad("Assault", "Units"),
-				tooltip = 'Adds assault units to the militia, increases chance of heavy units',
+				action = 'perkvpaddirector',
+				name = GG.Pad("Militia", "Director"),
+				tooltip = 'Allows issuing orders to the vehicle pad in order to direct the militia. Also increases chance of heavier units.',
 				texture = 'bitmaps/ui/upgrade.png',	
 			},
 			valid = function (unitDefID) return (not GG.hoverMap) and UnitDefs[unitDefID].name:find("vehiclepad") end,
 			applyPerk = function (unitID)
 				GG.PadUpgrade(unitID, 3)
+				GG.AddVpadCmds(unitID)
 			end,
 			costFunction = deductCBills,
 			price = 12000,

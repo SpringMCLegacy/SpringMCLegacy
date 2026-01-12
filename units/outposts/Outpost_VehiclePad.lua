@@ -1,3 +1,8 @@
+local yard = ""
+for i = 1, 16 do
+	yard = yard .. "o"
+end
+
 local Outpost_VehiclePad = Outpost:New{
 	name              	= "Vehicle Landing Pad",
 	description         = "A designated LZ for independent planetary militia forces",
@@ -9,6 +14,16 @@ local Outpost_VehiclePad = Outpost:New{
 	collisionVolumeOffsets = [[0 12 0]],
 	collisionVolumeScales = [[70 36 70]],
 	collisionVolumeType = "cylY",
+
+	canMove				= true,
+	canFight			= true,
+	canAttack			= false,
+	canPatrol			= true,
+	canGuard			= true,
+	
+	yardmap				= yard,
+	workertime			= 10,
+	builder				= true,
 
 	customparams = {
     },

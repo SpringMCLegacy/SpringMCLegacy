@@ -35,6 +35,8 @@ local DROPSHIP_DELAY = 10 * 30 -- 10s
 -- Variables
 local dropShipCache = {} -- dropShipCache[unitDefID] = "mech", "vehicle" or "outpost"
 GG.dropShipCache = dropShipCache
+local dropshipCallers = {}
+GG.dropshipCallers = dropshipCallers
 
 local activeDropships = {} -- activeDropships[dropshipID] = beaconID
 local teamDropShipHPs = {} -- teamDropShipHPs[teamID][unitDefID] = health
@@ -62,6 +64,7 @@ function SpawnDropship(beaconID, unitID, teamID, dropshipType, cargo, cost)
 	and Spring.GetUnitTeam(unitID) == teamID then
 		local tx,ty,tz = GetUnitPosition(unitID)
 		local dropshipID = CreateUnit(dropshipType, tx, ty, tz, "s", teamID)
+		dropshipCallers[dropshipID] = unitID
 		if dropshipType == "mech" then
 			GG.PlaySoundForTeam(teamID, "bb_Enemy_dropship_detected", 1, true) -- notify enemies
 		end
@@ -217,6 +220,7 @@ function gadget:UnitDestroyed(unitID, unitDefID, teamID, attackerID, attackerDef
 		--Spring.Echo("Oh noes, my dropship! Send the next one", attackerID, attackerDefID, attackerTeam)
 		BeaconFree(activeDropships[unitID], teamID)
 		activeDropships[unitID] = nil
+		dropshipCallers[unitID] = nil
 	end
 	if dropShipCache[unitDefID] == "mech" then  -- TODO: Only tracking mech landers atm
 		teamDropShipHPs[teamID][unitDefID] = {hp = Spring.GetUnitHealth(unitID), frame = Spring.GetGameFrame()}
