@@ -1,5 +1,5 @@
 local Sparrowhawk = Aero:New{
-	name              	= "Sparrowhawk SPR-7D",
+	name              	= "Sparrowhawk",
 	description         = "Light Interceptor",
 	
 	buildPic			= "fs_sparrowhawk.png", -- TODO: remove in future
@@ -39,10 +39,10 @@ local Sparrowhawk = Aero:New{
 	customparams = {
 		tonnage			= 30,
 		variant         = "SPR-7D",
-		speed			= 360 * 1.75, --3600
+		speed			= 250 * 1.75, --3600
 		price			= 4500,
 		heatlimit 		= 20,
-		armor			= 2,
+		armor			= 8,
 		
 		entryDelay 		= 5,
 		prepDelay 		= 10,

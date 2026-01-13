@@ -1,10 +1,23 @@
 local Corsair = Aero:New{
-	name              	= "Corsair CSR-V14",
+	name              	= "Corsair",
 	description         = "Medium Fighter Bomber",
 	
 	buildPic			= "fs_corsair.png", -- TODO: remove in future
 	
-	acceleration       = 0.35,
+	acceleration       = 0.32,
+	maxAcc             = 1.18,
+	turnRadius         = 105,
+	wingDrag           = 0.05,
+	wingAngle          = 0.08,
+	crashDrag          = 0.005,
+	maxBank            = 0.72,
+	maxPitch           = 0.6,
+	verticalSpeed      = 4.0,
+	maxAileron         = 0.024,--13,
+	maxElevator        = 0.024,--13,
+	maxRudder          = 0.0042,--22,
+	
+	--[[acceleration       = 0.35,
 	maxAcc             = 0.9,
 	turnRadius         = 110,
 	wingDrag           = 0.065,
@@ -15,8 +28,8 @@ local Corsair = Aero:New{
 	verticalSpeed      = 3.2,
 	maxAileron         = 0.010,
 	maxElevator        = 0.010,
-	maxRudder          = 0.0018,
-
+	maxRudder          = 0.0018,]]
+	
 	radardistance	= 1500,
 	
 	weapons = {	
@@ -60,12 +73,16 @@ local Corsair = Aero:New{
 	customparams = {
 		tonnage			= 50,
 		variant         = "CSR-V14",
-		speed			= 216 * 1.75, --2160
+		speed			= 250 * 1.75, --2160
 		price			= 9450,
 		heatlimit 		= 32,
-		armor			= 2,
+		armor			= 13.5,
 		squadsize 		= 2,
 		maxammo 		= {bomb = 5},
+		
+		entryDelay 		= 15,
+		prepDelay 		= 20,
+		
     },
 }
 
