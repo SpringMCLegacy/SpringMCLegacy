@@ -71,6 +71,10 @@ local numExhausts = { -- TODO: can we access model data in this context?
 		big = 2,
 		small = 0,
 	},
+	lightning = {
+		big = 1,
+		small = 2,
+	},
 }
 
 local tips = {
@@ -111,6 +115,10 @@ for sideName, techBase in pairs(Sides) do
 		effectUnitDefs[sideName .. "_avenger"] = avenger
 		effectUnitDefs[sideName .. "_corsair"] = BuildTable("corsair")
 		effectUnitDefs[sideName .. "_sparrowhawk"] = BuildTable("sparrowhawk")
+		effectUnitDefs[sideName .. "lightning_ltng15"] = BuildTable("lightning")
+		effectUnitDefs[sideName .. "lightning_ltng16d"] = BuildTable("lightning")
+		effectUnitDefs[sideName .. "lightning_ltng16l"] = BuildTable("lightning")
+		effectUnitDefs[sideName .. "lightning_ltng16s"] = BuildTable("lightning")
 	elseif techBase == "CL" then
 		effectUnitDefs[sideName .. "_bashkir_p"] = BuildTable("bashkir_p")
 		effectUnitDefs[sideName .. "_sulla"] = BuildTable("sulla")
