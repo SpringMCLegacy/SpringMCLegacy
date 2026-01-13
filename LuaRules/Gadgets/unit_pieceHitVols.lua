@@ -30,7 +30,7 @@ local WHEEL_SCALE = 1.1
 local accept = { 
 		mech = {pelvis = true, torso = true, rupperarm = true, rlowerarm = true, lupperarm = true, llowerarm = true, lupperleg = true, llowerleg = true, rupperleg = true, rlowerleg = true},
 		vehicle = {body = true, turret = true, launcher_1 = true, turret_2 = true, trackr = true, trackl = true},
-		aero = {lwing = true, rwing = true},
+		aero = {body = true, lwing = true, rwing = true},
 		vtol = {body = true, rotory1 = true, rotory2 = true},
 	}
 	
