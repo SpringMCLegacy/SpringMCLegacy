@@ -657,7 +657,7 @@ function gadget:GameFrame(n)
 			end
 			local ux, uy, uz = GetUnitPosition(unitID)
 			if vDistanceToMapEdge(ux, uy, uz) <= RETREAT_TOLERANCE then
-				RetreatPlane(unitID)
+				RetreatPlane(unitID, unitDefID, teamID)
 			end
 		end
 	end
