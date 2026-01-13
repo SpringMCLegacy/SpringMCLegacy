@@ -375,7 +375,7 @@ function gadget:UnitUnloaded(unitID, unitDefID, teamID, transportID, transportTe
 			for _, spot in pairs(flagSpots) do
 				GG.Delay.DelayCall(Spring.GiveOrderToUnit, {unitID, CMD.PATROL, {spot.x, 0, spot.z}, {"shift"}}, 30)
 			end
-		elseif (padLevels[callerID or -1] or -1) == 2 then -- unloaded by a MarkVII on a level 2 pad
+		elseif (padLevels[callerID or -1] or -1) == 3 then -- unloaded by a MarkVII on a level 3 pad
 			-- inherit orders
 			--Spring.Echo("Hey there, I found a callerID!", callerID, ud.name)
 			local cmd = Spring.GetUnitCommands(callerID, 1)[1]
