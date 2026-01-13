@@ -83,12 +83,13 @@ local tips = {
 }
 
 local function BuildTable(unitName)
+	if not numExhausts[unitName] then return nil end
 	local newTable = {}
 	for exhaustSize, data in pairs(AERO.exhausts) do
 		for i = 1, numExhausts[unitName][exhaustSize] do
 			local exhaustTable = {}
 			table.copy(data, exhaustTable)
-			exhaustTable.options.piece = "exhaust" .. i + (exhaustSize == "small" and numExhausts[unitName]["big"] or 0) -- eww
+			exhaustTable.options.piece = "exhaust" .. i + (exhaustSize == "small" and numExhausts[unitName]["big"] or 0) -- eww TODO: pass from script_helper in a rulesparam
 			table.insert(newTable, exhaustTable)
 		end
 	end
@@ -115,10 +116,11 @@ for sideName, techBase in pairs(Sides) do
 		effectUnitDefs[sideName .. "_avenger"] = avenger
 		effectUnitDefs[sideName .. "_corsair"] = BuildTable("corsair")
 		effectUnitDefs[sideName .. "_sparrowhawk"] = BuildTable("sparrowhawk")
-		effectUnitDefs[sideName .. "lightning_ltng15"] = BuildTable("lightning")
-		effectUnitDefs[sideName .. "lightning_ltng16d"] = BuildTable("lightning")
-		effectUnitDefs[sideName .. "lightning_ltng16l"] = BuildTable("lightning")
-		effectUnitDefs[sideName .. "lightning_ltng16s"] = BuildTable("lightning")
+		-- this duplicates variants for all IS sides and they won't exist but it shouldn't matter?
+		effectUnitDefs[sideName .. "_lightning_ltng15"] = BuildTable("lightning")
+		effectUnitDefs[sideName .. "_lightning_ltng16d"] = BuildTable("lightning")
+		effectUnitDefs[sideName .. "_lightning_ltng16l"] = BuildTable("lightning")
+		effectUnitDefs[sideName .. "_lightning_ltng16s"] = BuildTable("lightning")
 	elseif techBase == "CL" then
 		effectUnitDefs[sideName .. "_bashkir_p"] = BuildTable("bashkir_p")
 		effectUnitDefs[sideName .. "_sulla"] = BuildTable("sulla")
