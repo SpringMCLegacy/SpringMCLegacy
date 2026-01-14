@@ -21,6 +21,7 @@ local MY_TEAM_ID = Spring.GetMyTeamID()
 local MY_ALLY_ID = select(6, Spring.GetTeamInfo(MY_TEAM_ID))
 
 local UPLINK_ID = UnitDefNames["outpost_uplink"].id
+local AIRCON_ID = UnitDefNames["outpost_aircon"].id
 local BEACON_ID = UnitDefNames["beacon"].id
 
 local allyBeaconCounts = {}
@@ -67,11 +68,13 @@ local ticketWidth = 0
 local cBillsText = "C-Bills: " .. colors.grey .. 0
 local salvageText = "Salvage: " .. colors.slategray .. 0
 local tonnageText= "Tonnage: " .. colors.yellow .. 0
-local c3Text = "C3 Bandwidth:" .. colors.white .. 0
+local c3Text = "Mech C3:" .. colors.white .. 0
+local aeroC3Text = ""
 local gameTime = "Time: 0:00:00"
 local dropTime = "Dropship: 00:00"
 local artyTime = ""
 local haveArty = 0
+local haveAirCon = 0
 local fps = "fps: " .. colors.white .. GetFPS()
 local tempAmbient = ""
 local tempWater = ""
@@ -154,11 +157,12 @@ function widget:Initialize()
 	btFont = gl.LoadFont("LuaUI/Fonts/bt_oldstyle.ttf", 16, 2, 30)
 	TicketText()
 	haveArty = Spring.GetTeamUnitsCounts(MY_TEAM_ID)[UPLINK_ID] or 0
+	haveAirCon = Spring.GetTeamUnitsCounts(MY_TEAM_ID)[AIRCON_ID] or 0
 	for _, unitID in pairs(Spring.GetAllUnits()) do
 		widget:UnitCreated(unitID, Spring.GetUnitDefID(unitID), Spring.GetUnitTeam(unitID))
 	end
 	if Spring.GetGameFrame() > 0 then
-		widget:GamePreload()
+		widget:GameStart()
 	end
 	widgetHandler:RegisterGlobal("BEACONUPDATE", BeaconUpdate)
 end
@@ -172,18 +176,27 @@ function widget:PlayerChanged()
 	MY_TEAM_ID = Spring.GetMyTeamID()
 	MY_ALLY_ID = select(6, Spring.GetTeamInfo(MY_TEAM_ID))
 	haveArty = Spring.GetTeamUnitsCounts(MY_TEAM_ID)[UPLINK_ID] or 0 
+	haveAirCon = Spring.GetTeamUnitsCounts(MY_TEAM_ID)[AIRCON_ID] or 0 
 end
 
 function widget:UnitCreated(unitID, unitDefID, teamID)
-	if teamID == MY_TEAM_ID and unitDefID == UPLINK_ID then
-		haveArty = haveArty + 1
+	if teamID == MY_TEAM_ID then
+		if unitDefID == UPLINK_ID then
+			haveArty = haveArty + 1
+		elseif unitDefID == AIRCON_ID then
+			haveAirCon = haveAirCon + 1
+		end
 	end
 end
 
 
 function widget:UnitDestroyed(unitID, unitDefID, teamID)
-	if teamID == MY_TEAM_ID and unitDefID == UPLINK_ID then
-		haveArty = haveArty - 1
+	if teamID == MY_TEAM_ID then
+		if unitDefID == UPLINK_ID then
+			haveArty = haveArty - 1
+		elseif unitDefID == AIRCON_ID then
+			haveAirCon = haveAirCon - 1
+		end
 	end
 end
 
@@ -210,6 +223,8 @@ function widget:GameFrame(n)
 			countColour = frames == 0 and colors.green or colors.red
 			minutes, seconds = FramesToMinutesAndSeconds(frames)
 			artyTime = "Artillery: " .. countColour .. minutes .. colors.white .. ":" .. countColour .. seconds
+		else
+			artyTime = ""
 		end
 		fps = "fps: " .. colors.white .. GetFPS()
 		local cBills = floor(GetTeamResources(MY_TEAM_ID, "metal"))
@@ -223,7 +238,15 @@ function widget:GameFrame(n)
 		
 		local maxC3 = (GetTeamRulesParam(MY_TEAM_ID, "LANCES") or 1) * 4
 		local c3 = maxC3 - (GetTeamRulesParam(MY_TEAM_ID, "TEAM_SLOTS_REMAINING") or 4)
-		c3Text = "C3 Bandwidth: " .. colors.white .. c3 .. colors.white .. " / " .. colors.white .. maxC3
+		c3Text = "Mech C3: " .. colors.white .. c3 .. colors.white .. " / " .. colors.white .. maxC3
+		
+		if haveAirCon > 0 then
+			local maxAeroC3 = 6 -- For now this is fixed
+			local aeroC3 = maxAeroC3 - (GetTeamRulesParam(MY_TEAM_ID, "TEAM_AERO_SLOTS_REMAINING") or 6)
+			aeroC3Text = "Aero C3: " .. colors.white .. aeroC3 .. colors.white .. " / " .. colors.white .. maxAeroC3
+		else
+			aeroC3Text = ""
+		end
 		TicketText()
 	end
 end
@@ -242,6 +265,7 @@ function widget:DrawScreen()
 		btFont:Print(salvageText, xMax * 0.30, yMax - 48, 16, "od")
 		btFont:Print(tonnageText, xMax * 0.45, yMax - 32, 16, "od")
 		btFont:Print(c3Text, xMax * 0.45, yMax - 48, 16, "od")
+		btFont:Print(aeroC3Text, xMax * 0.45, yMax - 64, 16, "od")
 		btFont:Print(dropTime, xMax * 0.75, yMax - 32, 16, "odr")
 		if (haveArty or 0) > 0 then
 			btFont:Print(artyTime, xMax * 0.75, yMax - 48, 16, "odr")

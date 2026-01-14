@@ -15,8 +15,6 @@ if not gadgetHandler:IsSyncedCode() then return false end
 local sqrt = math.sqrt
 local max, sin, cos, atan2 = math.max, math.sin, math.cos, math.atan2
 
-local airfieldCapacity = 6
-
 local CMD_PLANES = GG.CustomCommands.GetCmdID("CMD_PLANES")
 local PATROL_DISTANCE = 1000
 local FORMATION_SEPARATION = 128
@@ -280,6 +278,7 @@ local function ModifyStockpile(teamID, sortie, amount, oldState, newState)
 	else
 		teamAvailableSortieSlots[teamID] = teamAvailableSortieSlots[teamID] + amount
 	end
+	Spring.SetTeamRulesParam(teamID, "TEAM_AERO_SLOTS_REMAINING", teamAvailableSortieSlots[teamID])
 	UpdateCMDs(teamID, sortie, teamSorties[teamID][-cmdID][newState] or teamSorties[teamID][-cmdID][oldState], newState or "none")
 end
 
