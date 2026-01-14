@@ -138,6 +138,10 @@ local decalDefs = {
 			stable		= 3,
 			fadeOut		= 120,
 		},
+		glow		= {
+			amount		= 0.9,
+			fallOff		= 0.1,
+		},
 	},
 	decal_beacon_zone = {
 		alias	= 4,
@@ -217,6 +221,11 @@ local function SpawnDecal(eventID, decalName, x, z, decalSize, angle, killCode)
 			if varyTint then
 				Spring.SetGroundDecalTint(decalID, varyTint, varyTint, varyTint, varyTint)
 			end
+		end
+		local glow = decalInfo.glow
+		if glow then
+			--Spring.Echo("yo, decal", decalName, "should glow", glow.amount, glow.fallOff)
+			Spring.SetGroundDecalGlowParams(decalID, glow.amount, glow.fallOff)
 		end
 		local duration = decalInfo.duration
 		if duration then
