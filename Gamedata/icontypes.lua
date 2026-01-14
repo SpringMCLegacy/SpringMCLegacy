@@ -39,6 +39,11 @@ local iconTypes = {
 		size			=	5,
 		distance	=	5.0,
 	},
+	bishop = {
+		bitmap		=	"icons/bishop.png",
+		size			=	5,
+		distance	=	5.0,
+	},
 	beacon = {
 		bitmap		=	"icons/beacon.png",
 		size			=	5,
