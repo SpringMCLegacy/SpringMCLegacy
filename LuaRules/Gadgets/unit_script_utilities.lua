@@ -139,16 +139,16 @@ local decalDefs = {
 			fadeOut		= 120,
 		},
 		glow		= {
-			amount		= 0.9,
-			fallOff		= 0.1,
+			amount		= 0.75,
+			fallOff		= 0.01,
 		},
 	},
 	decal_beacon_zone = {
-		alias	= 4,
+		alias	= 5,
 		alpha	= 0.2,
 	},
 	decal_foot = {
-		alias 	= 5,
+		alias 	= 6,
 		size 	= 85, 
 		vary 	= {
 			tintMax		= 80,
@@ -162,7 +162,7 @@ local decalDefs = {
 	},
 	-- decal_foot_normal
 	decal_outpost = {
-		alias 	= 7,
+		alias 	= 8,
 		size 	= 80, 
 		alpha 	= 0.2,
 		vary 	= {
@@ -179,7 +179,7 @@ local decalDefs = {
 	},
 	-- decal_outpost_normal
 	decal_start = {
-		alias = 11,
+		alias = 12,
 		size = 200,
 	}
 }
