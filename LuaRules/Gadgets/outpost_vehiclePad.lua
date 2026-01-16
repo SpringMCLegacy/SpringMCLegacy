@@ -379,9 +379,6 @@ function gadget:UnitUnloaded(unitID, unitDefID, teamID, transportID, transportTe
 			-- inherit orders
 			--Spring.Echo("Hey there, I found a callerID!", callerID, ud.name)
 			local cmd = Spring.GetUnitCommands(callerID, 1)[1]
-			Spring.Echo(cmd)
-			--for k,v in pairs(cmd) do Spring.Echo(k,v) end
-			--cmd = cmd[1]
 			if cmd then
 				--Spring.Echo("Hey there, I found a command!", CMD[cmd.id], ud.name)
 				Spring.GiveOrderToUnit(unitID, cmd.id, cmd.params, cmd.options)
