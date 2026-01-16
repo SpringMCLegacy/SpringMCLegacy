@@ -340,7 +340,7 @@ function Drop()
 		Sleep(30)
 	end
 	-- only proceed if the beacon is still ours and is secure
-	if not bugOut and beaconID and Spring.GetUnitTeam(beaconID) == teamID and Spring.GetUnitRulesParam(beaconID, "secure") == 1 then
+	if not bugOut and beaconID and Spring.GetUnitTeam(beaconID) == teamID and tonumber(Spring.GetUnitRulesParam(beaconID, "secure")) == 1 then
 		-- We're over the target area, reduce height!
 		PlaySound("dropship_rumble")
 		stage = 3
@@ -355,7 +355,8 @@ function Drop()
 			Spring.MoveCtrl.SetRelativeVelocity(unitID, 0, -math.max(2, vertSpeed * dist/300), 0)
 			Sleep(10)
 			dist = select(2, Spring.GetUnitPosition(unitID)) - wantedHeight
-			bugOut = (cargoID and Spring.GetUnitIsDead(cargoID)) or not (Spring.GetUnitTeam(beaconID) == teamID and Spring.GetUnitRulesParam(beaconID, "secure") == 1)
+			bugOut = (cargoID and Spring.GetUnitIsDead(cargoID)) or not (Spring.GetUnitTeam(beaconID) == teamID and tonumber(Spring.GetUnitRulesParam(beaconID, "secure")) == 1)
+			--Spring.Echo("derp", dist, bugOut)
 		end
 		-- We're in place. Halt and lower the cargo!
 		Spring.MoveCtrl.SetRelativeVelocity(unitID, 0, 0, 0)
