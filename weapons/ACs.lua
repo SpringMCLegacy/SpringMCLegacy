@@ -98,7 +98,7 @@ local LBX2_Cluster = LBX2:New(LBX_Class):New{
 	dynDamageMin			= 100,
 	
 	damage = {
-		default = 150,--20, --50 DPS
+		default = 25/2, --150,--20, --50 DPS
 	},
 }
 
@@ -207,7 +207,7 @@ local LBX5_Cluster = LBX5:New(LBX_Class):New{
 	dynDamageMin			= 100,
 	
 	damage = {
-		default = 150,--20, --50 DPS
+		default = 200/5,--20, --50 DPS
 	},
 }
 
@@ -260,7 +260,7 @@ local LBX10_Cluster = LBX10:New(LBX_Class):New{
 	dynDamageMin			= 100,
 	
 	damage = {
-		default = 150,--40, --50 DPS
+		default = 800/10,--40, --50 DPS
 	},
 }
 
@@ -324,7 +324,7 @@ local LBX20_Cluster = LBX20:New(LBX_Class):New{
 	dynDamageMin			= 100,
 	
 	damage = {
-		default = 150,--100, --600 DPS
+		default = 2000/20,--100, --600 DPS
 	},
 	customparams = {
 		shockwave = false,
