@@ -5,7 +5,7 @@ function gadget:GetInfo()
 		author		= "FLOZi (C. Lawrence)",
 		date		= "10/08/20",
 		license 	= "GNU GPL v2",
-		layer		= 5, -- after perks
+		layer		= 7, -- after perks
 		enabled		= true,
 	}
 end
