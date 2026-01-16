@@ -10,6 +10,7 @@ local Aircraft = Unit:New{
 	moveState					= 0, -- Hold Position
 	script						= "Vehicle.lua",
 	usepiececollisionvolumes 	= true,
+	collide						= false,
 	
 	customparams = {
 		ignoreatbeacon  = true,
