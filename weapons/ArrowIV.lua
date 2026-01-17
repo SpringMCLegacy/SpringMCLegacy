@@ -71,6 +71,11 @@ local ADArrow = ArrowIV:New{
 	model					= "Weapons/ArrowIV_AD.s3o",
 }
 
+local A2AArrow = ADArrow:New{
+	name                    = "A2A Arrow",
+	trajectoryHeight		= 0,
+}
+
 local ArrowIV_Cluster = ArrowIV:New{
 	model					= "Weapons/ArrowIV_Cluster.s3o",
 	explosionGenerator    	= "custom:HE_SMALL",
@@ -87,4 +92,5 @@ return lowerkeys({
 	ArrowIV_Guided = ArrowIV_Guided,
 	ADArrow = ADArrow,
 	ArrowIV_Cluster = ArrowIV_Cluster,
+	A2AArrow = A2AArrow;
 	})
