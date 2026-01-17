@@ -44,7 +44,7 @@ function LandingGearDown()
 	end
 	WaitForTurn(gears[info.numGears].joint, x_axis)
 	for i = 1, info.numGears do -- joint raises and locks into position
-		Move(gears[i].joint, y_axis, -5, 15)
+		Move(gears[i].joint, y_axis, 0, 15)
 	end
 	WaitForMove(gears[info.numGears].joint, y_axis)
 	Turn(piece("missile_doors"), y_axis, math.rad(32), math.rad(8))
