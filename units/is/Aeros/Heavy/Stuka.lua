@@ -76,6 +76,7 @@ local STUD6 = Stuka:New{
 		[10] = {
 			name	= "A2AArrow",
 			maxAngleDif = 35,
+			onlyTargetCategory = "air",
 		},
 		
 	},
