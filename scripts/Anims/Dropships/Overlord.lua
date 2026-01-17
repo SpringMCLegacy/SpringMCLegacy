@@ -94,6 +94,7 @@ local link, pad, main_door, door_struts, vtol_pad = piece ("link", "pad", "main_
 
 local WAIT_TIME = 10000
 local DOOR_SPEED = math.rad(60)
+local DOOR_ANGLE = math.rad(32.5)
 local x, _ ,z = Spring.GetUnitPosition(unitID)
 --local dx, _, dz = Spring.GetUnitDirection(unitID)
 local dirAngle = HEADING / 2^16 * 2 * math.pi
@@ -107,14 +108,14 @@ function UnloadCargo()
 	-- but should be doable later without too much hassle
 	PlaySound("dropship_dooropen")
 	Move(door_struts, z_axis, 25, 25)
-	Turn(main_door, x_axis, math.rad(105), DOOR_SPEED)
-	Turn(link, x_axis, math.rad(35), DOOR_SPEED * 10)
+	Turn(main_door, x_axis, DOOR_ANGLE + math.rad(70), DOOR_SPEED)
+	Turn(link, x_axis, DOOR_ANGLE, DOOR_SPEED * 10)
 	WaitForTurn(main_door, x_axis)
 	
 	for i, cargoID in ipairs(cargo) do
 		Move(link, z_axis, 0)
 		Move(pad, z_axis, 0)
-		Turn(pad, x_axis, math.rad(-35))
+		Turn(pad, x_axis,-DOOR_ANGLE)
 		--Move(vtol_pad, x_axis, 0)
 
 		WaitForMove(link, z_axis)
@@ -139,7 +140,7 @@ function UnloadCargo()
 		else
 			Spring.UnitScript.AttachUnit(pad, cargoID)
 			local moveSpeed = currUnitDef.speed * 1.2
-			Move(link, z_axis, 73, moveSpeed)
+			Move(link, z_axis, 180, moveSpeed)
 			WaitForMove(link, z_axis)
 			Move(pad, z_axis, 100, moveSpeed)
 			WaitForMove(pad, z_axis)
