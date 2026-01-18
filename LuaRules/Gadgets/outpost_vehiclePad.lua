@@ -53,11 +53,6 @@ local teamSquadSpots = {} -- teamSquadSpots[teamID][squadNum] = spotNum
 local teamSquads = {}
 local teamSideMults = {}
 
-local clanSides = { -- TODO: use SideTechBases instead
-	["wf"] = true,
-	["sj"] = true,
-}
-
 local classes = {"vtol", "apc", "arty", "regular"}
 local weights = {"light", "medium", "heavy", "assault",} -- TODO: this is repeated elsewhere
 
@@ -86,7 +81,8 @@ function gadget:GameStart()
 		if teamID ~= GAIA_TEAM_ID then
 			teamSquadSpots[teamID] = {}
 			local teamSide = GG.teamSide[teamID]
-			teamSideMults[teamID] = clanSides[teamSide] and CLAN_DELAY_MULT or 1
+			local techBase = GG.SideTechBases[teamSide]
+			teamSideMults[teamID] = techBase == "cl" and CLAN_DELAY_MULT or 1
 		end
 	end
 end

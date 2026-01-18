@@ -54,13 +54,17 @@ local sideData = VFS.Include("gamedata/sidedata.lua", nil, VFS.ZIP)
 local SideNames = {}
 local ValidSides = {}
 local SideTechBases = {}
+local TechBaseSides = {}
 for sideNum, data in pairs(sideData) do
 	SideNames[data.name:lower()] = data.shortName:lower()
-	SideTechBases[data.name:lower()] = data.techBase:lower()
+	SideTechBases[data.shortName:lower()] = data.techBase:lower()
+	TechBaseSides[data.techBase:lower()] = TechBaseSides[data.techBase:lower()] or {}
+	table.insert(TechBaseSides[data.techBase:lower()], data.shortName:lower())
 	ValidSides[data.shortName:lower()] = true
 end
 GG.SideNames = SideNames
 GG.SideTechBases = SideTechBases
+GG.TechBaseSides = TechBaseSides
 GG.ValidSides = ValidSides
 
 function gadget:GameID(id)
@@ -75,7 +79,7 @@ local function GetStartUnit(teamID)
 		-- startscript didn't specify a side for this team
 		local sidedata = Spring.GetSideData()
 		if (sidedata and #sidedata > 0) then
-			local sideNum = math.random(1,#Spring.GetSideData()) --TODO: 2 + teamID % #sidedata
+			local sideNum = teamID == 0 and math.random(1,#TechBaseSides.is) or math.random(#TechBaseSides.is+1,#TechBaseSides.is+1+#TechBaseSides.cl)
 			startUnit = sidedata[sideNum].startUnit
 			side = sidedata[sideNum].sideName
 		end
