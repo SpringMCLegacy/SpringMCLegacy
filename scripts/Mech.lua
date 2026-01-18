@@ -55,6 +55,7 @@ local superCharger = false
 local superChargerHeat = 0.1
 local superChargerDamage = 5
 local tsmActive = false
+local lostLegs = 0
 
 local missileWeaponIDs = info.missileWeaponIDs
 local flareOnShots = info.flareOnShots
@@ -303,8 +304,10 @@ local function CoolOff()
 			heatElevated = false
 			excessHeat = 0 -- if we managed to return to normal heat, remove all excess
 		end
-		if lostlegs == 0 and tsmActive and (currHeatLevel/heatLimit > 0.33) then
+		--Spring.Echo("CoolOff() loop", currHeatLevel, heatLimit, currHeatLevel/heatLimit, tsmActive, lostLegs)
+		if lostLegs == 0 and tsmActive and (currHeatLevel/heatLimit > 0.33) then
 			speedMod = (running and 1.5 * 1.3 or 1.2) * (superCharger and 1.25 or 1)
+			--Spring.Echo("heat is more than 33%, tsmActive", speedMod)
 			SpeedChangeCheck()
 		end
 		ChangeHeat(-coolRate)
@@ -373,7 +376,7 @@ function SmokeLimb(limb, hitPiece)
 	end
 end
 
-local lostLegs = 0
+
 function hideLimbPieces(limb, hide)
 	local rootPiece
 	local limbWeapons
@@ -527,7 +530,7 @@ local function RunDamage()
 	SetSignalMask(SIG_RUN)
 	while moving and running do
 		if mascActive then
-			--Spring.Echo("In mascdamage loop")
+			--Spring.Echo("In mascActive damage loop")
 			limbHPControl("left_leg", mascDamage, "llowerleg")
 			limbHPControl("right_leg", mascDamage, "rlowerleg")
 			if lostLegs > 0 then
@@ -539,6 +542,7 @@ local function RunDamage()
 			end
 		end
 		if superCharger then
+			--Spring.Echo("In superCharger damage loop")
 			Spring.AddUnitDamage(unitID, superChargerDamage)
 			local health, maxHealth = Spring.GetUnitHealth(unitID)
 			if health/maxHealth < 0.25 then
@@ -589,6 +593,7 @@ function Run(activate)
 			speedMod = speedMod * 1.25
 		end
 	end
+	--Spring.Echo("Run", activate, speedMod, "mascActive", mascActive, "tsmActive", tsmActive, "superCharger", superCharger)
 	speedMod = speedMod * (GG.modOptions and GG.modOptions.speed or 1.0) -- respect modoption
 	running = activate
 	StartThread(SpeedChangeCheck)
