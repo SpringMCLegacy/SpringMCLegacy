@@ -28,7 +28,7 @@ local FindUnitCmdDesc		= Spring.FindUnitCmdDesc
 
 -- Constants
 
-local CMD_MASC = GG.CustomCommands.GetCmdID("CMD_MASC")
+local CMD_RUN_TOGGLE = GG.CustomCommands.GetCmdID("CMD_RUN_TOGGLE")
 local mascUnits = {}
 GG.mascUnits = mascUnits
 
@@ -93,7 +93,7 @@ function gadget:Initialize()
 	end
 	-- centralise key bindings
 	Spring.SendCommands({"bind c flush"})
-	Spring.SendCommands({"bind v masc"})
+	Spring.SendCommands({"bind v runtoggle"})
 	Spring.SendCommands({"bind j jump"})
 	Spring.SendCommands({"bind t turn"})
 	Spring.SendCommands({"bind r onoff"})
@@ -128,18 +128,21 @@ function gadget:AllowCommand(unitID, unitDefID, teamID, cmdID, cmdParams, cmdOpt
 			Spring.UnitScript.CallAsUnit(unitID, env.Run, false)
 			--SpeedChange(unitID, unitDefID, 1)
 			return true
-		elseif cmdID == CMD_MASC then
+		elseif cmdID == CMD_RUN_TOGGLE then
+			--Spring.Echo("CMD_RUN_TOGGLE: recieved")
 			local super = Spring.GetUnitRulesParam(unitID, "supercharger")
 			local masc = Spring.GetUnitRulesParam(unitID, "masc")
 			if super or masc then
 				env = Spring.UnitScript.GetScriptEnv(unitID)
-				if cmdParams[1] == 1 and not activeMASCs[unitID] then -- toggle on
+				if cmdParams[1] == 1 then--and not activeMASCs[unitID] then -- toggle on
+					--Spring.Echo("CMD_RUN_TOGGLE: set on")
 					--[[if (Spring.GetUnitRulesParam(unitID, "excess_heat") or 0) > 0 then
 						return false -- don't allow overheated mechs to toggle on
 					end]]	
 					activeMASCs[unitID] = true
 					Spring.UnitScript.CallAsUnit(unitID, env.EnableMASC, true)
 				elseif activeMASCs[unitID] then -- toggle off
+					--Spring.Echo("CMD_RUN_TOGGLE: set off")
 					activeMASCs[unitID] = false
 					Spring.UnitScript.CallAsUnit(unitID, env.EnableMASC, false)
 				end
@@ -147,7 +150,7 @@ function gadget:AllowCommand(unitID, unitDefID, teamID, cmdID, cmdParams, cmdOpt
 							or (super and GG.superChargerParams)
 							or (masc and GG.mascParams)
 				paramsToUse[1] = cmdParams[1]
-				EditUnitCmdDesc(unitID, FindUnitCmdDesc(unitID, CMD_MASC), { params = paramsToUse})
+				EditUnitCmdDesc(unitID, FindUnitCmdDesc(unitID, CMD_RUN_TOGGLE), { params = paramsToUse})
 				return true
 			else 
 				return false 

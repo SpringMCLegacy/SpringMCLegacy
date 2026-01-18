@@ -142,10 +142,10 @@ local jumpCmdDesc = {
   action  = 'jump',
   tooltip = 'Jump to selected position',
 }
--- CMD_MASC
-local mascCmdDesc = {
-	id = GG.CustomCommands.GetCmdID("CMD_MASC"),
-	action = 'masc',
+-- CMD_RUN_TOGGLE
+local runToggleCmdDesc = {
+	id = GG.CustomCommands.GetCmdID("CMD_RUN_TOGGLE"),
+	action = 'runtoggle',
 	--name = '  MASC Off  ',
 	tooltip = 'Activate MASC accelerated sprint',
 	type	= CMDTYPE.ICON_MODE,
@@ -153,7 +153,7 @@ local mascCmdDesc = {
 	cursor	= "run",
 	hidden = true,
 }
-GG.mascParams = mascCmdDesc.params
+GG.mascParams = runToggleCmdDesc.params
 local superChargerParams = {0, GG.Pad(10,"Super", "Charger", "Off"), GG.Pad(10,"Super", "Charger", "On")}
 GG.superChargerParams = superChargerParams
 local superMASCParams = {0, GG.Pad(10,"Super", "MASC", "Off"), GG.Pad(10,"Super", "MASC", "On")}
@@ -214,7 +214,7 @@ local CMD_DESCS_TO_ADD = {
 	attackCmdDesc, unitSetTargetCircleCmdDesc, unitCancelTargetCmdDesc,
 	fightCmdDesc, guardCmdDesc, patrolCmdDesc,
 	jumpCmdDesc,
-	mascCmdDesc,
+	runToggleCmdDesc,
 }
 
 local VPAD_CMD_DESCS_TO_ADD = {
@@ -258,7 +258,7 @@ local function ShowMechMenu(unitID, unitDefID, menuType)
 			local hide = not lookup[unitDefID][menuType][cmdDesc.id]
 			if menuType == "viewmods" then
 				hide = not cmdDesc.action:find("mod")
-			elseif menuType == "issueorder" and cmdDesc.id == mascCmdDesc.id then -- Kinda gross exception
+			elseif menuType == "issueorder" and cmdDesc.id == runToggleCmdDesc.id then -- Kinda gross exception
 				hide = not (GG.mascUnits[unitID] or Spring.GetUnitRulesParam(unitID, "supercharger"))
 			end
 			EditUnitCmdDesc(unitID, i, {hidden = hide})
@@ -292,7 +292,7 @@ function gadget:UnitCreated(unitID, unitDefID, teamID)
 				end
 			end
 			lookup[unitDefID]["issueorder"][jumpCmdDesc.id] = GG.jumpers[unitDefID]
-			lookup[unitDefID]["issueorder"][mascCmdDesc.id] = false
+			lookup[unitDefID]["issueorder"][runToggleCmdDesc.id] = false
 		end
 		-- then show the order menu
 		ShowMechMenu(unitID, unitDefID, "issueorder")
