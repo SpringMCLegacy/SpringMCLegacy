@@ -14,7 +14,7 @@ if (gadgetHandler:IsSyncedCode()) then
 --SYNCED
 
 -- Localisations
-local activeMASCs = {}
+local activeRunToggles = {}
 
 -- Synced Read
 local GetUnitCmdDescs 		= Spring.GetUnitCmdDescs
@@ -134,17 +134,21 @@ function gadget:AllowCommand(unitID, unitDefID, teamID, cmdID, cmdParams, cmdOpt
 			local masc = Spring.GetUnitRulesParam(unitID, "masc")
 			if super or masc then
 				env = Spring.UnitScript.GetScriptEnv(unitID)
-				if cmdParams[1] == 1 then--and not activeMASCs[unitID] then -- toggle on
+				if cmdParams[1] == 1 then--and not activeRunToggles[unitID] then -- toggle on
 					--Spring.Echo("CMD_RUN_TOGGLE: set on")
 					--[[if (Spring.GetUnitRulesParam(unitID, "excess_heat") or 0) > 0 then
 						return false -- don't allow overheated mechs to toggle on
 					end]]	
-					activeMASCs[unitID] = true
-					Spring.UnitScript.CallAsUnit(unitID, env.EnableMASC, true)
-				elseif activeMASCs[unitID] then -- toggle off
+					activeRunToggles[unitID] = true
+				elseif activeRunToggles[unitID] then -- toggle off
 					--Spring.Echo("CMD_RUN_TOGGLE: set off")
-					activeMASCs[unitID] = false
-					Spring.UnitScript.CallAsUnit(unitID, env.EnableMASC, false)
+					activeRunToggles[unitID] = false
+				end
+				if masc then
+					Spring.UnitScript.CallAsUnit(unitID, env.EnableMASC, activeRunToggles[unitID])
+				end
+				if super then
+					Spring.UnitScript.CallAsUnit(unitID, env.EnableSuperCharger, activeRunToggles[unitID])
 				end
 				local paramsToUse = ((super and masc) and GG.superMASCParams) 
 							or (super and GG.superChargerParams)
