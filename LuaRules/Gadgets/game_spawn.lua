@@ -79,7 +79,7 @@ local function GetStartUnit(teamID)
 		-- startscript didn't specify a side for this team
 		local sidedata = Spring.GetSideData()
 		if (sidedata and #sidedata > 0) then
-			local sideNum = teamID == 0 and math.random(1,#TechBaseSides.is) or math.random(#TechBaseSides.is+1,#TechBaseSides.is+1+#TechBaseSides.cl)
+			local sideNum = teamID == 0 and math.random(1,#TechBaseSides.is) or math.random(#TechBaseSides.is+1,#TechBaseSides.is+#TechBaseSides.cl)
 			startUnit = sidedata[sideNum].startUnit
 			side = sidedata[sideNum].sideName
 		end
