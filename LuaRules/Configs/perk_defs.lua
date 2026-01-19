@@ -941,7 +941,8 @@ return {
 			valid = isMechBay,
 			applyTo = isNotOmni,
 			applyPerk = function (unitID, level, invert)
-				GG.AddMASC(unitID, invert)
+				env = Spring.UnitScript.GetScriptEnv(unitID)
+				Spring.UnitScript.CallAsUnit(unitID, env.EnableMASC, not invert)
 				GG.Delay.DelayCall(Spring.GiveOrderToUnit, {unitID, GG.CustomCommands.IDs.CMD_RUN_TOGGLE, {1}, EMPTY}, 1) -- set to on and refresh params
 				GG.Delay.DelayCall(GG.ShowMechMenu, {unitID, Spring.GetUnitDefID(unitID), "issueorder"}, 2) -- refresh menu
 			end,

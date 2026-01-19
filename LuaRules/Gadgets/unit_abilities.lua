@@ -29,8 +29,6 @@ local FindUnitCmdDesc		= Spring.FindUnitCmdDesc
 -- Constants
 
 local CMD_RUN_TOGGLE = GG.CustomCommands.GetCmdID("CMD_RUN_TOGGLE")
-local mascUnits = {}
-GG.mascUnits = mascUnits
 
 local CMD_FLUSH = GG.CustomCommands.GetCmdID("CMD_FLUSH")
 local coolantUnitDefs = {}
@@ -130,8 +128,9 @@ function gadget:AllowCommand(unitID, unitDefID, teamID, cmdID, cmdParams, cmdOpt
 			return true
 		elseif cmdID == CMD_RUN_TOGGLE then
 			--Spring.Echo("CMD_RUN_TOGGLE: recieved")
-			local super = Spring.GetUnitRulesParam(unitID, "supercharger")
+			local super = Spring.GetUnitRulesParam(unitID, "supercharger") 
 			local masc = Spring.GetUnitRulesParam(unitID, "masc")
+			--Spring.Echo("unit_abilities.lua CMD_RUN_TOGGLE", UnitDefs[unitDefID].name, super, masc)
 			if super or masc then
 				env = Spring.UnitScript.GetScriptEnv(unitID)
 				if cmdParams[1] == 1 then--and not activeRunToggles[unitID] then -- toggle on
@@ -169,13 +168,6 @@ function gadget:AllowCommand(unitID, unitDefID, teamID, cmdID, cmdParams, cmdOpt
 	end
 	return true
 end
-
-local function AddMASC(unitID, invert)
-	if invert == nil then invert = false end -- blargh!
-	Spring.SetUnitRulesParam(unitID, "masc", invert and "" or 100)
-	mascUnits[unitID] = not invert
-end
-GG.AddMASC = AddMASC
 
 else
 -- UNSYNCED

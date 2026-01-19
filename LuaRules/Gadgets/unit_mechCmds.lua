@@ -259,7 +259,9 @@ local function ShowMechMenu(unitID, unitDefID, menuType)
 			if menuType == "viewmods" then
 				hide = not cmdDesc.action:find("mod")
 			elseif menuType == "issueorder" and cmdDesc.id == runToggleCmdDesc.id then -- Kinda gross exception
-				hide = not (GG.mascUnits[unitID] or Spring.GetUnitRulesParam(unitID, "supercharger"))
+				local super = Spring.GetUnitRulesParam(unitID, "supercharger") 
+				local masc = Spring.GetUnitRulesParam(unitID, "masc")
+				hide = not (masc or super)
 			end
 			EditUnitCmdDesc(unitID, i, {hidden = hide})
 		end
