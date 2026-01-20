@@ -12,6 +12,7 @@ local AC_Class = Weapon:New{
 	intensity				= 0.1,
 	customparams = {
 		weaponclass			= "autocannon",
+		specialammo			= true,
     },	
 }
 
@@ -69,6 +70,7 @@ local RAC2 = AC2:New{
 		--heatgenerated		= 0.3,--0.5/s
 		spinspeed			= 600,
 		flareonshot 		= true,
+		specialammo			= false,
     },
 }
 
@@ -76,6 +78,9 @@ local UAC2 = AC2:New{
 	name                    = "Ultra AC/2",
 	range					= 1500,--2500,
 	reloadtime              = 0.25,
+	customparams = {
+		specialammo			= false,
+    },
 }
 
 local LBX2 = AC2:New{
@@ -171,9 +176,9 @@ local RAC5 = AC5:New{
 	reloadtime              = 2,
 	customparams = {
 		heatgenerated		= 0.4,--0.2/sec
-		--cegflare			= "MISSILE_MUZZLEFLASH",
 		spinspeed			= 600,
 		flareonshot 		= true,
+		specialammo			= false,
     },	
 }
 
@@ -184,6 +189,7 @@ local UAC5 = AC5:New{
 	reloadtime              = 1,
 	customparams = {
 		heatgenerated		= 0.4,--0.1/sec
+		specialammo			= false,
     },
 }
 
@@ -238,6 +244,9 @@ local UAC10 = AC10:New{
 	name                    = "Ultra AC/10",
 	range					= 1080,--1800,
 	reloadtime              = 2,
+	customparams = {
+		specialammo			= false,
+    },
 }
 
 local LBX10 = AC10:New{
@@ -293,6 +302,9 @@ local UAC20 = AC20:New{
 	name                    = "Ultra AC/20",
 	range                   = 600,--1000,
 	reloadtime              = 2.5,
+	customparams = {
+		specialammo			= false,
+    },
 }
 
 local AirAC20 = AC20:New{

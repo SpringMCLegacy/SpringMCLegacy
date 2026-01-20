@@ -54,13 +54,15 @@ local function hasWeaponClass(unitDefID, className, tag, with, value, custom) --
 	local weapons = UnitDefs[unitDefID].weapons
 	for weapNum, weapTable in pairs(weapons) do 
 		local wd = WeaponDefs[weapTable["weaponDef"]]
-		if wd.customParams["weaponclass"] == className then 
+		local cp = wd.customParams
+		if cp["weaponclass"] == className then 
 			if not tag then
 				return true
 			elseif tag and wd[tag] and not value then -- has tag, not looking for a value
 				return true
-			elseif tag and custom and wd.customParams[tag] then -- has customParam, not looking for a value
-				return true				
+			elseif tag and custom and cp[tag] then -- has customParam
+				if not (with and value) then return true end -- not looking for a value
+				return with and (cp[tag] == value) -- looking for a value
 			elseif with and wd[tag] and wd[tag] == value then -- has tag with specific value
 				--Spring.Echo(UnitDefs[unitDefID].name, "has weapon class", className, "(", wd.name, ") with", tag, "value", value)
 				return true
@@ -1594,7 +1596,7 @@ return {
 				texture = 'bitmaps/ui/perkyellow.png',	
 			},
 			valid = isMechBay,
-			applyTo = function (unitDefID) return hasWeaponClass(unitDefID, "autocannon") and isFaction(unitDefID, "fs") end,
+			applyTo = function (unitDefID) return hasWeaponClass(unitDefID, "autocannon", "specialammo", true, "true", true) and isFaction(unitDefID, "fs") end,
 			applyPerk = function (unitID, level, invert)
 				-- increase accuracy by 25%, lower is better
 				effect = 0.75
@@ -1639,7 +1641,7 @@ return {
 				texture = 'bitmaps/ui/perkyellow.png',	
 			},
 			valid = isMechBay,
-			applyTo = function (unitDefID) return hasWeaponClass(unitDefID, "autocannon") and isFaction(unitDefID, "cc") end,
+			applyTo = function (unitDefID) return hasWeaponClass(unitDefID, "autocannon", "specialammo", true, "true", true) and isFaction(unitDefID, "cc") end,
 			applyPerk = function (unitID, level, invert)
 				-- increase range by 25%
 				effect = 1.25
@@ -1684,7 +1686,7 @@ return {
 				texture = 'bitmaps/ui/perkyellow.png',	
 			},
 			valid = isMechBay,
-			applyTo = function (unitDefID) return hasWeaponClass(unitDefID, "autocannon") and isFaction(unitDefID, "fs") end,
+			applyTo = function (unitDefID) return hasWeaponClass(unitDefID, "autocannon", "specialammo", true, "true", true) and isFaction(unitDefID, "fs") end,
 			applyPerk = function (unitID, level, invert)
 				-- increase damage by 25%
 				GG.EnableAmmo(unitID, not invert, "autocannon", "armourpiercing")				
@@ -1732,7 +1734,7 @@ return {
 				texture = 'bitmaps/ui/perkyellow.png',	
 			},
 			valid = isMechBay,
-			applyTo = function (unitDefID) return hasWeaponClass(unitDefID, "autocannon") and isFaction(unitDefID, "fs") end,
+			applyTo = function (unitDefID) return hasWeaponClass(unitDefID, "autocannon", "specialammo", true, "true", true) and isFaction(unitDefID, "fs") end,
 			applyPerk = function (unitID, level, invert)
 				-- increase max ammo by 50%
 				local effect = 1.5
