@@ -43,6 +43,7 @@ local largeTurret = tonumber(unitDef.customParams.slotcost) == 2
 local TURRET_SPEED = info.turretTurnSpeed
 local ELEVATION_SPEED = info.elevationSpeed
 local BARREL_SPEED = info.barrelRecoilSpeed
+local SPIN_WAIT_MULT = 5 -- how many times spinSpeed to wait
 local RESTORE_DELAY = Spring.UnitScript.GetLongestReloadTime(unitID) * 2
 local AMMO_RESTORE_WAIT = tonumber(unitDef.customParams.ammorestorewait) or (largeTurret and 25 or 10) * 1000 -- 10 seconds
 
@@ -67,8 +68,7 @@ local launchPoints = {}
 local missiles = {}
 local numMissiles = info.numMissiles
 local currPoints = {}
-local spinPieces = {}
-local spinPiecesState = {}
+local spinners = {}
 
 local playerDisabled = {}
 for weaponID = 1, info.numWeapons do
@@ -93,8 +93,11 @@ for weaponID = 1, info.numWeapons do
 		mantlets[weaponID] = piece("mantlet_" .. weaponID)
 	end
 	if spinSpeeds[weaponID] then
-		spinPieces[weaponID] = piece("barrels_" .. weaponID)
-		spinPiecesState[weaponID] = false
+		spinners[weaponID] = {
+			pieceNum = piece("barrels_" .. weaponID),
+			state = 0,
+			wait = math.deg(spinSpeeds[weaponID]) * SPIN_WAIT_MULT,
+		}
 	elseif info.barrelIDs[weaponID] then
 		barrels[weaponID] = piece("barrel_" .. weaponID)
 	end
@@ -304,20 +307,18 @@ function script.Create()
 end
 
 local function SpinBarrels(weaponID, start)
-	Signal(spinSpeeds)
-	SetSignalMask(spinSpeeds)
-	if start then
-		for weaponID, spinPiece in pairs(spinPieces) do
-			Spin(spinPiece, z_axis, spinSpeeds[weaponID], spinSpeeds[weaponID] / 5)
-		end
-	else
-		Sleep(2500)
-		for weaponID, spinPiece in pairs(spinPieces) do
-			StopSpin(spinPiece, z_axis, spinSpeeds[weaponID]/10)
-		end
-	end
-	for weaponID, spinPiece in pairs(spinPieces) do
-		spinPiecesState[weaponID] = start -- must come after the Sleep
+	local spinfo = spinners[weaponID]
+	Signal(spinfo)
+	SetSignalMask(spinfo)
+	if start and spinfo.state == 0 then
+		spinfo.state = 1
+		Spin(spinfo.pieceNum, z_axis, spinSpeeds[weaponID], spinSpeeds[weaponID] / SPIN_WAIT_MULT)
+		Sleep(spinfo.wait) -- spin up wait
+		spinfo.state = 2
+	elseif not start and spinfo.state > 0 then
+		Sleep(spinfo.wait) -- spin down wait
+		StopSpin(spinfo.pieceNum, z_axis, spinSpeeds[weaponID]/10)
+		spinfo.state = 0
 	end
 end
 
@@ -372,8 +373,14 @@ local function WeaponCanFire(weaponID)
 		StartThread(AwaitRestock)
 		return false
 	else
-		if spinSpeeds[weaponID] and not spinPiecesState[weaponID] then
-			StartThread(SpinBarrels, weaponID, true)
+		if spinSpeeds[weaponID] then
+			local spinState = spinners[weaponID].state
+			if spinState < 1 then
+				StartThread(SpinBarrels, weaponID, true)
+				return false -- can't fire until spun up
+			else
+				return spinState == 2
+			end
 		end
 		Sleep(info.chainFireDelays[weaponID])
 		return true

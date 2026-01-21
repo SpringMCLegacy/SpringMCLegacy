@@ -84,6 +84,7 @@ end
 
 --Turning/Movement Locals
 local BARREL_SPEED = info.barrelRecoilSpeed
+local SPIN_WAIT_MULT = 5 -- how many times spinSpeed to wait
 local RESTORE_DELAY = Spring.UnitScript.GetLongestReloadTime(unitID) * 2
 local CMD_JUMP = GG.CustomCommands.GetCmdID("CMD_JUMP")
 
@@ -115,8 +116,7 @@ local barrels = {}
 local launchers = {}
 local launchPoints = {}
 local currPoints = {}
-local spinPieces = {}
-local spinPiecesState = {}
+local spinners = {}
 
 local playerDisabled = {}
 for weaponID = 1, numWeapons do
@@ -138,8 +138,11 @@ for weaponID = 1, numWeapons do
 			turrets[weaponID] = piece("turret_" .. weaponID)
 		end
 		if spinSpeeds[weaponID] then
-			spinPieces[weaponID] = piece("barrels_" .. weaponID)
-			spinPiecesState[weaponID] = 0
+			spinners[weaponID] = {
+				pieceNum = piece("barrels_" .. weaponID),
+				state = 0,
+				wait = math.deg(spinSpeeds[weaponID]) * SPIN_WAIT_MULT,
+			}
 		elseif info.barrelIDs[weaponID] then
 			barrels[weaponID] = piece("barrel_" .. weaponID)
 		end
@@ -187,22 +190,21 @@ function ChangeAmmo(ammoType, amount, maxAmmoMult)
 	return false -- Ammo was not changed
 end
 
+local SPIN_WAIT_MULT = 5 -- how many times spinSpeed to wait
+
 local function SpinBarrels(weaponID, start)
-	Signal(weaponID == 1 and spinSpeeds or maxAmmo) -- TODO: stupid hack for Jagermech having two spinning things
-	SetSignalMask(weaponID == 1 and spinSpeeds or maxAmmo)
-	if start then
-		spinPiecesState[weaponID] = 1
-		for weaponID, spinPiece in pairs(spinPieces) do
-			Spin(spinPiece, z_axis, spinSpeeds[weaponID], spinSpeeds[weaponID] / 5)
-		end
-		Sleep(2500) -- spin up wait
-		spinPiecesState[weaponID] = 2
-	else
-		Sleep(2500) -- spin down wait
-		for weaponID, spinPiece in pairs(spinPieces) do
-			StopSpin(spinPiece, z_axis, spinSpeeds[weaponID]/10)
-		end
-		spinPiecesState[weaponID] = 0
+	local spinfo = spinners[weaponID]
+	Signal(spinfo)
+	SetSignalMask(spinfo)
+	if start and spinfo.state == 0 then
+		spinfo.state = 1
+		Spin(spinfo.pieceNum, z_axis, spinSpeeds[weaponID], spinSpeeds[weaponID] / SPIN_WAIT_MULT)
+		Sleep(spinfo.wait) -- spin up wait
+		spinfo.state = 2
+	elseif not start and spinfo.state > 0 then
+		Sleep(spinfo.wait) -- spin down wait
+		StopSpin(spinfo.pieceNum, z_axis, spinSpeeds[weaponID]/10)
+		spinfo.state = 0
 	end
 end
 
@@ -714,11 +716,12 @@ function WeaponCanFire(weaponID)
 		Script.LuaRules.MechNeedsBay(unitID, teamID, weaponID == tonumber(unitDef.customParams.maxrangeid) and unitDef.customParams.maxrange or nil) -- let AI know
 		return false
 	elseif spinSpeeds[weaponID] then 
-		if spinPiecesState[weaponID] < 1 then
+		local spinState = spinners[weaponID].state
+		if spinState < 1 then
 			StartThread(SpinBarrels, weaponID, true)
 			return false -- can't fire until spun up
 		else
-			return spinPiecesState[weaponID] == 2
+			return spinState == 2
 		end
 	elseif missileWeaponIDs[weaponID] then
 		-- check we are not inside a mechbay
