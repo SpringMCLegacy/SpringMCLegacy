@@ -169,14 +169,14 @@ local RAC5 = AC5:New{
 	name                    = "Rotary AC/5",
 	range                   = 900,--1500,
 	--accuracy                = 550,
-	sprayangle				= 250,
+	sprayangle				= 450, -- 250
 	weaponVelocity          = 1750,
 	burst					= 6,
 	burstrate				= 0.1,
-	reloadtime              = 2,
+	reloadtime              = 2.5 + 6*0.1,
 	customparams = {
 		heatgenerated		= 0.4,--0.2/sec
-		spinspeed			= 600,
+		spinspeed			= 900,
 		flareonshot 		= true,
 		specialammo			= false,
     },	
