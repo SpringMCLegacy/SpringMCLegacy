@@ -1,8 +1,8 @@
 -- Fake Unit --
 -- Used as base for various invisible fake units
 local Fake = Unit:New{
-	objectName 				= "Decal.s3o",
-	script 					= "decal.lua",
+	objectName 				= "Fake.s3o",
+	script 					= "Fake.lua",
 	hideDamage				= true,
 	maxDamage				= 10, -- hack to avoid showing healthbar, never actually takes damage
 	
