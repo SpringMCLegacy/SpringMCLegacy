@@ -68,7 +68,7 @@ local ticketWidth = 0
 local cBillsText = "C-Bills: " .. colors.grey .. 0
 local salvageText = "Salvage: " .. colors.slategray .. 0
 local tonnageText= "Tonnage: " .. colors.yellow .. 0
-local c3Text = "Mech C3:" .. colors.white .. 0
+local c3Text = "C3 Limit:" .. colors.white .. 0
 local aeroC3Text = ""
 local gameTime = "Time: 0:00:00"
 local dropTime = "Dropship: 00:00"
@@ -238,14 +238,12 @@ function widget:GameFrame(n)
 		
 		local maxC3 = (GetTeamRulesParam(MY_TEAM_ID, "LANCES") or 1) * 4
 		local c3 = maxC3 - (GetTeamRulesParam(MY_TEAM_ID, "TEAM_SLOTS_REMAINING") or 4)
-		c3Text = "Mech C3: " .. colors.white .. c3 .. colors.white .. " / " .. colors.white .. maxC3
+		c3Text = "C3 Limit: " .. colors.white .. c3 .. colors.white .. " / " .. colors.white .. maxC3
 		
 		if haveAirCon > 0 then
 			local maxAeroC3 = 6 -- For now this is fixed
 			local aeroC3 = maxAeroC3 - (GetTeamRulesParam(MY_TEAM_ID, "TEAM_AERO_SLOTS_REMAINING") or 6)
-			aeroC3Text = "Aero C3: " .. colors.white .. aeroC3 .. colors.white .. " / " .. colors.white .. maxAeroC3
-		else
-			aeroC3Text = ""
+			c3Text = c3Text .. " : " .. colors.white .. aeroC3 .. colors.white .. " / " .. colors.white .. maxAeroC3
 		end
 		TicketText()
 	end
