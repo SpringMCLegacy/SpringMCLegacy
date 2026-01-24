@@ -35,7 +35,7 @@ for unitName, unitDef in pairs(DEFS.unitDefs) do
 		end
 	end
 	--Spring.Echo(unitName, typeString)
-	if typeString then
+	if typeString and armorDefs[typeString] then
 		table.insert(armorDefs[typeString], unitName)
 	end
 end

@@ -1,6 +1,7 @@
 -- Common pieces
 local base = piece ("base")
 local crate_base, crate_top, crate_right, crate_left, crate_front, crate_back = piece ("crate_base", "crate_top", "crate_right", "crate_left", "crate_front", "crate_back")
+local crateLink = piece("cratelink")
 -- Mechbay pieces
 local rampr, rampl, ramprfoldrear, ramprfoldfront, ramplfoldrear, ramplfoldfront = piece ("rampr", "rampl", "ramprfoldrear", "ramprfoldfront", "ramplfoldrear", "ramplfoldfront")
 local supportrlower, supportllower, supportrupper, supportlupper = piece ("supportrlower", "supportllower", "supportrupper", "supportlupper")
@@ -135,6 +136,8 @@ function Upgrade(level)
 	end
 end
 
+local crateID
+
 function script.Create()
 	if ramps[1] then -- vpad
 		for i = 1, 6 do
@@ -158,6 +161,9 @@ function script.Create()
 		Turn(tagbase2, z_axis, math.rad(-90))
 		Turn(tagstand2, z_axis, math.rad(-90))
 	elseif name == "outpost_artillery" then
+		local x,y,z = Spring.GetUnitBasePosition(unitID)
+		crateID = Spring.CreateUnit("crate", x,y,z, 0, teamID, false, false)
+		Spring.UnitAttach(unitID, crateID, crateLink)
 		StartThread(ArtilleryCreate)
 	end
 	Sleep(100) -- wait a few frames
@@ -168,6 +174,10 @@ function script.Create()
 end
 
 function Unloaded(ry)
+	if crateID then
+		env = Spring.UnitScript.GetScriptEnv(crateID)
+		Spring.UnitScript.CallAsUnit(crateID, env.Unloaded)
+	end
 	StartThread(Unpack, ry)
 end
 
@@ -179,27 +189,32 @@ function Unpack(ry)
 	end
 	-- Wait for delivery van to bug out
 	Sleep(2000)
-	-- Unpack the crate
-	PlaySound("outpost_unbox")
-	Turn(crate_front, x_axis, rad(45), CRATE_SPEED)
-	Turn(crate_back, x_axis, rad(-45), CRATE_SPEED)
-	Turn(crate_left, z_axis, rad(45), CRATE_SPEED)
-	Turn(crate_right, z_axis, rad(-45), CRATE_SPEED)
-	WaitForTurn(crate_right, z_axis)
-	WaitForTurn(crate_left, z_axis)
-	WaitForTurn(crate_back, x_axis)
-	WaitForTurn(crate_front, x_axis)
-	Turn(crate_front, x_axis, rad(90), CRATE_SPEED * 2)
-	Turn(crate_back, x_axis, rad(-90), CRATE_SPEED * 2)
-	Turn(crate_left, z_axis, rad(90), CRATE_SPEED * 2)
-	Turn(crate_right, z_axis, rad(-90), CRATE_SPEED * 2)
-	WaitForTurn(crate_right, z_axis)
-	WaitForTurn(crate_left, z_axis)
-	WaitForTurn(crate_back, x_axis)
-	WaitForTurn(crate_front, x_axis)
-	Turn(crate_top, z_axis, rad(-45), CRATE_SPEED)
-	WaitForTurn(crate_top, z_axis)
-	Turn(crate_top, z_axis, rad(-90), CRATE_SPEED * 2)
+	if crateLink then
+		-- Wait a little longer for the crate anim to play
+		Sleep(2000)	
+	else
+		-- Unpack the crate
+		PlaySound("outpost_unbox")
+		Turn(crate_front, x_axis, rad(45), CRATE_SPEED)
+		Turn(crate_back, x_axis, rad(-45), CRATE_SPEED)
+		Turn(crate_left, z_axis, rad(45), CRATE_SPEED)
+		Turn(crate_right, z_axis, rad(-45), CRATE_SPEED)
+		WaitForTurn(crate_right, z_axis)
+		WaitForTurn(crate_left, z_axis)
+		WaitForTurn(crate_back, x_axis)
+		WaitForTurn(crate_front, x_axis)
+		Turn(crate_front, x_axis, rad(90), CRATE_SPEED * 2)
+		Turn(crate_back, x_axis, rad(-90), CRATE_SPEED * 2)
+		Turn(crate_left, z_axis, rad(90), CRATE_SPEED * 2)
+		Turn(crate_right, z_axis, rad(-90), CRATE_SPEED * 2)
+		WaitForTurn(crate_right, z_axis)
+		WaitForTurn(crate_left, z_axis)
+		WaitForTurn(crate_back, x_axis)
+		WaitForTurn(crate_front, x_axis)
+		Turn(crate_top, z_axis, rad(-45), CRATE_SPEED)
+		WaitForTurn(crate_top, z_axis)
+		Turn(crate_top, z_axis, rad(-90), CRATE_SPEED * 2)
+	end
 	
 	-- Begin outpost-specific anims
 	GG.PlaySoundForTeam(Spring.GetUnitTeam(unitID), "bb_" .. name .. "_deployed", 1)
@@ -301,11 +316,16 @@ function Unpack(ry)
 		StartThread(AirCon)
 	end
 	Spring.UnitScript.SetUnitValue(COB.ACTIVATION, 1)
-	-- Let the sands of time cover the crate
-	Sleep(1500)
-	Move(crate_base, y_axis, -5, CRATE_SPEED * 2)
-	Sleep (5000)
-	RecursiveHide(crate_base, true)
+	if crateLink then
+		env = Spring.UnitScript.GetScriptEnv(crateID)
+		Spring.UnitScript.CallAsUnit(crateID, env.Sands)
+	else
+		-- Let the sands of time cover the crate
+		Sleep(1500)
+		Move(crate_base, y_axis, -5, CRATE_SPEED * 2)
+		Sleep (5000)
+		RecursiveHide(crate_base, true)
+	end
 end
 
 function script.Killed(recentDamage, maxRepairth)
