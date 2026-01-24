@@ -88,6 +88,8 @@ local STUD6 = Stuka:New{
 		armor			= 16,
 		squadsize 		= 2,
 		maxammo 		= {lrm = 2, arrow = 0.8},
+		strafeDistance  = 500, -- how close to get to target while strafing
+		strafeOvertime  = 1000, -- how long to keep flying over target after strafing
 		
     },
 }

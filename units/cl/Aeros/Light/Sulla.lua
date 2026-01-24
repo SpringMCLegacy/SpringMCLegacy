@@ -53,6 +53,9 @@ local Sulla = Aero:New{
 		heatlimit 		= 32,
 		armor			= 2,
 		maxammo 		= {bomb = 2},
+		
+		strafeDistance  = 600, -- how close to get to target while strafing
+		strafeOvertime  = 1000, -- how long to keep flying over target after strafing
     },
 }
 

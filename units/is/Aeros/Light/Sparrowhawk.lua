@@ -46,6 +46,8 @@ local Sparrowhawk = Aero:New{
 		
 		entryDelay 		= 5,
 		prepDelay 		= 10,
+		strafeDistance  = 300, -- how close to get to target while strafing
+		strafeOvertime  = 1000, -- how long to keep flying over target after strafing
     },
 }
 

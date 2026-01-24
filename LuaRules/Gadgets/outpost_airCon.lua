@@ -501,6 +501,10 @@ function gadget:UnitCreated(unitID, unitDefID, teamID)
 	local ud = UnitDefs[unitDefID]
 	-- Remove aircraft land and repairlevel buttons
 	if ud.canFly then
+		if ud.weapons[1] and not ud.customparams.dropship then
+			Spring.MoveCtrl.SetAirMoveTypeData(unitID, "attackSafetyDistance", 500)
+			Spring.MoveCtrl.SetAirMoveTypeData(unitID, "maneuverBlockTime", 1000)
+		end
 		Spring.GiveOrderToUnit(unitID, CMD.IDLEMODE, {0}, {})
 		for _, cmdID in pairs(toRemove) do
 			local cmdDescID = Spring.FindUnitCmdDesc(unitID, cmdID)

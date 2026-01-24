@@ -65,6 +65,8 @@ local LTNG15 = Lightning:New{
 		squadsize 		= 2,
 		maxammo 		= {ac20 = 2},
 		
+		strafeDistance  = 300, -- how close to get to target while strafing
+		strafeOvertime  = 1000, -- how long to keep flying over target after strafing
     },
 }
 
@@ -114,6 +116,9 @@ local LTNG16D = Lightning:New{
 		armor			= 10.5,
 		squadsize 		= 2,
 		maxammo 		= {ac2 = 5},
+		
+		strafeDistance  = 500, -- how close to get to target while strafing
+		strafeOvertime  = 1000, -- how long to keep flying over target after strafing
     },
 }
 
@@ -166,6 +171,9 @@ local LTNG16S = Lightning:New{
 		armor			= 10.5,
 		squadsize 		= 2,
 		maxammo 		= {hvgauss = 2},
+		
+		strafeDistance  = 800, -- how close to get to target while strafing
+		strafeOvertime  = 1000, -- how long to keep flying over target after strafing
     },
 }
 
@@ -203,6 +211,9 @@ local LTNG16L = Lightning:New{
 		armor			= 10.5,
 		squadsize 		= 2,
 		maxammo 		= {ac20 = 3},
+		
+		strafeDistance  = 300, -- how close to get to target while strafing
+		strafeOvertime  = 1000, -- how long to keep flying over target after strafing
     },
 }
 
