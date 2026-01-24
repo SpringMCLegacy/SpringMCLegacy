@@ -1,7 +1,7 @@
 local Mine = {
 	name              	= "Mine",
 	description         = "Explodes!",
-	objectName        	= "mine.s3o",
+	objectName        	= "Weapons/Mine.s3o",
 	script				= "Wall.lua",
 	category 			= "mine",
 	activateWhenBuilt   = true,

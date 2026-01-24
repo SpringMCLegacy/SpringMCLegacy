@@ -21,7 +21,7 @@ local Cluster = Bomb:New{
 }
  
 local Thunder = Cluster:New{
-	model					= "Mine.s3o",
+	model					= "Weapons/Mine.s3o",
 	explosionGenerator    	= "custom:MG_HIT",
 	areaOfEffect            = 1,
 	damage = {
