@@ -503,8 +503,8 @@ function gadget:UnitCreated(unitID, unitDefID, teamID)
 	-- Remove aircraft land and repairlevel buttons
 	if ud.canFly then 
 		if ud.weapons[1] and not cp.dropship then
-			local strafeDistance = cp.strafeDistance or 500
-			local StrafeOvertime = cp.strafeOvertime or 1000
+			local strafeDistance = tonumber(cp.strafeDistance or 500)
+			local strafeOvertime = tonumber(cp.strafeOvertime or 1000)
 			Spring.MoveCtrl.SetAirMoveTypeData(unitID, "attackSafetyDistance", strafeDistance)
 			Spring.MoveCtrl.SetAirMoveTypeData(unitID, "maneuverBlockTime", strafeOvertime)
 		end
