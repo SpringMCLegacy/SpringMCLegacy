@@ -238,9 +238,15 @@ function Drop()
 	local dx, dy, dz = Spring.GetUnitDirection(unitID)
 	dx, dy, dz = GG.Vector.Normalized(dx, dy, dz)
 	Spring.SetUnitVelocity(unitID, FINAL_SPEED * dx, FINAL_SPEED * dy, FINAL_SPEED * dz)
-	
-	local strafeDistance = tonumber(unitDef.customParams.strafeDistance or 500)
-	local strafeOvertime = tonumber(unitDef.customParams.strafeOvertime or 1000)
-	Spring.MoveCtrl.SetAirMoveTypeData(unitID, "attackSafetyDistance", strafeDistance)
-	Spring.MoveCtrl.SetAirMoveTypeData(unitID, "maneuverBlockTime", strafeOvertime)
+	--Sleep(20000)
+	--Spring.MoveCtrl.Enable(unitID)
+	--[[Spring.Echo("POWPOWPOWPOW")
+	for i = 5, 0 do
+		Spring.Echo(i)
+		Spring.MoveCtrl.SetRotation(unitID, math.rad(i * 6), 0, 0)
+		Explode(body, SFX.FALL)
+		Sleep(2500)
+	end
+	Sleep(500)]]
+	--TakeOff()
 end
