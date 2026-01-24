@@ -502,15 +502,9 @@ function gadget:UnitCreated(unitID, unitDefID, teamID)
 	local cp = ud.customParams
 	-- Remove aircraft land and repairlevel buttons
 	if ud.canFly then 
-<<<<<<< HEAD
 		if ud.weapons[1] and not cp.spawnAtTarget then
 			local strafeDistance = tonumber(cp.strafeDistance or 500)
 			local strafeOvertime = tonumber(cp.strafeOvertime or 1000)
-=======
-		if ud.weapons[1] and not cp.dropship then
-			local strafeDistance = cp.strafeDistance or 500
-			local StrafeOvertime = cp.strafeOvertime or 1000
->>>>>>> parent of 023343eb (* Fix strafe customparams and apply to Avenger)
 			Spring.MoveCtrl.SetAirMoveTypeData(unitID, "attackSafetyDistance", strafeDistance)
 			Spring.MoveCtrl.SetAirMoveTypeData(unitID, "maneuverBlockTime", strafeOvertime)
 		end
