@@ -1323,7 +1323,7 @@ return {
 			end,
 			costFunction = deductSalvage,
 			price = 10 * MOD_COST_MULT,
-			incompatible = {"ferrofibrousarmour", "hardenedarmour", "heatarmour", "reactivearmour", "reflecarmour"},
+			incompatible = {"ferrofibrousarmour", "hardenedarmour", "heatarmour", "reactivearmour", "reflecarmour", "artemislrm"},
 		},
 		-- Offensive (WEAPONS)
 		{
@@ -1411,7 +1411,7 @@ return {
 				local AMOUNT_PER_WEAPON = 5
 				return deductPerWeaponType(unitDefID, "lrm", AMOUNT_PER_WEAPON) * MOD_COST_MULT
 			end,
-			incompatible = {"ammolrmextended", "ammolrminferno", "ammolrmmagpulse", "ammolrmthunder", "ammolrmarad", "ammolrmhoming"},
+			incompatible = {"ammolrmextended", "ammolrminferno", "ammolrmmagpulse", "ammolrmthunder", "ammolrmarad", "ammolrmhoming", "stealtharmour"},
 		},
 		{
 			name = "artemissrm",

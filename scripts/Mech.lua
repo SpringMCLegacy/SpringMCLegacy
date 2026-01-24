@@ -496,8 +496,6 @@ function script.HitByWeapon(x, z, weaponID, damage, piece)
 	if weaponID == -314 then return end -- avoid infinite recursion in ammo cookoff
 	local wd = WeaponDefs[weaponID]
 	local hitPiece = piece or GetUnitLastAttackedPiece(unitID) or ""
-	--heat damage is now dealt in UnitPreDamaged of game_radar gadget (as it implements many mods, TODO: refactor to game_mods.lua)
-	--Spring.Echo(weaponID, wd.name, wd.customParams.heatdamage)
 	--Spring.Echo("HIT PIECE?", hitPiece, damage, heatDamage)
 	if weaponID == GG.lusHelper.MINE_WDID then
 		--Spring.Echo("MOIN! MOIN! MOIN!")
@@ -803,8 +801,8 @@ function script.BlockShot(weaponID, targetID, userTarget)
 	local jammable = jammableIDs[weaponID]
 	if jammable then
 		if targetID then
-			if GG.stealthActive[unitID] or not activated then return true end -- Can't fire guided weapons in stealth mode
-			local jammed = (GetUnitUnderECCM(unitID) or GetUnitUnderJammer(targetID) -- under the effects of ECM
+			if not activated then return true end
+			local jammed = (GetUnitUnderECCM(unitID) or GetUnitUnderJammer(targetID) -- under the effects of (E)ECM
 				or GG.stealthActive[targetID]) -- OR stealth armour
 				and (not IsUnitNARCed(targetID)) and (not IsUnitTAGed(targetID)) -- AND not TAGed or NARCed
 			local weaponClass = weapDef.customParams.weaponclass
