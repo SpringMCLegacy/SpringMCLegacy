@@ -4,7 +4,7 @@ local Outpost_Artillery = Outpost:New{
 	iconType			= "outpost_artillery",
 	maxDamage           = 5000,
 	mass                = 5000,
-	buildCostMetal      = 8300,
+	buildCostMetal      = 23000,
 	
 	radarDistance		= 0,
 	radarDistanceJam	= 0,
