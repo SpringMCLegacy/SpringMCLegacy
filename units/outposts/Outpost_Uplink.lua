@@ -4,7 +4,7 @@ local Outpost_Uplink = Outpost:New{
 	iconType			= "outpost_uplink",
 	maxDamage           = 5500,
 	mass                = 5000,
-	buildCostMetal      = 8300,
+	buildCostMetal      = 13000,
 
 	-- Constructor stuff
 	builder				= true,
