@@ -18,7 +18,6 @@ local Outpost = Unit:New{
 	cantbetransported	= false,
 	
 	customparams = {
-		outpost = true,
 		baseclass		= "outpost",
 	},
 }

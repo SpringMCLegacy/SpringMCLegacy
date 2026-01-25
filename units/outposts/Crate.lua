@@ -8,7 +8,6 @@ local Crate = Outpost:New{
 	objectName			= "Outpost/Crate.s3o",
 	
 	customparams = {
-		outpost 		= false, -- TODO: Check if this is needed
 		baseclass		= "crate",
 		ignoreatbeacon	= true,
     },

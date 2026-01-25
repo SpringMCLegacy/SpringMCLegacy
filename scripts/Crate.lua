@@ -15,9 +15,13 @@ end
 function BowOut()
 	-- Let the sands of time cover the crate
 	Sleep(1500)
-	Move(crate_base, y_axis, -5, CRATE_SPEED * 2)
-	Sleep (5000)
-	--RecursiveHide(crate_base, true)
+	local i = 1
+	while Spring.GetUnitHealth(unitID) > 100 do
+		Spring.AddUnitDamage(unitID, 50)
+		Move(crate_base, y_axis, -i * 10 / 900, CRATE_SPEED * 2)
+		i = i + 1
+		Sleep(200)
+	end
 	Spring.DestroyUnit(unitID, false, true)
 end
 
