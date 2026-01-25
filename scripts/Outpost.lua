@@ -139,6 +139,9 @@ end
 local crateID
 
 function script.Create()
+	local x,y,z = Spring.GetUnitBasePosition(unitID)
+	crateID = Spring.CreateUnit("crate", x,y,z, 0, teamID, false, false)
+	Spring.UnitAttach(unitID, crateID, crateLink)
 	if ramps[1] then -- vpad
 		for i = 1, 6 do
 			Turn(ramps[i], y_axis, rad((i-1) * -60))
@@ -161,9 +164,6 @@ function script.Create()
 		Turn(tagbase2, z_axis, math.rad(-90))
 		Turn(tagstand2, z_axis, math.rad(-90))
 	elseif name == "outpost_artillery" then
-		local x,y,z = Spring.GetUnitBasePosition(unitID)
-		crateID = Spring.CreateUnit("crate", x,y,z, 0, teamID, false, false)
-		Spring.UnitAttach(unitID, crateID, crateLink)
 		StartThread(ArtilleryCreate)
 	end
 	Sleep(100) -- wait a few frames

@@ -93,7 +93,7 @@ local LongTom = Artillery_Class:New{
 	weaponVelocity          = 950,
 	areaOfEffect            = 650,
 	accuracy                = 500,
-	reloadtime              = 15,
+	reloadtime              = 12,
 	damage = {
 		default = 2000, --
 	},
