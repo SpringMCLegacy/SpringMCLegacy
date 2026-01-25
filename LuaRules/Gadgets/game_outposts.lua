@@ -93,6 +93,13 @@ local function AlphaNameSort(a, b)
 	return UnitDefs[a].humanName < UnitDefs[b].humanName
 end
 
+local menuOrder = {
+	"outpost_c3array", "outpost_mechbay", "outpost_salvageyard", 	-- Mechs
+	"outpost_turretcontrol", "outpost_vehiclepad", "outpost_aircon",-- Additional units
+	"outpost_artillery", "outpost_launcher", "outpost_uplink",		-- Artillery Support
+	"outpost_garrison", "outpost_ewar",								-- Beacon Defense
+}
+
 function gadget:GamePreload()
 	for unitDefID, unitDef in pairs(UnitDefs) do
 		local name = unitDef.name
@@ -109,11 +116,14 @@ function gadget:GamePreload()
 			}
 			outpostDefs[unitDefID] = {cmdDesc = outpostCmdDesc, cost = cBillCost}
 			outpostCMDs[outpostCmdDesc.id] = unitDefID
-			table.insert(outpostDefsSorteds, unitDefID)
+			--table.insert(outpostDefsSorteds, unitDefID)
 		end
 	end
 	-- sort the defs for a static order
-	table.sort(outpostDefsSorteds, AlphaNameSort)
+	--table.sort(outpostDefsSorteds, AlphaNameSort)
+	for position, name in ipairs(menuOrder) do
+		outpostDefsSorteds[position] = UnitDefNames[name].id
+	end
 end
 
 -- REGULAR OUTPOSTS
