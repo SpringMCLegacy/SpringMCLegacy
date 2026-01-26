@@ -220,6 +220,8 @@ function Unpack(ry)
 	GG.PlaySoundForTeam(Spring.GetUnitTeam(unitID), "bb_" .. name .. "_deployed", 1)
 	if name == "outpost_c3array" then
 		StartThread(C3Array)
+	elseif name == "outpost_sensor" then
+		StartThread(Sensor)
 	elseif name == "outpost_mechbay" then
 		Spring.SetUnitBlocking(unitID, false, false) -- make it easy to get out
 		MechBayOpen()
@@ -513,6 +515,70 @@ elseif name == "outpost_c3array" then
 		Sleep(1000)
 	end
 
+elseif name == "outpost_sensor" then 
+
+ -- Sensor Array Pieces
+	local radarbase, radarlift, radarspin, radardish, radarpoke, dishflapl, dishflapr = piece ("radarbase", "radarlift", "radarspin", "radardish", "radarpoke", "dishflapl", "dishflapr")
+	local console1, console2, bloodhounddoor1, bloodhounddoor2, bloodhound  = piece ("console1", "console2", "bloodhounddoor1", "bloodhounddoor2", "bloodhound")
+	local hammerdoor1, hammerdoor2, hammermount, hammerarm1, hammerarm2, hammerhousing, hammer  = piece ("hammerdoor1", "hammerdoor2", "hammermount", "hammerarm1", "hammerarm2", "hammerhousing", "hammer")
+	
+	-- Sensor unpack anim
+	function Sensor()
+		Move(radarlift, y_axis, 8, CRATE_SPEED * 4)
+		PlaySound("HeavyLift")
+		WaitForMove(radarlift, y_axis)
+		Turn(radardish, z_axis, math.rad(90), CRATE_SPEED * 1)
+		PlaySound("Whir")
+		Sleep(900)
+		Turn(dishflapr, x_axis, math.rad(55), CRATE_SPEED * 1)
+		Turn(dishflapl, x_axis, math.rad(-55), CRATE_SPEED * 1)
+		PlaySound("Whir_Small")
+		WaitForTurn(dishflapr, x_axis)
+		Move(radarpoke, x_axis, 8.4, CRATE_SPEED * 4)
+		Move(radarpoke, y_axis, 1.5, CRATE_SPEED * 1)
+		PlaySound("Gear_Small")
+		Sleep(400)
+		Move(console1, x_axis, 7, CRATE_SPEED * 3)
+		Move(console2, x_axis, -7, CRATE_SPEED * 3)
+		PlaySound("Gear_Small")
+		Sleep(700)
+		Spin(radarspin, y_axis, math.rad(100), math.rad(15))
+		WaitForMove(console1, x_axis)
+		
+		-- BAP Upgrade
+		Move(bloodhounddoor1, x_axis, 6, CRATE_SPEED * 3)
+		Move(bloodhounddoor2, x_axis, -6, CRATE_SPEED * 3)
+		PlaySound("ElectricDoor")
+		WaitForMove(bloodhounddoor1, x_axis)
+		Move(bloodhound, y_axis, 13, CRATE_SPEED * 4)
+		PlaySound("HeavyLift")
+		WaitForMove(bloodhound, y_axis)
+		Sleep(1000)
+		
+		-- Seismic upgrade
+		Move(hammerdoor1, x_axis, 6, CRATE_SPEED * 3)
+		Move(hammerdoor2, x_axis, -6, CRATE_SPEED * 3)
+		PlaySound("ElectricDoor")
+		WaitForMove(hammerdoor1, x_axis)
+		Move(hammermount, z_axis, 5, CRATE_SPEED * 4)
+		PlaySound("Whir_Small")
+		WaitForMove(hammermount, z_axis)
+		Turn(hammerarm1, x_axis, math.rad(-25), CRATE_SPEED * 1)
+		Turn(hammerhousing, x_axis, math.rad(25), CRATE_SPEED * 1)
+		Move(hammerarm2, z_axis, 2.5, CRATE_SPEED * 2)
+		PlaySound("Whir")
+		PlaySound("HeavyLift")
+		WaitForTurn(hammerhousing, x_axis)
+		Sleep(500)
+		Turn(hammerhousing, x_axis, math.rad(100), CRATE_SPEED * 1.5)
+		Move(hammermount, z_axis, 0, CRATE_SPEED * 4)
+		Move(hammermount, y_axis, -2, CRATE_SPEED * 4)
+		PlaySound("Hydraulic_Click")
+		Sleep(300)
+		PlaySound("Thunk")
+		
+	end
+	
 elseif name == "outpost_artillery" then
 	
 	function ArtilleryCreate()
