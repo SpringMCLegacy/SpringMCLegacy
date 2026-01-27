@@ -5,6 +5,7 @@ local Outpost_Sensor = Outpost:New{
 	maxDamage           = 5000,
 	mass                = 5000,
 	buildCostMetal      = 4800,
+	sightDistance		= 1000,
 	
 	customparams = {
 		bap				= true,

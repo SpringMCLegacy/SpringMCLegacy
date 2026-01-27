@@ -1,5 +1,5 @@
 local Outpost_Garrison = Outpost:New{
-	name              	= "Garrison Bunker",
+	name              	= "Garrisoned Sentinel Bunker",
 	description         = "A fortified bunker outpost to secure navbeacons",
 	iconType			= "outpost_garrison",
 	maxDamage           = 10000,

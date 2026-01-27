@@ -1,5 +1,5 @@
 local Outpost_TurretControl = Outpost:New{
-	name              	= "Turret Control Hub",
+	name              	= "Turret Control Node",
 	description         = "A control hub for automated defensive turrets (sold separately)",
 	iconType			= "outpost_turretcontrol",
 	maxDamage           = 7000,

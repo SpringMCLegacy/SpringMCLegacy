@@ -1,5 +1,5 @@
 local Outpost_EWAR = Outpost:New{
-	name              	= "EWAR Station",
+	name              	= "EWAR Transmission Post",
 	description         = "A powerful ECM outpost to jam enemy sensors",
 	iconType			= "outpost_ewar",
 	maxDamage           = 5000,
