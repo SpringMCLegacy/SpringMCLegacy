@@ -340,6 +340,9 @@ function script.Killed(recentDamage, maxRepairth)
 	if not Spring.GetUnitTransporter(unitID) then
 		GG.PlaySoundForTeam(Spring.GetUnitTeam(unitID), "bb_" .. name .. "_destroyed", 1)
 	end
+	if crateID and not Spring.GetUnitIsDead(crateID) then
+		Spring.DestroyUnit(crateID, false, true)
+	end
 end
 
 ---------------------------------------------------------------------
