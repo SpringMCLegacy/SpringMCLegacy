@@ -582,51 +582,14 @@ return {
 			price = 12000,
 			requires = "turretcontrol_2",
 		},
-		-- Seismic Sensor
-		--[[{
-			name = "seismic_2",
-			cmdDesc = {
-				id = GetCmdID('PERK_SEISMIC_2'),
-				action = 'perkseismic_2',
-				name = GG.Pad("Increase", "Range"),
-				tooltip = 'Increases the range of the seismic sensor +50% (+10% time between pings)',
-				texture = 'bitmaps/ui/upgrade.png',	
-			},
-			valid = function (unitDefID) return UnitDefs[unitDefID].name == "outpost_seismic" end,
-			applyPerk = function (unitID)
-				env = Spring.UnitScript.GetScriptEnv(unitID)
-				env.seismicRange = env.seismicRange * 1.5
-				env.seismicDelay = env.seismicDelay * 1.1
-			end,
-			costFunction = deductCBills,
-			price = 8000,
-		},
-		{
-			name = "seismic_3",
-			cmdDesc = {
-				id = GetCmdID('PERK_SEISMIC_3'),
-				action = 'perkseismic_3',
-				name = GG.Pad("Increase", "Duration"),
-				tooltip = 'Increases the duration of each ping +250% (+20% time between pings)',
-				texture = 'bitmaps/ui/upgrade.png',	
-			},
-			valid = function (unitDefID) return UnitDefs[unitDefID].name == "outpost_seismic" end,
-			applyPerk = function (unitID)
-				env = Spring.UnitScript.GetScriptEnv(unitID)
-				env.seismicDuration = env.seismicDuration * 2.5
-				env.seismicDelay = env.seismicDelay * 1.2
-			end,
-			costFunction = deductCBills,
-			price = 8000,
-		},]]
 		-- EWAR
 		{
 			name = "ewar2",
 			cmdDesc = {
 				id = GetCmdID('PERK_EWAR_2'),
 				action = 'perkewar2',
-				name = GG.Pad("ECM", "Suite"),
-				tooltip = 'Adds ECM jammer',
+				name = GG.Pad("Angel", "ECM", "Suite"),
+				tooltip = 'Upgrades ECM to Angel ECM. Enemy Beagle Active Probe can no longer penetrate the ECM field.',
 				texture = 'bitmaps/ui/upgrade.png',	
 			},
 			valid = function (unitDefID) return UnitDefs[unitDefID].name == "outpost_ewar" end,
@@ -637,7 +600,7 @@ return {
 			costFunction = deductCBills,
 			price = 8000,
 		},
-		{
+		--[[{
 			name = "ewar3",
 			cmdDesc = {
 				id = GetCmdID('PERK_EWAR_3'),
@@ -654,7 +617,7 @@ return {
 			costFunction = deductCBills,
 			price = 12000,
 			requires = "ewar2",
-		},
+		},]]
 		-- Sensor
 		{
 			name = "sensor2",

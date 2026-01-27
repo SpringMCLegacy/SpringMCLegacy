@@ -834,12 +834,6 @@ elseif name == "outpost_vehiclepad" then
 		StartThread(CloseAnim, delay)
 	end
 
---[[elseif name == "outpost_seismic" then
-
-	seismicRange = unitDef.seismicRadius
-	seismicDelay = 5000
-	seismicDuration = 500]]
-
 elseif name == "outpost_ewar" then
 
 	function ECM()
@@ -850,7 +844,7 @@ elseif name == "outpost_ewar" then
 		WaitForMove(ecmdoor2, x_axis)
 		Move(ecm, y_axis, 11, CRATE_SPEED)
 		WaitForMove(ecm, y_axis)
-		GG.SetUnitECMRadius(unitID, nil, 1000)
+		GG.angels[unitID] = true
 	end
 
 	noFiring = true
@@ -869,6 +863,7 @@ elseif name == "outpost_ewar" then
 
 	function BAP()
 		Sleep(2000)
+		GG.SetUnitECMRadius(unitID, nil, 1000)
 		local bapmantlet, bapturret = piece ("bapmantlet", "bapturret")
 		while true do
 			Turn(bapmantlet, x_axis, rad(math.random(-15, 15)), CRATE_SPEED/2)

@@ -23,7 +23,6 @@ local Outpost_EWAR = Outpost:New{
 	},
 	
 	customparams = {
-		bap				= true,
 		ecm				= true,
     },
 	sounds = {
