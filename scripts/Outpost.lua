@@ -133,6 +133,12 @@ function Upgrade(level)
 		elseif level == 3 then
 			StartThread(TAG)
 		end
+	elseif name == "outpost_sensor" then
+		if level == 2 then
+			StartThread(Bloodhound)
+		elseif level == 3 then
+			StartThread(Seismic)
+		end
 	end
 end
 
@@ -405,10 +411,10 @@ if name == "outpost_aircon" then
 	
 	-- AirCon unpack anim
 	function AirCon()
-		Move(tower_mid, y_axis, 8, CRATE_SPEED * 8)
+		Move(tower_mid, y_axis, 7, CRATE_SPEED * 8)
 		PlaySound("HeavyLift")
 		WaitForMove(tower_mid, y_axis)
-		Move(tower_top, y_axis, 29, CRATE_SPEED * 12)
+		Move(tower_top, y_axis, 24, CRATE_SPEED * 12)
 		Turn(legs[1], z_axis, rad(90), CRATE_SPEED * 2)
 		Move(legs[1], x_axis, -11, CRATE_SPEED * 8)
 		Move(legs[1], y_axis, 1, CRATE_SPEED * 8)
@@ -436,7 +442,7 @@ if name == "outpost_aircon" then
 		PlaySound("Uplink_Whir")
 		Sleep(100)
 		PlaySound("Whir_Small")
-		Move(antenna2_2, y_axis, 9, CRATE_SPEED * 8)
+		Move(antenna2_2, y_axis, 6, CRATE_SPEED * 8)
 		Move(antenna1_1, y_axis, 10, CRATE_SPEED * 10)
 		WaitForMove(radar_mount, y_axis)
 		PlaySound("Whir_Small")
@@ -449,7 +455,7 @@ if name == "outpost_aircon" then
 		Move(ladder, y_axis, -26, CRATE_SPEED * 32)
 		PlaySound("Gear_Small")
 		WaitForMove(antenna1_1, y_axis)
-		Move(antenna1_2, y_axis, 14, CRATE_SPEED * 12)
+		Move(antenna1_2, y_axis, 11, CRATE_SPEED * 12)
 		PlaySound("Whir_Small")
 	end
 	
@@ -544,41 +550,43 @@ elseif name == "outpost_sensor" then
 		Sleep(700)
 		Spin(radarspin, y_axis, math.rad(100), math.rad(15))
 		WaitForMove(console1, x_axis)
-		
+	end
+	function Bloodhound()
 		-- BAP Upgrade
-		Move(bloodhounddoor1, x_axis, 6, CRATE_SPEED * 3)
-		Move(bloodhounddoor2, x_axis, -6, CRATE_SPEED * 3)
+		Move(bloodhounddoor1, x_axis, 6, CRATE_SPEED * 4)
+		Move(bloodhounddoor2, x_axis, -6, CRATE_SPEED * 4)
 		PlaySound("ElectricDoor")
 		WaitForMove(bloodhounddoor1, x_axis)
-		Move(bloodhound, y_axis, 13, CRATE_SPEED * 4)
+		Move(bloodhound, y_axis, 12, CRATE_SPEED * 5)
 		PlaySound("HeavyLift")
 		WaitForMove(bloodhound, y_axis)
 		Sleep(1000)
-		
+	end
+	function Seismic()
 		-- Seismic upgrade
-		Move(hammerdoor1, x_axis, 6, CRATE_SPEED * 3)
-		Move(hammerdoor2, x_axis, -6, CRATE_SPEED * 3)
+		Move(hammerdoor1, x_axis, 6, CRATE_SPEED * 4)
+		Move(hammerdoor2, x_axis, -6, CRATE_SPEED * 4)
 		PlaySound("ElectricDoor")
 		WaitForMove(hammerdoor1, x_axis)
 		Move(hammermount, z_axis, 5, CRATE_SPEED * 4)
+		Move(hammerarm2, z_axis, 2.5, CRATE_SPEED * 2)
 		PlaySound("Whir_Small")
 		WaitForMove(hammermount, z_axis)
+		Sleep(100)
 		Turn(hammerarm1, x_axis, math.rad(-25), CRATE_SPEED * 1)
 		Turn(hammerhousing, x_axis, math.rad(25), CRATE_SPEED * 1)
-		Move(hammerarm2, z_axis, 2.5, CRATE_SPEED * 2)
 		PlaySound("Whir")
 		PlaySound("HeavyLift")
 		WaitForTurn(hammerhousing, x_axis)
-		Sleep(500)
-		Turn(hammerhousing, x_axis, math.rad(100), CRATE_SPEED * 1.5)
+		Sleep(100)
+		Turn(hammerhousing, x_axis, math.rad(100), CRATE_SPEED * 1)
 		Move(hammermount, z_axis, 0, CRATE_SPEED * 4)
 		Move(hammermount, y_axis, -2, CRATE_SPEED * 4)
 		PlaySound("Hydraulic_Click")
 		Sleep(300)
 		PlaySound("Thunk")
-		
 	end
-	
+
 elseif name == "outpost_artillery" then
 	
 	function ArtilleryCreate()
