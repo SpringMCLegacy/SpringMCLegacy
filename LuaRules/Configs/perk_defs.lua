@@ -583,7 +583,7 @@ return {
 			requires = "turretcontrol_2",
 		},
 		-- Seismic Sensor
-		{
+		--[[{
 			name = "seismic_2",
 			cmdDesc = {
 				id = GetCmdID('PERK_SEISMIC_2'),
@@ -618,7 +618,7 @@ return {
 			end,
 			costFunction = deductCBills,
 			price = 8000,
-		},
+		},]]
 		-- EWAR
 		{
 			name = "ewar2",
@@ -631,7 +631,8 @@ return {
 			},
 			valid = function (unitDefID) return UnitDefs[unitDefID].name == "outpost_ewar" end,
 			applyPerk = function (unitID)
-				GG.EWARUpgrade(unitID, 2)
+				env = Spring.UnitScript.GetScriptEnv(unitID)
+				Spring.UnitScript.CallAsUnit(unitID, env.Upgrade, 2)
 			end,
 			costFunction = deductCBills,
 			price = 8000,
@@ -647,11 +648,48 @@ return {
 			},
 			valid = function (unitDefID) return UnitDefs[unitDefID].name == "outpost_ewar" end,
 			applyPerk = function (unitID)
-				GG.EWARUpgrade(unitID, 3)
+				env = Spring.UnitScript.GetScriptEnv(unitID)
+				Spring.UnitScript.CallAsUnit(unitID, env.Upgrade, 3)
 			end,
 			costFunction = deductCBills,
 			price = 12000,
 			requires = "ewar2",
+		},
+		-- Sensor
+		{
+			name = "sensor2",
+			cmdDesc = {
+				id = GetCmdID('PERK_SENSOR_2'),
+				action = 'perksensor2',
+				name = GG.Pad("Blood", "Hound", "Probe"),
+				tooltip = 'Upgrades from Beagle to Bloodhound Active Probe. Enemy ECM emitters are now fully revealed.',
+				texture = 'bitmaps/ui/upgrade.png',	
+			},
+			valid = function (unitDefID) return UnitDefs[unitDefID].name == "outpost_sensor" end,
+			applyPerk = function (unitID)
+				env = Spring.UnitScript.GetScriptEnv(unitID)
+				Spring.UnitScript.CallAsUnit(unitID, env.Upgrade, 2)
+			end,
+			costFunction = deductCBills,
+			price = 8000,
+		},
+		{
+			name = "sensor3",
+			cmdDesc = {
+				id = GetCmdID('PERK_SENSOR_3'),
+				action = 'perksensor3',
+				name = GG.Pad("Seismic", "Detector"),
+				tooltip = 'Adds a map-wide seismic detector that shows where enemy mechs are moving.',
+				texture = 'bitmaps/ui/upgrade.png',	
+			},
+			valid = function (unitDefID) return UnitDefs[unitDefID].name == "outpost_sensor" end,
+			applyPerk = function (unitID)
+				env = Spring.UnitScript.GetScriptEnv(unitID)
+				Spring.UnitScript.CallAsUnit(unitID, env.Upgrade, 3)
+			end,
+			costFunction = deductCBills,
+			price = 12000,
+			requires = "sensor2",
 		},
 		-- Mechbay
 		{

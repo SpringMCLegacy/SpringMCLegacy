@@ -171,6 +171,10 @@ function script.Create()
 		Turn(tagstand2, z_axis, math.rad(-90))
 	elseif name == "outpost_artillery" then
 		StartThread(ArtilleryCreate)
+	elseif name == "outpost_sensor" then
+		local hammerarm1, hammerhousing = piece ("hammerarm1", "hammerhousing")
+		Turn(hammerarm1, x_axis, math.rad(25))
+		Turn(hammerhousing, x_axis, math.rad(-100))
 	end
 	Sleep(100) -- wait a few frames
 	if not Spring.GetUnitTransporter(unitID) then
@@ -554,6 +558,7 @@ elseif name == "outpost_sensor" then
 		Spin(radarspin, y_axis, math.rad(100), math.rad(15))
 		WaitForMove(console1, x_axis)
 	end
+	
 	function Bloodhound()
 		-- BAP Upgrade
 		Move(bloodhounddoor1, x_axis, 6, CRATE_SPEED * 4)
@@ -564,7 +569,9 @@ elseif name == "outpost_sensor" then
 		PlaySound("HeavyLift")
 		WaitForMove(bloodhound, y_axis)
 		Sleep(1000)
+		GG.bloodHounds[unitID] = true
 	end
+	
 	function Seismic()
 		-- Seismic upgrade
 		Move(hammerdoor1, x_axis, 6, CRATE_SPEED * 4)
@@ -576,20 +583,44 @@ elseif name == "outpost_sensor" then
 		PlaySound("Whir_Small")
 		WaitForMove(hammermount, z_axis)
 		Sleep(100)
-		Turn(hammerarm1, x_axis, math.rad(-25), CRATE_SPEED * 1)
-		Turn(hammerhousing, x_axis, math.rad(25), CRATE_SPEED * 1)
+		Turn(hammerarm1, x_axis, 0, CRATE_SPEED * 1)
+		Turn(hammerhousing, x_axis, math.rad(-25), CRATE_SPEED * 1)
 		PlaySound("Whir")
 		PlaySound("HeavyLift")
 		WaitForTurn(hammerhousing, x_axis)
 		Sleep(100)
-		Turn(hammerhousing, x_axis, math.rad(100), CRATE_SPEED * 1)
+		Turn(hammerhousing, x_axis, 0, CRATE_SPEED * 1)
 		Move(hammermount, z_axis, 0, CRATE_SPEED * 4)
 		Move(hammermount, y_axis, -2, CRATE_SPEED * 4)
 		PlaySound("Hydraulic_Click")
 		Sleep(300)
 		PlaySound("Thunk")
+		StartThread(SeismicPings)
 	end
-
+	
+	function SeismicPings()
+		seismicRange = 50000 -- unitDef.seismicRadius
+		seismicDelay = 5000
+		seismicDuration = 500
+		
+		-- initial raise
+		Move(hammer, y_axis, 7, CRATE_SPEED * 5)
+		WaitForMove(hammer, y_axis)
+		local spike = piece("spike")
+		while true do
+			Move(hammer, y_axis, 0, CRATE_SPEED * 50)
+			WaitForMove(hammer, y_axis)
+			PlaySound("seismicstomp")
+			GG.EmitSfxName(unitID, spike, "mech_jump_dust")
+			Spring.SetUnitSensorRadius(unitID, "seismic", seismicRange)
+			Sleep(seismicDuration)
+			Move(hammer, y_axis, 7, CRATE_SPEED * 5)
+			WaitForMove(hammer, y_axis)
+			Spring.SetUnitSensorRadius(unitID, "seismic", 0)
+			Sleep(seismicDelay)
+		end
+	end
+	
 elseif name == "outpost_artillery" then
 	
 	function ArtilleryCreate()
