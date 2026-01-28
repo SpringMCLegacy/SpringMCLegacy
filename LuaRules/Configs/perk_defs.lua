@@ -600,13 +600,13 @@ return {
 			costFunction = deductCBills,
 			price = 8000,
 		},
-		--[[{
+		{
 			name = "ewar3",
 			cmdDesc = {
 				id = GetCmdID('PERK_EWAR_3'),
 				action = 'perkewar3',
-				name = GG.Pad("TAG", "Lasers"),
-				tooltip = 'Adds Target Aquisition Gear designataor lasers',
+				name = GG.Pad("Seismic", "Noise", "Maker"),
+				tooltip = 'Adds a seismic noise maker which confuses enemy seismic sensors with false seismic pings.',
 				texture = 'bitmaps/ui/upgrade.png',	
 			},
 			valid = function (unitDefID) return UnitDefs[unitDefID].name == "outpost_ewar" end,
@@ -617,7 +617,7 @@ return {
 			costFunction = deductCBills,
 			price = 12000,
 			requires = "ewar2",
-		},]]
+		},
 		-- Sensor
 		{
 			name = "sensor2",

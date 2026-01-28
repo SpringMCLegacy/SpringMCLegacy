@@ -129,9 +129,9 @@ function Upgrade(level)
 		RecursiveHide(recoveryrail, false)
 	elseif name == "outpost_ewar" then
 		if level == 2 then
-			StartThread(ECM)
+			StartThread(Angel)
 		elseif level == 3 then
-			StartThread(TAG)
+			StartThread(CumOnFeelTheNoise)
 		end
 	elseif name == "outpost_sensor" then
 		if level == 2 then
@@ -319,7 +319,7 @@ function Unpack(ry)
 		WaitForTurn(bapstand, x_axis)
 		WaitForTurn(bapmantlet, x_axis)
 		WaitForMove(console2, z_axis)
-		StartThread(BAP)
+		StartThread(ECM)
 	elseif name == "outpost_artillery" then
 		StartThread(Artillery)
 	elseif name == "outpost_launcher" then
@@ -836,7 +836,7 @@ elseif name == "outpost_vehiclepad" then
 
 elseif name == "outpost_ewar" then
 
-	function ECM()
+	function Angel()
 		local ecm, ecmdoor1, ecmdoor2, console1 = piece("ecm", "ecmdoor1", "ecmdoor2", "console1")
 		Move(console1, z_axis, -7, CRATE_SPEED)
 		Move(ecmdoor1, x_axis, 5, CRATE_SPEED)
@@ -846,9 +846,8 @@ elseif name == "outpost_ewar" then
 		WaitForMove(ecm, y_axis)
 		GG.angels[unitID] = true
 	end
-
-	noFiring = true
-	function TAG()
+	
+	function CumOnFeelTheNoise()
 		local tagbase1, tagstand1, tagbase2, tagstand2 = piece("tagbase1", "tagstand1", "tagbase2", "tagstand2")
 		Turn(tagbase1, z_axis, 0, CRATE_SPEED)
 		Turn(tagbase2, z_axis, 0, CRATE_SPEED)
@@ -856,12 +855,30 @@ elseif name == "outpost_ewar" then
 		Turn(tagstand1, z_axis, 0, CRATE_SPEED)
 		Turn(tagstand2, z_axis, 0, CRATE_SPEED)
 		WaitForTurn(tagstand2, z_axis)
-		noFiring = false
-		Spring.SetUnitRulesParam(unitID, "weapon_1", "active")
-		Spring.SetUnitRulesParam(unitID, "weapon_2", "active")
+
+		local noiseRange = 2000
+		local noiseDelay = 2000
+		local noiseNum = 10
+		local bx, by, bz = Spring.GetUnitBasePosition(unitID)
+		local x, z
+		local noiseID = Spring.CreateUnit("noise", bx,by,bz, 0, teamID, false, false)
+		
+		while true do
+			for i = 1, noiseNum do
+				-- TODO: add anim here
+				x = bx + math.random(-noiseRange, noiseRange)
+				z = bz + math.random(-noiseRange, noiseRange)
+				local y = Spring.GetGroundHeight(x, z)
+				Spring.SetUnitPosition(noiseID, x,y,z)
+				--Spring.MarkerAddPoint(x,y,z)
+				Spring.AddUnitSeismicPing(noiseID, 15)--math.random(2, 10))
+				Sleep(math.random(500, 1000))
+			end
+			Sleep(noiseDelay)
+		end
 	end
 
-	function BAP()
+	function ECM()
 		Sleep(2000)
 		GG.SetUnitECMRadius(unitID, nil, 1000)
 		local bapmantlet, bapturret = piece ("bapmantlet", "bapturret")

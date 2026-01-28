@@ -9,19 +9,6 @@ local Outpost_EWAR = Outpost:New{
 	radarDistance		= 2500,
 	radarDistanceJam	= 0,
 	
-	weapons = {
-		[1] = {
-			name	= "TAG",
-			mainDir = [[-1 0 0]],
-			maxAngleDif = 200,
-		},
-		[2] = {
-			name	= "TAG",
-			mainDir = [[1 0 0]],
-			maxAngleDif = 200,
-		},
-	},
-	
 	customparams = {
 		ecm				= true,
     },
