@@ -35,6 +35,7 @@ return lowerkeys({
 	["Noise"] = Fake:New{
 		seismicsignature	= 5,
 		sightDistance 		= 0,
+		mass				= 5000,
 	},
 	["Narc_ECM"] = Narc_ECM,
 	["Nuke_Icon"] = Nuke_Icon,

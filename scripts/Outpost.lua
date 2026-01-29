@@ -857,23 +857,30 @@ elseif name == "outpost_ewar" then
 		WaitForTurn(tagstand2, z_axis)
 
 		local noiseRange = 2000
-		local noiseDelay = 2000
+		local noiseDelay = 5000
 		local noiseNum = 10
 		local bx, by, bz = Spring.GetUnitBasePosition(unitID)
 		local x, z
+		--local noiseID = Spring.CreateUnit("fs_locust_lct3d", bx,by,bz, 0, teamID, false, false)
 		local noiseID = Spring.CreateUnit("noise", bx,by,bz, 0, teamID, false, false)
 		
 		while true do
+			--Spring.Echo("eggs n bakey")
 			for i = 1, noiseNum do
 				-- TODO: add anim here
 				x = bx + math.random(-noiseRange, noiseRange)
 				z = bz + math.random(-noiseRange, noiseRange)
-				local y = Spring.GetGroundHeight(x, z)
+				local y = Spring.GetGroundHeight(x, z) - 15
 				Spring.SetUnitPosition(noiseID, x,y,z)
+				Spring.SetUnitVelocity(noiseID, math.random() * 50, 0, math.random() * 50)
 				--Spring.MarkerAddPoint(x,y,z)
-				Spring.AddUnitSeismicPing(noiseID, 15)--math.random(2, 10))
-				Sleep(math.random(500, 1000))
+				for j = 1, 5 do
+					Spring.AddUnitSeismicPing(noiseID, math.random(3, 10))
+					Sleep(100)
+				end
+				Sleep(math.random(500, 1500))
 			end
+			--Spring.Echo("Sleep mode")
 			Sleep(noiseDelay)
 		end
 	end
