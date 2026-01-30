@@ -62,6 +62,8 @@ for unitDefID, unitDef in pairs(UnitDefs) do
 		mobileUnitDefs[unitDefID] = true
 	elseif cp.baseclass == "vehicle" then
 		mobileUnitDefs[unitDefID] = true
+	elseif unitDef.name == "noise" then
+		mobileUnitDefs[unitDefID] = true
 	end
 end
 
