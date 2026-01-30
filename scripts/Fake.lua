@@ -32,13 +32,15 @@ function script.Create()
 		--Spring.MoveCtrl.SetVelocity(unitID, sign * MAX_SPEED * math.random(), 0, sign * MAX_SPEED * math.random())
 		GG.Delay.DelayCall(Spring.DestroyUnit, {unitID}, 30 * TIME_TO_LIVE)
 	elseif unitDef.name == "noise" then
-		--StartThread(Noise)
+		StartThread(Noise)
 	end
 end
 
 function Noise()
 	while true do 
-		Spring.Echo("I'm alive!")
+		--[[Spring.Echo("I'm alive!")
+		local x,y,z = Spring.GetUnitBasePosition(unitID)
+		Spring.MarkerAddPoint(x,y,z)]]
 		Spring.AddUnitSeismicPing(unitID, math.random(3, 10))
 		Sleep(500)
 	end
