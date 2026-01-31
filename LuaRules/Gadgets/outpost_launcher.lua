@@ -109,8 +109,10 @@ end
 
 function gadget:ProjectileCreated(proID, proOwnerID, weaponID)
 	if weaponID == CRUISE_MISSILE_ID then
+		local teamID = Spring.GetUnitTeam(proOwnerID)
+		GG.PlaySoundForTeam(teamID, "bb_outpost_launcher_launching", 1)
 		Spring.SetProjectileAlwaysVisible(proID, true)
-		NukeIcon(proID, Spring.GetUnitTeam(proOwnerID))
+		NukeIcon(proID, teamID)
 	elseif weaponID == MELTDOWN_WDID then
 		Spring.SetProjectileAlwaysVisible(proID, true)
 	end
