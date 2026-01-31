@@ -6,10 +6,10 @@ local Outpost_SalvageYard = Outpost:New{
 	mass                = 9000,
 	buildCostMetal      = 7200,
 		
-	transportSize		= 3,
+	--[[transportSize		= 3,
 	transportCapacity	= 3, -- 1x transportSize
 	transportMass		= 10000,
-	loadingradius		= 100,
+	loadingradius		= 100,]]
 	
 	harvestStorage		= 20000,
 	
