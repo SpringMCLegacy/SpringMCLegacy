@@ -35,7 +35,7 @@ local Noise = Fake:New{
 	seismicsignature	= 5,
 	sightDistance 		= 0,
 	mass				= 5000,
-},
+}
 
 
 return lowerkeys({ 
