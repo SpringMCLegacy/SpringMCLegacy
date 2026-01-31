@@ -421,6 +421,7 @@ local function SpawnFlight(teamID, sortie, sx, sy, sz, cmdParams, stockpile)
 		end
 	end
 
+	GG.PlaySoundForTeam(teamID, "bb_outpost_aircon_deploying", 1)
 	SendMessageToTeam(teamID, sortie.name .. " arrived.")
 	ModifyStockpile(teamID, sortie, stockpile, "inbound", "active")
 	
@@ -557,9 +558,11 @@ local function SendPurchaseOrder(cost, weight, unitID, unitDefID, teamID)
 		Spring.SendMessageToTeam(teamID, "Sending purchase order for the following:")
 		for i, order in ipairs(orderQueue) do
 			for orderDefID, count in pairs(order) do
-				Spring.SendMessageToTeam(teamID, UnitDefs[orderDefID].humanName .. ":\t" .. count) -- TODO: play a sound
+				Spring.SendMessageToTeam(teamID, UnitDefs[orderDefID].humanName .. ":\t" .. count)
 				local sortie = sortieDefs[orderDefID]
 				ModifyStockpile(teamID, sortie, count, nil, "prep")
+				GG.PlaySoundForTeam(teamID, "bb_outpost_aircon_preparing", 1)
+				GG.Delay.DelayCall(GG.PlaySoundForTeam, {teamID, "bb_outpost_aircon_ready", 1}, sortie.prepDelay * 30) -- TODO: this will play multiple times...
 				GG.Delay.DelayCall(ModifyStockpile, {teamID, sortie, count, "prep", "ready"}, sortie.prepDelay * 30)
 			end
 		end
@@ -622,7 +625,9 @@ local function RetreatPlane(unitID, unitDefID, teamID)
 	--AddTeamResource(teamID, "m", depositReturn)
 	planeStates[unitID] = nil --this looks redundant, but needs to happen so that you actually get your bonus.
 	local sortie = sortieDefs[unitDefID]
+	GG.PlaySoundForTeam(teamID, "bb_outpost_aircon_preparing", 1) -- TODO: this will play multiple times
 	ModifyStockpile(teamID, sortie, 1, "active", "prep")
+	GG.Delay.DelayCall(GG.PlaySoundForTeam, {teamID, "bb_outpost_aircon_ready", 1}, sortie.prepDelay * 30) -- TODO: this will play multiple times...
 	GG.Delay.DelayCall(ModifyStockpile, {teamID, sortie, 1, "prep", "ready"}, sortie.prepDelay * 30)
 	DestroyUnit(unitID, false, true)
 end
@@ -649,6 +654,7 @@ function gadget:GameFrame(n)
 					planeStates[unitID] = PLANE_STATE_RETREAT	
 				end
 				-- make it say something
+				GG.PlaySoundForTeam(teamID, "bb_outpost_aircon_returning", 1)
 				if unitDef.customParams.planevoice then
 					local env = Spring.UnitScript.GetScriptEnv(unitID)
 					Spring.UnitScript.CallAsUnit(unitID, env.PlaneVoice, 'return_to_base')
