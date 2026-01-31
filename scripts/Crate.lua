@@ -26,6 +26,7 @@ function BowOut()
 end
 
 function Unpack(ry)
+	Turn(crate_base, y_axis, (ry and ry - math.pi/2) or 0)
 	-- Wait for delivery van to bug out
 	Sleep(2000)
 	-- Unpack the crate

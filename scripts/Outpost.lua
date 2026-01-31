@@ -1,21 +1,9 @@
 -- Common pieces
 local base = piece ("base")
---local crate_base, crate_top, crate_right, crate_left, crate_front, crate_back = piece ("crate_base", "crate_top", "crate_right", "crate_left", "crate_front", "crate_back")
-local crateLink = piece("cratelink")
+local crateLink = piece("cratelink") or base
 
 --include ("anims/outposts/" .. unitDef.name .. ".lua")
 
--- Mechbay pieces
-local rampr, rampl, ramprfoldrear, ramprfoldfront, ramplfoldrear, ramplfoldfront = piece ("rampr", "rampl", "ramprfoldrear", "ramprfoldfront", "ramplfoldrear", "ramplfoldfront")
-local supportrlower, supportllower, supportrupper, supportlupper = piece ("supportrlower", "supportllower", "supportrupper", "supportlupper")
-local ramprtoolupper, ramprtoolmid, ramprtoollower, ramprtoolfinger1, ramprtoolfinger2 = piece ("ramprtoolupper", "ramprtoolmid", "ramprtoollower", "ramprtoolfinger1", "ramprtoolfinger2")
-local rampltoolupper, rampltoolmid, rampltoollower, rampltoolfinger1, rampltoolfinger2 = piece ("rampltoolupper", "rampltoolmid", "rampltoollower", "rampltoolfinger1", "rampltoolfinger2")
-local supportrtorchattach, supportrtorchupper, supportrtorchmid, supportrtorchlower = piece ("supportrtorchattach", "supportrtorchupper", "supportrtorchmid", "supportrtorchlower")
-local supportrhandattach, supportrhandupper, supportrhandmid, supportrhandlower, supportrhandjoint, supportrhandfingers1, supportrhandfingers2 = piece ("supportrhandattach", "supportrhandupper", "supportrhandmid", "supportrhandlower", "supportrhandjoint", "supportrhandfingers1", "supportrhandfingers2")
-local supportltorchattach, supportltorchupper, supportltorchmid, supportltorchlower = piece ("supportltorchattach", "supportltorchupper", "supportltorchmid", "supportltorchlower")
-local supportlhandattach, supportlhandupper, supportlhandmid, supportlhandlower, supportlhandjoint, supportlhandfingers1, supportlhandfingers2 = piece ("supportlhandattach", "supportlhandupper", "supportlhandmid", "supportlhandlower", "supportlhandjoint", "supportlhandfingers1", "supportlhandfingers2")
-local supportltorchspark, supportrtorchspark = piece ("supportltorchspark", "supportrtorchspark")
-local ramprtoolspark, rampltoolspark = piece ("ramprtoolspark", "rampltoolspark")
 -- Orbital Uplink pieces
 local antennabase, antennamast, antennareceiver, antennapole = piece ("antennabase", "antennamast", "antennareceiver", "antennapole")
 local dishs = {}
@@ -96,8 +84,8 @@ for i = 1, 4 do
 end
 
 -- Constants
-local unitDefID = Spring.GetUnitDefID(unitID)
-local unitDef = UnitDefs[unitDefID]
+--local unitDefID = Spring.GetUnitDefID(unitID)
+--local unitDef = UnitDefs[unitDefID]
 local name = unitDef.name
 local rad = math.rad
 local CRATE_SPEED = math.rad(50)
@@ -150,8 +138,8 @@ local crateID
 function script.Create()
 	local x,y,z = Spring.GetUnitBasePosition(unitID)
 	crateID = Spring.CreateUnit("crate", x,y,z, 0, teamID, false, false)
-	Spring.UnitAttach(unitID, crateID, crateLink)
-	if ramps[1] then -- vpad
+	Spring.UnitAttach(unitID, crateID, crateLink, true)
+	if name == "outpost_vehiclepad" then
 		for i = 1, 6 do
 			Turn(ramps[i], y_axis, rad((i-1) * -60))
 		end
@@ -189,7 +177,7 @@ end
 function Unloaded(ry)
 	if crateID then
 		env = Spring.UnitScript.GetScriptEnv(crateID)
-		Spring.UnitScript.CallAsUnit(crateID, env.Unloaded)
+		Spring.UnitScript.CallAsUnit(crateID, env.Unloaded, ry)
 	end
 	StartThread(Unpack, ry)
 end
@@ -198,35 +186,13 @@ function Unpack(ry)
 	if unitDef.isFactory then
 		-- AirCon is an actual structure with yardmap as it needs factory buildoptions
 		-- Engine forces it to grid on unload, so turn model instead
-		Turn(1, y_axis, (ry and ry - math.pi/2) or 0)
+		Turn(base, y_axis, (ry and ry - math.pi/2) or 0)
 	end
 	-- Wait for delivery van to bug out
 	Sleep(2000)
-	if crateLink then
+	if crateID then
 		-- Wait a little longer for the crate anim to play
 		Sleep(2000)	
-	else
-		-- Unpack the crate
-		--[[PlaySound("outpost_unbox")
-		Turn(crate_front, x_axis, rad(45), CRATE_SPEED)
-		Turn(crate_back, x_axis, rad(-45), CRATE_SPEED)
-		Turn(crate_left, z_axis, rad(45), CRATE_SPEED)
-		Turn(crate_right, z_axis, rad(-45), CRATE_SPEED)
-		WaitForTurn(crate_right, z_axis)
-		WaitForTurn(crate_left, z_axis)
-		WaitForTurn(crate_back, x_axis)
-		WaitForTurn(crate_front, x_axis)
-		Turn(crate_front, x_axis, rad(90), CRATE_SPEED * 2)
-		Turn(crate_back, x_axis, rad(-90), CRATE_SPEED * 2)
-		Turn(crate_left, z_axis, rad(90), CRATE_SPEED * 2)
-		Turn(crate_right, z_axis, rad(-90), CRATE_SPEED * 2)
-		WaitForTurn(crate_right, z_axis)
-		WaitForTurn(crate_left, z_axis)
-		WaitForTurn(crate_back, x_axis)
-		WaitForTurn(crate_front, x_axis)
-		Turn(crate_top, z_axis, rad(-45), CRATE_SPEED)
-		WaitForTurn(crate_top, z_axis)
-		Turn(crate_top, z_axis, rad(-90), CRATE_SPEED * 2)]]
 	end
 	
 	-- Begin outpost-specific anims
@@ -894,8 +860,21 @@ elseif name == "outpost_ewar" then
 	end
 
 elseif name == "outpost_mechbay" then
+	-- Mechbay pieces
+	local rampr, rampl, ramprfoldrear, ramprfoldfront, ramplfoldrear, ramplfoldfront = piece ("rampr", "rampl", "ramprfoldrear", "ramprfoldfront", "ramplfoldrear", "ramplfoldfront")
+	local supportrlower, supportllower, supportrupper, supportlupper = piece ("supportrlower", "supportllower", "supportrupper", "supportlupper")
+	local ramprtoolupper, ramprtoolmid, ramprtoollower, ramprtoolfinger1, ramprtoolfinger2 = piece ("ramprtoolupper", "ramprtoolmid", "ramprtoollower", "ramprtoolfinger1", "ramprtoolfinger2")
+	local rampltoolupper, rampltoolmid, rampltoollower, rampltoolfinger1, rampltoolfinger2 = piece ("rampltoolupper", "rampltoolmid", "rampltoollower", "rampltoolfinger1", "rampltoolfinger2")
+	local supportrtorchattach, supportrtorchupper, supportrtorchmid, supportrtorchlower = piece ("supportrtorchattach", "supportrtorchupper", "supportrtorchmid", "supportrtorchlower")
+	local supportrhandattach, supportrhandupper, supportrhandmid, supportrhandlower, supportrhandjoint, supportrhandfingers1, supportrhandfingers2 = piece ("supportrhandattach", "supportrhandupper", "supportrhandmid", "supportrhandlower", "supportrhandjoint", "supportrhandfingers1", "supportrhandfingers2")
+	local supportltorchattach, supportltorchupper, supportltorchmid, supportltorchlower = piece ("supportltorchattach", "supportltorchupper", "supportltorchmid", "supportltorchlower")
+	local supportlhandattach, supportlhandupper, supportlhandmid, supportlhandlower, supportlhandjoint, supportlhandfingers1, supportlhandfingers2 = piece ("supportlhandattach", "supportlhandupper", "supportlhandmid", "supportlhandlower", "supportlhandjoint", "supportlhandfingers1", "supportlhandfingers2")
+	local supportltorchspark, supportrtorchspark = piece ("supportltorchspark", "supportrtorchspark")
+	local ramprtoolspark, rampltoolspark = piece ("ramprtoolspark", "rampltoolspark")
 
+	-- Constants
 	local BAY_RESTORE = 5000 -- 5 seconds
+	-- Variables
 	local bayReady = false
 
 	function MechBayOpen()
