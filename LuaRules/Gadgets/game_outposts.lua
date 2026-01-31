@@ -89,8 +89,8 @@ end
 local menuOrder = {
 	"outpost_c3array", "outpost_mechbay", "outpost_salvageyard", 	-- Mechs
 	"outpost_turretcontrol", "outpost_vehiclepad", "outpost_aircon",-- Additional units
+	"outpost_garrison", "outpost_sensor", "outpost_ewar",			-- Beacon Defense
 	"outpost_artillery", "outpost_launcher", "outpost_uplink",		-- Artillery Support
-	"outpost_garrison", "outpost_ewar", "outpost_sensor",			-- Beacon Defense
 }
 
 function gadget:GamePreload()

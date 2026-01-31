@@ -1,7 +1,10 @@
 -- Common pieces
 local base = piece ("base")
-local crate_base, crate_top, crate_right, crate_left, crate_front, crate_back = piece ("crate_base", "crate_top", "crate_right", "crate_left", "crate_front", "crate_back")
+--local crate_base, crate_top, crate_right, crate_left, crate_front, crate_back = piece ("crate_base", "crate_top", "crate_right", "crate_left", "crate_front", "crate_back")
 local crateLink = piece("cratelink")
+
+--include ("anims/outposts/" .. unitDef.name .. ".lua")
+
 -- Mechbay pieces
 local rampr, rampl, ramprfoldrear, ramprfoldfront, ramplfoldrear, ramplfoldfront = piece ("rampr", "rampl", "ramprfoldrear", "ramprfoldfront", "ramplfoldrear", "ramplfoldfront")
 local supportrlower, supportllower, supportrupper, supportlupper = piece ("supportrlower", "supportllower", "supportrupper", "supportlupper")
@@ -204,7 +207,7 @@ function Unpack(ry)
 		Sleep(2000)	
 	else
 		-- Unpack the crate
-		PlaySound("outpost_unbox")
+		--[[PlaySound("outpost_unbox")
 		Turn(crate_front, x_axis, rad(45), CRATE_SPEED)
 		Turn(crate_back, x_axis, rad(-45), CRATE_SPEED)
 		Turn(crate_left, z_axis, rad(45), CRATE_SPEED)
@@ -223,7 +226,7 @@ function Unpack(ry)
 		WaitForTurn(crate_front, x_axis)
 		Turn(crate_top, z_axis, rad(-45), CRATE_SPEED)
 		WaitForTurn(crate_top, z_axis)
-		Turn(crate_top, z_axis, rad(-90), CRATE_SPEED * 2)
+		Turn(crate_top, z_axis, rad(-90), CRATE_SPEED * 2)]]
 	end
 	
 	-- Begin outpost-specific anims
@@ -616,7 +619,7 @@ elseif name == "outpost_sensor" then
 			Sleep(seismicDuration)
 			Move(hammer, y_axis, 7, CRATE_SPEED * 5)
 			WaitForMove(hammer, y_axis)
-			 mkkSpring.SetUnitSensorRadius(unitID, "seismic", 0)
+			Spring.SetUnitSensorRadius(unitID, "seismic", 0)
 			Sleep(seismicDelay)
 		end
 	end

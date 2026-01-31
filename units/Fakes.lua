@@ -31,12 +31,15 @@ local Naval_Laser = Nuke_Meltdown:New{ -- for invincible and minimal sight
 	}
 }
 
+local Noise = Fake:New{
+	seismicsignature	= 5,
+	sightDistance 		= 0,
+	mass				= 5000,
+},
+
+
 return lowerkeys({ 
-	["Noise"] = Fake:New{
-		seismicsignature	= 5,
-		sightDistance 		= 0,
-		mass				= 5000,
-	},
+	["Noise"] = Noise,
 	["Narc_ECM"] = Narc_ECM,
 	["Nuke_Icon"] = Nuke_Icon,
 	["Nuke_Meltdown"] = Nuke_Meltdown,
