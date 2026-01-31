@@ -4,51 +4,6 @@ local crateLink = piece("cratelink") or base
 
 --include ("anims/outposts/" .. unitDef.name .. ".lua")
 
--- Orbital Uplink pieces
-local antennabase, antennamast, antennareceiver, antennapole = piece ("antennabase", "antennamast", "antennareceiver", "antennapole")
-local dishs = {}
-for i = 1, 15 do
-	dishs[i] = piece("dish" .. i)
-end
--- Salvage Yard pieces
-local foundation, recoveryrail, armature1, armature2 = piece ("foundation", "recoveryrail", "armature1", "armature2")
-local supporttorchattach, supporttorchupper, supporttorchmid, supporttorchlower = piece ("supporttorchattach", "supporttorchupper", "supporttorchmid", "supporttorchlower")
-local supporthandattach, supporthandupper, supporthandmid, supporthandlower, supporthandjoint, supporthandfingers1, supporthandfingers2 = piece ("supporthandattach", "supporthandupper", "supporthandmid", "supporthandlower", "supporthandjoint", "supporthandfingers1", "supporthandfingers2")
-local doora1, doora2, doorb1, doorb2, doorc1, doorc2 = piece ("doora1", "doora2", "doorb1", "doorb2", "doorc1", "doorc2")
-local doors = {}
-for i = 1, 6 do
-	doors[i] = piece("door" .. i)
-end
-local armPieces = {"armattach", "armjointa", "armextender", "armjointb", "saw"}
-local arms = {}
-for i, pieceType in ipairs(armPieces) do
-	arms[pieceType] = {}
-end
-for i = 1, 6 do
-	for j, pieceType in ipairs(armPieces) do
-		arms[pieceType][i] = piece(pieceType .. i)
-	end
-end
-
--- Vehicle Pad pieces
-local ramps = {}
-local blinks = {}
-for i = 1, 6 do
-	ramps[i] = piece("ramp" .. i)
-	blinks[i] = piece("blink" .. i)
-end
-local base2 = piece("base2")
-local flags = piece("flags")
--- Turret Control pieces
-local hatch = {}
-for i = 1, 4 do
-	hatch[i] = piece("hatch" .. i)
-end
-local pole = {}
-for i = 1, 4 do
-	pole[i] = piece("pole" .. i)
-end
-
 -- Weapon pieces
 local flares = {}
 local barrels = {}
@@ -84,17 +39,15 @@ for i = 1, 4 do
 end
 
 -- Constants
---local unitDefID = Spring.GetUnitDefID(unitID)
---local unitDef = UnitDefs[unitDefID]
 local name = unitDef.name
 local rad = math.rad
 local CRATE_SPEED = math.rad(50)
 local RANDOM_ROT = math.random(-180, 180)
-local UNLOAD_X, UNLOAD_Z
 
 ---------------------------------------------------------------------
 -- Common functions
 ---------------------------------------------------------------------
+local crateID
 pointID = nil
 beaconID = nil
 function ParentBeacon(callingPointID, parentBeaconID)
@@ -103,69 +56,19 @@ function ParentBeacon(callingPointID, parentBeaconID)
 end
 
 function Upgrade(level)
-	if name == "outpost_vehiclepad" then
-		--[[if level == 2 then
-			Show(base2)
-			Hide(base)
-			for i = 1,6 do
-				Hide(ramps[i])
-			end
-		elseif level == 3 then
-			Show(flags)
-		end]]
-	elseif name == "outpost_c3array" then
-		StartThread(C3_Upgrade)
-	elseif name == "outpost_salvageyard" and level == 2 then
-		Show(foundation)
-		RecursiveHide(recoveryrail, false)
-	elseif name == "outpost_ewar" then
-		if level == 2 then
-			StartThread(Angel)
-		elseif level == 3 then
-			StartThread(CumOnFeelTheNoise)
-		end
-	elseif name == "outpost_sensor" then
-		if level == 2 then
-			StartThread(Bloodhound)
-		elseif level == 3 then
-			StartThread(Seismic)
-		end
+	if level == 2 then
+		StartThread(Upgrade2)
+	elseif level == 3 then
+		StartThread(Upgrade3)
 	end
 end
-
-local crateID
 
 function script.Create()
 	local x,y,z = Spring.GetUnitBasePosition(unitID)
 	crateID = Spring.CreateUnit("crate", x,y,z, 0, teamID, false, false)
 	Spring.UnitAttach(unitID, crateID, crateLink, true)
-	if name == "outpost_vehiclepad" then
-		for i = 1, 6 do
-			Turn(ramps[i], y_axis, rad((i-1) * -60))
-		end
-		--Hide(base2)
-		--Hide(flags)
-	elseif name == "outpost_salvageyard" then
-		Hide(foundation)
-		--RecursiveHide(recoveryrail, true)
-		Move(armature1, z_axis, 10)
-		Move(armature2, z_axis, -10)
-	elseif name == "outpost_ewar" then
-		Spring.SetUnitRulesParam(unitID, "FXOFF", 1, {public = true})
-		local bapstand, bapmantlet = piece("bapstand", "bapmantlet")
-		Turn(bapstand, x_axis, math.rad(-90))
-		Turn(bapmantlet, x_axis, math.rad(135))
-		local tagbase1, tagstand1, tagbase2, tagstand2 = piece("tagbase1", "tagstand1", "tagbase2", "tagstand2")
-		Turn(tagbase1, z_axis, math.rad(90))
-		Turn(tagstand1, z_axis, math.rad(90))
-		Turn(tagbase2, z_axis, math.rad(-90))
-		Turn(tagstand2, z_axis, math.rad(-90))
-	elseif name == "outpost_artillery" then
-		StartThread(ArtilleryCreate)
-	elseif name == "outpost_sensor" then
-		local hammerarm1, hammerhousing = piece ("hammerarm1", "hammerhousing")
-		Turn(hammerarm1, x_axis, math.rad(25))
-		Turn(hammerhousing, x_axis, math.rad(-100))
+	if Setup then
+		StartThread(Setup)
 	end
 	Sleep(100) -- wait a few frames
 	if not Spring.GetUnitTransporter(unitID) then
@@ -177,14 +80,14 @@ end
 function Unloaded(ry)
 	if crateID then
 		env = Spring.UnitScript.GetScriptEnv(crateID)
-		Spring.UnitScript.CallAsUnit(crateID, env.Unloaded, ry)
+		Spring.UnitScript.CallAsUnit(crateID, env.Unloaded, unitDef.isFactory and ry or nil)
 	end
 	StartThread(Unpack, ry)
 end
 
 function Unpack(ry)
 	if unitDef.isFactory then
-		-- AirCon is an actual structure with yardmap as it needs factory buildoptions
+		-- AirCon and Vehiclepad are actual structure with yardmap as it needs factory buildoptions / commands
 		-- Engine forces it to grid on unload, so turn model instead
 		Turn(base, y_axis, (ry and ry - math.pi/2) or 0)
 	end
@@ -194,118 +97,15 @@ function Unpack(ry)
 		-- Wait a little longer for the crate anim to play
 		Sleep(2000)	
 	end
-	
 	-- Begin outpost-specific anims
 	GG.PlaySoundForTeam(Spring.GetUnitTeam(unitID), "bb_" .. name .. "_deployed", 1)
-	if name == "outpost_c3array" then
-		StartThread(C3Array)
-	elseif name == "outpost_sensor" then
-		StartThread(Sensor)
-	elseif name == "outpost_mechbay" then
-		Spring.SetUnitBlocking(unitID, false, false) -- make it easy to get out
-		MechBayOpen()
-		local x, _ ,z = Spring.GetUnitPosition(unitID)
-		local dx, _, dz = Spring.GetUnitDirection(unitID)
-		UNLOAD_X = x + 150 * dx
-		UNLOAD_Z = z + 150 * dz
-	elseif name == "outpost_salvageyard" then
-		GG.SpawnSalvager(unitID, teamID)
-		Show(foundation)
-		Move(armature1, z_axis, 0, CRATE_SPEED * 2)
-		Move(armature2, z_axis, 0, CRATE_SPEED * 2)
-		WaitForMove(armature2, z_axis)
-		--GG.PopulateQueue(unitID) -- initialise the queue with any existing corpses
-		Spring.SetUnitBlocking(unitID, false, false) -- make it easy to get out
-		for i = 1, 6 do
-			local sign = i % 2 == 0 and -1 or 1
-			Move(doors[i], z_axis, sign, CRATE_SPEED * 2)
-		end
-		WaitForMove(doors[6], z_axis)
-		for i = 1, 6 do
-			local sign = i % 2 == 1 and -1 or 1
-			Turn(arms["armjointa"][i], z_axis, sign * rad(-45), CRATE_SPEED * 2)
-			Turn(arms["armjointb"][i], z_axis, sign * rad(220), CRATE_SPEED * 2)
-		end
-		Turn(supporthandupper, z_axis, rad(45), CRATE_SPEED * 2)
-		Turn(supporthandlower, z_axis, rad(-45), CRATE_SPEED * 2)
-		Turn(supporttorchupper, z_axis, rad(-45), CRATE_SPEED * 2)
-		Turn(supporttorchlower, z_axis, rad(45), CRATE_SPEED * 2)
-		WaitForTurn(arms["armjointb"][6], z_axis)
-		Turn(arms["armattach"][1], x_axis, rad(-30), CRATE_SPEED * 2)
-		Turn(arms["armattach"][3], x_axis, rad(10), CRATE_SPEED * 2)
-		Move(arms["armextender"][3], y_axis, 2, CRATE_SPEED * 2)
-		Turn(arms["armattach"][2], x_axis, rad(10), CRATE_SPEED * 2)
-		Move(arms["armextender"][2], y_axis, 2, CRATE_SPEED * 2)
-		Turn(arms["armattach"][5], x_axis, rad(-20), CRATE_SPEED * 2)
-	elseif name == "outpost_uplink" then
-		Move(antennabase, z_axis, -15, CRATE_SPEED * 5)
-		Turn(antennamast, x_axis, rad(90), CRATE_SPEED)
-		Turn(antennareceiver, x_axis, rad(-45), CRATE_SPEED * 2)
-		PlaySound("uplink_whir")
-		WaitForTurn(antennamast, x_axis)
-		WaitForTurn(antennareceiver, x_axis)
-		Move(antennapole, y_axis, 10, CRATE_SPEED * 10)
-		for i = 2,15 do
-			Turn(dishs[i], y_axis, rad(24), CRATE_SPEED / 4)
-		end
-		PlaySound("dish_deploy")
-		Turn(antennabase, y_axis, rad(RANDOM_ROT), CRATE_SPEED)
-		WaitForTurn(antennabase, y_axis)
-	elseif name == "outpost_vehiclepad" then
-		for i = 1, 6 do
-			Turn(ramps[i], x_axis, rad(-115), CRATE_SPEED)
-		end
-		WaitForTurn(ramps[6], x_axis)
-		StartThread(Blinks)
-		GG.LCLeft(nil, unitID, teamID) -- fake call, no dropship really left
-	elseif name == "outpost_garrison" then
-		-- nothing special
-	elseif name == "outpost_turretcontrol" then
-		 for i = 1,4 do
-			local signX = i <= 2 and 1 or -1
-			local signZ = (i > 1 and i < 4) and -1 or 1
-			Move(hatch[i], x_axis, 6 * signX, CRATE_SPEED * 4)
-			Move(hatch[i], z_axis, 6 * signZ, CRATE_SPEED * 4)
-			WaitForMove(hatch[4], z_axis)
-		end
-		local poleHeights = {4, 3.25, 10.5, 15.5}
-		 for i = 1, #pole do
-			Move(pole[i], y_axis, poleHeights[i], CRATE_SPEED * 5)
-		end
-		WaitForMove(pole[#pole], y_axis)
-		Spin(pole[1], y_axis, math.rad(20), math.rad(5))
-		SetUnitValue(COB.INBUILDSTANCE, 1)
-		-- use our own location, not beaconID
-		local x, y, z = Spring.GetUnitPosition(unitID)
-		GG.BuildMaskCircle(x, z, 460 * 1.5, 2)
-		GG.UpdateTurretSlots(unitID, teamID, 4)
-	elseif name == "outpost_ewar" then
-		local console2 = piece("console2")
-		Move(console2, z_axis, 7, CRATE_SPEED)
-		local bapstand, bapmantlet = piece("bapstand", "bapmantlet")
-		Turn(bapstand, x_axis, 0, CRATE_SPEED/4)
-		Turn(bapmantlet, x_axis, 0, CRATE_SPEED/2)
-		WaitForTurn(bapstand, x_axis)
-		WaitForTurn(bapmantlet, x_axis)
-		WaitForMove(console2, z_axis)
-		StartThread(ECM)
-	elseif name == "outpost_artillery" then
-		StartThread(Artillery)
-	elseif name == "outpost_launcher" then
-		StartThread(MissileLauncher)
-	elseif name == "outpost_aircon" then
-		StartThread(AirCon)
+	if Deploy then
+		StartThread(Deploy)
 	end
-	Spring.UnitScript.SetUnitValue(COB.ACTIVATION, 1)
-	if crateLink then
+	
+	if crateID then
 		env = Spring.UnitScript.GetScriptEnv(crateID)
 		Spring.UnitScript.CallAsUnit(crateID, env.Sands)
-	else
-		-- Let the sands of time cover the crate
-		Sleep(1500)
-		Move(crate_base, y_axis, -5, CRATE_SPEED * 2)
-		Sleep (5000)
-		RecursiveHide(crate_base, true)
 	end
 end
 
@@ -385,8 +185,7 @@ if name == "outpost_aircon" then
 	local tower_mid, tower_top, ladder, antennadoor1, radardoor1, radardoor2 = piece ("tower_mid", "tower_top", "ladder", "antennadoor1", "radardoor1", "radardoor2")
 	local radar_mount, radar_spin, radar_arm1, radar_arm2, antennabase, antenna1_1, antenna1_2, antenna2_1, antenna2_2 = piece ("radar_mount", "radar_spin", "radar_arm1", "radar_arm2", "antennabase", "antenna1_1", "antenna1_2", "antenna2_1", "antenna2_2")
 	
-	-- AirCon unpack anim
-	function AirCon()
+	function Deploy()
 		Move(tower_mid, y_axis, 7, CRATE_SPEED * 8)
 		PlaySound("HeavyLift")
 		WaitForMove(tower_mid, y_axis)
@@ -433,8 +232,9 @@ if name == "outpost_aircon" then
 		WaitForMove(antenna1_1, y_axis)
 		Move(antenna1_2, y_axis, 11, CRATE_SPEED * 12)
 		PlaySound("Whir_Small")
+		Spring.UnitScript.SetUnitValue(COB.ACTIVATION, 1)
 	end
-	
+
 elseif name == "outpost_c3array" then
 	 -- C3 Pieces
 	local emitterbase1, emitter1, geo1, emitterbase2, emitter2, geo2 = piece ("emitterbase1", "emitter1", "geo1", "emitterbase2", "emitter2", "geo2")
@@ -442,7 +242,7 @@ elseif name == "outpost_c3array" then
 	local leg1, leg2, leg3, leg4, foot1, foot2, foot3, foot4 = piece ("leg1", "leg2", "leg3", "leg4", "foot1", "foot2", "foot3", "foot4")
 	
 	-- C3 unpack anim
-	function C3Array()
+	function Deploy()
 		PlaySound("Whir")
 		Move(leg1, x_axis, 12, CRATE_SPEED * 10)
 		Move(leg1, y_axis, -2, CRATE_SPEED * 3)
@@ -477,10 +277,11 @@ elseif name == "outpost_c3array" then
 		Spin(geo1, y_axis, math.rad(100), math.rad(15))
 		Sleep(1000)
 		GG.LanceControl(teamID, unitID, true)
+		Spring.UnitScript.SetUnitValue(COB.ACTIVATION, 1)
 	end
 
 	-- C3 upgrade anim
-	function C3_Upgrade()
+	function Upgrade2()
 		Move(door2a, z_axis, -10, CRATE_SPEED * 20)
 		WaitForMove(door2a, z_axis)
 		Move(door2b, z_axis, -15, CRATE_SPEED * 20)
@@ -504,8 +305,12 @@ elseif name == "outpost_sensor" then
 	local console1, console2, bloodhounddoor1, bloodhounddoor2, bloodhound  = piece ("console1", "console2", "bloodhounddoor1", "bloodhounddoor2", "bloodhound")
 	local hammerdoor1, hammerdoor2, hammermount, hammerarm1, hammerarm2, hammerhousing, hammer  = piece ("hammerdoor1", "hammerdoor2", "hammermount", "hammerarm1", "hammerarm2", "hammerhousing", "hammer")
 	
-	-- Sensor unpack anim
-	function Sensor()
+	function Setup()
+		Turn(hammerarm1, x_axis, math.rad(25))
+		Turn(hammerhousing, x_axis, math.rad(-100))
+	end
+	
+	function Deploy()
 		Move(radarlift, y_axis, 8, CRATE_SPEED * 4)
 		PlaySound("HeavyLift")
 		WaitForMove(radarlift, y_axis)
@@ -526,10 +331,11 @@ elseif name == "outpost_sensor" then
 		Sleep(700)
 		Spin(radarspin, y_axis, math.rad(100), math.rad(15))
 		WaitForMove(console1, x_axis)
+		Spring.UnitScript.SetUnitValue(COB.ACTIVATION, 1)
 	end
 	
-	function Bloodhound()
-		-- BAP Upgrade
+	function Upgrade2()
+		-- Bloodound AP
 		Move(bloodhounddoor1, x_axis, 6, CRATE_SPEED * 4)
 		Move(bloodhounddoor2, x_axis, -6, CRATE_SPEED * 4)
 		PlaySound("ElectricDoor")
@@ -541,8 +347,8 @@ elseif name == "outpost_sensor" then
 		GG.bloodHounds[unitID] = true
 	end
 	
-	function Seismic()
-		-- Seismic upgrade
+	function Upgrade3()
+		-- Seismic
 		Move(hammerdoor1, x_axis, 6, CRATE_SPEED * 4)
 		Move(hammerdoor2, x_axis, -6, CRATE_SPEED * 4)
 		PlaySound("ElectricDoor")
@@ -592,7 +398,7 @@ elseif name == "outpost_sensor" then
 	
 elseif name == "outpost_artillery" then
 	
-	function ArtilleryCreate()
+	function Setup()
 		local barrelend, casing, rammoarm, lammoarm, rammorail, lammorail = piece ("barrelend", "casing", "rammoarm", "lammoarm", "rammorail", "lammorail")
 		Move(barrelend, z_axis, -30)
 		Hide(casing)
@@ -602,7 +408,7 @@ elseif name == "outpost_artillery" then
 		Hide(lammorail)
 	end
 
-	function Artillery()
+	function Deploy()
 		local barrel_1, barrelend, breechblock, hydraulic, casing = piece ("barrel_1", "barrelend", "breechblock", "hydraulic", "casing")
 		local rammoarm, rammorail, rammobin, rammo, rammotray, rram = piece ("rammoarm", "rammorail", "rammobin", "rammo", "rammotray", "rram")
 		local lammoarm, lammorail, lammobin, lammo, lammotray, lram = piece ("lammoarm", "lammorail", "lammobin", "lammo", "lammotray", "lram")
@@ -638,6 +444,7 @@ elseif name == "outpost_artillery" then
 		WaitForMove(barrelend, z_axis)
 		noFiring = false
 		Spring.SetUnitRulesParam(unitID, "weapon_1", "active")
+		Spring.UnitScript.SetUnitValue(COB.ACTIVATION, 1)
 	end
 
 	function ArtilleryReload()
@@ -729,10 +536,10 @@ elseif name == "outpost_artillery" then
 	end
 	
 elseif name == "outpost_launcher" then
-
-	function MissileLauncher()
-		local launcher, launchdoor1, launchdoor2, gantry, projectile = piece ("launcher", "launchdoor1", "launchdoor2", "gantry", "projectile")
-		
+	-- Cruise Missile Launcher pieces
+	local launcher, launchdoor1, launchdoor2, gantry, projectile = piece ("launcher", "launchdoor1", "launchdoor2", "gantry", "projectile")
+	
+	function Deploy()	
 		PlaySound("Clicks")
 		for i = 1, 2 do
 			Turn(legs[i], z_axis, math.rad(90), CRATE_SPEED * 4)
@@ -757,10 +564,10 @@ elseif name == "outpost_launcher" then
 		Sleep(500)
 		noFiring = false
 		Spring.SetUnitRulesParam(unitID, "weapon_1", "active")
+		Spring.UnitScript.SetUnitValue(COB.ACTIVATION, 1)
 	end
 
 	function LauncherClose()
-		local launcher, launchdoor1, launchdoor2, gantry, projectile = piece ("launcher", "launchdoor1", "launchdoor2", "gantry", "projectile")
 		Hide(projectile)
 		Sleep(1000)
 		Move(gantry, y_axis, 0, CRATE_SPEED * 8)
@@ -777,6 +584,32 @@ elseif name == "outpost_launcher" then
 
 elseif name == "outpost_vehiclepad" then
 
+	-- Vehicle Pad pieces
+	local ramps = {}
+	local blinks = {}
+	for i = 1, 6 do
+		ramps[i] = piece("ramp" .. i)
+		blinks[i] = piece("blink" .. i)
+	end
+	local base2 = piece("base2")
+	local flags = piece("flags")
+	
+	function Setup()
+		for i = 1, 6 do
+			Turn(ramps[i], y_axis, rad((i-1) * -60))
+		end
+	end
+
+	function Deploy()
+		for i = 1, 6 do
+			Turn(ramps[i], x_axis, rad(-115), CRATE_SPEED)
+		end
+		WaitForTurn(ramps[6], x_axis)
+		StartThread(Blinks)
+		GG.LCLeft(nil, unitID, teamID) -- fake call, no dropship really left
+		Spring.UnitScript.SetUnitValue(COB.ACTIVATION, 1)
+	end
+	
 	function Blinks()
 		local i = 1
 		while true do
@@ -804,8 +637,35 @@ elseif name == "outpost_vehiclepad" then
 	end
 
 elseif name == "outpost_ewar" then
+	-- EWAR pieces
+	local tagbase1, tagstand1, tagbase2, tagstand2 = piece("tagbase1", "tagstand1", "tagbase2", "tagstand2")
+	local bapstand, bapmantlet, bapturret = piece("bapstand", "bapmantlet", "bapturret")
+			
+	function Setup()
+		Spring.SetUnitRulesParam(unitID, "FXOFF", 1, {public = true})
+		Turn(bapstand, x_axis, math.rad(-90))
+		Turn(bapmantlet, x_axis, math.rad(135))	
+		Turn(tagbase1, z_axis, math.rad(90))
+		Turn(tagstand1, z_axis, math.rad(90))
+		Turn(tagbase2, z_axis, math.rad(-90))
+		Turn(tagstand2, z_axis, math.rad(-90))
+	end
 
-	function Angel()
+	function Deploy()
+		local console2 = piece("console2")
+		Move(console2, z_axis, 7, CRATE_SPEED)
+		local bapstand, bapmantlet = piece("bapstand", "bapmantlet")
+		Turn(bapstand, x_axis, 0, CRATE_SPEED/4)
+		Turn(bapmantlet, x_axis, 0, CRATE_SPEED/2)
+		WaitForTurn(bapstand, x_axis)
+		WaitForTurn(bapmantlet, x_axis)
+		WaitForMove(console2, z_axis)
+		StartThread(ECM)
+		Spring.UnitScript.SetUnitValue(COB.ACTIVATION, 1)
+	end
+	
+	function Upgrade2()
+		-- Angel
 		local ecm, ecmdoor1, ecmdoor2, console1 = piece("ecm", "ecmdoor1", "ecmdoor2", "console1")
 		Move(console1, z_axis, -7, CRATE_SPEED)
 		Move(ecmdoor1, x_axis, 5, CRATE_SPEED)
@@ -816,8 +676,8 @@ elseif name == "outpost_ewar" then
 		GG.angels[unitID] = true
 	end
 	
-	function CumOnFeelTheNoise()
-		local tagbase1, tagstand1, tagbase2, tagstand2 = piece("tagbase1", "tagstand1", "tagbase2", "tagstand2")
+	function Upgrade3()
+		-- CumOnFeelTheNoise
 		Turn(tagbase1, z_axis, 0, CRATE_SPEED)
 		Turn(tagbase2, z_axis, 0, CRATE_SPEED)
 		WaitForTurn(tagbase2, z_axis)
@@ -845,11 +705,10 @@ elseif name == "outpost_ewar" then
 			Sleep(noiseDelay)
 		end
 	end
-
+		
 	function ECM()
 		Sleep(2000)
 		GG.SetUnitECMRadius(unitID, nil, 1000)
-		local bapmantlet, bapturret = piece ("bapmantlet", "bapturret")
 		while true do
 			Turn(bapmantlet, x_axis, rad(math.random(-15, 15)), CRATE_SPEED/2)
 			Turn(bapturret, y_axis, rad(math.random(-180, 180)), CRATE_SPEED/2)
@@ -857,6 +716,129 @@ elseif name == "outpost_ewar" then
 			WaitForTurn(bapturret, y_axis)
 			Sleep(math.random(2000, 5000))
 		end
+	end
+
+elseif name == "outpost_uplink" then
+	-- Orbital Uplink pieces
+	local antennabase, antennamast, antennareceiver, antennapole = piece ("antennabase", "antennamast", "antennareceiver", "antennapole")
+	local dishs = {}
+	for i = 1, 15 do
+		dishs[i] = piece("dish" .. i)
+	end
+	
+	function Deploy()
+		Move(antennabase, z_axis, -15, CRATE_SPEED * 5)
+		Turn(antennamast, x_axis, rad(90), CRATE_SPEED)
+		Turn(antennareceiver, x_axis, rad(-45), CRATE_SPEED * 2)
+		PlaySound("uplink_whir")
+		WaitForTurn(antennamast, x_axis)
+		WaitForTurn(antennareceiver, x_axis)
+		Move(antennapole, y_axis, 10, CRATE_SPEED * 10)
+		for i = 2,15 do
+			Turn(dishs[i], y_axis, rad(24), CRATE_SPEED / 4)
+		end
+		PlaySound("dish_deploy")
+		Turn(antennabase, y_axis, rad(RANDOM_ROT), CRATE_SPEED)
+		WaitForTurn(antennabase, y_axis)
+		Spring.UnitScript.SetUnitValue(COB.ACTIVATION, 1)
+	end
+	
+elseif name == "outpost_turretcontrol" then
+	-- Turret Control pieces
+	local hatch = {}
+	for i = 1, 4 do
+		hatch[i] = piece("hatch" .. i)
+	end
+	local pole = {}
+	for i = 1, 4 do
+		pole[i] = piece("pole" .. i)
+	end
+	
+	function Deploy()
+		for i = 1,4 do
+			local signX = i <= 2 and 1 or -1
+			local signZ = (i > 1 and i < 4) and -1 or 1
+			Move(hatch[i], x_axis, 6 * signX, CRATE_SPEED * 4)
+			Move(hatch[i], z_axis, 6 * signZ, CRATE_SPEED * 4)
+			WaitForMove(hatch[4], z_axis)
+		end
+		local poleHeights = {4, 3.25, 10.5, 15.5}
+		 for i = 1, #pole do
+			Move(pole[i], y_axis, poleHeights[i], CRATE_SPEED * 5)
+		end
+		WaitForMove(pole[#pole], y_axis)
+		Spin(pole[1], y_axis, math.rad(20), math.rad(5))
+		SetUnitValue(COB.INBUILDSTANCE, 1)
+		-- use our own location, not beaconID
+		local x, y, z = Spring.GetUnitPosition(unitID)
+		GG.BuildMaskCircle(x, z, 460 * 1.5, 2)
+		GG.UpdateTurretSlots(unitID, teamID, 4)
+		Spring.UnitScript.SetUnitValue(COB.ACTIVATION, 1)
+	end
+
+elseif name == "outpost_salvageyard" then
+	-- Salvage Yard pieces
+	local foundation, recoveryrail, armature1, armature2 = piece ("foundation", "recoveryrail", "armature1", "armature2")
+	local supporttorchattach, supporttorchupper, supporttorchmid, supporttorchlower = piece ("supporttorchattach", "supporttorchupper", "supporttorchmid", "supporttorchlower")
+	local supporthandattach, supporthandupper, supporthandmid, supporthandlower, supporthandjoint, supporthandfingers1, supporthandfingers2 = piece ("supporthandattach", "supporthandupper", "supporthandmid", "supporthandlower", "supporthandjoint", "supporthandfingers1", "supporthandfingers2")
+	local doora1, doora2, doorb1, doorb2, doorc1, doorc2 = piece ("doora1", "doora2", "doorb1", "doorb2", "doorc1", "doorc2")
+	local doors = {}
+	for i = 1, 6 do
+		doors[i] = piece("door" .. i)
+	end
+	local armPieces = {"armattach", "armjointa", "armextender", "armjointb", "saw"}
+	local arms = {}
+	for i, pieceType in ipairs(armPieces) do
+		arms[pieceType] = {}
+	end
+	for i = 1, 6 do
+		for j, pieceType in ipairs(armPieces) do
+			arms[pieceType][i] = piece(pieceType .. i)
+		end
+	end
+	
+	function Setup()
+		Hide(foundation)
+		--RecursiveHide(recoveryrail, true)
+		Move(armature1, z_axis, 10)
+		Move(armature2, z_axis, -10)
+	end
+
+	function Deploy()
+		GG.SpawnSalvager(unitID, teamID)
+		Show(foundation)
+		Move(armature1, z_axis, 0, CRATE_SPEED * 2)
+		Move(armature2, z_axis, 0, CRATE_SPEED * 2)
+		WaitForMove(armature2, z_axis)
+		--GG.PopulateQueue(unitID) -- initialise the queue with any existing corpses
+		Spring.SetUnitBlocking(unitID, false, false) -- make it easy to get out
+		for i = 1, 6 do
+			local sign = i % 2 == 0 and -1 or 1
+			Move(doors[i], z_axis, sign, CRATE_SPEED * 2)
+		end
+		WaitForMove(doors[6], z_axis)
+		for i = 1, 6 do
+			local sign = i % 2 == 1 and -1 or 1
+			Turn(arms["armjointa"][i], z_axis, sign * rad(-45), CRATE_SPEED * 2)
+			Turn(arms["armjointb"][i], z_axis, sign * rad(220), CRATE_SPEED * 2)
+		end
+		Turn(supporthandupper, z_axis, rad(45), CRATE_SPEED * 2)
+		Turn(supporthandlower, z_axis, rad(-45), CRATE_SPEED * 2)
+		Turn(supporttorchupper, z_axis, rad(-45), CRATE_SPEED * 2)
+		Turn(supporttorchlower, z_axis, rad(45), CRATE_SPEED * 2)
+		WaitForTurn(arms["armjointb"][6], z_axis)
+		Turn(arms["armattach"][1], x_axis, rad(-30), CRATE_SPEED * 2)
+		Turn(arms["armattach"][3], x_axis, rad(10), CRATE_SPEED * 2)
+		Move(arms["armextender"][3], y_axis, 2, CRATE_SPEED * 2)
+		Turn(arms["armattach"][2], x_axis, rad(10), CRATE_SPEED * 2)
+		Move(arms["armextender"][2], y_axis, 2, CRATE_SPEED * 2)
+		Turn(arms["armattach"][5], x_axis, rad(-20), CRATE_SPEED * 2)
+		Spring.UnitScript.SetUnitValue(COB.ACTIVATION, 1)
+	end
+
+	function Upgrade2()
+		Show(foundation)
+		RecursiveHide(recoveryrail, false)
 	end
 
 elseif name == "outpost_mechbay" then
@@ -874,8 +856,21 @@ elseif name == "outpost_mechbay" then
 
 	-- Constants
 	local BAY_RESTORE = 5000 -- 5 seconds
+	local UNLOAD_X, UNLOAD_Z
+	
 	-- Variables
 	local bayReady = false
+	
+	function Deploy()
+		Spring.SetUnitBlocking(unitID, false, false) -- make it easy to get out
+		MechBayOpen()
+		local x, _ ,z = Spring.GetUnitPosition(unitID)
+		local dx, _, dz = Spring.GetUnitDirection(unitID)
+		UNLOAD_X = x + 150 * dx
+		UNLOAD_Z = z + 150 * dz
+		Spring.UnitScript.SetUnitValue(COB.ACTIVATION, 1)
+	end
+
 
 	function MechBayOpen()
 		Move(rampr, x_axis, 10, CRATE_SPEED * 10)
