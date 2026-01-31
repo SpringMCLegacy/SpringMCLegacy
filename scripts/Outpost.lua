@@ -616,7 +616,7 @@ elseif name == "outpost_sensor" then
 			Sleep(seismicDuration)
 			Move(hammer, y_axis, 7, CRATE_SPEED * 5)
 			WaitForMove(hammer, y_axis)
-			Spring.SetUnitSensorRadius(unitID, "seismic", 0)
+			 mkkSpring.SetUnitSensorRadius(unitID, "seismic", 0)
 			Sleep(seismicDelay)
 		end
 	end
@@ -856,7 +856,7 @@ elseif name == "outpost_ewar" then
 		Turn(tagstand2, z_axis, 0, CRATE_SPEED)
 		WaitForTurn(tagstand2, z_axis)
 
-		local noiseRange = 2000
+		local noiseRange = 1000
 		local noiseDelay = 5000
 		local noiseNum = 10
 		local bx, by, bz = Spring.GetUnitBasePosition(unitID)
@@ -866,8 +866,8 @@ elseif name == "outpost_ewar" then
 		while true do
 			for i = 1, noiseNum do
 				-- TODO: add anim here
-				x = bx + math.random(-noiseRange, noiseRange)
-				z = bz + math.random(-noiseRange, noiseRange)
+				x = math.max(math.min(bx + math.random(-noiseRange, noiseRange), Game.mapSizeX), 0)
+				z = math.max(math.min(bz + math.random(-noiseRange, noiseRange), Game.mapSizeZ), 0)
 				local y = Spring.GetGroundHeight(x, z) - 15
 				Spring.SetUnitPosition(noiseID, x,y,z)
 				Spring.SetUnitVelocity(noiseID, math.random() * 50, 0, math.random() * 50)
