@@ -13,7 +13,6 @@ local Outpost_Dropzone = Outpost:New{
 	description         = "Allows the purchase and delivery of battlemechs",
 	objectName        	= "outpost/outpost_Dropzone.s3o",
 	iconType			= "beacon",
-	script				= "outpost_Dropzone.lua",
 	category 			= "beacon",
 	collisionVolumeType 	= "", -- override base class, as we want s3o radius...
 	collisionVolumeScales 	= "", -- ...for selection

@@ -1,11 +1,10 @@
---pieces
-local base = piece ("base")
+-- Dropzone pieces
 local blinks = {}
 for i = 1, 12 do
 	blinks[i] = piece("blink_" .. i)
 end
 
-function script.Create()
+function Setup()
 	local i = 1
 	Spring.SetUnitBlocking(unitID, false, false, false, --[[true]]false, false, false, true)
 	Spring.SetFactoryBuggerOff(unitID, true, 0, 200)
@@ -19,8 +18,4 @@ end
 
 function ClearTheDeck(yes)
 	Spring.UnitScript.SetUnitValue(COB.BUGGER_OFF, yes)
-end
-
-function script.Killed(recentDamage, maxHealth)
-	return 1
 end
