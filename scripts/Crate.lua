@@ -56,6 +56,8 @@ function Unpack(ry)
 end
 
 function script.Create()
+	Spring.SetUnitNoSelect(unitID, true)
+	Spring.SetUnitBlocking(unitID, false, false, false, false, false, false, false)
 	--[[if not Spring.GetUnitTransporter(unitID) then
 		Unloaded()
 	end]]

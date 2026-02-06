@@ -6,13 +6,14 @@ for i = 1, 4 do
 	legs[i] = piece("leg" .. i)
 end
 
-local animString = unitDef.name:find("dropzone") and "outpost_dropzone" or unitDef.name
-include ("anims/outposts/" .. animString .. ".lua")
-
 -- Constants
 local name = unitDef.name
+local isDZ = name:find("dropzone")
 local rad = math.rad
 CRATE_SPEED = math.rad(50)
+
+local animString = isDZ and "outpost_dropzone" or unitDef.name
+include ("anims/outposts/" .. animString .. ".lua")
 
 ---------------------------------------------------------------------
 -- Common functions
@@ -70,7 +71,9 @@ function Unpack(ry)
 		Sleep(2000)	
 	end
 	-- Begin outpost-specific anims
-	GG.PlaySoundForTeam(Spring.GetUnitTeam(unitID), "bb_" .. name .. "_deployed", 1)
+	if not isDZ then
+		GG.PlaySoundForTeam(Spring.GetUnitTeam(unitID), "bb_" .. name .. "_deployed", 1)
+	end
 	if Deploy then
 		StartThread(Deploy)
 	end
@@ -82,7 +85,7 @@ function Unpack(ry)
 end
 
 function script.Killed(recentDamage, maxRepairth)
-	if not Spring.GetUnitTransporter(unitID) then
+	if not Spring.GetUnitTransporter(unitID) and not isDZ then
 		GG.PlaySoundForTeam(Spring.GetUnitTeam(unitID), "bb_" .. name .. "_destroyed", 1)
 	end
 	if crateID and not Spring.GetUnitIsDead(crateID) then
