@@ -30,7 +30,18 @@ local CLAN_DELAY_MULT = 1.5
 local DEATH_DELAY = 60 * 30 -- delay next one by extra 1 minute if the last one died
 local BEACON_ID = UnitDefNames["beacon"].id
 local VPAD_ID = (not hoverMap) and UnitDefNames["outpost_vehiclepad"].id or -1
+local VPAD_DEF = UnitDefNames["outpost_vehiclepad"]
 local HPAD_ID = hoverMap and UnitDefNames["outpost_vehiclepad"].id or -1
+
+local CMD_VPAD_TOGGLE = GG.CustomCommands.GetCmdID("CMD_VPAD_TOGGLE")
+local toggleCmdDesc = {
+	id 	= CMD_VPAD_TOGGLE,
+	type   = CMDTYPE.ICON_MODE,
+	action = 'vpadtoggle',
+	tooltip = "Switch between Regular and All Terrain vehicle militia.",
+	params	= {hoverMap and 1 or 0, GG.Pad(10,"Regular"), GG.Pad(10,"All", "Terrain")},
+	--tooltip = "",
+}
 
 local SPAWN_DEF_IDS = {
 	[VPAD_ID] = not hoverMap,
@@ -41,11 +52,12 @@ local flagSpots = {} --VFS.Include("maps/flagConfig/" .. Game.mapName .. "_profi
 
 local vehiclesDefCache = {} -- unitDefID = squadSize -- ALL vehicles
 
-local sideSpawnLists = {} -- sideSpawnLists[side][spawnDefID] = {...}
+local sideSpawnLists = {} -- sideSpawnLists[side][toggle] = {...}
 
 local spawnPads = {} -- spawnPads[unitID] = unloadFrame
 local padLevels = {} -- padLevels[unitID] = 1, 2, 3 etc
-local vehiclePadSides = {} -- vehiclePadSides[untiID] = "fs", etc
+local padToggles = {} -- padToggles[unitID] = 0 (vpad), 1 (hpad)
+local vehiclePadSides = {} -- vehiclePadSides[unitID] = "fs", etc
 
 local unitSquads = {} -- unitSquads[unitID] = squadNum
 local teamSquadCounts = {} -- teamSquadCounts[teamID] = numberOfSquads
@@ -59,12 +71,15 @@ local weights = {"light", "medium", "heavy", "assault",} -- TODO: this is repeat
 function gadget:Initialize()
 	for sideName, shortName in pairs(GG.SideNames) do
 		sideSpawnLists[shortName] = {}
-		for spawnDefID, use in pairs(SPAWN_DEF_IDS) do
+		
+		sideSpawnLists[shortName][0] = table.unserialize(VPAD_DEF.customParams.vpadspawn)[shortName]
+		sideSpawnLists[shortName][1] = table.unserialize(VPAD_DEF.customParams.hpadspawn)[shortName]
+		--[[for spawnDefID, use in pairs(SPAWN_DEF_IDS) do
 			if use then
 				sideSpawnLists[shortName][spawnDefID] = table.unserialize(UnitDefs[spawnDefID].customParams.spawn)[shortName]
-				--table.echo(sideSpawnLists[shortName][spawnDefID])
+				table.echo(sideSpawnLists[shortName][spawnDefID])
 			end
-		end
+		end--]]
 	end
 	for unitDefID, unitDef in pairs(UnitDefs) do
 		local basicType = unitDef.customParams.baseclass
@@ -95,7 +110,7 @@ local delays = {
 }
 
 local chances = {
-	[VPAD_ID] = {
+	[0] = { -- 0 indexed to match cmdDesc params
 		[1] = { -- Tier 1: light/med
 			-- following sum to 1
 			class = {
@@ -139,7 +154,7 @@ local chances = {
 			},
 		},
 	},
-	[HPAD_ID] = {
+	[1] = {
 		[1] = { -- light hovers
 			class = {
 				apc = 0.1,
@@ -154,8 +169,8 @@ local chances = {
 		[2] = { -- medium hovers
 			class = {
 				apc = 0.15,
-				vtol = 0.0,
-				regular = 0.85,
+				vtol = 0.25,
+				regular = 0.60,
 			},
 			weights = {
 				light = 0.75,
@@ -237,15 +252,15 @@ local function Deliver(unitID, teamID)
 	if Spring.ValidUnitID(unitID) and (not Spring.GetUnitIsDead(unitID)) and (teamID == Spring.GetUnitTeam(unitID)) then
 		local age = Spring.GetGameFrame() - spawnPads[unitID]
 		local currLevel = padLevels[unitID]
-		local spawnDefID = Spring.GetUnitDefID(unitID)
+		local spawnDefID = padToggles[unitID] --Spring.GetUnitDefID(unitID)
 		local class = ChooseElement(spawnDefID, currLevel, "class", classes)
 		local weight, weightIndex = ChooseElement(spawnDefID, currLevel, "weights", weights)
 		local vehName = RandomVehicle(unitID, spawnDefID, currLevel, class, weight, weightIndex)
 		if vehName and UnitDefNames[vehName] then -- double check def was actually loaded
-			--Spring.Echo("New Vehicle:", vehName, vehiclesDefCache[UnitDefNames[vehName].id], class, weight)
+			--Spring.Echo("New Vehicle:", vehName, vehiclesDefCache[UnitDefNames[vehName].id], spawnDefID, class, weight)
 			GG.DropshipDelivery(Spring.GetUnitRulesParam(unitID, "beaconID"), unitID, teamID, GG.teamSide[teamID] .. "_dropship_markvii", {{[vehName] = vehiclesDefCache[UnitDefNames[vehName].id]}}, 0, nil, 1) 
 		else
-			--Spring.Echo("No vehicle of that weight :(")
+			--Spring.Echo("No vehicle of that class and weight :(", class, weight)
 		end
 	end
 end
@@ -288,8 +303,10 @@ function gadget:UnitCreated(unitID, unitDefID, teamID)
 		-- for /give, UnitUnloaded will set it again in 'real' play
 		spawnPads[unitID] = Spring.GetGameFrame()	
 		padLevels[unitID] = 1 -- default level
+		padToggles[unitID] = hoverMap and 1 or 0
 		vehiclePadSides[unitID] = GG.teamSide[teamID]
 		GG.ClearCmdDescs(unitID)
+		Spring.InsertUnitCmdDesc(unitID, toggleCmdDesc)
 	elseif cp.dropship and cp.dropship == "vehicle" then
 		NewSquad(unitID, teamID)
 	end
@@ -401,6 +418,11 @@ function gadget:AllowCommand(unitID, unitDefID, teamID, cmdID, cmdParams, cmdOpt
 	if vehiclesDefCache[unitDefID] then
 		--Spring.Echo("Vehicle AllowCommand", UnitDefs[unitDefID].name, CMD[cmdID], playerID, synced, fromLua)
 		return fromLua
+	elseif spawnPads[unitID] and cmdID == CMD_VPAD_TOGGLE then
+		--Spring.Echo("YARRR, TOGGLE ME VPADS!", cmdParams[1])
+		padToggles[unitID] = cmdParams[1]
+		toggleCmdDesc.params[1] = cmdParams[1]
+		Spring.EditUnitCmdDesc(unitID, Spring.FindUnitCmdDesc(unitID, CMD_VPAD_TOGGLE), { params = toggleCmdDesc.params})
 	end
 	return true
 end

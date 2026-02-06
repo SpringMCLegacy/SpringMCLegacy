@@ -535,7 +535,8 @@ table.sort(TCONTROL_BUILDOPTIONS)
 TCONTROL_UD["buildoptions"] = TCONTROL_BUILDOPTIONS
 table.sort(AEROCON_BUILDOPTIONS)
 AEROCON_UD["buildoptions"] = AEROCON_BUILDOPTIONS
-VPAD_UD.customparams.spawn = hoverMap and HPAD_SPAWNOPTIONS or VPAD_SPAWNOPTIONS
+VPAD_UD.customparams.hpadspawn = HPAD_SPAWNOPTIONS
+VPAD_UD.customparams.vpadspawn = VPAD_SPAWNOPTIONS
 --HPAD_UD.customparams.spawn = HPAD_SPAWNOPTIONS
 --table.echo(VPAD_UD.customparams.spawn)
 --table.echo(HPAD_UD.customparams.spawn)
