@@ -25,7 +25,8 @@ local GAIA_TEAM_ID = Spring.GetGaiaTeamID()
 local C3_ID = UnitDefNames["outpost_c3array"].id
 
 -- Variables
-local C3Status = {} -- C3Status[unitID] = bool deployed
+local C3Status = {} -- C3Status[unitID] = number lancesSupported
+GG.C3Status = C3Status
 local teamC3Counts = {} -- teamC3Counts[teamID] = number
 local teamSlots = {} -- teamSlots[teamID] = {[1] = {active = true, used = number, available = number, units = {unitID1 = tons, unitID2 = tons, ...}}, ...}
 local unitLances = {} -- unitLances[unitID] = lance_number
@@ -138,7 +139,7 @@ end
 function LanceControl(teamID, unitID, add)
 	if teamID == GAIA_TEAM_ID then return end -- no need to track for gaia
 	if add then
-		C3Status[unitID] = true
+		C3Status[unitID] = (C3Status[unitID] or 0) + 1
 		teamC3Counts[teamID] = teamC3Counts[teamID] + 1
 		--Spring.Echo(teamID, "C3 Count INCREASE", teamC3Counts[teamID])
 		if teamC3Counts[teamID] <= 2 then -- only the first 2 C3s give you an extra lance
@@ -157,7 +158,7 @@ function LanceControl(teamID, unitID, add)
 			GG.PlaySoundForTeam(teamID, "bb_c3_increased")
 		end
 	elseif C3Status[unitID] then -- lost a deployed C3
-		teamC3Counts[teamID] = teamC3Counts[teamID] - 1
+		teamC3Counts[teamID] = teamC3Counts[teamID] - C3Status[unitID]
 		-- check if there were any backup C3 towers
 		--Spring.Echo(teamID, "C3 Count DECREASE", teamC3Counts[teamID])
 		if teamC3Counts[teamID] < 2 then -- team lost control of / capacity for a lance

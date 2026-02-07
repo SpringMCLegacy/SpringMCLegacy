@@ -405,6 +405,24 @@ return {
 			costFunction = deductCBills,
 			price = 12000,
 		},
+		-- C3 Array
+		{
+			name = "c3overclock",
+			cmdDesc = {
+				id = GetCmdID('PERK_C3ARRAY_2'),
+				action = 'perkc3overclock',
+				name = GG.Pad("C3 Over", "Clock"),
+				tooltip = 'Unlocks all 3 lances from a single C3 Mainframe. WARNING: Will gradually destroy the mainframe!!',
+				texture = 'bitmaps/ui/upgrade.png',	
+			},
+			valid = function (unitDefID) return UnitDefs[unitDefID].name:find("c3array") end,
+			applyPerk = function (unitID)
+				env = Spring.UnitScript.GetScriptEnv(unitID)
+				Spring.UnitScript.CallAsUnit(unitID, env.Upgrade, 2)
+			end,
+			costFunction = deductCBills,
+			price = 12000,
+		},
 		-- vehicle pad
 		{
 			name = "vpadheavy",

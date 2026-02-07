@@ -58,4 +58,11 @@ function Upgrade2()
 	WaitForMove(generator2, x_axis)
 	Spin(geo2, y_axis, math.rad(100), math.rad(15))
 	Sleep(1000)
+	GG.LanceControl(Spring.GetUnitTeam(unitID), unitID, true)
+	local pieceCount = #(Spring.GetUnitPieceList(unitID))
+	while true do
+		GG.EmitSfxName(unitID, math.random(1, pieceCount), "sparks")
+		Spring.AddUnitDamage(unitID, math.random(20, 50))
+		Sleep(1000)
+	end
 end
