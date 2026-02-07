@@ -85,7 +85,7 @@ local CMD_ATTACK = CMD.ATTACK
 local CMD_OPT_SHIFT = CMD.OPT_SHIFT
 
 -- Menus
-local typeStrings = {"order", "deploy", "support"}
+local typeStrings = {"order", "deploy"}--, "support"}
 local typeStringIndex = {}
 for i, v in ipairs(typeStrings) do
 	typeStringIndex[v] = i
@@ -93,7 +93,7 @@ end
 local typeStringAliases = { 
 	["order"] 	= GG.Pad(10,"Order", "Aeros"),
 	["deploy"] 	= GG.Pad(10,"Deploy", "Sorties"), 
-	["support"] = GG.Pad(10,"Support", "VTOL"), 
+	--["support"] = GG.Pad(10,"Support", "VTOL"), 
 }
 
 local aeroMenuCmdDescs = {}
