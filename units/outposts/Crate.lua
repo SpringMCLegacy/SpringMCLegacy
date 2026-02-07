@@ -7,6 +7,10 @@ local Crate = Outpost:New{
 	script				= "Crate.lua",
 	objectName			= "Outpost/Crate.s3o",
 	
+	footprintX			= 1,
+	footprintZ 			= 1,
+	collisionVolumeScales = [[0.1 0.1 0.1]],
+	
 	customparams = {
 		baseclass		= "crate",
 		ignoreatbeacon	= true,
