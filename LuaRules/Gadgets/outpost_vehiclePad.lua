@@ -15,6 +15,25 @@ end
 if gadgetHandler:IsSyncedCode() then
 --	SYNCED
 
+-- localisations
+--SyncedRead
+local FindUnitCmdDesc		= Spring.FindUnitCmdDesc
+local GetGameFrame			= Spring.GetGameFrame
+local GetGroundHeight 		= Spring.GetGroundHeight
+local GetTeamInfo			= Spring.GetTeamInfo
+local GetUnitCommandCount	= Spring.GetUnitCommandCount
+local GetUnitCommands		= Spring.GetUnitCommands
+local GetUnitDefID			= Spring.GetUnitDefID
+local GetUnitIsDead 		= Spring.GetUnitIsDead
+local GetUnitPosition		= Spring.GetUnitPosition
+local GetUnitRulesParam		= Spring.GetUnitRulesParam
+local GetUnitTeam			= Spring.GetUnitTeam
+local ValidUnitID			= Spring.ValidUnitID
+--SyncedCtrl
+local InsertUnitCmdDesc		= Spring.InsertUnitCmdDesc
+local EditUnitCmdDesc		= Spring.EditUnitCmdDesc
+local GiveOrderToUnit 		= Spring.GiveOrderToUnit
+
 local PROFILE_PATH = "maps/flagConfig/" .. Game.mapName .. "_profile.lua"
 local hoverMap
 if VFS.FileExists(PROFILE_PATH) then
@@ -205,7 +224,7 @@ end
 
 local function RandomVehicle(unitID, spawnDefID, level, class, weight, weightIndex)
 	if not unitID then return false end 
-	if Spring.GetUnitTeam(unitID) == GAIA_TEAM_ID then return false end -- team died
+	if GetUnitTeam(unitID) == GAIA_TEAM_ID then return false end -- team died
 	
 	local originalWeight = weight
 	-- sideSpawnLists[side][level][class][weight]
@@ -249,16 +268,16 @@ end
 
 local function Deliver(unitID, teamID)
 	-- check VP didn't die or switch teams during delay
-	if Spring.ValidUnitID(unitID) and (not Spring.GetUnitIsDead(unitID)) and (teamID == Spring.GetUnitTeam(unitID)) then
-		local age = Spring.GetGameFrame() - spawnPads[unitID]
+	if ValidUnitID(unitID) and (not GetUnitIsDead(unitID)) and (teamID == GetUnitTeam(unitID)) then
+		local age = GetGameFrame() - spawnPads[unitID]
 		local currLevel = padLevels[unitID]
-		local spawnDefID = padToggles[unitID] --Spring.GetUnitDefID(unitID)
+		local spawnDefID = padToggles[unitID]
 		local class = ChooseElement(spawnDefID, currLevel, "class", classes)
 		local weight, weightIndex = ChooseElement(spawnDefID, currLevel, "weights", weights)
 		local vehName = RandomVehicle(unitID, spawnDefID, currLevel, class, weight, weightIndex)
 		if vehName and UnitDefNames[vehName] then -- double check def was actually loaded
 			--Spring.Echo("New Vehicle:", vehName, vehiclesDefCache[UnitDefNames[vehName].id], spawnDefID, class, weight)
-			GG.DropshipDelivery(Spring.GetUnitRulesParam(unitID, "beaconID"), unitID, teamID, GG.teamSide[teamID] .. "_dropship_markvii", {{[vehName] = vehiclesDefCache[UnitDefNames[vehName].id]}}, 0, nil, 1) 
+			GG.DropshipDelivery(GetUnitRulesParam(unitID, "beaconID"), unitID, teamID, GG.teamSide[teamID] .. "_dropship_markvii", {{[vehName] = vehiclesDefCache[UnitDefNames[vehName].id]}}, 0, nil, 1) 
 		else
 			--Spring.Echo("No vehicle of that class and weight :(", class, weight)
 		end
@@ -266,7 +285,7 @@ local function Deliver(unitID, teamID)
 end
 
 function LCLeft(beaconID, vPadID, teamID, died) -- called by LC once it has left, to start countdown
-	if Spring.ValidUnitID(vPadID) and (not Spring.GetUnitIsDead(vPadID)) and (teamID == Spring.GetUnitTeam(vPadID)) then
+	if ValidUnitID(vPadID) and (not GetUnitIsDead(vPadID)) and (teamID == GetUnitTeam(vPadID)) then
 		GG.Delay.DelayCall(Deliver, {vPadID, teamID}, (died and DEATH_DELAY or 0) + delays[padLevels[vPadID]] * (teamSideMults[teamID] or 1) + math.random(10) * 30)
 		if died then
 			env = Spring.UnitScript.GetScriptEnv(vPadID)
@@ -287,26 +306,26 @@ local function NewSquad(unitID, teamID)
 end
 
 local function SetSquad(cargoID, teamID)
-	if vehiclesDefCache[Spring.GetUnitDefID(cargoID)] then
+	if vehiclesDefCache[GetUnitDefID(cargoID)] then
 		unitSquads[cargoID] = teamSquadCounts[teamID]
 	end
 end
-GG.SetSquad = SetSquad
+GG.SetSquad = SetSquad -- TODO: is this still used?
 
 function gadget:UnitCreated(unitID, unitDefID, teamID)
 	local ud = UnitDefs[unitDefID]
 	local cp = ud.customParams
 	if unitDefID == BEACON_ID then
-		local x,_,z = Spring.GetUnitPosition(unitID)
+		local x,_,z = GetUnitPosition(unitID)
 		table.insert(flagSpots, {x = x, z = z})
 	elseif SPAWN_DEF_IDS[unitDefID] then
 		-- for /give, UnitUnloaded will set it again in 'real' play
-		spawnPads[unitID] = Spring.GetGameFrame()	
+		spawnPads[unitID] = GetGameFrame()	
 		padLevels[unitID] = 1 -- default level
 		padToggles[unitID] = hoverMap and 1 or 0
 		vehiclePadSides[unitID] = GG.teamSide[teamID]
 		GG.ClearCmdDescs(unitID)
-		Spring.InsertUnitCmdDesc(unitID, toggleCmdDesc)
+		InsertUnitCmdDesc(unitID, toggleCmdDesc)
 	elseif cp.dropship and cp.dropship == "vehicle" then
 		NewSquad(unitID, teamID)
 	end
@@ -318,7 +337,7 @@ function gadget:UnitDestroyed(unitID, unitDefID, teamID)
 		unitSquads[unitID] = nil
 		spawnPads[unitID] = nil
 		padLevels[unitID] = nil
-		local beaconID = Spring.GetUnitRulesParam(unitID, "beaconID")
+		local beaconID = GetUnitRulesParam(unitID, "beaconID")
 		if beaconID then -- currently this will only force landing craft to bugout if it was properly built, not /give en
 			GG.BeaconDropshipBugOut(beaconID, teamID, unitID)
 		end
@@ -326,10 +345,10 @@ function gadget:UnitDestroyed(unitID, unitDefID, teamID)
 end
 
 local function Wander(unitID, cmd)
-	if Spring.ValidUnitID(unitID) and not Spring.GetUnitIsDead(unitID) and vehiclesDefCache[Spring.GetUnitDefID(unitID)] then
+	if ValidUnitID(unitID) and not GetUnitIsDead(unitID) and vehiclesDefCache[GetUnitDefID(unitID)] then
 		--Spring.Echo("Wander!", unitID, cmd)
-		local teamID = Spring.GetUnitTeam(unitID)
-		if select(3, Spring.GetTeamInfo(teamID)) then return false end -- team died
+		local teamID = GetUnitTeam(unitID)
+		if select(3, GetTeamInfo(teamID)) then return false end -- team died
 		if teamID == GAIA_TEAM_ID then return false end -- team died and unit transferred to gaia
 		local spotNum = teamSquadSpots[teamID][unitSquads[unitID]] or math.random(1, #flagSpots)
 		local spot = flagSpots[spotNum]
@@ -337,22 +356,19 @@ local function Wander(unitID, cmd)
 		local offsetZ = math.random(50, 150)
 		offsetX = offsetX * -1 ^ (offsetX % 2)
 		offsetZ = offsetZ * -1 ^ (offsetZ % 2)
-		local y = Spring.GetGroundHeight(spot.x, spot.z)
-		--if cmd then
+		local y = GetGroundHeight(spot.x, spot.z)
 		cmd = CMD.FIGHT
-			GG.Delay.DelayCall(Spring.GiveOrderToUnit, {unitID, cmd, {spot.x + offsetX, y, spot.z + offsetZ}, {}}, 1)
-		--end
-		--GG.Delay.DelayCall(Spring.GiveOrderToUnit, {unitID, CMD.FIGHT, {spot.x + offsetX, y, spot.z + offsetZ}, {"shift"}}, 1)
+		GG.Delay.DelayCall(GiveOrderToUnit, {unitID, cmd, {spot.x + offsetX, y, spot.z + offsetZ}, {}}, 1)
 	end
 end
 
 GG.Wander = Wander
 
 local function UnitIdleCheck(unitID, unitDefID, teamID)
-	if (not Spring.ValidUnitID(unitID)) or Spring.GetUnitIsDead(unitID) then return false end -- unit died
-	if select(3, Spring.GetTeamInfo(teamID)) then return false end -- team died
+	if (not ValidUnitID(unitID)) or GetUnitIsDead(unitID) then return false end -- unit died
+	if select(3, GetTeamInfo(teamID)) then return false end -- team died
 	if teamID == GAIA_TEAM_ID then return false end -- team died and unit transferred to gaia
-	local cmdQueueSize = (Spring.GetUnitCommandCount and Spring.GetUnitCommandCount(unitID)) or 0-- or Spring.GetCommandQueue(unitID, 0) or 0
+	local cmdQueueSize = GetUnitCommandCount(unitID) or 0
 	if cmdQueueSize > 0 then 
 		--Spring.Echo("UnitIdleCheck: I'm so not idle!") 
 		return
@@ -366,13 +382,7 @@ end
 
 function gadget:UnitIdle(unitID, unitDefID, teamID)
 	--Spring.Echo("UnitIdle", UnitDefs[unitDefID].name)
-	if vehiclesDefCache[unitDefID] and not ((Spring.GetUnitRulesParam(unitID, "deployed") or 0) > 0) then -- a vehicle
-		--local commandQueue = Spring.GetCommandQueue(unitID)
-		--for k, v in pairs(commandQueue) do Spring.Echo(k,v) end
-		--local cmdQueueSize = Spring.GetCommandQueue(unitID, 0) or 0
-		--if cmdQueueSize > 0 then 
-			--Spring.Echo("UnitIdle: I'm so not idle!") 
-		--end
+	if vehiclesDefCache[unitDefID] and not ((GetUnitRulesParam(unitID, "deployed") or 0) > 0) then -- a vehicle
 		GG.Delay.DelayCall(UnitIdleCheck, {unitID, unitDefID, teamID}, 1)
 	end
 end
@@ -386,15 +396,15 @@ function gadget:UnitUnloaded(unitID, unitDefID, teamID, transportID, transportTe
 		if ud.canFly then
 			--Spring.Echo("VTOL!")
 			for _, spot in pairs(flagSpots) do
-				GG.Delay.DelayCall(Spring.GiveOrderToUnit, {unitID, CMD.PATROL, {spot.x, 0, spot.z}, {"shift"}}, 30)
+				GG.Delay.DelayCall(GiveOrderToUnit, {unitID, CMD.PATROL, {spot.x, 0, spot.z}, {"shift"}}, 30)
 			end
 		elseif (padLevels[callerID or -1] or -1) == 3 then -- unloaded by a MarkVII on a level 3 pad
 			-- inherit orders
 			--Spring.Echo("Hey there, I found a callerID!", callerID, ud.name)
-			local cmd = Spring.GetUnitCommands(callerID, 1)[1]
+			local cmd = GetUnitCommands(callerID, 1)[1]
 			if cmd then
 				--Spring.Echo("Hey there, I found a command!", CMD[cmd.id], ud.name)
-				Spring.GiveOrderToUnit(unitID, cmd.id, cmd.params, cmd.options)
+				GiveOrderToUnit(unitID, cmd.id, cmd.params, cmd.options)
 			else
 				Wander(unitID)
 			end
@@ -403,14 +413,14 @@ function gadget:UnitUnloaded(unitID, unitDefID, teamID, transportID, transportTe
 			Wander(unitID)
 		end
 	elseif SPAWN_DEF_IDS[unitDefID] then
-		spawnPads[unitID] = Spring.GetGameFrame()
+		spawnPads[unitID] = GetGameFrame()
 	end
 end
 
 function gadget:UnitGiven(unitID, unitDefID, newTeam, oldTeam)
 	if SPAWN_DEF_IDS[unitDefID] then
 		GG.Delay.DelayCall(Deliver, {unitID, newTeam}, delays[padLevels[unitID]] * (teamSideMults[teamID] or 1) + math.floor(math.random(10) * 30))
-		spawnPads[unitID] = Spring.GetGameFrame()
+		spawnPads[unitID] = GetGameFrame()
 	end
 end
 
@@ -422,7 +432,7 @@ function gadget:AllowCommand(unitID, unitDefID, teamID, cmdID, cmdParams, cmdOpt
 		--Spring.Echo("YARRR, TOGGLE ME VPADS!", cmdParams[1])
 		padToggles[unitID] = cmdParams[1]
 		toggleCmdDesc.params[1] = cmdParams[1]
-		Spring.EditUnitCmdDesc(unitID, Spring.FindUnitCmdDesc(unitID, CMD_VPAD_TOGGLE), { params = toggleCmdDesc.params})
+		EditUnitCmdDesc(unitID, FindUnitCmdDesc(unitID, CMD_VPAD_TOGGLE), { params = toggleCmdDesc.params})
 	end
 	return true
 end

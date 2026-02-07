@@ -117,6 +117,8 @@ local menuTypeCache = {}
 
 -- Sorties
 local AIRCON_UD = UnitDefNames["outpost_aircon"]
+local aeroCache = {}
+GG.aeroCache = aeroCache -- just in case
 
 local sideSortieCmdDescs = {}
 local sortieDefs = {}
@@ -469,6 +471,7 @@ function gadget:Initialize()
 		if cp.baseclass and cp.baseclass == "aero" then
 			local side = unitDef.name:sub(1,2)
 			--Spring.Echo("Init: found an aero", side, unitDef.name)
+			aeroCache[unitDefID] = true
 			sideAeroDefs[side] = sideAeroDefs[side] or {}
 			sideAeroDefs[side][unitDefID] = true
 			GenerateSortie(unitDefID)
@@ -503,7 +506,7 @@ function gadget:UnitCreated(unitID, unitDefID, teamID)
 	local cp = ud.customParams
 	-- Remove aircraft land and repairlevel buttons
 	if ud.canFly then 
-		if ud.weapons[1] and not cp.spawnAtTarget then
+		if aeroCache[unitDefID] and not cp.spawnAtTarget then
 			local strafeDistance = tonumber(cp.strafeDistance or 500)
 			local strafeOvertime = tonumber(cp.strafeOvertime or 1000)
 			Spring.MoveCtrl.SetAirMoveTypeData(unitID, "attackSafetyDistance", strafeDistance)
