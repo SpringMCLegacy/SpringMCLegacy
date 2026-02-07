@@ -5,6 +5,7 @@ local rad = math.rad
 local CRATE_SPEED = math.rad(50)
 
 function Unloaded(ry)
+	Spring.SetUnitNoSelect(unitID, true)
 	StartThread(Unpack, ry)
 end
 
@@ -57,7 +58,7 @@ end
 
 function script.Create()
 	Spring.SetUnitNoSelect(unitID, true)
-	Spring.SetUnitBlocking(unitID, false, false, false, false, false, false, false)
+	GG.ClearCmdDescs(unitID)
 	--[[if not Spring.GetUnitTransporter(unitID) then
 		Unloaded()
 	end]]

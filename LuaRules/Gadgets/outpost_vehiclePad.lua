@@ -310,7 +310,7 @@ local function SetSquad(cargoID, teamID)
 		unitSquads[cargoID] = teamSquadCounts[teamID]
 	end
 end
-GG.SetSquad = SetSquad -- TODO: is this still used?
+GG.SetSquad = SetSquad -- is this still used? Yes. Is it still needed? Yes without a significant refactor
 
 function gadget:UnitCreated(unitID, unitDefID, teamID)
 	local ud = UnitDefs[unitDefID]
@@ -332,7 +332,6 @@ function gadget:UnitCreated(unitID, unitDefID, teamID)
 end
 
 function gadget:UnitDestroyed(unitID, unitDefID, teamID)
-	-- TODO: remove from list to spawn at
 	if spawnPads[unitID] then
 		unitSquads[unitID] = nil
 		spawnPads[unitID] = nil
