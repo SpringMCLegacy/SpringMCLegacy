@@ -158,6 +158,7 @@ if unitDef.weapons[1] then
 		if name == "outpost_artillery" then 
 			Move(barrels[weaponID], z_axis, -25, CRATE_SPEED * 175)
 			GG.EmitSfxName(unitID, base, "dust_bloom_big")
+			Spring.AddUnitSeismicPing(unitID, 5)
 			WaitForMove(barrels[weaponID], z_axis)
 			Move(barrels[weaponID], z_axis, 0, CRATE_SPEED * 25)
 			WaitForMove(barrels[weaponID], z_axis)
