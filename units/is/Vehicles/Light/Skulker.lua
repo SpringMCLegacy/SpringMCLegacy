@@ -2,7 +2,7 @@ local Skulker = LightTank:New{
 	name              	= "Skulker",
 	description			= "Light Scout",
 	
-	trackWidth			= 12,--width to render the decal
+	trackWidth			= 14,--width to render the decal
 	
 	weapons 		= {	
 		[1] = {
