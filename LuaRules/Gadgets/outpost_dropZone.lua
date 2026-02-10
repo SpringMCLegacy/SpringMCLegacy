@@ -51,25 +51,28 @@ local CMD_SEND_ORDER = GG.CustomCommands.GetCmdID("CMD_SEND_ORDER")
 local sendOrderCmdDesc = {
 	id = CMD_SEND_ORDER,
 	type   = CMDTYPE.ICON,
-	name   = "Submit \nOrder ",
+	name   = GG.Pad("Submit", "Order"),
 	action = 'submit_order',
 	tooltip = "Submit your purchasing order",
+	texture = "bitmaps/ui/submit.png",
 }
 local CMD_RUNNING_TOTAL = GG.CustomCommands.GetCmdID("CMD_RUNNING_TOTAL")
 local runningTotalCmdDesc = {
 	id = CMD_RUNNING_TOTAL,
 	type   = CMDTYPE.ICON,
-	name   = "Order\n" .. COLOURS.cbills .. "C-Bills: \n0",
+	name   = COLOURS.cbills .. GG.Pad(13, "C-Bills"," 0 "),
 	--disabled = true,
 	action = "menuprevious",
+	texture = "bitmaps/ui/blank.png",
 }
 local CMD_RUNNING_TONS = GG.CustomCommands.GetCmdID("CMD_RUNNING_TONS")
 local runningTonsCmdDesc = {
 	id = CMD_RUNNING_TONS,
 	type   = CMDTYPE.ICON,
-	name   = "Order\n" .. COLOURS.tonnage .. "Tonnes: \n0",
+	name   = COLOURS.tonnage .. GG.Pad(11, "Tonnes", " 0 "),
 	--disabled = true,
 	action = "menunext",
+	texture = "bitmaps/ui/blank.png",
 }
 local dropZoneCmdDesc = {
 	id     = GG.CustomCommands.GetCmdID("CMD_DROPZONE", 0), -- dropzone is free
@@ -278,15 +281,15 @@ GG.CheckBuildOptions = CheckBuildOptions
 
 function UpdateButtons(unitID, teamID, arrived) -- Toggles Submit Order vs Order Sent
 	if arrived then
-		EditUnitCmdDesc(unitID, FindUnitCmdDesc(unitID, CMD_SEND_ORDER), {disabled = true, name = "Dropship \nArrived "})
+		EditUnitCmdDesc(unitID, FindUnitCmdDesc(unitID, CMD_SEND_ORDER), {disabled = true, name = GG.Pad("Dropship", "Arrived")})
 	elseif orderStatus[unitID] == 0 then -- ready for new order
-		EditUnitCmdDesc(unitID, FindUnitCmdDesc(unitID, CMD_SEND_ORDER), {disabled = false, name = "Submit \nOrder "})
+		EditUnitCmdDesc(unitID, FindUnitCmdDesc(unitID, CMD_SEND_ORDER), {disabled = false, name = GG.Pad("Submit","Order"), texture = "bitmaps/ui/submit.png"})
 		if orderSizes[unitID] == 0 then
-			EditUnitCmdDesc(unitID, FindUnitCmdDesc(unitID, CMD_RUNNING_TOTAL), {name = "Order\n" .. COLOURS.cbills .. "C-Bills: \n0"})
-			EditUnitCmdDesc(unitID, FindUnitCmdDesc(unitID, CMD_RUNNING_TONS), {name = "Order\n" .. COLOURS.tonnage .. "Tonnes: \n0"})
+			EditUnitCmdDesc(unitID, FindUnitCmdDesc(unitID, CMD_RUNNING_TOTAL), {name = COLOURS.cbills .. GG.Pad(13, "C-Bills", " 0 ")})
+			EditUnitCmdDesc(unitID, FindUnitCmdDesc(unitID, CMD_RUNNING_TONS), {name = COLOURS.tonnage .. GG.Pad(11, "Tonnes", " 0 ")})
 		end
 	elseif orderStatus[unitID] >= 1 then -- order submitted
-		EditUnitCmdDesc(unitID, FindUnitCmdDesc(unitID, CMD_SEND_ORDER), {name = "Order \nSent "})
+		EditUnitCmdDesc(unitID, FindUnitCmdDesc(unitID, CMD_SEND_ORDER), {name = GG.Pad("Order","Sent"), texture = "bitmaps/ui/submit2.png"})
 	end
 end
 
@@ -455,8 +458,8 @@ local function PurchaseOrders(unitID, unitDefID, teamID, cmdID, cmdOptions, comp
 				UseTeamResource(teamID, "metal", cost)
 				UseTeamResource(teamID, "energy", weight)
 				CheckBuildOptions(unitID, teamID, slotsLeft, cmdID)
-				EditUnitCmdDesc(unitID, FindUnitCmdDesc(unitID, CMD_RUNNING_TOTAL), {name = "Order\n" .. COLOURS.cbills .. "C-Bills: \n" .. newTotal})
-				EditUnitCmdDesc(unitID, FindUnitCmdDesc(unitID, CMD_RUNNING_TONS), {name = "Order\n" .. COLOURS.tonnage .. "Tonnes: \n" .. newTons})
+				EditUnitCmdDesc(unitID, FindUnitCmdDesc(unitID, CMD_RUNNING_TOTAL), {name = COLOURS.cbills .. GG.Pad(13, "C-Bills", "" .. newTotal)})
+				EditUnitCmdDesc(unitID, FindUnitCmdDesc(unitID, CMD_RUNNING_TONS), {name = COLOURS.tonnage .. GG.Pad(11, "Tonnes", "" .. newTons)})
 				return true
 			else
 				if cost > money then  -- not enough money
@@ -477,8 +480,8 @@ local function PurchaseOrders(unitID, unitDefID, teamID, cmdID, cmdOptions, comp
 				AddTeamResource(teamID, "energy", weight)
 				orderSizes[unitID] = runningSize - 1
 				CheckBuildOptions(unitID, teamID, slotsLeft)
-				EditUnitCmdDesc(unitID, FindUnitCmdDesc(unitID, CMD_RUNNING_TOTAL), {name = "Order\n" .. COLOURS.cbills .. "C-Bills: \n" .. runningTotal - cost})
-				EditUnitCmdDesc(unitID, FindUnitCmdDesc(unitID, CMD_RUNNING_TONS), {name = "Order\n" .. COLOURS.tonnage .. "Tonnes: \n" .. runningTons - weight})
+				EditUnitCmdDesc(unitID, FindUnitCmdDesc(unitID, CMD_RUNNING_TOTAL), {name = COLOURS.cbills .. GG.Pad(13, "C-Bills", "" .. (runningTotal - cost))})
+				EditUnitCmdDesc(unitID, FindUnitCmdDesc(unitID, CMD_RUNNING_TONS), {name = COLOURS.tonnage .. GG.Pad(11, "Tonnes", "" .. (runningTons - weight))})
 				return true
 			else
 				return false
