@@ -16,6 +16,7 @@ if gadgetHandler:IsSyncedCode() then
 -- localisations
 local SetUnitRulesParam		= Spring.SetUnitRulesParam
 --SyncedRead
+local GetGroundHeight		= Spring.GetGroundHeight
 local GetUnitHealth			= Spring.GetUnitHealth
 local GetUnitPosition		= Spring.GetUnitPosition
 local GetUnitTeam			= Spring.GetUnitTeam
@@ -48,7 +49,7 @@ local beaconDropshipQueue = {} -- beaconDropshipQueue[beaconID] = {info1 = {}, i
 
 function SpawnCargo(beaconID, targetID, dropshipID, unitDefID, teamID)
 	local tx, ty, tz = GetUnitPosition(dropshipID)
-	local ty = math.max(0, Spring.GetGroundHeight(tx,tz))
+	local ty = math.max(0, GetGroundHeight(tx,tz))
 	local cargoID = CreateUnit(unitDefID, tx, ty, tz, "s", teamID, false, false)
 	env = Spring.UnitScript.GetScriptEnv(dropshipID)
 	Spring.UnitScript.CallAsUnit(dropshipID, env.LoadCargo, cargoID, targetID, beaconID)
@@ -58,11 +59,16 @@ function SpawnCargo(beaconID, targetID, dropshipID, unitDefID, teamID)
 	end
 end
 
-function SpawnDropship(beaconID, unitID, teamID, dropshipType, cargo, cost)
+function SpawnDropship(beaconID, unitID, teamID, dropshipType, cargo, cost, offsets)
 	--Spring.Echo("Spawn a dropship!", beaconID, unitID, teamID, dropshipType, cargo, cost)
 	if Spring.ValidUnitID(unitID) and not Spring.GetUnitIsDead(unitID) --and not outpostIDs[unitID] 
 	and Spring.GetUnitTeam(unitID) == teamID then
 		local tx,ty,tz = GetUnitPosition(unitID)
+		if offsets then 
+			tx = tx + offsets.x
+			tz = tz + offsets.z
+			ty = GetGroundHeight(tx, tz)
+		end
 		local dropshipID = CreateUnit(dropshipType, tx, ty, tz, "s", teamID)
 		dropshipCallers[dropshipID] = unitID
 		if dropshipType == "mech" then
@@ -95,7 +101,7 @@ function BeaconNextQueueItem(beaconID, teamID)
 		if item.sound then
 			GG.PlaySoundForTeam(teamID, item.sound, 1)
 		end
-		local dropshipID = SpawnDropship(beaconID, item.target, teamID, item.dropshipType, item.cargo, item.cost)
+		local dropshipID = SpawnDropship(beaconID, item.target, teamID, item.dropshipType, item.cargo, item.cost, item.offsets)
 		if dropshipID then -- can fail if beacon was lost or dropzone moved TODO: so reset queue here?
 			beaconActive[beaconID] = dropshipID
 			activeDropships[dropshipID] = beaconID
@@ -123,13 +129,14 @@ function BeaconEnqueueDropship(beaconID, beaconPointID, teamID, info, priority)
 	end
 end
 
-function DropshipDelivery(beaconID, beaconPointID, teamID, dropshipType, cargo, cost, sound, delay)
+function DropshipDelivery(beaconID, beaconPointID, teamID, dropshipType, cargo, cost, sound, delay, offsets)
 	local info = {
 		["target"] = beaconPointID, 
 		["dropshipType"] = dropshipType, 
 		["cargo"] = cargo, 
 		["cost"] = cost, 
-		["sound"] = sound
+		["sound"] = sound,
+		["offsets"] = offsets,
 	}
 	-- check dropshipType for mech deliveries and add to front of queue
 	local priority = delay == 0
