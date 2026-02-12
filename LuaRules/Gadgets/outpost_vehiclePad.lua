@@ -333,7 +333,6 @@ end
 
 function gadget:UnitDestroyed(unitID, unitDefID, teamID)
 	if spawnPads[unitID] then
-		unitSquads[unitID] = nil
 		spawnPads[unitID] = nil
 		padLevels[unitID] = nil
 		local beaconID = GetUnitRulesParam(unitID, "beaconID")
@@ -341,6 +340,7 @@ function gadget:UnitDestroyed(unitID, unitDefID, teamID)
 			GG.BeaconDropshipBugOut(beaconID, teamID, unitID)
 		end
 	end
+	unitSquads[unitID] = nil
 end
 
 local function Wander(unitID, cmd)
@@ -424,7 +424,7 @@ function gadget:UnitGiven(unitID, unitDefID, newTeam, oldTeam)
 end
 
 function gadget:AllowCommand(unitID, unitDefID, teamID, cmdID, cmdParams, cmdOptions, cmdTag, playerID, synced, fromLua)
-	if vehiclesDefCache[unitDefID] then
+	if vehiclesDefCache[unitDefID] and unitSquads[unitID] then
 		--Spring.Echo("Vehicle AllowCommand", UnitDefs[unitDefID].name, CMD[cmdID], playerID, synced, fromLua)
 		return fromLua
 	elseif spawnPads[unitID] and cmdID == CMD_VPAD_TOGGLE then
