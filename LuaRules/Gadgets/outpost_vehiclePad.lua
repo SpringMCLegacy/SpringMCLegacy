@@ -87,6 +87,10 @@ local teamSideMults = {}
 local classes = {"vtol", "apc", "arty", "regular"}
 local weights = {"light", "medium", "heavy", "assault",} -- TODO: this is repeated elsewhere
 
+local blackList = {
+	[UnitDefNames["salvager"].id] = true,
+}
+
 function gadget:Initialize()
 	for sideName, shortName in pairs(GG.SideNames) do
 		sideSpawnLists[shortName] = {}
@@ -102,7 +106,7 @@ function gadget:Initialize()
 	end
 	for unitDefID, unitDef in pairs(UnitDefs) do
 		local basicType = unitDef.customParams.baseclass
-		if basicType == "vehicle" or basicType == "vtol" then -- apc's are still vehicle but *identified* (not changed) in _post
+		if (basicType == "vehicle" or basicType == "vtol") and not blackList[unitDefID] then -- apc's are still vehicle but *identified* (not changed) in _post
 			vehiclesDefCache[unitDefID] = 1 --unitDef.customParams.squadsize or 1
 		end
 	end
@@ -425,7 +429,7 @@ end
 
 function gadget:AllowCommand(unitID, unitDefID, teamID, cmdID, cmdParams, cmdOptions, cmdTag, playerID, synced, fromLua)
 	if vehiclesDefCache[unitDefID] and unitSquads[unitID] then
-		--Spring.Echo("Vehicle AllowCommand", UnitDefs[unitDefID].name, CMD[cmdID], playerID, synced, fromLua)
+		Spring.Echo("Vehicle AllowCommand", UnitDefs[unitDefID].name, CMD[cmdID], playerID, synced, fromLua)
 		return fromLua
 	elseif spawnPads[unitID] and cmdID == CMD_VPAD_TOGGLE then
 		--Spring.Echo("YARRR, TOGGLE ME VPADS!", cmdParams[1])

@@ -408,9 +408,9 @@ for name, ud in pairs(UnitDefs) do
 			end
 		end
 		cp.weaponCounts = weaponCounts -- stick this in here for weapondefs_post
-		if cp.speed then
-			ud.description = (ud.description or "") .. GetSpeedColoured(cp.speed)
-		end
+	end
+	if cp.speed then
+		ud.description = (ud.description or "") .. GetSpeedColoured(cp.speed)
 	end
 	
 	-- Automatically build dropship buildmenus

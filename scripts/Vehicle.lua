@@ -744,6 +744,27 @@ function script.QueryWeapon(weaponID)
 end
 
 if unitDef.isBuilder then -- BRVS
+
+	local crateID
+	function EnCrate()
+		--if crateLink then
+		local x,y,z = Spring.GetUnitBasePosition(unitID)
+		crateID = Spring.CreateUnit("crate", x,y,z, 0, teamID, false, false)
+		Spring.UnitAttach(unitID, crateID, crateLink or 1, true)
+		--end
+	end
+	
+	function Unloaded(ry, callerID)
+		Spring.MoveCtrl.Enable(unitID) -- don't allow moving until crate is unfolded
+		GG.Delay.DelayCall(Spring.MoveCtrl.Disable, {unitID}, 5 * 30)
+		GG.SpawnSalvager(callerID, teamID, unitID)
+		if crateID then
+			env = Spring.UnitScript.GetScriptEnv(crateID)
+			Spring.UnitScript.CallAsUnit(crateID, env.Unloaded)
+			Spring.UnitDetach(crateID)
+		end
+	end
+	
 	Spring.SetUnitNanoPieces(unitID, {piece("crane_wrist2")})
 
 	local CRANE_Y = math.rad(30)

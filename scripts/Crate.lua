@@ -9,23 +9,6 @@ function Unloaded(ry)
 	StartThread(Unpack, ry)
 end
 
-function Sands()
-	StartThread(BowOut)
-end
-
-function BowOut()
-	-- Let the sands of time cover the crate
-	Sleep(1500)
-	local i = 1
-	while Spring.GetUnitHealth(unitID) > 100 do
-		Spring.AddUnitDamage(unitID, 50)
-		Move(crate_base, y_axis, -i * 10 / 900, CRATE_SPEED * 2)
-		i = i + 1
-		Sleep(200)
-	end
-	Spring.DestroyUnit(unitID, false, true)
-end
-
 function Unpack(ry)
 	if ry then
 		Turn(crate_base, y_axis, (ry and ry - math.pi/2) or 0)
@@ -53,7 +36,17 @@ function Unpack(ry)
 	Turn(crate_top, z_axis, rad(-45), CRATE_SPEED)
 	WaitForTurn(crate_top, z_axis)
 	Turn(crate_top, z_axis, rad(-90), CRATE_SPEED * 2)
-	--Sands()
+	
+	-- Let the sands of time cover the crate
+	Sleep(1500)
+	local i = 1
+	while Spring.GetUnitHealth(unitID) > 100 do
+		Spring.AddUnitDamage(unitID, 50)
+		Move(crate_base, y_axis, -i * 10 / 900, CRATE_SPEED * 2)
+		i = i + 1
+		Sleep(200)
+	end
+	Spring.DestroyUnit(unitID, false, true)
 end
 
 function script.Create()

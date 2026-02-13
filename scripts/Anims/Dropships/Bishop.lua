@@ -401,11 +401,11 @@ function UnloadCargo()
 		Spring.SetUnitBlocking(cargoID, true, true, true, true, true, true, true)
 		-- Let the cargo know it is unloaded
 		env = Spring.UnitScript.GetScriptEnv(cargoID)
-		if env then
-			Spring.UnitScript.CallAsUnit(cargoID, env.Unloaded, ANGLE)
+		if env and env.Unloaded then
+			Spring.UnitScript.CallAsUnit(cargoID, env.Unloaded, ANGLE, callerID)
 			-- Let the beacon know outpost is ready
 			env = Spring.UnitScript.GetScriptEnv(callerID)
-			if env then -- there was a crash here, beacon point died by DFA, should not happen now but just in case!
+			if env and env.ChangeType then -- there was a crash here, beacon point died by DFA, should not happen now but just in case!
 				Spring.UnitScript.CallAsUnit(callerID, env.ChangeType, true)
 			end
 		end

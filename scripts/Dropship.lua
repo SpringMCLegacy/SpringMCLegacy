@@ -96,6 +96,9 @@ function LoadCargo(cargoID, callerUnitID, callerBeaconID)
 		if env.ParentBeacon then
 			Spring.UnitScript.CallAsUnit(cargoID, env.ParentBeacon, targetID, beaconID)
 		end
+		if env.EnCrate then
+			Spring.UnitScript.CallAsUnit(cargoID, env.EnCrate)
+		end
 	end
 end
 

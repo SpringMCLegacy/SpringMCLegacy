@@ -54,16 +54,22 @@ local DelayCall					 = GG.Delay.DelayCall
 -- Constants
 local GAIA_TEAM_ID = Spring.GetGaiaTeamID()
 local BEACON_ID = UnitDefNames["beacon"].id
+local COLOURS = GG.GameConstants.colours
 -- Mech pickup
 local PICKUP_DIST = 100
 -- Salvager
 local SALVAGEYARD_ID = UnitDefNames["outpost_salvageyard"] and UnitDefNames["outpost_salvageyard"].id or nil
-local SALVAGER_ID = UnitDefNames["salvager"].id
+local SALVAGER_DEF = UnitDefNames["salvager"]
+local SALVAGER_ID = SALVAGER_DEF.id
+local SALVAGER_TOOLTIP = "Build: Salvager - " .. SALVAGER_DEF.tooltip .. ": n/a\n" 
+						.. "Health " .. SALVAGER_DEF.health .. "\n" 
+						.. COLOURS.cbills .. "C-Bills cost " .. SALVAGER_DEF.customParams.price
 local SALVAGE_RANGE = 4000
 local CONVERSION_RATE = 40 -- 1000 metal / this = 25
 local RATE_PER_TICK = modOptions and modOptions.salvagepertick or 1
 local TIME_PER_TICK = 30 * 60 -- 1 minute
 local CMD_DEPOSIT = GG.CustomCommands.GetCmdID("CMD_DEPOSIT")
+local CMD_NEWSALVAGER = -SALVAGER_ID --GG.CustomCommands.GetCmdID("CMD_NEWSALVAGER")
 
 -- Variables
 -- Mech pickup
@@ -102,6 +108,15 @@ local depositCmdDesc = {
 	cursor	= "Unload",
 }
 
+local newSalvagerCmdDesc = {
+	id 		= CMD_NEWSALVAGER,
+	type	= CMDTYPE.ICON,
+	name 	= " New \n Salvager",
+	action	= "newsalvager",
+	tooltip = SALVAGER_TOOLTIP,
+}
+
+
 local function PinataLevel(unitID, delta)
 	if delta then
 		unitPinataLevels[unitID] = unitPinataLevels[unitID] + delta
@@ -126,10 +141,10 @@ local function SYardoutpost(unitID, level)
 end
 GG.SYardoutpost = SYardoutpost
 
-local function SpawnSalvager(yardID, teamID)
+local function SpawnSalvager(yardID, teamID, salvagerID)
 	local x, y, z = GetUnitPosition(yardID)
 	yardPos[yardID] = {["x"] = x, ["y"] = y, ["z"] = z}
-	local salvagerID = CreateUnit(SALVAGER_ID, x,y,z, 0, teamID)
+	salvagerID = salvagerID or CreateUnit(SALVAGER_ID, x,y,z, 0, teamID)
 	if salvagerID then
 		salvagerYards[salvagerID] = yardID
 		yardSalvagers[yardID] = salvagerID
@@ -146,6 +161,7 @@ function gadget:UnitCreated(unitID, unitDefID, teamID, builderID)
 		yardQueues[unitID] = {}
 		yardRaws[unitID] = 0
 		yardTeams[unitID] = teamID
+		InsertUnitCmdDesc(unitID, newSalvagerCmdDesc)
 	elseif unitDefID == SALVAGER_ID then
 		InsertUnitCmdDesc(unitID, depositCmdDesc)
 	elseif GG.mechCache[unitDefID] then -- a mech
@@ -247,6 +263,14 @@ function gadget:AllowCommand(unitID, unitDefID, teamID, cmdID, cmdParams, cmdOpt
 		end
 	elseif cmdID == CMD.RECLAIM and isSalvager then
 		idleSalvagers[unitID] = false
+	elseif yardLevels[unitID] and cmdID == CMD_NEWSALVAGER then
+		local cBills = Spring.GetTeamResources(teamID, "metal")
+		if cBills >= tonumber(UnitDefs[SALVAGER_ID].customParams.price) then -- TODO: cache this
+			GG.DropshipDelivery(Spring.GetUnitRulesParam(unitID, "beaconID"), unitID, teamID, GG.teamSide[teamID] .. "_bishop", SALVAGER_ID, 0, nil, 0, {x = 0, z = 200})
+			return true
+		end
+		GG.PlaySoundForTeam(teamID, "bb_insufficient_cbills", 1)
+		return false
 	end
 	return true
 end
@@ -310,6 +334,7 @@ function gadget:GameFrame(n)
 				yardRaws[yardID] = yardRaws[yardID] - rawAvailable
 				SetUnitHarvestStorage(yardID, yardRaws[yardID])
 			end
+			GG.CheckBuildOptions(yardID, teamID, 6)
 		end
 	end
 	if n % 10 == 5 then -- 3x a second

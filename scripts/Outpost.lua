@@ -24,6 +24,7 @@ beaconID = nil
 function ParentBeacon(callingPointID, parentBeaconID)
 	pointID = callingPointID
 	beaconID = parentBeaconID
+	Spring.SetUnitRulesParam(unitID, "beaconID", beaconID)
 end
 
 function Upgrade(level)
@@ -34,12 +35,15 @@ function Upgrade(level)
 	end
 end
 
-function script.Create()
+function EnCrate()
 	if crateLink then
 		local x,y,z = Spring.GetUnitBasePosition(unitID)
 		crateID = Spring.CreateUnit("crate", x,y,z, 0, teamID, false, false)
 		Spring.UnitAttach(unitID, crateID, crateLink, true)
 	end
+end
+
+function script.Create()
 	if Setup then
 		StartThread(Setup)
 	end
@@ -76,11 +80,6 @@ function Unpack(ry)
 	end
 	if Deploy then
 		StartThread(Deploy)
-	end
-	
-	if crateID then
-		env = Spring.UnitScript.GetScriptEnv(crateID)
-		Spring.UnitScript.CallAsUnit(crateID, env.Sands)
 	end
 end
 

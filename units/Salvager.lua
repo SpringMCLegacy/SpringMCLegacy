@@ -1,6 +1,6 @@
 local Salvager = LightTank:New{
 	name              	= "Salvager",
-	description         = "Support Vehicle",
+	description         = "Support Vehicle - Gradually removes salvage from wrecks and deposits it at the salvage yard.",
 	trackWidth			= 25,--width to render the decal
 	
 	builder 			= true,
