@@ -61,9 +61,10 @@ local PICKUP_DIST = 100
 local SALVAGEYARD_ID = UnitDefNames["outpost_salvageyard"] and UnitDefNames["outpost_salvageyard"].id or nil
 local SALVAGER_DEF = UnitDefNames["salvager"]
 local SALVAGER_ID = SALVAGER_DEF.id
+local SALVAGER_PRICE = tonumber(SALVAGER_DEF.customParams.price)
 local SALVAGER_TOOLTIP = "Build: Salvager - " .. SALVAGER_DEF.tooltip .. ": n/a\n" 
 						.. "Health " .. SALVAGER_DEF.health .. "\n" 
-						.. COLOURS.cbills .. "C-Bills cost " .. SALVAGER_DEF.customParams.price
+						.. COLOURS.cbills .. "C-Bills cost " .. SALVAGER_PRICE
 local SALVAGE_RANGE = 4000
 local CONVERSION_RATE = 40 -- 1000 metal / this = 25
 local RATE_PER_TICK = modOptions and modOptions.salvagepertick or 1
@@ -264,9 +265,10 @@ function gadget:AllowCommand(unitID, unitDefID, teamID, cmdID, cmdParams, cmdOpt
 	elseif cmdID == CMD.RECLAIM and isSalvager then
 		idleSalvagers[unitID] = false
 	elseif yardLevels[unitID] and cmdID == CMD_NEWSALVAGER then
-		local cBills = Spring.GetTeamResources(teamID, "metal")
-		if cBills >= tonumber(UnitDefs[SALVAGER_ID].customParams.price) then -- TODO: cache this
+		local cBills = GetTeamResources(teamID, "metal")
+		if cBills >= SALVAGER_PRICE then
 			GG.DropshipDelivery(Spring.GetUnitRulesParam(unitID, "beaconID"), unitID, teamID, GG.teamSide[teamID] .. "_bishop", SALVAGER_ID, 0, nil, 0, {x = 0, z = 200})
+			UseTeamResource(teamID, "m", SALVAGER_PRICE)
 			return true
 		end
 		GG.PlaySoundForTeam(teamID, "bb_insufficient_cbills", 1)
@@ -334,7 +336,6 @@ function gadget:GameFrame(n)
 				yardRaws[yardID] = yardRaws[yardID] - rawAvailable
 				SetUnitHarvestStorage(yardID, yardRaws[yardID])
 			end
-			GG.CheckBuildOptions(yardID, teamID, 6)
 		end
 	end
 	if n % 10 == 5 then -- 3x a second
@@ -348,6 +349,9 @@ function gadget:GameFrame(n)
 					DestroyFeature(featureID)
 				end
 			end
+		end
+		for yardID, teamID in pairs(yardTeams) do
+			GG.CheckBuildOptions(yardID, teamID, 6)
 		end
 	end
 end
