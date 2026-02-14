@@ -745,6 +745,16 @@ end
 
 if unitDef.isBuilder then -- BRVS
 
+	local function Derp()
+		local x,y,z = Spring.GetUnitPiecePosDir(unitID, piece("crane_claw1"))
+		local featureID = Spring.CreateFeature("fs_locust_lct3d_x", x,y,z, 0, teamID)
+		Spring.SetFeatureBlocking(featureID, false, false, false, false, false, false, false)
+		while true do
+			GG.FeatureAttach(unitID, piece("crane_claw1"), featureID)
+			Sleep(30)
+		end
+	end
+	
 	local crateID
 	function EnCrate()
 		--if crateLink then
@@ -763,6 +773,7 @@ if unitDef.isBuilder then -- BRVS
 			Spring.UnitScript.CallAsUnit(crateID, env.Unloaded)
 			Spring.UnitDetach(crateID)
 		end
+		StartThread(Derp)
 	end
 	
 	Spring.SetUnitNanoPieces(unitID, {piece("crane_wrist2")})

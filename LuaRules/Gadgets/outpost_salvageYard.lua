@@ -142,6 +142,14 @@ local function SYardoutpost(unitID, level)
 end
 GG.SYardoutpost = SYardoutpost
 
+local function FeatureAttach(unitID, pieceNum, featureID)
+	local px, py, pz, dx, dy, dz = Spring.GetUnitPiecePosDir(unitID, pieceNum)
+	local vx, vy, vz = Spring.GetUnitVelocity(unitID)
+	Spring.SetFeatureMoveCtrl(featureID,false,1,1,1,1,1,1,1,1,1)
+	Spring.SetFeaturePhysics(featureID, px,py,pz, vx,vy,vz, dx,dy,dz)
+end
+GG.FeatureAttach = FeatureAttach
+
 local function SpawnSalvager(yardID, teamID, salvagerID)
 	local x, y, z = GetUnitPosition(yardID)
 	yardPos[yardID] = {["x"] = x, ["y"] = y, ["z"] = z}
