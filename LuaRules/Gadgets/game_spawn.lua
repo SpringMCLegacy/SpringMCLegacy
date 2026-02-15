@@ -48,6 +48,8 @@ if not modOptions.startcbills then -- load via file
 		end
 	end
 	startPosType = 1 -- randomise when testing via spring.exe
+	-- set the gamerules param to notify other gadgets it was a direct launch
+	Spring.SetGameRulesParam("runningWithoutScript", 1)
 end
 -- Need the raw sidedata for short names
 local sideData = VFS.Include("gamedata/sidedata.lua", nil, VFS.ZIP)
@@ -60,7 +62,7 @@ for sideNum, data in pairs(sideData) do
 	SideTechBases[data.shortName:lower()] = data.techBase:lower()
 	TechBaseSides[data.techBase:lower()] = TechBaseSides[data.techBase:lower()] or {}
 	table.insert(TechBaseSides[data.techBase:lower()], data.shortName:lower())
-	ValidSides[data.shortName:lower()] = true
+	ValidSides[data.shortName:lower()] = data.name:lower()
 end
 GG.SideNames = SideNames
 GG.SideTechBases = SideTechBases
@@ -73,7 +75,7 @@ end
 
 local function GetStartUnit(teamID)
 	-- get the team startup info
-	local side = select(5, Spring.GetTeamInfo(teamID))
+	local side = GG.teamSide[teamID] or "" --or select(5, Spring.GetTeamInfo(teamID))
 	local startUnit
 	if (side == "") then
 		-- startscript didn't specify a side for this team
@@ -83,8 +85,6 @@ local function GetStartUnit(teamID)
 			startUnit = sidedata[sideNum].startUnit
 			side = sidedata[sideNum].sideName
 		end
-		-- set the gamerules param to notify other gadgets it was a direct launch
-		Spring.SetGameRulesParam("runningWithoutScript", 1)
 	else
 		startUnit = Spring.GetSideData(side)
 	end
@@ -94,7 +94,7 @@ local function GetStartUnit(teamID)
 end
 
 local function SpawnStartUnit(teamID)
-	local startUnit = sideStartUnits[teamID]
+	local startUnit = GetStartUnit(teamID)--sideStartUnits[teamID]
 	if (startUnit and startUnit ~= "") then
 		-- spawn the specified start unit
 		local startPos = teamStarts[teamID]
@@ -204,7 +204,7 @@ function gadget:GameStart()
 						numActiveTeams = numActiveTeams - 1
 					end
 				end
-				sideStartUnits[teamID] = activeTeams[teamID] and GetStartUnit(teamID)
+				--sideStartUnits[teamID] = activeTeams[teamID] and GetStartUnit(teamID)
 			end
 		end
 		if (startPosType == 3 or startPosType == 2) and lockToProfileStarts then
@@ -271,6 +271,27 @@ local function DeploySpawnBeacons(skip)
 	end
 end
 GG.DeploySpawnBeacons = DeploySpawnBeacons
+
+-- keep track of choosing faction ingame
+function gadget:RecvLuaMsg(msg, playerID)
+	-- these messages are only useful during pre-game placement
+	if Spring.GetGameFrame() > 0 then
+		return false
+	end
+
+	local code = string.sub(msg,1,1)
+	if code ~= '\138' then
+		return
+	end
+	local side = string.sub(msg,2,string.len(msg))
+	local _, _, playerIsSpec, playerTeam = Spring.GetPlayerInfo(playerID)
+	if not playerIsSpec then
+		GG.teamSide[playerTeam] = ValidSides[side]
+		Spring.SetTeamRulesParam(playerTeam, "side", side, {allied=true, public=false}) -- visible to allies only, set visible to all on GameStart
+		--side = select(5, Spring.GetTeamInfo(playerTeam))
+		return true
+	end
+end
 
 else
 -- UNSYNCED
