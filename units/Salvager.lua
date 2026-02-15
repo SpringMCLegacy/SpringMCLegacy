@@ -9,6 +9,7 @@ local Salvager = LightTank:New{
 	harvestStorage		= 1000,
 	workerTime			= 200,
 	buildDistance 		= 50,
+	holdSteady			= true,
 	
 	--weapons	= {	
 	--},

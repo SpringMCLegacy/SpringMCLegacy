@@ -746,11 +746,14 @@ end
 if unitDef.isBuilder then -- BRVS
 
 	local function Derp()
+		local attachPiece = piece("crane_claw1")
 		local x,y,z = Spring.GetUnitPiecePosDir(unitID, piece("crane_claw1"))
+		local fakeID = Spring.CreateUnit("fake", x,y,z, 0, teamID)
+		Spring.UnitAttach(unitID, fakeID, attachPiece)
 		local featureID = Spring.CreateFeature("fs_locust_lct3d_x", x,y,z, 0, teamID)
 		Spring.SetFeatureBlocking(featureID, false, false, false, false, false, false, false)
 		while true do
-			GG.FeatureAttach(unitID, piece("crane_claw1"), featureID)
+			GG.FeatureAttach(unitID, attachPiece, fakeID, featureID)
 			Sleep(30)
 		end
 	end
@@ -773,7 +776,7 @@ if unitDef.isBuilder then -- BRVS
 			Spring.UnitScript.CallAsUnit(crateID, env.Unloaded)
 			Spring.UnitDetach(crateID)
 		end
-		StartThread(Derp)
+		--StartThread(Derp)
 	end
 	
 	Spring.SetUnitNanoPieces(unitID, {piece("crane_wrist2")})

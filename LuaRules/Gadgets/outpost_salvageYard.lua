@@ -142,11 +142,13 @@ local function SYardoutpost(unitID, level)
 end
 GG.SYardoutpost = SYardoutpost
 
-local function FeatureAttach(unitID, pieceNum, featureID)
+local function FeatureAttach(unitID, pieceNum, fakeID, featureID)
 	local px, py, pz, dx, dy, dz = Spring.GetUnitPiecePosDir(unitID, pieceNum)
+	local front, up = Spring.GetUnitVectors(fakeID)
 	local vx, vy, vz = Spring.GetUnitVelocity(unitID)
 	Spring.SetFeatureMoveCtrl(featureID,false,1,1,1,1,1,1,1,1,1)
-	Spring.SetFeaturePhysics(featureID, px,py,pz, vx,vy,vz, dx,dy,dz)
+	Spring.SetFeaturePhysics(featureID, px,py,pz, vx,vy,vz, 0,0,0)
+	Spring.SetFeatureDirection(featureID, unpack(front), unpack(up))
 end
 GG.FeatureAttach = FeatureAttach
 

@@ -39,6 +39,7 @@ local Noise = Fake:New{
 
 
 return lowerkeys({ 
+	["Fake"] = Fake,
 	["Noise"] = Noise,
 	["Narc_ECM"] = Narc_ECM,
 	["Nuke_Icon"] = Nuke_Icon,
