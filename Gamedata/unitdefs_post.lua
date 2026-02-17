@@ -226,7 +226,7 @@ for name, ud in pairs(UnitDefs) do
 			end
 		end
 		if cp.ignoreatbeacon then
-			ud.power = 1 -- shutup about low power, Recoil
+			ud.power = ud.power or 1 -- shutup about low power, Recoil
 		end
 	end
 	if cp and cp.baseclass then -- mech, vehicle, apc, vtol, infantry
@@ -267,11 +267,11 @@ for name, ud in pairs(UnitDefs) do
 			end
 		end
 		if cp.baseclass == "mech" or cp.baseclass == "aero" then
-			ud.buildCostEnergy = (cp.tonnage or 0)
+			ud.buildCostEnergy = (tonumber(cp.tonnage) or 0)
 			-- scale prices by a multiplier -- from an origin of 4000
 			local priceMult = modOptions.pricemult
 			ud.buildCostMetal = (cp.price or 0) * priceMult -- (4000 * (priceMult - 1)))
-			ud.power = ud.buildCostMetal * ud.buildCostEnergy
+			ud.power = ud.buildCostMetal * (ud.buildCostEnergy > 0 and ud.buildCostEnergy or 1)
 			if cp.jumpjets then
 				ud.description = ud.description .. " \255\001\179\214[JUMP]"
 			end
@@ -290,9 +290,9 @@ for name, ud in pairs(UnitDefs) do
 			ud.power = ud.buildcostmetal
 		else -- vehicle, vtol, apc?
 			ud.buildCostMetal = (cp.price or 100) * modOptions.pricemult
-			ud.power = ud.power or cp.tonnage or ud.buildcostmetal
 		end
 	end
+	ud.power = ud.power or cp.tonnage or ud.buildcostmetal
 	-- set maxvelocity by modoption
 	ud.maxvelocity = (ud.maxvelocity or 0) * (modOptions.speed or 0.65)
 	ud.turninplace = not cp.wheels

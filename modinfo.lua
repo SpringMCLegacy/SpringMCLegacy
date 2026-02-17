@@ -5,7 +5,7 @@ local modinfo = {
 		shortGame				= "MCL",
 		mutator					= "Official",
 		description				= "War is hell.",
-		url						= "http://springrts.com/phpbb/viewforum.php?f=70",
+		url						= "https://discord.com/invite/QMCChXp4zH",
 		modtype					= "1",
 		version					= "$VERSION",
 		--depend = {

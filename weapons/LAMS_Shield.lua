@@ -9,7 +9,6 @@ weaponDef = {
 	shield = {
 		alpha = 0.2,
 		armortype = "shields",
-		energyupkeep = 0,
 		intercepttype = 4,
 		power = 3000,
 		powerregen = 500,

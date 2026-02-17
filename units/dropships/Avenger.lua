@@ -18,7 +18,7 @@ local Avenger = Aero:New{
 	maxSlope			= 50,
 	moveState			= 0,
 	levelGround			= false,
-	power				= 100,
+	power				= 36000,
 	
 	canFly				= true,
 	--hoverAttack			= true,

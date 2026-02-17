@@ -1,14 +1,14 @@
 local iconTypes = {
-	default = {
+	--[[default = {
 		bitmap		=	"icons/blank.png",
 		size			=	0,
 		distance	=	5000,
-	},
-	dropship = {
+	},]]
+	--[[dropship = {
 		bitmap		=	"icons/dropship.png",
 		size			=	5,
 		distance	=	5.0,
-	},
+	},]]
 	leopard = {
 		bitmap		=	"icons/leopard.png",
 		size			=	5,

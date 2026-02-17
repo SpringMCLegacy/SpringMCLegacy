@@ -6,7 +6,6 @@ local IS_MarkVII = DropShip:New{
 	maxDamage 			= 150 / 10 + 13 * 1000,-- cp.tonnage / 10 + cp.armor * 1000
 	mass                = 15000,
 	buildCostEnergy     = 0,
-	buildCostMetal      = 0,
 	canMove				= true,
 	maxVelocity			= 0,
 	idleAutoHeal		= 0,
@@ -15,6 +14,7 @@ local IS_MarkVII = DropShip:New{
 	levelGround			= false,
 	usePieceCollisionVolumes = true,
 	category			= "air",
+	power				= 150,
 
 	--Makes unit use weapon from /weapons folder
 	weapons	= {	
@@ -61,6 +61,7 @@ local IS_MarkVII = DropShip:New{
 		},
 	},
 	customparams = {
+		price			= 15000,
 		baseclass		= "aero",
 		dropship		= "vehicle",
 		hoverheight		= 43 + 12,
