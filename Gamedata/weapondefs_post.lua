@@ -108,7 +108,8 @@ end
 
 for unitName, ud in pairs(UnitDefs) do
 	local weapons = ud.weapons
-	if weapons or ud.canreclaim then -- TODO: remove stupid hack for BRVs
+	local cp = ud.customparams
+	if cp.baseclass or cp.dropship then --weapons or ud.canreclaim then -- TODO: remove stupid hack for BRVs
 		if not ud.sfxtypes then
 			ud.sfxtypes = { explosiongenerators = {} }
 		end

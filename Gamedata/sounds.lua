@@ -20,7 +20,7 @@ local Sounds = {
 			dopplerscale = 0,
 		},
 		FailedCommand = {
-			file = "sounds/beep3.wav",
+			file = "sounds/WARN.wav,",
 		},
 
 		default = {
