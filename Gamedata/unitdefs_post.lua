@@ -292,6 +292,9 @@ for name, ud in pairs(UnitDefs) do
 			ud.buildCostMetal = (cp.price or 100) * modOptions.pricemult
 		end
 	end
+	if cp.wheels then
+		cp.uniformbin = "defaultunit" -- disable treads shader
+	end
 	ud.power = ud.power or cp.tonnage or ud.buildcostmetal
 	-- set maxvelocity by modoption
 	ud.maxvelocity = (ud.maxvelocity or 0) * (modOptions.speed or 0.65)
