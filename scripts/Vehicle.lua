@@ -57,6 +57,7 @@ local turretOnTurretSides = info.turretOnTurretSides
 local weaponProgenitors = info.weaponProgenitors
 local limbHPs = {}
 local wheelsRemaining = {}
+local steerWheels = {[1] = true, [info.numWheels/2+1] = true}
 wheelsRemaining["l"] = info.numWheels / 2
 wheelsRemaining["r"] = info.numWheels / 2
 for limb,limbHP in pairs(info.limbHPs) do -- copy table from defaults
@@ -521,6 +522,29 @@ function VehicleSFX()
 	end
 end
 
+local THRESHOLD = math.rad(0.5)
+local GetUnitHeading = Spring.GetUnitHeading
+function SteerCheck()
+	local currHeading = GetUnitHeading(unitID, true)
+	while moving do
+		local newHeading = GetUnitHeading(unitID, true)
+		local delta = newHeading - currHeading
+		if math.abs(delta) > THRESHOLD then
+			--Spring.Echo("Turning!")
+			for wheelNum in pairs (steerWheels) do
+				--Spring.Echo("Turn wheel", wheelNum, "to", math.deg(delta))
+				Turn(wheels[wheelNum], y_axis, delta * 15, WHEEL_SPEED/5)
+			end
+		else
+			for wheelNum in pairs (steerWheels) do
+				Turn(wheels[wheelNum], y_axis, 0, WHEEL_SPEED/2.5)
+			end			
+		end
+		currHeading = newHeading
+		Sleep(30) -- every game frame
+	end
+end
+
 function script.StartMoving()
 	for i = 1, #wheels do
 		Spin(wheels[i], x_axis, WHEEL_SPEED, WHEEL_ACCEL)
@@ -528,13 +552,16 @@ function script.StartMoving()
 	moving = true
 	if not vtol and not aero then
 		StartThread(VehicleSFX)
+		if wheeled then
+			StartThread(SteerCheck)
+		end
 	end
 end
 
 function script.StopMoving()
 	Signal(SIG_SOUNDS)
 	for i = 1, #wheels do
-		StopSpin(wheels[i], x_axis, WHEEL_ACCEL)
+		StopSpin(wheels[i], x_axis, WHEEL_ACCEL * 10)
 	end
 	moving = false
 end
