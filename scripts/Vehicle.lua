@@ -526,6 +526,7 @@ local THRESHOLD = math.rad(0.5)
 local GetUnitHeading = Spring.GetUnitHeading
 function SteerCheck()
 	local currHeading = GetUnitHeading(unitID, true)
+	local hitch = piece("hitch")
 	while moving do
 		local newHeading = GetUnitHeading(unitID, true)
 		local delta = newHeading - currHeading
@@ -535,10 +536,18 @@ function SteerCheck()
 				--Spring.Echo("Turn wheel", wheelNum, "to", math.deg(delta))
 				Turn(wheels[wheelNum], y_axis, delta * 15, WHEEL_SPEED/5)
 			end
+			if hitch then
+				Turn(hitch, y_axis, -delta * 60, WHEEL_SPEED/10)
+			end
 		else
 			for wheelNum in pairs (steerWheels) do
 				Turn(wheels[wheelNum], y_axis, 0, WHEEL_SPEED/2.5)
 			end			
+			if hitch then
+				local _, goal, _ = Spring.UnitScript.GetPieceRotation(hitch)
+				if goal > math.pi then goal = goal - math.pi end
+				Turn(hitch, y_axis, goal * 0.9, WHEEL_SPEED/5)
+			end
 		end
 		currHeading = newHeading
 		Sleep(30) -- every game frame
@@ -770,7 +779,7 @@ function script.QueryWeapon(weaponID)
 	end
 end
 
-if unitDef.isBuilder then -- BRVS
+if unitDef.isBuilder and unitDef.name == "salvager" then -- BRVS
 
 	local function Derp()
 		local attachPiece = piece("crane_claw1")
