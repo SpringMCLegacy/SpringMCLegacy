@@ -523,6 +523,7 @@ function VehicleSFX()
 end
 
 local THRESHOLD = math.rad(0.5)
+local HITCH_MAX_Y = info.hitchMaxY
 local GetUnitHeading = Spring.GetUnitHeading
 function SteerCheck()
 	local currHeading = GetUnitHeading(unitID, true)
@@ -534,10 +535,10 @@ function SteerCheck()
 			--Spring.Echo("Turning!")
 			for wheelNum in pairs (steerWheels) do
 				--Spring.Echo("Turn wheel", wheelNum, "to", math.deg(delta))
-				Turn(wheels[wheelNum], y_axis, delta * 15, WHEEL_SPEED/5)
+				Turn(wheels[wheelNum], y_axis, delta * HITCH_MAX_Y/4, WHEEL_SPEED/5)
 			end
 			if hitch then
-				Turn(hitch, y_axis, -delta * 60, WHEEL_SPEED/10)
+				Turn(hitch, y_axis, -delta * HITCH_MAX_Y, WHEEL_SPEED/10)
 			end
 		else
 			for wheelNum in pairs (steerWheels) do

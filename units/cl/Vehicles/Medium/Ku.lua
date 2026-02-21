@@ -26,6 +26,9 @@ local Ku = LightTank:New{
 		maxammo 		= {ac10 = 2, srm = 2},
 		squadsize 		= 1,
 		mods			= {"ferrofibrousarmour"},
+		wheels			= true,
+		wheelspeed		= 200,
+		hitchmaxy		= 30,
     },
 }
 

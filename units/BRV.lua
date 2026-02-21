@@ -23,6 +23,7 @@ local BRV = Tank:New{
 		squadsize 		= 1,
 		mods			= {"ferrofibrousarmour"},
 		wheels			= true,
+		hitchmaxy		= 60,
 	},
 }
 
