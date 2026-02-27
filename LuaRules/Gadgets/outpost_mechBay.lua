@@ -54,6 +54,7 @@ local GetCmdID 				= GG.CustomCommands.GetCmdID
 -- Constants
 local GAIA_TEAM_ID = Spring.GetGaiaTeamID()
 local MECHBAY_ID = UnitDefNames["outpost_mechbay"].id
+local CRATE_ID = UnitDefNames["crate"].id
 
 -- Command Descriptions
 local getOutCmdDesc = {
@@ -249,7 +250,7 @@ function gadget:UnitCreated(unitID, unitDefID, teamID, builderID)
 end
 
 function gadget:UnitLoaded(unitID, unitDefID, unitTeam, transportID, transportTeam)
-	if mechBays[transportID] and mechBays[transportID] >= 1 then
+	if mechBays[transportID] and mechBays[transportID] >= 1 and not unitDefID == CRATE_ID then
 		-- update mod status for this mech
 		GG.UpdateUnitApps(transportID, unitDefID, "mods")
 		ShowModsByType(transportID, currMenu[unitID], unitID)
