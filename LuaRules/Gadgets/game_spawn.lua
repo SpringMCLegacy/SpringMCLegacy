@@ -75,7 +75,7 @@ end
 
 local function GetStartUnit(teamID)
 	-- get the team startup info
-	local side = GG.teamSide[teamID] or "" --or select(5, Spring.GetTeamInfo(teamID))
+	local side = GG.teamSide[teamID] or select(5, Spring.GetTeamInfo(teamID))
 	local startUnit
 	if (side == "") then
 		-- startscript didn't specify a side for this team
