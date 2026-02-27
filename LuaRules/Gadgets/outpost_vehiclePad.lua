@@ -429,7 +429,7 @@ end
 
 function gadget:AllowCommand(unitID, unitDefID, teamID, cmdID, cmdParams, cmdOptions, cmdTag, playerID, synced, fromLua)
 	if vehiclesDefCache[unitDefID] and unitSquads[unitID] then
-		Spring.Echo("Vehicle AllowCommand", UnitDefs[unitDefID].name, CMD[cmdID], playerID, synced, fromLua)
+		--Spring.Echo("Vehicle AllowCommand", UnitDefs[unitDefID].name, CMD[cmdID], playerID, synced, fromLua)
 		return fromLua
 	elseif spawnPads[unitID] and cmdID == CMD_VPAD_TOGGLE then
 		--Spring.Echo("YARRR, TOGGLE ME VPADS!", cmdParams[1])
