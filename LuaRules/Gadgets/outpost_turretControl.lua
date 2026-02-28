@@ -77,7 +77,7 @@ end
 -- TURRETS
 
 -- TODO: this is copy pasta from L208 outpost_dropZone.lua LockHeavy function, generalise it?
-local locked = {} -- unitDefID = true
+local locked = {} -- unitID[unitDefID] = true
 
 local function LockHeavyTurrets(tcID, lock) 
 	local cmdDescs = GetUnitCmdDescs(tcID)
@@ -87,7 +87,8 @@ local function LockHeavyTurrets(tcID, lock)
 			local class = turretDefIDs[-defID]
 			if class == 2 then
 				--Spring.Echo("Hiding", UnitDefs[-defID].name, class)
-				locked[-defID] = lock
+				locked[tcID] = locked[tcID] or {}
+				locked[tcID][-defID] = lock
 				EditUnitCmdDesc(tcID, i, {hidden = lock})		
 			end
 		end

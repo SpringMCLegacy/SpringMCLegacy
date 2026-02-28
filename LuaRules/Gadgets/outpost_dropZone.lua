@@ -123,7 +123,7 @@ GG.mechCache = mechCache
 -- Menu
 local currMenu = {} -- [dropzoneID] = unitType
 local currMenuIndex = {}
-local locked = {} -- unitDefID = true
+local locked = {} -- unitID[unitDefID] = true
 -- Orders
 local orderCosts = {} -- orderCosts[unitID] = cost
 local orderTons = {} -- orderTons[unitID] = totalTonnage
@@ -180,7 +180,7 @@ end
 GG.ClearCmdDescs = ClearCmdDescs
 
 local function ShowBuildOptionsByType(unitID, menuType, menuCache, menuIDs, typeStringIndex, lockedDescs)
-	local lockedDescs = lockedDescs or locked -- TODO: remove this crap when LockHeavy is generalised
+	local lockedDescs = lockedDescs and lockedDescs[unitID] or locked[unitID] -- TODO: remove this crap when LockHeavy is generalised
 	currMenu[unitID] = menuType
 	currMenuIndex[unitID] = typeStringIndex[menuType]
 	local cmdID = menuType and GG.CustomCommands.GetCmdID("CMD_MENU_" .. menuType:upper())
@@ -209,21 +209,22 @@ local function ResetBuildQueue(unitID)
 	end
 end
 
-local function 	LockHeavy(dropZone, lock) 
-	local cmdDescs = GetUnitCmdDescs(dropZone)
+local function 	LockHeavy(dropZoneID, lock) 
+	local cmdDescs = GetUnitCmdDescs(dropZoneID)
 	for i = 1, #cmdDescs do
 		local defID = cmdDescs[i].id
 		if defID < 0 then
 			local class = GetWeight(UnitDefs[-defID].mass)
 			if class == "heavy" or class == "assault" then
 				--Spring.Echo("Hiding", UnitDefs[-defID].name, class)
-				locked[-defID] = lock
-				EditUnitCmdDesc(dropZone, i, {hidden = lock})		
+				locked[dropZoneID] = locked[dropZoneID] or {}
+				locked[dropZoneID][-defID] = lock
+				EditUnitCmdDesc(dropZoneID, i, {hidden = lock})		
 			end
 		end
 	end
 	-- show only the currently selected menu
-	ShowBuildOptionsByType(dropZone, currMenu[dropZone], mechCache, menuCmdIDs, typeStringIndex)
+	ShowBuildOptionsByType(dropZoneID, currMenu[dropZoneID], mechCache, menuCmdIDs, typeStringIndex)
 end
 GG.LockHeavy = LockHeavy
 
