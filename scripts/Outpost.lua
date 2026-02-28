@@ -58,6 +58,7 @@ function Unloaded(ry)
 	if crateID then
 		env = Spring.UnitScript.GetScriptEnv(crateID)
 		Spring.UnitScript.CallAsUnit(crateID, env.Unloaded, unitDef.isFactory and ry or nil)
+		Spring.UnitDetach(crateID)
 	end
 	StartThread(Unpack, ry)
 end

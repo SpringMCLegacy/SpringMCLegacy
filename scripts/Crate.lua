@@ -51,6 +51,7 @@ end
 
 function script.Create()
 	Spring.SetUnitNoSelect(unitID, true)
+	Spring.SetUnitBlocking(unitID, false, false, false, false, false, false, false)
 	GG.ClearCmdDescs(unitID)
 	--[[if not Spring.GetUnitTransporter(unitID) then
 		Unloaded()

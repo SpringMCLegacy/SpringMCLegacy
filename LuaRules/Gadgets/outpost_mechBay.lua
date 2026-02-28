@@ -156,6 +156,7 @@ local function CheckOmniOptions(unitID, teamID, cmdID)
 end
 
 local function ShowOmniMenu(unitID, tOrF)
+	--Spring.Echo("ShowOmniMenu!", tOrF)
 	for i, cmdDesc in ipairs(GetUnitCmdDescs(unitID)) do
 		if cmdDesc.id == CMD_MENU_OMNI then
 			EditUnitCmdDesc(unitID, i, {hidden = not tOrF})
@@ -168,6 +169,7 @@ local function ShowOmniMenu(unitID, tOrF)
 end
 
 local function ShowOmniOptions(unitID, mechDefID, name, tOrF)
+	--Spring.Echo("ShowOmniOptions!", name, tOrF)
 	if tOrF then
 		for i, letter in ipairs(omniOrder) do
 			local cmdDesc = omniConfigs[name][letter]
@@ -213,6 +215,7 @@ GG.SetMechBayLevel = SetMechBayLevel
 local function ShowModsByType(unitID, modType, mechID)
 	local cmdID = modType and GetCmdID("CMD_MENU_" .. modType:upper())
 	local mechDefID = mechID and GetUnitDefID(mechID)
+	if mechDefID == CRATE_ID then return end
 	for i, cmdDesc in ipairs(GetUnitCmdDescs(unitID)) do
 		local cmdDescID = cmdDesc.id
 		if cmdDescID == cmdID then
@@ -227,7 +230,7 @@ local function ShowModsByType(unitID, modType, mechID)
 			end
 		end
 	end
-	if mechBays[unitID] == 1 and omniCache[mechDefID] then
+	if mechBays[unitID] and omniCache[mechDefID] then
 		ShowOmniOptions(unitID, mechDefID, omniCache[mechDefID], modType == "omni")
 	end
 end
@@ -250,7 +253,8 @@ function gadget:UnitCreated(unitID, unitDefID, teamID, builderID)
 end
 
 function gadget:UnitLoaded(unitID, unitDefID, unitTeam, transportID, transportTeam)
-	if mechBays[transportID] and mechBays[transportID] >= 1 and not unitDefID == CRATE_ID then
+	if mechBays[transportID] and mechBays[transportID] >= 1 and unitDefID ~= CRATE_ID then
+		--Spring.Echo("PARP! loaded a unit")
 		-- update mod status for this mech
 		GG.UpdateUnitApps(transportID, unitDefID, "mods")
 		ShowModsByType(transportID, currMenu[unitID], unitID)
@@ -367,6 +371,7 @@ function gadget:Initialize()
 		if unitDef.customParams.omni then
 			local config = unitDef.name:sub(-1)
 			local name = unitDef.name:sub(1,-2)
+			--Spring.Echo("YO I FOUND AN OMNI", name, config)
 			omniCache[unitDefID] = name
 			omniConfigs[name] = omniConfigs[name] or {}
 			omniConfigs[name][config] = {
