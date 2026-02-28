@@ -25,13 +25,16 @@ if (gadgetHandler:IsSyncedCode()) then
     end
   end
  
+ local FUDGE = 10
+ 
   function gadget:Explosion(weaponID, px, py, pz, ownerID)
     local wd = WeaponDefs[weaponID]
 	local specialAmmo = GG.unitSpecialAmmos[ownerID]
 	local lrmThunder = specialAmmo and specialAmmo.lrm and specialAmmo.lrm == "thunder"
 	local arrowThunder = wd.name == "thunder"
 	if lrmThunder or arrowThunder then
-		if py == Spring.GetGroundHeight(px, pz) then
+		--Spring.Echo("Thunder in paradise!")
+		if py <= Spring.GetGroundHeight(px, pz) + FUDGE then
 			Spring.CreateUnit("mine", px,py,pz, "s", Spring.GetUnitTeam(ownerID))
 			return true
 		end
