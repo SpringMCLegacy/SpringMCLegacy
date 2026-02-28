@@ -149,7 +149,7 @@ end
 local function UpdateUnitApps(unitID, unitDefID, appType)
 	local teamID, _, dead = Spring.GetUnitTeam(unitID)
 	local applierID
-	if not dead then
+	if teamID and not dead then
 		local newLevel
 		if appType == "perks" then
 			newLevel = Spring.GetUnitExperience(unitID)

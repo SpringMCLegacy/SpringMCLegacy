@@ -123,7 +123,7 @@ GG.mechCache = mechCache
 -- Menu
 local currMenu = {} -- [dropzoneID] = unitType
 local currMenuIndex = {}
-local locked = {} -- unitID[unitDefID] = true
+local locked = {} -- teamID[unitDefID] = true
 -- Orders
 local orderCosts = {} -- orderCosts[unitID] = cost
 local orderTons = {} -- orderTons[unitID] = totalTonnage
@@ -180,7 +180,8 @@ end
 GG.ClearCmdDescs = ClearCmdDescs
 
 local function ShowBuildOptionsByType(unitID, menuType, menuCache, menuIDs, typeStringIndex, lockedDescs)
-	local lockedDescs = lockedDescs and lockedDescs[unitID] or locked[unitID] -- TODO: remove this crap when LockHeavy is generalised
+	local teamID = Spring.GetUnitTeam(unitID) -- TODO: pass this instead of looking up when I don't have a baby laid on me
+	local lockedDescs = lockedDescs and lockedDescs[teamID] or locked[teamID] -- TODO: remove this crap when LockHeavy is generalised
 	currMenu[unitID] = menuType
 	currMenuIndex[unitID] = typeStringIndex[menuType]
 	local cmdID = menuType and GG.CustomCommands.GetCmdID("CMD_MENU_" .. menuType:upper())
@@ -217,8 +218,7 @@ local function 	LockHeavy(dropZoneID, lock)
 			local class = GetWeight(UnitDefs[-defID].mass)
 			if class == "heavy" or class == "assault" then
 				--Spring.Echo("Hiding", UnitDefs[-defID].name, class)
-				locked[dropZoneID] = locked[dropZoneID] or {}
-				locked[dropZoneID][-defID] = lock
+				locked[Spring.GetUnitTeam(dropZoneID)][-defID] = lock -- TODO: pass teamID
 				EditUnitCmdDesc(dropZoneID, i, {hidden = lock})		
 			end
 		end
@@ -395,6 +395,8 @@ local function SetDropZone(beaconID, teamID)
 	if currDropZone then
 		DestroyUnit(currDropZone, false, true)
 		DropZoneCoolDown(teamID, true) -- reset the timer
+	else
+		locked[teamID] = {}
 	end
 	local x,y,z = GetUnitPosition(beaconID)
 	local side = GG.teamSide[teamID]
