@@ -87,7 +87,8 @@ local function LockHeavyTurrets(tcID, lock)
 			local class = turretDefIDs[-defID]
 			if class == 2 then
 				--Spring.Echo("Hiding", UnitDefs[-defID].name, class)
-				locked[Spring.GetUnitTeam(tcID)][-defID] = lock
+				locked[tcID] = locked[tcID] or {}
+				locked[tcID][-defID] = lock
 				EditUnitCmdDesc(tcID, i, {hidden = lock})		
 			end
 		end
