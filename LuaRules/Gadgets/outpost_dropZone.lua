@@ -179,8 +179,8 @@ local function ClearCmdDescs(unitID)
 end
 GG.ClearCmdDescs = ClearCmdDescs
 
-local function ShowBuildOptionsByType(unitID, menuType, menuCache, menuIDs, typeStringIndex, lockedDescs)
-	local teamID = Spring.GetUnitTeam(unitID) -- TODO: pass this instead of looking up when I don't have a baby laid on me
+local function ShowBuildOptionsByType(unitID, menuType, menuCache, menuIDs, typeStringIndex, lockedDescs, teamID)
+	teamID = teamID or unitID -- fallback to unitID for TurretControl and AirCon
 	local lockedDescs = lockedDescs and lockedDescs[teamID] or locked[teamID] -- TODO: remove this crap when LockHeavy is generalised
 	currMenu[unitID] = menuType
 	currMenuIndex[unitID] = typeStringIndex[menuType]
@@ -224,7 +224,7 @@ local function 	LockHeavy(dropZoneID, lock)
 		end
 	end
 	-- show only the currently selected menu
-	ShowBuildOptionsByType(dropZoneID, currMenu[dropZoneID], mechCache, menuCmdIDs, typeStringIndex)
+	ShowBuildOptionsByType(dropZoneID, currMenu[dropZoneID], mechCache, menuCmdIDs, typeStringIndex, locked, Spring.GetUnitTeam(dropZoneID))
 end
 GG.LockHeavy = LockHeavy
 
@@ -402,7 +402,7 @@ local function SetDropZone(beaconID, teamID)
 	local side = GG.teamSide[teamID]
 	if not side then return end -- a weird bug to avoid here, maybe due to dead team?
 	local dropZoneID = CreateUnit(side .. "_dropzone", x,y,z, "s", teamID)
-	ShowBuildOptionsByType(dropZoneID, "fast", mechCache, menuCmdIDs, typeStringIndex)
+	ShowBuildOptionsByType(dropZoneID, "fast", mechCache, menuCmdIDs, typeStringIndex, locked, teamID)
 	dropZones[dropZoneID] = teamID
 	teamDropZones[teamID] = dropZoneID
 	dropZoneBeaconIDs[teamID] = beaconID
@@ -431,7 +431,7 @@ local function PurchaseOrders(unitID, unitDefID, teamID, cmdID, cmdOptions, comp
 			if newIndex < 1 then newIndex = menuIDs.n end
 			typeString = typeStrings[newIndex]
 		end
-		ShowBuildOptionsByType(unitID, typeString, menuCache, menuIDs, typeStringIndex, lockedDescs)
+		ShowBuildOptionsByType(unitID, typeString, menuCache, menuIDs, typeStringIndex, lockedDescs, dropZones[unitID])
 		GG.PlaySoundForTeam(teamID, "IncomingChat", 1)
 		return true
 	elseif cmdID < 0 then

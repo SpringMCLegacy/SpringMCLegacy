@@ -120,7 +120,7 @@ local AIRCON_UD = UnitDefNames["outpost_aircon"]
 local aeroCache = {}
 GG.aeroCache = aeroCache -- just in case
 
-local sideSortieCmdDescs = {}
+--local sideSortieCmdDescs = {}
 local sortieDefs = {}
 local sortieCmdIDs = {} --cmdID = { unitDefID, unitDefID... name, units, delay, cmdDesc }
 
@@ -154,16 +154,19 @@ local function GetDefaultTooltip(sortie, sortieUnitDef)
 end
 
 -- TODO: this is copy pasta from L208 outpost_dropZone.lua LockHeavy function, generalise it?
-local locked = {} -- unitDefID = true
+local locked = {} -- unitID[unitDefID] = true
 
 local function LockAssault(acID, lock) 
 	local cmdDescs = GetUnitCmdDescs(acID)
+	locked[acID] = locked[acID] or {}
 	for i = 1, #cmdDescs do
 		local defID = cmdDescs[i].id
+		--if defID > 0 then Spring.Echo("UMM?", sortieCmdIDs[defID] and sortieCmdIDs[defID].name) end
 		local class = (defID < 0 and tonumber(UnitDefs[-defID].customParams.unlocklevel or 0)) or (sortieCmdIDs[defID] and tonumber(sortieCmdIDs[defID].unlockLevel or 0))
+		--Spring.Echo("YOYO", class)--defID < 0 and tonumber(UnitDefs[-defID].customParams.unlocklevel or 0))
 		if class == 2 then
-			--Spring.Echo("Hiding", defID, lock)
-			locked[math.abs(defID)] = lock
+			--Spring.Echo("Hiding", defID < 0 and UnitDefs[-defID].name or sortieCmdIDs[defID] and sortieCmdIDs[defID].name, lock)
+			locked[acID][math.abs(defID)] = lock
 			EditUnitCmdDesc(acID, i, {hidden = lock})		
 		end
 	end
@@ -190,9 +193,7 @@ local function GenerateSortie(unitDefID)
 	sortie.alwaysAttack = cp.alwaysattack
 	sortie.spawnAtTarget = cp.spawnattarget
 	sortie.unlockLevel = cp.unlocklevel
-	if sortie.unlockLevel then
-		locked[cmdID] = true
-	end
+
 	sortie.cmdDesc = {
 		id = cmdID,
 		action = "sortie_" .. unitDef.name,
@@ -206,8 +207,8 @@ local function GenerateSortie(unitDefID)
 	sortieCmdIDs[cmdID] = sortie
 	sortieDefs[unitDefID] = sortie
 	local side = unitDef.name:sub(1,2)
-	sideSortieCmdDescs[side] = sideSortieCmdDescs[side] or {}
-	sideSortieCmdDescs[side][unitDefID] = sortie.cmdDesc
+	--sideSortieCmdDescs[side] = sideSortieCmdDescs[side] or {}
+	--sideSortieCmdDescs[side][unitDefID] = sortie.cmdDesc
 end
 
 
@@ -506,7 +507,7 @@ function gadget:UnitCreated(unitID, unitDefID, teamID)
 	local cp = ud.customParams
 	-- Remove aircraft land and repairlevel buttons
 	if ud.canFly then 
-		if aeroCache[unitDefID] and not cp.spawnAtTarget then
+		if aeroCache[unitDefID] and not cp.spawnattarget then
 			local strafeDistance = tonumber(cp.strafeDistance or 500)
 			local strafeOvertime = tonumber(cp.strafeOvertime or 1000)
 			Spring.MoveCtrl.SetAirMoveTypeData(unitID, "attackSafetyDistance", strafeDistance)
@@ -524,6 +525,7 @@ function gadget:UnitCreated(unitID, unitDefID, teamID)
 	
 	-- It's an aircon, initialize it
 	radios[teamID][unitID] = true
+	locked[unitID] = {}
 	GG.ClearCmdDescs(unitID, true)
 	GG.AddBuildMenu(unitID, aeroMenuCmdDescs)
 	GG.orderStatus[unitID] = 0
@@ -537,9 +539,14 @@ function gadget:UnitCreated(unitID, unitDefID, teamID)
 				toDelete[cmdDesc.id] = true
 			else
 				-- add in the deploy sortie cmddescs
-				local sortieCmdDesc = sideSortieCmdDescs[side][-cmdDesc.id]
+				local sortie = sortieDefs[-cmdDesc.id]
+				local sortieCmdDesc = sortie.cmdDesc
 				local stockpile = GetTeamRulesParam(teamID, "game_planes.stockpile" .. sortieCmdDesc.id) or 0
 				sortieCmdDesc.name = stockpile .. "\n" .. statusText.none -- TODO: assuming only aircon atm
+				if sortie.unlockLevel then
+					--Spring.Echo("PARP found a locked sortie", sortie.name, sortie.unlockLevel)
+					locked[unitID][sortieCmdDesc.id] = true
+				end
 				sortieCmdDesc.disabled = not (stockpile > 0)
 				GG.Delay.DelayCall(InsertUnitCmdDesc,{unitID, sortieCmdDesc}, 1) -- so that unit-perks populates upgrades first
 			end
@@ -699,6 +706,7 @@ function gadget:UnitDestroyed(unitID, unitDefID, teamID)
 	end
 	planeStates[unitID] = nil
 	radios[teamID][unitID] = nil
+	locked[unitID] = nil
 end
 
 function gadget:AllowUnitBuildStep(builderID, builderTeam, unitID, unitDefID, part)

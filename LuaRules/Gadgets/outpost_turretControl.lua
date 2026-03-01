@@ -81,13 +81,13 @@ local locked = {} -- teamID[unitDefID] = true
 
 local function LockHeavyTurrets(tcID, lock) 
 	local cmdDescs = GetUnitCmdDescs(tcID)
+	locked[tcID] = locked[tcID] or {}
 	for i = 1, #cmdDescs do
 		local defID = cmdDescs[i].id
 		if defID < 0 then
 			local class = turretDefIDs[-defID]
 			if class == 2 then
 				--Spring.Echo("Hiding", UnitDefs[-defID].name, class)
-				locked[tcID] = locked[tcID] or {}
 				locked[tcID][-defID] = lock
 				EditUnitCmdDesc(tcID, i, {hidden = lock})		
 			end
@@ -150,6 +150,7 @@ function gadget:UnitDestroyed(unitID, unitDefID, teamID, attackerID, attackerDef
 		end
 	elseif unitDefID == TURRETCONTROL_ID then -- turret control died, kill link and disable
 		tcTeams[unitID] = nil
+		locked[unitID] = nil
 		for turretID, controllerID in pairs(turretOwners) do
 			if controllerID == unitID then
 				GG.ToggleLink(turretID, teamID, true)
