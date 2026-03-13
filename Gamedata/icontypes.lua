@@ -1,9 +1,9 @@
 local iconTypes = {
-	--[[default = {
+	default = {
 		bitmap		=	"icons/blank.png",
 		size			=	0,
 		distance	=	5000,
-	},]]
+	},
 	--[[dropship = {
 		bitmap		=	"icons/dropship.png",
 		size			=	5,
