@@ -284,7 +284,7 @@ function UnloadCargo()
 	local numCargoAnim = numCargo <= 4 and numCargo or 4
 	for i = 1, numCargoAnim do
 		Turn(links[i], y_axis, (i <= 2 and 1 or -1) * math.rad(90)) -- bad argument #1 to 'Turn' (number expected, got nil), happens when > 4 mechs transported
-		Turn(doors[i], z_axis, (i <= 2 and -1 or 1) * math.rad(140), DOOR_SPEED)
+		Turn(doors[i], z_axis, (i % 2 == 1 and -1 or 1) * math.rad(140), DOOR_SPEED)
 	end
 	WaitForTurn(doors[numCargoAnim], z_axis)
 	for i = 1, numCargoAnim do
