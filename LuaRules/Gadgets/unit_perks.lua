@@ -108,6 +108,8 @@ local function UpdateRemaining(unitID, unitDefID, appType, newLevel, applierID)
 			elseif unitID and currentApps[unitID] then
 				if (not currentApps[unitID][appType][appDef.name] or currentApps[unitID][appType][appDef.name] < (appDef.levels or 1)) 
 				and validApps[Spring.GetUnitDefID(applierID)][appType][appCmdID] then
+					local cmdDescPos = FindUnitCmdDesc(applierID, appCmdID)
+					if not cmdDescPos then return end
 					appRemaining = true
 					local price = Spring.IsNoCostEnabled() and 0 or appDef.price
 					if price and appDef.applyTo and appDef.applyTo(unitDefID) then
@@ -118,18 +120,18 @@ local function UpdateRemaining(unitID, unitDefID, appType, newLevel, applierID)
 							price = appDef.priceFunction(unitDefID)
 							modCostsPerUnitDef[appDef.name][unitDefID] = price
 						end
-						EditUnitCmdDesc(applierID, FindUnitCmdDesc(applierID, appCmdID), {tooltip = BuildToolTip(appType, appDef, price)})
+						EditUnitCmdDesc(applierID, cmdDescPos, {tooltip = BuildToolTip(appType, appDef, price)})
 					end
 					if (newLevel < (price or -1))
 					or (appDef.requires and not currentApps[unitID][appType][appDef.requires]) then
-						EditUnitCmdDesc(applierID, FindUnitCmdDesc(applierID, appCmdID), {disabled = true,})
+						EditUnitCmdDesc(applierID, cmdDescPos, {disabled = true,})
 					elseif appType == "mods" then -- reset name if no longer applied
 						if currentModCounts[unitID] == MAX_MODS and not appDef.noLimit then
-							EditUnitCmdDesc(applierID, FindUnitCmdDesc(applierID, appCmdID), {disabled = true, name = GG.Pad(10, "Fully", "Modded")})
+							EditUnitCmdDesc(applierID, cmdDescPos, {disabled = true, name = GG.Pad(10, "Fully", "Modded")})
 						elseif incompatible[unitID] and incompatible[unitID][appDef.name] then
-							EditUnitCmdDesc(applierID, FindUnitCmdDesc(applierID, appCmdID), {name = appDef.cmdDesc.name .."\n  (Conflict)"})
+							EditUnitCmdDesc(applierID, cmdDescPos, {name = appDef.cmdDesc.name .."\n  (Conflict)"})
 						else
-							EditUnitCmdDesc(applierID, FindUnitCmdDesc(applierID, appCmdID), {disabled = false, name = appDef.cmdDesc.name})
+							EditUnitCmdDesc(applierID, cmdDescPos, {disabled = false, name = appDef.cmdDesc.name})
 						end
 					else
 						EditUnitCmdDesc(applierID, FindUnitCmdDesc(applierID, appCmdID), {disabled = false,})
