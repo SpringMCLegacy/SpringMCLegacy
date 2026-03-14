@@ -112,9 +112,12 @@ for unitName, ud in pairs(UnitDefs) do
 	if cp.baseclass or cp.dropship then --weapons or ud.canreclaim then -- TODO: remove stupid hack for BRVs
 		if not ud.sfxtypes then
 			ud.sfxtypes = { explosiongenerators = {} }
+			if unitName:find("dropzone") or unitName:find("vehiclepad") then
+				table.insert(ud.sfxtypes.explosiongenerators, "custom:beacon")
+			else
+				table.insert(ud.sfxtypes.explosiongenerators, 1, "custom:heavy_jumpjet_trail_blue")
+			end
 		end
-		-- for now all units have jumpjet CEG as 1 (SFX.CEG)
-		table.insert(ud.sfxtypes.explosiongenerators, 1, "custom:heavy_jumpjet_trail_blue")
 		local cp = ud.customparams
 		if weapons then
 			local maxrange = 0
@@ -197,9 +200,6 @@ for unitName, ud in pairs(UnitDefs) do
 		ud.sfxtypes = { explosiongenerators = {} }
 		table.insert(ud.sfxtypes.explosiongenerators, "custom:reentry_fx")
 		table.insert(ud.sfxtypes.explosiongenerators, "custom:ROACHPLOSION")
-		table.insert(ud.sfxtypes.explosiongenerators, "custom:beacon")
-	elseif unitName:find("dropzone") or unitName:find("vehiclepad") then
-		ud.sfxtypes = { explosiongenerators = {} }
 		table.insert(ud.sfxtypes.explosiongenerators, "custom:beacon")
 	end
 	if not ud.corpse then
