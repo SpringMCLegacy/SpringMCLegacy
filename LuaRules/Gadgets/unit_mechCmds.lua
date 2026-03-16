@@ -81,7 +81,7 @@ local turnCmdDesc = {
 	name = GG.Pad(10,"Turn"),
 	action = "turn",
 	tooltip = "Turn to face a location",
-	cursor = "Patrol",
+	cursor = "turn",
 }
 -- CMD.STOP
 local stopCmdDesc = {
