@@ -160,7 +160,8 @@ function gadget:CommandFallback(unitID, unitDefID, unitTeam, cmdID, cmdParams, c
 end
 
 function gadget:Initialize()
-	Spring.SetCustomCommandDrawData(CMD_TURN, "Patrol", {0,1,0,.8})
+	Spring.AssignMouseCursor("turn", "cursorturn")
+	Spring.SetCustomCommandDrawData(CMD_TURN, "turn", {0,1,0,.8})
 end
 
 else
