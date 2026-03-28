@@ -1,4 +1,5 @@
 -- Salvage Yard pieces
+mount = piece ("mount")
 local foundation, recoveryrail, armature1, armature2 = piece ("foundation", "recoveryrail", "armature1", "armature2")
 local supporttorchattach, supporttorchupper, supporttorchmid, supporttorchlower = piece ("supporttorchattach", "supporttorchupper", "supporttorchmid", "supporttorchlower")
 local supporthandattach, supporthandupper, supporthandmid, supporthandlower, supporthandjoint, supporthandfingers1, supporthandfingers2 = piece ("supporthandattach", "supporthandupper", "supporthandmid", "supporthandlower", "supporthandjoint", "supporthandfingers1", "supporthandfingers2")
@@ -27,8 +28,27 @@ function Setup()
 	Move(armature2, z_axis, -10)
 end
 
+local function RecoverAnim(tons)
+	--Spring.Echo("yoooooo, turn that shit upside down brah!")
+	Turn(mount, x_axis, -math.rad(90), math.rad(10))
+	WaitForTurn(mount, x_axis)
+	for n = 0, 100 do
+		Spring.SetUnitRulesParam(unitID, "recover", n)
+		Sleep(tons * 10) -- 1% x tons x 1000ms
+		--Spring.Echo("Recovery:", n, "%")
+	end
+	--Spring.Echo("Shazam I am done")
+	GG.YardNotifyDone(unitID, teamID, mount)
+	Spring.SetUnitRulesParam(unitID, "recover", nil)
+end
+
+function Recover(tons)
+	--Spring.Echo("yoooooo, recover me brah!")
+	StartThread(RecoverAnim, tons)
+end
+
 function Deploy()
-	GG.SpawnSalvager(unitID, teamID)
+	--GG.SpawnSalvager(unitID, teamID)
 	Show(foundation)
 	Move(armature1, z_axis, 0, CRATE_SPEED * 2)
 	Move(armature2, z_axis, 0, CRATE_SPEED * 2)

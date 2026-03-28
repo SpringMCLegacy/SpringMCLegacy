@@ -55,22 +55,46 @@ local DelayCall					 = GG.Delay.DelayCall
 local GAIA_TEAM_ID = Spring.GetGaiaTeamID()
 local BEACON_ID = UnitDefNames["beacon"].id
 local COLOURS = GG.GameConstants.colours
+
 -- Mech pickup
 local PICKUP_DIST = 100
+
 -- Salvager
-local SALVAGEYARD_ID = UnitDefNames["outpost_salvageyard"] and UnitDefNames["outpost_salvageyard"].id or nil
-local SALVAGER_DEF = UnitDefNames["salvager"]
-local SALVAGER_ID = SALVAGER_DEF.id
-local SALVAGER_PRICE = tonumber(SALVAGER_DEF.customParams.price)
-local SALVAGER_TOOLTIP = "Build: Salvager - " .. SALVAGER_DEF.tooltip .. ": n/a\n" 
-						.. "Health " .. SALVAGER_DEF.health .. "\n" 
-						.. COLOURS.cbills .. "C-Bills cost " .. SALVAGER_PRICE
+local SALVAGER_ID = UnitDefNames["salvager"].id
 local SALVAGE_RANGE = 4000
+local CMD_DEPOSIT = GG.CustomCommands.GetCmdID("CMD_DEPOSIT")
+
+-- BRV
+local BRV_ID = UnitDefNames["brv"].id
+local CMD_RECOVER = GG.CustomCommands.GetCmdID("CMD_RECOVER")
+
+local function GetToolTip(unitDefID, discount, action)
+	local ud = UnitDefs[unitDefID]
+	local weaponTooltip = ud.weapons[1] and "" or ": n/a "
+	local tooltip = action .. ": " .. ud.humanName .. " - " .. ud.tooltip .. weaponTooltip .. "\n" 
+					.. "Health " .. ud.health .. "\n"
+					.. COLOURS.cbills .. "C-Bills cost " .. tonumber(ud.customParams.price) * discount .. "\n"
+	if ud.customParams.tonnage then
+		tooltip = tooltip .. COLOURS.tonnage .. "Tonnage cost " .. tonumber(ud.customParams.tonnage)
+	end
+	return tooltip
+end
+
+-- Yard
+local SALVAGEYARD_ID = UnitDefNames["outpost_salvageyard"] and UnitDefNames["outpost_salvageyard"].id or nil
 local CONVERSION_RATE = 40 -- 1000 metal / this = 25
 local RATE_PER_TICK = modOptions and modOptions.salvagepertick or 1
 local TIME_PER_TICK = 30 * 60 -- 1 minute
-local CMD_DEPOSIT = GG.CustomCommands.GetCmdID("CMD_DEPOSIT")
-local CMD_NEWSALVAGER = -SALVAGER_ID --GG.CustomCommands.GetCmdID("CMD_NEWSALVAGER")
+local CMD_NEWSALVAGER = -SALVAGER_ID
+local SALVAGER_PRICE = tonumber(UnitDefNames["salvager"].customParams.price)
+local SALVAGER_TOOLTIP = GetToolTip(SALVAGER_ID, 1, "Build")
+local CMD_NEWBRV = -BRV_ID
+local BRV_PRICE = tonumber(UnitDefNames["brv"].customParams.price)
+local BRV_TOOLTIP = GetToolTip(BRV_ID, 1, "Build")
+
+local RECOVER_DISCOUNT = 0.2 -- 20% cbill cost
+GG.RECOVER_DISCOUNT = RECOVER_DISCOUNT -- TODO: move to modOptions
+
 
 -- Variables
 -- Mech pickup
@@ -89,17 +113,26 @@ local salvageCache = {} -- featureDefID = true
 local salvageArray = {} -- [1] = featureDefID1, ...
 local unitPinataLevels = {} -- unitID = 0 or 1 or 2 or 3
 
+local recoverTargets = {} -- unitID = featureID
+
 -- Salvage yard
 local yardLevels = {} -- yardLevels[yardID] = 1, 2 or 3
 local yardQueues = {} -- yardQueues[yardID] = {{dist = number, id = featureID}, ...}, from furthest to closest
 local yardPos = {} -- yardPos[yardID] = {x = x, y = y, z = z}
 local yardRaws = {} -- yardRaws[yardID] = metalInHarvestStorage
 local yardTeams = {} -- yardTeams[yardID] = teamID
+local remainingSlots = {} -- remainingSlots[unitID] = numberOfSlots
+
+local supportCosts = {
+	[SALVAGER_ID] = SALVAGER_PRICE,
+	[BRV_ID] = BRV_PRICE,
+}
 
 local salvagerYards = {} -- salvagerYards[salvagerID] = yardID
 local yardSalvagers = {} -- for now; yardSalvagers[yardID] = salvagerID
 local idleSalvagers = {} -- idleSalvagers[salvagerID] = true
 
+-- Salvager
 local depositCmdDesc = {
 	id 		= CMD_DEPOSIT,
 	type	= CMDTYPE.ICON_UNIT,
@@ -109,6 +142,17 @@ local depositCmdDesc = {
 	cursor	= "Unload",
 }
 
+-- BRV
+local recoverCmdDesc = {
+	id 		= CMD_RECOVER,
+	type	= CMDTYPE.ICON_UNIT_FEATURE_OR_AREA,
+	name 	= " Recover \n Mech",
+	action	= "recover",
+	tooltip = "Recover a wrecked mech to the salvage yard",
+	cursor	= "recover",
+}
+
+-- Yard
 local newSalvagerCmdDesc = {
 	id 		= CMD_NEWSALVAGER,
 	type	= CMDTYPE.ICON,
@@ -116,6 +160,23 @@ local newSalvagerCmdDesc = {
 	action	= "newsalvager",
 	tooltip = SALVAGER_TOOLTIP,
 }
+local newBRVCmdDesc = {
+	id 		= CMD_NEWBRV,
+	type	= CMDTYPE.ICON,
+	name 	= " New \n BRV",
+	action	= "newbrv",
+	tooltip = BRV_TOOLTIP,
+}
+
+local function GetMechCmdDesc(unitDefID)
+	local cmdDesc = {
+		id		= -unitDefID,
+		type 	= CMDTYPE.ICON,
+		action	= "resurrectmech",
+		tooltip = GetToolTip(unitDefID, RECOVER_DISCOUNT, "Recover"),
+	}
+	return cmdDesc
+end
 
 
 local function PinataLevel(unitID, delta)
@@ -142,17 +203,72 @@ local function SYardoutpost(unitID, level)
 end
 GG.SYardoutpost = SYardoutpost
 
-local function FeatureAttach(unitID, pieceNum, fakeID, featureID)
+
+local function FeatureAttachUpdate(unitID, pieceNum, fakeID, featureID)
 	local px, py, pz, dx, dy, dz = Spring.GetUnitPiecePosDir(unitID, pieceNum)
 	local front, up = Spring.GetUnitVectors(fakeID)
+	local heading = Spring.GetUnitHeading(fakeID)
 	local vx, vy, vz = Spring.GetUnitVelocity(unitID)
 	Spring.SetFeatureMoveCtrl(featureID,false,1,1,1,1,1,1,1,1,1)
 	Spring.SetFeaturePhysics(featureID, px,py,pz, vx,vy,vz, 0,0,0)
-	Spring.SetFeatureDirection(featureID, unpack(front), unpack(up))
+	--Spring.SetFeatureDirection(featureID, unpack(front), unpack(up))
+	--Spring.Echo("buh?", unpack(up), up[1], up[2], up[3])
+	Spring.SetFeatureHeadingAndUpDir(featureID, heading, up[1], up[2], up[3])
+end
+GG.FeatureAttachUpdate = FeatureAttachUpdate
+
+local featureAttachers = {}
+
+local function FeatureDetach(featureID)
+	if not featureAttachers[featureID] then return end
+	Spring.DestroyUnit(featureAttachers[featureID].fake, false, true)
+	featureAttachers[featureID] = nil
+	Spring.SetFeatureBlocking(featureID, true, true, true, true, true, true, true)
+end
+GG.FeatureDetach = FeatureDetach
+
+local function FeatureAttach(unitID, pieceNum, featureID, direct)
+	--FeatureDetach(featureID)
+	Spring.SetFeatureBlocking(featureID, false, false, false, false, false, false, false)
+	local x,y,z = Spring.GetUnitPiecePosDir(unitID, pieceNum)
+	local fakeID = direct and unitID or featureAttachers[featureID] and featureAttachers[featureID].fake or Spring.CreateUnit("fake", x,y,z, 0, Spring.GetUnitTeam(unitID))
+	if not direct then
+		Spring.UnitAttach(unitID, fakeID, pieceNum, true)
+	end
+	featureAttachers[featureID] = {
+		fake = fakeID, 
+		unit = unitID, 
+		piece = pieceNum
+	}
+	FeatureAttachUpdate(unitID, pieceNum, fakeID, featureID)
 end
 GG.FeatureAttach = FeatureAttach
 
-local function SpawnSalvager(yardID, teamID, salvagerID)
+local function Cripple(unitID)
+	env = Spring.UnitScript.GetScriptEnv(unitID)
+	Spring.UnitScript.CallAsUnit(unitID, env.limbHPControl, "left_leg", 10000)
+	Spring.UnitScript.CallAsUnit(unitID, env.limbHPControl, "right_leg", 10000)
+	Spring.SetUnitHealth(unitID, 1)
+	-- TODO: somehow track dead arms from the feature... :/ theoretically possible
+end
+
+local function YardNotifyDone(yardID, teamID, pieceNum)
+	local featureID = recoverTargets[yardID]
+	local info = featureAttachers[featureID]
+	local fd = FeatureDefs[Spring.GetFeatureDefID(featureID)]
+	local x,y,z = Spring.GetUnitPiecePosDir(yardID, pieceNum)
+	local heading = Spring.GetUnitHeading(info.fake)
+	local front, up = Spring.GetUnitVectors(info.fake)
+	FeatureDetach(featureID)
+	Spring.DestroyFeature(featureID)
+	local mechID = CreateUnit(fd.customParams.was, x,y,z, 0, teamID)
+	Spring.SetUnitHeadingAndUpDir(mechID, heading,  up[1], up[2], up[3])
+	Cripple(mechID)
+	recoverTargets[yardID] = nil
+end
+GG.YardNotifyDone = YardNotifyDone
+
+local function SpawnSalvager(yardID, teamID, salvagerID) -- TODO: rename to 'AssociateSupportVehicle' or something
 	local x, y, z = GetUnitPosition(yardID)
 	yardPos[yardID] = {["x"] = x, ["y"] = y, ["z"] = z}
 	salvagerID = salvagerID or CreateUnit(SALVAGER_ID, x,y,z, 0, teamID)
@@ -172,11 +288,19 @@ function gadget:UnitCreated(unitID, unitDefID, teamID, builderID)
 		yardQueues[unitID] = {}
 		yardRaws[unitID] = 0
 		yardTeams[unitID] = teamID
+		remainingSlots[unitID] = 4
 		InsertUnitCmdDesc(unitID, newSalvagerCmdDesc)
+		InsertUnitCmdDesc(unitID, newBRVCmdDesc) -- TODO: lock behind an upgrade
 	elseif unitDefID == SALVAGER_ID then
 		InsertUnitCmdDesc(unitID, depositCmdDesc)
+	elseif unitDefID == BRV_ID then
+		InsertUnitCmdDesc(unitID, recoverCmdDesc)
 	elseif GG.mechCache[unitDefID] then -- a mech
 		unitPinataLevels[unitID] = 0
+		if builderID and GetUnitDefID(builderID) == SALVAGER_ID then -- TODO: change to brv
+			Spring.SetUnitHealth(unitID, 1, 0, 100)
+			GG.Delay.DelayCall(Cripple, {unitID}, 1)
+		end
 	end
 end
 
@@ -185,7 +309,11 @@ function gadget:UnitDestroyed(unitID, unitDefID, teamID)
 	yardQueues[unitID] = nil
 	yardRaws[unitID] = nil
 	yardTeams[unitID] = nil
-	salvagerYards[unitID] = nil
+	local yardID = salvagerYards[unitID]
+	if yardID then
+		remainingSlots[yardID] = remainingSlots[yardID] + 1
+		salvagerYards[unitID] = nil
+	end
 	yardSalvagers[unitID] = nil
 	idleSalvagers[unitID] = nil
 end
@@ -252,7 +380,7 @@ function gadget:UnitIdle(unitID, unitDefID, teamID)
 	if yardID then -- is a Salvager
 		--Spring.Echo("Yawn! Nought to do here boss")
 		local dist = GetUnitSeparation(unitID, yardID)
-		if dist and dist > 50 then -- nothing else to salvage, force RTB
+		if dist and dist > 50 and not (unitDefID == BRV_ID and not recoverTargets[unitID]) then -- nothing else to salvage, force RTB
 			gadget:UnitHarvestStorageFull(unitID, unitDefID, teamID)
 		else
 			idleSalvagers[unitID] = true
@@ -272,18 +400,52 @@ function gadget:AllowCommand(unitID, unitDefID, teamID, cmdID, cmdParams, cmdOpt
 		else
 			return false
 		end
-	elseif cmdID == CMD.RECLAIM and isSalvager then
-		idleSalvagers[unitID] = false
-	elseif yardLevels[unitID] and cmdID == CMD_NEWSALVAGER then
-		local cBills = GetTeamResources(teamID, "metal")
-		if cBills >= SALVAGER_PRICE then
-			GG.DropshipDelivery(Spring.GetUnitRulesParam(unitID, "beaconID"), unitID, teamID, GG.teamSide[teamID] .. "_bishop", SALVAGER_ID, 0, nil, 0, {x = 0, z = 200})
-			UseTeamResource(teamID, "m", SALVAGER_PRICE)
+	elseif cmdID == CMD_RECOVER and unitDefID == BRV_ID then -- TODO: make a 'isBRV' to include BRV, Heavy BRV, Savior?
+		local yardID = salvagerYards[unitID]
+		if recoverTargets[yardID] then return false end -- yard already has a corpse loaded, TODO: this can fail if you have multiple BRV
+		--for k,v in pairs(cmdParams) do Spring.Echo("toot", k, v) end
+		local featureID = (cmdParams[1] and cmdParams[1] > Game.maxUnits and cmdParams[1] or 0) - Game.maxUnits -- TODO: handle area commands
+		--Spring.Echo("PARP", featureID)
+		if featureID > 0 then
+			local x,y,z = GetFeaturePosition(featureID)
+			--Spring.Echo("Gonna find me a corpse bride!", x,y,z)
+			SetUnitMoveGoal(unitID, x, y, z)
+			recoverTargets[unitID] = featureID
+			salvageSources[featureID] = nil
 			return true
+		end
+		return false
+	elseif cmdID == CMD.RECLAIM and isSalvager then
+		if salvageSources[featureID] then
+			idleSalvagers[unitID] = false
+			return true
+		end
+		return false
+	elseif yardLevels[unitID] and cmdID < 0 then 
+		local cBills = GetTeamResources(teamID, "metal")
+		local supportCost = supportCosts[-cmdID]
+		if supportCost then -- purchasing a support vehicle
+			if cBills >= supportCost then
+				GG.DropshipDelivery(Spring.GetUnitRulesParam(unitID, "beaconID"), unitID, teamID, GG.teamSide[teamID] .. "_bishop", -cmdID, 0, nil, 0, {x = 0, z = 200})
+				UseTeamResource(teamID, "m", supportCosts[-cmdID])
+				remainingSlots[unitID] = remainingSlots[unitID] - 1 -- TODO: higher slot cost for BRV?
+				return true
+			end
+		else -- Rezzing a mech, in theory
+			local cost = tonumber(UnitDefs[-cmdID].customParams.price) * RECOVER_DISCOUNT
+			local tons = tonumber(UnitDefs[-cmdID].customParams.tonnage)
+			local tonnage = GetTeamResources(teamID, "energy")
+			if cBills >= cost and tonnage >= tons then
+				env = Spring.UnitScript.GetScriptEnv(unitID)
+				Spring.UnitScript.CallAsUnit(unitID, env.Recover, tons)
+				Spring.RemoveUnitCmdDesc(unitID, FindUnitCmdDesc(unitID, cmdID))
+				return true
+			end
 		end
 		GG.PlaySoundForTeam(teamID, "bb_insufficient_cbills", 1)
 		return false
 	end
+	--if cmdID == CMD.RESURRECT then Spring.Echo("Yay rezzin time!") end
 	return true
 end
 
@@ -292,17 +454,46 @@ function gadget:CommandFallback(unitID, unitDefID, teamID, cmdID, cmdParams, cmd
 		local yardID = salvagerYards[unitID]
 		local dist = GetUnitSeparation(unitID, yardID)
 		if dist and dist < 50 then
-			local raw = GetUnitHarvestStorage(unitID)
-			local salvage = math.floor(raw / CONVERSION_RATE)
-			--Spring.Echo("Made it back, have " .. salvage .. " Salvage!")
-			yardRaws[yardID] = yardRaws[yardID] + raw
-			SetUnitHarvestStorage(yardID, yardRaws[yardID])
-			SetUnitHarvestStorage(unitID, 0)
-			local pos = yardPos[yardID]
-			DelayCall(GiveOrderToUnit, {unitID, CMD.RECLAIM, {pos.x, pos.y, pos.z, SALVAGE_RANGE}, {}}, 1) -- TODO: range change
+			if unitDefID == SALVAGER_ID then -- depositing salvage
+				local raw = GetUnitHarvestStorage(unitID)
+				local salvage = math.floor(raw / CONVERSION_RATE)
+				--Spring.Echo("Made it back, have " .. salvage .. " Salvage!")
+				yardRaws[yardID] = yardRaws[yardID] + raw
+				SetUnitHarvestStorage(yardID, yardRaws[yardID])
+				SetUnitHarvestStorage(unitID, 0)
+				local pos = yardPos[yardID]
+				DelayCall(GiveOrderToUnit, {unitID, CMD.RECLAIM, {pos.x, pos.y, pos.z, SALVAGE_RANGE}, {}}, 1) -- TODO: range change
+			elseif unitDefID == BRV_ID then
+				local featureID = recoverTargets[unitID]
+				local featureDef = FeatureDefs[Spring.GetFeatureDefID(featureID)]
+				--Spring.Echo("Made it back, have a " .. featureDef.name .. " to ressurect!")
+				FeatureDetach(featureID)
+				env = Spring.UnitScript.GetScriptEnv(unitID)
+				Spring.UnitScript.CallAsUnit(unitID, env.UnloadFeature, featureID)
+				env = Spring.UnitScript.GetScriptEnv(yardID)
+				FeatureAttach(yardID, env.mount, featureID)
+				recoverTargets[unitID] = nil
+				recoverTargets[yardID] = featureID
+				local cp = featureDef.customParams
+				local targetDefID = cp.was and UnitDefNames[cp.was].id or 0
+				local cmdDesc = GetMechCmdDesc(targetDefID)
+				Spring.InsertUnitCmdDesc(yardID, cmdDesc)
+			end
 			return true, true
 		else -- not home yet, keep going
 			return true, false
+		end
+	elseif cmdID == CMD_RECOVER then
+		local featureID = recoverTargets[unitID]
+		if featureID then
+			local dist = Spring.GetUnitFeatureSeparation(unitID, featureID)
+			if dist and dist < 50 then
+				env = Spring.UnitScript.GetScriptEnv(unitID)
+				Spring.UnitScript.CallAsUnit(unitID, env.RecoverFeature, featureID)
+				return true, true
+			else -- not there yet, keep going
+				return true, false
+			end
 		end
 	end
 	return false
@@ -330,9 +521,16 @@ function gadget:Initialize()
 		local unitDefID = Spring.GetUnitDefID(unitID)
 		gadget:UnitCreated(unitID, unitDefID, teamID)
 	end
+	Spring.AssignMouseCursor("recover", "cursorpickup")
+	Spring.SetCustomCommandDrawData(CMD_RECOVER, "recover", {1,0.7,0.9,0.8})
 end
 
 function gadget:GameFrame(n)
+	-- every frame
+	for featureID, info in pairs(featureAttachers) do
+		FeatureAttachUpdate(info.unit, info.piece, info.fake, featureID)
+	end
+	
 	if n % TIME_PER_TICK == 5 then
 		for yardID, teamID in pairs(yardTeams) do
 			-- turn water into wine
@@ -361,7 +559,7 @@ function gadget:GameFrame(n)
 			end
 		end
 		for yardID, teamID in pairs(yardTeams) do
-			GG.CheckBuildOptions(yardID, teamID, 6)
+			GG.CheckBuildOptions(yardID, teamID, remainingSlots[yardID])
 		end
 	end
 end

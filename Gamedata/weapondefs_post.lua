@@ -173,7 +173,7 @@ for unitName, ud in pairs(UnitDefs) do
 						footprintz = ud.footprintz,
 						object = corpseModel,
 						customparams = {
-							["was"] = ud.name,
+							["was"] = unitName,
 							["normaltex"] = cp.normaltex,
 						},
 						reclaimable = true,

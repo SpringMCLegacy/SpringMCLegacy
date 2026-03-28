@@ -238,7 +238,11 @@ local function GenerateUnitGraphics(uid, udid, getAuras)
 				bars.salvage = {}
 				bars.salvage.color = {0.77647, 0.88627, 1, 0.8} --198\226\255
 			end	
-
+			local recovery = GetUnitRulesParam(uid, "recover")
+			if recovery then
+				bars.recovery = {}
+				bars.recovery.color = {1, 0.65, 0, 0.8}
+			end
         end
 	end
 
@@ -310,6 +314,12 @@ local function GenerateUnitGraphics(uid, udid, getAuras)
 		else
 			bars.salvage.pct = nil
 		end
+	end
+	
+	if bars.recovery then
+		local recovery = GetUnitRulesParam(uid, "recover")
+		bars.recovery.pct = tonumber(recovery)/100
+		display = true
 	end
 	
 	-- APC

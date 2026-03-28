@@ -5,11 +5,12 @@ local Salvager = LightTank:New{
 	
 	builder 			= true,
 	canReclaim 			= true,
+	--canResurrect 		= true,
+	canRestore			= false,
 	canRepair			= false,
 	harvestStorage		= 1000,
 	workerTime			= 200,
 	buildDistance 		= 50,
-	holdSteady			= true,
 	
 	--weapons	= {	
 	--},
@@ -18,7 +19,7 @@ local Salvager = LightTank:New{
 		tonnage			= 60,
 		variant         = "",
 		speed			= 50,
-		price			= 10170,
+		price			= 5085,
 		heatlimit 		= 10,
 		armor			= 6,
 		squadsize 		= 1,

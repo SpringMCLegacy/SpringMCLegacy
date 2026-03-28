@@ -5,13 +5,14 @@ local Outpost_SalvageYard = Outpost:New{
 	maxDamage           = 10000,
 	mass                = 9000,
 	buildCostMetal      = 7200,
-		
-	--[[transportSize		= 3,
-	transportCapacity	= 3, -- 1x transportSize
-	transportMass		= 10000,
-	loadingradius		= 100,]]
 	
 	harvestStorage		= 20000,
+	
+	--[[builder				= true,
+	canResurrect		= true,
+	workerTime			= 100,
+	buildDistance		= 50,]]
+	holdSteady			= true,
 	
 	sounds = {
 		select = "salvageyard",

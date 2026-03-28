@@ -1,15 +1,9 @@
 local BRV = Tank:New{
-	name              	= "BRV",
-	description         = "Support Vehicle",
+	name              	= "Heavy BRV",
+	description         = "Support Vehicle - Loads an entire wreck and deposits it at the salvage yard for recovery or scrapping.",
 	trackWidth			= 25,--width to render the decal
 	
-	builder 			= true,
-	canReclaim 			= true,
-	canRepair			= false,
-	harvestStorage		= 1000,
-	workerTime			= 200,
-	buildDistance 		= 50,
-	
+	holdSteady = true,
 	--weapons	= {	
 	--},
 

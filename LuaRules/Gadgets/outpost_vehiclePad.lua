@@ -89,6 +89,7 @@ local weights = {"light", "medium", "heavy", "assault",} -- TODO: this is repeat
 
 local blackList = {
 	[UnitDefNames["salvager"].id] = true,
+	[UnitDefNames["brv"].id] = true,
 }
 
 function gadget:Initialize()

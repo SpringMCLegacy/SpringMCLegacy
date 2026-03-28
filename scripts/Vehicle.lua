@@ -482,6 +482,24 @@ local function UnLoad(targetID)
 	--cargo = nil -- reset cargo container, so we get a clean roster when they re-embark (perhaps some died :()
 end
 
+	local function Derp(featureID)
+		GG.FeatureAttach(unitID, piece("bed"), featureID)
+		local fd = FeatureDefs[Spring.GetFeatureDefID(featureID)]
+		-- change speed based on weight
+		GG.SpeedChange(unitID, unitDefID, (12000 - fd.mass)/10000)
+	end
+	
+	function UnloadFeature(featureID)
+		GG.SpeedChange(unitID, unitDefID, 1)
+	end
+	
+	function RecoverFeature(featureID)
+		if unitDef.name == "brv" then
+			--Spring.Echo("DERPIN TIME!")
+			StartThread(Derp, featureID)
+		end
+	end
+	
 function script.Create()
 	if wakepoint then
 		local fxStages = { {1, "hovercraft", EMPTY}, }
@@ -780,20 +798,7 @@ function script.QueryWeapon(weaponID)
 	end
 end
 
-if unitDef.isBuilder and unitDef.name == "salvager" then -- BRVS
-
-	local function Derp()
-		local attachPiece = piece("crane_claw1")
-		local x,y,z = Spring.GetUnitPiecePosDir(unitID, piece("crane_claw1"))
-		local fakeID = Spring.CreateUnit("fake", x,y,z, 0, teamID)
-		Spring.UnitAttach(unitID, fakeID, attachPiece)
-		local featureID = Spring.CreateFeature("fs_locust_lct3d_x", x,y,z, 0, teamID)
-		Spring.SetFeatureBlocking(featureID, false, false, false, false, false, false, false)
-		while true do
-			GG.FeatureAttach(unitID, attachPiece, fakeID, featureID)
-			Sleep(30)
-		end
-	end
+if unitDef.isBuilder or unitDef.name == "brv" then -- BRVS
 	
 	local crateID
 	function EnCrate()
@@ -813,13 +818,13 @@ if unitDef.isBuilder and unitDef.name == "salvager" then -- BRVS
 			Spring.UnitScript.CallAsUnit(crateID, env.Unloaded)
 			Spring.UnitDetach(crateID)
 		end
-		--StartThread(Derp)
 	end
 	
 	Spring.SetUnitNanoPieces(unitID, {piece("crane_wrist2")})
 
 	local CRANE_Y = math.rad(30)
 	
+	if unitDef.isBuilder then
 	function script.StartBuilding(heading, pitch)
 		--Spring.Echo("StartBuilding!")
 		-- TODO: unfold anim and waits
@@ -865,6 +870,7 @@ if unitDef.isBuilder and unitDef.name == "salvager" then -- BRVS
 		for i = 1, amount do
 			Explode(piece("crane_base"), SFX.FIRE + SFX.SMOKE)
 		end
+	end
 	end
 end
 
