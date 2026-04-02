@@ -162,10 +162,11 @@ for unitName, ud in pairs(UnitDefs) do
 				for corpseType, path in pairs(corpseModels) do
 					local corpseModelExists = VFS.FileExists("objects3d/" .. path, VFS.ZIP)
 					corpseModel = (corpseModelExists and path) or (corpseModelBaseExists and corpseModels._x) or ud.objectname
+					local info = corpseType == "_x_both" and " (No arms)" or corpseType == "_x_left" and " (No left arm)" or corpseType == "_x_right" and " (No right arm)" or ""
 					--Spring.Echo("corspeModel", corpseType, path, corpseModel, corpseModelExists)
 					FeatureDefs[unitName .. corpseType] = Feature:New{
 						damage = ud.maxdamage * 0.5,
-						description = "Wrecked " .. ud.name,
+						description = "Wrecked " .. ud.name .. info,
 						mass = ud.mass,
 						metal = (cp.price or 200) * 0.5,
 						featuredead = "wreck_x",

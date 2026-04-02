@@ -948,8 +948,25 @@ function script.Killed(recentDamage, maxHealth)
 	local heading = Spring.GetUnitHeading(unitID)
 	local leftArmMissing = limbHPs["left_arm"] <= 0
 	local rightArmMissing = limbHPs["right_arm"] <= 0
-	if leftArmMissing and rightArmMissing then Spring.CreateFeature(unitDef.name .. "_x_both", x,y,z, heading, teamID)
-	elseif leftArmMissing then Spring.CreateFeature(unitDef.name .. "_x_left", x,y,z, heading, teamID)
-	elseif rightArmMissing then Spring.CreateFeature(unitDef.name .. "_x_right", x,y,z, heading, teamID)
-	else return 1 end
+	local corpseType = ""
+	local toHide = {}
+	if leftArmMissing then 
+		corpseType = rightArmMissing and "both" or "left"
+		toHide["lupperarm"] = true
+		toHide["llowerarm"] = true
+	end
+	if rightArmMissing then 
+		corpseType = leftArmMissing and "both" or "right"
+		toHide["rupperarm"] = true
+		toHide["rlowerarm"] = true
+	end
+	if not leftArmMissing and not rightArmMissing then return 1 end
+	-- hide feature pieces
+	local featureID = Spring.CreateFeature(unitDef.name .. "_x_" .. corpseType, x,y,z, heading, teamID)
+	local fPieces = Spring.GetFeaturePieceMap(featureID)
+	for pieceName in pairs(toHide) do
+		if fPieces[pieceName] then
+			Spring.SetFeaturePieceVisible(featureID, fPieces[pieceName], false)
+		end
+	end
 end
