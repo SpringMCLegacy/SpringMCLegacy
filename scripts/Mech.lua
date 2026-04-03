@@ -379,7 +379,7 @@ function SmokeLimb(limb, hitPiece)
 end
 
 
-function hideLimbPieces(limb, hide)
+function hideLimbPieces(limb, hide, silent)
 	local rootPiece
 	local limbWeapons
 	if limb == "left_arm" then
@@ -394,7 +394,9 @@ function hideLimbPieces(limb, hide)
 	else -- legs
 		if hide then
 			local side = limb == "left_leg" and llowerleg or rlowerleg
-			Explode(side, SFX.FIRE + SFX.SHATTER + SFX.RECURSIVE)
+			if not silent then
+				Explode(side, SFX.FIRE + SFX.SHATTER + SFX.RECURSIVE)
+			end
 			lostLegs = lostLegs + 1
 			--Spring.Echo("Lost a leg! halving move speed")
 			speedMod = 1 / (2^lostLegs)
@@ -417,8 +419,10 @@ function hideLimbPieces(limb, hide)
 		return
 	end
 	if hide then
-		EmitSfx(rootPiece, SFX.CEG + numWeapons + 1)
-		Explode(rootPiece, SFX.FIRE + SFX.SMOKE + SFX.RECURSIVE)
+		if not silent then
+			EmitSfx(rootPiece, SFX.CEG + numWeapons + 1)
+			Explode(rootPiece, SFX.FIRE + SFX.SMOKE + SFX.RECURSIVE)
+		end
 		local cookoffDamage = 0
 		for id, valid in pairs(limbWeapons) do
 			local damage = 0
@@ -429,7 +433,7 @@ function hideLimbPieces(limb, hide)
 				local weapDef = WeaponDefs[unitDef.weapons[id].weaponDef]
 				local ammoType = ammoTypes[id]
 				--Spring.Echo("Destroyed weapon", weapDef.name, "had ammo type", ammoType, "was 1 of", info.ammoTypeWeapCounts[ammoType], "mech had", currAmmo[ammoType], "/", maxAmmo[ammoType])
-				if ammoType then
+				if ammoType and not silent then
 					local ammoPCentLost = case and 0.25 or 0.5
 					local ammoLost = math.floor(currAmmo[ammoType] / info.ammoTypeWeapCounts[ammoType] * ammoPCentLost)
 					ChangeAmmo(ammoType, -ammoLost)
@@ -437,7 +441,7 @@ function hideLimbPieces(limb, hide)
 				end
 			end
 		end
-		cookoffDamage = cookoffDamage * (case and 0 or expandedBins and 2 or 1)
+		cookoffDamage = cookoffDamage * ((case or silent) and 0 or expandedBins and 2 or 1)
 		if cookoffDamage > 0 then Spring.AddUnitDamage(unitID, cookoffDamage, nil, nil, -314) end
 	else
 		for id, valid in pairs(limbWeapons) do
@@ -450,13 +454,13 @@ function hideLimbPieces(limb, hide)
 end
 
 local limbsLost = 0
-function limbHPControl(limb, damage, piece)
+function limbHPControl(limb, damage, piece, silent, hpNotDamage)
 	local currHP = limbHPs[limb]
 	if currHP > 0 or (damage or 0) < 0 then
-		local newHP = math.min(limbHPs[limb] - damage, info.limbHPs[limb]) -- don't allow HP above max
+		local newHP = hpNotDamage and damage or math.min(limbHPs[limb] - damage, info.limbHPs[limb]) -- don't allow HP above max
 		--Spring.Echo(unitDef.name, limb, "newHP", newHP, "currHP", currHP)
 		if newHP < 0 then 
-			hideLimbPieces(limb, true)
+			hideLimbPieces(limb, true, silent)
 			newHP = 0
 			limbsLost = limbsLost + 1
 			SetUnitRulesParam(unitID, "limblost", limbsLost)
@@ -945,28 +949,11 @@ function script.Killed(recentDamage, maxHealth)
 		GG.PlaySoundForTeam(Spring.GetUnitTeam(unitID), "BB_BattleMech_destroyed_" .. soundNum, 1)
 	end
 	-- live fast, die young, leave a beautiful corpse
+	local lArm = limbHPs["left_arm"] <= 0
+	local rArm = limbHPs["right_arm"] <= 0
+	local corpseType = (rArm and lArm) and "both" or rArm and "right" or lArm and "left" or nil
+	if not corpseType then return 1 end
+	-- spawn relevant feature
 	local heading = Spring.GetUnitHeading(unitID)
-	local leftArmMissing = limbHPs["left_arm"] <= 0
-	local rightArmMissing = limbHPs["right_arm"] <= 0
-	local corpseType = ""
-	local toHide = {}
-	if leftArmMissing then 
-		corpseType = rightArmMissing and "both" or "left"
-		toHide["lupperarm"] = true
-		toHide["llowerarm"] = true
-	end
-	if rightArmMissing then 
-		corpseType = leftArmMissing and "both" or "right"
-		toHide["rupperarm"] = true
-		toHide["rlowerarm"] = true
-	end
-	if not leftArmMissing and not rightArmMissing then return 1 end
-	-- hide feature pieces
 	local featureID = Spring.CreateFeature(unitDef.name .. "_x_" .. corpseType, x,y,z, heading, teamID)
-	local fPieces = Spring.GetFeaturePieceMap(featureID)
-	for pieceName in pairs(toHide) do
-		if fPieces[pieceName] then
-			Spring.SetFeaturePieceVisible(featureID, fPieces[pieceName], false)
-		end
-	end
 end

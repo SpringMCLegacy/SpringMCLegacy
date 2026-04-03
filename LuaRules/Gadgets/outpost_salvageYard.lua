@@ -244,12 +244,13 @@ local function FeatureAttach(unitID, pieceNum, featureID, direct)
 end
 GG.FeatureAttach = FeatureAttach
 
-local function Cripple(unitID)
+local function Cripple(unitID, lArm, rArm)
 	env = Spring.UnitScript.GetScriptEnv(unitID)
-	Spring.UnitScript.CallAsUnit(unitID, env.limbHPControl, "left_leg", 10000)
-	Spring.UnitScript.CallAsUnit(unitID, env.limbHPControl, "right_leg", 10000)
+	Spring.UnitScript.CallAsUnit(unitID, env.limbHPControl, "left_leg", 10000, nil, true)
+	Spring.UnitScript.CallAsUnit(unitID, env.limbHPControl, "right_leg", 10000, nil, true)
+	Spring.UnitScript.CallAsUnit(unitID, env.limbHPControl, "left_arm", lArm and 10000 or 10, nil, true, not lArm)
+	Spring.UnitScript.CallAsUnit(unitID, env.limbHPControl, "right_arm", rArm and 10000 or 10, nil, true, not rArm)
 	Spring.SetUnitHealth(unitID, 1)
-	-- TODO: somehow track dead arms from the feature... :/ theoretically possible
 end
 
 local function YardNotifyDone(yardID, teamID, pieceNum)
@@ -263,7 +264,9 @@ local function YardNotifyDone(yardID, teamID, pieceNum)
 	Spring.DestroyFeature(featureID)
 	local mechID = CreateUnit(fd.customParams.was, x,y,z, 0, teamID)
 	Spring.SetUnitHeadingAndUpDir(mechID, heading,  up[1], up[2], up[3])
-	Cripple(mechID)
+	local lArm = fd.name:find("_left") or fd.name:find("_both")
+	local rArm = fd.name:find("_right") or fd.name:find("_both")
+	Cripple(mechID, lArm, rArm)
 	recoverTargets[yardID] = nil
 end
 GG.YardNotifyDone = YardNotifyDone
@@ -332,6 +335,26 @@ function gadget:FeatureCreated(featureID, allyTeamID)
 			["amount"] = amount * (modOptions.salvageperpile or 1),
 		}
 	elseif cp and cp.was then
+		local toHide = {}
+		local somethingToHide = false
+		if cp.left then
+			toHide["lupperarm"] = true
+			toHide["llowerarm"] = true
+			somethingToHide = true
+		end
+		if cp.right then
+			toHide["rupperarm"] = true
+			toHide["rlowerarm"] = true
+			somethingToHide = true
+		end
+		if somethingToHide then
+			local fPieces = Spring.GetFeaturePieceMap(featureID)
+			for pieceName in pairs(toHide) do
+				if fPieces[pieceName] then
+					Spring.SetFeaturePieceVisible(featureID, fPieces[pieceName], false)
+				end
+			end
+		end
 		for yardID, level in pairs(yardLevels) do
 			local dist = GetUnitFeatureSeparation(yardID, featureID, true)
 			if dist and dist <= SALVAGE_RANGE then -- TODO: allow for upgrading range
