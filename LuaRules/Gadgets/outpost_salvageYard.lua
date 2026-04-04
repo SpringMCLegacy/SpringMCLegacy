@@ -244,13 +244,17 @@ local function FeatureAttach(unitID, pieceNum, featureID, direct)
 end
 GG.FeatureAttach = FeatureAttach
 
-local function Cripple(unitID, lArm, rArm)
+local function Cripple(unitID, unitDefID, lArm, rArm)
+	local info = GG.lusHelper[unitDefID]
 	env = Spring.UnitScript.GetScriptEnv(unitID)
 	Spring.UnitScript.CallAsUnit(unitID, env.limbHPControl, "left_leg", 10000, nil, true)
 	Spring.UnitScript.CallAsUnit(unitID, env.limbHPControl, "right_leg", 10000, nil, true)
-	Spring.UnitScript.CallAsUnit(unitID, env.limbHPControl, "left_arm", lArm and 10000 or 10, nil, true, not lArm)
-	Spring.UnitScript.CallAsUnit(unitID, env.limbHPControl, "right_arm", rArm and 10000 or 10, nil, true, not rArm)
+	Spring.UnitScript.CallAsUnit(unitID, env.limbHPControl, "left_arm", lArm and 10000 or info.limbHPs.left_arm * 0.1, nil, true, not lArm)
+	Spring.UnitScript.CallAsUnit(unitID, env.limbHPControl, "right_arm", rArm and 10000 or info.limbHPs.right_arm * 0.1, nil, true, not rArm)
 	Spring.SetUnitHealth(unitID, 1)
+	for ammoType, maxAmmo in pairs(info.ammoTypeWeapCounts) do
+		Spring.UnitScript.CallAsUnit(unitID, env.ChangeAmmo, ammoType, -1000)
+	end
 end
 
 local function YardNotifyDone(yardID, teamID, pieceNum)
@@ -262,11 +266,12 @@ local function YardNotifyDone(yardID, teamID, pieceNum)
 	local front, up = Spring.GetUnitVectors(info.fake)
 	FeatureDetach(featureID)
 	Spring.DestroyFeature(featureID)
-	local mechID = CreateUnit(fd.customParams.was, x,y,z, 0, teamID)
+	local mechDefID = UnitDefNames[fd.customParams.was].id
+	local mechID = CreateUnit(mechDefID, x,y,z, 0, teamID)
 	Spring.SetUnitHeadingAndUpDir(mechID, heading,  up[1], up[2], up[3])
 	local lArm = fd.name:find("_left") or fd.name:find("_both")
 	local rArm = fd.name:find("_right") or fd.name:find("_both")
-	Cripple(mechID, lArm, rArm)
+	Cripple(mechID, mechDefID, lArm, rArm)
 	recoverTargets[yardID] = nil
 end
 GG.YardNotifyDone = YardNotifyDone

@@ -183,7 +183,7 @@ function ChangeAmmo(ammoType, amount, maxAmmoMult)
 	if not newAmmoLevel and maxAmmo[ammoType] then -- ERROR: somehow one of these can be wrong type / nil?
 		Spring.Echo("BUGREPORT: Mech.lua L168:", newAmmoLevel, maxAmmo[ammoType])
 	elseif newAmmoLevel <= maxAmmo[ammoType] then 
-		currAmmo[ammoType] = newAmmoLevel
+		currAmmo[ammoType] = math.max(newAmmoLevel, 0)
 		SetUnitRulesParam(unitID, "ammo_" .. ammoType, 100 * newAmmoLevel / maxAmmo[ammoType])
 		return true -- Ammo was changed
 	end
