@@ -94,7 +94,7 @@ local BRV_TOOLTIP = GetToolTip(BRV_ID, 1, "Build")
 
 local RECOVER_DISCOUNT = 0.2 -- 20% cbill cost
 GG.RECOVER_DISCOUNT = RECOVER_DISCOUNT -- TODO: move to modOptions
-
+local CMD_SCRAP = GG.CustomCommands.GetCmdID("CMD_SCRAP")
 
 -- Variables
 -- Mech pickup
@@ -174,10 +174,17 @@ local function GetMechCmdDesc(unitDefID)
 		type 	= CMDTYPE.ICON,
 		action	= "resurrectmech",
 		tooltip = GetToolTip(unitDefID, RECOVER_DISCOUNT, "Recover"),
+		name	= "Recover",
 	}
 	return cmdDesc
 end
-
+local scrapMechCmdDesc = {
+	id 		= CMD_SCRAP,
+	type	= CMDTYPE.ICON,
+	name 	= GG.Pad("Scrap","Mech", COLOURS.salvage .. "   (+S)"),
+	action	= "scrapmech",
+	tooltip = "Scraps the mech for ",
+}
 
 local function PinataLevel(unitID, delta)
 	if delta then
@@ -265,7 +272,7 @@ local function YardNotifyDone(yardID, teamID, pieceNum)
 	local heading = Spring.GetUnitHeading(info.fake)
 	local front, up = Spring.GetUnitVectors(info.fake)
 	FeatureDetach(featureID)
-	Spring.DestroyFeature(featureID)
+	DestroyFeature(featureID)
 	local mechDefID = UnitDefNames[fd.customParams.was].id
 	local mechID = CreateUnit(mechDefID, x,y,z, 0, teamID)
 	Spring.SetUnitHeadingAndUpDir(mechID, heading,  up[1], up[2], up[3])
@@ -431,9 +438,7 @@ function gadget:AllowCommand(unitID, unitDefID, teamID, cmdID, cmdParams, cmdOpt
 	elseif cmdID == CMD_RECOVER and unitDefID == BRV_ID then -- TODO: make a 'isBRV' to include BRV, Heavy BRV, Savior?
 		local yardID = salvagerYards[unitID]
 		if recoverTargets[yardID] then return false end -- yard already has a corpse loaded, TODO: this can fail if you have multiple BRV
-		--for k,v in pairs(cmdParams) do Spring.Echo("toot", k, v) end
 		local featureID = (cmdParams[1] and cmdParams[1] > Game.maxUnits and cmdParams[1] or 0) - Game.maxUnits -- TODO: handle area commands
-		--Spring.Echo("PARP", featureID)
 		if featureID > 0 then
 			local x,y,z = GetFeaturePosition(featureID)
 			--Spring.Echo("Gonna find me a corpse bride!", x,y,z)
@@ -449,25 +454,36 @@ function gadget:AllowCommand(unitID, unitDefID, teamID, cmdID, cmdParams, cmdOpt
 			return true
 		end
 		return false
-	elseif yardLevels[unitID] and cmdID < 0 then 
-		local cBills = GetTeamResources(teamID, "metal")
-		local supportCost = supportCosts[-cmdID]
-		if supportCost then -- purchasing a support vehicle
-			if cBills >= supportCost then
-				GG.DropshipDelivery(Spring.GetUnitRulesParam(unitID, "beaconID"), unitID, teamID, GG.teamSide[teamID] .. "_bishop", -cmdID, 0, nil, 0, {x = 0, z = 200})
-				UseTeamResource(teamID, "m", supportCosts[-cmdID])
-				remainingSlots[unitID] = remainingSlots[unitID] - 1 -- TODO: higher slot cost for BRV?
-				return true
-			end
-		else -- Rezzing a mech, in theory
-			local cost = tonumber(UnitDefs[-cmdID].customParams.price) * RECOVER_DISCOUNT
-			local tons = tonumber(UnitDefs[-cmdID].customParams.tonnage)
-			local tonnage = GetTeamResources(teamID, "energy")
-			if cBills >= cost and tonnage >= tons then
-				env = Spring.UnitScript.GetScriptEnv(unitID)
-				Spring.UnitScript.CallAsUnit(unitID, env.Recover, tons)
-				Spring.RemoveUnitCmdDesc(unitID, FindUnitCmdDesc(unitID, cmdID))
-				return true
+	elseif yardLevels[unitID] then
+		if cmdID == CMD_SCRAP then
+			local featureID = recoverTargets[unitID]
+			local featureDef = FeatureDefs[Spring.GetFeatureDefID(featureID)]
+			-- TODO: Maybe add a animation in the yard script and have it be non-instant
+			local amount = math.floor(featureDef.metal / CONVERSION_RATE)
+			ChangeTeamSalvage(teamID, amount)
+			FeatureDetach(featureID)
+			DestroyFeature(featureID)
+			Spring.RemoveUnitCmdDesc(unitID, FindUnitCmdDesc(unitID, CMD_SCRAP)) -- TODO: hide / disable instead?
+		elseif cmdID < 0 then 
+			local cBills = GetTeamResources(teamID, "metal")
+			local supportCost = supportCosts[-cmdID]
+			if supportCost then -- purchasing a support vehicle
+				if cBills >= supportCost then
+					GG.DropshipDelivery(Spring.GetUnitRulesParam(unitID, "beaconID"), unitID, teamID, GG.teamSide[teamID] .. "_bishop", -cmdID, 0, nil, 0, {x = 0, z = 200})
+					UseTeamResource(teamID, "m", supportCosts[-cmdID])
+					remainingSlots[unitID] = remainingSlots[unitID] - 1 -- TODO: higher slot cost for BRV?
+					return true
+				end
+			else -- Rezzing a mech, in theory
+				local cost = tonumber(UnitDefs[-cmdID].customParams.price) * RECOVER_DISCOUNT
+				local tons = tonumber(UnitDefs[-cmdID].customParams.tonnage)
+				local tonnage = GetTeamResources(teamID, "energy")
+				if cBills >= cost and tonnage >= tons then
+					env = Spring.UnitScript.GetScriptEnv(unitID)
+					Spring.UnitScript.CallAsUnit(unitID, env.Recover, tons)
+					Spring.RemoveUnitCmdDesc(unitID, FindUnitCmdDesc(unitID, cmdID))
+					return true
+				end
 			end
 		end
 		GG.PlaySoundForTeam(teamID, "bb_insufficient_cbills", 1)
@@ -506,6 +522,10 @@ function gadget:CommandFallback(unitID, unitDefID, teamID, cmdID, cmdParams, cmd
 				local targetDefID = cp.was and UnitDefNames[cp.was].id or 0
 				local cmdDesc = GetMechCmdDesc(targetDefID)
 				Spring.InsertUnitCmdDesc(yardID, cmdDesc)
+				local ttCache = scrapMechCmdDesc.tooltip
+				scrapMechCmdDesc.tooltip = scrapMechCmdDesc.tooltip .. COLOURS.salvage .. " " .. math.floor(featureDef.metal / CONVERSION_RATE) .. " Salvage"
+				Spring.InsertUnitCmdDesc(yardID, scrapMechCmdDesc)
+				scrapMechCmdDesc.tooltip = ttCache
 			end
 			return true, true
 		else -- not home yet, keep going
@@ -550,7 +570,7 @@ function gadget:Initialize()
 		gadget:UnitCreated(unitID, unitDefID, teamID)
 	end
 	Spring.AssignMouseCursor("recover", "cursorpickup")
-	Spring.SetCustomCommandDrawData(CMD_RECOVER, "recover", {1,0.7,0.9,0.8})
+	Spring.SetCustomCommandDrawData(CMD_RECOVER, "recover", {1,0.7,0.9,0.8}, true)
 end
 
 function gadget:GameFrame(n)
