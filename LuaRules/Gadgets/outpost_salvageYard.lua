@@ -133,6 +133,14 @@ local yardSalvagers = {} -- for now; yardSalvagers[yardID] = salvagerID
 local idleSalvagers = {} -- idleSalvagers[salvagerID] = true
 
 -- Salvager
+local salvageCmdDesc = {
+	id 		= CMD.RECLAIM,
+	type	= CMDTYPE.ICON_UNIT,
+	name 	= " Salvage \n Wreck",
+	action	= "reclaim",
+	tooltip = "Break down a wreck into components to be salvaged at the salvage yard.",
+	cursor	= "Reclaim",
+}
 local depositCmdDesc = {
 	id 		= CMD_DEPOSIT,
 	type	= CMDTYPE.ICON_UNIT,
@@ -141,6 +149,7 @@ local depositCmdDesc = {
 	tooltip = "Deposit current salvage",
 	cursor	= "Unload",
 }
+local SALVAGER_CMD_DESCS_TO_ADD = {salvageCmdDesc, depositCmdDesc}
 
 -- BRV
 local recoverCmdDesc = {
@@ -151,6 +160,7 @@ local recoverCmdDesc = {
 	tooltip = "Recover a wrecked mech to the salvage yard",
 	cursor	= "recover",
 }
+local BRV_CMD_DESCS_TO_ADD = {recoverCmdDesc}
 
 -- Yard
 local newSalvagerCmdDesc = {
@@ -307,9 +317,11 @@ function gadget:UnitCreated(unitID, unitDefID, teamID, builderID)
 		InsertUnitCmdDesc(unitID, newSalvagerCmdDesc)
 		InsertUnitCmdDesc(unitID, newBRVCmdDesc) -- TODO: lock behind an upgrade
 	elseif unitDefID == SALVAGER_ID then
-		InsertUnitCmdDesc(unitID, depositCmdDesc)
+		GG.ClearDefaultCmds(unitID)
+		GG.AddSupportCmds(unitID, SALVAGER_CMD_DESCS_TO_ADD)
 	elseif unitDefID == BRV_ID then
-		InsertUnitCmdDesc(unitID, recoverCmdDesc)
+		GG.ClearDefaultCmds(unitID)
+		GG.AddSupportCmds(unitID, BRV_CMD_DESCS_TO_ADD)
 	elseif GG.mechCache[unitDefID] then -- a mech
 		unitPinataLevels[unitID] = 0
 		if builderID and GetUnitDefID(builderID) == SALVAGER_ID then -- TODO: change to brv

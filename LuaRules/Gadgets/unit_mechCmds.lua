@@ -207,7 +207,7 @@ for i, menuString in ipairs(menuStrings) do
 	ignoredCmdDescs[cmdID] = 1
 end
 
-local CMDS_TO_REMOVE = {CMD.FIRE_STATE, CMD.MOVE_STATE, CMD.ONOFF, CMD.MOVE, CMD.STOP, CMD.ATTACK, CMD.FIGHT, CMD.GUARD, CMD.PATROL, CMD.REPEAT}
+local CMDS_TO_REMOVE = {CMD.FIRE_STATE, CMD.MOVE_STATE, CMD.ONOFF, CMD.MOVE, CMD.STOP, CMD.ATTACK, CMD.FIGHT, CMD.GUARD, CMD.PATROL, CMD.REPEAT, CMD.WAIT}
 local CMD_DESCS_TO_ADD = {
 	fireStateCmdDesc, moveStateCmdDesc, onOffCmdDesc,
 	moveCmdDesc, turnCmdDesc, stopCmdDesc,
@@ -222,10 +222,21 @@ local VPAD_CMD_DESCS_TO_ADD = {
 	fightCmdDesc, guardCmdDesc, patrolCmdDesc,
 }
 
+local SUPPORT_CMD_DESCS_TO_ADD = {
+	moveCmdDesc,
+}
+
 local wantedCmdDescs = {}
 for i, cmdDesc in ipairs(CMD_DESCS_TO_ADD) do
 	wantedCmdDescs[cmdDesc.id] = true
 end
+
+local function ClearDefaultCmds(unitID)
+	for i, cmd in pairs(CMDS_TO_REMOVE) do
+		RemoveUnitCmdDesc(unitID, FindUnitCmdDesc(unitID, cmd))
+	end
+end
+GG.ClearDefaultCmds = ClearDefaultCmds
 
 local function AddCmdDescs(unitID, list)
 	for i, cmdDesc in ipairs(list) do
@@ -242,6 +253,14 @@ local function AddVpadCmds(unitID)
 	AddCmdDescs(unitID, VPAD_CMD_DESCS_TO_ADD)
 end
 GG.AddVpadCmds = AddVpadCmds
+
+local function AddSupportCmds(unitID, extras)
+	AddCmdDescs(unitID, SUPPORT_CMD_DESCS_TO_ADD)
+	if extras then
+		AddCmdDescs(unitID, extras)
+	end
+end
+GG.AddSupportCmds = AddSupportCmds
 
 local lookup = {}
 
@@ -272,9 +291,7 @@ GG.ShowMechMenu = ShowMechMenu
 function gadget:UnitCreated(unitID, unitDefID, teamID)
 	if GG.mechCache[unitDefID] then
 		-- first remove all the default command descriptions
-		for i, cmd in pairs(CMDS_TO_REMOVE) do
-			RemoveUnitCmdDesc(unitID, FindUnitCmdDesc(unitID, cmd))
-		end
+		ClearDefaultCmds(unitID)
 		-- Add back in 
 		AddMechMenu(unitID)
 		GG.AddApps(unitID, unitDefID)
