@@ -494,6 +494,8 @@ function gadget:AllowCommand(unitID, unitDefID, teamID, cmdID, cmdParams, cmdOpt
 					env = Spring.UnitScript.GetScriptEnv(unitID)
 					Spring.UnitScript.CallAsUnit(unitID, env.Recover, tons)
 					Spring.RemoveUnitCmdDesc(unitID, FindUnitCmdDesc(unitID, cmdID))
+					UseTeamResource(teamID, "metal", cost)
+					UseTeamResource(teamID, "energy", tons)
 					return true
 				end
 			end
