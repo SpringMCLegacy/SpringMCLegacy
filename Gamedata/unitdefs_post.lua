@@ -71,6 +71,21 @@ local function GetSpeedColoured(speed)
 	return speedString .. speed .. "\255\255\255\255 km/h"
 end
 
+local function GetHeatsinksColoured(sinks, double)
+	local heatString = "\tHeatsinks: "
+	local mult = double and 2 or 1
+	if sinks * mult < 11 then -- red
+		heatString = heatString .. "\255\255\001\001"
+	elseif sinks * mult  < 16 then -- orange
+		heatString = heatString .. "\255\255\128\001"
+	elseif sinks * mult  < 21 then -- yellow
+		heatString = heatString .. "\255\255\255\001"
+	else -- green
+		heatString = heatString .. "\255\001\255\001"
+	end
+	return heatString .. sinks .. "\255\255\255\255 " .. (double and "Double" or "Single")
+end
+
 local function GetRole(roleString)
 	for role, info in pairs(roleSensors) do
 		if roleString:lower():find(role) then
@@ -415,6 +430,15 @@ for name, ud in pairs(UnitDefs) do
 	end
 	if cp.speed then
 		ud.description = (ud.description or "") .. GetSpeedColoured(cp.speed)
+		if cp.heatlimit then
+			local double = false
+			if cp.mods then
+				for i, mod in pairs(cp.mods) do
+					double = mod == "doubleheatsinks"
+				end
+			end
+			ud.description = ud.description .. GetHeatsinksColoured(cp.heatlimit, double)
+		end
 	end
 	
 	-- Automatically build dropship buildmenus
