@@ -17,6 +17,7 @@ if gadgetHandler:IsSyncedCode() then
 local modOptions = Spring.GetModOptions()
 
 --SyncedRead
+local GetFeatureDefID			= Spring.GetFeatureDefID
 local GetFeaturePosition		= Spring.GetFeaturePosition
 local GetGameFrame				= Spring.GetGameFrame
 local GetGroundHeight 			= Spring.GetGroundHeight
@@ -63,6 +64,7 @@ local PICKUP_DIST = 100
 local SALVAGER_ID = UnitDefNames["salvager"].id
 local SALVAGE_RANGE = 4000
 local CMD_DEPOSIT = GG.CustomCommands.GetCmdID("CMD_DEPOSIT")
+local CMD_SET_BASE = GG.CustomCommands.GetCmdID("CMD_SET_BASE")
 
 -- BRV
 local BRV_ID = UnitDefNames["brv"].id
@@ -109,7 +111,8 @@ local names = {
 
 local teamSalvages = {} -- teamID = salvageAmount
 local salvageSources = {} -- featureID = {x,z}
-local salvageCache = {} -- featureDefID = true
+local pileCache = {} -- featureDefID = true
+local corpseCache = {} -- featureDefID = true
 local salvageArray = {} -- [1] = featureDefID1, ...
 local unitPinataLevels = {} -- unitID = 0 or 1 or 2 or 3
 
@@ -135,8 +138,8 @@ local idleSalvagers = {} -- idleSalvagers[salvagerID] = true
 -- Salvager
 local salvageCmdDesc = {
 	id 		= CMD.RECLAIM,
-	type	= CMDTYPE.ICON_UNIT,
-	name 	= " Salvage \n Wreck",
+	type	= CMDTYPE.ICON_UNIT_FEATURE_OR_AREA,
+	name 	= GG.Pad("Salvage","Wreck"),
 	action	= "reclaim",
 	tooltip = "Break down a wreck into components to be salvaged at the salvage yard.",
 	cursor	= "Reclaim",
@@ -144,23 +147,31 @@ local salvageCmdDesc = {
 local depositCmdDesc = {
 	id 		= CMD_DEPOSIT,
 	type	= CMDTYPE.ICON_UNIT,
-	name 	= " Deposit \n Salvage",
+	name 	= GG.Pad("Deposit", "Salvage"),
 	action	= "deposit",
 	tooltip = "Deposit current salvage",
 	cursor	= "Unload",
 }
-local SALVAGER_CMD_DESCS_TO_ADD = {salvageCmdDesc, depositCmdDesc}
+local setBaseCmdDesc = {
+	id 		= CMD_SET_BASE,
+	type	= CMDTYPE.ICON_UNIT,
+	name 	= GG.Pad("Assign", "Base", 12),
+	action	= "setbase",
+	tooltip = "Set the base salvage yard",
+	cursor	= "Reclaim", -- TODO: custom cursor?
+}
+local SALVAGER_CMD_DESCS_TO_ADD = {setBaseCmdDesc, salvageCmdDesc, depositCmdDesc}
 
 -- BRV
 local recoverCmdDesc = {
 	id 		= CMD_RECOVER,
 	type	= CMDTYPE.ICON_UNIT_FEATURE_OR_AREA,
-	name 	= " Recover \n Mech",
+	name 	= GG.Pad("Recover", "Mech"),
 	action	= "recover",
 	tooltip = "Recover a wrecked mech to the salvage yard",
 	cursor	= "recover",
 }
-local BRV_CMD_DESCS_TO_ADD = {recoverCmdDesc}
+local BRV_CMD_DESCS_TO_ADD = {setBaseCmdDesc, recoverCmdDesc}
 
 -- Yard
 local newSalvagerCmdDesc = {
@@ -235,10 +246,12 @@ end
 GG.FeatureAttachUpdate = FeatureAttachUpdate
 
 local featureAttachers = {}
+local brvAttachers = {}
 
 local function FeatureDetach(featureID)
 	if not featureAttachers[featureID] then return end
 	Spring.DestroyUnit(featureAttachers[featureID].fake, false, true)
+	brvAttachers[featureAttachers[featureID]] = nil
 	featureAttachers[featureID] = nil
 	Spring.SetFeatureBlocking(featureID, true, true, true, true, true, true, true)
 end
@@ -257,6 +270,7 @@ local function FeatureAttach(unitID, pieceNum, featureID, direct)
 		unit = unitID, 
 		piece = pieceNum
 	}
+	brvAttachers[unitID] = featureID
 	FeatureAttachUpdate(unitID, pieceNum, fakeID, featureID)
 end
 GG.FeatureAttach = FeatureAttach
@@ -293,17 +307,24 @@ local function YardNotifyDone(yardID, teamID, pieceNum)
 end
 GG.YardNotifyDone = YardNotifyDone
 
-local function SpawnSalvager(yardID, teamID, salvagerID) -- TODO: rename to 'AssociateSupportVehicle' or something
+local function AssociateSupport(yardID, teamID, salvagerID)
 	local x, y, z = GetUnitPosition(yardID)
 	yardPos[yardID] = {["x"] = x, ["y"] = y, ["z"] = z}
-	salvagerID = salvagerID or CreateUnit(SALVAGER_ID, x,y,z, 0, teamID)
+	--salvagerID = salvagerID or CreateUnit(SALVAGER_ID, x,y,z, 0, teamID)
+	local unitDefID = Spring.GetUnitDefID(salvagerID)
 	if salvagerID then
 		salvagerYards[salvagerID] = yardID
 		yardSalvagers[yardID] = salvagerID
-		GiveOrderToUnit(salvagerID, CMD.RECLAIM, {x, y, z, SALVAGE_RANGE}, {})
+		if unitDefID == SALVAGER_ID then
+			GiveOrderToUnit(salvagerID, CMD.RECLAIM, {x, y, z, SALVAGE_RANGE}, {})
+		elseif unitDefID == BRV_ID and brvAttachers[salvagerID] then
+			GiveOrderToUnit(salvagerID, CMD_DEPOSIT, {yardID}, {})
+		else
+			GiveOrderToUnit(salvagerID, CMD.MOVE, {x + math.random(-200, 200), y, z + math.random(-200, 200)}, {})
+		end
 	end
 end
-GG.SpawnSalvager = SpawnSalvager
+GG.SpawnSalvager = AssociateSupport  -- TODO: rename elsewhere
 
 function gadget:UnitCreated(unitID, unitDefID, teamID, builderID)
 	local unitDef = UnitDefs[unitDefID]
@@ -349,7 +370,7 @@ function gadget:FeatureCreated(featureID, allyTeamID)
 	local fdID = GetFeatureDefID(featureID)
 	local fd = FeatureDefs[fdID]
 	local cp = fd.customParams
-	local amount = salvageCache[fdID]
+	local amount = pileCache[fdID]
 	if amount then
 		local x,y,z = GetFeaturePosition(featureID)
 		--Spring.Echo("New pile!", amount, x,y,z)
@@ -461,15 +482,30 @@ function gadget:AllowCommand(unitID, unitDefID, teamID, cmdID, cmdParams, cmdOpt
 		end
 		return false
 	elseif cmdID == CMD.RECLAIM and isSalvager then
-		if salvageSources[featureID] then
-			idleSalvagers[unitID] = false
+		local area = cmdParams[4]
+		if area and area > 0 then 
+			return true 
+		end
+		local featureID = (cmdParams[1] and cmdParams[1] > Game.maxUnits and cmdParams[1] or 0) - Game.maxUnits
+		if featureID > 0 then
+			local featureDefID = GetFeatureDefID(featureID)
+			if corpseCache[featureDefID] then
+				idleSalvagers[unitID] = false
+				return true
+			end
+		end
+		return false
+	elseif cmdID == CMD_SET_BASE and isSalvager then
+		local yardID = cmdParams[1]
+		if yardLevels[yardID] then -- it is a yard, afterall
+			AssociateSupport(yardID, teamID, unitID)
 			return true
 		end
 		return false
 	elseif yardLevels[unitID] then
 		if cmdID == CMD_SCRAP then
 			local featureID = recoverTargets[unitID]
-			local featureDef = FeatureDefs[Spring.GetFeatureDefID(featureID)]
+			local featureDef = FeatureDefs[GetFeatureDefID(featureID)]
 			-- TODO: Maybe add a animation in the yard script and have it be non-instant
 			local amount = math.floor(featureDef.metal / CONVERSION_RATE)
 			ChangeTeamSalvage(teamID, amount)
@@ -570,8 +606,10 @@ function gadget:Initialize()
 	Script.SetWatchWeapon(-1, true) -- pieces
 	for featureDefID, featureDef in pairs(FeatureDefs) do
 		if featureDef.customParams.salvage then
-			salvageCache[featureDefID] = tonumber(featureDef.customParams.salvage)
+			pileCache[featureDefID] = tonumber(featureDef.customParams.salvage)
 			table.insert(salvageArray, featureDefID)
+		elseif featureDef.customParams.was then
+			corpseCache[featureDefID] = tonumber(featureDef.metal)
 		end
 	end
 	for _, featureID in ipairs(Spring.GetAllFeatures()) do
