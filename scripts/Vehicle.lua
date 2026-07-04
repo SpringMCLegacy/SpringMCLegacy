@@ -547,22 +547,34 @@ local GetUnitHeading = Spring.GetUnitHeading
 function SteerCheck()
 	local currHeading = GetUnitHeading(unitID, true)
 	local hitch = piece("hitch")
+	local steerL = piece("steerl") -- TODO: generalise this
+	local steerR = piece("steerr")
 	while moving do
 		local newHeading = GetUnitHeading(unitID, true)
 		local delta = newHeading - currHeading
 		if math.abs(delta) > THRESHOLD then
 			--Spring.Echo("Turning!")
-			for wheelNum in pairs (steerWheels) do
-				--Spring.Echo("Turn wheel", wheelNum, "to", math.deg(delta))
-				Turn(wheels[wheelNum], y_axis, delta * HITCH_MAX_Y/4, WHEEL_SPEED/5)
+			if steerL and steerR then
+				Turn(steerL, y_axis, delta * HITCH_MAX_Y/4, WHEEL_SPEED/5)
+				Turn(steerR, y_axis, delta * HITCH_MAX_Y/4, WHEEL_SPEED/5)
+			else
+				for wheelNum in pairs (steerWheels) do
+					--Spring.Echo("Turn wheel", wheelNum, "to", math.deg(delta))
+					Turn(wheels[wheelNum], y_axis, delta * HITCH_MAX_Y/4, WHEEL_SPEED/5)
+				end
 			end
 			if hitch then
 				Turn(hitch, y_axis, -delta * HITCH_MAX_Y, WHEEL_SPEED/10)
 			end
 		else
-			for wheelNum in pairs (steerWheels) do
-				Turn(wheels[wheelNum], y_axis, 0, WHEEL_SPEED/2.5)
-			end			
+			if steerL and steerR then
+				Turn(steerL, y_axis, 0, WHEEL_SPEED/2.5)
+				Turn(steerR, y_axis, 0, WHEEL_SPEED/2.5)
+			else
+				for wheelNum in pairs (steerWheels) do
+					Turn(wheels[wheelNum], y_axis, 0, WHEEL_SPEED/2.5)
+				end			
+			end
 			if hitch then
 				local _, goal, _ = Spring.UnitScript.GetPieceRotation(hitch)
 				if goal > math.pi then goal = goal - math.pi end
@@ -581,7 +593,7 @@ function script.StartMoving()
 	moving = true
 	if not vtol and not aero then
 		StartThread(VehicleSFX)
-		if wheeled then
+		if wheeled or piece("steerl") then -- TODO: this is gross
 			StartThread(SteerCheck)
 		end
 	end
