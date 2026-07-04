@@ -354,6 +354,7 @@ function gadget:GamePreload()
 		info.wheelSpeed = math.rad(tonumber(cp.wheelspeed) or 100)
 		info.hitchMaxY = tonumber(cp.hitchmaxy or 0)
 		info.wheelAccel = math.rad(tonumber(cp.wheelaccel) or info.wheelSpeed * 2)
+		info.tonnage = tonumber(cp.tonnage)
 		-- And finally, stick it in GG for the script to access
 		GG.lusHelper[unitDefID] = info
 	end

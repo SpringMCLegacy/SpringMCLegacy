@@ -28,6 +28,7 @@ baseCoolRate = info.coolRate
 local coolRate = baseCoolRate
 local inWater = false
 local activated = true
+local lastFiredWeapon = 0
 
 local missileWeaponIDs = info.missileWeaponIDs
 local flareOnShots = info.flareOnShots
@@ -696,6 +697,23 @@ function script.AimWeapon(weaponID, heading, pitch)
 	return WeaponCanFire(weaponID)
 end
 
+local ROCK_SPEED = math.rad(5000/info.tonnage) -- heavier units should rock less
+local RESTORE_SPEED = math.rad(20)
+
+function script.RockUnit(x,z)
+	if barrelRecoils[lastFiredWeapon] then
+		local base = body -- TODO:
+		Turn(base, x_axis,  0.048 * z, ROCK_SPEED)
+		Turn(base, z_axis, 0.048 * x, ROCK_SPEED)
+
+		WaitForTurn(base, z_axis)
+		WaitForTurn(base, x_axis)
+
+		Turn(base, z_axis, 0, RESTORE_SPEED)
+		Turn(base, x_axis, 0, RESTORE_SPEED)
+	end
+end
+
 function script.BlockShot(weaponID, targetID, userTarget)
 	if amsIDs[weaponID] then return false end
 	local minRange = minRanges[weaponID]
@@ -762,6 +780,7 @@ function script.FireWeapon(weaponID)
 	if not missileWeaponIDs[weaponID] and not flareOnShots[weaponID] and flares[weaponID] then
 		EmitSfx(flares[weaponID], SFX.CEG + weaponID)
 	end
+	lastFiredWeapon = weaponID
 end
 
 function script.Shot(weaponID)
