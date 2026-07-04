@@ -26,7 +26,7 @@ local Partisan = Tank:New{
 		heatlimit 		= 20,
 		armor			= 7,
 		maxammo 		= {ac5 = 8},
-		barrelrecoildist = {[1] = 1, [2] = 1, [3] = 1, [4] = 1},
+		barrelrecoildist = {[1] = 3, [2] = 3, [3] = 3, [4] = 3},
 		squadsize 		= 1,
     },
 }
