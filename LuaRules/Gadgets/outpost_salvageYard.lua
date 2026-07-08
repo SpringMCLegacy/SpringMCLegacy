@@ -475,7 +475,7 @@ function gadget:AllowCommand(unitID, unitDefID, teamID, cmdID, cmdParams, cmdOpt
 		if featureID > 0 then
 			local x,y,z = GetFeaturePosition(featureID)
 			--Spring.Echo("Gonna find me a corpse bride!", x,y,z)
-			SetUnitMoveGoal(unitID, x, y, z)
+			SetUnitMoveGoal(unitID, x, y, z+50)
 			recoverTargets[unitID] = featureID
 			salvageSources[featureID] = nil
 			return true
@@ -584,7 +584,7 @@ function gadget:CommandFallback(unitID, unitDefID, teamID, cmdID, cmdParams, cmd
 	elseif cmdID == CMD_RECOVER then
 		local featureID = recoverTargets[unitID]
 		if featureID then
-			local dist = Spring.GetUnitFeatureSeparation(unitID, featureID)
+			local dist = Spring.GetUnitFeatureSeparation(unitID, featureID) -- TODO: change to cached target location alongside
 			if dist and dist < 50 then
 				env = Spring.UnitScript.GetScriptEnv(unitID)
 				Spring.UnitScript.CallAsUnit(unitID, env.RecoverFeature, featureID)

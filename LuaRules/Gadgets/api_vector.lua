@@ -142,6 +142,12 @@ local function DotProduct3(x1, y1, z1, x2, y2, z2)
 	return DotProduct2(x1, y1, x2, y2) + z1 * z2
 end
 
+local function AngleBetween2(x1, y1, x2, y2)
+	-- a.b = |a||b|cos(t)
+	-- cos(t) = a.b/(|a||b|)
+	return math.acos(DotProduct2(x1, y1, x2, y2)/(Magnitude(x1, y1, 0 )*Magnitude(x2,y2, 0)))
+end
+
 local function CounterClockNorm(x1, y1)
 	return -y1, x1
 end
@@ -207,7 +213,8 @@ local Vector = {
 	RadiansToHeading = RadiansToHeading,
 	DotProduct2 = DotProduct2,
 	DotProduct3 = DotProduct3,
-	
+	AngleBetween2 = AngleBetween2,
+
 	IsInsideSectorVector = IsInsideSectorVector,
 	SectorVectorsFromAngle = SectorVectorsFromAngle,
 	SectorVectorsFromUnit = SectorVectorsFromUnit,

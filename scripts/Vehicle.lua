@@ -483,7 +483,37 @@ local function UnLoad(targetID)
 	--cargo = nil -- reset cargo container, so we get a clean roster when they re-embark (perhaps some died :()
 end
 
-	local function Derp(featureID)
+	local function GrabIt(featureID, heading, pitch, dist)
+		GG.SpeedChange(unitID, unitDefID, 0.0001)
+		local turret = piece("turret")
+		local lArm = {}
+		local rArm = {}
+		for i = 1, 4 do
+			lArm[i] = piece("larm" .. i)
+			rArm[i] = piece("rarm" .. i)
+		end
+		Turn(turret, y_axis, heading, TURRET_SPEED/10)
+		Turn(lArm[2], x_axis, pitch, ELEVATION_SPEED)
+		Turn(rArm[2], x_axis, pitch, ELEVATION_SPEED)
+		WaitForTurn(turret, y_axis)
+		WaitForTurn(rArm[2], x_axis)
+		for i = 3, 4 do
+			Move(lArm[i], z_axis, dist / 3, TURRET_SPEED/2)
+			Move(rArm[i], z_axis, dist / 3, TURRET_SPEED/2)
+		end
+		WaitForMove(rArm[4], z_axis)
+		GG.FeatureAttach(unitID, piece("link"), featureID)
+		-- move over bed
+		Turn(lArm[2], x_axis, 0, ELEVATION_SPEED)
+		Turn(rArm[2], x_axis, 0, ELEVATION_SPEED)
+		WaitForTurn(rArm[2], x_axis)
+		for i = 3, 4 do
+			Move(lArm[i], z_axis, 0, TURRET_SPEED/2)
+			Move(rArm[i], z_axis, 0, TURRET_SPEED/2)
+		end
+		WaitForMove(rArm[4], z_axis)
+		Turn(turret, y_axis, math.pi, TURRET_SPEED/10)
+		WaitForTurn(turret, y_axis)
 		GG.FeatureAttach(unitID, piece("bed"), featureID)
 		local fd = FeatureDefs[Spring.GetFeatureDefID(featureID)]
 		-- change speed based on weight
@@ -496,8 +526,27 @@ end
 	
 	function RecoverFeature(featureID)
 		if unitDef.name == "brv" then
+			--[[xzDelta = get PIECE_XZ(turret) - posxz;
+			yDelta = posy - get PIECE_Y(turret) - [20.000000];
+			xzDistToTarget = get XZ_HYPOT(xzDelta);
+			distToTarget = get HYPOT(xzDistToTarget,yDelta) - [20.000000];
+			heading = get XZ_ATAN(xzDelta);
+			-- wtf is XZ_ATAN doing, well -> return int(RAD2TAANG*math::atan2((float)UNPACKX(p1), (float)UNPACKZ(p1)) + 32768 - unit->heading); <- Ah, heading!
+			pitch = get ATAN(yDelta,xzDistToTarget);
+			withinMaxTransportRange = distToTarget < [126.000000];==]]
 			--Spring.Echo("DERPIN TIME!")
-			StartThread(Derp, featureID)
+			local fx,fy,fz = Spring.GetFeaturePosition(featureID)
+			local x,y,z = Spring.GetUnitPiecePosDir(unitID, piece("turret"))
+			local brvHeading = GG.Vector.HeadingToRadians(Spring.GetUnitHeading(unitID))
+			
+			--local front, up, right = Spring.GetUnitVectors(unitID)
+			--local heading = GG.Vector.AngleBetween2(fx-x, fz-z, front[1], front[3])
+			--local heading = GG.Vector.AngleBetween2(fx-x, fz-z, right[1], right[3]) - math.pi/2
+			local heading = math.atan2(fx-x, fz-z) - brvHeading
+			local dist = GG.Vector.DistanceBetween(x,y,z,fx,fy,fz)
+			local pitch = math.asin((y-fy)/dist)
+			--Spring.Echo("heading", math.deg(heading), "pitch", math.deg(pitch), "distance", dist)
+			StartThread(GrabIt, featureID, heading, pitch, dist)
 		end
 	end
 	
