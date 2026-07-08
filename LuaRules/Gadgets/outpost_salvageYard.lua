@@ -473,9 +473,12 @@ function gadget:AllowCommand(unitID, unitDefID, teamID, cmdID, cmdParams, cmdOpt
 		if recoverTargets[yardID] then return false end -- yard already has a corpse loaded, TODO: this can fail if you have multiple BRV
 		local featureID = (cmdParams[1] and cmdParams[1] > Game.maxUnits and cmdParams[1] or 0) - Game.maxUnits -- TODO: handle area commands
 		if featureID > 0 then
-			local x,y,z = GetFeaturePosition(featureID)
+			local fx,fy,fz = GetFeaturePosition(featureID)
 			--Spring.Echo("Gonna find me a corpse bride!", x,y,z)
-			SetUnitMoveGoal(unitID, x, y, z+50)
+			local fHeading = Spring.GetFeatureHeading(featureID)
+			local x,y,z = GG.Vector.RotateY(fx, fy, fz + 50, GG.Vector.HeadingToRadians(fHeading))
+			--Spring.MarkerAddPoint(x,y,z)
+			SetUnitMoveGoal(unitID, x, y, z)
 			recoverTargets[unitID] = featureID
 			salvageSources[featureID] = nil
 			return true
