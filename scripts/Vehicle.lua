@@ -484,14 +484,23 @@ local function UnLoad(targetID)
 end
 
 if unitDef.name == "brv" then
+	local turret = piece("turret")
 	local lArm = {}
 	local rArm = {}
 	for i = 1, 4 do
 		lArm[i] = piece("larm" .. i)
 		rArm[i] = piece("rarm" .. i)
 	end
+	local lFinger = {}
+	local rFinger = {}
+	for i = 1, 4 do
+		lFinger[i] = piece("lfinger" .. i)
+		rFinger[i] = piece("rfinger" .. i)
+	end
+	
 	
 	function SetupArms()
+		Turn(turret, y_axis, math.pi)
 		Turn(lArm[1], x_axis, -math.rad(65))
 		Turn(rArm[1], x_axis, -math.rad(65))
 		Turn(lArm[2], x_axis, math.rad(25+65))
@@ -499,41 +508,50 @@ if unitDef.name == "brv" then
 	end
 
 	local function GrabIt(featureID, heading, pitch, dist)
+		-- TODO: setup the customparams
+		STRETCH_SPEED = TURRET_SPEED / 2
+		TURRET_SPEED = TURRET_SPEED / 10
+		ELEVATION_SPEED = ELEVATION_SPEED / 4
+		
 		GG.SpeedChange(unitID, unitDefID, 0.0001)
-		local turret = piece("turret")
-		Turn(turret, y_axis, heading, TURRET_SPEED/10)
+		local fMass = FeatureDefs[Spring.GetFeatureDefID(featureID)].mass
+		local slowDown = 2000/fMass
+		
+		-- get arm into position
+		Turn(turret, y_axis, heading, TURRET_SPEED)
 		WaitForTurn(turret, y_axis)
 		Turn(lArm[1], x_axis, 0, ELEVATION_SPEED)
 		Turn(rArm[1], x_axis, 0, ELEVATION_SPEED)
-		Turn(lArm[2], x_axis, pitch, ELEVATION_SPEED)
-		Turn(rArm[2], x_axis, pitch, ELEVATION_SPEED)
+		Turn(lArm[2], x_axis, pitch-25, ELEVATION_SPEED)
+		Turn(rArm[2], x_axis, pitch-25, ELEVATION_SPEED)
 		WaitForTurn(rArm[2], x_axis)
 		for i = 3, 4 do
-			Move(lArm[i], z_axis, (dist - 48) / 3, TURRET_SPEED/2)
-			Move(rArm[i], z_axis, (dist - 48) / 3, TURRET_SPEED/2)
+			Move(lArm[i], z_axis, (dist - 48) / 3, STRETCH_SPEED)
+			Move(rArm[i], z_axis, (dist - 48) / 3, STRETCH_SPEED)
 		end
 		WaitForMove(rArm[4], z_axis)
 		GG.FeatureAttach(unitID, piece("link"), featureID)
-		-- move over bed
-		Turn(lArm[1], x_axis, -math.rad(65), ELEVATION_SPEED/10)
-		Turn(rArm[1], x_axis, -math.rad(65), ELEVATION_SPEED/10)
-		Turn(lArm[2], x_axis, math.rad(65), ELEVATION_SPEED/10)
-		Turn(rArm[2], x_axis, math.rad(65), ELEVATION_SPEED/10)
+		
+		-- picked up, move over bed
+		Turn(lArm[1], x_axis, -math.rad(65), ELEVATION_SPEED * slowDown)
+		Turn(rArm[1], x_axis, -math.rad(65), ELEVATION_SPEED * slowDown)
+		Turn(lArm[2], x_axis, math.rad(65), ELEVATION_SPEED * slowDown)
+		Turn(rArm[2], x_axis, math.rad(65), ELEVATION_SPEED * slowDown)
 		WaitForTurn(rArm[2], x_axis)
 		for i = 3, 4 do
-			Move(lArm[i], z_axis, 0, TURRET_SPEED/2)
-			Move(rArm[i], z_axis, 0, TURRET_SPEED/2)
+			Move(lArm[i], z_axis, 0, STRETCH_SPEED * slowDown)
+			Move(rArm[i], z_axis, 0, STRETCH_SPEED * slowDown)
 		end
 		WaitForMove(rArm[4], z_axis)
-		Turn(turret, y_axis, math.pi, TURRET_SPEED/10)
+		Turn(turret, y_axis, math.pi, TURRET_SPEED * slowDown)
 		WaitForTurn(turret, y_axis)
-		Turn(lArm[2], x_axis, math.rad(65+25), ELEVATION_SPEED/10)
-		Turn(rArm[2], x_axis, math.rad(65+25), ELEVATION_SPEED/10)
+		Turn(lArm[2], x_axis, math.rad(65+25), ELEVATION_SPEED * slowDown)
+		Turn(rArm[2], x_axis, math.rad(65+25), ELEVATION_SPEED * slowDown)
 		WaitForTurn(rArm[2], x_axis)
 		GG.FeatureAttach(unitID, piece("bed"), featureID)
-		local fd = FeatureDefs[Spring.GetFeatureDefID(featureID)]
-		-- change speed based on weight
-		GG.SpeedChange(unitID, unitDefID, (12000 - fd.mass)/10000)
+		
+		-- allow to drive off with speed based on weight
+		GG.SpeedChange(unitID, unitDefID, (12000 - fMass)/10000)
 	end
 	
 	function UnloadFeature(featureID)
@@ -550,7 +568,10 @@ if unitDef.name == "brv" then
 		pitch = get ATAN(yDelta,xzDistToTarget);
 		withinMaxTransportRange = distToTarget < [126.000000];==]]
 		--Spring.Echo("DERPIN TIME!")
-		local fx,fy,fz = Spring.GetFeaturePosition(featureID)
+		--local fx,fy,fz = Spring.GetFeaturePosition(featureID)
+		local torso = Spring.GetFeaturePieceMap(featureID).torso
+		local fx, fy, fz = Spring.GetFeaturePiecePosDir(featureID, torso)
+		fy = fy + 25
 		local x,y,z = Spring.GetUnitPiecePosDir(unitID, piece("turret"))
 		local brvHeading = GG.Vector.HeadingToRadians(Spring.GetUnitHeading(unitID))
 			
