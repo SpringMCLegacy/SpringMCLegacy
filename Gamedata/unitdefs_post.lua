@@ -307,7 +307,7 @@ for name, ud in pairs(UnitDefs) do
 			ud.buildCostMetal = (cp.price or 100) * modOptions.pricemult
 		end
 	end
-	if cp.wheels then
+	if cp.wheels and not cp.uniformbin then
 		cp.uniformbin = "defaultunit" -- disable treads shader
 	end
 	ud.power = ud.power or cp.tonnage or ud.buildcostmetal

@@ -41,6 +41,15 @@ local uniformBins = {
 		treadLinkWidth = 22,
 		treadSpeedMult = 4.0,
 	},
+	treads2k = {
+		-- MCL track textures are top-bottom so use OPTION_TREADS_V
+		bitOptions = defaultUnitBitShaderOptions + OPTION_TREADS_V,
+		baseVertexDisplacement = 0.0,
+		brightnessFactor = 1.1,
+		treadRect = {933*2, 0, (1024 - 933)*2, 1024*2}, 
+		treadLinkWidth = 22*2,
+		treadSpeedMult = 4.0,
+	},
 	-- DEFAULT UNIFORM BINS
 	defaultunit = {
 		-- by default gadget will assign these options to every unit texture set bin
