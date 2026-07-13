@@ -487,6 +487,7 @@ if unitDef.name == "brv" then
 	local turret = piece("turret")
 	local lArm = {}
 	local rArm = {}
+	local lHand, rHand = piece("lhand", "rhand")
 	for i = 1, 4 do
 		lArm[i] = piece("larm" .. i)
 		rArm[i] = piece("rarm" .. i)
@@ -497,22 +498,32 @@ if unitDef.name == "brv" then
 		lFinger[i] = piece("lfinger" .. i)
 		rFinger[i] = piece("rfinger" .. i)
 	end
+	local link = piece("link")
+	local bed, lBedWall, rBedWall = piece("bed", "lbedwall", "rbedwall")
 	
-	
-	function SetupArms()
-		Turn(turret, y_axis, math.pi)
-		Turn(lArm[1], x_axis, -math.rad(65))
-		Turn(rArm[1], x_axis, -math.rad(65))
-		Turn(lArm[2], x_axis, math.rad(25+65))
-		Turn(rArm[2], x_axis, math.rad(25+65))
-	end
-
-	local function GrabIt(featureID, heading, pitch, dist)
+	function SetupArms(reset)
+		TURRET_SPEED = info.turretTurnSpeed
+		ELEVATION_SPEED = info.elevationSpeed
 		-- TODO: setup the customparams
 		STRETCH_SPEED = TURRET_SPEED / 2
-		TURRET_SPEED = TURRET_SPEED / 10
+		TURRET_SPEED = TURRET_SPEED / 4
 		ELEVATION_SPEED = ELEVATION_SPEED / 4
 		
+		Turn(turret, y_axis, math.pi, reset and TURRET_SPEED)
+		Turn(bed, y_axis, math.pi) -- for correct rotation when attached
+		Turn(lArm[1], x_axis, -math.rad(65), reset and ELEVATION_SPEED)
+		Turn(rArm[1], x_axis, -math.rad(65), reset and ELEVATION_SPEED)
+		Turn(lArm[2], x_axis, math.rad(25+65), reset and ELEVATION_SPEED)
+		Turn(rArm[2], x_axis, math.rad(25+65), reset and ELEVATION_SPEED)
+		for i = 1, 4 do
+			Turn(lFinger[i], x_axis, 0, ELEVATION_SPEED)
+			Turn(rFinger[i], x_axis, 0, ELEVATION_SPEED)
+		end
+		Turn(lBedWall, z_axis, 0, ELEVATION_SPEED)
+		Turn(rBedWall, z_axis, 0, ELEVATION_SPEED)
+	end
+
+	local function GrabIt(featureID, heading, pitch, dist)	
 		GG.SpeedChange(unitID, unitDefID, 0.0001)
 		local fMass = FeatureDefs[Spring.GetFeatureDefID(featureID)].mass
 		local slowDown = 2000/fMass
@@ -520,42 +531,74 @@ if unitDef.name == "brv" then
 		-- get arm into position
 		Turn(turret, y_axis, heading, TURRET_SPEED)
 		WaitForTurn(turret, y_axis)
+		for i = 1, 4 do
+			Turn(lFinger[i], x_axis, math.rad(35) * (-1)^i, ELEVATION_SPEED)
+			Turn(rFinger[i], x_axis, math.rad(35) * (-1)^i, ELEVATION_SPEED)
+		end
 		Turn(lArm[1], x_axis, 0, ELEVATION_SPEED)
 		Turn(rArm[1], x_axis, 0, ELEVATION_SPEED)
-		Turn(lArm[2], x_axis, pitch-25, ELEVATION_SPEED)
-		Turn(rArm[2], x_axis, pitch-25, ELEVATION_SPEED)
+		--WaitForTurn(rArm[1], x_axis)
+		Turn(lArm[2], x_axis, pitch, ELEVATION_SPEED*2)
+		Turn(rArm[2], x_axis, pitch, ELEVATION_SPEED*2)
 		WaitForTurn(rArm[2], x_axis)
 		for i = 3, 4 do
 			Move(lArm[i], z_axis, (dist - 48) / 3, STRETCH_SPEED)
 			Move(rArm[i], z_axis, (dist - 48) / 3, STRETCH_SPEED)
 		end
 		WaitForMove(rArm[4], z_axis)
-		GG.FeatureAttach(unitID, piece("link"), featureID)
+		for i = 1, 4 do
+			Turn(lFinger[i], x_axis, 0, ELEVATION_SPEED)
+			Turn(rFinger[i], x_axis, 0, ELEVATION_SPEED)
+		end
+		WaitForTurn(rFinger[4], x_axis)
+		GG.FeatureAttach(unitID, link, featureID)
 		
 		-- picked up, move over bed
+		Turn(lBedWall, z_axis, -math.rad(90), ELEVATION_SPEED)
+		Turn(rBedWall, z_axis, math.rad(90), ELEVATION_SPEED)
 		Turn(lArm[1], x_axis, -math.rad(65), ELEVATION_SPEED * slowDown)
 		Turn(rArm[1], x_axis, -math.rad(65), ELEVATION_SPEED * slowDown)
 		Turn(lArm[2], x_axis, math.rad(65), ELEVATION_SPEED * slowDown)
 		Turn(rArm[2], x_axis, math.rad(65), ELEVATION_SPEED * slowDown)
 		WaitForTurn(rArm[2], x_axis)
 		for i = 3, 4 do
-			Move(lArm[i], z_axis, 0, STRETCH_SPEED * slowDown)
-			Move(rArm[i], z_axis, 0, STRETCH_SPEED * slowDown)
+			Move(lArm[i], z_axis, 2, STRETCH_SPEED * slowDown)
+			Move(rArm[i], z_axis, 2, STRETCH_SPEED * slowDown)
 		end
 		WaitForMove(rArm[4], z_axis)
 		Turn(turret, y_axis, math.pi, TURRET_SPEED * slowDown)
 		WaitForTurn(turret, y_axis)
-		Turn(lArm[2], x_axis, math.rad(65+25), ELEVATION_SPEED * slowDown)
-		Turn(rArm[2], x_axis, math.rad(65+25), ELEVATION_SPEED * slowDown)
+		-- lower to bed
+		--[[Turn(lHand, x_axis, -math.rad(25), ELEVATION_SPEED * slowDown)
+		Turn(rHand, x_axis, -math.rad(25), ELEVATION_SPEED * slowDown)
+		Turn(rArm[2], x_axis, math.rad(25), ELEVATION_SPEED * slowDown)
+		Turn(lArm[2], x_axis, math.rad(25), ELEVATION_SPEED * slowDown)
+		WaitForTurn(rArm[2], x_axis)]]
+		Turn(rArm[1], x_axis, 0, ELEVATION_SPEED * slowDown)
+		Turn(lArm[1], x_axis, 0, ELEVATION_SPEED * slowDown)
+		Turn(lHand, x_axis, 0, ELEVATION_SPEED * slowDown)
+		Turn(rHand, x_axis, 0, ELEVATION_SPEED * slowDown)
+		--WaitForTurn(rHand, x_axis)
+		Turn(rArm[2], x_axis, 0, ELEVATION_SPEED * slowDown)
+		Turn(lArm[2], x_axis, 0, ELEVATION_SPEED * slowDown)
 		WaitForTurn(rArm[2], x_axis)
+		--[[for i = 1, 4 do
+			Turn(lFinger[i], x_axis, math.rad(35) * (-1)^i, ELEVATION_SPEED)
+			Turn(rFinger[i], x_axis, math.rad(35) * (-1)^i, ELEVATION_SPEED)
+		end
+		WaitForTurn(rFinger[4], x_axis)]]
 		GG.FeatureAttach(unitID, piece("bed"), featureID)
-		
 		-- allow to drive off with speed based on weight
 		GG.SpeedChange(unitID, unitDefID, (12000 - fMass)/10000)
+		for i = 3, 4 do
+			Move(lArm[i], z_axis, 0, STRETCH_SPEED * slowDown)
+			Move(rArm[i], z_axis, 0, STRETCH_SPEED * slowDown)
+		end
 	end
 	
 	function UnloadFeature(featureID)
 		GG.SpeedChange(unitID, unitDefID, 1)
+		StartThread(SetupArms, true)
 	end
 	
 	function RecoverFeature(featureID)
@@ -571,8 +614,10 @@ if unitDef.name == "brv" then
 		--local fx,fy,fz = Spring.GetFeaturePosition(featureID)
 		local torso = Spring.GetFeaturePieceMap(featureID).torso
 		local fx, fy, fz = Spring.GetFeaturePiecePosDir(featureID, torso)
-		fy = fy + 25
+		fy = fy + 10
+		Spring.MarkerAddPoint(fx, fy, fz)
 		local x,y,z = Spring.GetUnitPiecePosDir(unitID, piece("turret"))
+		Spring.MarkerAddPoint(fx, fy, fz)
 		local brvHeading = GG.Vector.HeadingToRadians(Spring.GetUnitHeading(unitID))
 			
 		--local front, up, right = Spring.GetUnitVectors(unitID)
