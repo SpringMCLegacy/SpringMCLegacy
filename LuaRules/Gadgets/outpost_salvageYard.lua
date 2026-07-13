@@ -473,11 +473,12 @@ function gadget:AllowCommand(unitID, unitDefID, teamID, cmdID, cmdParams, cmdOpt
 		if recoverTargets[yardID] then return false end -- yard already has a corpse loaded, TODO: this can fail if you have multiple BRV
 		local featureID = (cmdParams[1] and cmdParams[1] > Game.maxUnits and cmdParams[1] or 0) - Game.maxUnits -- TODO: handle area commands
 		if featureID > 0 then
-			local torso = Spring.GetFeaturePieceMap(featureID).torso
-			local fx, fy, fz = Spring.GetFeaturePiecePosDir(featureID, torso)
+			local pelvis = Spring.GetFeaturePieceMap(featureID).pelvis
+			local fx, fy, fz = Spring.GetFeaturePiecePosDir(featureID, pelvis)
 			--Spring.Echo("Gonna find me a corpse bride!", x,y,z)
 			local fHeading = Spring.GetFeatureHeading(featureID)
-			local x,y,z = GG.Vector.RotateY(fx, fy, fz - 50, GG.Vector.HeadingToRadians(fHeading))
+			local radius = Spring.GetFeatureRadius(featureID)
+			local x,y,z = GG.Vector.RotateY(fx, fy, fz - radius * 3, GG.Vector.HeadingToRadians(fHeading))
 			Spring.MarkerAddPoint(x,y,z)
 			SetUnitMoveGoal(unitID, x, y, z, 5)
 			recoverTargets[unitID] = featureID
@@ -590,17 +591,17 @@ function gadget:CommandFallback(unitID, unitDefID, teamID, cmdID, cmdParams, cmd
 		if featureID then
 			--local dist = Spring.GetUnitFeatureSeparation(unitID, featureID) -- TODO: change to cached target location alongside
 			-- TODO: ffs cache this!
-			local torso = Spring.GetFeaturePieceMap(featureID).torso
-			local fx, fy, fz = Spring.GetFeaturePiecePosDir(featureID, torso)
+			local pelvis = Spring.GetFeaturePieceMap(featureID).pelvis
+			local fx, fy, fz = Spring.GetFeaturePiecePosDir(featureID, pelvis)
 			local fHeading = Spring.GetFeatureHeading(featureID)
-			local tx,ty,tz = GG.Vector.RotateY(fx, fy, fz - 50, GG.Vector.HeadingToRadians(fHeading))
+			local radius = Spring.GetFeatureRadius(featureID)
+			local tx,ty,tz = GG.Vector.RotateY(fx, fy, fz - radius * 3, GG.Vector.HeadingToRadians(fHeading))
 			local turret = Spring.GetUnitPieceMap(unitID).turret
 			local x,y,z = Spring.GetUnitPiecePosDir(unitID, turret)
 			local dist = GG.Vector.DistanceBetween(x, y, z, tx, ty, tz)
-			local radius = Spring.GetFeatureRadius(featureID)
-			Spring.Echo("CMD_RECOVER distance", dist, "feature radius is", Spring.GetFeatureRadius(featureID))
-			if dist and dist < 2 * radius then
-				Spring.Echo("CMD_RECOVER within distance")
+			--Spring.Echo("CMD_RECOVER distance", dist, "feature radius is", Spring.GetFeatureRadius(featureID))
+			if dist and dist < 31 then
+				--Spring.Echo("CMD_RECOVER within distance")
 				env = Spring.UnitScript.GetScriptEnv(unitID)
 				Spring.UnitScript.CallAsUnit(unitID, env.RecoverFeature, featureID)
 				return true, true

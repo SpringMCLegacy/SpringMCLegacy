@@ -484,7 +484,7 @@ local function UnLoad(targetID)
 end
 
 if unitDef.name == "brv" then
-	local turret = piece("turret")
+	local turret, pitchRef = piece("turret", "pitchref")
 	local lArm = {}
 	local rArm = {}
 	local lHand, rHand = piece("lhand", "rhand")
@@ -523,10 +523,16 @@ if unitDef.name == "brv" then
 		Turn(rBedWall, z_axis, 0, ELEVATION_SPEED)
 	end
 
-	local function GrabIt(featureID, heading, pitch, dist)	
-		GG.SpeedChange(unitID, unitDefID, 0.0001)
+	local function GrabIt(featureID)	
 		local fMass = FeatureDefs[Spring.GetFeatureDefID(featureID)].mass
 		local slowDown = 2000/fMass
+		local pelvis = Spring.GetFeaturePieceMap(featureID).pelvis
+		local fx, fy, fz = Spring.GetFeaturePiecePosDir(featureID, pelvis)
+		fy = fy + 10
+		
+		local x,y,z = Spring.GetUnitPiecePosDir(unitID, turret)
+		local brvHeading = GG.Vector.HeadingToRadians(Spring.GetUnitHeading(unitID))
+		local heading = math.atan2(fx-x, fz-z) - brvHeading
 		
 		-- get arm into position
 		Turn(turret, y_axis, heading, TURRET_SPEED)
@@ -537,13 +543,21 @@ if unitDef.name == "brv" then
 		end
 		Turn(lArm[1], x_axis, 0, ELEVATION_SPEED)
 		Turn(rArm[1], x_axis, 0, ELEVATION_SPEED)
-		--WaitForTurn(rArm[1], x_axis)
+		Turn(lArm[2], x_axis, math.rad(25), ELEVATION_SPEED)
+		Turn(rArm[2], x_axis, math.rad(25), ELEVATION_SPEED)
+		WaitForTurn(rArm[2], x_axis)
+		
+		x,y,z = Spring.GetUnitPiecePosDir(unitID, pitchRef)
+		local dist = GG.Vector.DistanceBetween(x,y,z,fx,fy,fz)
+		local pitch = math.asin((y-fy)/dist)
+		--Spring.Echo("heading", math.deg(heading), "pitch", math.deg(pitch), "distance", dist)
+
 		Turn(lArm[2], x_axis, pitch, ELEVATION_SPEED*2)
 		Turn(rArm[2], x_axis, pitch, ELEVATION_SPEED*2)
 		WaitForTurn(rArm[2], x_axis)
 		for i = 3, 4 do
-			Move(lArm[i], z_axis, (dist - 48) / 3, STRETCH_SPEED)
-			Move(rArm[i], z_axis, (dist - 48) / 3, STRETCH_SPEED)
+			Move(lArm[i], z_axis, (dist-30) / 3, STRETCH_SPEED)
+			Move(rArm[i], z_axis, (dist-30) / 3, STRETCH_SPEED)
 		end
 		WaitForMove(rArm[4], z_axis)
 		for i = 1, 4 do
@@ -602,32 +616,8 @@ if unitDef.name == "brv" then
 	end
 	
 	function RecoverFeature(featureID)
-		--[[xzDelta = get PIECE_XZ(turret) - posxz;
-		yDelta = posy - get PIECE_Y(turret) - [20.000000];
-		xzDistToTarget = get XZ_HYPOT(xzDelta);
-		distToTarget = get HYPOT(xzDistToTarget,yDelta) - [20.000000];
-		heading = get XZ_ATAN(xzDelta);
-		-- wtf is XZ_ATAN doing, well -> return int(RAD2TAANG*math::atan2((float)UNPACKX(p1), (float)UNPACKZ(p1)) + 32768 - unit->heading); <- Ah, heading!
-		pitch = get ATAN(yDelta,xzDistToTarget);
-		withinMaxTransportRange = distToTarget < [126.000000];==]]
-		--Spring.Echo("DERPIN TIME!")
-		--local fx,fy,fz = Spring.GetFeaturePosition(featureID)
-		local torso = Spring.GetFeaturePieceMap(featureID).torso
-		local fx, fy, fz = Spring.GetFeaturePiecePosDir(featureID, torso)
-		fy = fy + 10
-		Spring.MarkerAddPoint(fx, fy, fz)
-		local x,y,z = Spring.GetUnitPiecePosDir(unitID, piece("turret"))
-		Spring.MarkerAddPoint(fx, fy, fz)
-		local brvHeading = GG.Vector.HeadingToRadians(Spring.GetUnitHeading(unitID))
-			
-		--local front, up, right = Spring.GetUnitVectors(unitID)
-		--local heading = GG.Vector.AngleBetween2(fx-x, fz-z, front[1], front[3])
-		--local heading = GG.Vector.AngleBetween2(fx-x, fz-z, right[1], right[3]) - math.pi/2
-		local heading = math.atan2(fx-x, fz-z) - brvHeading
-		local dist = GG.Vector.DistanceBetween(x,y,z,fx,fy,fz)
-		local pitch = math.asin((y-fy)/dist)
-		--Spring.Echo("heading", math.deg(heading), "pitch", math.deg(pitch), "distance", dist)
-		StartThread(GrabIt, featureID, heading, pitch, dist)
+		GG.SpeedChange(unitID, unitDefID, 0.0001)
+		StartThread(GrabIt, featureID)
 	end
 end
 
