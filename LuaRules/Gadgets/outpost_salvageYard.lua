@@ -116,7 +116,7 @@ local corpseCache = {} -- featureDefID = true
 local salvageArray = {} -- [1] = featureDefID1, ...
 local unitPinataLevels = {} -- unitID = 0 or 1 or 2 or 3
 
-local recoverTargets = {} -- unitID = featureID
+local recoverTargets = {}
 
 -- Salvage yard
 local yardLevels = {} -- yardLevels[yardID] = 1, 2 or 3
@@ -289,12 +289,13 @@ local function Cripple(unitID, unitDefID, lArm, rArm)
 end
 
 local function YardNotifyDone(yardID, teamID, pieceNum)
-	local featureID = recoverTargets[yardID]
-	local info = featureAttachers[featureID]
+	local targetInfo = recoverTargets[yardID]
+	local featureID = targetInfo.fID
+	local attachInfo = featureAttachers[featureID]
 	local fd = FeatureDefs[Spring.GetFeatureDefID(featureID)]
 	local x,y,z = Spring.GetUnitPiecePosDir(yardID, pieceNum)
-	local heading = Spring.GetUnitHeading(info.fake)
-	local front, up = Spring.GetUnitVectors(info.fake)
+	local heading = Spring.GetUnitHeading(attachInfo.fake)
+	local front, up = Spring.GetUnitVectors(attachInfo.fake)
 	FeatureDetach(featureID)
 	DestroyFeature(featureID)
 	local mechDefID = UnitDefNames[fd.customParams.was].id
@@ -448,7 +449,8 @@ function gadget:UnitIdle(unitID, unitDefID, teamID)
 	if yardID then -- is a Salvager
 		--Spring.Echo("Yawn! Nought to do here boss")
 		local dist = GetUnitSeparation(unitID, yardID)
-		if dist and dist > 50 and not (unitDefID == BRV_ID and not recoverTargets[unitID]) then -- nothing else to salvage, force RTB
+		if dist and dist > 50 -- nothing else to salvage, force RTB
+		and not (unitDefID == BRV_ID and recoverTargets[yardID] and recoverTargets[yardID].loaded) then -- exempt BRV if there is a mech loaded
 			gadget:UnitHarvestStorageFull(unitID, unitDefID, teamID)
 		else
 			idleSalvagers[unitID] = true
@@ -470,7 +472,8 @@ function gadget:AllowCommand(unitID, unitDefID, teamID, cmdID, cmdParams, cmdOpt
 		end
 	elseif cmdID == CMD_RECOVER and unitDefID == BRV_ID then -- TODO: make a 'isBRV' to include BRV, Heavy BRV, Savior?
 		local yardID = salvagerYards[unitID]
-		if recoverTargets[yardID] then return false end -- yard already has a corpse loaded, TODO: this can fail if you have multiple BRV
+		local target = recoverTargets[yardID]
+		if target and target.loaded then return false end -- yard already has a corpse loaded
 		local featureID = (cmdParams[1] and cmdParams[1] > Game.maxUnits and cmdParams[1] or 0) - Game.maxUnits -- TODO: handle area commands
 		if featureID > 0 then
 			local pelvis = Spring.GetFeaturePieceMap(featureID).pelvis
@@ -479,9 +482,19 @@ function gadget:AllowCommand(unitID, unitDefID, teamID, cmdID, cmdParams, cmdOpt
 			local fHeading = Spring.GetFeatureHeading(featureID)
 			local radius = Spring.GetFeatureRadius(featureID)
 			local x,y,z = GG.Vector.RotateY(fx, fy, fz - radius * 3, GG.Vector.HeadingToRadians(fHeading))
-			Spring.MarkerAddPoint(x,y,z)
+			--Spring.MarkerAddPoint(x,y,z)
 			SetUnitMoveGoal(unitID, x, y, z, 5)
-			recoverTargets[unitID] = featureID
+			recoverTargets[yardID] = {
+				fID = featureID,
+				yID = yardID,
+				brvID = unitID,
+				pos = {
+					['x'] = x,
+					['y'] = y,
+					['z'] = z,
+				},
+				loaded = false,
+			}
 			salvageSources[featureID] = nil
 			return true
 		end
@@ -507,9 +520,9 @@ function gadget:AllowCommand(unitID, unitDefID, teamID, cmdID, cmdParams, cmdOpt
 			return true
 		end
 		return false
-	elseif yardLevels[unitID] then
+	elseif yardLevels[unitID] then -- it is a yard
 		if cmdID == CMD_SCRAP then
-			local featureID = recoverTargets[unitID]
+			local featureID = recoverTargets[unitID].fID
 			local featureDef = FeatureDefs[GetFeatureDefID(featureID)]
 			-- TODO: Maybe add a animation in the yard script and have it be non-instant
 			local amount = math.floor(featureDef.metal / CONVERSION_RATE)
@@ -552,6 +565,7 @@ function gadget:CommandFallback(unitID, unitDefID, teamID, cmdID, cmdParams, cmd
 	if cmdID == CMD_DEPOSIT then
 		local yardID = salvagerYards[unitID]
 		local dist = GetUnitSeparation(unitID, yardID)
+		--Spring.Echo("CMD_DEPOSIT", unitID, yardID, dist)
 		if dist and dist < 50 then
 			if unitDefID == SALVAGER_ID then -- depositing salvage
 				local raw = GetUnitHarvestStorage(unitID)
@@ -563,7 +577,7 @@ function gadget:CommandFallback(unitID, unitDefID, teamID, cmdID, cmdParams, cmd
 				local pos = yardPos[yardID]
 				DelayCall(GiveOrderToUnit, {unitID, CMD.RECLAIM, {pos.x, pos.y, pos.z, SALVAGE_RANGE}, {}}, 1) -- TODO: range change
 			elseif unitDefID == BRV_ID then
-				local featureID = recoverTargets[unitID]
+				local featureID = recoverTargets[yardID].fID
 				local featureDef = FeatureDefs[Spring.GetFeatureDefID(featureID)]
 				--Spring.Echo("Made it back, have a " .. featureDef.name .. " to ressurect!")
 				FeatureDetach(featureID)
@@ -571,8 +585,7 @@ function gadget:CommandFallback(unitID, unitDefID, teamID, cmdID, cmdParams, cmd
 				Spring.UnitScript.CallAsUnit(unitID, env.UnloadFeature, featureID)
 				env = Spring.UnitScript.GetScriptEnv(yardID)
 				FeatureAttach(yardID, env.mount, featureID)
-				recoverTargets[unitID] = nil
-				recoverTargets[yardID] = featureID
+				recoverTargets[yardID].loaded = true
 				local cp = featureDef.customParams
 				local targetDefID = cp.was and UnitDefNames[cp.was].id or 0
 				local cmdDesc = GetMechCmdDesc(targetDefID)
@@ -582,28 +595,27 @@ function gadget:CommandFallback(unitID, unitDefID, teamID, cmdID, cmdParams, cmd
 				Spring.InsertUnitCmdDesc(yardID, scrapMechCmdDesc)
 				scrapMechCmdDesc.tooltip = ttCache
 			end
+			--Spring.Echo("CommandFallback consume CMD_DEPOSIT")
 			return true, true
 		else -- not home yet, keep going
+			--Spring.Echo("CommandFallback again CMD_DEPOSIT")
 			return true, false
 		end
 	elseif cmdID == CMD_RECOVER then
-		local featureID = recoverTargets[unitID]
-		if featureID then
+		local yardID = salvagerYards[unitID]
+		local info = recoverTargets[yardID]
+		if info then
 			--local dist = Spring.GetUnitFeatureSeparation(unitID, featureID) -- TODO: change to cached target location alongside
-			-- TODO: ffs cache this!
-			local pelvis = Spring.GetFeaturePieceMap(featureID).pelvis
-			local fx, fy, fz = Spring.GetFeaturePiecePosDir(featureID, pelvis)
-			local fHeading = Spring.GetFeatureHeading(featureID)
-			local radius = Spring.GetFeatureRadius(featureID)
-			local tx,ty,tz = GG.Vector.RotateY(fx, fy, fz - radius * 3, GG.Vector.HeadingToRadians(fHeading))
+			-- TODO: maybe cache turret piece lookup?
 			local turret = Spring.GetUnitPieceMap(unitID).turret
 			local x,y,z = Spring.GetUnitPiecePosDir(unitID, turret)
-			local dist = GG.Vector.DistanceBetween(x, y, z, tx, ty, tz)
+			local dist = GG.Vector.DistanceBetween(x, y, z, info.pos.x, info.pos.y, info.pos.z)
 			--Spring.Echo("CMD_RECOVER distance", dist, "feature radius is", Spring.GetFeatureRadius(featureID))
-			if dist and dist < 31 then
+			if dist and dist < 35 then
 				--Spring.Echo("CMD_RECOVER within distance")
 				env = Spring.UnitScript.GetScriptEnv(unitID)
-				Spring.UnitScript.CallAsUnit(unitID, env.RecoverFeature, featureID)
+				Spring.UnitScript.CallAsUnit(unitID, env.RecoverFeature, info.fID)
+				gadget:UnitHarvestStorageFull(unitID, unitDefID, teamID)
 				return true, true
 			else -- not there yet, keep going
 				return true, false
