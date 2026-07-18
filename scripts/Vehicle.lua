@@ -967,7 +967,7 @@ if unitDef.isBuilder or unitDef.name == "brv" then -- BRVS
 	end
 	
 	function Unloaded(ry, callerID)
-		Spring.MoveCtrl.Enable(unitID) -- don't allow moving until crate is unfolded
+		GG.Delay.DelayCall(Spring.MoveCtrl.Enable, {unitID}, 5) -- don't allow moving until crate is unfolded
 		GG.Delay.DelayCall(Spring.MoveCtrl.Disable, {unitID}, 5 * 30)
 		GG.SpawnSalvager(callerID, teamID, unitID)
 		if crateID then
