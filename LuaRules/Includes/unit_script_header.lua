@@ -9,6 +9,7 @@
 local unitID = unitID
 local unitDefID = unitDefID
 local unitDef = UnitDefs[unitDefID]
+local cp = unitDef.customParams
 local teamID = Spring.GetUnitTeam(unitID)
 
 local UnitScript = Spring.UnitScript

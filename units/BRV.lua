@@ -18,6 +18,9 @@ local BRV = Tank:New{
 		mods			= {"ferrofibrousarmour"},
 		hitchmaxy		= 60,
 		uniformbin		= "treads2k",
+		turretturnspeed	= 25,
+		elevationspeed	= 25,
+		cratetype		= "cratelong",
 	},
 }
 

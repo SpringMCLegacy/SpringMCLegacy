@@ -484,6 +484,8 @@ local function UnLoad(targetID)
 end
 
 if unitDef.name == "brv" then
+	local STRETCH_SPEED = TURRET_SPEED * 2
+	
 	local turret, pitchRef = piece("turret", "pitchref")
 	local lArm = {}
 	local rArm = {}
@@ -501,13 +503,14 @@ if unitDef.name == "brv" then
 	local link = piece("link")
 	local bed, lBedWall, rBedWall = piece("bed", "lbedwall", "rbedwall")
 	
-	function SetupArms(reset)
-		TURRET_SPEED = info.turretTurnSpeed
-		ELEVATION_SPEED = info.elevationSpeed
+	function SetupArms(reset, sleepDelay)
+		Sleep(sleepDelay or 1)
+		--TURRET_SPEED = info.turretTurnSpeed
+		--ELEVATION_SPEED = info.elevationSpeed
 		-- TODO: setup the customparams
-		STRETCH_SPEED = TURRET_SPEED / 2
-		TURRET_SPEED = TURRET_SPEED / 4
-		ELEVATION_SPEED = ELEVATION_SPEED / 4
+--		STRETCH_SPEED = TURRET_SPEED * 2
+		--TURRET_SPEED = TURRET_SPEED / 4
+		--ELEVATION_SPEED = ELEVATION_SPEED / 4
 		
 		Turn(turret, y_axis, math.pi, reset and TURRET_SPEED)
 		Turn(bed, y_axis, math.pi) -- for correct rotation when attached
@@ -628,8 +631,9 @@ function script.Create()
 		StartThread(Wobble)
 	end
 	if unitDef.name == "brv" then
-		StartThread(SetupArms)
+		Turn(turret, y_axis, math.pi)
 	end
+	
 	-- set engagement range to weapon 1 range
 	Spring.SetUnitMaxRange(unitID, closeRange)
 	StartThread(SmokeUnit, {body})
@@ -956,11 +960,10 @@ if unitDef.isBuilder or unitDef.name == "brv" then -- BRVS
 	
 	local crateID
 	function EnCrate()
-		--if crateLink then
+		local crateLink = piece("cratelink") or 1
 		local x,y,z = Spring.GetUnitBasePosition(unitID)
-		crateID = Spring.CreateUnit("crate", x,y,z, 0, teamID, false, false)
-		Spring.UnitAttach(unitID, crateID, crateLink or 1, true)
-		--end
+		crateID = Spring.CreateUnit(cp.cratetype or "crate", x,y,z, 0, teamID, false, false)
+		Spring.UnitAttach(unitID, crateID, crateLink, true)
 	end
 	
 	function Unloaded(ry, callerID)
@@ -971,6 +974,9 @@ if unitDef.isBuilder or unitDef.name == "brv" then -- BRVS
 			env = Spring.UnitScript.GetScriptEnv(crateID)
 			Spring.UnitScript.CallAsUnit(crateID, env.Unloaded)
 			Spring.UnitDetach(crateID)
+		end
+		if unitDef.name == "brv" then
+			StartThread(SetupArms, true, 5000)
 		end
 	end
 	

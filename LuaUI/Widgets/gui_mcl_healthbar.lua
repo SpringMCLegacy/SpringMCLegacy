@@ -202,7 +202,7 @@ local function GenerateUnitGraphics(uid, udid, getAuras)
 	or Spring.GetUnitTransporter(uid)
 	or ud.name:find("beacon") -- TODO: cache IDs rather than string comp!
 	or ud.name:find("dropzone")
-	or ud.name == "crate"
+	or ud.name:find("crate")
 	or ud.customParams.invincible then
         return false
 	end

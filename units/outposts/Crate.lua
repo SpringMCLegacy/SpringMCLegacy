@@ -17,4 +17,11 @@ local Crate = Outpost:New{
     },
 }
 
-return lowerkeys({ ["Crate"] = Crate })
+local CrateLong = Crate:New{
+	objectName			= "Outpost/CrateLong.s3o",
+}
+
+return lowerkeys({ 
+	["Crate"] = Crate,
+	["CrateLong"] = CrateLong,
+})

@@ -346,10 +346,10 @@ function gadget:UnitCreated(unitID, unitDefID, teamID, builderID)
 		GG.AddSupportCmds(unitID, BRV_CMD_DESCS_TO_ADD)
 	elseif GG.mechCache[unitDefID] then -- a mech
 		unitPinataLevels[unitID] = 0
-		if builderID and GetUnitDefID(builderID) == SALVAGER_ID then -- TODO: change to brv
+		--[[if builderID and GetUnitDefID(builderID) == SALVAGER_ID then -- TODO: change to brv
 			Spring.SetUnitHealth(unitID, 1, 0, 100)
 			GG.Delay.DelayCall(Cripple, {unitID}, 1)
-		end
+		end]]
 	end
 end
 
@@ -576,7 +576,7 @@ function gadget:CommandFallback(unitID, unitDefID, teamID, cmdID, cmdParams, cmd
 				SetUnitHarvestStorage(unitID, 0)
 				local pos = yardPos[yardID]
 				DelayCall(GiveOrderToUnit, {unitID, CMD.RECLAIM, {pos.x, pos.y, pos.z, SALVAGE_RANGE}, {}}, 1) -- TODO: range change
-			elseif unitDefID == BRV_ID then
+			elseif unitDefID == BRV_ID and recoverTargets[yardID] then
 				local featureID = recoverTargets[yardID].fID
 				local featureDef = FeatureDefs[Spring.GetFeatureDefID(featureID)]
 				--Spring.Echo("Made it back, have a " .. featureDef.name .. " to ressurect!")
@@ -605,7 +605,6 @@ function gadget:CommandFallback(unitID, unitDefID, teamID, cmdID, cmdParams, cmd
 		local yardID = salvagerYards[unitID]
 		local info = recoverTargets[yardID]
 		if info then
-			--local dist = Spring.GetUnitFeatureSeparation(unitID, featureID) -- TODO: change to cached target location alongside
 			-- TODO: maybe cache turret piece lookup?
 			local turret = Spring.GetUnitPieceMap(unitID).turret
 			local x,y,z = Spring.GetUnitPiecePosDir(unitID, turret)
