@@ -300,7 +300,7 @@ function OrderFinished(unitID, teamID)
 	orderTons[unitID] = 0
 	orderSizes[unitID] = 0
 end
-GG.OrderFinished = OrderFinished
+GG.OrderFinished = OrderFinished -- for outpost_airCon build menu
 
 local function DropShipAvailable(teamID)
 	if orderStatus[unitID] == 0 then -- only play this sound if no new order is queued
@@ -312,15 +312,16 @@ local function CleanupOrder(unitID, teamID)
 	orderStatus[unitID] = 0 -- ready for new order
 	UpdateButtons(unitID, teamID)
 end
-GG.CleanupOrder = CleanupOrder
+GG.CleanupOrder = CleanupOrder -- for outpost_airCon build menu
 
-function DropZoneCoolDown(teamID) -- called by Dropship once it has left, to enable "Submit Order"
+function DropZoneCoolDown(teamID) -- called when Dropship leaves (via UnitDestroyed), to enable "Submit Order"
 	local dead = select(3, Spring.GetTeamInfo(teamID))
 	if dead then return end
 	if not dead and teamID and teamDropZoneLevels[teamID] then
 		local unitID = teamDropZones[teamID]
 		local beaconID = GG.dropZoneBeaconIDs[teamID]	
 		if unitID then -- dropzone might have died in the meantime
+			OrderFinished(unitID, teamID)
 			CleanupOrder(unitID, teamID)
 		end
 		-- Dropship is no longer ACTIVE, it is entering COOLDOWN
@@ -364,6 +365,7 @@ local function SendCommandFallback(cost, weight, unitID, unitDefID, teamID)
 		end -- dropzone died TODO: Transfer to new DZ if there is one
 		if #orderQueue > 0 then -- proceed with order
 			local beaconID = GG.dropZoneBeaconIDs[teamID]
+						--beaconID, beaconPointID, teamID, dropshipType, 					cargo, cost, sound, delay
 			GG.DropshipDelivery(beaconID, beaconID, teamID, teamDropZoneLevels[teamID].def, orderQueue, 0, nil, 0)
 			Spring.SendMessageToTeam(teamID, "Sending purchase order for the following:")
 			for i, order in ipairs(orderQueue) do
@@ -382,7 +384,8 @@ local function SendCommandFallback(cost, weight, unitID, unitDefID, teamID)
 			UpdateButtons(unitID, teamID)
 		end
 		-- clean up (regardless of whether or not order was fulfilled or cancelled)
-		OrderFinished(unitID, teamID)
+		ResetBuildQueue(unitID)
+		--OrderFinished(unitID, teamID)
 	else -- Dropship is ACTIVE or COOLDOWN
 		GG.Delay.DelayCall(SendCommandFallback, {cost, weight, unitID, unitDefID, teamID}, 16)
 	end
@@ -521,7 +524,7 @@ GG.PurchaseOrders = PurchaseOrders
 function gadget:AllowCommand(unitID, unitDefID, teamID, cmdID, cmdParams, cmdOptions, cmdTag, synced)
 	-- DROPZONE PURCHASE ORDERS
 	if dropZones[unitID] then
-		return PurchaseOrders(unitID, unitDefID, teamID, cmdID, cmdOptions, SendCommandFallback, mechCache, menuCmdIDs, typeStrings, typeStringIndex, GG.TeamSlotsRemaining(teamID))
+		return dropZoneStatus[teamID] ~= 1 and PurchaseOrders(unitID, unitDefID, teamID, cmdID, cmdOptions, SendCommandFallback, mechCache, menuCmdIDs, typeStrings, typeStringIndex, GG.TeamSlotsRemaining(teamID))
 	-- DROPZONE PLACEMENT ORDERS
 	elseif unitDefID == BEACON_ID then
 		if cmdID == dropZoneCmdDesc.id then
