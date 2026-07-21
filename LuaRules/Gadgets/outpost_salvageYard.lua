@@ -325,7 +325,7 @@ local function AssociateSupport(yardID, teamID, salvagerID)
 		end
 	end
 end
-GG.SpawnSalvager = AssociateSupport  -- TODO: rename elsewhere
+GG.AssociateSupport = AssociateSupport
 
 function gadget:UnitCreated(unitID, unitDefID, teamID, builderID)
 	local unitDef = UnitDefs[unitDefID]

@@ -48,7 +48,6 @@ function Recover(tons)
 end
 
 function Deploy()
-	--GG.SpawnSalvager(unitID, teamID)
 	Show(foundation)
 	Move(armature1, z_axis, 0, CRATE_SPEED * 2)
 	Move(armature2, z_axis, 0, CRATE_SPEED * 2)
