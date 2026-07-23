@@ -553,11 +553,10 @@ function gadget:AllowCommand(unitID, unitDefID, teamID, cmdID, cmdParams, cmdOpt
 					return true
 				end
 			end
+			GG.PlaySoundForTeam(teamID, "bb_insufficient_cbills", 1)
 		end
-		GG.PlaySoundForTeam(teamID, "bb_insufficient_cbills", 1)
 		return false
 	end
-	--if cmdID == CMD.RESURRECT then Spring.Echo("Yay rezzin time!") end
 	return true
 end
 
