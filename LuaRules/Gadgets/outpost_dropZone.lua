@@ -182,19 +182,24 @@ GG.ClearCmdDescs = ClearCmdDescs
 local function ShowBuildOptionsByType(unitID, menuType, menuCache, menuIDs, typeStringIndex, lockedDescs, teamID)
 	teamID = teamID or unitID -- fallback to unitID for TurretControl and AirCon
 	local lockedDescs = lockedDescs and lockedDescs[teamID] or locked[teamID] -- TODO: remove this crap when LockHeavy is generalised
-	currMenu[unitID] = menuType
-	currMenuIndex[unitID] = typeStringIndex[menuType]
+	currMenu[unitID] = menuType ~= "purchase" and menuType or currMenu[unitID]
+	currMenuIndex[unitID] = menuType ~= "purchase" and typeStringIndex[menuType] or currMenuIndex[unitID]
 	local cmdID = menuType and GG.CustomCommands.GetCmdID("CMD_MENU_" .. menuType:upper())
-	for i, cmdDesc in pairs(Spring.GetUnitCmdDescs(unitID)) do
+	for i, cmdDesc in pairs(GetUnitCmdDescs(unitID)) do
 		if cmdDesc.id == cmdID then
-			EditUnitCmdDesc(unitID, i, {texture = 'bitmaps/ui/selected.png',})
+			EditUnitCmdDesc(unitID, i, {texture = 'bitmaps/ui/selected.png', hidden = false})
 		elseif cmdDesc.id < 0 or lockedDescs[cmdDesc.id] then --  buildoption
-			-- Order matters here... nil or false = false, false or nil = nil, thanks lua
-			local hide = lockedDescs[math.abs(cmdDesc.id)] or menuCache[-cmdDesc.id] ~= menuType
-			EditUnitCmdDesc(unitID, i, {hidden = hide})
+			if menuType == "purchase" then
+				EditUnitCmdDesc(unitID, i, {hidden = type(tonumber(cmdDesc.params[1])) ~= "number"})	
+			else
+				-- Order matters here... nil or false = false, false or nil = nil, thanks lua
+				local hide = lockedDescs[math.abs(cmdDesc.id)] or menuCache[-cmdDesc.id] ~= menuType
+				EditUnitCmdDesc(unitID, i, {hidden = hide})
+			end
 		elseif menuCache[cmdDesc.id] then -- a button other than a buildoption which belongs to a particular menu
 			EditUnitCmdDesc(unitID, i, {hidden = menuCache[cmdDesc.id] ~= menuType})
 		elseif menuIDs[cmdDesc.id] then -- an actual menu button
+			EditUnitCmdDesc(unitID, i, {hidden = menuType == "purchase"})
 			if not (menuIDs[cmdDesc.id] == "next" or menuIDs[cmdDesc.id] == "previous") then
 				EditUnitCmdDesc(unitID, i, {texture = 'bitmaps/ui/filter.png',})
 			end
@@ -288,6 +293,7 @@ function UpdateButtons(unitID, teamID, arrived) -- Toggles Submit Order vs Order
 		if orderSizes[unitID] == 0 then
 			EditUnitCmdDesc(unitID, FindUnitCmdDesc(unitID, CMD_RUNNING_TOTAL), {name = COLOURS.cbills .. GG.Pad(13, "C-Bills", " 0 ")})
 			EditUnitCmdDesc(unitID, FindUnitCmdDesc(unitID, CMD_RUNNING_TONS), {name = COLOURS.tonnage .. GG.Pad(11, "Tonnes", " 0 ")})
+			ShowBuildOptionsByType(unitID, currMenu[unitID], mechCache, menuCmdIDs, typeStringIndex, locked, teamID)
 		end
 	elseif orderStatus[unitID] >= 1 then -- order submitted
 		EditUnitCmdDesc(unitID, FindUnitCmdDesc(unitID, CMD_SEND_ORDER), {name = GG.Pad("Order","Sent"), texture = "bitmaps/ui/submit2.png"})
@@ -511,6 +517,7 @@ local function PurchaseOrders(unitID, unitDefID, teamID, cmdID, cmdOptions, comp
 		end
 		orderStatus[unitID] = Spring.GetGameFrame() --1
 		UpdateButtons(unitID, teamID)
+		ShowBuildOptionsByType(unitID, "purchase", mechCache, menuCmdIDs, typeStringIndex, locked, teamID)
 		if dropZoneStatus[teamID] ~= 0 then -- check here so it only plays once rather than every fallback
 			GG.PlaySoundForTeam(teamID, "bb_reinforcements_queued", 1)
 		end
