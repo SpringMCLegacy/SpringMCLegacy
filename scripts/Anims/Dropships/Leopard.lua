@@ -238,7 +238,7 @@ local x, _ ,z = Spring.GetUnitPosition(unitID)
 
 local cargoLeft
 
-function UnloadMech(i)
+function UnloadMech(i, lastMech)
 	Signal(2 ^ (i + 1 + #weapons))
 	SetSignalMask(2 ^ (i + 1 + #weapons))
 	local env = Spring.UnitScript.GetScriptEnv(cargo[i])
@@ -258,21 +258,19 @@ function UnloadMech(i)
 	WaitForMove(cargoPieces[pieceNum], z_axis)
 	Spring.UnitScript.DropUnit(cargo[i])
 	Spring.SetUnitBlocking(cargo[i], true, true, true, true, true, true, true)
-	-- TODO: change bugout depending on side of leopard
+	-- change bugout depending on side of leopard
 	local dx, _, dz = Spring.GetUnitDirection(unitID)
 	local UNLOAD_X = x + 300 * dz * (i <= 2 and 1 or -1)
 	local UNLOAD_Z = z + 300 * dx * (i <= 2 and -1 or 1)
-	--Spring.SetUnitMoveGoal(cargo[i], UNLOAD_X, 0, UNLOAD_Z, 25) -- bug out over here
 	Spring.GiveOrderToUnit(cargo[i], CMD.MOVE, {UNLOAD_X, 0, UNLOAD_Z}, {"alt"})
 	--Spring.MarkerAddPoint(UNLOAD_X, 0, UNLOAD_Z)
-	cargoLeft = cargoLeft - 1
 	Sleep(1000)
 	Move(cargoPieces[pieceNum], z_axis, 0)
 	Move(links[pieceNum], x_axis, 0)
 	PlaySound("dropship_doorclose")
 	Turn(doors[pieceNum], z_axis, 0, DOOR_SPEED/3)
 	WaitForTurn(doors[pieceNum], z_axis)
-	if cargoLeft == 0 then -- This was the last mech out
+	if i == lastMech then -- This was the last mech out
 		Sleep(2000)
 		TakeOff()
 	end
@@ -281,7 +279,7 @@ end
 function UnloadCargo()
 	cargoLeft = numCargo
 	PlaySound("dropship_dooropen")
-	local numCargoAnim = numCargo <= 4 and numCargo or 4
+	local numCargoAnim = math.min(numCargo, 4) -- in case of more than 4 mechs 
 	for i = 1, numCargoAnim do
 		Turn(links[i], y_axis, (i <= 2 and 1 or -1) * math.rad(90)) -- bad argument #1 to 'Turn' (number expected, got nil), happens when > 4 mechs transported
 		Turn(doors[i], z_axis, (i % 2 == 1 and -1 or 1) * math.rad(140), DOOR_SPEED)
@@ -292,7 +290,7 @@ function UnloadCargo()
 		Turn(cargoPieces[i], x_axis, -math.rad(25))
 	end
 	for i = 1, numCargo do
-		StartThread(UnloadMech, i)
+		StartThread(UnloadMech, i, numCargo)
 	end	
 end
 
