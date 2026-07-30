@@ -351,10 +351,12 @@ function script.TransportDrop (passengerID, x, y, z)
 	if isTransporting and #isTransporting > 0 then
 		Signal(1) -- kill repair anim & threads
 		passengerID = passengerID or isTransporting[1]
-		Spring.UnitScript.DropUnit(passengerID)
-		bayReady = true
-		Spring.SetUnitMoveGoal(passengerID, UNLOAD_X, 0, UNLOAD_Z, 50) -- bug out over here
+		if passengerID and Spring.ValidUnitID(passengerID) and not Spring.GetUnitIsDead(passengerID) then
+			Spring.UnitScript.DropUnit(passengerID)
+			Spring.SetUnitMoveGoal(passengerID, UNLOAD_X, 0, UNLOAD_Z, 50) -- bug out over here
+		end
 		-- reset states
+		bayReady = true
 		repaired = false
 		resupplied = false
 		restored = false
