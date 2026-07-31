@@ -478,10 +478,11 @@ function gadget:AllowCommand(unitID, unitDefID, teamID, cmdID, cmdParams, cmdOpt
 		if featureID > 0 then
 			local pelvis = Spring.GetFeaturePieceMap(featureID).pelvis
 			local fx, fy, fz = Spring.GetFeaturePiecePosDir(featureID, pelvis)
-			--Spring.Echo("Gonna find me a corpse bride!", x,y,z)
 			local fHeading = Spring.GetFeatureHeading(featureID)
 			local radius = Spring.GetFeatureRadius(featureID)
-			local x,y,z = GG.Vector.RotateY(fx, fy, fz - radius * 3, GG.Vector.HeadingToRadians(fHeading))
+			local dx,dy,dz = GG.Vector.RotateY(0, 0 , -radius * 3, GG.Vector.HeadingToRadians(fHeading))
+			local x,y,z = fx+dx, fy+dy, fz+dz
+			--Spring.Echo("Gonna find me a corpse bride!", "pelvis", pelvis, "fH", fHeading, "angle", math.deg(GG.Vector.HeadingToRadians(fHeading)), "r", radius, "F xyz", fx,fy,fz, "D xyz", dx,dy,dz, "xyz", x,y,z)
 			--Spring.MarkerAddPoint(x,y,z)
 			SetUnitMoveGoal(unitID, x, y, z, 5)
 			recoverTargets[yardID] = {
