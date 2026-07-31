@@ -11,6 +11,7 @@ local Turret_TAG = Turret:New{
 	},
 	customparams = {
 		turrettype = "energy",
+		normaltex		= "unittextures/normals/TurretsB_Normals.dds",
     },
 }
 

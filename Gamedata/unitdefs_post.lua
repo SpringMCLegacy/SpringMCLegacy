@@ -247,7 +247,6 @@ for name, ud in pairs(UnitDefs) do
 	if cp and cp.baseclass then -- mech, vehicle, apc, vtol, infantry
 		local normalname = (cp.baseclass == "outpost" and name) or ud.name:gsub(" ", "")
 		cp.normaltex = cp.normaltex or "unittextures/normals/" .. normalname .. "_Normals.dds"
-		if not VFS.FileExists(cp.normaltex) then cp.normaltex = nil end
 		ud.name = ud.name .. " " .. (cp.variant or "") -- concatenate variant code to name
 		cp.infocard = {}
 		if partsList[cp.baseclass] then -- infantry don't exist but won't show up on unitcard anwyay
@@ -307,6 +306,13 @@ for name, ud in pairs(UnitDefs) do
 			ud.buildCostMetal = (cp.price or 100) * modOptions.pricemult
 		end
 	end
+	if cp.normaltex and not VFS.FileExists(cp.normaltex) then 
+		if (cp.baseclass and cp.baseclass ~= "mech") and not name:find("dropzone") then -- for now, ignore all mechs due to how many are untextured
+			Spring.Log("unitdefs_post.lua", "Warning", name .. " seems to be missing it's normaltex (" .. cp.normaltex .. ")")
+		end
+		cp.normaltex = nil 
+	end
+
 	if cp.wheels and not cp.uniformbin then
 		cp.uniformbin = "defaultunit" -- disable treads shader
 	end

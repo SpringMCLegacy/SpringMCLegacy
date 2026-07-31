@@ -24,6 +24,7 @@ local Turret_Mortar = Turret:New{
 		turrettype = "turret",
 		maxammo 		= {mortar = 1},
 		chainfiredelays = {[2] = 200, [3] = 400},
+		normaltex		= "unittextures/normals/TurretsB_Normals.dds",
     },
 }
 

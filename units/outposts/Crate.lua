@@ -14,6 +14,7 @@ local Crate = Outpost:New{
 	customparams = {
 		baseclass		= "crate",
 		ignoreatbeacon	= true,
+		normaltex		= "unittextures/normals/Outpost_Aircon_Normals.dds",
     },
 }
 

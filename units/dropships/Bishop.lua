@@ -19,6 +19,7 @@ local Bishop = DropShip:New{
 		hoverheight		= 300,
 		radialdist		= 2500,
 		ignoreatbeacon	= true,
+		normaltex		= "unittextures/normals/Bishop_Normals.dds",
     },
 	sounds = {
 		underattack        = "Dropship_Alarm",

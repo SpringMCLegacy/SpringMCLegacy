@@ -13,6 +13,7 @@ local Turret_AMS = Turret:New{
 		turretturnspeed = 9000,
 		elevationspeed  = 9000,
 		turrettype = "turret",
+		normaltex		= "unittextures/normals/TurretsB_Normals.dds",
     },
 }
 

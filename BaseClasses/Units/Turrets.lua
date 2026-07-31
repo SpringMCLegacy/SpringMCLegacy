@@ -22,6 +22,7 @@ local Turret = Unit:New{
 		ignoreatbeacon = true,
 		baseclass		= "turret",
 		slotcost		= 1,
+		normaltex		= "unittextures/normals/Turrets_Normals.dds",
 	},
 	
 	sounds = {
@@ -36,6 +37,7 @@ local HeavyTurret = Turret:New{
 	
 	customparams = {
 		slotcost		= 2,
+		normaltex		= "unittextures/normals/HeavyTurrets_Normals.dds",
 	},
 	
 	sounds = {
