@@ -21,6 +21,7 @@ local BRV = Tank:New{
 		turretturnspeed	= 25,
 		elevationspeed	= 25,
 		cratetype		= "cratelong",
+		normaltex		= "unittextures/normals/J-27_Normals.dds",
 	},
 }
 

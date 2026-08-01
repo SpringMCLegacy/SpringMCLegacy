@@ -17,7 +17,7 @@ local J27 = Tank:New{
 		squadsize 		= 1,
 		mods			= {"ferrofibrousarmour"},
 		hitchmaxy		= 60,
-		cratetype		= "cratelong",
+		normaltex		= "unittextures/normals/J-27_Normals.dds",
 	},
 }
 
