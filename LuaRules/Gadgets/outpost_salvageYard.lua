@@ -327,6 +327,15 @@ local function AssociateSupport(yardID, teamID, salvagerID)
 end
 GG.AssociateSupport = AssociateSupport
 
+local function ChangeSupportLance(teamID, unitID, delta)
+	local current = tonumber(Spring.GetTeamRulesParam(teamID, "SUPPORT_LANCE") or 0)
+	local new = current + delta
+	--Spring.Echo("outpost_salvageyard ChangeSupportLance", delta, current, new, new > 0)
+	Spring.SetTeamRulesParam(teamID, "SUPPORT_LANCE", new)
+	SendToUnsynced("LANCE", teamID, unitID, 4, false)
+	SendToUnsynced("SUPPORT_LANCE", teamID, new > 0)
+end
+
 function gadget:UnitCreated(unitID, unitDefID, teamID, builderID)
 	local unitDef = UnitDefs[unitDefID]
 	local cp = unitDef.customParams
@@ -341,9 +350,11 @@ function gadget:UnitCreated(unitID, unitDefID, teamID, builderID)
 	elseif unitDefID == SALVAGER_ID then
 		GG.ClearDefaultCmds(unitID)
 		GG.AddSupportCmds(unitID, SALVAGER_CMD_DESCS_TO_ADD)
+		ChangeSupportLance(teamID, unitID, 1)
 	elseif unitDefID == BRV_ID then
 		GG.ClearDefaultCmds(unitID)
 		GG.AddSupportCmds(unitID, BRV_CMD_DESCS_TO_ADD)
+		ChangeSupportLance(teamID, unitID, 1)
 	elseif GG.mechCache[unitDefID] then -- a mech
 		unitPinataLevels[unitID] = 0
 		--[[if builderID and GetUnitDefID(builderID) == SALVAGER_ID then -- TODO: change to brv
@@ -365,6 +376,9 @@ function gadget:UnitDestroyed(unitID, unitDefID, teamID)
 	end
 	yardSalvagers[unitID] = nil
 	idleSalvagers[unitID] = nil
+	if unitDefID == SALVAGER_ID or unitDefID == BRV_ID then -- TODO: store in a map
+		ChangeSupportLance(teamID, unitID, -1)
+	end
 end
 
 function gadget:FeatureCreated(featureID, allyTeamID)

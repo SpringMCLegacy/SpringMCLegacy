@@ -47,17 +47,18 @@ local deckButtons	= {}
 
 local currentLance  = 1
 local maxLance = 1
+local sLance = false
 local noUnit		= ":cl:bitmaps/ui/infocard/no_unit.png"
 
 local testColors	= { {1,0,0,1}, {0,1,0,1}, {0,0,1,1},}
-local lanceNames	= {"Alpha", "Bravo", "Charlie"}
+local lanceNames	= {"Alpha", "Bravo", "Charlie", "S"}
 --adding reverse lookup
 for k,v in pairs(lanceNames)do
 	lanceNames[v]=k
 end
 
 local lances = {}
-for i = 1, 3 do
+for i = 1, 4 do
 	lances[i] = {}
 end
 -- getting font in scale with screen
@@ -107,7 +108,7 @@ end
 -- builds out each lance tab and unit in each lance, done to reduce redudant work
 -------------------------------------------------------------------------------------
 local function initializeSetView()
-	for counter = 1, 3 do
+	for counter = 1, 4 do
 		deckSets[counter]	= Chili.ScrollPanel:New{
 			name		= "lance list #" .. counter;
 			--BorderTileImage 		= ":cl:panel2.png";
@@ -121,8 +122,9 @@ local function initializeSetView()
 		}	
 	end
 
-	for counter = 1, 3 do
-		local spacing = (counter-1) * 34
+	for counter = 1, 4 do
+		local spacing = (counter-1) * 28--34
+		local spt = counter == 4
 		deckButtons[counter]	= Chili.Button:New{	
 				tiles 			= {10, 10, 10, 10};
 				parent			= deckWindow;	
@@ -134,15 +136,15 @@ local function initializeSetView()
 									outlineWidth	= 5;};
 				textColor 		= grey;
 				x				= spacing .. "%";
-				width			= "32%";
+				width			= counter < 4 and "29%" or "15%";
 				height			= "15%";
-				backgroundColor = maxLance >= counter and black or red;
+				backgroundColor = ((spt and sLance) or (maxLance >= counter)) and black or red;
 				OnMouseUp = { 
 					function()
-						if counter > maxLance then return end 
+						if (not spt and counter > maxLance) or (spt and not sLance) then return end 
 						-- hide old tab
 						setWindow:RemoveChild(deckSets[currentLance])
-						local colour = maxLance >= currentLance and black or red
+						local colour = ((currentLance == 4 and sLance) or (maxLance >= currentLance)) and black or red;
 						updateButton(colour, grey)
 						-- show new tab
 						currentLance = counter
@@ -165,7 +167,7 @@ local function initializeSetView()
 	updateButton(green, white)
 	
 	-- adds all lance units to their respective lances.
-	for lanceNumber = 1, 3 do
+	for lanceNumber = 1, 4 do
 		-- initialize lance groups
 		units[lanceNumber]	= {}
 		unitIdCache[lanceNumber]	= {}
@@ -257,6 +259,9 @@ local function CleanLance(unitID, lance)
 			lances[lance][slot] = nil
 		end
 	end
+	if lance == 4 then
+		sLance = tonumber(Spring.GetTeamRulesParam(MY_TEAM, "SUPPORT_LANCE") or 0) > 0
+	end
 end
 
 local function SetLance(unitID, lanceNum)
@@ -268,6 +273,11 @@ local function SetLance(unitID, lanceNum)
 	lances[lanceNum][slot] = unitID
 	--Spring.Echo("SetLance team:", Spring.GetMyTeamID(), "unit:", unitID, lanceNum, "slot", slot)
 	-- clean other lances
+	if lanceNum == 4 then 
+		sLance = true
+		-- easy out for support lance
+		return 
+	end
 	for lance = 1, 3 do
 		if lance ~= lanceNum then
 			CleanLance(unitID, lance)
@@ -288,6 +298,16 @@ local function SetMaxLance(newMaxLance)
 	updateButton(green, white)
 end
 
+local function SetSupportLance(yesOrNo)
+	sLance = yesOrNo
+	local cache = currentLance
+	local colour = sLance and black or red
+	currentLance = 4
+	updateButton(colour, grey)
+	currentLance = cache
+	updateButton(green, white)
+end
+
 function widget:Initialize()
 	MY_TEAM = Spring.GetMyTeamID()
 	for unitDefID, ud in pairs(UnitDefs) do
@@ -300,6 +320,7 @@ function widget:Initialize()
 	widgetHandler:RegisterGlobal('SetLance', SetLance)
 	widgetHandler:RegisterGlobal('CleanLance', CleanLance)
 	widgetHandler:RegisterGlobal('SetMaxLance', SetMaxLance)
+	widgetHandler:RegisterGlobal('SetSupportLance', SetSupportLance)
 	Chili = WG.Chili
 	
 	if (not Chili) then
@@ -402,5 +423,7 @@ function widget:PlayerChanged()
 		end
 		maxLance = Spring.GetTeamRulesParam(teamID, "LANCES")
 		SetMaxLance(maxLance)
+		sLance = (tonumber(Spring.GetTeamRulesParam(teamID, "SUPPORT_LANCE")) or 0) > 0
+		SetSupportLanceLance(sLance)
 	end
 end

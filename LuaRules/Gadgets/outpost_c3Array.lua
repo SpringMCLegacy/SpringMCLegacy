@@ -301,9 +301,18 @@ function SetMaxLance(eventID, teamID, maxLance)
 	end
 end
 
+function SetSupportLance(eventID, teamID, yesOrNo)
+	if teamID == Spring.GetMyTeamID() then
+		Script.LuaUI.SetSupportLance(yesOrNo)
+	end
+end
+
+
+
 function gadget:Initialize()
 	gadgetHandler:AddSyncAction("LANCE", AddUnitToLance)
 	gadgetHandler:AddSyncAction("MAX_LANCE", SetMaxLance)
+	gadgetHandler:AddSyncAction("SUPPORT_LANCE", SetSupportLance)
 	gadgetHandler:AddSyncAction("TOGGLE_SELECT", ToggleSelectionByTeam)
 end
 
