@@ -476,6 +476,15 @@ function gadget:AllowCommand(unitID, unitDefID, teamID, cmdID, cmdParams, cmdOpt
 		if target and target.loaded then return false end -- yard already has a corpse loaded
 		local featureID = (cmdParams[1] and cmdParams[1] > Game.maxUnits and cmdParams[1] or 0) - Game.maxUnits -- TODO: handle area commands
 		if featureID > 0 then
+			-- First check if the target is a mech
+			local featureDefID = Spring.GetFeatureDefID(featureID)
+			local featureDef = FeatureDefs[featureDefID]
+			local baseClass = featureDef.customParams.wasbaseclass
+			if not baseClass or baseClass ~= "mech" then 
+				Spring.SendMessageToTeam(teamID, "Cannot recover that wreck - It is not a mech")
+				return false 
+			end
+			-- Target is a mech, proceed
 			local pelvis = Spring.GetFeaturePieceMap(featureID).pelvis
 			local fx, fy, fz = Spring.GetFeaturePiecePosDir(featureID, pelvis)
 			local fHeading = Spring.GetFeatureHeading(featureID)

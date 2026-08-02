@@ -177,6 +177,7 @@ for unitName, ud in pairs(UnitDefs) do
 						object = corpseModel,
 						customparams = {
 							["was"] = unitName,
+							["wasbaseclass"] = cp.baseclass,
 							["normaltex"] = cp.normaltex,
 							["left"] = lArm,
 							["right"] = rArm,
