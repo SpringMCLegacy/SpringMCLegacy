@@ -10,6 +10,16 @@ function gadget:GetInfo()
 	}
 end
 
+-- Salvager
+local SALVAGER_ID = UnitDefNames["salvager"].id
+local SALVAGE_RANGE = 4000
+local CMD_DEPOSIT = GG.CustomCommands.GetCmdID("CMD_DEPOSIT")
+local CMD_SET_BASE = GG.CustomCommands.GetCmdID("CMD_SET_BASE")
+
+-- BRV
+local BRV_ID = UnitDefNames["brv"].id
+local CMD_RECOVER = GG.CustomCommands.GetCmdID("CMD_RECOVER")
+
 if gadgetHandler:IsSyncedCode() then
 --	SYNCED
 
@@ -60,15 +70,6 @@ local COLOURS = GG.GameConstants.colours
 -- Mech pickup
 local PICKUP_DIST = 100
 
--- Salvager
-local SALVAGER_ID = UnitDefNames["salvager"].id
-local SALVAGE_RANGE = 4000
-local CMD_DEPOSIT = GG.CustomCommands.GetCmdID("CMD_DEPOSIT")
-local CMD_SET_BASE = GG.CustomCommands.GetCmdID("CMD_SET_BASE")
-
--- BRV
-local BRV_ID = UnitDefNames["brv"].id
-local CMD_RECOVER = GG.CustomCommands.GetCmdID("CMD_RECOVER")
 
 local function GetToolTip(unitDefID, discount, action)
 	local ud = UnitDefs[unitDefID]
@@ -88,10 +89,8 @@ local CONVERSION_RATE = 40 -- 1000 metal / this = 25
 local RATE_PER_TICK = modOptions and modOptions.salvagepertick or 1
 local TIME_PER_TICK = 30 * 60 -- 1 minute
 local CMD_NEWSALVAGER = -SALVAGER_ID
-local SALVAGER_PRICE = tonumber(UnitDefNames["salvager"].customParams.price)
 local SALVAGER_TOOLTIP = GetToolTip(SALVAGER_ID, 1, "Build")
 local CMD_NEWBRV = -BRV_ID
-local BRV_PRICE = tonumber(UnitDefNames["brv"].customParams.price)
 local BRV_TOOLTIP = GetToolTip(BRV_ID, 1, "Build")
 
 local RECOVER_DISCOUNT = 0.2 -- 20% cbill cost
@@ -124,12 +123,24 @@ local yardQueues = {} -- yardQueues[yardID] = {{dist = number, id = featureID}, 
 local yardPos = {} -- yardPos[yardID] = {x = x, y = y, z = z}
 local yardRaws = {} -- yardRaws[yardID] = metalInHarvestStorage
 local yardTeams = {} -- yardTeams[yardID] = teamID
-local remainingSlots = {} -- remainingSlots[unitID] = numberOfSlots
+local remainingSupportSlots = {} -- remainingSupportSlots[teamID] = numberOfSlots
+
+
+local supportDefIDs = { -- TODO: to replace each BLAHBLAH_ID
+	["salvager"]	= UnitDefNames["salvager"].id,
+	["brv"]			= UnitDefNames["brv"].id,
+	["j27"]			= UnitDefNames["j27"].id,
+}
 
 local supportCosts = {
-	[SALVAGER_ID] = SALVAGER_PRICE,
-	[BRV_ID] = BRV_PRICE,
+	[supportDefIDs.salvager] = tonumber(UnitDefNames["salvager"].customParams.price),
+	[supportDefIDs.brv] = tonumber(UnitDefNames["brv"].customParams.price),
+	[supportDefIDs.j27] = tonumber(UnitDefNames["j27"].customParams.price),
 }
+local supportTooltips = {}
+for name, id in pairs(supportDefIDs) do
+	supportTooltips[name] = GetToolTip(id, 1, "Build")
+end
 
 local salvagerYards = {} -- salvagerYards[salvagerID] = yardID
 local yardSalvagers = {} -- for now; yardSalvagers[yardID] = salvagerID
@@ -146,11 +157,10 @@ local salvageCmdDesc = {
 }
 local depositCmdDesc = {
 	id 		= CMD_DEPOSIT,
-	type	= CMDTYPE.ICON_UNIT,
+	type	= CMDTYPE.ICON,
 	name 	= GG.Pad("Deposit", "Salvage"),
 	action	= "deposit",
 	tooltip = "Deposit current salvage",
-	cursor	= "Unload",
 }
 local setBaseCmdDesc = {
 	id 		= CMD_SET_BASE,
@@ -158,7 +168,7 @@ local setBaseCmdDesc = {
 	name 	= GG.Pad("Assign", "Base", 12),
 	action	= "setbase",
 	tooltip = "Set the base salvage yard",
-	cursor	= "Reclaim", -- TODO: custom cursor?
+	cursor	= "Unload", -- TODO: custom cursor?
 }
 local SALVAGER_CMD_DESCS_TO_ADD = {setBaseCmdDesc, salvageCmdDesc, depositCmdDesc}
 
@@ -179,14 +189,14 @@ local newSalvagerCmdDesc = {
 	type	= CMDTYPE.ICON,
 	name 	= " New \n Salvager",
 	action	= "newsalvager",
-	tooltip = SALVAGER_TOOLTIP,
+	tooltip = supportTooltips.salvager,
 }
 local newBRVCmdDesc = {
 	id 		= CMD_NEWBRV,
 	type	= CMDTYPE.ICON,
 	name 	= " New \n BRV",
 	action	= "newbrv",
-	tooltip = BRV_TOOLTIP,
+	tooltip = supportTooltips.brv,
 }
 
 local function GetMechCmdDesc(unitDefID)
@@ -308,26 +318,27 @@ local function YardNotifyDone(yardID, teamID, pieceNum)
 end
 GG.YardNotifyDone = YardNotifyDone
 
-local function AssociateSupport(yardID, teamID, salvagerID)
+
+local function AssociateSupport(yardID, teamID, supportID)
 	local x, y, z = GetUnitPosition(yardID)
 	yardPos[yardID] = {["x"] = x, ["y"] = y, ["z"] = z}
-	--salvagerID = salvagerID or CreateUnit(SALVAGER_ID, x,y,z, 0, teamID)
-	local unitDefID = Spring.GetUnitDefID(salvagerID)
-	if salvagerID then
-		salvagerYards[salvagerID] = yardID
-		yardSalvagers[yardID] = salvagerID
+	local unitDefID = Spring.GetUnitDefID(supportID)
+	if supportID then
+		salvagerYards[supportID] = yardID
+		yardSalvagers[yardID] = supportID
 		if unitDefID == SALVAGER_ID then
-			GiveOrderToUnit(salvagerID, CMD.RECLAIM, {x, y, z, SALVAGE_RANGE}, {})
-		elseif unitDefID == BRV_ID and brvAttachers[salvagerID] then
-			GiveOrderToUnit(salvagerID, CMD_DEPOSIT, {yardID}, {})
+			GiveOrderToUnit(supportID, CMD.RECLAIM, {x, y, z, SALVAGE_RANGE}, {})
+		elseif unitDefID == BRV_ID and brvAttachers[supportID] then
+			GiveOrderToUnit(supportID, CMD_DEPOSIT, {yardID}, {})
 		else
-			GiveOrderToUnit(salvagerID, CMD.MOVE, {x + math.random(-200, 200), y, z + math.random(-200, 200)}, {})
+			GiveOrderToUnit(supportID, CMD.MOVE, {x + math.random(-200, 200), y, z + math.random(-200, 200)}, {})
 		end
 	end
 end
 GG.AssociateSupport = AssociateSupport
 
 local function ChangeSupportLance(teamID, unitID, delta)
+	remainingSupportSlots[teamID] = remainingSupportSlots[teamID] - delta
 	local current = tonumber(Spring.GetTeamRulesParam(teamID, "SUPPORT_LANCE") or 0)
 	local new = current + delta
 	--Spring.Echo("outpost_salvageyard ChangeSupportLance", delta, current, new, new > 0)
@@ -344,7 +355,6 @@ function gadget:UnitCreated(unitID, unitDefID, teamID, builderID)
 		yardQueues[unitID] = {}
 		yardRaws[unitID] = 0
 		yardTeams[unitID] = teamID
-		remainingSlots[unitID] = 4
 		InsertUnitCmdDesc(unitID, newSalvagerCmdDesc)
 		InsertUnitCmdDesc(unitID, newBRVCmdDesc) -- TODO: lock behind an upgrade
 	elseif unitDefID == SALVAGER_ID then
@@ -371,7 +381,6 @@ function gadget:UnitDestroyed(unitID, unitDefID, teamID)
 	yardTeams[unitID] = nil
 	local yardID = salvagerYards[unitID]
 	if yardID then
-		remainingSlots[yardID] = remainingSlots[yardID] + 1
 		salvagerYards[unitID] = nil
 	end
 	yardSalvagers[unitID] = nil
@@ -477,7 +486,8 @@ function gadget:AllowCommand(unitID, unitDefID, teamID, cmdID, cmdParams, cmdOpt
 	if cmdID == CMD_DEPOSIT then
 		if isSalvager then -- is a Salvager
 			idleSalvagers[unitID] = false
-			local pos = yardPos[cmdParams[1]]
+			local yardID = salvagerYards[unitID]
+			local pos = yardPos[yardID]
 			SetUnitMoveGoal(unitID, pos.x, pos.y, pos.z)
 			--Spring.Echo("Haulin' ass back to base!")
 			return true
@@ -561,7 +571,6 @@ function gadget:AllowCommand(unitID, unitDefID, teamID, cmdID, cmdParams, cmdOpt
 				if cBills >= supportCost then
 					GG.DropshipDelivery(Spring.GetUnitRulesParam(unitID, "beaconID"), unitID, teamID, GG.teamSide[teamID] .. "_bishop", -cmdID, 0, nil, 0, {x = 0, z = 200})
 					UseTeamResource(teamID, "m", supportCosts[-cmdID])
-					remainingSlots[unitID] = remainingSlots[unitID] - 1 -- TODO: higher slot cost for BRV?
 					return true
 				end
 			else -- Rezzing a mech, in theory
@@ -654,6 +663,9 @@ end
 
 function gadget:Initialize()
 	Script.SetWatchWeapon(-1, true) -- pieces
+	for _, teamID in pairs(Spring.GetTeamList()) do
+		remainingSupportSlots[teamID] = 4
+	end
 	for featureDefID, featureDef in pairs(FeatureDefs) do
 		if featureDef.customParams.salvage then
 			pileCache[featureDefID] = tonumber(featureDef.customParams.salvage)
@@ -709,11 +721,39 @@ function gadget:GameFrame(n)
 			end
 		end
 		for yardID, teamID in pairs(yardTeams) do
-			GG.CheckBuildOptions(yardID, teamID, remainingSlots[yardID])
+			GG.CheckBuildOptions(yardID, teamID, remainingSupportSlots[teamID])
 		end
 	end
 end
 
 else
 --	UNSYNCED
-return false end
+
+function gadget:Initialize()
+	Spring.AssignMouseCursor("recover", "cursorpickup")
+	Spring.SetCustomCommandDrawData(CMD_RECOVER, "recover", {1,0.7,0.9,0.8}, true)
+end
+	
+function gadget:DefaultCommand(targetType, targetID)
+	local recoverableTarget = false
+	if targetType == "feature" then
+		local targetDefID = Spring.GetFeatureDefID(targetID)
+		local targetDef = FeatureDefs[targetDefID]
+		recoverableTarget = targetDef.customParams.wasbaseclass == "mech"
+    end
+	  
+	local cmd = false
+	for _,u in ipairs(Spring.GetSelectedUnits()) do
+		local unitDefID = Spring.GetUnitDefID(u)
+		if unitDefID == BRV_ID then
+			return recoverableTarget and CMD_RECOVER or CMD.MOVE
+		elseif unitDefID == SALVAGER_ID then
+			return targetType == "feature" and CMD.RECLAIM or CMD.MOVE
+		end
+	end
+    
+	return -- let engine handle it
+end
+
+--return false 
+end

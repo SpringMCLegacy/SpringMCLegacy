@@ -1,6 +1,6 @@
 local J27 = Tank:New{
 	name              	= "J-27 Ordnance Transport",
-	description         = "Resupply Vehicle - Loads an entire wreck and deposits it at the salvage yard for recovery or scrapping.",
+	description         = "Resupply Vehicle - Supplies ammunition to mechs on the frontline.",
 	trackWidth			= 27,--width to render the decal
 	
 	holdSteady = true,
