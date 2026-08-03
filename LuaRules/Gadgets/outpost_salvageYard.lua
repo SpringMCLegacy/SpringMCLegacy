@@ -168,7 +168,7 @@ local setBaseCmdDesc = {
 	name 	= GG.Pad("Assign", "Base", 12),
 	action	= "setbase",
 	tooltip = "Set the base salvage yard",
-	cursor	= "Unload", -- TODO: custom cursor?
+	cursor	= "Guard", -- TODO: custom cursor?
 }
 local SALVAGER_CMD_DESCS_TO_ADD = {setBaseCmdDesc, salvageCmdDesc, depositCmdDesc}
 
@@ -236,10 +236,10 @@ local function ChangeTeamSalvage(teamID, delta)
 end
 GG.ChangeTeamSalvage = ChangeTeamSalvage
 
-local function SYardoutpost(unitID, level)
+local function SYardUpgrade(unitID, level)
 	yardLevels[unitID] = level
 end
-GG.SYardoutpost = SYardoutpost
+GG.SYardUpgrade = SYardUpgrade -- for unit_perks, when there is an upgrade worth implementing
 
 
 local function FeatureAttachUpdate(unitID, pieceNum, fakeID, featureID)
@@ -320,6 +320,7 @@ GG.YardNotifyDone = YardNotifyDone
 
 
 local function AssociateSupport(yardID, teamID, supportID)
+	--Spring.Echo("AssociateSupport", yardID, teamID, supportID)
 	local x, y, z = GetUnitPosition(yardID)
 	yardPos[yardID] = {["x"] = x, ["y"] = y, ["z"] = z}
 	local unitDefID = Spring.GetUnitDefID(supportID)
@@ -482,7 +483,7 @@ function gadget:UnitIdle(unitID, unitDefID, teamID)
 end
 
 function gadget:AllowCommand(unitID, unitDefID, teamID, cmdID, cmdParams, cmdOptions)
-	local isSalvager = salvagerYards[unitID]
+	local isSalvager = supportCosts[unitDefID] --salvagerYards[unitID]
 	if cmdID == CMD_DEPOSIT then
 		if isSalvager then -- is a Salvager
 			idleSalvagers[unitID] = false
@@ -549,6 +550,7 @@ function gadget:AllowCommand(unitID, unitDefID, teamID, cmdID, cmdParams, cmdOpt
 		return false
 	elseif cmdID == CMD_SET_BASE and isSalvager then
 		local yardID = cmdParams[1]
+		--Spring.Echo("AllowCommand CMD_SET_BASE", yardID)
 		if yardLevels[yardID] then -- it is a yard, afterall
 			AssociateSupport(yardID, teamID, unitID)
 			return true
@@ -683,6 +685,7 @@ function gadget:Initialize()
 		local unitDefID = Spring.GetUnitDefID(unitID)
 		gadget:UnitCreated(unitID, unitDefID, teamID)
 	end
+	Spring.AssignMouseCursor("setbase", "cursordefend")
 	Spring.AssignMouseCursor("recover", "cursorpickup")
 	Spring.SetCustomCommandDrawData(CMD_RECOVER, "recover", {1,0.7,0.9,0.8}, true)
 end
@@ -730,7 +733,6 @@ else
 --	UNSYNCED
 
 function gadget:Initialize()
-	Spring.AssignMouseCursor("recover", "cursorpickup")
 	Spring.SetCustomCommandDrawData(CMD_RECOVER, "recover", {1,0.7,0.9,0.8}, true)
 end
 	
