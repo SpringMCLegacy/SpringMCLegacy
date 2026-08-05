@@ -135,7 +135,7 @@ function gadget:Initialize()
 	Spring.AssignMouseCursor("support", "cursordefend", true, false)
 	Spring.SetCustomCommandDrawData(CMD_SUPPORT, "support", {1,0.5,0,.8}, false)
 	for unitDefID, unitDef in pairs(UnitDefs) do
-		if unitDef.transportCapacity > 0 and unitDef.customParams.baseclass == "vehicle" and unitDef.name ~= "brv" then -- TODO: replace this with cp.squad
+		if unitDef.transportCapacity > 0 and unitDef.customParams.baseclass == "vehicle" and not unitDef.customParams.support then -- TODO: replace this with cp.squad
 			--Spring.Echo("APC found:", unitDef.name)
 			apcDefIDs[unitDefID] = basicSquad -- table.unserialize(unitDef.customparams.squad)
 		end
