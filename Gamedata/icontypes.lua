@@ -154,6 +154,11 @@ local iconTypes = {
 		size			=	2.2,
 		distance	=	1.3,
 	},
+	support = {
+		bitmap		=	"icons/support.png",
+		size			=	2.2,
+		distance	=	1.2,
+	},
 	vehiclelight = {
 		bitmap		=	"icons/vehicle.png",
 		size			=	1.5,
