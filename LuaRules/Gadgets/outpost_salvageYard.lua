@@ -253,7 +253,7 @@ local function FeatureAttachUpdate(unitID, pieceNum, fakeID, featureID)
 	--Spring.Echo("buh?", unpack(up), up[1], up[2], up[3])
 	Spring.SetFeatureHeadingAndUpDir(featureID, heading, up[1], up[2], up[3])
 end
-GG.FeatureAttachUpdate = FeatureAttachUpdate
+--GG.FeatureAttachUpdate = FeatureAttachUpdate 
 
 local featureAttachers = {}
 local brvAttachers = {}
@@ -265,7 +265,7 @@ local function FeatureDetach(featureID)
 	featureAttachers[featureID] = nil
 	Spring.SetFeatureBlocking(featureID, true, true, true, true, true, true, true)
 end
-GG.FeatureDetach = FeatureDetach
+--GG.FeatureDetach = FeatureDetach
 
 local function FeatureAttach(unitID, pieceNum, featureID, direct)
 	--FeatureDetach(featureID)
@@ -283,7 +283,7 @@ local function FeatureAttach(unitID, pieceNum, featureID, direct)
 	brvAttachers[unitID] = featureID
 	FeatureAttachUpdate(unitID, pieceNum, fakeID, featureID)
 end
-GG.FeatureAttach = FeatureAttach
+GG.FeatureAttach = FeatureAttach -- called by LUS Vehicle.lua
 
 local function Cripple(unitID, unitDefID, lArm, rArm)
 	local info = GG.lusHelper[unitDefID]
@@ -316,7 +316,7 @@ local function YardNotifyDone(yardID, teamID, pieceNum)
 	Cripple(mechID, mechDefID, lArm, rArm)
 	recoverTargets[yardID] = nil
 end
-GG.YardNotifyDone = YardNotifyDone
+GG.YardNotifyDone = YardNotifyDone -- called by LUS Anims\Outpost_SalvageYard.lua
 
 
 local function AssociateSupport(yardID, teamID, supportID)
@@ -358,14 +358,15 @@ function gadget:UnitCreated(unitID, unitDefID, teamID, builderID)
 		yardTeams[unitID] = teamID
 		InsertUnitCmdDesc(unitID, newSalvagerCmdDesc)
 		InsertUnitCmdDesc(unitID, newBRVCmdDesc) -- TODO: lock behind an upgrade
-	elseif unitDefID == SALVAGER_ID then
-		GG.ClearDefaultCmds(unitID)
-		GG.AddSupportCmds(unitID, SALVAGER_CMD_DESCS_TO_ADD)
+	elseif supportCosts[unitDefID] then
 		ChangeSupportLance(teamID, unitID, 1)
-	elseif unitDefID == BRV_ID then
-		GG.ClearDefaultCmds(unitID)
-		GG.AddSupportCmds(unitID, BRV_CMD_DESCS_TO_ADD)
-		ChangeSupportLance(teamID, unitID, 1)
+		if unitDefID == SALVAGER_ID then -- TODO: generalise
+			GG.ClearDefaultCmds(unitID) -- can't be above until J27_CMD_DESCS_TO_ADD
+			GG.AddSupportCmds(unitID, SALVAGER_CMD_DESCS_TO_ADD)
+		elseif unitDefID == BRV_ID then
+			GG.ClearDefaultCmds(unitID)
+			GG.AddSupportCmds(unitID, BRV_CMD_DESCS_TO_ADD)
+		end
 	elseif GG.mechCache[unitDefID] then -- a mech
 		unitPinataLevels[unitID] = 0
 		--[[if builderID and GetUnitDefID(builderID) == SALVAGER_ID then -- TODO: change to brv
@@ -386,7 +387,7 @@ function gadget:UnitDestroyed(unitID, unitDefID, teamID)
 	end
 	yardSalvagers[unitID] = nil
 	idleSalvagers[unitID] = nil
-	if unitDefID == SALVAGER_ID or unitDefID == BRV_ID then -- TODO: store in a map
+	if supportCosts[unitDefID] then
 		ChangeSupportLance(teamID, unitID, -1)
 	end
 end
