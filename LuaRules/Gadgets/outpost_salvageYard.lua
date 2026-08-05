@@ -10,11 +10,12 @@ function gadget:GetInfo()
 	}
 end
 
+local CMD_SET_BASE = GG.CustomCommands.GetCmdID("CMD_SET_BASE")
+
 -- Salvager
 local SALVAGER_ID = UnitDefNames["salvager"].id
 local SALVAGE_RANGE = 4000
 local CMD_DEPOSIT = GG.CustomCommands.GetCmdID("CMD_DEPOSIT")
-local CMD_SET_BASE = GG.CustomCommands.GetCmdID("CMD_SET_BASE")
 
 -- BRV
 local BRV_ID = UnitDefNames["brv"].id
@@ -65,33 +66,15 @@ local DelayCall					 = GG.Delay.DelayCall
 -- Constants
 local GAIA_TEAM_ID = Spring.GetGaiaTeamID()
 local BEACON_ID = UnitDefNames["beacon"].id
-local COLOURS = GG.GameConstants.colours
 
 -- Mech pickup
 local PICKUP_DIST = 100
-
-
-local function GetToolTip(unitDefID, discount, action)
-	local ud = UnitDefs[unitDefID]
-	local weaponTooltip = ud.weapons[1] and "" or ": n/a "
-	local tooltip = action .. ": " .. ud.humanName .. " - " .. ud.tooltip .. weaponTooltip .. "\n" 
-					.. "Health " .. ud.health .. "\n"
-					.. COLOURS.cbills .. "C-Bills cost " .. tonumber(ud.customParams.price) * discount .. "\n"
-	if ud.customParams.tonnage then
-		tooltip = tooltip .. COLOURS.tonnage .. "Tonnage cost " .. tonumber(ud.customParams.tonnage)
-	end
-	return tooltip
-end
 
 -- Yard
 local SALVAGEYARD_ID = UnitDefNames["outpost_salvageyard"] and UnitDefNames["outpost_salvageyard"].id or nil
 local CONVERSION_RATE = 40 -- 1000 metal / this = 25
 local RATE_PER_TICK = modOptions and modOptions.salvagepertick or 1
 local TIME_PER_TICK = 30 * 60 -- 1 minute
-local CMD_NEWSALVAGER = -SALVAGER_ID
-local SALVAGER_TOOLTIP = GetToolTip(SALVAGER_ID, 1, "Build")
-local CMD_NEWBRV = -BRV_ID
-local BRV_TOOLTIP = GetToolTip(BRV_ID, 1, "Build")
 
 local RECOVER_DISCOUNT = 0.2 -- 20% cbill cost
 GG.RECOVER_DISCOUNT = RECOVER_DISCOUNT -- TODO: move to modOptions
@@ -125,22 +108,11 @@ local yardRaws = {} -- yardRaws[yardID] = metalInHarvestStorage
 local yardTeams = {} -- yardTeams[yardID] = teamID
 local remainingSupportSlots = {} -- remainingSupportSlots[teamID] = numberOfSlots
 
-
-local supportDefIDs = { -- TODO: to replace each BLAHBLAH_ID
-	["salvager"]	= UnitDefNames["salvager"].id,
-	["brv"]			= UnitDefNames["brv"].id,
-	["j27"]			= UnitDefNames["j27"].id,
-}
-
-local supportCosts = {
-	[supportDefIDs.salvager] = tonumber(UnitDefNames["salvager"].customParams.price),
-	[supportDefIDs.brv] = tonumber(UnitDefNames["brv"].customParams.price),
-	[supportDefIDs.j27] = tonumber(UnitDefNames["j27"].customParams.price),
-}
-local supportTooltips = {}
-for name, id in pairs(supportDefIDs) do
-	supportTooltips[name] = GetToolTip(id, 1, "Build")
+local function SYardUpgrade(unitID, level)
+	yardLevels[unitID] = level
 end
+GG.SYardUpgrade = SYardUpgrade -- for unit_perks, when there is an upgrade worth implementing
+
 
 local salvagerYards = {} -- salvagerYards[salvagerID] = yardID
 local yardSalvagers = {} -- for now; yardSalvagers[yardID] = salvagerID
@@ -155,23 +127,13 @@ local salvageCmdDesc = {
 	tooltip = "Break down a wreck into components to be salvaged at the salvage yard.",
 	cursor	= "Reclaim",
 }
-local depositCmdDesc = {
+local depositCmdDesc = { -- also BRV
 	id 		= CMD_DEPOSIT,
 	type	= CMDTYPE.ICON,
 	name 	= GG.Pad("Deposit", "Salvage"),
 	action	= "deposit",
 	tooltip = "Deposit current salvage",
 }
-local setBaseCmdDesc = {
-	id 		= CMD_SET_BASE,
-	type	= CMDTYPE.ICON_UNIT,
-	name 	= GG.Pad("Assign", "Base", 12),
-	action	= "setbase",
-	tooltip = "Set the base salvage yard",
-	cursor	= "Guard", -- TODO: custom cursor?
-}
-local SALVAGER_CMD_DESCS_TO_ADD = {setBaseCmdDesc, salvageCmdDesc, depositCmdDesc}
-
 -- BRV
 local recoverCmdDesc = {
 	id 		= CMD_RECOVER,
@@ -181,42 +143,33 @@ local recoverCmdDesc = {
 	tooltip = "Recover a wrecked mech to the salvage yard",
 	cursor	= "recover",
 }
-local BRV_CMD_DESCS_TO_ADD = {setBaseCmdDesc, recoverCmdDesc}
 
--- Yard
+-- Support Vehicles related tables ---------------------------------------------------------------------
+local supportCosts = {
+	[SALVAGER_ID] = tonumber(UnitDefNames["salvager"].customParams.price),
+	[BRV_ID] = tonumber(UnitDefNames["brv"].customParams.price),
+}
+
+local supportDescs = {
+	[SALVAGER_ID] = {GG.setBaseCmdDesc, salvageCmdDesc, depositCmdDesc},
+	[BRV_ID] = {GG.setBaseCmdDesc, recoverCmdDesc},
+}
+
+-- Yard Support Ordering Descs
 local newSalvagerCmdDesc = {
-	id 		= CMD_NEWSALVAGER,
+	id 		= -SALVAGER_ID,
 	type	= CMDTYPE.ICON,
-	name 	= " New \n Salvager",
 	action	= "newsalvager",
-	tooltip = supportTooltips.salvager,
+	tooltip = GG.GetBuildToolTip(SALVAGER_ID, 1, "Build"),
 }
 local newBRVCmdDesc = {
-	id 		= CMD_NEWBRV,
+	id 		= -BRV_ID,
 	type	= CMDTYPE.ICON,
-	name 	= " New \n BRV",
 	action	= "newbrv",
-	tooltip = supportTooltips.brv,
+	tooltip = GG.GetBuildToolTip(BRV_ID, 1, "Build"),
 }
 
-local function GetMechCmdDesc(unitDefID)
-	local cmdDesc = {
-		id		= -unitDefID,
-		type 	= CMDTYPE.ICON,
-		action	= "resurrectmech",
-		tooltip = GetToolTip(unitDefID, RECOVER_DISCOUNT, "Recover"),
-		name	= "Recover",
-	}
-	return cmdDesc
-end
-local scrapMechCmdDesc = {
-	id 		= CMD_SCRAP,
-	type	= CMDTYPE.ICON,
-	name 	= GG.Pad("Scrap","Mech", COLOURS.salvage .. "   (+S)"),
-	action	= "scrapmech",
-	tooltip = "Scraps the mech for ",
-}
-
+-- Salavge resource related functions -------------------------------------------------------------------
 local function PinataLevel(unitID, delta)
 	if delta then
 		unitPinataLevels[unitID] = unitPinataLevels[unitID] + delta
@@ -236,11 +189,18 @@ local function ChangeTeamSalvage(teamID, delta)
 end
 GG.ChangeTeamSalvage = ChangeTeamSalvage
 
-local function SYardUpgrade(unitID, level)
-	yardLevels[unitID] = level
-end
-GG.SYardUpgrade = SYardUpgrade -- for unit_perks, when there is an upgrade worth implementing
 
+-- BRV related functions --------------------------------------------------------------------------------
+local function GetMechCmdDesc(unitDefID)
+	local cmdDesc = {
+		id		= -unitDefID,
+		type 	= CMDTYPE.ICON,
+		action	= "resurrectmech",
+		tooltip = GG.GetBuildToolTip(unitDefID, RECOVER_DISCOUNT, "Recover"),
+		name	= "Recover",
+	}
+	return cmdDesc
+end
 
 local function FeatureAttachUpdate(unitID, pieceNum, fakeID, featureID)
 	local px, py, pz, dx, dy, dz = Spring.GetUnitPiecePosDir(unitID, pieceNum)
@@ -347,6 +307,7 @@ local function ChangeSupportLance(teamID, unitID, delta)
 	SendToUnsynced("LANCE", teamID, unitID, 4, false)
 	SendToUnsynced("SUPPORT_LANCE", teamID, new > 0)
 end
+GG.ChangeSupportLance = ChangeSupportLance
 
 function gadget:UnitCreated(unitID, unitDefID, teamID, builderID)
 	local unitDef = UnitDefs[unitDefID]
@@ -360,19 +321,10 @@ function gadget:UnitCreated(unitID, unitDefID, teamID, builderID)
 		InsertUnitCmdDesc(unitID, newBRVCmdDesc) -- TODO: lock behind an upgrade
 	elseif supportCosts[unitDefID] then
 		ChangeSupportLance(teamID, unitID, 1)
-		if unitDefID == SALVAGER_ID then -- TODO: generalise
-			GG.ClearDefaultCmds(unitID) -- can't be above until J27_CMD_DESCS_TO_ADD
-			GG.AddSupportCmds(unitID, SALVAGER_CMD_DESCS_TO_ADD)
-		elseif unitDefID == BRV_ID then
-			GG.ClearDefaultCmds(unitID)
-			GG.AddSupportCmds(unitID, BRV_CMD_DESCS_TO_ADD)
-		end
+		GG.ClearDefaultCmds(unitID)
+		GG.AddSupportCmds(unitID, supportDescs[unitDefID])
 	elseif GG.mechCache[unitDefID] then -- a mech
 		unitPinataLevels[unitID] = 0
-		--[[if builderID and GetUnitDefID(builderID) == SALVAGER_ID then -- TODO: change to brv
-			Spring.SetUnitHealth(unitID, 1, 0, 100)
-			GG.Delay.DelayCall(Cripple, {unitID}, 1)
-		end]]
 	end
 end
 
@@ -454,7 +406,7 @@ function gadget:ProjectileCreated(proID, proOwnerID, weaponID)
 		else
 			local unitDefID = GetUnitDefID(proOwnerID)
 			local ud = UnitDefs[unitDefID]
-			if (GG.mechCache[unitDefID] or unitDefID == GG.SALVAGER_ID) then 
+			if (GG.mechCache[unitDefID] or unitDefID == SALVAGER_ID) then 
 				pieces[proID] = true 
 			end
 		end

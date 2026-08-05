@@ -956,8 +956,9 @@ function script.QueryWeapon(weaponID)
 	end
 end
 
-if unitDef.isBuilder or unitDef.name == "brv" then -- BRVS
+if unitDef.customParams.support then -- TODO: mech/outpost style includes?
 	
+	-- Shared support anims
 	local crateID
 	function EnCrate()
 		local crateLink = piece("cratelink") or 1
@@ -980,10 +981,102 @@ if unitDef.isBuilder or unitDef.name == "brv" then -- BRVS
 		end
 	end
 	
-	Spring.SetUnitNanoPieces(unitID, {piece("crane_wrist2")})
-
-	local CRANE_Y = math.rad(30)
 	
+	-- Savior
+	
+	local function DeployAnim()
+		local bed, bedL, bedR = piece("bed", "bedl", "bedr")
+		local flapL1, flapL2, flapR1, flapR2 = piece("flapl1", "flapl2", "flapr1", "flapr2")
+		Turn(bed, x_axis, math.rad(-90), ELEVATION_SPEED/2)
+		WaitForTurn(bed, x_axis)
+		Turn(bedL, z_axis, math.rad(-60), ELEVATION_SPEED/2)
+		Turn(bedR, z_axis, math.rad(60), ELEVATION_SPEED/2)
+		WaitForTurn(bedR, z_axis)
+		Turn(flapL1, z_axis, math.rad(179), ELEVATION_SPEED)
+		Turn(flapL2, z_axis, math.rad(179), ELEVATION_SPEED)
+		Turn(flapR1, z_axis, math.rad(-179), ELEVATION_SPEED)
+		Turn(flapR2, z_axis, math.rad(-179), ELEVATION_SPEED)
+		WaitForTurn(flapR2, z_axis)
+		Turn(flapL1, z_axis, math.rad(230), ELEVATION_SPEED)
+		Turn(flapL2, z_axis, math.rad(230), ELEVATION_SPEED)
+		Turn(flapR1, z_axis, math.rad(-230), ELEVATION_SPEED)
+		Turn(flapR2, z_axis, math.rad(-230), ELEVATION_SPEED)
+		WaitForTurn(flapR2, z_axis)
+	end
+	
+	function Deploy()
+		GG.SpeedChange(unitID, unitDefID, 0)
+		Spring.MoveCtrl.Enable(unitID)
+		StartThread(DeployAnim)
+	end
+	
+	local function UnDeployAnim()
+		local bed, bedL, bedR = piece("bed", "bedl", "bedr")
+		local flapL1, flapL2, flapR1, flapR2 = piece("flapl1", "flapl2", "flapr1", "flapr2")
+		Turn(flapL1, z_axis, math.rad(179), ELEVATION_SPEED)
+		Turn(flapL2, z_axis, math.rad(179), ELEVATION_SPEED)
+		Turn(flapR1, z_axis, math.rad(-179), ELEVATION_SPEED)
+		Turn(flapR2, z_axis, math.rad(-179), ELEVATION_SPEED)
+		WaitForTurn(flapR2, z_axis)
+		Turn(flapL1, z_axis, math.rad(0), ELEVATION_SPEED)
+		Turn(flapL2, z_axis, math.rad(0), ELEVATION_SPEED)
+		Turn(flapR1, z_axis, math.rad(0), ELEVATION_SPEED)
+		Turn(flapR2, z_axis, math.rad(0), ELEVATION_SPEED)
+		WaitForTurn(flapR2, z_axis)
+		Turn(bedL, z_axis, math.rad(0), ELEVATION_SPEED/2)
+		Turn(bedR, z_axis, math.rad(0), ELEVATION_SPEED/2)
+		WaitForTurn(bedR, z_axis)
+		Turn(bed, x_axis, math.rad(0), ELEVATION_SPEED/2)
+		WaitForTurn(bed, x_axis)
+		Spring.MoveCtrl.Disable(unitID)
+		GG.SpeedChange(unitID, unitDefID, 1)
+	end
+	
+	local REPAIR_RATE = 0.05
+	function Repair(passengerID)
+		SetSignalMask(1024)
+		--StartThread(MechBayRepair)
+		local curHP, maxHP = Spring.GetUnitHealth(passengerID)
+		while curHP ~= maxHP do
+			local newHP = math.min(curHP + maxHP * REPAIR_RATE, maxHP)
+			Spring.SetUnitHealth(passengerID, newHP)
+			--curHP, maxHP = GetUnitHealth(passengerID)
+			curHP, maxHP = Spring.GetUnitHealth(passengerID)
+			Sleep(1000)
+		end
+		Sleep(5000) -- always wait 5 seconds before shoving the mech out
+		script.TransportDrop(passengerID)
+	end
+	
+	function script.TransportPickup (passengerID)
+		passengerDefID = Spring.GetUnitDefID(passengerID)
+		passengerInfo = GG.lusHelper[passengerDefID]
+		passengerEnv = Spring.UnitScript.GetScriptEnv(passengerID)
+		if passengerEnv then
+			Spring.UnitScript.CallAsUnit(passengerID, passengerEnv.script.StopMoving)
+		end
+		-- TODO: pickup animation
+		Spring.UnitScript.AttachUnit(piece("mechlink"), passengerID)
+		StartThread(Repair, passengerID)
+	end
+
+
+	function script.TransportDrop (passengerID, x, y, z)
+		local isTransporting = Spring.GetUnitIsTransporting(unitID)
+		if isTransporting and #isTransporting > 0 then
+			Signal(1024) -- kill repair anim & threads
+			passengerID = passengerID or isTransporting[1]
+			if passengerID and Spring.ValidUnitID(passengerID) and not Spring.GetUnitIsDead(passengerID) then
+				Spring.UnitScript.DropUnit(passengerID)
+				--Spring.SetUnitMoveGoal(passengerID, UNLOAD_X, 0, UNLOAD_Z, 50) -- bug out over here
+			end
+			StartThread(UnDeployAnim)
+		end
+	end
+
+	-- Salvager
+	local CRANE_Y = math.rad(30)
+	Spring.SetUnitNanoPieces(unitID, {piece("crane_wrist2")})
 	if unitDef.isBuilder then
 	function script.StartBuilding(heading, pitch)
 		--Spring.Echo("StartBuilding!")

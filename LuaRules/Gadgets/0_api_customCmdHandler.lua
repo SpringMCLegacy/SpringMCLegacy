@@ -84,11 +84,26 @@ end
 GG.FramesToMinutesAndSeconds = FramesToMinutesAndSeconds
 
 if (gadgetHandler:IsSyncedCode()) then
-  function gadget:Initialize()
-    for name, cmdID in pairs(customCommands.IDs) do
-	  --Spring.Echo("Adding cmd to game rules params!", name, cmdID)
-      Spring.SetGameRulesParam(name, cmdID)
-    end
-  end
+	local COLOURS = GG.GameConstants.colours
+	
+	local function GetBuildToolTip(unitDefID, discount, action)
+		local ud = UnitDefs[unitDefID]
+		local weaponTooltip = ud.weapons[1] and "" or ": n/a "
+		local tooltip = action .. ": " .. ud.humanName .. " - " .. ud.tooltip .. weaponTooltip .. "\n" 
+						.. "Health " .. ud.health .. "\n"
+						.. COLOURS.cbills .. "C-Bills cost " .. tonumber(ud.customParams.price) * discount .. "\n"
+		if ud.customParams.tonnage then
+			tooltip = tooltip .. COLOURS.tonnage .. "Tonnage cost " .. tonumber(ud.customParams.tonnage)
+		end
+		return tooltip
+	end
+	GG.GetBuildToolTip = GetBuildToolTip -- for outpost_salvageYard.lua, outpost_mechBay
+
+	function gadget:Initialize()
+		for name, cmdID in pairs(customCommands.IDs) do
+			--Spring.Echo("Adding cmd to game rules params!", name, cmdID)
+			Spring.SetGameRulesParam(name, cmdID)
+		end
+	end
 end
 

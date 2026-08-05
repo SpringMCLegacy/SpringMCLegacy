@@ -18,6 +18,7 @@ local J27 = Tank:New{
 		mods			= {"ferrofibrousarmour"},
 		hitchmaxy		= 60,
 		normaltex		= "unittextures/normals/J-27_Normals.dds",
+		support			= true,
 	},
 }
 

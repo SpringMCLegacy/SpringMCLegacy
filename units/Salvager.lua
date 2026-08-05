@@ -24,6 +24,7 @@ local Salvager = LightTank:New{
 		armor			= 6,
 		squadsize 		= 1,
 		wheels			= true,
+		support			= true,
 	},
 }
 

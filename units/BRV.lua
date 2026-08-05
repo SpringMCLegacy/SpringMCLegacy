@@ -22,6 +22,7 @@ local BRV = Tank:New{
 		elevationspeed	= 25,
 		cratetype		= "cratelong",
 		normaltex		= "unittextures/normals/Oppie_Normals.dds",
+		support			= true,
 	},
 }
 

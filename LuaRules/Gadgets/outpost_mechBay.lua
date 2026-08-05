@@ -56,6 +56,75 @@ local GAIA_TEAM_ID = Spring.GetGaiaTeamID()
 local MECHBAY_ID = UnitDefNames["outpost_mechbay"].id
 local CRATE_ID = UnitDefNames["crate"].id
 
+-- Support Vehicle related ------------------------------------------------------------------------------
+local CMD_SET_BASE = GG.CustomCommands.GetCmdID("CMD_SET_BASE")
+local CMD_RESUPPLY = GG.CustomCommands.GetCmdID("CMD_RESUPPLY")
+local CMD_FIELDREPAIR = GG.CustomCommands.GetCmdID("CMD_FIELDREPAIR")
+
+-- Support Shared
+local setBaseCmdDesc = {
+	id 		= CMD_SET_BASE,
+	type	= CMDTYPE.ICON_UNIT,
+	name 	= GG.Pad("Assign", "Base", 12),
+	action	= "setbase",
+	tooltip = "Set the base outpost",
+	cursor	= "Guard", -- TODO: custom cursor?
+}
+GG.setBaseCmdDesc = setBaseCmdDesc
+
+local resupplyCmdDesc = {
+	id 		= CMD_RESUPPLY,
+	type	= CMDTYPE.ICON_UNIT,
+	name 	= GG.Pad("Resupply", "Ammo", 12),
+	action	= "resupply",
+	tooltip = "Resupply ammunition to a combat unit",
+	cursor	= "Guard", -- TODO: custom cursor?
+}
+
+local repairCmdDesc = {
+	id 		= CMD_FIELDREPAIR,
+	type	= CMDTYPE.ICON_UNIT,
+	name 	= GG.Pad("Repair", "Mech", 12),
+	action	= "repair",
+	tooltip = "Repair a battlemech in the field",
+	cursor	= "Repair", -- TODO: custom cursor?
+}
+
+-- J-27
+local J27_ID = UnitDefNames["j27"].id
+local CMD_RESUPPLY = GG.CustomCommands.GetCmdID("CMD_RESUPPLY")
+-- Savior
+local SAVIOR_ID = UnitDefNames["savior"].id
+local CMD_FIELDREPAIR = GG.CustomCommands.GetCmdID("CMD_FIELDREPAIR")
+
+local supportCosts = {
+	[J27_ID] = tonumber(UnitDefNames["j27"].customParams.price),
+	[SAVIOR_ID] = tonumber(UnitDefNames["savior"].customParams.price),
+}
+
+local supportDescs = {
+	[J27_ID] = {GG.setBaseCmdDesc, resupplyCmdDesc},
+	[SAVIOR_ID] = {GG.setBaseCmdDesc, repairCmdDesc},
+}
+
+local repairTargets = {} -- saviorID = mechID
+
+-- Yard Support Ordering Descs 
+local newJ27CmdDesc = {
+	id 		= -J27_ID,
+	type	= CMDTYPE.ICON,
+	--name 	= " New \n J-27",
+	action	= "newj27",
+	tooltip = GG.GetBuildToolTip(J27_ID, 1, "Build"),
+}
+local newSaviorCmdDesc = {
+	id 		= -SAVIOR_ID,
+	type	= CMDTYPE.ICON,
+	name 	= " New \n BRV",
+	action	= "newsavior",
+	tooltip = GG.GetBuildToolTip(SAVIOR_ID, 1, "Build"),
+}
+
 -- Command Descriptions
 local getOutCmdDesc = {
 	id 		= GetCmdID("CMD_MECHBAY_GETOUT"),
@@ -219,18 +288,20 @@ local function ShowModsByType(unitID, modType, mechID)
 	for i, cmdDesc in ipairs(GetUnitCmdDescs(unitID)) do
 		local cmdDescID = cmdDesc.id
 		if cmdDescID == cmdID then
-			EditUnitCmdDesc(unitID, i, {texture = 'bitmaps/ui/selected.png',})
+			EditUnitCmdDesc(unitID, i, {texture = 'bitmaps/ui/selected.png'})
 		elseif menuCmdIDs[cmdDescID] then 
-			EditUnitCmdDesc(unitID, i, {texture = 'bitmaps/ui/filter.png',})
+			EditUnitCmdDesc(unitID, i, {texture = 'bitmaps/ui/filter.png'})
 		elseif GG.appDefTypes[cmdDescID] == "mods" then
 			if mechID and not hiddenMods[mechDefID][cmdDescID] then
 				EditUnitCmdDesc(unitID, i, {hidden = GG.appDefs[cmdDesc.id].menu ~= modType}) -- eww
 			elseif not mechID then -- hide all mods if no mech loaded
 				EditUnitCmdDesc(unitID, i, {hidden = true})
 			end
+		elseif cmdDescID < 0 then -- support vehicles
+			EditUnitCmdDesc(unitID, i, {hidden = mechID ~= nil})
 		end
 	end
-	if mechBays[unitID] and omniCache[mechDefID] then
+	if mechID and mechBays[unitID] and omniCache[mechDefID] then
 		ShowOmniOptions(unitID, mechDefID, omniCache[mechDefID], modType == "omni")
 	end
 end
@@ -247,8 +318,22 @@ function gadget:UnitCreated(unitID, unitDefID, teamID, builderID)
 		InsertUnitCmdDesc(unitID, GET_OUT_POSITION, getOutCmdDesc)
 		InsertUnitCmdDesc(unitID, SELL_POSITION, sellMechCmdDesc)
 		InsertUnitCmdDesc(unitID, SCRAP_POSITION, scrapMechCmdDesc)
+		InsertUnitCmdDesc(unitID, newJ27CmdDesc) -- TODO: lock both supports behind an upgrade
+		InsertUnitCmdDesc(unitID, newSaviorCmdDesc)
 		SetMechBayLevel(unitID, 1)
 		ShowModsByType(unitID, "none", nil) -- don't show any mods until a mech gets in
+	elseif supportCosts[unitDefID] then
+		GG.ChangeSupportLance(teamID, unitID, 1)
+		GG.ClearDefaultCmds(unitID)
+		GG.AddSupportCmds(unitID, supportDescs[unitDefID])
+	end
+end
+
+function gadget:UnitDestroyed(unitID, unitDefID, teamID)
+	mechBays[unitID] = nil
+	repairTargets[unitID] = nil
+	if supportCosts[unitDefID] then
+		ChangeSupportLance(teamID, unitID, -1)
 	end
 end
 
@@ -271,7 +356,7 @@ function gadget:UnitUnloaded(unitID, unitDefID, unitTeam, transportID, transport
 	if mechBays[transportID] and mechBays[transportID] >= 1 then
 		-- reset menu
 		GG.UpdateUnitApps(transportID, unitDefID, "mods")
-		ShowModsByType(transportID, "none", unitID)
+		ShowModsByType(transportID, "none", nil)--unitID)
 		ShowOmniMenu(transportID, false)
 	end
 end
@@ -320,9 +405,18 @@ function gadget:AllowCommand(unitID, unitDefID, teamID, cmdID, cmdParams, cmdOpt
 			--if mechID and omniCache[GetUnitDefID(mechID)] then
 				--ShowOmniOptions(unitID, omniCache[GetUnitDefID(mechID)], cmdID == CMD_MENU_OMNI)
 			--end
-		elseif cmdID < 0 then -- an omni config
+		elseif cmdID < 0 then 
+			local supportCost = supportCosts[-cmdID]
 			local transporting = GetUnitIsTransporting(unitID)
-			if transporting[1] then
+			
+			if supportCost then -- purchasing a support vehicle
+				local cBills = GetTeamResources(teamID, "metal")
+				if cBills >= supportCost then
+					GG.DropshipDelivery(Spring.GetUnitRulesParam(unitID, "beaconID"), unitID, teamID, GG.teamSide[teamID] .. "_bishop", -cmdID, 0, nil, 0, {x = 0, z = 200})
+					UseTeamResource(teamID, "m", supportCosts[-cmdID])
+					return true
+				end
+			elseif transporting[1] then  -- an omni config
 				local cost = (IsNoCostEnabled() and 0) or tonumber(UnitDefs[-cmdID].customParams.omniswapcost or 5)
 				if GG.GetTeamSalvage(teamID) >= cost then
 					GG.ChangeTeamSalvage(teamID, -cost)
@@ -345,8 +439,61 @@ function gadget:AllowCommand(unitID, unitDefID, teamID, cmdID, cmdParams, cmdOpt
 				end
 			end
 		end
+	elseif supportCosts[unitDefID] then -- a support vehicle
+		if cmdID == CMD_FIELDREPAIR then
+			if unitDefID == SAVIOR_ID then
+				local targetID = cmdParams[1]
+				local targetDefID = GetUnitDefID(targetID)
+				if GG.mechCache[targetDefID] then
+					local x,y,z = Spring.GetUnitBasePosition(targetID)
+					Spring.SetUnitMoveGoal(unitID, x, y, z, 5)
+					repairTargets[unitID] = targetID
+					return true
+				else
+					return false -- not a mech
+				end
+			else
+				return false -- only Savior can FIELD_REPAIR
+			end
+		elseif cmdID == CMD_SET_BASE and isSalvager then
+			local yardID = cmdParams[1]
+			--Spring.Echo("AllowCommand CMD_SET_BASE", yardID)
+			if yardLevels[yardID] then -- it is a yard, afterall
+				AssociateSupport(yardID, teamID, unitID)
+				return true
+			end
+			return false
+		end
 	end
 	return true
+end
+
+local REPAIR_DIST = 100
+
+function gadget:CommandFallback(unitID, unitDefID, teamID, cmdID, cmdParams, cmdOptions)
+	if cmdID == CMD_FIELDREPAIR then
+		local targetID = repairTargets[unitID]
+		if Spring.GetUnitIsDead(targetID) then return true, true end
+		if Spring.GetUnitSeparation(unitID, targetID) < REPAIR_DIST then -- close enough
+			-- call the unfold anim
+			env = Spring.UnitScript.GetScriptEnv(unitID)
+			Spring.UnitScript.CallAsUnit(unitID, env.Deploy)
+			-- Savior will stop on return, now we want the target to stop what it is doing and move to the back
+			local mechlink = Spring.GetUnitPieceMap(unitID).mechlink
+			local x,y,z = Spring.GetUnitPiecePosDir(unitID, mechlink)
+			--Spring.GiveOrderToUnit(targetID, CMD.LOAD_ONTO, {unitID}, {})
+			Spring.SetUnitMoveGoal(targetID, x,y,z, 1)
+			GG.Delay.DelayCall(Spring.UnitScript.CallAsUnit, {unitID, env.script.TransportPickup, targetID}, 30 * 5) -- 5 seconds
+			-- need some command fallback for that? use load_onto?
+			--Spring.Echo("CommandFallback consume CMD_FIELDREPAIR")
+			return true, true
+		else -- not close enough yet, keep going
+			local x,y,z = Spring.GetUnitBasePosition(targetID)
+			Spring.SetUnitMoveGoal(unitID, x, y, z, REPAIR_DIST - 5)
+			--Spring.Echo("CommandFallback again CMD_FIELDREPAIR")
+			return true, false
+		end
+	end
 end
 
 function gadget:GameFrame(n)
@@ -390,6 +537,8 @@ function gadget:Initialize()
 			end
 		end
 	end
+	Spring.SetCustomCommandDrawData(CMD_RESUPPLY, "resupply", {1,0.7,0.9,0.8}, true)
+	Spring.SetCustomCommandDrawData(CMD_FIELDREPAIR, "repair", {1,0.7,0.9,0.8}, true)
 end
 
 else
