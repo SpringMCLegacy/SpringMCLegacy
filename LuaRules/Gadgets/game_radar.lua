@@ -14,6 +14,8 @@ if (gadgetHandler:IsSyncedCode()) then
 --SYNCED
 
 -- Localisations
+local modOptions = Spring.GetModOptions()
+
 local DelayCall = GG.Delay.DelayCall
 local SetUnitRulesParam	= Spring.SetUnitRulesParam
 -- Synced Read
@@ -43,7 +45,7 @@ local SpawnCEG 							= Spring.SpawnCEG
 -- Constants
 
 local FRAME_FUDGE = 16
-local SECTOR_RADIUS = 1000
+local SECTOR_RADIUS = tonumber(modOptions and modOptions.sectorrange or 1000)
 
 local mobileUnitDefs = {}
 local mobileUnits = {}
@@ -68,7 +70,6 @@ for unitDefID, unitDef in pairs(UnitDefs) do
 end
 
 -- Variables
-local modOptions = Spring.GetModOptions()
 local inRadarUnits = {}
 local outRadarUnits = {}
 local inAutoLos = {}
