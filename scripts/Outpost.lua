@@ -18,7 +18,7 @@ include ("anims/outposts/" .. animString .. ".lua")
 ---------------------------------------------------------------------
 -- Common functions
 ---------------------------------------------------------------------
-crateID
+crateID = nil
 pointID = nil
 beaconID = nil
 function ParentBeacon(callingPointID, parentBeaconID)
