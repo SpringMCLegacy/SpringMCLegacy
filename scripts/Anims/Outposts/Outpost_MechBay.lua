@@ -327,6 +327,7 @@ function Resupply(passengerID)
 end
 
 function script.TransportPickup (passengerID)
+	if crateID and crateID == passengerID then return end
 	if bayReady then
 		repaired = false
 		resupplied = false
@@ -347,6 +348,7 @@ function script.TransportPickup (passengerID)
 end
 
 function script.TransportDrop (passengerID, x, y, z)
+	if crateID and crateID == passengerID then return end
 	local isTransporting = Spring.GetUnitIsTransporting(unitID)
 	if isTransporting and #isTransporting > 0 then
 		Signal(1) -- kill repair anim & threads

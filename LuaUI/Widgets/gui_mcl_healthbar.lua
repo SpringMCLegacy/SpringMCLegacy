@@ -217,7 +217,7 @@ local function GenerateUnitGraphics(uid, udid, getAuras)
 			bars.health = {}
 			bars.health.color = {0,0,0,0.8}
 		end
-			if ud.transportCapacity > 0 and ud.customParams.baseclass == "vehicle" then -- APC
+			if ud.transportCapacity > 0 and ud.customParams.baseclass == "vehicle" and not ud.customParams.support then -- APC
 				bars.apc = {}
 				bars.apc.max = 5 -- TODO: read squad size
 				bars.apc.color = {0, 0, 1, 0.8}

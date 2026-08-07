@@ -3,6 +3,10 @@ local J27 = Tank:New{
 	description         = "Resupply Vehicle - Supplies ammunition to mechs on the frontline.",
 	trackWidth			= 27,--width to render the decal
 	
+	transportSize		= 3,
+	transportCapacity	= 3, -- 1x transportSize
+	transportMass		= 10000,
+	loadingradius		= 5,
 	holdSteady = true,
 	--weapons	= {	
 	--},

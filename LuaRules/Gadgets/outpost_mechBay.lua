@@ -61,6 +61,8 @@ local CMD_SET_BASE = GG.CustomCommands.GetCmdID("CMD_SET_BASE")
 local CMD_RESUPPLY = GG.CustomCommands.GetCmdID("CMD_RESUPPLY")
 local CMD_FIELDREPAIR = GG.CustomCommands.GetCmdID("CMD_FIELDREPAIR")
 
+local SUPPORT_DIST = 100
+
 -- Support Shared
 local setBaseCmdDesc = {
 	id 		= CMD_SET_BASE,
@@ -78,7 +80,15 @@ local resupplyCmdDesc = {
 	name 	= GG.Pad("Resupply", "Ammo", 12),
 	action	= "resupply",
 	tooltip = "Resupply ammunition to a combat unit",
-	cursor	= "Guard", -- TODO: custom cursor?
+	cursor	= "Resupply",
+}
+
+local rtbCmdDesc = {
+	id 		= GG.CustomCommands.GetCmdID("CMD_DEPOSIT"),
+	type	= CMDTYPE.ICON,
+	name 	= GG.Pad("Restock", "Crates", 12),
+	action	= "rtb",
+	tooltip = "Returns to mechbay to restock to 6 ammo crates",
 }
 
 local repairCmdDesc = {
@@ -97,17 +107,18 @@ local CMD_RESUPPLY = GG.CustomCommands.GetCmdID("CMD_RESUPPLY")
 local SAVIOR_ID = UnitDefNames["savior"].id
 local CMD_FIELDREPAIR = GG.CustomCommands.GetCmdID("CMD_FIELDREPAIR")
 
+local supportTargets = {} -- supportID = mechID
+local supportStates = {} -- 0 = Ready, 1 = Active, 2 = RTB
+GG.supportStates = supportStates -- for LUS
+
 local supportCosts = {
 	[J27_ID] = tonumber(UnitDefNames["j27"].customParams.price),
 	[SAVIOR_ID] = tonumber(UnitDefNames["savior"].customParams.price),
 }
-
 local supportDescs = {
-	[J27_ID] = {GG.setBaseCmdDesc, resupplyCmdDesc},
+	[J27_ID] = {GG.setBaseCmdDesc, rtbCmdDesc, resupplyCmdDesc},
 	[SAVIOR_ID] = {GG.setBaseCmdDesc, repairCmdDesc},
 }
-
-local repairTargets = {} -- saviorID = mechID
 
 -- Yard Support Ordering Descs 
 local newJ27CmdDesc = {
@@ -323,6 +334,7 @@ function gadget:UnitCreated(unitID, unitDefID, teamID, builderID)
 		SetMechBayLevel(unitID, 1)
 		ShowModsByType(unitID, "none", nil) -- don't show any mods until a mech gets in
 	elseif supportCosts[unitDefID] then
+		supportStates[unitID] = 0
 		GG.ChangeSupportLance(teamID, unitID, 1)
 		GG.ClearDefaultCmds(unitID)
 		GG.AddSupportCmds(unitID, supportDescs[unitDefID])
@@ -331,7 +343,8 @@ end
 
 function gadget:UnitDestroyed(unitID, unitDefID, teamID)
 	mechBays[unitID] = nil
-	repairTargets[unitID] = nil
+	supportTargets[unitID] = nil
+	supportStates[unitID] = nil
 	if supportCosts[unitDefID] then
 		ChangeSupportLance(teamID, unitID, -1)
 	end
@@ -440,26 +453,31 @@ function gadget:AllowCommand(unitID, unitDefID, teamID, cmdID, cmdParams, cmdOpt
 			end
 		end
 	elseif supportCosts[unitDefID] then -- a support vehicle
-		if cmdID == CMD_FIELDREPAIR then
-			if unitDefID == SAVIOR_ID then
+		local repair = cmdID == CMD_FIELDREPAIR
+		local resupply = cmdID == CMD_RESUPPLY 
+		if repair or resupply then
+			local savior = unitDefID == SAVIOR_ID
+			local j27 = unitDefID == J27_ID
+			if (repair and savior) or (resupply and j27) then
+				if (supportStates[unitID] or 0) > 0 then return false end -- Already active or RTB
 				local targetID = cmdParams[1]
 				local targetDefID = GetUnitDefID(targetID)
 				if GG.mechCache[targetDefID] then
 					local x,y,z = Spring.GetUnitBasePosition(targetID)
-					Spring.SetUnitMoveGoal(unitID, x, y, z, 5)
-					repairTargets[unitID] = targetID
+					Spring.SetUnitMoveGoal(unitID, x, y, z, SUPPORT_DIST)
+					supportTargets[unitID] = targetID
 					return true
 				else
 					return false -- not a mech
 				end
 			else
-				return false -- only Savior can FIELD_REPAIR
+				return false -- only Savior can FIELDREPAIR, only J27 can RESUPPLY
 			end
-		elseif cmdID == CMD_SET_BASE and isSalvager then
+		elseif cmdID == CMD_SET_BASE then
 			local yardID = cmdParams[1]
 			--Spring.Echo("AllowCommand CMD_SET_BASE", yardID)
-			if yardLevels[yardID] then -- it is a yard, afterall
-				AssociateSupport(yardID, teamID, unitID)
+			if mechBays[yardID] then -- it is a bay, afterall
+				GG.AssociateSupport(yardID, teamID, unitID)
 				return true
 			end
 			return false
@@ -468,29 +486,30 @@ function gadget:AllowCommand(unitID, unitDefID, teamID, cmdID, cmdParams, cmdOpt
 	return true
 end
 
-local REPAIR_DIST = 100
-
 function gadget:CommandFallback(unitID, unitDefID, teamID, cmdID, cmdParams, cmdOptions)
-	if cmdID == CMD_FIELDREPAIR then
-		local targetID = repairTargets[unitID]
+	if cmdID == CMD_FIELDREPAIR or cmdID == CMD_RESUPPLY then
+		local targetID = supportTargets[unitID]
 		if Spring.GetUnitIsDead(targetID) then return true, true end
-		if Spring.GetUnitSeparation(unitID, targetID) < REPAIR_DIST then -- close enough
-			-- call the unfold anim
-			env = Spring.UnitScript.GetScriptEnv(unitID)
-			Spring.UnitScript.CallAsUnit(unitID, env.Deploy)
-			-- Savior will stop on return, now we want the target to stop what it is doing and move to the back
-			local mechlink = Spring.GetUnitPieceMap(unitID).mechlink
-			local x,y,z = Spring.GetUnitPiecePosDir(unitID, mechlink)
-			--Spring.GiveOrderToUnit(targetID, CMD.LOAD_ONTO, {unitID}, {})
-			Spring.SetUnitMoveGoal(targetID, x,y,z, 1)
-			GG.Delay.DelayCall(Spring.UnitScript.CallAsUnit, {unitID, env.script.TransportPickup, targetID}, 30 * 5) -- 5 seconds
-			-- need some command fallback for that? use load_onto?
-			--Spring.Echo("CommandFallback consume CMD_FIELDREPAIR")
+		if Spring.GetUnitSeparation(unitID, targetID) < SUPPORT_DIST then -- close enough
+			if supportStates[unitID] == 0 then -- ensure this only runs once
+				supportStates[unitID] = 1
+				-- call the unfold anim
+				env = Spring.UnitScript.GetScriptEnv(unitID)
+				Spring.UnitScript.CallAsUnit(unitID, env.Deploy)
+				-- Savior will stop on return, now we want the target to stop what it is doing and move to the back
+				local mechlink = Spring.GetUnitPieceMap(unitID).mechlink
+				local x,y,z = Spring.GetUnitPiecePosDir(unitID, mechlink)
+				Spring.GiveOrderToUnit(targetID, CMD.LOAD_ONTO, {unitID}, {})
+				Spring.SetUnitMoveGoal(targetID, x,y,z, 1)
+				GG.Delay.DelayCall(Spring.UnitScript.CallAsUnit, {unitID, env.script.TransportPickup, targetID}, 30 * 5) -- 5 seconds
+				-- need some command fallback for that? use load_onto?
+			end
+			--Spring.Echo("CommandFallback consume CMD_FIELDREPAIR or CMD_RESUPPLY")
 			return true, true
 		else -- not close enough yet, keep going
 			local x,y,z = Spring.GetUnitBasePosition(targetID)
-			Spring.SetUnitMoveGoal(unitID, x, y, z, REPAIR_DIST - 5)
-			--Spring.Echo("CommandFallback again CMD_FIELDREPAIR")
+			Spring.SetUnitMoveGoal(unitID, x, y, z, SUPPORT_DIST - 5)
+			--Spring.Echo("CommandFallback again CMD_FIELDREPAIR or CMD_RESUPPLY")
 			return true, false
 		end
 	end
@@ -537,7 +556,8 @@ function gadget:Initialize()
 			end
 		end
 	end
-	Spring.SetCustomCommandDrawData(CMD_RESUPPLY, "resupply", {1,0.7,0.9,0.8}, true)
+	Spring.AssignMouseCursor("Resupply", "cursorrearm")
+	Spring.SetCustomCommandDrawData(CMD_RESUPPLY, "Resupply", {1,0.7,0.9,0.8}, true)
 	Spring.SetCustomCommandDrawData(CMD_FIELDREPAIR, "repair", {1,0.7,0.9,0.8}, true)
 end
 

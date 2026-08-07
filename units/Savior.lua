@@ -7,7 +7,6 @@ local Savior = Tank:New{
 	transportCapacity	= 3, -- 1x transportSize
 	transportMass		= 10000,
 	loadingradius		= 5,
-	
 	holdSteady = true,
 	weapons	= {	
 		[1] = {

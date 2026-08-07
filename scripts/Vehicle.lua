@@ -958,6 +958,8 @@ end
 
 if unitDef.customParams.support then -- TODO: mech/outpost style includes?
 	
+	local ammoLeft = 6
+	
 	-- Shared support anims
 	local crateID
 	function EnCrate()
@@ -982,26 +984,32 @@ if unitDef.customParams.support then -- TODO: mech/outpost style includes?
 	end
 	
 	
-	-- Savior
+	-- Savior & J-27
+
+	local passengerDefID
+	local passengerInfo
+	local passengerEnv
 	
 	local function DeployAnim()
-		local bed, bedL, bedR = piece("bed", "bedl", "bedr")
-		local flapL1, flapL2, flapR1, flapR2 = piece("flapl1", "flapl2", "flapr1", "flapr2")
-		Turn(bed, x_axis, math.rad(-90), ELEVATION_SPEED/2)
-		WaitForTurn(bed, x_axis)
-		Turn(bedL, z_axis, math.rad(-60), ELEVATION_SPEED/2)
-		Turn(bedR, z_axis, math.rad(60), ELEVATION_SPEED/2)
-		WaitForTurn(bedR, z_axis)
-		Turn(flapL1, z_axis, math.rad(179), ELEVATION_SPEED)
-		Turn(flapL2, z_axis, math.rad(179), ELEVATION_SPEED)
-		Turn(flapR1, z_axis, math.rad(-179), ELEVATION_SPEED)
-		Turn(flapR2, z_axis, math.rad(-179), ELEVATION_SPEED)
-		WaitForTurn(flapR2, z_axis)
-		Turn(flapL1, z_axis, math.rad(230), ELEVATION_SPEED)
-		Turn(flapL2, z_axis, math.rad(230), ELEVATION_SPEED)
-		Turn(flapR1, z_axis, math.rad(-230), ELEVATION_SPEED)
-		Turn(flapR2, z_axis, math.rad(-230), ELEVATION_SPEED)
-		WaitForTurn(flapR2, z_axis)
+		if unitDef.name == "savior" then
+			local bed, bedL, bedR = piece("bed", "bedl", "bedr")
+			local flapL1, flapL2, flapR1, flapR2 = piece("flapl1", "flapl2", "flapr1", "flapr2")
+			Turn(bed, x_axis, math.rad(-90), ELEVATION_SPEED/2)
+			WaitForTurn(bed, x_axis)
+			Turn(bedL, z_axis, math.rad(-60), ELEVATION_SPEED/2)
+			Turn(bedR, z_axis, math.rad(60), ELEVATION_SPEED/2)
+			WaitForTurn(bedR, z_axis)
+			Turn(flapL1, z_axis, math.rad(179), ELEVATION_SPEED)
+			Turn(flapL2, z_axis, math.rad(179), ELEVATION_SPEED)
+			Turn(flapR1, z_axis, math.rad(-179), ELEVATION_SPEED)
+			Turn(flapR2, z_axis, math.rad(-179), ELEVATION_SPEED)
+			WaitForTurn(flapR2, z_axis)
+			Turn(flapL1, z_axis, math.rad(230), ELEVATION_SPEED)
+			Turn(flapL2, z_axis, math.rad(230), ELEVATION_SPEED)
+			Turn(flapR1, z_axis, math.rad(-230), ELEVATION_SPEED)
+			Turn(flapR2, z_axis, math.rad(-230), ELEVATION_SPEED)
+			WaitForTurn(flapR2, z_axis)
+		end
 	end
 	
 	function Deploy()
@@ -1010,24 +1018,39 @@ if unitDef.customParams.support then -- TODO: mech/outpost style includes?
 		StartThread(DeployAnim)
 	end
 	
+	local CMD_DEPOSIT = GG.CustomCommands.GetCmdID("CMD_DEPOSIT")
 	local function UnDeployAnim()
-		local bed, bedL, bedR = piece("bed", "bedl", "bedr")
-		local flapL1, flapL2, flapR1, flapR2 = piece("flapl1", "flapl2", "flapr1", "flapr2")
-		Turn(flapL1, z_axis, math.rad(179), ELEVATION_SPEED)
-		Turn(flapL2, z_axis, math.rad(179), ELEVATION_SPEED)
-		Turn(flapR1, z_axis, math.rad(-179), ELEVATION_SPEED)
-		Turn(flapR2, z_axis, math.rad(-179), ELEVATION_SPEED)
-		WaitForTurn(flapR2, z_axis)
-		Turn(flapL1, z_axis, math.rad(0), ELEVATION_SPEED)
-		Turn(flapL2, z_axis, math.rad(0), ELEVATION_SPEED)
-		Turn(flapR1, z_axis, math.rad(0), ELEVATION_SPEED)
-		Turn(flapR2, z_axis, math.rad(0), ELEVATION_SPEED)
-		WaitForTurn(flapR2, z_axis)
-		Turn(bedL, z_axis, math.rad(0), ELEVATION_SPEED/2)
-		Turn(bedR, z_axis, math.rad(0), ELEVATION_SPEED/2)
-		WaitForTurn(bedR, z_axis)
-		Turn(bed, x_axis, math.rad(0), ELEVATION_SPEED/2)
-		WaitForTurn(bed, x_axis)
+		if unitDef.name == "savior" then
+			local bed, bedL, bedR = piece("bed", "bedl", "bedr")
+			local flapL1, flapL2, flapR1, flapR2 = piece("flapl1", "flapl2", "flapr1", "flapr2")
+			Turn(flapL1, z_axis, math.rad(179), ELEVATION_SPEED)
+			Turn(flapL2, z_axis, math.rad(179), ELEVATION_SPEED)
+			Turn(flapR1, z_axis, math.rad(-179), ELEVATION_SPEED)
+			Turn(flapR2, z_axis, math.rad(-179), ELEVATION_SPEED)
+			WaitForTurn(flapR2, z_axis)
+			Turn(flapL1, z_axis, math.rad(0), ELEVATION_SPEED)
+			Turn(flapL2, z_axis, math.rad(0), ELEVATION_SPEED)
+			Turn(flapR1, z_axis, math.rad(0), ELEVATION_SPEED)
+			Turn(flapR2, z_axis, math.rad(0), ELEVATION_SPEED)
+			WaitForTurn(flapR2, z_axis)
+			Turn(bedL, z_axis, math.rad(0), ELEVATION_SPEED/2)
+			Turn(bedR, z_axis, math.rad(0), ELEVATION_SPEED/2)
+			WaitForTurn(bedR, z_axis)
+			Turn(bed, x_axis, math.rad(0), ELEVATION_SPEED/2)
+			WaitForTurn(bed, x_axis)
+		elseif unitDef.name == "j27" then
+			Hide(piece("ammo" .. ammoLeft)) -- TODO: cache in a table
+			ammoLeft = ammoLeft - 1
+			--Spring.Echo("I've got", ammoLeft, "left, base is", GG.GetSupportBase(unitID))
+			GG.supportStatus = 0
+			if ammoLeft == 0 then
+				GG.supportStatus = 2
+				-- TODO: go home and pick up some more
+				--Spring.Echo("Awwww gees, I'm all out, best RTB!", GG.GetSupportBase(unitID))
+				--Spring.Echo("UnDeployAnim giving CMD_DEPOSIT")
+				Spring.GiveOrderToUnit(unitID, CMD_DEPOSIT, {GG.GetSupportBase(unitID)}, {})
+			end
+		end
 		Spring.MoveCtrl.Disable(unitID)
 		GG.SpeedChange(unitID, unitDefID, 1)
 	end
@@ -1048,16 +1071,77 @@ if unitDef.customParams.support then -- TODO: mech/outpost style includes?
 		script.TransportDrop(passengerID)
 	end
 	
+	local function RefillAmmoAnim()
+		while ammoLeft < 6 do
+			Sleep(1000)
+			ammoLeft = ammoLeft + 1
+			Show(piece("ammo" .. ammoLeft)) -- TODO: cache in a table
+		end
+		GG.supportStatus = 0 -- ready to go out and resupply again
+	end
+	
+	function RefillAmmoCrates()
+		StartThread(RefillAmmoAnim)
+	end
+	
+	local suppliedAmmos = {}
+	
+	function ResupplyAmmoType(passengerID, weaponNum, ammoType)
+		if ammoType then
+			suppliedAmmos[ammoType] = false -- so the loop has something to go over
+			local moreToDo = true
+			while moreToDo do
+				local amount = passengerInfo.burstLengths[weaponNum] or 1
+				local tookSome = passengerEnv.ChangeAmmo(ammoType, amount)
+				--if tookSome then Spring.Echo("Deduct " .. amount .. " " .. ammoType) end
+				moreToDo = moreToDo and tookSome
+				Sleep(1000)
+			end
+			suppliedAmmos[ammoType] = true
+		end
+	end
+
+	function Resupply(passengerID)
+		SetSignalMask(1024)
+		local ammoTypes = passengerInfo.ammoTypes
+		if passengerEnv.ChangeAmmo then
+			for weaponNum, ammoType in pairs(ammoTypes) do
+				StartThread(ResupplyAmmoType, passengerID, weaponNum, ammoType)
+			end
+		end
+		local resupplied = false
+		while not resupplied do
+			local allDone = true
+			for ammoType, done in pairs(suppliedAmmos) do
+				allDone = allDone and done
+			end
+			resupplied = allDone
+			Sleep(1000)
+		end
+		Sleep(1000) -- always wait 1 second before shoving the mech out
+		--Spring.Echo("Resupply is all done!")
+		script.TransportDrop(passengerID)
+	end
+
 	function script.TransportPickup (passengerID)
+		script.StopMoving()
+		-- stop movement again here in case of CMD_LOAD_ONTO being used
+		GG.SpeedChange(unitID, unitDefID, 0)
+		Spring.MoveCtrl.Enable(unitID)
 		passengerDefID = Spring.GetUnitDefID(passengerID)
 		passengerInfo = GG.lusHelper[passengerDefID]
 		passengerEnv = Spring.UnitScript.GetScriptEnv(passengerID)
+		--Spring.Echo("script.TransportPickup", passengerID, passengerDefID, passengerInfo, passengerEnv)
 		if passengerEnv then
 			Spring.UnitScript.CallAsUnit(passengerID, passengerEnv.script.StopMoving)
 		end
 		-- TODO: pickup animation
 		Spring.UnitScript.AttachUnit(piece("mechlink"), passengerID)
-		StartThread(Repair, passengerID)
+		if unitDef.name == "savior" then
+			StartThread(Repair, passengerID)
+		elseif unitDef.name == "j27" then
+			StartThread(Resupply, passengerID)
+		end
 	end
 
 

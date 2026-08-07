@@ -278,6 +278,10 @@ local function YardNotifyDone(yardID, teamID, pieceNum)
 end
 GG.YardNotifyDone = YardNotifyDone -- called by LUS Anims\Outpost_SalvageYard.lua
 
+local function GetSupportBase(supportID)
+	return salvagerYards[supportID]
+end
+GG.GetSupportBase = GetSupportBase -- for outpost_mechBay.lua, kinda eww
 
 local function AssociateSupport(yardID, teamID, supportID)
 	--Spring.Echo("AssociateSupport", yardID, teamID, supportID)
@@ -290,6 +294,7 @@ local function AssociateSupport(yardID, teamID, supportID)
 		if unitDefID == SALVAGER_ID then
 			GiveOrderToUnit(supportID, CMD.RECLAIM, {x, y, z, SALVAGE_RANGE}, {})
 		elseif unitDefID == BRV_ID and brvAttachers[supportID] then
+			--Spring.Echo("AssociateSupport giving CMD_DEPOSIT")
 			GiveOrderToUnit(supportID, CMD_DEPOSIT, {yardID}, {})
 		else
 			GiveOrderToUnit(supportID, CMD.MOVE, {x + math.random(-200, 200), y, z + math.random(-200, 200)}, {})
@@ -422,8 +427,8 @@ function gadget:ProjectileDestroyed(proID)
 end
 
 function gadget:UnitIdle(unitID, unitDefID, teamID)
-	local yardID = salvagerYards[unitID]
-	if yardID then -- is a Salvager
+	if supportCosts[unitDefID] then -- is a support
+		local yardID = salvagerYards[unitID]
 		--Spring.Echo("Yawn! Nought to do here boss")
 		local dist = GetUnitSeparation(unitID, yardID)
 		if dist and dist > 50 -- nothing else to salvage, force RTB
@@ -438,7 +443,8 @@ end
 function gadget:AllowCommand(unitID, unitDefID, teamID, cmdID, cmdParams, cmdOptions)
 	local isSalvager = supportCosts[unitDefID] --salvagerYards[unitID]
 	if cmdID == CMD_DEPOSIT then
-		if isSalvager then -- is a Salvager
+		local yardID = salvagerYards[unitID]
+		if yardID then --isSalvager then -- is a Salvager
 			idleSalvagers[unitID] = false
 			local yardID = salvagerYards[unitID]
 			local pos = yardPos[yardID]
@@ -448,7 +454,7 @@ function gadget:AllowCommand(unitID, unitDefID, teamID, cmdID, cmdParams, cmdOpt
 		else
 			return false
 		end
-	elseif cmdID == CMD_RECOVER and unitDefID == BRV_ID then -- TODO: make a 'isBRV' to include BRV, Heavy BRV, Savior?
+	elseif cmdID == CMD_RECOVER and unitDefID == BRV_ID then
 		local yardID = salvagerYards[unitID]
 		local target = recoverTargets[yardID]
 		if target and target.loaded then return false end -- yard already has a corpse loaded
@@ -581,6 +587,10 @@ function gadget:CommandFallback(unitID, unitDefID, teamID, cmdID, cmdParams, cmd
 				scrapMechCmdDesc.tooltip = scrapMechCmdDesc.tooltip .. COLOURS.salvage .. " " .. math.floor(featureDef.metal / CONVERSION_RATE) .. " Salvage"
 				Spring.InsertUnitCmdDesc(yardID, scrapMechCmdDesc)
 				scrapMechCmdDesc.tooltip = ttCache
+			elseif unitDefID == UnitDefNames["j27"].id then
+				--Spring.Echo("A J-27 made it home, awwwww!")
+				env = Spring.UnitScript.GetScriptEnv(unitID)
+				Spring.UnitScript.CallAsUnit(unitID, env.RefillAmmoCrates)
 			end
 			--Spring.Echo("CommandFallback consume CMD_DEPOSIT")
 			return true, true
@@ -613,6 +623,7 @@ end
 
 function gadget:UnitHarvestStorageFull(unitID, unitDefID, teamID)
 	--Spring.Echo("Oi vey! I'm full")
+	--Spring.Echo("UnitHarvestStorageFull giving CMD_DEPOSIT")
 	GiveOrderToUnit(unitID, CMD_DEPOSIT, {salvagerYards[unitID]}, {})
 end
 
