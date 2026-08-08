@@ -678,8 +678,8 @@ return {
 			cmdDesc = {
 				id = GetCmdID('PERK_MECHBAY_2'),
 				action = 'perkmechbay_2',
-				name = GG.Pad("Selling"), --"Mech", "Mods"),
-				tooltip = 'Unlocks the ability to sell mechs for C-Bills', --'Unlock mech equipment mods',
+				name = GG.Pad("Support", "Vehicles"), --"Mech", "Mods"),
+				tooltip = 'Unlocks the ability to purchase Savior MRV and J-27 ammo carrier.', --'Unlock mech equipment mods',
 				texture = 'bitmaps/ui/upgrade.png',	
 			},
 			valid = isMechBay,
@@ -694,8 +694,8 @@ return {
 			cmdDesc = {
 				id = GetCmdID('PERK_MECHBAY_3'),
 				action = 'perkmechbay_3',
-				name = GG.Pad("Scrapping"), --"Omnitech"),
-				tooltip = 'Unlocks the ability to scrap mechs for Salvage', --'Unlocks omnitech allowing for changing weapon loadouts of omnimechs',
+				name = GG.Pad("Hardened", "MechBay"), --"Omnitech"),
+				tooltip = 'Encases the mechbay in an armoured shroud.', --'Unlocks omnitech allowing for changing weapon loadouts of omnimechs',
 				texture = 'bitmaps/ui/upgrade.png',	
 			},
 			valid = isMechBay,
@@ -704,7 +704,7 @@ return {
 			end,
 			costFunction = deductCBills,
 			price = 6000,
-			requires = "mechbay_2",
+			requires = "sensor2", -- TODO: this disables it, change to "mechbay_2",
 		},
 		-- Salvage Yard
 		{

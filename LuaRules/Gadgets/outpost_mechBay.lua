@@ -164,9 +164,9 @@ local scrapMechCmdDesc = {
 local START_POSITION = 9
 local GET_OUT_POSITION = START_POSITION
 local SELL_POSITION = START_POSITION + 1
-local SCRAP_POSITION = START_POSITION + 2
+--local SCRAP_POSITION = START_POSITION + 2
 
-local typeStrings = {"ammo", "structural", "mobility", "tactical", "offensive", "defensive", "omni"}
+local typeStrings = {"structural", "mobility", "tactical", "offensive", "defensive", "omni", "ammo"}
 local typeStringAliases = {
 	["ammo"] 		= GG.Pad(10,"Special", "Ammo"),
 	["mobility"] 	= GG.Pad(10,"Engine", "Mods"), 
@@ -193,9 +193,9 @@ for i, typeString in ipairs(typeStrings) do
 end
 
 local CMD_MENU_OMNI = GetCmdID("CMD_MENU_OMNI")
-menuCmdDescs[5].tooltip = "Select omnimech weapon loadout configuration"
-menuCmdDescs[5].disabled = true
-menuCmdDescs[5].hidden = true
+menuCmdDescs[7].tooltip = "Select omnimech weapon loadout configuration"
+--menuCmdDescs[5].disabled = true
+--menuCmdDescs[7].hidden = true
 
 -- Mods
 local mechBays = {} -- mechBayID = level
@@ -236,12 +236,13 @@ local function CheckOmniOptions(unitID, teamID, cmdID)
 end
 
 local function ShowOmniMenu(unitID, tOrF)
-	--Spring.Echo("ShowOmniMenu!", tOrF)
 	for i, cmdDesc in ipairs(GetUnitCmdDescs(unitID)) do
 		if cmdDesc.id == CMD_MENU_OMNI then
 			EditUnitCmdDesc(unitID, i, {hidden = not tOrF})
 		elseif menuCmdIDs[cmdDesc.id] then
-			if cmdDesc.action ~= "menuammo" then
+			if cmdDesc.action == "menuammo" then
+				EditUnitCmdDesc(unitID, i, {hidden = false})
+			else
 				EditUnitCmdDesc(unitID, i, {hidden = tOrF})
 			end
 		end
@@ -249,7 +250,6 @@ local function ShowOmniMenu(unitID, tOrF)
 end
 
 local function ShowOmniOptions(unitID, mechDefID, name, tOrF)
-	--Spring.Echo("ShowOmniOptions!", name, tOrF)
 	if tOrF then
 		for i, letter in ipairs(omniOrder) do
 			local cmdDesc = omniConfigs[name][letter]
@@ -271,23 +271,21 @@ end
 local function SetMechBayLevel(unitID, level)
 	mechBays[unitID] = level
 	if level == 1 then
-		EditUnitCmdDesc(unitID, SELL_POSITION, {disabled = true}) -- disable Sell
-		EditUnitCmdDesc(unitID, SCRAP_POSITION, {disabled = true}) -- disable Scrap
 		for i, cmdDesc in ipairs(menuCmdDescs) do
-			InsertUnitCmdDesc(unitID, START_POSITION + 2 +i, cmdDesc)
+			InsertUnitCmdDesc(unitID, START_POSITION + 1 +i, cmdDesc) -- +1 for Sell
 		end
 		local transporting = GetUnitIsTransporting(unitID)
 		local mechID = transporting and transporting[1]
 		local omni = false
 		if mechID then
 			omni = omniCache[GetUnitDefID(mechID)] ~= nil
+			ShowOmniMenu(unitID, omni)
 		end
-		ShowOmniMenu(unitID, omni)
-		EditUnitCmdDesc(unitID, START_POSITION + 7, {disabled = false})
-	elseif level == 2 then -- Enable Sell
-		EditUnitCmdDesc(unitID, SELL_POSITION, {disabled = false})
-	elseif level == 3 then -- Enable Scrap
-		EditUnitCmdDesc(unitID, SCRAP_POSITION, {disabled = false})
+	elseif level == 2 then -- Enable Support Vehicles
+		InsertUnitCmdDesc(unitID, newJ27CmdDesc)
+		InsertUnitCmdDesc(unitID, newSaviorCmdDesc)
+	elseif level == 3 then -- Harden the mechbay
+		--EditUnitCmdDesc(unitID, SCRAP_POSITION, {disabled = false})
 	end
 end
 GG.SetMechBayLevel = SetMechBayLevel
@@ -298,18 +296,20 @@ local function ShowModsByType(unitID, modType, mechID)
 	if mechDefID == CRATE_ID then return end
 	for i, cmdDesc in ipairs(GetUnitCmdDescs(unitID)) do
 		local cmdDescID = cmdDesc.id
-		if cmdDescID == cmdID then
+		if not mechID then
+			local hide = cmdDescID > 0 -- not a support vehicle
+						and GG.appDefTypes[cmdDescID] ~= "upgrades" -- not the upgrade buttons
+						and cmdDescID ~= GetCmdID("CMD_MECHBAY_GETOUT")
+						and cmdDescID ~= GetCmdID("CMD_MECHBAY_SELLMECH")
+			EditUnitCmdDesc(unitID, i, {hidden = hide})
+		elseif cmdDescID == cmdID then
 			EditUnitCmdDesc(unitID, i, {texture = 'bitmaps/ui/selected.png'})
-		elseif menuCmdIDs[cmdDescID] then 
+		elseif menuCmdIDs[cmdDescID] and menuCmdIDs[cmdDescID] ~= CMD_MENU_OMNI then 
 			EditUnitCmdDesc(unitID, i, {texture = 'bitmaps/ui/filter.png'})
-		elseif GG.appDefTypes[cmdDescID] == "mods" then
-			if mechID and not hiddenMods[mechDefID][cmdDescID] then
-				EditUnitCmdDesc(unitID, i, {hidden = GG.appDefs[cmdDesc.id].menu ~= modType}) -- eww
-			elseif not mechID then -- hide all mods if no mech loaded
-				EditUnitCmdDesc(unitID, i, {hidden = true})
-			end
+		elseif GG.appDefTypes[cmdDescID] == "mods" and not hiddenMods[mechDefID][cmdDescID] then
+			EditUnitCmdDesc(unitID, i, {hidden = GG.appDefs[cmdDesc.id].menu ~= modType}) -- eww
 		elseif cmdDescID < 0 then -- support vehicles
-			EditUnitCmdDesc(unitID, i, {hidden = mechID ~= nil})
+			EditUnitCmdDesc(unitID, i, {hidden = true})
 		end
 	end
 	if mechID and mechBays[unitID] and omniCache[mechDefID] then
@@ -328,9 +328,6 @@ function gadget:UnitCreated(unitID, unitDefID, teamID, builderID)
 		end
 		InsertUnitCmdDesc(unitID, GET_OUT_POSITION, getOutCmdDesc)
 		InsertUnitCmdDesc(unitID, SELL_POSITION, sellMechCmdDesc)
-		InsertUnitCmdDesc(unitID, SCRAP_POSITION, scrapMechCmdDesc)
-		InsertUnitCmdDesc(unitID, newJ27CmdDesc) -- TODO: lock both supports behind an upgrade
-		InsertUnitCmdDesc(unitID, newSaviorCmdDesc)
 		SetMechBayLevel(unitID, 1)
 		ShowModsByType(unitID, "none", nil) -- don't show any mods until a mech gets in
 	elseif supportCosts[unitDefID] then
@@ -352,13 +349,11 @@ end
 
 function gadget:UnitLoaded(unitID, unitDefID, unitTeam, transportID, transportTeam)
 	if mechBays[transportID] and mechBays[transportID] >= 1 and unitDefID ~= CRATE_ID then
-		--Spring.Echo("PARP! loaded a unit")
 		-- update mod status for this mech
 		GG.UpdateUnitApps(transportID, unitDefID, "mods")
-		ShowModsByType(transportID, currMenu[unitID], unitID)
+		ShowModsByType(transportID, currMenu[unitID] or "chassis", unitID)
 		-- hide irrelevant mods
 		for cmdID in pairs(hiddenMods[unitDefID]) do
-			--Spring.Echo("Hiding2", UnitDefs[unitDefID].name, GG.appDefs[cmdID].name)
 			EditUnitCmdDesc(transportID, FindUnitCmdDesc(transportID, cmdID), {hidden = true})
 		end
 		ShowOmniMenu(transportID, omniCache[unitDefID] ~= nil)
@@ -369,8 +364,8 @@ function gadget:UnitUnloaded(unitID, unitDefID, unitTeam, transportID, transport
 	if mechBays[transportID] and mechBays[transportID] >= 1 then
 		-- reset menu
 		GG.UpdateUnitApps(transportID, unitDefID, "mods")
-		ShowModsByType(transportID, "none", nil)--unitID)
-		ShowOmniMenu(transportID, false)
+		ShowModsByType(transportID, "none", nil)
+		--ShowOmniMenu(transportID, false)
 	end
 end
 
@@ -475,7 +470,6 @@ function gadget:AllowCommand(unitID, unitDefID, teamID, cmdID, cmdParams, cmdOpt
 			end
 		elseif cmdID == CMD_SET_BASE then
 			local yardID = cmdParams[1]
-			--Spring.Echo("AllowCommand CMD_SET_BASE", yardID)
 			if mechBays[yardID] then -- it is a bay, afterall
 				GG.AssociateSupport(yardID, teamID, unitID)
 				return true
@@ -504,12 +498,10 @@ function gadget:CommandFallback(unitID, unitDefID, teamID, cmdID, cmdParams, cmd
 				GG.Delay.DelayCall(Spring.UnitScript.CallAsUnit, {unitID, env.script.TransportPickup, targetID}, 30 * 5) -- 5 seconds
 				-- need some command fallback for that? use load_onto?
 			end
-			--Spring.Echo("CommandFallback consume CMD_FIELDREPAIR or CMD_RESUPPLY")
 			return true, true
 		else -- not close enough yet, keep going
 			local x,y,z = Spring.GetUnitBasePosition(targetID)
 			Spring.SetUnitMoveGoal(unitID, x, y, z, SUPPORT_DIST - 5)
-			--Spring.Echo("CommandFallback again CMD_FIELDREPAIR or CMD_RESUPPLY")
 			return true, false
 		end
 	end
@@ -537,7 +529,6 @@ function gadget:Initialize()
 		if unitDef.customParams.omni then
 			local config = unitDef.name:sub(-1)
 			local name = unitDef.name:sub(1,-2)
-			--Spring.Echo("YO I FOUND AN OMNI", name, config)
 			omniCache[unitDefID] = name
 			omniConfigs[name] = omniConfigs[name] or {}
 			omniConfigs[name][config] = {
@@ -551,7 +542,6 @@ function gadget:Initialize()
 			-- ...check if the perk is valid and cache the result
 			local show = modDef.applyTo(unitDefID)
 			if not show then
-				--Spring.Echo("Hiding", unitDef.name, modDef.name)
 				hiddenMods[unitDefID][modDef.cmdDesc.id] = true
 			end
 		end
