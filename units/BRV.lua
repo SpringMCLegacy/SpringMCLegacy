@@ -1,4 +1,4 @@
-local BRV = Tank:New{
+local BRV = Support:New{
 	name              	= "Heavy BRV",
 	description         = "Support Vehicle - Loads an entire wreck and deposits it at the salvage yard for recovery or scrapping.",
 	trackWidth			= 37,--width to render the decal
@@ -15,14 +15,12 @@ local BRV = Tank:New{
 		heatlimit 		= 10,
 		armor			= 6,
 		squadsize 		= 1,
-		mods			= {"ferrofibrousarmour"},
 		hitchmaxy		= 60,
 		uniformbin		= "treads2k",
 		turretturnspeed	= 25,
 		elevationspeed	= 25,
 		cratetype		= "cratelong",
 		normaltex		= "unittextures/normals/Oppie_Normals.dds",
-		support			= true,
 	},
 }
 

@@ -1,4 +1,4 @@
-local Savior = Tank:New{
+local Savior = Support:New{
 	name              	= "Savior Repair Vehicle",
 	description         = "Repair Vehicle - Repairs mechs on the frontline.",
 	trackWidth			= 27,--width to render the decal
@@ -25,7 +25,6 @@ local Savior = Tank:New{
 		--mods			= {"ferrofibrousarmour"},
 		hitchmaxy		= 60,
 		normaltex		= "unittextures/normals/Savior_Normals.dds",
-		support			= true,
 	},
 }
 

@@ -1,4 +1,4 @@
-local Salvager = LightTank:New{
+local Salvager = Support:New{
 	name              	= "Salvager",
 	description         = "Support Vehicle - Gradually removes salvage from wrecks and deposits it at the salvage yard.",
 	trackWidth			= 25,--width to render the decal
@@ -24,7 +24,6 @@ local Salvager = LightTank:New{
 		armor			= 6,
 		squadsize 		= 1,
 		wheels			= true,
-		support			= true,
 	},
 }
 

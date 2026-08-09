@@ -45,9 +45,17 @@ local Hover = LightTank:New{
 	},
 }
 
+local Support = Tank:New{
+	iconType			= "support",
+	customparams = {
+		support			= true,
+    },
+}
+
 return {
 	Vehicle = Vehicle,
 	Tank = Tank,
 	LightTank = LightTank,
 	Hover = Hover,
+	Support = Support,
 }

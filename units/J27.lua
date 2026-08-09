@@ -1,4 +1,4 @@
-local J27 = Tank:New{
+local J27 = Support:New{
 	name              	= "J-27 Ordnance Transport",
 	description         = "Resupply Vehicle - Supplies ammunition to mechs on the frontline.",
 	trackWidth			= 27,--width to render the decal
@@ -19,10 +19,8 @@ local J27 = Tank:New{
 		heatlimit 		= 10,
 		armor			= 1,
 		squadsize 		= 1,
-		mods			= {"ferrofibrousarmour"},
 		hitchmaxy		= 60,
 		normaltex		= "unittextures/normals/J-27_Normals.dds",
-		support			= true,
 	},
 }
 
