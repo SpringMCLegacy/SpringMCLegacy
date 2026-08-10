@@ -99,12 +99,14 @@ GG.LockHeavyTurrets = LockHeavyTurrets
 
 function LinkCheck(x, z, controllerID, teamID)
 	local nearUnits = GetUnitsInCylinder(x, z, MAX_BUILD_RANGE)
+	local count = 0
 	for _, unitID in pairs(nearUnits) do
 		if turretOwners[unitID] then -- it is a turret
 			if GetUnitRulesParam(unitID, "LOST_LINK") == 1 then -- it is lost link
 				--Spring.Echo("Hey there baby wanna hook up?", UnitDefs[Spring.GetUnitDefID(unitID)].name)
 				local slotCost = turretDefIDs[Spring.GetUnitDefID(unitID)]
-				if remainingSlots[controllerID] >= slotCost then
+				if remainingSlots[controllerID] >= count + slotCost then
+					count = count + slotCost
 					DelayCall(TransferUnit, {unitID, teamID}, 1)
 					DelayCall(SetUnitNeutral,{unitID, false}, 1)
 					turretOwners[unitID] = controllerID
