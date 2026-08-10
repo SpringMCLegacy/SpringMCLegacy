@@ -96,6 +96,25 @@ local function LockHeavyTurrets(tcID, lock)
 end
 GG.LockHeavyTurrets = LockHeavyTurrets
 
+
+function LinkCheck(x, z, controllerID, teamID)
+	local nearUnits = GetUnitsInCylinder(x, z, MAX_BUILD_RANGE)
+	for _, unitID in pairs(nearUnits) do
+		if turretOwners[unitID] then -- it is a turret
+			if GetUnitRulesParam(unitID, "LOST_LINK") == 1 then -- it is lost link
+				--Spring.Echo("Hey there baby wanna hook up?", UnitDefs[Spring.GetUnitDefID(unitID)].name)
+				local slotCost = turretDefIDs[Spring.GetUnitDefID(unitID)]
+				if remainingSlots[controllerID] >= slotCost then
+					DelayCall(TransferUnit, {unitID, teamID}, 1)
+					DelayCall(SetUnitNeutral,{unitID, false}, 1)
+					turretOwners[unitID] = controllerID
+				end
+			end
+		end
+	end
+end
+--GG.LinkCheck = LinkCheck
+
 function UpdateTurretSlots(unitID, teamID, delta)
 	if not unitID or unitID and Spring.GetUnitIsDead(unitID) then return false end
 	remainingSlots[unitID] = (remainingSlots[unitID] or 0) + delta 
@@ -105,7 +124,7 @@ function UpdateTurretSlots(unitID, teamID, delta)
 	end
 	GG.CheckBuildOptions(unitID, teamID, remainingSlots[unitID] + 1, nil, turretDefIDs) -- +1 here as we want to specify slots to deduct
 end
-GG.UpdateTurretSlots = UpdateTurretSlots -- for outpost_turretcontrol perk
+GG.UpdateTurretSlots = UpdateTurretSlots -- for outpost_turretcontrol perk, Anims\Outposts\Outpost_TurretControl LUS
 
 function gadget:UnitCreated(unitID, unitDefID, teamID, builderID)
 	local unitDef = UnitDefs[unitDefID]
@@ -201,7 +220,7 @@ function gadget:UnitGiven(unitID, unitDefID, teamID, oldTeamID)
 		GG.ToggleLink(unitID, teamID, false)
 		local env = Spring.UnitScript.GetScriptEnv(unitID)
 		Spring.UnitScript.CallAsUnit(unitID, env.TeamChange, teamID) -- toggle firing
-		UpdateTurretSlots(turretOwners[unitID], teamID, turretDefIDs[unitDefID])
+		UpdateTurretSlots(turretOwners[unitID], teamID, -turretDefIDs[unitDefID])
 	end
 end
 
@@ -215,23 +234,6 @@ function gadget:GameFrame(n)
 	end
 end
 
-function LinkCheck(x, z, controllerID, teamID)
-	local nearUnits = GetUnitsInCylinder(x, z, MAX_BUILD_RANGE)
-	for _, unitID in pairs(nearUnits) do
-		if turretOwners[unitID] then -- it is a turret
-			if GetUnitRulesParam(unitID, "LOST_LINK") == 1 then -- it is lost link
-				--Spring.Echo("Hey there baby wanna hook up?", UnitDefs[Spring.GetUnitDefID(unitID)].name)
-				local slotCost = turretDefIDs[Spring.GetUnitDefID(unitID)]
-				if remainingSlots[controllerID] >= slotCost then
-					DelayCall(TransferUnit, {unitID, teamID}, 1)
-					DelayCall(SetUnitNeutral,{unitID, false}, 1)
-					turretOwners[unitID] = controllerID
-				end
-			end
-		end
-	end
-end
-GG.LinkCheck = LinkCheck
 
 function gadget:Initialize()
 	gadget:GamePreload()
