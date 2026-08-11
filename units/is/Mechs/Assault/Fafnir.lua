@@ -1,6 +1,12 @@
 local Fafnir = Assault:New{
 	name				= "Fafnir",
 	
+	leaveTracks			= true,	
+	trackType			= "Fafnir",
+	trackOffset			= 6,
+	trackWidth			= 46,
+	trackStretch 		= 2,
+	
 	customparams = {
 		cockpitheight	= 7,
 		tonnage			= 100,
