@@ -38,6 +38,7 @@ local WFT1 = Wolftrap:New{
 		armor			= 7.5,
 		maxammo 		= {ac10 = 2, lrm = 1},
 		mods			= {"xlengine", "endosteel", "case"},
+		barrelrecoildist = {[1] = 3,},
     },
 }
 
