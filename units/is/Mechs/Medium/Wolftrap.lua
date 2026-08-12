@@ -1,6 +1,12 @@
 local Wolftrap = Medium:New{
 	name				= "Wolf Trap",
 	
+	leaveTracks			= true,	
+	trackType			= "Wolftrap",
+	trackOffset			= 6,
+	trackWidth			= 36,
+	trackStretch 		= 2,
+	
 	customparams = {
 		cockpitheight	= 9.5,
 		tonnage			= 45,
