@@ -1,6 +1,12 @@
 local Panther = Light:New{
 	name              	= "Panther",
 	
+	leaveTracks			= true,	
+	trackType			= "Panther",
+	trackOffset			= 6,
+	trackWidth			= 20,
+	trackStretch 		= 2,
+	
 	customparams = {
 		cockpitheight	= 8,
 		tonnage 		= 35,
