@@ -4,7 +4,7 @@ local Wolftrap = Medium:New{
 	leaveTracks			= true,	
 	trackType			= "Wolftrap",
 	trackOffset			= 6,
-	trackWidth			= 36,
+	trackWidth			= 26,
 	trackStretch 		= 2,
 	
 	customparams = {
