@@ -123,6 +123,7 @@ local function SpawnStartUnit(teamID)
 		Spring.SetTeamResource(teamID, "ms", tonumber(m * 100))
 		Spring.SetTeamResource(teamID, "m", 0)
 		Spring.AddTeamResource(teamID, "m", tonumber(m))
+		Spring.SetTeamShareLevel(teamID, "metal", 100000000000000000)
 		GG.ChangeTeamSalvage(teamID, modOptions.startsalvage or 100)
 	end
 	if (e and tonumber(e) ~= 0) then
@@ -132,6 +133,7 @@ local function SpawnStartUnit(teamID)
 		Spring.SetTeamResource(teamID, "es", tonumber(e))
 		Spring.SetTeamResource(teamID, "e", 0)
 		Spring.AddTeamResource(teamID, "e", tonumber(e))
+		Spring.SetTeamShareLevel(teamID, "energy", 100000000000000000)
 	end
 end
 
