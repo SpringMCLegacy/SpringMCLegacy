@@ -53,6 +53,13 @@ function gadget:UnitDestroyed(unitID, unitDefID, teamID, attackerID, attackerDef
 	end
 end
 
+function gadget:AllowResourceLevel(teamID, res, amount)
+	if res == "e" then 
+		return false 
+	end
+	return true
+end
+
 function gadget:AllowResourceTransfer(oldTeamID, newTeamID, res, amount)
 	if res == "e" then 
 		return false 
