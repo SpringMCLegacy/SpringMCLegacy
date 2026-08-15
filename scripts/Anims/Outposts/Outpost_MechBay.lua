@@ -22,9 +22,10 @@ function Deploy()
 	Spring.SetUnitBlocking(unitID, false, false) -- make it easy to get out
 	MechBayOpen()
 	local x, _ ,z = Spring.GetUnitPosition(unitID)
-	local dx, _, dz = Spring.GetUnitDirection(unitID)
-	UNLOAD_X = x + 150 * dx
-	UNLOAD_Z = z + 150 * dz
+	local heading = Spring.GetUnitHeading(unitID)
+	local dx, dz = Spring.GetVectorFromHeading(heading)
+	UNLOAD_X = (x + 150 * dx) or 0
+	UNLOAD_Z = (z + 150 * dz) or 0
 	Spring.UnitScript.SetUnitValue(COB.ACTIVATION, 1)
 end
 
