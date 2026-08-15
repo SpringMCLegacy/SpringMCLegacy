@@ -429,13 +429,15 @@ end
 function gadget:UnitIdle(unitID, unitDefID, teamID)
 	if supportCosts[unitDefID] then -- is a support
 		local yardID = salvagerYards[unitID]
+		if yardID and ValidUnitID(yardID) and not Spring.GetUnitIsDead(yardID) then
 		--Spring.Echo("Yawn! Nought to do here boss")
-		local dist = GetUnitSeparation(unitID, yardID)
-		if dist and dist > 50 -- nothing else to salvage, force RTB
-		and not (unitDefID == BRV_ID and recoverTargets[yardID] and recoverTargets[yardID].loaded) then -- exempt BRV if there is a mech loaded
-			gadget:UnitHarvestStorageFull(unitID, unitDefID, teamID)
-		else
-			idleSalvagers[unitID] = true
+			local dist = GetUnitSeparation(unitID, yardID)
+			if dist and dist > 50 -- nothing else to salvage, force RTB
+			and not (unitDefID == BRV_ID and recoverTargets[yardID] and recoverTargets[yardID].loaded) then -- exempt BRV if there is a mech loaded
+				gadget:UnitHarvestStorageFull(unitID, unitDefID, teamID)
+			else
+				idleSalvagers[unitID] = true
+			end
 		end
 	end
 end
