@@ -1,6 +1,12 @@
 local ShaYu = Medium:New{
 	name				= "Sha Yu",
 	
+	leaveTracks			= true,	
+	trackType			= "Shayu",
+	trackOffset			= 6,
+	trackWidth			= 26,
+	trackStretch 		= 2,
+	
 	customparams = {
 		cockpitheight	= 5.1,
 		tonnage			= 40,
