@@ -205,6 +205,7 @@ function PlaceFlag(spot, flagType, newFlag, spotNum)
 			startPos.y = startPos.y or Spring.GetGroundHeight(startPos.x, startPos.z)
 			if GG.Vector.DistanceBetween(spot.x, spot.y, spot.z, startPos.x, startPos.y, startPos.z) < 1.5 * CAP_RADIUS then
 				--Spring.Echo("Uhhhhh, deleting a flag, spotNum", spotNum)
+				EXPECTED_FLAGS = EXPECTED_FLAGS - 1
 				flagTypeSpots[flagType][spotNum] = nil
 				return
 			end
@@ -260,7 +261,8 @@ local function LoadProfile()
 			table.insert(flagSpots, mh.teams[t]["startpos"])
 		end
 	end
-	EXPECTED_FLAGS = #flagSpots + GG.numActiveTeams - 1
+	EXPECTED_FLAGS = #flagSpots + GG.numActiveTeams -- 1
+	Spring.Echo("Map has " .. EXPECTED_FLAGS .. " expected beacons. (" .. #flagSpots .. " flagSpots & " .. (GG.numActiveTeams) .. " team starts)")
 	flagTypeSpots["beacon"] = flagSpots
 	GG.beaconSpots = flagSpots
 end
@@ -503,6 +505,7 @@ function gadget:UnitCreated(unitID, unitDefID, unitTeam, builderID)
 		PlaceFlag(newSpot, "beacon", unitID, spotNum)
 		UpdateBeacons(unitTeam, 1)
 		if #flagTypeSpots["beacon"] == EXPECTED_FLAGS then
+			Spring.Echo("Map actually has " .. EXPECTED_FLAGS .. " beacons created.")
 			beaconsDeployed = Spring.GetGameFrame() + 5
 		end
 	end
