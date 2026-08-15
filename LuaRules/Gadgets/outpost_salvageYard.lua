@@ -531,9 +531,11 @@ function gadget:AllowCommand(unitID, unitDefID, teamID, cmdID, cmdParams, cmdOpt
 			local cBills = GetTeamResources(teamID, "metal")
 			local supportCost = supportCosts[-cmdID]
 			if supportCost then -- purchasing a support vehicle
+				supportCost = Spring.IsNoCostEnabled() and 0 or supportCost
 				if cBills >= supportCost then
-					GG.DropshipDelivery(Spring.GetUnitRulesParam(unitID, "beaconID"), unitID, teamID, GG.teamSide[teamID] .. "_bishop", -cmdID, 0, nil, 0, {x = 0, z = 200})
-					UseTeamResource(teamID, "m", supportCosts[-cmdID])
+					local beaconID = Spring.GetUnitRulesParam(unitID, "beaconID")
+					GG.DropshipDelivery(beaconID, beaconID, teamID, GG.teamSide[teamID] .. "_bishop", -cmdID, 0, nil, 0, {x = 0, z = 0})
+					UseTeamResource(teamID, "m", -supportCost)
 					return true
 				end
 			else -- Rezzing a mech, in theory
