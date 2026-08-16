@@ -38,6 +38,7 @@ if VFS.FileExists(PROFILE_PATH) then
 end
 teamStarts = teamStarts or {}
 local sideStartUnits = {}
+local activeTeams = {} -- teamID = true
 
 local modOptions = Spring.GetModOptions()
 if not modOptions.startcbills then -- load via file
@@ -74,6 +75,7 @@ function gadget:GameID(id)
 end
 
 local function GetStartUnit(teamID)
+	if not activeTeams[teamID] then return false end
 	-- get the team startup info
 	local side = GG.teamSide[teamID] or select(5, Spring.GetTeamInfo(teamID))
 	local startUnit
@@ -94,6 +96,7 @@ local function GetStartUnit(teamID)
 end
 
 local function SpawnStartUnit(teamID)
+	if not activeTeams[teamID] then return false end
 	local startUnit = GetStartUnit(teamID)--sideStartUnits[teamID]
 	if (startUnit and startUnit ~= "") then
 		-- spawn the specified start unit
@@ -169,7 +172,6 @@ function gadget:GameStart()
 	local existingTeams = Spring.GetTeamList() -- i = teamID
 	local gaiaTeamID = Spring.GetGaiaTeamID()
 	--Spring.Echo("Gaia ID is", gaiaTeamID)
-	local activeTeams = {} -- teamID = true
 	local numActiveTeams = 0
 	if true then--startPosType <= 1 or startPosType == 3 then -- Fixed or random, no player selection
 		--Spring.Echo("[Game_Spawn.lua]", #teamStarts+1, "profile starts &", #(Spring.GetMapStartPositions()), "map defined starts")
