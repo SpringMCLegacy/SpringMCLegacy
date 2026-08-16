@@ -38,7 +38,8 @@ function Crashed()
 	-- This is a really awful hack , built on top of another hack. 
 	-- There's some issue with alwaysVisible not working (http://springrts.com/mantis/view.php?id=4483)
 	-- So instead make the owner the decal unit spawned by the teams starting beacon, as it can never die
-	local ownerID = Spring.GetTeamUnitsByDefs(teamID, UnitDefNames["decal_beacon"].id)[1] or unitID
+	-- 2026: not sure if that hack is still needed, however, removed decal unit as they are now GL. So, just grab nearest ally.
+	local ownerID = Spring.GetUnitNearestAlly(unitID) or unitID
 	local nukeID = Spring.SpawnProjectile(WeaponDefNames["meltdown"].id, {pos = {x,y,z}, owner = ownerID, team = teamID, ttl = 20})
 	Sleep(500)
 	local lwing, rwing = piece("lwing", "rwing")
