@@ -424,6 +424,6 @@ function widget:PlayerChanged()
 		maxLance = Spring.GetTeamRulesParam(teamID, "LANCES")
 		SetMaxLance(maxLance)
 		sLance = (tonumber(Spring.GetTeamRulesParam(teamID, "SUPPORT_LANCE")) or 0) > 0
-		SetSupportLanceLance(sLance)
+		SetSupportLance(sLance)
 	end
 end
