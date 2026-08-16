@@ -119,8 +119,10 @@ local FACING = 0
 
 -- Variables
 local stage = 1
+local teamID
 
-function TeamChange(teamID)
+function TeamChange(newTeamID)
+	teamID = newTeamID
 	--if stage == 3 then -- only toggle noFiring once landed
 		if teamID == GAIA_TEAM_ID then
 			noFiring = true
@@ -151,7 +153,8 @@ end
 
 function RealBoy()
 	StartThread(SmokeUnit, {base, turret})
-	if Spring.GetUnitTeam(unitID) ~= GAIA_TEAM_ID then
+	teamID = Spring.GetUnitTeam(unitID)
+	if teamID ~= GAIA_TEAM_ID then
 		noFiring = false
 		Spring.SetUnitNeutral(unitID, false)
 	end
@@ -348,7 +351,7 @@ local function AwaitRestock()
 	for ammoType, amount in pairs(maxAmmo) do
 		ChangeAmmo(ammoType, amount) 
 	end
-	noFiring = false
+	noFiring = teamID == GAIA_TEAM_ID
 end
 
 local function WeaponCanFire(weaponID)
