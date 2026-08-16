@@ -11,7 +11,7 @@ local AMS = Weapon:New{
 	turret                  = true,
 	range                   = 750,
 	--accuracy                = 100,
-	areaOfEffect            = 75,
+	areaOfEffect            = 25,
 	weaponVelocity          = 2400,
 	reloadtime              = 0.1,
 	burst					= 5,
@@ -44,7 +44,7 @@ local AMS = Weapon:New{
 return lowerkeys({ 
 	AMS = AMS,
 	HAMS = AMS:New{
-		areaOfEffect 	= 200,
+		areaOfEffect 	= 50,
 		coverage		= 1000,
 		range			= 1000,
 	},
