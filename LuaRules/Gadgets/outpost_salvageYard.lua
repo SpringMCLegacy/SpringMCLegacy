@@ -565,12 +565,16 @@ function gadget:CommandFallback(unitID, unitDefID, teamID, cmdID, cmdParams, cmd
 		--Spring.Echo("CMD_DEPOSIT", unitID, yardID, dist)
 		if dist and dist < 50 then
 			if unitDefID == SALVAGER_ID then -- depositing salvage
-				local raw = GetUnitHarvestStorage(unitID)
+				local raw = GetUnitHarvestStorage(unitID) --or 0
 				local salvage = math.floor(raw / CONVERSION_RATE)
 				--Spring.Echo("Made it back, have " .. salvage .. " Salvage!")
-				yardRaws[yardID] = yardRaws[yardID] + raw
-				SetUnitHarvestStorage(yardID, yardRaws[yardID])
-				SetUnitHarvestStorage(unitID, 0)
+				if not yardRaws[yardID] or not raw then
+					Spring.Log("outpost_salvageYard.lua", "FLOZi logic fail something is nil! yardRaws", yardRaws[yardID], "raw", raw)
+				else
+					yardRaws[yardID] = yardRaws[yardID] + raw
+					SetUnitHarvestStorage(yardID, yardRaws[yardID])
+					SetUnitHarvestStorage(unitID, 0)
+				end
 				local pos = yardPos[yardID]
 				DelayCall(GiveOrderToUnit, {unitID, CMD.RECLAIM, {pos.x, pos.y, pos.z, SALVAGE_RANGE}, {}}, 1) -- TODO: range change
 			elseif unitDefID == BRV_ID and recoverTargets[yardID] then
