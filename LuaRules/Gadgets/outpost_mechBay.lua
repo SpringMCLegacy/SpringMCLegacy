@@ -343,7 +343,7 @@ function gadget:UnitDestroyed(unitID, unitDefID, teamID)
 	supportTargets[unitID] = nil
 	supportStates[unitID] = nil
 	if supportCosts[unitDefID] then
-		ChangeSupportLance(teamID, unitID, -1)
+		GG.ChangeSupportLance(teamID, unitID, -1)
 	end
 end
 
