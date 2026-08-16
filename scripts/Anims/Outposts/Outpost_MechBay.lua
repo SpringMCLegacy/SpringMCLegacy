@@ -12,7 +12,7 @@ local ramprtoolspark, rampltoolspark = piece ("ramprtoolspark", "rampltoolspark"
 
 -- Constants
 local BAY_RESTORE = 5000 -- 5 seconds
-local UNLOAD_X, UNLOAD_Z
+local UNLOAD_X, UNLOAD_Z = 0, 0
 
 -- Variables
 local bayReady = false
