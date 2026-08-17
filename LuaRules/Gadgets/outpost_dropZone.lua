@@ -181,7 +181,6 @@ GG.ClearCmdDescs = ClearCmdDescs
 
 local function ShowBuildOptionsByType(unitID, menuType, menuCache, menuIDs, typeStringIndex, lockedDescs, teamID)
 	teamID = teamID or unitID -- fallback to unitID for TurretControl and AirCon
-	local lockedDescs = lockedDescs and lockedDescs[teamID] or locked[teamID] -- TODO: remove this crap when LockHeavy is generalised
 	currMenu[unitID] = menuType ~= "purchase" and menuType or currMenu[unitID]
 	currMenuIndex[unitID] = menuType ~= "purchase" and typeStringIndex[menuType] or currMenuIndex[unitID]
 	local cmdID = menuType and GG.CustomCommands.GetCmdID("CMD_MENU_" .. menuType:upper())
@@ -217,19 +216,20 @@ end
 
 local function 	LockHeavy(dropZoneID, lock) 
 	local cmdDescs = GetUnitCmdDescs(dropZoneID)
+	local teamID = Spring.GetUnitTeam(dropZoneID)
 	for i = 1, #cmdDescs do
 		local defID = cmdDescs[i].id
 		if defID < 0 then
 			local class = GetWeight(UnitDefs[-defID].mass)
 			if class == "heavy" or class == "assault" then
 				--Spring.Echo("Hiding", UnitDefs[-defID].name, class)
-				locked[Spring.GetUnitTeam(dropZoneID)][-defID] = lock -- TODO: pass teamID
+				locked[teamID][-defID] = lock -- TODO: pass teamID
 				EditUnitCmdDesc(dropZoneID, i, {hidden = lock})		
 			end
 		end
 	end
 	-- show only the currently selected menu
-	ShowBuildOptionsByType(dropZoneID, currMenu[dropZoneID], mechCache, menuCmdIDs, typeStringIndex, locked, Spring.GetUnitTeam(dropZoneID))
+	ShowBuildOptionsByType(dropZoneID, currMenu[dropZoneID], mechCache, menuCmdIDs, typeStringIndex, locked[teamID], Spring.GetUnitTeam(dropZoneID))
 end
 GG.LockHeavy = LockHeavy
 
@@ -293,7 +293,6 @@ function UpdateButtons(unitID, teamID, arrived) -- Toggles Submit Order vs Order
 		if orderSizes[unitID] == 0 then
 			EditUnitCmdDesc(unitID, FindUnitCmdDesc(unitID, CMD_RUNNING_TOTAL), {name = COLOURS.cbills .. GG.Pad(13, "C-Bills", " 0 ")})
 			EditUnitCmdDesc(unitID, FindUnitCmdDesc(unitID, CMD_RUNNING_TONS), {name = COLOURS.tonnage .. GG.Pad(11, "Tonnes", " 0 ")})
-			ShowBuildOptionsByType(unitID, currMenu[unitID], mechCache, menuCmdIDs, typeStringIndex, locked, teamID)
 		end
 	elseif orderStatus[unitID] >= 1 then -- order submitted
 		EditUnitCmdDesc(unitID, FindUnitCmdDesc(unitID, CMD_SEND_ORDER), {name = GG.Pad("Order","Sent"), texture = "bitmaps/ui/submit2.png"})
@@ -305,6 +304,9 @@ function OrderFinished(unitID, teamID)
 	orderCosts[unitID] = 0
 	orderTons[unitID] = 0
 	orderSizes[unitID] = 0
+	if dropZones[unitID] then
+		ShowBuildOptionsByType(unitID, currMenu[unitID], mechCache, menuCmdIDs, typeStringIndex, locked[teamID], teamID)
+	end
 end
 GG.OrderFinished = OrderFinished -- for outpost_airCon build menu
 
@@ -411,7 +413,7 @@ local function SetDropZone(beaconID, teamID)
 	local side = GG.teamSide[teamID]
 	if not side then return end -- a weird bug to avoid here, maybe due to dead team?
 	local dropZoneID = CreateUnit(side .. "_dropzone", x,y,z, "s", teamID)
-	ShowBuildOptionsByType(dropZoneID, "fast", mechCache, menuCmdIDs, typeStringIndex, locked, teamID)
+	ShowBuildOptionsByType(dropZoneID, "fast", mechCache, menuCmdIDs, typeStringIndex, locked[teamID], teamID)
 	dropZones[dropZoneID] = teamID
 	teamDropZones[teamID] = dropZoneID
 	dropZoneBeaconIDs[teamID] = beaconID
@@ -517,7 +519,7 @@ local function PurchaseOrders(unitID, unitDefID, teamID, cmdID, cmdOptions, comp
 		end
 		orderStatus[unitID] = Spring.GetGameFrame() --1
 		UpdateButtons(unitID, teamID)
-		ShowBuildOptionsByType(unitID, "purchase", mechCache, menuCmdIDs, typeStringIndex, locked, teamID)
+		ShowBuildOptionsByType(unitID, dropZones[unitID] and "purchase" or "order", menuCache, menuIDs, typeStringIndex, lockedDescs, teamID)
 		if dropZoneStatus[teamID] ~= 0 then -- check here so it only plays once rather than every fallback
 			GG.PlaySoundForTeam(teamID, "bb_reinforcements_queued", 1)
 		end

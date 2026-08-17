@@ -170,7 +170,7 @@ local function LockAssault(acID, lock)
 			EditUnitCmdDesc(acID, i, {hidden = lock})		
 		end
 	end
-	GG.ShowBuildOptionsByType(acID, "order", menuTypeCache, menuCmdIDs, typeStringIndex, locked)
+	GG.ShowBuildOptionsByType(acID, "order", menuTypeCache, menuCmdIDs, typeStringIndex, locked[acID])
 end
 GG.LockAssault = LockAssault
 
@@ -599,7 +599,7 @@ function gadget:AllowCommand(unitID, unitDefID, teamID, cmdID, cmdParams, cmdOpt
 	-- check if command is a sortie
 	local sortie = sortieCmdIDs[cmdID]
 	if not sortie then
-		return GG.PurchaseOrders(unitID, unitDefID, teamID, cmdID, cmdOptions, SendPurchaseOrder, menuTypeCache, menuCmdIDs, typeStrings, typeStringIndex, teamAvailableSortieSlots[teamID], locked)
+		return GG.PurchaseOrders(unitID, unitDefID, teamID, cmdID, cmdOptions, SendPurchaseOrder, menuTypeCache, menuCmdIDs, typeStrings, typeStringIndex, teamAvailableSortieSlots[teamID], locked[unitID])
 	end
 	
 	local _, _, inBuild = GetUnitIsStunned(unitID)
