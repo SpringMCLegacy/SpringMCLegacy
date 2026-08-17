@@ -1,6 +1,6 @@
 local HTurret_ADA = HeavyTurret:New{
 	description         = "Air Defense Arrow",
-	buildCostMetal      = 7300,
+	buildCostMetal      = 14600,
 	maxDamage           = 2000,
 
 	weapons	= {	

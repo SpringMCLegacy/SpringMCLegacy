@@ -1,6 +1,6 @@
 local HTurret_PPCMRM = HeavyTurret:New{
 	description         = "Dual ERPPC & MRM-30",
-	buildCostMetal      = 15000,
+	buildCostMetal      = 20000,
 
 	weapons	= {	
 		[1] = {

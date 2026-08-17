@@ -1,6 +1,6 @@
 local HTurret_LGauss = HeavyTurret:New{
 	description         = "Quad Light Gauss",
-	buildCostMetal      = 18000,
+	buildCostMetal      = 20000,
 
 	weapons	= {	
 		[1] = {

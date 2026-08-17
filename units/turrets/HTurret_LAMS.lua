@@ -1,6 +1,6 @@
 local HTurret_LAMS = HeavyTurret:New{
 	description         = "Laser Anti-Missile System",
-	buildCostMetal      = 8500,
+	buildCostMetal      = 17000,
 	airSightDistance 		= 1750,
 	maxDamage           = 2000,
 

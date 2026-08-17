@@ -1,6 +1,6 @@
 local HTurret_Arrow = HeavyTurret:New{
 	description         = "Arrow IV Artillery (Homing) Launcher",
-	buildCostMetal      = 7300,
+	buildCostMetal      = 14600,
 	maxDamage           = 2000,
 
 	weapons	= {	

@@ -1,6 +1,6 @@
 local HTurret_RAC = HeavyTurret:New{
 	description         = "Quad RAC/5",
-	buildCostMetal      = 19000,
+	buildCostMetal      = 20000,
 
 	weapons	= {	
 		[1] = {

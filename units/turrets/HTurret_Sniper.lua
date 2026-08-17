@@ -1,6 +1,6 @@
 local HTurret_Sniper = HeavyTurret:New{
 	description         = "Sniper Artillery",
-	buildCostMetal      = 9700,
+	buildCostMetal      = 19400,
 	maxDamage           = 2500,
 
 	weapons	= {	
