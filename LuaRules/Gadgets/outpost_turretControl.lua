@@ -30,6 +30,7 @@ local RemoveUnitCmdDesc		= Spring.RemoveUnitCmdDesc
 local TransferUnit			= Spring.TransferUnit
 local SetUnitNeutral		= Spring.SetUnitNeutral
 local SetSquareBuildingMask = Spring.SetSquareBuildingMask
+local UseTeamResource 		= Spring.UseTeamResource
 
 -- GG
 local DelayCall				 = GG.Delay.DelayCall
@@ -192,20 +193,22 @@ function gadget:AllowCommand(unitID, unitDefID, teamID, cmdID, cmdParams, cmdOpt
 			
 			local tx, ty, tz = unpack(cmdParams)
 			local dist = GG.GetUnitDistanceToPoint(unitID, tx, ty, tz, false)
+			local cBills = GetTeamResources(teamID, "metal")
+			local cost = UnitDefs[-cmdID].metalCost
 			-- check for max range, although limited via unit script to only build inside beacon radius... 
 			-- ...need to ensure it is within the beacon radius we are built at!
 			if dist > MAX_BUILD_RANGE then
 				Spring.SendMessageToTeam(teamID, "Too far from Turret Control!")
 				GG.PlaySoundForTeam(teamID, "bb_turret_toofar", 1)
 			-- check we have the resources
-			elseif GetTeamResources(teamID, "metal") < UnitDefs[-cmdID].metalCost then
+			elseif cBills < cost then
 				GG.PlaySoundForTeam(teamID, "bb_insufficient_cbills", 1)
 				Spring.SendMessageToTeam(teamID, "Not enough C-Bills for turret deployment!")	
-			end
 			-- check we have the slots
-			if remainingSlots[unitID] >= turretDefIDs[-cmdID] then -- Shouldn't be needed but, bolts and braces
+			elseif remainingSlots[unitID] >= turretDefIDs[-cmdID] then -- Shouldn't be needed but, bolts and braces
 				UpdateTurretSlots(unitID, teamID, -slotCost)
 				local success = CreateUnit(-cmdID, tx, ty, tz, 1, teamID, false, false, nil, unitID)
+				UseTeamResource(teamID, "m", cost)
 				--Spring.Echo("Yo make a turret!", -cmdID, UnitDefs[-cmdID].name, success)
 			end
 			return false -- don't let the engine build it itself whether we passed the conditions or not
