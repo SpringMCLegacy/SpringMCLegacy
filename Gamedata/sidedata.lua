@@ -25,7 +25,7 @@ local sidedata = {
 		shortName = "CC",
 		startUnit = "beacon",
 		techBase = "IS",
-		texmods = {"DeathCommando"},
+		texmods = {"DeathCommandos"},
 	},
 	{
 		name = "Free Worlds League",
