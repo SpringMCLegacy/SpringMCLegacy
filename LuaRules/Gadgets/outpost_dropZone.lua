@@ -519,7 +519,7 @@ local function PurchaseOrders(unitID, unitDefID, teamID, cmdID, cmdOptions, comp
 		end
 		orderStatus[unitID] = Spring.GetGameFrame() --1
 		UpdateButtons(unitID, teamID)
-		ShowBuildOptionsByType(unitID, dropZones[unitID] and "purchase" or "order", menuCache, menuIDs, typeStringIndex, lockedDescs, teamID)
+		ShowBuildOptionsByType(unitID, dropZones[unitID] and "purchase" or "deploy", menuCache, menuIDs, typeStringIndex, lockedDescs, teamID)
 		if dropZoneStatus[teamID] ~= 0 then -- check here so it only plays once rather than every fallback
 			GG.PlaySoundForTeam(teamID, "bb_reinforcements_queued", 1)
 		end

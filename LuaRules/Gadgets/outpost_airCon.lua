@@ -541,13 +541,23 @@ function gadget:UnitCreated(unitID, unitDefID, teamID)
 				-- add in the deploy sortie cmddescs
 				local sortie = sortieDefs[-cmdDesc.id]
 				local sortieCmdDesc = sortie.cmdDesc
-				local stockpile = GetTeamRulesParam(teamID, "game_planes.stockpile" .. sortieCmdDesc.id) or 0
-				sortieCmdDesc.name = stockpile .. "\n" .. statusText.none -- TODO: assuming only aircon atm
+
+				local stockpile = teamSorties[teamID][-sortieCmdDesc.id] or {} -- TODO: uh, how is it nil?
+				local highestPile = 0
+				local highestStage = "none"
+				for stage, pile in pairs(stockpile) do
+					--Spring.Echo("PARP!", stage, pile)
+					if pile > highestPile then
+						highestPile = pile
+						highestStage = stage
+					end
+				end
+				sortieCmdDesc.name = highestPile .. "\n" .. statusText[highestStage]
 				if sortie.unlockLevel then
 					--Spring.Echo("PARP found a locked sortie", sortie.name, sortie.unlockLevel)
 					locked[unitID][sortieCmdDesc.id] = true
 				end
-				sortieCmdDesc.disabled = not (stockpile > 0)
+				sortieCmdDesc.disabled = not (highestPile > 0)
 				GG.Delay.DelayCall(InsertUnitCmdDesc,{unitID, sortieCmdDesc}, 1) -- so that unit-perks populates upgrades first
 			end
 		end
