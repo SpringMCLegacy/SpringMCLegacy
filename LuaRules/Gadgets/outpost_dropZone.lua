@@ -533,7 +533,7 @@ GG.PurchaseOrders = PurchaseOrders
 function gadget:AllowCommand(unitID, unitDefID, teamID, cmdID, cmdParams, cmdOptions, cmdTag, synced)
 	-- DROPZONE PURCHASE ORDERS
 	if dropZones[unitID] then
-		return dropZoneStatus[teamID] ~= 1 and PurchaseOrders(unitID, unitDefID, teamID, cmdID, cmdOptions, SendCommandFallback, mechCache, menuCmdIDs, typeStrings, typeStringIndex, GG.TeamSlotsRemaining(teamID))
+		return dropZoneStatus[teamID] ~= 1 and PurchaseOrders(unitID, unitDefID, teamID, cmdID, cmdOptions, SendCommandFallback, mechCache, menuCmdIDs, typeStrings, typeStringIndex, GG.TeamSlotsRemaining(teamID), locked[teamID])
 	-- DROPZONE PLACEMENT ORDERS
 	elseif unitDefID == BEACON_ID then
 		if cmdID == dropZoneCmdDesc.id then
