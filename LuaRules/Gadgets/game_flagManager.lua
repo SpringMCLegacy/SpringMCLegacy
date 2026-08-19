@@ -536,7 +536,11 @@ function CheckAllyTeamUnits(unitTeam)
 	end
 end
 
+local deadDropshipTeams = {}
+GG.deadDropshipTeams = deadDropshipTeams
+
 function NotifyDropshipDied(teamID)
+	deadDropshipTeams[teamID] = true
 	local allyTeam = select(6, Spring.GetTeamInfo(teamID))
 	local teamsInAlliance = Spring.GetTeamList(allyTeam)
 	local numTeams = #teamsInAlliance
@@ -558,6 +562,11 @@ function NotifyDropshipDied(teamID)
 				GG.PlaySoundForTeam(team, "bb_elimination_enemy", 1)
 			end
 		end
+	end
+	-- remove the dropzone
+	local dzID = GG.teamDropZones[teamID]
+	if dzID and Spring.ValidUnitID(dzID) then
+		Spring.DestroyUnit(dzID, false, true)
 	end
 end
 GG.NotifyDropshipDied = NotifyDropshipDied

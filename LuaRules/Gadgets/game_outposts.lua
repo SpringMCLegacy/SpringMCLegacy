@@ -251,7 +251,11 @@ end
 function gadget:AllowCommand(unitID, unitDefID, teamID, cmdID, cmdParams, cmdOptions)
 	if unitDefID == BEACON_POINT_ID then
 		if outpostCMDs[cmdID] and not outpostIDs[unitID] then
-			if Spring.GetUnitRulesParam(unitID, "secure") == 0 then 
+			if GG.deadDropshipTeams[teamID] then 
+				Spring.SendMessageToTeam(teamID, "Cannot place outpost at beacon - You have no dropship!")
+				--GG.PlaySoundForTeam(teamID, "bb_outpost_blocked_noship", 1)
+				return false 
+			elseif Spring.GetUnitRulesParam(unitID, "secure") == 0 then 
 				Spring.SendMessageToTeam(teamID, "Cannot place outpost at beacon - Under attack!")
 				return false 
 			end

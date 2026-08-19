@@ -537,7 +537,11 @@ function gadget:AllowCommand(unitID, unitDefID, teamID, cmdID, cmdParams, cmdOpt
 	-- DROPZONE PLACEMENT ORDERS
 	elseif unitDefID == BEACON_ID then
 		if cmdID == dropZoneCmdDesc.id then
-			if Spring.GetUnitRulesParam(unitID, "secure") == 0 then 
+			if GG.deadDropshipTeams[teamID] then 
+				Spring.SendMessageToTeam(teamID, "Cannot establish dropzone - You have no dropship!")
+				--GG.PlaySoundForTeam(teamID, "bb_dropzone_reassign_blocked_noship", 1)
+				return false 
+			elseif Spring.GetUnitRulesParam(unitID, "secure") == 0 then 
 				Spring.SendMessageToTeam(teamID, "Cannot establish dropzone - Under attack!")
 				GG.PlaySoundForTeam(teamID, "bb_dropzone_reassign_blocked_enemy", 1)
 				return false 
