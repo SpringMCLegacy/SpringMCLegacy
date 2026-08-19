@@ -131,8 +131,8 @@ local function GetTempColour(temp)
 end
 
 function widget:GameStart()--Preload()
-	local ambTemp = GetGameRulesParam("MAP_TEMP_AMBIENT")
-	local watTemp = GetGameRulesParam("MAP_TEMP_WATER")
+	local ambTemp = GetGameRulesParam("MAP_TEMP_AMBIENT") or 20
+	local watTemp = GetGameRulesParam("MAP_TEMP_WATER") or 10
 	tempAmbient = "Ambient: " .. GetTempColour(ambTemp) .. ambTemp .. colors.white .. " \'C"
 	tempWater = "Water: " .. GetTempColour(watTemp) .. watTemp .. colors.white .. " \'C"
 end

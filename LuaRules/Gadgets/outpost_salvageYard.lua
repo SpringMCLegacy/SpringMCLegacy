@@ -304,6 +304,10 @@ end
 GG.AssociateSupport = AssociateSupport
 
 local function ChangeSupportLance(teamID, unitID, delta)
+	if not teamID or not unitID or not delta or not remainingSupportSlots[teamID] then
+		Spring.Log("outpost_salvageYard", "FLOZi logic fail something was nil", teamID, unitID, delta, remainingSupportSlots[teamID])
+		return
+	end
 	remainingSupportSlots[teamID] = remainingSupportSlots[teamID] - delta
 	local current = tonumber(Spring.GetTeamRulesParam(teamID, "SUPPORT_LANCE") or 0)
 	local new = current + delta
