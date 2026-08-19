@@ -405,9 +405,14 @@ function script.HitByWeapon(x, z, weaponID, damage)
 	ChangeHeat(heatDamage)
 	local hitPiece = GetUnitLastAttackedPiece(unitID) or ""
 	local module = info.progenitorMap[hitPiece] or "body"
+	local limbMult = (weaponID == GG.lusHelper.MG_WDID) and 40 or 1
 	local mult = 1
 	if module == "body" then 
 		return damage
+	elseif module == "turret" then
+		mult = 0.5 -- still apply 50% of the damage to main unit too
+		limbHPControl(module, damage) -- MG does not get bonus vs turret
+		return damage * mult
 	elseif wheeled and hitPiece:find("wheel") then
 		mult = 0.1 -- apply only 10% damage
 	elseif hitPiece:find("track") then
@@ -415,7 +420,7 @@ function script.HitByWeapon(x, z, weaponID, damage)
 	else -- turret, wing or rotor
 		mult = 0.5 -- still apply 50% of the damage to main unit too
 	end
-	limbHPControl(module, damage)
+	limbHPControl(module, damage * limbMult)
 	return damage * mult
 end
 
