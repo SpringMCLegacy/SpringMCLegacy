@@ -508,20 +508,22 @@ function script.HitByWeapon(x, z, weaponID, damage, piece)
 	end -- hitPiece will be "" for mines so the next bit deals normal torso damage too
 	if hitPiece == "torso" or hitPiece == "pelvis" or hitPiece == "" then 
 		return damage
-	elseif hitPiece == "lupperleg" or hitPiece == "llowerleg" then
+	end
+	local limbMult = (weaponID == GG.lusHelper.MG_WDID) and 40 or 1
+	if hitPiece == "lupperleg" or hitPiece == "llowerleg" then
 		--deduct Left Leg HP
-		local hp = limbHPControl("left_leg", damage, hitPiece)
+		local hp = limbHPControl("left_leg", damage * limbMult, hitPiece)
 		if hp == 0 then return damage end
 	elseif hitPiece == "rupperleg" or hitPiece == "rlowerleg" then
 		--deduct Right Leg HP
-		local hp = limbHPControl("right_leg", damage, hitPiece)
+		local hp = limbHPControl("right_leg", damage * limbMult, hitPiece)
 		if hp == 0 then return damage end
 	elseif hitPiece == "lupperarm" or hitPiece == "llowerarm" then
 		--deduct Left Arm HP
-		limbHPControl("left_arm", damage, hitPiece)
+		limbHPControl("left_arm", damage * limbMult, hitPiece)
 	elseif hitPiece == "rupperarm" or hitPiece == "rlowerarm" then
 		--deduct Right Arm HP
-		limbHPControl("right_arm", damage, hitPiece)
+		limbHPControl("right_arm", damage * limbMult, hitPiece)
 	end
 	return 0
 end
