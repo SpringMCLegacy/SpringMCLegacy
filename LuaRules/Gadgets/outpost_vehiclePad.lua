@@ -430,6 +430,13 @@ function gadget:UnitGiven(unitID, unitDefID, newTeam, oldTeam)
 	end
 end
 
+function gadget:AllowUnitTransfer(unitID, unitDefID, oldTeam, newTeam, capture)
+	if vehiclesDefCache[unitDefID] then
+		return false
+	end
+	return true
+end
+
 function gadget:AllowCommand(unitID, unitDefID, teamID, cmdID, cmdParams, cmdOptions, cmdTag, playerID, synced, fromLua)
 	if vehiclesDefCache[unitDefID] and unitSquads[unitID] then
 		--Spring.Echo("Vehicle AllowCommand", UnitDefs[unitDefID].name, CMD[cmdID], playerID, synced, fromLua)

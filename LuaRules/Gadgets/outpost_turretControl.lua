@@ -229,6 +229,13 @@ function gadget:UnitGiven(unitID, unitDefID, teamID, oldTeamID)
 	end
 end
 
+function gadget:AllowUnitTransfer(unitID, unitDefID, oldTeam, newTeam, capture)
+	if turretDefIDs[unitDefID] then
+		return oldTeam == GAIA_TEAM_ID or newTeam == GAIA_TEAM_ID -- TODO: we do want to transfer them with their TC though...
+	end
+	return true
+end
+
 
 function gadget:GameFrame(n)
 	if n > 0 and n % 30 == 0 then -- once a second
