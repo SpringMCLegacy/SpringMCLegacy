@@ -596,9 +596,9 @@ function gadget:AllowUnitTransfer(unitID, unitDefID, oldTeam, newTeam, capture)
 		local flagAllyTeam = select(6, GetTeamInfo(oldTeam))
 		local newAllyTeam = select(6, GetTeamInfo(newTeam))
 		local neutCheck = Spring.GetUnitRulesParam(unitID, "secure") == 0
-		
+		-- There is a potential issue here where you could give your beacons away to GAIA to recap them for the income bonus, so check status
 		if capped or (neuted and neutCheck) then return true end
-		-- TODO: There is a potential issue here where you can give your beacons away to GAIA to recap them for the income bonus
+
 		local flagAllyTeam = select(6, GetTeamInfo(oldTeam))
 		local newAllyTeam = select(6, GetTeamInfo(newTeam))
 		return flagAllyTeam == newAllyTeam

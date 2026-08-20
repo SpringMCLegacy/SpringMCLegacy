@@ -122,6 +122,7 @@ GG.mechCache = mechCache
 
 -- Menu
 local currMenu = {} -- [dropzoneID] = unitType
+GG.currMenu = currMenu -- for outpost_airCon
 local currMenuIndex = {}
 local locked = {} -- teamID[unitDefID] = true
 -- Orders

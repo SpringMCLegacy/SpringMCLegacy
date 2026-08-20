@@ -117,7 +117,7 @@ local menuTypeCache = {}
 
 -- Sorties
 local AIRCON_UD = UnitDefNames["outpost_aircon"]
-local aeroCache = {}
+local aeroCache = {} -- unitDefID = true
 GG.aeroCache = aeroCache -- just in case
 
 --local sideSortieCmdDescs = {}
@@ -726,22 +726,26 @@ function gadget:AllowUnitBuildStep(builderID, builderTeam, unitID, unitDefID, pa
 	return true
 end
 
---[[function TransferStockpiles(oldTeamID, newTeamID) -- TODO
-	for _, sortie in pairs(sortieDefs) do
-		local cmdID = sortie.cmdDesc.id
-		local rulesParamName = "game_planes.stockpile" .. cmdID
-		local stockpile = GetTeamRulesParam(oldTeamID, rulesParamName) or 0
-		ModifyStockpile(oldTeamID, sortie, -stockpile)
-		ModifyStockpile(newTeamID, sortie, stockpile)
-	end
-end]]
 
 function gadget:UnitGiven(unitID, unitDefID, newTeam, oldTeam)
 	if radios[oldTeam][unitID] then
 		radios[oldTeam][unitID] = nil
 		if next(radios[oldTeam]) == nil then
-			--TransferStockpiles(oldTeam, newTeam)
+			--TODO: rebuild the order menu with side appropriate
+			--TODO: rebuild the deploy menu with side appropriate + any non-native sorties that have been transferred to the newTeam
 		end
+	elseif aeroCache[unitDefID] then
+		local sortie = sortieDefs[unitDefID]
+		local newSide = GG.teamSide[newTeam]
+		if not (sideAeroDefs[newSide][unitDefID]) then -- is not a native sortie type, need to add hte button back in
+			local sortieCmdDesc = sortie.cmdDesc
+			for airConID in pairs(radios[newTeam]) do
+				sortieCmdDesc.hidden = GG.currMenu[airConID] ~= "deploy"
+				InsertUnitCmdDesc(airConID, sortieCmdDesc)
+			end
+		end	
+		ModifyStockpile(oldTeam, sortie, 1, "active", nil)
+		ModifyStockpile(newTeam, sortie, 1, nil, "active")
 	end
 end
 
