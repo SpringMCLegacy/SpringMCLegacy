@@ -331,24 +331,25 @@ local function StripUnits(unitsAtFlag)
 	end
 end
 
-local function TransferFlag(flagID, flagTeamID, teamID)
+local function TransferFlag(flagID, flagTeamID, newTeamID, capTeamID)
 	local capped = flagTeamID == GAIA_TEAM_ID
-	TransferUnit(flagID, capped and teamID or GAIA_TEAM_ID, false)
-	Spring.AddTeamResource(teamID, "metal", CAP_BONUS) -- 2k CBills for neut or cap
-	if capped then -- new team is gaining a beacon
-		-- Update the new team
-		UpdateBeacons(teamID, 1)
-	else -- neutralised, so old team is losing a beacon
-		-- Update the old team
+	local neuted = newTeamID == GAIA_TEAM_ID
+	TransferUnit(flagID, capped and capTeamID or GAIA_TEAM_ID, false)
+	if capped or neuted then
+		Spring.AddTeamResource(capTeamID, "metal", CAP_BONUS) -- 2k CBills for neut or cap
+		-- Flag has changed status, reset capping statuses
+		flagCapStatuses[flagID] = {}
+		for _, cleanTeamID in pairs(Spring.GetTeamList()) do
+			SetUnitRulesParam(flagID, "cap" .. tostring(cleanTeamID), 0, {public = true})
+		end
+		UpdateBeacons(capped and capTeamID or flagTeamID, capped and 1 or -1)
+	else -- player transfered
+		-- Update both teams
+		UpdateBeacons(newTeamID, 1)
 		UpdateBeacons(flagTeamID, -1)
 	end
 	-- Turn flag back on TODO: check if this can be avoided in MCL?
 	GiveOrderToUnit(flagID, CMD.ONOFF, {1}, {})
-	-- Flag has changed team, reset capping statuses
-	flagCapStatuses[flagID] = {}
-	for _, cleanTeamID in pairs(Spring.GetTeamList()) do
-		SetUnitRulesParam(flagID, "cap" .. tostring(cleanTeamID), 0, {public = true})
-	end
 end
 
 local function FlagCapChange(flagID, flagTeamID, allyTeamID, teamID, change)
@@ -379,18 +380,22 @@ local function FlagCapChange(flagID, flagTeamID, allyTeamID, teamID, change)
 			SendToUnsynced("MESSAGE", teamID, x,y,z)
 		end
 	elseif flagCapStatuses[flagID][allyTeamID].cap > CAP_THRESHOLD and teamID ~= flagTeamID then -- capped or neutralised
-		TransferFlag(flagID, flagTeamID, teamID)
 		if Spring.GetTeamUnitDefCount(flagTeamID, BEACON_ID) == 0 then -- this was the last beacon!
 			GG.PlaySoundForTeam(flagTeamID, "bb_dropzone_lost_last", 1)
 		elseif GG.dropZoneBeaconIDs[flagTeamID] == flagID and not (GG.orderStatus[GG.teamDropZones[flagTeamID]] or 0 > 0) then -- this was the dropzone beacon! (and no order pending)
 			GG.PlaySoundForTeam(flagTeamID, "bb_dropzone_lost_noauto", 1)
-		else
+		elseif change > 0 then
 			GG.PlaySoundForTeam(flagTeamID, "bb_beacon_lost", 1)
 		end
+		local newTeamID
 		if flagTeamID == GAIA_TEAM_ID then -- flag was capped, not neutralised
 			GG.PlaySoundForTeam(teamID, "bb_beacon_secured", 1)
 			SetUnitRulesParam(flagID, "secure", 1, {public = true})
+			newTeamID = teamID
+		else
+			newTeamID = GAIA_TEAM_ID
 		end
+		TransferFlag(flagID, flagTeamID, newTeamID, teamID)
 	end
 end
 
@@ -583,11 +588,36 @@ function gadget:UnitDestroyed(unitID, unitDefID, unitTeam, attackerID, attackerD
 	end
 end
 
+
+function gadget:AllowUnitTransfer(unitID, unitDefID, oldTeam, newTeam, capture)
+	if unitDefID == BEACON_ID then
+		local capped = oldTeam == GAIA_TEAM_ID
+		local neuted = newTeam == GAIA_TEAM_ID
+		local flagAllyTeam = select(6, GetTeamInfo(oldTeam))
+		local newAllyTeam = select(6, GetTeamInfo(newTeam))
+		local neutCheck = Spring.GetUnitRulesParam(unitID, "secure") == 0
+		
+		if capped or (neuted and neutCheck) then return true end
+		-- TODO: There is a potential issue here where you can give your beacons away to GAIA to recap them for the income bonus
+		local flagAllyTeam = select(6, GetTeamInfo(oldTeam))
+		local newAllyTeam = select(6, GetTeamInfo(newTeam))
+		return flagAllyTeam == newAllyTeam
+	end
+	return true
+end
+
 function gadget:UnitGiven(unitID, unitDefID, newTeam, oldTeam)
 	local ud = UnitDefs[unitDefID]
 	if ud.customParams.baseclass == "mech" then
 		teamUnitCounts[oldTeam] = teamUnitCounts[oldTeam] - 1
 		teamUnitCounts[newTeam] = teamUnitCounts[newTeam] + 1
+	elseif unitDefID == BEACON_ID then
+		local capped = oldTeam == GAIA_TEAM_ID
+		local neuted = newTeam == GAIA_TEAM_ID
+		if capped or neuted then return end
+		-- transfered within allyTeam
+		local allyTeamID = select(6, GetTeamInfo(newTeam))
+		FlagCapChange(unitID, oldTeam, allyTeamID, newTeam, 0)
 	end
 	DelayCall(CheckAllyTeamUnits, {oldTeam}, 1)
 end
