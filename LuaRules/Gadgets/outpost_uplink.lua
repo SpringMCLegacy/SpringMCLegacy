@@ -146,6 +146,13 @@ function gadget:UnitUnloaded(unitID, unitDefID, teamID, transportID, transportTe
 	end
 end
 
+function gadget:UnitGiven(unitID, unitDefID, newTeam, oldTeam)
+	if unitDefID == UPLINK_ID then
+		artyCanFire[newTeam] = artyCanFire[newTeam] or GetGameFrame()
+		SetTeamRulesParam(newTeam, "UPLINK_ARTILLERY", artyCanFire[newTeam])
+	end
+end
+
 local function ArtyShot(strikeType, unitID, teamID, x,y,z)
 	local projParams = {}
 	projParams.gravity = -3 + math.random()
