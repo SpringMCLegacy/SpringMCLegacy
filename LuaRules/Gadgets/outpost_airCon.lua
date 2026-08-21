@@ -119,6 +119,7 @@ local menuTypeCache = {}
 local AIRCON_UD = UnitDefNames["outpost_aircon"]
 local aeroCache = {} -- unitDefID = true
 GG.aeroCache = aeroCache -- just in case
+local aeroBuildOptionsCache = {}
 
 --local sideSortieCmdDescs = {}
 local sortieDefs = {}
@@ -501,7 +502,32 @@ function gadget:Initialize()
 end
 
 local toRemove = {CMD.IDLEMODE, CMD.AUTOREPAIRLEVEL}
-		
+
+local function AddSortieDescs(unitID, teamID, cmdDescID, onlyIfStockpiled)
+	local sortie = sortieDefs[-cmdDescID]
+	local sortieCmdDesc = sortie.cmdDesc
+
+	local stockpile = teamSorties[teamID][-sortieCmdDesc.id] or {} -- TODO: uh, how is it nil?
+	local highestPile = 0
+	local highestStage = "none"
+	for stage, pile in pairs(stockpile) do
+		if pile > highestPile then
+			highestPile = pile
+			highestStage = stage
+		end
+	end
+	sortieCmdDesc.name = highestPile .. "\n" .. statusText[highestStage]
+	if sortie.unlockLevel then
+		--Spring.Echo("PARP found a locked sortie", sortie.name, sortie.unlockLevel)
+		locked[unitID][sortieCmdDesc.id] = true
+	end
+	sortieCmdDesc.disabled = not (highestPile > 0)
+	sortieCmdDesc.hidden = GG.currMenu[unitID] ~= "deploy"
+	if not onlyIfStockpiled or (onlyIfStockpiled and highestPile > 0) then
+		GG.Delay.DelayCall(InsertUnitCmdDesc,{unitID, sortieCmdDesc}, onlyIfStockpiled and 2 or 1) -- so that unit-perks populates upgrades first
+	end
+end
+				
 function gadget:UnitCreated(unitID, unitDefID, teamID)
 	local ud = UnitDefs[unitDefID]
 	local cp = ud.customParams
@@ -525,40 +551,27 @@ function gadget:UnitCreated(unitID, unitDefID, teamID)
 	
 	-- It's an aircon, initialize it
 	radios[teamID][unitID] = true
-	locked[unitID] = {}
+	locked[unitID] = locked[unitID] or {} -- we could get here through transfer and want to respect unlock status
 	GG.ClearCmdDescs(unitID, true)
 	GG.AddBuildMenu(unitID, aeroMenuCmdDescs)
+	GG.currMenu[unitID] = "order" -- force an update of this
 	GG.orderStatus[unitID] = 0
 	-- Remove all aero units that do not belong to the team's side
 	local side = GG.teamSide[teamID]
 	if not side then return end -- presume team is dead
 	local toDelete = {}
-	for i, cmdDesc in pairs(Spring.GetUnitCmdDescs(unitID)) do
+	local airconCmdDescs = Spring.GetUnitCmdDescs(unitID)
+	if not aeroBuildOptionsCache[1] then -- build the cache on first run
+		table.copy(airconCmdDescs, aeroBuildOptionsCache)
+	end
+	for i, cmdDesc in pairs(airconCmdDescs) do
 		if cmdDesc.id < 0 then
-			if not (sideAeroDefs[side][-cmdDesc.id]) then -- or sortieDefs[-cmdDesc.id]) then
+			if not (sideAeroDefs[side][-cmdDesc.id]) then
 				toDelete[cmdDesc.id] = true
+				AddSortieDescs(unitID, teamID, cmdDesc.id, true) -- only add if there is a stockpile
 			else
 				-- add in the deploy sortie cmddescs
-				local sortie = sortieDefs[-cmdDesc.id]
-				local sortieCmdDesc = sortie.cmdDesc
-
-				local stockpile = teamSorties[teamID][-sortieCmdDesc.id] or {} -- TODO: uh, how is it nil?
-				local highestPile = 0
-				local highestStage = "none"
-				for stage, pile in pairs(stockpile) do
-					--Spring.Echo("PARP!", stage, pile)
-					if pile > highestPile then
-						highestPile = pile
-						highestStage = stage
-					end
-				end
-				sortieCmdDesc.name = highestPile .. "\n" .. statusText[highestStage]
-				if sortie.unlockLevel then
-					--Spring.Echo("PARP found a locked sortie", sortie.name, sortie.unlockLevel)
-					locked[unitID][sortieCmdDesc.id] = true
-				end
-				sortieCmdDesc.disabled = not (highestPile > 0)
-				GG.Delay.DelayCall(InsertUnitCmdDesc,{unitID, sortieCmdDesc}, 1) -- so that unit-perks populates upgrades first
+				AddSortieDescs(unitID, teamID, cmdDesc.id, false) -- always add
 			end
 		end
 	end
@@ -726,14 +739,24 @@ function gadget:AllowUnitBuildStep(builderID, builderTeam, unitID, unitDefID, pa
 	return true
 end
 
+function gadget:AllowUnitTransfer(unitID, unitDefID, oldTeam, newTeam, capture)
+	if aeroCache[unitDefID] then
+		local availableTonnage = GetTeamResources(newTeam, "e")
+		local unitDef = UnitDefs[unitDefID]
+		return availableTonnage >= unitDef.energyCost
+	end
+	return true
+end
 
 function gadget:UnitGiven(unitID, unitDefID, newTeam, oldTeam)
 	if radios[oldTeam][unitID] then
 		radios[oldTeam][unitID] = nil
-		if next(radios[oldTeam]) == nil then
-			--TODO: rebuild the order menu with side appropriate
-			--TODO: rebuild the deploy menu with side appropriate + any non-native sorties that have been transferred to the newTeam
+		-- add all the aeros back in
+		for i, cmdDesc in ipairs(aeroBuildOptionsCache) do
+			InsertUnitCmdDesc(unitID, cmdDesc)
 		end
+		-- unit created will filter them for the new side
+		gadget:UnitCreated(unitID, unitDefID, newTeam)
 	elseif aeroCache[unitDefID] then
 		local sortie = sortieDefs[unitDefID]
 		local newSide = GG.teamSide[newTeam]
@@ -746,6 +769,9 @@ function gadget:UnitGiven(unitID, unitDefID, newTeam, oldTeam)
 		end	
 		ModifyStockpile(oldTeam, sortie, 1, "active", nil)
 		ModifyStockpile(newTeam, sortie, 1, nil, "active")
+		local unitDef = UnitDefs[unitDefID]
+		AddTeamResource(oldTeam, "e", unitDef.energyCost)
+		UseTeamResource(newTeam, "e", unitDef.energyCost)
 	end
 end
 
