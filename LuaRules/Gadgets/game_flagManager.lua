@@ -22,6 +22,7 @@ local GetGroundInfo				= Spring.GetGroundInfo
 local GetUnitHeading			= Spring.GetUnitHeading
 local GetUnitPosition			= Spring.GetUnitPosition
 local GetUnitsInCylinder		= Spring.GetUnitsInCylinder
+local GetUnitRulesParam			= Spring.GetUnitRulesParam
 local GetUnitTeam				= Spring.GetUnitTeam
 local GetTeamInfo 				= Spring.GetTeamInfo
 local GetTeamRulesParam			= Spring.GetTeamRulesParam
@@ -370,7 +371,7 @@ local function FlagCapChange(flagID, flagTeamID, allyTeamID, teamID, change)
 		GG.PlaySoundForTeam(flagTeamID, "bb_beacon_secured", 1)
 		SetUnitRulesParam(flagID, "secure", 1, {public = true})
 		flagCapStatuses[flagID][allyTeamID].cap = 0
-	elseif flagCapStatuses[flagID][allyTeamID].cap < 2 then -- first cap step, mark as insecure
+	elseif tonumber(GetUnitRulesParam(flagID, "secure") or 0) == 1 then -- first cap step, mark as insecure
 		SetUnitRulesParam(flagID, "secure", 0, {public = true})
 	elseif 	flagCapStatuses[flagID][allyTeamID].cap >= math.floor(0.25 * CAP_THRESHOLD) 
 		and flagCapStatuses[flagID][allyTeamID].cap <  math.floor(0.25 * CAP_THRESHOLD) + 1 then -- dropped to 75%, inform player
