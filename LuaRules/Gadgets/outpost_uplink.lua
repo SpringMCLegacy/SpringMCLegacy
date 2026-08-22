@@ -148,7 +148,7 @@ end
 
 function gadget:UnitGiven(unitID, unitDefID, newTeam, oldTeam)
 	if unitDefID == UPLINK_ID then
-		artyCanFire[newTeam] = artyCanFire[newTeam] or GetGameFrame()
+		artyCanFire[newTeam] = artyCanFire[oldTeam] or GetGameFrame()
 		SetTeamRulesParam(newTeam, "UPLINK_ARTILLERY", artyCanFire[newTeam])
 	end
 end
