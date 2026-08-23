@@ -229,9 +229,28 @@ function gadget:UnitGiven(unitID, unitDefID, teamID, oldTeamID)
 	end
 end
 
+
+local transferring = {} -- turretID = bool
+
 function gadget:AllowUnitTransfer(unitID, unitDefID, oldTeam, newTeam, capture)
-	if turretDefIDs[unitDefID] then
-		return oldTeam == GAIA_TEAM_ID or newTeam == GAIA_TEAM_ID -- TODO: we do want to transfer them with their TC though...
+	if unitDefID == TURRETCONTROL_ID then
+		for turretID, tcID in pairs(turretOwners) do -- lol, loop over all turrets
+			if tcID == unitID then
+				transferring[turretID] = true
+				Spring.TransferUnit(turretID, newTeam)
+			end
+		end
+		return true
+	elseif turretDefIDs[unitDefID] then
+		if transferring[unitID] then
+			transferring[unitID] = false
+			return true
+		end
+		-- not being player transferred with TC, check for lost link
+		local linkState = GetUnitRulesParam(unitID, "LOST_LINK")
+		local lostLink = linkState == 1 and newTeam == GAIA_TEAM_ID
+		local regainLink = linkState == 0 and oldTeam == GAIA_TEAM_ID
+		return lostLink or regainLink
 	end
 	return true
 end
