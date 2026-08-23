@@ -373,6 +373,9 @@ end
 function gadget:UnitGiven(unitID, unitDefID, newTeam, oldTeam)
 	if mechBays[unitID] then
 		ShowModsByType(unitID, "none", nil)	
+	elseif supportCosts[unitDefID] then
+		ChangeSupportLance(newTeam, unitID, 1)
+		ChangeSupportLance(oldTeam, unitID, -1)
 	end
 end
 

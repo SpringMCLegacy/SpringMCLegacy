@@ -356,6 +356,9 @@ end
 function gadget:UnitGiven(unitID, unitDefID, newTeam, oldTeam)
 	if yardLevels[unitID] then
 		yardTeams[unitID] = newTeam
+	elseif supportCosts[unitDefID] then
+		ChangeSupportLance(newTeam, unitID, 1)
+		ChangeSupportLance(oldTeam, unitID, -1)
 	end
 end
 
