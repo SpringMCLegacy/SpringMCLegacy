@@ -241,9 +241,6 @@ function gadget:UnitDestroyed(unitID, unitDefID, teamID, attackerID, attackerDef
 end
 
 function gadget:UnitGiven(unitID, unitDefID, newTeam, oldTeam)
-	if GG.mechCache[unitDefID] then
-		UpdateTeamSlots(oldTeam, unitID, unitDefID, false)
-	end
 	if newTeam ~= GAIA_TEAM_ID then
 		gadget:UnitCreated(unitID, unitDefID, newTeam)
 		gadget:UnitDestroyed(unitID, unitDefID, oldTeam)

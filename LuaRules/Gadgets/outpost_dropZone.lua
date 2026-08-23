@@ -635,6 +635,9 @@ function gadget:UnitGiven(unitID, unitDefID, newTeam, oldTeam)
 		gadget:UnitDestroyed(unitID, unitDefID, oldTeam)
 		if newTeam ~= GAIA_TEAM_ID then
 			gadget:UnitCreated(unitID, unitDefID, newTeam)
+			if mechCache[unitDefID] then -- take tonnage, as usually done on purchase, not Created
+				UseTeamResource(newTeam, "energy", UnitDefs[unitDefID].energyCost)
+			end
 		end
 	end
 end
