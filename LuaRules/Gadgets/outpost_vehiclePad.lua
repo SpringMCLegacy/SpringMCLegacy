@@ -425,8 +425,9 @@ end
 
 function gadget:UnitGiven(unitID, unitDefID, newTeam, oldTeam)
 	if SPAWN_DEF_IDS[unitDefID] then
-		GG.Delay.DelayCall(Deliver, {unitID, newTeam}, delays[padLevels[unitID]] * (teamSideMults[teamID] or 1) + math.floor(math.random(10) * 30))
+		GG.Delay.DelayCall(Deliver, {unitID, newTeam}, delays[padLevels[unitID]] * (teamSideMults[newTeam] or 1) + math.floor(math.random(10) * 30))
 		spawnPads[unitID] = GetGameFrame()
+		vehiclePadSides[unitID] = GG.teamSide[newTeam]
 	end
 end
 
