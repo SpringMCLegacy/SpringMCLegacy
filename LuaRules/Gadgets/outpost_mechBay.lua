@@ -369,6 +369,13 @@ function gadget:UnitUnloaded(unitID, unitDefID, unitTeam, transportID, transport
 	end
 end
 
+
+function gadget:UnitGiven(unitID, unitDefID, newTeam, oldTeam)
+	if mechBays[unitID] then
+		ShowModsByType(unitID, "none", nil)	
+	end
+end
+
 function gadget:AllowCommand(unitID, unitDefID, teamID, cmdID, cmdParams, cmdOptions)
 	if unitDefID == MECHBAY_ID then
 		if cmdID == getOutCmdDesc.id then

@@ -353,6 +353,12 @@ function gadget:UnitDestroyed(unitID, unitDefID, teamID)
 	end
 end
 
+function gadget:UnitGiven(unitID, unitDefID, newTeam, oldTeam)
+	if yardLevels[unitID] then
+		yardTeams[unitID] = newTeam
+	end
+end
+
 function gadget:FeatureCreated(featureID, allyTeamID)
 	local fdID = GetFeatureDefID(featureID)
 	local fd = FeatureDefs[fdID]
