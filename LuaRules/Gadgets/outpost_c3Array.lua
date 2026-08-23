@@ -246,7 +246,9 @@ function gadget:UnitGiven(unitID, unitDefID, newTeam, oldTeam)
 	end
 	if newTeam ~= GAIA_TEAM_ID then
 		gadget:UnitCreated(unitID, unitDefID, newTeam)
+		gadget:UnitDestroyed(unitID, unitDefID, oldTeam)
 		if unitDefID == C3_ID then
+			-- need to call this as usually it is on deploy, not Created
 			LanceControl(newTeam, unitID, true)
 		end
 	end
