@@ -447,7 +447,7 @@ function gadget:UnitCreated(unitID, unitDefID, unitTeam)
   local t = spGetGameSeconds()
   lastJump[unitID] = t - BASE_RELOAD
   unitJumpInstant[unitID] = false
-  unitJumpDelays[unitID] = 40
+  unitJumpDelays[unitID] = 20
   unitDFADamages[unitID] = 1
 
   spSetUnitRulesParam(unitID,"jump_reload_bar",100)
