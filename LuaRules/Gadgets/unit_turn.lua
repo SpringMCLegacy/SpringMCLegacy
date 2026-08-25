@@ -2,7 +2,7 @@ function gadget:GetInfo()
 	return {
 		name      = "Unit - Turn Command",
 		desc      = "Implements Turn command for vehicles",
-		author    = "FLOZi, yuritch", -- yuritch is magical
+		author    = "FLOZi, yuritch, zvero + ChatGPT", -- yuritch is magical
 		date      = "5/02/10",
 		license   = "PD",
 		layer     = -5,
@@ -33,17 +33,29 @@ local DelayCall = GG.Delay.DelayCall
 local unitTurnRates = {} -- unitID = turnRate
 
 local function SetUnitTurnRate(unitID, mult)
+	if not unitTurnRates[unitID] or not mult then
+		return false
+	end
 	unitTurnRates[unitID] = unitTurnRates[unitID] * mult
+	return true
 end
 GG.SetUnitTurnRate = SetUnitTurnRate
+
+-- Expose the already-modified chassis turn rate for systems such as direct control.
+local function GetUnitTurnRate(unitID)
+	return unitTurnRates[unitID]
+end
+GG.GetUnitTurnRate = GetUnitTurnRate
 
 local function StartTurn(unitID, unitDefID, tx, tz)
 	local ud = UnitDefs[unitDefID]
 	local turnRate = unitTurnRates[unitID]
+	if not turnRate or turnRate == 0 then
+		return false
+	end
 	local ux, uy, uz = GetUnitPosition(unitID)
 	local dx, dz = tx - ux, tz - uz
-
-	local newHeading = math.deg(math.atan2(dx, dz)) * COB_ANGULAR	
+	local newHeading = math.deg(math.atan2(dx, dz)) * COB_ANGULAR 
 	local currHeading = GetUnitCOBValue(unitID, COB.HEADING)
 	local deltaHeading = newHeading - currHeading
 	if math.abs(deltaHeading) < MINIMUM_TURN then return false end -- turn command was too small
@@ -79,7 +91,7 @@ end
 
 
 local function StopTurn(unitID)
-	if turning[unitID].numFrames then -- only attempt to stop if we are actually turning
+	if turning[unitID] and turning[unitID].numFrames then -- only attempt to stop if we are actually turning
 		turning[unitID] = {} -- not nil here or gets started again by CommandFallback
 		env = Spring.UnitScript.GetScriptEnv(unitID)
 		if env and env.StopTurn then
@@ -105,6 +117,8 @@ function gadget:GameFrame(n)
 			end
 		else
 			turning[unitID] = nil
+			GG.turning[unitID] = nil
+			unitTurnRates[unitID] = nil
 		end
 	end
 end
@@ -118,6 +132,8 @@ end
 
 function gadget:UnitDestroyed(unitID)
 	turning[unitID] = nil
+	GG.turning[unitID] = nil
+	unitTurnRates[unitID] = nil
 end
 
 local CMD_JUMP = GG.CustomCommands.GetCmdID("CMD_JUMP")
@@ -162,6 +178,22 @@ end
 function gadget:Initialize()
 	Spring.AssignMouseCursor("turn", "cursorturn")
 	Spring.SetCustomCommandDrawData(CMD_TURN, "turn", {0,1,0,.8})
+	-- Preserve turn-rate availability across /luarules reloads.
+	for _,unitID in ipairs(Spring.GetAllUnits()) do
+		local unitDefID = Spring.GetUnitDefID(unitID)
+		if unitDefID then
+			gadget:UnitCreated(unitID, unitDefID, Spring.GetUnitTeam(unitID))
+		end
+	end
+end
+
+function gadget:Shutdown()
+	if GG.GetUnitTurnRate == GetUnitTurnRate then
+		GG.GetUnitTurnRate = nil
+	end
+	if GG.SetUnitTurnRate == SetUnitTurnRate then
+		GG.SetUnitTurnRate = nil
+	end
 end
 
 else
