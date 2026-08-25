@@ -1,9 +1,10 @@
+-- Direct-control integration revision 2
 function widget:GetInfo()
   return {
     name      = "MC:L - Minimum Ranges",
-    desc      = "Draws minimum range rings",
+    desc      = "Draws weapon range rings with zoom-scaled labels for attack targeting and direct control",
     author    = "FLOZi (C. Lawrence)",
-    date      = "28/07/2013",
+    date      = "28/07/2013; direct-control/zoom integration 2026",
     license   = "GNU GPL v2",
     layer     = 10000,
     enabled   = true,
@@ -23,6 +24,19 @@ local GetUnitDefID			= Spring.GetUnitDefID
 -- UnsyncedRead
 local GetActiveCommand		= Spring.GetActiveCommand
 local GetSelectedUnits		= Spring.GetSelectedUnits
+local GetCameraPosition		= Spring.GetCameraPosition
+
+local sqrt = math.sqrt
+local min = math.min
+local max = math.max
+
+-- Range labels are world-space billboard text. A fixed world size grows huge on
+-- screen as the camera zooms in, so scale the world size with camera distance.
+-- This is camera-agnostic: stock cameras and Shooter Control use the same rule.
+local RANGE_LABEL_BASE_SIZE = 20
+local RANGE_LABEL_REFERENCE_DISTANCE = 1600
+local RANGE_LABEL_MIN_SIZE = 3
+local RANGE_LABEL_MAX_SIZE = 22
 
 local AttackRed = {1.0, 0.2, 0.2, 0.7}
 --local BuildGreen = {0.3, 1.0, 0.3, 0.5} -- doesn't match engine for some reason so make less opaque
@@ -88,21 +102,98 @@ function widget:Initialize()
 	btFont = gl.LoadFont("LuaUI/Fonts/bt_oldstyle.ttf", 24, 2, 30)
 end
 
+local function IsDirectControlledUnit(unitID)
+	local shooter =
+		WG
+		and WG.MCLShooterControl
+
+	if
+		not shooter
+		or not shooter.IsControlledUnit
+	then
+		return false
+	end
+
+	local ok, result =
+		pcall(
+			shooter.IsControlledUnit,
+			unitID
+		)
+
+	return
+		ok
+		and result == true
+end
+
+local function ShouldDrawWeaponRanges(unitID)
+	if
+		select(
+			2,
+			GetActiveCommand()
+		) == CMD.ATTACK
+	then
+		return true
+	end
+
+	return
+		IsDirectControlledUnit(
+			unitID
+		)
+end
+
+local function GetRangeLabelSize(x, y, z)
+	if not GetCameraPosition then
+		return RANGE_LABEL_BASE_SIZE
+	end
+
+	local cx, cy, cz =
+		GetCameraPosition()
+
+	if not cx then
+		return RANGE_LABEL_BASE_SIZE
+	end
+
+	local dx = x - cx
+	local dy = y - cy
+	local dz = z - cz
+
+	local distance =
+		sqrt(
+			dx * dx +
+			dy * dy +
+			dz * dz
+		)
+
+	local size =
+		RANGE_LABEL_BASE_SIZE *
+		(distance / RANGE_LABEL_REFERENCE_DISTANCE)
+
+	return
+		max(
+			RANGE_LABEL_MIN_SIZE,
+			min(
+				RANGE_LABEL_MAX_SIZE,
+				size
+			)
+		)
+end
+
 function widget:DrawWorldPreUnit()
 	for _,unitID in ipairs(GetSelectedUnits()) do
 		local unitDefID = GetUnitDefID(unitID)
-		if select(2, GetActiveCommand()) == CMD.ATTACK then
+		if ShouldDrawWeaponRanges(unitID) then
 			glColor(AttackRed)
 			local minRangesU = minRangesToDraw[unitDefID]
 			local maxRangesU = maxRangesToDraw[unitDefID]
 			local x, y, z = GetUnitPosition(unitID)
+			local labelSize = GetRangeLabelSize(x, y + 40, z)
 			if maxRangesU then
 				for radius, info in pairs(maxRangesU) do
 					gl.PushMatrix()
 						glDrawGroundCircle(x,y,z, radius,24)
 						glTranslate(x, y + 40, z + radius + 40)
 						glBillboard()
-						btFont:Print(info, 0, 0, 24, "oc")
+						btFont:Print(info, 0, 0, labelSize, "oc")
 					gl.PopMatrix()
 				end
 			end
@@ -113,7 +204,7 @@ function widget:DrawWorldPreUnit()
 						glDrawGroundCircle(x,y,z, radius,24)
 						glTranslate(x, y + 40, z + radius - 40)
 						glBillboard()
-						btFont:Print(info, 0, 0, 24, "oc")
+						btFont:Print(info, 0, 0, labelSize, "oc")
 						gl.LineStipple(false)
 					gl.PopMatrix()
 				end
