@@ -1,4 +1,4 @@
--- Minimum-range hazard-band revision 13
+-- Range-ring colour controls revision 15
 function widget:GetInfo()
   return {
     name      = "MC:L - Minimum Ranges",
@@ -56,6 +56,13 @@ local LuaShader = gl.LuaShader
 -- their approximate world-space pitch, and MIN_RANGE_HAZARD_FILL controls the
 -- stripe/gap duty cycle (0.5 = equal stripe and gap).
 -- Ring and band alpha are automatically reduced as the camera zooms farther out.
+-- These RGB controls apply to the full range treatment: crisp ring, diffusion,
+-- hex overlay, and (for minimum ranges) hazard stripes. Alpha remains controlled
+-- separately by the existing opacity settings below.
+local MAX_RANGE_RING_RGB = {1.00, 0.20, 0.20}
+local MIN_RANGE_RING_RGB = {1.00, 0.82, 0.12}
+local SALVAGE_RANGE_RING_RGB = {0.77647, 0.88627, 1.00}
+
 local RING_THICKNESS = 1.5
 local RING_ALPHA = 0.70
 local BAND_THICKNESS = 80
@@ -710,10 +717,10 @@ local RANGE_LABEL_BASE_SIZE = 20
 local RANGE_LABEL_REFERENCE_DISTANCE = 1600
 local RANGE_LABEL_MIN_SIZE = 9
 local RANGE_LABEL_MAX_SIZE = 28
+local RANGE_LABEL_ALPHA = 0.50
 
-local AttackRed = {1.0, 0.2, 0.2, 0.7}
+-- Ring RGB is configured above; text keeps its existing per-weapon colour data.
 --local BuildGreen = {0.3, 1.0, 0.3, 0.5} -- doesn't match engine for some reason so make less opaque
-local SalvageBlue = {0.77647, 0.88627, 1, 0.5}
 
 local minRanges = {} -- minRange[unitDefID] = {weapName = range, ...}
 local maxRanges = {}
@@ -963,27 +970,29 @@ function widget:DrawWorldPreUnit()
 	for _,unitID in ipairs(GetSelectedUnits()) do
 		local unitDefID = GetUnitDefID(unitID)
 		if ShouldDrawWeaponRanges(unitID) then
-			glColor(AttackRed)
+			glColor(MAX_RANGE_RING_RGB)
 			local maxRangesU, minRangesU = BuildActiveWeaponRanges(unitID, unitDefID)
 			local x, y, z = GetUnitPosition(unitID)
 			local labelSize = GetRangeLabelSize(x, y + 40, z)
 			local ringHalfWidth = GetRangeRingHalfWidth(x, y, z)
 			if maxRangesU then
 				for radius, info in pairs(maxRangesU) do
-					DrawRangeRing(x, y, z, radius, AttackRed, false, ringHalfWidth)
+					DrawRangeRing(x, y, z, radius, MAX_RANGE_RING_RGB, false, ringHalfWidth)
 					gl.PushMatrix()
 						glTranslate(x, y + 40, z + radius + 40)
 						glBillboard()
+						glColor(1, 1, 1, RANGE_LABEL_ALPHA)
 						btFont:Print(info, 0, 0, labelSize, "oc")
 					gl.PopMatrix()
 				end
 			end
 			if minRangesU then
 				for radius, info in pairs(minRangesU) do
-					DrawRangeRing(x, y, z, radius, AttackRed, true, ringHalfWidth)
+					DrawRangeRing(x, y, z, radius, MIN_RANGE_RING_RGB, true, ringHalfWidth)
 					gl.PushMatrix()
 						glTranslate(x, y + 40, z + radius - 40)
 						glBillboard()
+						glColor(1, 1, 1, RANGE_LABEL_ALPHA)
 						btFont:Print(info, 0, 0, labelSize, "oc")
 					gl.PopMatrix()
 				end
@@ -992,9 +1001,9 @@ function widget:DrawWorldPreUnit()
 			rangesToDraw = salvageRanges[unitDefID]
 			if rangesToDraw then
 				local x, y, z = GetUnitPosition(unitID)
-				glColor(SalvageBlue)
+				glColor(SALVAGE_RANGE_RING_RGB)
 				local ringHalfWidth = GetRangeRingHalfWidth(x, y, z)
-				DrawRangeRing(x, y, z, rangesToDraw, SalvageBlue, false, ringHalfWidth)
+				DrawRangeRing(x, y, z, rangesToDraw, SALVAGE_RANGE_RING_RGB, false, ringHalfWidth)
 			end
 		end
 		glColor(1,1,1,1)
