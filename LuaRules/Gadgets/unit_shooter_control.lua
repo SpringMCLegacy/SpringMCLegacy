@@ -2,7 +2,7 @@
 --------------------------------------------------------------------------------
 --
 --  MCL Isometric Shooter Control
---  Revision 44 - Native Command Whitelist and Weapon Groups
+--  Revision 46 - Per-Weapon Maximum-Range Aim Clamping
 --
 --  SYNCED GADGET
 --
@@ -43,6 +43,12 @@
 --
 --  r22:
 --      Direct pointer aim mirrors Mech.lua's weapon-piece routing.
+--
+--  r46:
+--      * ordinary positional fire clamps beyond-range aim back along the same
+--        aim ray to each weapon's own live maximum range
+--      * visible aim remains unchanged and genuine UNIT targets stay native
+--      * protocol remains SHOOTER45 because LuaUI is unchanged
 --
 --  r45:
 --      * protocol/revision synchronized with gui_shooter_control_r45.lua
@@ -205,9 +211,9 @@
 
 function gadget:GetInfo()
 	return {
-		name      = "MCL Isometric Shooter Control r45",
-		desc      = "Mech-only direct control paired with native-command whitelist/weapon-group GUI, MCL minimum ranges, lock-required weapons, native guidance, full articulation and run/yaw",
-		author    = "SpringMCLegacy",
+		name      = "MCL Isometric Shooter Control r46",
+		desc      = "Mech-only direct control with per-weapon maximum-range aim clamping, native-command whitelist/weapon groups, MCL minimum ranges and native guidance",
+		author    = "zvero + ChatGPT",
 		date      = "2026",
 		license   = "GPLv2 or later",
 		-- r33 must see newly created LRM projectiles before game_weapons.lua
@@ -1994,8 +2000,33 @@ local function ShouldUseNativeUnitTarget(controller, aimDef)
 end
 
 --------------------------------------------------------------------------------
--- Shooter positional minimum range + PPC Inhibitor bridge
+-- Shooter positional range helpers + PPC Inhibitor bridge
 --------------------------------------------------------------------------------
+
+local function GetShooterWeaponMaxRange(controller, aimDef, weaponID)
+    local range
+
+    if spGetUnitWeaponState then
+        range = tonumber(spGetUnitWeaponState(controller.unitID, weaponID, "range"))
+    end
+
+    if range and range > 0 then
+        return range
+    end
+
+    local weaponDef =
+        aimDef
+        and aimDef.weaponDefID
+        and WeaponDefs[aimDef.weaponDefID]
+
+    range = weaponDef and tonumber(weaponDef.range)
+
+    if range and range > 0 then
+        return range
+    end
+
+    return nil
+end
 
 local function IsInsideShooterMinRange(controller, aimDef)
     local minRange =
@@ -2554,6 +2585,39 @@ local function ApplyFireTargets(controller)
                         targetZ =
                             controller.fireOriginZ +
                             controller.fireDirZ * projectedDistance
+                    end
+
+                    -----------------------------------------------------------------
+                    -- r46: positional maximum-range forgiveness. The reticle stays
+                    -- where the player aimed; only this weapon's hidden engine target
+                    -- is pulled back along the exact same ray. Real UNIT targets use
+                    -- the native branch above and are never clamped here.
+                    -----------------------------------------------------------------
+
+                    local weaponRange =
+                        GetShooterWeaponMaxRange(
+                            controller,
+                            aimDef,
+                            weaponID
+                        )
+
+                    if
+                        weaponRange
+                        and rawDistance > weaponRange
+                        and controller.fireOriginX
+                        and controller.fireDirX
+                    then
+                        targetX =
+                            controller.fireOriginX +
+                            controller.fireDirX * weaponRange
+
+                        targetY =
+                            controller.fireOriginY +
+                            controller.fireDirY * weaponRange
+
+                        targetZ =
+                            controller.fireOriginZ +
+                            controller.fireDirZ * weaponRange
                     end
 
                     spSetUnitTarget(
