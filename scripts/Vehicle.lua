@@ -23,6 +23,7 @@ end
 include "smokeunit.lua"
 
 -- Info from lusHelper gadget
+numWeapons = info.numWeapons
 heatLimit = info.heatLimit
 baseCoolRate = info.coolRate
 local coolRate = baseCoolRate
@@ -750,7 +751,7 @@ function script.Deactivate()
 end
 
 local function WeaponCanFire(weaponID)
-	if playerDisabled[weaponID] then
+	if playerDisabled[weaponID] or weaponID == numWeapons + 1 then
 		return false
 	end
 	if mainTurretIDs[weaponID] and limbHPs["turret"] <= 0 then
@@ -956,6 +957,8 @@ end
 function script.QueryWeapon(weaponID) 
 	if missileWeaponIDs[weaponID] then
 		return launchPoints[weaponID][currPoints[weaponID]]
+	elseif weaponID == numWeapons + 1 then -- Sight
+		return 1 --cockpit
 	else
 		return flares[weaponID] or turret or piece("bomb")
 	end

@@ -23,6 +23,7 @@ end
 
 local roleSensors = {
 	["hturret"]			= {radar = 1000,	sector = 15},
+	["aero"]			= {radar = 1000,	sector = 25},
 	["scout"] 			= {radar = 1500,	sector = 80},
 	["ewar"] 			= {radar = 1500,	sector = 80},
 	["skirmisher"] 		= {radar = 1500,	sector = 65},
@@ -358,6 +359,11 @@ for name, ud in pairs(UnitDefs) do
 			ud.radardistance = roleSensors["hturret"].radar * modOptions.radar
 			ud.airsightdistance = ud.radardistance
 			cp.sectorangle = (cp.sectorangle or roleSensors["hturret"].sector) * modOptions.sectorangle
+		elseif cp.baseclass == "aero" then
+			table.insert(ud.weapons, {name = "sight"})
+			ud.radardistance = roleSensors["aero"].radar * modOptions.radar
+			ud.airsightdistance = ud.radardistance
+			cp.sectorangle = (cp.sectorangle or roleSensors["aero"].sector) * modOptions.sectorangle
 		else -- everything but mechs
 			ud.seismicsignature = 0
 			ud.airsightdistance = ud.airsightdistance or ud.radardistance or ud.sightdistance
