@@ -1,12 +1,12 @@
--- Range-ring colour controls revision 15
+-- Tactical rings revision 19
 function widget:GetInfo()
   return {
     name      = "MC:L - Minimum Ranges",
-    desc      = "Draws active-weapon range rings with directional diffusion, hex and minimum-range hazard bands",
+    desc      = "Draws weapon/salvage ranges plus selected-unit sight-sector AR and merged radar coverage",
     author    = "FLOZi (C. Lawrence) + zvero + ChatGPT",
     date      = "28/07/2013; direct-control/zoom/GL4 diffusion integration 2026",
     license   = "GNU GPL v2",
-    layer     = 10000,
+    layer     = 0,
     enabled   = true,
   }
 end
@@ -20,7 +20,6 @@ local glDrawGroundCircle 	= gl.DrawGroundCircle
 local glTranslate			= gl.Translate
 local glBeginEnd			= gl.BeginEnd
 local glVertex				= gl.Vertex
-local glTexCoord			= gl.TexCoord
 -- SyncedRead
 local GetUnitPosition 		= Spring.GetUnitPosition
 local GetUnitDefID			= Spring.GetUnitDefID
@@ -51,13 +50,13 @@ local LuaShader = gl.LuaShader
 -- MAX_BAND_ALPHA fades linearly to MIN_BAND_ALPHA across BAND_THICKNESS.
 -- MIN_RANGE_DASH_FILL controls the dashed minimum-range ring duty cycle:
 -- 1.0 = solid ring, 0.5 = equal dash/gap, 0.0 = no ring.
--- Minimum-range bands use diagonal hazard stripes instead of the hex overlay.
+-- Minimum-range bands use diagonal hazard stripes.
 -- MIN_RANGE_HAZARD_ALPHA controls stripe opacity, MIN_RANGE_HAZARD_SIZE controls
 -- their approximate world-space pitch, and MIN_RANGE_HAZARD_FILL controls the
 -- stripe/gap duty cycle (0.5 = equal stripe and gap).
 -- Ring and band alpha are automatically reduced as the camera zooms farther out.
 -- These RGB controls apply to the full range treatment: crisp ring, diffusion,
--- hex overlay, and (for minimum ranges) hazard stripes. Alpha remains controlled
+-- and (for minimum ranges) hazard stripes. Alpha remains controlled
 -- separately by the existing opacity settings below.
 local MAX_RANGE_RING_RGB = {1.00, 0.20, 0.20}
 local MIN_RANGE_RING_RGB = {1.00, 0.82, 0.12}
@@ -69,8 +68,6 @@ local BAND_THICKNESS = 80
 local MAX_BAND_ALPHA = 0.15
 local MIN_BAND_ALPHA = 0.00
 local MIN_RANGE_DASH_FILL = 0.50
-local HEX_PATTERN_ALPHA = 0.30
-local HEX_PATTERN_SIZE = 160
 local MIN_RANGE_HAZARD_ALPHA = 0.45
 local MIN_RANGE_HAZARD_SIZE = 48
 local MIN_RANGE_HAZARD_FILL = 0.50
@@ -78,10 +75,8 @@ local MIN_RANGE_HAZARD_FILL = 0.50
 -- Renderer internals
 local RING_SEGMENTS = 384
 local RING_HEIGHT_OFFSET = 4
-local RING_HEX_WORLD_SCALE = 1 / 256
 local LEGACY_RING_SEGMENTS = 96
 local LEGACY_DIFFUSE_STEPS = 48
-local LEGACY_HEX_SEGMENTS = 192
 local LEGACY_DASH_STIPPLE_FACTOR = 4
 local GL4_HALF_WIDTH_PER_LEGACY_PIXEL = 3.6666666667
 local VISIBILITY_REFERENCE_DISTANCE = 1800
@@ -95,7 +90,62 @@ local ringGL4Ready = false
 local diffusionGL4Ready = false
 local ringUniforms = {}
 local diffusionUniforms = {}
-local ringHexTexture = (VFS and VFS.FileExists and VFS.FileExists("bitmaps/maphex.png")) and "bitmaps/maphex.png" or false
+
+-- Tactical AR/sensor presentation moved here from gui_mcl_fow.lua. These
+-- settings are visual only and never contribute to FOW, LOS or detection state.
+-- Keep them grouped in one table to avoid unnecessary Lua top-level locals.
+local TACTICAL_STYLE = {
+	drawSector = true,
+	drawRadar = true,
+
+	sightRadius = tonumber((Spring.GetModOptions() or {}).mechsight) or 400,
+	sectorFallback = tonumber((Spring.GetModOptions() or {}).sectorrange) or 1000,
+	sectorInset = 50,
+	groundLift = 3.0,
+
+	zoomFadeStart = 1800,
+	zoomFadeReference = 3600,
+	zoomFadeMin = 0.22,
+
+	sector = {
+		color = {0.75, 0.75, 0.75},
+		sightColor = {0.75, 0.75, 0.75},
+		sightRingAlpha = 0.68,
+		edgeAlpha = 0.72,
+		outerArcAlpha = 0.76,
+		centerlineAlpha = 0.18,
+		guideArcAlpha = 0.13,
+		glowAlpha = 0.18,
+		glowWidth = 10,
+		coreLineWidth = 1.7,
+		glowLineWidth = 4.5,
+		fullCircleSegments = 128,
+		arcSegments = 64,
+		sideLineSegments = 24,
+		drawCenterline = true,
+		drawGuideArc = true,
+		drawTargetingRails = true,
+		targetingRailAlpha = 0.16,
+		targetingRailWidth = 1.0,
+		targetingRailOffsetDegrees = 2.25,
+	},
+
+	radar = {
+		color = {0.18, 0.92, 0.28},
+		ringAlpha = 0.70,
+		ringWidth = 1.7,
+		glowAlpha = 0.16,
+		diffuseWidth = 90,
+		diffuseEdgeAlpha = 0.16,
+		diffuseInnerAlpha = 0.00,
+		ringSegments = 128,
+		radialSteps = 6,
+	},
+
+	unitDefInfos = {},
+	cockpitPieceCache = {},
+}
+
 
 local RING_VERTEX_SHADER = [[
 #version 420
@@ -175,14 +225,9 @@ local DIFFUSION_FRAGMENT_SHADER = [[
 #version 420
 
 in float vRingEdge;
-in vec2 vWorldXZ;
 
 uniform vec4 diffusionColor;
-uniform sampler2D hexTex;
 uniform float minBandAlpha;
-uniform float hexScale;
-uniform float hexPatternAlpha;
-uniform int useHexTex;
 uniform int outwardBand;
 
 out vec4 fragColor;
@@ -196,26 +241,8 @@ void main()
         ? clamp((1.0 - vRingEdge) * 0.5, 0.0, 1.0)
         : clamp((vRingEdge + 1.0) * 0.5, 0.0, 1.0);
 
-    float hexLine = 0.0;
-    if (useHexTex != 0) {
-        // fract() guarantees world-space tiling even if the source bitmap was
-        // loaded with clamped sampler state.
-        vec2 hexUV = fract(vWorldXZ * hexScale);
-        vec3 hexRGB = texture(hexTex, hexUV).rgb;
-        float hexLuma = dot(hexRGB, vec3(0.299, 0.587, 0.114));
-        hexLine = smoothstep(0.55, 0.90, hexLuma);
-    }
-
     float diffusionAlpha = mix(minBandAlpha, diffusionColor.a, boundaryBlend);
-    float hexAlpha = hexLine * hexPatternAlpha * boundaryBlend;
-
-    // Diffusion and hex opacity are independent. HEX_PATTERN_ALPHA = 1.0 can
-    // therefore make the hex-line pixels fully opaque at the range boundary
-    // even when MAX_BAND_ALPHA is much lower.
-    vec3 color = diffusionColor.rgb * (0.62 + 0.38 * hexLine);
-    float alpha = max(diffusionAlpha, hexAlpha);
-
-    fragColor = vec4(color, alpha);
+    fragColor = vec4(diffusionColor.rgb, diffusionAlpha);
 }
 ]]
 
@@ -322,8 +349,6 @@ local function InitializeGL4RingRenderer()
             fragment = DIFFUSION_FRAGMENT_SHADER,
             uniformInt = {
                 heightmapTex = 0,
-                hexTex = 1,
-                useHexTex = 0,
                 outwardBand = 0,
             },
             uniformFloat = {
@@ -333,8 +358,6 @@ local function InitializeGL4RingRenderer()
                 ringHeightOffset = RING_HEIGHT_OFFSET,
                 diffusionColor = {1, 1, 1, MAX_BAND_ALPHA},
                 minBandAlpha = MIN_BAND_ALPHA,
-                hexScale = RING_HEX_WORLD_SCALE,
-                hexPatternAlpha = HEX_PATTERN_ALPHA,
             },
         },
         "MCL Range Ring Diffusion GL4"
@@ -348,9 +371,6 @@ local function InitializeGL4RingRenderer()
         diffusionUniforms.ringHeightOffset = gl.GetUniformLocation(diffusionShaderObj, "ringHeightOffset")
         diffusionUniforms.diffusionColor = gl.GetUniformLocation(diffusionShaderObj, "diffusionColor")
         diffusionUniforms.minBandAlpha = gl.GetUniformLocation(diffusionShaderObj, "minBandAlpha")
-        diffusionUniforms.hexScale = gl.GetUniformLocation(diffusionShaderObj, "hexScale")
-        diffusionUniforms.hexPatternAlpha = gl.GetUniformLocation(diffusionShaderObj, "hexPatternAlpha")
-        diffusionUniforms.useHexTex = gl.GetUniformLocation(diffusionShaderObj, "useHexTex")
         diffusionUniforms.outwardBand = gl.GetUniformLocation(diffusionShaderObj, "outwardBand")
 
         diffusionGL4Ready = true
@@ -427,88 +447,6 @@ local function DrawLegacyDiffusionBand(x, y, z, radius, color, alphaScale, outwa
     end
 
     gl.LineWidth(1)
-    glColor(1, 1, 1, 1)
-    gl.PopAttrib()
-end
-
-local function EmitLegacyHexBandVertex(worldX, worldZ, color, alpha)
-    local worldY = GetGroundHeight(worldX, worldZ) + RING_HEIGHT_OFFSET + 0.75
-    glColor(color[1], color[2], color[3], alpha)
-    glTexCoord(worldX / HEX_PATTERN_SIZE, worldZ / HEX_PATTERN_SIZE)
-    glVertex(worldX, worldY, worldZ)
-end
-
-local function DrawLegacyHexBandGeometry(x, z, outerRadius, innerRadius, color, outerAlpha, innerAlpha)
-    for i = 0, LEGACY_HEX_SEGMENTS do
-        local angle = (i / LEGACY_HEX_SEGMENTS) * (2 * pi)
-        local dx = cos(angle)
-        local dz = sin(angle)
-
-        EmitLegacyHexBandVertex(
-            x + dx * outerRadius,
-            z + dz * outerRadius,
-            color,
-            outerAlpha
-        )
-        EmitLegacyHexBandVertex(
-            x + dx * innerRadius,
-            z + dz * innerRadius,
-            color,
-            innerAlpha
-        )
-    end
-end
-
-local function DrawLegacyHexBand(x, y, z, radius, color, alphaScale, outwardBand)
-    if
-        not ringHexTexture
-        or not glBeginEnd
-        or not glVertex
-        or not glTexCoord
-        or not GetGroundHeight
-    then
-        return
-    end
-
-    local outerRadius
-    local innerRadius
-    local outerAlpha
-    local innerAlpha
-
-    if outwardBand then
-        outerRadius = radius + BAND_THICKNESS
-        innerRadius = radius
-        outerAlpha = 0.0
-        innerAlpha = HEX_PATTERN_ALPHA * alphaScale
-    else
-        outerRadius = radius
-        innerRadius = max(0, radius - BAND_THICKNESS)
-        if innerRadius >= radius then
-            return
-        end
-        outerAlpha = HEX_PATTERN_ALPHA * alphaScale
-        innerAlpha = 0.0
-    end
-
-    gl.PushAttrib(GL.ALL_ATTRIB_BITS)
-    gl.Culling(false)
-    gl.DepthTest(true)
-    gl.DepthMask(false)
-
-    -- Hex opacity is intentionally independent of the diffusion-band alpha.
-    -- HEX_PATTERN_ALPHA = 1.0 therefore supplies full source alpha at the ring
-    -- edge before the shared camera-distance visibility multiplier is applied.
-    -- Additive blending lets the white grid contribute while the dark cell
-    -- interiors add very little to the diffusion beneath it.
-    gl.Blending(GL.SRC_ALPHA, GL.ONE)
-    gl.Texture(ringHexTexture)
-    glBeginEnd(
-        GL.QUAD_STRIP,
-        DrawLegacyHexBandGeometry,
-        x, z, outerRadius, innerRadius, color, outerAlpha, innerAlpha
-    )
-    gl.Texture(false)
-
     glColor(1, 1, 1, 1)
     gl.PopAttrib()
 end
@@ -600,8 +538,6 @@ local function DrawGL4DiffusionBand(x, y, z, radius, color, alphaScale, outwardB
         DrawLegacyDiffusionBand(x, y, z, radius, color, alphaScale, outwardBand)
         if outwardBand then
             DrawLegacyHazardBand(x, y, z, radius, color, alphaScale)
-        else
-            DrawLegacyHexBand(x, y, z, radius, color, alphaScale, outwardBand)
         end
         return
     end
@@ -613,9 +549,6 @@ local function DrawGL4DiffusionBand(x, y, z, radius, color, alphaScale, outwardB
     end
 
     gl.Texture(0, "$heightmap")
-    if ringHexTexture then
-        gl.Texture(1, ringHexTexture)
-    end
 
     diffusionShader:Activate()
     gl.Uniform(diffusionUniforms.ringCenter, x, y, z)
@@ -624,16 +557,10 @@ local function DrawGL4DiffusionBand(x, y, z, radius, color, alphaScale, outwardB
     gl.Uniform(diffusionUniforms.ringHeightOffset, RING_HEIGHT_OFFSET)
     gl.Uniform(diffusionUniforms.diffusionColor, color[1], color[2], color[3], MAX_BAND_ALPHA * alphaScale)
     gl.Uniform(diffusionUniforms.minBandAlpha, MIN_BAND_ALPHA * alphaScale)
-    gl.Uniform(diffusionUniforms.hexScale, RING_HEX_WORLD_SCALE)
-    gl.Uniform(diffusionUniforms.hexPatternAlpha, outwardBand and 0 or (HEX_PATTERN_ALPHA * alphaScale))
-    gl.UniformInt(diffusionUniforms.useHexTex, (not outwardBand and ringHexTexture) and 1 or 0)
     gl.UniformInt(diffusionUniforms.outwardBand, outwardBand and 1 or 0)
     ringVAO:DrawArrays(GL.TRIANGLE_STRIP)
     diffusionShader:Deactivate()
 
-    if ringHexTexture then
-        gl.Texture(1, false)
-    end
     gl.Texture(0, false)
 
     if outwardBand then
@@ -680,8 +607,6 @@ local function DrawRangeRing(x, y, z, radius, color, dashed, halfWidth)
     DrawLegacyDiffusionBand(x, y, z, radius, color, alphaScale, dashed)
     if dashed then
         DrawLegacyHazardBand(x, y, z, radius, color, alphaScale)
-    else
-        DrawLegacyHexBand(x, y, z, radius, color, alphaScale, dashed)
     end
 
     glColor(color[1], color[2], color[3], RING_ALPHA * alphaScale)
@@ -792,7 +717,518 @@ local function BuildActiveWeaponRanges(unitID, unitDefID)
 	return maxToDraw, minToDraw
 end
 
+
+--------------------------------------------------------------------------------
+-- Tactical sight-sector / radar helpers
+--------------------------------------------------------------------------------
+
+function TACTICAL_STYLE.Clamp01(value)
+	if value <= 0 then
+		return 0
+	elseif value >= 1 then
+		return 1
+	end
+	return value
+end
+
+function TACTICAL_STYLE.GetUnitDefHalfAngle(unitDef)
+	local sectorAngle =
+		unitDef
+		and unitDef.customParams
+		and tonumber(unitDef.customParams.sectorangle)
+
+	if sectorAngle and sectorAngle > 0 then
+		return math.rad(sectorAngle * 0.5)
+	end
+	return nil
+end
+
+function TACTICAL_STYLE.ResolveCockpitPose(unitID, unitDefID)
+	local pieceID = TACTICAL_STYLE.cockpitPieceCache[unitDefID]
+
+	if pieceID == nil then
+		local pieceMap = Spring.GetUnitPieceMap and Spring.GetUnitPieceMap(unitID)
+		pieceID = pieceMap and pieceMap["cockpit"] or false
+		TACTICAL_STYLE.cockpitPieceCache[unitDefID] = pieceID
+	end
+
+	if pieceID and Spring.GetUnitPiecePosDir then
+		local x, y, z, dx, dy, dz = Spring.GetUnitPiecePosDir(unitID, pieceID)
+		if x and dx and dz then
+			return x, z, math.atan2(dx, dz)
+		end
+	end
+
+	local x, y, z = Spring.GetUnitPosition(unitID)
+	if not x then
+		return nil
+	end
+
+	local heading = (Spring.GetUnitHeading and Spring.GetUnitHeading(unitID)) or 0
+	return x, z, heading * ((2 * pi) / 65536)
+end
+
+function TACTICAL_STYLE.GetZoomAlphaScale(x, y, z)
+	local cx, cy, cz = Spring.GetCameraPosition()
+	if not cx then
+		return 1
+	end
+
+	local dx = x - cx
+	local dy = y - cy
+	local dz = z - cz
+	local distance = sqrt(dx * dx + dy * dy + dz * dz)
+
+	if distance <= TACTICAL_STYLE.zoomFadeStart then
+		return 1
+	end
+
+	local scale = TACTICAL_STYLE.zoomFadeReference / distance
+	return max(TACTICAL_STYLE.zoomFadeMin, min(1, scale))
+end
+
+function TACTICAL_STYLE.GroundVertex(cx, cz, angle, radius)
+	local x = cx + sin(angle) * radius
+	local z = cz + cos(angle) * radius
+	local y = GetGroundHeight(x, z) + TACTICAL_STYLE.groundLift
+	return x, y, z
+end
+
+function TACTICAL_STYLE.DrawArcLine(cx, cz, radius, startAngle, endAngle, segments, color, alpha, width)
+	gl.Color(color[1], color[2], color[3], alpha)
+	gl.LineWidth(width)
+	gl.BeginEnd(GL.LINE_STRIP, function()
+		for i = 0, segments do
+			local t = i / segments
+			local angle = startAngle + (endAngle - startAngle) * t
+			local x, y, z = TACTICAL_STYLE.GroundVertex(cx, cz, angle, radius)
+			gl.Vertex(x, y, z)
+		end
+	end)
+end
+
+function TACTICAL_STYLE.DrawRadialLine(cx, cz, angle, innerRadius, outerRadius, segments, color, alpha, width)
+	gl.Color(color[1], color[2], color[3], alpha)
+	gl.LineWidth(width)
+	gl.BeginEnd(GL.LINE_STRIP, function()
+		for i = 0, segments do
+			local t = i / segments
+			local radius = innerRadius + (outerRadius - innerRadius) * t
+			local x, y, z = TACTICAL_STYLE.GroundVertex(cx, cz, angle, radius)
+			gl.Vertex(x, y, z)
+		end
+	end)
+end
+
+function TACTICAL_STYLE.DrawArcGlow(cx, cz, radius, startAngle, endAngle, segments, color, alpha, glowWidth)
+	local innerRadius = max(0, radius - glowWidth)
+	local outerRadius = radius + glowWidth
+
+	gl.BeginEnd(GL.TRIANGLE_STRIP, function()
+		for i = 0, segments do
+			local t = i / segments
+			local angle = startAngle + (endAngle - startAngle) * t
+			local x1, y1, z1 = TACTICAL_STYLE.GroundVertex(cx, cz, angle, innerRadius)
+			local x2, y2, z2 = TACTICAL_STYLE.GroundVertex(cx, cz, angle, radius)
+
+			gl.Color(color[1], color[2], color[3], 0)
+			gl.Vertex(x1, y1, z1)
+			gl.Color(color[1], color[2], color[3], alpha)
+			gl.Vertex(x2, y2, z2)
+		end
+	end)
+
+	gl.BeginEnd(GL.TRIANGLE_STRIP, function()
+		for i = 0, segments do
+			local t = i / segments
+			local angle = startAngle + (endAngle - startAngle) * t
+			local x2, y2, z2 = TACTICAL_STYLE.GroundVertex(cx, cz, angle, radius)
+			local x3, y3, z3 = TACTICAL_STYLE.GroundVertex(cx, cz, angle, outerRadius)
+
+			gl.Color(color[1], color[2], color[3], alpha)
+			gl.Vertex(x2, y2, z2)
+			gl.Color(color[1], color[2], color[3], 0)
+			gl.Vertex(x3, y3, z3)
+		end
+	end)
+end
+
+function TACTICAL_STYLE.DrawSelectedSector(unitID, unitDefID, halfAngle, sectorRange)
+	local cx, cz, heading = TACTICAL_STYLE.ResolveCockpitPose(unitID, unitDefID)
+	if not cx then
+		return
+	end
+
+	local style = TACTICAL_STYLE.sector
+	local sightRadius = TACTICAL_STYLE.sightRadius
+	sectorRange = max(sightRadius + 1, sectorRange)
+
+	local unitY = GetGroundHeight(cx, cz)
+	local alphaScale = TACTICAL_STYLE.GetZoomAlphaScale(cx, unitY, cz)
+	local startAngle = heading - halfAngle
+	local endAngle = heading + halfAngle
+	local twoPi = 2 * pi
+
+	TACTICAL_STYLE.DrawArcGlow(cx, cz, sightRadius, 0, twoPi, style.fullCircleSegments, style.sightColor, style.glowAlpha * alphaScale, style.glowWidth)
+	TACTICAL_STYLE.DrawArcLine(cx, cz, sightRadius, 0, twoPi, style.fullCircleSegments, style.sightColor, style.sightRingAlpha * alphaScale, style.coreLineWidth)
+
+	TACTICAL_STYLE.DrawArcGlow(cx, cz, sectorRange, startAngle, endAngle, style.arcSegments, style.color, style.glowAlpha * alphaScale, style.glowWidth)
+	TACTICAL_STYLE.DrawArcLine(cx, cz, sectorRange, startAngle, endAngle, style.arcSegments, style.color, style.outerArcAlpha * alphaScale, style.coreLineWidth)
+
+	TACTICAL_STYLE.DrawRadialLine(cx, cz, startAngle, sightRadius, sectorRange, style.sideLineSegments, style.color, style.glowAlpha * alphaScale, style.glowLineWidth)
+	TACTICAL_STYLE.DrawRadialLine(cx, cz, endAngle, sightRadius, sectorRange, style.sideLineSegments, style.color, style.glowAlpha * alphaScale, style.glowLineWidth)
+	TACTICAL_STYLE.DrawRadialLine(cx, cz, startAngle, sightRadius, sectorRange, style.sideLineSegments, style.color, style.edgeAlpha * alphaScale, style.coreLineWidth)
+	TACTICAL_STYLE.DrawRadialLine(cx, cz, endAngle, sightRadius, sectorRange, style.sideLineSegments, style.color, style.edgeAlpha * alphaScale, style.coreLineWidth)
+
+	if style.drawTargetingRails then
+		local railOffset = math.rad(style.targetingRailOffsetDegrees)
+		TACTICAL_STYLE.DrawRadialLine(cx, cz, startAngle, 0, sectorRange, style.sideLineSegments, style.color, style.targetingRailAlpha * 0.90 * alphaScale, style.targetingRailWidth)
+		TACTICAL_STYLE.DrawRadialLine(cx, cz, endAngle, 0, sectorRange, style.sideLineSegments, style.color, style.targetingRailAlpha * 0.90 * alphaScale, style.targetingRailWidth)
+		TACTICAL_STYLE.DrawRadialLine(cx, cz, heading - railOffset, 0, sectorRange, style.sideLineSegments, style.color, style.targetingRailAlpha * alphaScale, style.targetingRailWidth)
+		TACTICAL_STYLE.DrawRadialLine(cx, cz, heading + railOffset, 0, sectorRange, style.sideLineSegments, style.color, style.targetingRailAlpha * alphaScale, style.targetingRailWidth)
+	end
+
+	if style.drawCenterline then
+		gl.LineStipple(2, 0xAAAA)
+		TACTICAL_STYLE.DrawRadialLine(cx, cz, heading, 0, sectorRange, style.sideLineSegments, style.color, style.centerlineAlpha * alphaScale, 1.0)
+		gl.LineStipple(false)
+	end
+
+	if style.drawGuideArc then
+		local guideRadius = sightRadius + (sectorRange - sightRadius) * 0.5
+		TACTICAL_STYLE.DrawArcLine(cx, cz, guideRadius, startAngle, endAngle, style.arcSegments, style.color, style.guideArcAlpha * alphaScale, 1.0)
+	end
+end
+
+function TACTICAL_STYLE.GetLiveRadarRadius(unitID, unitDefID)
+	local radius = nil
+	if Spring.GetUnitSensorRadius then
+		radius = Spring.GetUnitSensorRadius(unitID, "radar")
+	end
+
+	if radius == nil then
+		local unitDef = unitDefID and UnitDefs[unitDefID]
+		radius = unitDef and unitDef.radarDistance or 0
+	end
+
+	return tonumber(radius) or 0
+end
+
+function TACTICAL_STYLE.BuildRadarSources(selectedUnitsSorted)
+	local sources = {}
+
+	for unitDefID, units in pairs(selectedUnitsSorted) do
+		for i = 1, #units do
+			local unitID = units[i]
+			if Spring.GetUnitDefID(unitID) == unitDefID then
+				local transported = Spring.GetUnitTransporter and Spring.GetUnitTransporter(unitID)
+				local active = not Spring.GetUnitIsActive or Spring.GetUnitIsActive(unitID)
+
+				if not transported and active then
+					local radius = TACTICAL_STYLE.GetLiveRadarRadius(unitID, unitDefID)
+					if radius > 0 then
+						local x, y, z = Spring.GetUnitPosition(unitID)
+						if x then
+							sources[#sources + 1] = {
+								unitID = unitID,
+								x = x,
+								z = z,
+								radius = radius,
+								alphaScale = TACTICAL_STYLE.GetZoomAlphaScale(x, GetGroundHeight(x, z), z),
+							}
+						end
+					end
+				end
+			end
+		end
+	end
+
+	return sources
+end
+
+function TACTICAL_STYLE.GetExposedArcs(sourceIndex, sources)
+	local source = sources[sourceIndex]
+	local covered = {}
+	local epsilon = 0.001
+	local twoPi = 2 * pi
+
+	for otherIndex = 1, #sources do
+		if otherIndex ~= sourceIndex then
+			local other = sources[otherIndex]
+			local dx = other.x - source.x
+			local dz = other.z - source.z
+			local d2 = dx * dx + dz * dz
+			local d = sqrt(d2)
+
+			if d <= epsilon then
+				if other.radius > source.radius + epsilon then
+					return {}
+				elseif math.abs(other.radius - source.radius) <= epsilon and otherIndex < sourceIndex then
+					return {}
+				end
+			elseif d + source.radius <= other.radius + epsilon then
+				return {}
+			elseif d < source.radius + other.radius - epsilon and d + other.radius > source.radius + epsilon then
+				local c = (source.radius * source.radius + d2 - other.radius * other.radius) / (2 * source.radius * d)
+				c = max(-1, min(1, c))
+				local half = math.acos(c)
+				local center = math.atan2(dx, dz)
+
+				while center < 0 do
+					center = center + twoPi
+				end
+				while center >= twoPi do
+					center = center - twoPi
+				end
+
+				local a0 = center - half
+				local a1 = center + half
+
+				if a0 < 0 then
+					covered[#covered + 1] = {0, a1}
+					covered[#covered + 1] = {a0 + twoPi, twoPi}
+				elseif a1 > twoPi then
+					covered[#covered + 1] = {a0, twoPi}
+					covered[#covered + 1] = {0, a1 - twoPi}
+				else
+					covered[#covered + 1] = {a0, a1}
+				end
+			end
+		end
+	end
+
+	if #covered == 0 then
+		return {{0, twoPi}}
+	end
+
+	table.sort(covered, function(a, b)
+		return a[1] < b[1]
+	end)
+
+	local merged = {}
+	for i = 1, #covered do
+		local interval = covered[i]
+		local last = merged[#merged]
+		if last and interval[1] <= last[2] + epsilon then
+			last[2] = max(last[2], interval[2])
+		else
+			merged[#merged + 1] = {interval[1], interval[2]}
+		end
+	end
+
+	local exposed = {}
+	local cursor = 0
+	for i = 1, #merged do
+		local interval = merged[i]
+		if interval[1] > cursor + epsilon then
+			exposed[#exposed + 1] = {cursor, interval[1]}
+		end
+		cursor = max(cursor, interval[2])
+	end
+
+	if cursor < twoPi - epsilon then
+		exposed[#exposed + 1] = {cursor, twoPi}
+	end
+
+	return exposed
+end
+
+function TACTICAL_STYLE.DrawRadarDiffuseArc(source, startAngle, endAngle, minimap)
+	local style = TACTICAL_STYLE.radar
+	local innerRadius = max(0, source.radius - style.diffuseWidth)
+	local span = max(1, source.radius - innerRadius)
+	local segments = max(2, math.ceil(style.ringSegments * ((endAngle - startAngle) / (2 * pi))))
+
+	gl.Blending(GL.SRC_ALPHA, GL.ONE_MINUS_SRC_ALPHA)
+
+	for radial = 0, style.radialSteps - 1 do
+		local t0 = radial / style.radialSteps
+		local t1 = (radial + 1) / style.radialSteps
+		local r0 = innerRadius + span * t0
+		local r1 = innerRadius + span * t1
+		local alphaScale = minimap and 1 or source.alphaScale
+		local a0 = (style.diffuseInnerAlpha + (style.diffuseEdgeAlpha - style.diffuseInnerAlpha) * t0) * alphaScale
+		local a1 = (style.diffuseInnerAlpha + (style.diffuseEdgeAlpha - style.diffuseInnerAlpha) * t1) * alphaScale
+
+		gl.BeginEnd(GL.TRIANGLE_STRIP, function()
+			for i = 0, segments do
+				local t = i / segments
+				local angle = startAngle + (endAngle - startAngle) * t
+				local sxn = sin(angle)
+				local czn = cos(angle)
+
+				if minimap then
+					gl.Color(style.color[1], style.color[2], style.color[3], a0)
+					gl.Vertex(source.x + sxn * r0, source.z + czn * r0, 0)
+					gl.Color(style.color[1], style.color[2], style.color[3], a1)
+					gl.Vertex(source.x + sxn * r1, source.z + czn * r1, 0)
+				else
+					local x0, y0, z0 = TACTICAL_STYLE.GroundVertex(source.x, source.z, angle, r0)
+					local x1, y1, z1 = TACTICAL_STYLE.GroundVertex(source.x, source.z, angle, r1)
+					gl.Color(style.color[1], style.color[2], style.color[3], a0)
+					gl.Vertex(x0, y0, z0)
+					gl.Color(style.color[1], style.color[2], style.color[3], a1)
+					gl.Vertex(x1, y1, z1)
+				end
+			end
+		end)
+	end
+end
+
+function TACTICAL_STYLE.DrawRadarWorldUnion(selectedUnitsSorted)
+	if not TACTICAL_STYLE.drawRadar then
+		return
+	end
+
+	local style = TACTICAL_STYLE.radar
+	local sources = TACTICAL_STYLE.BuildRadarSources(selectedUnitsSorted)
+
+	for sourceIndex = 1, #sources do
+		local source = sources[sourceIndex]
+		local arcs = TACTICAL_STYLE.GetExposedArcs(sourceIndex, sources)
+
+		for arcIndex = 1, #arcs do
+			local a0 = arcs[arcIndex][1]
+			local a1 = arcs[arcIndex][2]
+			local segments = max(2, math.ceil(style.ringSegments * ((a1 - a0) / (2 * pi))))
+
+			TACTICAL_STYLE.DrawRadarDiffuseArc(source, a0, a1, false)
+			TACTICAL_STYLE.DrawArcGlow(source.x, source.z, source.radius, a0, a1, segments, style.color, style.glowAlpha * source.alphaScale, TACTICAL_STYLE.sector.glowWidth)
+			TACTICAL_STYLE.DrawArcLine(source.x, source.z, source.radius, a0, a1, segments, style.color, style.ringAlpha * source.alphaScale, style.ringWidth)
+		end
+	end
+end
+
+function TACTICAL_STYLE.ApplyMiniMapTransform(sx, sy)
+	local rotation = Spring.GetMiniMapRotation and Spring.GetMiniMapRotation() or 0
+	if math.abs(rotation) > 1.5 then
+		gl.Translate(sx, 0, 0)
+		gl.Scale(-sx / Game.mapSizeX, sy / Game.mapSizeZ, 1)
+	else
+		gl.Translate(0, sy, 0)
+		gl.Scale(sx / Game.mapSizeX, -sy / Game.mapSizeZ, 1)
+	end
+end
+
+function TACTICAL_STYLE.DrawMiniMapArcLine(source, startAngle, endAngle, alpha, width)
+	local style = TACTICAL_STYLE.radar
+	local segments = max(2, math.ceil(style.ringSegments * ((endAngle - startAngle) / (2 * pi))))
+	gl.Color(style.color[1], style.color[2], style.color[3], alpha)
+	gl.LineWidth(width)
+	gl.BeginEnd(GL.LINE_STRIP, function()
+		for i = 0, segments do
+			local t = i / segments
+			local angle = startAngle + (endAngle - startAngle) * t
+			gl.Vertex(source.x + sin(angle) * source.radius, source.z + cos(angle) * source.radius, 0)
+		end
+	end)
+end
+
+function TACTICAL_STYLE.DrawRadarMiniMapUnion(selectedUnitsSorted, sx, sy)
+	if not TACTICAL_STYLE.drawRadar then
+		return
+	end
+
+	local style = TACTICAL_STYLE.radar
+	local sources = TACTICAL_STYLE.BuildRadarSources(selectedUnitsSorted)
+	if #sources == 0 then
+		return
+	end
+
+	if gl.PushAttrib then
+		gl.PushAttrib(GL.ALL_ATTRIB_BITS)
+	end
+	gl.DepthTest(false)
+	gl.DepthMask(false)
+	gl.PushMatrix()
+	TACTICAL_STYLE.ApplyMiniMapTransform(sx, sy)
+
+	for sourceIndex = 1, #sources do
+		local source = sources[sourceIndex]
+		local arcs = TACTICAL_STYLE.GetExposedArcs(sourceIndex, sources)
+
+		for arcIndex = 1, #arcs do
+			local a0 = arcs[arcIndex][1]
+			local a1 = arcs[arcIndex][2]
+			TACTICAL_STYLE.DrawRadarDiffuseArc(source, a0, a1, true)
+			TACTICAL_STYLE.DrawMiniMapArcLine(source, a0, a1, style.glowAlpha, style.ringWidth * 3.0)
+			TACTICAL_STYLE.DrawMiniMapArcLine(source, a0, a1, style.ringAlpha, style.ringWidth)
+		end
+	end
+
+	gl.PopMatrix()
+	gl.Texture(false)
+	gl.LineWidth(1)
+	gl.Color(1, 1, 1, 1)
+	if gl.PopAttrib then
+		gl.PopAttrib()
+	end
+end
+
+function TACTICAL_STYLE.Initialize()
+	for unitDefID, unitDef in ipairs(UnitDefs) do
+		local halfAngle = TACTICAL_STYLE.GetUnitDefHalfAngle(unitDef)
+		if halfAngle then
+			TACTICAL_STYLE.unitDefInfos[unitDefID] = {
+				halfAngle = halfAngle,
+			}
+		end
+	end
+end
+
+function TACTICAL_STYLE.DrawWorld()
+	if Spring.IsGUIHidden and Spring.IsGUIHidden() then
+		return
+	end
+
+	local selectedUnitsSorted = Spring.GetSelectedUnitsSorted and Spring.GetSelectedUnitsSorted()
+	if not selectedUnitsSorted then
+		return
+	end
+
+	if gl.PushAttrib then
+		gl.PushAttrib(GL.ALL_ATTRIB_BITS)
+	end
+	gl.DepthTest(true)
+	gl.DepthMask(false)
+	gl.Blending(GL.SRC_ALPHA, GL.ONE_MINUS_SRC_ALPHA)
+
+	TACTICAL_STYLE.DrawRadarWorldUnion(selectedUnitsSorted)
+
+	if TACTICAL_STYLE.drawSector then
+		for unitDefID, info in pairs(TACTICAL_STYLE.unitDefInfos) do
+			local units = selectedUnitsSorted[unitDefID]
+			if units then
+				for i = 1, #units do
+					local unitID = units[i]
+					local transported = Spring.GetUnitTransporter and Spring.GetUnitTransporter(unitID)
+					if not transported and Spring.GetUnitDefID(unitID) then
+						local sectorRange =
+							(Spring.GetUnitRulesParam(unitID, "sectorradius") or TACTICAL_STYLE.sectorFallback)
+							- TACTICAL_STYLE.sectorInset
+
+						TACTICAL_STYLE.DrawSelectedSector(unitID, unitDefID, info.halfAngle, sectorRange)
+					end
+				end
+			end
+		end
+	end
+
+	gl.LineStipple(false)
+	gl.LineWidth(1)
+	gl.Texture(false)
+	gl.Color(1, 1, 1, 1)
+	if gl.PopAttrib then
+		gl.PopAttrib()
+	else
+		gl.DepthMask(true)
+		gl.DepthTest(false)
+		gl.Blending(GL.SRC_ALPHA, GL.ONE_MINUS_SRC_ALPHA)
+	end
+end
+
 function widget:Initialize()
+	TACTICAL_STYLE.Initialize()
 	-- Change default command menu font
 	local currentFont = Spring.GetConfigString("FontFile")
 	local currentFontSmall = Spring.GetConfigString("SmallFontFile")
@@ -869,6 +1305,7 @@ function widget:Initialize()
 	else
 		Spring.Echo("[MCL Range Rings] GL4 renderer unavailable; ring and diffusion using legacy fallback.")
 	end
+	Spring.Echo("[MCL Range Rings r19] Selected-Mech sight/sector AR and merged standard radar presentation active; radar diffusion reduced to 128 angular segments / 6 radial steps; hex-grid overlays removed.")
 end
 
 function widget:Shutdown()
@@ -1009,3 +1446,19 @@ function widget:DrawWorldPreUnit()
 		glColor(1,1,1,1)
 	end
 end
+
+function widget:DrawWorld()
+	TACTICAL_STYLE.DrawWorld()
+end
+
+function widget:DrawInMiniMap(sx, sy)
+	if Spring.IsGUIHidden and Spring.IsGUIHidden() then
+		return
+	end
+
+	local selectedUnitsSorted = Spring.GetSelectedUnitsSorted and Spring.GetSelectedUnitsSorted()
+	if selectedUnitsSorted then
+		TACTICAL_STYLE.DrawRadarMiniMapUnion(selectedUnitsSorted, sx, sy)
+	end
+end
+
