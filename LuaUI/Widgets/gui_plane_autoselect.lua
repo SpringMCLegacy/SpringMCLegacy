@@ -121,7 +121,7 @@ local activePress = false
 local function IsPlane(unitID)
 	local udef = GetUnitDefID(unitID)
 	local ud = UnitDefs[udef]
-	if ud.canFly == true or ud.customParams.dropship then  --- can fly
+	if ud.canFly == true and not ud.customParams.dropship then  --- can fly
 		return true
     end
 	return false
