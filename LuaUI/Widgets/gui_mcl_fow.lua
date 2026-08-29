@@ -1,6 +1,6 @@
 function widget:GetInfo()
 	return {
-		name = "MC:L - Custom Fog of War r25",
+		name = "MC:L - Custom Fog of War r27",
 		desc = "Custom MCL visual fog-of-war with allyteam-aware Unexplored / Explored / Visible presentation, spectator isolation, organic exploration boundaries, and synchronized minimap presentation",
 		author = "zvero + ChatGPT",
 		date = "2026",
@@ -50,6 +50,17 @@ local ALLIED_MECH_REFRESH_FRAMES = 60
 -- its apparent smoothness remains consistent across different map sizes.
 local MASK_COVERAGE_FEATHER_TEXELS = 3.0
 
+-- Visual terrain occlusion for the custom Mech mask. The GPU samples Recoil's
+-- live $heightmap along the sightline from the cockpit to each candidate terrain
+-- point. This affects presentation only; engine LOS/gameplay remains unchanged.
+local TERRAIN_VISIBILITY = {
+	enabled = true,
+	sampleSpacing = 32,
+	clearance = 3,
+	softness = 4,
+	targetLift = 2,
+}
+
 -- Fog compositing is screen-space. The map's g-buffer depth is used to
 -- reconstruct the terrain world position for each visible pixel, so there is no
 -- second ground surface to z-fight with and no terrain-sized geometry cost.
@@ -59,8 +70,8 @@ local NATIVE_LOS_TEXTURE = "$info:los"
 
 -- MCL vision geometry. Mech close sight and directional sight are rasterized
 -- into the same custom mask so there is no independently filtered join between
--- the close circle and forward sector. Native LOS is still unioned afterward
--- for non-Mech LOS sources.
+-- the close circle and forward sector. Native LOS remains gameplay/exploration
+-- data only and is intentionally excluded from the final Visible presentation.
 local SECTOR_RANGE_INSET = 50
 
 -- Minimap presentation mirrors the actual custom FOW state without changing
@@ -93,6 +104,7 @@ local ENGINE_LOS_CHECK_INTERVAL = 0.20
 local unitDefInfos = {}
 local cockpitPieceCache = {}
 local alliedMechs = {}
+local alliedCircularLosSources = {}
 local lastAlliedRefreshFrame = -999999
 
 local visionMaskTexture = nil
@@ -610,7 +622,7 @@ function MINIMAP_STYLE.InitializeFogShader()
 	})
 
 	if not MINIMAP_STYLE.fogShader then
-		Spring.Echo("[MCL FOW r25] WARNING: minimap FOW shader failed to compile; world FOW remains active.")
+		Spring.Echo("[MCL FOW r27] WARNING: minimap FOW shader failed to compile; world FOW remains active.")
 		if gl.GetShaderLog then
 			local log = gl.GetShaderLog()
 			if log and log ~= "" then
@@ -641,7 +653,7 @@ function MINIMAP_STYLE.InitializeFogShader()
 		local name = names[i]
 		local location = gl.GetUniformLocation(MINIMAP_STYLE.fogShader, name)
 		if type(location) ~= "number" or location < 0 then
-			Spring.Echo("[MCL FOW r25] WARNING: missing minimap FOW shader uniform " .. name .. "; minimap FOW disabled.")
+			Spring.Echo("[MCL FOW r27] WARNING: missing minimap FOW shader uniform " .. name .. "; minimap FOW disabled.")
 			if gl.DeleteShader then
 				gl.DeleteShader(MINIMAP_STYLE.fogShader)
 			end
@@ -653,8 +665,8 @@ function MINIMAP_STYLE.InitializeFogShader()
 	end
 
 	MINIMAP_STYLE.fogShaderReady = true
-	Spring.Echo("[MCL FOW r25] Minimap FOW texture compositor active; it consumes the existing visibility/exploration masks without changing them.")
-	Spring.Echo("[MCL FOW r25] Minimap FOW will composite in DrawInMiniMap after engine minimap content.")
+	Spring.Echo("[MCL FOW r27] Minimap FOW texture compositor active; it consumes the existing visibility/exploration masks without changing them.")
+	Spring.Echo("[MCL FOW r27] Minimap FOW will composite in DrawInMiniMap after engine minimap content.")
 	return true
 end
 
@@ -685,13 +697,13 @@ function MINIMAP_STYLE.InitializeFogTexture()
 	)
 
 	if not ok or not texture then
-		Spring.Echo("[MCL FOW r25] WARNING: could not create minimap FOW texture; world FOW remains active.")
+		Spring.Echo("[MCL FOW r27] WARNING: could not create minimap FOW texture; world FOW remains active.")
 		return false
 	end
 
 	MINIMAP_STYLE.fogTexture = texture
 	MINIMAP_STYLE.fogTextureReady = true
-	Spring.Echo("[MCL FOW r25] Minimap FOW texture created at " .. visionMaskWidth .. "x" .. visionMaskHeight .. ".")
+	Spring.Echo("[MCL FOW r27] Minimap FOW texture created at " .. visionMaskWidth .. "x" .. visionMaskHeight .. ".")
 	return true
 end
 
@@ -732,7 +744,7 @@ function MINIMAP_STYLE.RenderFogTextureContents()
 		gl.Uniform(MINIMAP_STYLE.uniforms.edgeLow, FOG_EDGE_LOW)
 		gl.Uniform(MINIMAP_STYLE.uniforms.edgeHigh, FOG_EDGE_HIGH)
 		gl.Uniform(MINIMAP_STYLE.uniforms.edgeSampleRadius, FOG_EDGE_SAMPLE_RADIUS)
-		-- r25 diagnostic: native LOS remains mechanically active and continues to
+		-- r27 diagnostic: native LOS remains mechanically active and continues to
 		-- feed Explored memory, but is excluded from the final minimap Visible edge.
 		gl.Uniform(MINIMAP_STYLE.uniforms.nativeLosAvailable, 0.0)
 		gl.Uniform(MINIMAP_STYLE.uniforms.organicEdgeEnabled, FOW_BOUNDARY_STYLE.enabled and 1.0 or 0.0)
@@ -774,7 +786,7 @@ function MINIMAP_STYLE.UpdateFogTexture()
 
 	local ok, err = pcall(gl.RenderToTexture, MINIMAP_STYLE.fogTexture, MINIMAP_STYLE.RenderFogTextureContents)
 	if not ok then
-		Spring.Echo("[MCL FOW r25] WARNING: minimap FOW texture update failed: " .. tostring(err))
+		Spring.Echo("[MCL FOW r27] WARNING: minimap FOW texture update failed: " .. tostring(err))
 		MINIMAP_STYLE.fogTextureHasData = false
 		return false
 	end
@@ -782,7 +794,7 @@ function MINIMAP_STYLE.UpdateFogTexture()
 	MINIMAP_STYLE.fogTextureHasData = true
 	if not MINIMAP_STYLE.loggedFirstFogTextureUpdate then
 		MINIMAP_STYLE.loggedFirstFogTextureUpdate = true
-		Spring.Echo("[MCL FOW r25] First minimap FOW texture update completed successfully in DrawGenesis().")
+		Spring.Echo("[MCL FOW r27] First minimap FOW texture update completed successfully in DrawGenesis().")
 	end
 	return true
 end
@@ -895,17 +907,18 @@ local function ResolveCockpitPose(unitID, unitDefID)
 		viewX, viewY, viewZ = Spring.GetUnitViewPosition(unitID)
 	end
 	local offsetX = viewX and (viewX - simX) or 0
+	local offsetY = viewY and simY and (viewY - simY) or 0
 	local offsetZ = viewZ and (viewZ - simZ) or 0
 
 	if pieceID then
 		local x, y, z, dx, dy, dz = Spring.GetUnitPiecePosDir(unitID, pieceID)
-		if x and dx and dz then
-			return x + offsetX, z + offsetZ, math.atan2(dx, dz)
+		if x and y and dx and dz then
+			return x + offsetX, y + offsetY, z + offsetZ, math.atan2(dx, dz)
 		end
 	end
 
 	local heading = Spring.GetUnitHeading(unitID) or 0
-	return simX + offsetX, simZ + offsetZ, heading * HEADING_TO_RAD
+	return simX + offsetX, (simY or 0) + offsetY, simZ + offsetZ, heading * HEADING_TO_RAD
 end
 
 --------------------------------------------------------------------------------
@@ -923,8 +936,43 @@ local function SuppressNativeLosOverlay()
 end
 
 --------------------------------------------------------------------------------
--- Allied Mech directional-sector extension mask
+-- Allied visual LOS sources
 --------------------------------------------------------------------------------
+
+local function GetLiveLosRadius(unitID, unitDefID)
+	local radius = nil
+	if Spring.GetUnitSensorRadius then
+		radius = tonumber(Spring.GetUnitSensorRadius(unitID, "los"))
+	end
+
+	if radius == nil then
+		local unitDef = unitDefID and UnitDefs[unitDefID]
+		radius = tonumber(unitDef and unitDef.sightDistance) or 0
+	end
+
+	return max(0, radius)
+end
+
+local function ResolveCircularLosPose(unitID, unitDefID)
+	local simX, simY, simZ = Spring.GetUnitPosition(unitID)
+	if not simX then
+		return nil
+	end
+
+	local viewX, viewY, viewZ
+	if Spring.GetUnitViewPosition then
+		viewX, viewY, viewZ = Spring.GetUnitViewPosition(unitID)
+	end
+
+	local offsetX = viewX and (viewX - simX) or 0
+	local offsetY = viewY and simY and (viewY - simY) or 0
+	local offsetZ = viewZ and (viewZ - simZ) or 0
+
+	local unitDef = unitDefID and UnitDefs[unitDefID]
+	local emitHeight = tonumber(unitDef and unitDef.losEmitHeight) or 20
+
+	return simX + offsetX, (simY or 0) + offsetY + emitHeight, simZ + offsetZ
+end
 
 local function RefreshAlliedMechs(force)
 	local frame = (Spring.GetGameFrame and Spring.GetGameFrame()) or 0
@@ -934,6 +982,7 @@ local function RefreshAlliedMechs(force)
 
 	lastAlliedRefreshFrame = frame
 	alliedMechs = {}
+	alliedCircularLosSources = {}
 
 	if not Spring.GetTeamList or not Spring.GetTeamUnits then
 		return
@@ -955,11 +1004,21 @@ local function RefreshAlliedMechs(force)
 			for ui = 1, #units do
 				local unitID = units[ui]
 				local unitDefID = Spring.GetUnitDefID(unitID)
-				if unitDefID and unitDefInfos[unitDefID] then
-					alliedMechs[#alliedMechs + 1] = {
-						unitID = unitID,
-						unitDefID = unitDefID,
-					}
+				if unitDefID then
+					if unitDefInfos[unitDefID] then
+						alliedMechs[#alliedMechs + 1] = {
+							unitID = unitID,
+							unitDefID = unitDefID,
+						}
+					elseif GetLiveLosRadius(unitID, unitDefID) > 0 then
+						-- Non-sector allied units (captured Beacons, structures, vehicles,
+						-- etc.) contribute their ordinary live circular engine LOS to the
+						-- custom presentation instead of re-enabling native $info:los.
+						alliedCircularLosSources[#alliedCircularLosSources + 1] = {
+							unitID = unitID,
+							unitDefID = unitDefID,
+						}
+					end
 				end
 			end
 		end
@@ -981,18 +1040,62 @@ void main()
 local VISION_MASK_COVERAGE_FRAGMENT_SHADER = [[
 #version 130
 
+uniform sampler2D heightmapTex;
+uniform vec2 mapSize;
 uniform vec2 sourceCenter;
 uniform vec2 leftBoundaryDir;
 uniform vec2 rightBoundaryDir;
+uniform float sourceEyeHeight;
 uniform float circleRadius;
 uniform float sectorRadius;
+uniform float sectorEnabled;
 uniform float featherWidth;
+uniform float terrainEnabled;
+uniform float terrainSampleSpacing;
+uniform float terrainClearance;
+uniform float terrainSoftness;
+uniform float terrainTargetLift;
 
 varying vec2 vWorldXZ;
+
+const int MAX_TERRAIN_STEPS = 32;
 
 float cross2D(vec2 a, vec2 b)
 {
 	return a.x * b.y - a.y * b.x;
+}
+
+float sampleTerrainHeight(vec2 worldXZ)
+{
+	vec2 uv = clamp(worldXZ / max(mapSize, vec2(1.0)), 0.0, 1.0);
+	return texture2D(heightmapTex, uv).r;
+}
+
+float getTerrainVisibility(vec2 targetXZ, float radialDistance)
+{
+	if (terrainEnabled < 0.5 || radialDistance <= max(terrainSampleSpacing, 1.0)) {
+		return 1.0;
+	}
+
+	float targetHeight = sampleTerrainHeight(targetXZ) + terrainTargetLift;
+	float requestedSteps = ceil(radialDistance / max(terrainSampleSpacing, 1.0));
+	int steps = int(clamp(requestedSteps, 2.0, float(MAX_TERRAIN_STEPS)));
+	float maxObstruction = -1000000.0;
+
+	for (int i = 1; i < MAX_TERRAIN_STEPS; ++i) {
+		if (i >= steps) {
+			break;
+		}
+
+		float t = float(i) / float(steps);
+		vec2 sampleXZ = mix(sourceCenter, targetXZ, t);
+		float terrainHeight = sampleTerrainHeight(sampleXZ);
+		float sightlineHeight = mix(sourceEyeHeight, targetHeight, t);
+		maxObstruction = max(maxObstruction, terrainHeight - sightlineHeight);
+	}
+
+	float softness = max(terrainSoftness, 0.001);
+	return 1.0 - smoothstep(terrainClearance - softness, terrainClearance + softness, maxObstruction);
 }
 
 void main()
@@ -1001,21 +1104,24 @@ void main()
 	float radialDistance = length(p);
 	float halfFeather = max(featherWidth * 0.5, 0.001);
 
-	// Close sight circle. Coverage is 0.5 exactly on the nominal gameplay
-	// boundary and changes continuously as the source moves within a mask texel.
 	float circleInside = circleRadius - radialDistance;
 	float circleCoverage = smoothstep(-halfFeather, halfFeather, circleInside);
 
-	// Directional sector. The two ray tests are expressed as perpendicular
-	// world-space distances, so the side-edge feather has a stable width rather
-	// than becoming angularly wider with range.
-	float leftInside = -cross2D(leftBoundaryDir, p);
-	float rightInside = cross2D(rightBoundaryDir, p);
-	float radialInside = sectorRadius - radialDistance;
-	float sectorInside = min(radialInside, min(leftInside, rightInside));
-	float sectorCoverage = smoothstep(-halfFeather, halfFeather, sectorInside);
+	float sectorCoverage = 0.0;
+	if (sectorEnabled >= 0.5) {
+		float leftInside = -cross2D(leftBoundaryDir, p);
+		float rightInside = cross2D(rightBoundaryDir, p);
+		float radialInside = sectorRadius - radialDistance;
+		float sectorInside = min(radialInside, min(leftInside, rightInside));
+		sectorCoverage = smoothstep(-halfFeather, halfFeather, sectorInside);
+	}
 
 	float coverage = max(circleCoverage, sectorCoverage);
+	if (coverage <= 0.001) {
+		discard;
+	}
+
+	coverage *= getTerrainVisibility(vWorldXZ, radialDistance);
 	if (coverage <= 0.001) {
 		discard;
 	}
@@ -1032,18 +1138,29 @@ local function InitializeVisionMaskCoverageShader()
 	visionMaskCoverageShader = gl.CreateShader({
 		vertex = VISION_MASK_COVERAGE_VERTEX_SHADER,
 		fragment = VISION_MASK_COVERAGE_FRAGMENT_SHADER,
+		uniformInt = {
+			heightmapTex = 0,
+		},
 		uniformFloat = {
+			mapSize = {Game.mapSizeX, Game.mapSizeZ},
 			sourceCenter = {0.0, 0.0},
 			leftBoundaryDir = {0.0, 1.0},
 			rightBoundaryDir = {0.0, 1.0},
+			sourceEyeHeight = 0.0,
 			circleRadius = LOS,
 			sectorRadius = RADAR,
+			sectorEnabled = 1.0,
 			featherWidth = visionMaskCoverageFeatherWorld,
+			terrainEnabled = TERRAIN_VISIBILITY.enabled and 1.0 or 0.0,
+			terrainSampleSpacing = TERRAIN_VISIBILITY.sampleSpacing,
+			terrainClearance = TERRAIN_VISIBILITY.clearance,
+			terrainSoftness = TERRAIN_VISIBILITY.softness,
+			terrainTargetLift = TERRAIN_VISIBILITY.targetLift,
 		},
 	})
 
 	if not visionMaskCoverageShader then
-		Spring.Echo("[MCL FOW r25] ERROR: smooth visibility-mask coverage shader failed to compile.")
+		Spring.Echo("[MCL FOW r27] ERROR: smooth visibility-mask coverage shader failed to compile.")
 		if gl.GetShaderLog then
 			local log = gl.GetShaderLog()
 			if log and log ~= "" then
@@ -1054,19 +1171,27 @@ local function InitializeVisionMaskCoverageShader()
 	end
 
 	local names = {
+		"mapSize",
 		"sourceCenter",
 		"leftBoundaryDir",
 		"rightBoundaryDir",
+		"sourceEyeHeight",
 		"circleRadius",
 		"sectorRadius",
+		"sectorEnabled",
 		"featherWidth",
+		"terrainEnabled",
+		"terrainSampleSpacing",
+		"terrainClearance",
+		"terrainSoftness",
+		"terrainTargetLift",
 	}
 
 	for i = 1, #names do
 		local name = names[i]
 		local location = gl.GetUniformLocation(visionMaskCoverageShader, name)
 		if type(location) ~= "number" or location < 0 then
-			Spring.Echo("[MCL FOW r25] ERROR: missing smooth visibility-mask shader uniform " .. name .. ".")
+			Spring.Echo("[MCL FOW r27] ERROR: missing smooth visibility-mask shader uniform " .. name .. ".")
 			if gl.DeleteShader then
 				gl.DeleteShader(visionMaskCoverageShader)
 			end
@@ -1078,24 +1203,37 @@ local function InitializeVisionMaskCoverageShader()
 	end
 
 	visionMaskCoverageShaderReady = true
-	Spring.Echo("[MCL FOW r25] Continuous sub-texel Mech visibility-mask coverage active.")
+	Spring.Echo("[MCL FOW r27] Continuous sub-texel terrain-aware visibility-mask coverage active for Mech sectors and allied circular LOS sources.")
 	return true
 end
 
-local function DrawSmoothMaskSource(cx, cz, heading, halfAngle, sectorRange)
+local function DrawSmoothMaskSource(cx, cy, cz, circleRadius, heading, halfAngle, sectorRange, sectorEnabled)
+	heading = heading or 0
+	halfAngle = halfAngle or 0
+	sectorRange = sectorRange or 0
+	sectorEnabled = sectorEnabled or 0
+
 	local leftAngle = heading - halfAngle
 	local rightAngle = heading + halfAngle
 	local leftX, leftZ = sin(leftAngle), cos(leftAngle)
 	local rightX, rightZ = sin(rightAngle), cos(rightAngle)
 
+	gl.Uniform(visionMaskCoverageUniforms.mapSize, Game.mapSizeX, Game.mapSizeZ)
 	gl.Uniform(visionMaskCoverageUniforms.sourceCenter, cx, cz)
 	gl.Uniform(visionMaskCoverageUniforms.leftBoundaryDir, leftX, leftZ)
 	gl.Uniform(visionMaskCoverageUniforms.rightBoundaryDir, rightX, rightZ)
-	gl.Uniform(visionMaskCoverageUniforms.circleRadius, LOS)
+	gl.Uniform(visionMaskCoverageUniforms.sourceEyeHeight, cy)
+	gl.Uniform(visionMaskCoverageUniforms.circleRadius, circleRadius)
 	gl.Uniform(visionMaskCoverageUniforms.sectorRadius, sectorRange)
+	gl.Uniform(visionMaskCoverageUniforms.sectorEnabled, sectorEnabled)
 	gl.Uniform(visionMaskCoverageUniforms.featherWidth, visionMaskCoverageFeatherWorld)
+	gl.Uniform(visionMaskCoverageUniforms.terrainEnabled, TERRAIN_VISIBILITY.enabled and 1.0 or 0.0)
+	gl.Uniform(visionMaskCoverageUniforms.terrainSampleSpacing, TERRAIN_VISIBILITY.sampleSpacing)
+	gl.Uniform(visionMaskCoverageUniforms.terrainClearance, TERRAIN_VISIBILITY.clearance)
+	gl.Uniform(visionMaskCoverageUniforms.terrainSoftness, TERRAIN_VISIBILITY.softness)
+	gl.Uniform(visionMaskCoverageUniforms.terrainTargetLift, TERRAIN_VISIBILITY.targetLift)
 
-	local extent = max(LOS, sectorRange) + visionMaskCoverageFeatherWorld
+	local extent = max(circleRadius, sectorEnabled >= 0.5 and sectorRange or 0) + visionMaskCoverageFeatherWorld
 	gl.BeginEnd(GL.QUADS, function()
 		gl.Vertex(cx - extent, cz - extent, 0)
 		gl.Vertex(cx + extent, cz - extent, 0)
@@ -1138,14 +1276,14 @@ local function InitializeVisionMaskTexture()
 	)
 
 	if not ok or not texture then
-		Spring.Echo("[MCL FOW r25] ERROR: could not create visibility-mask FBO texture.")
+		Spring.Echo("[MCL FOW r27] ERROR: could not create visibility-mask FBO texture.")
 		visionMaskFailed = true
 		return false
 	end
 
 	visionMaskTexture = texture
 	visionMaskReady = true
-	Spring.Echo("[MCL FOW r25] Visibility mask created at " .. visionMaskWidth .. "x" .. visionMaskHeight .. ".")
+	Spring.Echo("[MCL FOW r27] Visibility mask created at " .. visionMaskWidth .. "x" .. visionMaskHeight .. ".")
 	return true
 end
 
@@ -1171,6 +1309,8 @@ local function RenderVisionMaskContents()
 	gl.PushMatrix()
 	gl.LoadIdentity()
 
+	gl.Texture(0, "$heightmap")
+
 	if visionMaskCoverageShaderReady and gl.UseShader(visionMaskCoverageShader) then
 		for i = 1, #alliedMechs do
 			local entry = alliedMechs[i]
@@ -1180,18 +1320,36 @@ local function RenderVisionMaskContents()
 				local transporterID = Spring.GetUnitTransporter and Spring.GetUnitTransporter(entry.unitID)
 				if not transporterID then
 					local info = unitDefInfos[entry.unitDefID]
-					local cx, cz, heading = ResolveCockpitPose(entry.unitID, entry.unitDefID)
+					local cx, cy, cz, heading = ResolveCockpitPose(entry.unitID, entry.unitDefID)
 
 					if info and cx then
 						local sectorRange = (Spring.GetUnitRulesParam(entry.unitID, "sectorradius") or RADAR) - SECTOR_RANGE_INSET
 						sectorRange = max(LOS + 1, sectorRange)
-						DrawSmoothMaskSource(cx, cz, heading, info.halfAngle, sectorRange)
+						DrawSmoothMaskSource(cx, cy, cz, LOS, heading, info.halfAngle, sectorRange, 1.0)
 					end
 				end
 			end
 		end
+
+		for i = 1, #alliedCircularLosSources do
+			local entry = alliedCircularLosSources[i]
+			if Spring.GetUnitDefID(entry.unitID) == entry.unitDefID then
+				local transporterID = Spring.GetUnitTransporter and Spring.GetUnitTransporter(entry.unitID)
+				if not transporterID then
+					local radius = GetLiveLosRadius(entry.unitID, entry.unitDefID)
+					if radius > 0 then
+						local cx, cy, cz = ResolveCircularLosPose(entry.unitID, entry.unitDefID)
+						if cx then
+							DrawSmoothMaskSource(cx, cy, cz, radius, 0, 0, 0, 0.0)
+						end
+					end
+				end
+			end
+		end
+
 		gl.UseShader(0)
 	end
+	gl.Texture(0, false)
 
 	gl.UseShader(0)
 	gl.PopMatrix()
@@ -1227,7 +1385,7 @@ local function UpdateVisionMask()
 	lastVisionMaskDrawFrame = drawFrame
 	local ok, err = pcall(gl.RenderToTexture, visionMaskTexture, RenderVisionMaskContents)
 	if not ok then
-		Spring.Echo("[MCL FOW r25] ERROR: visibility-mask update failed: " .. tostring(err))
+		Spring.Echo("[MCL FOW r27] ERROR: visibility-mask update failed: " .. tostring(err))
 		visionMaskFailed = true
 		visionMaskHasData = false
 		return false
@@ -1236,7 +1394,7 @@ local function UpdateVisionMask()
 	visionMaskHasData = true
 	if not loggedFirstMaskUpdate then
 		loggedFirstMaskUpdate = true
-		Spring.Echo("[MCL FOW r25] First visibility-mask render completed successfully in DrawGenesis().")
+		Spring.Echo("[MCL FOW r27] First visibility-mask render completed successfully in DrawGenesis().")
 	end
 
 	return true
@@ -1263,7 +1421,7 @@ local function InitializeExploredMaskTextures()
 		)
 
 		if not ok or not texture then
-			Spring.Echo("[MCL FOW r25] ERROR: could not create explored-mask FBO texture " .. i .. ".")
+			Spring.Echo("[MCL FOW r27] ERROR: could not create explored-mask FBO texture " .. i .. ".")
 			exploredMaskFailed = true
 			return false
 		end
@@ -1383,15 +1541,15 @@ function VIEW_STATE.RefreshPerspective(force)
 
 	if visionMaskReady and (force or allyTeamID ~= oldAllyTeamID or VIEW_STATE.activeExploredKey == nil) then
 		if not VIEW_STATE.ActivateExploredBank(allyTeamID) then
-			Spring.Echo("[MCL FOW r25] WARNING: could not activate Explored-memory bank for allyteam " .. tostring(allyTeamID) .. ".")
+			Spring.Echo("[MCL FOW r27] WARNING: could not activate Explored-memory bank for allyteam " .. tostring(allyTeamID) .. ".")
 		end
 	end
 
 	if VIEW_STATE.spectating then
 		if VIEW_STATE.fullView then
-			Spring.Echo("[MCL FOW r25] Spectator full-view active: FOW presentation bypassed; gameplay LOS state remains untouched.")
+			Spring.Echo("[MCL FOW r27] Spectator full-view active: FOW presentation bypassed; gameplay LOS state remains untouched.")
 		else
-			Spring.Echo("[MCL FOW r25] Spectator team POV active: team " .. tostring(teamID) .. ", allyteam " .. tostring(allyTeamID) .. ".")
+			Spring.Echo("[MCL FOW r27] Spectator team POV active: team " .. tostring(teamID) .. ", allyteam " .. tostring(allyTeamID) .. ".")
 		end
 	end
 
@@ -1426,7 +1584,7 @@ local function InitializeExploredUpdateShader()
 	})
 
 	if not exploredUpdateShader then
-		Spring.Echo("[MCL FOW r25] ERROR: explored-mask update shader failed to compile.")
+		Spring.Echo("[MCL FOW r27] ERROR: explored-mask update shader failed to compile.")
 		if gl.GetShaderLog then
 			local log = gl.GetShaderLog()
 			if log and log ~= "" then
@@ -1449,7 +1607,7 @@ local function InitializeExploredUpdateShader()
 		local name = names[i]
 		local location = gl.GetUniformLocation(exploredUpdateShader, name)
 		if type(location) ~= "number" or location < 0 then
-			Spring.Echo("[MCL FOW r25] ERROR: missing explored-mask shader uniform " .. name .. ".")
+			Spring.Echo("[MCL FOW r27] ERROR: missing explored-mask shader uniform " .. name .. ".")
 			if gl.DeleteShader then
 				gl.DeleteShader(exploredUpdateShader)
 			end
@@ -1462,7 +1620,7 @@ local function InitializeExploredUpdateShader()
 	end
 
 	exploredUpdateShaderReady = true
-	Spring.Echo("[MCL FOW r25] Explored-memory mask update shader active.")
+	Spring.Echo("[MCL FOW r27] Explored-memory mask update shader active.")
 	return true
 end
 
@@ -1506,7 +1664,7 @@ local function RenderExploredMaskContents(previousExploredTexture)
 		gl.Texture(1, false)
 		if not loggedNativeLosBindFailure then
 			loggedNativeLosBindFailure = true
-			Spring.Echo("[MCL FOW r25] WARNING: could not bind " .. NATIVE_LOS_TEXTURE .. "; explored memory will currently use Mech sectors only.")
+			Spring.Echo("[MCL FOW r27] WARNING: could not bind " .. NATIVE_LOS_TEXTURE .. "; explored memory will currently use Mech sectors only.")
 		end
 	end
 	local previousExploredAvailable = 0.0
@@ -1558,7 +1716,7 @@ local function UpdateExploredMask()
 		RenderExploredMaskContents(readTexture)
 	end)
 	if not ok then
-		Spring.Echo("[MCL FOW r25] ERROR: explored-mask update failed: " .. tostring(err))
+		Spring.Echo("[MCL FOW r27] ERROR: explored-mask update failed: " .. tostring(err))
 		exploredMaskFailed = true
 		exploredMaskHasData = false
 		VIEW_STATE.StoreActiveExploredBank()
@@ -1570,7 +1728,7 @@ local function UpdateExploredMask()
 	VIEW_STATE.StoreActiveExploredBank()
 	if not loggedFirstExploredUpdate then
 		loggedFirstExploredUpdate = true
-		Spring.Echo("[MCL FOW r25] First explored-memory update completed successfully in DrawGenesis().")
+		Spring.Echo("[MCL FOW r27] First explored-memory update completed successfully in DrawGenesis().")
 	end
 
 	return true
@@ -1634,13 +1792,13 @@ local function InitializeModelDepthCaptureTextures()
 	featureDepthTexture = CreateDepthTexture()
 	if not unitDepthTexture or not featureDepthTexture then
 		DeleteModelDepthCaptureTextures()
-		Spring.Echo("[MCL FOW r25] WARNING: could not create model-depth capture textures; final FOW will fall back to map depth where model depth is unavailable.")
+		Spring.Echo("[MCL FOW r27] WARNING: could not create model-depth capture textures; final FOW will fall back to map depth where model depth is unavailable.")
 		return false
 	end
 
 	modelDepthWidth = width
 	modelDepthHeight = height
-	Spring.Echo("[MCL FOW r25] Model-depth capture textures created at " .. width .. "x" .. height .. ".")
+	Spring.Echo("[MCL FOW r27] Model-depth capture textures created at " .. width .. "x" .. height .. ".")
 	return true
 end
 
@@ -1658,7 +1816,7 @@ local function InitializeDepthCopyShader()
 	})
 
 	if not depthCopyShader then
-		Spring.Echo("[MCL FOW r25] WARNING: model-depth copy shader failed to compile.")
+		Spring.Echo("[MCL FOW r27] WARNING: model-depth copy shader failed to compile.")
 		if gl.GetShaderLog then
 			local log = gl.GetShaderLog()
 			if log and log ~= "" then
@@ -1747,7 +1905,7 @@ local function CaptureCurrentModelDepth(targetTexture)
 	end)
 
 	if not ok then
-		Spring.Echo("[MCL FOW r25] WARNING: model-depth capture failed: " .. tostring(err))
+		Spring.Echo("[MCL FOW r27] WARNING: model-depth capture failed: " .. tostring(err))
 		return false
 	end
 	return didCopy
@@ -1801,7 +1959,7 @@ local function InitializeFogShader()
 	})
 
 	if not fogShader then
-		Spring.Echo("[MCL FOW r25] ERROR: screen-space FOW shader failed to compile.")
+		Spring.Echo("[MCL FOW r27] ERROR: screen-space FOW shader failed to compile.")
 		if gl.GetShaderLog then
 			local log = gl.GetShaderLog()
 			if log and log ~= "" then
@@ -1834,7 +1992,7 @@ local function InitializeFogShader()
 		local name = names[i]
 		local location = gl.GetUniformLocation(fogShader, name)
 		if type(location) ~= "number" or location < 0 then
-			Spring.Echo("[MCL FOW r25] ERROR: missing FOW shader uniform " .. name .. ".")
+			Spring.Echo("[MCL FOW r27] ERROR: missing FOW shader uniform " .. name .. ".")
 			if gl.DeleteShader then
 				gl.DeleteShader(fogShader)
 			end
@@ -1846,15 +2004,15 @@ local function InitializeFogShader()
 	end
 
 	fogShaderReady = true
-	Spring.Echo("[MCL FOW r25] Screen-space depth-reconstructed GLSL 1.30 fog compositor active; camera inverse supplied by compatibility GLSL state.")
+	Spring.Echo("[MCL FOW r27] Screen-space depth-reconstructed GLSL 1.30 fog compositor active; camera inverse supplied by compatibility GLSL state.")
 	return true
 end
 
 local function ValidateScreenFogRenderer()
-	Spring.Echo("[MCL FOW r25] Screen-space fog renderer ready; using GLSL compatibility inverse camera matrix.")
-	Spring.Echo("[MCL FOW r25] Final-scene fog compositor will combine map, captured unit, and captured feature depth.")
-	Spring.Echo("[MCL FOW r25] Unified Mech circle/sector mask and transport suppression active.")
-	Spring.Echo("[MCL FOW r25] Organic Unexplored/Explored boundary active; exploration state itself remains unmodified.")
+	Spring.Echo("[MCL FOW r27] Screen-space fog renderer ready; using GLSL compatibility inverse camera matrix.")
+	Spring.Echo("[MCL FOW r27] Final-scene fog compositor will combine map, captured unit, and captured feature depth.")
+	Spring.Echo("[MCL FOW r27] Unified Mech circle/sector mask and transport suppression active.")
+	Spring.Echo("[MCL FOW r27] Organic Unexplored/Explored boundary active; exploration state itself remains unmodified.")
 	return true
 end
 
@@ -1875,7 +2033,7 @@ local function BeginFogShader()
 		gl.Texture(0, false)
 		if not loggedDepthTextureFailure then
 			loggedDepthTextureFailure = true
-			Spring.Echo("[MCL FOW r25] ERROR: could not bind " .. MAP_DEPTH_TEXTURE .. "; final screen-space FOW cannot render.")
+			Spring.Echo("[MCL FOW r27] ERROR: could not bind " .. MAP_DEPTH_TEXTURE .. "; final screen-space FOW cannot render.")
 		end
 		return false
 	end
@@ -1887,7 +2045,7 @@ local function BeginFogShader()
 		gl.Texture(3, false)
 		if not loggedNativeLosBindFailure then
 			loggedNativeLosBindFailure = true
-			Spring.Echo("[MCL FOW r25] WARNING: could not bind " .. NATIVE_LOS_TEXTURE .. "; only custom Mech sight will contribute to current visibility.")
+			Spring.Echo("[MCL FOW r27] WARNING: could not bind " .. NATIVE_LOS_TEXTURE .. "; only custom Mech sight will contribute to current visibility.")
 		end
 	end
 
@@ -1924,8 +2082,8 @@ local function BeginFogShader()
 	gl.Uniform(fogUniforms.edgeLow, FOG_EDGE_LOW)
 	gl.Uniform(fogUniforms.edgeHigh, FOG_EDGE_HIGH)
 	gl.Uniform(fogUniforms.edgeSampleRadius, FOG_EDGE_SAMPLE_RADIUS)
-	-- r25 diagnostic: exclude native $info:los only from final world Visible
-	-- presentation so the custom 3072 Mech mask can be judged in isolation.
+	-- Native $info:los is intentionally excluded from final Visible presentation;
+	-- it remains active for engine gameplay and Explored-memory accumulation.
 	gl.Uniform(fogUniforms.nativeLosAvailable, 0.0)
 	gl.Uniform(fogUniforms.unitDepthAvailable, unitAvailable)
 	gl.Uniform(fogUniforms.featureDepthAvailable, featureAvailable)
@@ -1993,23 +2151,23 @@ function widget:Initialize()
 	SuppressNativeLosOverlay()
 
 	if not InitializeVisionMaskTexture() then
-		Spring.Echo("[MCL FOW r25] Custom FOW disabled because the visibility mask could not be created.")
+		Spring.Echo("[MCL FOW r27] Custom FOW disabled because the visibility mask could not be created.")
 		return
 	end
 	if not InitializeVisionMaskCoverageShader() then
-		Spring.Echo("[MCL FOW r25] Custom FOW disabled because smooth visibility-mask coverage could not be initialized.")
+		Spring.Echo("[MCL FOW r27] Custom FOW disabled because smooth visibility-mask coverage could not be initialized.")
 		return
 	end
 
 	VIEW_STATE.RefreshPerspective(true)
 	if not exploredMaskReady or exploredMaskFailed then
-		Spring.Echo("[MCL FOW r25] Custom FOW disabled because the active allyteam Explored-memory textures could not be created.")
+		Spring.Echo("[MCL FOW r27] Custom FOW disabled because the active allyteam Explored-memory textures could not be created.")
 		return
 	end
 	RefreshAlliedMechs(true)
 
 	if not InitializeExploredUpdateShader() then
-		Spring.Echo("[MCL FOW r25] Custom FOW disabled because the explored-memory update shader could not be created.")
+		Spring.Echo("[MCL FOW r27] Custom FOW disabled because the explored-memory update shader could not be created.")
 		return
 	end
 
@@ -2017,7 +2175,7 @@ function widget:Initialize()
 	InitializeDepthCopyShader()
 
 	if not InitializeFogShader() then
-		Spring.Echo("[MCL FOW r25] Custom FOW disabled because the fog shader could not be created.")
+		Spring.Echo("[MCL FOW r27] Custom FOW disabled because the fog shader could not be created.")
 		return
 	end
 
@@ -2025,15 +2183,17 @@ function widget:Initialize()
 	MINIMAP_STYLE.InitializeFogTexture()
 
 	if not ValidateScreenFogRenderer() then
-		Spring.Echo("[MCL FOW r25] Custom FOW disabled because screen-space depth fog rendering is unavailable.")
+		Spring.Echo("[MCL FOW r27] Custom FOW disabled because screen-space depth fog rendering is unavailable.")
 		return
 	end
 
-	Spring.Echo("[MCL FOW r25] Native LOS overlay suppressed; custom MCL FOW is authoritative for map presentation.")
-	Spring.Echo("[MCL FOW r25] TEST MODE: final Visible presentation uses only the custom 3072 Mech close-sight/sector mask; native LOS remains active for gameplay and Explored-memory tracking.")
-	Spring.Echo("[MCL FOW r25] Tactical AR, radar, BAP and ECM presentation is intentionally delegated to mcl_gui_rings.lua.")
-	Spring.Echo("[MCL FOW r25] Minimap uses a cached visual overlay built from the same Unexplored / Explored / Visible state as the world.")
-	Spring.Echo("[MCL FOW r25] Allyteam-aware player/spectator perspectives and visual-only /fow toggle active.")
+	Spring.Echo("[MCL FOW r27] Native LOS overlay suppressed; custom MCL FOW is authoritative for map presentation.")
+	Spring.Echo("[MCL FOW r27] Final Visible presentation uses the custom 1024 Mech close-sight/sector mask; native LOS remains active for gameplay and Explored-memory tracking.")
+	Spring.Echo("[MCL FOW r27] Terrain-aware visual occlusion active: custom Mech sight is ray-tested against the live $heightmap from cockpit height.")
+	Spring.Echo("[MCL FOW r27] Allied non-sector LOS providers are mirrored into the custom Visible mask using their live circular sight radius.")
+	Spring.Echo("[MCL FOW r27] Tactical AR, radar, BAP and ECM presentation is intentionally delegated to mcl_gui_rings.lua.")
+	Spring.Echo("[MCL FOW r27] Minimap uses a cached visual overlay built from the same Unexplored / Explored / Visible state as the world.")
+	Spring.Echo("[MCL FOW r27] Allyteam-aware player/spectator perspectives and visual-only /fow toggle active.")
 end
 
 function widget:Shutdown()
@@ -2139,15 +2299,15 @@ function widget:TextCommand(command)
 	VIEW_STATE.RefreshPerspective(false)
 	local cheatsEnabled = Spring.IsCheatingEnabled and Spring.IsCheatingEnabled() or false
 	if not VIEW_STATE.spectating and not cheatsEnabled then
-		Spring.Echo("[MCL FOW r25] /fow requires /cheat while playing. Spectators may use it freely.")
+		Spring.Echo("[MCL FOW r27] /fow requires /cheat while playing. Spectators may use it freely.")
 		return true
 	end
 
 	VIEW_STATE.fowEnabled = not VIEW_STATE.fowEnabled
 	if VIEW_STATE.fowEnabled then
-		Spring.Echo("[MCL FOW r25] FOW presentation ON. Unexplored / Explored / Visible state was preserved while hidden.")
+		Spring.Echo("[MCL FOW r27] FOW presentation ON. Unexplored / Explored / Visible state was preserved while hidden.")
 	else
-		Spring.Echo("[MCL FOW r25] FOW presentation OFF. This is visual only; LOS, detection and exploration tracking continue unchanged.")
+		Spring.Echo("[MCL FOW r27] FOW presentation OFF. This is visual only; LOS, detection and exploration tracking continue unchanged.")
 	end
 	return true
 end
@@ -2195,7 +2355,7 @@ function widget:DrawGenesis()
 end
 
 function widget:DrawWorldPreUnit()
-	-- Intentionally empty in r25. Fog is composited after opaque units/features
+	-- Intentionally empty in r27. Fog is composited after opaque units/features
 	-- so model antialiasing is resolved before darkness is applied.
 end
 
@@ -2212,7 +2372,7 @@ function widget:DrawFeaturesPostDeferred()
 end
 
 function widget:DrawInMiniMapBackground(sx, sy)
-	-- Intentionally empty in r25. The pre-rendered minimap FOW texture is drawn
+	-- Intentionally empty in r27. The pre-rendered minimap FOW texture is drawn
 	-- in DrawInMiniMap instead. This does not change visibility state or FOW
 	-- generation; it only moves the final minimap compositing stage.
 end
@@ -2222,7 +2382,7 @@ function widget:DrawInMiniMap(sx, sy)
 	-- and AR overlays are rendered by mcl_gui_rings.lua.
 	if not MINIMAP_STYLE.loggedFirstForegroundDraw then
 		MINIMAP_STYLE.loggedFirstForegroundDraw = true
-		Spring.Echo("[MCL FOW r25] DrawInMiniMap foreground compositor reached; drawing cached minimap FOW texture.")
+		Spring.Echo("[MCL FOW r27] DrawInMiniMap foreground compositor reached; drawing cached minimap FOW texture.")
 	end
 	MINIMAP_STYLE.DrawFog(sx, sy)
 end
