@@ -3,7 +3,7 @@
 --
 -- UNIFIED TWO-RING CUSTOM-PROJECTION TERRAIN
 --
--- Revision: 2026-08-23-two-ring-unified-custom-hex-r1
+-- Revision: 2026-08-29-r2
 --
 -- Design:
 --
@@ -42,7 +42,7 @@ function widget:GetInfo()
     }
 end
 
-local SOURCE_VERSION = "2026-08-23-two-ring-unified-custom-hex-r1"
+local SOURCE_VERSION = "2026-08-29-r6"
 
 --------------------------------------------------------------------------------
 -- Configuration
@@ -58,17 +58,23 @@ local CFG = {
     outerGridSize = 128,
 
     --------------------------------------------------------------------------
-    -- Brightness
+    -- Exterior FOW presentation
     --------------------------------------------------------------------------
 
-    exteriorBrightness = 0.40,
-
-    -- Main artistic control.
+    -- Match gui_mcl_fow_r27's Unexplored presentation exactly:
+    -- FOG_COLOR = {0.025, 0.030, 0.035}
+    -- UNEXPLORED_FOG_ALPHA = 0.86
     --
-    -- 1.00 = baseline
-    -- 0.90 = 10% darker
-    -- 1.10 = 10% brighter
-    exteriorBrightnessAdjust = 1.00,
+    -- The mirrored terrain is first rendered normally, then composited toward
+    -- this color at the same alpha as Unexplored terrain. This replaces the old
+    -- YCbCr brightness adjustment, which could produce map-dependent hue shifts.
+    unexploredFogColor = {
+        0.025,
+        0.030,
+        0.035,
+    },
+
+    unexploredFogAlpha = 0.86,
 
     --------------------------------------------------------------------------
     -- Hex overlay
@@ -91,12 +97,30 @@ local CFG = {
     },
 
     --------------------------------------------------------------------------
+    -- Playable / exterior terrain depth ordering
+    --------------------------------------------------------------------------
+
+    -- Native map-depth values at or above this are treated as clear sky /
+    -- no playable terrain at that screen pixel.
+    mapDepthClearThreshold = 0.999999,
+
+    -- Small camera-space bias in elmos. Positive values slightly favor the
+    -- playable map only when surfaces are effectively coincident, reducing
+    -- shimmer without forcing playable terrain to always win.
+    depthOrderBias = 1.0,
+
+    --------------------------------------------------------------------------
     -- Exterior land / water boundary
     --------------------------------------------------------------------------
 
-    -- Exterior terrain at or below the active water plane is discarded so
-    -- native Recoil water remains responsible for submerged areas.
-    waterHeightBias = 0.50,
+    -- Small tolerance around the native water plane when separating the
+    -- normal dry-terrain pass from the submerged seabed pass.
+    waterSplitBias = 0.50,
+
+    -- Exterior-only tint applied over native water so exterior water visually
+    -- matches Unexplored FOW. This is separate from terrain FOW alpha because
+    -- native water already includes lighting, reflections, and translucency.
+    exteriorWaterFogAlpha = 0.58,
 
     --------------------------------------------------------------------------
     -- Unified camera-focus haze
@@ -149,6 +173,8 @@ local MAP = {
 local STATE = {
     shader = nil,
     uniform = {},
+
+    mapDepthAvailable = false,
 
     minHeight = -1000,
     maxHeight = 1000,
@@ -206,6 +232,21 @@ local ENV = {
 --------------------------------------------------------------------------------
 -- Utility
 --------------------------------------------------------------------------------
+
+local function TextureExists(name)
+    if not gl.TextureInfo then
+        return false
+    end
+
+    local ok, info =
+        pcall(
+            gl.TextureInfo,
+            name
+        )
+
+    return ok and info ~= nil
+end
+
 
 local function SafeCall(func, ...)
     if not func then
@@ -510,11 +551,15 @@ uniform vec2 mapSize;
 uniform vec2 gridStep;
 uniform float cellsX;
 
+uniform float waterLevel;
+uniform float waterFogPass;
+
 out DataVS
 {
     vec2 uv;
     vec3 worldPos;
     float outsideDistance;
+    float sourceTerrainHeight;
 };
 
 
@@ -626,6 +671,14 @@ void main()
             0.0
         ).x;
 
+    float sampledTerrainHeight =
+        height;
+
+    if (waterFogPass > 0.5)
+    {
+        height = waterLevel;
+    }
+
     vec2 mirroredXZ =
         mix(
             sourceXZ,
@@ -660,6 +713,9 @@ void main()
     outsideDistance =
         outside;
 
+    sourceTerrainHeight =
+        sampledTerrainHeight;
+
     gl_Position =
         projectionMatrix
         * viewMatrix
@@ -676,11 +732,28 @@ local FRAGMENT_SHADER = [[
 
 uniform sampler2D colorTex;
 uniform sampler2D hexTex;
+uniform sampler2D mapDepthTex;
 
 uniform vec2 mapSize;
+uniform vec2 viewportSize;
 
-uniform float exteriorBrightness;
-uniform float exteriorBrightnessAdjust;
+uniform float useMapDepthMask;
+uniform float mapDepthClearThreshold;
+uniform float depthOrderBias;
+
+uniform vec3 nativeCameraPos;
+uniform vec3 nativeCameraForward;
+uniform float nativeProjectionA;
+uniform float nativeProjectionB;
+
+uniform vec3 unexploredFogColor;
+uniform float unexploredFogAlpha;
+
+uniform float waterLevel;
+uniform float waterSplitBias;
+uniform float underwaterPass;
+uniform float waterFogPass;
+uniform float exteriorWaterFogAlpha;
 
 uniform float hexTileWorldSize;
 uniform float hexOverlayOpacity;
@@ -688,82 +761,81 @@ uniform vec3 hexOverlayTint;
 
 uniform vec2 focusPosition;
 
-uniform vec3 fogColor;
+uniform vec3 distanceFogColor;
 
 uniform float focusFogStart;
 uniform float focusFogEnd;
-
-uniform float waterLevel;
-uniform float waterHeightBias;
 
 in DataVS
 {
     vec2 uv;
     vec3 worldPos;
     float outsideDistance;
+    float sourceTerrainHeight;
 };
 
 out vec4 fragColor;
 
 
-const mat3 RGB2YCBCR =
-    mat3(
-         0.2126,
-        -0.114572,
-         0.5,
-
-         0.7152,
-        -0.385428,
-        -0.454153,
-
-         0.0722,
-         0.5,
-        -0.0458471
-    );
-
-
-const mat3 YCBCR2RGB =
-    mat3(
-        1.0,
-        1.0,
-        1.0,
-
-        0.0,
-       -0.187324,
-        1.8556,
-
-        1.5748,
-       -0.468124,
-        0.0
-    );
-
-
-vec3 ApplyExteriorBrightness(vec3 color)
-{
-    vec3 ycbcr =
-        RGB2YCBCR
-        * color;
-
-    float brightnessFactor =
-        exteriorBrightness
-        * exteriorBrightnessAdjust;
-
-    ycbcr.x =
-        clamp(
-            ycbcr.x
-            * brightnessFactor,
-            0.0,
-            1.0
-        );
-
-    return
-        YCBCR2RGB
-        * ycbcr;
-}
-
-
 void main()
 {
+    // Native playable terrain and the exterior extension use different
+    // projection far planes, so raw hardware depth values are not directly
+    // comparable. Sample native depth only to detect a playable surface, then
+    // compare both surfaces in the same native camera-space distance.
+    if (useMapDepthMask > 0.5)
+    {
+        vec2 screenUV =
+            gl_FragCoord.xy
+            / max(
+                viewportSize,
+                vec2(1.0)
+            );
+
+        float nativeMapDepth =
+            texture(
+                mapDepthTex,
+                screenUV
+            ).r;
+
+        // Clear native depth means no playable terrain is present here.
+        // Skip all additional ordering math in that common exterior case.
+        if (nativeMapDepth < mapDepthClearThreshold)
+        {
+            float denominator =
+                nativeMapDepth
+                - nativeProjectionA;
+
+            if (abs(denominator) > 0.000001)
+            {
+                float nativeViewDepth =
+                    abs(
+                        nativeProjectionB
+                        / denominator
+                    );
+
+                // One subtraction and one dot product gives the exterior
+                // fragment's distance along the native camera forward axis.
+                float exteriorViewDepth =
+                    dot(
+                        worldPos.xyz
+                        - nativeCameraPos,
+                        nativeCameraForward
+                    );
+
+                // Native playable terrain wins only when it is actually nearer.
+                if (
+                    nativeViewDepth
+                    + depthOrderBias
+                    < exteriorViewDepth
+                )
+                {
+                    discard;
+                }
+            }
+        }
+    }
+
     // The extension is exterior-only. Even if a mirrored/custom-projection
     // triangle ever overlaps the playable rectangle in screen/depth space,
     // it is never allowed to shade pixels whose world X/Z lie inside it.
@@ -778,10 +850,48 @@ void main()
         discard;
     }
 
-    // Native Recoil water remains responsible for submerged exterior areas.
-    if (worldPos.y <= waterLevel + waterHeightBias)
+    // Exterior water FOW tint pass.
+    //
+    // The vertex shader flattens this pass to the native water plane, while
+    // sourceTerrainHeight preserves the mirrored terrain's original height.
+    // Only mirrored cells that are actually underwater contribute.
+    if (waterFogPass > 0.5)
     {
-        discard;
+        if (sourceTerrainHeight > waterLevel + waterSplitBias)
+        {
+            discard;
+        }
+
+        fragColor = vec4(
+            unexploredFogColor,
+            clamp(
+                exteriorWaterFogAlpha,
+                0.0,
+                1.0
+            )
+        );
+
+        return;
+    }
+
+    // Dry terrain and submerged seabed are rendered as separate passes.
+    //
+    // The dry pass writes depth normally. The submerged pass is submitted
+    // again with depth writes disabled on the Lua side, allowing native
+    // translucent Recoil water to remain visible over the mirrored seabed.
+    if (underwaterPass > 0.5)
+    {
+        if (worldPos.y > waterLevel + waterSplitBias)
+        {
+            discard;
+        }
+    }
+    else
+    {
+        if (worldPos.y <= waterLevel + waterSplitBias)
+        {
+            discard;
+        }
     }
 
     vec2 textureDimensions =
@@ -812,9 +922,40 @@ void main()
             sampleUV
         ).rgb;
 
+    float focusDistance =
+        distance(
+            focusPosition,
+            worldPos.xz
+        );
+
+    float visibility =
+        1.0
+        - smoothstep(
+            focusFogStart,
+            focusFogEnd,
+            focusDistance
+        );
+
     color =
-        ApplyExteriorBrightness(
-            color
+        mix(
+            distanceFogColor,
+            color,
+            visibility
+        );
+
+    // Apply the same compositing used by gui_mcl_fow_r27 for Unexplored
+    // terrain. Because this happens after the atmospheric distance haze, the
+    // exterior remains visually locked to the FOW palette instead of inheriting
+    // strong map-specific coloration.
+    color =
+        mix(
+            color,
+            unexploredFogColor,
+            clamp(
+                unexploredFogAlpha,
+                0.0,
+                1.0
+            )
         );
 
     // World-space tiled overlay. Because UVs come from world X/Z rather than
@@ -851,27 +992,6 @@ void main()
             hexBlend
         );
 
-    float focusDistance =
-        distance(
-            focusPosition,
-            worldPos.xz
-        );
-
-    float visibility =
-        1.0
-        - smoothstep(
-            focusFogStart,
-            focusFogEnd,
-            focusDistance
-        );
-
-    color =
-        mix(
-            fogColor,
-            color,
-            visibility
-        );
-
     fragColor =
         vec4(
             color,
@@ -892,8 +1012,24 @@ local REQUIRED_UNIFORMS = {
     "gridStep",
     "cellsX",
 
-    "exteriorBrightness",
-    "exteriorBrightnessAdjust",
+    "viewportSize",
+    "useMapDepthMask",
+    "mapDepthClearThreshold",
+    "depthOrderBias",
+
+    "nativeCameraPos",
+    "nativeCameraForward",
+    "nativeProjectionA",
+    "nativeProjectionB",
+
+    "unexploredFogColor",
+    "unexploredFogAlpha",
+
+    "waterLevel",
+    "waterSplitBias",
+    "underwaterPass",
+    "waterFogPass",
+    "exteriorWaterFogAlpha",
 
     "hexTileWorldSize",
     "hexOverlayOpacity",
@@ -901,13 +1037,11 @@ local REQUIRED_UNIFORMS = {
 
     "focusPosition",
 
-    "fogColor",
+    "distanceFogColor",
 
     "focusFogStart",
     "focusFogEnd",
 
-    "waterLevel",
-    "waterHeightBias",
 }
 
 
@@ -918,9 +1052,10 @@ local function InitShader()
             fragment = FRAGMENT_SHADER,
 
             uniformInt = {
-                heightTex = 0,
-                colorTex  = 1,
-                hexTex    = 2,
+                heightTex   = 0,
+                colorTex    = 1,
+                hexTex      = 2,
+                mapDepthTex = 3,
             },
         })
 
@@ -1108,6 +1243,13 @@ local function BindTextures()
         2,
         "bitmaps/maphex.png"
     )
+
+    if STATE.mapDepthAvailable then
+        gl.Texture(
+            3,
+            "$map_gbuffer_zvaltex"
+        )
+    end
 end
 
 
@@ -1115,6 +1257,7 @@ local function UnbindTextures()
     gl.Texture(0, false)
     gl.Texture(1, false)
     gl.Texture(2, false)
+    gl.Texture(3, false)
 end
 
 --------------------------------------------------------------------------------
@@ -1218,9 +1361,155 @@ end
 -- Shared draw uniforms
 --------------------------------------------------------------------------------
 
+local function GetNativeDepthOrderingState()
+    local cameraX,
+          cameraY,
+          cameraZ =
+        Spring.GetCameraPosition()
+
+    if not cameraX then
+        return nil
+    end
+
+    local cameraState =
+        Spring.GetCameraState
+        and Spring.GetCameraState()
+        or nil
+
+    local forwardX,
+          forwardY,
+          forwardZ
+
+    if cameraState
+        and cameraState.dx
+        and cameraState.dy
+        and cameraState.dz
+    then
+        forwardX = cameraState.dx
+        forwardY = cameraState.dy
+        forwardZ = cameraState.dz
+    else
+        local viewMatrix = {
+            gl.GetMatrixData(
+                "view"
+            )
+        }
+
+        if #viewMatrix ~= 16 then
+            return nil
+        end
+
+        forwardX = -viewMatrix[3]
+        forwardY = -viewMatrix[7]
+        forwardZ = -viewMatrix[11]
+    end
+
+    local forwardLength =
+        math.sqrt(
+            forwardX * forwardX
+            + forwardY * forwardY
+            + forwardZ * forwardZ
+        )
+
+    if forwardLength <= 0.000001 then
+        return nil
+    end
+
+    forwardX = forwardX / forwardLength
+    forwardY = forwardY / forwardLength
+    forwardZ = forwardZ / forwardLength
+
+    local projection = {
+        gl.GetMatrixData(
+            "projection"
+        )
+    }
+
+    if #projection ~= 16 then
+        return nil
+    end
+
+    return cameraX,
+           cameraY,
+           cameraZ,
+           forwardX,
+           forwardY,
+           forwardZ,
+           projection[11],
+           projection[15]
+end
+
+
 local function UploadSharedUniforms(focusX, focusZ)
     local U =
         STATE.uniform
+
+    local viewX,
+          viewY =
+        gl.GetViewSizes()
+
+    gl.Uniform(
+        U.viewportSize,
+        viewX,
+        viewY
+    )
+
+    gl.Uniform(
+        U.mapDepthClearThreshold,
+        CFG.mapDepthClearThreshold
+    )
+
+    gl.Uniform(
+        U.depthOrderBias,
+        CFG.depthOrderBias
+    )
+
+    local cameraX,
+          cameraY,
+          cameraZ,
+          forwardX,
+          forwardY,
+          forwardZ,
+          projectionA,
+          projectionB =
+        GetNativeDepthOrderingState()
+
+    local depthOrderingAvailable =
+        STATE.mapDepthAvailable
+        and cameraX ~= nil
+        and projectionA ~= nil
+        and projectionB ~= nil
+
+    gl.Uniform(
+        U.useMapDepthMask,
+        depthOrderingAvailable and 1.0 or 0.0
+    )
+
+    if depthOrderingAvailable then
+        gl.Uniform(
+            U.nativeCameraPos,
+            cameraX,
+            cameraY,
+            cameraZ
+        )
+
+        gl.Uniform(
+            U.nativeCameraForward,
+            forwardX,
+            forwardY,
+            forwardZ
+        )
+
+        gl.Uniform(
+            U.nativeProjectionA,
+            projectionA
+        )
+
+        gl.Uniform(
+            U.nativeProjectionB,
+            projectionB
+        )
+    end
 
     gl.Uniform(
         U.mapSize,
@@ -1229,13 +1518,30 @@ local function UploadSharedUniforms(focusX, focusZ)
     )
 
     gl.Uniform(
-        U.exteriorBrightness,
-        CFG.exteriorBrightness
+        U.unexploredFogColor,
+        CFG.unexploredFogColor[1],
+        CFG.unexploredFogColor[2],
+        CFG.unexploredFogColor[3]
     )
 
     gl.Uniform(
-        U.exteriorBrightnessAdjust,
-        CFG.exteriorBrightnessAdjust
+        U.unexploredFogAlpha,
+        CFG.unexploredFogAlpha
+    )
+
+    gl.Uniform(
+        U.waterLevel,
+        ENV.waterLevel
+    )
+
+    gl.Uniform(
+        U.waterSplitBias,
+        CFG.waterSplitBias
+    )
+
+    gl.Uniform(
+        U.exteriorWaterFogAlpha,
+        CFG.exteriorWaterFogAlpha
     )
 
     gl.Uniform(
@@ -1262,7 +1568,7 @@ local function UploadSharedUniforms(focusX, focusZ)
     )
 
     gl.Uniform(
-        U.fogColor,
+        U.distanceFogColor,
         ENV.fog.r,
         ENV.fog.g,
         ENV.fog.b
@@ -1278,15 +1584,6 @@ local function UploadSharedUniforms(focusX, focusZ)
         CFG.focusFogEnd * MAP.minSize
     )
 
-    gl.Uniform(
-        U.waterLevel,
-        ENV.waterLevel
-    )
-
-    gl.Uniform(
-        U.waterHeightBias,
-        CFG.waterHeightBias
-    )
 end
 
 --------------------------------------------------------------------------------
@@ -1387,7 +1684,131 @@ local function DrawExtension()
         focusZ
     )
 
-    -- One projection, one haze model, two resolutions.
+    -- Pass 1: dry exterior terrain. This is the normal terrain path and
+    -- continues to write custom-projection depth exactly as before.
+    gl.Uniform(
+        U.underwaterPass,
+        0.0
+    )
+
+    gl.Uniform(
+        U.waterFogPass,
+        0.0
+    )
+
+    DrawLayer(
+        "outer"
+    )
+
+    DrawLayer(
+        "inner"
+    )
+
+    -- Pass 2: submerged mirrored seabed. Keep depth testing enabled but stop
+    -- writing its incompatible custom-projection depth into the shared depth
+    -- buffer. Native Recoil water can therefore render over it afterward while
+    -- still having actual terrain colour/geometry beneath its translucency.
+    gl.DepthMask(
+        false
+    )
+
+    gl.Uniform(
+        U.underwaterPass,
+        1.0
+    )
+
+    gl.Uniform(
+        U.waterFogPass,
+        0.0
+    )
+
+    DrawLayer(
+        "outer"
+    )
+
+    DrawLayer(
+        "inner"
+    )
+
+    -- Restore the state expected by the caller before leaving this helper.
+    gl.DepthMask(
+        true
+    )
+
+    gl.UseShader(
+        0
+    )
+
+    UnbindTextures()
+end
+
+
+local function DrawExteriorWaterFog()
+    local view = {
+        gl.GetMatrixData(
+            "view"
+        )
+    }
+
+    local engineProjection = {
+        gl.GetMatrixData(
+            "projection"
+        )
+    }
+
+    if
+        #view ~= 16
+        or #engineProjection ~= 16
+    then
+        return
+    end
+
+    local extendedProjection =
+        BuildExtendedProjection(
+            engineProjection
+        )
+
+    if not extendedProjection then
+        return
+    end
+
+    local focusX, focusZ =
+        GetCameraFocus()
+
+    local U =
+        STATE.uniform
+
+    BindTextures()
+
+    gl.UseShader(
+        STATE.shader
+    )
+
+    gl.UniformMatrix(
+        U.viewMatrix,
+        unpack(view)
+    )
+
+    gl.UniformMatrix(
+        U.projectionMatrix,
+        unpack(extendedProjection)
+    )
+
+    UploadSharedUniforms(
+        focusX,
+        focusZ
+    )
+
+    gl.Uniform(
+        U.underwaterPass,
+        0.0
+    )
+
+    gl.Uniform(
+        U.waterFogPass,
+        1.0
+    )
+
     DrawLayer(
         "outer"
     )
@@ -1440,6 +1861,21 @@ function widget:Initialize()
         )
 
         return
+    end
+
+    STATE.mapDepthAvailable =
+        TextureExists(
+            "$map_gbuffer_zvaltex"
+        )
+
+    if STATE.mapDepthAvailable then
+        Spring.Echo(
+            "[Map Edge Extension] Native playable/exterior depth ordering source: AVAILABLE"
+        )
+    else
+        Spring.Echo(
+            "[Map Edge Extension] WARNING: $map_gbuffer_zvaltex unavailable; native/exterior depth ordering disabled"
+        )
     end
 
     STATE.layers.inner.gridSize =
@@ -1530,6 +1966,36 @@ function widget:Initialize()
     )
 
     Spring.Echo(
+        "[Map Edge Extension] Native/exterior depth ordering available: "
+        .. tostring(STATE.mapDepthAvailable)
+    )
+
+    Spring.Echo(
+        string.format(
+            "[Map Edge Extension] Exterior Unexplored FOW match: color %.3f %.3f %.3f | alpha %.2f",
+            CFG.unexploredFogColor[1],
+            CFG.unexploredFogColor[2],
+            CFG.unexploredFogColor[3],
+            CFG.unexploredFogAlpha
+        )
+    )
+
+    Spring.Echo(
+        string.format(
+            "[Map Edge Extension] Native/exterior camera-space depth bias: %.2f elmos",
+            CFG.depthOrderBias
+        )
+    )
+
+    Spring.Echo(
+        "[Map Edge Extension] Native view/projection matrices captured using Recoil multi-return convention"
+    )
+
+    Spring.Echo(
+        "[Map Edge Extension] Water treatment: dry terrain + submerged seabed + late-world exterior FOW tint"
+    )
+
+    Spring.Echo(
         "[Map Edge Extension] Ready | revision "
         .. SOURCE_VERSION
     )
@@ -1592,6 +2058,60 @@ function widget:DrawWorldPreUnit()
     if gl.ResetState then
         gl.ResetState()
     else
+        gl.DepthTest(false)
+        gl.DepthMask(false)
+        gl.Culling(false)
+    end
+end
+
+
+function widget:DrawWorld()
+    if not STATE.shader then
+        return
+    end
+
+    if
+        STATE.layers.inner.instanceCount <= 0
+        and STATE.layers.outer.instanceCount <= 0
+    then
+        return
+    end
+
+    UpdateEnvironment()
+
+    if gl.ResetState then
+        gl.ResetState()
+    end
+
+    gl.Blending(
+        GL.SRC_ALPHA,
+        GL.ONE_MINUS_SRC_ALPHA
+    )
+
+    gl.DepthTest(
+        GL.LEQUAL
+    )
+
+    gl.DepthMask(
+        false
+    )
+
+    gl.Culling(
+        false
+    )
+
+    DrawExteriorWaterFog()
+
+    gl.UseShader(
+        0
+    )
+
+    UnbindTextures()
+
+    if gl.ResetState then
+        gl.ResetState()
+    else
+        gl.Blending(false)
         gl.DepthTest(false)
         gl.DepthMask(false)
         gl.Culling(false)
