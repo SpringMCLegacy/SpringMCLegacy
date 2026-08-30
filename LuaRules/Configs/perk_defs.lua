@@ -141,7 +141,7 @@ end
 
 local function deductSalvage(unitID, amount)
 	local teamID = Spring.GetUnitTeam(unitID)
-	GG.ChangeTeamSalvage(teamID, Spring.IsNoCostEnabled() and 0 or -amount)
+	GG.ChangeTeamResource(teamID, "salvage", Spring.IsNoCostEnabled() and 0 or -amount)
 end
 
 local function WeaponTypeCount(unitDefID, className)

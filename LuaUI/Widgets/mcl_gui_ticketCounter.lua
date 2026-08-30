@@ -229,7 +229,7 @@ function widget:GameFrame(n)
 		fps = "fps: " .. colors.white .. GetFPS()
 		local cBills = floor(GetTeamResources(MY_TEAM_ID, "metal"))
 		cBillsText = "C-Bills: " .. colors.grey .. cBills
-		local salvage = tonumber(GetTeamRulesParam(MY_TEAM_ID, "SALVAGE") or 0)
+		local salvage = tonumber(GetTeamRulesParam(MY_TEAM_ID, "salvage") or 0)
 		salvageText = "Salvage: " .. colors.slategray .. salvage
 		local tonnage, maxTonnage = GetTeamResources(MY_TEAM_ID, "energy")
 		maxTonnage = floor(maxTonnage) 

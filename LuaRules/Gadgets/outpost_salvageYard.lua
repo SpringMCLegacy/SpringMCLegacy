@@ -178,18 +178,6 @@ local function PinataLevel(unitID, delta)
 end
 GG.PinataLevel = PinataLevel
 
-local function GetTeamSalvage(teamID)
-	return teamSalvages[teamID] or 0
-end
-GG.GetTeamSalvage = GetTeamSalvage
-
-local function ChangeTeamSalvage(teamID, delta)
-	teamSalvages[teamID] = (teamSalvages[teamID] or 0) + delta
-	SetTeamRulesParam(teamID, "SALVAGE", teamSalvages[teamID])
-end
-GG.ChangeTeamSalvage = ChangeTeamSalvage
-
-
 -- BRV related functions --------------------------------------------------------------------------------
 local function GetMechCmdDesc(unitDefID)
 	local cmdDesc = {
@@ -536,7 +524,7 @@ function gadget:AllowCommand(unitID, unitDefID, teamID, cmdID, cmdParams, cmdOpt
 			local featureDef = FeatureDefs[GetFeatureDefID(featureID)]
 			-- TODO: Maybe add a animation in the yard script and have it be non-instant
 			local amount = math.floor(featureDef.metal / CONVERSION_RATE)
-			ChangeTeamSalvage(teamID, amount)
+			GG.ChangeTeamResource(teamID, "salvage", amount)
 			FeatureDetach(featureID)
 			DestroyFeature(featureID)
 			Spring.RemoveUnitCmdDesc(unitID, FindUnitCmdDesc(unitID, CMD_SCRAP)) -- TODO: hide / disable instead?
@@ -689,7 +677,7 @@ function gadget:GameFrame(n)
 				local totalSalvage = math.floor(totalRaw / CONVERSION_RATE)
 				local rawAvailable = math.min(CONVERSION_RATE, totalRaw)
 				local salvageAvailable = math.min(rawAvailable/CONVERSION_RATE, RATE_PER_TICK)
-				GG.ChangeTeamSalvage(teamID, salvageAvailable * yardLevels[yardID])
+				GG.ChangeTeamResource(teamID, "salvage", salvageAvailable * yardLevels[yardID])
 				-- consume the raw
 				yardRaws[yardID] = yardRaws[yardID] - rawAvailable
 				SetUnitHarvestStorage(yardID, yardRaws[yardID])
@@ -703,7 +691,7 @@ function gadget:GameFrame(n)
 				local unitDefID = GetUnitDefID(units[1])
 				if GG.mechCache[unitDefID] then
 					local teamID = GetUnitTeam(units[1])
-					ChangeTeamSalvage(teamID, info.amount)
+					GG.ChangeTeamResource(teamID, "salvage", info.amount)
 					DestroyFeature(featureID)
 				end
 			end

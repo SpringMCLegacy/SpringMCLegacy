@@ -212,7 +212,7 @@ local omniOrder = {"p", "a", "b", "c", "d", "e", "f", "g", "h"} -- TODO: maybe a
 
 
 local function CheckOmniOptions(unitID, teamID, cmdID)
-	local salvage = GG.GetTeamSalvage(teamID)
+	local salvage = GG.GetTeamResource(teamID, "salvage")
 	local cmdDescs = GetUnitCmdDescs(unitID) or EMPTY_TABLE
 	for cmdDescID = 1, #cmdDescs do
 		local buildDefID = cmdDescs[cmdDescID].id
@@ -410,7 +410,7 @@ function gadget:AllowCommand(unitID, unitDefID, teamID, cmdID, cmdParams, cmdOpt
 				env = GetScriptEnv(unitID)
 				CallAsUnit(unitID, env.script.TransportDrop, transporting[1])
 				DestroyUnit(transporting[1], false, true)
-				GG.ChangeTeamSalvage(teamID, salvage)
+				GG.ChangeTeamResource(teamID, "salvage", salvage)
 				return true
 			end
 			return false
@@ -438,8 +438,8 @@ function gadget:AllowCommand(unitID, unitDefID, teamID, cmdID, cmdParams, cmdOpt
 				end
 			elseif transporting[1] then  -- an omni config
 				local cost = (IsNoCostEnabled() and 0) or tonumber(UnitDefs[-cmdID].customParams.omniswapcost or 5)
-				if GG.GetTeamSalvage(teamID) >= cost then
-					GG.ChangeTeamSalvage(teamID, -cost)
+				if GG.GetTeamResource(teamID, "salvage") >= cost then
+					GG.ChangeTeamResource(teamID, "salvage", -cost)
 					local x,y,z = GetUnitPosition(unitID)
 					local newID = CreateUnit(-cmdID, x,y,z, 0, teamID, false, false)
 					local oldID = transporting[1]

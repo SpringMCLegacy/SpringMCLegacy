@@ -707,7 +707,7 @@ local OUTPOST_FUNCTION_ALIASES = {
 function gadget:UnitLoaded(unitID, unitDefID, unitTeam, transportID, transportTeam)
 	--if teamMechbayIDs[transportTeam][transportID] then
 	if teamOutpostIDs[transportTeam]["OUTPOST_MECHBAY"][transportID] then
-		Mod(unitID, transportID, GG.GetTeamSalvage(teamID))
+		Mod(unitID, transportID, GG.GetTeamResource(teamID, "salvage"))
 	end
 end
 

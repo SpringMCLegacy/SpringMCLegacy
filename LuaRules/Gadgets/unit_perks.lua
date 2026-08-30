@@ -157,7 +157,7 @@ local function UpdateUnitApps(unitID, unitDefID, appType)
 			newLevel = Spring.GetUnitExperience(unitID)
 			Spring.SetUnitRulesParam(unitID, "perk_xp", math.min(100, 100 * newLevel / GG.PERK_XP_COST))
 		elseif appType == "mods" then
-			newLevel = GG.GetTeamSalvage(teamID)
+			newLevel = GG.GetTeamResource(teamID, "salvage")
 			applierID = unitID
 			unitID = (Spring.GetUnitIsTransporting(unitID) or EMPTY_TABLE)[1]
 			if unitID then unitDefID = Spring.GetUnitDefID(unitID) end -- does this mean it was all a wasted effort anyway?
