@@ -535,7 +535,9 @@ function gadget:AllowCommand(unitID, unitDefID, teamID, cmdID, cmdParams, cmdOpt
 				supportCost = Spring.IsNoCostEnabled() and 0 or supportCost
 				if cBills >= supportCost then
 					local beaconID = Spring.GetUnitRulesParam(unitID, "beaconID")
-					GG.DropshipDelivery(beaconID, beaconID, teamID, GG.teamSide[teamID] .. "_bishop", -cmdID, 0, nil, 0, {x = 0, z = 0})
+					local bx, _, bz = GetUnitPosition(beaconID)
+					local ux, _, uz = GetUnitPosition(unitID)
+					GG.DropshipDelivery(beaconID, unitID, teamID, GG.teamSide[teamID] .. "_bishop", -cmdID, 0, nil, 0, {x = bx-ux, z = bz-uz})
 					UseTeamResource(teamID, "m", -supportCost)
 					return true
 				end
