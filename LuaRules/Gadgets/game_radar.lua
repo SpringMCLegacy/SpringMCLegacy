@@ -26,11 +26,12 @@ local GetUnitAllyTeam					= Spring.GetUnitAllyTeam
 local GetUnitIsActive 					= Spring.GetUnitIsActive
 local GetUnitIsDead 					= Spring.GetUnitIsDead
 local GetUnitLosState					= Spring.GetUnitLosState
+local GetUnitPiecePosDir 				= Spring.GetUnitPiecePosDir
 local GetUnitPosition					= Spring.GetUnitPosition
 local GetUnitRulesParam					= Spring.GetUnitRulesParam
 local GetUnitTransporter				= Spring.GetUnitTransporter
 local GetUnitsInCylinder				= Spring.GetUnitsInCylinder
-local GetUnitWeaponHaveFreeLineOfFire 	= Spring.GetUnitWeaponHaveFreeLineOfFire
+local TraceRayGroundBetweenPositions	= Spring.TraceRayGroundBetweenPositions
 local ValidUnitID						= Spring.ValidUnitID
 -- Synced Ctrl
 local EditUnitCmdDesc					= Spring.EditUnitCmdDesc
@@ -355,18 +356,20 @@ function gadget:GameFrame(n)
 						and mobileUnits[enemyID] -- is mobile
 						and not GetUnitTransporter(enemyID) -- Not current in a dropship
 						then
-							local ex, _, ez = GetUnitPosition(enemyID)
+							local _, _, _, ex, ey, ez = GetUnitPosition(enemyID, true) -- midpos
 							local inSector = GG.Vector.IsInsideSectorVector(ex, ez, x, z, v1x, v1z, v2x, v2z)
 							if inSector then
 								--Spring.Echo("inSector yes", enemyID, UnitDefs[Spring.GetUnitDefID(enemyID)].name)
 								-- check it is really this unit sector giving them los
-								local rayTrace = GetUnitWeaponHaveFreeLineOfFire(unitID, info.sight, enemyID)
-								if rayTrace then
+								--local rayTrace = GetUnitWeaponHaveFreeLineOfFire(unitID, info.sight, enemyID)
+								local sx, sy, sz = GetUnitPiecePosDir(unitID, info.cockpit)
+								local rayTraceHitGround = TraceRayGroundBetweenPositions(sx, sy, sz, ex, ey, ez)
+								if not rayTraceHitGround then
 									SetUnitLosState(enemyID, allyTeam, fullLOS)
 									SetUnitLosMask(enemyID, allyTeam, fullLOS)
 									sectorUnits[allyTeam][enemyID] = true
 									--Spring.Echo("rayTrace yes", enemyID, UnitDefs[Spring.GetUnitDefID(enemyID)].name)
-								--else
+								else
 									--Spring.Echo("rayTrace no", enemyID, UnitDefs[Spring.GetUnitDefID(enemyID)].name)
 								end
 							end
