@@ -9,7 +9,7 @@ local HunchbackIIC = Medium:New{
 	
 	customparams = {
 		tonnage			= 50,
-		cockpitheight	= 9.3,
+		cockpitheight	= 17.14,
 		mods			= {"jumpjets", "doubleheatsinks", "endosteel", "xlengine"},
     },	
 }

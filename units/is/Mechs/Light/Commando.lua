@@ -8,7 +8,7 @@ local Commando = Light:New{
 	trackStretch 		= 2,
 	
 	customparams = {
-		cockpitheight	= 7.1,
+		cockpitheight	= 15.61,
 		tonnage 		= 25,
     },
 }

@@ -8,7 +8,7 @@ local Blackjack = Medium:New{
 	trackStretch 		= 2,
 	
 	customparams = {
-		cockpitheight	= 10,
+		cockpitheight	= 12.71,
 		tonnage			= 50,
 		speed			= 60,
 		heatlimit 		= 10,--10 double

@@ -8,7 +8,7 @@ local Stiletto = Light:New{
 	trackStretch 		= 2.5,
 	
 	customparams = {
-		cockpitheight	= 2.6,
+		cockpitheight	= 6.55,
 		tonnage			= 35,
     },
 }

@@ -8,7 +8,7 @@ local Fafnir = Assault:New{
 	trackStretch 		= 2,
 	
 	customparams = {
-		cockpitheight	= 7,
+		cockpitheight	= 18.35,
 		tonnage			= 100,
     },
 }

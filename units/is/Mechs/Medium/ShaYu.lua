@@ -8,7 +8,7 @@ local ShaYu = Medium:New{
 	trackStretch 		= 2,
 	
 	customparams = {
-		cockpitheight	= 5.1,
+		cockpitheight	= 12.32,
 		tonnage			= 40,
     },
 }

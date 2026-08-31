@@ -9,7 +9,7 @@ local Adder = Light:New{
 	
     customparams = {
 		tonnage			= 35,
-		cockpitheight	= 4.6,
+		cockpitheight	= 7.77,
 		mods			= {"ferrofibrousarmour", "doubleheatsinks", "xlengine", "endosteel"},
 		omni			= true,
     },

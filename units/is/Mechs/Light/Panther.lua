@@ -8,7 +8,7 @@ local Panther = Light:New{
 	trackStretch 		= 2,
 	
 	customparams = {
-		cockpitheight	= 8,
+		cockpitheight	= 13.85,
 		tonnage 		= 35,
     },
 }

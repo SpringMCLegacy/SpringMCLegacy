@@ -8,7 +8,7 @@ local Scarabus = Light:New{
 	trackStretch 		= 2,
 	
 	customparams = {
-		cockpitheight	= 8.3,
+		cockpitheight	= 9.51,
 		tonnage			= 30,
     },
 }

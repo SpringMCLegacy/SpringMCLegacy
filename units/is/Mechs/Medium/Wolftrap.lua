@@ -8,7 +8,7 @@ local Wolftrap = Medium:New{
 	trackStretch 		= 2,
 	
 	customparams = {
-		cockpitheight	= 9.5,
+		cockpitheight	= 10.50,
 		tonnage			= 45,
     },
 }

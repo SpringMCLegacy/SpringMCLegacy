@@ -8,7 +8,7 @@ local Wolfhound = Light:New{
 	trackStretch 		= 2,
 	
 	customparams = {
-		cockpitheight	= 8.5,
+		cockpitheight	= 15.27,
 		tonnage 		= 35,
     },
 }

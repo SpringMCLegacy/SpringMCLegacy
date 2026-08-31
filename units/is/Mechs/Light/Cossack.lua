@@ -7,7 +7,7 @@ local Cossack = Light:New{
 	trackWidth			= 20,
 	trackStretch 		= 2,
 	customparams = {
-		cockpitheight	= 7,
+		cockpitheight	= 12.78,
 		tonnage 		= 20,
     },
 }

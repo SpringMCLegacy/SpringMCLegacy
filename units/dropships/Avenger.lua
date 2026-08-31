@@ -197,6 +197,7 @@ maxRudder          = 0.0015,
 		price      		= 36000,
 		maxfuel 		= 45,
 		unlocklevel 	= 2,
+		cockpitheight	= 25.23,
     },
 }
 

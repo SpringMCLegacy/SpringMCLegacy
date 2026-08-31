@@ -8,7 +8,7 @@ local Uziel = Medium:New{
 	trackStretch 		= 2,
 	
 	customparams = {
-		cockpitheight	= 1,
+		cockpitheight	= 5.31,
 		tonnage			= 50,
     },
 }

@@ -8,7 +8,7 @@ local Dart = Light:New{
 	trackStretch 		= 2,
 	
 	customparams = {
-		cockpitheight	= 5,
+		cockpitheight	= 10.52,
 		tonnage			= 25,
     },
 }

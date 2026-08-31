@@ -8,7 +8,7 @@ local Hunchback = Medium:New{
 	trackStretch 		= 2,
 	
 	customparams = {
-		cockpitheight	= 10.4,
+		cockpitheight	= 17.48,
 		tonnage			= 50,
     },	
 }

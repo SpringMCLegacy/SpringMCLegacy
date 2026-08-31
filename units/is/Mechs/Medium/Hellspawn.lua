@@ -8,7 +8,7 @@ local Hellspawn = Medium:New{
 	trackStretch 		= 2,
 	
 	customparams = {
-		cockpitheight	= 8.5,
+		cockpitheight	= 12.43,
 		tonnage			= 45,
     },
 }

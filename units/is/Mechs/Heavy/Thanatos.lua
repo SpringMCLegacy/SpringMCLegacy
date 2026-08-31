@@ -6,7 +6,7 @@ local Thanatos = Heavy:New{
 	trackWidth			= 46,
 	trackStretch 		= 2,
     customparams = {
-		cockpitheight	= 7.7,
+		cockpitheight	= 15.29,
 		tonnage			= 75,
     },
 }

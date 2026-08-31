@@ -8,7 +8,7 @@ local Jenner = Light:New{
 	trackStretch 		= 2,
 	
 	customparams = {
-		cockpitheight	= 3.9,
+		cockpitheight	= 7.90,
 		tonnage 		= 35,
     },
 }

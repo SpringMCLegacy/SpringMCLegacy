@@ -8,7 +8,7 @@ local Devastator = Assault:New{
 	trackStretch 		= 2,
 	
 	customparams = {
-		cockpitheight	= 9.4,
+		cockpitheight	= 20.34,
 		tonnage			= 100,
     },
 }

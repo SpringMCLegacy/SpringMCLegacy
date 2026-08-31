@@ -9,7 +9,7 @@ local Direwolf = Assault:New{
 	
 	customparams = {
 		tonnage			= 100,
-		cockpitheight	= 8.2,
+		cockpitheight	= 16.26,
 		mods			= {"doubleheatsinks", "xlengine"},
 		omni			= true,
     },	

@@ -275,11 +275,15 @@ function gadget:UnitCreated(unitID, unitDefID, teamID)
 			visionCache[unitDefID].cockpit = GG.lusHelper[unitDefID].cockpit
 			local losHeight = visionCache[unitDefID].losHeight
 			local pieceMap = Spring.GetUnitPieceMap(unitID)
-			local px, py, pz = Spring.GetUnitPiecePosition(unitID, pieceMap.cockpit)
-			local mx, my, mz = Spring.GetUnitPiecePosition(unitID, pieceMap.torso)
-			local pCent = (py-my-losHeight)/losHeight * 100
-			if pCent > 5 then
-				Spring.Echo("[game_radar.lua]", ud.name, "Unit losHeight is", losHeight, "but cockpit is at", py-my, "% error is ", pCent)
+			if pieceMap.cockpit then
+				local px, py, pz = Spring.GetUnitPiecePosition(unitID, pieceMap.cockpit)
+				local mx, my, mz = Spring.GetUnitPiecePosition(unitID, pieceMap.torso or pieceMap.body)
+				local pCent = (py-my-losHeight)/losHeight * 100
+				if pCent > 5 then
+					Spring.Echo("[game_radar.lua]", ud.name, "Unit losHeight is", losHeight, "but cockpit is at", py-my, "% error is ", pCent)
+				end
+			else
+				Spring.Echo("[game_radar.lua", ud.name, "is in visionCache but does not have a cockpit piece?")
 			end
 		end
 		unitSectorRadii[unitID] = SECTOR_RADIUS

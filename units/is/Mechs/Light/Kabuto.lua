@@ -8,7 +8,7 @@ local Kabuto = Light:New{
 	trackStretch 		= 2,
 	
 	customparams = {
-		cockpitheight	= 5.95,
+		cockpitheight	= 10.95,
 		tonnage 		= 20,
     },
 }

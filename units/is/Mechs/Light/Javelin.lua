@@ -8,7 +8,7 @@ local Javelin = Light:New{
 	trackStretch 		= 2,
 	
 	customparams = {
-		cockpitheight	= 5.3,
+		cockpitheight	= 10.95,
 		tonnage 		= 30,
     },
 }

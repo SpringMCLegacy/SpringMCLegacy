@@ -8,7 +8,7 @@ local Raven = Light:New{
 	trackStretch 		= 2,
 	
 	customparams = {
-		cockpitheight	= 2.1,
+		cockpitheight	= 5.40,
 		tonnage			= 35,
     },
 }
