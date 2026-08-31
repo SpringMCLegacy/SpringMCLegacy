@@ -8,7 +8,7 @@ local Fireball = Light:New{
 	trackStretch 		= 2,
 	
 	customparams = {
-		cockpitheight	= 5.95,
+		cockpitheight	= 12.01,
 		tonnage			= 20,
     },
 }

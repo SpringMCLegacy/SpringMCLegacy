@@ -60,6 +60,8 @@ for unitDefID, unitDef in pairs(UnitDefs) do
 			x = s1x,
 			z = s1z,
 			sight = #unitDef.weapons, -- always make the sight weapon the last one
+			losHeight = unitDef.losHeight,
+			radarHeight = unitDef.radarHeight,
 		}
 		mobileUnitDefs[unitDefID] = true
 	elseif cp.baseclass == "vehicle" then
@@ -268,8 +270,18 @@ function gadget:UnitCreated(unitID, unitDefID, teamID)
 		mobileUnits[unitID] = true
 	end
 	if visionCache[unitDefID] then -- a mech or hturret... something with a sector!
+		if not visionCache[unitDefID].cockpit then 
+			visionCache[unitDefID].cockpit = GG.lusHelper[unitDefID].cockpit
+			local losHeight = visionCache[unitDefID].losHeight
+			local pieceMap = Spring.GetUnitPieceMap(unitID)
+			local px, py, pz = Spring.GetUnitPiecePosition(unitID, pieceMap.cockpit)
+			local mx, my, mz = Spring.GetUnitPiecePosition(unitID, pieceMap.torso)
+			local pCent = (py-my-losHeight)/losHeight * 100
+			if pCent > 5 then
+				Spring.Echo("[game_radar.lua]", ud.name, "Unit losHeight is", losHeight, "but cockpit is at", py-my, "% error is ", pCent)
+			end
+		end
 		unitSectorRadii[unitID] = SECTOR_RADIUS
-		visionCache[unitDefID].cockpit = GG.lusHelper[unitDefID].cockpit
 		allyTeamMechs[GetUnitAllyTeam(unitID)][unitID] = visionCache[unitDefID]
 	end
 	for i = 1, numAllyTeams do
