@@ -297,10 +297,13 @@ local function ShowModsByType(unitID, modType, mechID)
 	for i, cmdDesc in ipairs(GetUnitCmdDescs(unitID)) do
 		local cmdDescID = cmdDesc.id
 		if not mechID then
-			local hide = cmdDescID > 0 -- not a support vehicle
+			local hide = (cmdDescID > 0 -- not a support vehicle
 						and GG.appDefTypes[cmdDescID] ~= "upgrades" -- not the upgrade buttons
 						and cmdDescID ~= GetCmdID("CMD_MECHBAY_GETOUT")
-						and cmdDescID ~= GetCmdID("CMD_MECHBAY_SELLMECH")
+						and cmdDescID ~= GetCmdID("CMD_MECHBAY_SELLMECH"))
+						or 
+						(cmdDescID < 0 
+						and omniCache[-cmdDescID] ~= nil)
 			EditUnitCmdDesc(unitID, i, {hidden = hide})
 		elseif cmdDescID == cmdID then
 			EditUnitCmdDesc(unitID, i, {texture = 'bitmaps/ui/selected.png'})
@@ -363,9 +366,11 @@ end
 function gadget:UnitUnloaded(unitID, unitDefID, unitTeam, transportID, transportTeam)
 	if mechBays[transportID] and mechBays[transportID] >= 1 then
 		-- reset menu
+		if omniCache[unitDefID] then
+			ShowOmniMenu(transportID, false)
+		end
 		GG.UpdateUnitApps(transportID, unitDefID, "mods")
 		ShowModsByType(transportID, "none", nil)
-		--ShowOmniMenu(transportID, false)
 	end
 end
 
