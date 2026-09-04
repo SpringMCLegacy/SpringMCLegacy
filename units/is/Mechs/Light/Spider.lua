@@ -1,6 +1,12 @@
 local Spider = Light:New{
 	name              	= "Spider",
 	
+	leaveTracks			= true,	
+	trackType			= "Spider",
+	trackOffset			= 6,
+	trackWidth			= 18,
+	trackStretch 		= 2,
+	
 	customparams = {
 		cockpitheight	= 5.6,
 		tonnage			= 25,
