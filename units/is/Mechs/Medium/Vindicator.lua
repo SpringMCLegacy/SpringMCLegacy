@@ -1,6 +1,12 @@
 local Vindicator = Medium:New{
 	name				= "Vindicator",
 	
+	leaveTracks			= true,	
+	trackType			= "Vindicator",
+	trackOffset			= 6,
+	trackWidth			= 26,
+	trackStretch 		= 2,
+	
 	customparams = {
 		cockpitheight	= 8,
 		tonnage			= 45,
