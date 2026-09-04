@@ -25,6 +25,7 @@ local Savior = Support:New{
 		--mods			= {"ferrofibrousarmour"},
 		hitchmaxy		= 60,
 		normaltex		= "unittextures/normals/Savior_Normals.dds",
+		texmod 			= "player",
 	},
 }
 

@@ -5,7 +5,7 @@ function gadget:GetInfo()
 		name	= "CUS GL4",
 		desc	= "Implements CustomUnitShaders for GL4 rendering pipeline",
 		version = "0.5",
-		author	= "ivand, Beherith",
+		author	= "ivand, Beherith, zvero + ChatGPT",
 		date 	= "20220310",
 		license = "GNU GPL, v2 or later",
 		layer	= 0,
@@ -323,10 +323,21 @@ local cusFeatureIDtoDrawFlag = {} -- {featureID = drawFlag,...}, this remains po
 -- }
 
 local uniformBins, texToPreload = VFS.Include("LuaRules/Configs/cus_defs.lua", nil, VFS.ZIP)
+local texmodConfig = VFS.Include("LuaRules/Configs/mcl_texmods.lua", nil, VFS.ZIP)
 local unitDrawBins = nil -- this also controls wether cusgl4 is on at all!
 
 local objectIDtoDefID = {}
 
+-- MCL per-team TexMod state. Kept in one table to minimize additional top-level locals.
+local texmodState = {
+	objectTextureKey = {},
+	baseUnitTextures = {},
+	textureKeyCache = {},
+	missingWarnings = {},
+	texturePathIndex = false,
+	botBuddyEnabled = texmodConfig.BotBuddyTexmodsEnabled(),
+	lastRecheckFrame = -999999,
+}
 
 local shaders = {} -- double nested table of {drawflag : {"units":shaderID}}
 
@@ -803,6 +814,179 @@ local function GetNormal(unitDef, featureDef)
 	-- if the customparam is not set, just fallback to blank, let games decide how to do fallback with the cp itself
 	return blankNormalMap
 end
+
+-- MCL TEXMOD INTEGRATION BEGIN
+local function CopyTextureTable(source)
+	local copy = {}
+	for i = 0, 20 do
+		copy[i] = source[i]
+	end
+	return copy
+end
+
+local function LogMissingTexmod(unitDefID, texmod, expectedPath, reason)
+	local warningKey = tostring(unitDefID) .. "|" .. tostring(texmod)
+	if texmodState.missingWarnings[warningKey] then
+		return
+	end
+	texmodState.missingWarnings[warningKey] = true
+
+	local unitDef = UnitDefs[unitDefID]
+	local internalName = unitDef and unitDef.name or tostring(unitDefID)
+	local humanName = unitDef and unitDef.humanName
+	local displayName = humanName and (internalName .. " (" .. humanName .. ")") or internalName
+	local message = string.format(
+		"[MCL TexMods] Missing texmod for %s: requested '%s'%s%s; using Team for this UnitDef.",
+		tostring(displayName),
+		tostring(texmod),
+		expectedPath and (", expected " .. tostring(expectedPath)) or "",
+		reason and (" (" .. tostring(reason) .. ")") or ""
+	)
+
+	if Spring.Log and LOG and LOG.WARNING then
+		Spring.Log("MCL TexMods", LOG.WARNING, message)
+	else
+		Spring.Echo(message)
+	end
+end
+
+local function UnitUsesTexmod(unitID, unitDefID)
+	local unitDef = UnitDefs[unitDefID]
+	if not unitDef or texmodConfig.UnitDefExplicitlyDisabled(unitDef) then
+		return false
+	end
+	if texmodConfig.UnitDefExplicitEligibility(unitDef) then
+		return true
+	end
+	return texmodState.botBuddyEnabled
+		and Spring.GetUnitRulesParam(unitID, texmodConfig.BOT_BUDDY_RULE_PARAM) == 1
+end
+
+local function GetTeamTexmod(teamID)
+	if teamID == nil then
+		return texmodConfig.DEFAULT_TEXMOD
+	end
+	return texmodConfig.NormalizeTexmod(
+		Spring.GetTeamRulesParam(teamID, texmodConfig.TEAM_RULE_PARAM)
+	)
+end
+
+local function BuildTexmodTexturePath(unitDef, texmod)
+	local model = unitDef and unitDef.model
+	local textures = model and model.textures
+	local tex1 = textures and textures.tex1
+	if type(tex1) ~= "string" or tex1 == "" then
+		return nil, "unit has no S3O texture1 name"
+	end
+
+	local filename = tex1:gsub("\\", "/")
+	filename = filename:gsub("^[Uu][Nn][Ii][Tt][Tt][Ee][Xx][Tt][Uu][Rr][Ee][Ss]/", "")
+	local lower = filename:lower()
+	local suffix = "_team.dds"
+	if lower:sub(-#suffix) ~= suffix then
+		return nil, "texture1 does not end in _Team.dds"
+	end
+
+	local stem = filename:sub(1, #filename - #suffix)
+	return "unittextures/" .. stem .. "_" .. texmod .. ".dds"
+end
+
+local function ResolveTexturePath(candidate)
+	if not candidate then
+		return nil
+	end
+	if VFS.FileExists(candidate) then
+		return candidate
+	end
+
+	-- VFS/model texture names are not guaranteed to preserve filename case.
+	-- Build one case-insensitive index as a redundancy so Linux/archive casing
+	-- differences do not create false missing-skin fallbacks.
+	if texmodState.texturePathIndex == false then
+		local index = {}
+		local files = VFS.DirList("unittextures/") or {}
+		for i = 1, #files do
+			local path = files[i]
+			if type(path) == "string" and path:lower():sub(-4) == ".dds" then
+				index[path:lower()] = path
+			end
+		end
+		texmodState.texturePathIndex = index
+	end
+	return texmodState.texturePathIndex[candidate:lower()]
+end
+
+local function GenTexmodTextureKey(textureTable)
+	local strkey = "mcltexmod"
+	for i = 0, 20 do
+		local texture = textureTable[i]
+		if texture ~= nil and texture ~= false then
+			strkey = strkey .. "|" .. tostring(i) .. "=" .. string.lower(tostring(texture))
+		end
+	end
+
+	local existing = fastTextureKeyCache[strkey]
+	if existing then
+		return existing
+	end
+
+	numfastTextureKeyCache = numfastTextureKeyCache + 1
+	fastTextureKeyCache[strkey] = numfastTextureKeyCache
+	return numfastTextureKeyCache
+end
+
+local function GetUnitTexmodTextureKey(unitID, unitDefID)
+	local defaultKey = fastObjectDefIDtoTextureKey[unitDefID]
+	if not defaultKey or not UnitUsesTexmod(unitID, unitDefID) then
+		return defaultKey
+	end
+
+	local texmod = GetTeamTexmod(Spring.GetUnitTeam(unitID))
+	if texmod == texmodConfig.DEFAULT_TEXMOD then
+		return defaultKey
+	end
+
+	local cacheKey = tostring(unitDefID) .. "|" .. texmod
+	local cached = texmodState.textureKeyCache[cacheKey]
+	if cached then
+		return cached
+	end
+
+	local unitDef = UnitDefs[unitDefID]
+	local candidate, reason = BuildTexmodTexturePath(unitDef, texmod)
+	local resolved = ResolveTexturePath(candidate)
+	if not resolved then
+		LogMissingTexmod(unitDefID, texmod, candidate, reason or "DDS file not found")
+		texmodState.textureKeyCache[cacheKey] = defaultKey
+		return defaultKey
+	end
+
+	local baseTextures = texmodState.baseUnitTextures[unitDefID]
+	if not baseTextures then
+		LogMissingTexmod(unitDefID, texmod, candidate, "CUS base texture set unavailable")
+		texmodState.textureKeyCache[cacheKey] = defaultKey
+		return defaultKey
+	end
+
+	local textureTable = CopyTextureTable(baseTextures)
+	-- Only healthy texture1 changes. texture2, normal map, wreck textures and
+	-- wreck normal map remain CUS defaults, preserving health texturing/deformation.
+	textureTable[0] = resolved
+	local texKey = GenTexmodTextureKey(textureTable)
+	if textureKeytoSet[texKey] == nil then
+		textureKeytoSet[texKey] = textureTable
+	end
+	texmodState.textureKeyCache[cacheKey] = texKey
+	return texKey
+end
+
+local function ResolveObjectTextureKey(objectID, objectDefID)
+	if objectID >= 0 then
+		return GetUnitTexmodTextureKey(objectID, objectDefID)
+	end
+	return fastObjectDefIDtoTextureKey[objectDefID]
+end
+-- MCL TEXMOD INTEGRATION END
 -- BIG TODO:
 -- Replace lua texture names with overrides of WreckTex et al!
 -- 
@@ -926,6 +1110,10 @@ local function initBinsAndTextures()
 				textureTable[5] = wreckNormalTex
 			end
 			
+			-- Preserve the complete native healthy/wreck set as the source for
+			-- per-team variants. TexMods will clone this and change slot 0 only.
+			texmodState.baseUnitTextures[unitDefID] = textureTable
+			
 			if unitDef.customParams and unitDef.customParams.useskinning then 
 				unitDefsUseSkinning[unitDefID] = true
 				objectDefToUniformBin[unitDefID]  = 'defaultunit' -- This will temporarily disable raptor shader
@@ -988,7 +1176,7 @@ local assigncalls = 0
 local function AssignObjectToBin(objectID, objectDefID, flag, shader, textures, texKey, uniformBinID, calledfrom)
 	assigncalls = (assigncalls + 1 ) % (2^20)
 	shader = shader or GetShaderName(flag, objectDefID)
-	texKey = texKey or fastObjectDefIDtoTextureKey[objectDefID]
+	texKey = texKey or texmodState.objectTextureKey[objectID] or ResolveObjectTextureKey(objectID, objectDefID)
 
 	if objectDefID == nil then
 		Spring.Echo("AssignObjectToBin",objectID, objectDefID, flag, shader, textures, texKey, uniformBinID, calledfrom)
@@ -1180,12 +1368,17 @@ local function AddObject(objectID, drawFlag, reason)
 	end
 	if objectDefID == nil then return end -- This bail is needed so that we dont add/update units that dont actually exist any more, when cached from the catchup phase
 
+	local texKey = ResolveObjectTextureKey(objectID, objectDefID)
+	if objectID >= 0 then
+		texmodState.objectTextureKey[objectID] = texKey
+	end
+
 	for k = 1, #drawBinKeys do
 		local flag = drawBinKeys[k]
 		if HasAllBits(drawFlag, flag) then
 			if overrideDrawFlagsCombined[flag] then
 								 --objectID, objectDefID, flag, shader, textures, texKey, uniformBinID, calledfrom
-				AssignObjectToBin(objectID, objectDefID, flag, nil,	nil,	  nil,	  nil, 			"addobject")
+				AssignObjectToBin(objectID, objectDefID, flag, nil,	nil,	  texKey, nil, 			"addobject")
 			end
 		end
 	end
@@ -1213,7 +1406,7 @@ end
 
 local function RemoveObjectFromBin(objectID, objectDefID, texKey, shader, flag, uniformBinID, reason)
 	shader = shader or GetShaderName(flag, objectDefID)
-	texKey = texKey or fastObjectDefIDtoTextureKey[objectDefID]
+	texKey = texKey or texmodState.objectTextureKey[objectID] or ResolveObjectTextureKey(objectID, objectDefID)
 	if debugmode then Spring.Echo("RemoveObjectFromBin", objectID, objectDefID, texKey,shader,flag,uniformBinID, reason)  end
 
 	if unitDrawBins[flag][shader] then
@@ -1299,7 +1492,7 @@ local function UpdateObject(objectID, drawFlag, reason)
 
 		if hasFlagOld ~= hasFlagNew and overrideDrawFlagsCombined[flag] then
 			local shader = GetShaderName(flag, objectDefID)
-			local texKey  = fastObjectDefIDtoTextureKey[objectDefID]
+			local texKey  = texmodState.objectTextureKey[objectID] or fastObjectDefIDtoTextureKey[objectDefID]
 			local uniformBinID = GetUniformBinID(objectDefID,'UpdateObject')
 
 			if hasFlagOld then --had this flag, but no longer have
@@ -1346,7 +1539,7 @@ local function RemoveObject(objectID, reason) -- we get pos/neg objectID here
 		if debugmode then Spring.Echo("RemoveObject Flags", objectID, flag, overrideDrawFlagsCombined[flag] ) end
 		if overrideDrawFlagsCombined[flag] then
 			local shader = GetShaderName(flag, objectDefID)
-			local texKey  = fastObjectDefIDtoTextureKey[objectDefID]
+			local texKey  = texmodState.objectTextureKey[objectID] or fastObjectDefIDtoTextureKey[objectDefID]
 			local uniformBinID = GetUniformBinID(objectDefID,'RemoveObject')
 			RemoveObjectFromBin(objectID, objectDefID, texKey, shader, flag, uniformBinID, "removeobject")
 			--if flag == 1 then
@@ -1355,6 +1548,7 @@ local function RemoveObject(objectID, reason) -- we get pos/neg objectID here
 		end
 	end
 	objectIDtoDefID[objectID] = nil
+	texmodState.objectTextureKey[objectID] = nil
 	if objectID >= 0 then
 		cusUnitIDtoDrawFlag[objectID] = nil
 		buildProgresses[objectID] = nil
@@ -1927,6 +2121,31 @@ local function UpdateUnit(unitID, flag)
 	destroyedUnitDrawFlags[numdestroyedUnits] = flag
 end
 
+
+-- Re-evaluate currently CUS-rendered units at low frequency. This lets a
+-- start-of-match selection, ownership transfer, or newly-published Bot Buddy
+-- marker move an existing unit between texture bins without touching shaders.
+local function QueueChangedTexmodUnits()
+	local frame = Spring.GetGameFrame()
+	if frame - texmodState.lastRecheckFrame < texmodConfig.RECHECK_FRAMES then
+		return
+	end
+	texmodState.lastRecheckFrame = frame
+
+	for unitID, drawFlag in pairs(cusUnitIDtoDrawFlag) do
+		local unitDefID = objectIDtoDefID[unitID] or Spring.GetUnitDefID(unitID)
+		if unitDefID and drawFlag and drawFlag > 0 and drawFlag < 128 then
+			local currentKey = texmodState.objectTextureKey[unitID] or fastObjectDefIDtoTextureKey[unitDefID]
+			local desiredKey = GetUnitTexmodTextureKey(unitID, unitDefID)
+			if desiredKey and currentKey ~= desiredKey then
+				-- Full remove/re-add is intentional: CUS texture sets are bin-level state.
+				UpdateUnit(unitID, 0)
+				UpdateUnit(unitID, drawFlag)
+			end
+		end
+	end
+end
+
 function gadget:UnitDestroyed(unitID, unitDefID, unitTeam, attackerID, attackerDefID, attackerTeam, weaponDefID)
 	--UpdateUnit(unitID, 0) -- having this here means that dying units lose CUS, RenderUnitDestroyed _should_ be fine
 end
@@ -2003,6 +2222,7 @@ function gadget:DrawWorldPreUnit()
 --function gadget:DrawGenesis() -- nope, shadow flags still a frame late https://github.com/beyond-all-reason/spring/issues/264
 	if unitDrawBins == nil then return end
 
+	QueueChangedTexmodUnits()
 	updateframe = (updateframe + 1) % updaterate
 
 	if updateframe == 0 then

@@ -21,6 +21,7 @@ local BRV = Support:New{
 		elevationspeed	= 25,
 		cratetype		= "cratelong",
 		normaltex		= "unittextures/normals/Oppie_Normals.dds",
+		texmod 			= "player",
 	},
 }
 

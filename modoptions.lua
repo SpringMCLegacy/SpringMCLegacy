@@ -299,6 +299,13 @@ local options = {
 			},
 		}
 	},
+	{
+		key  = "texmod_botbuddy",
+		name = "Bot Buddy Paint Schemes",
+		desc = "Apply each human team's selected paint scheme to that team's Bot Buddy units where matching texmod textures exist.",
+		type = "bool",
+		def  = false,
+	},
 	----------------------------------------------------------------------------
 	{
 		key    = '4devtools',

@@ -24,6 +24,8 @@ local Salvager = Support:New{
 		armor			= 6,
 		squadsize 		= 1,
 		wheels			= true,
+		normaltex		= "unittextures/normals/Salvager_Normals.dds",
+		texmod 			= "player",
 	},
 }
 

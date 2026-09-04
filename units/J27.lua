@@ -21,6 +21,7 @@ local J27 = Support:New{
 		squadsize 		= 1,
 		hitchmaxy		= 60,
 		normaltex		= "unittextures/normals/J-27_Normals.dds",
+		texmod 			= "player",
 	},
 }
 
