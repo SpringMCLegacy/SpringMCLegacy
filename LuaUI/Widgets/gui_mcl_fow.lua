@@ -1,6 +1,6 @@
 function widget:GetInfo()
 	return {
-		name = "MC:L - Custom Fog of War r27",
+		name = "MC:L - Custom Fog of War r32",
 		desc = "Custom MCL visual fog-of-war with allyteam-aware Unexplored / Explored / Visible presentation, spectator isolation, organic exploration boundaries, and synchronized minimap presentation",
 		author = "zvero + ChatGPT",
 		date = "2026",
@@ -14,11 +14,17 @@ end
 -- Visual configuration
 --------------------------------------------------------------------------------
 
+local modOptions = Spring.GetModOptions() or {}
+
 -- Custom FOW. Native Recoil LOS-map rendering is suppressed while this widget
 -- is active; actual engine LOS/gameplay state is NOT changed.
 local FOG_COLOR = {0.025, 0.030, 0.035}
-local UNEXPLORED_FOG_ALPHA = 0.86
 local EXPLORED_FOG_ALPHA = 0.62
+local FOW_STYLE = string.lower(tostring(modOptions.fowstyle or "explored"))
+local UNEXPLORED_FOG_ALPHA =
+	(FOW_STYLE == "unexplored")
+	and 0.86
+	or EXPLORED_FOG_ALPHA
 local VISIBLE_FOG_ALPHA = 0.00
 
 -- Visual-only organic treatment for the Unexplored <-> Explored frontier.
@@ -179,7 +185,6 @@ local pi = math.pi
 local TWO_PI = 2 * pi
 local HEADING_TO_RAD = TWO_PI / 65536
 
-local modOptions = Spring.GetModOptions() or {}
 local RADAR = tonumber(modOptions.sectorrange) or 1000
 local LOS = tonumber(modOptions.mechsight) or 400
 
@@ -622,7 +627,7 @@ function MINIMAP_STYLE.InitializeFogShader()
 	})
 
 	if not MINIMAP_STYLE.fogShader then
-		Spring.Echo("[MCL FOW r27] WARNING: minimap FOW shader failed to compile; world FOW remains active.")
+		Spring.Echo("[MCL FOW r32] WARNING: minimap FOW shader failed to compile; world FOW remains active.")
 		if gl.GetShaderLog then
 			local log = gl.GetShaderLog()
 			if log and log ~= "" then
@@ -653,7 +658,7 @@ function MINIMAP_STYLE.InitializeFogShader()
 		local name = names[i]
 		local location = gl.GetUniformLocation(MINIMAP_STYLE.fogShader, name)
 		if type(location) ~= "number" or location < 0 then
-			Spring.Echo("[MCL FOW r27] WARNING: missing minimap FOW shader uniform " .. name .. "; minimap FOW disabled.")
+			Spring.Echo("[MCL FOW r32] WARNING: missing minimap FOW shader uniform " .. name .. "; minimap FOW disabled.")
 			if gl.DeleteShader then
 				gl.DeleteShader(MINIMAP_STYLE.fogShader)
 			end
@@ -665,8 +670,8 @@ function MINIMAP_STYLE.InitializeFogShader()
 	end
 
 	MINIMAP_STYLE.fogShaderReady = true
-	Spring.Echo("[MCL FOW r27] Minimap FOW texture compositor active; it consumes the existing visibility/exploration masks without changing them.")
-	Spring.Echo("[MCL FOW r27] Minimap FOW will composite in DrawInMiniMap after engine minimap content.")
+	Spring.Echo("[MCL FOW r32] Minimap FOW texture compositor active; it consumes the existing visibility/exploration masks without changing them.")
+	Spring.Echo("[MCL FOW r32] Minimap FOW will composite in DrawInMiniMap after engine minimap content.")
 	return true
 end
 
@@ -697,13 +702,13 @@ function MINIMAP_STYLE.InitializeFogTexture()
 	)
 
 	if not ok or not texture then
-		Spring.Echo("[MCL FOW r27] WARNING: could not create minimap FOW texture; world FOW remains active.")
+		Spring.Echo("[MCL FOW r32] WARNING: could not create minimap FOW texture; world FOW remains active.")
 		return false
 	end
 
 	MINIMAP_STYLE.fogTexture = texture
 	MINIMAP_STYLE.fogTextureReady = true
-	Spring.Echo("[MCL FOW r27] Minimap FOW texture created at " .. visionMaskWidth .. "x" .. visionMaskHeight .. ".")
+	Spring.Echo("[MCL FOW r32] Minimap FOW texture created at " .. visionMaskWidth .. "x" .. visionMaskHeight .. ".")
 	return true
 end
 
@@ -744,7 +749,7 @@ function MINIMAP_STYLE.RenderFogTextureContents()
 		gl.Uniform(MINIMAP_STYLE.uniforms.edgeLow, FOG_EDGE_LOW)
 		gl.Uniform(MINIMAP_STYLE.uniforms.edgeHigh, FOG_EDGE_HIGH)
 		gl.Uniform(MINIMAP_STYLE.uniforms.edgeSampleRadius, FOG_EDGE_SAMPLE_RADIUS)
-		-- r27 diagnostic: native LOS remains mechanically active and continues to
+		-- r32 diagnostic: native LOS remains mechanically active and continues to
 		-- feed Explored memory, but is excluded from the final minimap Visible edge.
 		gl.Uniform(MINIMAP_STYLE.uniforms.nativeLosAvailable, 0.0)
 		gl.Uniform(MINIMAP_STYLE.uniforms.organicEdgeEnabled, FOW_BOUNDARY_STYLE.enabled and 1.0 or 0.0)
@@ -786,7 +791,7 @@ function MINIMAP_STYLE.UpdateFogTexture()
 
 	local ok, err = pcall(gl.RenderToTexture, MINIMAP_STYLE.fogTexture, MINIMAP_STYLE.RenderFogTextureContents)
 	if not ok then
-		Spring.Echo("[MCL FOW r27] WARNING: minimap FOW texture update failed: " .. tostring(err))
+		Spring.Echo("[MCL FOW r32] WARNING: minimap FOW texture update failed: " .. tostring(err))
 		MINIMAP_STYLE.fogTextureHasData = false
 		return false
 	end
@@ -794,7 +799,7 @@ function MINIMAP_STYLE.UpdateFogTexture()
 	MINIMAP_STYLE.fogTextureHasData = true
 	if not MINIMAP_STYLE.loggedFirstFogTextureUpdate then
 		MINIMAP_STYLE.loggedFirstFogTextureUpdate = true
-		Spring.Echo("[MCL FOW r27] First minimap FOW texture update completed successfully in DrawGenesis().")
+		Spring.Echo("[MCL FOW r32] First minimap FOW texture update completed successfully in DrawGenesis().")
 	end
 	return true
 end
@@ -1160,7 +1165,7 @@ local function InitializeVisionMaskCoverageShader()
 	})
 
 	if not visionMaskCoverageShader then
-		Spring.Echo("[MCL FOW r27] ERROR: smooth visibility-mask coverage shader failed to compile.")
+		Spring.Echo("[MCL FOW r32] ERROR: smooth visibility-mask coverage shader failed to compile.")
 		if gl.GetShaderLog then
 			local log = gl.GetShaderLog()
 			if log and log ~= "" then
@@ -1191,7 +1196,7 @@ local function InitializeVisionMaskCoverageShader()
 		local name = names[i]
 		local location = gl.GetUniformLocation(visionMaskCoverageShader, name)
 		if type(location) ~= "number" or location < 0 then
-			Spring.Echo("[MCL FOW r27] ERROR: missing smooth visibility-mask shader uniform " .. name .. ".")
+			Spring.Echo("[MCL FOW r32] ERROR: missing smooth visibility-mask shader uniform " .. name .. ".")
 			if gl.DeleteShader then
 				gl.DeleteShader(visionMaskCoverageShader)
 			end
@@ -1203,7 +1208,7 @@ local function InitializeVisionMaskCoverageShader()
 	end
 
 	visionMaskCoverageShaderReady = true
-	Spring.Echo("[MCL FOW r27] Continuous sub-texel terrain-aware visibility-mask coverage active for Mech sectors and allied circular LOS sources.")
+	Spring.Echo("[MCL FOW r32] Continuous sub-texel terrain-aware visibility-mask coverage active for Mech sectors and allied circular LOS sources.")
 	return true
 end
 
@@ -1276,14 +1281,14 @@ local function InitializeVisionMaskTexture()
 	)
 
 	if not ok or not texture then
-		Spring.Echo("[MCL FOW r27] ERROR: could not create visibility-mask FBO texture.")
+		Spring.Echo("[MCL FOW r32] ERROR: could not create visibility-mask FBO texture.")
 		visionMaskFailed = true
 		return false
 	end
 
 	visionMaskTexture = texture
 	visionMaskReady = true
-	Spring.Echo("[MCL FOW r27] Visibility mask created at " .. visionMaskWidth .. "x" .. visionMaskHeight .. ".")
+	Spring.Echo("[MCL FOW r32] Visibility mask created at " .. visionMaskWidth .. "x" .. visionMaskHeight .. ".")
 	return true
 end
 
@@ -1385,7 +1390,7 @@ local function UpdateVisionMask()
 	lastVisionMaskDrawFrame = drawFrame
 	local ok, err = pcall(gl.RenderToTexture, visionMaskTexture, RenderVisionMaskContents)
 	if not ok then
-		Spring.Echo("[MCL FOW r27] ERROR: visibility-mask update failed: " .. tostring(err))
+		Spring.Echo("[MCL FOW r32] ERROR: visibility-mask update failed: " .. tostring(err))
 		visionMaskFailed = true
 		visionMaskHasData = false
 		return false
@@ -1394,7 +1399,7 @@ local function UpdateVisionMask()
 	visionMaskHasData = true
 	if not loggedFirstMaskUpdate then
 		loggedFirstMaskUpdate = true
-		Spring.Echo("[MCL FOW r27] First visibility-mask render completed successfully in DrawGenesis().")
+		Spring.Echo("[MCL FOW r32] First visibility-mask render completed successfully in DrawGenesis().")
 	end
 
 	return true
@@ -1421,7 +1426,7 @@ local function InitializeExploredMaskTextures()
 		)
 
 		if not ok or not texture then
-			Spring.Echo("[MCL FOW r27] ERROR: could not create explored-mask FBO texture " .. i .. ".")
+			Spring.Echo("[MCL FOW r32] ERROR: could not create explored-mask FBO texture " .. i .. ".")
 			exploredMaskFailed = true
 			return false
 		end
@@ -1541,15 +1546,15 @@ function VIEW_STATE.RefreshPerspective(force)
 
 	if visionMaskReady and (force or allyTeamID ~= oldAllyTeamID or VIEW_STATE.activeExploredKey == nil) then
 		if not VIEW_STATE.ActivateExploredBank(allyTeamID) then
-			Spring.Echo("[MCL FOW r27] WARNING: could not activate Explored-memory bank for allyteam " .. tostring(allyTeamID) .. ".")
+			Spring.Echo("[MCL FOW r32] WARNING: could not activate Explored-memory bank for allyteam " .. tostring(allyTeamID) .. ".")
 		end
 	end
 
 	if VIEW_STATE.spectating then
 		if VIEW_STATE.fullView then
-			Spring.Echo("[MCL FOW r27] Spectator full-view active: FOW presentation bypassed; gameplay LOS state remains untouched.")
+			Spring.Echo("[MCL FOW r32] Spectator full-view active: FOW presentation bypassed; gameplay LOS state remains untouched.")
 		else
-			Spring.Echo("[MCL FOW r27] Spectator team POV active: team " .. tostring(teamID) .. ", allyteam " .. tostring(allyTeamID) .. ".")
+			Spring.Echo("[MCL FOW r32] Spectator team POV active: team " .. tostring(teamID) .. ", allyteam " .. tostring(allyTeamID) .. ".")
 		end
 	end
 
@@ -1584,7 +1589,7 @@ local function InitializeExploredUpdateShader()
 	})
 
 	if not exploredUpdateShader then
-		Spring.Echo("[MCL FOW r27] ERROR: explored-mask update shader failed to compile.")
+		Spring.Echo("[MCL FOW r32] ERROR: explored-mask update shader failed to compile.")
 		if gl.GetShaderLog then
 			local log = gl.GetShaderLog()
 			if log and log ~= "" then
@@ -1607,7 +1612,7 @@ local function InitializeExploredUpdateShader()
 		local name = names[i]
 		local location = gl.GetUniformLocation(exploredUpdateShader, name)
 		if type(location) ~= "number" or location < 0 then
-			Spring.Echo("[MCL FOW r27] ERROR: missing explored-mask shader uniform " .. name .. ".")
+			Spring.Echo("[MCL FOW r32] ERROR: missing explored-mask shader uniform " .. name .. ".")
 			if gl.DeleteShader then
 				gl.DeleteShader(exploredUpdateShader)
 			end
@@ -1620,7 +1625,7 @@ local function InitializeExploredUpdateShader()
 	end
 
 	exploredUpdateShaderReady = true
-	Spring.Echo("[MCL FOW r27] Explored-memory mask update shader active.")
+	Spring.Echo("[MCL FOW r32] Explored-memory mask update shader active.")
 	return true
 end
 
@@ -1664,7 +1669,7 @@ local function RenderExploredMaskContents(previousExploredTexture)
 		gl.Texture(1, false)
 		if not loggedNativeLosBindFailure then
 			loggedNativeLosBindFailure = true
-			Spring.Echo("[MCL FOW r27] WARNING: could not bind " .. NATIVE_LOS_TEXTURE .. "; explored memory will currently use Mech sectors only.")
+			Spring.Echo("[MCL FOW r32] WARNING: could not bind " .. NATIVE_LOS_TEXTURE .. "; explored memory will currently use Mech sectors only.")
 		end
 	end
 	local previousExploredAvailable = 0.0
@@ -1716,7 +1721,7 @@ local function UpdateExploredMask()
 		RenderExploredMaskContents(readTexture)
 	end)
 	if not ok then
-		Spring.Echo("[MCL FOW r27] ERROR: explored-mask update failed: " .. tostring(err))
+		Spring.Echo("[MCL FOW r32] ERROR: explored-mask update failed: " .. tostring(err))
 		exploredMaskFailed = true
 		exploredMaskHasData = false
 		VIEW_STATE.StoreActiveExploredBank()
@@ -1728,7 +1733,7 @@ local function UpdateExploredMask()
 	VIEW_STATE.StoreActiveExploredBank()
 	if not loggedFirstExploredUpdate then
 		loggedFirstExploredUpdate = true
-		Spring.Echo("[MCL FOW r27] First explored-memory update completed successfully in DrawGenesis().")
+		Spring.Echo("[MCL FOW r32] First explored-memory update completed successfully in DrawGenesis().")
 	end
 
 	return true
@@ -1792,13 +1797,13 @@ local function InitializeModelDepthCaptureTextures()
 	featureDepthTexture = CreateDepthTexture()
 	if not unitDepthTexture or not featureDepthTexture then
 		DeleteModelDepthCaptureTextures()
-		Spring.Echo("[MCL FOW r27] WARNING: could not create model-depth capture textures; final FOW will fall back to map depth where model depth is unavailable.")
+		Spring.Echo("[MCL FOW r32] WARNING: could not create model-depth capture textures; final FOW will fall back to map depth where model depth is unavailable.")
 		return false
 	end
 
 	modelDepthWidth = width
 	modelDepthHeight = height
-	Spring.Echo("[MCL FOW r27] Model-depth capture textures created at " .. width .. "x" .. height .. ".")
+	Spring.Echo("[MCL FOW r32] Model-depth capture textures created at " .. width .. "x" .. height .. ".")
 	return true
 end
 
@@ -1816,7 +1821,7 @@ local function InitializeDepthCopyShader()
 	})
 
 	if not depthCopyShader then
-		Spring.Echo("[MCL FOW r27] WARNING: model-depth copy shader failed to compile.")
+		Spring.Echo("[MCL FOW r32] WARNING: model-depth copy shader failed to compile.")
 		if gl.GetShaderLog then
 			local log = gl.GetShaderLog()
 			if log and log ~= "" then
@@ -1905,7 +1910,7 @@ local function CaptureCurrentModelDepth(targetTexture)
 	end)
 
 	if not ok then
-		Spring.Echo("[MCL FOW r27] WARNING: model-depth capture failed: " .. tostring(err))
+		Spring.Echo("[MCL FOW r32] WARNING: model-depth capture failed: " .. tostring(err))
 		return false
 	end
 	return didCopy
@@ -1959,7 +1964,7 @@ local function InitializeFogShader()
 	})
 
 	if not fogShader then
-		Spring.Echo("[MCL FOW r27] ERROR: screen-space FOW shader failed to compile.")
+		Spring.Echo("[MCL FOW r32] ERROR: screen-space FOW shader failed to compile.")
 		if gl.GetShaderLog then
 			local log = gl.GetShaderLog()
 			if log and log ~= "" then
@@ -1992,7 +1997,7 @@ local function InitializeFogShader()
 		local name = names[i]
 		local location = gl.GetUniformLocation(fogShader, name)
 		if type(location) ~= "number" or location < 0 then
-			Spring.Echo("[MCL FOW r27] ERROR: missing FOW shader uniform " .. name .. ".")
+			Spring.Echo("[MCL FOW r32] ERROR: missing FOW shader uniform " .. name .. ".")
 			if gl.DeleteShader then
 				gl.DeleteShader(fogShader)
 			end
@@ -2004,15 +2009,15 @@ local function InitializeFogShader()
 	end
 
 	fogShaderReady = true
-	Spring.Echo("[MCL FOW r27] Screen-space depth-reconstructed GLSL 1.30 fog compositor active; camera inverse supplied by compatibility GLSL state.")
+	Spring.Echo("[MCL FOW r32] Screen-space depth-reconstructed GLSL 1.30 fog compositor active; camera inverse supplied by compatibility GLSL state.")
 	return true
 end
 
 local function ValidateScreenFogRenderer()
-	Spring.Echo("[MCL FOW r27] Screen-space fog renderer ready; using GLSL compatibility inverse camera matrix.")
-	Spring.Echo("[MCL FOW r27] Final-scene fog compositor will combine map, captured unit, and captured feature depth.")
-	Spring.Echo("[MCL FOW r27] Unified Mech circle/sector mask and transport suppression active.")
-	Spring.Echo("[MCL FOW r27] Organic Unexplored/Explored boundary active; exploration state itself remains unmodified.")
+	Spring.Echo("[MCL FOW r32] Screen-space fog renderer ready; using GLSL compatibility inverse camera matrix.")
+	Spring.Echo("[MCL FOW r32] Final-scene fog compositor will combine map, captured unit, and captured feature depth.")
+	Spring.Echo("[MCL FOW r32] Unified Mech circle/sector mask and transport suppression active.")
+	Spring.Echo("[MCL FOW r32] Organic Unexplored/Explored boundary active; exploration state itself remains unmodified.")
 	return true
 end
 
@@ -2033,7 +2038,7 @@ local function BeginFogShader()
 		gl.Texture(0, false)
 		if not loggedDepthTextureFailure then
 			loggedDepthTextureFailure = true
-			Spring.Echo("[MCL FOW r27] ERROR: could not bind " .. MAP_DEPTH_TEXTURE .. "; final screen-space FOW cannot render.")
+			Spring.Echo("[MCL FOW r32] ERROR: could not bind " .. MAP_DEPTH_TEXTURE .. "; final screen-space FOW cannot render.")
 		end
 		return false
 	end
@@ -2045,7 +2050,7 @@ local function BeginFogShader()
 		gl.Texture(3, false)
 		if not loggedNativeLosBindFailure then
 			loggedNativeLosBindFailure = true
-			Spring.Echo("[MCL FOW r27] WARNING: could not bind " .. NATIVE_LOS_TEXTURE .. "; only custom Mech sight will contribute to current visibility.")
+			Spring.Echo("[MCL FOW r32] WARNING: could not bind " .. NATIVE_LOS_TEXTURE .. "; only custom Mech sight will contribute to current visibility.")
 		end
 	end
 
@@ -2151,23 +2156,23 @@ function widget:Initialize()
 	SuppressNativeLosOverlay()
 
 	if not InitializeVisionMaskTexture() then
-		Spring.Echo("[MCL FOW r27] Custom FOW disabled because the visibility mask could not be created.")
+		Spring.Echo("[MCL FOW r32] Custom FOW disabled because the visibility mask could not be created.")
 		return
 	end
 	if not InitializeVisionMaskCoverageShader() then
-		Spring.Echo("[MCL FOW r27] Custom FOW disabled because smooth visibility-mask coverage could not be initialized.")
+		Spring.Echo("[MCL FOW r32] Custom FOW disabled because smooth visibility-mask coverage could not be initialized.")
 		return
 	end
 
 	VIEW_STATE.RefreshPerspective(true)
 	if not exploredMaskReady or exploredMaskFailed then
-		Spring.Echo("[MCL FOW r27] Custom FOW disabled because the active allyteam Explored-memory textures could not be created.")
+		Spring.Echo("[MCL FOW r32] Custom FOW disabled because the active allyteam Explored-memory textures could not be created.")
 		return
 	end
 	RefreshAlliedMechs(true)
 
 	if not InitializeExploredUpdateShader() then
-		Spring.Echo("[MCL FOW r27] Custom FOW disabled because the explored-memory update shader could not be created.")
+		Spring.Echo("[MCL FOW r32] Custom FOW disabled because the explored-memory update shader could not be created.")
 		return
 	end
 
@@ -2175,7 +2180,7 @@ function widget:Initialize()
 	InitializeDepthCopyShader()
 
 	if not InitializeFogShader() then
-		Spring.Echo("[MCL FOW r27] Custom FOW disabled because the fog shader could not be created.")
+		Spring.Echo("[MCL FOW r32] Custom FOW disabled because the fog shader could not be created.")
 		return
 	end
 
@@ -2183,17 +2188,20 @@ function widget:Initialize()
 	MINIMAP_STYLE.InitializeFogTexture()
 
 	if not ValidateScreenFogRenderer() then
-		Spring.Echo("[MCL FOW r27] Custom FOW disabled because screen-space depth fog rendering is unavailable.")
+		Spring.Echo("[MCL FOW r32] Custom FOW disabled because screen-space depth fog rendering is unavailable.")
 		return
 	end
 
-	Spring.Echo("[MCL FOW r27] Native LOS overlay suppressed; custom MCL FOW is authoritative for map presentation.")
-	Spring.Echo("[MCL FOW r27] Final Visible presentation uses the custom 1024 Mech close-sight/sector mask; native LOS remains active for gameplay and Explored-memory tracking.")
-	Spring.Echo("[MCL FOW r27] Terrain-aware visual occlusion active: custom Mech sight is ray-tested against the live $heightmap from cockpit height.")
-	Spring.Echo("[MCL FOW r27] Allied non-sector LOS providers are mirrored into the custom Visible mask using their live circular sight radius.")
-	Spring.Echo("[MCL FOW r27] Tactical AR, radar, BAP and ECM presentation is intentionally delegated to mcl_gui_rings.lua.")
-	Spring.Echo("[MCL FOW r27] Minimap uses a cached visual overlay built from the same Unexplored / Explored / Visible state as the world.")
-	Spring.Echo("[MCL FOW r27] Allyteam-aware player/spectator perspectives and visual-only /fow toggle active.")
+	Spring.Echo("[MCL FOW r32] Native LOS overlay suppressed; custom MCL FOW is authoritative for map presentation.")
+	Spring.Echo("[MCL FOW r32] Final Visible presentation uses the custom 1024 Mech close-sight/sector mask; native LOS remains active for gameplay and Explored-memory tracking.")
+	Spring.Echo("[MCL FOW r32] Terrain-aware visual occlusion active: custom Mech sight is ray-tested against the live $heightmap from cockpit height.")
+	Spring.Echo("[MCL FOW r32] Allied non-sector LOS providers are mirrored into the custom Visible mask using their live circular sight radius.")
+	Spring.Echo("[MCL FOW r32] Stable r27 world-compositor stage restored; r28/r29 render-phase experiment removed.")
+	Spring.Echo("[MCL FOW r32] FOW style: " .. ((UNEXPLORED_FOG_ALPHA == EXPLORED_FOG_ALPHA) and "Explored" or "Unexplored") .. ". Exploration state remains fully tracked in both modes.")
+	Spring.Echo("[MCL FOW r32] Default behavior is now Explored-style FOW unless modoption fowstyle is explicitly set to 'unexplored'.")
+	Spring.Echo("[MCL FOW r32] Tactical AR, radar, BAP and ECM presentation is intentionally delegated to mcl_gui_rings.lua.")
+	Spring.Echo("[MCL FOW r32] Minimap uses a cached visual overlay built from the same Unexplored / Explored / Visible state as the world.")
+	Spring.Echo("[MCL FOW r32] Allyteam-aware player/spectator perspectives and visual-only /fow toggle active.")
 end
 
 function widget:Shutdown()
@@ -2299,15 +2307,15 @@ function widget:TextCommand(command)
 	VIEW_STATE.RefreshPerspective(false)
 	local cheatsEnabled = Spring.IsCheatingEnabled and Spring.IsCheatingEnabled() or false
 	if not VIEW_STATE.spectating and not cheatsEnabled then
-		Spring.Echo("[MCL FOW r27] /fow requires /cheat while playing. Spectators may use it freely.")
+		Spring.Echo("[MCL FOW r32] /fow requires /cheat while playing. Spectators may use it freely.")
 		return true
 	end
 
 	VIEW_STATE.fowEnabled = not VIEW_STATE.fowEnabled
 	if VIEW_STATE.fowEnabled then
-		Spring.Echo("[MCL FOW r27] FOW presentation ON. Unexplored / Explored / Visible state was preserved while hidden.")
+		Spring.Echo("[MCL FOW r32] FOW presentation ON. Unexplored / Explored / Visible state was preserved while hidden.")
 	else
-		Spring.Echo("[MCL FOW r27] FOW presentation OFF. This is visual only; LOS, detection and exploration tracking continue unchanged.")
+		Spring.Echo("[MCL FOW r32] FOW presentation OFF. This is visual only; LOS, detection and exploration tracking continue unchanged.")
 	end
 	return true
 end
@@ -2355,7 +2363,7 @@ function widget:DrawGenesis()
 end
 
 function widget:DrawWorldPreUnit()
-	-- Intentionally empty in r27. Fog is composited after opaque units/features
+	-- Intentionally empty in r32. Fog is composited after opaque units/features
 	-- so model antialiasing is resolved before darkness is applied.
 end
 
@@ -2372,7 +2380,7 @@ function widget:DrawFeaturesPostDeferred()
 end
 
 function widget:DrawInMiniMapBackground(sx, sy)
-	-- Intentionally empty in r27. The pre-rendered minimap FOW texture is drawn
+	-- Intentionally empty in r32. The pre-rendered minimap FOW texture is drawn
 	-- in DrawInMiniMap instead. This does not change visibility state or FOW
 	-- generation; it only moves the final minimap compositing stage.
 end
@@ -2382,13 +2390,17 @@ function widget:DrawInMiniMap(sx, sy)
 	-- and AR overlays are rendered by mcl_gui_rings.lua.
 	if not MINIMAP_STYLE.loggedFirstForegroundDraw then
 		MINIMAP_STYLE.loggedFirstForegroundDraw = true
-		Spring.Echo("[MCL FOW r27] DrawInMiniMap foreground compositor reached; drawing cached minimap FOW texture.")
+		Spring.Echo("[MCL FOW r32] DrawInMiniMap foreground compositor reached; drawing cached minimap FOW texture.")
 	end
 	MINIMAP_STYLE.DrawFog(sx, sy)
 end
 
 function widget:DrawWorld()
-	-- One final fog pass covers the already-rendered opaque world. Tactical AR,
-	-- range and sensor overlays deliberately live in mcl_gui_rings.lua.
+	-- r32 restores the confirmed r27 compositor stage. The r28/r29 experiment
+	-- moved the compositor to a different render phase and interfered with MCL
+	-- weapon/projectile effects and the expected HUD draw order.
+	--
+	-- Keep the world FOW here while future air/effect exemptions are solved with
+	-- a selective mask instead of by moving the entire compositor.
 	DrawCustomFog()
 end

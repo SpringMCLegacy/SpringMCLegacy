@@ -227,6 +227,7 @@ local options = {
 		type	= 'section',
 	},
 	----------------------------------------------------------------------------
+	
 	{
 		key		= "vehicle_delay",
 		name 	= "Vehicle Delay",
@@ -259,6 +260,25 @@ local options = {
 		max		= 100,
 		step	= 1,
 		section	= "3game",
+	},
+	{
+		key  = "fowstyle",
+		name = "Fog of War Style",
+		desc = "Choose whether unseen terrain uses the darker Unexplored appearance or the lighter Explored appearance.",
+		type = "list",
+		def  = "explored",
+		items = {
+			{
+				key  = "unexplored",
+				name = "Unexplored",
+				desc = "Terrain starts dark and becomes lighter after it has been explored.",
+			},
+			{
+				key  = "explored",
+				name = "Explored",
+				desc = "All unseen terrain uses the lighter Explored appearance from the start.",
+			},
+		},
 	},
 	{
 		key		= "ai_difficulty",
