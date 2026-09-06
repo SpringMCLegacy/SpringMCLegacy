@@ -9,6 +9,7 @@
 -- The texmod key is the internal/debug name used for DDS/PNG filenames and
 -- synced logic. "display" is optional player-facing localization. If display is
 -- missing or empty, the selector falls back to the debug name.
+-- WARNING: Texmod names can not have numbers in them!
 --------------------------------------------------------------------------------
 
 return {
@@ -16,6 +17,9 @@ return {
 		texmods = {
 			DavionGuards = {
 				display = "Davion Guards",
+			},
+			Crucis = {
+				display = "8th Crucis Lancers",
 			},
 		},
 	},
@@ -25,6 +29,9 @@ return {
 			DeathCommandos = {
 				display = "Death Commandos",
 			},
+			Imarra = {
+				display = "Warrior House Imarra",
+			},
 		},
 	},
 
@@ -32,6 +39,9 @@ return {
 		texmods = {
 			SwordofLight = {
 				display = "Sword of Light",
+			},
+			Genyosha = {
+				display = "2nd Genyosha",
 			},
 		},
 	},
@@ -41,6 +51,9 @@ return {
 			MarikMilitia = {
 				display = "Marik Militia",
 			},
+			Regulan = {
+				display = "5th Regulan Hussars",
+			},
 		},
 	},
 
@@ -49,24 +62,33 @@ return {
 			LyranGuards = {
 				display = "Lyran Guards",
 			},
+			SkyeRangers = {
+				display = "Skye Rangers",
+			},
 		},
 	},
 
 	SJ = {
 		texmods = {
 			SJAlpha = {
-				display = "Smoke Jaguar Alpha Galaxy",
+				display = "Alpha Galaxy",
+			},
+			SJZeta = {
+				display = "Zeta Galaxy",
 			},
 		},
 	},
 
 	WF = {
 		texmods = {
+			WFAlpha = {
+				display = "Alpha Galaxy",
+			},
 			WFBeta = {
-				display = "Wolf Beta Galaxy",
+				display = "Beta Galaxy",
 			},
 			WolfInExile = {
-				display = "Wolf in Exile",
+				display = "Wolf-in-Exile",
 			},
 		},
 	},
