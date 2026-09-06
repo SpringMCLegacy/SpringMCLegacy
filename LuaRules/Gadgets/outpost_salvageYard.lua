@@ -41,7 +41,6 @@ local GetUnitPosition			= Spring.GetUnitPosition
 local GetUnitSeparation 		= Spring.GetUnitSeparation
 local GetUnitTeam				= Spring.GetUnitTeam
 local GetUnitsInCylinder		= Spring.GetUnitsInCylinder
-local GetTeamResources			= Spring.GetTeamResources
 local ValidUnitID				= Spring.ValidUnitID
 --SyncedCtrl
 local CreateFeature				= Spring.CreateFeature
@@ -56,12 +55,13 @@ local SetUnitHarvestStorage 	= Spring.SetUnitHarvestStorage
 local SetUnitMoveGoal 			= Spring.SetUnitMoveGoal
 local SetUnitRulesParam			= Spring.SetUnitRulesParam
 local SetTeamRulesParam			= Spring.SetTeamRulesParam
-local UseTeamResource 			= Spring.UseTeamResource
+
 -- UnsyncedCtrl
 local GiveOrderToUnit			= Spring.GiveOrderToUnit
 
 -- GG
-local DelayCall					 = GG.Delay.DelayCall
+local DelayCall					= GG.Delay.DelayCall
+local COLOURS 					= GG.GameConstants.colours
 
 -- Constants
 local GAIA_TEAM_ID = Spring.GetGaiaTeamID()
@@ -179,6 +179,14 @@ end
 GG.PinataLevel = PinataLevel
 
 -- BRV related functions --------------------------------------------------------------------------------
+local scrapMechCmdDesc = {
+	id 		= CMD_SCRAP,
+	type	= CMDTYPE.ICON,
+	name 	= GG.Pad("Scrap","Mech", COLOURS.salvage .. "   (+S)"),
+	action	= "scrapmech",
+	tooltip = "Scraps the mech for ",
+}
+
 local function GetMechCmdDesc(unitDefID)
 	local cmdDesc = {
 		id		= -unitDefID,
@@ -529,28 +537,20 @@ function gadget:AllowCommand(unitID, unitDefID, teamID, cmdID, cmdParams, cmdOpt
 			DestroyFeature(featureID)
 			Spring.RemoveUnitCmdDesc(unitID, FindUnitCmdDesc(unitID, CMD_SCRAP)) -- TODO: hide / disable instead?
 		elseif cmdID < 0 then 
-			local cBills = GetTeamResources(teamID, "metal")
+			local cBills = GG.GetTeamResource(teamID, "cbills")
 			local supportCost = supportCosts[-cmdID]
 			if supportCost then -- purchasing a support vehicle
-				supportCost = Spring.IsNoCostEnabled() and 0 or supportCost
-				if cBills >= supportCost then
-					local beaconID = Spring.GetUnitRulesParam(unitID, "beaconID")
-					local bx, _, bz = GetUnitPosition(beaconID)
-					local ux, _, uz = GetUnitPosition(unitID)
-					GG.DropshipDelivery(beaconID, unitID, teamID, GG.teamSide[teamID] .. "_bishop", -cmdID, 0, nil, 0, {x = bx-ux, z = bz-uz})
-					UseTeamResource(teamID, "m", -supportCost)
-					return true
-				end
+				GG.CheckSupportCosts(unitID, teamID, cmdID, supportCost)
 			else -- Rezzing a mech, in theory
 				local cost = tonumber(UnitDefs[-cmdID].customParams.price) * RECOVER_DISCOUNT
 				local tons = tonumber(UnitDefs[-cmdID].customParams.tonnage)
-				local tonnage = GetTeamResources(teamID, "energy")
+				local tonnage = GG.GetTeamResource(teamID, "tonnage")
 				if cBills >= cost and tonnage >= tons then
 					env = Spring.UnitScript.GetScriptEnv(unitID)
 					Spring.UnitScript.CallAsUnit(unitID, env.Recover, tons)
 					Spring.RemoveUnitCmdDesc(unitID, FindUnitCmdDesc(unitID, cmdID))
-					UseTeamResource(teamID, "metal", cost)
-					UseTeamResource(teamID, "energy", tons)
+					GG.ChangeTeamResource(teamID, "cbills", -cost)
+					GG.ChangeTeamResource(teamID, "tonnage", -tons)
 					return true
 				end
 			end

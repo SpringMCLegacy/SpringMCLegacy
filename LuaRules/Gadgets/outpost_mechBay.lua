@@ -23,7 +23,6 @@ local GetUnitDefID 			= Spring.GetUnitDefID
 local GetUnitIsTransporting	= Spring.GetUnitIsTransporting
 local GetUnitPosition		= Spring.GetUnitPosition
 local GetUnitTeam 			= Spring.GetUnitTeam
-local GetTeamResources		= Spring.GetTeamResources
 local IsNoCostEnabled 		= Spring.IsNoCostEnabled
 --SyncedCtrl
 local AddTeamResource 		= Spring.AddTeamResource
@@ -37,7 +36,6 @@ local SetUnitExperience		= Spring.SetUnitExperience
 local SetUnitHealth 		= Spring.SetUnitHealth
 local SetUnitRulesParam		= Spring.SetUnitRulesParam
 local SetTeamRulesParam		= Spring.SetTeamRulesParam
-local UseTeamResource 		= Spring.UseTeamResource
 -- UnitScript
 -- localised in init so that unit_script has loaded
 local CallAsUnit
@@ -384,6 +382,20 @@ function gadget:UnitGiven(unitID, unitDefID, newTeam, oldTeam)
 	end
 end
 
+local function CheckSupportCosts(unitID, teamID, cmdID, supportCost)
+	local cBills = GG.GetTeamResource(teamID, "cbills")
+	supportCost = Spring.IsNoCostEnabled() and 0 or supportCost
+	if cBills >= supportCost then
+		local beaconID = Spring.GetUnitRulesParam(unitID, "beaconID")
+		local bx, _, bz = GetUnitPosition(beaconID)
+		local ux, _, uz = GetUnitPosition(unitID)
+		GG.DropshipDelivery(beaconID, unitID, teamID, GG.teamSide[teamID] .. "_bishop", -cmdID, 0, nil, 0, {x = bx-ux, z = bz-uz})
+		GG.ChangeTeamResource(teamID, "cbills", -supportCost)
+		return true
+	end
+end
+GG.CheckSupportCosts = CheckSupportCosts
+
 function gadget:AllowCommand(unitID, unitDefID, teamID, cmdID, cmdParams, cmdOptions)
 	if unitDefID == MECHBAY_ID then
 		if cmdID == getOutCmdDesc.id then
@@ -433,16 +445,7 @@ function gadget:AllowCommand(unitID, unitDefID, teamID, cmdID, cmdParams, cmdOpt
 			local transporting = GetUnitIsTransporting(unitID)
 			
 			if supportCost then -- purchasing a support vehicle
-				local cBills = GetTeamResources(teamID, "metal")
-				supportCost = Spring.IsNoCostEnabled() and 0 or supportCost
-				if cBills >= supportCost then
-					local beaconID = Spring.GetUnitRulesParam(unitID, "beaconID")
-					local bx, _, bz = GetUnitPosition(beaconID)
-					local ux, _, uz = GetUnitPosition(unitID)
-					GG.DropshipDelivery(beaconID, unitID, teamID, GG.teamSide[teamID] .. "_bishop", -cmdID, 0, nil, 0, {x = bx-ux, z = bz-uz})
-					UseTeamResource(teamID, "m", -supportCost)
-					return true
-				end
+				CheckSupportCosts(unitID, teamID, cmdID, supportCost)
 			elseif transporting[1] then  -- an omni config
 				local cost = (IsNoCostEnabled() and 0) or tonumber(UnitDefs[-cmdID].customParams.omniswapcost or 5)
 				if GG.GetTeamResource(teamID, "salvage") >= cost then
@@ -458,7 +461,7 @@ function gadget:AllowCommand(unitID, unitDefID, teamID, cmdID, cmdParams, cmdOpt
 					DestroyUnit(oldID, false, true)
 					CallAsUnit(unitID, env.script.TransportPickup, newID)
 					ShowModsByType(unitID, currMenu[unitID], newID)
-					UseTeamResource(teamID, "energy", UnitDefs[-cmdID].customParams.tonnage)
+					GG.ChangeTeamResource(teamID, "tonnage", -UnitDefs[-cmdID].customParams.tonnage)
 					CheckOmniOptions(unitID, teamID, cmdID)
 				else
 					SendMessageToTeam(teamID, "Insufficient salvage!")

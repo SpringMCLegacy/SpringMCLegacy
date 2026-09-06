@@ -37,7 +37,7 @@ local RESOURCE_ALIAS = { -- alias for engine resources,
 		amount				= "m",
 		storage				= "ms",
 	},
-	["tonnagemech"] 	= {
+	["tonnage"] 	= {
 		amount				= "e",
 		storage				= "es",
 	},
@@ -106,9 +106,9 @@ local function ChangeTeamResource(teamID, resource, delta)
 	local alias = RESOURCE_ALIAS[resource]
 	if alias then
 		if delta > 0 then
-			spAddTeamResource(teamID, resource, delta)
+			spAddTeamResource(teamID, alias.amount, delta)
 		elseif delta < 0 then
-			spUseTeamResource(teamID, resource, delta)
+			spUseTeamResource(teamID, alias.amount, -delta)
 		end
 	else
 		teamResources[teamID][resource] = (teamResources[teamID][resource] or 0) + delta
