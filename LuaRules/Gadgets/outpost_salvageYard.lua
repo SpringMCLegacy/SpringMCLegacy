@@ -107,6 +107,7 @@ local yardPos = {} -- yardPos[yardID] = {x = x, y = y, z = z}
 local yardRaws = {} -- yardRaws[yardID] = metalInHarvestStorage
 local yardTeams = {} -- yardTeams[yardID] = teamID
 local remainingSupportSlots = {} -- remainingSupportSlots[teamID] = numberOfSlots
+GG.remainingSupportSlots = remainingSupportSlots -- for outpost_mechBay TODO: move there?
 
 local function SYardUpgrade(unitID, level)
 	yardLevels[unitID] = level

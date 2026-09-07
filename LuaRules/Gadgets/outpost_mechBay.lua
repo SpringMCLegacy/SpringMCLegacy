@@ -215,7 +215,7 @@ local function CheckOmniOptions(unitID, teamID, cmdID)
 	for cmdDescID = 1, #cmdDescs do
 		local buildDefID = cmdDescs[cmdDescID].id
 		local cmdDesc = cmdDescs[cmdDescID]
-		if cmdDesc.id ~= cmdID then
+		if cmdDesc.id ~= cmdID and omniCache[-cmdDesc.id] then
 			local currParam = cmdDesc.params[1] or ""
 			local sCost
 			if buildDefID < 0 then -- a build order
@@ -532,7 +532,9 @@ end
 function gadget:GameFrame(n)
 	if n % 30 == 5 then -- once a second
 		for mechBayID, level in pairs(mechBays) do
-			CheckOmniOptions(mechBayID, GetUnitTeam(mechBayID))
+			local teamID = GetUnitTeam(mechBayID) -- TODO: cache this, we no longer need level here
+			GG.CheckBuildOptions(mechBayID, teamID, GG.remainingSupportSlots[teamID])
+			CheckOmniOptions(mechBayID, teamID)
 		end
 	end
 end
@@ -556,7 +558,7 @@ function gadget:Initialize()
 			omniConfigs[name][config] = {
 				id = -unitDef.id, 
 				tooltip = unitDef.humanName .. "\n" .. unitDef.tooltip .. "\n" .. COLOURS.salvage .. "Salvage cost: " .. tonumber(unitDef.customParams.omniswapcost or 5), 
-				action = name..config
+				action = "omniswap",--name..config,
 			}
 		end
 		hiddenMods[unitDefID] = {} 

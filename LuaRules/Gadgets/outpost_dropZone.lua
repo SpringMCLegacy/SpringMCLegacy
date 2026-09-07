@@ -267,7 +267,8 @@ local function CheckBuildOptions(unitID, teamID, slotsLeft, cmdID, slotCosts)
 		local cmdDescID = cmdDesc.id -- localise
 		if cmdDescID < 0 and cmdDescID ~= cmdID then
 			local currParam = cmdDesc.params[1]
-			local cCost = UnitDefs[-cmdDescID].metalCost * (cmdDesc.action == "resurrectmech" and GG.RECOVER_DISCOUNT or 1) -- Oh dear me
+			local cCost = UnitDefs[-cmdDescID].metalCost 
+			cCost = cCost * (cmdDesc.action == "resurrectmech" and GG.RECOVER_DISCOUNT or 1) * (cmdDesc.action == "omniswap" and 0 or 1) -- oh dear
 			local tCost = UnitDefs[-cmdDescID].energyCost
 			local limitLeft = slotsLeft - (orderSizes[unitID] or (slotCosts and slotCosts[-cmdDescID]) or 0)
 			if type(tonumber(currParam)) == "number" then
