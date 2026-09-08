@@ -277,7 +277,7 @@ function gadget:UnitCreated(unitID, unitDefID, teamID)
 			local pieceMap = Spring.GetUnitPieceMap(unitID)
 			if pieceMap.cockpit then
 				local px, py, pz = Spring.GetUnitPiecePosition(unitID, pieceMap.cockpit)
-				local mx, my, mz = Spring.GetUnitPiecePosition(unitID, pieceMap.torso or pieceMap.body)
+				local mx, my, mz = Spring.GetUnitPiecePosition(unitID, pieceMap.torso or pieceMap.body or pieceMap.base)
 				local pCent = (py-my-losHeight)/losHeight * 100
 				if pCent > 5 then
 					Spring.Echo("[game_radar.lua]", ud.name, "Unit losHeight is", losHeight, "but cockpit is at", py-my, "% error is ", pCent)
