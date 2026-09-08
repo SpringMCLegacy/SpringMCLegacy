@@ -162,7 +162,7 @@ local function UpdateUnitApps(unitID, unitDefID, appType)
 			unitID = (Spring.GetUnitIsTransporting(unitID) or EMPTY_TABLE)[1]
 			if unitID then unitDefID = Spring.GetUnitDefID(unitID) end -- does this mean it was all a wasted effort anyway?
 		elseif appType == "upgrades" then
-			newLevel = select(1, Spring.GetTeamResources(teamID, "metal"))
+			newLevel = select(1, GG.GetTeamResource(teamID, "cbills"))
 		end
 		UpdateRemaining(unitID, unitDefID, appType, newLevel, applierID)
 	end

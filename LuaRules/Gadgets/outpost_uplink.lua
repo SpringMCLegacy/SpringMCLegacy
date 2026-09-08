@@ -18,7 +18,6 @@ if gadgetHandler:IsSyncedCode() then
 local GetGameFrame			= Spring.GetGameFrame
 local GetUnitPosition		= Spring.GetUnitPosition
 local GetUnitTeam			= Spring.GetUnitTeam
-local GetTeamResources		= Spring.GetTeamResources
 local GetTeamList			= Spring.GetTeamList
 local AreTeamsAllied		= Spring.AreTeamsAllied
 --SyncedCtrl
@@ -181,7 +180,7 @@ local function ArtyStrike(unitID, teamID, x, y, z, cost, strikeType, dx, dy, dz)
 		Spring.SendMessageToTeam(teamID, "Not yet! " .. minutes .. " min " .. seconds .. " seconds left")
 		return false
 	end
-	local money = GetTeamResources(teamID, "metal")
+	local money = GG.GetTeamResource(teamID, "cbills")
 	if money < cost then  -- not enough C-Bills (TODO: Should never get this far, button disabled by unit_purchasing.lua?)
 		GG.PlaySoundForTeam(teamID, "bb_insufficient_cbills", 1)
 		Spring.SendMessageToTeam(teamID, "Not enough C-Bills for artillery strike!")

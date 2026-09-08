@@ -22,7 +22,6 @@ local SetTeamRulesParam		= Spring.SetTeamRulesParam
 --SyncedRead
 local AreTeamsAllied		= Spring.AreTeamsAllied
 local GetGameFrame			= Spring.GetGameFrame
-local GetTeamResources		= Spring.GetTeamResources
 local GetUnitCmdDescs 		= Spring.GetUnitCmdDescs
 local GetUnitPosition		= Spring.GetUnitPosition
 --SyncedCtrl
@@ -242,7 +241,7 @@ local function DropZoneUpgrade(teamID)
 		local newDefID = UnitDefNames[side .. "_dropship_" .. dropZoneLevels[newTier]].id
 		teamDropZoneLevels[teamID] = {def = newDefID, tier = newTier}
 		local maxTonnage = math.floor(UnitDefs[newDefID].customParams.maxtonnage * tonnageMult)
-		local _, currMaxTonnage = Spring.GetTeamResources(teamID, "energy")
+		local currMaxTonnage = GG.GetTeamStorage(teamID, "tonnage")
 		local tonnageIncrease = maxTonnage - currMaxTonnage --math.floor(UnitDefs[oldDefID].customParams.maxtonnage * tonnageMult)
 		Spring.SetTeamResource(teamID, "es", maxTonnage)
 		Spring.AddTeamResource(teamID, "e", tonnageIncrease)
@@ -260,8 +259,8 @@ local C = {COLOURS.cbills .. "C"}
 local T = {COLOURS.tonnage .. "T"}
 
 local function CheckBuildOptions(unitID, teamID, slotsLeft, cmdID, slotCosts)
-	local money = GetTeamResources(teamID, "metal")
-	local weightLeft = GetTeamResources(teamID, "energy")
+	local money = GG.GetTeamResource(teamID, "cbills")
+	local weightLeft = GG.GetTeamResource(teamID, "tonnage")
 	
 	for i, cmdDesc in pairs(GetUnitCmdDescs(unitID)) do
 		local cmdDescID = cmdDesc.id -- localise
@@ -454,8 +453,8 @@ local function PurchaseOrders(unitID, unitDefID, teamID, cmdID, cmdOptions, comp
 		local runningTotal = orderCosts[unitID] or 0
 		local runningTons = orderTons[unitID] or 0
 		local runningSize = orderSizes[unitID] or 0
-		local money = GetTeamResources(teamID, "metal")
-		local tonnage = GetTeamResources(teamID, "energy")
+		local money = GG.GetTeamResource(teamID, "cbills")
+		local tonnage = GG.GetTeamResource(teamID, "tonnage")
 		if not rightClick then
 			if cmdOptions.shift or cmdOptions.ctrl then return false end -- otherwise we can (dramatically) circumvent unit limits
 			if (slotsLeft - runningSize) < 1 then  -- not enough C3 bandwidth

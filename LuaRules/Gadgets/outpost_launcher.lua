@@ -17,7 +17,6 @@ if gadgetHandler:IsSyncedCode() then
 
 --SyncedRead
 local GetTeamList			= Spring.GetTeamList
-local GetTeamResources		= Spring.GetTeamResources
 local GetUnitStockpile		= Spring.GetUnitStockpile
 --SyncedCtrl
 local AddTeamResource		= Spring.AddTeamResource
@@ -65,7 +64,7 @@ function gadget:AllowCommand(unitID, unitDefID, teamID, cmdID, cmdParams, cmdOpt
 			if cmdOptions.shift or cmdOptions.ctrl then return false end -- otherwise we can (dramatically) circumvent costs
 			local price = Spring.IsNoCostEnabled() and 0 or CRUISE_MISSILE_COST
 			if not cmdOptions.right then -- ordering new
-				if GetTeamResources(teamID, "metal") >= price then
+				if GG.GetTeamResource(teamID, "cbills") >= price then
 					UseTeamResource(teamID, "metal", price)
 					GG.PlaySoundForTeam(teamID, "bb_outpost_launcher_preparing", 1)
 					return true

@@ -15,7 +15,6 @@ if gadgetHandler:IsSyncedCode() then
 
 -- localisations
 -- SyncedRead
-local GetTeamResources 		= Spring.GetTeamResources
 local GetUnitCmdDescs		= Spring.GetUnitCmdDescs
 local GetUnitIsDead			= Spring.GetUnitIsDead
 local GetUnitRulesParam		= Spring.GetUnitRulesParam
@@ -193,7 +192,7 @@ function gadget:AllowCommand(unitID, unitDefID, teamID, cmdID, cmdParams, cmdOpt
 			
 			local tx, ty, tz = unpack(cmdParams)
 			local dist = GG.GetUnitDistanceToPoint(unitID, tx, ty, tz, false)
-			local cBills = GetTeamResources(teamID, "metal")
+			local cBills = GG.GetTeamResource(teamID, "cbills")
 			local cost = UnitDefs[-cmdID].metalCost
 			-- check for max range, although limited via unit script to only build inside beacon radius... 
 			-- ...need to ensure it is within the beacon radius we are built at!

@@ -221,7 +221,7 @@ local function Outpost(beaconID, teamID)
 		if difficulty > 1 then -- cheat the required resources in
 			Spring.AddTeamResource(teamID, "metal", AI_CMDS[cmd].cost)
 		end
-		if Spring.GetTeamResources(teamID, "metal") > AI_CMDS[cmd].cost then
+		if GG.GetTeamResource(teamID, "cbills") > AI_CMDS[cmd].cost then
 			-- outpostPointIDs[outpostID] = outpostPointID
 			-- outpostIDs[outpostPointID] = outpostID
 			-- need to check available slot rather than just picking...
@@ -279,15 +279,15 @@ local function Spam(teamID)
 				else
 					buildID = SimpleReverseSearch(sideMechs[side], 
 							math.max(UnitDefs[sideMechs[side][1]].metalCost, 
-							Spring.GetTeamResources(teamID, "metal") * math.random(5, 95)/100), 
-							Spring.GetTeamResources(teamID, "energy"))
+							GG.GetTeamResource(teamID, "cbills") * math.random(5, 95)/100), 
+							GG.GetTeamResource(teamID, "tonnage"))
 				end
 			else
 				--local cmdDesc = cmdDescs[math.random(1, #cmdDescs)]
 				buildID = SimpleReverseSearch(sideMechs[side], 
 						math.max(UnitDefs[sideMechs[side][1]].metalCost, 
-						Spring.GetTeamResources(teamID, "metal") * math.random(5, 95)/100), 
-						Spring.GetTeamResources(teamID, "energy"))
+						GG.GetTeamResource(teamID, "cbills") * math.random(5, 95)/100), 
+						GG.GetTeamResource(teamID, "tonnage"))
 			end
 			if buildID then
 				GG.Delay.DelayCall(Spring.GiveOrderToUnit, {unitID, -buildID, EMPTY_TABLE, EMPTY_TABLE}, 1)
@@ -305,7 +305,7 @@ local function Spam(teamID)
 						if difficulty > 1 then
 							Spring.AddTeamResource(teamID, "metal", cost)
 						end
-						if Spring.GetTeamResources(teamID, "metal") > cost then
+						if GG.GetTeamResource(teamID, "cbills") > cost then
 							GG.Delay.DelayCall(Spring.GiveOrderToUnit, {unitID, AI_CMDS["CMD_DROPZONE_" .. nextLevel].id, EMPTY_TABLE, EMPTY_TABLE}, 1)
 							teamDropshipOutposts[teamID] = nextLevel
 						end
@@ -524,7 +524,7 @@ end
 local TC_RANGE = UnitDefs[AI_OUTPOST_DEFS["OUTPOST_TURRETCONTROL"]].buildDistance
 
 local function TurretControlCalls(teamID)
-	local cBills = Spring.GetTeamResources(teamID, "metal")
+	local cBills = GG.GetTeamResource(teamID, "cbills")
 	local runningTotal = 0
 	for unitID in pairs(teamOutpostIDs[teamID]["OUTPOST_TURRETCONTROL"]) do
 		local likeToBuy = {}
@@ -580,7 +580,7 @@ local function AirconCalls(teamID)
 	--[[if select(3, Spring.GetTeamInfo(teamID)) then -- Team is dead
 		return
 	end]]
-	local cBills = Spring.GetTeamResources(teamID, "metal")
+	local cBills = GG.GetTeamResource(teamID, "cbills")
 	for unitID in pairs(teamOutpostIDs[teamID]["OUTPOST_AIRCON"]) do
 		if not Spring.ValidUnitID(unitID) or Spring.GetUnitIsDead(unitID) then -- Aircon is dead
 			-- no-op
@@ -640,7 +640,7 @@ local function UplinkCalls(teamID)
 			--CleanTeamOutPosts(teamID, "OUTPOST_UPLINK", unitID)
 		else
 			-- always try arty first as well as others
-			local cBills = Spring.GetTeamResources(teamID, "metal")
+			local cBills = GG.GetTeamResource(teamID, "cbills")
 			local randPick = math.random(GG.uplinkLevels[unitID]) 
 			local artyCmdDesc = Spring.GetUnitCmdDescs(unitID, randPick + 8)[1]
 			if difficulty > 1 then -- cheat the required resources in

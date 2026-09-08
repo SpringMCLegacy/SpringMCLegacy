@@ -41,7 +41,6 @@ local SetUnitRotation = Spring.SetUnitRotation
 local SetUnitVelocity = Spring.SetUnitVelocity
 local AddTeamResource = Spring.AddTeamResource
 local UseTeamResource = Spring.UseTeamResource
-local GetTeamResources = Spring.GetTeamResources
 local GetTeamStartPosition = Spring.GetTeamStartPosition
 local GetUnitCmdDescs = Spring.GetUnitCmdDescs
 local EditUnitCmdDesc = Spring.EditUnitCmdDesc
@@ -720,10 +719,6 @@ function gadget:UnitDestroyed(unitID, unitDefID, teamID)
 	if planeStates[unitID] then -- aircraft was killed, not retreating
 		local unitDef = UnitDefs[unitDefID]
 		AddTeamResource(teamID, "e", unitDef.energyCost)
-		--local curCommand = GetTeamResources(teamID, "metal")
-		--local penalty = math.min((unitDef.customParams.penalty or PENALTY_AMOUNT) * unitDef.metalCost, curCommand)
-		--UseTeamResource(teamID, "m", penalty)s
-		--teamAvailableSortieSlots[teamID] = teamAvailableSortieSlots[teamID] + 1
 		local sortie = sortieDefs[unitDefID]
 		ModifyStockpile(teamID, sortie, 1, "active", nil)
 	end
@@ -741,7 +736,7 @@ end
 
 function gadget:AllowUnitTransfer(unitID, unitDefID, oldTeam, newTeam, capture)
 	if aeroCache[unitDefID] then
-		local availableTonnage = GetTeamResources(newTeam, "e")
+		local availableTonnage = GG.GetTeamResource(newTeam, "tonnage")
 		local unitDef = UnitDefs[unitDefID]
 		return availableTonnage >= unitDef.energyCost
 	end

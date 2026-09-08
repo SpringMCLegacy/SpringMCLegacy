@@ -18,7 +18,6 @@ local modOptions = Spring.GetModOptions()
 local SetUnitRulesParam		= Spring.SetUnitRulesParam
 --SyncedRead
 local GetGameFrame			= Spring.GetGameFrame
-local GetTeamResources		= Spring.GetTeamResources
 --SyncedCtrl
 local CreateUnit			= Spring.CreateUnit
 local EditUnitCmdDesc		= Spring.EditUnitCmdDesc
@@ -155,7 +154,7 @@ local C = "\n\n\n" .. COLOURS.cbills .. "C          "
 local function CheckOutpostOptions(unitID, teamID)
 	if not Spring.ValidUnitID(unitID) then return end
 	if outpostIDs[unitID] then return end -- don't override ToggleOutpostOptions
-	local money = GetTeamResources(teamID, "metal")
+	local money = GG.GetTeamResource(teamID, "cbills")
 	local noCost = Spring.IsNoCostEnabled()
 	
 	for outpostDefID, outpostInfo in pairs(outpostDefs) do
@@ -261,7 +260,7 @@ function gadget:AllowCommand(unitID, unitDefID, teamID, cmdID, cmdParams, cmdOpt
 			end
 			local outpostDefID = outpostCMDs[cmdID]
 			local cost = (Spring.IsNoCostEnabled() and 0) or (outpostDefs[outpostDefID] and outpostDefs[outpostDefID].cost or 1000)
-			if cost <= GetTeamResources(teamID, "metal") and GG.teamSide[teamID] then
+			if GG.teamSide[teamID] and cost <= GG.GetTeamResource(teamID, "cbills") then
 				--Spring.Echo("I'm totally gonna outpost your beacon bro!")
 				ToggleOutpostOptions(unitID, false)
 				outpostIDs[unitID] = true -- overwritten with unitID on spawn
