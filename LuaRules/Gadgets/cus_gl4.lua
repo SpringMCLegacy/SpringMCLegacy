@@ -334,7 +334,7 @@ local texmodState = {
 	baseUnitTextures = {},
 	textureKeyCache = {},
 	missingWarnings = {},
-	texturePathIndex = false,
+	texturePathIndex = {},
 	botBuddyEnabled = texmodConfig.BotBuddyTexmodsEnabled(),
 	lastRecheckFrame = -999999,
 }
@@ -881,6 +881,7 @@ local function BuildTexmodTexturePath(unitDef, texmod)
 
 	local filename = tex1:gsub("\\", "/")
 	filename = filename:gsub("^[Uu][Nn][Ii][Tt][Tt][Ee][Xx][Tt][Uu][Rr][Ee][Ss]/", "")
+	filename = filename:match("([^/]+)$") or filename
 	local lower = filename:lower()
 	local suffix = "_team.dds"
 	if lower:sub(-#suffix) ~= suffix then
@@ -888,7 +889,7 @@ local function BuildTexmodTexturePath(unitDef, texmod)
 	end
 
 	local stem = filename:sub(1, #filename - #suffix)
-	return "unittextures/" .. stem .. "_" .. texmod .. ".dds"
+	return "unittextures/texmods/" .. texmod .. "/" .. stem .. "_" .. texmod .. ".dds"
 end
 
 local function ResolveTexturePath(candidate)
@@ -900,20 +901,27 @@ local function ResolveTexturePath(candidate)
 	end
 
 	-- VFS/model texture names are not guaranteed to preserve filename case.
-	-- Build one case-insensitive index as a redundancy so Linux/archive casing
-	-- differences do not create false missing-skin fallbacks.
-	if texmodState.texturePathIndex == false then
-		local index = {}
-		local files = VFS.DirList("unittextures/") or {}
+	-- Texmods now live in per-scheme directories, so cache a case-insensitive
+	-- index for only the directory being queried instead of scanning unittextures/.
+	local directory = candidate:match("^(.*)/[^/]+$")
+	if not directory then
+		return nil
+	end
+	directory = directory .. "/"
+	local directoryKey = directory:lower()
+	local index = texmodState.texturePathIndex[directoryKey]
+	if index == nil then
+		index = {}
+		local files = VFS.DirList(directory) or {}
 		for i = 1, #files do
 			local path = files[i]
 			if type(path) == "string" and path:lower():sub(-4) == ".dds" then
 				index[path:lower()] = path
 			end
 		end
-		texmodState.texturePathIndex = index
+		texmodState.texturePathIndex[directoryKey] = index
 	end
-	return texmodState.texturePathIndex[candidate:lower()]
+	return index[candidate:lower()]
 end
 
 local function GenTexmodTextureKey(textureTable)

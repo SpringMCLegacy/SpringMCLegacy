@@ -7,6 +7,7 @@ local M = {
 	DEFAULT_TEXMOD = "Team",
 	TEAM_RULE_PARAM = "mcl_texmod",
 	START_UNIT_RULE_PARAM = "startUnit",
+	SIDE_RULE_PARAM = "side",
 	BOT_BUDDY_RULE_PARAM = "bot_buddy",
 	BOT_BUDDY_MODOPTION = "texmod_botbuddy",
 	BOT_BUDDY_DEFAULT = false,
@@ -66,9 +67,9 @@ function M.NormalizeTexmod(value)
 	return value
 end
 
--- sidedata is retained only for resolving MCL's direct-launch startUnit back to
--- the faction selected by the existing faction wheel. Paint-scheme membership is
--- no longer read from sidedata; all paint definitions come from Gamedata/texmods.lua.
+-- sidedata is retained only for resolving MCL's selected faction identifiers
+-- (including the public "side" TeamRulesParam and legacy startUnit path) back to
+-- their faction entries. Paint membership comes only from Gamedata/texmods.lua.
 function M.LoadSideData()
 	local ok, data = pcall(VFS.Include, "gamedata/sidedata.lua", {})
 	if not ok or type(data) ~= "table" then
@@ -131,6 +132,20 @@ function M.GetEffectiveTeamSide(teamID, sideData)
 		return "", nil, "none"
 	end
 
+	-- MCL's faction-change widget publishes the selected shortName through the
+	-- public team "side" rules param. Prefer it whenever present so direct-launch
+	-- faction changes and synced TexMod validation agree on the same faction.
+	local selectedSide = Spring.GetTeamRulesParam
+		and Spring.GetTeamRulesParam(teamID, M.SIDE_RULE_PARAM)
+	if type(selectedSide) == "string" and selectedSide ~= "" then
+		local selectedEntry = M.GetSideEntry(selectedSide, sideData)
+		if selectedEntry then
+			return SideDisplayName(selectedEntry, selectedSide), selectedEntry, "sideRule"
+		end
+	end
+
+	-- Retain startUnit as a compatibility path for setups that communicate faction
+	-- by changing the team's starting unit rather than the MCL side rules param.
 	local startUnitDefID = Spring.GetTeamRulesParam
 		and Spring.GetTeamRulesParam(teamID, M.START_UNIT_RULE_PARAM)
 	local startEntry = M.GetSideEntryFromStartUnit(startUnitDefID, sideData)

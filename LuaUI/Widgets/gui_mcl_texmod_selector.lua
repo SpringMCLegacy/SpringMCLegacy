@@ -66,6 +66,7 @@ local pendingElapsed = 0
 local hoveredIndex
 local currentSelection = TEXMOD.DEFAULT_TEXMOD
 local debugAll = false
+local factionHandoff = {directLaunch = false, waiting = false}
 local vsx, vsy = 1, 1
 local scale = 1
 local centerX, centerY = 0, 0
@@ -86,6 +87,10 @@ local min = math.min
 --------------------------------------------------------------------------------
 -- Helpers
 --------------------------------------------------------------------------------
+
+local function GetFactionChangeState()
+	return WG and WG.MCLFactionChange
+end
 
 local function PrettyName(name)
 	if name == TEXMOD.DEFAULT_TEXMOD then
@@ -264,7 +269,7 @@ local function DrawPreview(texmod, x, y, size, hovered)
 	end)
 end
 
-local function DrawRingWedge(index, hovered, selected)
+local function DrawRingWedge(index, hovered)
 	local count = #allowedTexmods
 	local sector = twoPi / count
 	local centerAngle = (pi * 0.5) + ((index - 1) * sector)
@@ -273,9 +278,10 @@ local function DrawRingWedge(index, hovered, selected)
 	local a0 = centerAngle - half
 	local a1 = centerAngle + half
 
-	-- Keep every wedge visually neutral: the preview/outline communicates hover
-	-- and selection while the wheel itself stays almost completely transparent.
-	gl.Color(0.55, 0.55, 0.55, 0.10)
+	-- The wedge itself is the hover cue. Keep every entry the same neutral grey,
+	-- then brighten the full fill subtly under the mouse instead of emphasizing
+	-- only the perimeter.
+	gl.Color(0.55, 0.55, 0.55, hovered and 0.18 or 0.10)
 
 	gl.BeginEnd(GL.TRIANGLE_STRIP, function()
 		for step = 0, WEDGE_SEGMENTS do
@@ -288,8 +294,10 @@ local function DrawRingWedge(index, hovered, selected)
 		end
 	end)
 
-	gl.Color(0.82, 0.82, 0.82, hovered and 0.90 or selected and 0.62 or 0.28)
-	gl.LineWidth((hovered and 2.0 or 1.0) * scale)
+	-- A faint static perimeter remains only to separate neighboring wedges; it is
+	-- deliberately unaffected by hover/current selection state.
+	gl.Color(0.82, 0.82, 0.82, 0.18)
+	gl.LineWidth(1.0 * scale)
 	gl.BeginEnd(GL.LINE_STRIP, function()
 		for step = 0, WEDGE_SEGMENTS do
 			local t = step / WEDGE_SEGMENTS
@@ -365,13 +373,22 @@ function widget:Initialize()
 
 	myTeamID = Spring.GetMyTeamID()
 	debugAll = false
+	factionHandoff.directLaunch = Spring.GetGameRulesParam
+		and Spring.GetGameRulesParam("runningWithoutScript") == 1
+	do
+		local factionState = GetFactionChangeState()
+		factionHandoff.waiting = factionHandoff.directLaunch
+			and factionState ~= nil
+			and factionState.active == true
+	end
 	RefreshGeometry()
 	RefreshEffectiveSide(true)
 
-	-- Do not remove ourselves merely because the engine-side field has no texmods.
-	-- In direct spring.exe launches MCL's radial faction selector may still change
-	-- startUnit, which is the authoritative faction choice for this system.
-	Spring.Echo("[MCL TexMods] Radial paint selector waiting for effective faction/startUnit.")
+	if factionHandoff.waiting then
+		Spring.Echo("[MCL TexMods] Direct launch detected; waiting for MC:L Faction Change to complete before opening paint selection.")
+	else
+		Spring.Echo("[MCL TexMods] Paint selector waiting for a resolved faction.")
+	end
 end
 
 function widget:ViewResize()
@@ -381,6 +398,46 @@ end
 function widget:Update(dt)
 	if completed then return end
 	dt = dt or 0
+
+	-- In direct spring.exe/Recoil launches, the faction wheel is the first setup
+	-- stage. Stay completely dormant while that wheel is active. Its direct-launch
+	-- path marks itself complete and retires its screen/input after the player's
+	-- explicit faction click; that state transition is the handoff boundary.
+	if factionHandoff.directLaunch then
+		local factionState = GetFactionChangeState()
+		if factionState and factionState.active == true then
+			factionHandoff.waiting = true
+			menuVisible = false
+			selectionElapsed = 0
+			return
+		elseif factionHandoff.waiting then
+			-- The faction widget sends its synced side change before closing. When it
+			-- reports an explicit direct-launch choice, wait until that shortName is
+			-- visible through the public TeamRulesParam as well. This prevents the
+			-- paint wheel from validating against the previous faction for one frame.
+			local expectedSide = factionState and factionState.complete and factionState.side
+			if type(expectedSide) == "string" and expectedSide ~= "" then
+				local publishedSide = Spring.GetTeamRulesParam(myTeamID, TEXMOD.SIDE_RULE_PARAM)
+				if string.lower(tostring(publishedSide or "")) ~= string.lower(expectedSide) then
+					return
+				end
+			end
+
+			factionHandoff.waiting = false
+			menuVisible = false
+			hoveredIndex = nil
+			pendingSelection = nil
+			pendingElapsed = 0
+			selectionElapsed = 0
+			elapsed = 0
+			stableElapsed = 0
+			pollAccumulator = 0
+			RefreshEffectiveSide(true)
+			Spring.Echo("[MCL TexMods] Faction selection completed; paint selection is now active for the resolved faction.")
+			return
+		end
+	end
+
 	elapsed = elapsed + dt
 	stableElapsed = stableElapsed + dt
 	pollAccumulator = pollAccumulator + dt
@@ -421,8 +478,8 @@ function widget:Update(dt)
 	end
 
 	-- A resolved faction with no configured alternates needs no interaction. Team
-	-- remains the default. If MCL has not resolved the selected faction yet, keep
-	-- waiting because the direct-launch faction selector may still change startUnit.
+	-- remains the default. Direct-launch faction selection has already completed
+	-- before this point, while lobby/multiplayer setups arrive with a faction set.
 	if debugAll or effectiveSideEntry then
 		if #allowedTexmods <= 1 then
 			Spring.Echo("[MCL TexMods] No alternate texmods for faction '" .. tostring(effectiveSide) .. "'; using Team.")
@@ -450,8 +507,7 @@ function widget:DrawScreen()
 	gl.Text(debugAll and "Debug mode: showing every paint scheme in Gamedata/texmods.lua" or "Choose a force paint scheme - missing unit textures automatically use Team", centerX, centerY + statusOffset, 12 * scale, "oc")
 
 	for i = 1, #allowedTexmods do
-		local texmod = allowedTexmods[i]
-		DrawRingWedge(i, i == hoveredIndex, texmod == currentSelection)
+		DrawRingWedge(i, i == hoveredIndex)
 	end
 
 	DrawCenter()

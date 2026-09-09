@@ -1,16 +1,14 @@
-
 function widget:GetInfo()
     return {
-        name    = 'MC:L Faction Change',
-        desc    = 'Adds buttons to switch faction at the game beggining',
-        author    = 'Niobium (adapted to s44 by Jose Luis Cercos-Pita, adapted to MCL by FLOZi)',
-        date    = 'May 2011',
-        license    = 'GNU GPL v2',
-        layer    = -100,
-        enabled    = true,
+        name      = 'MC:L Faction Change',
+        desc      = 'Adds buttons to switch faction at the game beggining',
+        author    = 'Niobium (adapted to s44 by Jose Luis Cercos-Pita, adapted to MCL by FLOZi), zvero + ChatGPT',
+        date      = 'May 2011',
+        license   = 'GNU GPL v2',
+        layer     = -100,
+        enabled   = true,
     }
 end
-
 --------------------------------------------------------------------------------
 -- Var
 --------------------------------------------------------------------------------
@@ -22,7 +20,6 @@ local px, py = 0.4*wWidth, 0.4*wHeight
 --------------------------------------------------------------------------------
 local teamList = Spring.GetTeamList()
 local myTeamID = Spring.GetMyTeamID()
-
 local glTexCoord = gl.TexCoord
 local glVertex = gl.Vertex
 local glColor = gl.Color
@@ -42,7 +39,6 @@ local glText = gl.Text
 local glCallList = gl.CallList
 local glCreateList = gl.CreateList
 local glDeleteList = gl.DeleteList
-
 local spGetTeamStartPosition = Spring.GetTeamStartPosition
 local spGetTeamInfo = Spring.GetTeamInfo
 local spGetTeamRulesParam = Spring.GetTeamRulesParam
@@ -51,9 +47,13 @@ local spGetGroundHeight = Spring.GetGroundHeight
 local spSendLuaRulesMsg = Spring.SendLuaRulesMsg
 local spGetSpectatingState = Spring.GetSpectatingState
 -- local spGetSideData = Spring.GetSideData  -- Overloaded by a custom sidedata
-
 local amNewbie = (spGetTeamRulesParam(myTeamID, 'isNewbie') == 1)
 local mySide = select(5, spGetTeamInfo(myTeamID))
+
+-- Shared LuaUI state used by the paint selector for a clean direct-launch handoff.
+-- This does not affect synced faction selection or multiplayer setup behavior.
+local factionState = WG.MCLFactionChange or {}
+WG.MCLFactionChange = factionState
 
 local factionChangeList
 
@@ -64,7 +64,6 @@ local SIDEDATA = {
         sideName = "random team (gm)",
     },]]
 }
-
 local N_AXIS = 0
 local N_ALLIES = 0
 local N_NEUTRAL = 0
@@ -96,7 +95,6 @@ for _, faction in ipairs(factions) do
         N_NEUTRAL = N_NEUTRAL + 1
     end
 end
-
 --------------------------------------------------------------------------------
 -- Functions
 --------------------------------------------------------------------------------
@@ -110,7 +108,6 @@ end
 function spGetSideData()
     return SIDEDATA
 end
-
 function getTeamName()
     local side = mySide
     if side == "" then
@@ -131,7 +128,6 @@ function getTeamNumber()
     -- Error, return 0, and let's see
     return 0
 end
-
 function getTeamNameByNumber(teamNum)
     local sidedata = spGetSideData()
     while teamNum < 1 do
@@ -148,29 +144,35 @@ function getTeamNameByNumber(teamNum)
     end
     return side
 end
-
 function readAll(file)
     local f = io.open(file, "rb")
     local content = f:read("*all")
     f:close()
     return content
 end
-
 --------------------------------------------------------------------------------
 -- Callins
 --------------------------------------------------------------------------------
 function widget:Initialize()
-    if spGetSpectatingState() or
-		Spring.GetGameFrame() > 0 or
-		not (Game.startPosType == 2 or Spring.GetGameRulesParam("runningWithoutScript") == 1) or
-		amNewbie then
-		widgetHandler:RemoveWidget(self)
-		return
-	end
-	-- Check that game_setup.lua has a faction already set
-	spSendLuaRulesMsg('\138' .. mySide)
-end
+    factionState.active = false
+    factionState.complete = false
+    factionState.side = nil
 
+    if spGetSpectatingState() or
+        Spring.GetGameFrame() > 0 or
+        not (Game.startPosType == 2 or Spring.GetGameRulesParam("runningWithoutScript") == 1) or
+        amNewbie then
+        factionState.available = false
+        widgetHandler:RemoveWidget(self)
+        return
+    end
+
+    factionState.available = true
+    factionState.active = true
+
+    -- Check that game_setup.lua has a faction already set
+    spSendLuaRulesMsg('\138' .. mySide)
+end
 function widget:DrawWorld()
     glColor(1, 1, 1, 0.5)
     glDepthTest(false)
@@ -183,15 +185,21 @@ function widget:DrawWorld()
                 -- No idea why it takes 0 value after choosing random team...
                 side = "random team (gm)"
             else
-				glTexture('LuaUI/Images/faction_change/' .. side .. '.png')
-				glBeginEnd(GL_QUADS, QuadVerts, tsx, spGetGroundHeight(tsx, tsz), tsz, 80)
-			end
+                glTexture('LuaUI/Images/faction_change/' .. side .. '.png')
+                glBeginEnd(GL_QUADS, QuadVerts, tsx, spGetGroundHeight(tsx, tsz), tsz, 80)
+            end
         end
     end
     glTexture(false)
 end
-
 function widget:DrawScreen()
+
+    -- In direct-launch setup, the first explicit faction click completes this
+    -- screen-stage. Keep DrawWorld alive for the existing start-position faction
+    -- markers, but retire the faction wheel so the paint selector can take over.
+    if Spring.GetGameRulesParam("runningWithoutScript") == 1 and factionState.complete then
+        return
+    end
 
     -- Spectator check
     if spGetSpectatingState() then
@@ -205,28 +213,26 @@ function widget:DrawScreen()
     --call list
     if factionChangeList then
         glCallList(factionChangeList)
-    else 
+    else
         factionChangeList = glCreateList(FactionChangeList)
     end
     glPopMatrix()
 
-    
+
 end
 
 function DrawCircle(a0, a1, n)
     local da = a1 - a0
     local r = RADIUS
     glVertex(r, r)
-
     for i=0,n do
         local a = a0 + i * da / n
         glVertex(
-            r + (r * math.sin(a)), 
+            r + (r * math.sin(a)),
             r + (r * math.cos(a))
         )
     end
 end
-
 function FactionChangeList()
     -- Panel (Divided in Axis/Allies/Neutral)
     local sidedata = spGetSideData()
@@ -244,7 +250,6 @@ function FactionChangeList()
     local a1 = a0 + N_NEUTRAL * da
     glColor(0, 0, 0, 0.5)
     glBeginEnd(GL_TRIANGLE_FAN, DrawCircle, a0, a1, N_NEUTRAL * 4)]]
-
     -- Place random at mid
     local selTeam = getTeamNumber()
     local R = RADIUS
@@ -278,10 +283,11 @@ function FactionChangeList()
         end
     end
 end
-
-
-
 function widget:MousePress(mx, my, mButton)
+
+    if Spring.GetGameRulesParam("runningWithoutScript") == 1 and factionState.complete then
+        return false
+    end
 
     -- Check we are on the circle
     local R = RADIUS
@@ -301,7 +307,6 @@ function widget:MousePress(mx, my, mButton)
         widgetHandler:RemoveWidget(self)
         return false
     end
-
     -- Check if we are selecting a new team
     local sidedata = spGetSideData()
     local n = #sidedata
@@ -316,7 +321,6 @@ function widget:MousePress(mx, my, mButton)
         factionChangeList = glCreateList(FactionChangeList)
         return true
     end]]
-
     -- Get the new team
     local da = 2.0 * math.pi / (n - 0)
     local a0 = 0.5 * N_NEUTRAL * da     -- Neutrals are placed at top
@@ -327,14 +331,32 @@ function widget:MousePress(mx, my, mButton)
     local i = math.floor(a / da) + 1
     mySide = getTeamNameByNumber(i)
     spSendLuaRulesMsg('\138' .. mySide)
+
+    -- When Recoil is launched directly, faction choice is the first setup step.
+    -- Treat the first explicit faction click as completion and hand control to the
+    -- TexMod selector. Lobby/multiplayer behaviour is intentionally unchanged.
+    if Spring.GetGameRulesParam("runningWithoutScript") == 1 then
+        factionState.side = mySide
+        factionState.complete = true
+        factionState.active = false
+        if factionChangeList then
+            glDeleteList(factionChangeList)
+            factionChangeList = nil
+        end
+        return true
+    end
+
     if factionChangeList then
         glDeleteList(factionChangeList)
     end
     factionChangeList = glCreateList(FactionChangeList)
     return true
 end
-
 function widget:MouseMove(mx, my, dx, dy, mButton)
+    if Spring.GetGameRulesParam("runningWithoutScript") == 1 and factionState.complete then
+        return
+    end
+
     -- Dragging
     if mButton == 2 or mButton == 3 then
         px = px + dx
@@ -346,3 +368,6 @@ function widget:GameStart()
     widgetHandler:RemoveWidget(self)
 end
 
+function widget:Shutdown()
+    factionState.active = false
+end
