@@ -80,6 +80,8 @@ local Corsair = Aero:New{
 		squadsize 		= 2,
 		maxammo 		= {bomb = 5},
 		
+		texmod			= "player",
+		
 		entryDelay 		= 15,
 		prepDelay 		= 20,
 		strafeDistance  = 300, -- how close to get to target while strafing

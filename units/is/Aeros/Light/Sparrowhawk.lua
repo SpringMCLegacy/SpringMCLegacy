@@ -44,6 +44,8 @@ local Sparrowhawk = Aero:New{
 		heatlimit 		= 20,
 		armor			= 8,
 		
+		texmod			= "player",
+		
 		entryDelay 		= 5,
 		prepDelay 		= 10,
 		strafeDistance  = 300, -- how close to get to target while strafing

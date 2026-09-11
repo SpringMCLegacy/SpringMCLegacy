@@ -26,6 +26,8 @@ local Stuka = Aero:New{
 		armor			= 16,
 		squadsize 		= 2,
 		
+		texmod			= "player",
+		
 		entryDelay 		= 30,
 		prepDelay 		= 45,
 		

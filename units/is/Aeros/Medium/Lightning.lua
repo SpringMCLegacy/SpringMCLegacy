@@ -28,6 +28,7 @@ local Lightning = Aero:New{
 		
 		entryDelay 		= 20,
 		prepDelay 		= 30,
+		texmod			= "player",
 		
     },
 }
