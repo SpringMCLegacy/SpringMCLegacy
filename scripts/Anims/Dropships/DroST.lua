@@ -216,7 +216,7 @@ function fx()
 end
 
 local function Refund()
-	Spring.AddTeamResource(teamID, "metal", UnitDefs[Spring.GetUnitDefID(cargo[1])].metalCost)
+	GG.ChangeTeamResource(teamID, "cbills", UnitDefs[Spring.GetUnitDefID(cargo[1])].metalCost)
 	Spring.DestroyUnit(cargo[1], false, true)
 	GG.PlaySoundForTeam(teamID, "bb_outpost_refund", 1)
 end

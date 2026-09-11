@@ -25,14 +25,12 @@ local GetGameFrame			= Spring.GetGameFrame
 local GetUnitCmdDescs 		= Spring.GetUnitCmdDescs
 local GetUnitPosition		= Spring.GetUnitPosition
 --SyncedCtrl
-local AddTeamResource 		= Spring.AddTeamResource
 local CreateUnit			= Spring.CreateUnit
 local DestroyUnit			= Spring.DestroyUnit
 local EditUnitCmdDesc		= Spring.EditUnitCmdDesc
 local FindUnitCmdDesc		= Spring.FindUnitCmdDesc
 local InsertUnitCmdDesc		= Spring.InsertUnitCmdDesc
 local RemoveUnitCmdDesc		= Spring.RemoveUnitCmdDesc
-local UseTeamResource 		= Spring.UseTeamResource
 
 -- GG
 local DelayCall				 = GG.Delay.DelayCall
@@ -243,8 +241,8 @@ local function DropZoneUpgrade(teamID)
 		local maxTonnage = math.floor(UnitDefs[newDefID].customParams.maxtonnage * tonnageMult)
 		local currMaxTonnage = GG.GetTeamStorage(teamID, "tonnage")
 		local tonnageIncrease = maxTonnage - currMaxTonnage --math.floor(UnitDefs[oldDefID].customParams.maxtonnage * tonnageMult)
-		Spring.SetTeamResource(teamID, "es", maxTonnage)
-		Spring.AddTeamResource(teamID, "e", tonnageIncrease)
+		GG.SetTeamStorage(teamID, "tonnage", maxTonnage)
+		GG.ChangeTeamResource(teamID, "tonnage", tonnageIncrease)
 		-- first upgrade unlocks heavy and assault mechs
 		GG.LockHeavy(teamDropZones[teamID], false)
 	else -- max upgrade reached, disable button
@@ -353,8 +351,8 @@ local function Refund(teamID, cost, weight)
 	if cost and weight then
 		Spring.SendMessageToTeam(teamID, "Refunding order, there is no dropzone")
 		GG.PlaySoundForTeam(teamID, "bb_reinforcements_refund", 1)
-		AddTeamResource(teamID, "metal", cost)
-		AddTeamResource(teamID, "energy", weight)
+		GG.ChangeTeamResource(teamID, "cbills", cost)
+		GG.ChangeTeamResource(teamID, "tonnage", weight)
 	end
 end
 
@@ -470,8 +468,8 @@ local function PurchaseOrders(unitID, unitDefID, teamID, cmdID, cmdOptions, comp
 				orderTons[unitID] = newTons
 				orderSizes[unitID] = runningSize + 1
 				-- Take the costs upfront, can be reimbursed
-				UseTeamResource(teamID, "metal", cost)
-				UseTeamResource(teamID, "energy", weight)
+				GG.ChangeTeamResource(teamID, "cbills", -cost)
+				GG.ChangeTeamResource(teamID, "tonnage", -weight)
 				CheckBuildOptions(unitID, teamID, slotsLeft, cmdID)
 				EditUnitCmdDesc(unitID, FindUnitCmdDesc(unitID, CMD_RUNNING_TOTAL), {name = COLOURS.cbills .. GG.Pad(13, "C-Bills", "" .. newTotal)})
 				EditUnitCmdDesc(unitID, FindUnitCmdDesc(unitID, CMD_RUNNING_TONS), {name = COLOURS.tonnage .. GG.Pad(11, "Tonnes", "" .. newTons)})
@@ -491,8 +489,8 @@ local function PurchaseOrders(unitID, unitDefID, teamID, cmdID, cmdOptions, comp
 				orderCosts[unitID] = runningTotal - cost
 				orderTons[unitID] = runningTons - weight
 				-- reimburse the costs
-				AddTeamResource(teamID, "metal", cost)
-				AddTeamResource(teamID, "energy", weight)
+				GG.ChangeTeamResource(teamID, "cbills", cost)
+				GG.ChangeTeamResource(teamID, "tonnage", weight)
 				orderSizes[unitID] = runningSize - 1
 				CheckBuildOptions(unitID, teamID, slotsLeft)
 				EditUnitCmdDesc(unitID, FindUnitCmdDesc(unitID, CMD_RUNNING_TOTAL), {name = COLOURS.cbills .. GG.Pad(13, "C-Bills", "" .. (runningTotal - cost))})
@@ -623,7 +621,7 @@ function gadget:UnitDestroyed(unitID, unitDefID, teamID, attackerID, attackerDef
 		DropZoneCoolDown(teamID)
 	elseif mechCache[unitDefID] then
 		-- reimburse 'weight'
-		AddTeamResource(teamID, "energy", UnitDefs[unitDefID].energyCost)
+		GG.ChangeTeamResource(teamID, "tonnage", UnitDefs[unitDefID].energyCost)
 	end
 end
 
@@ -636,7 +634,7 @@ function gadget:UnitGiven(unitID, unitDefID, newTeam, oldTeam)
 		if newTeam ~= GAIA_TEAM_ID then
 			gadget:UnitCreated(unitID, unitDefID, newTeam)
 			if mechCache[unitDefID] then -- take tonnage, as usually done on purchase, not Created
-				UseTeamResource(newTeam, "energy", UnitDefs[unitDefID].energyCost)
+				GG.ChangeTeamResource(newTeam, "tonnage", -UnitDefs[unitDefID].energyCost)
 			end
 		end
 	end

@@ -337,7 +337,7 @@ local function TransferFlag(flagID, flagTeamID, newTeamID, capTeamID)
 	local neuted = newTeamID == GAIA_TEAM_ID
 	TransferUnit(flagID, capped and capTeamID or GAIA_TEAM_ID, false)
 	if capped or neuted then
-		Spring.AddTeamResource(capTeamID, "metal", CAP_BONUS) -- 2k CBills for neut or cap
+		GG.ChangeTeamResource(capTeamID, "cbills", CAP_BONUS) -- 2k CBills for neut or cap
 		-- Flag has changed status, reset capping statuses
 		flagCapStatuses[flagID] = {}
 		for _, cleanTeamID in pairs(Spring.GetTeamList()) do

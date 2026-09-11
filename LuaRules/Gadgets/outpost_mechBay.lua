@@ -25,7 +25,6 @@ local GetUnitPosition		= Spring.GetUnitPosition
 local GetUnitTeam 			= Spring.GetUnitTeam
 local IsNoCostEnabled 		= Spring.IsNoCostEnabled
 --SyncedCtrl
-local AddTeamResource 		= Spring.AddTeamResource
 local CreateUnit			= Spring.CreateUnit
 local DestroyUnit			= Spring.DestroyUnit
 local InsertUnitCmdDesc		= Spring.InsertUnitCmdDesc
@@ -415,7 +414,7 @@ function gadget:AllowCommand(unitID, unitDefID, teamID, cmdID, cmdParams, cmdOpt
 				env = GetScriptEnv(unitID)
 				CallAsUnit(unitID, env.script.TransportDrop, transporting[1])
 				DestroyUnit(transporting[1], false, true)
-				AddTeamResource(teamID, "m", cBills)
+				GG.ChangeTeamResource(teamID, "cbills", cBills)
 				GG.PlaySoundForTeam(teamID, "Chaching", 10)
 				return true
 			end

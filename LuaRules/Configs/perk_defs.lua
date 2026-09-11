@@ -136,7 +136,7 @@ end
 
 local function deductCBills(unitID, amount)
 	local teamID = Spring.GetUnitTeam(unitID)
-	Spring.UseTeamResource(teamID, "m", Spring.IsNoCostEnabled() and 0 or amount)
+	GG.ChangeTeamResource(teamID, "cbills", Spring.IsNoCostEnabled() and 0 or -amount)
 end
 
 local function deductSalvage(unitID, amount)

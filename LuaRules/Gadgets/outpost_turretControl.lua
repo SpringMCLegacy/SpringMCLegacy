@@ -29,7 +29,6 @@ local RemoveUnitCmdDesc		= Spring.RemoveUnitCmdDesc
 local TransferUnit			= Spring.TransferUnit
 local SetUnitNeutral		= Spring.SetUnitNeutral
 local SetSquareBuildingMask = Spring.SetSquareBuildingMask
-local UseTeamResource 		= Spring.UseTeamResource
 
 -- GG
 local DelayCall				 = GG.Delay.DelayCall
@@ -207,7 +206,7 @@ function gadget:AllowCommand(unitID, unitDefID, teamID, cmdID, cmdParams, cmdOpt
 			elseif remainingSlots[unitID] >= turretDefIDs[-cmdID] then -- Shouldn't be needed but, bolts and braces
 				UpdateTurretSlots(unitID, teamID, -slotCost)
 				local success = CreateUnit(-cmdID, tx, ty, tz, 1, teamID, false, false, nil, unitID)
-				UseTeamResource(teamID, "m", cost)
+				GG.ChangeTeamResource(teamID, "cbills", -cost)
 				--Spring.Echo("Yo make a turret!", -cmdID, UnitDefs[-cmdID].name, success)
 			end
 			return false -- don't let the engine build it itself whether we passed the conditions or not

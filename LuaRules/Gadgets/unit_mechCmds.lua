@@ -23,7 +23,6 @@ local FindUnitCmdDesc		= Spring.FindUnitCmdDesc
 local GetUnitDefID			= Spring.GetUnitDefID
 local ValidUnitID			= Spring.ValidUnitID
 --SyncedCtrl
-local AddTeamResource 		= Spring.AddTeamResource
 local DestroyUnit			= Spring.DestroyUnit
 local InsertUnitCmdDesc		= Spring.InsertUnitCmdDesc
 local EditUnitCmdDesc		= Spring.EditUnitCmdDesc

@@ -86,8 +86,8 @@ local function SetTeamResource(teamID, resource, amount)
 		spSetTeamResource(teamID, alias.amount, safeAmount)
 	else
 		teamResources[teamID][resource] = safeAmount
-		SetTeamRulesParam(teamID, resource, teamResources[teamID][resource])
 	end
+	SetTeamRulesParam(teamID, resource, safeAmount)
 end
 GG.SetTeamResource = SetTeamResource
 
@@ -98,6 +98,7 @@ local function SetTeamStorage(teamID, resource, maxAmount)
 	else
 		teamStorages[teamID][resource] = maxAmount
 	end
+	SetTeamRulesParam(teamID, "max_" .. resource, maxAmount)
 end
 GG.SetTeamStorage = SetTeamStorage
 
@@ -112,8 +113,8 @@ local function ChangeTeamResource(teamID, resource, delta)
 		end
 	else
 		teamResources[teamID][resource] = (teamResources[teamID][resource] or 0) + delta
-		SetTeamRulesParam(teamID, resource, teamResources[teamID][resource])
 	end
+	SetTeamRulesParam(teamID, resource, GetTeamResource(teamID, resource))
 end
 GG.ChangeTeamResource = ChangeTeamResource
 

@@ -30,7 +30,6 @@ local RemoveUnitCmdDesc		= Spring.RemoveUnitCmdDesc
 local SetUnitRulesParam		= Spring.SetUnitRulesParam
 local SetTeamRulesParam		= Spring.SetTeamRulesParam
 local SpawnProjectile		= Spring.SpawnProjectile
-local UseTeamResource 		= Spring.UseTeamResource
 
 -- GG
 local FramesToMinutesAndSeconds = GG.FramesToMinutesAndSeconds
@@ -186,7 +185,7 @@ local function ArtyStrike(unitID, teamID, x, y, z, cost, strikeType, dx, dy, dz)
 		Spring.SendMessageToTeam(teamID, "Not enough C-Bills for artillery strike!")
 		return false 
 	end
-	UseTeamResource(teamID, "metal", cost)
+	GG.ChangeTeamResource(teamID, "cbills", -cost)
 	artyCanFire[teamID] = currFrame + weapInfo.cooldown
 	SetTeamRulesParam(teamID, "UPLINK_ARTILLERY", currFrame + weapInfo.cooldown) -- frame this team can fire arty again
 	local lastDelay = 0

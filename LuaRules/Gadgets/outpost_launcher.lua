@@ -19,10 +19,8 @@ if gadgetHandler:IsSyncedCode() then
 local GetTeamList			= Spring.GetTeamList
 local GetUnitStockpile		= Spring.GetUnitStockpile
 --SyncedCtrl
-local AddTeamResource		= Spring.AddTeamResource
 local EditUnitCmdDesc		= Spring.EditUnitCmdDesc
 local FindUnitCmdDesc		= Spring.FindUnitCmdDesc
-local UseTeamResource 		= Spring.UseTeamResource
 
 -- Constants
 local COLOURS = GG.GameConstants.colours
@@ -65,7 +63,7 @@ function gadget:AllowCommand(unitID, unitDefID, teamID, cmdID, cmdParams, cmdOpt
 			local price = Spring.IsNoCostEnabled() and 0 or CRUISE_MISSILE_COST
 			if not cmdOptions.right then -- ordering new
 				if GG.GetTeamResource(teamID, "cbills") >= price then
-					UseTeamResource(teamID, "metal", price)
+					GG.ChangeTeamResource(teamID, "cbills", -price)
 					GG.PlaySoundForTeam(teamID, "bb_outpost_launcher_preparing", 1)
 					return true
 				else
@@ -75,7 +73,7 @@ function gadget:AllowCommand(unitID, unitDefID, teamID, cmdID, cmdParams, cmdOpt
 			else -- cancelling
 				local stockpiled, queued = GetUnitStockpile(unitID)
 				if queued > 0 then
-					AddTeamResource(teamID, "metal", price)
+					GG.ChangeTeamResource(teamID, "cbills", price)
 					GG.PlaySoundForTeam(teamID, "bb_outpost_launcher_refund", 1)
 					return true
 				end

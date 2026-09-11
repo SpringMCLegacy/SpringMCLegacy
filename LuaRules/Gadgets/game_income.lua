@@ -20,7 +20,6 @@ local SetUnitRulesParam		= Spring.SetUnitRulesParam
 --SyncedRead
 local AreTeamsAllied		= Spring.AreTeamsAllied
 --SyncedCtrl
-local AddTeamResource 		= Spring.AddTeamResource
 local DestroyUnit			= Spring.DestroyUnit
 local InsertUnitCmdDesc		= Spring.InsertUnitCmdDesc
 
@@ -40,7 +39,7 @@ function gadget:UnitDamaged(unitID, unitDefID, teamID, damage, paralyzer, weapon
 		if GG.mechCache[attackerDefID] then -- only mechs generate income
 			-- don't allow income from nukes
 			if not (weaponID and weaponID == MELTDOWN) then		
-				AddTeamResource(attackerTeam, "metal", damage * DAMAGE_REWARD_MULT)
+				GG.ChangeTeamResource(attackerTeam, "cbills", damage * DAMAGE_REWARD_MULT)
 			end
 		end
 	end
@@ -49,7 +48,7 @@ end
 function gadget:UnitDestroyed(unitID, unitDefID, teamID, attackerID, attackerDefID, attackerTeam)
 	-- Insurance income
 	if attackerID and not AreTeamsAllied(teamID, attackerTeam) and GG.mechCache[unitDefID] then
-		AddTeamResource(teamID, "metal", UnitDefs[unitDefID].metalCost * INSURANCE_MULT)
+		GG.ChangeTeamResource(teamID, "cbills", UnitDefs[unitDefID].metalCost * INSURANCE_MULT)
 	end
 end
 
@@ -71,7 +70,7 @@ function gadget:GameFrame(n)
 	if n > 0 and n % 30 == 0 then -- once a second
 		-- Beacon Income
 		for _, teamID in pairs(Spring.GetTeamList()) do
-			AddTeamResource(teamID, "metal", CBILLS_PER_SEC * Spring.GetTeamUnitDefCount(teamID, BEACON_ID))
+			GG.ChangeTeamResource(teamID, "cbills", CBILLS_PER_SEC * Spring.GetTeamUnitDefCount(teamID, BEACON_ID))
 		end
 	end
 end

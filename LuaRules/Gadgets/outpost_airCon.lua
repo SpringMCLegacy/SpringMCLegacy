@@ -39,8 +39,6 @@ local DestroyUnit = Spring.DestroyUnit
 local SetUnitPosition = Spring.SetUnitPosition
 local SetUnitRotation = Spring.SetUnitRotation
 local SetUnitVelocity = Spring.SetUnitVelocity
-local AddTeamResource = Spring.AddTeamResource
-local UseTeamResource = Spring.UseTeamResource
 local GetTeamStartPosition = Spring.GetTeamStartPosition
 local GetUnitCmdDescs = Spring.GetUnitCmdDescs
 local EditUnitCmdDesc = Spring.EditUnitCmdDesc
@@ -652,9 +650,6 @@ end
 
 local function RetreatPlane(unitID, unitDefID, teamID)
 	local hpLeft, totalHp = GetUnitHealth(unitID)
-	--local deposit = (unitDef.customParams.deposit or DEPOSIT_AMOUNT) * unitDef.metalCost
-	--local depositReturn = (hpLeft / totalHp) * deposit
-	--AddTeamResource(teamID, "m", depositReturn)
 	planeStates[unitID] = nil --this looks redundant, but needs to happen so that you actually get your bonus.
 	local sortie = sortieDefs[unitDefID]
 	GG.PlaySoundForTeam(teamID, "bb_outpost_aircon_preparing", 1) -- TODO: this will play multiple times
@@ -718,7 +713,7 @@ end
 function gadget:UnitDestroyed(unitID, unitDefID, teamID)
 	if planeStates[unitID] then -- aircraft was killed, not retreating
 		local unitDef = UnitDefs[unitDefID]
-		AddTeamResource(teamID, "e", unitDef.energyCost)
+		GG.ChangeTeamResource(teamID, "tonnage", unitDef.energyCost)
 		local sortie = sortieDefs[unitDefID]
 		ModifyStockpile(teamID, sortie, 1, "active", nil)
 	end
@@ -765,8 +760,8 @@ function gadget:UnitGiven(unitID, unitDefID, newTeam, oldTeam)
 		ModifyStockpile(oldTeam, sortie, 1, "active", nil)
 		ModifyStockpile(newTeam, sortie, 1, nil, "active")
 		local unitDef = UnitDefs[unitDefID]
-		AddTeamResource(oldTeam, "e", unitDef.energyCost)
-		UseTeamResource(newTeam, "e", unitDef.energyCost)
+		GG.ChangeTeamResource(oldTeam, "tonnage", unitDef.energyCost)
+		GG.ChangeTeamResource(newTeam, "tonnage", -unitDef.energyCost)
 	end
 end
 

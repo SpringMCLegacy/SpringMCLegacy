@@ -217,7 +217,7 @@ local function Refund()
 	if cargo[1] and not Spring.GetUnitIsDead(cargo[1]) then
 		local cargoDefID = Spring.GetUnitDefID(cargo[1])
 		if cargoDefID then
-			Spring.AddTeamResource(teamID, "metal", UnitDefs[cargoDefID].metalCost)
+			GG.ChangeTeamResource(teamID, "cbills", UnitDefs[cargoDefID].metalCost)
 			Spring.DestroyUnit(cargo[1], false, true)
 			GG.PlaySoundForTeam(teamID, "bb_outpost_refund", 1)
 		end

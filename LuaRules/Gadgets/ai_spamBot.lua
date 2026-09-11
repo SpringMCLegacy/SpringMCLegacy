@@ -219,7 +219,7 @@ local function Outpost(beaconID, teamID)
 		local cmd = "CMD_" .. AI_OUTPOST_OPTIONS[randPick]
 		--Spring.Echo("AI team", teamID, "has", (teamOutpostCounts[teamID][UnitDefNames["outpost_c3array"].id] + 1) * 4, "slots and", teamMechCounts[teamID], "mechs. Choice is", cmd)
 		if difficulty > 1 then -- cheat the required resources in
-			Spring.AddTeamResource(teamID, "metal", AI_CMDS[cmd].cost)
+			GG.ChangeTeamResource(teamID, "cbills", AI_CMDS[cmd].cost)
 		end
 		if GG.GetTeamResource(teamID, "cbills") > AI_CMDS[cmd].cost then
 			-- outpostPointIDs[outpostID] = outpostPointID
@@ -267,15 +267,15 @@ local function Spam(teamID)
 			--Spring.Echo("COMPARING:", orderSizes[teamID], GG.TeamSlotsRemaining(teamID))
 			local buildID
 			if difficulty > 1 then
-				Spring.AddTeamResource(teamID, "metal", 1500)
+				GG.ChangeTeamResource(teamID, "cbills", 1500)
 				if difficulty > 2 then
-					Spring.AddTeamResource(teamID, "metal", 2500)
+					GG.ChangeTeamResource(teamID, "cbills", 2500)
 					if difficulty == 4 then -- Assaults only
 						buildID = -sideAssaults[side][math.random(1, #sideAssaults[side])]
 					elseif difficulty == 3 then -- jumpers only
 						buildID = -sideJumpers[side][math.random(1, #sideJumpers[side])]
 					end
-					Spring.AddTeamResource(teamID, "energy", 100)
+					GG.ChangeTeamResource(teamID, "tonnage", 100)
 				else
 					buildID = SimpleReverseSearch(sideMechs[side], 
 							math.max(UnitDefs[sideMechs[side][1]].metalCost, 
@@ -303,7 +303,7 @@ local function Spam(teamID)
 					if nextLevel <= 3 then
 						local cost = AI_CMDS["CMD_DROPZONE_" .. nextLevel].cost
 						if difficulty > 1 then
-							Spring.AddTeamResource(teamID, "metal", cost)
+							GG.ChangeTeamResource(teamID, "cbills", cost)
 						end
 						if GG.GetTeamResource(teamID, "cbills") > cost then
 							GG.Delay.DelayCall(Spring.GiveOrderToUnit, {unitID, AI_CMDS["CMD_DROPZONE_" .. nextLevel].id, EMPTY_TABLE, EMPTY_TABLE}, 1)
@@ -568,7 +568,7 @@ local function LauncherCalls(teamID)
 		elseif queued == 0 then
 			-- stockpile more
 			if difficulty > 1 then
-				Spring.AddTeamResource(teamID, "metal", 10000)
+				GG.ChangeTeamResource(teamID, "cbills", 10000)
 			end
 			--Spring.Echo("Try and stockpile bro!")
 			Spring.GiveOrderToUnit(unitID, CMD.STOCKPILE, EMPTY_TABLE, EMPTY_TABLE)
@@ -594,7 +594,7 @@ local function AirconCalls(teamID)
 				while desiredOrderSize > 0 do
 					local buildID
 					if difficulty > 1 then
-						Spring.AddTeamResource(teamID, "metal", 2500)
+						GG.ChangeTeamResource(teamID, "cbills", 2500)
 					end
 					for i, cmdDesc in pairs(cmdDescs) do
 						if cmdDesc.id < 0 then
@@ -644,8 +644,8 @@ local function UplinkCalls(teamID)
 			local randPick = math.random(GG.uplinkLevels[unitID]) 
 			local artyCmdDesc = Spring.GetUnitCmdDescs(unitID, randPick + 8)[1]
 			if difficulty > 1 then -- cheat the required resources in
-				Spring.AddTeamResource(teamID, "metal", UPLINK_CMD_COSTS[1])
-				Spring.AddTeamResource(teamID, "metal", UPLINK_CMD_COSTS[randPick])
+				GG.ChangeTeamResource(teamID, "cbills", UPLINK_CMD_COSTS[1])
+				GG.ChangeTeamResource(teamID, "cbills", UPLINK_CMD_COSTS[randPick])
 			end
 			if cBills > UPLINK_CMD_COSTS[1] then
 				local currFrame = Spring.GetGameFrame()
@@ -748,8 +748,8 @@ function gadget:UnitCreated(unitID, unitDefID, teamID)
 			end
 		end
 		if difficulty > 2 then -- harder AI tonnage cheats, needs storage to do so
-			Spring.SetTeamResource(teamID, "es", 1000000)
-			Spring.AddTeamResource(teamID, "energy", 1000000)
+			GG.SetTeamStorage(teamID, "tonnage", 1000000)
+			GG.ChangeTeamResource(teamID, "tonnage", 1000000)
 		end
 	end
 end

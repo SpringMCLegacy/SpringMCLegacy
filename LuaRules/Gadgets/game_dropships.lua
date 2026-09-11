@@ -24,7 +24,6 @@ local GetUnitTeam			= Spring.GetUnitTeam
 local CreateUnit			= Spring.CreateUnit
 local DestroyUnit			= Spring.DestroyUnit
 local InsertUnitCmdDesc		= Spring.InsertUnitCmdDesc
-local UseTeamResource 		= Spring.UseTeamResource
 
 -- GG
 local DelayCall				 = GG.Delay.DelayCall
@@ -89,7 +88,7 @@ function SpawnDropship(beaconID, unitID, teamID, dropshipType, cargo, cost, offs
 	elseif teamID and not select(3, Spring.GetTeamInfo(teamID)) then -- dropzone moved or beacon was capped, but team lives
 		-- Refund
 		Spring.SendMessageToTeam(teamID, "No dropzone, order refunded: " .. cost)
-		Spring.AddTeamResource(teamID, "metal", cost)
+		GG.ChangeTeamResource(teamID, "cbills", cost)
 		-- Delete the entire drop queue
 		beaconDropshipQueue[beaconID] = {}
 	end
@@ -113,7 +112,7 @@ function BeaconEnqueueDropship(beaconID, beaconPointID, teamID, info, priority)
 	-- Check the beacon is still on the requesting team
 	local beaconTeam = GetUnitTeam(beaconID)
 	if beaconTeam ~= teamID then 
-		Spring.AddTeamResource(teamID, "metal", info.cost)
+		GG.ChangeTeamResource(teamID, "cbills", info.cost)
 		return 
 	end
 	if not beaconDropshipQueue[beaconID] then beaconDropshipQueue[beaconID] = {} end -- TODO: move to unitcreated?
@@ -144,7 +143,7 @@ function DropshipDelivery(beaconID, beaconPointID, teamID, dropshipType, cargo, 
 	if cost then -- deduct cost immediately to give feedback to player that order was accepted
 	-- will be refunded later if it fails (e.g. beacon capped)
 		--Spring.Echo("COST!?", cost)
-		UseTeamResource(teamID, "metal", cost)
+		GG.ChangeTeamResource(teamID, "cbills", -cost)
 	end
 end
 GG.DropshipDelivery = DropshipDelivery

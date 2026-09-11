@@ -179,7 +179,7 @@ function TakeOff(bugout)
 	-- We're out of the atmosphere, bye bye!
 	if bugout then
 		for i, cargoID in pairs(cargo) do
-			Spring.AddTeamResource(teamID, "metal", UnitDefs[Spring.GetUnitDefID(cargoID)].metalCost)
+			GG.ChangeTeamResource(teamID, "cbills", UnitDefs[Spring.GetUnitDefID(cargoID)].metalCost)
 			Spring.DestroyUnit(cargoID, false, true)
 		end
 		GG.PlaySoundForTeam(teamID, "bb_reinforcements_refund", 1)

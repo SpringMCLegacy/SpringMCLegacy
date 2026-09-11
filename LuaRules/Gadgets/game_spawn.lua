@@ -118,25 +118,25 @@ local function SpawnStartUnit(teamID)
 	local e = modOptions.starttonnage * modOptions.tonnagemult
 
 	-- using SetTeamResource to get rid of any existing resource without affecting stats
-	-- using AddTeamResource to add starting resource and counting it as income
+	-- using ChangeTeamResource to add starting resource and counting it as income
 	if (m and tonumber(m) ~= 0) then
 		-- remove the pre-existing storage
 		--   must be done after the start unit is spawned,
 		--   otherwise the starting resources are lost!
-		Spring.SetTeamResource(teamID, "ms", tonumber(m * 100))
-		Spring.SetTeamResource(teamID, "m", 0)
-		Spring.AddTeamResource(teamID, "m", tonumber(m))
-		Spring.SetTeamShareLevel(teamID, "metal", 100000000000000000)
+		GG.SetTeamStorage(teamID, "cbills", tonumber(m * 100)) -- TODO: do we actually need mstorage if it is set via lua?
+		GG.SetTeamResource(teamID, "cbills", 0)
+		GG.ChangeTeamResource(teamID, "cbills", tonumber(m))
+		Spring.SetTeamShareLevel(teamID, "metal", 1)
 		GG.ChangeTeamResource(teamID, "salvage", modOptions.startsalvage or 100)
 	end
 	if (e and tonumber(e) ~= 0) then
 		-- remove the pre-existing storage
 		--   must be done after the start unit is spawned,
 		--   otherwise the starting resources are lost!
-		Spring.SetTeamResource(teamID, "es", tonumber(e))
-		Spring.SetTeamResource(teamID, "e", 0)
-		Spring.AddTeamResource(teamID, "e", tonumber(e))
-		Spring.SetTeamShareLevel(teamID, "energy", 100000000000000000)
+		GG.SetTeamStorage(teamID, "tonnage", tonumber(e))
+		GG.SetTeamResource(teamID, "tonnage", 0)
+		GG.ChangeTeamResource(teamID, "tonnage", tonumber(e))
+		Spring.SetTeamShareLevel(teamID, "energy", 1)
 	end
 end
 
