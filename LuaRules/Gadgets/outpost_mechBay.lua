@@ -224,7 +224,7 @@ local function CheckOmniOptions(unitID, teamID, cmdID)
 			and sCost > salvage and (currParam == "" or currParam == S[1]) then
 				EditUnitCmdDesc(unitID, cmdDescID, {disabled = true, params = S})
 			else
-				if cmdDesc.disabled and currParam == S[1] then
+				if cmdDesc.disabled then -- and currParam == S[1] then
 					EditUnitCmdDesc(unitID, cmdDescID, {disabled = false, params = EMPTY_TABLE})
 				end
 			end
