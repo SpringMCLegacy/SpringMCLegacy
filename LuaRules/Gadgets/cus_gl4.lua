@@ -334,7 +334,10 @@ local texmodState = {
 	baseUnitTextures = {},
 	textureKeyCache = {},
 	missingWarnings = {},
+	missingTextureInfo = {},
 	texturePathIndex = {},
+	texmodData = texmodConfig.LoadTexmodData(),
+	texmodFactionByScheme = {},
 	botBuddyEnabled = texmodConfig.BotBuddyTexmodsEnabled(),
 	lastRecheckFrame = -999999,
 }
@@ -824,7 +827,19 @@ local function CopyTextureTable(source)
 	return copy
 end
 
-local function LogMissingTexmod(unitDefID, texmod, expectedPath, reason)
+local function LogMissingTexmod(unitID, unitDefID, texmod, expectedPath, reason)
+	-- Missing-skin information is private to the owning player team. CUS runs
+	-- unsynced on every client, so never expose an enemy UnitDef/scheme failure
+	-- through infolog or console output.
+	if Spring.GetSpectatingState and Spring.GetSpectatingState() then
+		return
+	end
+	local unitTeam = unitID and Spring.GetUnitTeam(unitID)
+	local myTeamID = Spring.GetMyTeamID and Spring.GetMyTeamID()
+	if unitTeam == nil or myTeamID == nil or unitTeam ~= myTeamID then
+		return
+	end
+
 	local warningKey = tostring(unitDefID) .. "|" .. tostring(texmod)
 	if texmodState.missingWarnings[warningKey] then
 		return
@@ -871,12 +886,36 @@ local function GetTeamTexmod(teamID)
 	)
 end
 
+local function GetTexmodFactionFolder(texmod)
+	local cached = texmodState.texmodFactionByScheme[texmod]
+	if cached ~= nil then
+		return cached or nil
+	end
+
+	for factionKey, factionData in pairs(texmodState.texmodData or {}) do
+		local schemes = type(factionData) == "table" and factionData.texmods
+		if type(schemes) == "table" and schemes[texmod] ~= nil then
+			texmodState.texmodFactionByScheme[texmod] = tostring(factionKey)
+			return tostring(factionKey)
+		end
+	end
+
+	-- false distinguishes a cached miss from an unresolved lookup.
+	texmodState.texmodFactionByScheme[texmod] = false
+	return nil
+end
+
 local function BuildTexmodTexturePath(unitDef, texmod)
 	local model = unitDef and unitDef.model
 	local textures = model and model.textures
 	local tex1 = textures and textures.tex1
 	if type(tex1) ~= "string" or tex1 == "" then
 		return nil, "unit has no S3O texture1 name"
+	end
+
+	local factionFolder = GetTexmodFactionFolder(texmod)
+	if not factionFolder then
+		return nil, "texmod is not assigned to a faction in Gamedata/texmods.lua"
 	end
 
 	local filename = tex1:gsub("\\", "/")
@@ -889,7 +928,7 @@ local function BuildTexmodTexturePath(unitDef, texmod)
 	end
 
 	local stem = filename:sub(1, #filename - #suffix)
-	return "unittextures/texmods/" .. texmod .. "/" .. stem .. "_" .. texmod .. ".dds"
+	return "unittextures/texmods/" .. factionFolder .. "/" .. stem .. "_" .. texmod .. ".dds"
 end
 
 local function ResolveTexturePath(candidate)
@@ -901,8 +940,8 @@ local function ResolveTexturePath(candidate)
 	end
 
 	-- VFS/model texture names are not guaranteed to preserve filename case.
-	-- Texmods now live in per-scheme directories, so cache a case-insensitive
-	-- index for only the directory being queried instead of scanning unittextures/.
+	-- Texmods live in per-faction directories, so cache a case-insensitive index
+	-- for only the faction directory being queried instead of scanning unittextures/.
 	local directory = candidate:match("^(.*)/[^/]+$")
 	if not directory then
 		return nil
@@ -957,6 +996,13 @@ local function GetUnitTexmodTextureKey(unitID, unitDefID)
 	local cacheKey = tostring(unitDefID) .. "|" .. texmod
 	local cached = texmodState.textureKeyCache[cacheKey]
 	if cached then
+		-- A missing combination may have been discovered first while rendering an
+		-- enemy unit. Keep the filesystem result cached, but emit the warning later
+		-- if that same UnitDef/scheme combination is encountered on our own team.
+		local missing = texmodState.missingTextureInfo[cacheKey]
+		if missing then
+			LogMissingTexmod(unitID, unitDefID, texmod, missing.expectedPath, missing.reason)
+		end
 		return cached
 	end
 
@@ -964,17 +1010,28 @@ local function GetUnitTexmodTextureKey(unitID, unitDefID)
 	local candidate, reason = BuildTexmodTexturePath(unitDef, texmod)
 	local resolved = ResolveTexturePath(candidate)
 	if not resolved then
-		LogMissingTexmod(unitDefID, texmod, candidate, reason or "DDS file not found")
+		local missingReason = reason or "DDS file not found"
+		texmodState.missingTextureInfo[cacheKey] = {
+			expectedPath = candidate,
+			reason = missingReason,
+		}
+		LogMissingTexmod(unitID, unitDefID, texmod, candidate, missingReason)
 		texmodState.textureKeyCache[cacheKey] = defaultKey
 		return defaultKey
 	end
 
 	local baseTextures = texmodState.baseUnitTextures[unitDefID]
 	if not baseTextures then
-		LogMissingTexmod(unitDefID, texmod, candidate, "CUS base texture set unavailable")
+		local missingReason = "CUS base texture set unavailable"
+		texmodState.missingTextureInfo[cacheKey] = {
+			expectedPath = candidate,
+			reason = missingReason,
+		}
+		LogMissingTexmod(unitID, unitDefID, texmod, candidate, missingReason)
 		texmodState.textureKeyCache[cacheKey] = defaultKey
 		return defaultKey
 	end
+	texmodState.missingTextureInfo[cacheKey] = nil
 
 	local textureTable = CopyTextureTable(baseTextures)
 	-- Only healthy texture1 changes. texture2, normal map, wreck textures and
