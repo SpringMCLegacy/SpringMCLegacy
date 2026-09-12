@@ -72,6 +72,8 @@ local SILVERBULLET_DEF = WeaponDefNames["silverbullet"]
 local TAG_ID = WeaponDefNames["tag"].id
 
 -- Variables
+local limbMults = {}
+GG.limbMults = limbMults -- for scripts
 local invincibleDefs = {}
 local tracking = {}
 local contTAG = {}
@@ -392,6 +394,7 @@ end
 
 
 local MINE_ID = WeaponDefNames["mine"].id
+GG.MINE_ID = MINE_ID -- for mech.lua
 local MINE_DEF_ID = UnitDefNames["mine"].id
 function gadget:UnitCreated(unitID, unitDefID, teamID)
 	local ud = UnitDefs[unitDefID]
@@ -567,6 +570,7 @@ function gadget:Initialize()
 				}
 			end
 		end
+		limbMults[id] = cp.limbMults
 	end
 	for id, ud in pairs(UnitDefs) do
 		local cp = ud.customParams

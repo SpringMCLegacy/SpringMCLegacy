@@ -406,7 +406,7 @@ function script.HitByWeapon(x, z, weaponID, damage)
 	ChangeHeat(heatDamage)
 	local hitPiece = GetUnitLastAttackedPiece(unitID) or ""
 	local module = info.progenitorMap[hitPiece] or "body"
-	local limbMult = (weaponID == GG.lusHelper.MG_WDID) and 40 or 1
+	local limbMult = GG.limbMults[weaponID] or 1
 	local mult = 1
 	if module == "body" then 
 		return damage

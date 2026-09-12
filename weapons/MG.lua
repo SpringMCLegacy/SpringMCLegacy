@@ -32,6 +32,7 @@ local MG = Weapon:New{
 		cegflare			= "MG_MUZZLEFLASH",
 		weaponclass			= "projectile",
 		flareonshot 		= true,
+		limbmult			= 20,
     },
 }
 

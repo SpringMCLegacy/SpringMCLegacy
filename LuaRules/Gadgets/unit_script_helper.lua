@@ -358,8 +358,6 @@ function gadget:GamePreload()
 		-- And finally, stick it in GG for the script to access
 		GG.lusHelper[unitDefID] = info
 	end
-	GG.lusHelper.MINE_WDID = WeaponDefNames["mine"].id
-	GG.lusHelper.MG_WDID = WeaponDefNames["mg"].id
 end
 
 function gadget:Initialize()

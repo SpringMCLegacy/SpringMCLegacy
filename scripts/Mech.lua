@@ -501,7 +501,7 @@ function script.HitByWeapon(x, z, weaponID, damage, piece)
 	local wd = WeaponDefs[weaponID]
 	local hitPiece = piece or GetUnitLastAttackedPiece(unitID) or ""
 	--Spring.Echo("HIT PIECE?", hitPiece, damage, heatDamage)
-	if weaponID == GG.lusHelper.MINE_WDID then
+	if weaponID == GG.MINE_ID then
 		--Spring.Echo("MOIN! MOIN! MOIN!")
 		limbHPControl("left_leg", damage/2, "llowerleg")
 		limbHPControl("right_leg", damage/2, "rlowerleg")
@@ -509,7 +509,7 @@ function script.HitByWeapon(x, z, weaponID, damage, piece)
 	if hitPiece == "torso" or hitPiece == "pelvis" or hitPiece == "" then 
 		return damage
 	end
-	local limbMult = (weaponID == GG.lusHelper.MG_WDID) and 40 or 1
+	local limbMult = GG.limbMults[weaponID] or 1
 	if hitPiece == "lupperleg" or hitPiece == "llowerleg" then
 		--deduct Left Leg HP
 		local hp = limbHPControl("left_leg", damage * limbMult, hitPiece)
