@@ -47,6 +47,17 @@ end
 
 AutoAdd("scars", false)
 AutoAdd("decals", false)
-AutoAdd("projectiletextures", true) 
+
+local campDecals = resources["graphics"].decals or {}
+resources["graphics"].decals = campDecals
+
+for _, fullPath in ipairs(RecursiveFileSearch("bitmaps/Decals/camps")) do
+	local path, _, ext = fullPath:match("bitmaps/(.*/(.*)%.(.*))")
+	if path and ext and ext:lower() == "png" then
+		table.insert(campDecals, path)
+	end
+end
+
+AutoAdd("projectiletextures", true)
 
 return resources
