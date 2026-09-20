@@ -47,4 +47,19 @@ local starts = {
 	},
 }
 
-return resources, temps, starts
+local camps = {
+	{
+		x = 609,
+		z = 2251,
+	},
+	{
+		x = 6688,
+		z = 7517,
+	},
+	{
+		x = 7777,
+		z = 2672,
+	},
+}
+
+return resources, temps, starts, camps

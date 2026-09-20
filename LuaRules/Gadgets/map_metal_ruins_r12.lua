@@ -32,26 +32,29 @@
 --      bitmaps/Decals/camps/ and a new table entry in camp_configs.lua;
 --      the core gadget does not need to be edited.
 --
---      The map profile may optionally specify:
+--      The map profile may optionally select a specific template:
 --
 --          {
 --              x = 4694,
 --              z = 3526,
 --              template = "template1",
---              radius = 600,
---              buildings = 6,
 --              rotation = 0, -- degrees, optional explicit override
 --          },
 --
---      "layout" is accepted as an alias for "template".
---      "ruins" remains accepted as a legacy alias for "buildings".
+--      If template is omitted, one available template is selected randomly.
+--      Template size and maximum building count are authored by the template.
+--      Most camps fill every socket; occasionally one or two sockets are left
+--      empty for visual variation.
 --
---      Radius now scales the entire authored template uniformly relative to the
---      template's referenceRadius. If omitted, a random radius is chosen from
---      CAMP_RADIUS_MIN/MAX.
---
---      Rotation now defaults to a random orientation in r9 so camps gain
---      more visual variety while keeping explicit per-camp rotation support.
+--  Revision 12:
+--      - Removes random/default camp radius scaling; templates now always use
+--        their authored width, height, socket positions and exclusion radius.
+--      - Removes flagConfig radius and building-count overrides.
+--      - Removes per-template buildingsMin/buildingsMax; socket count is now
+--        the template's maximum building count.
+--      - Most camps fill every socket, with a low chance of one empty socket
+--        and a smaller chance of two empty sockets.
+--      - flagConfig may still select a specific template and rotation.
 --
 --  Revision 11:
 --      - Consolidates all camp template definitions into one shared config:
@@ -162,7 +165,6 @@ local function LoadCampConfigs()
             type(template.texture) ~= "string"
             or type(template.width) ~= "number"
             or type(template.height) ~= "number"
-            or type(template.referenceRadius) ~= "number"
             or type(template.sockets) ~= "table"
             or #template.sockets == 0
         then
@@ -440,16 +442,6 @@ end
 --------------------------------------------------------------------------------
 -- Synced tuning
 --------------------------------------------------------------------------------
-
--- template1 has six authored structure sockets. Until more templates exist,
--- default camps use five or six of them.
-local CAMP_BUILDINGS_MIN = 5
-local CAMP_BUILDINGS_MAX = 6
-
--- Radius scales the complete template relative to referenceRadius = 600.
--- In r8, radius = 600 produces a roughly 600x600-elmo template footprint.
-local CAMP_RADIUS_MIN = 500
-local CAMP_RADIUS_MAX = 650
 
 local CAMP_BUILDING_MIN_SPACING = 120
 
@@ -902,7 +894,6 @@ local function ResolveCampTemplate(camp)
 
     local requested =
         camp.template
-        or camp.layout
 
     if
         requested
@@ -938,25 +929,6 @@ local function ResolveCampTemplate(camp)
         ]
 end
 
-local function ResolveCampRadius(camp)
-    if camp._resolvedRadius then
-        return camp._resolvedRadius
-    end
-
-    if type(camp.radius) == "number" then
-        camp._resolvedRadius =
-            math.max(1, camp.radius)
-    else
-        camp._resolvedRadius =
-            math.random(
-                CAMP_RADIUS_MIN,
-                CAMP_RADIUS_MAX
-            )
-    end
-
-    return camp._resolvedRadius
-end
-
 local function ResolveCampRotation(camp)
     if camp._resolvedRotation then
         return camp._resolvedRotation
@@ -975,12 +947,6 @@ local function ResolveCampRotation(camp)
     return camp._resolvedRotation
 end
 
-local function ResolveCampScale(camp, template)
-    return
-        ResolveCampRadius(camp)
-        / template.referenceRadius
-end
-
 local function ResolveCampTint(camp, template)
     local tint = template.tint
 
@@ -995,76 +961,26 @@ local function ResolveCampTint(camp, template)
         tonumber(tint[4]) or 0.5
 end
 
-local function ResolveCampBuildingCount(camp, template)
-    local requested
+local function ResolveCampBuildingCount(template)
+    local maximum = #template.sockets
 
-    if type(camp.buildings) == "number" then
-        requested =
-            math.max(
-                0,
-                math.floor(camp.buildings)
-            )
-    elseif type(camp.ruins) == "number" then
-        requested =
-            math.max(
-                0,
-                math.floor(camp.ruins)
-            )
-    else
-        local minimum =
-            math.max(
-                0,
-                math.floor(
-                    tonumber(
-                        template.buildingsMin
-                    )
-                    or CAMP_BUILDINGS_MIN
-                )
-            )
-
-        local maximum =
-            math.max(
-                minimum,
-                math.floor(
-                    tonumber(
-                        template.buildingsMax
-                    )
-                    or CAMP_BUILDINGS_MAX
-                )
-            )
-
-        maximum =
-            math.min(
-                maximum,
-                #template.sockets
-            )
-
-        minimum =
-            math.min(
-                minimum,
-                maximum
-            )
-
-        requested =
-            math.random(
-                minimum,
-                maximum
-            )
+    if maximum <= 1 then
+        return maximum
     end
 
-    if requested > #template.sockets then
-        Spring.Echo(
-            "[Map Debris & Template Camps] WARNING: Camp requested",
-            requested,
-            "buildings but template has only",
-            #template.sockets,
-            "sockets; capping to socket count."
-        )
+    -- Sparse variation:
+    --   70% use every authored socket.
+    --   22% leave one socket empty.
+    --    8% leave two sockets empty.
+    local roll = math.random()
 
-        requested = #template.sockets
+    if roll < 0.70 then
+        return maximum
+    elseif roll < 0.92 then
+        return maximum - 1
     end
 
-    return requested
+    return math.max(1, maximum - 2)
 end
 
 --------------------------------------------------------------------------------
@@ -1130,17 +1046,8 @@ local function IsNearCampFootprint(x, z, camps)
                 ResolveCampTemplate(camp)
 
             if template then
-                local scale =
-                    ResolveCampScale(
-                        camp,
-                        template
-                    )
-
                 local radius =
-                    (
-                        template.dressingExclusionRadius
-                        * scale
-                    )
+                    template.dressingExclusionRadius
                     + MAP_DRESSING_CAMP_MARGIN
 
                 local dx = x - camp.x
@@ -1351,14 +1258,13 @@ end
 local function TransformSocket(
     camp,
     socket,
-    scale,
     rotation
 )
     local localX =
-        socket.x * scale
+        socket.x
 
     local localZ =
-        socket.z * scale
+        socket.z
 
     local cosRotation =
         math.cos(rotation)
@@ -1393,19 +1299,16 @@ end
 
 local function CampFootprintFitsMap(
     camp,
-    template,
-    scale
+    template
 )
     -- Conservative radius around the entire square decal. This is independent
     -- of rotation and keeps every corner inside the playable map.
     local halfWidth =
         template.width
-        * scale
         * 0.5
 
     local halfHeight =
         template.height
-        * scale
         * 0.5
 
     local radius =
@@ -1425,7 +1328,6 @@ local function SendCampDecal(
     camp,
     templateName,
     template,
-    scale,
     rotation
 )
     local tintR,
@@ -1442,8 +1344,8 @@ local function SendCampDecal(
         templateName,
         camp.x,
         camp.z,
-        template.width * scale * 0.5,
-        template.height * scale * 0.5,
+        template.width * 0.5,
+        template.height * 0.5,
         rotation,
         tintR,
         tintG,
@@ -1484,19 +1386,12 @@ local function PlaceCamp(
         return 0
     end
 
-    local scale =
-        ResolveCampScale(
-            camp,
-            template
-        )
-
     local rotation =
         ResolveCampRotation(camp)
 
     if not CampFootprintFitsMap(
         camp,
-        template,
-        scale
+        template
     ) then
         Spring.Echo(
             "[Map Debris & Template Camps] WARNING: Camp",
@@ -1508,7 +1403,6 @@ local function PlaceCamp(
 
     local buildingCount =
         ResolveCampBuildingCount(
-            camp,
             template
         )
 
@@ -1530,7 +1424,6 @@ local function PlaceCamp(
             TransformSocket(
                 camp,
                 socket,
-                scale,
                 rotation
             )
 
@@ -1577,7 +1470,6 @@ local function PlaceCamp(
             camp,
             templateName,
             template,
-            scale,
             rotation
         )
     end
@@ -1590,8 +1482,6 @@ local function PlaceCamp(
         "at",
         camp.x,
         camp.z,
-        "radius",
-        ResolveCampRadius(camp),
         "rotation(deg)",
         math.floor(
             rotation * 180 / math.pi

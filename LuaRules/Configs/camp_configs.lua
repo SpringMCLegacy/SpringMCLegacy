@@ -19,6 +19,10 @@
 --     1. bitmaps/Decals/camps/<name>.png
 --     2. one new entry in this table
 --
+-- Each socket is one available building slot. The socket count is therefore
+-- the template's maximum building count. The gadget normally fills every slot,
+-- with occasional sparse camps leaving one or two sockets empty.
+--
 --------------------------------------------------------------------------------
 
 return {
@@ -33,11 +37,7 @@ return {
 
         width = 420,
         height = 420,
-        referenceRadius = 600,
         dressingExclusionRadius = 266,
-
-        buildingsMin = 5,
-        buildingsMax = 6,
 
         -- Recoil ground-decal tint:
         -- 0.5 RGB is neutral/no hue shift.
@@ -77,11 +77,7 @@ return {
 
         width = 600,
         height = 600,
-        referenceRadius = 600,
         dressingExclusionRadius = 380,
-
-        buildingsMin = 6,
-        buildingsMax = 7,
 
         tint = {0.5, 0.5, 0.5, 0.5},
         alpha = 0.72,
@@ -123,11 +119,7 @@ return {
 
         width = 600,
         height = 600,
-        referenceRadius = 600,
         dressingExclusionRadius = 380,
-
-        buildingsMin = 5,
-        buildingsMax = 6,
 
         tint = {0.5, 0.5, 0.5, 0.5},
         alpha = 0.72,
@@ -150,6 +142,69 @@ return {
 
             -- lower-right
             {x =   86.9, z =  190.6, facing = -146},
+        },
+    },
+
+
+    ---------------------------------------------------------------------------
+    -- Template 4
+    --
+    -- Compact three-pad Y-junction layout.
+    ---------------------------------------------------------------------------
+
+    template4 = {
+        texture =
+            "bitmaps/Decals/camps/template4.png",
+
+        width = 600,
+        height = 600,
+        dressingExclusionRadius = 380,
+
+        tint = {0.5, 0.5, 0.5, 0.5},
+        alpha = 0.72,
+
+        sockets = {
+            -- north
+            {x =    0.0, z = -127.0, facing = 180},
+
+            -- southwest
+            {x = -156.0, z =  147.0, facing =  45},
+
+            -- southeast
+            {x =  156.0, z =  147.0, facing = -45},
+        },
+    },
+
+
+    ---------------------------------------------------------------------------
+    -- Template 5
+    --
+    -- Minimal four-pad cross layout.
+    ---------------------------------------------------------------------------
+
+    template5 = {
+        texture =
+            "bitmaps/Decals/camps/template5.png",
+
+        width = 600,
+        height = 600,
+        dressingExclusionRadius = 380,
+
+        tint = {0.5, 0.5, 0.5, 0.5},
+        alpha = 0.72,
+
+        sockets = {
+            -- north
+            {x =    0.0, z = -174.0, facing = 180},
+
+            -- west
+            {x = -184.0, z =    0.0, facing =  90},
+
+            -- east
+            {x =  174.0, z =    0.0, facing = -90},
+
+            -- south
+            {x =    0.0, z =  184.0, facing =   0},
         },
     },
 
