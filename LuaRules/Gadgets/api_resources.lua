@@ -63,7 +63,7 @@ local function GetTeamResource(teamID, resource)
 	if alias then
 		return spGetTeamResources(teamID, alias.amount)
 	else
-		return teamResources[teamID][resource] or 0 -- assume no resource if none yet allocated
+		return teamID and teamResources[teamID][resource] or 0 -- assume no resource if none yet allocated
 	end
 end
 GG.GetTeamResource = GetTeamResource
@@ -73,7 +73,7 @@ local function GetTeamStorage(teamID, resource)
 	if alias then
 		return spGetTeamResources(teamID, alias.storage)
 	else
-		return teamStorages[teamID][resource] or math.huge -- assume infinite storage if not specified
+		return teamID and teamStorages[teamID][resource] or math.huge -- assume infinite storage if not specified
 	end
 end
 GG.GetTeamStorage = GetTeamStorage
@@ -81,7 +81,7 @@ GG.GetTeamStorage = GetTeamStorage
 -- Set
 local function SetTeamResource(teamID, resource, amount)
 	local alias = RESOURCE_ALIAS[resource]
-	local safeAmount = math.min(amount, GetTeamStorage(teamID, alias and alias.storage or resource))
+	local safeAmount = math.floor(math.min(amount, GetTeamStorage(teamID, alias and alias.storage or resource)))
 	if alias then
 		spSetTeamResource(teamID, alias.amount, safeAmount)
 	else
@@ -105,6 +105,7 @@ GG.SetTeamStorage = SetTeamStorage
 -- Change
 local function ChangeTeamResource(teamID, resource, delta)
 	local alias = RESOURCE_ALIAS[resource]
+	delta = math.floor(delta)
 	if alias then
 		if delta > 0 then
 			spAddTeamResource(teamID, alias.amount, delta)
