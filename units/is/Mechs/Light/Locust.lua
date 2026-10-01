@@ -38,7 +38,7 @@ local LCT3M = Locust:New{
 	},
 		
 	customparams = {
-		variant         = "LCT3M",
+		variant         = "LCT-3M",
 		speed			= 120,
 		price			= 5220,
 		heatlimit 		= 10,
@@ -73,7 +73,7 @@ local LCT5M = Locust:New{
 	},
 		
 	customparams = {
-		variant         = "LCT5M",
+		variant         = "LCT-5M",
 		speed			= 180,
 		price			= 7190,
 		heatlimit 		= 10,
