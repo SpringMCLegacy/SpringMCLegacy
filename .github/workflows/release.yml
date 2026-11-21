@@ -1,0 +1,61 @@
+name: Build Release Artifacts
+
+on:
+  release:
+    types: [created]
+
+jobs:
+  build-sdz:
+    runs-on: ubuntu-24.04
+    permissions:
+      contents: write          # needed to attach the .sdz to the release
+    steps:
+      - name: Check out the release tag
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.release.tag_name }}
+
+      - name: Only build version-shaped tags (e.g. 2.3.0)
+        id: gate
+        shell: bash
+        env:
+          TAG: ${{ github.event.release.tag_name }}
+        run: |
+          if [[ "$TAG" =~ ^[0-9]+\.[0-9]+\.[0-9]+$ ]]; then
+            echo "match=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "::warning::Tag '$TAG' is not X.X.X — no .sdz built."
+            echo "match=false" >> "$GITHUB_OUTPUT"
+          fi
+
+      # The repo keeps version = "$VERSION" (so the dev checkout always loads as the same game); only the .sdz gets
+      # the tag. Nothing is committed: the stamped modinfo.lua goes into a throwaway tree that is archived.
+      - name: Stamp the version into modinfo.lua
+        if: steps.gate.outputs.match == 'true'
+        shell: bash
+        env:
+          TAG: ${{ github.event.release.tag_name }}
+        run: |
+          if grep -q '\$VERSION' modinfo.lua; then
+            sed -i "s/\\\$VERSION/$TAG/" modinfo.lua
+          else
+            echo "::warning::modinfo.lua has no \$VERSION; its version is left as committed."
+          fi
+          grep -n 'version' modinfo.lua
+
+      - name: Build the .sdz
+        if: steps.gate.outputs.match == 'true'
+        run: |
+          git add modinfo.lua
+          git archive --format=zip "$(git write-tree)" -o release.sdz
+
+      - name: Attach the .sdz to the release
+        if: steps.gate.outputs.match == 'true'
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          TAG: ${{ github.event.release.tag_name }}
+          REPO: ${{ github.event.repository.name }}
+        run: |
+          asset="${REPO}_${TAG}.sdz"
+          mv release.sdz "$asset"
+          gh release upload "$TAG" "$asset" --clobber
