@@ -78,17 +78,17 @@ local function GetStartUnit(teamID)
 	if not activeTeams[teamID] then return false end
 	-- get the team startup info
 	local side = GG.teamSide[teamID] or select(5, Spring.GetTeamInfo(teamID))
-	local startUnit
+	local startUnit = "beacon"
 	if (side == "") then
 		-- startscript didn't specify a side for this team
 		local sidedata = Spring.GetSideData()
 		if (sidedata and #sidedata > 0) then
 			local sideNum = teamID == 0 and math.random(1,#TechBaseSides.is) or math.random(#TechBaseSides.is+1,#TechBaseSides.is+#TechBaseSides.cl)
-			startUnit = sidedata[sideNum].startUnit
+			--startUnit = sidedata[sideNum].startUnit
 			side = sidedata[sideNum].sideName
 		end
-	else
-		startUnit = Spring.GetSideData(side)
+	--else
+		--startUnit = Spring.GetSideData(side)
 	end
 	GG.teamSide[teamID] = SideNames[side]
 	Spring.SetTeamRulesParam(teamID, "side", SideNames[side])
