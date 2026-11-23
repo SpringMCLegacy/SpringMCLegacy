@@ -254,8 +254,8 @@ local function LoadProfile()
 		end
 	else
 		Spring.Echo("NO MAP PROFILE FOUND FOR " .. Game.mapName, "FALLING BACK TO USING START POSITIONS")
-		Map = {}
-		Map.configFile = "maps/" .. Game.mapName .. ".smd"
+		--Map = {}
+		--Map.configFile = "maps/" .. Game.mapName .. ".smd"
 		local mh = VFS.Include("maphelper/mapinfo.lua")
 
 		for t = #teams - 1, #(mh.teams) do -- start beyond spawned teams
